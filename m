@@ -1,162 +1,119 @@
 From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 5/7] perf script python: add Python3 support to
- intel-pt-events.py
-Date: Wed, 6 Mar 2019 11:28:35 +0200
-Message-ID: <d3920c9a-3990-6111-ca4f-58d96a929bf4@intel.com>
-References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-6-tonyj@suse.de>
- <6fe06c75-5f98-4829-e139-af2bfcda24f3@intel.com>
- <dfa719d4-0d9e-ad08-536f-17b3da116b19@suse.de>
- <18913237-75f2-731b-940d-1fccc43d1b4a@suse.de>
- <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
+Subject: Re: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events by
+ CPU
+Date: Wed, 6 Mar 2019 16:23:40 +0200
+Message-ID: <6d837d6b-da67-9878-dcc5-a2b0f2dc6826@intel.com>
+References: <20190305144758.12397-1-andi@firstfloor.org>
+ <20190305144758.12397-4-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fd26acf9-0c0f-717f-9664-a3c33043ce19@suse.de>
+In-Reply-To: <20190305144758.12397-4-andi@firstfloor.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: Andi Kleen <andi@firstfloor.org>, acme@kernel.org
+Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 5/03/19 6:19 PM, Tony Jones wrote:
-> On 3/5/19 8:10 AM, Tony Jones wrote:
+On 5/03/19 4:47 PM, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
->>
->> Sure enough, I managed to attach the wrong patch. Sorry. I'll attach revised (v3) 
->> to this thread as the change is trivial.
-> 
-> From: Tony Jones <tonyj@suse.de>
-> Date: Tue, 05 Mar 2019 08:31:30 -0800
-> Subject: [PATCH v3] perf script python: add Python3 support to intel-pt-events.py
-> 
-> Support both Python2 and Python3 in the intel-pt-events.py script
-> 
-> There may be differences in the ordering of output lines due to
-> differences in dictionary ordering etc.  However the format within lines
-> should be unchanged.
-> 
-> The use of 'from __future__' implies the minimum supported Python2 version
-> is now v2.6
-> 
-> Signed-off-by: Tony Jones <tonyj@suse.de>
-> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> The --cpu option only filtered samples. Filter other perf events,
+> such as COMM, FORK, SWITCH by the CPU too.
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Because tasks can migrate from cpu to cpu, we probably need to process most
+of the events anyway, even if they are not printed.
 
+> 
+> Reported-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  tools/perf/scripts/python/intel-pt-events.py |   32 ++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 13 deletions(-)
+>  tools/perf/builtin-script.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> --- a/tools/perf/scripts/python/intel-pt-events.py
-> +++ b/tools/perf/scripts/python/intel-pt-events.py
-> @@ -10,6 +10,8 @@
->  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->  # more details.
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index fbc440bdf880..3813f60d1dc0 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2038,6 +2038,9 @@ static int process_comm_event(struct perf_tool *tool,
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+>  	int ret = -1;
 >  
-> +from __future__ import print_function
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
 > +
->  import os
->  import sys
->  import struct
-> @@ -22,34 +24,34 @@ sys.path.append(os.environ['PERF_EXEC_PA
->  #from Core import *
+>  	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
+>  	if (thread == NULL) {
+>  		pr_debug("problem processing COMM event, skipping it.\n");
+> @@ -2073,6 +2076,9 @@ static int process_namespaces_event(struct perf_tool *tool,
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+>  	int ret = -1;
 >  
->  def trace_begin():
-> -	print "Intel PT Power Events and PTWRITE"
-> +	print("Intel PT Power Events and PTWRITE")
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	thread = machine__findnew_thread(machine, event->namespaces.pid,
+>  					 event->namespaces.tid);
+>  	if (thread == NULL) {
+> @@ -2108,6 +2114,9 @@ static int process_fork_event(struct perf_tool *tool,
+>  	struct perf_session *session = script->session;
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
 >  
->  def trace_end():
-> -	print "End"
-> +	print("End")
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	if (perf_event__process_fork(tool, event, sample, machine) < 0)
+>  		return -1;
 >  
->  def trace_unhandled(event_name, context, event_fields_dict):
-> -		print ' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())])
-> +		print(' '.join(['%s=%s'%(k,str(v))for k,v in sorted(event_fields_dict.items())]))
+> @@ -2141,6 +2150,9 @@ static int process_exit_event(struct perf_tool *tool,
+>  	struct perf_session *session = script->session;
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
 >  
->  def print_ptwrite(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
->  	flags = data[0]
->  	payload = data[1]
->  	exact_ip = flags & 1
-> -	print "IP: %u payload: %#x" % (exact_ip, payload),
-> +	print("IP: %u payload: %#x" % (exact_ip, payload), end=' ')
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
+>  	if (thread == NULL) {
+>  		pr_debug("problem processing EXIT event, skipping it.\n");
+> @@ -2174,6 +2186,9 @@ static int process_mmap_event(struct perf_tool *tool,
+>  	struct perf_session *session = script->session;
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
 >  
->  def print_cbr(raw_buf):
->  	data = struct.unpack_from("<BBBBII", raw_buf)
->  	cbr = data[0]
->  	f = (data[4] + 500) / 1000
->  	p = ((cbr * 1000 / data[2]) + 5) / 10
-> -	print "%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p),
-> +	print("%3u  freq: %4u MHz  (%3u%%)" % (cbr, f, p), end=' ')
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
+>  		return -1;
 >  
->  def print_mwait(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
->  	payload = data[1]
->  	hints = payload & 0xff
->  	extensions = (payload >> 32) & 0x3
-> -	print "hints: %#x extensions: %#x" % (hints, extensions),
-> +	print("hints: %#x extensions: %#x" % (hints, extensions), end=' ')
+> @@ -2206,6 +2221,9 @@ static int process_mmap2_event(struct perf_tool *tool,
+>  	struct perf_session *session = script->session;
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
 >  
->  def print_pwre(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
-> @@ -57,13 +59,14 @@ def print_pwre(raw_buf):
->  	hw = (payload >> 7) & 1
->  	cstate = (payload >> 12) & 0xf
->  	subcstate = (payload >> 8) & 0xf
-> -	print "hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-> +	print("hw: %u cstate: %u sub-cstate: %u" % (hw, cstate, subcstate),
-> +		end=' ')
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
+>  		return -1;
 >  
->  def print_exstop(raw_buf):
->  	data = struct.unpack_from("<I", raw_buf)
->  	flags = data[0]
->  	exact_ip = flags & 1
-> -	print "IP: %u" % (exact_ip),
-> +	print("IP: %u" % (exact_ip), end=' ')
+> @@ -2238,6 +2256,9 @@ static int process_switch_event(struct perf_tool *tool,
+>  	struct perf_session *session = script->session;
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
 >  
->  def print_pwrx(raw_buf):
->  	data = struct.unpack_from("<IQ", raw_buf)
-> @@ -71,18 +74,21 @@ def print_pwrx(raw_buf):
->  	deepest_cstate = payload & 0xf
->  	last_cstate = (payload >> 4) & 0xf
->  	wake_reason = (payload >> 8) & 0xf
-> -	print "deepest cstate: %u last cstate: %u wake reason: %#x" % (deepest_cstate, last_cstate, wake_reason),
-> +	print("deepest cstate: %u last cstate: %u wake reason: %#x" %
-> +		(deepest_cstate, last_cstate, wake_reason), end=' ')
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	if (perf_event__process_switch(tool, event, sample, machine) < 0)
+>  		return -1;
 >  
->  def print_common_start(comm, sample, name):
->  	ts = sample["time"]
->  	cpu = sample["cpu"]
->  	pid = sample["pid"]
->  	tid = sample["tid"]
-> -	print "%16s %5u/%-5u [%03u] %9u.%09u %7s:" % (comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-> +	print("%16s %5u/%-5u [%03u] %9u.%09u %7s:" %
-> +		(comm, pid, tid, cpu, ts / 1000000000, ts %1000000000, name),
-> +		end=' ')
+> @@ -2266,6 +2287,9 @@ process_lost_event(struct perf_tool *tool,
+>  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+>  	struct thread *thread;
 >  
->  def print_common_ip(sample, symbol, dso):
->  	ip = sample["ip"]
-> -	print "%16x %s (%s)" % (ip, symbol, dso)
-> +	print("%16x %s (%s)" % (ip, symbol, dso))
->  
->  def process_event(param_dict):
->  	event_attr = param_dict["attr"]
-> @@ -92,12 +98,12 @@ def process_event(param_dict):
->  	name	   = param_dict["ev_name"]
->  
->  	# Symbol and dso info are not always resolved
-> -	if (param_dict.has_key("dso")):
-> +	if "dso" in param_dict:
->  		dso = param_dict["dso"]
->  	else:
->  		dso = "[unknown]"
->  
-> -	if (param_dict.has_key("symbol")):
-> +	if "symbol" in param_dict:
->  		symbol = param_dict["symbol"]
->  	else:
->  		symbol = "[unknown]"
+> +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> +		return 0;
+> +
+>  	thread = machine__findnew_thread(machine, sample->pid,
+>  					 sample->tid);
+>  	if (thread == NULL)
 > 
