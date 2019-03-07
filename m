@@ -1,50 +1,88 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/35] perf, bpf: Consider events with attr.bpf_event as side-band events
-Date: Thu,  7 Mar 2019 14:43:59 -0300
-Message-ID: <20190307174433.28819-2-acme@kernel.org>
+Subject: [PATCH 02/35] perf probe: Clarify error message about not finding kernel modules debuginfo
+Date: Thu,  7 Mar 2019 14:44:00 -0300
+Message-ID: <20190307174433.28819-3-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Peter Zijlstra <peterz@infradead.org>, kernel-team@fb.com, netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Marcelo Ricardo Leitner <mleitner@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Events with attr.bpf_event set should be considered as side-band events,
-as they carry information about BPF programs.
+'perf probe' supports using just the kernel module name, but that will
+work only when the module is loaded, or using the full pathname to the
+file with the DWARF debug info, but the warning was cryptic:
 
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
+Before:
+
+  # perf probe -m cls_flower -L fl_change
+  Failed to find the path for cls_flower: No such file or directory
+    Error: Failed to show lines.
+  #
+
+After:
+
+  # perf probe -m cls_flower -L fl_change
+  Module cls_flower is not loaded, please specify its full path name.
+    Error: Failed to show lines.
+  # perf probe -m /lib/modules/5.0.0-rc7+/kernel/net/sched/cls_flower.ko -L fl_change | head -7
+  <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
+        0  static int fl_change(struct net *net, struct sk_buff *in_skb,
+         		       struct tcf_proto *tp, unsigned long base,
+         		       u32 handle, struct nlattr **tca,
+         		       void **arg, bool ovr, struct netlink_ext_ack *extack)
+        4  {
+        5  	struct cls_fl_head *head = rtnl_dereference(tp->root);
+  #
+
+The behaviour doesn't change when the module is loaded:
+
+  # modprobe cls_flower
+  # perf probe -m cls_flower -L fl_change | head -7
+  <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
+        0  static int fl_change(struct net *net, struct sk_buff *in_skb,
+                               struct tcf_proto *tp, unsigned long base,
+                               u32 handle, struct nlattr **tca,
+                               void **arg, bool ovr, struct netlink_ext_ack *extack)
+        4  {
+        5         struct cls_fl_head *head = rtnl_dereference(tp->root);
+  #
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel-team@fb.com
-Cc: netdev@vger.kernel.org
-Fixes: 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
-Link: http://lkml.kernel.org/r/20190226002019.3748539-2-songliubraving@fb.com
+Link: https://lkml.kernel.org/n/tip-q4njvk9mshra00jacqjbzfn5@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/probe-event.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5f59d848171e..dd9698ad3d66 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4238,7 +4238,8 @@ static bool is_sb_event(struct perf_event *event)
- 	if (attr->mmap || attr->mmap_data || attr->mmap2 ||
- 	    attr->comm || attr->comm_exec ||
- 	    attr->task || attr->ksymbol ||
--	    attr->context_switch)
-+	    attr->context_switch ||
-+	    attr->bpf_event)
- 		return true;
- 	return false;
- }
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 0030f9b9bf7e..a1b8d9649ca7 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -472,9 +472,12 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
+ 					strcpy(reason, "(unknown)");
+ 			} else
+ 				dso__strerror_load(dso, reason, STRERR_BUFSIZE);
+-			if (!silent)
+-				pr_err("Failed to find the path for %s: %s\n",
+-					module ?: "kernel", reason);
++			if (!silent) {
++				if (module)
++					pr_err("Module %s is not loaded, please specify its full path name.\n", module);
++				else
++					pr_err("Failed to find the path for the kernel: %s\n", reason);
++			}
+ 			return NULL;
+ 		}
+ 		path = dso->long_name;
 -- 
 2.20.1
