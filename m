@@ -1,353 +1,108 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/35] perf annotate: Calculate the max instruction name, align column to that
-Date: Thu,  7 Mar 2019 14:44:17 -0300
-Message-ID: <20190307174433.28819-20-acme@kernel.org>
+Subject: [PATCH 22/35] perf diff: Support --cpu filter option
+Date: Thu,  7 Mar 2019 14:44:20 -0300
+Message-ID: <20190307174433.28819-23-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Travis Downs <travis.downs@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-We were hardcoding '6' as the max instruction name, and we have lots
-that are longer than that, see the diff from two 'P' printed TUI
-annotations for a libc function that uses instructions with long names,
-such as 'vpmovmskb' with its 9 chars:
+To improve 'perf diff', implement a --cpu filter option.
 
-  --- __strcmp_avx2.annotation.before	2019-03-06 16:31:39.368020425 -0300
-  +++ __strcmp_avx2.annotation	2019-03-06 16:32:12.079450508 -0300
-  @@ -2,284 +2,284 @@
-   Event: cycles:ppp
+Multiple CPUs can be provided as a comma-separated list with no space:
+0,1.  Ranges of CPUs are specified with -: 0-2. Default is to report
+samples on all CPUs.
 
-   Percent        endbr64
-  -  0.10         mov    %edi,%eax
-  +  0.10         mov        %edi,%eax
-  -               xor    %edx,%edx
-  +               xor        %edx,%edx
-  -  3.54         vpxor  %ymm7,%ymm7,%ymm7
-  +  3.54         vpxor      %ymm7,%ymm7,%ymm7
-  -               or     %esi,%eax
-  +               or         %esi,%eax
-  -               and    $0xfff,%eax
-  +               and        $0xfff,%eax
-  -               cmp    $0xf80,%eax
-  +               cmp        $0xf80,%eax
-  -             ↓ jg     370
-  +             ↓ jg         370
-  - 27.07         vmovdqu (%rdi),%ymm1
-  + 27.07         vmovdqu    (%rdi),%ymm1
-  -  7.97         vpcmpeqb (%rsi),%ymm1,%ymm0
-  +  7.97         vpcmpeqb   (%rsi),%ymm1,%ymm0
-  -  2.15         vpminub %ymm1,%ymm0,%ymm0
-  +  2.15         vpminub    %ymm1,%ymm0,%ymm0
-  -  4.09         vpcmpeqb %ymm7,%ymm0,%ymm0
-  +  4.09         vpcmpeqb   %ymm7,%ymm0,%ymm0
-  -  0.43         vpmovmskb %ymm0,%ecx
-  +  0.43         vpmovmskb  %ymm0,%ecx
-  -  1.53         test   %ecx,%ecx
-  +  1.53         test       %ecx,%ecx
-  -             ↓ je     b0
-  +             ↓ je         b0
-  -  5.26         tzcnt  %ecx,%edx
-  +  5.26         tzcnt      %ecx,%edx
-  - 18.40         movzbl (%rdi,%rdx,1),%eax
-  + 18.40         movzbl     (%rdi,%rdx,1),%eax
-  -  7.09         movzbl (%rsi,%rdx,1),%edx
-  +  7.09         movzbl     (%rsi,%rdx,1),%edx
-  -  3.34         sub    %edx,%eax
-  +  3.34         sub        %edx,%eax
-     2.37         vzeroupper
-                ← retq
-                  nop
-  -         50:   tzcnt  %ecx,%edx
-  +         50:   tzcnt      %ecx,%edx
-  -               movzbl 0x20(%rdi,%rdx,1),%eax
-  +               movzbl     0x20(%rdi,%rdx,1),%eax
-  -               movzbl 0x20(%rsi,%rdx,1),%edx
-  +               movzbl     0x20(%rsi,%rdx,1),%edx
-  -               sub    %edx,%eax
-  +               sub        %edx,%eax
-                  vzeroupper
-                ← retq
-  -               data16 nopw %cs:0x0(%rax,%rax,1)
-  +               data16     nopw %cs:0x0(%rax,%rax,1)
+For example,
 
-Reported-by: Travis Downs <travis.downs@gmail.com>
-LPU-Reference: CAOBGo4z1KfmWeOm6Et0cnX5Z6DWsG2PQbAvRn1MhVPJmXHrc5g@mail.gmail.com
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-89wsdd9h9g6bvq52sgp6d0u4@git.kernel.org
+  perf diff --cpu 0,1
+
+It only diff the samples for CPU0 and CPU1.
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1551791143-10334-3-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/annotate/instructions.c |  2 +-
- tools/perf/arch/s390/annotate/instructions.c  |  2 +-
- tools/perf/util/annotate.c                    | 74 ++++++++++++-------
- tools/perf/util/annotate.h                    |  7 +-
- 4 files changed, 52 insertions(+), 33 deletions(-)
+ tools/perf/Documentation/perf-diff.txt |  5 +++++
+ tools/perf/builtin-diff.c              | 16 ++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
-index 76c6345a57d5..8f70a1b282df 100644
---- a/tools/perf/arch/arm64/annotate/instructions.c
-+++ b/tools/perf/arch/arm64/annotate/instructions.c
-@@ -58,7 +58,7 @@ static int arm64_mov__parse(struct arch *arch __maybe_unused,
- }
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index 036d65bded51..8c2c229faf50 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -163,6 +163,11 @@ OPTIONS
+ 	the end of perf.data.old and analyzes the perf.data from the
+ 	timestamp 3971.150589 to the end of perf.data.
  
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
--			  struct ins_operands *ops);
-+			  struct ins_operands *ops, int max_ins_name);
++--cpu:: Only diff samples for the list of CPUs provided. Multiple CPUs can
++	be provided as a comma-separated list with no space: 0,1. Ranges of
++	CPUs are specified with -: 0-2. Default is to report samples on all
++	CPUs.
++
+ COMPARISON
+ ----------
+ The comparison is governed by the baseline file. The baseline perf.data
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 17cd898074c8..dfe6c7606f5a 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -83,6 +83,9 @@ static unsigned int sort_compute = 1;
+ static s64 compute_wdiff_w1;
+ static s64 compute_wdiff_w2;
  
- static struct ins_ops arm64_mov_ops = {
- 	.parse	   = arm64_mov__parse,
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index de0dd66dbb48..89bb8f2c54ce 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -46,7 +46,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- }
- 
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops);
-+			   struct ins_operands *ops, int max_ins_name);
- 
- static struct ins_ops s390_call_ops = {
- 	.parse	   = s390_call__parse,
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 11a8a447a3af..5f6dbbf5d749 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -198,18 +198,18 @@ static void ins__delete(struct ins_operands *ops)
- }
- 
- static int ins__raw_scnprintf(struct ins *ins, char *bf, size_t size,
--			      struct ins_operands *ops)
-+			      struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s", ins->name, ops->raw);
-+	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->raw);
- }
- 
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
--		  struct ins_operands *ops)
-+		   struct ins_operands *ops, int max_ins_name)
- {
- 	if (ins->ops->scnprintf)
--		return ins->ops->scnprintf(ins, bf, size, ops);
-+		return ins->ops->scnprintf(ins, bf, size, ops, max_ins_name);
- 
--	return ins__raw_scnprintf(ins, bf, size, ops);
-+	return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- }
- 
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2)
-@@ -273,18 +273,18 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int call__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	if (ops->target.sym)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.sym->name);
- 
- 	if (ops->target.addr == 0)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
- 	if (ops->target.name)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.name);
- 
--	return scnprintf(bf, size, "%-6s *%" PRIx64, ins->name, ops->target.addr);
-+	return scnprintf(bf, size, "%-*s *%" PRIx64, max_ins_name, ins->name, ops->target.addr);
- }
- 
- static struct ins_ops call_ops = {
-@@ -388,15 +388,15 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	const char *c;
- 
- 	if (!ops->target.addr || ops->target.offset < 0)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
- 	if (ops->target.outside && ops->target.sym != NULL)
--		return scnprintf(bf, size, "%-6s %s", ins->name, ops->target.sym->name);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name, ops->target.sym->name);
- 
- 	c = strchr(ops->raw, ',');
- 	c = validate_comma(c, ops);
-@@ -415,7 +415,7 @@ static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
- 			c++;
++static const char		*cpu_list;
++static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
++
+ enum {
+ 	COMPUTE_DELTA,
+ 	COMPUTE_RATIO,
+@@ -354,6 +357,11 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 		return -1;
  	}
  
--	return scnprintf(bf, size, "%-6s %.*s%" PRIx64,
-+	return scnprintf(bf, size, "%-*s %.*s%" PRIx64, max_ins_name,
- 			 ins->name, c ? c - ops->raw : 0, ops->raw,
- 			 ops->target.offset);
- }
-@@ -483,16 +483,16 @@ static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- }
- 
- static int lock__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
- 	int printed;
- 
- 	if (ops->locked.ins.ops == NULL)
--		return ins__raw_scnprintf(ins, bf, size, ops);
-+		return ins__raw_scnprintf(ins, bf, size, ops, max_ins_name);
- 
--	printed = scnprintf(bf, size, "%-6s ", ins->name);
-+	printed = scnprintf(bf, size, "%-*s ", max_ins_name, ins->name);
- 	return printed + ins__scnprintf(&ops->locked.ins, bf + printed,
--					size - printed, ops->locked.ops);
-+					size - printed, ops->locked.ops, max_ins_name);
- }
- 
- static void lock__delete(struct ins_operands *ops)
-@@ -564,9 +564,9 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
- }
- 
- static int mov__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s,%s", ins->name,
-+	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
- 			 ops->source.name ?: ops->source.raw,
- 			 ops->target.name ?: ops->target.raw);
- }
-@@ -604,9 +604,9 @@ static int dec__parse(struct arch *arch __maybe_unused, struct ins_operands *ops
- }
- 
- static int dec__scnprintf(struct ins *ins, char *bf, size_t size,
--			   struct ins_operands *ops)
-+			   struct ins_operands *ops, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s %s", ins->name,
-+	return scnprintf(bf, size, "%-*s %s", max_ins_name, ins->name,
- 			 ops->target.name ?: ops->target.raw);
- }
- 
-@@ -616,9 +616,9 @@ static struct ins_ops dec_ops = {
- };
- 
- static int nop__scnprintf(struct ins *ins __maybe_unused, char *bf, size_t size,
--			  struct ins_operands *ops __maybe_unused)
-+			  struct ins_operands *ops __maybe_unused, int max_ins_name)
- {
--	return scnprintf(bf, size, "%-6s", "nop");
-+	return scnprintf(bf, size, "%-*s", max_ins_name, "nop");
- }
- 
- static struct ins_ops nop_ops = {
-@@ -1232,12 +1232,12 @@ void disasm_line__free(struct disasm_line *dl)
- 	annotation_line__delete(&dl->al);
- }
- 
--int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw)
-+int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name)
- {
- 	if (raw || !dl->ins.ops)
--		return scnprintf(bf, size, "%-6s %s", dl->ins.name, dl->ops.raw);
-+		return scnprintf(bf, size, "%-*s %s", max_ins_name, dl->ins.name, dl->ops.raw);
- 
--	return ins__scnprintf(&dl->ins, bf, size, &dl->ops);
-+	return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
- }
- 
- static void annotation_line__add(struct annotation_line *al, struct list_head *head)
-@@ -2414,12 +2414,30 @@ static inline int width_jumps(int n)
- 	return 1;
- }
- 
-+static int annotation__max_ins_name(struct annotation *notes)
-+{
-+	int max_name = 0, len;
-+	struct annotation_line *al;
-+
-+        list_for_each_entry(al, &notes->src->source, node) {
-+		if (al->offset == -1)
-+			continue;
-+
-+		len = strlen(disasm_line(al)->ins.name);
-+		if (max_name < len)
-+			max_name = len;
++	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap)) {
++		ret = 0;
++		goto out_put;
 +	}
 +
-+	return max_name;
-+}
+ 	if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample, true)) {
+ 		pr_warning("problem incrementing symbol period, skipping event\n");
+ 		goto out_put;
+@@ -892,6 +900,13 @@ static int __cmd_diff(void)
+ 				goto out_delete;
+ 		}
+ 
++		if (cpu_list) {
++			ret = perf_session__cpu_bitmap(d->session, cpu_list,
++						       cpu_bitmap);
++			if (ret < 0)
++				goto out_delete;
++		}
 +
- void annotation__init_column_widths(struct annotation *notes, struct symbol *sym)
- {
- 	notes->widths.addr = notes->widths.target =
- 		notes->widths.min_addr = hex_width(symbol__size(sym));
- 	notes->widths.max_addr = hex_width(sym->end);
- 	notes->widths.jumps = width_jumps(notes->max_jump_sources);
-+	notes->widths.max_ins_name = annotation__max_ins_name(notes);
- }
- 
- void annotation__update_column_widths(struct annotation *notes)
-@@ -2583,7 +2601,7 @@ static void disasm_line__write(struct disasm_line *dl, struct annotation *notes,
- 		obj__printf(obj, "  ");
- 	}
- 
--	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset);
-+	disasm_line__scnprintf(dl, bf, size, !notes->options->use_offset, notes->widths.max_ins_name);
- }
- 
- static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 95053cab41fe..df34fe483164 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -59,14 +59,14 @@ struct ins_ops {
- 	void (*free)(struct ins_operands *ops);
- 	int (*parse)(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms);
- 	int (*scnprintf)(struct ins *ins, char *bf, size_t size,
--			 struct ins_operands *ops);
-+			 struct ins_operands *ops, int max_ins_name);
+ 		ret = perf_session__process_events(d->session);
+ 		if (ret) {
+ 			pr_err("Failed to process %s\n", d->data.path);
+@@ -969,6 +984,7 @@ static const struct option options[] = {
+ 		     "How to display percentage of filtered entries", parse_filter_percentage),
+ 	OPT_STRING(0, "time", &pdiff.time_str, "str",
+ 		   "Time span (time percent or absolute timestamp)"),
++	OPT_STRING(0, "cpu", &cpu_list, "cpu", "list of cpus to profile"),
+ 	OPT_END()
  };
  
- bool ins__is_jump(const struct ins *ins);
- bool ins__is_call(const struct ins *ins);
- bool ins__is_ret(const struct ins *ins);
- bool ins__is_lock(const struct ins *ins);
--int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops);
-+int ins__scnprintf(struct ins *ins, char *bf, size_t size, struct ins_operands *ops, int max_ins_name);
- bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
- 
- #define ANNOTATION__IPC_WIDTH 6
-@@ -219,7 +219,7 @@ int __annotation__scnprintf_samples_period(struct annotation *notes,
- 					   struct perf_evsel *evsel,
- 					   bool show_freq);
- 
--int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw);
-+int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool raw, int max_ins_name);
- size_t disasm__fprintf(struct list_head *head, FILE *fp);
- void symbol__calc_percent(struct symbol *sym, struct perf_evsel *evsel);
- 
-@@ -289,6 +289,7 @@ struct annotation {
- 		u8		target;
- 		u8		min_addr;
- 		u8		max_addr;
-+		u8		max_ins_name;
- 	} widths;
- 	bool			have_cycles;
- 	struct annotated_source *src;
 -- 
 2.20.1
