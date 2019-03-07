@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/35] perf scripts python: exported-sql-viewer.py: Factor out TreeWindowBase
-Date: Thu,  7 Mar 2019 14:44:10 -0300
-Message-ID: <20190307174433.28819-13-acme@kernel.org>
+Subject: [PATCH 13/35] perf scripts python: exported-sql-viewer.py: Improve TreeModel abstraction
+Date: Thu,  7 Mar 2019 14:44:11 -0300
+Message-ID: <20190307174433.28819-14-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,87 +14,66 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Factor out a base class TreeWindowBase from CallGraphWindow, so that
-TreeWindowBase can be reused.
+Instead of passing the tree root, get it from a method that can be
+implemented in any derived class.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: https://lkml.kernel.org/n/tip-ifirw0c0mhkwxg6l12lk6k4p@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ovcv28bg4mt9swk36ypdyz14@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 50 ++++++++++++-------
- 1 file changed, 31 insertions(+), 19 deletions(-)
+ .../perf/scripts/python/exported-sql-viewer.py  | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 09ce73b07d35..df854f0a69f0 100755
+index df854f0a69f0..b2a22525549d 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -693,28 +693,16 @@ class VBox():
- 	def Widget(self):
- 		return self.vbox
+@@ -167,9 +167,10 @@ class Thread(QThread):
  
--# Context-sensitive call graph window
--
--class CallGraphWindow(QMdiSubWindow):
--
--	def __init__(self, glb, parent=None):
--		super(CallGraphWindow, self).__init__(parent)
-+# Tree window base
+ class TreeModel(QAbstractItemModel):
  
--		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
-+class TreeWindowBase(QMdiSubWindow):
- 
--		self.view = QTreeView()
--		self.view.setModel(self.model)
--
--		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
--			self.view.setColumnWidth(c, w)
--
--		self.find_bar = FindBar(self, self)
--
--		self.vbox = VBox(self.view, self.find_bar.Widget())
--
--		self.setWidget(self.vbox.Widget())
-+	def __init__(self, parent=None):
-+		super(TreeWindowBase, self).__init__(parent)
- 
--		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
-+		self.model = None
-+		self.view = None
-+		self.find_bar = None
- 
- 	def DisplayFound(self, ids):
- 		if not len(ids):
-@@ -747,6 +735,30 @@ class CallGraphWindow(QMdiSubWindow):
- 		if not found:
- 			self.find_bar.NotFound()
- 
-+
-+# Context-sensitive call graph window
-+
-+class CallGraphWindow(TreeWindowBase):
-+
+-	def __init__(self, root, parent=None):
 +	def __init__(self, glb, parent=None):
-+		super(CallGraphWindow, self).__init__(parent)
-+
-+		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
-+
-+		self.view = QTreeView()
-+		self.view.setModel(self.model)
-+
-+		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
-+			self.view.setColumnWidth(c, w)
-+
-+		self.find_bar = FindBar(self, self)
-+
-+		self.vbox = VBox(self.view, self.find_bar.Widget())
-+
-+		self.setWidget(self.vbox.Widget())
-+
-+		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
-+
- # Child data item  finder
+ 		super(TreeModel, self).__init__(parent)
+-		self.root = root
++		self.glb = glb
++		self.root = self.GetRoot()
+ 		self.last_row_read = 0
  
- class ChildDataItemFinder():
+ 	def Item(self, parent):
+@@ -562,8 +563,10 @@ class CallGraphRootItem(CallGraphLevelItemBase):
+ class CallGraphModel(TreeModel):
+ 
+ 	def __init__(self, glb, parent=None):
+-		super(CallGraphModel, self).__init__(CallGraphRootItem(glb), parent)
+-		self.glb = glb
++		super(CallGraphModel, self).__init__(glb, parent)
++
++	def GetRoot(self):
++		return CallGraphRootItem(self.glb)
+ 
+ 	def columnCount(self, parent=None):
+ 		return 7
+@@ -1339,8 +1342,7 @@ class BranchModel(TreeModel):
+ 	progress = Signal(object)
+ 
+ 	def __init__(self, glb, event_id, where_clause, parent=None):
+-		super(BranchModel, self).__init__(BranchRootItem(), parent)
+-		self.glb = glb
++		super(BranchModel, self).__init__(glb, parent)
+ 		self.event_id = event_id
+ 		self.more = True
+ 		self.populated = 0
+@@ -1364,6 +1366,9 @@ class BranchModel(TreeModel):
+ 		self.fetcher.done.connect(self.Update)
+ 		self.fetcher.Fetch(glb_chunk_sz)
+ 
++	def GetRoot(self):
++		return BranchRootItem()
++
+ 	def columnCount(self, parent=None):
+ 		return 8
+ 
 -- 
 2.20.1
