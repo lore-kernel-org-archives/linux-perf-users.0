@@ -1,239 +1,374 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/35] perf bpf: Automatically add BTF ELF markers
-Date: Thu,  7 Mar 2019 14:44:15 -0300
-Message-ID: <20190307174433.28819-18-acme@kernel.org>
+Subject: [PATCH 21/35] perf diff: Support --time filter option
+Date: Thu,  7 Mar 2019 14:44:19 -0300
+Message-ID: <20190307174433.28819-22-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@fb.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>, Yonghong Song <yhs@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-The libbpf loader expects that some __btf_map_<MAP_NAME> structs be in
-place with the keys and values types of maps so that one can store the
-struct definitions and have them sent to the kernel via sys_bpf(fd, cmd
-= BTF_LOAD) and then later be retrievable via sys_bpf(fd, cmd =
-BPF_OBJ_GET_INFO_BY_FD) for use by tools such as 'bpftool map dump id
-MAP_ID'.
+To improve 'perf diff', implement a --time filter option to diff the
+samples within given time window.
 
-Since we already have this for defining maps in 'perf trace' BPF events:
+It supports time percent with multiple time ranges. The time string
+format is 'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
 
-   bpf_map(name, _type, type_key, type_val, _max_entries)
+For example:
 
-As used in the tools/perf/examples/bpf/augmented_raw_syscalls.c:
+Select the second 10% time slice to diff:
 
- --- 8< ---
+  perf diff --time 10%/2
 
-struct syscall {
-        bool    enabled;
-};
+Select from 0% to 10% time slice to diff:
 
-bpf_map(syscalls, ARRAY, int, struct syscall, 512);
+  perf diff --time 0%-10%
 
- --- 8< ---
+Select the first and the second 10% time slices to diff:
 
-All we need is to get all that already available info, piggyback on the
-'bpf_map' define in tools/perf/include/bpf/bpf.h, that is included by
-'perf trace' BPF programs and do that without requiring changes to the
-BPF programs already defining maps using 'bpf_map()'.
+  perf diff --time 10%/1,10%/2
 
-So this is what we have before this patch:
+Select from 0% to 10% and 30% to 40% slices to diff:
 
-1) With this in ~/.perfconfig to dump .c events as .o, aka save a copy
-   so that we can use the .o later as a pre-compiled BPF bytecode:
+  perf diff --time 0%-10%,30%-40%
 
-  # grep '\[llvm\]' -A2 ~/.perfconfig
-  [llvm]
-	dump-obj = true
-	clang-opt = -g
+It also supports analysing samples within a given time window
+<start>,<stop>.
 
-  #
-  # clang --version
-  clang version 9.0.0 (https://git.llvm.org/git/clang.git/ 7906282d3afec5dfdc2b27943fd6c0309086c507) (https://git.llvm.org/git/llvm.git/ a1b5de1ff8ae8bc79dc8e86e1f82565229bd0500)
-  Target: x86_64-unknown-linux-gnu
-  Thread model: posix
-  InstalledDir: /opt/llvm/bin
+Times have the format seconds.microseconds.
 
-2) Note the -g there so that we get clang to generate debuginfo, and
-   since the target is 'bpf' it will generate the BTF info in this
-   clang version (9.0).
+If 'start' is not given (i.e., time string is ',x.y') then analysis starts at
+the beginning of the file.
 
-3) Run a simple 'perf record' specifiying as an event the augmented_raw_syscalls.c
-   source code:
+If the stop time is not given (i.e, time string is 'x.y,') then analysis
+goes to end of file.
 
-  # perf record -e /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.c sleep 1
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.025 MB perf.data ]
+Time string is 'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for
+different perf.data files.
 
-  # file /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o: ELF 64-bit LSB relocatable, eBPF, version 1 (SYSV), with debug_info, not stripped
+For example, we get the timestamp information from perf script.
 
-4) Look at the BTF structs encoded in it:
+  perf script -i perf.data.old
 
-  # pahole -F btf --sizes /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  syscall_enter_args	64	0
-  augmented_filename	264	0
-  syscall	1	0
-  syscall_exit_args	24	0
-  bpf_map	28	0
-  #
-  # pahole -F btf -C syscalls /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  # pahole -F btf -C syscall /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  struct syscall {
-	  bool                       enabled;              /*     0     1 */
+    mgen 13940 [000]  3946.361400: ...
 
-	  /* size: 1, cachelines: 1, members: 1 */
-	  /* last cacheline: 1 bytes */
-  };
-  #
+  perf script -i perf.data
 
-5) Ok, with just this we don't have the markers expected by the libbpf
-   loader and when we run with this BPF bytecode, because we have:
+    mgen 13940 [000]  3971.150589 ...
 
-  # grep '\[trace\]' -A1 ~/.perfconfig
-  [trace]
-	add_events = /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  #
+  perf diff --time 3946.361400,:3971.150589,
 
-6) Lets do a 'perf trace' system wide session using this BPF program:
+It analyzes the perf.data.old from the timestamp 3946.361400 to the end of
+perf.data.old and analyzes the perf.data from the timestamp 3971.150589 to the
+end of perf.data.
 
-   # perf trace -e *mmsg,open*
-  Cache2 I/O/6885 openat(AT_FDCWD, "/home/acme/.cache/mozilla/firefox/ina67tev.default/cache2/entries/BA220AB2914006A7AE96D27BE6EA13DD77519FCA", O_RDWR|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR) = 106
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  Cache2 I/O/6885 openat(AT_FDCWD, "/proc/self/mountinfo", O_RDONLY) = 121
-  DNS Res~ver #3/23340 openat(AT_FDCWD, "/etc/hosts", O_RDONLY|O_CLOEXEC) = 106
-  DNS Res~ver #3/23340 sendmmsg(106<socket:[3482690]>, 0x7f252f1fcaf0, 2, MSG_NOSIGNAL) = 2
-  Cache2 I/O/6885 openat(AT_FDCWD, "/home/acme/.cache/mozilla/firefox/ina67tev.default/cache2/entries/BA220AB2914006A7AE96D27BE6EA13DD77519FCA", O_RDWR) = 106
-  lighttpd/18915 openat(AT_FDCWD, "/proc/loadavg", O_RDONLY) = 12
+ v4:
+ ---
+ Update abstime_str_dup(), let it return error if strdup
+ is failed, and update __cmd_diff() accordingly.
 
-7) While it runs lets see the maps that 'perf trace' + libbpf's BPF
-  loader loaded into the kernel via sys_bpf(fd, BPF_BTF_LOAD, ...):
-
-  # bpftool map list | tail -6
-  149: perf_event_array  name __augmented_sys  flags 0x0
-	  key 4B  value 4B  max_entries 8  memlock 4096B
-  150: array  name syscalls  flags 0x0
-	  key 4B  value 1B  max_entries 512  memlock 8192B
-  151: hash  name pids_filtered  flags 0x0
-	  key 4B  value 1B  max_entries 64  memlock 8192B
-  #
-
-8) Dump the "pids_filtered", map, that will have one entry per PID that
-   'perf trace' wants filtered, which includes its own, to avoid a
-   tracing feedback loop (perf trace shows the syscalls it does which
-   generates more syscalls that it has to show that...), it also
-   auto-filters the 'gnome-terminal' and 'sshd' parent PIDs, for the
-   same reason:
-
-  # bpftool map dump id 151
-  key: a5 0c 00 00  value: 01
-  key: 14 63 00 00  value: 01
-  Found 2 elements
-  #
-
-9) Since there is no BTF info available, it does a generic hex dump :-\
-
-10) Now, with this patch applied, we'll do steps 3 to 6 again and look
-    with pahole if there are extra structs encoded in BTF:
-
-  # pahole -F btf --sizes /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  syscall_enter_args	64	0
-  augmented_filename	264	0
-  syscall	1	0
-  syscall_exit_args	24	0
-  bpf_map	28	0
-  ____btf_map___augmented_syscalls__	8	0
-  ____btf_map_syscalls	8	0
-  ____btf_map_pids_filtered	8	0
-  #
-
-11) Yes, those __btf_map_ + the map names, lets see how they look like:
-
-  # pahole -F btf -C ____btf_map_syscalls /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  struct ____btf_map_syscalls {
-	  int                        key;                  /*     0     4 */
-	  struct syscall             value;                /*     4     1 */
-
-	  /* size: 8, cachelines: 1, members: 2 */
-	  /* padding: 3 */
-	  /* last cacheline: 8 bytes */
-  };
-  #
-
-12) Lets repeat step 7 to get the new map ids:
-
-  # bpftool map list | tail -6
-  155: perf_event_array  name __augmented_sys  flags 0x0
-	  key 4B  value 4B  max_entries 8  memlock 4096B
-  156: array  name syscalls  flags 0x0
-	  key 4B  value 1B  max_entries 512  memlock 8192B
-  157: hash  name pids_filtered  flags 0x0
-	  key 4B  value 1B  max_entries 64  memlock 8192B
-  #
-
-13) And finally lets dump the 'pids_filtered':
-
-  # bpftool map dump id 157
-  [{
-        "key": 3237,
-        "value": true
-    },{
-        "key": 26435,
-        "value": true
-    }
-  ]
-  #
-
-Looks much better! BTF info was used to interpret the key as an integer
-and the value as a struct with just one boolean member, so to make it
-more compact, show just the 'true' value where we saw '01'.
-
-Now to make 'perf trace --dump-map' to use BTF!
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@fb.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-ybuf9wpkm30xk28iq7jbwb40@git.kernel.org
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1551791143-10334-2-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/include/bpf/bpf.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-diff.txt |  45 ++++++++
+ tools/perf/builtin-diff.c              | 148 ++++++++++++++++++++++---
+ 2 files changed, 179 insertions(+), 14 deletions(-)
 
-diff --git a/tools/perf/include/bpf/bpf.h b/tools/perf/include/bpf/bpf.h
-index 5df7ed9d9020..2eac6d804b2d 100644
---- a/tools/perf/include/bpf/bpf.h
-+++ b/tools/perf/include/bpf/bpf.h
-@@ -24,7 +24,13 @@ struct bpf_map SEC("maps") name = {				\
- 	.key_size    = sizeof(type_key),			\
- 	.value_size  = sizeof(type_val),			\
- 	.max_entries = _max_entries,				\
--}
-+};								\
-+struct ____btf_map_##name {					\
-+	type_key key;						\
-+	type_val value;                                 	\
-+};								\
-+struct ____btf_map_##name __attribute__((section(".maps." #name), used)) \
-+	____btf_map_##name = { }
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index a79c84ae61aa..036d65bded51 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -118,6 +118,51 @@ OPTIONS
+ 	sum of shown entries will be always 100%.  "absolute" means it retains
+ 	the original value before and after the filter is applied.
  
- /*
-  * FIXME: this should receive .max_entries as a parameter, as careful
++--time::
++	Analyze samples within given time window. It supports time
++	percent with multiple time ranges. Time string is 'a%/n,b%/m,...'
++	or 'a%-b%,c%-%d,...'.
++
++	For example:
++
++	Select the second 10% time slice to diff:
++
++	  perf diff --time 10%/2
++
++	Select from 0% to 10% time slice to diff:
++
++	  perf diff --time 0%-10%
++
++	Select the first and the second 10% time slices to diff:
++
++	  perf diff --time 10%/1,10%/2
++
++	Select from 0% to 10% and 30% to 40% slices to diff:
++
++	  perf diff --time 0%-10%,30%-40%
++
++	It also supports analyzing samples within a given time window
++	<start>,<stop>. Times have the format seconds.microseconds. If 'start'
++	is not given (i.e., time string is ',x.y') then analysis starts at
++	the beginning of the file. If stop time is not given (i.e, time
++	string is 'x.y,') then analysis goes to the end of the file. Time string is
++	'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
++	perf.data files.
++
++	For example, we get the timestamp information from 'perf script'.
++
++	  perf script -i perf.data.old
++	    mgen 13940 [000]  3946.361400: ...
++
++	  perf script -i perf.data
++	    mgen 13940 [000]  3971.150589 ...
++
++	  perf diff --time 3946.361400,:3971.150589,
++
++	It analyzes the perf.data.old from the timestamp 3946.361400 to
++	the end of perf.data.old and analyzes the perf.data from the
++	timestamp 3971.150589 to the end of perf.data.
++
+ COMPARISON
+ ----------
+ The comparison is governed by the baseline file. The baseline perf.data
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 58fe0e88215c..17cd898074c8 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -19,12 +19,21 @@
+ #include "util/util.h"
+ #include "util/data.h"
+ #include "util/config.h"
++#include "util/time-utils.h"
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <stdlib.h>
+ #include <math.h>
+ 
++struct perf_diff {
++	struct perf_tool		 tool;
++	const char			*time_str;
++	struct perf_time_interval	*ptime_range;
++	int				 range_size;
++	int				 range_num;
++};
++
+ /* Diff command specific HPP columns. */
+ enum {
+ 	PERF_HPP_DIFF__BASELINE,
+@@ -323,16 +332,22 @@ static int formula_fprintf(struct hist_entry *he, struct hist_entry *pair,
+ 	return -1;
+ }
+ 
+-static int diff__process_sample_event(struct perf_tool *tool __maybe_unused,
++static int diff__process_sample_event(struct perf_tool *tool,
+ 				      union perf_event *event,
+ 				      struct perf_sample *sample,
+ 				      struct perf_evsel *evsel,
+ 				      struct machine *machine)
+ {
++	struct perf_diff *pdiff = container_of(tool, struct perf_diff, tool);
+ 	struct addr_location al;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	int ret = -1;
+ 
++	if (perf_time__ranges_skip_sample(pdiff->ptime_range, pdiff->range_num,
++					  sample->time)) {
++		return 0;
++	}
++
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_warning("problem processing %d event, skipping it.\n",
+ 			   event->header.type);
+@@ -359,17 +374,19 @@ static int diff__process_sample_event(struct perf_tool *tool __maybe_unused,
+ 	return ret;
+ }
+ 
+-static struct perf_tool tool = {
+-	.sample	= diff__process_sample_event,
+-	.mmap	= perf_event__process_mmap,
+-	.mmap2	= perf_event__process_mmap2,
+-	.comm	= perf_event__process_comm,
+-	.exit	= perf_event__process_exit,
+-	.fork	= perf_event__process_fork,
+-	.lost	= perf_event__process_lost,
+-	.namespaces = perf_event__process_namespaces,
+-	.ordered_events = true,
+-	.ordering_requires_timestamps = true,
++static struct perf_diff pdiff = {
++	.tool = {
++		.sample	= diff__process_sample_event,
++		.mmap	= perf_event__process_mmap,
++		.mmap2	= perf_event__process_mmap2,
++		.comm	= perf_event__process_comm,
++		.exit	= perf_event__process_exit,
++		.fork	= perf_event__process_fork,
++		.lost	= perf_event__process_lost,
++		.namespaces = perf_event__process_namespaces,
++		.ordered_events = true,
++		.ordering_requires_timestamps = true,
++	},
+ };
+ 
+ static struct perf_evsel *evsel_match(struct perf_evsel *evsel,
+@@ -771,19 +788,110 @@ static void data__free(struct data__file *d)
+ 	}
+ }
+ 
++static int abstime_str_dup(char **pstr)
++{
++	char *str = NULL;
++
++	if (pdiff.time_str && strchr(pdiff.time_str, ':')) {
++		str = strdup(pdiff.time_str);
++		if (!str)
++			return -ENOMEM;
++	}
++
++	*pstr = str;
++	return 0;
++}
++
++static int parse_absolute_time(struct data__file *d, char **pstr)
++{
++	char *p = *pstr;
++	int ret;
++
++	/*
++	 * Absolute timestamp for one file has the format: a.b,c.d
++	 * For multiple files, the format is: a.b,c.d:a.b,c.d
++	 */
++	p = strchr(*pstr, ':');
++	if (p) {
++		if (p == *pstr) {
++			pr_err("Invalid time string\n");
++			return -EINVAL;
++		}
++
++		*p = 0;
++		p++;
++		if (*p == 0) {
++			pr_err("Invalid time string\n");
++			return -EINVAL;
++		}
++	}
++
++	ret = perf_time__parse_for_ranges(*pstr, d->session,
++					  &pdiff.ptime_range,
++					  &pdiff.range_size,
++					  &pdiff.range_num);
++	if (ret < 0)
++		return ret;
++
++	if (!p || *p == 0)
++		*pstr = NULL;
++	else
++		*pstr = p;
++
++	return ret;
++}
++
++static int parse_percent_time(struct data__file *d)
++{
++	int ret;
++
++	ret = perf_time__parse_for_ranges(pdiff.time_str, d->session,
++					  &pdiff.ptime_range,
++					  &pdiff.range_size,
++					  &pdiff.range_num);
++	return ret;
++}
++
++static int parse_time_str(struct data__file *d, char *abstime_ostr,
++			   char **pabstime_tmp)
++{
++	int ret = 0;
++
++	if (abstime_ostr)
++		ret = parse_absolute_time(d, pabstime_tmp);
++	else if (pdiff.time_str)
++		ret = parse_percent_time(d);
++
++	return ret;
++}
++
+ static int __cmd_diff(void)
+ {
+ 	struct data__file *d;
+-	int ret = -EINVAL, i;
++	int ret, i;
++	char *abstime_ostr, *abstime_tmp;
++
++	ret = abstime_str_dup(&abstime_ostr);
++	if (ret)
++		return ret;
++
++	abstime_tmp = abstime_ostr;
++	ret = -EINVAL;
+ 
+ 	data__for_each_file(i, d) {
+-		d->session = perf_session__new(&d->data, false, &tool);
++		d->session = perf_session__new(&d->data, false, &pdiff.tool);
+ 		if (!d->session) {
+ 			pr_err("Failed to open %s\n", d->data.path);
+ 			ret = -1;
+ 			goto out_delete;
+ 		}
+ 
++		if (pdiff.time_str) {
++			ret = parse_time_str(d, abstime_ostr, &abstime_tmp);
++			if (ret < 0)
++				goto out_delete;
++		}
++
+ 		ret = perf_session__process_events(d->session);
+ 		if (ret) {
+ 			pr_err("Failed to process %s\n", d->data.path);
+@@ -791,6 +899,9 @@ static int __cmd_diff(void)
+ 		}
+ 
+ 		perf_evlist__collapse_resort(d->session->evlist);
++
++		if (pdiff.ptime_range)
++			zfree(&pdiff.ptime_range);
+ 	}
+ 
+ 	data_process();
+@@ -802,6 +913,13 @@ static int __cmd_diff(void)
+ 	}
+ 
+ 	free(data__files);
++
++	if (pdiff.ptime_range)
++		zfree(&pdiff.ptime_range);
++
++	if (abstime_ostr)
++		free(abstime_ostr);
++
+ 	return ret;
+ }
+ 
+@@ -849,6 +967,8 @@ static const struct option options[] = {
+ 	OPT_UINTEGER('o', "order", &sort_compute, "Specify compute sorting."),
+ 	OPT_CALLBACK(0, "percentage", NULL, "relative|absolute",
+ 		     "How to display percentage of filtered entries", parse_filter_percentage),
++	OPT_STRING(0, "time", &pdiff.time_str, "str",
++		   "Time span (time percent or absolute timestamp)"),
+ 	OPT_END()
+ };
+ 
 -- 
 2.20.1
