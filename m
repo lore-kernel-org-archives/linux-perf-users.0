@@ -1,88 +1,61 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/35] perf probe: Clarify error message about not finding kernel modules debuginfo
-Date: Thu,  7 Mar 2019 14:44:00 -0300
-Message-ID: <20190307174433.28819-3-acme@kernel.org>
+Subject: [PATCH 04/35] perf: Mark expected switch fall-through
+Date: Thu,  7 Mar 2019 14:44:02 -0300
+Message-ID: <20190307174433.28819-5-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Marcelo Ricardo Leitner <mleitner@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kees Kook <keescook@chromium.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 
-'perf probe' supports using just the kernel module name, but that will
-work only when the module is loaded, or using the full pathname to the
-file with the DWARF debug info, but the warning was cryptic:
+In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+where we are expecting to fall through.
 
-Before:
+This patch fixes the following warning:
 
-  # perf probe -m cls_flower -L fl_change
-  Failed to find the path for cls_flower: No such file or directory
-    Error: Failed to show lines.
-  #
+  kernel/events/core.c: In function ‘perf_event_parse_addr_filter’:
+  kernel/events/core.c:9154:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+      kernel = 1;
+      ~~~~~~~^~~
+  kernel/events/core.c:9156:3: note: here
+     case IF_SRC_FILEADDR:
+     ^~~~
 
-After:
+Warning level 3 was used: -Wimplicit-fallthrough=3
 
-  # perf probe -m cls_flower -L fl_change
-  Module cls_flower is not loaded, please specify its full path name.
-    Error: Failed to show lines.
-  # perf probe -m /lib/modules/5.0.0-rc7+/kernel/net/sched/cls_flower.ko -L fl_change | head -7
-  <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
-        0  static int fl_change(struct net *net, struct sk_buff *in_skb,
-         		       struct tcf_proto *tp, unsigned long base,
-         		       u32 handle, struct nlattr **tca,
-         		       void **arg, bool ovr, struct netlink_ext_ack *extack)
-        4  {
-        5  	struct cls_fl_head *head = rtnl_dereference(tp->root);
-  #
+This patch is part of the ongoing efforts to enable -Wimplicit-fallthrough.
 
-The behaviour doesn't change when the module is loaded:
-
-  # modprobe cls_flower
-  # perf probe -m cls_flower -L fl_change | head -7
-  <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
-        0  static int fl_change(struct net *net, struct sk_buff *in_skb,
-                               struct tcf_proto *tp, unsigned long base,
-                               u32 handle, struct nlattr **tca,
-                               void **arg, bool ovr, struct netlink_ext_ack *extack)
-        4  {
-        5         struct cls_fl_head *head = rtnl_dereference(tp->root);
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kees Kook <keescook@chromium.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-q4njvk9mshra00jacqjbzfn5@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190212205430.GA8446@embeddedor
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ kernel/events/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 0030f9b9bf7e..a1b8d9649ca7 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -472,9 +472,12 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
- 					strcpy(reason, "(unknown)");
- 			} else
- 				dso__strerror_load(dso, reason, STRERR_BUFSIZE);
--			if (!silent)
--				pr_err("Failed to find the path for %s: %s\n",
--					module ?: "kernel", reason);
-+			if (!silent) {
-+				if (module)
-+					pr_err("Module %s is not loaded, please specify its full path name.\n", module);
-+				else
-+					pr_err("Failed to find the path for the kernel: %s\n", reason);
-+			}
- 			return NULL;
- 		}
- 		path = dso->long_name;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index dd9698ad3d66..6fb27b564730 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9175,6 +9175,7 @@ perf_event_parse_addr_filter(struct perf_event *event, char *fstr,
+ 		case IF_SRC_KERNELADDR:
+ 		case IF_SRC_KERNEL:
+ 			kernel = 1;
++			/* fall through */
+ 
+ 		case IF_SRC_FILEADDR:
+ 		case IF_SRC_FILE:
 -- 
 2.20.1
