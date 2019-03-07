@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/35] perf scripts python: export-to-postgresql.py: Export calls parent_id
-Date: Thu,  7 Mar 2019 14:44:09 -0300
-Message-ID: <20190307174433.28819-12-acme@kernel.org>
+Subject: [PATCH 12/35] perf scripts python: exported-sql-viewer.py: Factor out TreeWindowBase
+Date: Thu,  7 Mar 2019 14:44:10 -0300
+Message-ID: <20190307174433.28819-13-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,67 +14,87 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Export to the 'calls' table the newly created 'parent_id' and create an
-index for it.
+Factor out a base class TreeWindowBase from CallGraphWindow, so that
+TreeWindowBase can be reused.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: https://lkml.kernel.org/n/tip-eybd6fnk6j9r7g643lsideoo@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ifirw0c0mhkwxg6l12lk6k4p@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-postgresql.py | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ .../scripts/python/exported-sql-viewer.py     | 50 ++++++++++++-------
+ 1 file changed, 31 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index 6358522a69f6..390a351d15ea 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -394,7 +394,8 @@ if perf_db_export_calls:
- 		'call_id	bigint,'
- 		'return_id	bigint,'
- 		'parent_call_path_id	bigint,'
--		'flags		integer)')
-+		'flags		integer,'
-+		'parent_id	bigint)')
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index 09ce73b07d35..df854f0a69f0 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -693,28 +693,16 @@ class VBox():
+ 	def Widget(self):
+ 		return self.vbox
  
- do_query(query, 'CREATE VIEW machines_view AS '
- 	'SELECT '
-@@ -479,7 +480,8 @@ if perf_db_export_calls:
- 			'call_id,'
- 			'return_id,'
- 			'CASE WHEN flags=0 THEN \'\' WHEN flags=1 THEN \'no call\' WHEN flags=2 THEN \'no return\' WHEN flags=3 THEN \'no call/return\' WHEN flags=6 THEN \'jump\' ELSE CAST ( flags AS VARCHAR(6) ) END AS flags,'
--			'parent_call_path_id'
-+			'parent_call_path_id,'
-+			'calls.parent_id'
- 		' FROM calls INNER JOIN call_paths ON call_paths.id = call_path_id')
+-# Context-sensitive call graph window
+-
+-class CallGraphWindow(QMdiSubWindow):
+-
+-	def __init__(self, glb, parent=None):
+-		super(CallGraphWindow, self).__init__(parent)
++# Tree window base
  
- do_query(query, 'CREATE VIEW samples_view AS '
-@@ -575,6 +577,7 @@ def trace_begin():
- 	sample_table(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
- 	if perf_db_export_calls or perf_db_export_callchains:
- 		call_path_table(0, 0, 0, 0)
-+		call_return_table(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+-		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
++class TreeWindowBase(QMdiSubWindow):
  
- unhandled_count = 0
+-		self.view = QTreeView()
+-		self.view.setModel(self.model)
+-
+-		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
+-			self.view.setColumnWidth(c, w)
+-
+-		self.find_bar = FindBar(self, self)
+-
+-		self.vbox = VBox(self.view, self.find_bar.Widget())
+-
+-		self.setWidget(self.vbox.Widget())
++	def __init__(self, parent=None):
++		super(TreeWindowBase, self).__init__(parent)
  
-@@ -657,6 +660,7 @@ def trace_end():
- 					'ADD CONSTRAINT returnfk    FOREIGN KEY (return_id)    REFERENCES samples    (id),'
- 					'ADD CONSTRAINT parent_call_pathfk FOREIGN KEY (parent_call_path_id) REFERENCES call_paths (id)')
- 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
-+		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
+-		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
++		self.model = None
++		self.view = None
++		self.find_bar = None
  
- 	if (unhandled_count):
- 		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
-@@ -728,7 +732,7 @@ def call_path_table(cp_id, parent_id, symbol_id, ip, *x):
- 	value = struct.pack(fmt, 4, 8, cp_id, 8, parent_id, 8, symbol_id, 8, ip)
- 	call_path_file.write(value)
+ 	def DisplayFound(self, ids):
+ 		if not len(ids):
+@@ -747,6 +735,30 @@ class CallGraphWindow(QMdiSubWindow):
+ 		if not found:
+ 			self.find_bar.NotFound()
  
--def call_return_table(cr_id, thread_id, comm_id, call_path_id, call_time, return_time, branch_count, call_id, return_id, parent_call_path_id, flags, *x):
--	fmt = "!hiqiqiqiqiqiqiqiqiqiqii"
--	value = struct.pack(fmt, 11, 8, cr_id, 8, thread_id, 8, comm_id, 8, call_path_id, 8, call_time, 8, return_time, 8, branch_count, 8, call_id, 8, return_id, 8, parent_call_path_id, 4, flags)
-+def call_return_table(cr_id, thread_id, comm_id, call_path_id, call_time, return_time, branch_count, call_id, return_id, parent_call_path_id, flags, parent_id, *x):
-+	fmt = "!hiqiqiqiqiqiqiqiqiqiqiiiq"
-+	value = struct.pack(fmt, 12, 8, cr_id, 8, thread_id, 8, comm_id, 8, call_path_id, 8, call_time, 8, return_time, 8, branch_count, 8, call_id, 8, return_id, 8, parent_call_path_id, 4, flags, 8, parent_id)
- 	call_file.write(value)
++
++# Context-sensitive call graph window
++
++class CallGraphWindow(TreeWindowBase):
++
++	def __init__(self, glb, parent=None):
++		super(CallGraphWindow, self).__init__(parent)
++
++		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
++
++		self.view = QTreeView()
++		self.view.setModel(self.model)
++
++		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
++			self.view.setColumnWidth(c, w)
++
++		self.find_bar = FindBar(self, self)
++
++		self.vbox = VBox(self.view, self.find_bar.Widget())
++
++		self.setWidget(self.vbox.Widget())
++
++		AddSubWindow(glb.mainwindow.mdi_area, self, "Context-Sensitive Call Graph")
++
+ # Child data item  finder
+ 
+ class ChildDataItemFinder():
 -- 
 2.20.1
