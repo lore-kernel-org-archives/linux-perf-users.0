@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/35] perf tools: Read and store caps/max_precise in perf_pmu
-Date: Thu,  7 Mar 2019 14:44:30 -0300
-Message-ID: <20190307174433.28819-33-acme@kernel.org>
+Subject: [PATCH 33/35] perf evsel: Probe for precise_ip with simple attr
+Date: Thu,  7 Mar 2019 14:44:31 -0300
+Message-ID: <20190307174433.28819-34-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Read the caps/max_precise value and store it in struct perf_pmu to be
-used when setting the maximum precise_ip field in following patch.
+Currently we probe for precise_ip with user specified perf_event_attr,
+which might fail because of unsupported kernel features, which would get
+disabled during the open time anyway.
+
+Switching the probe to take place on simple hw cycles, so the following
+record sets proper precise_ip:
+
+  # perf record -e cycles:P ls
+  # perf evlist -v
+  cycles:P: size: 112, ... precise_ip: 3, ...
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -25,56 +33,80 @@ Cc: Nageswara R Sastry <nasastry@in.ibm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lkml.kernel.org/r/20190305152536.21035-5-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190305152536.21035-7-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 14 ++++++++++++++
- tools/perf/util/pmu.h |  1 +
- 2 files changed, 15 insertions(+)
+ tools/perf/util/evlist.c | 25 ++++++++++++++++++++-----
+ tools/perf/util/evsel.c  |  8 --------
+ 2 files changed, 20 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 51d437f55d18..6199a3174ab9 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -752,6 +752,19 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
- 	return NULL;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 08cedb643ea6..ed20f4379956 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -230,18 +230,33 @@ void perf_evlist__set_leader(struct perf_evlist *evlist)
+ 	}
  }
  
-+static int pmu_max_precise(const char *name)
-+{
-+	char path[PATH_MAX];
-+	int max_precise = -1;
-+
-+	scnprintf(path, PATH_MAX,
-+		 "bus/event_source/devices/%s/caps/max_precise",
-+		 name);
-+
-+	sysfs__read_int(path, &max_precise);
-+	return max_precise;
-+}
-+
- static struct perf_pmu *pmu_lookup(const char *name)
+-void perf_event_attr__set_max_precise_ip(struct perf_event_attr *attr)
++void perf_event_attr__set_max_precise_ip(struct perf_event_attr *pattr)
  {
- 	struct perf_pmu *pmu;
-@@ -784,6 +797,7 @@ static struct perf_pmu *pmu_lookup(const char *name)
- 	pmu->name = strdup(name);
- 	pmu->type = type;
- 	pmu->is_uncore = pmu_is_uncore(name);
-+	pmu->max_precise = pmu_max_precise(name);
- 	pmu_add_cpu_aliases(&aliases, pmu);
+-	attr->precise_ip = 3;
++	struct perf_event_attr attr = {
++		.type		= PERF_TYPE_HARDWARE,
++		.config		= PERF_COUNT_HW_CPU_CYCLES,
++		.exclude_kernel	= 1,
++		.precise_ip	= 3,
++	};
  
- 	INIT_LIST_HEAD(&pmu->format);
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 47253c3daf55..bd9ec2704a57 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -26,6 +26,7 @@ struct perf_pmu {
- 	__u32 type;
- 	bool selectable;
- 	bool is_uncore;
-+	int max_precise;
- 	struct perf_event_attr *default_config;
- 	struct cpu_map *cpus;
- 	struct list_head format;  /* HEAD struct perf_pmu_format -> list */
+-	while (attr->precise_ip != 0) {
+-		int fd = sys_perf_event_open(attr, 0, -1, -1, 0);
++	event_attr_init(&attr);
++
++	/*
++	 * Unnamed union member, not supported as struct member named
++	 * initializer in older compilers such as gcc 4.4.7
++	 */
++	attr.sample_period = 1;
++
++	while (attr.precise_ip != 0) {
++		int fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+ 		if (fd != -1) {
+ 			close(fd);
+ 			break;
+ 		}
+-		--attr->precise_ip;
++		--attr.precise_ip;
+ 	}
++
++	pattr->precise_ip = attr.precise_ip;
+ }
+ 
+ int __perf_evlist__add_default(struct perf_evlist *evlist, bool precise)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dfe2958e6287..3bbf73e979c0 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -294,20 +294,12 @@ struct perf_evsel *perf_evsel__new_cycles(bool precise)
+ 
+ 	if (!precise)
+ 		goto new_event;
+-	/*
+-	 * Unnamed union member, not supported as struct member named
+-	 * initializer in older compilers such as gcc 4.4.7
+-	 *
+-	 * Just for probing the precise_ip:
+-	 */
+-	attr.sample_period = 1;
+ 
+ 	perf_event_attr__set_max_precise_ip(&attr);
+ 	/*
+ 	 * Now let the usual logic to set up the perf_event_attr defaults
+ 	 * to kick in when we return and before perf_evsel__open() is called.
+ 	 */
+-	attr.sample_period = 0;
+ new_event:
+ 	evsel = perf_evsel__new(&attr);
+ 	if (evsel == NULL)
 -- 
 2.20.1
