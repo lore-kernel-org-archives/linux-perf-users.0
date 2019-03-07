@@ -1,61 +1,54 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/35] perf: Mark expected switch fall-through
-Date: Thu,  7 Mar 2019 14:44:02 -0300
-Message-ID: <20190307174433.28819-5-acme@kernel.org>
+Subject: [PATCH 03/35] tools lib traceevent: Fix buffer overflow in arg_eval
+Date: Thu,  7 Mar 2019 14:44:01 -0300
+Message-ID: <20190307174433.28819-4-acme@kernel.org>
 References: <20190307174433.28819-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190307174433.28819-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Kees Kook <keescook@chromium.org>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Michael Sartain <mikesart@fastmail.com>, Mathias Krause <minipli@googlemail.com>, Steven Rostedt <rostedt@goodmis.org>, Frederic Weisbecker <fweisbec@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Tony Jones <tonyj@suse.de>
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
+Fix buffer overflow observed when running perf test.
 
-This patch fixes the following warning:
+The overflow is when trying to evaluate "1ULL << (64 - 1)" which is
+resulting in -9223372036854775808 which overflows the 20 character
+buffer.
 
-  kernel/events/core.c: In function ‘perf_event_parse_addr_filter’:
-  kernel/events/core.c:9154:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
-      kernel = 1;
-      ~~~~~~~^~~
-  kernel/events/core.c:9156:3: note: here
-     case IF_SRC_FILEADDR:
-     ^~~~
+If is possible this bug has been reported before but I still don't see
+any fix checked in:
 
-Warning level 3 was used: -Wimplicit-fallthrough=3
+See: https://www.spinics.net/lists/linux-perf-users/msg07714.html
 
-This patch is part of the ongoing efforts to enable -Wimplicit-fallthrough.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kees Kook <keescook@chromium.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190212205430.GA8446@embeddedor
+Reported-by: Michael Sartain <mikesart@fastmail.com>
+Reported-by: Mathias Krause <minipli@googlemail.com>
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190228015532.8941-1-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- kernel/events/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index dd9698ad3d66..6fb27b564730 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9175,6 +9175,7 @@ perf_event_parse_addr_filter(struct perf_event *event, char *fstr,
- 		case IF_SRC_KERNELADDR:
- 		case IF_SRC_KERNEL:
- 			kernel = 1;
-+			/* fall through */
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index abd4fa5d3088..87494c7c619d 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2457,7 +2457,7 @@ static int arg_num_eval(struct tep_print_arg *arg, long long *val)
+ static char *arg_eval (struct tep_print_arg *arg)
+ {
+ 	long long val;
+-	static char buf[20];
++	static char buf[24];
  
- 		case IF_SRC_FILEADDR:
- 		case IF_SRC_FILE:
+ 	switch (arg->type) {
+ 	case TEP_PRINT_ATOM:
 -- 
 2.20.1
