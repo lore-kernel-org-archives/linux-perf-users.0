@@ -1,89 +1,106 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2 6/7] perf script python: add Python3 support to sql
- scripts
-Date: Thu, 7 Mar 2019 15:51:42 -0300
-Message-ID: <20190307185142.GA32240@kernel.org>
-References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-7-tonyj@suse.de>
- <7353b42e-ea14-e044-adfe-5a9705bf030c@intel.com>
- <72ea2e3d-1b82-549e-741f-d2b532e4c33b@suse.de>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 02/35] perf probe: Clarify error message about not
+ finding kernel modules debuginfo
+Date: Fri, 8 Mar 2019 08:30:33 +0900
+Message-ID: <20190308083033.cd4aceb08983875d07cabc1a@kernel.org>
+References: <20190307174433.28819-1-acme@kernel.org>
+        <20190307174433.28819-3-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <72ea2e3d-1b82-549e-741f-d2b532e4c33b@suse.de>
+In-Reply-To: <20190307174433.28819-3-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Jones <tonyj@suse.de>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Marcelo Ricardo Leitner <mleitner@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Mar 06, 2019 at 08:32:42AM -0800, Tony Jones escreveu:
-> On 3/6/19 1:26 AM, Adrian Hunter wrote:
-> > On 2/03/19 3:19 AM, Tony Jones wrote:
-> >> Support both Python2 and Python3 in the exported-sql-viewer.py,
-> >> export-to-postgresql.py and export-to-sqlite.py scripts
-> >>
-> >> There may be differences in the ordering of output lines due to
-> >> differences in dictionary ordering etc.  However the format within lines
-> >> should be unchanged.
-> >>
-> >> The use of 'from __future__' implies the minimum supported Python2 version
-> >> is now v2.6
-> >>
-> >> Signed-off-by: Tony Jones <tonyj@suse.de>
-> >> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-> >> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > 
-> > Apart from one issue (see below), it looks good, thank you!
-> > 
-> >> ---
-> >>  tools/perf/scripts/python/export-to-postgresql.py | 65 +++++++++++++++--------
-> >>  tools/perf/scripts/python/export-to-sqlite.py     | 23 ++++----
-> >>  tools/perf/scripts/python/exported-sql-viewer.py  | 42 ++++++++++-----
-> >>  3 files changed, 84 insertions(+), 46 deletions(-)
-> >>
-> >> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-> >> index 390a351d15ea..439bbbf1e036 100644
-> >> --- a/tools/perf/scripts/python/export-to-postgresql.py
-> >> +++ b/tools/perf/scripts/python/export-to-postgresql.py
-> >> @@ -10,6 +10,8 @@
-> >>  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> >>  # more details.
-> >>  
-> >> +from __future__ import print_function
-> >> +
-> >>  import os
-> >>  import sys
-> >>  import struct
-> >> @@ -199,6 +201,16 @@ import datetime
-> >>  
-> >>  from PySide.QtSql import *
-> >>  
-> >> +if sys.version_info < (3, 0):
-> >> +	def tobytes(str):
-> >> +		return str
-> >> +else:
-> >> +	def tobytes(str):
-> >> +		# Use latin-1 (ISO-8859-1) so all code-points 0-255 will result
-> >> +		# in one byte (note utf-8 is 2 bytes for values > 128 and
-> >> +		# ascii is limited to values <= 128)
-> >> +		return bytes(str, "ISO-8859-1")
-> > 
-> > Probably this should be the server_encoding, but python2 allowed UTF-8
-> > so let's just use UTF-8 for now.  That will also mean doing the conversion
-> > before getting the len(), otherwise len() can be wrong.
-> 
-> I'm not totally understanding what you're saying here.  The rationale for 
-> using latin-1 and not UTF-8 was clearly expressed in the comment.  Else you 
-> do indeed run into length issues.
-> 
-> Would it be easier, since you have a) more familiarity with the code b) some
-> specific issues I'm not fully understanding if you just took this patch and
-> made the changes you want yourself.  I doubt I'll ever use these scripta, my
-> interest is purely in eliminating Python2 as a fixed requirement.
+On Thu,  7 Mar 2019 14:44:00 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Adrian, can you please reply here? I'm not familiar with this tobytes()
-python2/python3 difference, what do you mean about using
-'server_encoding'? Where is that defined?
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> 'perf probe' supports using just the kernel module name, but that will
+> work only when the module is loaded, or using the full pathname to the
+> file with the DWARF debug info, but the warning was cryptic:
 
-- Arnaldo
+Agreed, this looks good to me.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thank you!
+
+> 
+> Before:
+> 
+>   # perf probe -m cls_flower -L fl_change
+>   Failed to find the path for cls_flower: No such file or directory
+>     Error: Failed to show lines.
+>   #
+> 
+> After:
+> 
+>   # perf probe -m cls_flower -L fl_change
+>   Module cls_flower is not loaded, please specify its full path name.
+>     Error: Failed to show lines.
+>   # perf probe -m /lib/modules/5.0.0-rc7+/kernel/net/sched/cls_flower.ko -L fl_change | head -7
+>   <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
+>         0  static int fl_change(struct net *net, struct sk_buff *in_skb,
+>          		       struct tcf_proto *tp, unsigned long base,
+>          		       u32 handle, struct nlattr **tca,
+>          		       void **arg, bool ovr, struct netlink_ext_ack *extack)
+>         4  {
+>         5  	struct cls_fl_head *head = rtnl_dereference(tp->root);
+>   #
+> 
+> The behaviour doesn't change when the module is loaded:
+> 
+>   # modprobe cls_flower
+>   # perf probe -m cls_flower -L fl_change | head -7
+>   <fl_change@/home/acme/git/linux/net/sched/cls_flower.c:0>
+>         0  static int fl_change(struct net *net, struct sk_buff *in_skb,
+>                                struct tcf_proto *tp, unsigned long base,
+>                                u32 handle, struct nlattr **tca,
+>                                void **arg, bool ovr, struct netlink_ext_ack *extack)
+>         4  {
+>         5         struct cls_fl_head *head = rtnl_dereference(tp->root);
+>   #
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-q4njvk9mshra00jacqjbzfn5@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/probe-event.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> index 0030f9b9bf7e..a1b8d9649ca7 100644
+> --- a/tools/perf/util/probe-event.c
+> +++ b/tools/perf/util/probe-event.c
+> @@ -472,9 +472,12 @@ static struct debuginfo *open_debuginfo(const char *module, struct nsinfo *nsi,
+>  					strcpy(reason, "(unknown)");
+>  			} else
+>  				dso__strerror_load(dso, reason, STRERR_BUFSIZE);
+> -			if (!silent)
+> -				pr_err("Failed to find the path for %s: %s\n",
+> -					module ?: "kernel", reason);
+> +			if (!silent) {
+> +				if (module)
+> +					pr_err("Module %s is not loaded, please specify its full path name.\n", module);
+> +				else
+> +					pr_err("Failed to find the path for the kernel: %s\n", reason);
+> +			}
+>  			return NULL;
+>  		}
+>  		path = dso->long_name;
+> -- 
+> 2.20.1
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
