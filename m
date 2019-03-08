@@ -1,320 +1,138 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v4 02/15] perf tools script: Support insn output for
- normal samples
-Date: Fri, 8 Mar 2019 10:37:43 -0300
-Message-ID: <20190308133743.GA26260@kernel.org>
+Subject: Re: [PATCH v4 03/15] perf tools script: Filter COMM/FORK/.. events
+ by CPU
+Date: Fri, 8 Mar 2019 10:39:01 -0300
+Message-ID: <20190308133901.GB26260@kernel.org>
 References: <20190305144758.12397-1-andi@firstfloor.org>
- <20190305144758.12397-3-andi@firstfloor.org>
+ <20190305144758.12397-4-andi@firstfloor.org>
+ <6d837d6b-da67-9878-dcc5-a2b0f2dc6826@intel.com>
+ <20190307110231.GB8979@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190305144758.12397-3-andi@firstfloor.org>
+In-Reply-To: <20190307110231.GB8979@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Mar 05, 2019 at 06:47:45AM -0800, Andi Kleen escreveu:
-> From: Andi Kleen <ak@linux.intel.com>
+Em Thu, Mar 07, 2019 at 12:02:31PM +0100, Jiri Olsa escreveu:
+> On Wed, Mar 06, 2019 at 04:23:40PM +0200, Adrian Hunter wrote:
+> > On 5/03/19 4:47 PM, Andi Kleen wrote:
+> > > From: Andi Kleen <ak@linux.intel.com>
+> > > 
+> > > The --cpu option only filtered samples. Filter other perf events,
+> > > such as COMM, FORK, SWITCH by the CPU too.
+> > 
+> > Because tasks can migrate from cpu to cpu, we probably need to process most
+> > of the events anyway, even if they are not printed.
 > 
-> perf script -F +insn was only working for PT traces because
-> the PT instruction decoder was filling in the insn/insn_len
-> sample attributes. Support it for non PT samples too on x86
-> using the existing x86 instruction decoder.
-> 
-> This adds some extra checking to ensure that we don't try
-> to decode instructions when using perf.data from a different
-> architecture.
-> 
-> % perf record -a sleep 1
-> % perf script -F ip,sym,insn --xed
->  ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
->  ffffffff8100bb50 intel_bts_enable_local                retq
->  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
->  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
->  ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
->  ffffffff810f1f79 generic_exec_single           xor %eax, %eax
->  ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
->  ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
->  ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
-> ...
-> 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> 
-> ---
-> v2:
-> Avoid printing instruction when empty
-> Only decode when perf.data file was collected on same architecture
+> agreed, I wonder we could just make the perf_event__fprintf conditional
 
-Thanks, applied and added some testing notes comparing the output with
-the one from 'perf annotate --stdio2':
+Humm, probably just do the filtering on PERF_RECORD_SAMPLE is enough?
+I.e. having the other PERF_RECORD_{COMM,MMAP,} etc is required in face
+of migration.
 
-commit 2109d7fa73200bc6ff7abe909b5fe821224f98b3
-Author: Andi Kleen <ak@linux.intel.com>
-Date:   Tue Mar 5 06:47:45 2019 -0800
+- Arnaldo
+ 
+> jirka
+> 
+> > 
+> > > 
+> > > Reported-by: Jiri Olsa <jolsa@kernel.org>
+> > > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> > > ---
+> > >  tools/perf/builtin-script.c | 24 ++++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > > 
+> > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > index fbc440bdf880..3813f60d1dc0 100644
+> > > --- a/tools/perf/builtin-script.c
+> > > +++ b/tools/perf/builtin-script.c
+> > > @@ -2038,6 +2038,9 @@ static int process_comm_event(struct perf_tool *tool,
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  	int ret = -1;
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
+> > >  	if (thread == NULL) {
+> > >  		pr_debug("problem processing COMM event, skipping it.\n");
+> > > @@ -2073,6 +2076,9 @@ static int process_namespaces_event(struct perf_tool *tool,
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  	int ret = -1;
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	thread = machine__findnew_thread(machine, event->namespaces.pid,
+> > >  					 event->namespaces.tid);
+> > >  	if (thread == NULL) {
+> > > @@ -2108,6 +2114,9 @@ static int process_fork_event(struct perf_tool *tool,
+> > >  	struct perf_session *session = script->session;
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	if (perf_event__process_fork(tool, event, sample, machine) < 0)
+> > >  		return -1;
+> > >  
+> > > @@ -2141,6 +2150,9 @@ static int process_exit_event(struct perf_tool *tool,
+> > >  	struct perf_session *session = script->session;
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
+> > >  	if (thread == NULL) {
+> > >  		pr_debug("problem processing EXIT event, skipping it.\n");
+> > > @@ -2174,6 +2186,9 @@ static int process_mmap_event(struct perf_tool *tool,
+> > >  	struct perf_session *session = script->session;
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
+> > >  		return -1;
+> > >  
+> > > @@ -2206,6 +2221,9 @@ static int process_mmap2_event(struct perf_tool *tool,
+> > >  	struct perf_session *session = script->session;
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
+> > >  		return -1;
+> > >  
+> > > @@ -2238,6 +2256,9 @@ static int process_switch_event(struct perf_tool *tool,
+> > >  	struct perf_session *session = script->session;
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	if (perf_event__process_switch(tool, event, sample, machine) < 0)
+> > >  		return -1;
+> > >  
+> > > @@ -2266,6 +2287,9 @@ process_lost_event(struct perf_tool *tool,
+> > >  	struct perf_evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
+> > >  	struct thread *thread;
+> > >  
+> > > +	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
+> > > +		return 0;
+> > > +
+> > >  	thread = machine__findnew_thread(machine, sample->pid,
+> > >  					 sample->tid);
+> > >  	if (thread == NULL)
+> > > 
+> > 
 
-    perf script: Support insn output for normal samples
-    
-    perf script -F +insn was only working for PT traces because the PT
-    instruction decoder was filling in the insn/insn_len sample attributes.
-    Support it for non PT samples too on x86 using the existing x86
-    instruction decoder.
-    
-    This adds some extra checking to ensure that we don't try to decode
-    instructions when using perf.data from a different architecture.
-    
-      % perf record -a sleep 1
-      % perf script -F ip,sym,insn --xed
-       ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
-       ffffffff8100bb50 intel_bts_enable_local                retq
-       ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
-       ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
-       ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
-       ffffffff810f1f79 generic_exec_single           xor %eax, %eax
-       ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
-       ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
-       ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
-      ...
-    
-    Committer testing:
-    
-    Before:
-    
-      # perf script -F ip,sym,insn --xed | head -5
-       ffffffffa4068804 native_write_msr            addb  %al, (%rax)
-       ffffffffa4068804 native_write_msr            addb  %al, (%rax)
-       ffffffffa4068804 native_write_msr            addb  %al, (%rax)
-       ffffffffa4068806 native_write_msr            addb  %al, (%rax)
-       ffffffffa4068806 native_write_msr            addb  %al, (%rax)
-      # perf script -F ip,sym,insn --xed | grep -v "addb  %al, (%rax)"
-      #
-    
-    After:
-    
-      # perf script -F ip,sym,insn --xed | head -5
-       ffffffffa4068804 native_write_msr            wrmsr
-       ffffffffa4068804 native_write_msr            wrmsr
-       ffffffffa4068804 native_write_msr            wrmsr
-       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
-       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
-      # perf script -F ip,sym,insn --xed | grep -v "addb  %al, (%rax)" | head -5
-       ffffffffa4068804 native_write_msr            wrmsr
-       ffffffffa4068804 native_write_msr            wrmsr
-       ffffffffa4068804 native_write_msr            wrmsr
-       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
-       ffffffffa4068806 native_write_msr            nopl  %eax, (%rax,%rax,1)
-      #
-    
-    More examples:
-    
-      # perf script -F ip,sym,insn --xed | grep -v native_write_msr | head
-       ffffffffa416b90e tick_check_broadcast_expired                btq  %rax, 0x1a5f42a(%rip)
-       ffffffffa4956bd0 nmi_cpu_backtrace           pushq  %r13
-       ffffffffa415b95e __hrtimer_next_event_base           movq  0x18(%rax), %rdx
-       ffffffffa4956bf3 nmi_cpu_backtrace           popq  %r12
-       ffffffffa4171d5c smp_call_function_single            pause
-       ffffffffa4956bdd nmi_cpu_backtrace           mov %ebp, %r12d
-       ffffffffa4797e4d menu_select                 cmp $0x190, %rax
-       ffffffffa4171d5c smp_call_function_single            pause
-       ffffffffa405a7d8 nmi_cpu_backtrace_handler           callq  0xffffffffa4956bd0
-       ffffffffa4797f7a menu_select                 shr $0x3, %rax
-      #
-    
-    Which matches the annotate output modulo resolving callqs:
-    
-      # perf annotate --stdio2 nmi_cpu_backtrace_handler
-      Samples: 4  of event 'cycles:ppp', 4000 Hz, Event count (approx.): 35908, [percent: local period]
-      nmi_cpu_backtrace_handler() /lib/modules/5.0.0+/build/vmlinux
-      Percent
-                  Disassembly of section .text:
-    
-                  ffffffff8105a7d0 <nmi_cpu_backtrace_handler>:
-                  nmi_cpu_backtrace_handler():
-                          nmi_trigger_cpumask_backtrace(mask, exclude_self,
-                                                        nmi_raise_cpu_backtrace);
-                  }
-    
-                  static int nmi_cpu_backtrace_handler(unsigned int cmd, struct pt_regs *regs)
-                  {
-       24.45      → callq  __fentry__
-                          if (nmi_cpu_backtrace(regs))
-                    mov    %rsi,%rdi
-       75.55      → callq  nmi_cpu_backtrace
-                                  return NMI_HANDLED;
-                    movzbl %al,%eax
-    
-                          return NMI_DONE;
-                  }
-                  ← retq
-        #
-    
-      # perf annotate --stdio2 __hrtimer_next_event_base
-      Samples: 4  of event 'cycles:ppp', 4000 Hz, Event count (approx.): 767977, [percent: local period]
-      __hrtimer_next_event_base() /lib/modules/5.0.0+/build/vmlinux
-      Percent
-                  Disassembly of section .text:
-    
-                  ffffffff8115b910 <__hrtimer_next_event_base>:
-                  __hrtimer_next_event_base():
-    
-                  static ktime_t __hrtimer_next_event_base(struct hrtimer_cpu_base *cpu_base,
-                                                           const struct hrtimer *exclude,
-                                                           unsigned int active,
-                                                           ktime_t expires_next)
-                  {
-                  → callq  __fentry__
-    <SNIP>
-              4a:   add    $0x1,%r14
-       77.31        mov    0x18(%rax),%rdx
-                    shl    $0x6,%r14
-                    sub    0x38(%rbx,%r14,1),%rdx
-                                  if (expires < expires_next) {
-                    cmp    %r12,%rdx
-                  ↓ jge    68
-    <SNIP>
-    
-    Signed-off-by: Andi Kleen <ak@linux.intel.com>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Link: http://lkml.kernel.org/r/20190305144758.12397-3-andi@firstfloor.org
-    [ Converted fetch_exe() to use the name it ended up having when merged: thread__memcpy() ]
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+-- 
 
-diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-index 7aab0be5fc5f..7b8e69bbbdfe 100644
---- a/tools/perf/arch/x86/util/Build
-+++ b/tools/perf/arch/x86/util/Build
-@@ -6,6 +6,7 @@ perf-y += perf_regs.o
- perf-y += group.o
- perf-y += machine.o
- perf-y += event.o
-+perf-y += archinsn.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
-diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
-new file mode 100644
-index 000000000000..4237bb2e7fa2
---- /dev/null
-+++ b/tools/perf/arch/x86/util/archinsn.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "perf.h"
-+#include "archinsn.h"
-+#include "util/intel-pt-decoder/insn.h"
-+#include "machine.h"
-+#include "thread.h"
-+#include "symbol.h"
-+
-+void arch_fetch_insn(struct perf_sample *sample,
-+		     struct thread *thread,
-+		     struct machine *machine)
-+{
-+	struct insn insn;
-+	int len;
-+	bool is64bit = false;
-+
-+	if (!sample->ip)
-+		return;
-+	len = thread__memcpy(thread, machine, sample->insn, sample->ip, sizeof(sample->insn), &is64bit);
-+	if (len <= 0)
-+		return;
-+	insn_init(&insn, sample->insn, len, is64bit);
-+	insn_get_length(&insn);
-+	if (insn_complete(&insn) && insn.length <= len)
-+		sample->insn_len = insn.length;
-+}
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 53f78cf3113f..a5080afd361d 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -29,10 +29,12 @@
- #include "util/time-utils.h"
- #include "util/path.h"
- #include "print_binary.h"
-+#include "archinsn.h"
- #include <linux/bitmap.h>
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-+#include <sys/utsname.h>
- #include "asm/bug.h"
- #include "util/mem-events.h"
- #include "util/dump-insn.h"
-@@ -63,6 +65,7 @@ static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- static struct perf_stat_config	stat_config;
- static int			max_blocks;
-+static bool			native_arch;
- 
- unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
- 
-@@ -1227,6 +1230,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
- 	return len + dlen;
- }
- 
-+__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
-+			    struct thread *thread __maybe_unused,
-+			    struct machine *machine __maybe_unused)
-+{
-+}
-+
- static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 				     struct perf_event_attr *attr,
- 				     struct thread *thread,
-@@ -1234,9 +1243,12 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- {
- 	int printed = 0;
- 
-+	if (sample->insn_len == 0 && native_arch)
-+		arch_fetch_insn(sample, thread, machine);
-+
- 	if (PRINT_FIELD(INSNLEN))
- 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
--	if (PRINT_FIELD(INSN)) {
-+	if (PRINT_FIELD(INSN) && sample->insn_len) {
- 		int i;
- 
- 		printed += fprintf(fp, " insn:");
-@@ -3277,6 +3289,7 @@ int cmd_script(int argc, const char **argv)
- 		.set = false,
- 		.default_no_sample = true,
- 	};
-+	struct utsname uts;
- 	char *script_path = NULL;
- 	const char **__argv;
- 	int i, j, err = 0;
-@@ -3615,6 +3628,12 @@ int cmd_script(int argc, const char **argv)
- 	if (symbol__init(&session->header.env) < 0)
- 		goto out_delete;
- 
-+	uname(&uts);
-+	if (!strcmp(uts.machine, session->header.env.arch) ||
-+	    (!strcmp(uts.machine, "x86_64") &&
-+	     !strcmp(session->header.env.arch, "i386")))
-+		native_arch = true;
-+
- 	script.session = session;
- 	script__setup_sample_type(&script);
- 
-diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
-new file mode 100644
-index 000000000000..448cbb6b8d7e
---- /dev/null
-+++ b/tools/perf/util/archinsn.h
-@@ -0,0 +1,12 @@
-+#ifndef INSN_H
-+#define INSN_H 1
-+
-+struct perf_sample;
-+struct machine;
-+struct thread;
-+
-+void arch_fetch_insn(struct perf_sample *sample,
-+		     struct thread *thread,
-+		     struct machine *machine);
-+
-+#endif
+- Arnaldo
