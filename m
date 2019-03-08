@@ -1,312 +1,1175 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 6/7] perf script python: add Python3 support to sql
- scripts
-Date: Fri, 8 Mar 2019 11:47:55 +0200
-Message-ID: <f4c9445f-d992-60d8-fab7-67e0eea4416c@intel.com>
-References: <20190302011903.2416-1-tonyj@suse.de>
- <20190302011903.2416-7-tonyj@suse.de>
- <7353b42e-ea14-e044-adfe-5a9705bf030c@intel.com>
- <72ea2e3d-1b82-549e-741f-d2b532e4c33b@suse.de>
- <20190307185142.GA32240@kernel.org>
+From: =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+Subject: Re: [PATCH v2] AMD perf PMU events for AMD Family 17h.
+Date: Fri, 8 Mar 2019 11:19:46 +0100
+Message-ID: <32d6a969-8b15-cda1-1057-9923733dbe39@suse.cz>
+References: <3ee15066-429e-b0f2-1255-aab100fad472@suse.cz>
+ <fc049074-595e-92d7-5bab-bcd00f8493e2@suse.cz>
+ <20180823143141.GA22309@kernel.org>
+ <40464a66-9085-f26c-88cd-8d510b07a859@redhat.com>
+ <d65873ca-e402-b198-4fe9-8c4af81258c8@suse.cz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190307185142.GA32240@kernel.org>
+In-Reply-To: <d65873ca-e402-b198-4fe9-8c4af81258c8@suse.cz>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Tony Jones <tonyj@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: William Cohen <wcohen@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Martin Jambor <mjambor@suse.cz>, Jiri Olsa <jolsa@redhat.com>, Borislav Petkov <bpetkov@suse.de>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 7/03/19 8:51 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Mar 06, 2019 at 08:32:42AM -0800, Tony Jones escreveu:
->> On 3/6/19 1:26 AM, Adrian Hunter wrote:
->>> On 2/03/19 3:19 AM, Tony Jones wrote:
->>>> Support both Python2 and Python3 in the exported-sql-viewer.py,
->>>> export-to-postgresql.py and export-to-sqlite.py scripts
->>>>
->>>> There may be differences in the ordering of output lines due to
->>>> differences in dictionary ordering etc.  However the format within lines
->>>> should be unchanged.
->>>>
->>>> The use of 'from __future__' implies the minimum supported Python2 version
->>>> is now v2.6
->>>>
->>>> Signed-off-by: Tony Jones <tonyj@suse.de>
->>>> Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
->>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
->>>
->>> Apart from one issue (see below), it looks good, thank you!
->>>
->>>> ---
->>>>  tools/perf/scripts/python/export-to-postgresql.py | 65 +++++++++++++++--------
->>>>  tools/perf/scripts/python/export-to-sqlite.py     | 23 ++++----
->>>>  tools/perf/scripts/python/exported-sql-viewer.py  | 42 ++++++++++-----
->>>>  3 files changed, 84 insertions(+), 46 deletions(-)
->>>>
->>>> diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
->>>> index 390a351d15ea..439bbbf1e036 100644
->>>> --- a/tools/perf/scripts/python/export-to-postgresql.py
->>>> +++ b/tools/perf/scripts/python/export-to-postgresql.py
->>>> @@ -10,6 +10,8 @@
->>>>  # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->>>>  # more details.
->>>>  
->>>> +from __future__ import print_function
->>>> +
->>>>  import os
->>>>  import sys
->>>>  import struct
->>>> @@ -199,6 +201,16 @@ import datetime
->>>>  
->>>>  from PySide.QtSql import *
->>>>  
->>>> +if sys.version_info < (3, 0):
->>>> +	def tobytes(str):
->>>> +		return str
->>>> +else:
->>>> +	def tobytes(str):
->>>> +		# Use latin-1 (ISO-8859-1) so all code-points 0-255 will result
->>>> +		# in one byte (note utf-8 is 2 bytes for values > 128 and
->>>> +		# ascii is limited to values <= 128)
->>>> +		return bytes(str, "ISO-8859-1")
->>>
->>> Probably this should be the server_encoding, but python2 allowed UTF-8
->>> so let's just use UTF-8 for now.  That will also mean doing the conversion
->>> before getting the len(), otherwise len() can be wrong.
->>
->> I'm not totally understanding what you're saying here.  The rationale for 
->> using latin-1 and not UTF-8 was clearly expressed in the comment.  Else you 
->> do indeed run into length issues.
->>
->> Would it be easier, since you have a) more familiarity with the code b) some
->> specific issues I'm not fully understanding if you just took this patch and
->> made the changes you want yourself.  I doubt I'll ever use these scripta, my
->> interest is purely in eliminating Python2 as a fixed requirement.
+PING^1
+
+On 2/13/19 12:19 PM, Martin Liška wrote:
+> Hi.
 > 
-> Adrian, can you please reply here? I'm not familiar with this tobytes()
-> python2/python3 difference, what do you mean about using
-> 'server_encoding'? Where is that defined?
-
-Under python 2 the character set was not changed, so UTF-8, for example,
-would pass through unmodified.
-
-Under python 3, the perf strings are converted to unicode because that
-is what python 3 uses for strings.
-
-So under python 3, the correct character set must be used when converting
-back to a character encoding that postgrsql expects.
-
-client_encoding is a postgresql connection parameter.
-
-server_encoding is a postgresql database parameter.
-
-To keep things simple for now, I would prefer to hard code UTF-8 rather
-than ISO-8859-1 because I think it is more future-proof.  UTF-8 is a
-superset of ISO-8859-1 but can have multi-byte characters, so the
-conversion must be performed before calculating the output string length.
-
-Ideally, the script would ask/tell the client or server what character
-encoding to use, but hard coding will do for now.
-
-
-This is what I would like:
-
-
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index 390a351d15ea..00ab972a2eba 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -10,6 +10,8 @@
- # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- # more details.
- 
-+from __future__ import print_function
-+
- import os
- import sys
- import struct
-@@ -199,6 +201,18 @@ import datetime
- 
- from PySide.QtSql import *
- 
-+if sys.version_info < (3, 0):
-+	def toserverstr(str):
-+		return str
-+	def toclientstr(str):
-+		return str
-+else:
-+	# Assume UTF-8 server_encoding and client_encoding
-+	def toserverstr(str):
-+		return bytes(str, "UTF_8")
-+	def toclientstr(str):
-+		return bytes(str, "UTF_8")
-+
- # Need to access PostgreSQL C library directly to use COPY FROM STDIN
- from ctypes import *
- libpq = CDLL("libpq.so.5")
-@@ -234,12 +248,14 @@ perf_db_export_mode = True
- perf_db_export_calls = False
- perf_db_export_callchains = False
- 
-+def printerr(*args, **kw_args):
-+	print(*args, file=sys.stderr, **kw_args)
- 
- def usage():
--	print >> sys.stderr, "Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]"
--	print >> sys.stderr, "where:	columns		'all' or 'branches'"
--	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
--	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
-+	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
-+	printerr("where:	columns		'all' or 'branches'")
-+	printerr("		calls		'calls' => create calls and call_paths table")
-+	printerr("		callchains	'callchains' => create call_paths table")
- 	raise Exception("Too few arguments")
- 
- if (len(sys.argv) < 2):
-@@ -273,7 +289,7 @@ def do_query(q, s):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
- 
--print datetime.datetime.today(), "Creating database..."
-+print(datetime.datetime.today(), "Creating database...")
- 
- db = QSqlDatabase.addDatabase('QPSQL')
- query = QSqlQuery(db)
-@@ -506,12 +522,12 @@ do_query(query, 'CREATE VIEW samples_view AS '
- 	' FROM samples')
- 
- 
--file_header = struct.pack("!11sii", "PGCOPY\n\377\r\n\0", 0, 0)
--file_trailer = "\377\377"
-+file_header = struct.pack("!11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
-+file_trailer = b"\377\377"
- 
- def open_output_file(file_name):
- 	path_name = output_dir_name + "/" + file_name
--	file = open(path_name, "w+")
-+	file = open(path_name, "wb+")
- 	file.write(file_header)
- 	return file
- 
-@@ -526,13 +542,13 @@ def copy_output_file_direct(file, table_name):
- 
- # Use COPY FROM STDIN because security may prevent postgres from accessing the files directly
- def copy_output_file(file, table_name):
--	conn = PQconnectdb("dbname = " + dbname)
-+	conn = PQconnectdb(toclientstr("dbname = " + dbname))
- 	if (PQstatus(conn)):
- 		raise Exception("COPY FROM STDIN PQconnectdb failed")
- 	file.write(file_trailer)
- 	file.seek(0)
- 	sql = "COPY " + table_name + " FROM STDIN (FORMAT 'binary')"
--	res = PQexec(conn, sql)
-+	res = PQexec(conn, toclientstr(sql))
- 	if (PQresultStatus(res) != 4):
- 		raise Exception("COPY FROM STDIN PQexec failed")
- 	data = file.read(65536)
-@@ -566,7 +582,7 @@ if perf_db_export_calls:
- 	call_file		= open_output_file("call_table.bin")
- 
- def trace_begin():
--	print datetime.datetime.today(), "Writing to intermediate files..."
-+	print(datetime.datetime.today(), "Writing to intermediate files...")
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
- 	machine_table(0, 0, "unknown")
-@@ -582,7 +598,7 @@ def trace_begin():
- unhandled_count = 0
- 
- def trace_end():
--	print datetime.datetime.today(), "Copying to database..."
-+	print(datetime.datetime.today(), "Copying to database...")
- 	copy_output_file(evsel_file,		"selected_events")
- 	copy_output_file(machine_file,		"machines")
- 	copy_output_file(thread_file,		"threads")
-@@ -597,7 +613,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		copy_output_file(call_file,		"calls")
- 
--	print datetime.datetime.today(), "Removing intermediate files..."
-+	print(datetime.datetime.today(), "Removing intermediate files...")
- 	remove_output_file(evsel_file)
- 	remove_output_file(machine_file)
- 	remove_output_file(thread_file)
-@@ -612,7 +628,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		remove_output_file(call_file)
- 	os.rmdir(output_dir_name)
--	print datetime.datetime.today(), "Adding primary keys"
-+	print(datetime.datetime.today(), "Adding primary keys")
- 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
-@@ -627,7 +643,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
- 
--	print datetime.datetime.today(), "Adding foreign keys"
-+	print(datetime.datetime.today(), "Adding foreign keys")
- 	do_query(query, 'ALTER TABLE threads '
- 					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
- 					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
-@@ -663,8 +679,8 @@ def trace_end():
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
--	print datetime.datetime.today(), "Done"
-+		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
-+	print(datetime.datetime.today(), "Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
-@@ -674,12 +690,14 @@ def sched__sched_switch(*x):
- 	pass
- 
- def evsel_table(evsel_id, evsel_name, *x):
-+	evsel_name = toserverstr(evsel_name)
- 	n = len(evsel_name)
- 	fmt = "!hiqi" + str(n) + "s"
- 	value = struct.pack(fmt, 2, 8, evsel_id, n, evsel_name)
- 	evsel_file.write(value)
- 
- def machine_table(machine_id, pid, root_dir, *x):
-+	root_dir = toserverstr(root_dir)
- 	n = len(root_dir)
- 	fmt = "!hiqiii" + str(n) + "s"
- 	value = struct.pack(fmt, 3, 8, machine_id, 4, pid, n, root_dir)
-@@ -690,6 +708,7 @@ def thread_table(thread_id, machine_id, process_id, pid, tid, *x):
- 	thread_file.write(value)
- 
- def comm_table(comm_id, comm_str, *x):
-+	comm_str = toserverstr(comm_str)
- 	n = len(comm_str)
- 	fmt = "!hiqi" + str(n) + "s"
- 	value = struct.pack(fmt, 2, 8, comm_id, n, comm_str)
-@@ -701,6 +720,9 @@ def comm_thread_table(comm_thread_id, comm_id, thread_id, *x):
- 	comm_thread_file.write(value)
- 
- def dso_table(dso_id, machine_id, short_name, long_name, build_id, *x):
-+	short_name = toserverstr(short_name)
-+	long_name = toserverstr(long_name)
-+	build_id = toserverstr(build_id)
- 	n1 = len(short_name)
- 	n2 = len(long_name)
- 	n3 = len(build_id)
-@@ -709,12 +731,14 @@ def dso_table(dso_id, machine_id, short_name, long_name, build_id, *x):
- 	dso_file.write(value)
- 
- def symbol_table(symbol_id, dso_id, sym_start, sym_end, binding, symbol_name, *x):
-+	symbol_name = toserverstr(symbol_name)
- 	n = len(symbol_name)
- 	fmt = "!hiqiqiqiqiii" + str(n) + "s"
- 	value = struct.pack(fmt, 6, 8, symbol_id, 8, dso_id, 8, sym_start, 8, sym_end, 4, binding, n, symbol_name)
- 	symbol_file.write(value)
- 
- def branch_type_table(branch_type, name, *x):
-+	name = toserverstr(name)
- 	n = len(name)
- 	fmt = "!hiii" + str(n) + "s"
- 	value = struct.pack(fmt, 2, 4, branch_type, n, name)
+> I'm sending updated version of the patch. I'm going to document particular changes
+> in quotes below:
+> 
+> On 8/23/18 6:16 PM, William Cohen wrote:
+>> On 08/23/2018 10:31 AM, Arnaldo Carvalho de Melo wrote:
+>>> Em Thu, Aug 23, 2018 at 01:21:45PM +0200, Martin Liška escreveu:
+>>>> May I please ping this.
+>>> I was waiting for someone to give some ack, perhaps Will Cohen can take
+>>> a brief look and provide that? Will?
+>>>
+>>> Thanks,
+>>>
+>>> - Arnaldo
+>>>  
+>>>> Thanks,
+>>>> Martin
+>>>>
+>>>> On 08/06/2018 10:42 AM, Martin Liška wrote:
+>>>>> Hello.
+>>>>>
+>>>>> Following patch adds PMC events for AMD Family 17 CPUs as defined in [1].
+>>>>> It covers events described in section: 2.1.13. Regex pattern in mapfile.csv
+>>>>> covers all CPUs of the family.
+>>>>>
+>>>>> Thanks,
+>>>>> Martin
+>>>>>
+>>>>> [1] https://support.amd.com/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+>>>>>
+>>>>> Signed-off-by: Martin Liška <mliska@suse.cz>
+>>>>>
+>>>>> ---
+>>>>>  .../pmu-events/arch/x86/amdfam17h/cache.json  | 332 ++++++++++++++++++
+>>>>>  .../pmu-events/arch/x86/amdfam17h/core.json   | 124 +++++++
+>>>>>  .../arch/x86/amdfam17h/floating-point.json    | 196 +++++++++++
+>>>>>  .../pmu-events/arch/x86/amdfam17h/memory.json | 225 ++++++++++++
+>>>>>  .../pmu-events/arch/x86/amdfam17h/other.json  |  51 +++
+>>>>>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+>>>>>  6 files changed, 929 insertions(+)
+>>>>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+>>>>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/core.json
+>>>>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json
+>>>>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/memory.json
+>>>>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+>>>>>
+>>>>>
+>> Hi,
+>>
+>> I had already deleted the patch from my mailbox earlier, so I downloaded the patch from the archive and added some inline comments to the attached patch.
+>>
+>> -Will
+>>
+>>
+>>
+>> Hello.
+>>
+>> Following patch adds PMC events for AMD Family 17 CPUs as defined in [1].
+>> It covers events described in section: 2.1.13. Regex pattern in mapfile.csv
+>> covers all CPUs of the family.
+>>
+>> Thanks,
+>> Martin
+>>
+>> [1] https://support.amd.com/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+>>
+>> Signed-off-by: Martin Liška <mliska@suse.cz>
+>>
+>> ---
+>>  .../pmu-events/arch/x86/amdfam17h/cache.json  | 332 ++++++++++++++++++
+>>  .../pmu-events/arch/x86/amdfam17h/core.json   | 124 +++++++
+>>  .../arch/x86/amdfam17h/floating-point.json    | 196 +++++++++++
+>>  .../pmu-events/arch/x86/amdfam17h/memory.json | 225 ++++++++++++
+>>  .../pmu-events/arch/x86/amdfam17h/other.json  |  51 +++
+>>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+>>  6 files changed, 929 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/core.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/memory.json
+>>  create mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+>>
+>>
+>>
+>> --------------DD285E7CC6B09B0E203385F4
+>> Content-Type: text/x-patch;
+>>  name="0001-AMD-perf-PMU-eventts-for-AMD-Family-17h.patch"
+>> Content-Transfer-Encoding: 7bit
+>> Content-Disposition: attachment;
+>>  filename="0001-AMD-perf-PMU-eventts-for-AMD-Family-17h.patch"
+>>
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json b/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+>> new file mode 100644
+>> index 000000000000..6a41cc9d1d5e
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+>> @@ -0,0 +1,332 @@
+>> +[
+>> +  {
+>> +    "EventName": "ic_fw32",
+>> +    "EventCode": "0x80",
+>> +    "BriefDescription": "The number of 32B fetch windows transferred from IC pipe to DE instruction decoder (includes non-cacheable and cacheable fill responses)."
+>> +  },
+>> +  {
+>> +    "EventName": "ic_fw32_miss",
+>> +    "EventCode": "0x81",
+>> +    "BriefDescription": "The number of 32B fetch windows tried to read the L1 IC and missed in the full tag."
+>> +  },
+>> +  {
+>> +    "EventName": "ic_cache_fill_l2",
+>> +    "EventCode": "0x82",
+>> +    "BriefDescription": "The number of 64 byte instruction cache line was fulfilled from the L2 cache."
+>> +  },
+>> +  {
+>> +    "EventName": "ic_cache_fill_sys",
+>> +    "EventCode": "0x83",
+>> +    "BriefDescription": "The number of 64 byte instruction cache line fulfilled from system memory or another cache."
+>> +  },
+>> +  {
+>> +    "EventName": "bp_l1_tlb_miss_l2_hit",
+>> +    "EventCode": "0x84",
+>> +    "BriefDescription": "The number of instruction fetches that miss in the L1 ITLB but hit in the L2 ITLB."
+>> +  },
+>> +  {
+>> +    "EventName": "bp_l1_tlb_miss_l2_miss",
+>> +    "EventCode": "0x85",
+>> +    "BriefDescription": "The number of instruction fetches that miss in both the L1 and L2 TLBs."
+>> +  },
+>> +  {
+>> +    "EventName": "bp_snp_re_sync",
+>> +    "EventCode": "0x86",
+>> +    "BriefDescription": "The number of pipeline restarts caused by invalidating probes that hit on the instruction stream currently being executed. This would happen if the active instruction stream was being modified by another processor in an MP system - typically a highly unlikely event."
+>> +  },
+>> +  {
+>> +    "EventName": "ic_fetch_stall.ic_stall_any",
+>> +    "EventCode": "0x87",
+>> +    "BriefDescription": "IC pipe was stalled during this clock cycle for any reason (nothing valid in pipe ICM1).",
+>> +    "PublicDescription": "Instruction Pipe Stall. IC pipe was stalled during this clock cycle for any reason (nothing valid in pipe ICM1).",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ic_fetch_stall.ic_stall_dq_empty",
+>> +    "EventCode": "0x87",
+>> +    "BriefDescription": "IC pipe was stalled during this clock cycle (including IC to OC fetches) due to DQ empty.",
+>> +    "PublicDescription": "Instruction Pipe Stall. IC pipe was stalled during this clock cycle (including IC to OC fetches) due to DQ empty.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ic_fetch_stall.ic_stall_back_pressure",
+>> +    "EventCode": "0x87",
+>> +    "BriefDescription": "IC pipe was stalled during this clock cycle (including IC to OC fetches) due to back-pressure.",
+>> +    "PublicDescription": "Instruction Pipe Stall. IC pipe was stalled during this clock cycle (including IC to OC fetches) due to back-pressure.",
+>> +    "UMask": "0x1"
+>> +  },
+>>
+>> Aren't the following bp_l1_btb_correct and bp_l2btb_correct branch prediction instructions should they be in a branch.json file rather than be lumped in with the cache perf events?
+> 
+> Yes, moved there.
+> 
+>>
+>> +  {
+>> +    "EventName": "bp_l1_btb_correct",
+>> +    "EventCode": "0x8a",
+>> +    "BriefDescription": "L1 BTB Correction."
+>> +  },
+>> +  {
+>> +    "EventName": "bp_l2_btb_correct",
+>> +    "EventCode": "0x8b",
+>> +    "BriefDescription": "L2 BTB Correction."
+>> +  },
+>> +  {
+>> +    "EventName": "ic_cache_inval.l2_invalidating_probe",
+>> +    "EventCode": "0x8c",
+>> +    "BriefDescription": "IC line invalidated due to L2 invalidating probe (external or LS).",
+>> +    "PublicDescription": "The number of instruction cache lines invalidated. A non-SMC event is CMC (cross modifying code), either from the other thread of the core or another core. IC line invalidated due to L2 invalidating probe (external or LS).",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ic_cache_inval.fill_invalidated",
+>> +    "EventCode": "0x8c",
+>> +    "BriefDescription": "IC line invalidated due to overwriting fill response.",
+>> +    "PublicDescription": "The number of instruction cache lines invalidated. A non-SMC event is CMC (cross modifying code), either from the other thread of the core or another core. IC line invalidated due to overwriting fill response.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "bp_tlb_rel",
+>> +    "EventCode": "0x99",
+>> +    "BriefDescription": "The number of ITLB reload requests."
+>> +  },
+>>
+>> The AMD documentions isn't really clear what the ic_oc_mode_switch.oc_ic_mode_switch and ic_oc_mode_switch.ic_oc_mode_switch do.  Should these two events go into the other.json?
+> 
+> Yes, done.
+> 
+>>
+>> +  {
+>> +    "EventName": "ic_oc_mode_switch.oc_ic_mode_switch",
+>> +    "EventCode": "0x28a",
+>> +    "BriefDescription": "OC to IC mode switch.",
+>> +    "PublicDescription": "OC Mode Switch. OC to IC mode switch.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ic_oc_mode_switch.ic_oc_mode_switch",
+>> +    "EventCode": "0x28a",
+>> +    "BriefDescription": "IC to OC mode switch.",
+>> +    "PublicDescription": "OC Mode Switch. IC to OC mode switch.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.rd_blk_l",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x80"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.rd_blk_x",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.ls_rd_blk_c_s",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.cacheable_ic_read",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.change_to_x",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.prefetch_l2",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.l2_hw_pf",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Requests to L2 Group1.",
+>> +    "PublicDescription": "Requests to L2 Group1.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g1.other_requests",
+>> +    "EventCode": "0x60",
+>> +    "BriefDescription": "Events covered by l2_request_g2.",
+>> +    "PublicDescription": "Requests to L2 Group1. Events covered by l2_request_g2.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.group1",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "All Group 1 commands not in unit0.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous. All Group 1 commands not in unit0.",
+>> +    "UMask": "0x80"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.ls_rd_sized",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "RdSized, RdSized32, RdSized64.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous. RdSized, RdSized32, RdSized64.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.ls_rd_sized_nc",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "RdSizedNC, RdSized32NC, RdSized64NC.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous. RdSizedNC, RdSized32NC, RdSized64NC.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.ic_rd_sized",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.ic_rd_sized_nc",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.smc_inval",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.bus_locks_originator",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_request_g2.bus_locks_responses",
+>> +    "EventCode": "0x61",
+>> +    "BriefDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "PublicDescription": "Multi-events in that LS and IF requests can be received simultaneous.",
+>> +    "UMask": "0x1"
+>> +  },
+>>
+>> The following event brief description for l2_latency is too long.  For this description there is no way to program event l2_request_g1 unit mask to be FEH. The l2_request_g1 only (and other events) configurations only allow setting a single bit.
+> 
+> Simplified.
+> 
+>>
+>> +  {
+>> +    "EventName": "l2_latency.l2_cycles_waiting_on_fills",
+>> +    "EventCode": "0x62",
+>> +    "BriefDescription": "Total cycles spent waiting for L2 fills to complete from L3 or memory, divided by four. This may be used to calculate average latency by multiplying this count by four and then dividing by the total number of L2 fills (unit mask l2_request_g1 == FEh). Event counts are for both threads. To calculate average latency, the number of fills from both threads must be used.",
+>> +    "PublicDescription": "Total cycles spent waiting for L2 fills to complete from L3 or memory, divided by four. This may be used to calculate average latency by multiplying this count by four and then dividing by the total number of L2 fills (unit mask l2_request_g1 == FEh). Event counts are for both threads. To calculate average latency, the number of fills from both threads must be used.",
+>> +    "UMask": "0x1"
+>> +  },
+>>
+>> The AMD manual doesn't provide much details, but are the following l2_wbc_req.* events suppose to have identical *Description sections?
+> 
+> I reworded (and renamed slightly) that based on discussion with Linux x86_64 port maintainer Boris Petkov.
+> 
+>>
+>> +  {
+>> +    "EventName": "l2_wbc_req.wcb_write",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "LS to L2 WBC requests.",
+>> +    "PublicDescription": "LS to L2 WBC requests.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_wbc_req.wcb_close",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "LS to L2 WBC requests.",
+>> +    "PublicDescription": "LS to L2 WBC requests.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_wbc_req.cache_line_flush",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "LS to L2 WBC requests.",
+>> +    "PublicDescription": "LS to L2 WBC requests.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_wbc_req.i_line_flush",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "LS to L2 WBC requests.",
+>> +    "PublicDescription": "LS to L2 WBC requests.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_wbc_req.zero_byte_store",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "This becomes WriteNoData at SDP; this count does not include DVM Sync Ops and bus locks which are counted in l2_request_g2.",
+>> +    "PublicDescription": "LS to L2 WBC requests. This becomes WriteNoData at SDP; this count does not include DVM Sync Ops and bus locks which are counted in l2_request_g2.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_wbc_req.local_ic_clr",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "Local IC Clear.",
+>> +    "PublicDescription": "LS to L2 WBC requests. Local IC Clear.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_wbc_req.cl_zero",
+>> +    "EventCode": "0x63",
+>> +    "BriefDescription": "Cache Line Zero.",
+>> +    "PublicDescription": "LS to L2 WBC requests. Cache Line Zero.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ls_rd_blk_cs",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "LS ReadBlock C/S Hit.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. LS ReadBlock C/S Hit.",
+>> +    "UMask": "0x80"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ls_rd_blk_l_hit_x",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "LS Read Block L Hit X.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. LS Read Block L Hit X.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ls_rd_blk_l_hit_s",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "LsRdBlkL Hit Shared.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. LsRdBlkL Hit Shared.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ls_rd_blk_x",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "LsRdBlkX/ChgToX Hit X.  Count RdBlkX finding Shared as a Miss.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. LsRdBlkX/ChgToX Hit X.  Count RdBlkX finding Shared as a Miss.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ls_rd_blk_c",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "LS Read Block C S L X Change to X Miss.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. LS Read Block C S L X Change to X Miss.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ic_fill_hit_x",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "IC Fill Hit Exclusive Stale.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. IC Fill Hit Exclusive Stale.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ic_fill_hit_s",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "IC Fill Hit Shared.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. IC Fill Hit Shared.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_cache_req_stat.ic_fill_miss",
+>> +    "EventCode": "0x64",
+>> +    "BriefDescription": "IC Fill Miss.",
+>> +    "PublicDescription": "This event does not count accesses to the L2 cache by the L2 prefetcher, but it does count accesses by the L1 prefetcher. IC Fill Miss.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "l2_fill_pending.l2_fill_busy",
+>> +    "EventCode": "0x6d",
+>> +    "BriefDescription": "Total cycles spent with one or more fill requests in flight from L2.",
+>> +    "PublicDescription": "Total cycles spent with one or more fill requests in flight from L2.",
+>> +    "UMask": "0x1"
+>> +  }
+>> +]
+>> \ No newline at end of file
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/core.json b/tools/perf/pmu-events/arch/x86/amdfam17h/core.json
+>> new file mode 100644
+>> index 000000000000..79754a187fe5
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdfam17h/core.json
+>> @@ -0,0 +1,124 @@
+>> +[
+>> +  {
+>> +    "EventName": "ex_ret_instr",
+>> +    "EventCode": "0xc0",
+>> +    "BriefDescription": "Retired Instructions."
+>> +  },
+>>
+>> For the following ex_ret_* instruction make the Briefdescription in a form like the ex_ret_instr above and move the existing BriefDescription to the long description.
+> 
+> Done.
+> 
+>>
+>> +  {
+>> +    "EventName": "ex_ret_cops",
+>> +    "EventCode": "0xc1",
+>> +    "BriefDescription": "The number of uOps retired. This includes all processor activity (instructions, exceptions, interrupts, microcode assists, etc.). The number of events logged per cycle can vary from 0 to 4."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn",
+>> +    "EventCode": "0xc2",
+>> +    "BriefDescription": "The number of branch instructions retired. This includes all types of architectural control flow changes, including exceptions and interrupts."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn_misp",
+>> +    "EventCode": "0xc3",
+>> +    "BriefDescription": "The number of branch instructions retired, of any type, that were not correctly predicted. This includes those for which prediction is not attempted (far control transfers, exceptions and interrupts)."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn_tkn",
+>> +    "EventCode": "0xc4",
+>> +    "BriefDescription": "The number of taken branches that were retired. This includes all types of architectural control flow changes, including exceptions and interrupts."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn_tkn_misp",
+>> +    "EventCode": "0xc5",
+>> +    "BriefDescription": "The number of retired taken branch instructions that were mispredicted."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn_far",
+>> +    "EventCode": "0xc6",
+>> +    "BriefDescription": "The number of far control transfers retired including far call/jump/return, IRET, SYSCALL and SYSRET, plus exceptions and interrupts. Far control transfers are not subject to branch prediction."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn_resync",
+>> +    "EventCode": "0xc7",
+>> +    "BriefDescription": "The number of resync branches. These reflect pipeline restarts due to certain microcode assists and events such as writes to the active instruction stream, among other things. Each occurrence reflects a restart penalty similar to a branch mispredict. This is relatively rare."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_near_ret",
+>> +    "EventCode": "0xc8",
+>> +    "BriefDescription": "The number of near return instructions (RET or RET Iw) retired."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_near_ret_mispred",
+>> +    "EventCode": "0xc9",
+>> +    "BriefDescription": "The number of near returns retired that were not correctly predicted by the return address predictor. Each such mispredict incurs the same penalty as a mispredicted conditional branch instruction."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_brn_ind_misp",
+>> +    "EventCode": "0xca",
+>> +    "BriefDescription": "Retired Indirect Branch Instructions Mispredicted."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_mmx_fp_instr.sse_instr",
+>> +    "EventCode": "0xcb",
+>> +    "BriefDescription": "SSE instructions (SSE, SSE2, SSE3, SSSE3, SSE4A, SSE41, SSE42, AVX).",
+>> +    "PublicDescription": "The number of MMX, SSE or x87 instructions retired. The UnitMask allows the selection of the individual classes of instructions as given in the table. Each increment represents one complete instruction. Since this event includes non-numeric instructions it is not suitable for measuring MFLOPS. SSE instructions (SSE, SSE2, SSE3, SSSE3, SSE4A, SSE41, SSE42, AVX).",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_mmx_fp_instr.mmx_instr",
+>> +    "EventCode": "0xcb",
+>> +    "BriefDescription": "MMX instructions.",
+>> +    "PublicDescription": "The number of MMX, SSE or x87 instructions retired. The UnitMask allows the selection of the individual classes of instructions as given in the table. Each increment represents one complete instruction. Since this event includes non-numeric instructions it is not suitable for measuring MFLOPS. MMX instructions.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_mmx_fp_instr.x87_instr",
+>> +    "EventCode": "0xcb",
+>> +    "BriefDescription": "x87 instructions.",
+>> +    "PublicDescription": "The number of MMX, SSE or x87 instructions retired. The UnitMask allows the selection of the individual classes of instructions as given in the table. Each increment represents one complete instruction. Since this event includes non-numeric instructions it is not suitable for measuring MFLOPS. x87 instructions.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_cond",
+>> +    "EventCode": "0xd1",
+>> +    "BriefDescription": "Retired Conditional Branch Instructions."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_cond_misp",
+>> +    "EventCode": "0xd2",
+>> +    "BriefDescription": "Retired Conditional Branch Instructions Mispredicted."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_div_busy",
+>> +    "EventCode": "0xd3",
+>> +    "BriefDescription": "Div Cycles Busy count."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_div_count",
+>> +    "EventCode": "0xd4",
+>> +    "BriefDescription": "Div Op Count."
+>> +  },
+>> +  {
+>> +    "EventName": "ex_tagged_ibs_ops.ibs_count_rollover",
+>> +    "EventCode": "0x1cf",
+>> +    "BriefDescription": "Number of times an op could not be tagged by IBS because of a previous tagged op that has not retired.",
+>> +    "PublicDescription": "Tagged IBS Ops. Number of times an op could not be tagged by IBS because of a previous tagged op that has not retired.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ex_tagged_ibs_ops.ibs_tagged_ops_ret",
+>> +    "EventCode": "0x1cf",
+>> +    "BriefDescription": "Number of Ops tagged by IBS that retired.",
+>> +    "PublicDescription": "Tagged IBS Ops. Number of Ops tagged by IBS that retired.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ex_tagged_ibs_ops.ibs_tagged_ops",
+>> +    "EventCode": "0x1cf",
+>> +    "BriefDescription": "Number of Ops tagged by IBS.",
+>> +    "PublicDescription": "Tagged IBS Ops. Number of Ops tagged by IBS.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ex_ret_fus_brnch_inst",
+>> +    "EventCode": "0x1d0",
+>> +    "BriefDescription": "The number of fused retired branch instructions retired per cycle. The number of events logged per cycle can vary from 0 to 3."
+>> +  }
+>> +]
+>> \ No newline at end of file
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json b/tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json
+>> new file mode 100644
+>> index 000000000000..529e95c2d4bb
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json
+>> @@ -0,0 +1,196 @@
+>>
+>> For the fpu_pipe_assignement.* does it make sense to just allow measurement of one pipe at a time?  Seems like the likely use cases would be 0xf0 (dual, all multi-pipe uOps)  and 0x0f (total, total number of uOps).  Are people going to really care about number of uOps to Pipe3 vs Pipe0?
+> 
+> Done.
+> 
+>>
+>> +[
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.dual3",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number multi-pipe uOps assigned to Pipe 3.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
+>> +    "UMask": "0x80"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.dual2",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number multi-pipe uOps assigned to Pipe 2.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 2.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.dual1",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number multi-pipe uOps assigned to Pipe 1.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 1.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.dual0",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number multi-pipe uOps assigned to Pipe 0.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 0.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.total3",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number uOps assigned to Pipe 3.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 3.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.total2",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number uOps assigned to Pipe 2.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 2.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.total1",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number uOps assigned to Pipe 1.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 1.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "fpu_pipe_assignment.total0",
+>> +    "EventCode": "0x00",
+>> +    "BriefDescription": "Total number uOps assigned to Pipe 0.",
+>> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMXTM, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 0.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_sched_empty",
+>> +    "EventCode": "0x01",
+>> +    "BriefDescription": "This is a speculative event. The number of cycles in which the FPU scheduler is empty. Note that some Ops like FP loads bypass the scheduler."
+>> +  },
+>>
+>> For fp_retx86_fp_ops, would it be possible to have a setting for all event in addition to the individual flags?
+> 
+> Likewise done.
+> 
+>>
+>> +  {
+>> +    "EventName": "fp_retx87_fp_ops.div_sqr_r_ops",
+>> +    "EventCode": "0x02",
+>> +    "BriefDescription": "Divide and square root Ops.",
+>> +    "PublicDescription": "The number of x87 floating-point Ops that have retired. The number of events logged per cycle can vary from 0 to 8. Divide and square root Ops.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_retx87_fp_ops.mul_ops",
+>> +    "EventCode": "0x02",
+>> +    "BriefDescription": "Multiply Ops.",
+>> +    "PublicDescription": "The number of x87 floating-point Ops that have retired. The number of events logged per cycle can vary from 0 to 8. Multiply Ops.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_retx87_fp_ops.add_sub_ops",
+>> +    "EventCode": "0x02",
+>> +    "BriefDescription": "Add/subtract Ops.",
+>> +    "PublicDescription": "The number of x87 floating-point Ops that have retired. The number of events logged per cycle can vary from 0 to 8. Add/subtract Ops.",
+>> +    "UMask": "0x1"
+>> +  },
+>>
+>> For fp_ret_sse_avx_ops, would like to have a umask setting for all the events sub events it can measure.
+> 
+> Likewise done.
+> 
+>>
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.dp_mult_add_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Double precision multiply-add FLOPS. Multiply-add counts as 2 FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Double precision multiply-add FLOPS. Multiply-add counts as 2 FLOPS.",
+>> +    "UMask": "0x80"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.dp_div_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Double precision divide/square root FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Double precision divide/square root FLOPS.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.dp_mult_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Double precision multiply FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Double precision multiply FLOPS.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.dp_add_sub_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Double precision add/subtract FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Double precision add/subtract FLOPS.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.sp_mult_add_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Single precision multiply-add FLOPS. Multiply-add counts as 2 FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Single precision multiply-add FLOPS. Multiply-add counts as 2 FLOPS.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.sp_div_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Single-precision divide/square root FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Single-precision divide/square root FLOPS.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.sp_mult_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Single-precision multiply FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Single-precision multiply FLOPS.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_ret_sse_avx_ops.sp_add_sub_flops",
+>> +    "EventCode": "0x03",
+>> +    "BriefDescription": "Single-precision add/subtract FLOPS.",
+>> +    "PublicDescription": "This is a retire-based event. The number of retired SSE/AVX FLOPS. The number of events logged per cycle can vary from 0 to 64. This event can count above 15. Single-precision add/subtract FLOPS.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_num_mov_elim_scal_op.optimized",
+>> +    "EventCode": "0x04",
+>> +    "BriefDescription": "Number of Scalar Ops optimized.",
+>> +    "PublicDescription": "This is a dispatch based speculative event, and is useful for measuring the effectiveness of the Move elimination and Scalar code optimization schemes. Number of Scalar Ops optimized.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_num_mov_elim_scal_op.opt_potential",
+>> +    "EventCode": "0x04",
+>> +    "BriefDescription": "Number of Ops that are candidates for optimization (have Z-bit either set or pass).",
+>> +    "PublicDescription": "This is a dispatch based speculative event, and is useful for measuring the effectiveness of the Move elimination and Scalar code optimization schemes. Number of Ops that are candidates for optimization (have Z-bit either set or pass).",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_num_mov_elim_scal_op.sse_mov_ops_elim",
+>> +    "EventCode": "0x04",
+>> +    "BriefDescription": "Number of SSE Move Ops eliminated.",
+>> +    "PublicDescription": "This is a dispatch based speculative event, and is useful for measuring the effectiveness of the Move elimination and Scalar code optimization schemes. Number of SSE Move Ops eliminated.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_num_mov_elim_scal_op.sse_mov_ops",
+>> +    "EventCode": "0x04",
+>> +    "BriefDescription": "Number of SSE Move Ops.",
+>> +    "PublicDescription": "This is a dispatch based speculative event, and is useful for measuring the effectiveness of the Move elimination and Scalar code optimization schemes. Number of SSE Move Ops.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_retired_ser_ops.x87_ctrl_ret",
+>> +    "EventCode": "0x05",
+>> +    "BriefDescription": "x87 control word mispredict traps due to mispredictions in RC or PC, or changes in mask bits.",
+>> +    "PublicDescription": "The number of serializing Ops retired. x87 control word mispredict traps due to mispredictions in RC or PC, or changes in mask bits.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_retired_ser_ops.x87_bot_ret",
+>> +    "EventCode": "0x05",
+>> +    "BriefDescription": "x87 bottom-executing uOps retired.",
+>> +    "PublicDescription": "The number of serializing Ops retired. x87 bottom-executing uOps retired.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_retired_ser_ops.sse_ctrl_ret",
+>> +    "EventCode": "0x05",
+>> +    "BriefDescription": "SSE control word mispredict traps due to mispredictions in RC, FTZ or DAZ, or changes in mask bits.",
+>> +    "PublicDescription": "The number of serializing Ops retired. SSE control word mispredict traps due to mispredictions in RC, FTZ or DAZ, or changes in mask bits.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "fp_retired_ser_ops.sse_bot_ret",
+>> +    "EventCode": "0x05",
+>> +    "BriefDescription": "SSE bottom-executing uOps retired.",
+>> +    "PublicDescription": "The number of serializing Ops retired. SSE bottom-executing uOps retired.",
+>> +    "UMask": "0x1"
+>> +  }
+>> +]
+>> \ No newline at end of file
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/memory.json b/tools/perf/pmu-events/arch/x86/amdfam17h/memory.json
+>> new file mode 100644
+>> index 000000000000..15678880f90b
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdfam17h/memory.json
+>> @@ -0,0 +1,225 @@
+>> +[
+>>
+>> Is "Unit Masks ORed." really the description for ls_locks.*?  That looks documentation error in the AMD manual.
+> 
+> Boris recommended to remove all except bus_lock sub-event.
+> 
+>>
+>> +  {
+>> +    "EventName": "ls_locks.spec_lock_map_commit",
+>> +    "EventCode": "0x25",
+>> +    "BriefDescription": "Unit Masks ORed.",
+>> +    "PublicDescription": "Unit Masks ORed.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_locks.spec_lock",
+>> +    "EventCode": "0x25",
+>> +    "BriefDescription": "Unit Masks ORed.",
+>> +    "PublicDescription": "Unit Masks ORed.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_locks.non_spec_lock",
+>> +    "EventCode": "0x25",
+>> +    "BriefDescription": "Unit Masks ORed.",
+>> +    "PublicDescription": "Unit Masks ORed.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_locks.bus_lock",
+>> +    "EventCode": "0x25",
+>> +    "BriefDescription": "Unit Masks ORed.",
+>> +    "PublicDescription": "Unit Masks ORed.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_dispatch.ld_st_dispatch",
+>> +    "EventCode": "0x29",
+>> +    "BriefDescription": "Load-op-Stores.",
+>> +    "PublicDescription": "Counts the number of operations dispatched to the LS unit. Unit Masks ADDed. Load-op-Stores.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_dispatch.store_dispatch",
+>> +    "EventCode": "0x29",
+>> +    "BriefDescription": "Counts the number of operations dispatched to the LS unit. Unit Masks ADDed.",
+>> +    "PublicDescription": "Counts the number of operations dispatched to the LS unit. Unit Masks ADDed.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_dispatch.ld_dispatch",
+>> +    "EventCode": "0x29",
+>> +    "BriefDescription": "Counts the number of operations dispatched to the LS unit. Unit Masks ADDed.",
+>> +    "PublicDescription": "Counts the number of operations dispatched to the LS unit. Unit Masks ADDed.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_stlf",
+>> +    "EventCode": "0x35",
+>> +    "BriefDescription": "Number of STLF hits."
+>> +  },
+>> +  {
+>> +    "EventName": "ls_dc_accesses",
+>> +    "EventCode": "0x40",
+>> +    "BriefDescription": "The number of accesses to the data cache for load and store references. This may include certain microcode scratchpad accesses, although these are generally rare. Each increment represents an eight-byte access, although the instruction may only be accessing a portion of that. This event is a speculative event."
+>> +  },
+>>
+>> Shouldn't there be some variation in the description of the ls_mab_alloc_pipe.* events with the different unit masks?
+> 
+> Boris recommended to remove these.
+> 
+>>
+>> +  {
+>> +    "EventName": "ls_mab_alloc_pipe.tlb_pipe_early",
+>> +    "EventCode": "0x41",
+>> +    "BriefDescription": "MAB Allocation by Pipe.",
+>> +    "PublicDescription": "MAB Allocation by Pipe.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_mab_alloc_pipe.hw_pf",
+>> +    "EventCode": "0x41",
+>> +    "BriefDescription": "MAB Allocation by Pipe.",
+>> +    "PublicDescription": "MAB Allocation by Pipe.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_mab_alloc_pipe.tlb_pipe_late",
+>> +    "EventCode": "0x41",
+>> +    "BriefDescription": "MAB Allocation by Pipe.",
+>> +    "PublicDescription": "MAB Allocation by Pipe.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_mab_alloc_pipe.st_pipe",
+>> +    "EventCode": "0x41",
+>> +    "BriefDescription": "MAB Allocation by Pipe.",
+>> +    "PublicDescription": "MAB Allocation by Pipe.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_mab_alloc_pipe.data_pipe",
+>> +    "EventCode": "0x41",
+>> +    "BriefDescription": "MAB Allocation by Pipe.",
+>> +    "PublicDescription": "MAB Allocation by Pipe.",
+>> +    "UMask": "0x1"
+>> +  },
+>>
+>> Shouldn't the descriptions ls_l1_d_tlb_miss.* mention the different page sizes that the different unit masks refer to?  Also would it be possible to have an entry count all variations of ls_l1_d_tlb_miss?
+> 
+> Description is enhanced here and new *.all event is added.
+> 
+>>
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload1_gl2_miss",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x80"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload2_ml2_miss",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload32_kl2_miss",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload4_kl2_miss",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload1_gl2_hit",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload2_ml2_hit",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload32_kl2_hit",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_l1_d_tlb_miss.tlb_reload4_kl2_hit",
+>> +    "EventCode": "0x45",
+>> +    "BriefDescription": "L1 DTLB Miss.",
+>> +    "PublicDescription": "L1 DTLB Miss.",
+>> +    "UMask": "0x1"
+>> +  },
+>>
+>> Would it be possible to have a setting for ls_tablewalker.*iside* and another setting for *dside*?
+> 
+> Yes.
+> 
+>>
+>> +  {
+>> +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_iside1",
+>> +    "EventCode": "0x46",
+>> +    "BriefDescription": "Tablewalker allocation.",
+>> +    "PublicDescription": "Tablewalker allocation.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_iside0",
+>> +    "EventCode": "0x46",
+>> +    "BriefDescription": "Tablewalker allocation.",
+>> +    "PublicDescription": "Tablewalker allocation.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_dside1",
+>> +    "EventCode": "0x46",
+>> +    "BriefDescription": "Tablewalker allocation.",
+>> +    "PublicDescription": "Tablewalker allocation.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_dside0",
+>> +    "EventCode": "0x46",
+>> +    "BriefDescription": "Tablewalker allocation.",
+>> +    "PublicDescription": "Tablewalker allocation.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_misal_accesses",
+>> +    "EventCode": "0x47",
+>> +    "BriefDescription": "Misaligned loads."
+>> +  },
+>>
+>>
+>> The descriptions for ls_pref_instr_disp.prefetch_nta and store_prefetch_w should have some differences.
+> 
+> Fixed.
+> 
+> That's all I modifed.
+> 
+> Martin
+> 
+>>
+>> +  {
+>> +    "EventName": "ls_pref_instr_disp.prefetch_nta",
+>> +    "EventCode": "0x4b",
+>> +    "BriefDescription": "Software Prefetch Instructions Dispatched.",
+>> +    "PublicDescription": "Software Prefetch Instructions Dispatched.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_pref_instr_disp.store_prefetch_w",
+>> +    "EventCode": "0x4b",
+>> +    "BriefDescription": "Software Prefetch Instructions Dispatched.",
+>> +    "PublicDescription": "Software Prefetch Instructions Dispatched.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_pref_instr_disp.load_prefetch_w",
+>> +    "EventCode": "0x4b",
+>> +    "BriefDescription": "Prefetch, Prefetch_T0_T1_T2.",
+>> +    "PublicDescription": "Software Prefetch Instructions Dispatched. Prefetch, Prefetch_T0_T1_T2.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_inef_sw_pref.mab_mch_cnt",
+>> +    "EventCode": "0x52",
+>> +    "BriefDescription": "The number of software prefetches that did not fetch data outside of the processor core.",
+>> +    "PublicDescription": "The number of software prefetches that did not fetch data outside of the processor core.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_inef_sw_pref.data_pipe_sw_pf_dc_hit",
+>> +    "EventCode": "0x52",
+>> +    "BriefDescription": "The number of software prefetches that did not fetch data outside of the processor core.",
+>> +    "PublicDescription": "The number of software prefetches that did not fetch data outside of the processor core.",
+>> +    "UMask": "0x1"
+>> +  },
+>> +  {
+>> +    "EventName": "ls_not_halted_cyc",
+>> +    "EventCode": "0x76",
+>> +    "BriefDescription": "Cycles not in Halt."
+>> +  }
+>> +]
+>> \ No newline at end of file
+>> diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/other.json b/tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+>> new file mode 100644
+>> index 000000000000..03fa0d97ad3d
+>> --- /dev/null
+>> +++ b/tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+>> @@ -0,0 +1,51 @@
+>> +[
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.retire_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "RETIRE Tokens unavailable.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall. RETIRE Tokens unavailable.",
+>> +    "UMask": "0x40"
+>> +  },
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.agsq_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "AGSQ Tokens unavailable.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall. AGSQ Tokens unavailable.",
+>> +    "UMask": "0x20"
+>> +  },
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.alu_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "ALU tokens total unavailable.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall. ALU tokens total unavailable.",
+>> +    "UMask": "0x10"
+>> +  },
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.alsq3_0_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall.",
+>> +    "UMask": "0x8"
+>> +  },
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.alsq3_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "ALSQ 3 Tokens unavailable.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall. ALSQ 3 Tokens unavailable.",
+>> +    "UMask": "0x4"
+>> +  },
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.alsq2_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "ALSQ 2 Tokens unavailable.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall. ALSQ 2 Tokens unavailable.",
+>> +    "UMask": "0x2"
+>> +  },
+>> +  {
+>> +    "EventName": "de_dis_dispatch_token_stalls0.alsq1_token_stall",
+>> +    "EventCode": "0xaf",
+>> +    "BriefDescription": "ALSQ 1 Tokens unavailable.",
+>> +    "PublicDescription": "Cycles where a dispatch group is valid but does not get dispatched due to a token stall. ALSQ 1 Tokens unavailable.",
+>> +    "UMask": "0x1"
+>> +  }
+>> +]
+>> \ No newline at end of file
+>> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+>> index 7e3cce3bcf3b..4e0973c08a52 100644
+>> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+>> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+>> @@ -32,3 +32,4 @@ GenuineIntel-6-2C,v2,westmereep-dp,core
+>>  GenuineIntel-6-25,v2,westmereep-sp,core
+>>  GenuineIntel-6-2F,v2,westmereex,core
+>>  GenuineIntel-6-55,v1,skylakex,core
+>> +AuthenticAMD-23-[[:xdigit:]]+,v1,amdfam17h,core
+>>
+>>
+>> --------------DD285E7CC6B09B0E203385F4--
+>>
+> 
