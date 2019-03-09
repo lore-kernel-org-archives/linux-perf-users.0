@@ -1,51 +1,78 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v5 12/15] perf tools: Add some new tips describing the new options
-Date: Fri,  8 Mar 2019 21:56:25 -0800
-Message-ID: <20190309055628.21617-13-andi@firstfloor.org>
-References: <20190309055628.21617-1-andi@firstfloor.org>
+Subject: Support sample context in perf report
+Date: Fri,  8 Mar 2019 21:56:13 -0800
+Message-ID: <20190309055628.21617-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+[Changes: 
+v5:
+Address review comments.
+Fix perf script --cpu filtering
+Use _NSEC defines.
+Fix DEBUG=0 build again
+Make sample context size configurable.
+Some minor improvements.
+]
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+We currently have two ways to look at sample data in perf:
+either use perf report to aggregate everything, or use
+perf script to look at all individual samples.
 
----
-v2:
-Even more tips.
-v3:
-Even more tips
----
- tools/perf/Documentation/tips.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+Both ways are useful. Of course aggregation is useful
+to quickly find the most expensive part of the code.
 
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 849599f39c5e..869965d629ce 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -15,6 +15,7 @@ To see callchains in a more compact form: perf report -g folded
- Show individual samples with: perf script
- Limit to show entries above 5% only: perf report --percent-limit 5
- Profiling branch (mis)predictions with: perf record -b / perf report
-+To show assembler sample contexts use perf record -b / perf script -F +brstackinsn --xed
- Treat branches as callchains: perf report --branch-history
- To count events in every 1000 msec: perf stat -I 1000
- Print event counts in CSV format with: perf stat -x,
-@@ -34,3 +35,9 @@ Show current config key-value pairs: perf config --list
- Show user configuration overrides: perf config --user --list
- To add Node.js USDT(User-Level Statically Defined Tracing): perf buildid-cache --add `which node`
- To report cacheline events from previous recording: perf c2c report
-+To browse sample contexts use perf report --sample 10 and select in context menu
-+To separate samples by time use perf report --sort time,overhead,sym
-+To set sample time separation other than 100ms with --sort time use --time-quantum
-+Add -I to perf report to sample register values visible in perf report context.
-+To show IPC for sampling periods use perf record -e '{cycles,instructions}:S' and then browse context
-+To show context switches in perf report sample context add --switch-events to perf record.
--- 
-2.20.1
+But sometimes a single sample is not good enough to
+determine the problem and we need to look at context, either
+through branch contexts, or other previous samples (e.g. for
+correlating different micro architecture events or computing
+metrics)
+
+This can be done through perf script today, but it can
+be rather cumbersome to find the right samples to look
+at.
+
+Another problem with perf report is that it aggregates
+the whole measurement period. But many real workloads
+have phases where they behave quite differently, and it is
+often not useful to combine them into a single histogram.
+
+While this can be worked around with the --time option
+to report, it can be quite cumbersome.
+
+This patch kit attempts to address some of these
+problems in perf report by making it time aware.
+
+- It adds a new time sort key that allows perf report
+to separate samples from different regions. The time
+regions can be defined with a new --time-quantum option.
+
+- Then it extends the perf script support in the
+tui record browser to allow browsing samples for 
+different time regions from within a perf report
+session.
+
+- Extends the report browser script display
+to automatically select sensible defaults
+based on what was recorded. For example it will
+automatically show branch contexts with -b.
+
+- Support browsing the context of individual samples.
+perf report can save a limited number of random samples
+per histogram entry with the new --samples option.
+Then the browser allows directly jumping to any
+of the saved samples and browsing the context on the current
+thread or CPU.
+
+There could be probably be done more to make
+perf report even better for such use cases (e.g. a real
+time line display), but this basic support is good
+enough for many useful usages.
+
+Also available in
+git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git perf/streams-5
