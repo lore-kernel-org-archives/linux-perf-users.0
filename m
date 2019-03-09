@@ -1,35 +1,35 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v4 05/15] perf tools report: Parse time quantum
-Date: Fri, 8 Mar 2019 09:39:49 -0800
-Message-ID: <20190308173949.GI7535@tassilo.jf.intel.com>
-References: <20190305144758.12397-1-andi@firstfloor.org>
- <20190305144758.12397-6-andi@firstfloor.org>
- <20190308134532.GC26260@kernel.org>
- <20190308135236.GF26260@kernel.org>
+From: Tony Jones <tonyj@suse.de>
+Subject: [PATCH v3 0/4] perf script python: add Python3 support
+Date: Fri,  8 Mar 2019 16:05:14 -0800
+Message-ID: <20190309000518.2438-1-tonyj@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190308135236.GF26260@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Mar 08, 2019 at 10:52:36AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Mar 08, 2019 at 10:45:32AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Mar 05, 2019 at 06:47:48AM -0800, Andi Kleen escreveu:
-> > > From: Andi Kleen <ak@linux.intel.com>
-> > > +	if (*end == 0)
-> > > +		return 0;
-> > 
-> > We have tools/include/linux/time64.h, just like the kernel, so please
-> > use:
-> > 
-> > #include <linux/time64.h>
-> 
-> I'll do that this time.
+This is v3 of my version of the patchset.  
 
-Thanks.  I already did it in my copy too.
+The exporter and viewer changes were all in one patch for V2. 
+For V3 I split them into 3 patches for the reasons below.
 
--Andi
+Patch#1 adds Python3 support to exported-sql-viewer 
+Patch#2 adds Python3 support to export-to-postgresql
+Patch#3 adds Python3 support to export-to-sqlite 
+Patch#4 cleans up some repeated use of date functions in the code.
+
+I added Adrian's signed-off-by to Patch#2 per the revised patch he sent 
+in his review of V2.
+
+The content of patches 1, 3 and 4 is unchanged from V2 but I'm including 
+all the patches again to hopefully make your application easier. I added 
+Adrian's Acked-by to Patch#4 per his review of that patch in V2.
+
+Once these are applied I believe this is everything needed to run on a
+system without Python2.
+
+Thanks
+
+Tony
