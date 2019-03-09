@@ -1,78 +1,80 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: Support sample context in perf report
-Date: Fri,  8 Mar 2019 21:56:13 -0800
-Message-ID: <20190309055628.21617-1-andi@firstfloor.org>
+Subject: [PATCH v5 14/15] perf tools script: Add array bound checking to list_scripts
+Date: Fri,  8 Mar 2019 21:56:27 -0800
+Message-ID: <20190309055628.21617-15-andi@firstfloor.org>
+References: <20190309055628.21617-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-[Changes: 
-v5:
-Address review comments.
-Fix perf script --cpu filtering
-Use _NSEC defines.
-Fix DEBUG=0 build again
-Make sample context size configurable.
-Some minor improvements.
-]
+From: Andi Kleen <ak@linux.intel.com>
 
-We currently have two ways to look at sample data in perf:
-either use perf report to aggregate everything, or use
-perf script to look at all individual samples.
+Don't overflow array when the scripts directory is too large,
+or the script file name is too long.
 
-Both ways are useful. Of course aggregation is useful
-to quickly find the most expensive part of the code.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/builtin-script.c      | 8 ++++++--
+ tools/perf/builtin.h             | 3 ++-
+ tools/perf/ui/browsers/scripts.c | 3 ++-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-But sometimes a single sample is not good enough to
-determine the problem and we need to look at context, either
-through branch contexts, or other previous samples (e.g. for
-correlating different micro architecture events or computing
-metrics)
-
-This can be done through perf script today, but it can
-be rather cumbersome to find the right samples to look
-at.
-
-Another problem with perf report is that it aggregates
-the whole measurement period. But many real workloads
-have phases where they behave quite differently, and it is
-often not useful to combine them into a single histogram.
-
-While this can be worked around with the --time option
-to report, it can be quite cumbersome.
-
-This patch kit attempts to address some of these
-problems in perf report by making it time aware.
-
-- It adds a new time sort key that allows perf report
-to separate samples from different regions. The time
-regions can be defined with a new --time-quantum option.
-
-- Then it extends the perf script support in the
-tui record browser to allow browsing samples for 
-different time regions from within a perf report
-session.
-
-- Extends the report browser script display
-to automatically select sensible defaults
-based on what was recorded. For example it will
-automatically show branch contexts with -b.
-
-- Support browsing the context of individual samples.
-perf report can save a limited number of random samples
-per histogram entry with the new --samples option.
-Then the browser allows directly jumping to any
-of the saved samples and browsing the context on the current
-thread or CPU.
-
-There could be probably be done more to make
-perf report even better for such use cases (e.g. a real
-time line display), but this basic support is good
-enough for many useful usages.
-
-Also available in
-git://git.kernel.org/pub/scm/linux/kernel/git/ak/linux-misc.git perf/streams-5
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 77cc014ff8d0..389118500694 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2975,7 +2975,8 @@ static int check_ev_match(char *dir_name, char *scriptname,
+  * will list all statically runnable scripts, select one, execute it and
+  * show the output in a perf browser.
+  */
+-int find_scripts(char **scripts_array, char **scripts_path_array)
++int find_scripts(char **scripts_array, char **scripts_path_array, int num,
++		 int pathlen)
+ {
+ 	struct dirent *script_dirent, *lang_dirent;
+ 	char scripts_path[MAXPATHLEN], lang_path[MAXPATHLEN];
+@@ -3020,7 +3021,10 @@ int find_scripts(char **scripts_array, char **scripts_path_array)
+ 			/* Skip those real time scripts: xxxtop.p[yl] */
+ 			if (strstr(script_dirent->d_name, "top."))
+ 				continue;
+-			sprintf(scripts_path_array[i], "%s/%s", lang_path,
++			if (i >= num)
++				break;
++			snprintf(scripts_path_array[i], pathlen, "%s/%s",
++				lang_path,
+ 				script_dirent->d_name);
+ 			temp = strchr(script_dirent->d_name, '.');
+ 			snprintf(scripts_array[i],
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index 05745f3ce912..999fe9170122 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -40,5 +40,6 @@ int cmd_mem(int argc, const char **argv);
+ int cmd_data(int argc, const char **argv);
+ int cmd_ftrace(int argc, const char **argv);
+ 
+-int find_scripts(char **scripts_array, char **scripts_path_array);
++int find_scripts(char **scripts_array, char **scripts_path_array, int num,
++		 int pathlen);
+ #endif
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 5d407ab834b5..6759d6657e1a 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -117,7 +117,8 @@ static int list_scripts(char *script_name, bool *custom,
+ 		paths[i] = names[i] + SCRIPT_NAMELEN;
+ 	}
+ 
+-	num = find_scripts(names + max_std, paths + max_std);
++	num = find_scripts(names + max_std, paths + max_std, SCRIPT_MAX_NO - max_std,
++			SCRIPT_FULLPATH_LEN);
+ 	if (num < 0)
+ 		num = 0;
+ 	choice = ui__popup_menu(num + max_std, (char * const *)names);
+-- 
+2.20.1
