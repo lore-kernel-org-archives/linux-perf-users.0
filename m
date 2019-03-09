@@ -1,7 +1,7 @@
 From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH v3 1/4] perf script python: add Python3 support to exported-sql-viewer.py
-Date: Fri,  8 Mar 2019 16:05:15 -0800
-Message-ID: <20190309000518.2438-2-tonyj@suse.de>
+Subject: [PATCH v3 3/4] perf script python: add Python3 support to export-to-sqlite.py
+Date: Fri,  8 Mar 2019 16:05:17 -0800
+Message-ID: <20190309000518.2438-4-tonyj@suse.de>
 References: <20190309000518.2438-1-tonyj@suse.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,7 +12,7 @@ To: linux-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python2 and Python3 in the exported-sql-viewer.py script.
+Support both Python2 and Python3 in the export-to-sqlite.py script
 
 The use of 'from __future__' implies the minimum supported Python2 version
 is now v2.6
@@ -21,118 +21,76 @@ Signed-off-by: Tony Jones <tonyj@suse.de>
 Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 42 ++++++++++++++++--------
- 1 file changed, 28 insertions(+), 14 deletions(-)
+ tools/perf/scripts/python/export-to-sqlite.py | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index afec9479ca7f..e38518cdcbc3 100755
---- a/tools/perf/scripts/python/exported-sql-viewer.py
-+++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -88,11 +88,20 @@
- #                                                                              7fab593ea956 48 89 15 3b 13 22 00                            movq  %rdx, 0x22133b(%rip)
- # 8107675243232  2    ls       22011  22011  hardware interrupt     No         7fab593ea956 _dl_start+0x26 (ld-2.19.so) -> ffffffff86a012e0 page_fault ([kernel])
+diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
+index eb63e6c7107f..3da338243aed 100644
+--- a/tools/perf/scripts/python/export-to-sqlite.py
++++ b/tools/perf/scripts/python/export-to-sqlite.py
+@@ -10,6 +10,8 @@
+ # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ # more details.
  
 +from __future__ import print_function
 +
- import sys
- import weakref
- import threading
- import string
--import cPickle
-+try:
-+	# Python2
-+	import cPickle as pickle
-+	# size of pickled integer big enough for record size
-+	glb_nsz = 8
-+except ImportError:
-+	import pickle
-+	glb_nsz = 16
- import re
  import os
- from PySide.QtCore import *
-@@ -102,6 +111,15 @@ from decimal import *
- from ctypes import *
- from multiprocessing import Process, Array, Value, Event
+ import sys
+ import struct
+@@ -60,11 +62,14 @@ perf_db_export_mode = True
+ perf_db_export_calls = False
+ perf_db_export_callchains = False
  
-+# xrange is range in Python3
-+try:
-+	xrange
-+except NameError:
-+	xrange = range
-+
 +def printerr(*args, **keyword_args):
 +	print(*args, file=sys.stderr, **keyword_args)
 +
- # Data formatting helpers
+ def usage():
+-	print >> sys.stderr, "Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]"
+-	print >> sys.stderr, "where:	columns		'all' or 'branches'"
+-	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
+-	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
++	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
++	printerr("where:	columns		'all' or 'branches'");
++	printerr("		calls		'calls' => create calls and call_paths table");
++	printerr("		callchains	'callchains' => create call_paths table");
+ 	raise Exception("Too few arguments")
  
- def tohex(ip):
-@@ -1004,10 +1022,6 @@ class ChildDataItemFinder():
+ if (len(sys.argv) < 2):
+@@ -100,7 +105,7 @@ def do_query_(q):
+ 		return
+ 	raise Exception("Query failed: " + q.lastError().text())
  
- glb_chunk_sz = 10000
+-print datetime.datetime.today(), "Creating database..."
++print(datetime.datetime.today(), "Creating database ...")
  
--# size of pickled integer big enough for record size
--
--glb_nsz = 8
--
- # Background process for SQL data fetcher
+ db_exists = False
+ try:
+@@ -378,7 +383,7 @@ if perf_db_export_calls:
+ 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
  
- class SQLFetcherProcess():
-@@ -1066,7 +1080,7 @@ class SQLFetcherProcess():
- 				return True
- 			if space >= glb_nsz:
- 				# Use 0 (or space < glb_nsz) to mean there is no more at the top of the buffer
--				nd = cPickle.dumps(0, cPickle.HIGHEST_PROTOCOL)
-+				nd = pickle.dumps(0, pickle.HIGHEST_PROTOCOL)
- 				self.buffer[self.local_head : self.local_head + len(nd)] = nd
- 			self.local_head = 0
- 		if self.local_tail - self.local_head > sz:
-@@ -1084,9 +1098,9 @@ class SQLFetcherProcess():
- 			self.wait_event.wait()
+ def trace_begin():
+-	print datetime.datetime.today(), "Writing records..."
++	print(datetime.datetime.today(), "Writing records...")
+ 	do_query(query, 'BEGIN TRANSACTION')
+ 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
+ 	evsel_table(0, "unknown")
+@@ -397,14 +402,14 @@ unhandled_count = 0
+ def trace_end():
+ 	do_query(query, 'END TRANSACTION')
  
- 	def AddToBuffer(self, obj):
--		d = cPickle.dumps(obj, cPickle.HIGHEST_PROTOCOL)
-+		d = pickle.dumps(obj, pickle.HIGHEST_PROTOCOL)
- 		n = len(d)
--		nd = cPickle.dumps(n, cPickle.HIGHEST_PROTOCOL)
-+		nd = pickle.dumps(n, pickle.HIGHEST_PROTOCOL)
- 		sz = n + glb_nsz
- 		self.WaitForSpace(sz)
- 		pos = self.local_head
-@@ -1198,12 +1212,12 @@ class SQLFetcher(QObject):
- 		pos = self.local_tail
- 		if len(self.buffer) - pos < glb_nsz:
- 			pos = 0
--		n = cPickle.loads(self.buffer[pos : pos + glb_nsz])
-+		n = pickle.loads(self.buffer[pos : pos + glb_nsz])
- 		if n == 0:
- 			pos = 0
--			n = cPickle.loads(self.buffer[0 : glb_nsz])
-+			n = pickle.loads(self.buffer[0 : glb_nsz])
- 		pos += glb_nsz
--		obj = cPickle.loads(self.buffer[pos : pos + n])
-+		obj = pickle.loads(self.buffer[pos : pos + n])
- 		self.local_tail = pos + n
- 		return obj
+-	print datetime.datetime.today(), "Adding indexes"
++	print(datetime.datetime.today(), "Adding indexes")
+ 	if perf_db_export_calls:
+ 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
+ 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
  
-@@ -2973,7 +2987,7 @@ class DBRef():
+ 	if (unhandled_count):
+-		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
+-	print datetime.datetime.today(), "Done"
++		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
++	print(datetime.datetime.today(), "Done")
  
- def Main():
- 	if (len(sys.argv) < 2):
--		print >> sys.stderr, "Usage is: exported-sql-viewer.py {<database name> | --help-only}"
-+		printerr("Usage is: exported-sql-viewer.py {<database name> | --help-only}");
- 		raise Exception("Too few arguments")
- 
- 	dbname = sys.argv[1]
-@@ -2986,8 +3000,8 @@ def Main():
- 
- 	is_sqlite3 = False
- 	try:
--		f = open(dbname)
--		if f.read(15) == "SQLite format 3":
-+		f = open(dbname, "rb")
-+		if f.read(15) == b'SQLite format 3':
- 			is_sqlite3 = True
- 		f.close()
- 	except:
+ def trace_unhandled(event_name, context, event_fields_dict):
+ 	global unhandled_count
 -- 
 2.16.4
