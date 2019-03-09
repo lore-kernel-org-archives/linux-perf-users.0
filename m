@@ -1,224 +1,142 @@
-From: Tony Jones <tonyj@suse.de>
-Subject: [PATCH v3 2/4] perf script python: add Python3 support to export-to-postgresql.py
-Date: Fri,  8 Mar 2019 16:05:16 -0800
-Message-ID: <20190309000518.2438-3-tonyj@suse.de>
-References: <20190309000518.2438-1-tonyj@suse.de>
+From: Andi Kleen <andi@firstfloor.org>
+Subject: [PATCH v5 01/15] perf tools: Add utility function to fetch executable
+Date: Fri,  8 Mar 2019 21:56:14 -0800
+Message-ID: <20190309055628.21617-2-andi@firstfloor.org>
+References: <20190309055628.21617-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190309000518.2438-1-tonyj@suse.de>
+In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org, acme@kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+To: acme@kernel.org
+Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Support both Python2 and Python3 in the export-to-postgresql.py script.
+From: Andi Kleen <ak@linux.intel.com>
 
-The use of 'from __future__' implies the minimum supported Python2 version
-is now v2.6
+Add a utility function to fetch executable code. Convert one
+user over to it. There are more places doing that, but they
+do significantly different actions, so they are not
+easy to fit into a single library function.
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/scripts/python/export-to-postgresql.py | 58 ++++++++++++++++-------
- 1 file changed, 41 insertions(+), 17 deletions(-)
+ tools/perf/util/Build       |  1 +
+ tools/perf/util/fetch.c     | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/fetch.h     |  7 +++++++
+ tools/perf/util/intel-bts.c | 21 +++------------------
+ 4 files changed, 39 insertions(+), 18 deletions(-)
+ create mode 100644 tools/perf/util/fetch.c
+ create mode 100644 tools/perf/util/fetch.h
 
-diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
-index 390a351d15ea..00ab972a2eba 100644
---- a/tools/perf/scripts/python/export-to-postgresql.py
-+++ b/tools/perf/scripts/python/export-to-postgresql.py
-@@ -10,6 +10,8 @@
- # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- # more details.
- 
-+from __future__ import print_function
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 8dd3102301ea..649321fc3fb9 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -65,6 +65,7 @@ perf-y += trace-event-scripting.o
+ perf-y += trace-event.o
+ perf-y += svghelper.o
+ perf-y += sort.o
++perf-y += fetch.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += xyarray.o
+diff --git a/tools/perf/util/fetch.c b/tools/perf/util/fetch.c
+new file mode 100644
+index 000000000000..1430083e7eca
+--- /dev/null
++++ b/tools/perf/util/fetch.c
+@@ -0,0 +1,28 @@
++#include "perf.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
++#include "map.h"
++#include "fetch.h"
 +
- import os
- import sys
- import struct
-@@ -199,6 +201,18 @@ import datetime
- 
- from PySide.QtSql import *
- 
-+if sys.version_info < (3, 0):
-+	def toserverstr(str):
-+		return str
-+	def toclientstr(str):
-+		return str
-+else:
-+	# Assume UTF-8 server_encoding and client_encoding
-+	def toserverstr(str):
-+		return bytes(str, "UTF_8")
-+	def toclientstr(str):
-+		return bytes(str, "UTF_8")
++int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
++	      char *buf, int len, bool *is64bit)
++{
++	struct addr_location al;
++	u8 cpumode;
++	long offset;
 +
- # Need to access PostgreSQL C library directly to use COPY FROM STDIN
- from ctypes import *
- libpq = CDLL("libpq.so.5")
-@@ -234,12 +248,14 @@ perf_db_export_mode = True
- perf_db_export_calls = False
- perf_db_export_callchains = False
++	if (machine__kernel_ip(machine, ip))
++		cpumode = PERF_RECORD_MISC_KERNEL;
++	else
++		cpumode = PERF_RECORD_MISC_USER;
++	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
++		return -1;
++	if (al.map->dso->data.status == DSO_DATA_STATUS_ERROR)
++		return -1;
++	map__load(al.map);
++	offset = al.map->map_ip(al.map, ip);
++	if (is64bit)
++		*is64bit = al.map->dso->is_64_bit;
++	return dso__data_read_offset(al.map->dso, machine, offset, (u8 *)buf, len);
++}
+diff --git a/tools/perf/util/fetch.h b/tools/perf/util/fetch.h
+new file mode 100644
+index 000000000000..7b77b8cee55a
+--- /dev/null
++++ b/tools/perf/util/fetch.h
+@@ -0,0 +1,7 @@
++#ifndef FETCH_H
++#define FETCH_H 1
++
++int fetch_exe(u64 ip, struct thread *thread, struct machine *machine,
++	      char *buf, int len, bool *is64bit);
++
++#endif
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index 0c0180c67574..915f4662e52e 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -38,6 +38,7 @@
+ #include "auxtrace.h"
+ #include "intel-pt-decoder/intel-pt-insn-decoder.h"
+ #include "intel-bts.h"
++#include "fetch.h"
  
-+def printerr(*args, **kw_args):
-+	print(*args, file=sys.stderr, **kw_args)
+ #define MAX_TIMESTAMP (~0ULL)
  
- def usage():
--	print >> sys.stderr, "Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]"
--	print >> sys.stderr, "where:	columns		'all' or 'branches'"
--	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
--	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
-+	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
-+	printerr("where:	columns		'all' or 'branches'")
-+	printerr("		calls		'calls' => create calls and call_paths table")
-+	printerr("		callchains	'callchains' => create call_paths table")
- 	raise Exception("Too few arguments")
+@@ -328,35 +329,19 @@ static int intel_bts_get_next_insn(struct intel_bts_queue *btsq, u64 ip)
+ {
+ 	struct machine *machine = btsq->bts->machine;
+ 	struct thread *thread;
+-	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
+-	uint8_t cpumode;
++	bool x86_64;
+ 	int err = -1;
  
- if (len(sys.argv) < 2):
-@@ -273,7 +289,7 @@ def do_query(q, s):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
+-	if (machine__kernel_ip(machine, ip))
+-		cpumode = PERF_RECORD_MISC_KERNEL;
+-	else
+-		cpumode = PERF_RECORD_MISC_USER;
+-
+ 	thread = machine__find_thread(machine, -1, btsq->tid);
+ 	if (!thread)
+ 		return -1;
  
--print datetime.datetime.today(), "Creating database..."
-+print(datetime.datetime.today(), "Creating database...")
+-	if (!thread__find_map(thread, cpumode, ip, &al) || !al.map->dso)
+-		goto out_put;
+-
+-	len = dso__data_read_addr(al.map->dso, al.map, machine, ip, buf,
+-				  INTEL_PT_INSN_BUF_SZ);
++	len = fetch_exe(ip, thread, machine, (char*)buf, INTEL_PT_INSN_BUF_SZ, &x86_64);
+ 	if (len <= 0)
+ 		goto out_put;
  
- db = QSqlDatabase.addDatabase('QPSQL')
- query = QSqlQuery(db)
-@@ -506,12 +522,12 @@ do_query(query, 'CREATE VIEW samples_view AS '
- 	' FROM samples')
+-	/* Load maps to ensure dso->is_64_bit has been updated */
+-	map__load(al.map);
+-
+-	x86_64 = al.map->dso->is_64_bit;
+-
+ 	if (intel_pt_get_insn(buf, len, x86_64, &btsq->intel_pt_insn))
+ 		goto out_put;
  
- 
--file_header = struct.pack("!11sii", "PGCOPY\n\377\r\n\0", 0, 0)
--file_trailer = "\377\377"
-+file_header = struct.pack("!11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
-+file_trailer = b"\377\377"
- 
- def open_output_file(file_name):
- 	path_name = output_dir_name + "/" + file_name
--	file = open(path_name, "w+")
-+	file = open(path_name, "wb+")
- 	file.write(file_header)
- 	return file
- 
-@@ -526,13 +542,13 @@ def copy_output_file_direct(file, table_name):
- 
- # Use COPY FROM STDIN because security may prevent postgres from accessing the files directly
- def copy_output_file(file, table_name):
--	conn = PQconnectdb("dbname = " + dbname)
-+	conn = PQconnectdb(toclientstr("dbname = " + dbname))
- 	if (PQstatus(conn)):
- 		raise Exception("COPY FROM STDIN PQconnectdb failed")
- 	file.write(file_trailer)
- 	file.seek(0)
- 	sql = "COPY " + table_name + " FROM STDIN (FORMAT 'binary')"
--	res = PQexec(conn, sql)
-+	res = PQexec(conn, toclientstr(sql))
- 	if (PQresultStatus(res) != 4):
- 		raise Exception("COPY FROM STDIN PQexec failed")
- 	data = file.read(65536)
-@@ -566,7 +582,7 @@ if perf_db_export_calls:
- 	call_file		= open_output_file("call_table.bin")
- 
- def trace_begin():
--	print datetime.datetime.today(), "Writing to intermediate files..."
-+	print(datetime.datetime.today(), "Writing to intermediate files...")
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
- 	machine_table(0, 0, "unknown")
-@@ -582,7 +598,7 @@ def trace_begin():
- unhandled_count = 0
- 
- def trace_end():
--	print datetime.datetime.today(), "Copying to database..."
-+	print(datetime.datetime.today(), "Copying to database...")
- 	copy_output_file(evsel_file,		"selected_events")
- 	copy_output_file(machine_file,		"machines")
- 	copy_output_file(thread_file,		"threads")
-@@ -597,7 +613,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		copy_output_file(call_file,		"calls")
- 
--	print datetime.datetime.today(), "Removing intermediate files..."
-+	print(datetime.datetime.today(), "Removing intermediate files...")
- 	remove_output_file(evsel_file)
- 	remove_output_file(machine_file)
- 	remove_output_file(thread_file)
-@@ -612,7 +628,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		remove_output_file(call_file)
- 	os.rmdir(output_dir_name)
--	print datetime.datetime.today(), "Adding primary keys"
-+	print(datetime.datetime.today(), "Adding primary keys")
- 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
- 	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
-@@ -627,7 +643,7 @@ def trace_end():
- 	if perf_db_export_calls:
- 		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
- 
--	print datetime.datetime.today(), "Adding foreign keys"
-+	print(datetime.datetime.today(), "Adding foreign keys")
- 	do_query(query, 'ALTER TABLE threads '
- 					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
- 					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
-@@ -663,8 +679,8 @@ def trace_end():
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
--	print datetime.datetime.today(), "Done"
-+		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
-+	print(datetime.datetime.today(), "Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
-@@ -674,12 +690,14 @@ def sched__sched_switch(*x):
- 	pass
- 
- def evsel_table(evsel_id, evsel_name, *x):
-+	evsel_name = toserverstr(evsel_name)
- 	n = len(evsel_name)
- 	fmt = "!hiqi" + str(n) + "s"
- 	value = struct.pack(fmt, 2, 8, evsel_id, n, evsel_name)
- 	evsel_file.write(value)
- 
- def machine_table(machine_id, pid, root_dir, *x):
-+	root_dir = toserverstr(root_dir)
- 	n = len(root_dir)
- 	fmt = "!hiqiii" + str(n) + "s"
- 	value = struct.pack(fmt, 3, 8, machine_id, 4, pid, n, root_dir)
-@@ -690,6 +708,7 @@ def thread_table(thread_id, machine_id, process_id, pid, tid, *x):
- 	thread_file.write(value)
- 
- def comm_table(comm_id, comm_str, *x):
-+	comm_str = toserverstr(comm_str)
- 	n = len(comm_str)
- 	fmt = "!hiqi" + str(n) + "s"
- 	value = struct.pack(fmt, 2, 8, comm_id, n, comm_str)
-@@ -701,6 +720,9 @@ def comm_thread_table(comm_thread_id, comm_id, thread_id, *x):
- 	comm_thread_file.write(value)
- 
- def dso_table(dso_id, machine_id, short_name, long_name, build_id, *x):
-+	short_name = toserverstr(short_name)
-+	long_name = toserverstr(long_name)
-+	build_id = toserverstr(build_id)
- 	n1 = len(short_name)
- 	n2 = len(long_name)
- 	n3 = len(build_id)
-@@ -709,12 +731,14 @@ def dso_table(dso_id, machine_id, short_name, long_name, build_id, *x):
- 	dso_file.write(value)
- 
- def symbol_table(symbol_id, dso_id, sym_start, sym_end, binding, symbol_name, *x):
-+	symbol_name = toserverstr(symbol_name)
- 	n = len(symbol_name)
- 	fmt = "!hiqiqiqiqiii" + str(n) + "s"
- 	value = struct.pack(fmt, 6, 8, symbol_id, 8, dso_id, 8, sym_start, 8, sym_end, 4, binding, n, symbol_name)
- 	symbol_file.write(value)
- 
- def branch_type_table(branch_type, name, *x):
-+	name = toserverstr(name)
- 	n = len(name)
- 	fmt = "!hiii" + str(n) + "s"
- 	value = struct.pack(fmt, 2, 4, branch_type, n, name)
 -- 
-2.16.4
+2.20.1
