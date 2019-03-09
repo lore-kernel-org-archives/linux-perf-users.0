@@ -1,83 +1,47 @@
-From: Qu Wenruo <wqu@suse.de>
-Subject: Re: [PATCH RFC 0/3] btrfs: Performance profiler support
-Date: Sat, 9 Mar 2019 14:32:55 +0800
-Message-ID: <7d13f8ab-06e6-6a03-04e6-dd101f08d612@suse.de>
-References: <20190306061907.29685-1-wqu@suse.com>
- <20190307140223.GH31119@twin.jikos.cz>
- <ccf67c41-752a-6812-0de7-34f39c37ecac@gmx.com>
- <20190307161203.GJ31119@twin.jikos.cz>
- <4040a77a-7e64-9667-3ede-d0750456c9f4@suse.com>
+From: Feng Tang <feng.tang@intel.com>
+Subject: Re: [PATCH v4 07/15] perf tools report: Use less for scripts output
+Date: Sat, 9 Mar 2019 15:52:25 +0800
+Message-ID: <20190309075225.6bfmj4vofatiy4md@shbuild888>
+References: <20190305144758.12397-1-andi@firstfloor.org>
+ <20190305144758.12397-8-andi@firstfloor.org>
+ <20190308134754.GD26260@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-btrfs-owner@vger.kernel.org>
-In-Reply-To: <4040a77a-7e64-9667-3ede-d0750456c9f4@suse.com>
-Content-Language: en-US
-Sender: linux-btrfs-owner@vger.kernel.org
-To: Nikolay Borisov <nborisov@suse.com>, Qu Wenruo <quwenruo.btrfs@gmx.com>, dsterba@suse.cz, linux-btrfs@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190308134754.GD26260@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-
-On 2019/3/9 下午2:21, Nikolay Borisov wrote:
+On Fri, Mar 08, 2019 at 10:47:54AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Mar 05, 2019 at 06:47:50AM -0800, Andi Kleen escreveu:
+> > From: Andi Kleen <ak@linux.intel.com>
+> > 
+> > The UI viewer for scripts output has a lot of limitations: limited size,
+> > no search or save function, slow, and various other issues.
+> > 
+> > Just use 'less' to display directly on the terminal instead.
 > 
+> I'm ok with this, CCing Feng tho since he contributed this browser, to
+> let him know.
+
+Thanks for the note!
+
 > 
-> On 7.03.19 г. 18:12 ч., David Sterba wrote:
->> On Thu, Mar 07, 2019 at 10:18:49PM +0800, Qu Wenruo wrote:
->>>> Well, most of that is answered by 'figure out how to use tracepoints and
->>>> perf for that'.
->>>>
->>>> If there were not a whole substystem, actively maintained and
->>>> documented, implementing something like that might help, but that's not
->>>> the case.
->>>>
->>>> I see what you were able to understand from the results, but it's more
->>>> like a custom analysis tool that should not merged as-is. It brings a
->>>> whole new interface and that's always hard to get right with all the
->>>> mistakes ahead that somebody has probably solved already.
->>>>
->>>> It would be good to have list of the limitations of perf you see, and we
->>>> can find a solution ourselves or ask elsewhere.
->>>
->>> Add linux-perf-users mail list.
->>>
->>> I should mention the problem of ftrace (or my perf skill) in cover letter.
->>>
->>> The biggest problem is the conflicts between detailed function execution
->>> duration and classification.
->>>
->>> For tree lock case, indeed we can use function graph to get execution
->>> duration of btrfs_tree_read_lock() and btrfs_tree_lock().
->>> But that's all. We can't really do much classification.
->>>
->>> If just use trace event, with trace event added, then we can't get the
->>> execution duration.
->>
->> I think you can save the start and end times and put the delta to the
->> tracepoint output.
->>
-> 
-> Yes, this can be done and in fact JBD2 uses a similar approach. For
-> example check how journal->j_stats is being used in fs/jbd2/commit.c.
-> I.e stats are accumulated in a structure which is then printed by some
-> tracepoints.
+> - Arnaldo
+>  
+> > This won't work in gtk mode, but gtk doesn't support these
+> > context menus anyways. If that is ever done could use an terminal
+> > for the output.
+> > 
+> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> > 
 
-The idea to use the trace events other than re-inventing a sysfs
-interface indeed makes sense.
-I'll go traditional trace events way.
+Looks good to me.
 
-Then my question is, there is no way to make the trace events happen at
-certain time point. The example in jdb2 can only be triggered by
-jdb2_journal_commit_transaction().
-
-IMHO for such accumulated accounting, it would be much more useful to
-get such stats at users' will.
-So we still need a method to trigger trace event at users' will.
+Acked-by: Feng Tang <feng.tang@intel.com>
 
 Thanks,
-Qu
-
-> Concretely, rs_request_delayd calculates the delay between
-> transaction commit being requested and the transaction entering locked
-> (committing) state.
-> 
+Feng
