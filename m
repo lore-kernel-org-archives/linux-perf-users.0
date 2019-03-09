@@ -1,192 +1,61 @@
-From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v5 02/15] perf tools script: Support insn output for normal samples
-Date: Fri,  8 Mar 2019 21:56:15 -0800
-Message-ID: <20190309055628.21617-3-andi@firstfloor.org>
-References: <20190309055628.21617-1-andi@firstfloor.org>
+From: Nikolay Borisov <nborisov@suse.com>
+Subject: Re: [PATCH RFC 0/3] btrfs: Performance profiler support
+Date: Sat, 9 Mar 2019 08:21:22 +0200
+Message-ID: <4040a77a-7e64-9667-3ede-d0750456c9f4@suse.com>
+References: <20190306061907.29685-1-wqu@suse.com>
+ <20190307140223.GH31119@twin.jikos.cz>
+ <ccf67c41-752a-6812-0de7-34f39c37ecac@gmx.com>
+ <20190307161203.GJ31119@twin.jikos.cz>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190309055628.21617-1-andi@firstfloor.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Return-path: <linux-btrfs-owner@vger.kernel.org>
+In-Reply-To: <20190307161203.GJ31119@twin.jikos.cz>
+Content-Language: en-US
+Sender: linux-btrfs-owner@vger.kernel.org
+To: dsterba@suse.cz, Qu Wenruo <quwenruo.btrfs@gmx.com>, Qu Wenruo <wqu@suse.com>, linux-btrfs@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
 
-perf script -F +insn was only working for PT traces because
-the PT instruction decoder was filling in the insn/insn_len
-sample attributes. Support it for non PT samples too on x86
-using the existing x86 instruction decoder.
 
-This adds some extra checking to ensure that we don't try
-to decode instructions when using perf.data from a different
-architecture.
+On 7.03.19 г. 18:12 ч., David Sterba wrote:
+> On Thu, Mar 07, 2019 at 10:18:49PM +0800, Qu Wenruo wrote:
+>>> Well, most of that is answered by 'figure out how to use tracepoints and
+>>> perf for that'.
+>>>
+>>> If there were not a whole substystem, actively maintained and
+>>> documented, implementing something like that might help, but that's not
+>>> the case.
+>>>
+>>> I see what you were able to understand from the results, but it's more
+>>> like a custom analysis tool that should not merged as-is. It brings a
+>>> whole new interface and that's always hard to get right with all the
+>>> mistakes ahead that somebody has probably solved already.
+>>>
+>>> It would be good to have list of the limitations of perf you see, and we
+>>> can find a solution ourselves or ask elsewhere.
+>>
+>> Add linux-perf-users mail list.
+>>
+>> I should mention the problem of ftrace (or my perf skill) in cover letter.
+>>
+>> The biggest problem is the conflicts between detailed function execution
+>> duration and classification.
+>>
+>> For tree lock case, indeed we can use function graph to get execution
+>> duration of btrfs_tree_read_lock() and btrfs_tree_lock().
+>> But that's all. We can't really do much classification.
+>>
+>> If just use trace event, with trace event added, then we can't get the
+>> execution duration.
+> 
+> I think you can save the start and end times and put the delta to the
+> tracepoint output.
+> 
 
-% perf record -a sleep 1
-% perf script -F ip,sym,insn --xed
- ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
- ffffffff8100bb50 intel_bts_enable_local                retq
- ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
- ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
- ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
- ffffffff810f1f79 generic_exec_single           xor %eax, %eax
- ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
- ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
- ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
-...
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
----
-v2:
-Avoid printing instruction when empty
-Only decode when perf.data file was collected on same architecture
----
- tools/perf/arch/x86/util/Build      |  1 +
- tools/perf/arch/x86/util/archinsn.c | 28 ++++++++++++++++++++++++++++
- tools/perf/builtin-script.c         | 21 ++++++++++++++++++++-
- tools/perf/util/archinsn.h          | 12 ++++++++++++
- 4 files changed, 61 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/arch/x86/util/archinsn.c
- create mode 100644 tools/perf/util/archinsn.h
-
-diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
-index 7aab0be5fc5f..7b8e69bbbdfe 100644
---- a/tools/perf/arch/x86/util/Build
-+++ b/tools/perf/arch/x86/util/Build
-@@ -6,6 +6,7 @@ perf-y += perf_regs.o
- perf-y += group.o
- perf-y += machine.o
- perf-y += event.o
-+perf-y += archinsn.o
- 
- perf-$(CONFIG_DWARF) += dwarf-regs.o
- perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
-diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
-new file mode 100644
-index 000000000000..10b3c2a08b8f
---- /dev/null
-+++ b/tools/perf/arch/x86/util/archinsn.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "perf.h"
-+#include "archinsn.h"
-+#include "fetch.h"
-+#include "util/intel-pt-decoder/insn.h"
-+#include "machine.h"
-+#include "thread.h"
-+#include "symbol.h"
-+
-+void arch_fetch_insn(struct perf_sample *sample,
-+		     struct thread *thread,
-+		     struct machine *machine)
-+{
-+	struct insn insn;
-+	int len;
-+	bool is64bit = false;
-+
-+	if (!sample->ip)
-+		return;
-+	len = fetch_exe(sample->ip, thread, machine, sample->insn,
-+			sizeof(sample->insn), &is64bit);
-+	if (len <= 0)
-+		return;
-+	insn_init(&insn, sample->insn, len, is64bit);
-+	insn_get_length(&insn);
-+	if (insn_complete(&insn) && insn.length <= len)
-+		sample->insn_len = insn.length;
-+}
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 2d8cb1d1682c..fbc440bdf880 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -29,10 +29,12 @@
- #include "util/time-utils.h"
- #include "util/path.h"
- #include "print_binary.h"
-+#include "archinsn.h"
- #include <linux/bitmap.h>
- #include <linux/kernel.h>
- #include <linux/stringify.h>
- #include <linux/time64.h>
-+#include <sys/utsname.h>
- #include "asm/bug.h"
- #include "util/mem-events.h"
- #include "util/dump-insn.h"
-@@ -63,6 +65,7 @@ static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- static struct perf_stat_config	stat_config;
- static int			max_blocks;
-+static bool			native_arch;
- 
- unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
- 
-@@ -1227,6 +1230,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
- 	return len + dlen;
- }
- 
-+__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
-+			    struct thread *thread __maybe_unused,
-+			    struct machine *machine __maybe_unused)
-+{
-+}
-+
- static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 				     struct perf_event_attr *attr,
- 				     struct thread *thread,
-@@ -1234,9 +1243,12 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- {
- 	int printed = 0;
- 
-+	if (sample->insn_len == 0 && native_arch)
-+		arch_fetch_insn(sample, thread, machine);
-+
- 	if (PRINT_FIELD(INSNLEN))
- 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
--	if (PRINT_FIELD(INSN)) {
-+	if (PRINT_FIELD(INSN) && sample->insn_len) {
- 		int i;
- 
- 		printed += fprintf(fp, " insn:");
-@@ -3277,6 +3289,7 @@ int cmd_script(int argc, const char **argv)
- 		.set = false,
- 		.default_no_sample = true,
- 	};
-+	struct utsname uts;
- 	char *script_path = NULL;
- 	const char **__argv;
- 	int i, j, err = 0;
-@@ -3615,6 +3628,12 @@ int cmd_script(int argc, const char **argv)
- 	if (symbol__init(&session->header.env) < 0)
- 		goto out_delete;
- 
-+	uname(&uts);
-+	if (!strcmp(uts.machine, session->header.env.arch) ||
-+		(!strcmp(uts.machine, "x86_64") &&
-+		 !strcmp(session->header.env.arch, "i386")))
-+		native_arch = true;
-+
- 	script.session = session;
- 	script__setup_sample_type(&script);
- 
-diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
-new file mode 100644
-index 000000000000..448cbb6b8d7e
---- /dev/null
-+++ b/tools/perf/util/archinsn.h
-@@ -0,0 +1,12 @@
-+#ifndef INSN_H
-+#define INSN_H 1
-+
-+struct perf_sample;
-+struct machine;
-+struct thread;
-+
-+void arch_fetch_insn(struct perf_sample *sample,
-+		     struct thread *thread,
-+		     struct machine *machine);
-+
-+#endif
--- 
-2.20.1
+Yes, this can be done and in fact JBD2 uses a similar approach. For
+example check how journal->j_stats is being used in fs/jbd2/commit.c.
+I.e stats are accumulated in a structure which is then printed by some
+tracepoints. Concretely, rs_request_delayd calculates the delay between
+transaction commit being requested and the transaction entering locked
+(committing) state.
