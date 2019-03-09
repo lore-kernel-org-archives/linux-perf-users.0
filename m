@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v5 14/15] perf tools script: Add array bound checking to list_scripts
-Date: Fri,  8 Mar 2019 21:56:27 -0800
-Message-ID: <20190309055628.21617-15-andi@firstfloor.org>
+Subject: [PATCH v5 10/15] perf tools: Add utility function to print ns time stamps
+Date: Fri,  8 Mar 2019 21:56:23 -0800
+Message-ID: <20190309055628.21617-11-andi@firstfloor.org>
 References: <20190309055628.21617-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,67 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Don't overflow array when the scripts directory is too large,
-or the script file name is too long.
+Add a utility function to print nanosecond timestamps.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/builtin-script.c      | 8 ++++++--
- tools/perf/builtin.h             | 3 ++-
- tools/perf/ui/browsers/scripts.c | 3 ++-
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ tools/perf/util/time-utils.c | 8 ++++++++
+ tools/perf/util/time-utils.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 77cc014ff8d0..389118500694 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2975,7 +2975,8 @@ static int check_ev_match(char *dir_name, char *scriptname,
-  * will list all statically runnable scripts, select one, execute it and
-  * show the output in a perf browser.
-  */
--int find_scripts(char **scripts_array, char **scripts_path_array)
-+int find_scripts(char **scripts_array, char **scripts_path_array, int num,
-+		 int pathlen)
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 6193b46050a5..a63bdf4cfd1b 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -404,6 +404,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
+ }
+ 
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
++{
++	u64  sec = timestamp / NSEC_PER_SEC;
++	u64 nsec = timestamp % NSEC_PER_SEC;
++
++	return scnprintf(buf, sz, "%"PRIu64".%09"PRIu64, sec, nsec);
++}
++
+ int fetch_current_timestamp(char *buf, size_t sz)
  {
- 	struct dirent *script_dirent, *lang_dirent;
- 	char scripts_path[MAXPATHLEN], lang_path[MAXPATHLEN];
-@@ -3020,7 +3021,10 @@ int find_scripts(char **scripts_array, char **scripts_path_array)
- 			/* Skip those real time scripts: xxxtop.p[yl] */
- 			if (strstr(script_dirent->d_name, "top."))
- 				continue;
--			sprintf(scripts_path_array[i], "%s/%s", lang_path,
-+			if (i >= num)
-+				break;
-+			snprintf(scripts_path_array[i], pathlen, "%s/%s",
-+				lang_path,
- 				script_dirent->d_name);
- 			temp = strchr(script_dirent->d_name, '.');
- 			snprintf(scripts_array[i],
-diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-index 05745f3ce912..999fe9170122 100644
---- a/tools/perf/builtin.h
-+++ b/tools/perf/builtin.h
-@@ -40,5 +40,6 @@ int cmd_mem(int argc, const char **argv);
- int cmd_data(int argc, const char **argv);
- int cmd_ftrace(int argc, const char **argv);
+ 	struct timeval tv;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 70b177d2b98c..9266cf4a8e58 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -24,6 +24,7 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 				   int num, u64 timestamp);
  
--int find_scripts(char **scripts_array, char **scripts_path_array);
-+int find_scripts(char **scripts_array, char **scripts_path_array, int num,
-+		 int pathlen);
- #endif
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 5d407ab834b5..6759d6657e1a 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -117,7 +117,8 @@ static int list_scripts(char *script_name, bool *custom,
- 		paths[i] = names[i] + SCRIPT_NAMELEN;
- 	}
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
  
--	num = find_scripts(names + max_std, paths + max_std);
-+	num = find_scripts(names + max_std, paths + max_std, SCRIPT_MAX_NO - max_std,
-+			SCRIPT_FULLPATH_LEN);
- 	if (num < 0)
- 		num = 0;
- 	choice = ui__popup_menu(num + max_std, (char * const *)names);
+ int fetch_current_timestamp(char *buf, size_t sz);
+ 
 -- 
 2.20.1
