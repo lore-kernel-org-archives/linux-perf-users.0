@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v5 06/15] perf tools report: Support time sort key
-Date: Fri,  8 Mar 2019 21:56:19 -0800
-Message-ID: <20190309055628.21617-7-andi@firstfloor.org>
+Subject: [PATCH v5 02/15] perf tools script: Support insn output for normal samples
+Date: Fri,  8 Mar 2019 21:56:15 -0800
+Message-ID: <20190309055628.21617-3-andi@firstfloor.org>
 References: <20190309055628.21617-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,210 +14,179 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add a time sort key to perf report to display samples for
-different time quantums separately. This allows easier
-analysis of workloads that change over time, and also
-will allow looking at the context of samples.
+perf script -F +insn was only working for PT traces because
+the PT instruction decoder was filling in the insn/insn_len
+sample attributes. Support it for non PT samples too on x86
+using the existing x86 instruction decoder.
 
-% perf record ...
-% perf report --sort time,overhead,symbol --time-quantum 1ms --stdio
+This adds some extra checking to ensure that we don't try
+to decode instructions when using perf.data from a different
+architecture.
+
+% perf record -a sleep 1
+% perf script -F ip,sym,insn --xed
+ ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+ ffffffff8100bb50 intel_bts_enable_local                retq
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff81048612 native_apic_mem_write                 movl  %esi, -0xa04000(%rdi)
+ ffffffff810f1f79 generic_exec_single           xor %eax, %eax
+ ffffffff811704c9 remote_function               movl  %eax, 0x18(%rbx)
+ ffffffff8100bb34 intel_bts_enable_local                movl  0x2000(%rax), %edx
+ ffffffff81048610 native_apic_mem_write                 mov %edi, %edi
 ...
-     0.67%  277061.87300  [.] _dl_start
-     0.50%  277061.87300  [.] f1
-     0.50%  277061.87300  [.] f2
-     0.33%  277061.87300  [.] main
-     0.29%  277061.87300  [.] _dl_lookup_symbol_x
-     0.29%  277061.87300  [.] dl_main
-     0.29%  277061.87300  [.] do_lookup_x
-     0.17%  277061.87300  [.] _dl_debug_initialize
-     0.17%  277061.87300  [.] _dl_init_paths
-     0.08%  277061.87300  [.] check_match
-     0.04%  277061.87300  [.] _dl_count_modids
-     1.33%  277061.87400  [.] f1
-     1.33%  277061.87400  [.] f2
-     1.33%  277061.87400  [.] main
-     1.17%  277061.87500  [.] main
-     1.08%  277061.87500  [.] f1
-     1.08%  277061.87500  [.] f2
-     1.00%  277061.87600  [.] main
-     0.83%  277061.87600  [.] f1
-     0.83%  277061.87600  [.] f2
-     1.00%  277061.87700  [.] main
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 v2:
-Use symbol_conf.time_quantum
-v3:
-Use _PER_NSEC defines
-Fix fallback path for zero quantum
+Avoid printing instruction when empty
+Only decode when perf.data file was collected on same architecture
 ---
- tools/perf/Documentation/perf-report.txt |  2 ++
- tools/perf/util/hist.c                   | 11 +++++++
- tools/perf/util/hist.h                   |  1 +
- tools/perf/util/sort.c                   | 39 ++++++++++++++++++++++++
- tools/perf/util/sort.h                   |  2 ++
- 5 files changed, 55 insertions(+)
+ tools/perf/arch/x86/util/Build      |  1 +
+ tools/perf/arch/x86/util/archinsn.c | 28 ++++++++++++++++++++++++++++
+ tools/perf/builtin-script.c         | 21 ++++++++++++++++++++-
+ tools/perf/util/archinsn.h          | 12 ++++++++++++
+ 4 files changed, 61 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/x86/util/archinsn.c
+ create mode 100644 tools/perf/util/archinsn.h
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 9ec1702bccdd..546d87221ad8 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -105,6 +105,8 @@ OPTIONS
- 	guest machine
- 	- sample: Number of sample
- 	- period: Raw number of event count of sample
-+	- time: Separate the samples by time stamp with the resolution specified by
-+	--time-quantum (default 100ms). Specify with overhead and before it.
+diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+index 7aab0be5fc5f..7b8e69bbbdfe 100644
+--- a/tools/perf/arch/x86/util/Build
++++ b/tools/perf/arch/x86/util/Build
+@@ -6,6 +6,7 @@ perf-y += perf_regs.o
+ perf-y += group.o
+ perf-y += machine.o
+ perf-y += event.o
++perf-y += archinsn.o
  
- 	By default, comm, dso and symbol keys are used.
- 	(i.e. --sort comm,dso,symbol)
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 669f961316f0..08e2b3be4c1b 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -19,6 +19,7 @@
- #include <math.h>
- #include <inttypes.h>
- #include <sys/param.h>
-+#include <linux/time64.h>
+ perf-$(CONFIG_DWARF) += dwarf-regs.o
+ perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
+diff --git a/tools/perf/arch/x86/util/archinsn.c b/tools/perf/arch/x86/util/archinsn.c
+new file mode 100644
+index 000000000000..10b3c2a08b8f
+--- /dev/null
++++ b/tools/perf/arch/x86/util/archinsn.c
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "perf.h"
++#include "archinsn.h"
++#include "fetch.h"
++#include "util/intel-pt-decoder/insn.h"
++#include "machine.h"
++#include "thread.h"
++#include "symbol.h"
++
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine)
++{
++	struct insn insn;
++	int len;
++	bool is64bit = false;
++
++	if (!sample->ip)
++		return;
++	len = fetch_exe(sample->ip, thread, machine, sample->insn,
++			sizeof(sample->insn), &is64bit);
++	if (len <= 0)
++		return;
++	insn_init(&insn, sample->insn, len, is64bit);
++	insn_get_length(&insn);
++	if (insn_complete(&insn) && insn.length <= len)
++		sample->insn_len = insn.length;
++}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 2d8cb1d1682c..fbc440bdf880 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -29,10 +29,12 @@
+ #include "util/time-utils.h"
+ #include "util/path.h"
+ #include "print_binary.h"
++#include "archinsn.h"
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/stringify.h>
+ #include <linux/time64.h>
++#include <sys/utsname.h>
+ #include "asm/bug.h"
+ #include "util/mem-events.h"
+ #include "util/dump-insn.h"
+@@ -63,6 +65,7 @@ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+ static struct perf_stat_config	stat_config;
+ static int			max_blocks;
++static bool			native_arch;
  
- static bool hists__filter_entry_by_dso(struct hists *hists,
- 				       struct hist_entry *he);
-@@ -192,6 +193,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
- 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
- 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
- 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
-+	hists__new_col_len(hists, HISTC_TIME, 12);
+ unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
  
- 	if (h->srcline) {
- 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
-@@ -246,6 +248,14 @@ static void he_stat__add_cpumode_period(struct he_stat *he_stat,
- 	}
+@@ -1227,6 +1230,12 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
+ 	return len + dlen;
  }
  
-+static long hist_time(unsigned long time)
++__weak void arch_fetch_insn(struct perf_sample *sample __maybe_unused,
++			    struct thread *thread __maybe_unused,
++			    struct machine *machine __maybe_unused)
 +{
-+	unsigned long time_quantum = symbol_conf.time_quantum;
-+	if (time_quantum)
-+		return (time / time_quantum) * time_quantum;
-+	return time;
 +}
 +
- static void he_stat__add_period(struct he_stat *he_stat, u64 period,
- 				u64 weight)
+ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 				     struct perf_event_attr *attr,
+ 				     struct thread *thread,
+@@ -1234,9 +1243,12 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
  {
-@@ -626,6 +636,7 @@ __hists__add_entry(struct hists *hists,
- 		.raw_data = sample->raw_data,
- 		.raw_size = sample->raw_size,
- 		.ops = ops,
-+		.time = hist_time(sample->time),
- 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+ 	int printed = 0;
  
- 	if (!hists->has_callchains && he && he->callchain_size != 0)
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4af27fbab24f..6279eca56409 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -31,6 +31,7 @@ enum hist_filter {
++	if (sample->insn_len == 0 && native_arch)
++		arch_fetch_insn(sample, thread, machine);
++
+ 	if (PRINT_FIELD(INSNLEN))
+ 		printed += fprintf(fp, " ilen: %d", sample->insn_len);
+-	if (PRINT_FIELD(INSN)) {
++	if (PRINT_FIELD(INSN) && sample->insn_len) {
+ 		int i;
  
- enum hist_column {
- 	HISTC_SYMBOL,
-+	HISTC_TIME,
- 	HISTC_DSO,
- 	HISTC_THREAD,
- 	HISTC_COMM,
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index d2299e912e59..bdd30cab51cb 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -3,6 +3,7 @@
- #include <inttypes.h>
- #include <regex.h>
- #include <linux/mman.h>
-+#include <linux/time64.h>
- #include "sort.h"
- #include "hist.h"
- #include "comm.h"
-@@ -15,6 +16,7 @@
- #include <traceevent/event-parse.h>
- #include "mem-events.h"
- #include "annotate.h"
-+#include "time-utils.h"
- #include <linux/kernel.h>
+ 		printed += fprintf(fp, " insn:");
+@@ -3277,6 +3289,7 @@ int cmd_script(int argc, const char **argv)
+ 		.set = false,
+ 		.default_no_sample = true,
+ 	};
++	struct utsname uts;
+ 	char *script_path = NULL;
+ 	const char **__argv;
+ 	int i, j, err = 0;
+@@ -3615,6 +3628,12 @@ int cmd_script(int argc, const char **argv)
+ 	if (symbol__init(&session->header.env) < 0)
+ 		goto out_delete;
  
- regex_t		parent_regex;
-@@ -654,6 +656,42 @@ struct sort_entry sort_socket = {
- 	.se_width_idx	= HISTC_SOCKET,
- };
++	uname(&uts);
++	if (!strcmp(uts.machine, session->header.env.arch) ||
++		(!strcmp(uts.machine, "x86_64") &&
++		 !strcmp(session->header.env.arch, "i386")))
++		native_arch = true;
++
+ 	script.session = session;
+ 	script__setup_sample_type(&script);
  
-+/* --sort time */
+diff --git a/tools/perf/util/archinsn.h b/tools/perf/util/archinsn.h
+new file mode 100644
+index 000000000000..448cbb6b8d7e
+--- /dev/null
++++ b/tools/perf/util/archinsn.h
+@@ -0,0 +1,12 @@
++#ifndef INSN_H
++#define INSN_H 1
 +
-+static int64_t
-+sort__time_cmp(struct hist_entry *left, struct hist_entry *right)
-+{
-+	return right->time - left->time;
-+}
++struct perf_sample;
++struct machine;
++struct thread;
 +
-+static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
-+				    size_t size, unsigned int width)
-+{
-+	unsigned long secs;
-+	unsigned long long nsecs;
-+	char he_time[32];
++void arch_fetch_insn(struct perf_sample *sample,
++		     struct thread *thread,
++		     struct machine *machine);
 +
-+	nsecs = he->time;
-+	secs = nsecs / NSEC_PER_SEC;
-+	nsecs -= secs * NSEC_PER_SEC;
-+
-+	if (symbol_conf.nanosecs)
-+		snprintf(he_time, sizeof he_time, "%5lu.%09llu: ",
-+			 secs, nsecs);
-+	else
-+		timestamp__scnprintf_usec(he->time, he_time,
-+					  sizeof(he_time));
-+
-+	return repsep_snprintf(bf, size, "%-.*s", width, he_time);
-+}
-+
-+struct sort_entry sort_time = {
-+	.se_header      = "Time",
-+	.se_cmp	        = sort__time_cmp,
-+	.se_snprintf    = hist_entry__time_snprintf,
-+	.se_width_idx	= HISTC_TIME,
-+};
-+
- /* --sort trace */
- 
- static char *get_trace_output(struct hist_entry *he)
-@@ -1634,6 +1672,7 @@ static struct sort_dimension common_sort_dimensions[] = {
- 	DIM(SORT_DSO_SIZE, "dso_size", sort_dso_size),
- 	DIM(SORT_CGROUP_ID, "cgroup_id", sort_cgroup_id),
- 	DIM(SORT_SYM_IPC_NULL, "ipc_null", sort_sym_ipc_null),
-+	DIM(SORT_TIME, "time", sort_time),
- };
- 
- #undef DIM
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 2fbee0b1011c..19dceb7f6145 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -135,6 +135,7 @@ struct hist_entry {
- 	char			*srcfile;
- 	struct symbol		*parent;
- 	struct branch_info	*branch_info;
-+	long			time;
- 	struct hists		*hists;
- 	struct mem_info		*mem_info;
- 	void			*raw_data;
-@@ -231,6 +232,7 @@ enum sort_type {
- 	SORT_DSO_SIZE,
- 	SORT_CGROUP_ID,
- 	SORT_SYM_IPC_NULL,
-+	SORT_TIME,
- 
- 	/* branch stack specific sort keys */
- 	__SORT_BRANCH_STACK,
++#endif
 -- 
 2.20.1
