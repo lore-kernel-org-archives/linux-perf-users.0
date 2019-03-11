@@ -1,30 +1,42 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v5 01/15] perf tools: Add utility function to fetch
- executable
-Date: Mon, 11 Mar 2019 13:32:40 +0100
-Message-ID: <20190311123240.GC26829@krava>
-References: <20190309055628.21617-1-andi@firstfloor.org>
- <20190309055628.21617-2-andi@firstfloor.org>
+From: =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+Subject: Re: [PATCH v2] AMD perf PMU events for AMD Family 17h.
+Date: Mon, 11 Mar 2019 13:35:41 +0100
+Message-ID: <3cdd0ff4-b189-6869-e30b-d616b4d7ae48@suse.cz>
+References: <3ee15066-429e-b0f2-1255-aab100fad472@suse.cz>
+ <fc049074-595e-92d7-5bab-bcd00f8493e2@suse.cz>
+ <20180823143141.GA22309@kernel.org>
+ <40464a66-9085-f26c-88cd-8d510b07a859@redhat.com>
+ <d65873ca-e402-b198-4fe9-8c4af81258c8@suse.cz>
+ <32d6a969-8b15-cda1-1057-9923733dbe39@suse.cz>
+ <20190308165747.GA10690@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190309055628.21617-2-andi@firstfloor.org>
+In-Reply-To: <20190308165747.GA10690@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: acme@kernel.org, jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: William Cohen <wcohen@redhat.com>, linux-perf-users@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, Martin Jambor <mjambor@suse.cz>, Jiri Olsa <jolsa@redhat.com>, Borislav Petkov <bpetkov@suse.de>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Mar 08, 2019 at 09:56:14PM -0800, Andi Kleen wrote:
-> From: Andi Kleen <ak@linux.intel.com>
+On 3/8/19 5:57 PM, Arnaldo Carvalho de Melo wrote:
+> Collected Boris's Acked-by and the original cset commit log and the
+> patch at the end of the message, next time please resubmit with a:
 > 
-> Add a utility function to fetch executable code. Convert one
-> user over to it. There are more places doing that, but they
-> do significantly different actions, so they are not
-> easy to fit into a single library function.
+>   [PATCH v2] proper summary
+> 
+>   proper description
+> 
+>   collect acks
+>   s-o-b
+> 
+> Thanks,
+> 
+> - Arnaldo
 
-fyi, Arnaldo added thread__memcpy based on your patch:
+Thank you Arnaldo.
 
-153259382633 perf thread: Generalize function to copy from thread addr space from intel-bts code
+I'll make better next time ;)
 
-jirka
+Martin
