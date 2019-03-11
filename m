@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH v1 06/10] perf, tools, report: Print better message for JITed code
-Date: Mon, 11 Mar 2019 13:24:42 -0700
-Message-ID: <20190311202446.10210-7-andi@firstfloor.org>
+Subject: [PATCH v1 07/10] perf, tools, report: Indicate JITed code better in report
+Date: Mon, 11 Mar 2019 13:24:43 -0700
+Message-ID: <20190311202446.10210-8-andi@firstfloor.org>
 References: <20190311202446.10210-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,33 +14,99 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The message about missing /tmp/perf-* for JITed code is quite confusing
-to users. Add a better error message, but only print it once.
+Print [TID] tid %d instead of the crypted /tmp/perf-%d.map default.
+
+% cat >loop.java
+public class loop {
+        public static void main(String[] args)
+        {
+                for (;;);
+        }
+}
+^D
+% javac loop.java
+% perf record java loop
+^C
+
+Before:
+
+% perf report --stdio
+...
+    56.09%  java     perf-34724.map      [.] 0x00007fd5bd021896
+    19.12%  java     perf-34724.map      [.] 0x00007fd5bd021887
+     9.79%  java     perf-34724.map      [.] 0x00007fd5bd021783
+     8.97%  java     perf-34724.map      [.] 0x00007fd5bd02175b
+
+After:
+
+% perf report --stdio
+...
+    56.09%  java     [JIT] tid 34724     [.] 0x00007fd5bd021896
+    19.12%  java     [JIT] tid 34724     [.] 0x00007fd5bd021887
+     9.79%  java     [JIT] tid 34724     [.] 0x00007fd5bd021783
+     8.97%  java     [JIT] tid 34724     [.] 0x00007fd5bd02175b
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/map.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/util/dso.c | 42 ++++++++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index fbeb0c6efaa6..d476b76abc6a 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -316,6 +316,15 @@ int map__load(struct map *map)
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index ba58ba603b69..ab8a455d2283 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -1141,28 +1141,34 @@ void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
  
- 	nr = dso__load(map->dso, map);
- 	if (nr < 0) {
-+		if (!strncmp(map->dso->name, "/tmp/perf-", 10)) {
-+			static bool warned;
-+			if (!warned) {
-+				pr_err("Cannot find executable, JITed code present? May need agent.\n");
-+				warned = true;
-+			}
-+			return -1;
-+		}
-+
- 		if (map->dso->has_build_id) {
- 			char sbuild_id[SBUILD_ID_SIZE];
+ static void dso__set_basename(struct dso *dso)
+ {
+-       /*
+-        * basename() may modify path buffer, so we must pass
+-        * a copy.
+-        */
+-       char *base, *lname = strdup(dso->long_name);
++	char *base, *lname;
++	int tid;
  
+-       if (!lname)
+-               return;
+-
+-       /*
+-        * basename() may return a pointer to internal
+-        * storage which is reused in subsequent calls
+-        * so copy the result.
+-        */
+-       base = strdup(basename(lname));
++	if (sscanf(dso->long_name, "/tmp/perf-%d.map", &tid) == 1) {
++		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
++			return;
++	} else {
++	      /*
++	       * basename() may modify path buffer, so we must pass
++               * a copy.
++               */
++		lname = strdup(dso->long_name);
++		if (!lname)
++			return;
+ 
+-       free(lname);
++		/*
++		 * basename() may return a pointer to internal
++		 * storage which is reused in subsequent calls
++		 * so copy the result.
++		 */
++		base = strdup(basename(lname));
+ 
+-       if (!base)
+-               return;
++		free(lname);
+ 
+-       dso__set_short_name(dso, base, true);
++		if (!base)
++			return;
++	}
++	dso__set_short_name(dso, base, true);
+ }
+ 
+ int dso__name_len(const struct dso *dso)
 -- 
 2.20.1
