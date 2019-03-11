@@ -1,107 +1,65 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v6 09/11] perf tools report: Add custom scripts to script
- menu
-Date: Mon, 11 Mar 2019 15:10:21 -0300
-Message-ID: <20190311181021.GT10690@kernel.org>
+Subject: Re: [PATCH v6 11/11] perf tools ui: Fix ui popup browser for many
+ entries
+Date: Mon, 11 Mar 2019 15:17:24 -0300
+Message-ID: <20190311181724.GU10690@kernel.org>
 References: <20190311144502.15423-1-andi@firstfloor.org>
- <20190311144502.15423-10-andi@firstfloor.org>
+ <20190311144502.15423-12-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190311144502.15423-10-andi@firstfloor.org>
+In-Reply-To: <20190311144502.15423-12-andi@firstfloor.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Andi Kleen <andi@firstfloor.org>
 Cc: jolsa@kernel.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Mar 11, 2019 at 07:45:00AM -0700, Andi Kleen escreveu:
+Em Mon, Mar 11, 2019 at 07:45:02AM -0700, Andi Kleen escreveu:
 > From: Andi Kleen <ak@linux.intel.com>
 > 
-> Add a way to define custom scripts through ~/.perfconfig, which
-> are then added to the scripts menu. The scripts get the same
-> arguments as perf script, in particular -i, --cpu, --tid.
+> Fix the argv ui browser code to correctly display more entries
+> than fit on the screen without crashing. The problem was some type
+> confusion with pointer types in the ->seek function. Do
+> the argv arithmetic correctly with char ** pointers. Also
+> add some asserts to find overruns and limit the display function
+> correctly.
 > 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/Documentation/perf-config.txt |  8 ++++++++
->  tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> index 2d0fb7613134..c3323228d3d0 100644
-> --- a/tools/perf/Documentation/perf-config.txt
-> +++ b/tools/perf/Documentation/perf-config.txt
-> @@ -590,6 +590,14 @@ samples.*::
->  		Define how many ns worth of time to show
->  		around samples in perf report sample context browser.
->  
-> +script.*::
-> +
-> +	Any option defines a script that is added to the scripts menu
-> +	in the interactive perf browser and whose output is displayed.
-> +	The name of the option is the name, the value is a script command line.
-> +	The script gets the same options passed as a full perf script,
-> +	in particular -i perfdata file, --cpu, --tid
-> +
+> Then finally remove a workaround for this in the res sample
+> browser.
 
-Isn't it better to use 'scripts' for those scripts and leave 'script'
-for configuring the 'perf script' command like we have options for
-annotate, etc?
+Applied and added this, please do so next time:
 
-- Arnaldo
+Committer testing:
 
->  SEE ALSO
->  --------
->  linkperf:perf[1]
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index cdba58447b85..5d407ab834b5 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -6,6 +6,7 @@
->  #include "../../util/symbol.h"
->  #include "../browser.h"
->  #include "../libslang.h"
-> +#include "config.h"
->  
->  #define SCRIPT_NAMELEN	128
->  #define SCRIPT_MAX_NO	64
-> @@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
->  	return 0;
->  }
->  
-> +static int scripts_config(const char *var, const char *value, void *data)
-> +{
-> +	struct script_config *c = data;
-> +
-> +	if (!strstarts(var, "script."))
-> +		return -1;
-> +	if (c->index >= SCRIPT_MAX_NO)
-> +		return -1;
-> +	c->names[c->index] = strdup(var + 7);
-> +	if (!c->names[c->index])
-> +		return -1;
-> +	if (asprintf(&c->paths[c->index], "%s %s", value,
-> +		     c->extra_format) < 0)
-> +		return -1;
-> +	c->index++;
-> +	return 0;
-> +}
-> +
->  /*
->   * When success, will copy the full path of the selected script
->   * into  the buffer pointed by script_name, and return 0.
-> @@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
->  			  &scriptc);
->  	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
->  			  &scriptc);
-> +	perf_config(scripts_config, &scriptc);
->  	custom_perf = scriptc.index;
->  	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
->  	i = scriptc.index;
-> -- 
-> 2.20.1
+1) Resize the x terminal to have just some 5 lines
 
--- 
+2) Use 'perf report --samples 1' to activate the sample browser options
+   in the menu
 
-- Arnaldo
+3) Press ENTER, this will cause the crash:
+
+  # perf report --samples 1
+  perf: Segmentation fault
+  -------- backtrace --------
+  perf[0x5a514a]
+  /lib64/libc.so.6(+0x385bf)[0x7f27281b55bf]
+  /lib64/libc.so.6(+0x161a67)[0x7f27282dea67]
+  /lib64/libslang.so.2(SLsmg_write_wrapped_string+0x82)[0x7f272874a0b2]
+  perf(ui_browser__argv_refresh+0x77)[0x5939a7]
+  perf[0x5924cc]
+  perf(ui_browser__run+0x39)[0x593449]
+  perf(ui__popup_menu+0x83)[0x5a5263]
+  perf[0x59f421]
+  perf(perf_evlist__tui_browse_hists+0x3a0)[0x5a3780]
+  perf(cmd_report+0x2746)[0x447136]
+  perf[0x4a95fe]
+  perf(main+0x61c)[0x42dc6c]
+  /lib64/libc.so.6(__libc_start_main+0xf2)[0x7f27281a1412]
+  perf(_start+0x2d)[0x42de9d]
+  #
+
+After applying this patch no crash takes place in such situation.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
