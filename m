@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/30] perf tools report: Add custom scripts to script menu
-Date: Mon, 11 Mar 2019 23:02:04 -0300
-Message-ID: <20190312020204.22092-31-acme@kernel.org>
+Subject: [PATCH 28/30] perf script: Add array bound checking to list_scripts
+Date: Mon, 11 Mar 2019 23:02:02 -0300
+Message-ID: <20190312020204.22092-29-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,82 +14,70 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add a way to define custom scripts through ~/.perfconfig, which are then
-added to the scripts menu. The scripts get the same arguments as 'perf
-script', in particular -i, --cpu, --tid.
+Don't overflow array when the scripts directory is too large, or the
+script file name is too long.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190311144502.15423-10-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20190311144502.15423-11-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt |  8 ++++++++
- tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+)
+ tools/perf/builtin-script.c      | 8 ++++++--
+ tools/perf/builtin.h             | 3 ++-
+ tools/perf/ui/browsers/scripts.c | 3 ++-
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 2d0fb7613134..95054a8176a2 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -590,6 +590,14 @@ samples.*::
- 		Define how many ns worth of time to show
- 		around samples in perf report sample context browser.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index b695b20ffc8a..2f93d60c5a17 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2982,7 +2982,8 @@ static int check_ev_match(char *dir_name, char *scriptname,
+  * will list all statically runnable scripts, select one, execute it and
+  * show the output in a perf browser.
+  */
+-int find_scripts(char **scripts_array, char **scripts_path_array)
++int find_scripts(char **scripts_array, char **scripts_path_array, int num,
++		 int pathlen)
+ {
+ 	struct dirent *script_dirent, *lang_dirent;
+ 	char scripts_path[MAXPATHLEN], lang_path[MAXPATHLEN];
+@@ -3027,7 +3028,10 @@ int find_scripts(char **scripts_array, char **scripts_path_array)
+ 			/* Skip those real time scripts: xxxtop.p[yl] */
+ 			if (strstr(script_dirent->d_name, "top."))
+ 				continue;
+-			sprintf(scripts_path_array[i], "%s/%s", lang_path,
++			if (i >= num)
++				break;
++			snprintf(scripts_path_array[i], pathlen, "%s/%s",
++				lang_path,
+ 				script_dirent->d_name);
+ 			temp = strchr(script_dirent->d_name, '.');
+ 			snprintf(scripts_array[i],
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index 05745f3ce912..999fe9170122 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -40,5 +40,6 @@ int cmd_mem(int argc, const char **argv);
+ int cmd_data(int argc, const char **argv);
+ int cmd_ftrace(int argc, const char **argv);
  
-+scripts.*::
-+
-+	Any option defines a script that is added to the scripts menu
-+	in the interactive perf browser and whose output is displayed.
-+	The name of the option is the name, the value is a script command line.
-+	The script gets the same options passed as a full perf script,
-+	in particular -i perfdata file, --cpu, --tid
-+
- SEE ALSO
- --------
- linkperf:perf[1]
+-int find_scripts(char **scripts_array, char **scripts_path_array);
++int find_scripts(char **scripts_array, char **scripts_path_array, int num,
++		 int pathlen);
+ #endif
 diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 96e5cd3b0eee..27cf3ab88d13 100644
+index cdba58447b85..96e5cd3b0eee 100644
 --- a/tools/perf/ui/browsers/scripts.c
 +++ b/tools/perf/ui/browsers/scripts.c
-@@ -6,6 +6,7 @@
- #include "../../util/symbol.h"
- #include "../browser.h"
- #include "../libslang.h"
-+#include "config.h"
+@@ -97,7 +97,8 @@ static int list_scripts(char *script_name, bool *custom,
+ 		paths[i] = names[i] + SCRIPT_NAMELEN;
+ 	}
  
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
-@@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
- 	return 0;
- }
- 
-+static int scripts_config(const char *var, const char *value, void *data)
-+{
-+	struct script_config *c = data;
-+
-+	if (!strstarts(var, "scripts."))
-+		return -1;
-+	if (c->index >= SCRIPT_MAX_NO)
-+		return -1;
-+	c->names[c->index] = strdup(var + 7);
-+	if (!c->names[c->index])
-+		return -1;
-+	if (asprintf(&c->paths[c->index], "%s %s", value,
-+		     c->extra_format) < 0)
-+		return -1;
-+	c->index++;
-+	return 0;
-+}
-+
- /*
-  * When success, will copy the full path of the selected script
-  * into  the buffer pointed by script_name, and return 0.
-@@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
-+	perf_config(scripts_config, &scriptc);
- 	custom_perf = scriptc.index;
- 	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
- 	i = scriptc.index;
+-	num = find_scripts(names + max_std, paths + max_std);
++	num = find_scripts(names + max_std, paths + max_std, SCRIPT_MAX_NO - max_std,
++			SCRIPT_FULLPATH_LEN);
+ 	if (num < 0)
+ 		num = 0;
+ 	choice = ui__popup_menu(num + max_std, (char * const *)names);
 -- 
 2.20.1
