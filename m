@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/30] perf script python: Add Python3 support to export-to-sqlite.py
-Date: Mon, 11 Mar 2019 23:01:51 -0300
-Message-ID: <20190312020204.22092-18-acme@kernel.org>
+Subject: [PATCH 04/30] perf time-utils: Add utility function to print time stamps in nanoseconds
+Date: Mon, 11 Mar 2019 23:01:38 -0300
+Message-ID: <20190312020204.22092-5-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,92 +9,53 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: Andi Kleen <ak@linux.intel.com>
 
-Support both Python2 and Python3 in the export-to-sqlite.py script
+Add a utility function to print nanosecond timestamps.
 
-The use of 'from __future__' implies the minimum supported Python2 version
-is now v2.6
-
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: http://lkml.kernel.org/r/20190309000518.2438-4-tonyj@suse.de
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lkml.kernel.org/r/20190305144758.12397-11-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/export-to-sqlite.py | 23 +++++++++++--------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ tools/perf/util/time-utils.c | 8 ++++++++
+ tools/perf/util/time-utils.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index eb63e6c7107f..3da338243aed 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -10,6 +10,8 @@
- # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- # more details.
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 0f53baec660e..20663a460df3 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -453,6 +453,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
+ }
  
-+from __future__ import print_function
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
++{
++	u64 sec  = timestamp / NSEC_PER_SEC,
++	    nsec = timestamp % NSEC_PER_SEC;
 +
- import os
- import sys
- import struct
-@@ -60,11 +62,14 @@ perf_db_export_mode = True
- perf_db_export_calls = False
- perf_db_export_callchains = False
- 
-+def printerr(*args, **keyword_args):
-+	print(*args, file=sys.stderr, **keyword_args)
++	return scnprintf(buf, sz, "%" PRIu64 ".%09" PRIu64, sec, nsec);
++}
 +
- def usage():
--	print >> sys.stderr, "Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]"
--	print >> sys.stderr, "where:	columns		'all' or 'branches'"
--	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
--	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
-+	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
-+	printerr("where:	columns		'all' or 'branches'");
-+	printerr("		calls		'calls' => create calls and call_paths table");
-+	printerr("		callchains	'callchains' => create call_paths table");
- 	raise Exception("Too few arguments")
+ int fetch_current_timestamp(char *buf, size_t sz)
+ {
+ 	struct timeval tv;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index b923de44e36f..72a42ea1d513 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -30,6 +30,7 @@ int perf_time__parse_for_ranges(const char *str, struct perf_session *session,
+ 				int *range_size, int *range_num);
  
- if (len(sys.argv) < 2):
-@@ -100,7 +105,7 @@ def do_query_(q):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
  
--print datetime.datetime.today(), "Creating database..."
-+print(datetime.datetime.today(), "Creating database ...")
+ int fetch_current_timestamp(char *buf, size_t sz);
  
- db_exists = False
- try:
-@@ -378,7 +383,7 @@ if perf_db_export_calls:
- 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
- 
- def trace_begin():
--	print datetime.datetime.today(), "Writing records..."
-+	print(datetime.datetime.today(), "Writing records...")
- 	do_query(query, 'BEGIN TRANSACTION')
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
-@@ -397,14 +402,14 @@ unhandled_count = 0
- def trace_end():
- 	do_query(query, 'END TRANSACTION')
- 
--	print datetime.datetime.today(), "Adding indexes"
-+	print(datetime.datetime.today(), "Adding indexes")
- 	if perf_db_export_calls:
- 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
--	print datetime.datetime.today(), "Done"
-+		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
-+	print(datetime.datetime.today(), "Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
 -- 
 2.20.1
