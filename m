@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/30] perf header: Add DIR_FORMAT feature to describe directory data
-Date: Mon, 11 Mar 2019 23:01:46 -0300
-Message-ID: <20190312020204.22092-13-acme@kernel.org>
+Subject: [PATCH 14/30] perf report: Use less for scripts output
+Date: Mon, 11 Mar 2019 23:01:48 -0300
+Message-ID: <20190312020204.22092-15-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,202 +9,197 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Feng Tang <feng.tang@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
 
-The data files layout is described by HEADER_DIR_FORMAT feature.
-Currently it holds only version number (1):
+The UI viewer for scripts output has a lot of limitations: limited size,
+no search or save function, slow, and various other issues.
 
-     uint64_t version;
+Just use 'less' to display directly on the terminal instead.
 
-The current version holds only version value (1) means that data files:
+This won't work in GTK mode, but GTK doesn't support these context menus
+anyways. If that is ever done could use an terminal for the output.
 
-  - Follow the 'data.*' name format.
-
-  - Contain raw events data in standard perf format as read from kernel
-    (and need to be sorted)
-
-Future versions are expected to describe different data files layout
-according to special needs.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190308134745.5057-6-jolsa@kernel.org
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Feng Tang <feng.tang@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190309055628.21617-8-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c |  2 ++
- tools/perf/util/data.c      | 10 +++++++--
- tools/perf/util/data.h      |  1 +
- tools/perf/util/header.c    | 44 ++++++++++++++++++++++++++++++++++++-
- tools/perf/util/header.h    |  5 +++++
- 5 files changed, 59 insertions(+), 3 deletions(-)
+ tools/perf/ui/browsers/scripts.c | 130 ++++---------------------------
+ 1 file changed, 17 insertions(+), 113 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index e983c8d71a79..a468d882e74f 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -837,6 +837,8 @@ static void record__init_features(struct record *rec)
- 	if (!(rec->opts.use_clockid && rec->opts.clockid_res_ns))
- 		perf_header__clear_feat(&session->header, HEADER_CLOCKID);
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index 90a32ac69e76..7f36630694bf 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -1,35 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <elf.h>
+-#include <inttypes.h>
+-#include <sys/ttydefaults.h>
+-#include <string.h>
+ #include "../../util/sort.h"
+ #include "../../util/util.h"
+ #include "../../util/hist.h"
+ #include "../../util/debug.h"
+ #include "../../util/symbol.h"
+ #include "../browser.h"
+-#include "../helpline.h"
+ #include "../libslang.h"
  
-+	perf_header__clear_feat(&session->header, HEADER_DIR_FORMAT);
-+
- 	perf_header__clear_feat(&session->header, HEADER_STAT);
+-/* 2048 lines should be enough for a script output */
+-#define MAX_LINES		2048
+-
+-/* 160 bytes for one output line */
+-#define AVERAGE_LINE_LEN	160
+-
+-struct script_line {
+-	struct list_head node;
+-	char line[AVERAGE_LINE_LEN];
+-};
+-
+-struct perf_script_browser {
+-	struct ui_browser b;
+-	struct list_head entries;
+-	const char *script_name;
+-	int nr_lines;
+-};
+-
+ #define SCRIPT_NAMELEN	128
+ #define SCRIPT_MAX_NO	64
+ /*
+@@ -73,69 +50,29 @@ static int list_scripts(char *script_name)
+ 	return ret;
  }
  
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index b71c441cafbb..c6b67efea11a 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -14,6 +14,7 @@
- #include "data.h"
- #include "util.h"
- #include "debug.h"
-+#include "header.h"
- 
- static void close_dir(struct perf_data_file *files, int nr)
+-static void script_browser__write(struct ui_browser *browser,
+-				   void *entry, int row)
++static void run_script(char *cmd)
  {
-@@ -41,8 +42,9 @@ int perf_data__create_dir(struct perf_data *data, int nr)
- 	if (!files)
- 		return -ENOMEM;
- 
--	data->dir.files = files;
--	data->dir.nr    = nr;
-+	data->dir.version = PERF_DIR_VERSION;
-+	data->dir.files   = files;
-+	data->dir.nr      = nr;
- 
- 	for (i = 0; i < nr; i++) {
- 		struct perf_data_file *file = &files[i];
-@@ -75,6 +77,10 @@ int perf_data__open_dir(struct perf_data *data)
- 	if (WARN_ON(!data->is_dir))
- 		return -EINVAL;
- 
-+	/* The version is provided by DIR_FORMAT feature. */
-+	if (WARN_ON(data->dir.version != PERF_DIR_VERSION))
-+		return -1;
-+
- 	dir = opendir(data->path);
- 	if (!dir)
- 		return -EINVAL;
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index d342469bdfda..6aef8746469f 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -24,6 +24,7 @@ struct perf_data {
- 	enum perf_data_mode	 mode;
- 
- 	struct {
-+		u64			 version;
- 		struct perf_data_file	*files;
- 		int			 nr;
- 	} dir;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 01b324c275b9..b0683bf4d9f3 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -861,6 +861,21 @@ static int write_clockid(struct feat_fd *ff,
- 			sizeof(ff->ph->env.clockid_res_ns));
+-	struct script_line *sline = list_entry(entry, struct script_line, node);
+-	bool current_entry = ui_browser__is_current_entry(browser, row);
+-
+-	ui_browser__set_color(browser, current_entry ? HE_COLORSET_SELECTED :
+-						       HE_COLORSET_NORMAL);
+-
+-	ui_browser__write_nstring(browser, sline->line, browser->width);
++	pr_debug("Running %s\n", cmd);
++	SLang_reset_tty();
++	if (system(cmd) < 0)
++		pr_warning("Cannot run %s\n", cmd);
++	/*
++	 * SLang doesn't seem to reset the whole terminal, so be more
++	 * forceful to get back to the original state.
++	 */
++	printf("\033[c\033[H\033[J");
++	fflush(stdout);
++	SLang_init_tty(0, 0, 0);
++	SLsmg_refresh();
  }
  
-+static int write_dir_format(struct feat_fd *ff,
-+			    struct perf_evlist *evlist __maybe_unused)
-+{
-+	struct perf_session *session;
-+	struct perf_data *data;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+	data = session->data;
-+
-+	if (WARN_ON(!perf_data__is_dir(data)))
-+		return -1;
-+
-+	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
-+}
-+
- static int cpu_cache_level__sort(const void *a, const void *b)
+-static int script_browser__run(struct perf_script_browser *browser)
+-{
+-	int key;
+-
+-	if (ui_browser__show(&browser->b, browser->script_name,
+-			     "Press ESC to exit") < 0)
+-		return -1;
+-
+-	while (1) {
+-		key = ui_browser__run(&browser->b, 0);
+-
+-		/* We can add some special key handling here if needed */
+-		break;
+-	}
+-
+-	ui_browser__hide(&browser->b);
+-	return key;
+-}
+-
+-
+ int script_browse(const char *script_opt)
  {
- 	struct cpu_cache_level *cache_a = (struct cpu_cache_level *)a;
-@@ -1341,6 +1356,17 @@ static void print_clockid(struct feat_fd *ff, FILE *fp)
- 		ff->ph->env.clockid_res_ns * 1000);
- }
+ 	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
+-	char *line = NULL;
+-	size_t len = 0;
+-	ssize_t retlen;
+-	int ret = -1, nr_entries = 0;
+-	FILE *fp;
+-	void *buf;
+-	struct script_line *sline;
+-
+-	struct perf_script_browser script = {
+-		.b = {
+-			.refresh    = ui_browser__list_head_refresh,
+-			.seek	    = ui_browser__list_head_seek,
+-			.write	    = script_browser__write,
+-		},
+-		.script_name = script_name,
+-	};
+-
+-	INIT_LIST_HEAD(&script.entries);
+-
+-	/* Save each line of the output in one struct script_line object. */
+-	buf = zalloc((sizeof(*sline)) * MAX_LINES);
+-	if (!buf)
+-		return -1;
+-	sline = buf;
  
-+static void print_dir_format(struct feat_fd *ff, FILE *fp)
-+{
-+	struct perf_session *session;
-+	struct perf_data *data;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+	data = session->data;
-+
-+	fprintf(fp, "# directory data version : %"PRIu64"\n", data->dir.version);
-+}
-+
- static void free_event_desc(struct perf_evsel *events)
- {
- 	struct perf_evsel *evsel;
-@@ -2373,6 +2399,21 @@ static int process_clockid(struct feat_fd *ff,
- 	return 0;
- }
- 
-+static int process_dir_format(struct feat_fd *ff,
-+			      void *_data __maybe_unused)
-+{
-+	struct perf_session *session;
-+	struct perf_data *data;
-+
-+	session = container_of(ff->ph, struct perf_session, header);
-+	data = session->data;
-+
-+	if (WARN_ON(!perf_data__is_dir(data)))
+ 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
+ 	if (list_scripts(script_name))
+-		goto exit;
 +		return -1;
-+
-+	return do_read_u64(ff, &data->dir.version);
-+}
-+
- struct feature_ops {
- 	int (*write)(struct feat_fd *ff, struct perf_evlist *evlist);
- 	void (*print)(struct feat_fd *ff, FILE *fp);
-@@ -2432,7 +2473,8 @@ static const struct feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPN(CACHE,		cache,		true),
- 	FEAT_OPR(SAMPLE_TIME,	sample_time,	false),
- 	FEAT_OPR(MEM_TOPOLOGY,	mem_topology,	true),
--	FEAT_OPR(CLOCKID,       clockid,        false)
-+	FEAT_OPR(CLOCKID,	clockid,	false),
-+	FEAT_OPN(DIR_FORMAT,	dir_format,	false)
- };
  
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 0d553ddca0a3..6a231340238d 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -39,6 +39,7 @@ enum {
- 	HEADER_SAMPLE_TIME,
- 	HEADER_MEM_TOPOLOGY,
- 	HEADER_CLOCKID,
-+	HEADER_DIR_FORMAT,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
-@@ -48,6 +49,10 @@ enum perf_header_version {
- 	PERF_HEADER_VERSION_2,
- };
+ 	sprintf(cmd, "perf script -s %s ", script_name);
  
-+enum perf_dir_version {
-+	PERF_DIR_VERSION	= 1,
-+};
-+
- struct perf_file_section {
- 	u64 offset;
- 	u64 size;
+@@ -147,42 +84,9 @@ int script_browse(const char *script_opt)
+ 		strcat(cmd, input_name);
+ 	}
+ 
+-	strcat(cmd, " 2>&1");
+-
+-	fp = popen(cmd, "r");
+-	if (!fp)
+-		goto exit;
+-
+-	while ((retlen = getline(&line, &len, fp)) != -1) {
+-		strncpy(sline->line, line, AVERAGE_LINE_LEN);
+-
+-		/* If one output line is very large, just cut it short */
+-		if (retlen >= AVERAGE_LINE_LEN) {
+-			sline->line[AVERAGE_LINE_LEN - 1] = '\0';
+-			sline->line[AVERAGE_LINE_LEN - 2] = '\n';
+-		}
+-		list_add_tail(&sline->node, &script.entries);
+-
+-		if (script.b.width < retlen)
+-			script.b.width = retlen;
+-
+-		if (nr_entries++ >= MAX_LINES - 1)
+-			break;
+-		sline++;
+-	}
+-
+-	if (script.b.width > AVERAGE_LINE_LEN)
+-		script.b.width = AVERAGE_LINE_LEN;
+-
+-	free(line);
+-	pclose(fp);
++	strcat(cmd, " 2>&1 | less");
+ 
+-	script.nr_lines = nr_entries;
+-	script.b.nr_entries = nr_entries;
+-	script.b.entries = &script.entries;
++	run_script(cmd);
+ 
+-	ret = script_browser__run(&script);
+-exit:
+-	free(buf);
+-	return ret;
++	return 0;
+ }
 -- 
 2.20.1
