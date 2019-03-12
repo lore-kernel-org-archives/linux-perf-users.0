@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/30] perf tools: Update x86's syscall_64.tbl, no change in tools/perf behaviour
-Date: Mon, 11 Mar 2019 23:01:53 -0300
-Message-ID: <20190312020204.22092-20-acme@kernel.org>
+Subject: [PATCH 17/30] perf script python: Add Python3 support to export-to-sqlite.py
+Date: Mon, 11 Mar 2019 23:01:51 -0300
+Message-ID: <20190312020204.22092-18-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,60 +9,92 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Tony Jones <tonyj@suse.de>
 
-To pick the changes in 7948450d4556 ("x86/x32: use time64 versions of
-sigtimedwait and recvmmsg"), that doesn't cause any change in behaviour
-in tools/perf/ as it deals just with the x32 entries.
+Support both Python2 and Python3 in the export-to-sqlite.py script
 
-This silences this tools/perf build warning:
+The use of 'from __future__' implies the minimum supported Python2 version
+is now v2.6
 
-  Warning: Kernel ABI header at 'tools/perf/arch/x86/entry/syscalls/syscall_64.tbl' differs from latest version at 'arch/x86/entry/syscalls/syscall_64.tbl'
-  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-mqpvshayeqidlulx5qpioa59@git.kernel.org
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: http://lkml.kernel.org/r/20190309000518.2438-4-tonyj@suse.de
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/scripts/python/export-to-sqlite.py | 23 +++++++++++--------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index f0b1709a5ffb..2ae92fddb6d5 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -343,6 +343,8 @@
- 332	common	statx			__x64_sys_statx
- 333	common	io_pgetevents		__x64_sys_io_pgetevents
- 334	common	rseq			__x64_sys_rseq
-+# don't use numbers 387 through 423, add new calls after the last
-+# 'common' entry
+diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
+index eb63e6c7107f..3da338243aed 100644
+--- a/tools/perf/scripts/python/export-to-sqlite.py
++++ b/tools/perf/scripts/python/export-to-sqlite.py
+@@ -10,6 +10,8 @@
+ # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ # more details.
  
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-@@ -361,7 +363,7 @@
- 520	x32	execve			__x32_compat_sys_execve/ptregs
- 521	x32	ptrace			__x32_compat_sys_ptrace
- 522	x32	rt_sigpending		__x32_compat_sys_rt_sigpending
--523	x32	rt_sigtimedwait		__x32_compat_sys_rt_sigtimedwait
-+523	x32	rt_sigtimedwait		__x32_compat_sys_rt_sigtimedwait_time64
- 524	x32	rt_sigqueueinfo		__x32_compat_sys_rt_sigqueueinfo
- 525	x32	sigaltstack		__x32_compat_sys_sigaltstack
- 526	x32	timer_create		__x32_compat_sys_timer_create
-@@ -375,7 +377,7 @@
- 534	x32	preadv			__x32_compat_sys_preadv64
- 535	x32	pwritev			__x32_compat_sys_pwritev64
- 536	x32	rt_tgsigqueueinfo	__x32_compat_sys_rt_tgsigqueueinfo
--537	x32	recvmmsg		__x32_compat_sys_recvmmsg
-+537	x32	recvmmsg		__x32_compat_sys_recvmmsg_time64
- 538	x32	sendmmsg		__x32_compat_sys_sendmmsg
- 539	x32	process_vm_readv	__x32_compat_sys_process_vm_readv
- 540	x32	process_vm_writev	__x32_compat_sys_process_vm_writev
++from __future__ import print_function
++
+ import os
+ import sys
+ import struct
+@@ -60,11 +62,14 @@ perf_db_export_mode = True
+ perf_db_export_calls = False
+ perf_db_export_callchains = False
+ 
++def printerr(*args, **keyword_args):
++	print(*args, file=sys.stderr, **keyword_args)
++
+ def usage():
+-	print >> sys.stderr, "Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]"
+-	print >> sys.stderr, "where:	columns		'all' or 'branches'"
+-	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
+-	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
++	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
++	printerr("where:	columns		'all' or 'branches'");
++	printerr("		calls		'calls' => create calls and call_paths table");
++	printerr("		callchains	'callchains' => create call_paths table");
+ 	raise Exception("Too few arguments")
+ 
+ if (len(sys.argv) < 2):
+@@ -100,7 +105,7 @@ def do_query_(q):
+ 		return
+ 	raise Exception("Query failed: " + q.lastError().text())
+ 
+-print datetime.datetime.today(), "Creating database..."
++print(datetime.datetime.today(), "Creating database ...")
+ 
+ db_exists = False
+ try:
+@@ -378,7 +383,7 @@ if perf_db_export_calls:
+ 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+ 
+ def trace_begin():
+-	print datetime.datetime.today(), "Writing records..."
++	print(datetime.datetime.today(), "Writing records...")
+ 	do_query(query, 'BEGIN TRANSACTION')
+ 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
+ 	evsel_table(0, "unknown")
+@@ -397,14 +402,14 @@ unhandled_count = 0
+ def trace_end():
+ 	do_query(query, 'END TRANSACTION')
+ 
+-	print datetime.datetime.today(), "Adding indexes"
++	print(datetime.datetime.today(), "Adding indexes")
+ 	if perf_db_export_calls:
+ 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
+ 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
+ 
+ 	if (unhandled_count):
+-		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
+-	print datetime.datetime.today(), "Done"
++		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
++	print(datetime.datetime.today(), "Done")
+ 
+ def trace_unhandled(event_name, context, event_fields_dict):
+ 	global unhandled_count
 -- 
 2.20.1
