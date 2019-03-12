@@ -1,61 +1,176 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/30] tools headers uapi: Update linux/in.h copy
-Date: Mon, 11 Mar 2019 23:01:55 -0300
-Message-ID: <20190312020204.22092-22-acme@kernel.org>
+Subject: [PATCH 22/30] perf script: Filter COMM/FORK/.. events by CPU
+Date: Mon, 11 Mar 2019 23:01:56 -0300
+Message-ID: <20190312020204.22092-23-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, "David S . Miller" <davem@davemloft.net>, =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-To get the changes in:
+The --cpu option only filtered samples. Filter other perf events, such
+as COMM, FORK, SWITCH by the CPU too.
 
-  4effd28c1245 ("bridge: join all-snoopers multicast address")
-
-That do not generate any changes in tools/ use of this file.
-
-Silences this tools/perf build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs from latest version at 'include/uapi/linux/in.h'
-  diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Linus Lüssing <linus.luessing@c0d3.blue>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ifpl634035266ho6wxuqgo81@git.kernel.org
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/20190311144502.15423-2-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/in.h | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/builtin-script.c | 71 ++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 24 deletions(-)
 
-diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-index a55cb8b10165..e7ad9d350a28 100644
---- a/tools/include/uapi/linux/in.h
-+++ b/tools/include/uapi/linux/in.h
-@@ -292,10 +292,11 @@ struct sockaddr_in {
- #define	IN_LOOPBACK(a)		((((long int) (a)) & 0xff000000) == 0x7f000000)
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 111787e83784..b695b20ffc8a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1933,6 +1933,13 @@ static int cleanup_scripting(void)
+ 	return scripting_ops ? scripting_ops->stop_script() : 0;
+ }
  
- /* Defines for Multicast INADDR */
--#define INADDR_UNSPEC_GROUP   	0xe0000000U	/* 224.0.0.0   */
--#define INADDR_ALLHOSTS_GROUP 	0xe0000001U	/* 224.0.0.1   */
--#define INADDR_ALLRTRS_GROUP    0xe0000002U	/* 224.0.0.2 */
--#define INADDR_MAX_LOCAL_GROUP  0xe00000ffU	/* 224.0.0.255 */
-+#define INADDR_UNSPEC_GROUP		0xe0000000U	/* 224.0.0.0   */
-+#define INADDR_ALLHOSTS_GROUP		0xe0000001U	/* 224.0.0.1   */
-+#define INADDR_ALLRTRS_GROUP		0xe0000002U	/* 224.0.0.2 */
-+#define INADDR_ALLSNOOPERS_GROUP	0xe000006aU	/* 224.0.0.106 */
-+#define INADDR_MAX_LOCAL_GROUP		0xe00000ffU	/* 224.0.0.255 */
- #endif
++static bool filter_cpu(struct perf_sample *sample)
++{
++	if (cpu_list)
++		return !test_bit(sample->cpu, cpu_bitmap);
++	return false;
++}
++
+ static int process_sample_event(struct perf_tool *tool,
+ 				union perf_event *event,
+ 				struct perf_sample *sample,
+@@ -1967,7 +1974,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 	if (al.filtered)
+ 		goto out_put;
  
- /* <asm/byteorder.h> contains the htonl type stuff.. */
+-	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
++	if (filter_cpu(sample))
+ 		goto out_put;
+ 
+ 	if (scripting_ops)
+@@ -2052,9 +2059,11 @@ static int process_comm_event(struct perf_tool *tool,
+ 		sample->tid = event->comm.tid;
+ 		sample->pid = event->comm.pid;
+ 	}
+-	perf_sample__fprintf_start(sample, thread, evsel,
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
+ 				   PERF_RECORD_COMM, stdout);
+-	perf_event__fprintf(event, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	ret = 0;
+ out:
+ 	thread__put(thread);
+@@ -2088,9 +2097,11 @@ static int process_namespaces_event(struct perf_tool *tool,
+ 		sample->tid = event->namespaces.tid;
+ 		sample->pid = event->namespaces.pid;
+ 	}
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_NAMESPACES, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_NAMESPACES, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	ret = 0;
+ out:
+ 	thread__put(thread);
+@@ -2122,9 +2133,11 @@ static int process_fork_event(struct perf_tool *tool,
+ 		sample->tid = event->fork.tid;
+ 		sample->pid = event->fork.pid;
+ 	}
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_FORK, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_FORK, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	thread__put(thread);
+ 
+ 	return 0;
+@@ -2152,9 +2165,11 @@ static int process_exit_event(struct perf_tool *tool,
+ 		sample->tid = event->fork.tid;
+ 		sample->pid = event->fork.pid;
+ 	}
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_EXIT, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_EXIT, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 
+ 	if (perf_event__process_exit(tool, event, sample, machine) < 0)
+ 		err = -1;
+@@ -2188,9 +2203,11 @@ static int process_mmap_event(struct perf_tool *tool,
+ 		sample->tid = event->mmap.tid;
+ 		sample->pid = event->mmap.pid;
+ 	}
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_MMAP, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_MMAP, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	thread__put(thread);
+ 	return 0;
+ }
+@@ -2220,9 +2237,11 @@ static int process_mmap2_event(struct perf_tool *tool,
+ 		sample->tid = event->mmap2.tid;
+ 		sample->pid = event->mmap2.pid;
+ 	}
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_MMAP2, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_MMAP2, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	thread__put(thread);
+ 	return 0;
+ }
+@@ -2247,9 +2266,11 @@ static int process_switch_event(struct perf_tool *tool,
+ 		return -1;
+ 	}
+ 
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_SWITCH, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_SWITCH, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	thread__put(thread);
+ 	return 0;
+ }
+@@ -2270,9 +2291,11 @@ process_lost_event(struct perf_tool *tool,
+ 	if (thread == NULL)
+ 		return -1;
+ 
+-	perf_sample__fprintf_start(sample, thread, evsel,
+-				   PERF_RECORD_LOST, stdout);
+-	perf_event__fprintf(event, stdout);
++	if (!filter_cpu(sample)) {
++		perf_sample__fprintf_start(sample, thread, evsel,
++					   PERF_RECORD_LOST, stdout);
++		perf_event__fprintf(event, stdout);
++	}
+ 	thread__put(thread);
+ 	return 0;
+ }
 -- 
 2.20.1
