@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/30] perf data: Add perf_data__update_dir() function
-Date: Mon, 11 Mar 2019 23:01:44 -0300
-Message-ID: <20190312020204.22092-11-acme@kernel.org>
+Subject: [PATCH 11/30] perf data: Make perf_data__size() work over directory
+Date: Mon, 11 Mar 2019 23:01:45 -0300
+Message-ID: <20190312020204.22092-12-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add perf_data__update_dir() to update the size for every file within the
-perf.data directory.
+Make perf_data__size() return proper size for directory data, summing up
+all the individual file sizes.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -25,53 +25,59 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190308134745.5057-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190308134745.5057-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 20 ++++++++++++++++++++
- tools/perf/util/data.h |  1 +
- 2 files changed, 21 insertions(+)
+ tools/perf/util/data.c | 17 +++++++++++++++++
+ tools/perf/util/data.h |  6 +-----
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 18fa8d4614eb..5d0f26aef77f 100644
+index 5d0f26aef77f..b71c441cafbb 100644
 --- a/tools/perf/util/data.c
 +++ b/tools/perf/util/data.c
-@@ -124,6 +124,26 @@ int perf_data__open_dir(struct perf_data *data)
+@@ -393,3 +393,20 @@ int perf_data__switch(struct perf_data *data,
+ 	free(new_filepath);
  	return ret;
  }
- 
-+int perf_data__update_dir(struct perf_data *data)
++
++unsigned long perf_data__size(struct perf_data *data)
 +{
++	u64 size = data->file.size;
 +	int i;
 +
-+	if (WARN_ON(!data->is_dir))
-+		return -EINVAL;
++	if (!data->is_dir)
++		return size;
 +
 +	for (i = 0; i < data->dir.nr; i++) {
 +		struct perf_data_file *file = &data->dir.files[i];
-+		struct stat st;
 +
-+		if (fstat(file->fd, &st))
-+			return -1;
-+
-+		file->size = st.st_size;
++		size += file->size;
 +	}
 +
-+	return 0;
++	return size;
 +}
-+
- static bool check_pipe(struct perf_data *data)
- {
- 	struct stat st;
 diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 06aefeda311f..0deeb1af9f54 100644
+index 0deeb1af9f54..d342469bdfda 100644
 --- a/tools/perf/util/data.h
 +++ b/tools/perf/util/data.h
-@@ -79,4 +79,5 @@ int perf_data__switch(struct perf_data *data,
- int perf_data__create_dir(struct perf_data *data, int nr);
+@@ -54,11 +54,6 @@ static inline int perf_data__fd(struct perf_data *data)
+ 	return data->file.fd;
+ }
+ 
+-static inline unsigned long perf_data__size(struct perf_data *data)
+-{
+-	return data->file.size;
+-}
+-
+ int perf_data__open(struct perf_data *data);
+ void perf_data__close(struct perf_data *data);
+ ssize_t perf_data__write(struct perf_data *data,
+@@ -80,4 +75,5 @@ int perf_data__create_dir(struct perf_data *data, int nr);
  int perf_data__open_dir(struct perf_data *data);
  void perf_data__close_dir(struct perf_data *data);
-+int perf_data__update_dir(struct perf_data *data);
+ int perf_data__update_dir(struct perf_data *data);
++unsigned long perf_data__size(struct perf_data *data);
  #endif /* __PERF_DATA_H */
 -- 
 2.20.1
