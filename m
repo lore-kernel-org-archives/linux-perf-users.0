@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/30] perf data: Make perf_data__size() work over directory
-Date: Mon, 11 Mar 2019 23:01:45 -0300
-Message-ID: <20190312020204.22092-12-acme@kernel.org>
+Subject: [PATCH 13/30] perf session: Add process callback to reader object
+Date: Mon, 11 Mar 2019 23:01:47 -0300
+Message-ID: <20190312020204.22092-14-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Make perf_data__size() return proper size for directory data, summing up
-all the individual file sizes.
+Adding callback function to reader object so callers can process data in
+different ways.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -25,59 +25,66 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190308134745.5057-5-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190308134745.5057-7-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 17 +++++++++++++++++
- tools/perf/util/data.h |  6 +-----
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ tools/perf/util/session.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 5d0f26aef77f..b71c441cafbb 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -393,3 +393,20 @@ int perf_data__switch(struct perf_data *data,
- 	free(new_filepath);
- 	return ret;
- }
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index de777bdc0ed3..0ec34227bd60 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1847,10 +1847,17 @@ fetch_mmaped_event(struct perf_session *session,
+ #define NUM_MMAPS 128
+ #endif
+ 
++struct reader;
 +
-+unsigned long perf_data__size(struct perf_data *data)
-+{
-+	u64 size = data->file.size;
-+	int i;
++typedef s64 (*reader_cb_t)(struct perf_session *session,
++			   union perf_event *event,
++			   u64 file_offset);
 +
-+	if (!data->is_dir)
-+		return size;
-+
-+	for (i = 0; i < data->dir.nr; i++) {
-+		struct perf_data_file *file = &data->dir.files[i];
-+
-+		size += file->size;
-+	}
-+
-+	return size;
-+}
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 0deeb1af9f54..d342469bdfda 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -54,11 +54,6 @@ static inline int perf_data__fd(struct perf_data *data)
- 	return data->file.fd;
+ struct reader {
+-	int	fd;
+-	u64	data_size;
+-	u64	data_offset;
++	int		 fd;
++	u64		 data_size;
++	u64		 data_offset;
++	reader_cb_t	 process;
+ };
+ 
+ static int
+@@ -1921,7 +1928,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 	size = event->header.size;
+ 
+ 	if (size < sizeof(struct perf_event_header) ||
+-	    (skip = perf_session__process_event(session, event, file_pos)) < 0) {
++	    (skip = rd->process(session, event, file_pos)) < 0) {
+ 		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+ 		       file_offset + head, event->header.size,
+ 		       event->header.type);
+@@ -1947,12 +1954,20 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 	return err;
  }
  
--static inline unsigned long perf_data__size(struct perf_data *data)
--{
--	return data->file.size;
--}
--
- int perf_data__open(struct perf_data *data);
- void perf_data__close(struct perf_data *data);
- ssize_t perf_data__write(struct perf_data *data,
-@@ -80,4 +75,5 @@ int perf_data__create_dir(struct perf_data *data, int nr);
- int perf_data__open_dir(struct perf_data *data);
- void perf_data__close_dir(struct perf_data *data);
- int perf_data__update_dir(struct perf_data *data);
-+unsigned long perf_data__size(struct perf_data *data);
- #endif /* __PERF_DATA_H */
++static s64 process_simple(struct perf_session *session,
++			  union perf_event *event,
++			  u64 file_offset)
++{
++	return perf_session__process_event(session, event, file_offset);
++}
++
+ static int __perf_session__process_events(struct perf_session *session)
+ {
+ 	struct reader rd = {
+ 		.fd		= perf_data__fd(session->data),
+ 		.data_size	= session->header.data_size,
+ 		.data_offset	= session->header.data_offset,
++		.process	= process_simple,
+ 	};
+ 	struct ordered_events *oe = &session->ordered_events;
+ 	struct perf_tool *tool = session->tool;
 -- 
 2.20.1
