@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/30] perf report: Use less for scripts output
-Date: Mon, 11 Mar 2019 23:01:48 -0300
-Message-ID: <20190312020204.22092-15-acme@kernel.org>
+Subject: [PATCH 16/30] perf script python: Add Python3 support to export-to-postgresql.py
+Date: Mon, 11 Mar 2019 23:01:50 -0300
+Message-ID: <20190312020204.22092-17-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,197 +9,220 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Feng Tang <feng.tang@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Adrian Hunter <adrian.hunter@intel.com>, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Tony Jones <tonyj@suse.de>
 
-The UI viewer for scripts output has a lot of limitations: limited size,
-no search or save function, slow, and various other issues.
+Support both Python2 and Python3 in the export-to-postgresql.py script.
 
-Just use 'less' to display directly on the terminal instead.
+The use of 'from __future__' implies the minimum supported Python2 version
+is now v2.6
 
-This won't work in GTK mode, but GTK doesn't support these context menus
-anyways. If that is ever done could use an terminal for the output.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Feng Tang <feng.tang@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190309055628.21617-8-andi@firstfloor.org
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Link: http://lkml.kernel.org/r/20190309000518.2438-3-tonyj@suse.de
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/scripts.c | 130 ++++---------------------------
- 1 file changed, 17 insertions(+), 113 deletions(-)
+ .../scripts/python/export-to-postgresql.py    | 58 +++++++++++++------
+ 1 file changed, 41 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index 90a32ac69e76..7f36630694bf 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -1,35 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
--#include <elf.h>
--#include <inttypes.h>
--#include <sys/ttydefaults.h>
--#include <string.h>
- #include "../../util/sort.h"
- #include "../../util/util.h"
- #include "../../util/hist.h"
- #include "../../util/debug.h"
- #include "../../util/symbol.h"
- #include "../browser.h"
--#include "../helpline.h"
- #include "../libslang.h"
+diff --git a/tools/perf/scripts/python/export-to-postgresql.py b/tools/perf/scripts/python/export-to-postgresql.py
+index 390a351d15ea..00ab972a2eba 100644
+--- a/tools/perf/scripts/python/export-to-postgresql.py
++++ b/tools/perf/scripts/python/export-to-postgresql.py
+@@ -10,6 +10,8 @@
+ # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ # more details.
  
--/* 2048 lines should be enough for a script output */
--#define MAX_LINES		2048
--
--/* 160 bytes for one output line */
--#define AVERAGE_LINE_LEN	160
--
--struct script_line {
--	struct list_head node;
--	char line[AVERAGE_LINE_LEN];
--};
--
--struct perf_script_browser {
--	struct ui_browser b;
--	struct list_head entries;
--	const char *script_name;
--	int nr_lines;
--};
--
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
- /*
-@@ -73,69 +50,29 @@ static int list_scripts(char *script_name)
- 	return ret;
- }
++from __future__ import print_function
++
+ import os
+ import sys
+ import struct
+@@ -199,6 +201,18 @@ import datetime
  
--static void script_browser__write(struct ui_browser *browser,
--				   void *entry, int row)
-+static void run_script(char *cmd)
- {
--	struct script_line *sline = list_entry(entry, struct script_line, node);
--	bool current_entry = ui_browser__is_current_entry(browser, row);
--
--	ui_browser__set_color(browser, current_entry ? HE_COLORSET_SELECTED :
--						       HE_COLORSET_NORMAL);
--
--	ui_browser__write_nstring(browser, sline->line, browser->width);
-+	pr_debug("Running %s\n", cmd);
-+	SLang_reset_tty();
-+	if (system(cmd) < 0)
-+		pr_warning("Cannot run %s\n", cmd);
-+	/*
-+	 * SLang doesn't seem to reset the whole terminal, so be more
-+	 * forceful to get back to the original state.
-+	 */
-+	printf("\033[c\033[H\033[J");
-+	fflush(stdout);
-+	SLang_init_tty(0, 0, 0);
-+	SLsmg_refresh();
- }
+ from PySide.QtSql import *
  
--static int script_browser__run(struct perf_script_browser *browser)
--{
--	int key;
--
--	if (ui_browser__show(&browser->b, browser->script_name,
--			     "Press ESC to exit") < 0)
--		return -1;
--
--	while (1) {
--		key = ui_browser__run(&browser->b, 0);
--
--		/* We can add some special key handling here if needed */
--		break;
--	}
--
--	ui_browser__hide(&browser->b);
--	return key;
--}
--
--
- int script_browse(const char *script_opt)
- {
- 	char cmd[SCRIPT_FULLPATH_LEN*2], script_name[SCRIPT_FULLPATH_LEN];
--	char *line = NULL;
--	size_t len = 0;
--	ssize_t retlen;
--	int ret = -1, nr_entries = 0;
--	FILE *fp;
--	void *buf;
--	struct script_line *sline;
--
--	struct perf_script_browser script = {
--		.b = {
--			.refresh    = ui_browser__list_head_refresh,
--			.seek	    = ui_browser__list_head_seek,
--			.write	    = script_browser__write,
--		},
--		.script_name = script_name,
--	};
--
--	INIT_LIST_HEAD(&script.entries);
--
--	/* Save each line of the output in one struct script_line object. */
--	buf = zalloc((sizeof(*sline)) * MAX_LINES);
--	if (!buf)
--		return -1;
--	sline = buf;
++if sys.version_info < (3, 0):
++	def toserverstr(str):
++		return str
++	def toclientstr(str):
++		return str
++else:
++	# Assume UTF-8 server_encoding and client_encoding
++	def toserverstr(str):
++		return bytes(str, "UTF_8")
++	def toclientstr(str):
++		return bytes(str, "UTF_8")
++
+ # Need to access PostgreSQL C library directly to use COPY FROM STDIN
+ from ctypes import *
+ libpq = CDLL("libpq.so.5")
+@@ -234,12 +248,14 @@ perf_db_export_mode = True
+ perf_db_export_calls = False
+ perf_db_export_callchains = False
  
- 	memset(script_name, 0, SCRIPT_FULLPATH_LEN);
- 	if (list_scripts(script_name))
--		goto exit;
-+		return -1;
++def printerr(*args, **kw_args):
++	print(*args, file=sys.stderr, **kw_args)
  
- 	sprintf(cmd, "perf script -s %s ", script_name);
+ def usage():
+-	print >> sys.stderr, "Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]"
+-	print >> sys.stderr, "where:	columns		'all' or 'branches'"
+-	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
+-	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
++	printerr("Usage is: export-to-postgresql.py <database name> [<columns>] [<calls>] [<callchains>]")
++	printerr("where:	columns		'all' or 'branches'")
++	printerr("		calls		'calls' => create calls and call_paths table")
++	printerr("		callchains	'callchains' => create call_paths table")
+ 	raise Exception("Too few arguments")
  
-@@ -147,42 +84,9 @@ int script_browse(const char *script_opt)
- 		strcat(cmd, input_name);
- 	}
+ if (len(sys.argv) < 2):
+@@ -273,7 +289,7 @@ def do_query(q, s):
+ 		return
+ 	raise Exception("Query failed: " + q.lastError().text())
  
--	strcat(cmd, " 2>&1");
--
--	fp = popen(cmd, "r");
--	if (!fp)
--		goto exit;
--
--	while ((retlen = getline(&line, &len, fp)) != -1) {
--		strncpy(sline->line, line, AVERAGE_LINE_LEN);
--
--		/* If one output line is very large, just cut it short */
--		if (retlen >= AVERAGE_LINE_LEN) {
--			sline->line[AVERAGE_LINE_LEN - 1] = '\0';
--			sline->line[AVERAGE_LINE_LEN - 2] = '\n';
--		}
--		list_add_tail(&sline->node, &script.entries);
--
--		if (script.b.width < retlen)
--			script.b.width = retlen;
--
--		if (nr_entries++ >= MAX_LINES - 1)
--			break;
--		sline++;
--	}
--
--	if (script.b.width > AVERAGE_LINE_LEN)
--		script.b.width = AVERAGE_LINE_LEN;
--
--	free(line);
--	pclose(fp);
-+	strcat(cmd, " 2>&1 | less");
+-print datetime.datetime.today(), "Creating database..."
++print(datetime.datetime.today(), "Creating database...")
  
--	script.nr_lines = nr_entries;
--	script.b.nr_entries = nr_entries;
--	script.b.entries = &script.entries;
-+	run_script(cmd);
+ db = QSqlDatabase.addDatabase('QPSQL')
+ query = QSqlQuery(db)
+@@ -506,12 +522,12 @@ do_query(query, 'CREATE VIEW samples_view AS '
+ 	' FROM samples')
  
--	ret = script_browser__run(&script);
--exit:
--	free(buf);
--	return ret;
-+	return 0;
- }
+ 
+-file_header = struct.pack("!11sii", "PGCOPY\n\377\r\n\0", 0, 0)
+-file_trailer = "\377\377"
++file_header = struct.pack("!11sii", b"PGCOPY\n\377\r\n\0", 0, 0)
++file_trailer = b"\377\377"
+ 
+ def open_output_file(file_name):
+ 	path_name = output_dir_name + "/" + file_name
+-	file = open(path_name, "w+")
++	file = open(path_name, "wb+")
+ 	file.write(file_header)
+ 	return file
+ 
+@@ -526,13 +542,13 @@ def copy_output_file_direct(file, table_name):
+ 
+ # Use COPY FROM STDIN because security may prevent postgres from accessing the files directly
+ def copy_output_file(file, table_name):
+-	conn = PQconnectdb("dbname = " + dbname)
++	conn = PQconnectdb(toclientstr("dbname = " + dbname))
+ 	if (PQstatus(conn)):
+ 		raise Exception("COPY FROM STDIN PQconnectdb failed")
+ 	file.write(file_trailer)
+ 	file.seek(0)
+ 	sql = "COPY " + table_name + " FROM STDIN (FORMAT 'binary')"
+-	res = PQexec(conn, sql)
++	res = PQexec(conn, toclientstr(sql))
+ 	if (PQresultStatus(res) != 4):
+ 		raise Exception("COPY FROM STDIN PQexec failed")
+ 	data = file.read(65536)
+@@ -566,7 +582,7 @@ if perf_db_export_calls:
+ 	call_file		= open_output_file("call_table.bin")
+ 
+ def trace_begin():
+-	print datetime.datetime.today(), "Writing to intermediate files..."
++	print(datetime.datetime.today(), "Writing to intermediate files...")
+ 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
+ 	evsel_table(0, "unknown")
+ 	machine_table(0, 0, "unknown")
+@@ -582,7 +598,7 @@ def trace_begin():
+ unhandled_count = 0
+ 
+ def trace_end():
+-	print datetime.datetime.today(), "Copying to database..."
++	print(datetime.datetime.today(), "Copying to database...")
+ 	copy_output_file(evsel_file,		"selected_events")
+ 	copy_output_file(machine_file,		"machines")
+ 	copy_output_file(thread_file,		"threads")
+@@ -597,7 +613,7 @@ def trace_end():
+ 	if perf_db_export_calls:
+ 		copy_output_file(call_file,		"calls")
+ 
+-	print datetime.datetime.today(), "Removing intermediate files..."
++	print(datetime.datetime.today(), "Removing intermediate files...")
+ 	remove_output_file(evsel_file)
+ 	remove_output_file(machine_file)
+ 	remove_output_file(thread_file)
+@@ -612,7 +628,7 @@ def trace_end():
+ 	if perf_db_export_calls:
+ 		remove_output_file(call_file)
+ 	os.rmdir(output_dir_name)
+-	print datetime.datetime.today(), "Adding primary keys"
++	print(datetime.datetime.today(), "Adding primary keys")
+ 	do_query(query, 'ALTER TABLE selected_events ADD PRIMARY KEY (id)')
+ 	do_query(query, 'ALTER TABLE machines        ADD PRIMARY KEY (id)')
+ 	do_query(query, 'ALTER TABLE threads         ADD PRIMARY KEY (id)')
+@@ -627,7 +643,7 @@ def trace_end():
+ 	if perf_db_export_calls:
+ 		do_query(query, 'ALTER TABLE calls           ADD PRIMARY KEY (id)')
+ 
+-	print datetime.datetime.today(), "Adding foreign keys"
++	print(datetime.datetime.today(), "Adding foreign keys")
+ 	do_query(query, 'ALTER TABLE threads '
+ 					'ADD CONSTRAINT machinefk  FOREIGN KEY (machine_id)   REFERENCES machines   (id),'
+ 					'ADD CONSTRAINT processfk  FOREIGN KEY (process_id)   REFERENCES threads    (id)')
+@@ -663,8 +679,8 @@ def trace_end():
+ 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
+ 
+ 	if (unhandled_count):
+-		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
+-	print datetime.datetime.today(), "Done"
++		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
++	print(datetime.datetime.today(), "Done")
+ 
+ def trace_unhandled(event_name, context, event_fields_dict):
+ 	global unhandled_count
+@@ -674,12 +690,14 @@ def sched__sched_switch(*x):
+ 	pass
+ 
+ def evsel_table(evsel_id, evsel_name, *x):
++	evsel_name = toserverstr(evsel_name)
+ 	n = len(evsel_name)
+ 	fmt = "!hiqi" + str(n) + "s"
+ 	value = struct.pack(fmt, 2, 8, evsel_id, n, evsel_name)
+ 	evsel_file.write(value)
+ 
+ def machine_table(machine_id, pid, root_dir, *x):
++	root_dir = toserverstr(root_dir)
+ 	n = len(root_dir)
+ 	fmt = "!hiqiii" + str(n) + "s"
+ 	value = struct.pack(fmt, 3, 8, machine_id, 4, pid, n, root_dir)
+@@ -690,6 +708,7 @@ def thread_table(thread_id, machine_id, process_id, pid, tid, *x):
+ 	thread_file.write(value)
+ 
+ def comm_table(comm_id, comm_str, *x):
++	comm_str = toserverstr(comm_str)
+ 	n = len(comm_str)
+ 	fmt = "!hiqi" + str(n) + "s"
+ 	value = struct.pack(fmt, 2, 8, comm_id, n, comm_str)
+@@ -701,6 +720,9 @@ def comm_thread_table(comm_thread_id, comm_id, thread_id, *x):
+ 	comm_thread_file.write(value)
+ 
+ def dso_table(dso_id, machine_id, short_name, long_name, build_id, *x):
++	short_name = toserverstr(short_name)
++	long_name = toserverstr(long_name)
++	build_id = toserverstr(build_id)
+ 	n1 = len(short_name)
+ 	n2 = len(long_name)
+ 	n3 = len(build_id)
+@@ -709,12 +731,14 @@ def dso_table(dso_id, machine_id, short_name, long_name, build_id, *x):
+ 	dso_file.write(value)
+ 
+ def symbol_table(symbol_id, dso_id, sym_start, sym_end, binding, symbol_name, *x):
++	symbol_name = toserverstr(symbol_name)
+ 	n = len(symbol_name)
+ 	fmt = "!hiqiqiqiqiii" + str(n) + "s"
+ 	value = struct.pack(fmt, 6, 8, symbol_id, 8, dso_id, 8, sym_start, 8, sym_end, 4, binding, n, symbol_name)
+ 	symbol_file.write(value)
+ 
+ def branch_type_table(branch_type, name, *x):
++	name = toserverstr(name)
+ 	n = len(name)
+ 	fmt = "!hiii" + str(n) + "s"
+ 	value = struct.pack(fmt, 2, 4, branch_type, n, name)
 -- 
 2.20.1
