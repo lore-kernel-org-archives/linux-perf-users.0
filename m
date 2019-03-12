@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/30] perf script: Filter COMM/FORK/.. events by CPU
-Date: Mon, 11 Mar 2019 23:01:56 -0300
-Message-ID: <20190312020204.22092-23-acme@kernel.org>
+Subject: [PATCH 24/30] perf report: Support running scripts for current time range
+Date: Mon, 11 Mar 2019 23:01:58 -0300
+Message-ID: <20190312020204.22092-25-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,163 +14,158 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The --cpu option only filtered samples. Filter other perf events, such
-as COMM, FORK, SWITCH by the CPU too.
+When using the time sort key, add new context menus to run scripts for
+only the currently selected time range. Compute the correct range for
+the selection add pass it as the --time option to perf script.
 
-Reported-by: Jiri Olsa <jolsa@kernel.org>
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190311144502.15423-2-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20190311144502.15423-6-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 71 ++++++++++++++++++++++++-------------
- 1 file changed, 47 insertions(+), 24 deletions(-)
+ tools/perf/ui/browsers/hists.c | 83 +++++++++++++++++++++++++++++-----
+ 1 file changed, 72 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 111787e83784..b695b20ffc8a 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1933,6 +1933,13 @@ static int cleanup_scripting(void)
- 	return scripting_ops ? scripting_ops->stop_script() : 0;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index aef800d97ea1..f98aeac607dd 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -7,6 +7,7 @@
+ #include <string.h>
+ #include <linux/rbtree.h>
+ #include <sys/ttydefaults.h>
++#include <linux/time64.h>
+ 
+ #include "../../util/callchain.h"
+ #include "../../util/evsel.h"
+@@ -30,6 +31,7 @@
+ #include "srcline.h"
+ #include "string2.h"
+ #include "units.h"
++#include "time-utils.h"
+ 
+ #include "sane_ctype.h"
+ 
+@@ -2338,6 +2340,7 @@ static int switch_data_file(void)
  }
  
-+static bool filter_cpu(struct perf_sample *sample)
+ struct popup_action {
++	unsigned long		time;
+ 	struct thread 		*thread;
+ 	struct map_symbol 	ms;
+ 	int			socket;
+@@ -2527,36 +2530,64 @@ static int
+ do_run_script(struct hist_browser *browser __maybe_unused,
+ 	      struct popup_action *act)
+ {
+-	char script_opt[64];
+-	memset(script_opt, 0, sizeof(script_opt));
++	char *script_opt;
++	int len;
++	int n = 0;
++
++	len = 100;
++	if (act->thread)
++		len += strlen(thread__comm_str(act->thread));
++	else if (act->ms.sym)
++		len += strlen(act->ms.sym->name);
++	script_opt = malloc(len);
++	if (!script_opt)
++		return -1;
+ 
++	script_opt[0] = 0;
+ 	if (act->thread) {
+-		scnprintf(script_opt, sizeof(script_opt), " -c %s ",
++		n = scnprintf(script_opt, len, " -c %s ",
+ 			  thread__comm_str(act->thread));
+ 	} else if (act->ms.sym) {
+-		scnprintf(script_opt, sizeof(script_opt), " -S %s ",
++		n = scnprintf(script_opt, len, " -S %s ",
+ 			  act->ms.sym->name);
+ 	}
+ 
++	if (act->time) {
++		char start[32], end[32];
++		unsigned long starttime = act->time;
++		unsigned long endtime = act->time + symbol_conf.time_quantum;
++
++		if (starttime == endtime) { /* Display 1ms as fallback */
++			starttime -= 1*NSEC_PER_MSEC;
++			endtime += 1*NSEC_PER_MSEC;
++		}
++		timestamp__scnprintf_usec(starttime, start, sizeof start);
++		timestamp__scnprintf_usec(endtime, end, sizeof end);
++		n += snprintf(script_opt + n, len - n, " --time %s,%s", start, end);
++	}
++
+ 	script_browse(script_opt);
++	free(script_opt);
+ 	return 0;
+ }
+ 
+ static int
+-add_script_opt(struct hist_browser *browser __maybe_unused,
++add_script_opt_2(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act, char **optstr,
+-	       struct thread *thread, struct symbol *sym)
++	       struct thread *thread, struct symbol *sym,
++	       const char *tstr)
+ {
++
+ 	if (thread) {
+-		if (asprintf(optstr, "Run scripts for samples of thread [%s]",
+-			     thread__comm_str(thread)) < 0)
++		if (asprintf(optstr, "Run scripts for samples of thread [%s]%s",
++			     thread__comm_str(thread), tstr) < 0)
+ 			return 0;
+ 	} else if (sym) {
+-		if (asprintf(optstr, "Run scripts for samples of symbol [%s]",
+-			     sym->name) < 0)
++		if (asprintf(optstr, "Run scripts for samples of symbol [%s]%s",
++			     sym->name, tstr) < 0)
+ 			return 0;
+ 	} else {
+-		if (asprintf(optstr, "Run scripts for all samples") < 0)
++		if (asprintf(optstr, "Run scripts for all samples%s", tstr) < 0)
+ 			return 0;
+ 	}
+ 
+@@ -2566,6 +2597,36 @@ add_script_opt(struct hist_browser *browser __maybe_unused,
+ 	return 1;
+ }
+ 
++static int
++add_script_opt(struct hist_browser *browser,
++	       struct popup_action *act, char **optstr,
++	       struct thread *thread, struct symbol *sym)
 +{
-+	if (cpu_list)
-+		return !test_bit(sample->cpu, cpu_bitmap);
-+	return false;
++	int n, j;
++	struct hist_entry *he;
++
++	n = add_script_opt_2(browser, act, optstr, thread, sym, "");
++
++	he = hist_browser__selected_entry(browser);
++	if (sort_order && strstr(sort_order, "time")) {
++		char tstr[128];
++
++		optstr++;
++		act++;
++		j = sprintf(tstr, " in ");
++		j += timestamp__scnprintf_usec(he->time, tstr + j,
++					       sizeof tstr - j);
++		j += sprintf(tstr + j, "-");
++		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
++				          tstr + j,
++				          sizeof tstr - j);
++		n += add_script_opt_2(browser, act, optstr, thread, sym,
++					  tstr);
++		act->time = he->time;
++	}
++	return n;
 +}
 +
- static int process_sample_event(struct perf_tool *tool,
- 				union perf_event *event,
- 				struct perf_sample *sample,
-@@ -1967,7 +1974,7 @@ static int process_sample_event(struct perf_tool *tool,
- 	if (al.filtered)
- 		goto out_put;
- 
--	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap))
-+	if (filter_cpu(sample))
- 		goto out_put;
- 
- 	if (scripting_ops)
-@@ -2052,9 +2059,11 @@ static int process_comm_event(struct perf_tool *tool,
- 		sample->tid = event->comm.tid;
- 		sample->pid = event->comm.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
- 				   PERF_RECORD_COMM, stdout);
--	perf_event__fprintf(event, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	ret = 0;
- out:
- 	thread__put(thread);
-@@ -2088,9 +2097,11 @@ static int process_namespaces_event(struct perf_tool *tool,
- 		sample->tid = event->namespaces.tid;
- 		sample->pid = event->namespaces.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_NAMESPACES, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_NAMESPACES, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	ret = 0;
- out:
- 	thread__put(thread);
-@@ -2122,9 +2133,11 @@ static int process_fork_event(struct perf_tool *tool,
- 		sample->tid = event->fork.tid;
- 		sample->pid = event->fork.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_FORK, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_FORK, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 
- 	return 0;
-@@ -2152,9 +2165,11 @@ static int process_exit_event(struct perf_tool *tool,
- 		sample->tid = event->fork.tid;
- 		sample->pid = event->fork.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_EXIT, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_EXIT, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 
- 	if (perf_event__process_exit(tool, event, sample, machine) < 0)
- 		err = -1;
-@@ -2188,9 +2203,11 @@ static int process_mmap_event(struct perf_tool *tool,
- 		sample->tid = event->mmap.tid;
- 		sample->pid = event->mmap.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_MMAP, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_MMAP, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
-@@ -2220,9 +2237,11 @@ static int process_mmap2_event(struct perf_tool *tool,
- 		sample->tid = event->mmap2.tid;
- 		sample->pid = event->mmap2.pid;
- 	}
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_MMAP2, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_MMAP2, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
-@@ -2247,9 +2266,11 @@ static int process_switch_event(struct perf_tool *tool,
- 		return -1;
- 	}
- 
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_SWITCH, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_SWITCH, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
-@@ -2270,9 +2291,11 @@ process_lost_event(struct perf_tool *tool,
- 	if (thread == NULL)
- 		return -1;
- 
--	perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_LOST, stdout);
--	perf_event__fprintf(event, stdout);
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_LOST, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
- 	thread__put(thread);
- 	return 0;
- }
+ static int
+ do_switch_data(struct hist_browser *browser __maybe_unused,
+ 	       struct popup_action *act __maybe_unused)
 -- 
 2.20.1
