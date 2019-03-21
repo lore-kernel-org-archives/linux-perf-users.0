@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/44] perf maps: Purge all maps from the 'names' tree
-Date: Thu, 21 Mar 2019 15:51:18 -0300
-Message-ID: <20190321185142.11441-21-acme@kernel.org>
+Subject: [PATCH 21/44] perf top: Fix global-buffer-overflow issue
+Date: Thu, 21 Mar 2019 15:51:19 -0300
+Message-ID: <20190321185142.11441-22-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,60 +9,94 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Eric Saint-Etienne <eric.saint.etienne@oracle.com>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Changbin Du <changbin.du@gmail.com>
 
-Add function __maps__purge_names() to purge all maps from the names
-tree.  We need to cleanup the names tree in maps__exit().
+The array str[] should have six elements.
 
-Detected with gcc's ASan.
+  =================================================================
+  ==4322==ERROR: AddressSanitizer: global-buffer-overflow on address 0x56463844e300 at pc 0x564637e7ad0d bp 0x7f30c8c89d10 sp 0x7f30c8c89d00
+  READ of size 8 at 0x56463844e300 thread T9
+      #0 0x564637e7ad0c in __ordered_events__flush util/ordered-events.c:316
+      #1 0x564637e7b0e4 in ordered_events__flush util/ordered-events.c:338
+      #2 0x564637c6a57d in process_thread /home/changbin/work/linux/tools/perf/builtin-top.c:1073
+      #3 0x7f30d173a163 in start_thread (/lib/x86_64-linux-gnu/libpthread.so.0+0x8163)
+      #4 0x7f30cfffbdee in __clone (/lib/x86_64-linux-gnu/libc.so.6+0x11adee)
+
+  0x56463844e300 is located 32 bytes to the left of global variable 'flags' defined in 'util/trace-event-parse.c:229:26' (0x56463844e320) of size 192
+  0x56463844e300 is located 0 bytes to the right of global variable 'str' defined in 'util/ordered-events.c:268:28' (0x56463844e2e0) of size 32
+  SUMMARY: AddressSanitizer: global-buffer-overflow util/ordered-events.c:316 in __ordered_events__flush
+  Shadow bytes around the buggy address:
+    0x0ac947081c10: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081c20: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081c30: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081c40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081c50: 00 00 00 00 00 00 00 00 f9 f9 f9 f9 00 00 00 00
+  =>0x0ac947081c60:[f9]f9 f9 f9 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081c70: 00 00 00 00 00 00 00 00 00 00 00 00 f9 f9 f9 f9
+    0x0ac947081c80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081c90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081ca0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    0x0ac947081cb0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  Shadow byte legend (one shadow byte represents 8 application bytes):
+    Addressable:           00
+    Partially addressable: 01 02 03 04 05 06 07
+    Heap left redzone:       fa
+    Freed heap region:       fd
+    Stack left redzone:      f1
+    Stack mid redzone:       f2
+    Stack right redzone:     f3
+    Stack after return:      f5
+    Stack use after scope:   f8
+    Global redzone:          f9
+    Global init order:       f6
+    Poisoned by user:        f7
+    Container overflow:      fc
+    Array cookie:            ac
+    Intra object redzone:    bb
+    ASan internal:           fe
+    Left alloca redzone:     ca
+    Right alloca redzone:    cb
+  Thread T9 created by T0 here:
+      #0 0x7f30d179de5f in __interceptor_pthread_create (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x4ae5f)
+      #1 0x564637c6b954 in __cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1253
+      #2 0x564637c7173c in cmd_top /home/changbin/work/linux/tools/perf/builtin-top.c:1642
+      #3 0x564637d85038 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #4 0x564637d85577 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #5 0x564637d8597b in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #6 0x564637d860e9 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #7 0x7f30cff0509a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 1e6285699b30 ("perf symbols: Fix slowness due to -ffunction-section")
-Link: http://lkml.kernel.org/r/20190316080556.3075-12-changbin.du@gmail.com
+Cc: Jiri Olsa <jolsa@kernel.org>
+Fixes: 16c66bc167cc ("perf top: Add processing thread")
+Fixes: 68ca5d07de20 ("perf ordered_events: Add ordered_events__flush_time interface")
+Link: http://lkml.kernel.org/r/20190316080556.3075-13-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/perf/util/ordered-events.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 64bea5eb8bf6..e32628cd20a7 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -577,10 +577,25 @@ static void __maps__purge(struct maps *maps)
- 	}
- }
- 
-+static void __maps__purge_names(struct maps *maps)
-+{
-+	struct rb_root *root = &maps->names;
-+	struct rb_node *next = rb_first(root);
-+
-+	while (next) {
-+		struct map *pos = rb_entry(next, struct map, rb_node_name);
-+
-+		next = rb_next(&pos->rb_node_name);
-+		rb_erase_init(&pos->rb_node_name, root);
-+		map__put(pos);
-+	}
-+}
-+
- static void maps__exit(struct maps *maps)
- {
- 	down_write(&maps->lock);
- 	__maps__purge(maps);
-+	__maps__purge_names(maps);
- 	up_write(&maps->lock);
- }
- 
+diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
+index ea523d3b248f..989fed6f43b5 100644
+--- a/tools/perf/util/ordered-events.c
++++ b/tools/perf/util/ordered-events.c
+@@ -270,6 +270,8 @@ static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
+ 		"FINAL",
+ 		"ROUND",
+ 		"HALF ",
++		"TOP  ",
++		"TIME ",
+ 	};
+ 	int err;
+ 	bool show_progress = false;
 -- 
 2.20.1
