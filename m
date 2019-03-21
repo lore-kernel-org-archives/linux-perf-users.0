@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/44] perf map: Remove map from 'names' tree in __maps__remove()
-Date: Thu, 21 Mar 2019 15:51:17 -0300
-Message-ID: <20190321185142.11441-20-acme@kernel.org>
+Subject: [PATCH 20/44] perf maps: Purge all maps from the 'names' tree
+Date: Thu, 21 Mar 2019 15:51:18 -0300
+Message-ID: <20190321185142.11441-21-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Changbin Du <changbin.du@gmail.com>
 
-There are two trees for each map inserted by maps__insert(), so remove
-it from the 'names' tree in __maps__remove().
+Add function __maps__purge_names() to purge all maps from the names
+tree.  We need to cleanup the names tree in maps__exit().
 
 Detected with gcc's ASan.
 
@@ -28,25 +28,41 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Fixes: 1e6285699b30 ("perf symbols: Fix slowness due to -ffunction-section")
-Link: http://lkml.kernel.org/r/20190316080556.3075-11-changbin.du@gmail.com
+Link: http://lkml.kernel.org/r/20190316080556.3075-12-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/map.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index fbeb0c6efaa6..64bea5eb8bf6 100644
+index 64bea5eb8bf6..e32628cd20a7 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -917,6 +917,9 @@ static void __maps__remove(struct maps *maps, struct map *map)
- {
- 	rb_erase_init(&map->rb_node, &maps->entries);
- 	map__put(map);
-+
-+	rb_erase_init(&map->rb_node_name, &maps->names);
-+	map__put(map);
+@@ -577,10 +577,25 @@ static void __maps__purge(struct maps *maps)
+ 	}
  }
  
- void maps__remove(struct maps *maps, struct map *map)
++static void __maps__purge_names(struct maps *maps)
++{
++	struct rb_root *root = &maps->names;
++	struct rb_node *next = rb_first(root);
++
++	while (next) {
++		struct map *pos = rb_entry(next, struct map, rb_node_name);
++
++		next = rb_next(&pos->rb_node_name);
++		rb_erase_init(&pos->rb_node_name, root);
++		map__put(pos);
++	}
++}
++
+ static void maps__exit(struct maps *maps)
+ {
+ 	down_write(&maps->lock);
+ 	__maps__purge(maps);
++	__maps__purge_names(maps);
+ 	up_write(&maps->lock);
+ }
+ 
 -- 
 2.20.1
