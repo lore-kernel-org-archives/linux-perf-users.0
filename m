@@ -1,9 +1,10 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/44] perf list: Don't forget to drop the reference to the allocated thread_map
-Date: Thu, 21 Mar 2019 15:51:09 -0300
-Message-ID: <20190321185142.11441-12-acme@kernel.org>
+Subject: [PATCH 12/44] perf tools: Fix errors under optimization level '-Og'
+Date: Thu, 21 Mar 2019 15:51:10 -0300
+Message-ID: <20190321185142.11441-13-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
@@ -14,21 +15,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Changbin Du <changbin.du@gmail.com>
 
-Detected via gcc's ASan:
+Optimization level '-Og' offers a reasonable level of optimization while
+maintaining fast compilation and a good debugging experience. This patch
+tries to make it work.
 
-  Direct leak of 2048 byte(s) in 64 object(s) allocated from:
-    6     #0 0x7f606512e370 in __interceptor_realloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee370)
-    7     #1 0x556b0f1d7ddd in thread_map__realloc util/thread_map.c:43
-    8     #2 0x556b0f1d84c7 in thread_map__new_by_tid util/thread_map.c:85
-    9     #3 0x556b0f0e045e in is_event_supported util/parse-events.c:2250
-   10     #4 0x556b0f0e1aa1 in print_hwcache_events util/parse-events.c:2382
-   11     #5 0x556b0f0e3231 in print_events util/parse-events.c:2514
-   12     #6 0x556b0ee0a66e in cmd_list /home/changbin/work/linux/tools/perf/builtin-list.c:58
-   13     #7 0x556b0f01e0ae in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-   14     #8 0x556b0f01e859 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-   15     #9 0x556b0f01edc8 in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-   16     #10 0x556b0f01f71f in main /home/changbin/work/linux/tools/perf/perf.c:520
-   17     #11 0x7f6062ccf09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  $ make DEBUG=1 EXTRA_CFLAGS='-Og'
+  bench/epoll-ctl.c: In function ‘do_threads’:
+  bench/epoll-ctl.c:274:9: error: ‘ret’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+    return ret;
+           ^~~
+  ...
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -37,24 +33,66 @@ Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 89896051f8da ("perf tools: Do not put a variable sized type not at the end of a struct")
-Link: http://lkml.kernel.org/r/20190316080556.3075-3-changbin.du@gmail.com
+Link: http://lkml.kernel.org/r/20190316080556.3075-4-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/bpf/libbpf.c                  | 2 +-
+ tools/perf/bench/epoll-ctl.c            | 2 +-
+ tools/perf/bench/epoll-wait.c           | 2 +-
+ tools/perf/tests/backward-ring-buffer.c | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 4dcc01b2532c..2e9035c4c252 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2271,6 +2271,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 		perf_evsel__delete(evsel);
- 	}
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index f5eb60379c8d..4884557aa17f 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -622,7 +622,7 @@ bpf_object__init_maps(struct bpf_object *obj, int flags)
+ 	bool strict = !(flags & MAPS_RELAX_COMPAT);
+ 	int i, map_idx, map_def_sz, nr_maps = 0;
+ 	Elf_Scn *scn;
+-	Elf_Data *data;
++	Elf_Data *data = NULL;
+ 	Elf_Data *symbols = obj->efile.symbols;
  
-+	thread_map__put(tmap);
- 	return ret;
- }
+ 	if (obj->efile.maps_shndx < 0)
+diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+index 0c0a6e824934..2af067859966 100644
+--- a/tools/perf/bench/epoll-ctl.c
++++ b/tools/perf/bench/epoll-ctl.c
+@@ -224,7 +224,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret;
++	int ret = 0;
  
+ 	if (!noaffinity)
+ 		pthread_attr_init(&thread_attr);
+diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+index 5a11534e96a0..fe85448abd45 100644
+--- a/tools/perf/bench/epoll-wait.c
++++ b/tools/perf/bench/epoll-wait.c
+@@ -293,7 +293,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
+ 	pthread_attr_t thread_attr, *attrp = NULL;
+ 	cpu_set_t cpuset;
+ 	unsigned int i, j;
+-	int ret, events = EPOLLIN;
++	int ret = 0, events = EPOLLIN;
+ 
+ 	if (oneshot)
+ 		events |= EPOLLONESHOT;
+diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
+index 6d598cc071ae..1a9c3becf5ff 100644
+--- a/tools/perf/tests/backward-ring-buffer.c
++++ b/tools/perf/tests/backward-ring-buffer.c
+@@ -18,7 +18,7 @@ static void testcase(void)
+ 	int i;
+ 
+ 	for (i = 0; i < NR_ITERS; i++) {
+-		char proc_name[10];
++		char proc_name[15];
+ 
+ 		snprintf(proc_name, sizeof(proc_name), "p:%d\n", i);
+ 		prctl(PR_SET_NAME, proc_name);
 -- 
 2.20.1
