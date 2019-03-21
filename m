@@ -1,98 +1,143 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/44] perf tools: Fix errors under optimization level '-Og'
-Date: Thu, 21 Mar 2019 15:51:10 -0300
-Message-ID: <20190321185142.11441-13-acme@kernel.org>
+Subject: [PATCH 04/44] perf report: Show all sort keys in help output
+Date: Thu, 21 Mar 2019 15:51:02 -0300
+Message-ID: <20190321185142.11441-5-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Changbin Du <changbin.du@gmail.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-Optimization level '-Og' offers a reasonable level of optimization while
-maintaining fast compilation and a good debugging experience. This patch
-tries to make it work.
+Show all the supported sort keys in the command line help output, so
+that it's not needed to refer to the manpage.
 
-  $ make DEBUG=1 EXTRA_CFLAGS='-Og'
-  bench/epoll-ctl.c: In function ‘do_threads’:
-  bench/epoll-ctl.c:274:9: error: ‘ret’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
-    return ret;
-           ^~~
+Before:
+
+  % perf report -h
   ...
+       -s, --sort <key[,key2...]>
+                            sort by key(s): pid, comm, dso, symbol, parent, cpu, srcline, ... Please refer the man page for the complete list.
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190316080556.3075-4-changbin.du@gmail.com
+After:
+
+  % perf report -h
+  ...
+      -s, --sort <key[,key2...]>
+                            sort by key(s): overhead overhead_sys overhead_us overhead_guest_sys overhead_guest_us overhead_children sample period pid comm dso symbol parent cpu ...
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+LPU-Reference: 20190314225002.30108-5-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-9r3uz2ch4izoi1uln3f889co@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/bpf/libbpf.c                  | 2 +-
- tools/perf/bench/epoll-ctl.c            | 2 +-
- tools/perf/bench/epoll-wait.c           | 2 +-
- tools/perf/tests/backward-ring-buffer.c | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-report.c |  5 ++--
+ tools/perf/util/sort.c      | 52 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/sort.h      |  2 ++
+ 3 files changed, 56 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index f5eb60379c8d..4884557aa17f 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -622,7 +622,7 @@ bpf_object__init_maps(struct bpf_object *obj, int flags)
- 	bool strict = !(flags & MAPS_RELAX_COMPAT);
- 	int i, map_idx, map_def_sz, nr_maps = 0;
- 	Elf_Scn *scn;
--	Elf_Data *data;
-+	Elf_Data *data = NULL;
- 	Elf_Data *symbols = obj->efile.symbols;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1921aaa9cece..4054eb1f98ac 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1083,10 +1083,9 @@ int cmd_report(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "header-only", &report.header_only,
+ 		    "Show only data header."),
+ 	OPT_STRING('s', "sort", &sort_order, "key[,key2...]",
+-		   "sort by key(s): pid, comm, dso, symbol, parent, cpu, srcline, ..."
+-		   " Please refer the man page for the complete list."),
++		   sort_help("sort by key(s):")),
+ 	OPT_STRING('F', "fields", &field_order, "key[,keys...]",
+-		   "output field(s): overhead, period, sample plus all of sort keys"),
++		   sort_help("output field(s): overhead period sample ")),
+ 	OPT_BOOLEAN(0, "show-cpu-utilization", &symbol_conf.show_cpu_utilization,
+ 		    "Show sample percentage for different cpu modes"),
+ 	OPT_BOOLEAN_FLAG(0, "showcpuutilization", &symbol_conf.show_cpu_utilization,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index bdd30cab51cb..5d2518e89fc4 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -13,6 +13,7 @@
+ #include "evsel.h"
+ #include "evlist.h"
+ #include "strlist.h"
++#include "strbuf.h"
+ #include <traceevent/event-parse.h>
+ #include "mem-events.h"
+ #include "annotate.h"
+@@ -3107,3 +3108,54 @@ void reset_output_field(void)
+ 	reset_dimensions();
+ 	perf_hpp__reset_output_field(&perf_hpp_list);
+ }
++
++#define INDENT (3*8 + 1)
++
++static void add_key(struct strbuf *sb, const char *str, int *llen)
++{
++	if (*llen >= 75) {
++		strbuf_addstr(sb, "\n\t\t\t ");
++		*llen = INDENT;
++	}
++	strbuf_addf(sb, " %s", str);
++	*llen += strlen(str) + 1;
++}
++
++static void add_sort_string(struct strbuf *sb, struct sort_dimension *s, int n,
++			    int *llen)
++{
++	int i;
++
++	for (i = 0; i < n; i++)
++		add_key(sb, s[i].name, llen);
++}
++
++static void add_hpp_sort_string(struct strbuf *sb, struct hpp_dimension *s, int n,
++				int *llen)
++{
++	int i;
++
++	for (i = 0; i < n; i++)
++		add_key(sb, s[i].name, llen);
++}
++
++const char *sort_help(const char *prefix)
++{
++	struct strbuf sb;
++	char *s;
++	int len = strlen(prefix) + INDENT;
++
++	strbuf_init(&sb, 300);
++	strbuf_addstr(&sb, prefix);
++	add_hpp_sort_string(&sb, hpp_sort_dimensions,
++			    ARRAY_SIZE(hpp_sort_dimensions), &len);
++	add_sort_string(&sb, common_sort_dimensions,
++			    ARRAY_SIZE(common_sort_dimensions), &len);
++	add_sort_string(&sb, bstack_sort_dimensions,
++			    ARRAY_SIZE(bstack_sort_dimensions), &len);
++	add_sort_string(&sb, memory_sort_dimensions,
++			    ARRAY_SIZE(memory_sort_dimensions), &len);
++	s = strbuf_detach(&sb, NULL);
++	strbuf_release(&sb);
++	return s;
++}
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index bb9442ab7a0c..ce376a73f964 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -296,6 +296,8 @@ void reset_output_field(void);
+ void sort__setup_elide(FILE *fp);
+ void perf_hpp__set_elide(int idx, bool elide);
  
- 	if (obj->efile.maps_shndx < 0)
-diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
-index 0c0a6e824934..2af067859966 100644
---- a/tools/perf/bench/epoll-ctl.c
-+++ b/tools/perf/bench/epoll-ctl.c
-@@ -224,7 +224,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
- 	pthread_attr_t thread_attr, *attrp = NULL;
- 	cpu_set_t cpuset;
- 	unsigned int i, j;
--	int ret;
-+	int ret = 0;
++const char *sort_help(const char *prefix);
++
+ int report_parse_ignore_callees_opt(const struct option *opt, const char *arg, int unset);
  
- 	if (!noaffinity)
- 		pthread_attr_init(&thread_attr);
-diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-index 5a11534e96a0..fe85448abd45 100644
---- a/tools/perf/bench/epoll-wait.c
-+++ b/tools/perf/bench/epoll-wait.c
-@@ -293,7 +293,7 @@ static int do_threads(struct worker *worker, struct cpu_map *cpu)
- 	pthread_attr_t thread_attr, *attrp = NULL;
- 	cpu_set_t cpuset;
- 	unsigned int i, j;
--	int ret, events = EPOLLIN;
-+	int ret = 0, events = EPOLLIN;
- 
- 	if (oneshot)
- 		events |= EPOLLONESHOT;
-diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index 6d598cc071ae..1a9c3becf5ff 100644
---- a/tools/perf/tests/backward-ring-buffer.c
-+++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -18,7 +18,7 @@ static void testcase(void)
- 	int i;
- 
- 	for (i = 0; i < NR_ITERS; i++) {
--		char proc_name[10];
-+		char proc_name[15];
- 
- 		snprintf(proc_name, sizeof(proc_name), "p:%d\n", i);
- 		prctl(PR_SET_NAME, proc_name);
+ bool is_strict_order(const char *order);
 -- 
 2.20.1
