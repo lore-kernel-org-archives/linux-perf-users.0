@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/44] perf tests: Fix memory leak by expr__find_other() in test__expr()
-Date: Thu, 21 Mar 2019 15:51:22 -0300
-Message-ID: <20190321185142.11441-25-acme@kernel.org>
+Subject: [PATCH 25/44] perf tests: Fix a memory leak in test__perf_evsel__tp_sched_test()
+Date: Thu, 21 Mar 2019 15:51:23 -0300
+Message-ID: <20190321185142.11441-26-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,65 +9,58 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190321185142.11441-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Daniel Borkmann <daniel@iogearbox.net>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Changbin Du <changbin.du@gmail.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Changbin Du <changbin.du@gmail.com>
 
   =================================================================
-  ==7506==ERROR: LeakSanitizer: detected memory leaks
+  ==20875==ERROR: LeakSanitizer: detected memory leaks
 
-  Direct leak of 13 byte(s) in 3 object(s) allocated from:
-      #0 0x7f03339d6070 in __interceptor_strdup (/usr/lib/x86_64-linux-gnu/libasan.so.5+0x3b070)
-      #1 0x5625e53aaef0 in expr__find_other util/expr.y:221
-      #2 0x5625e51bcd3f in test__expr tests/expr.c:52
-      #3 0x5625e51528e6 in run_test tests/builtin-test.c:358
-      #4 0x5625e5152baf in test_and_print tests/builtin-test.c:388
-      #5 0x5625e51543fe in __cmd_test tests/builtin-test.c:583
-      #6 0x5625e515572f in cmd_test tests/builtin-test.c:722
-      #7 0x5625e51c3fb8 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
-      #8 0x5625e51c44f7 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
-      #9 0x5625e51c48fb in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
-      #10 0x5625e51c5069 in main /home/changbin/work/linux/tools/perf/perf.c:520
-      #11 0x7f033214d09a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+  Direct leak of 1160 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc84138 in calloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xee138)
+      #1 0x55bd50005599 in zalloc util/util.h:23
+      #2 0x55bd500068f5 in perf_evsel__newtp_idx util/evsel.c:327
+      #3 0x55bd4ff810fc in perf_evsel__newtp /home/work/linux/tools/perf/util/evsel.h:216
+      #4 0x55bd4ff81608 in test__perf_evsel__tp_sched_test tests/evsel-tp-sched.c:69
+      #5 0x55bd4ff528e6 in run_test tests/builtin-test.c:358
+      #6 0x55bd4ff52baf in test_and_print tests/builtin-test.c:388
+      #7 0x55bd4ff543fe in __cmd_test tests/builtin-test.c:583
+      #8 0x55bd4ff5572f in cmd_test tests/builtin-test.c:722
+      #9 0x55bd4ffc4087 in run_builtin /home/changbin/work/linux/tools/perf/perf.c:302
+      #10 0x55bd4ffc45c6 in handle_internal_command /home/changbin/work/linux/tools/perf/perf.c:354
+      #11 0x55bd4ffc49ca in run_argv /home/changbin/work/linux/tools/perf/perf.c:398
+      #12 0x55bd4ffc5138 in main /home/changbin/work/linux/tools/perf/perf.c:520
+      #13 0x7f1b6e34809a in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x2409a)
+
+  Indirect leak of 19 byte(s) in 1 object(s) allocated from:
+      #0 0x7f1b6fc83f30 in __interceptor_malloc (/usr/lib/x86_64-linux-gnu/libasan.so.5+0xedf30)
+      #1 0x7f1b6e3ac30f in vasprintf (/lib/x86_64-linux-gnu/libc.so.6+0x8830f)
 
 Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Fixes: 075167363f8b ("perf tools: Add a simple expression parser for JSON")
-Link: http://lkml.kernel.org/r/20190316080556.3075-16-changbin.du@gmail.com
+Fixes: 6a6cd11d4e57 ("perf test: Add test for the sched tracepoint format fields")
+Link: http://lkml.kernel.org/r/20190316080556.3075-17-changbin.du@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/expr.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/evsel-tp-sched.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 01f0706995a9..9acc1e80b936 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -19,7 +19,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	const char *p;
- 	const char **other;
- 	double val;
--	int ret;
-+	int i, ret;
- 	struct parse_ctx ctx;
- 	int num_other;
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index ea7acf403727..71f60c0f9faa 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -85,5 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
+ 		ret = -1;
  
-@@ -56,6 +56,9 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	TEST_ASSERT_VAL("find other", !strcmp(other[1], "BAZ"));
- 	TEST_ASSERT_VAL("find other", !strcmp(other[2], "BOZO"));
- 	TEST_ASSERT_VAL("find other", other[3] == NULL);
-+
-+	for (i = 0; i < num_other; i++)
-+		free((void *)other[i]);
- 	free((void *)other);
- 
- 	return 0;
++	perf_evsel__delete(evsel);
+ 	return ret;
+ }
 -- 
 2.20.1
