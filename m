@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/44] perf report: Indicate JITed code better in report
-Date: Thu, 21 Mar 2019 15:51:03 -0300
-Message-ID: <20190321185142.11441-6-acme@kernel.org>
+Subject: [PATCH 06/44] perf script: Support relative time
+Date: Thu, 21 Mar 2019 15:51:04 -0300
+Message-ID: <20190321185142.11441-7-acme@kernel.org>
 References: <20190321185142.11441-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,104 +14,127 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Print [TID] tid %d instead of the crypted /tmp/perf-%d.map default.
+When comparing time stamps in 'perf script' traces it can be annoying to
+work with the full perf time stamps.
 
-% cat >loop.java
-  public class loop {
-          public static void main(String[] args)
-          {
-                  for (;;);
-          }
-  }
-  ^D
-  % javac loop.java
-  % perf record java loop
-  ^C
+Add a --reltime option that displays time stamps relative to the trace
+start to make it easier to read the traces.
+
+Note: not currently supported for --time. Report an error in this
+case.
 
 Before:
 
-  % perf report --stdio
-  ...
-      56.09%  java     perf-34724.map      [.] 0x00007fd5bd021896
-      19.12%  java     perf-34724.map      [.] 0x00007fd5bd021887
-       9.79%  java     perf-34724.map      [.] 0x00007fd5bd021783
-       8.97%  java     perf-34724.map      [.] 0x00007fd5bd02175b
+  % perf script
+      swapper 0 [000] 245402.891216:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
+      swapper 0 [000] 245402.891223:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
+      swapper 0 [000] 245402.891227:    5 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
+      swapper 0 [000] 245402.891231:   41 cycles:ppp: ffffffffa0068816 native_write_msr+0x6 ([kernel.kallsyms])
+      swapper 0 [000] 245402.891235:  355 cycles:ppp: ffffffffa000dd51 intel_bts_enable_local+0x21 ([kernel.kallsyms])
+      swapper 0 [000] 245402.891239: 3084 cycles:ppp: ffffffffa0a0150a end_repeat_nmi+0x48 ([kernel.kallsyms])
 
 After:
 
-  % perf report --stdio
-  ...
-      56.09%  java     [JIT] tid 34724     [.] 0x00007fd5bd021896
-      19.12%  java     [JIT] tid 34724     [.] 0x00007fd5bd021887
-       9.79%  java     [JIT] tid 34724     [.] 0x00007fd5bd021783
-       8.97%  java     [JIT] tid 34724     [.] 0x00007fd5bd02175b
+  % perf script --reltime
+
+      swapper 0 [000]     0.000000:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
+      swapper 0 [000]     0.000006:    1 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
+      swapper 0 [000]     0.000010:    5 cycles:ppp: ffffffffa0068814 native_write_msr+0x4 ([kernel.kallsyms])
+      swapper 0 [000]     0.000014:   41 cycles:ppp: ffffffffa0068816 native_write_msr+0x6 ([kernel.kallsyms])
+      swapper 0 [000]     0.000018:  355 cycles:ppp: ffffffffa000dd51 intel_bts_enable_local+0x21 ([kernel.kallsyms])
+      swapper 0 [000]     0.000022: 3084 cycles:ppp: ffffffffa0a0150a end_repeat_nmi+0x48 ([kernel.kallsyms])
+
+Committer notes:
+
+Do not use 'time' as the name of a variable, as this breaks the build on
+older glibcs:
+
+  cc1: warnings being treated as errors
+  builtin-script.c: In function 'perf_sample__fprintf_start':
+  builtin-script.c:691: warning: declaration of 'time' shadows a global declaration
+  /usr/include/time.h:187: warning: shadowed declaration is here
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-LPU-Reference: 20190314225002.30108-7-andi@firstfloor.org
-Link: https://lkml.kernel.org/n/tip-r17l6py9g0sezb7mi1f286gt@git.kernel.org
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+LPU-Reference: 20190314225002.30108-8-andi@firstfloor.org
+Link: https://lkml.kernel.org/n/tip-bpahyi6pr9r399mvihu65fvc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 42 ++++++++++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 18 deletions(-)
+ tools/perf/Documentation/perf-script.txt |  3 +++
+ tools/perf/builtin-script.c              | 18 ++++++++++++++++--
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index ba58ba603b69..ab8a455d2283 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1141,28 +1141,34 @@ void dso__set_short_name(struct dso *dso, const char *name, bool name_allocated)
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 2e19fd7ffe35..9b0d04dd2a61 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -380,6 +380,9 @@ include::itrace.txt[]
+ 	Set the maximum number of program blocks to print with brstackasm for
+ 	each sample.
  
- static void dso__set_basename(struct dso *dso)
- {
--       /*
--        * basename() may modify path buffer, so we must pass
--        * a copy.
--        */
--       char *base, *lname = strdup(dso->long_name);
-+	char *base, *lname;
-+	int tid;
++--reltime::
++	Print time stamps relative to trace start.
++
+ --per-event-dump::
+ 	Create per event files with a "perf.data.EVENT.dump" name instead of
+         printing to stdout, useful, for instance, for generating flamegraphs.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 2f93d60c5a17..61cfd8f70989 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -53,6 +53,8 @@
  
--       if (!lname)
--               return;
--
--       /*
--        * basename() may return a pointer to internal
--        * storage which is reused in subsequent calls
--        * so copy the result.
--        */
--       base = strdup(basename(lname));
-+	if (sscanf(dso->long_name, "/tmp/perf-%d.map", &tid) == 1) {
-+		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
-+			return;
-+	} else {
-+	      /*
-+	       * basename() may modify path buffer, so we must pass
-+               * a copy.
-+               */
-+		lname = strdup(dso->long_name);
-+		if (!lname)
-+			return;
+ static char const		*script_name;
+ static char const		*generate_script_lang;
++static bool			reltime;
++static u64			initial_time;
+ static bool			debug_mode;
+ static u64			last_timestamp;
+ static u64			nr_unordered;
+@@ -686,7 +688,13 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 	}
  
--       free(lname);
-+		/*
-+		 * basename() may return a pointer to internal
-+		 * storage which is reused in subsequent calls
-+		 * so copy the result.
-+		 */
-+		base = strdup(basename(lname));
+ 	if (PRINT_FIELD(TIME)) {
+-		nsecs = sample->time;
++		u64 t = sample->time;
++		if (reltime) {
++			if (!initial_time)
++				initial_time = sample->time;
++			t = sample->time - initial_time;
++		}
++		nsecs = t;
+ 		secs = nsecs / NSEC_PER_SEC;
+ 		nsecs -= secs * NSEC_PER_SEC;
  
--       if (!base)
--               return;
-+		free(lname);
+@@ -694,7 +702,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
+ 			printed += fprintf(fp, "%5lu.%09llu: ", secs, nsecs);
+ 		else {
+ 			char sample_time[32];
+-			timestamp__scnprintf_usec(sample->time, sample_time, sizeof(sample_time));
++			timestamp__scnprintf_usec(t, sample_time, sizeof(sample_time));
+ 			printed += fprintf(fp, "%12s: ", sample_time);
+ 		}
+ 	}
+@@ -3413,6 +3421,7 @@ int cmd_script(int argc, const char **argv)
+ 		     "Set the maximum stack depth when parsing the callchain, "
+ 		     "anything beyond the specified depth will be ignored. "
+ 		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
++	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
+ 	OPT_BOOLEAN('I', "show-info", &show_full_info,
+ 		    "display extended information from perf.data file"),
+ 	OPT_BOOLEAN('\0', "show-kernel-path", &symbol_conf.show_kernel_path,
+@@ -3487,6 +3496,11 @@ int cmd_script(int argc, const char **argv)
+ 		}
+ 	}
  
--       dso__set_short_name(dso, base, true);
-+		if (!base)
-+			return;
++	if (script.time_str && reltime) {
++		fprintf(stderr, "Don't combine --reltime with --time\n");
++		return -1;
 +	}
-+	dso__set_short_name(dso, base, true);
- }
- 
- int dso__name_len(const struct dso *dso)
++
+ 	if (itrace_synth_opts.callchain &&
+ 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
+ 		scripting_max_stack = itrace_synth_opts.callchain_sz;
 -- 
 2.20.1
