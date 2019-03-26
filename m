@@ -1,7 +1,7 @@
 From: Andi Kleen <andi@firstfloor.org>
-Subject: [PATCH 1/4] perf, tools: Revert checks for duration_time
-Date: Tue, 26 Mar 2019 15:18:20 -0700
-Message-ID: <20190326221823.11518-2-andi@firstfloor.org>
+Subject: [PATCH 3/4] perf, tools: Support name for duration_time
+Date: Tue, 26 Mar 2019 15:18:22 -0700
+Message-ID: <20190326221823.11518-4-andi@firstfloor.org>
 References: <20190326221823.11518-1-andi@firstfloor.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,85 +14,41 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-This reverts e864c5ca145e perf stat: Hide internal duration_time counter
-but doing it manually since the code has now moved to a different file.
-
-The next patch will properly implement duration_time as a full
-event, so no need to hide it anymore.
+Implement printing the correct name for duration_time
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/stat-display.c | 18 ------------------
- 1 file changed, 18 deletions(-)
+ tools/perf/util/evsel.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 6d043c78f3c2..3324f23c7efc 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -18,11 +18,6 @@
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 7835e05f0c0a..6872394b6f55 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -579,6 +579,12 @@ static int perf_evsel__raw_name(struct perf_evsel *evsel, char *bf, size_t size)
+ 	return ret + perf_evsel__add_modifiers(evsel, bf + ret, size - ret);
+ }
  
--static bool is_duration_time(struct perf_evsel *evsel)
--{
--	return !strcmp(evsel->name, "duration_time");
--}
--
- static void print_running(struct perf_stat_config *config,
- 			  u64 run, u64 ena)
++static int perf_evsel__tool_name(char *bf, size_t size)
++{
++	int ret = scnprintf(bf, size, "duration_time");
++	return ret;
++}
++
+ const char *perf_evsel__name(struct perf_evsel *evsel)
  {
-@@ -628,9 +623,6 @@ static void print_aggr(struct perf_stat_config *config,
- 		ad.id = id = config->aggr_map->map[s];
- 		first = true;
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
--
- 			ad.val = ad.ena = ad.run = 0;
- 			ad.nr = 0;
- 			if (!collect_data(config, counter, aggr_cb, &ad))
-@@ -848,8 +840,6 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
- 		if (prefix)
- 			fputs(prefix, config->output);
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			if (first) {
- 				aggr_printout(config, counter, cpu, 0);
- 				first = false;
-@@ -906,8 +896,6 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 	char bf[128];
+@@ -600,7 +606,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
+ 		break;
  
- 	/* Print metrics headers only */
- 	evlist__for_each_entry(evlist, counter) {
--		if (is_duration_time(counter))
--			continue;
- 		os.evsel = counter;
- 		out.ctx = &os;
- 		out.print_metric = print_metric_header;
-@@ -1136,15 +1124,11 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
+ 	case PERF_TYPE_SOFTWARE:
+-		perf_evsel__sw_name(evsel, bf, sizeof(bf));
++		if (evsel->tool_event)
++			perf_evsel__tool_name(bf, sizeof(bf));
++		else
++			perf_evsel__sw_name(evsel, bf, sizeof(bf));
  		break;
- 	case AGGR_THREAD:
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			print_aggr_thread(config, _target, counter, prefix);
- 		}
- 		break;
- 	case AGGR_GLOBAL:
- 		evlist__for_each_entry(evlist, counter) {
--			if (is_duration_time(counter))
--				continue;
- 			print_counter_aggr(config, counter, prefix);
- 		}
- 		if (metric_only)
-@@ -1155,8 +1139,6 @@ perf_evlist__print_counters(struct perf_evlist *evlist,
- 			print_no_aggr_metric(config, evlist, prefix);
- 		else {
- 			evlist__for_each_entry(evlist, counter) {
--				if (is_duration_time(counter))
--					continue;
- 				print_counter(config, counter, prefix);
- 			}
- 		}
+ 
+ 	case PERF_TYPE_TRACEPOINT:
 -- 
 2.20.1
