@@ -1,65 +1,72 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/13] perf intel-pt: Fix TSC slip
-Date: Fri, 29 Mar 2019 10:37:50 -0300
-Message-ID: <20190329133801.21004-3-acme@kernel.org>
+Subject: [PATCH 01/13] perf cs-etm: Add missing case value
+Date: Fri, 29 Mar 2019 10:37:49 -0300
+Message-ID: <20190329133801.21004-2-acme@kernel.org>
 References: <20190329133801.21004-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190329133801.21004-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Solomon Tan <solomonbobstoner@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulouse <suzuki.poulose@arm.com>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Robert Walker <robert.walker@arm.com>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
-
-A TSC packet can slip past MTC packets so that the timestamp appears to
-go backwards. One estimate is that can be up to about 40 CPU cycles,
-which is certainly less than 0x1000 TSC ticks, but accept slippage an
-order of magnitude more to be on the safe side.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 79b58424b821c ("perf tools: Add Intel PT support for decoding MTC packets")
-Link: http://lkml.kernel.org/r/20190325135135.18348-1-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- .../util/intel-pt-decoder/intel-pt-decoder.c  | 20 ++++++++-----------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index 6e03db142091..872fab163585 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -251,19 +251,15 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
- 		if (!(decoder->tsc_ctc_ratio_n % decoder->tsc_ctc_ratio_d))
- 			decoder->tsc_ctc_mult = decoder->tsc_ctc_ratio_n /
- 						decoder->tsc_ctc_ratio_d;
--
--		/*
--		 * Allow for timestamps appearing to backwards because a TSC
--		 * packet has slipped past a MTC packet, so allow 2 MTC ticks
--		 * or ...
--		 */
--		decoder->tsc_slip = multdiv(2 << decoder->mtc_shift,
--					decoder->tsc_ctc_ratio_n,
--					decoder->tsc_ctc_ratio_d);
- 	}
--	/* ... or 0x100 paranoia */
--	if (decoder->tsc_slip < 0x100)
--		decoder->tsc_slip = 0x100;
-+
-+	/*
-+	 * A TSC packet can slip past MTC packets so that the timestamp appears
-+	 * to go backwards. One estimate is that can be up to about 40 CPU
-+	 * cycles, which is certainly less than 0x1000 TSC ticks, but accept
-+	 * slippage an order of magnitude more to be on the safe side.
-+	 */
-+	decoder->tsc_slip = 0x10000;
- 
- 	intel_pt_log("timestamp: mtc_shift %u\n", decoder->mtc_shift);
- 	intel_pt_log("timestamp: tsc_ctc_ratio_n %u\n", decoder->tsc_ctc_ratio_n);
--- 
-2.20.1
+RnJvbTogU29sb21vbiBUYW4gPHNvbG9tb25ib2JzdG9uZXJAZ21haWwuY29tPgoKVGhlIGZvbGxv
+d2luZyBlcnJvciB3YXMgdGhyb3duIHdoZW4gY29tcGlsaW5nIGB0b29scy9wZXJmYCB1c2luZyBP
+cGVuQ1NECnYwLjExLjEuIFRoaXMgcGF0Y2ggZml4ZXMgc2FpZCBlcnJvci4KCiAgICBDQyAgICAg
+ICB1dGlsL2ludGVsLXB0LWRlY29kZXIvaW50ZWwtcHQtbG9nLm8KICAgIENDICAgICAgIHV0aWwv
+Y3MtZXRtLWRlY29kZXIvY3MtZXRtLWRlY29kZXIubwogIHV0aWwvY3MtZXRtLWRlY29kZXIvY3Mt
+ZXRtLWRlY29kZXIuYzogSW4gZnVuY3Rpb24KICDigJhjc19ldG1fZGVjb2Rlcl9fYnVmZmVyX3Jh
+bmdl4oCZOgogIHV0aWwvY3MtZXRtLWRlY29kZXIvY3MtZXRtLWRlY29kZXIuYzozNzA6MjogZXJy
+b3I6IGVudW1lcmF0aW9uIHZhbHVlCiAg4oCYT0NTRF9JTlNUUl9XRklfV0ZF4oCZIG5vdCBoYW5k
+bGVkIGluIHN3aXRjaCBbLVdlcnJvcj1zd2l0Y2gtZW51bV0KICAgIHN3aXRjaCAoZWxlbS0+bGFz
+dF9pX3R5cGUpIHsKICAgIF5+fn5+fgogICAgQ0MgICAgICAgdXRpbC9pbnRlbC1wdC1kZWNvZGVy
+L2ludGVsLXB0LWRlY29kZXIubwogIGNjMTogYWxsIHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMg
+ZXJyb3JzCgpCZWNhdXNlIGBPQ1NEX0lOU1RSX1dGSV9XRkVgIGNhc2Ugd2FzIGFkZGVkIG9ubHkg
+aW4gdjAuMTEuMCwgdGhlIG1pbmltdW0KcmVxdWlyZWQgT3BlbkNTRCBsaWJyYXJ5IHZlcnNpb24g
+Zm9yIHRoaXMgcGF0Y2ggaXMgbm8gbG9uZ2VyIHYwLjEwLjAuCgpTaWduZWQtb2ZmLWJ5OiBTb2xv
+bW9uIFRhbiA8c29sb21vbmJvYnN0b25lckBnbWFpbC5jb20+CkNjOiBBbGV4YW5kZXIgU2hpc2hr
+aW4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+CkNjOiBKaXJpIE9sc2EgPGpv
+bHNhQHJlZGhhdC5jb20+CkNjOiBNYXRoaWV1IFBvaXJpZXIgPG1hdGhpZXUucG9pcmllckBsaW5h
+cm8ub3JnPgpDYzogTmFtaHl1bmcgS2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPgpDYzogUGV0ZXIg
+WmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPgpDYzogUm9iZXJ0IFdhbGtlciA8cm9iZXJ0
+LndhbGtlckBhcm0uY29tPgpDYzogU3V6dWtpIEsgUG91bG91c2UgPHN1enVraS5wb3Vsb3NlQGFy
+bS5jb20+CkNjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKTGluazogaHR0
+cDovL2xrbWwua2VybmVsLm9yZy9yLzIwMTkwMzIyMDUyMjU1LkdBNDgwOUB3LU9wdGlQbGV4LTcw
+NTAKU2lnbmVkLW9mZi1ieTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5j
+b20+Ci0tLQogdG9vbHMvYnVpbGQvZmVhdHVyZS90ZXN0LWxpYm9wZW5jc2QuYyAgICAgICAgICAg
+fCA0ICsrLS0KIHRvb2xzL3BlcmYvdXRpbC9jcy1ldG0tZGVjb2Rlci9jcy1ldG0tZGVjb2Rlci5j
+IHwgMSArCiAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkK
+CmRpZmYgLS1naXQgYS90b29scy9idWlsZC9mZWF0dXJlL3Rlc3QtbGlib3BlbmNzZC5jIGIvdG9v
+bHMvYnVpbGQvZmVhdHVyZS90ZXN0LWxpYm9wZW5jc2QuYwppbmRleCBkNjhlYjRmYjQwY2MuLjJi
+MGUwMmMzODg3MCAxMDA2NDQKLS0tIGEvdG9vbHMvYnVpbGQvZmVhdHVyZS90ZXN0LWxpYm9wZW5j
+c2QuYworKysgYi90b29scy9idWlsZC9mZWF0dXJlL3Rlc3QtbGlib3BlbmNzZC5jCkBAIC00LDkg
+KzQsOSBAQAogLyoKICAqIENoZWNrIE9wZW5DU0QgbGlicmFyeSB2ZXJzaW9uIGlzIHN1ZmZpY2ll
+bnQgdG8gcHJvdmlkZSByZXF1aXJlZCBmZWF0dXJlcwogICovCi0jZGVmaW5lIE9DU0RfTUlOX1ZF
+UiAoKDAgPDwgMTYpIHwgKDEwIDw8IDgpIHwgKDApKQorI2RlZmluZSBPQ1NEX01JTl9WRVIgKCgw
+IDw8IDE2KSB8ICgxMSA8PCA4KSB8ICgwKSkKICNpZiAhZGVmaW5lZChPQ1NEX1ZFUl9OVU0pIHx8
+IChPQ1NEX1ZFUl9OVU0gPCBPQ1NEX01JTl9WRVIpCi0jZXJyb3IgIk9wZW5DU0QgPj0gMC4xMC4w
+IGlzIHJlcXVpcmVkIgorI2Vycm9yICJPcGVuQ1NEID49IDAuMTEuMCBpcyByZXF1aXJlZCIKICNl
+bmRpZgogCiBpbnQgbWFpbih2b2lkKQpkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi91dGlsL2NzLWV0
+bS1kZWNvZGVyL2NzLWV0bS1kZWNvZGVyLmMgYi90b29scy9wZXJmL3V0aWwvY3MtZXRtLWRlY29k
+ZXIvY3MtZXRtLWRlY29kZXIuYwppbmRleCBiYTRjNjIzY2Q4ZGUuLjM5ZmUyMWUxY2Y5MyAxMDA2
+NDQKLS0tIGEvdG9vbHMvcGVyZi91dGlsL2NzLWV0bS1kZWNvZGVyL2NzLWV0bS1kZWNvZGVyLmMK
+KysrIGIvdG9vbHMvcGVyZi91dGlsL2NzLWV0bS1kZWNvZGVyL2NzLWV0bS1kZWNvZGVyLmMKQEAg
+LTM4Nyw2ICszODcsNyBAQCBjc19ldG1fZGVjb2Rlcl9fYnVmZmVyX3JhbmdlKHN0cnVjdCBjc19l
+dG1fZGVjb2RlciAqZGVjb2RlciwKIAkJYnJlYWs7CiAJY2FzZSBPQ1NEX0lOU1RSX0lTQjoKIAlj
+YXNlIE9DU0RfSU5TVFJfRFNCX0RNQjoKKwljYXNlIE9DU0RfSU5TVFJfV0ZJX1dGRToKIAljYXNl
+IE9DU0RfSU5TVFJfT1RIRVI6CiAJZGVmYXVsdDoKIAkJcGFja2V0LT5sYXN0X2luc3RyX3Rha2Vu
+X2JyYW5jaCA9IGZhbHNlOwotLSAKMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
