@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/13] perf machine: Update kernel map address and re-order properly
-Date: Fri, 29 Mar 2019 10:37:58 -0300
-Message-ID: <20190329133801.21004-11-acme@kernel.org>
+Subject: [PATCH 11/13] perf scripts python: exported-sql-viewer.py: Fix never-ending loop
+Date: Fri, 29 Mar 2019 10:37:59 -0300
+Message-ID: <20190329133801.21004-12-acme@kernel.org>
 References: <20190329133801.21004-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,134 +9,143 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190329133801.21004-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Wei Li <liwei391@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Ahern <dsahern@gmail.com>, Hanjun Guo <guohanjun@huawei.com>, Kim Phillips <kim.phillips@arm.com>, Li Bin <huawei.libin@huawei.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Since commit 1fb87b8e9599 ("perf machine: Don't search for active kernel
-start in __machine__create_kernel_maps"), the __machine__create_kernel_maps()
-just create a map what start and end are both zero. Though the address will be
-updated later, the order of map in the rbtree may be incorrect.
+pyside version 1 fails to handle python3 large integers in some cases,
+resulting in Qt getting into a never-ending loop. This affects:
+	samples Table
+	samples_view Table
+	All branches Report
+	Selected branches Report
 
-The commit ee05d21791db ("perf machine: Set main kernel end address properly")
-fixed the logic in machine__create_kernel_maps(), but it's still wrong in
-function machine__process_kernel_mmap_event().
+Add workarounds for those cases.
 
-To reproduce this issue, we need an environment which the module address
-is before the kernel text segment. I tested it on an aarch64 machine with
-kernel 4.19.25:
-
-  [root@localhost hulk]# grep _stext /proc/kallsyms
-  ffff000008081000 T _stext
-  [root@localhost hulk]# grep _etext /proc/kallsyms
-  ffff000009780000 R _etext
-  [root@localhost hulk]# tail /proc/modules
-  hisi_sas_v2_hw 77824 0 - Live 0xffff00000191d000
-  nvme_core 126976 7 nvme, Live 0xffff0000018b6000
-  mdio 20480 1 ixgbe, Live 0xffff0000018ab000
-  hisi_sas_main 106496 1 hisi_sas_v2_hw, Live 0xffff000001861000
-  hns_mdio 20480 2 - Live 0xffff000001822000
-  hnae 28672 3 hns_dsaf,hns_enet_drv, Live 0xffff000001815000
-  dm_mirror 40960 0 - Live 0xffff000001804000
-  dm_region_hash 32768 1 dm_mirror, Live 0xffff0000017f5000
-  dm_log 32768 2 dm_mirror,dm_region_hash, Live 0xffff0000017e7000
-  dm_mod 315392 17 dm_mirror,dm_log, Live 0xffff000001780000
-  [root@localhost hulk]#
-
-Before fix:
-
-  [root@localhost bin]# perf record sleep 3
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
-  [root@localhost bin]# perf buildid-list -i perf.data
-  4c4e46c971ca935f781e603a09b52a92e8bdfee8 [vdso]
-  [root@localhost bin]# perf buildid-list -i perf.data -H
-  0000000000000000000000000000000000000000 /proc/kcore
-  [root@localhost bin]#
-
-After fix:
-
-  [root@localhost tools]# ./perf/perf record sleep 3
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.011 MB perf.data (9 samples) ]
-  [root@localhost tools]# ./perf/perf buildid-list -i perf.data
-  28a6c690262896dbd1b5e1011ed81623e6db0610 [kernel.kallsyms]
-  106c14ce6e4acea3453e484dc604d66666f08a2f [vdso]
-  [root@localhost tools]# ./perf/perf buildid-list -i perf.data -H
-  28a6c690262896dbd1b5e1011ed81623e6db0610 /proc/kcore
-
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Hanjun Guo <guohanjun@huawei.com>
-Cc: Kim Phillips <kim.phillips@arm.com>
-Cc: Li Bin <huawei.libin@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190228092003.34071-1-liwei391@huawei.com
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Fixes: beda0e725e5f ("perf script python: Add Python3 support to exported-sql-viewer.py")
+Link: http://lkml.kernel.org/r/20190327072826.19168-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 32 ++++++++++++++++++++------------
- 1 file changed, 20 insertions(+), 12 deletions(-)
+ .../scripts/python/exported-sql-viewer.py     | 60 +++++++++++++++----
+ 1 file changed, 50 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 61959aba7e27..3c520baa198c 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1421,6 +1421,20 @@ static void machine__set_kernel_mmap(struct machine *machine,
- 		machine->vmlinux_map->end = ~0ULL;
- }
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index e38518cdcbc3..0cf30956064a 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -107,6 +107,7 @@ import os
+ from PySide.QtCore import *
+ from PySide.QtGui import *
+ from PySide.QtSql import *
++pyside_version_1 = True
+ from decimal import *
+ from ctypes import *
+ from multiprocessing import Process, Array, Value, Event
+@@ -1526,6 +1527,19 @@ def BranchDataPrep(query):
+ 			" (" + dsoname(query.value(15)) + ")")
+ 	return data
  
-+static void machine__update_kernel_mmap(struct machine *machine,
-+				     u64 start, u64 end)
-+{
-+	struct map *map = machine__kernel_map(machine);
++def BranchDataPrepWA(query):
++	data = []
++	data.append(query.value(0))
++	# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++	data.append("{:>19}".format(query.value(1)))
++	for i in xrange(2, 8):
++		data.append(query.value(i))
++	data.append(tohex(query.value(8)).rjust(16) + " " + query.value(9) + offstr(query.value(10)) +
++			" (" + dsoname(query.value(11)) + ")" + " -> " +
++			tohex(query.value(12)) + " " + query.value(13) + offstr(query.value(14)) +
++			" (" + dsoname(query.value(15)) + ")")
++	return data
 +
-+	map__get(map);
-+	map_groups__remove(&machine->kmaps, map);
-+
-+	machine__set_kernel_mmap(machine, start, end);
-+
-+	map_groups__insert(&machine->kmaps, map);
-+	map__put(map);
-+}
-+
- int machine__create_kernel_maps(struct machine *machine)
- {
- 	struct dso *kernel = machine__get_kernel(machine);
-@@ -1453,17 +1467,11 @@ int machine__create_kernel_maps(struct machine *machine)
- 			goto out_put;
- 		}
+ # Branch data model
  
--		/* we have a real start address now, so re-order the kmaps */
--		map = machine__kernel_map(machine);
+ class BranchModel(TreeModel):
+@@ -1553,7 +1567,11 @@ class BranchModel(TreeModel):
+ 			" AND evsel_id = " + str(self.event_id) +
+ 			" ORDER BY samples.id"
+ 			" LIMIT " + str(glb_chunk_sz))
+-		self.fetcher = SQLFetcher(glb, sql, BranchDataPrep, self.AddSample)
++		if pyside_version_1 and sys.version_info[0] == 3:
++			prep = BranchDataPrepWA
++		else:
++			prep = BranchDataPrep
++		self.fetcher = SQLFetcher(glb, sql, prep, self.AddSample)
+ 		self.fetcher.done.connect(self.Update)
+ 		self.fetcher.Fetch(glb_chunk_sz)
+ 
+@@ -2079,14 +2097,6 @@ def IsSelectable(db, table, sql = ""):
+ 		return False
+ 	return True
+ 
+-# SQL data preparation
 -
--		map__get(map);
--		map_groups__remove(&machine->kmaps, map);
+-def SQLTableDataPrep(query, count):
+-	data = []
+-	for i in xrange(count):
+-		data.append(query.value(i))
+-	return data
 -
--		/* assume it's the last in the kmaps */
--		machine__set_kernel_mmap(machine, addr, ~0ULL);
--
--		map_groups__insert(&machine->kmaps, map);
--		map__put(map);
-+		/*
-+		 * we have a real start address now, so re-order the kmaps
-+		 * assume it's the last in the kmaps
-+		 */
-+		machine__update_kernel_mmap(machine, addr, ~0ULL);
- 	}
+ # SQL table data model item
  
- 	if (machine__create_extra_kernel_maps(machine, kernel))
-@@ -1599,7 +1607,7 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 		if (strstr(kernel->long_name, "vmlinux"))
- 			dso__set_short_name(kernel, "[kernel.vmlinux]", false);
+ class SQLTableItem():
+@@ -2110,7 +2120,7 @@ class SQLTableModel(TableModel):
+ 		self.more = True
+ 		self.populated = 0
+ 		self.column_headers = column_headers
+-		self.fetcher = SQLFetcher(glb, sql, lambda x, y=len(column_headers): SQLTableDataPrep(x, y), self.AddSample)
++		self.fetcher = SQLFetcher(glb, sql, lambda x, y=len(column_headers): self.SQLTableDataPrep(x, y), self.AddSample)
+ 		self.fetcher.done.connect(self.Update)
+ 		self.fetcher.Fetch(glb_chunk_sz)
  
--		machine__set_kernel_mmap(machine, event->mmap.start,
-+		machine__update_kernel_mmap(machine, event->mmap.start,
- 					 event->mmap.start + event->mmap.len);
+@@ -2154,6 +2164,12 @@ class SQLTableModel(TableModel):
+ 	def columnHeader(self, column):
+ 		return self.column_headers[column]
  
- 		/*
++	def SQLTableDataPrep(self, query, count):
++		data = []
++		for i in xrange(count):
++			data.append(query.value(i))
++		return data
++
+ # SQL automatic table data model
+ 
+ class SQLAutoTableModel(SQLTableModel):
+@@ -2182,8 +2198,32 @@ class SQLAutoTableModel(SQLTableModel):
+ 			QueryExec(query, "SELECT column_name FROM information_schema.columns WHERE table_schema = '" + schema + "' and table_name = '" + select_table_name + "'")
+ 			while query.next():
+ 				column_headers.append(query.value(0))
++		if pyside_version_1 and sys.version_info[0] == 3:
++			if table_name == "samples_view":
++				self.SQLTableDataPrep = self.samples_view_DataPrep
++			if table_name == "samples":
++				self.SQLTableDataPrep = self.samples_DataPrep
+ 		super(SQLAutoTableModel, self).__init__(glb, sql, column_headers, parent)
+ 
++	def samples_view_DataPrep(self, query, count):
++		data = []
++		data.append(query.value(0))
++		# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++		data.append("{:>19}".format(query.value(1)))
++		for i in xrange(2, count):
++			data.append(query.value(i))
++		return data
++
++	def samples_DataPrep(self, query, count):
++		data = []
++		for i in xrange(9):
++			data.append(query.value(i))
++		# Workaround pyside failing to handle large integers (i.e. time) in python3 by converting to a string
++		data.append("{:>19}".format(query.value(9)))
++		for i in xrange(10, count):
++			data.append(query.value(i))
++		return data
++
+ # Base class for custom ResizeColumnsToContents
+ 
+ class ResizeColumnsToContentsBase(QObject):
 -- 
 2.20.1
