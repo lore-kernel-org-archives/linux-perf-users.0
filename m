@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/13] tools headers: Update x86's syscall_64.tbl and uapi/asm-generic/unistd
-Date: Fri, 29 Mar 2019 10:37:56 -0300
-Message-ID: <20190329133801.21004-9-acme@kernel.org>
+Subject: [PATCH 09/13] tools headers uapi: Sync powerpc's asm/kvm.h copy with the kernel sources
+Date: Fri, 29 Mar 2019 10:37:57 -0300
+Message-ID: <20190329133801.21004-10-acme@kernel.org>
 References: <20190329133801.21004-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,143 +9,49 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190329133801.21004-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Christian Brauner <christian@brauner.io>, Daniel Borkmann <daniel@iogearbox.net>, Jens Axboe <axboe@kernel.dk>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Paul Mackerras <paulus@ozlabs.org>, Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up the changes introduced in the following csets:
+To pick up the changes in:
 
-  2b188cc1bb85 ("Add io_uring IO interface")
-  edafccee56ff ("io_uring: add support for pre-mapped user IO buffers")
-  3eb39f47934f ("signal: add pidfd_send_signal() syscall")
+  2b57ecd0208f ("KVM: PPC: Book3S: Add count cache flush parameters to kvmppc_get_cpu_char()")
 
-This makes 'perf trace' to become aware of these new syscalls, so that
-one can use them like 'perf trace -e ui_uring*,*signal' to do a system
-wide strace-like session looking at those syscalls, for instance.
+That don't cause any changes in the tools.
 
-For example:
+This silences this perf build warning:
 
-  # perf trace -s io_uring-cp ~acme/isos/RHEL-x86_64-dvd1.iso ~/bla
-
-   Summary of events:
-
-   io_uring-cp (383), 1208866 events, 100.0%
-
-     syscall         calls   total    min     avg     max   stddev
-                             (msec) (msec)  (msec)  (msec)     (%)
-     -------------- ------ -------- ------ ------- -------  ------
-     io_uring_enter 605780 2955.615  0.000   0.005  33.804   1.94%
-     openat              4  459.446  0.004 114.861 459.435 100.00%
-     munmap              4    0.073  0.009   0.018   0.042  44.03%
-     mmap               10    0.054  0.002   0.005   0.026  43.24%
-     brk                28    0.038  0.001   0.001   0.003   7.51%
-     io_uring_setup      1    0.030  0.030   0.030   0.030   0.00%
-     mprotect            4    0.014  0.002   0.004   0.005  14.32%
-     close               5    0.012  0.001   0.002   0.004  28.87%
-     fstat               3    0.006  0.001   0.002   0.003  35.83%
-     read                4    0.004  0.001   0.001   0.002  13.58%
-     access              1    0.003  0.003   0.003   0.003   0.00%
-     lseek               3    0.002  0.001   0.001   0.001   9.00%
-     arch_prctl          2    0.002  0.001   0.001   0.001   0.69%
-     execve              1    0.000  0.000   0.000   0.000   0.00%
-  #
-  # perf trace -e io_uring* -s io_uring-cp ~acme/isos/RHEL-x86_64-dvd1.iso ~/bla
-
-   Summary of events:
-
-   io_uring-cp (390), 1191250 events, 100.0%
-
-     syscall         calls   total    min    avg    max  stddev
-                             (msec) (msec) (msec) (msec)    (%)
-     -------------- ------ -------- ------ ------ ------ ------
-     io_uring_enter 597093 2706.060  0.001  0.005 14.761  1.10%
-     io_uring_setup      1    0.038  0.038  0.038  0.038  0.00%
-  #
-
-More work needed to make the tools/perf/examples/bpf/augmented_raw_syscalls.c
-BPF program to copy the 'struct io_uring_params' arguments to perf's ring
-buffer so that 'perf trace' can use the BTF info put in place by pahole's
-conversion of the kernel DWARF and then auto-beautify those arguments.
-
-This patch produces the expected change in the generated syscalls table
-for x86_64:
-
-  --- /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c.before	2019-03-26 13:37:46.679057774 -0300
-  +++ /tmp/build/perf/arch/x86/include/generated/asm/syscalls_64.c	2019-03-26 13:38:12.755990383 -0300
-  @@ -334,5 +334,9 @@ static const char *syscalltbl_x86_64[] =
-   	[332] = "statx",
-   	[333] = "io_pgetevents",
-   	[334] = "rseq",
-  +	[424] = "pidfd_send_signal",
-  +	[425] = "io_uring_setup",
-  +	[426] = "io_uring_enter",
-  +	[427] = "io_uring_register",
-   };
-  -#define SYSCALLTBL_x86_64_MAX_ID 334
-  +#define SYSCALLTBL_x86_64_MAX_ID 427
-
-This silences these perf build warnings:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/unistd.h' differs from latest version at 'include/uapi/asm-generic/unistd.h'
-  diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/asm-generic/unistd.h
-  Warning: Kernel ABI header at 'tools/perf/arch/x86/entry/syscalls/syscall_64.tbl' differs from latest version at 'arch/x86/entry/syscalls/syscall_64.tbl'
-  diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
+  Warning: Kernel ABI header at 'tools/arch/powerpc/include/uapi/asm/kvm.h' differs from latest version at 'arch/powerpc/include/uapi/asm/kvm.h'
+  diff -u tools/arch/powerpc/include/uapi/asm/kvm.h arch/powerpc/include/uapi/asm/kvm.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Christian Brauner <christian@brauner.io>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jens Axboe <axboe@kernel.dk>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/n/tip-p0ars3otuc52x5iznf21shhw@git.kernel.org
+Cc: Paul Mackerras <paulus@ozlabs.org>
+Cc: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Link: https://lkml.kernel.org/n/tip-4pb7ywp9536hub2pnj4hu6i4@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/asm-generic/unistd.h           | 11 ++++++++++-
- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl |  4 ++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ tools/arch/powerpc/include/uapi/asm/kvm.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/include/uapi/asm-generic/unistd.h b/tools/include/uapi/asm-generic/unistd.h
-index 12cdf611d217..dee7292e1df6 100644
---- a/tools/include/uapi/asm-generic/unistd.h
-+++ b/tools/include/uapi/asm-generic/unistd.h
-@@ -824,8 +824,17 @@ __SYSCALL(__NR_futex_time64, sys_futex)
- __SYSCALL(__NR_sched_rr_get_interval_time64, sys_sched_rr_get_interval)
- #endif
+diff --git a/tools/arch/powerpc/include/uapi/asm/kvm.h b/tools/arch/powerpc/include/uapi/asm/kvm.h
+index 8c876c166ef2..26ca425f4c2c 100644
+--- a/tools/arch/powerpc/include/uapi/asm/kvm.h
++++ b/tools/arch/powerpc/include/uapi/asm/kvm.h
+@@ -463,10 +463,12 @@ struct kvm_ppc_cpu_char {
+ #define KVM_PPC_CPU_CHAR_BR_HINT_HONOURED	(1ULL << 58)
+ #define KVM_PPC_CPU_CHAR_MTTRIG_THR_RECONF	(1ULL << 57)
+ #define KVM_PPC_CPU_CHAR_COUNT_CACHE_DIS	(1ULL << 56)
++#define KVM_PPC_CPU_CHAR_BCCTR_FLUSH_ASSIST	(1ull << 54)
  
-+#define __NR_pidfd_send_signal 424
-+__SYSCALL(__NR_pidfd_send_signal, sys_pidfd_send_signal)
-+#define __NR_io_uring_setup 425
-+__SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
-+#define __NR_io_uring_enter 426
-+__SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
-+#define __NR_io_uring_register 427
-+__SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 424
-+#define __NR_syscalls 428
+ #define KVM_PPC_CPU_BEHAV_FAVOUR_SECURITY	(1ULL << 63)
+ #define KVM_PPC_CPU_BEHAV_L1D_FLUSH_PR		(1ULL << 62)
+ #define KVM_PPC_CPU_BEHAV_BNDS_CHK_SPEC_BAR	(1ULL << 61)
++#define KVM_PPC_CPU_BEHAV_FLUSH_COUNT_CACHE	(1ull << 58)
  
- /*
-  * 32 bit systems traditionally used different
-diff --git a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-index 2ae92fddb6d5..92ee0b4378d4 100644
---- a/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/tools/perf/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -345,6 +345,10 @@
- 334	common	rseq			__x64_sys_rseq
- # don't use numbers 387 through 423, add new calls after the last
- # 'common' entry
-+424	common	pidfd_send_signal	__x64_sys_pidfd_send_signal
-+425	common	io_uring_setup		__x64_sys_io_uring_setup
-+426	common	io_uring_enter		__x64_sys_io_uring_enter
-+427	common	io_uring_register	__x64_sys_io_uring_register
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
+ /* Per-vcpu XICS interrupt controller state */
+ #define KVM_REG_PPC_ICP_STATE	(KVM_REG_PPC | KVM_REG_SIZE_U64 | 0x8c)
 -- 
 2.20.1
