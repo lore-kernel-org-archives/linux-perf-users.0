@@ -1,9960 +1,2313 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 29/44] perf vendor events intel: Update Broadwell events to v23
-Date: Tue,  2 Apr 2019 13:05:34 -0300
-Message-ID: <20190402160549.13544-30-acme@kernel.org>
+Subject: [PATCH 22/44] tools lib traceevent: Rename input arguments of libtraceevent APIs from pevent to tep
+Date: Tue,  2 Apr 2019 13:05:27 -0300
+Message-ID: <20190402160549.13544-23-acme@kernel.org>
 References: <20190402160549.13544-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190402160549.13544-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Andrew Morton <akpm@linux-foundation.org>, Jiri Olsa <jolsa@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: https://lkml.kernel.org/r/20190315165219.GA21223@tassilo.jf.intel.com
+Input arguments of libtraceevent APIs are renamed from "struct
+tep_handle *pevent" to "struct tep_handle *tep". This makes the API
+consistent with the chosen naming convention: tep (trace event parser),
+instead of the old pevent.
+
+Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/linux-trace-devel/20190401132111.13727-2-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190401164344.465573837@goodmis.org
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../pmu-events/arch/x86/broadwell/cache.json  | 1630 ++++++++--------
- .../arch/x86/broadwell/floating-point.json    |   51 +-
- .../arch/x86/broadwell/frontend.json          |    4 +-
- .../pmu-events/arch/x86/broadwell/memory.json | 1640 ++++++++---------
- .../arch/x86/broadwell/pipeline.json          |   36 +-
- 5 files changed, 1685 insertions(+), 1676 deletions(-)
+ tools/lib/traceevent/event-parse-api.c     | 132 +++---
+ tools/lib/traceevent/event-parse-local.h   |   6 +-
+ tools/lib/traceevent/event-parse.c         | 452 ++++++++++-----------
+ tools/lib/traceevent/event-parse.h         | 123 +++---
+ tools/lib/traceevent/event-plugin.c        |   8 +-
+ tools/lib/traceevent/parse-filter.c        |   8 +-
+ tools/lib/traceevent/plugin_cfg80211.c     |   8 +-
+ tools/lib/traceevent/plugin_function.c     |   8 +-
+ tools/lib/traceevent/plugin_hrtimer.c      |  12 +-
+ tools/lib/traceevent/plugin_jbd2.c         |  12 +-
+ tools/lib/traceevent/plugin_kmem.c         |  28 +-
+ tools/lib/traceevent/plugin_kvm.c          |  44 +-
+ tools/lib/traceevent/plugin_mac80211.c     |   8 +-
+ tools/lib/traceevent/plugin_sched_switch.c |  16 +-
+ tools/lib/traceevent/plugin_scsi.c         |   8 +-
+ tools/lib/traceevent/plugin_xen.c          |   8 +-
+ 16 files changed, 439 insertions(+), 442 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/cache.json b/tools/pe=
-rf/pmu-events/arch/x86/broadwell/cache.json
-index 0b080b0352d8..7938bf5689ab 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/cache.json
-@@ -56,10 +56,10 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts the number of demand Data =
-Read requests that hit L2 cache. Only not rejected loads are counted.",
-+        "PublicDescription": "Counts the number of demand Data Read reques=
-ts, initiated by load instructions, that hit L2 cache.",
-         "EventCode": "0x24",
-         "Counter": "0,1,2,3",
--        "UMask": "0x41",
-+        "UMask": "0xc1",
-         "EventName": "L2_RQSTS.DEMAND_DATA_RD_HIT",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "Demand Data Read requests that hit L2 cache",
-@@ -68,7 +68,7 @@
-     {
-         "EventCode": "0x24",
-         "Counter": "0,1,2,3",
--        "UMask": "0x42",
-+        "UMask": "0xc2",
-         "EventName": "L2_RQSTS.RFO_HIT",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "RFO requests that hit L2 cache.",
-@@ -77,7 +77,7 @@
-     {
-         "EventCode": "0x24",
-         "Counter": "0,1,2,3",
--        "UMask": "0x44",
-+        "UMask": "0xc4",
-         "EventName": "L2_RQSTS.CODE_RD_HIT",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "L2 cache hits when fetching instructions, cod=
-e reads.",
-@@ -87,7 +87,7 @@
-         "PublicDescription": "This event counts the number of requests fro=
-m the L2 hardware prefetchers that hit L2 cache. L3 prefetch new types.",
-         "EventCode": "0x24",
-         "Counter": "0,1,2,3",
--        "UMask": "0x50",
-+        "UMask": "0xd0",
-         "EventName": "L2_RQSTS.L2_PF_HIT",
-         "SampleAfterValue": "200003",
-         "BriefDescription": "L2 prefetch requests that hit L2 cache",
-@@ -433,7 +433,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts line-split load uops retired to the architected=
- path. A line split is across 64B cache-line which includes a page split (4=
-K).",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts line-splitted load uops retired to the architec=
-ted path. A line split is across 64B cache-line which includes a page split=
- (4K).",
-         "EventCode": "0xD0",
-         "Counter": "0,1,2,3",
-         "UMask": "0x41",
-@@ -445,7 +445,7 @@
-     },
-     {
-         "PEBS": "1",
--        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts line-split store uops retired to the architecte=
-d path. A line split is across 64B cache-line which includes a page split (=
-4K).",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts line-splitted store uops retired to the archite=
-cted path. A line split is across 64B cache-line which includes a page spli=
-t (4K).",
-         "EventCode": "0xD0",
-         "Counter": "0,1,2,3",
-         "UMask": "0x42",
-@@ -771,2628 +771,2628 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that have any respo=
-nse type. Offcore response can be programmed only with a specific pair of e=
-vent select and counter MSR, and with specific event codes and predefine ma=
-sk bit value in a dedicated MSR to specify attributes of the offcore transa=
-ction.",
-+        "PublicDescription": "Counts demand data reads have any response t=
-ype.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010001 ",
-+        "MSRValue": "0x0000010001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that have any respon=
-se type.",
-+        "BriefDescription": "Counts demand data reads have any response ty=
-pe.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020001 ",
-+        "MSRValue": "0x0080020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020001 ",
-+        "MSRValue": "0x0100020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020001 ",
-+        "MSRValue": "0x0200020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020001 ",
-+        "MSRValue": "0x0400020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020001 ",
-+        "MSRValue": "0x1000020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020001 ",
-+        "MSRValue": "0x3F80020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-with no details on snoop-related information. Offcore response can be progr=
-ammed only with a specific pair of event select and counter MSR, and with s=
-pecific event codes and predefine mask bit value in a dedicated MSR to spec=
-ify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0001 ",
-+        "MSRValue": "0x00803C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 w=
-ith no details on snoop-related information.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-and sibling core snoops are not needed as either the core-valid bit is not =
-set or the shared line is present in multiple cores. Offcore response can b=
-e programmed only with a specific pair of event select and counter MSR, and=
- with specific event codes and predefine mask bit value in a dedicated MSR =
-to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0001 ",
-+        "MSRValue": "0x01003C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 a=
-nd sibling core snoops are not needed as either the core-valid bit is not s=
-et or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-with a snoop miss response. Offcore response can be programmed only with a =
-specific pair of event select and counter MSR, and with specific event code=
-s and predefine mask bit value in a dedicated MSR to specify attributes of =
-the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0001 ",
-+        "MSRValue": "0x02003C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 w=
-ith a snoop miss response.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-and the snoops to sibling cores hit in either E/S state and the line is not=
- forwarded. Offcore response can be programmed only with a specific pair of=
- event select and counter MSR, and with specific event codes and predefine =
-mask bit value in a dedicated MSR to specify attributes of the offcore tran=
-saction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0001 ",
-+        "MSRValue": "0x04003C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 a=
-nd the snoops to sibling cores hit in either E/S state and the line is not =
-forwarded.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0001 ",
-+        "MSRValue": "0x10003C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3.=
- Offcore response can be programmed only with a specific pair of event sele=
-ct and counter MSR, and with specific event codes and predefine mask bit va=
-lue in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0001 ",
-+        "MSRValue": "0x3F803C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that ha=
-ve any response type. Offcore response can be programmed only with a specif=
-ic pair of event select and counter MSR, and with specific event codes and =
-predefine mask bit value in a dedicated MSR to specify attributes of the of=
-fcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs) have an=
-y response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010002 ",
-+        "MSRValue": "0x0000010002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hav=
-e any response type.",
-+        "BriefDescription": "Counts all demand data writes (RFOs) have any=
- response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that hi=
-t in the L3 with no details on snoop-related information. Offcore response =
-can be programmed only with a specific pair of event select and counter MSR=
-, and with specific event codes and predefine mask bit value in a dedicated=
- MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0002 ",
-+        "MSRValue": "0x00803C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hit=
- in the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that hi=
-t in the L3 and sibling core snoops are not needed as either the core-valid=
- bit is not set or the shared line is present in multiple cores. Offcore re=
-sponse can be programmed only with a specific pair of event select and coun=
-ter MSR, and with specific event codes and predefine mask bit value in a de=
-dicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0002 ",
-+        "MSRValue": "0x01003C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hit=
- in the L3 and sibling core snoops are not needed as either the core-valid =
-bit is not set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that hi=
-t in the L3 with a snoop miss response. Offcore response can be programmed =
-only with a specific pair of event select and counter MSR, and with specifi=
-c event codes and predefine mask bit value in a dedicated MSR to specify at=
-tributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0002 ",
-+        "MSRValue": "0x02003C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hit=
- in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that hi=
-t in the L3 and the snoops to sibling cores hit in either E/S state and the=
- line is not forwarded. Offcore response can be programmed only with a spec=
-ific pair of event select and counter MSR, and with specific event codes an=
-d predefine mask bit value in a dedicated MSR to specify attributes of the =
-offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0002 ",
-+        "MSRValue": "0x04003C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hit=
- in the L3 and the snoops to sibling cores hit in either E/S state and the =
-line is not forwarded.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0002 ",
-+        "MSRValue": "0x10003C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_RFO & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that hi=
-t in the L3. Offcore response can be programmed only with a specific pair o=
-f event select and counter MSR, and with specific event codes and predefine=
- mask bit value in a dedicated MSR to specify attributes of the offcore tra=
-nsaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0002 ",
-+        "MSRValue": "0x3F803C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hit=
- in the L3.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that have any r=
-esponse type. Offcore response can be programmed only with a specific pair =
-of event select and counter MSR, and with specific event codes and predefin=
-e mask bit value in a dedicated MSR to specify attributes of the offcore tr=
-ansaction.",
-+        "PublicDescription": "Counts all demand code reads have any respon=
-se type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010004 ",
-+        "MSRValue": "0x0000010004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that have any re=
-sponse type.",
-+        "BriefDescription": "Counts all demand code reads have any respons=
-e type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020004 ",
-+        "MSRValue": "0x0080020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020004 ",
-+        "MSRValue": "0x0100020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020004 ",
-+        "MSRValue": "0x0200020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020004 ",
-+        "MSRValue": "0x0400020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020004 ",
-+        "MSRValue": "0x1000020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020004 ",
-+        "MSRValue": "0x3F80020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that hit in the=
- L3 with no details on snoop-related information. Offcore response can be p=
-rogrammed only with a specific pair of event select and counter MSR, and wi=
-th specific event codes and predefine mask bit value in a dedicated MSR to =
-specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0004 ",
-+        "MSRValue": "0x00803C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that hit in the =
-L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that hit in the=
- L3 and sibling core snoops are not needed as either the core-valid bit is =
-not set or the shared line is present in multiple cores. Offcore response c=
-an be programmed only with a specific pair of event select and counter MSR,=
- and with specific event codes and predefine mask bit value in a dedicated =
-MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0004 ",
-+        "MSRValue": "0x01003C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that hit in the =
-L3 and sibling core snoops are not needed as either the core-valid bit is n=
-ot set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that hit in the=
- L3 with a snoop miss response. Offcore response can be programmed only wit=
-h a specific pair of event select and counter MSR, and with specific event =
-codes and predefine mask bit value in a dedicated MSR to specify attributes=
- of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0004 ",
-+        "MSRValue": "0x02003C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that hit in the =
-L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that hit in the=
- L3 and the snoops to sibling cores hit in either E/S state and the line is=
- not forwarded. Offcore response can be programmed only with a specific pai=
-r of event select and counter MSR, and with specific event codes and predef=
-ine mask bit value in a dedicated MSR to specify attributes of the offcore =
-transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0004 ",
-+        "MSRValue": "0x04003C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that hit in the =
-L3 and the snoops to sibling cores hit in either E/S state and the line is =
-not forwarded.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0004 ",
-+        "MSRValue": "0x10003C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that hit in the=
- L3. Offcore response can be programmed only with a specific pair of event =
-select and counter MSR, and with specific event codes and predefine mask bi=
-t value in a dedicated MSR to specify attributes of the offcore transaction=
-.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0004 ",
-+        "MSRValue": "0x3F803C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that hit in the =
-L3.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at have any response type. Offcore response can be programmed only with a s=
-pecific pair of event select and counter MSR, and with specific event codes=
- and predefine mask bit value in a dedicated MSR to specify attributes of t=
-he offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive) ha=
-ve any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010008 ",
-+        "MSRValue": "0x0000010008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t have any response type.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive) hav=
-e any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020008 ",
-+        "MSRValue": "0x0080020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020008 ",
-+        "MSRValue": "0x0100020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_NOT_NEED=
-ED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020008 ",
-+        "MSRValue": "0x0200020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020008 ",
-+        "MSRValue": "0x0400020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_HIT_NO_F=
-WD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020008 ",
-+        "MSRValue": "0x1000020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020008 ",
-+        "MSRValue": "0x3F80020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at hit in the L3 with no details on snoop-related information. Offcore resp=
-onse can be programmed only with a specific pair of event select and counte=
-r MSR, and with specific event codes and predefine mask bit value in a dedi=
-cated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0008 ",
-+        "MSRValue": "0x00803C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t hit in the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at hit in the L3 and sibling core snoops are not needed as either the core-=
-valid bit is not set or the shared line is present in multiple cores. Offco=
-re response can be programmed only with a specific pair of event select and=
- counter MSR, and with specific event codes and predefine mask bit value in=
- a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0008 ",
-+        "MSRValue": "0x01003C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t hit in the L3 and sibling core snoops are not needed as either the core-v=
-alid bit is not set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at hit in the L3 with a snoop miss response. Offcore response can be progra=
-mmed only with a specific pair of event select and counter MSR, and with sp=
-ecific event codes and predefine mask bit value in a dedicated MSR to speci=
-fy attributes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0008 ",
-+        "MSRValue": "0x02003C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at hit in the L3 and the snoops to sibling cores hit in either E/S state an=
-d the line is not forwarded. Offcore response can be programmed only with a=
- specific pair of event select and counter MSR, and with specific event cod=
-es and predefine mask bit value in a dedicated MSR to specify attributes of=
- the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0008 ",
-+        "MSRValue": "0x04003C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t hit in the L3 and the snoops to sibling cores hit in either E/S state and=
- the line is not forwarded.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0008 ",
-+        "MSRValue": "0x10003C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at hit in the L3. Offcore response can be programmed only with a specific p=
-air of event select and counter MSR, and with specific event codes and pred=
-efine mask bit value in a dedicated MSR to specify attributes of the offcor=
-e transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0008 ",
-+        "MSRValue": "0x3F803C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t hit in the L3.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that have any response type. Offcore response can be programmed only=
- with a specific pair of event select and counter MSR, and with specific ev=
-ent codes and predefine mask bit value in a dedicated MSR to specify attrib=
-utes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads have any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010010 ",
-+        "MSRValue": "0x0000010010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that have any response type.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020010 ",
-+        "MSRValue": "0x0080020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_N=
-ONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020010 ",
-+        "MSRValue": "0x0100020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_N=
-OT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & SNOOP_NOT_NEE=
-DED",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020010 ",
-+        "MSRValue": "0x0200020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_M=
-ISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020010 ",
-+        "MSRValue": "0x0400020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_H=
-IT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & SNOOP_HIT_NO_=
-FWD",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020010 ",
-+        "MSRValue": "0x1000020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_H=
-ITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020010 ",
-+        "MSRValue": "0x3F80020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.ANY_SNO=
-OP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that hit in the L3 with no details on snoop-related information. Off=
-core response can be programmed only with a specific pair of event select a=
-nd counter MSR, and with specific event codes and predefine mask bit value =
-in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0010 ",
-+        "MSRValue": "0x00803C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that hit in the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that hit in the L3 and sibling core snoops are not needed as either =
-the core-valid bit is not set or the shared line is present in multiple cor=
-es. Offcore response can be programmed only with a specific pair of event s=
-elect and counter MSR, and with specific event codes and predefine mask bit=
- value in a dedicated MSR to specify attributes of the offcore transaction.=
-",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0010 ",
-+        "MSRValue": "0x01003C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_NOT_NEED=
-ED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that hit in the L3 and sibling core snoops are not needed as either t=
-he core-valid bit is not set or the shared line is present in multiple core=
-s.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that hit in the L3 with a snoop miss response. Offcore response can =
-be programmed only with a specific pair of event select and counter MSR, an=
-d with specific event codes and predefine mask bit value in a dedicated MSR=
- to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0010 ",
-+        "MSRValue": "0x02003C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that hit in the L3 and the snoops to sibling cores hit in either E/S=
- state and the line is not forwarded. Offcore response can be programmed on=
-ly with a specific pair of event select and counter MSR, and with specific =
-event codes and predefine mask bit value in a dedicated MSR to specify attr=
-ibutes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0010 ",
-+        "MSRValue": "0x04003C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_HIT_NO_F=
-WD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that hit in the L3 and the snoops to sibling cores hit in either E/S =
-state and the line is not forwarded.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0010 ",
-+        "MSRValue": "0x10003C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that hit in the L3. Offcore response can be programmed only with a s=
-pecific pair of event select and counter MSR, and with specific event codes=
- and predefine mask bit value in a dedicated MSR to specify attributes of t=
-he offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0010 ",
-+        "MSRValue": "0x3F803C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that hit in the L3.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that have any response type. Offcore response can be programmed only w=
-ith a specific pair of event select and counter MSR, and with specific even=
-t codes and predefine mask bit value in a dedicated MSR to specify attribut=
-es of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs have any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010020 ",
-+        "MSRValue": "0x0000010020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that have any response type.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020020 ",
-+        "MSRValue": "0x0080020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020020 ",
-+        "MSRValue": "0x0100020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_NOT_N=
-EEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020020 ",
-+        "MSRValue": "0x0200020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020020 ",
-+        "MSRValue": "0x0400020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_HIT_N=
-O_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020020 ",
-+        "MSRValue": "0x1000020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020020 ",
-+        "MSRValue": "0x3F80020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that hit in the L3 with no details on snoop-related information. Offco=
-re response can be programmed only with a specific pair of event select and=
- counter MSR, and with specific event codes and predefine mask bit value in=
- a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0020 ",
-+        "MSRValue": "0x00803C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that hit in the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that hit in the L3 and sibling core snoops are not needed as either th=
-e core-valid bit is not set or the shared line is present in multiple cores=
-. Offcore response can be programmed only with a specific pair of event sel=
-ect and counter MSR, and with specific event codes and predefine mask bit v=
-alue in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0020 ",
-+        "MSRValue": "0x01003C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that hit in the L3 and sibling core snoops are not needed as either the=
- core-valid bit is not set or the shared line is present in multiple cores.=
-",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that hit in the L3 with a snoop miss response. Offcore response can be=
- programmed only with a specific pair of event select and counter MSR, and =
-with specific event codes and predefine mask bit value in a dedicated MSR t=
-o specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0020 ",
-+        "MSRValue": "0x02003C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that hit in the L3 and the snoops to sibling cores hit in either E/S s=
-tate and the line is not forwarded. Offcore response can be programmed only=
- with a specific pair of event select and counter MSR, and with specific ev=
-ent codes and predefine mask bit value in a dedicated MSR to specify attrib=
-utes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0020 ",
-+        "MSRValue": "0x04003C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that hit in the L3 and the snoops to sibling cores hit in either E/S st=
-ate and the line is not forwarded.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0020 ",
-+        "MSRValue": "0x10003C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that hit in the L3. Offcore response can be programmed only with a spe=
-cific pair of event select and counter MSR, and with specific event codes a=
-nd predefine mask bit value in a dedicated MSR to specify attributes of the=
- offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0020 ",
-+        "MSRValue": "0x3F803C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that hit in the L3.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that have any response type. Offcore response can be progr=
-ammed only with a specific pair of event select and counter MSR, and with s=
-pecific event codes and predefine mask bit value in a dedicated MSR to spec=
-ify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads have any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010040 ",
-+        "MSRValue": "0x0000010040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that have any response type.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020040 ",
-+        "MSRValue": "0x0080020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_N=
-ONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020040 ",
-+        "MSRValue": "0x0100020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_N=
-OT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & SNOOP_NOT_NEE=
-DED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020040 ",
-+        "MSRValue": "0x0200020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_M=
-ISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020040 ",
-+        "MSRValue": "0x0400020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_H=
-IT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & SNOOP_HIT_NO_=
-FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020040 ",
-+        "MSRValue": "0x1000020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_H=
-ITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020040 ",
-+        "MSRValue": "0x3F80020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.ANY_SNO=
-OP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that hit in the L3 with no details on snoop-related inform=
-ation. Offcore response can be programmed only with a specific pair of even=
-t select and counter MSR, and with specific event codes and predefine mask =
-bit value in a dedicated MSR to specify attributes of the offcore transacti=
-on.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0040 ",
-+        "MSRValue": "0x00803C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that hit in the L3 with no details on snoop-related informa=
-tion.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that hit in the L3 and sibling core snoops are not needed =
-as either the core-valid bit is not set or the shared line is present in mu=
-ltiple cores. Offcore response can be programmed only with a specific pair =
-of event select and counter MSR, and with specific event codes and predefin=
-e mask bit value in a dedicated MSR to specify attributes of the offcore tr=
-ansaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0040 ",
-+        "MSRValue": "0x01003C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_NOT_NEED=
-ED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that hit in the L3 and sibling core snoops are not needed a=
-s either the core-valid bit is not set or the shared line is present in mul=
-tiple cores.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that hit in the L3 with a snoop miss response. Offcore res=
-ponse can be programmed only with a specific pair of event select and count=
-er MSR, and with specific event codes and predefine mask bit value in a ded=
-icated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0040 ",
-+        "MSRValue": "0x02003C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that hit in the L3 and the snoops to sibling cores hit in =
-either E/S state and the line is not forwarded. Offcore response can be pro=
-grammed only with a specific pair of event select and counter MSR, and with=
- specific event codes and predefine mask bit value in a dedicated MSR to sp=
-ecify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0040 ",
-+        "MSRValue": "0x04003C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_HIT_NO_F=
-WD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that hit in the L3 and the snoops to sibling cores hit in e=
-ither E/S state and the line is not forwarded.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0040 ",
-+        "MSRValue": "0x10003C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that hit in the L3. Offcore response can be programmed onl=
-y with a specific pair of event select and counter MSR, and with specific e=
-vent codes and predefine mask bit value in a dedicated MSR to specify attri=
-butes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0040 ",
-+        "MSRValue": "0x3F803C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that hit in the L3.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that have any response type. Offcore response can be progr=
-ammed only with a specific pair of event select and counter MSR, and with s=
-pecific event codes and predefine mask bit value in a dedicated MSR to spec=
-ify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads have any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010080 ",
-+        "MSRValue": "0x0000010080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that have any response type.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020080 ",
-+        "MSRValue": "0x0080020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_N=
-ONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020080 ",
-+        "MSRValue": "0x0100020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_N=
-OT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & SNOOP_NOT_NEE=
-DED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020080 ",
-+        "MSRValue": "0x0200020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_M=
-ISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020080 ",
-+        "MSRValue": "0x0400020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_H=
-IT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & SNOOP_HIT_NO_=
-FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020080 ",
-+        "MSRValue": "0x1000020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_H=
-ITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020080 ",
-+        "MSRValue": "0x3F80020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.ANY_SNO=
-OP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that hit in the L3 with no details on snoop-related inform=
-ation. Offcore response can be programmed only with a specific pair of even=
-t select and counter MSR, and with specific event codes and predefine mask =
-bit value in a dedicated MSR to specify attributes of the offcore transacti=
-on.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0080 ",
-+        "MSRValue": "0x00803C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that hit in the L3 with no details on snoop-related informa=
-tion.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that hit in the L3 and sibling core snoops are not needed =
-as either the core-valid bit is not set or the shared line is present in mu=
-ltiple cores. Offcore response can be programmed only with a specific pair =
-of event select and counter MSR, and with specific event codes and predefin=
-e mask bit value in a dedicated MSR to specify attributes of the offcore tr=
-ansaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0080 ",
-+        "MSRValue": "0x01003C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_NOT_NEED=
-ED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that hit in the L3 and sibling core snoops are not needed a=
-s either the core-valid bit is not set or the shared line is present in mul=
-tiple cores.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that hit in the L3 with a snoop miss response. Offcore res=
-ponse can be programmed only with a specific pair of event select and count=
-er MSR, and with specific event codes and predefine mask bit value in a ded=
-icated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0080 ",
-+        "MSRValue": "0x02003C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that hit in the L3 and the snoops to sibling cores hit in =
-either E/S state and the line is not forwarded. Offcore response can be pro=
-grammed only with a specific pair of event select and counter MSR, and with=
- specific event codes and predefine mask bit value in a dedicated MSR to sp=
-ecify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0080 ",
-+        "MSRValue": "0x04003C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_HIT_NO_F=
-WD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that hit in the L3 and the snoops to sibling cores hit in e=
-ither E/S state and the line is not forwarded.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0080 ",
-+        "MSRValue": "0x10003C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that hit in the L3. Offcore response can be programmed onl=
-y with a specific pair of event select and counter MSR, and with specific e=
-vent codes and predefine mask bit value in a dedicated MSR to specify attri=
-butes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0080 ",
-+        "MSRValue": "0x3F803C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that hit in the L3.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that have any response type. Offcore response can be programmed =
-only with a specific pair of event select and counter MSR, and with specifi=
-c event codes and predefine mask bit value in a dedicated MSR to specify at=
-tributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs have any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010100 ",
-+        "MSRValue": "0x0000010100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that have any response type.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020100 ",
-+        "MSRValue": "0x0080020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020100 ",
-+        "MSRValue": "0x0100020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_NOT_N=
-EEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020100 ",
-+        "MSRValue": "0x0200020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020100 ",
-+        "MSRValue": "0x0400020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_HIT_N=
-O_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020100 ",
-+        "MSRValue": "0x1000020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020100 ",
-+        "MSRValue": "0x3F80020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that hit in the L3 with no details on snoop-related information.=
- Offcore response can be programmed only with a specific pair of event sele=
-ct and counter MSR, and with specific event codes and predefine mask bit va=
-lue in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0100 ",
-+        "MSRValue": "0x00803C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that hit in the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that hit in the L3 and sibling core snoops are not needed as eit=
-her the core-valid bit is not set or the shared line is present in multiple=
- cores. Offcore response can be programmed only with a specific pair of eve=
-nt select and counter MSR, and with specific event codes and predefine mask=
- bit value in a dedicated MSR to specify attributes of the offcore transact=
-ion.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0100 ",
-+        "MSRValue": "0x01003C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that hit in the L3 and sibling core snoops are not needed as eith=
-er the core-valid bit is not set or the shared line is present in multiple =
-cores.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that hit in the L3 with a snoop miss response. Offcore response =
-can be programmed only with a specific pair of event select and counter MSR=
-, and with specific event codes and predefine mask bit value in a dedicated=
- MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0100 ",
-+        "MSRValue": "0x02003C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that hit in the L3 and the snoops to sibling cores hit in either=
- E/S state and the line is not forwarded. Offcore response can be programme=
-d only with a specific pair of event select and counter MSR, and with speci=
-fic event codes and predefine mask bit value in a dedicated MSR to specify =
-attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0100 ",
-+        "MSRValue": "0x04003C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that hit in the L3 and the snoops to sibling cores hit in either =
-E/S state and the line is not forwarded.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0100 ",
-+        "MSRValue": "0x10003C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that hit in the L3. Offcore response can be programmed only with=
- a specific pair of event select and counter MSR, and with specific event c=
-odes and predefine mask bit value in a dedicated MSR to specify attributes =
-of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0100 ",
-+        "MSRValue": "0x3F803C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that hit in the L3.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that have any response type. Offcore response can be programme=
-d only with a specific pair of event select and counter MSR, and with speci=
-fic event codes and predefine mask bit value in a dedicated MSR to specify =
-attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads have any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010200 ",
-+        "MSRValue": "0x0000010200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that have any response type.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020200 ",
-+        "MSRValue": "0x0080020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_N=
-ONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020200 ",
-+        "MSRValue": "0x0100020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_N=
-OT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & SNOOP_NOT_NEE=
-DED",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020200 ",
-+        "MSRValue": "0x0200020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_M=
-ISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020200 ",
-+        "MSRValue": "0x0400020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_H=
-IT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & SNOOP_HIT_NO_=
-FWD",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020200 ",
-+        "MSRValue": "0x1000020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_H=
-ITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020200 ",
-+        "MSRValue": "0x3F80020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.ANY_SNO=
-OP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that hit in the L3 with no details on snoop-related informatio=
-n. Offcore response can be programmed only with a specific pair of event se=
-lect and counter MSR, and with specific event codes and predefine mask bit =
-value in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0200 ",
-+        "MSRValue": "0x00803C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that hit in the L3 with no details on snoop-related information=
-.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that hit in the L3 and sibling core snoops are not needed as e=
-ither the core-valid bit is not set or the shared line is present in multip=
-le cores. Offcore response can be programmed only with a specific pair of e=
-vent select and counter MSR, and with specific event codes and predefine ma=
-sk bit value in a dedicated MSR to specify attributes of the offcore transa=
-ction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0200 ",
-+        "MSRValue": "0x01003C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_NOT_NEED=
-ED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that hit in the L3 and sibling core snoops are not needed as ei=
-ther the core-valid bit is not set or the shared line is present in multipl=
-e cores.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that hit in the L3 with a snoop miss response. Offcore respons=
-e can be programmed only with a specific pair of event select and counter M=
-SR, and with specific event codes and predefine mask bit value in a dedicat=
-ed MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0200 ",
-+        "MSRValue": "0x02003C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that hit in the L3 and the snoops to sibling cores hit in eith=
-er E/S state and the line is not forwarded. Offcore response can be program=
-med only with a specific pair of event select and counter MSR, and with spe=
-cific event codes and predefine mask bit value in a dedicated MSR to specif=
-y attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0200 ",
-+        "MSRValue": "0x04003C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_HIT_NO_F=
-WD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that hit in the L3 and the snoops to sibling cores hit in eithe=
-r E/S state and the line is not forwarded.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0200 ",
-+        "MSRValue": "0x10003C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that hit in the L3. Offcore response can be programmed only wi=
-th a specific pair of event select and counter MSR, and with specific event=
- codes and predefine mask bit value in a dedicated MSR to specify attribute=
-s of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0200 ",
-+        "MSRValue": "0x3F803C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that hit in the L3.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that have any resp=
-onse type. Offcore response can be programmed only with a specific pair of =
-event select and counter MSR, and with specific event codes and predefine m=
-ask bit value in a dedicated MSR to specify attributes of the offcore trans=
-action.",
-+        "PublicDescription": "Counts any other requests have any response =
-type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000018000 ",
-+        "MSRValue": "0x0000018000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that have any respo=
-nse type.",
-+        "BriefDescription": "Counts any other requests have any response t=
-ype.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080028000 ",
-+        "MSRValue": "0x0080028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100028000 ",
-+        "MSRValue": "0x0100028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NOT_NEEDE=
-D",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200028000 ",
-+        "MSRValue": "0x0200028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400028000 ",
-+        "MSRValue": "0x0400028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_HIT_NO_FW=
-D",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000028000 ",
-+        "MSRValue": "0x1000028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80028000 ",
-+        "MSRValue": "0x3F80028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that hit in the L3=
- with no details on snoop-related information. Offcore response can be prog=
-rammed only with a specific pair of event select and counter MSR, and with =
-specific event codes and predefine mask bit value in a dedicated MSR to spe=
-cify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c8000 ",
-+        "MSRValue": "0x00803C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that hit in the L3 =
-with no details on snoop-related information.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that hit in the L3=
- and sibling core snoops are not needed as either the core-valid bit is not=
- set or the shared line is present in multiple cores. Offcore response can =
-be programmed only with a specific pair of event select and counter MSR, an=
-d with specific event codes and predefine mask bit value in a dedicated MSR=
- to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c8000 ",
-+        "MSRValue": "0x01003C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that hit in the L3 =
-and sibling core snoops are not needed as either the core-valid bit is not =
-set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that hit in the L3=
- with a snoop miss response. Offcore response can be programmed only with a=
- specific pair of event select and counter MSR, and with specific event cod=
-es and predefine mask bit value in a dedicated MSR to specify attributes of=
- the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c8000 ",
-+        "MSRValue": "0x02003C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that hit in the L3 =
-with a snoop miss response.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that hit in the L3=
- and the snoops to sibling cores hit in either E/S state and the line is no=
-t forwarded. Offcore response can be programmed only with a specific pair o=
-f event select and counter MSR, and with specific event codes and predefine=
- mask bit value in a dedicated MSR to specify attributes of the offcore tra=
-nsaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c8000 ",
-+        "MSRValue": "0x04003C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that hit in the L3 =
-and the snoops to sibling cores hit in either E/S state and the line is not=
- forwarded.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c8000 ",
-+        "MSRValue": "0x10003C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that hit in the L3=
-. Offcore response can be programmed only with a specific pair of event sel=
-ect and counter MSR, and with specific event codes and predefine mask bit v=
-alue in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c8000 ",
-+        "MSRValue": "0x3F803C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that hit in the L3.=
-",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that have any=
- response type. Offcore response can be programmed only with a specific pai=
-r of event select and counter MSR, and with specific event codes and predef=
-ine mask bit value in a dedicated MSR to specify attributes of the offcore =
-transaction.",
-+        "PublicDescription": "Counts all prefetch data reads have any resp=
-onse type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010090 ",
-+        "MSRValue": "0x0000010090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that have any =
-response type.",
-+        "BriefDescription": "Counts all prefetch data reads have any respo=
-nse type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020090 ",
-+        "MSRValue": "0x0080020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020090 ",
-+        "MSRValue": "0x0100020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020090 ",
-+        "MSRValue": "0x0200020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020090 ",
-+        "MSRValue": "0x0400020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020090 ",
-+        "MSRValue": "0x1000020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020090 ",
-+        "MSRValue": "0x3F80020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that hit in t=
-he L3 with no details on snoop-related information. Offcore response can be=
- programmed only with a specific pair of event select and counter MSR, and =
-with specific event codes and predefine mask bit value in a dedicated MSR t=
-o specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0090 ",
-+        "MSRValue": "0x00803C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit in th=
-e L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that hit in t=
-he L3 and sibling core snoops are not needed as either the core-valid bit i=
-s not set or the shared line is present in multiple cores. Offcore response=
- can be programmed only with a specific pair of event select and counter MS=
-R, and with specific event codes and predefine mask bit value in a dedicate=
-d MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0090 ",
-+        "MSRValue": "0x01003C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit in th=
-e L3 and sibling core snoops are not needed as either the core-valid bit is=
- not set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that hit in t=
-he L3 with a snoop miss response. Offcore response can be programmed only w=
-ith a specific pair of event select and counter MSR, and with specific even=
-t codes and predefine mask bit value in a dedicated MSR to specify attribut=
-es of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0090 ",
-+        "MSRValue": "0x02003C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit in th=
-e L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that hit in t=
-he L3 and the snoops to sibling cores hit in either E/S state and the line =
-is not forwarded. Offcore response can be programmed only with a specific p=
-air of event select and counter MSR, and with specific event codes and pred=
-efine mask bit value in a dedicated MSR to specify attributes of the offcor=
-e transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0090 ",
-+        "MSRValue": "0x04003C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit in th=
-e L3 and the snoops to sibling cores hit in either E/S state and the line i=
-s not forwarded.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0090 ",
-+        "MSRValue": "0x10003C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that hit in t=
-he L3. Offcore response can be programmed only with a specific pair of even=
-t select and counter MSR, and with specific event codes and predefine mask =
-bit value in a dedicated MSR to specify attributes of the offcore transacti=
-on.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0090 ",
-+        "MSRValue": "0x3F803C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit in th=
-e L3.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that have any response =
-type. Offcore response can be programmed only with a specific pair of event=
- select and counter MSR, and with specific event codes and predefine mask b=
-it value in a dedicated MSR to specify attributes of the offcore transactio=
-n.",
-+        "PublicDescription": "Counts prefetch RFOs have any response type.=
-",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010120 ",
-+        "MSRValue": "0x0000010120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that have any response t=
-ype.",
-+        "BriefDescription": "Counts prefetch RFOs have any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020120 ",
-+        "MSRValue": "0x0080020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_NONE=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020120 ",
-+        "MSRValue": "0x0100020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_NOT_=
-NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & SNOOP_NOT_NEEDED=
-",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020120 ",
-+        "MSRValue": "0x0200020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_MISS=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020120 ",
-+        "MSRValue": "0x0400020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_HIT_=
-NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & SNOOP_HIT_NO_FWD=
-",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020120 ",
-+        "MSRValue": "0x1000020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_HITM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020120 ",
-+        "MSRValue": "0x3F80020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that hit in the L3 with=
- no details on snoop-related information. Offcore response can be programme=
-d only with a specific pair of event select and counter MSR, and with speci=
-fic event codes and predefine mask bit value in a dedicated MSR to specify =
-attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0120 ",
-+        "MSRValue": "0x00803C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that hit in the L3 with =
-no details on snoop-related information.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that hit in the L3 and =
-sibling core snoops are not needed as either the core-valid bit is not set =
-or the shared line is present in multiple cores. Offcore response can be pr=
-ogrammed only with a specific pair of event select and counter MSR, and wit=
-h specific event codes and predefine mask bit value in a dedicated MSR to s=
-pecify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0120 ",
-+        "MSRValue": "0x01003C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that hit in the L3 and s=
-ibling core snoops are not needed as either the core-valid bit is not set o=
-r the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that hit in the L3 with=
- a snoop miss response. Offcore response can be programmed only with a spec=
-ific pair of event select and counter MSR, and with specific event codes an=
-d predefine mask bit value in a dedicated MSR to specify attributes of the =
-offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0120 ",
-+        "MSRValue": "0x02003C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that hit in the L3 with =
-a snoop miss response.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that hit in the L3 and =
-the snoops to sibling cores hit in either E/S state and the line is not for=
-warded. Offcore response can be programmed only with a specific pair of eve=
-nt select and counter MSR, and with specific event codes and predefine mask=
- bit value in a dedicated MSR to specify attributes of the offcore transact=
-ion.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0120 ",
-+        "MSRValue": "0x04003C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that hit in the L3 and t=
-he snoops to sibling cores hit in either E/S state and the line is not forw=
-arded.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0120 ",
-+        "MSRValue": "0x10003C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that hit in the L3. Off=
-core response can be programmed only with a specific pair of event select a=
-nd counter MSR, and with specific event codes and predefine mask bit value =
-in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0120 ",
-+        "MSRValue": "0x3F803C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that hit in the L3.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that have any=
- response type. Offcore response can be programmed only with a specific pai=
-r of event select and counter MSR, and with specific event codes and predef=
-ine mask bit value in a dedicated MSR to specify attributes of the offcore =
-transaction.",
-+        "PublicDescription": "Counts all prefetch code reads have any resp=
-onse type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010240 ",
-+        "MSRValue": "0x0000010240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that have any =
-response type.",
-+        "BriefDescription": "Counts all prefetch code reads have any respo=
-nse type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020240 ",
-+        "MSRValue": "0x0080020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020240 ",
-+        "MSRValue": "0x0100020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020240 ",
-+        "MSRValue": "0x0200020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020240 ",
-+        "MSRValue": "0x0400020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020240 ",
-+        "MSRValue": "0x1000020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020240 ",
-+        "MSRValue": "0x3F80020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that hit in t=
-he L3 with no details on snoop-related information. Offcore response can be=
- programmed only with a specific pair of event select and counter MSR, and =
-with specific event codes and predefine mask bit value in a dedicated MSR t=
-o specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0240 ",
-+        "MSRValue": "0x00803C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that hit in th=
-e L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that hit in t=
-he L3 and sibling core snoops are not needed as either the core-valid bit i=
-s not set or the shared line is present in multiple cores. Offcore response=
- can be programmed only with a specific pair of event select and counter MS=
-R, and with specific event codes and predefine mask bit value in a dedicate=
-d MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0240 ",
-+        "MSRValue": "0x01003C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that hit in th=
-e L3 and sibling core snoops are not needed as either the core-valid bit is=
- not set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that hit in t=
-he L3 with a snoop miss response. Offcore response can be programmed only w=
-ith a specific pair of event select and counter MSR, and with specific even=
-t codes and predefine mask bit value in a dedicated MSR to specify attribut=
-es of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0240 ",
-+        "MSRValue": "0x02003C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that hit in th=
-e L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that hit in t=
-he L3 and the snoops to sibling cores hit in either E/S state and the line =
-is not forwarded. Offcore response can be programmed only with a specific p=
-air of event select and counter MSR, and with specific event codes and pred=
-efine mask bit value in a dedicated MSR to specify attributes of the offcor=
-e transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0240 ",
-+        "MSRValue": "0x04003C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that hit in th=
-e L3 and the snoops to sibling cores hit in either E/S state and the line i=
-s not forwarded.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0240 ",
-+        "MSRValue": "0x10003C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that hit in t=
-he L3. Offcore response can be programmed only with a specific pair of even=
-t select and counter MSR, and with specific event codes and predefine mask =
-bit value in a dedicated MSR to specify attributes of the offcore transacti=
-on.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0240 ",
-+        "MSRValue": "0x3F803C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that hit in th=
-e L3.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- have any response type. Offcore response can be programmed only with a spe=
-cific pair of event select and counter MSR, and with specific event codes a=
-nd predefine mask bit value in a dedicated MSR to specify attributes of the=
- offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads have=
- any response type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010091 ",
-+        "MSRValue": "0x0000010091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-have any response type.",
-+        "BriefDescription": "Counts all demand & prefetch data reads have =
-any response type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020091 ",
-+        "MSRValue": "0x0080020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_NON=
-E",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020091 ",
-+        "MSRValue": "0x0100020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_NOT=
-_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & SNOOP_NOT_NEEDE=
-D",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020091 ",
-+        "MSRValue": "0x0200020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_MIS=
-S",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020091 ",
-+        "MSRValue": "0x0400020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_HIT=
-_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & SNOOP_HIT_NO_FW=
-D",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020091 ",
-+        "MSRValue": "0x1000020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_HIT=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020091 ",
-+        "MSRValue": "0x3F80020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.ANY_SNOOP=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- hit in the L3 with no details on snoop-related information. Offcore respon=
-se can be programmed only with a specific pair of event select and counter =
-MSR, and with specific event codes and predefine mask bit value in a dedica=
-ted MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0091 ",
-+        "MSRValue": "0x00803C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-hit in the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- hit in the L3 and sibling core snoops are not needed as either the core-va=
-lid bit is not set or the shared line is present in multiple cores. Offcore=
- response can be programmed only with a specific pair of event select and c=
-ounter MSR, and with specific event codes and predefine mask bit value in a=
- dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0091 ",
-+        "MSRValue": "0x01003C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-hit in the L3 and sibling core snoops are not needed as either the core-val=
-id bit is not set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- hit in the L3 with a snoop miss response. Offcore response can be programm=
-ed only with a specific pair of event select and counter MSR, and with spec=
-ific event codes and predefine mask bit value in a dedicated MSR to specify=
- attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0091 ",
-+        "MSRValue": "0x02003C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-hit in the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- hit in the L3 and the snoops to sibling cores hit in either E/S state and =
-the line is not forwarded. Offcore response can be programmed only with a s=
-pecific pair of event select and counter MSR, and with specific event codes=
- and predefine mask bit value in a dedicated MSR to specify attributes of t=
-he offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0091 ",
-+        "MSRValue": "0x04003C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-hit in the L3 and the snoops to sibling cores hit in either E/S state and t=
-he line is not forwarded.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0091 ",
-+        "MSRValue": "0x10003C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- hit in the L3. Offcore response can be programmed only with a specific pai=
-r of event select and counter MSR, and with specific event codes and predef=
-ine mask bit value in a dedicated MSR to specify attributes of the offcore =
-transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0091 ",
-+        "MSRValue": "0x3F803C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-hit in the L3.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that have =
-any response type. Offcore response can be programmed only with a specific =
-pair of event select and counter MSR, and with specific event codes and pre=
-define mask bit value in a dedicated MSR to specify attributes of the offco=
-re transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs have any r=
-esponse type.",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0000010122 ",
-+        "MSRValue": "0x0000010122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that have a=
-ny response type.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs have any re=
-sponse type.",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0080020122 ",
-+        "MSRValue": "0x0080020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & SNOOP_NONE",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0100020122 ",
-+        "MSRValue": "0x0100020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0200020122 ",
-+        "MSRValue": "0x0200020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & SNOOP_MISS",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0400020122 ",
-+        "MSRValue": "0x0400020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1000020122 ",
-+        "MSRValue": "0x1000020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f80020122 ",
-+        "MSRValue": "0x3F80020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & ANY_SNOOP",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that hit i=
-n the L3 with no details on snoop-related information. Offcore response can=
- be programmed only with a specific pair of event select and counter MSR, a=
-nd with specific event codes and predefine mask bit value in a dedicated MS=
-R to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00803c0122 ",
-+        "MSRValue": "0x00803C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that hit in=
- the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that hit i=
-n the L3 and sibling core snoops are not needed as either the core-valid bi=
-t is not set or the shared line is present in multiple cores. Offcore respo=
-nse can be programmed only with a specific pair of event select and counter=
- MSR, and with specific event codes and predefine mask bit value in a dedic=
-ated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x01003c0122 ",
-+        "MSRValue": "0x01003C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that hit in=
- the L3 and sibling core snoops are not needed as either the core-valid bit=
- is not set or the shared line is present in multiple cores.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that hit i=
-n the L3 with a snoop miss response. Offcore response can be programmed onl=
-y with a specific pair of event select and counter MSR, and with specific e=
-vent codes and predefine mask bit value in a dedicated MSR to specify attri=
-butes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x02003c0122 ",
-+        "MSRValue": "0x02003C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that hit in=
- the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that hit i=
-n the L3 and the snoops to sibling cores hit in either E/S state and the li=
-ne is not forwarded. Offcore response can be programmed only with a specifi=
-c pair of event select and counter MSR, and with specific event codes and p=
-redefine mask bit value in a dedicated MSR to specify attributes of the off=
-core transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x04003c0122 ",
-+        "MSRValue": "0x04003C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that hit in=
- the L3 and the snoops to sibling cores hit in either E/S state and the lin=
-e is not forwarded.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x10003c0122 ",
-+        "MSRValue": "0x10003C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_HIT & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that hit i=
-n the L3. Offcore response can be programmed only with a specific pair of e=
-vent select and counter MSR, and with specific event codes and predefine ma=
-sk bit value in a dedicated MSR to specify attributes of the offcore transa=
-ction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f803c0122 ",
-+        "MSRValue": "0x3F803C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that hit in=
- the L3.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/floating-point.json b=
-/tools/perf/pmu-events/arch/x86/broadwell/floating-point.json
-index 689d478dae93..15291239c128 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/floating-point.json
-@@ -1,24 +1,26 @@
- [
-     {
--        "PublicDescription": "This event counts the number of transitions =
-from AVX-256 to legacy SSE when penalty is applicable.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts the number of transitions from AVX-256 to legac=
-y SSE when penalty is applicable.",
-         "EventCode": "0xC1",
-         "Counter": "0,1,2,3",
-         "UMask": "0x8",
-         "Errata": "BDM30",
-         "EventName": "OTHER_ASSISTS.AVX_TO_SSE",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of transitions from AVX-256 to legacy =
-SSE when penalty applicable.",
-+        "BriefDescription": "Number of transitions from AVX-256 to legacy =
-SSE when penalty applicable (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts the number of transitions =
-from legacy SSE to AVX-256 when penalty is applicable.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts the number of transitions from legacy SSE to AV=
-X-256 when penalty is applicable.",
-         "EventCode": "0xC1",
-         "Counter": "0,1,2,3",
-         "UMask": "0x10",
-         "Errata": "BDM30",
-         "EventName": "OTHER_ASSISTS.SSE_TO_AVX",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of transitions from SSE to AVX-256 whe=
-n penalty applicable.",
-+        "BriefDescription": "Number of transitions from legacy SSE to AVX-=
-256 when penalty applicable (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-@@ -45,7 +47,7 @@
-         "UMask": "0x3",
-         "EventName": "FP_ARITH_INST_RETIRED.SCALAR",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of SSE/AVX computational scalar floati=
-ng-point instructions retired. Applies to SSE* and AVX* scalar, double and =
-single precision floating-point: ADD SUB MUL DIV MIN MAX RSQRT RCP SQRT FM(=
-N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform multiple c=
-alculations per element.",
-+        "BriefDescription": "Number of SSE/AVX computational scalar floati=
-ng-point instructions retired. Applies to SSE* and AVX* scalar, double and =
-single precision floating-point: ADD SUB MUL DIV MIN MAX RSQRT RCP SQRT FM(=
-N)ADD/SUB. FM(N)ADD/SUB instructions count twice as they perform multiple c=
-alculations per element. (RSQRT for single precision?)",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -54,7 +56,7 @@
-         "UMask": "0x4",
-         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
-d double precision floating-point instructions retired.  Each count represe=
-nts 2 computations. Applies to SSE* and AVX* packed double precision floati=
-ng-point instructions: ADD SUB MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP =
-and FM(N)ADD/SUB instructions count twice as they perform multiple calculat=
-ions per element.",
-+        "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
-d double precision floating-point instructions retired.  Each count represe=
-nts 2 computations. Applies to SSE* and AVX* packed double precision floati=
-ng-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT DPP FM=
-(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform =
-multiple calculations per element.",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -63,7 +65,7 @@
-         "UMask": "0x8",
-         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
-d single precision floating-point instructions retired.  Each count represe=
-nts 4 computations. Applies to SSE* and AVX* packed single precision floati=
-ng-point instructions: ADD SUB MUL DIV MIN MAX RCP RSQRT SQRT DPP FM(N)ADD/=
-SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multipl=
-e calculations per element.",
-+        "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
-d single precision floating-point instructions retired.  Each count represe=
-nts 4 computations. Applies to SSE* and AVX* packed single precision floati=
-ng-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT RSQRT =
-DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they pe=
-rform multiple calculations per element.",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -72,7 +74,7 @@
-         "UMask": "0x10",
-         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of SSE/AVX computational 256-bit packe=
-d double precision floating-point instructions retired.  Each count represe=
-nts 4 computations. Applies to SSE* and AVX* packed double precision floati=
-ng-point instructions: ADD SUB MUL DIV MIN MAX SQRT DPP FM(N)ADD/SUB.  DPP =
-and FM(N)ADD/SUB instructions count twice as they perform multiple calculat=
-ions per element.",
-+        "BriefDescription": "Number of SSE/AVX computational 256-bit packe=
-d double precision floating-point instructions retired.  Each count represe=
-nts 4 computations. Applies to SSE* and AVX* packed double precision floati=
-ng-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT DPP FM=
-(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform =
-multiple calculations per element.",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -81,7 +83,7 @@
-         "UMask": "0x15",
-         "EventName": "FP_ARITH_INST_RETIRED.DOUBLE",
-         "SampleAfterValue": "2000006",
--        "BriefDescription": "Number of SSE/AVX computational double precis=
-ion floating-point instructions retired. Applies to SSE* and AVX*scalar, do=
-uble and single precision floating-point: ADD SUB MUL DIV MIN MAX SQRT DPP =
-FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perfor=
-m multiple calculations per element.  ?.",
-+        "BriefDescription": "Number of SSE/AVX computational double precis=
-ion floating-point instructions retired. Applies to SSE* and AVX*scalar, do=
-uble and single precision floating-point: ADD SUB MUL DIV MIN MAX SQRT DPP =
-FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perfor=
-m multiple calculations per element.",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -90,7 +92,7 @@
-         "UMask": "0x20",
-         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Number of SSE/AVX computational 256-bit packe=
-d single precision floating-point instructions retired.  Each count represe=
-nts 8 computations. Applies to SSE* and AVX* packed single precision floati=
-ng-point instructions: ADD SUB MUL DIV MIN MAX RCP RSQRT SQRT DPP FM(N)ADD/=
-SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perform multipl=
-e calculations per element.",
-+        "BriefDescription": "Number of SSE/AVX computational 256-bit packe=
-d single precision floating-point instructions retired.  Each count represe=
-nts 8 computations. Applies to SSE* and AVX* packed single precision floati=
-ng-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX SQRT RSQRT =
-DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they pe=
-rform multiple calculations per element.",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -99,7 +101,7 @@
-         "UMask": "0x2a",
-         "EventName": "FP_ARITH_INST_RETIRED.SINGLE",
-         "SampleAfterValue": "2000005",
--        "BriefDescription": "Number of SSE/AVX computational single precis=
-ion floating-point instructions retired. Applies to SSE* and AVX*scalar, do=
-uble and single precision floating-point: ADD SUB MUL DIV MIN MAX RCP RSQRT=
- SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as t=
-hey perform multiple calculations per element. ?.",
-+        "BriefDescription": "Number of SSE/AVX computational single precis=
-ion floating-point instructions retired. Applies to SSE* and AVX*scalar, do=
-uble and single precision floating-point: ADD SUB MUL DIV MIN MAX RCP RSQRT=
- SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as t=
-hey perform multiple calculations per element.",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
-@@ -108,57 +110,62 @@
-         "UMask": "0x3c",
-         "EventName": "FP_ARITH_INST_RETIRED.PACKED",
-         "SampleAfterValue": "2000004",
--        "BriefDescription": "Number of SSE/AVX computational packed floati=
-ng-point instructions retired. Applies to SSE* and AVX*, packed, double and=
- single precision floating-point: ADD SUB MUL DIV MIN MAX RSQRT RCP SQRT DP=
-P FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they perf=
-orm multiple calculations per element.",
-+        "BriefDescription": "Number of SSE/AVX computational packed floati=
-ng-point instructions retired. Applies to SSE* and AVX*, packed, double and=
- single precision floating-point: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX =
-SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as th=
-ey perform multiple calculations per element. (RSQRT for single-precision?)=
-",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "This event counts the number of x87 floating=
- point (FP) micro-code assist (numeric overflow/underflow, inexact result) =
-when the output value (destination register) is invalid.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts the number of x87 floating point (FP) micro-cod=
-e assist (numeric overflow/underflow, inexact result) when the output value=
- (destination register) is invalid.",
-         "EventCode": "0xCA",
-         "Counter": "0,1,2,3",
-         "UMask": "0x2",
-         "EventName": "FP_ASSIST.X87_OUTPUT",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of X87 assists due to output value.",
-+        "BriefDescription": "output - Numeric Overflow, Numeric Underflow,=
- Inexact Result  (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts x87 floating point (FP) mi=
-cro-code assist (invalid operation, denormal operand, SNaN operand) when th=
-e input value (one of the source operands to an FP instruction) is invalid.=
-",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts x87 floating point (FP) micro-code assist (inva=
-lid operation, denormal operand, SNaN operand) when the input value (one of=
- the source operands to an FP instruction) is invalid.",
-         "EventCode": "0xCA",
-         "Counter": "0,1,2,3",
-         "UMask": "0x4",
-         "EventName": "FP_ASSIST.X87_INPUT",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of X87 assists due to input value.",
-+        "BriefDescription": "input - Invalid Operation, Denormal Operand, =
-SNaN Operand  (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts the number of SSE* floatin=
-g point (FP) micro-code assist (numeric overflow/underflow) when the output=
- value (destination register) is invalid. Counting covers only cases involv=
-ing penalties that require micro-code assist intervention.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts the number of SSE* floating point (FP) micro-co=
-de assist (numeric overflow/underflow) when the output value (destination r=
-egister) is invalid. Counting covers only cases involving penalties that re=
-quire micro-code assist intervention.",
-         "EventCode": "0xCA",
-         "Counter": "0,1,2,3",
-         "UMask": "0x8",
-         "EventName": "FP_ASSIST.SIMD_OUTPUT",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of SIMD FP assists due to Output value=
-s",
-+        "BriefDescription": "SSE* FP micro-code assist when output value i=
-s invalid. (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts any input SSE* FP assist -=
- invalid operation, denormal operand, dividing by zero, SNaN operand. Count=
-ing includes only cases involving penalties that required micro-code assist=
- intervention.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts any input SSE* floating-point (FP) assist - inv=
-alid operation, denormal operand, dividing by zero, SNaN operand. Counting =
-includes only cases involving penalties that required micro-code assist int=
-ervention.",
-         "EventCode": "0xCA",
-         "Counter": "0,1,2,3",
-         "UMask": "0x10",
-         "EventName": "FP_ASSIST.SIMD_INPUT",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of SIMD FP assists due to input values=
-",
-+        "BriefDescription": "Any input SSE* FP Assist -   (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts cycles with any input and =
-output SSE or x87 FP assist. If an input and output assist are detected on =
-the same cycle the event increments by 1.",
-+        "PEBS": "1",
-+        "PublicDescription": "This event counts cycles with any input and =
-output SSE or x87 FP assist. If an input and output assist are detected on =
-the same cycle the event increments by 1. Uses PEBS.",
-         "EventCode": "0xCA",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1e",
-         "EventName": "FP_ASSIST.ANY",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Cycles with any input/output SSE or FP assist=
-",
-+        "BriefDescription": "Counts any FP_ASSIST umask was incrementing  =
- (Precise Event)",
-         "CounterMask": "1",
-         "CounterHTOff": "0,1,2,3"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/frontend.json b/tools=
-/perf/pmu-events/arch/x86/broadwell/frontend.json
-index 7142c76d7f11..aa4a5d762f21 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/frontend.json
-@@ -211,7 +211,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts the number of uops not del=
-ivered to Resource Allocation Table (RAT) per thread adding 4  x when Resou=
-rce Allocation Table (RAT) is not stalled and Instruction Decode Queue (IDQ=
-) delivers x uops to Resource Allocation Table (RAT) (where x belongs to {0=
-,1,2,3}). Counting does not cover cases when:\n a. IDQ-Resource Allocation =
-Table (RAT) pipe serves the other thread;\n b. Resource Allocation Table (R=
-AT) is stalled for the thread (including uop drops and clear BE conditions)=
-; \n c. Instruction Decode Queue (IDQ) delivers four uops.",
-+        "PublicDescription": "This event counts the number of uops not del=
-ivered to Resource Allocation Table (RAT) per thread adding \u201c4 \u2013 =
-x\u201d when Resource Allocation Table (RAT) is not stalled and Instruction=
- Decode Queue (IDQ) delivers x uops to Resource Allocation Table (RAT) (whe=
-re x belongs to {0,1,2,3}). Counting does not cover cases when:\n a. IDQ-Re=
-source Allocation Table (RAT) pipe serves the other thread;\n b. Resource A=
-llocation Table (RAT) is stalled for the thread (including uop drops and cl=
-ear BE conditions); \n c. Instruction Decode Queue (IDQ) delivers four uops=
-.",
-         "EventCode": "0x9C",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-@@ -274,7 +274,7 @@
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "This event counts Decode Stream Buffer (DSB)=
--to-MITE switch true penalty cycles. These cycles do not include uops route=
-d through because of the switch itself, for example, when Instruction Decod=
-e Queue (IDQ) pre-allocation is unavailable, or Instruction Decode Queue (I=
-DQ) is full. SBD-to-MITE switch true penalty cycles happen after the merge =
-mux (MM) receives Decode Stream Buffer (DSB) Sync-indication until receivin=
-g the first MITE uop. \nMM is placed before Instruction Decode Queue (IDQ) =
-to merge uops being fed from the MITE and Decode Stream Buffer (DSB) paths.=
- Decode Stream Buffer (DSB) inserts the Sync-indication whenever a Decode S=
-tream Buffer (DSB)-to-MITE switch occurs.\nPenalty: A Decode Stream Buffer =
-(DSB) hit followed by a Decode Stream Buffer (DSB) miss can cost up to six =
-cycles in which no uops are delivered to the IDQ. Most often, such switches=
- from the Decode Stream Buffer (DSB) to the legacy pipeline cost 02 cycles.=
-",
-+        "PublicDescription": "This event counts Decode Stream Buffer (DSB)=
--to-MITE switch true penalty cycles. These cycles do not include uops route=
-d through because of the switch itself, for example, when Instruction Decod=
-e Queue (IDQ) pre-allocation is unavailable, or Instruction Decode Queue (I=
-DQ) is full. SBD-to-MITE switch true penalty cycles happen after the merge =
-mux (MM) receives Decode Stream Buffer (DSB) Sync-indication until receivin=
-g the first MITE uop. \nMM is placed before Instruction Decode Queue (IDQ) =
-to merge uops being fed from the MITE and Decode Stream Buffer (DSB) paths.=
- Decode Stream Buffer (DSB) inserts the Sync-indication whenever a Decode S=
-tream Buffer (DSB)-to-MITE switch occurs.\nPenalty: A Decode Stream Buffer =
-(DSB) hit followed by a Decode Stream Buffer (DSB) miss can cost up to six =
-cycles in which no uops are delivered to the IDQ. Most often, such switches=
- from the Decode Stream Buffer (DSB) to the legacy pipeline cost 0\u20132 c=
-ycles.",
-         "EventCode": "0xAB",
-         "Counter": "0,1,2,3",
-         "UMask": "0x2",
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/memory.json b/tools/p=
-erf/pmu-events/arch/x86/broadwell/memory.json
-index c9154cebbdf0..b6b5247d3d5a 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/memory.json
-@@ -311,7 +311,7 @@
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above four.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above four.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x4",
-         "Counter": "3",
-@@ -320,13 +320,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Loads with latency value being above 4",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 4",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above eight.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above eight.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x8",
-         "Counter": "3",
-@@ -335,13 +335,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "50021",
--        "BriefDescription": "Loads with latency value being above 8",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 8",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above 16.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above 16.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x10",
-         "Counter": "3",
-@@ -350,13 +350,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "20011",
--        "BriefDescription": "Loads with latency value being above 16",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 16",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above 32.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above 32.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x20",
-         "Counter": "3",
-@@ -365,13 +365,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Loads with latency value being above 32",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 32",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above 64.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above 64.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x40",
-         "Counter": "3",
-@@ -380,13 +380,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "2003",
--        "BriefDescription": "Loads with latency value being above 64",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 64",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above 128.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above 128.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x80",
-         "Counter": "3",
-@@ -395,13 +395,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "1009",
--        "BriefDescription": "Loads with latency value being above 128",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 128",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above 256.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above 256.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x100",
-         "Counter": "3",
-@@ -410,13 +410,13 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "503",
--        "BriefDescription": "Loads with latency value being above 256",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 256",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
-         "PEBS": "2",
--        "PublicDescription": "This event counts loads with latency value b=
-eing above 512.",
-+        "PublicDescription": "Counts randomly selected loads with latency =
-value being above 512.",
-         "EventCode": "0xCD",
-         "MSRValue": "0x200",
-         "Counter": "3",
-@@ -425,2620 +425,2620 @@
-         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
-         "MSRIndex": "0x3F6",
-         "SampleAfterValue": "101",
--        "BriefDescription": "Loads with latency value being above 512",
-+        "BriefDescription": "Randomly selected loads with latency value be=
-ing above 512",
-         "TakenAlone": "1",
-         "CounterHTOff": "3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020001 ",
-+        "MSRValue": "0x2000020001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & SUPPLIER_NONE & SNOOP_NON_DR=
-AM",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that hit in the L3 =
-and the target was non-DRAM system address. Offcore response can be program=
-med only with a specific pair of event select and counter MSR, and with spe=
-cific event codes and predefine mask bit value in a dedicated MSR to specif=
-y attributes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0001 ",
-+        "MSRValue": "0x20003C0001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_HIT.SNOOP_NON_DRA=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that hit in the L3 a=
-nd the target was non-DRAM system address.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000001 ",
-+        "MSRValue": "0x0084000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ONE",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000001 ",
-+        "MSRValue": "0x0104000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-OT_NEEDED",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000001 ",
-+        "MSRValue": "0x0204000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_M=
-ISS",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000001 ",
-+        "MSRValue": "0x0404000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-IT_NO_FWD",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000001 ",
-+        "MSRValue": "0x1004000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-ITM",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000001 ",
-+        "MSRValue": "0x2004000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ON_DRAM",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000001 ",
-+        "MSRValue": "0x3F84000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS_LOCAL_DRAM.A=
-NY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS_LOCAL_DRAM & ANY_SNO=
-OP",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that miss the L3 wi=
-th no details on snoop-related information. Offcore response can be program=
-med only with a specific pair of event select and counter MSR, and with spe=
-cific event codes and predefine mask bit value in a dedicated MSR to specif=
-y attributes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000001 ",
-+        "MSRValue": "0x00BC000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the L3 wit=
-h no details on snoop-related information.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000001 ",
-+        "MSRValue": "0x013C000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_NOT_NE=
-EDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts demand data reads that miss the L3 wi=
-th a snoop miss response. Offcore response can be programmed only with a sp=
-ecific pair of event select and counter MSR, and with specific event codes =
-and predefine mask bit value in a dedicated MSR to specify attributes of th=
-e offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000001 ",
-+        "MSRValue": "0x023C000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts demand data reads that miss the L3 wit=
-h a snoop miss response.",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts demand data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000001 ",
-+        "MSRValue": "0x043C000001",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.L3_MISS.SNOOP_HIT_NO=
-_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_DATA_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts demand data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that hi=
-t in the L3 and the target was non-DRAM system address. Offcore response ca=
-n be programmed only with a specific pair of event select and counter MSR, =
-and with specific event codes and predefine mask bit value in a dedicated M=
-SR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0002 ",
-+        "MSRValue": "0x20003C0002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that hit=
- in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000002 ",
-+        "MSRValue": "0x3F84000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS_LOCAL_DRAM.ANY_S=
-NOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_RFO & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that mi=
-ss the L3 with no details on snoop-related information. Offcore response ca=
-n be programmed only with a specific pair of event select and counter MSR, =
-and with specific event codes and predefine mask bit value in a dedicated M=
-SR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000002 ",
-+        "MSRValue": "0x00BC000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that mis=
-s the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000002 ",
-+        "MSRValue": "0x013C000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_NOT_NEEDED=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_RFO & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand data writes (RFOs) that mi=
-ss the L3 with a snoop miss response. Offcore response can be programmed on=
-ly with a specific pair of event select and counter MSR, and with specific =
-event codes and predefine mask bit value in a dedicated MSR to specify attr=
-ibutes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000002 ",
-+        "MSRValue": "0x023C000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand data writes (RFOs) that mis=
-s the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand data writes (RFOs)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000002 ",
-+        "MSRValue": "0x043C000002",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.L3_MISS.SNOOP_HIT_NO_FWD=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_RFO & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all demand data writes (RFOs)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020004 ",
-+        "MSRValue": "0x2000020004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & SUPPLIER_NONE & SNOOP_NON_DR=
-AM",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that hit in the=
- L3 and the target was non-DRAM system address. Offcore response can be pro=
-grammed only with a specific pair of event select and counter MSR, and with=
- specific event codes and predefine mask bit value in a dedicated MSR to sp=
-ecify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0004 ",
-+        "MSRValue": "0x20003C0004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_HIT.SNOOP_NON_DRA=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that hit in the =
-L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000004 ",
-+        "MSRValue": "0x0084000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ONE",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000004 ",
-+        "MSRValue": "0x0104000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-OT_NEEDED",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000004 ",
-+        "MSRValue": "0x0204000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_M=
-ISS",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000004 ",
-+        "MSRValue": "0x0404000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-IT_NO_FWD",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000004 ",
-+        "MSRValue": "0x1004000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-ITM",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000004 ",
-+        "MSRValue": "0x2004000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ON_DRAM",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000004 ",
-+        "MSRValue": "0x3F84000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS_LOCAL_DRAM.A=
-NY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS_LOCAL_DRAM & ANY_SNO=
-OP",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that miss the L=
-3 with no details on snoop-related information. Offcore response can be pro=
-grammed only with a specific pair of event select and counter MSR, and with=
- specific event codes and predefine mask bit value in a dedicated MSR to sp=
-ecify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000004 ",
-+        "MSRValue": "0x00BC000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the L3=
- with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000004 ",
-+        "MSRValue": "0x013C000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_NOT_NE=
-EDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand code reads that miss the L=
-3 with a snoop miss response. Offcore response can be programmed only with =
-a specific pair of event select and counter MSR, and with specific event co=
-des and predefine mask bit value in a dedicated MSR to specify attributes o=
-f the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000004 ",
-+        "MSRValue": "0x023C000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand code reads that miss the L3=
- with a snoop miss response.",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000004 ",
-+        "MSRValue": "0x043C000004",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_CODE_RD.L3_MISS.SNOOP_HIT_NO=
-_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "DEMAND_CODE_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all demand code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020008 ",
-+        "MSRValue": "0x2000020008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.SUPPLIER_NONE.SNOOP_NON_DRAM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at hit in the L3 and the target was non-DRAM system address. Offcore respon=
-se can be programmed only with a specific pair of event select and counter =
-MSR, and with specific event codes and predefine mask bit value in a dedica=
-ted MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0008 ",
-+        "MSRValue": "0x20003C0008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t hit in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000008 ",
-+        "MSRValue": "0x0084000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_NON=
-E",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & SNOOP_NONE",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000008 ",
-+        "MSRValue": "0x0104000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_NOT=
-_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & SNOOP_NOT_NEEDE=
-D",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000008 ",
-+        "MSRValue": "0x0204000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_MIS=
-S",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & SNOOP_MISS",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000008 ",
-+        "MSRValue": "0x0404000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_HIT=
-_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & SNOOP_HIT_NO_FW=
-D",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000008 ",
-+        "MSRValue": "0x1004000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_HIT=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & SNOOP_HITM",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000008 ",
-+        "MSRValue": "0x2004000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.SNOOP_NON=
-_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000008 ",
-+        "MSRValue": "0x3F84000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS_LOCAL_DRAM.ANY_SNOOP=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at miss the L3 with no details on snoop-related information. Offcore respon=
-se can be programmed only with a specific pair of event select and counter =
-MSR, and with specific event codes and predefine mask bit value in a dedica=
-ted MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000008 ",
-+        "MSRValue": "0x00BC000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t miss the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000008 ",
-+        "MSRValue": "0x013C000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts writebacks (modified to exclusive) th=
-at miss the L3 with a snoop miss response. Offcore response can be programm=
-ed only with a specific pair of event select and counter MSR, and with spec=
-ific event codes and predefine mask bit value in a dedicated MSR to specify=
- attributes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000008 ",
-+        "MSRValue": "0x023C000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts writebacks (modified to exclusive) tha=
-t miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts writebacks (modified to exclusive)",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000008 ",
-+        "MSRValue": "0x043C000008",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.COREWB.L3_MISS.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "COREWB & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts writebacks (modified to exclusive)",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020010 ",
-+        "MSRValue": "0x2000020010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.SUPPLIER_NONE.SNOOP_N=
-ON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & SUPPLIER_NONE & SNOOP_NON_DRA=
-M",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that hit in the L3 and the target was non-DRAM system address. Offco=
-re response can be programmed only with a specific pair of event select and=
- counter MSR, and with specific event codes and predefine mask bit value in=
- a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0010 ",
-+        "MSRValue": "0x20003C0010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_HIT.SNOOP_NON_DRAM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that hit in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000010 ",
-+        "MSRValue": "0x0084000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-NE",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000010 ",
-+        "MSRValue": "0x0104000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-T_NEEDED",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000010 ",
-+        "MSRValue": "0x0204000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_MI=
-SS",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000010 ",
-+        "MSRValue": "0x0404000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-T_NO_FWD",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000010 ",
-+        "MSRValue": "0x1004000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-TM",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000010 ",
-+        "MSRValue": "0x2004000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-N_DRAM",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000010 ",
-+        "MSRValue": "0x3F84000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS_LOCAL_DRAM.AN=
-Y_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS_LOCAL_DRAM & ANY_SNOO=
-P",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that miss the L3 with no details on snoop-related information. Offco=
-re response can be programmed only with a specific pair of event select and=
- counter MSR, and with specific event codes and predefine mask bit value in=
- a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000010 ",
-+        "MSRValue": "0x00BC000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that miss the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000010 ",
-+        "MSRValue": "0x013C000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads that miss the L3 with a snoop miss response. Offcore response can be=
- programmed only with a specific pair of event select and counter MSR, and =
-with specific event codes and predefine mask bit value in a dedicated MSR t=
-o specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000010 ",
-+        "MSRValue": "0x023C000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads that miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to L2) data=
- reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000010 ",
-+        "MSRValue": "0x043C000010",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_DATA_RD.L3_MISS.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_DATA_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts prefetch (that bring data to L2) data =
-reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020020 ",
-+        "MSRValue": "0x2000020020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.SUPPLIER_NONE.SNOOP_NON_D=
-RAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that hit in the L3 and the target was non-DRAM system address. Offcore=
- response can be programmed only with a specific pair of event select and c=
-ounter MSR, and with specific event codes and predefine mask bit value in a=
- dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0020 ",
-+        "MSRValue": "0x20003C0020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that hit in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000020 ",
-+        "MSRValue": "0x0084000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000020 ",
-+        "MSRValue": "0x0104000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000020 ",
-+        "MSRValue": "0x0204000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000020 ",
-+        "MSRValue": "0x0404000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000020 ",
-+        "MSRValue": "0x1004000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000020 ",
-+        "MSRValue": "0x2004000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NON_DR=
-AM",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000020 ",
-+        "MSRValue": "0x3F84000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS_LOCAL_DRAM.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that miss the L3 with no details on snoop-related information. Offcore=
- response can be programmed only with a specific pair of event select and c=
-ounter MSR, and with specific event codes and predefine mask bit value in a=
- dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000020 ",
-+        "MSRValue": "0x00BC000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that miss the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000020 ",
-+        "MSRValue": "0x013C000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs that miss the L3 with a snoop miss response. Offcore response can be p=
-rogrammed only with a specific pair of event select and counter MSR, and wi=
-th specific event codes and predefine mask bit value in a dedicated MSR to =
-specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000020 ",
-+        "MSRValue": "0x023C000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs that miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to L2) =
-RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000020 ",
-+        "MSRValue": "0x043C000020",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_RFO & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to L2) R=
-FOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020040 ",
-+        "MSRValue": "0x2000020040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.SUPPLIER_NONE.SNOOP_N=
-ON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & SUPPLIER_NONE & SNOOP_NON_DRA=
-M",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that hit in the L3 and the target was non-DRAM system addr=
-ess. Offcore response can be programmed only with a specific pair of event =
-select and counter MSR, and with specific event codes and predefine mask bi=
-t value in a dedicated MSR to specify attributes of the offcore transaction=
-.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0040 ",
-+        "MSRValue": "0x20003C0040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_HIT.SNOOP_NON_DRAM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that hit in the L3 and the target was non-DRAM system addre=
-ss.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000040 ",
-+        "MSRValue": "0x0084000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-NE",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000040 ",
-+        "MSRValue": "0x0104000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-T_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000040 ",
-+        "MSRValue": "0x0204000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_MI=
-SS",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000040 ",
-+        "MSRValue": "0x0404000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-T_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000040 ",
-+        "MSRValue": "0x1004000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-TM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000040 ",
-+        "MSRValue": "0x2004000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-N_DRAM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000040 ",
-+        "MSRValue": "0x3F84000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS_LOCAL_DRAM.AN=
-Y_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS_LOCAL_DRAM & ANY_SNOO=
-P",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that miss the L3 with no details on snoop-related informat=
-ion. Offcore response can be programmed only with a specific pair of event =
-select and counter MSR, and with specific event codes and predefine mask bi=
-t value in a dedicated MSR to specify attributes of the offcore transaction=
-.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000040 ",
-+        "MSRValue": "0x00BC000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that miss the L3 with no details on snoop-related informati=
-on.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000040 ",
-+        "MSRValue": "0x013C000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads that miss the L3 with a snoop miss response. Offcore respo=
-nse can be programmed only with a specific pair of event select and counter=
- MSR, and with specific event codes and predefine mask bit value in a dedic=
-ated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000040 ",
-+        "MSRValue": "0x023C000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads that miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000040 ",
-+        "MSRValue": "0x043C000040",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L2_CODE_RD.L3_MISS.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L2_CODE_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020080 ",
-+        "MSRValue": "0x2000020080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.SUPPLIER_NONE.SNOOP_N=
-ON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & SUPPLIER_NONE & SNOOP_NON_DRA=
-M",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that hit in the L3 and the target was non-DRAM system addr=
-ess. Offcore response can be programmed only with a specific pair of event =
-select and counter MSR, and with specific event codes and predefine mask bi=
-t value in a dedicated MSR to specify attributes of the offcore transaction=
-.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0080 ",
-+        "MSRValue": "0x20003C0080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_HIT.SNOOP_NON_DRAM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that hit in the L3 and the target was non-DRAM system addre=
-ss.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000080 ",
-+        "MSRValue": "0x0084000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-NE",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000080 ",
-+        "MSRValue": "0x0104000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-T_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000080 ",
-+        "MSRValue": "0x0204000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_MI=
-SS",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000080 ",
-+        "MSRValue": "0x0404000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-T_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000080 ",
-+        "MSRValue": "0x1004000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-TM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000080 ",
-+        "MSRValue": "0x2004000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-N_DRAM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000080 ",
-+        "MSRValue": "0x3F84000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS_LOCAL_DRAM.AN=
-Y_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS_LOCAL_DRAM & ANY_SNOO=
-P",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that miss the L3 with no details on snoop-related informat=
-ion. Offcore response can be programmed only with a specific pair of event =
-select and counter MSR, and with specific event codes and predefine mask bi=
-t value in a dedicated MSR to specify attributes of the offcore transaction=
-.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000080 ",
-+        "MSRValue": "0x00BC000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that miss the L3 with no details on snoop-related informati=
-on.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000080 ",
-+        "MSRValue": "0x013C000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads that miss the L3 with a snoop miss response. Offcore respo=
-nse can be programmed only with a specific pair of event select and counter=
- MSR, and with specific event codes and predefine mask bit value in a dedic=
-ated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000080 ",
-+        "MSRValue": "0x023C000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads that miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000080 ",
-+        "MSRValue": "0x043C000080",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_DATA_RD.L3_MISS.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_DATA_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020100 ",
-+        "MSRValue": "0x2000020100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.SUPPLIER_NONE.SNOOP_NON_D=
-RAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that hit in the L3 and the target was non-DRAM system address. O=
-ffcore response can be programmed only with a specific pair of event select=
- and counter MSR, and with specific event codes and predefine mask bit valu=
-e in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0100 ",
-+        "MSRValue": "0x20003C0100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that hit in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000100 ",
-+        "MSRValue": "0x0084000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NONE",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000100 ",
-+        "MSRValue": "0x0104000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NOT_NE=
-EDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000100 ",
-+        "MSRValue": "0x0204000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & SNOOP_MISS",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000100 ",
-+        "MSRValue": "0x0404000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HIT_NO=
-_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000100 ",
-+        "MSRValue": "0x1004000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HITM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000100 ",
-+        "MSRValue": "0x2004000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.SNOOP_=
-NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NON_DR=
-AM",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000100 ",
-+        "MSRValue": "0x3F84000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS_LOCAL_DRAM.ANY_SN=
-OOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that miss the L3 with no details on snoop-related information. O=
-ffcore response can be programmed only with a specific pair of event select=
- and counter MSR, and with specific event codes and predefine mask bit valu=
-e in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000100 ",
-+        "MSRValue": "0x00BC000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that miss the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000100 ",
-+        "MSRValue": "0x013C000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs that miss the L3 with a snoop miss response. Offcore response ca=
-n be programmed only with a specific pair of event select and counter MSR, =
-and with specific event codes and predefine mask bit value in a dedicated M=
-SR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000100 ",
-+        "MSRValue": "0x023C000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs that miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch (that bring data to LLC =
-only) RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000100 ",
-+        "MSRValue": "0x043C000100",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_RFO & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch (that bring data to LLC o=
-nly) RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020200 ",
-+        "MSRValue": "0x2000020200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.SUPPLIER_NONE.SNOOP_N=
-ON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & SUPPLIER_NONE & SNOOP_NON_DRA=
-M",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that hit in the L3 and the target was non-DRAM system address.=
- Offcore response can be programmed only with a specific pair of event sele=
-ct and counter MSR, and with specific event codes and predefine mask bit va=
-lue in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0200 ",
-+        "MSRValue": "0x20003C0200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_HIT.SNOOP_NON_DRAM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that hit in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000200 ",
-+        "MSRValue": "0x0084000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-NE",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000200 ",
-+        "MSRValue": "0x0104000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-T_NEEDED",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000200 ",
-+        "MSRValue": "0x0204000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_MI=
-SS",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000200 ",
-+        "MSRValue": "0x0404000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-T_NO_FWD",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000200 ",
-+        "MSRValue": "0x1004000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_HI=
-TM",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000200 ",
-+        "MSRValue": "0x2004000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.SN=
-OOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_NO=
-N_DRAM",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000200 ",
-+        "MSRValue": "0x3F84000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS_LOCAL_DRAM.AN=
-Y_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS_LOCAL_DRAM & ANY_SNOO=
-P",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that miss the L3 with no details on snoop-related information.=
- Offcore response can be programmed only with a specific pair of event sele=
-ct and counter MSR, and with specific event codes and predefine mask bit va=
-lue in a dedicated MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000200 ",
-+        "MSRValue": "0x00BC000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that miss the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000200 ",
-+        "MSRValue": "0x013C000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_NOT_NEE=
-DED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads that miss the L3 with a snoop miss response. Offcore response =
-can be programmed only with a specific pair of event select and counter MSR=
-, and with specific event codes and predefine mask bit value in a dedicated=
- MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000200 ",
-+        "MSRValue": "0x023C000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads that miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch (that bring data to LLC only=
-) code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000200 ",
-+        "MSRValue": "0x043C000200",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.PF_L3_CODE_RD.L3_MISS.SNOOP_HIT_NO_=
-FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "PF_L3_CODE_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts prefetch (that bring data to LLC only)=
- code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000028000 ",
-+        "MSRValue": "0x2000028000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.SUPPLIER_NONE.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that hit in the L3=
- and the target was non-DRAM system address. Offcore response can be progra=
-mmed only with a specific pair of event select and counter MSR, and with sp=
-ecific event codes and predefine mask bit value in a dedicated MSR to speci=
-fy attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c8000 ",
-+        "MSRValue": "0x20003C8000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that hit in the L3 =
-and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084008000 ",
-+        "MSRValue": "0x0084008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NONE=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & SNOOP_NONE",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104008000 ",
-+        "MSRValue": "0x0104008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NOT_=
-NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & SNOOP_NOT_NEEDED=
-",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204008000 ",
-+        "MSRValue": "0x0204008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_MISS=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & SNOOP_MISS",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404008000 ",
-+        "MSRValue": "0x0404008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_HIT_=
-NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & SNOOP_HIT_NO_FWD=
-",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004008000 ",
-+        "MSRValue": "0x1004008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_HITM=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & SNOOP_HITM",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004008000 ",
-+        "MSRValue": "0x2004008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.SNOOP_NON_=
-DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84008000 ",
-+        "MSRValue": "0x3F84008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS_LOCAL_DRAM.ANY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that miss the L3 w=
-ith no details on snoop-related information. Offcore response can be progra=
-mmed only with a specific pair of event select and counter MSR, and with sp=
-ecific event codes and predefine mask bit value in a dedicated MSR to speci=
-fy attributes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc008000 ",
-+        "MSRValue": "0x00BC008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that miss the L3 wi=
-th no details on snoop-related information.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c008000 ",
-+        "MSRValue": "0x013C008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts any other requests that miss the L3 w=
-ith a snoop miss response. Offcore response can be programmed only with a s=
-pecific pair of event select and counter MSR, and with specific event codes=
- and predefine mask bit value in a dedicated MSR to specify attributes of t=
-he offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c008000 ",
-+        "MSRValue": "0x023C008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts any other requests that miss the L3 wi=
-th a snoop miss response.",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts any other requests",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c008000 ",
-+        "MSRValue": "0x043C008000",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.OTHER.L3_MISS.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "OTHER & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts any other requests",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020090 ",
-+        "MSRValue": "0x2000020090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.SUPPLIER_NONE.SNOOP_=
-NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & SUPPLIER_NONE & SNOOP_NON_DR=
-AM",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that hit in t=
-he L3 and the target was non-DRAM system address. Offcore response can be p=
-rogrammed only with a specific pair of event select and counter MSR, and wi=
-th specific event codes and predefine mask bit value in a dedicated MSR to =
-specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0090 ",
-+        "MSRValue": "0x20003C0090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_HIT.SNOOP_NON_DRA=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that hit in th=
-e L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000090 ",
-+        "MSRValue": "0x0084000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ONE",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000090 ",
-+        "MSRValue": "0x0104000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-OT_NEEDED",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000090 ",
-+        "MSRValue": "0x0204000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_M=
-ISS",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000090 ",
-+        "MSRValue": "0x0404000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-IT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000090 ",
-+        "MSRValue": "0x1004000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-ITM",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000090 ",
-+        "MSRValue": "0x2004000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ON_DRAM",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000090 ",
-+        "MSRValue": "0x3F84000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS_LOCAL_DRAM.A=
-NY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS_LOCAL_DRAM & ANY_SNO=
-OP",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that miss the=
- L3 with no details on snoop-related information. Offcore response can be p=
-rogrammed only with a specific pair of event select and counter MSR, and wi=
-th specific event codes and predefine mask bit value in a dedicated MSR to =
-specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000090 ",
-+        "MSRValue": "0x00BC000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that miss the =
-L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000090 ",
-+        "MSRValue": "0x013C000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_NOT_NE=
-EDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch data reads that miss the=
- L3 with a snoop miss response. Offcore response can be programmed only wit=
-h a specific pair of event select and counter MSR, and with specific event =
-codes and predefine mask bit value in a dedicated MSR to specify attributes=
- of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000090 ",
-+        "MSRValue": "0x023C000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch data reads that miss the =
-L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000090 ",
-+        "MSRValue": "0x043C000090",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_DATA_RD.L3_MISS.SNOOP_HIT_NO=
-_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_DATA_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020120 ",
-+        "MSRValue": "0x2000020120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.SUPPLIER_NONE.SNOOP_NON_=
-DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that hit in the L3 and =
-the target was non-DRAM system address. Offcore response can be programmed =
-only with a specific pair of event select and counter MSR, and with specifi=
-c event codes and predefine mask bit value in a dedicated MSR to specify at=
-tributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0120 ",
-+        "MSRValue": "0x20003C0120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that hit in the L3 and t=
-he target was non-DRAM system address.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000120 ",
-+        "MSRValue": "0x0084000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NONE",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000120 ",
-+        "MSRValue": "0x0104000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NOT_N=
-EEDED",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000120 ",
-+        "MSRValue": "0x0204000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & SNOOP_MISS",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000120 ",
-+        "MSRValue": "0x0404000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HIT_N=
-O_FWD",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000120 ",
-+        "MSRValue": "0x1004000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HITM",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000120 ",
-+        "MSRValue": "0x2004000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.SNOOP=
-_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NON_D=
-RAM",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000120 ",
-+        "MSRValue": "0x3F84000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS_LOCAL_DRAM.ANY_S=
-NOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that miss the L3 with n=
-o details on snoop-related information. Offcore response can be programmed =
-only with a specific pair of event select and counter MSR, and with specifi=
-c event codes and predefine mask bit value in a dedicated MSR to specify at=
-tributes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000120 ",
-+        "MSRValue": "0x00BC000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that miss the L3 with no=
- details on snoop-related information.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000120 ",
-+        "MSRValue": "0x013C000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_NOT_NEEDED=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts prefetch RFOs that miss the L3 with a=
- snoop miss response. Offcore response can be programmed only with a specif=
-ic pair of event select and counter MSR, and with specific event codes and =
-predefine mask bit value in a dedicated MSR to specify attributes of the of=
-fcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000120 ",
-+        "MSRValue": "0x023C000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts prefetch RFOs that miss the L3 with a =
-snoop miss response.",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000120 ",
-+        "MSRValue": "0x043C000120",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_RFO.L3_MISS.SNOOP_HIT_NO_FWD=
-",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_RFO & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020240 ",
-+        "MSRValue": "0x2000020240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.SUPPLIER_NONE.SNOOP_=
-NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & SUPPLIER_NONE & SNOOP_NON_DR=
-AM",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that hit in t=
-he L3 and the target was non-DRAM system address. Offcore response can be p=
-rogrammed only with a specific pair of event select and counter MSR, and wi=
-th specific event codes and predefine mask bit value in a dedicated MSR to =
-specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0240 ",
-+        "MSRValue": "0x20003C0240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_HIT.SNOOP_NON_DRA=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that hit in th=
-e L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000240 ",
-+        "MSRValue": "0x0084000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ONE",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000240 ",
-+        "MSRValue": "0x0104000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-OT_NEEDED",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000240 ",
-+        "MSRValue": "0x0204000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_M=
-ISS",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000240 ",
-+        "MSRValue": "0x0404000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-IT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000240 ",
-+        "MSRValue": "0x1004000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_H=
-ITM",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000240 ",
-+        "MSRValue": "0x2004000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.S=
-NOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & SNOOP_N=
-ON_DRAM",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000240 ",
-+        "MSRValue": "0x3F84000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS_LOCAL_DRAM.A=
-NY_SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS_LOCAL_DRAM & ANY_SNO=
-OP",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that miss the=
- L3 with no details on snoop-related information. Offcore response can be p=
-rogrammed only with a specific pair of event select and counter MSR, and wi=
-th specific event codes and predefine mask bit value in a dedicated MSR to =
-specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000240 ",
-+        "MSRValue": "0x00BC000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that miss the =
-L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000240 ",
-+        "MSRValue": "0x013C000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_NOT_NE=
-EDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all prefetch code reads that miss the=
- L3 with a snoop miss response. Offcore response can be programmed only wit=
-h a specific pair of event select and counter MSR, and with specific event =
-codes and predefine mask bit value in a dedicated MSR to specify attributes=
- of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000240 ",
-+        "MSRValue": "0x023C000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all prefetch code reads that miss the =
-L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all prefetch code reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000240 ",
-+        "MSRValue": "0x043C000240",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_PF_CODE_RD.L3_MISS.SNOOP_HIT_NO=
-_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_PF_CODE_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all prefetch code reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020091 ",
-+        "MSRValue": "0x2000020091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.SUPPLIER_NONE.SNOOP_NON=
-_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- hit in the L3 and the target was non-DRAM system address. Offcore response=
- can be programmed only with a specific pair of event select and counter MS=
-R, and with specific event codes and predefine mask bit value in a dedicate=
-d MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0091 ",
-+        "MSRValue": "0x20003C0091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-hit in the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000091 ",
-+        "MSRValue": "0x0084000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOO=
-P_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NONE=
-",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000091 ",
-+        "MSRValue": "0x0104000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOO=
-P_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NOT_=
-NEEDED",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000091 ",
-+        "MSRValue": "0x0204000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOO=
-P_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_MISS=
-",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000091 ",
-+        "MSRValue": "0x0404000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOO=
-P_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_HIT_=
-NO_FWD",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000091 ",
-+        "MSRValue": "0x1004000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOO=
-P_HITM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_HITM=
-",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000091 ",
-+        "MSRValue": "0x2004000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.SNOO=
-P_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & SNOOP_NON_=
-DRAM",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000091 ",
-+        "MSRValue": "0x3F84000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS_LOCAL_DRAM.ANY_=
-SNOOP",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- miss the L3 with no details on snoop-related information. Offcore response=
- can be programmed only with a specific pair of event select and counter MS=
-R, and with specific event codes and predefine mask bit value in a dedicate=
-d MSR to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000091 ",
-+        "MSRValue": "0x00BC000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-miss the L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000091 ",
-+        "MSRValue": "0x013C000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_NOT_NEEDE=
-D",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch data reads that=
- miss the L3 with a snoop miss response. Offcore response can be programmed=
- only with a specific pair of event select and counter MSR, and with specif=
-ic event codes and predefine mask bit value in a dedicated MSR to specify a=
-ttributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000091 ",
-+        "MSRValue": "0x023C000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch data reads that =
-miss the L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch data reads",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000091 ",
-+        "MSRValue": "0x043C000091",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_DATA_RD.L3_MISS.SNOOP_HIT_NO_FW=
-D",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_DATA_RD & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all demand & prefetch data reads",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2000020122 ",
-+        "MSRValue": "0x2000020122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.SUPPLIER_NONE.SNOOP_NON_DRA=
-M",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & SUPPLIER_NONE & SNOOP_NON_DRAM",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that hit i=
-n the L3 and the target was non-DRAM system address. Offcore response can b=
-e programmed only with a specific pair of event select and counter MSR, and=
- with specific event codes and predefine mask bit value in a dedicated MSR =
-to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x20003c0122 ",
-+        "MSRValue": "0x20003C0122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_HIT.SNOOP_NON_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that hit in=
- the L3 and the target was non-DRAM system address.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0084000122 ",
-+        "MSRValue": "0x0084000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NO=
-NE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NONE",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0104000122 ",
-+        "MSRValue": "0x0104000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NO=
-T_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NOT_NEED=
-ED",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0204000122 ",
-+        "MSRValue": "0x0204000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_MI=
-SS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & SNOOP_MISS",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x0404000122 ",
-+        "MSRValue": "0x0404000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HI=
-T_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HIT_NO_F=
-WD",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x1004000122 ",
-+        "MSRValue": "0x1004000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_HI=
-TM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & SNOOP_HITM",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x2004000122 ",
-+        "MSRValue": "0x2004000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.SNOOP_NO=
-N_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & SNOOP_NON_DRAM=
-",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x3f84000122 ",
-+        "MSRValue": "0x3F84000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS_LOCAL_DRAM.ANY_SNOO=
-P",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS_LOCAL_DRAM & ANY_SNOOP",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that miss =
-the L3 with no details on snoop-related information. Offcore response can b=
-e programmed only with a specific pair of event select and counter MSR, and=
- with specific event codes and predefine mask bit value in a dedicated MSR =
-to specify attributes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x00bc000122 ",
-+        "MSRValue": "0x00BC000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_NONE",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that miss t=
-he L3 with no details on snoop-related information.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x013c000122 ",
-+        "MSRValue": "0x013C000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_NOT_NEEDED",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS & SNOOP_NOT_NEEDED",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Counts all demand & prefetch RFOs that miss =
-the L3 with a snoop miss response. Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x023c000122 ",
-+        "MSRValue": "0x023C000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_MISS",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Counts all demand & prefetch RFOs that miss t=
-he L3 with a snoop miss response.",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "tbd Offcore response can be programmed only =
-with a specific pair of event select and counter MSR, and with specific eve=
-nt codes and predefine mask bit value in a dedicated MSR to specify attribu=
-tes of the offcore transaction.",
-+        "PublicDescription": "Counts all demand & prefetch RFOs",
-         "EventCode": "0xB7, 0xBB",
--        "MSRValue": "0x043c000122 ",
-+        "MSRValue": "0x043C000122",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "OFFCORE_RESPONSE.ALL_RFO.L3_MISS.SNOOP_HIT_NO_FWD",
--        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRIndex": "0x1a6, 0x1a7",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "ALL_RFO & L3_MISS & SNOOP_HIT_NO_FWD",
-+        "BriefDescription": "Counts all demand & prefetch RFOs",
-         "Offcore": "1",
-         "CounterHTOff": "0,1,2,3"
-     }
-diff --git a/tools/perf/pmu-events/arch/x86/broadwell/pipeline.json b/tools=
-/perf/pmu-events/arch/x86/broadwell/pipeline.json
-index 999cf3066363..bb25574b8d21 100644
---- a/tools/perf/pmu-events/arch/x86/broadwell/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/broadwell/pipeline.json
-@@ -1,7 +1,6 @@
- [
-     {
-         "PublicDescription": "This event counts the number of instructions=
- retired from execution. For instructions that consist of multiple micro-op=
-s, this event counts the retirement of the last micro-op of the instruction=
-. Counting continues during hardware interrupts, traps, and inside interrup=
-t handlers. \nNotes: INST_RETIRED.ANY is counted by a designated fixed coun=
-ter, leaving the four (eight when Hyperthreading is disabled) programmable =
-counters available for other events. INST_RETIRED.ANY_P is counted by a pro=
-grammable counter and it is an architectural performance event. \nCounting:=
- Faulting executions of GETSEC/VM entry/VM Exit/MWait will not count as ret=
-ired instructions.",
--        "EventCode": "0x00",
-         "Counter": "Fixed counter 0",
-         "UMask": "0x1",
-         "EventName": "INST_RETIRED.ANY",
-@@ -11,7 +10,6 @@
-     },
-     {
-         "PublicDescription": "This event counts the number of core cycles =
-while the thread is not in a halt state. The thread enters the halt state w=
-hen it is running the HLT instruction. This event is a component in many ke=
-y event ratios. The core frequency may change from time to time due to tran=
-sitions associated with Enhanced Intel SpeedStep Technology or TM2. For thi=
-s reason this event may have a changing ratio with regards to time. When th=
-e core frequency is constant, this event can approximate elapsed time while=
- the core was not in the halt state. It is counted on a dedicated fixed cou=
-nter, leaving the four (eight when Hyperthreading is disabled) programmable=
- counters available for other events.",
--        "EventCode": "0x00",
-         "Counter": "Fixed counter 1",
-         "UMask": "0x2",
-         "EventName": "CPU_CLK_UNHALTED.THREAD",
-@@ -20,7 +18,6 @@
-         "CounterHTOff": "Fixed counter 1"
-     },
-     {
--        "EventCode": "0x00",
-         "Counter": "Fixed counter 1",
-         "UMask": "0x2",
-         "AnyThread": "1",
-@@ -31,7 +28,6 @@
-     },
-     {
-         "PublicDescription": "This event counts the number of reference cy=
-cles when the core is not in a halt state. The core enters the halt state w=
-hen it is running the HLT instruction or the MWAIT instruction. This event =
-is not affected by core frequency changes (for example, P states, TM2 trans=
-itions) but has the same incrementing frequency as the time stamp counter. =
-This event can approximate elapsed time while the core was not in a halt st=
-ate. This event has a constant ratio with the CPU_CLK_UNHALTED.REF_XCLK eve=
-nt. It is counted on a dedicated fixed counter, leaving the four (eight whe=
-n Hyperthreading is disabled) programmable counters available for other eve=
-nts. \nNote: On all current platforms this event stops counting during 'thr=
-ottling (TM)' states duty off periods the processor is 'halted'.  This even=
-t is clocked by base clock (100 Mhz) on Sandy Bridge. The counter update is=
- done at a lower clock rate then the core clock the overflow status bit for=
- this counter may appear 'sticky'.  After the counter has overflowed and so=
-ftware clears the overflow status bit and resets the counter to less than M=
-AX. The reset value to the counter is not clocked immediately so the overfl=
-ow status bit will flip 'high (1)' and generate another PMI (if enabled) af=
-ter which the reset value gets clocked into the counter. Therefore, softwar=
-e will get the interrupt, read the overflow status bit '1 for bit 34 while =
-the counter value is less than MAX. Software should ignore this case.",
--        "EventCode": "0x00",
-         "Counter": "Fixed counter 2",
-         "UMask": "0x3",
-         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
-@@ -317,7 +313,7 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts stalls occurred due to cha=
-nging prefix length (66, 67 or REX.W when they change the length of the dec=
-oded instruction). Occurrences counting is proportional to the number of pr=
-efixes in a 16B-line. This may result in the following penalties: three-cyc=
-le penalty for each LCP in a 16-byte chunk.",
-+        "PublicDescription": "This event counts stalls occured due to chan=
-ging prefix length (66, 67 or REX.W when they change the length of the deco=
-ded instruction). Occurrences counting is proportional to the number of pre=
-fixes in a 16B-line. This may result in the following penalties: three-cycl=
-e penalty for each LCP in a 16-byte chunk.",
-         "EventCode": "0x87",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-@@ -786,8 +782,8 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts resource-related stall cyc=
-les. Reasons for stalls can be as follows:\n - *any* u-arch structure got f=
-ull (LB, SB, RS, ROB, BOB, LM, Physical Register Reclaim Table (PRRT), or P=
-hysical History Table (PHT) slots)\n - *any* u-arch structure got empty (li=
-ke INT/SIMD FreeLists)\n - FPU control word (FPCW), MXCSR\nand others. This=
- counts cycles that the pipeline backend blocked uop delivery from the fron=
-t end.",
--        "EventCode": "0xA2",
-+        "PublicDescription": "This event counts resource-related stall cyc=
-les.",
-+        "EventCode": "0xa2",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "RESOURCE_STALLS.ANY",
-@@ -973,6 +969,7 @@
-         "CounterHTOff": "2"
-     },
-     {
-+        "PublicDescription": "Number of Uops delivered by the LSD.",
-         "EventCode": "0xA8",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-@@ -1147,7 +1144,8 @@
-         "CounterHTOff": "1"
-     },
-     {
--        "PublicDescription": "This event counts FP operations retired. For=
- X87 FP operations that have no exceptions counting also includes flows tha=
-t have several X87, or flows that use X87 uops in the exception handling.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts FP operations retired. For X87 FP operations th=
-at have no exceptions counting also includes flows that have several X87, o=
-r flows that use X87 uops in the exception handling.",
-         "EventCode": "0xC0",
-         "Counter": "0,1,2,3",
-         "UMask": "0x2",
-@@ -1157,12 +1155,12 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-+        "PEBS": "1",
-         "EventCode": "0xC1",
-         "Counter": "0,1,2,3",
-         "UMask": "0x40",
-         "EventName": "OTHER_ASSISTS.ANY_WB_ASSIST",
-         "SampleAfterValue": "100003",
--        "BriefDescription": "Number of times any microcode assist is invok=
-ed by HW upon uop writeback.",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-@@ -1178,26 +1176,28 @@
-         "Data_LA": "1"
-     },
-     {
--        "PublicDescription": "This event counts cycles without actually re=
-tired uops.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts cycles without actually retired uops.",
-         "EventCode": "0xC2",
-         "Invert": "1",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "UOPS_RETIRED.STALL_CYCLES",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Cycles without actually retired uops.",
-+        "BriefDescription": "Cycles no executable uops retired (Precise Ev=
-ent)",
-         "CounterMask": "1",
-         "CounterHTOff": "0,1,2,3"
-     },
-     {
--        "PublicDescription": "Number of cycles using always true condition=
- (uops_ret < 16) applied to non PEBS uops retired event.",
-+        "PEBS": "1",
-+        "PublicDescription": "Number of cycles using always true condition=
- (uops_ret < 16) applied to  PEBS uops retired event.",
-         "EventCode": "0xC2",
-         "Invert": "1",
-         "Counter": "0,1,2,3",
-         "UMask": "0x1",
-         "EventName": "UOPS_RETIRED.TOTAL_CYCLES",
-         "SampleAfterValue": "2000003",
--        "BriefDescription": "Cycles with less than 10 actually retired uop=
-s.",
-+        "BriefDescription": "Number of cycles using always true condition =
-applied to  PEBS uops retired event.",
-         "CounterMask": "10",
-         "CounterHTOff": "0,1,2,3"
-     },
-@@ -1320,13 +1320,14 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts not taken branch instructi=
-ons retired.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts not taken branch instructions retired.",
-         "EventCode": "0xC4",
-         "Counter": "0,1,2,3",
-         "UMask": "0x10",
-         "EventName": "BR_INST_RETIRED.NOT_TAKEN",
-         "SampleAfterValue": "400009",
--        "BriefDescription": "Not taken branch instructions retired.",
-+        "BriefDescription": "Counts all not taken macro branch instruction=
-s retired. (Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
-@@ -1341,14 +1342,15 @@
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
--        "PublicDescription": "This event counts far branch instructions re=
-tired.",
-+        "PEBS": "1",
-+        "PublicDescription": "This is a precise version (that is, uses PEB=
-S) of the event that counts far branch instructions retired.",
-         "EventCode": "0xC4",
-         "Counter": "0,1,2,3",
-         "UMask": "0x40",
-         "Errata": "BDW98",
-         "EventName": "BR_INST_RETIRED.FAR_BRANCH",
-         "SampleAfterValue": "100007",
--        "BriefDescription": "Far branch instructions retired.",
-+        "BriefDescription": "Counts the number of far branch instructions =
-retired.(Precise Event)",
-         "CounterHTOff": "0,1,2,3,4,5,6,7"
-     },
-     {
---=20
+diff --git a/tools/lib/traceevent/event-parse-api.c b/tools/lib/traceevent/event-parse-api.c
+index f7184575f0d9..988587840c80 100644
+--- a/tools/lib/traceevent/event-parse-api.c
++++ b/tools/lib/traceevent/event-parse-api.c
+@@ -92,11 +92,11 @@ bool tep_test_flag(struct tep_handle *tep, enum tep_flag flag)
+ 	return false;
+ }
+ 
+-unsigned short tep_data2host2(struct tep_handle *pevent, unsigned short data)
++unsigned short tep_data2host2(struct tep_handle *tep, unsigned short data)
+ {
+ 	unsigned short swap;
+ 
+-	if (!pevent || pevent->host_bigendian == pevent->file_bigendian)
++	if (!tep || tep->host_bigendian == tep->file_bigendian)
+ 		return data;
+ 
+ 	swap = ((data & 0xffULL) << 8) |
+@@ -105,11 +105,11 @@ unsigned short tep_data2host2(struct tep_handle *pevent, unsigned short data)
+ 	return swap;
+ }
+ 
+-unsigned int tep_data2host4(struct tep_handle *pevent, unsigned int data)
++unsigned int tep_data2host4(struct tep_handle *tep, unsigned int data)
+ {
+ 	unsigned int swap;
+ 
+-	if (!pevent || pevent->host_bigendian == pevent->file_bigendian)
++	if (!tep || tep->host_bigendian == tep->file_bigendian)
+ 		return data;
+ 
+ 	swap = ((data & 0xffULL) << 24) |
+@@ -121,11 +121,11 @@ unsigned int tep_data2host4(struct tep_handle *pevent, unsigned int data)
+ }
+ 
+ unsigned long long
+-tep_data2host8(struct tep_handle *pevent, unsigned long long data)
++tep_data2host8(struct tep_handle *tep, unsigned long long data)
+ {
+ 	unsigned long long swap;
+ 
+-	if (!pevent || pevent->host_bigendian == pevent->file_bigendian)
++	if (!tep || tep->host_bigendian == tep->file_bigendian)
+ 		return data;
+ 
+ 	swap = ((data & 0xffULL) << 56) |
+@@ -142,15 +142,15 @@ tep_data2host8(struct tep_handle *pevent, unsigned long long data)
+ 
+ /**
+  * tep_get_header_page_size - get size of the header page
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This returns size of the header page
+- * If @pevent is NULL, 0 is returned.
++ * If @tep is NULL, 0 is returned.
+  */
+-int tep_get_header_page_size(struct tep_handle *pevent)
++int tep_get_header_page_size(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->header_page_size_size;
++	if (tep)
++		return tep->header_page_size_size;
+ 	return 0;
+ }
+ 
+@@ -170,163 +170,163 @@ int tep_get_header_timestamp_size(struct tep_handle *tep)
+ 
+ /**
+  * tep_get_cpus - get the number of CPUs
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This returns the number of CPUs
+- * If @pevent is NULL, 0 is returned.
++ * If @tep is NULL, 0 is returned.
+  */
+-int tep_get_cpus(struct tep_handle *pevent)
++int tep_get_cpus(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->cpus;
++	if (tep)
++		return tep->cpus;
+ 	return 0;
+ }
+ 
+ /**
+  * tep_set_cpus - set the number of CPUs
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This sets the number of CPUs
+  */
+-void tep_set_cpus(struct tep_handle *pevent, int cpus)
++void tep_set_cpus(struct tep_handle *tep, int cpus)
+ {
+-	if (pevent)
+-		pevent->cpus = cpus;
++	if (tep)
++		tep->cpus = cpus;
+ }
+ 
+ /**
+  * tep_get_long_size - get the size of a long integer on the traced machine
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This returns the size of a long integer on the traced machine
+- * If @pevent is NULL, 0 is returned.
++ * If @tep is NULL, 0 is returned.
+  */
+-int tep_get_long_size(struct tep_handle *pevent)
++int tep_get_long_size(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->long_size;
++	if (tep)
++		return tep->long_size;
+ 	return 0;
+ }
+ 
+ /**
+  * tep_set_long_size - set the size of a long integer on the traced machine
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  * @size: size, in bytes, of a long integer
+  *
+  * This sets the size of a long integer on the traced machine
+  */
+-void tep_set_long_size(struct tep_handle *pevent, int long_size)
++void tep_set_long_size(struct tep_handle *tep, int long_size)
+ {
+-	if (pevent)
+-		pevent->long_size = long_size;
++	if (tep)
++		tep->long_size = long_size;
+ }
+ 
+ /**
+  * tep_get_page_size - get the size of a memory page on the traced machine
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This returns the size of a memory page on the traced machine
+- * If @pevent is NULL, 0 is returned.
++ * If @tep is NULL, 0 is returned.
+  */
+-int tep_get_page_size(struct tep_handle *pevent)
++int tep_get_page_size(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->page_size;
++	if (tep)
++		return tep->page_size;
+ 	return 0;
+ }
+ 
+ /**
+  * tep_set_page_size - set the size of a memory page on the traced machine
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  * @_page_size: size of a memory page, in bytes
+  *
+  * This sets the size of a memory page on the traced machine
+  */
+-void tep_set_page_size(struct tep_handle *pevent, int _page_size)
++void tep_set_page_size(struct tep_handle *tep, int _page_size)
+ {
+-	if (pevent)
+-		pevent->page_size = _page_size;
++	if (tep)
++		tep->page_size = _page_size;
+ }
+ 
+ /**
+  * tep_is_file_bigendian - return the endian of the file
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This returns true if the file is in big endian order
+- * If @pevent is NULL, false is returned.
++ * If @tep is NULL, false is returned.
+  */
+-bool tep_is_file_bigendian(struct tep_handle *pevent)
++bool tep_is_file_bigendian(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->file_bigendian == TEP_BIG_ENDIAN;
++	if (tep)
++		return (tep->file_bigendian == TEP_BIG_ENDIAN);
+ 	return false;
+ }
+ 
+ /**
+  * tep_set_file_bigendian - set if the file is in big endian order
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  * @endian: non zero, if the file is in big endian order
+  *
+  * This sets if the file is in big endian order
+  */
+-void tep_set_file_bigendian(struct tep_handle *pevent, enum tep_endian endian)
++void tep_set_file_bigendian(struct tep_handle *tep, enum tep_endian endian)
+ {
+-	if (pevent)
+-		pevent->file_bigendian = endian;
++	if (tep)
++		tep->file_bigendian = endian;
+ }
+ 
+ /**
+  * tep_is_local_bigendian - return the endian of the saved local machine
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+- * This returns true if the saved local machine in @pevent is big endian.
+- * If @pevent is NULL, false is returned.
++ * This returns true if the saved local machine in @tep is big endian.
++ * If @tep is NULL, false is returned.
+  */
+-bool tep_is_local_bigendian(struct tep_handle *pevent)
++bool tep_is_local_bigendian(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->host_bigendian == TEP_BIG_ENDIAN;
++	if (tep)
++		return (tep->host_bigendian == TEP_BIG_ENDIAN);
+ 	return 0;
+ }
+ 
+ /**
+  * tep_set_local_bigendian - set the stored local machine endian order
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  * @endian: non zero, if the local host has big endian order
+  *
+  * This sets the endian order for the local machine.
+  */
+-void tep_set_local_bigendian(struct tep_handle *pevent, enum tep_endian endian)
++void tep_set_local_bigendian(struct tep_handle *tep, enum tep_endian endian)
+ {
+-	if (pevent)
+-		pevent->host_bigendian = endian;
++	if (tep)
++		tep->host_bigendian = endian;
+ }
+ 
+ /**
+  * tep_is_latency_format - get if the latency output format is configured
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  *
+  * This returns true if the latency output format is configured
+- * If @pevent is NULL, false is returned.
++ * If @tep is NULL, false is returned.
+  */
+-bool tep_is_latency_format(struct tep_handle *pevent)
++bool tep_is_latency_format(struct tep_handle *tep)
+ {
+-	if (pevent)
+-		return pevent->latency_format;
++	if (tep)
++		return (tep->latency_format);
+ 	return false;
+ }
+ 
+ /**
+  * tep_set_latency_format - set the latency output format
+- * @pevent: a handle to the tep_handle
++ * @tep: a handle to the tep_handle
+  * @lat: non zero for latency output format
+  *
+  * This sets the latency output format
+   */
+-void tep_set_latency_format(struct tep_handle *pevent, int lat)
++void tep_set_latency_format(struct tep_handle *tep, int lat)
+ {
+-	if (pevent)
+-		pevent->latency_format = lat;
++	if (tep)
++		tep->latency_format = lat;
+ }
+ 
+ /**
+diff --git a/tools/lib/traceevent/event-parse-local.h b/tools/lib/traceevent/event-parse-local.h
+index 35833ee32d6c..09aa142f7fdd 100644
+--- a/tools/lib/traceevent/event-parse-local.h
++++ b/tools/lib/traceevent/event-parse-local.h
+@@ -92,8 +92,8 @@ struct tep_handle {
+ void tep_free_event(struct tep_event *event);
+ void tep_free_format_field(struct tep_format_field *field);
+ 
+-unsigned short tep_data2host2(struct tep_handle *pevent, unsigned short data);
+-unsigned int tep_data2host4(struct tep_handle *pevent, unsigned int data);
+-unsigned long long tep_data2host8(struct tep_handle *pevent, unsigned long long data);
++unsigned short tep_data2host2(struct tep_handle *tep, unsigned short data);
++unsigned int tep_data2host4(struct tep_handle *tep, unsigned int data);
++unsigned long long tep_data2host8(struct tep_handle *tep, unsigned long long data);
+ 
+ #endif /* _PARSE_EVENTS_INT_H */
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 8836702122be..ceefa9b3d726 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -200,13 +200,13 @@ static const char *find_cmdline(struct tep_handle *pevent, int pid)
+ 
+ /**
+  * tep_is_pid_registered - return if a pid has a cmdline registered
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @pid: The pid to check if it has a cmdline registered with.
+  *
+  * Returns true if the pid has a cmdline mapped to it
+  * false otherwise.
+  */
+-bool tep_is_pid_registered(struct tep_handle *pevent, int pid)
++bool tep_is_pid_registered(struct tep_handle *tep, int pid)
+ {
+ 	const struct tep_cmdline *comm;
+ 	struct tep_cmdline key;
+@@ -214,13 +214,13 @@ bool tep_is_pid_registered(struct tep_handle *pevent, int pid)
+ 	if (!pid)
+ 		return true;
+ 
+-	if (!pevent->cmdlines && cmdline_init(pevent))
++	if (!tep->cmdlines && cmdline_init(tep))
+ 		return false;
+ 
+ 	key.pid = pid;
+ 
+-	comm = bsearch(&key, pevent->cmdlines, pevent->cmdline_count,
+-		       sizeof(*pevent->cmdlines), cmdline_cmp);
++	comm = bsearch(&key, tep->cmdlines, tep->cmdline_count,
++		       sizeof(*tep->cmdlines), cmdline_cmp);
+ 
+ 	if (comm)
+ 		return true;
+@@ -288,13 +288,13 @@ static int add_new_comm(struct tep_handle *pevent,
+ 	return 0;
+ }
+ 
+-static int _tep_register_comm(struct tep_handle *pevent,
++static int _tep_register_comm(struct tep_handle *tep,
+ 			      const char *comm, int pid, bool override)
+ {
+ 	struct cmdline_list *item;
+ 
+-	if (pevent->cmdlines)
+-		return add_new_comm(pevent, comm, pid, override);
++	if (tep->cmdlines)
++		return add_new_comm(tep, comm, pid, override);
+ 
+ 	item = malloc(sizeof(*item));
+ 	if (!item)
+@@ -309,17 +309,17 @@ static int _tep_register_comm(struct tep_handle *pevent,
+ 		return -1;
+ 	}
+ 	item->pid = pid;
+-	item->next = pevent->cmdlist;
++	item->next = tep->cmdlist;
+ 
+-	pevent->cmdlist = item;
+-	pevent->cmdline_count++;
++	tep->cmdlist = item;
++	tep->cmdline_count++;
+ 
+ 	return 0;
+ }
+ 
+ /**
+  * tep_register_comm - register a pid / comm mapping
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @comm: the command line to register
+  * @pid: the pid to map the command line to
+  *
+@@ -327,14 +327,14 @@ static int _tep_register_comm(struct tep_handle *pevent,
+  * a given pid. The comm is duplicated. If a command with the same pid
+  * already exist, -1 is returned and errno is set to EEXIST
+  */
+-int tep_register_comm(struct tep_handle *pevent, const char *comm, int pid)
++int tep_register_comm(struct tep_handle *tep, const char *comm, int pid)
+ {
+-	return _tep_register_comm(pevent, comm, pid, false);
++	return _tep_register_comm(tep, comm, pid, false);
+ }
+ 
+ /**
+  * tep_override_comm - register a pid / comm mapping
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @comm: the command line to register
+  * @pid: the pid to map the command line to
+  *
+@@ -342,19 +342,19 @@ int tep_register_comm(struct tep_handle *pevent, const char *comm, int pid)
+  * a given pid. The comm is duplicated. If a command with the same pid
+  * already exist, the command string is udapted with the new one
+  */
+-int tep_override_comm(struct tep_handle *pevent, const char *comm, int pid)
++int tep_override_comm(struct tep_handle *tep, const char *comm, int pid)
+ {
+-	if (!pevent->cmdlines && cmdline_init(pevent)) {
++	if (!tep->cmdlines && cmdline_init(tep)) {
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
+-	return _tep_register_comm(pevent, comm, pid, true);
++	return _tep_register_comm(tep, comm, pid, true);
+ }
+ 
+-int tep_register_trace_clock(struct tep_handle *pevent, const char *trace_clock)
++int tep_register_trace_clock(struct tep_handle *tep, const char *trace_clock)
+ {
+-	pevent->trace_clock = strdup(trace_clock);
+-	if (!pevent->trace_clock) {
++	tep->trace_clock = strdup(trace_clock);
++	if (!tep->trace_clock) {
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
+@@ -472,15 +472,14 @@ struct func_resolver {
+ 
+ /**
+  * tep_set_function_resolver - set an alternative function resolver
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @resolver: function to be used
+  * @priv: resolver function private state.
+  *
+  * Some tools may have already a way to resolve kernel functions, allow them to
+- * keep using it instead of duplicating all the entries inside
+- * pevent->funclist.
++ * keep using it instead of duplicating all the entries inside tep->funclist.
+  */
+-int tep_set_function_resolver(struct tep_handle *pevent,
++int tep_set_function_resolver(struct tep_handle *tep,
+ 			      tep_func_resolver_t *func, void *priv)
+ {
+ 	struct func_resolver *resolver = malloc(sizeof(*resolver));
+@@ -491,23 +490,23 @@ int tep_set_function_resolver(struct tep_handle *pevent,
+ 	resolver->func = func;
+ 	resolver->priv = priv;
+ 
+-	free(pevent->func_resolver);
+-	pevent->func_resolver = resolver;
++	free(tep->func_resolver);
++	tep->func_resolver = resolver;
+ 
+ 	return 0;
+ }
+ 
+ /**
+  * tep_reset_function_resolver - reset alternative function resolver
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  *
+  * Stop using whatever alternative resolver was set, use the default
+  * one instead.
+  */
+-void tep_reset_function_resolver(struct tep_handle *pevent)
++void tep_reset_function_resolver(struct tep_handle *tep)
+ {
+-	free(pevent->func_resolver);
+-	pevent->func_resolver = NULL;
++	free(tep->func_resolver);
++	tep->func_resolver = NULL;
+ }
+ 
+ static struct func_map *
+@@ -531,18 +530,18 @@ find_func(struct tep_handle *pevent, unsigned long long addr)
+ 
+ /**
+  * tep_find_function - find a function by a given address
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @addr: the address to find the function with
+  *
+  * Returns a pointer to the function stored that has the given
+  * address. Note, the address does not have to be exact, it
+  * will select the function that would contain the address.
+  */
+-const char *tep_find_function(struct tep_handle *pevent, unsigned long long addr)
++const char *tep_find_function(struct tep_handle *tep, unsigned long long addr)
+ {
+ 	struct func_map *map;
+ 
+-	map = find_func(pevent, addr);
++	map = find_func(tep, addr);
+ 	if (!map)
+ 		return NULL;
+ 
+@@ -551,7 +550,7 @@ const char *tep_find_function(struct tep_handle *pevent, unsigned long long addr
+ 
+ /**
+  * tep_find_function_address - find a function address by a given address
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @addr: the address to find the function with
+  *
+  * Returns the address the function starts at. This can be used in
+@@ -559,11 +558,11 @@ const char *tep_find_function(struct tep_handle *pevent, unsigned long long addr
+  * name and the function offset.
+  */
+ unsigned long long
+-tep_find_function_address(struct tep_handle *pevent, unsigned long long addr)
++tep_find_function_address(struct tep_handle *tep, unsigned long long addr)
+ {
+ 	struct func_map *map;
+ 
+-	map = find_func(pevent, addr);
++	map = find_func(tep, addr);
+ 	if (!map)
+ 		return 0;
+ 
+@@ -572,7 +571,7 @@ tep_find_function_address(struct tep_handle *pevent, unsigned long long addr)
+ 
+ /**
+  * tep_register_function - register a function with a given address
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @function: the function name to register
+  * @addr: the address the function starts at
+  * @mod: the kernel module the function may be in (NULL for none)
+@@ -580,7 +579,7 @@ tep_find_function_address(struct tep_handle *pevent, unsigned long long addr)
+  * This registers a function name with an address and module.
+  * The @func passed in is duplicated.
+  */
+-int tep_register_function(struct tep_handle *pevent, char *func,
++int tep_register_function(struct tep_handle *tep, char *func,
+ 			  unsigned long long addr, char *mod)
+ {
+ 	struct func_list *item = malloc(sizeof(*item));
+@@ -588,7 +587,7 @@ int tep_register_function(struct tep_handle *pevent, char *func,
+ 	if (!item)
+ 		return -1;
+ 
+-	item->next = pevent->funclist;
++	item->next = tep->funclist;
+ 	item->func = strdup(func);
+ 	if (!item->func)
+ 		goto out_free;
+@@ -601,8 +600,8 @@ int tep_register_function(struct tep_handle *pevent, char *func,
+ 		item->mod = NULL;
+ 	item->addr = addr;
+ 
+-	pevent->funclist = item;
+-	pevent->func_count++;
++	tep->funclist = item;
++	tep->func_count++;
+ 
+ 	return 0;
+ 
+@@ -617,23 +616,23 @@ int tep_register_function(struct tep_handle *pevent, char *func,
+ 
+ /**
+  * tep_print_funcs - print out the stored functions
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  *
+  * This prints out the stored functions.
+  */
+-void tep_print_funcs(struct tep_handle *pevent)
++void tep_print_funcs(struct tep_handle *tep)
+ {
+ 	int i;
+ 
+-	if (!pevent->func_map)
+-		func_map_init(pevent);
++	if (!tep->func_map)
++		func_map_init(tep);
+ 
+-	for (i = 0; i < (int)pevent->func_count; i++) {
++	for (i = 0; i < (int)tep->func_count; i++) {
+ 		printf("%016llx %s",
+-		       pevent->func_map[i].addr,
+-		       pevent->func_map[i].func);
+-		if (pevent->func_map[i].mod)
+-			printf(" [%s]\n", pevent->func_map[i].mod);
++		       tep->func_map[i].addr,
++		       tep->func_map[i].func);
++		if (tep->func_map[i].mod)
++			printf(" [%s]\n", tep->func_map[i].mod);
+ 		else
+ 			printf("\n");
+ 	}
+@@ -713,14 +712,14 @@ find_printk(struct tep_handle *pevent, unsigned long long addr)
+ 
+ /**
+  * tep_register_print_string - register a string by its address
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @fmt: the string format to register
+  * @addr: the address the string was located at
+  *
+  * This registers a string by the address it was stored in the kernel.
+  * The @fmt passed in is duplicated.
+  */
+-int tep_register_print_string(struct tep_handle *pevent, const char *fmt,
++int tep_register_print_string(struct tep_handle *tep, const char *fmt,
+ 			      unsigned long long addr)
+ {
+ 	struct printk_list *item = malloc(sizeof(*item));
+@@ -729,7 +728,7 @@ int tep_register_print_string(struct tep_handle *pevent, const char *fmt,
+ 	if (!item)
+ 		return -1;
+ 
+-	item->next = pevent->printklist;
++	item->next = tep->printklist;
+ 	item->addr = addr;
+ 
+ 	/* Strip off quotes and '\n' from the end */
+@@ -747,8 +746,8 @@ int tep_register_print_string(struct tep_handle *pevent, const char *fmt,
+ 	if (strcmp(p, "\\n") == 0)
+ 		*p = 0;
+ 
+-	pevent->printklist = item;
+-	pevent->printk_count++;
++	tep->printklist = item;
++	tep->printk_count++;
+ 
+ 	return 0;
+ 
+@@ -760,21 +759,21 @@ int tep_register_print_string(struct tep_handle *pevent, const char *fmt,
+ 
+ /**
+  * tep_print_printk - print out the stored strings
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  *
+  * This prints the string formats that were stored.
+  */
+-void tep_print_printk(struct tep_handle *pevent)
++void tep_print_printk(struct tep_handle *tep)
+ {
+ 	int i;
+ 
+-	if (!pevent->printk_map)
+-		printk_map_init(pevent);
++	if (!tep->printk_map)
++		printk_map_init(tep);
+ 
+-	for (i = 0; i < (int)pevent->printk_count; i++) {
++	for (i = 0; i < (int)tep->printk_count; i++) {
+ 		printf("%016llx %s\n",
+-		       pevent->printk_map[i].addr,
+-		       pevent->printk_map[i].printk);
++		       tep->printk_map[i].addr,
++		       tep->printk_map[i].printk);
+ 	}
+ }
+ 
+@@ -1184,7 +1183,7 @@ static enum tep_event_type read_token(char **tok)
+ }
+ 
+ /**
+- * tep_read_token - access to utilities to use the pevent parser
++ * tep_read_token - access to utilities to use the tep parser
+  * @tok: The token to return
+  *
+  * This will parse tokens from the string given by
+@@ -3357,14 +3356,14 @@ tep_find_any_field(struct tep_event *event, const char *name)
+ 
+ /**
+  * tep_read_number - read a number from data
+- * @pevent: handle for the pevent
++ * @tep: a handle to the trace event parser context
+  * @ptr: the raw data
+  * @size: the size of the data that holds the number
+  *
+  * Returns the number (converted to host) from the
+  * raw data.
+  */
+-unsigned long long tep_read_number(struct tep_handle *pevent,
++unsigned long long tep_read_number(struct tep_handle *tep,
+ 				   const void *ptr, int size)
+ {
+ 	unsigned long long val;
+@@ -3373,12 +3372,12 @@ unsigned long long tep_read_number(struct tep_handle *pevent,
+ 	case 1:
+ 		return *(unsigned char *)ptr;
+ 	case 2:
+-		return tep_data2host2(pevent, *(unsigned short *)ptr);
++		return tep_data2host2(tep, *(unsigned short *)ptr);
+ 	case 4:
+-		return tep_data2host4(pevent, *(unsigned int *)ptr);
++		return tep_data2host4(tep, *(unsigned int *)ptr);
+ 	case 8:
+ 		memcpy(&val, (ptr), sizeof(unsigned long long));
+-		return tep_data2host8(pevent, val);
++		return tep_data2host8(tep, val);
+ 	default:
+ 		/* BUG! */
+ 		return 0;
+@@ -3499,28 +3498,28 @@ static int events_id_cmp(const void *a, const void *b);
+ 
+ /**
+  * tep_find_event - find an event by given id
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @id: the id of the event
+  *
+  * Returns an event that has a given @id.
+  */
+-struct tep_event *tep_find_event(struct tep_handle *pevent, int id)
++struct tep_event *tep_find_event(struct tep_handle *tep, int id)
+ {
+ 	struct tep_event **eventptr;
+ 	struct tep_event key;
+ 	struct tep_event *pkey = &key;
+ 
+ 	/* Check cache first */
+-	if (pevent->last_event && pevent->last_event->id == id)
+-		return pevent->last_event;
++	if (tep->last_event && tep->last_event->id == id)
++		return tep->last_event;
+ 
+ 	key.id = id;
+ 
+-	eventptr = bsearch(&pkey, pevent->events, pevent->nr_events,
+-			   sizeof(*pevent->events), events_id_cmp);
++	eventptr = bsearch(&pkey, tep->events, tep->nr_events,
++			   sizeof(*tep->events), events_id_cmp);
+ 
+ 	if (eventptr) {
+-		pevent->last_event = *eventptr;
++		tep->last_event = *eventptr;
+ 		return *eventptr;
+ 	}
+ 
+@@ -3529,7 +3528,7 @@ struct tep_event *tep_find_event(struct tep_handle *pevent, int id)
+ 
+ /**
+  * tep_find_event_by_name - find an event by given name
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @sys: the system name to search for
+  * @name: the name of the event to search for
+  *
+@@ -3537,19 +3536,19 @@ struct tep_event *tep_find_event(struct tep_handle *pevent, int id)
+  * @sys. If @sys is NULL the first event with @name is returned.
+  */
+ struct tep_event *
+-tep_find_event_by_name(struct tep_handle *pevent,
++tep_find_event_by_name(struct tep_handle *tep,
+ 		       const char *sys, const char *name)
+ {
+ 	struct tep_event *event = NULL;
+ 	int i;
+ 
+-	if (pevent->last_event &&
+-	    strcmp(pevent->last_event->name, name) == 0 &&
+-	    (!sys || strcmp(pevent->last_event->system, sys) == 0))
+-		return pevent->last_event;
++	if (tep->last_event &&
++	    strcmp(tep->last_event->name, name) == 0 &&
++	    (!sys || strcmp(tep->last_event->system, sys) == 0))
++		return tep->last_event;
+ 
+-	for (i = 0; i < pevent->nr_events; i++) {
+-		event = pevent->events[i];
++	for (i = 0; i < tep->nr_events; i++) {
++		event = tep->events[i];
+ 		if (strcmp(event->name, name) == 0) {
+ 			if (!sys)
+ 				break;
+@@ -3557,10 +3556,10 @@ tep_find_event_by_name(struct tep_handle *pevent,
+ 				break;
+ 		}
+ 	}
+-	if (i == pevent->nr_events)
++	if (i == tep->nr_events)
+ 		event = NULL;
+ 
+-	pevent->last_event = event;
++	tep->last_event = event;
+ 	return event;
+ }
+ 
+@@ -5173,7 +5172,7 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
+ 
+ /**
+  * tep_data_latency_format - parse the data for the latency format
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @s: the trace_seq to write to
+  * @record: the record to read from
+  *
+@@ -5181,7 +5180,7 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
+  * need rescheduling, in hard/soft interrupt, preempt count
+  * and lock depth) and places it into the trace_seq.
+  */
+-void tep_data_latency_format(struct tep_handle *pevent,
++void tep_data_latency_format(struct tep_handle *tep,
+ 			     struct trace_seq *s, struct tep_record *record)
+ {
+ 	static int check_lock_depth = 1;
+@@ -5196,13 +5195,13 @@ void tep_data_latency_format(struct tep_handle *pevent,
+ 	int softirq;
+ 	void *data = record->data;
+ 
+-	lat_flags = parse_common_flags(pevent, data);
+-	pc = parse_common_pc(pevent, data);
++	lat_flags = parse_common_flags(tep, data);
++	pc = parse_common_pc(tep, data);
+ 	/* lock_depth may not always exist */
+ 	if (lock_depth_exists)
+-		lock_depth = parse_common_lock_depth(pevent, data);
++		lock_depth = parse_common_lock_depth(tep, data);
+ 	else if (check_lock_depth) {
+-		lock_depth = parse_common_lock_depth(pevent, data);
++		lock_depth = parse_common_lock_depth(tep, data);
+ 		if (lock_depth < 0)
+ 			check_lock_depth = 0;
+ 		else
+@@ -5211,9 +5210,9 @@ void tep_data_latency_format(struct tep_handle *pevent,
+ 
+ 	/* migrate_disable may not always exist */
+ 	if (migrate_disable_exists)
+-		migrate_disable = parse_common_migrate_disable(pevent, data);
++		migrate_disable = parse_common_migrate_disable(tep, data);
+ 	else if (check_migrate_disable) {
+-		migrate_disable = parse_common_migrate_disable(pevent, data);
++		migrate_disable = parse_common_migrate_disable(tep, data);
+ 		if (migrate_disable < 0)
+ 			check_migrate_disable = 0;
+ 		else
+@@ -5256,67 +5255,67 @@ void tep_data_latency_format(struct tep_handle *pevent,
+ 
+ /**
+  * tep_data_type - parse out the given event type
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @rec: the record to read from
+  *
+  * This returns the event id from the @rec.
+  */
+-int tep_data_type(struct tep_handle *pevent, struct tep_record *rec)
++int tep_data_type(struct tep_handle *tep, struct tep_record *rec)
+ {
+-	return trace_parse_common_type(pevent, rec->data);
++	return trace_parse_common_type(tep, rec->data);
+ }
+ 
+ /**
+  * tep_data_pid - parse the PID from record
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @rec: the record to parse
+  *
+  * This returns the PID from a record.
+  */
+-int tep_data_pid(struct tep_handle *pevent, struct tep_record *rec)
++int tep_data_pid(struct tep_handle *tep, struct tep_record *rec)
+ {
+-	return parse_common_pid(pevent, rec->data);
++	return parse_common_pid(tep, rec->data);
+ }
+ 
+ /**
+  * tep_data_preempt_count - parse the preempt count from the record
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @rec: the record to parse
+  *
+  * This returns the preempt count from a record.
+  */
+-int tep_data_preempt_count(struct tep_handle *pevent, struct tep_record *rec)
++int tep_data_preempt_count(struct tep_handle *tep, struct tep_record *rec)
+ {
+-	return parse_common_pc(pevent, rec->data);
++	return parse_common_pc(tep, rec->data);
+ }
+ 
+ /**
+  * tep_data_flags - parse the latency flags from the record
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @rec: the record to parse
+  *
+  * This returns the latency flags from a record.
+  *
+  *  Use trace_flag_type enum for the flags (see event-parse.h).
+  */
+-int tep_data_flags(struct tep_handle *pevent, struct tep_record *rec)
++int tep_data_flags(struct tep_handle *tep, struct tep_record *rec)
+ {
+-	return parse_common_flags(pevent, rec->data);
++	return parse_common_flags(tep, rec->data);
+ }
+ 
+ /**
+  * tep_data_comm_from_pid - return the command line from PID
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @pid: the PID of the task to search for
+  *
+  * This returns a pointer to the command line that has the given
+  * @pid.
+  */
+-const char *tep_data_comm_from_pid(struct tep_handle *pevent, int pid)
++const char *tep_data_comm_from_pid(struct tep_handle *tep, int pid)
+ {
+ 	const char *comm;
+ 
+-	comm = find_cmdline(pevent, pid);
++	comm = find_cmdline(tep, pid);
+ 	return comm;
+ }
+ 
+@@ -5338,7 +5337,7 @@ pid_from_cmdlist(struct tep_handle *pevent, const char *comm, struct tep_cmdline
+ 
+ /**
+  * tep_data_pid_from_comm - return the pid from a given comm
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @comm: the cmdline to find the pid from
+  * @next: the cmdline structure to find the next comm
+  *
+@@ -5349,7 +5348,7 @@ pid_from_cmdlist(struct tep_handle *pevent, const char *comm, struct tep_cmdline
+  * next pid.
+  * Also, it does a linear search, so it may be slow.
+  */
+-struct tep_cmdline *tep_data_pid_from_comm(struct tep_handle *pevent, const char *comm,
++struct tep_cmdline *tep_data_pid_from_comm(struct tep_handle *tep, const char *comm,
+ 					   struct tep_cmdline *next)
+ {
+ 	struct tep_cmdline *cmdline;
+@@ -5358,25 +5357,25 @@ struct tep_cmdline *tep_data_pid_from_comm(struct tep_handle *pevent, const char
+ 	 * If the cmdlines have not been converted yet, then use
+ 	 * the list.
+ 	 */
+-	if (!pevent->cmdlines)
+-		return pid_from_cmdlist(pevent, comm, next);
++	if (!tep->cmdlines)
++		return pid_from_cmdlist(tep, comm, next);
+ 
+ 	if (next) {
+ 		/*
+ 		 * The next pointer could have been still from
+ 		 * a previous call before cmdlines were created
+ 		 */
+-		if (next < pevent->cmdlines ||
+-		    next >= pevent->cmdlines + pevent->cmdline_count)
++		if (next < tep->cmdlines ||
++		    next >= tep->cmdlines + tep->cmdline_count)
+ 			next = NULL;
+ 		else
+ 			cmdline  = next++;
+ 	}
+ 
+ 	if (!next)
+-		cmdline = pevent->cmdlines;
++		cmdline = tep->cmdlines;
+ 
+-	while (cmdline < pevent->cmdlines + pevent->cmdline_count) {
++	while (cmdline < tep->cmdlines + tep->cmdline_count) {
+ 		if (strcmp(cmdline->comm, comm) == 0)
+ 			return cmdline;
+ 		cmdline++;
+@@ -5386,12 +5385,13 @@ struct tep_cmdline *tep_data_pid_from_comm(struct tep_handle *pevent, const char
+ 
+ /**
+  * tep_cmdline_pid - return the pid associated to a given cmdline
++ * @tep: a handle to the trace event parser context
+  * @cmdline: The cmdline structure to get the pid from
+  *
+  * Returns the pid for a give cmdline. If @cmdline is NULL, then
+  * -1 is returned.
+  */
+-int tep_cmdline_pid(struct tep_handle *pevent, struct tep_cmdline *cmdline)
++int tep_cmdline_pid(struct tep_handle *tep, struct tep_cmdline *cmdline)
+ {
+ 	struct cmdline_list *cmdlist = (struct cmdline_list *)cmdline;
+ 
+@@ -5402,9 +5402,9 @@ int tep_cmdline_pid(struct tep_handle *pevent, struct tep_cmdline *cmdline)
+ 	 * If cmdlines have not been created yet, or cmdline is
+ 	 * not part of the array, then treat it as a cmdlist instead.
+ 	 */
+-	if (!pevent->cmdlines ||
+-	    cmdline < pevent->cmdlines ||
+-	    cmdline >= pevent->cmdlines + pevent->cmdline_count)
++	if (!tep->cmdlines ||
++	    cmdline < tep->cmdlines ||
++	    cmdline >= tep->cmdlines + tep->cmdline_count)
+ 		return cmdlist->pid;
+ 
+ 	return cmdline->pid;
+@@ -5455,14 +5455,14 @@ static bool is_timestamp_in_us(char *trace_clock, bool use_trace_clock)
+ 
+ /**
+  * tep_find_event_by_record - return the event from a given record
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @record: The record to get the event from
+  *
+  * Returns the associated event for a given record, or NULL if non is
+  * is found.
+  */
+ struct tep_event *
+-tep_find_event_by_record(struct tep_handle *pevent, struct tep_record *record)
++tep_find_event_by_record(struct tep_handle *tep, struct tep_record *record)
+ {
+ 	int type;
+ 
+@@ -5471,21 +5471,21 @@ tep_find_event_by_record(struct tep_handle *pevent, struct tep_record *record)
+ 		return NULL;
+ 	}
+ 
+-	type = trace_parse_common_type(pevent, record->data);
++	type = trace_parse_common_type(tep, record->data);
+ 
+-	return tep_find_event(pevent, type);
++	return tep_find_event(tep, type);
+ }
+ 
+ /**
+  * tep_print_event_task - Write the event task comm, pid and CPU
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @s: the trace_seq to write to
+  * @event: the handle to the record's event
+  * @record: The record to get the event from
+  *
+  * Writes the tasks comm, pid and CPU to @s.
+  */
+-void tep_print_event_task(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event_task(struct tep_handle *tep, struct trace_seq *s,
+ 			  struct tep_event *event,
+ 			  struct tep_record *record)
+ {
+@@ -5493,27 +5493,26 @@ void tep_print_event_task(struct tep_handle *pevent, struct trace_seq *s,
+ 	const char *comm;
+ 	int pid;
+ 
+-	pid = parse_common_pid(pevent, data);
+-	comm = find_cmdline(pevent, pid);
++	pid = parse_common_pid(tep, data);
++	comm = find_cmdline(tep, pid);
+ 
+-	if (pevent->latency_format) {
+-		trace_seq_printf(s, "%8.8s-%-5d %3d",
+-		       comm, pid, record->cpu);
+-	} else
++	if (tep->latency_format)
++		trace_seq_printf(s, "%8.8s-%-5d %3d", comm, pid, record->cpu);
++	else
+ 		trace_seq_printf(s, "%16s-%-5d [%03d]", comm, pid, record->cpu);
+ }
+ 
+ /**
+  * tep_print_event_time - Write the event timestamp
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @s: the trace_seq to write to
+  * @event: the handle to the record's event
+  * @record: The record to get the event from
+- * @use_trace_clock: Set to parse according to the @pevent->trace_clock
++ * @use_trace_clock: Set to parse according to the @tep->trace_clock
+  *
+  * Writes the timestamp of the record into @s.
+  */
+-void tep_print_event_time(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event_time(struct tep_handle *tep, struct trace_seq *s,
+ 			  struct tep_event *event,
+ 			  struct tep_record *record,
+ 			  bool use_trace_clock)
+@@ -5524,19 +5523,18 @@ void tep_print_event_time(struct tep_handle *pevent, struct trace_seq *s,
+ 	int p;
+ 	bool use_usec_format;
+ 
+-	use_usec_format = is_timestamp_in_us(pevent->trace_clock,
+-							use_trace_clock);
++	use_usec_format = is_timestamp_in_us(tep->trace_clock, use_trace_clock);
+ 	if (use_usec_format) {
+ 		secs = record->ts / NSEC_PER_SEC;
+ 		nsecs = record->ts - secs * NSEC_PER_SEC;
+ 	}
+ 
+-	if (pevent->latency_format) {
+-		tep_data_latency_format(pevent, s, record);
++	if (tep->latency_format) {
++		tep_data_latency_format(tep, s, record);
+ 	}
+ 
+ 	if (use_usec_format) {
+-		if (pevent->flags & TEP_NSEC_OUTPUT) {
++		if (tep->flags & TEP_NSEC_OUTPUT) {
+ 			usecs = nsecs;
+ 			p = 9;
+ 		} else {
+@@ -5556,14 +5554,14 @@ void tep_print_event_time(struct tep_handle *pevent, struct trace_seq *s,
+ 
+ /**
+  * tep_print_event_data - Write the event data section
+- * @pevent: a handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @s: the trace_seq to write to
+  * @event: the handle to the record's event
+  * @record: The record to get the event from
+  *
+  * Writes the parsing of the record's data to @s.
+  */
+-void tep_print_event_data(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event_data(struct tep_handle *tep, struct trace_seq *s,
+ 			  struct tep_event *event,
+ 			  struct tep_record *record)
+ {
+@@ -5580,15 +5578,15 @@ void tep_print_event_data(struct tep_handle *pevent, struct trace_seq *s,
+ 	tep_event_info(s, event, record);
+ }
+ 
+-void tep_print_event(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event(struct tep_handle *tep, struct trace_seq *s,
+ 		     struct tep_record *record, bool use_trace_clock)
+ {
+ 	struct tep_event *event;
+ 
+-	event = tep_find_event_by_record(pevent, record);
++	event = tep_find_event_by_record(tep, record);
+ 	if (!event) {
+ 		int i;
+-		int type = trace_parse_common_type(pevent, record->data);
++		int type = trace_parse_common_type(tep, record->data);
+ 
+ 		do_warning("ug! no event found for type %d", type);
+ 		trace_seq_printf(s, "[UNKNOWN TYPE %d]", type);
+@@ -5598,9 +5596,9 @@ void tep_print_event(struct tep_handle *pevent, struct trace_seq *s,
+ 		return;
+ 	}
+ 
+-	tep_print_event_task(pevent, s, event, record);
+-	tep_print_event_time(pevent, s, event, record, use_trace_clock);
+-	tep_print_event_data(pevent, s, event, record);
++	tep_print_event_task(tep, s, event, record);
++	tep_print_event_time(tep, s, event, record, use_trace_clock);
++	tep_print_event_data(tep, s, event, record);
+ }
+ 
+ static int events_id_cmp(const void *a, const void *b)
+@@ -6017,7 +6015,7 @@ static void parse_header_field(const char *field,
+ 
+ /**
+  * tep_parse_header_page - parse the data stored in the header page
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @buf: the buffer storing the header page format string
+  * @size: the size of @buf
+  * @long_size: the long size to use if there is no header
+@@ -6027,7 +6025,7 @@ static void parse_header_field(const char *field,
+  *
+  * /sys/kernel/debug/tracing/events/header_page
+  */
+-int tep_parse_header_page(struct tep_handle *pevent, char *buf, unsigned long size,
++int tep_parse_header_page(struct tep_handle *tep, char *buf, unsigned long size,
+ 			  int long_size)
+ {
+ 	int ignore;
+@@ -6037,22 +6035,22 @@ int tep_parse_header_page(struct tep_handle *pevent, char *buf, unsigned long si
+ 		 * Old kernels did not have header page info.
+ 		 * Sorry but we just use what we find here in user space.
+ 		 */
+-		pevent->header_page_ts_size = sizeof(long long);
+-		pevent->header_page_size_size = long_size;
+-		pevent->header_page_data_offset = sizeof(long long) + long_size;
+-		pevent->old_format = 1;
++		tep->header_page_ts_size = sizeof(long long);
++		tep->header_page_size_size = long_size;
++		tep->header_page_data_offset = sizeof(long long) + long_size;
++		tep->old_format = 1;
+ 		return -1;
+ 	}
+ 	init_input_buf(buf, size);
+ 
+-	parse_header_field("timestamp", &pevent->header_page_ts_offset,
+-			   &pevent->header_page_ts_size, 1);
+-	parse_header_field("commit", &pevent->header_page_size_offset,
+-			   &pevent->header_page_size_size, 1);
+-	parse_header_field("overwrite", &pevent->header_page_overwrite,
++	parse_header_field("timestamp", &tep->header_page_ts_offset,
++			   &tep->header_page_ts_size, 1);
++	parse_header_field("commit", &tep->header_page_size_offset,
++			   &tep->header_page_size_size, 1);
++	parse_header_field("overwrite", &tep->header_page_overwrite,
+ 			   &ignore, 0);
+-	parse_header_field("data", &pevent->header_page_data_offset,
+-			   &pevent->header_page_data_size, 1);
++	parse_header_field("data", &tep->header_page_data_offset,
++			   &tep->header_page_data_size, 1);
+ 
+ 	return 0;
+ }
+@@ -6258,7 +6256,7 @@ __parse_event(struct tep_handle *pevent,
+ 
+ /**
+  * tep_parse_format - parse the event format
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @eventp: returned format
+  * @buf: the buffer storing the event format string
+  * @size: the size of @buf
+@@ -6271,17 +6269,17 @@ __parse_event(struct tep_handle *pevent,
+  *
+  * /sys/kernel/debug/tracing/events/.../.../format
+  */
+-enum tep_errno tep_parse_format(struct tep_handle *pevent,
++enum tep_errno tep_parse_format(struct tep_handle *tep,
+ 				struct tep_event **eventp,
+ 				const char *buf,
+ 				unsigned long size, const char *sys)
+ {
+-	return __parse_event(pevent, eventp, buf, size, sys);
++	return __parse_event(tep, eventp, buf, size, sys);
+ }
+ 
+ /**
+  * tep_parse_event - parse the event format
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @buf: the buffer storing the event format string
+  * @size: the size of @buf
+  * @sys: the system the event belongs to
+@@ -6293,11 +6291,11 @@ enum tep_errno tep_parse_format(struct tep_handle *pevent,
+  *
+  * /sys/kernel/debug/tracing/events/.../.../format
+  */
+-enum tep_errno tep_parse_event(struct tep_handle *pevent, const char *buf,
++enum tep_errno tep_parse_event(struct tep_handle *tep, const char *buf,
+ 			       unsigned long size, const char *sys)
+ {
+ 	struct tep_event *event = NULL;
+-	return __parse_event(pevent, &event, buf, size, sys);
++	return __parse_event(tep, &event, buf, size, sys);
+ }
+ 
+ int get_field_val(struct trace_seq *s, struct tep_format_field *field,
+@@ -6537,7 +6535,7 @@ static void free_func_handle(struct tep_function_handler *func)
+ 
+ /**
+  * tep_register_print_function - register a helper function
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @func: the function to process the helper function
+  * @ret_type: the return type of the helper function
+  * @name: the name of the helper function
+@@ -6550,7 +6548,7 @@ static void free_func_handle(struct tep_function_handler *func)
+  * The @parameters is a variable list of tep_func_arg_type enums that
+  * must end with TEP_FUNC_ARG_VOID.
+  */
+-int tep_register_print_function(struct tep_handle *pevent,
++int tep_register_print_function(struct tep_handle *tep,
+ 				tep_func_handler func,
+ 				enum tep_func_arg_type ret_type,
+ 				char *name, ...)
+@@ -6562,7 +6560,7 @@ int tep_register_print_function(struct tep_handle *pevent,
+ 	va_list ap;
+ 	int ret;
+ 
+-	func_handle = find_func_handler(pevent, name);
++	func_handle = find_func_handler(tep, name);
+ 	if (func_handle) {
+ 		/*
+ 		 * This is most like caused by the users own
+@@ -6570,7 +6568,7 @@ int tep_register_print_function(struct tep_handle *pevent,
+ 		 * system defaults.
+ 		 */
+ 		pr_stat("override of function helper '%s'", name);
+-		remove_func_handler(pevent, name);
++		remove_func_handler(tep, name);
+ 	}
+ 
+ 	func_handle = calloc(1, sizeof(*func_handle));
+@@ -6617,8 +6615,8 @@ int tep_register_print_function(struct tep_handle *pevent,
+ 	}
+ 	va_end(ap);
+ 
+-	func_handle->next = pevent->func_handlers;
+-	pevent->func_handlers = func_handle;
++	func_handle->next = tep->func_handlers;
++	tep->func_handlers = func_handle;
+ 
+ 	return 0;
+  out_free:
+@@ -6629,7 +6627,7 @@ int tep_register_print_function(struct tep_handle *pevent,
+ 
+ /**
+  * tep_unregister_print_function - unregister a helper function
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @func: the function to process the helper function
+  * @name: the name of the helper function
+  *
+@@ -6637,14 +6635,14 @@ int tep_register_print_function(struct tep_handle *pevent,
+  *
+  * Returns 0 if the handler was removed successully, -1 otherwise.
+  */
+-int tep_unregister_print_function(struct tep_handle *pevent,
++int tep_unregister_print_function(struct tep_handle *tep,
+ 				  tep_func_handler func, char *name)
+ {
+ 	struct tep_function_handler *func_handle;
+ 
+-	func_handle = find_func_handler(pevent, name);
++	func_handle = find_func_handler(tep, name);
+ 	if (func_handle && func_handle->func == func) {
+-		remove_func_handler(pevent, name);
++		remove_func_handler(tep, name);
+ 		return 0;
+ 	}
+ 	return -1;
+@@ -6675,7 +6673,7 @@ static struct tep_event *search_event(struct tep_handle *pevent, int id,
+ 
+ /**
+  * tep_register_event_handler - register a way to parse an event
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @id: the id of the event to register
+  * @sys_name: the system name the event belongs to
+  * @event_name: the name of the event
+@@ -6696,14 +6694,14 @@ static struct tep_event *search_event(struct tep_handle *pevent, int id,
+  *  negative TEP_ERRNO_... in case of an error
+  *
+  */
+-int tep_register_event_handler(struct tep_handle *pevent, int id,
++int tep_register_event_handler(struct tep_handle *tep, int id,
+ 			       const char *sys_name, const char *event_name,
+ 			       tep_event_handler_func func, void *context)
+ {
+ 	struct tep_event *event;
+ 	struct event_handler *handle;
+ 
+-	event = search_event(pevent, id, sys_name, event_name);
++	event = search_event(tep, id, sys_name, event_name);
+ 	if (event == NULL)
+ 		goto not_found;
+ 
+@@ -6738,8 +6736,8 @@ int tep_register_event_handler(struct tep_handle *pevent, int id,
+ 	}
+ 
+ 	handle->func = func;
+-	handle->next = pevent->handlers;
+-	pevent->handlers = handle;
++	handle->next = tep->handlers;
++	tep->handlers = handle;
+ 	handle->context = context;
+ 
+ 	return TEP_REGISTER_SUCCESS;
+@@ -6766,7 +6764,7 @@ static int handle_matches(struct event_handler *handler, int id,
+ 
+ /**
+  * tep_unregister_event_handler - unregister an existing event handler
+- * @pevent: the handle to the pevent
++ * @tep: a handle to the trace event parser context
+  * @id: the id of the event to unregister
+  * @sys_name: the system name the handler belongs to
+  * @event_name: the name of the event handler
+@@ -6780,7 +6778,7 @@ static int handle_matches(struct event_handler *handler, int id,
+  *
+  * Returns 0 if handler was removed successfully, -1 if event was not found.
+  */
+-int tep_unregister_event_handler(struct tep_handle *pevent, int id,
++int tep_unregister_event_handler(struct tep_handle *tep, int id,
+ 				 const char *sys_name, const char *event_name,
+ 				 tep_event_handler_func func, void *context)
+ {
+@@ -6788,7 +6786,7 @@ int tep_unregister_event_handler(struct tep_handle *pevent, int id,
+ 	struct event_handler *handle;
+ 	struct event_handler **next;
+ 
+-	event = search_event(pevent, id, sys_name, event_name);
++	event = search_event(tep, id, sys_name, event_name);
+ 	if (event == NULL)
+ 		goto not_found;
+ 
+@@ -6802,7 +6800,7 @@ int tep_unregister_event_handler(struct tep_handle *pevent, int id,
+ 	}
+ 
+ not_found:
+-	for (next = &pevent->handlers; *next; next = &(*next)->next) {
++	for (next = &tep->handlers; *next; next = &(*next)->next) {
+ 		handle = *next;
+ 		if (handle_matches(handle, id, sys_name, event_name,
+ 				   func, context))
+@@ -6819,7 +6817,7 @@ int tep_unregister_event_handler(struct tep_handle *pevent, int id,
+ }
+ 
+ /**
+- * tep_alloc - create a pevent handle
++ * tep_alloc - create a tep handle
+  */
+ struct tep_handle *tep_alloc(void)
+ {
+@@ -6833,9 +6831,9 @@ struct tep_handle *tep_alloc(void)
+ 	return pevent;
+ }
+ 
+-void tep_ref(struct tep_handle *pevent)
++void tep_ref(struct tep_handle *tep)
+ {
+-	pevent->ref_count++;
++	tep->ref_count++;
+ }
+ 
+ int tep_get_ref(struct tep_handle *tep)
+@@ -6885,10 +6883,10 @@ void tep_free_event(struct tep_event *event)
+ }
+ 
+ /**
+- * tep_free - free a pevent handle
+- * @pevent: the pevent handle to free
++ * tep_free - free a tep handle
++ * @tep: the tep handle to free
+  */
+-void tep_free(struct tep_handle *pevent)
++void tep_free(struct tep_handle *tep)
+ {
+ 	struct cmdline_list *cmdlist, *cmdnext;
+ 	struct func_list *funclist, *funcnext;
+@@ -6897,21 +6895,21 @@ void tep_free(struct tep_handle *pevent)
+ 	struct event_handler *handle;
+ 	int i;
+ 
+-	if (!pevent)
++	if (!tep)
+ 		return;
+ 
+-	cmdlist = pevent->cmdlist;
+-	funclist = pevent->funclist;
+-	printklist = pevent->printklist;
++	cmdlist = tep->cmdlist;
++	funclist = tep->funclist;
++	printklist = tep->printklist;
+ 
+-	pevent->ref_count--;
+-	if (pevent->ref_count)
++	tep->ref_count--;
++	if (tep->ref_count)
+ 		return;
+ 
+-	if (pevent->cmdlines) {
+-		for (i = 0; i < pevent->cmdline_count; i++)
+-			free(pevent->cmdlines[i].comm);
+-		free(pevent->cmdlines);
++	if (tep->cmdlines) {
++		for (i = 0; i < tep->cmdline_count; i++)
++			free(tep->cmdlines[i].comm);
++		free(tep->cmdlines);
+ 	}
+ 
+ 	while (cmdlist) {
+@@ -6921,12 +6919,12 @@ void tep_free(struct tep_handle *pevent)
+ 		cmdlist = cmdnext;
+ 	}
+ 
+-	if (pevent->func_map) {
+-		for (i = 0; i < (int)pevent->func_count; i++) {
+-			free(pevent->func_map[i].func);
+-			free(pevent->func_map[i].mod);
++	if (tep->func_map) {
++		for (i = 0; i < (int)tep->func_count; i++) {
++			free(tep->func_map[i].func);
++			free(tep->func_map[i].mod);
+ 		}
+-		free(pevent->func_map);
++		free(tep->func_map);
+ 	}
+ 
+ 	while (funclist) {
+@@ -6937,16 +6935,16 @@ void tep_free(struct tep_handle *pevent)
+ 		funclist = funcnext;
+ 	}
+ 
+-	while (pevent->func_handlers) {
+-		func_handler = pevent->func_handlers;
+-		pevent->func_handlers = func_handler->next;
++	while (tep->func_handlers) {
++		func_handler = tep->func_handlers;
++		tep->func_handlers = func_handler->next;
+ 		free_func_handle(func_handler);
+ 	}
+ 
+-	if (pevent->printk_map) {
+-		for (i = 0; i < (int)pevent->printk_count; i++)
+-			free(pevent->printk_map[i].printk);
+-		free(pevent->printk_map);
++	if (tep->printk_map) {
++		for (i = 0; i < (int)tep->printk_count; i++)
++			free(tep->printk_map[i].printk);
++		free(tep->printk_map);
+ 	}
+ 
+ 	while (printklist) {
+@@ -6956,24 +6954,24 @@ void tep_free(struct tep_handle *pevent)
+ 		printklist = printknext;
+ 	}
+ 
+-	for (i = 0; i < pevent->nr_events; i++)
+-		tep_free_event(pevent->events[i]);
++	for (i = 0; i < tep->nr_events; i++)
++		tep_free_event(tep->events[i]);
+ 
+-	while (pevent->handlers) {
+-		handle = pevent->handlers;
+-		pevent->handlers = handle->next;
++	while (tep->handlers) {
++		handle = tep->handlers;
++		tep->handlers = handle->next;
+ 		free_handler(handle);
+ 	}
+ 
+-	free(pevent->trace_clock);
+-	free(pevent->events);
+-	free(pevent->sort_events);
+-	free(pevent->func_resolver);
++	free(tep->trace_clock);
++	free(tep->events);
++	free(tep->sort_events);
++	free(tep->func_resolver);
+ 
+-	free(pevent);
++	free(tep);
+ }
+ 
+-void tep_unref(struct tep_handle *pevent)
++void tep_unref(struct tep_handle *tep)
+ {
+-	tep_free(pevent);
++	tep_free(tep);
+ }
+diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
+index d473dc557978..2720a30ef86b 100644
+--- a/tools/lib/traceevent/event-parse.h
++++ b/tools/lib/traceevent/event-parse.h
+@@ -64,8 +64,8 @@ typedef int (*tep_event_handler_func)(struct trace_seq *s,
+ 				      struct tep_event *event,
+ 				      void *context);
+ 
+-typedef int (*tep_plugin_load_func)(struct tep_handle *pevent);
+-typedef int (*tep_plugin_unload_func)(struct tep_handle *pevent);
++typedef int (*tep_plugin_load_func)(struct tep_handle *tep);
++typedef int (*tep_plugin_unload_func)(struct tep_handle *tep);
+ 
+ struct tep_plugin_option {
+ 	struct tep_plugin_option	*next;
+@@ -85,12 +85,12 @@ struct tep_plugin_option {
+  * TEP_PLUGIN_LOADER:  (required)
+  *   The function name to initialized the plugin.
+  *
+- *   int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++ *   int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+  *
+  * TEP_PLUGIN_UNLOADER:  (optional)
+  *   The function called just before unloading
+  *
+- *   int TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++ *   int TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+  *
+  * TEP_PLUGIN_OPTIONS:  (optional)
+  *   Plugin options that can be set before loading
+@@ -393,9 +393,9 @@ struct tep_plugin_list;
+ 
+ #define INVALID_PLUGIN_LIST_OPTION	((char **)((unsigned long)-1))
+ 
+-struct tep_plugin_list *tep_load_plugins(struct tep_handle *pevent);
++struct tep_plugin_list *tep_load_plugins(struct tep_handle *tep);
+ void tep_unload_plugins(struct tep_plugin_list *plugin_list,
+-			struct tep_handle *pevent);
++			struct tep_handle *tep);
+ char **tep_plugin_list_options(void);
+ void tep_plugin_free_options_list(char **list);
+ int tep_plugin_add_options(const char *name,
+@@ -410,7 +410,7 @@ typedef char *(tep_func_resolver_t)(void *priv,
+ 				    unsigned long long *addrp, char **modp);
+ void tep_set_flag(struct tep_handle *tep, int flag);
+ void tep_clear_flag(struct tep_handle *tep, enum tep_flag flag);
+-bool tep_check_flags(struct tep_handle *tep, enum tep_flag flags);
++bool tep_test_flag(struct tep_handle *tep, enum tep_flag flags);
+ 
+ static inline int tep_is_bigendian(void)
+ {
+@@ -430,37 +430,37 @@ enum trace_flag_type {
+ 	TRACE_FLAG_SOFTIRQ		= 0x10,
+ };
+ 
+-int tep_set_function_resolver(struct tep_handle *pevent,
++int tep_set_function_resolver(struct tep_handle *tep,
+ 			      tep_func_resolver_t *func, void *priv);
+-void tep_reset_function_resolver(struct tep_handle *pevent);
+-int tep_register_comm(struct tep_handle *pevent, const char *comm, int pid);
+-int tep_override_comm(struct tep_handle *pevent, const char *comm, int pid);
+-int tep_register_trace_clock(struct tep_handle *pevent, const char *trace_clock);
+-int tep_register_function(struct tep_handle *pevent, char *name,
++void tep_reset_function_resolver(struct tep_handle *tep);
++int tep_register_comm(struct tep_handle *tep, const char *comm, int pid);
++int tep_override_comm(struct tep_handle *tep, const char *comm, int pid);
++int tep_register_trace_clock(struct tep_handle *tep, const char *trace_clock);
++int tep_register_function(struct tep_handle *tep, char *name,
+ 			  unsigned long long addr, char *mod);
+-int tep_register_print_string(struct tep_handle *pevent, const char *fmt,
++int tep_register_print_string(struct tep_handle *tep, const char *fmt,
+ 			      unsigned long long addr);
+-bool tep_is_pid_registered(struct tep_handle *pevent, int pid);
++bool tep_is_pid_registered(struct tep_handle *tep, int pid);
+ 
+-void tep_print_event_task(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event_task(struct tep_handle *tep, struct trace_seq *s,
+ 			  struct tep_event *event,
+ 			  struct tep_record *record);
+-void tep_print_event_time(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event_time(struct tep_handle *tep, struct trace_seq *s,
+ 			  struct tep_event *event,
+ 			  struct tep_record *record,
+ 			  bool use_trace_clock);
+-void tep_print_event_data(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event_data(struct tep_handle *tep, struct trace_seq *s,
+ 			  struct tep_event *event,
+ 			  struct tep_record *record);
+-void tep_print_event(struct tep_handle *pevent, struct trace_seq *s,
++void tep_print_event(struct tep_handle *tep, struct trace_seq *s,
+ 		     struct tep_record *record, bool use_trace_clock);
+ 
+-int tep_parse_header_page(struct tep_handle *pevent, char *buf, unsigned long size,
++int tep_parse_header_page(struct tep_handle *tep, char *buf, unsigned long size,
+ 			  int long_size);
+ 
+-enum tep_errno tep_parse_event(struct tep_handle *pevent, const char *buf,
++enum tep_errno tep_parse_event(struct tep_handle *tep, const char *buf,
+ 			       unsigned long size, const char *sys);
+-enum tep_errno tep_parse_format(struct tep_handle *pevent,
++enum tep_errno tep_parse_format(struct tep_handle *tep,
+ 				struct tep_event **eventp,
+ 				const char *buf,
+ 				unsigned long size, const char *sys);
+@@ -492,50 +492,50 @@ enum tep_reg_handler {
+ 	TEP_REGISTER_SUCCESS_OVERWRITE,
+ };
+ 
+-int tep_register_event_handler(struct tep_handle *pevent, int id,
++int tep_register_event_handler(struct tep_handle *tep, int id,
+ 			       const char *sys_name, const char *event_name,
+ 			       tep_event_handler_func func, void *context);
+-int tep_unregister_event_handler(struct tep_handle *pevent, int id,
++int tep_unregister_event_handler(struct tep_handle *tep, int id,
+ 				 const char *sys_name, const char *event_name,
+ 				 tep_event_handler_func func, void *context);
+-int tep_register_print_function(struct tep_handle *pevent,
++int tep_register_print_function(struct tep_handle *tep,
+ 				tep_func_handler func,
+ 				enum tep_func_arg_type ret_type,
+ 				char *name, ...);
+-int tep_unregister_print_function(struct tep_handle *pevent,
++int tep_unregister_print_function(struct tep_handle *tep,
+ 				  tep_func_handler func, char *name);
+ 
+ struct tep_format_field *tep_find_common_field(struct tep_event *event, const char *name);
+ struct tep_format_field *tep_find_field(struct tep_event *event, const char *name);
+ struct tep_format_field *tep_find_any_field(struct tep_event *event, const char *name);
+ 
+-const char *tep_find_function(struct tep_handle *pevent, unsigned long long addr);
++const char *tep_find_function(struct tep_handle *tep, unsigned long long addr);
+ unsigned long long
+-tep_find_function_address(struct tep_handle *pevent, unsigned long long addr);
+-unsigned long long tep_read_number(struct tep_handle *pevent, const void *ptr, int size);
++tep_find_function_address(struct tep_handle *tep, unsigned long long addr);
++unsigned long long tep_read_number(struct tep_handle *tep, const void *ptr, int size);
+ int tep_read_number_field(struct tep_format_field *field, const void *data,
+ 			  unsigned long long *value);
+ 
+ struct tep_event *tep_get_first_event(struct tep_handle *tep);
+ int tep_get_events_count(struct tep_handle *tep);
+-struct tep_event *tep_find_event(struct tep_handle *pevent, int id);
++struct tep_event *tep_find_event(struct tep_handle *tep, int id);
+ 
+ struct tep_event *
+-tep_find_event_by_name(struct tep_handle *pevent, const char *sys, const char *name);
++tep_find_event_by_name(struct tep_handle *tep, const char *sys, const char *name);
+ struct tep_event *
+-tep_find_event_by_record(struct tep_handle *pevent, struct tep_record *record);
++tep_find_event_by_record(struct tep_handle *tep, struct tep_record *record);
+ 
+-void tep_data_latency_format(struct tep_handle *pevent,
++void tep_data_latency_format(struct tep_handle *tep,
+ 			     struct trace_seq *s, struct tep_record *record);
+-int tep_data_type(struct tep_handle *pevent, struct tep_record *rec);
+-int tep_data_pid(struct tep_handle *pevent, struct tep_record *rec);
+-int tep_data_preempt_count(struct tep_handle *pevent, struct tep_record *rec);
+-int tep_data_flags(struct tep_handle *pevent, struct tep_record *rec);
+-const char *tep_data_comm_from_pid(struct tep_handle *pevent, int pid);
++int tep_data_type(struct tep_handle *tep, struct tep_record *rec);
++int tep_data_pid(struct tep_handle *tep, struct tep_record *rec);
++int tep_data_preempt_count(struct tep_handle *tep, struct tep_record *rec);
++int tep_data_flags(struct tep_handle *tep, struct tep_record *rec);
++const char *tep_data_comm_from_pid(struct tep_handle *tep, int pid);
+ struct tep_cmdline;
+-struct tep_cmdline *tep_data_pid_from_comm(struct tep_handle *pevent, const char *comm,
++struct tep_cmdline *tep_data_pid_from_comm(struct tep_handle *tep, const char *comm,
+ 					   struct tep_cmdline *next);
+-int tep_cmdline_pid(struct tep_handle *pevent, struct tep_cmdline *cmdline);
++int tep_cmdline_pid(struct tep_handle *tep, struct tep_cmdline *cmdline);
+ 
+ void tep_print_field(struct trace_seq *s, void *data,
+ 		     struct tep_format_field *field);
+@@ -543,11 +543,10 @@ void tep_print_fields(struct trace_seq *s, void *data,
+ 		      int size __maybe_unused, struct tep_event *event);
+ void tep_event_info(struct trace_seq *s, struct tep_event *event,
+ 		    struct tep_record *record);
+-int tep_strerror(struct tep_handle *pevent, enum tep_errno errnum,
++int tep_strerror(struct tep_handle *tep, enum tep_errno errnum,
+ 		 char *buf, size_t buflen);
+ 
+-struct tep_event **tep_list_events(struct tep_handle *tep,
+-				   enum tep_event_sort_type);
++struct tep_event **tep_list_events(struct tep_handle *tep, enum tep_event_sort_type);
+ struct tep_event **tep_list_events_copy(struct tep_handle *tep,
+ 					enum tep_event_sort_type);
+ struct tep_format_field **tep_event_common_fields(struct tep_event *event);
+@@ -557,28 +556,28 @@ enum tep_endian {
+         TEP_LITTLE_ENDIAN = 0,
+         TEP_BIG_ENDIAN
+ };
+-int tep_get_cpus(struct tep_handle *pevent);
+-void tep_set_cpus(struct tep_handle *pevent, int cpus);
+-int tep_get_long_size(struct tep_handle *pevent);
+-void tep_set_long_size(struct tep_handle *pevent, int long_size);
+-int tep_get_page_size(struct tep_handle *pevent);
+-void tep_set_page_size(struct tep_handle *pevent, int _page_size);
+-bool tep_is_file_bigendian(struct tep_handle *pevent);
+-void tep_set_file_bigendian(struct tep_handle *pevent, enum tep_endian endian);
+-bool tep_is_local_bigendian(struct tep_handle *pevent);
+-void tep_set_local_bigendian(struct tep_handle *pevent, enum tep_endian endian);
+-bool tep_is_latency_format(struct tep_handle *pevent);
+-void tep_set_latency_format(struct tep_handle *pevent, int lat);
+-int tep_get_header_page_size(struct tep_handle *pevent);
++int tep_get_cpus(struct tep_handle *tep);
++void tep_set_cpus(struct tep_handle *tep, int cpus);
++int tep_get_long_size(struct tep_handle *tep);
++void tep_set_long_size(struct tep_handle *tep, int long_size);
++int tep_get_page_size(struct tep_handle *tep);
++void tep_set_page_size(struct tep_handle *tep, int _page_size);
++bool tep_is_file_bigendian(struct tep_handle *tep);
++void tep_set_file_bigendian(struct tep_handle *tep, enum tep_endian endian);
++bool tep_is_local_bigendian(struct tep_handle *tep);
++void tep_set_local_bigendian(struct tep_handle *tep, enum tep_endian endian);
++bool tep_is_latency_format(struct tep_handle *tep);
++void tep_set_latency_format(struct tep_handle *tep, int lat);
++int tep_get_header_page_size(struct tep_handle *tep);
+ int tep_get_header_timestamp_size(struct tep_handle *tep);
+ bool tep_is_old_format(struct tep_handle *tep);
+ void tep_set_print_raw(struct tep_handle *tep, int print_raw);
+ void tep_set_test_filters(struct tep_handle *tep, int test_filters);
+ 
+ struct tep_handle *tep_alloc(void);
+-void tep_free(struct tep_handle *pevent);
+-void tep_ref(struct tep_handle *pevent);
+-void tep_unref(struct tep_handle *pevent);
++void tep_free(struct tep_handle *tep);
++void tep_ref(struct tep_handle *tep);
++void tep_unref(struct tep_handle *tep);
+ int tep_get_ref(struct tep_handle *tep);
+ 
+ /* access to the internal parser */
+@@ -590,8 +589,8 @@ const char *tep_get_input_buf(void);
+ unsigned long long tep_get_input_buf_ptr(void);
+ 
+ /* for debugging */
+-void tep_print_funcs(struct tep_handle *pevent);
+-void tep_print_printk(struct tep_handle *pevent);
++void tep_print_funcs(struct tep_handle *tep);
++void tep_print_printk(struct tep_handle *tep);
+ 
+ /* ----------------------- filtering ----------------------- */
+ 
+@@ -724,7 +723,7 @@ struct tep_event_filter {
+ 	char			error_buffer[TEP_FILTER_ERROR_BUFSZ];
+ };
+ 
+-struct tep_event_filter *tep_filter_alloc(struct tep_handle *pevent);
++struct tep_event_filter *tep_filter_alloc(struct tep_handle *tep);
+ 
+ /* for backward compatibility */
+ #define FILTER_NONE		TEP_ERRNO__NO_FILTER
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index e74f16c88398..d0488de0174a 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -419,16 +419,16 @@ load_plugins(struct tep_handle *pevent, const char *suffix,
+ }
+ 
+ struct tep_plugin_list*
+-tep_load_plugins(struct tep_handle *pevent)
++tep_load_plugins(struct tep_handle *tep)
+ {
+ 	struct tep_plugin_list *list = NULL;
+ 
+-	load_plugins(pevent, ".so", load_plugin, &list);
++	load_plugins(tep, ".so", load_plugin, &list);
+ 	return list;
+ }
+ 
+ void
+-tep_unload_plugins(struct tep_plugin_list *plugin_list, struct tep_handle *pevent)
++tep_unload_plugins(struct tep_plugin_list *plugin_list, struct tep_handle *tep)
+ {
+ 	tep_plugin_unload_func func;
+ 	struct tep_plugin_list *list;
+@@ -438,7 +438,7 @@ tep_unload_plugins(struct tep_plugin_list *plugin_list, struct tep_handle *peven
+ 		plugin_list = list->next;
+ 		func = dlsym(list->handle, TEP_PLUGIN_UNLOADER_NAME);
+ 		if (func)
+-			func(pevent);
++			func(tep);
+ 		dlclose(list->handle);
+ 		free(list->name);
+ 		free(list);
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 3320c0a0e343..5d8f9d9bc253 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -164,9 +164,9 @@ add_filter_type(struct tep_event_filter *filter, int id)
+ 
+ /**
+  * tep_filter_alloc - create a new event filter
+- * @pevent: The pevent that this filter is associated with
++ * @tep: The tep that this filter is associated with
+  */
+-struct tep_event_filter *tep_filter_alloc(struct tep_handle *pevent)
++struct tep_event_filter *tep_filter_alloc(struct tep_handle *tep)
+ {
+ 	struct tep_event_filter *filter;
+ 
+@@ -175,8 +175,8 @@ struct tep_event_filter *tep_filter_alloc(struct tep_handle *pevent)
+ 		return NULL;
+ 
+ 	memset(filter, 0, sizeof(*filter));
+-	filter->pevent = pevent;
+-	tep_ref(pevent);
++	filter->pevent = tep;
++	tep_ref(tep);
+ 
+ 	return filter;
+ }
+diff --git a/tools/lib/traceevent/plugin_cfg80211.c b/tools/lib/traceevent/plugin_cfg80211.c
+index a51b366f47da..3d43b56a6c98 100644
+--- a/tools/lib/traceevent/plugin_cfg80211.c
++++ b/tools/lib/traceevent/plugin_cfg80211.c
+@@ -25,9 +25,9 @@ process___le16_to_cpup(struct trace_seq *s, unsigned long long *args)
+ 	return val ? (long long) le16toh(*val) : 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_print_function(pevent,
++	tep_register_print_function(tep,
+ 				    process___le16_to_cpup,
+ 				    TEP_FUNC_ARG_INT,
+ 				    "__le16_to_cpup",
+@@ -36,8 +36,8 @@ int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_print_function(pevent, process___le16_to_cpup,
++	tep_unregister_print_function(tep, process___le16_to_cpup,
+ 				      "__le16_to_cpup");
+ }
+diff --git a/tools/lib/traceevent/plugin_function.c b/tools/lib/traceevent/plugin_function.c
+index a73eca34a8f9..e93f33bd705f 100644
+--- a/tools/lib/traceevent/plugin_function.c
++++ b/tools/lib/traceevent/plugin_function.c
+@@ -164,9 +164,9 @@ static int function_handler(struct trace_seq *s, struct tep_record *record,
+ 	return 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_event_handler(pevent, -1, "ftrace", "function",
++	tep_register_event_handler(tep, -1, "ftrace", "function",
+ 				   function_handler, NULL);
+ 
+ 	tep_plugin_add_options("ftrace", plugin_options);
+@@ -174,11 +174,11 @@ int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+ 	int i, x;
+ 
+-	tep_unregister_event_handler(pevent, -1, "ftrace", "function",
++	tep_unregister_event_handler(tep, -1, "ftrace", "function",
+ 				     function_handler, NULL);
+ 
+ 	for (i = 0; i <= cpus; i++) {
+diff --git a/tools/lib/traceevent/plugin_hrtimer.c b/tools/lib/traceevent/plugin_hrtimer.c
+index 5db5e401275f..bb434e0ed03a 100644
+--- a/tools/lib/traceevent/plugin_hrtimer.c
++++ b/tools/lib/traceevent/plugin_hrtimer.c
+@@ -67,23 +67,23 @@ static int timer_start_handler(struct trace_seq *s,
+ 	return 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_event_handler(pevent, -1,
++	tep_register_event_handler(tep, -1,
+ 				   "timer", "hrtimer_expire_entry",
+ 				   timer_expire_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "timer", "hrtimer_start",
++	tep_register_event_handler(tep, -1, "timer", "hrtimer_start",
+ 				   timer_start_handler, NULL);
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_event_handler(pevent, -1,
++	tep_unregister_event_handler(tep, -1,
+ 				     "timer", "hrtimer_expire_entry",
+ 				     timer_expire_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "timer", "hrtimer_start",
++	tep_unregister_event_handler(tep, -1, "timer", "hrtimer_start",
+ 				     timer_start_handler, NULL);
+ }
+diff --git a/tools/lib/traceevent/plugin_jbd2.c b/tools/lib/traceevent/plugin_jbd2.c
+index a5e34135dd6a..04fc125f38cb 100644
+--- a/tools/lib/traceevent/plugin_jbd2.c
++++ b/tools/lib/traceevent/plugin_jbd2.c
+@@ -48,16 +48,16 @@ process_jiffies_to_msecs(struct trace_seq *s, unsigned long long *args)
+ 	return jiffies;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_print_function(pevent,
++	tep_register_print_function(tep,
+ 				    process_jbd2_dev_to_name,
+ 				    TEP_FUNC_ARG_STRING,
+ 				    "jbd2_dev_to_name",
+ 				    TEP_FUNC_ARG_INT,
+ 				    TEP_FUNC_ARG_VOID);
+ 
+-	tep_register_print_function(pevent,
++	tep_register_print_function(tep,
+ 				    process_jiffies_to_msecs,
+ 				    TEP_FUNC_ARG_LONG,
+ 				    "jiffies_to_msecs",
+@@ -66,11 +66,11 @@ int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_print_function(pevent, process_jbd2_dev_to_name,
++	tep_unregister_print_function(tep, process_jbd2_dev_to_name,
+ 				      "jbd2_dev_to_name");
+ 
+-	tep_unregister_print_function(pevent, process_jiffies_to_msecs,
++	tep_unregister_print_function(tep, process_jiffies_to_msecs,
+ 				      "jiffies_to_msecs");
+ }
+diff --git a/tools/lib/traceevent/plugin_kmem.c b/tools/lib/traceevent/plugin_kmem.c
+index 0e3c601f9ed1..c09bafdd8377 100644
+--- a/tools/lib/traceevent/plugin_kmem.c
++++ b/tools/lib/traceevent/plugin_kmem.c
+@@ -49,47 +49,47 @@ static int call_site_handler(struct trace_seq *s, struct tep_record *record,
+ 	return 1;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_event_handler(pevent, -1, "kmem", "kfree",
++	tep_register_event_handler(tep, -1, "kmem", "kfree",
+ 				   call_site_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kmem", "kmalloc",
++	tep_register_event_handler(tep, -1, "kmem", "kmalloc",
+ 				   call_site_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kmem", "kmalloc_node",
++	tep_register_event_handler(tep, -1, "kmem", "kmalloc_node",
+ 				   call_site_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kmem", "kmem_cache_alloc",
++	tep_register_event_handler(tep, -1, "kmem", "kmem_cache_alloc",
+ 				   call_site_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kmem",
++	tep_register_event_handler(tep, -1, "kmem",
+ 				   "kmem_cache_alloc_node",
+ 				   call_site_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kmem", "kmem_cache_free",
++	tep_register_event_handler(tep, -1, "kmem", "kmem_cache_free",
+ 				   call_site_handler, NULL);
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_event_handler(pevent, -1, "kmem", "kfree",
++	tep_unregister_event_handler(tep, -1, "kmem", "kfree",
+ 				     call_site_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kmem", "kmalloc",
++	tep_unregister_event_handler(tep, -1, "kmem", "kmalloc",
+ 				     call_site_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kmem", "kmalloc_node",
++	tep_unregister_event_handler(tep, -1, "kmem", "kmalloc_node",
+ 				     call_site_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kmem", "kmem_cache_alloc",
++	tep_unregister_event_handler(tep, -1, "kmem", "kmem_cache_alloc",
+ 				     call_site_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kmem",
++	tep_unregister_event_handler(tep, -1, "kmem",
+ 				     "kmem_cache_alloc_node",
+ 				     call_site_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kmem", "kmem_cache_free",
++	tep_unregister_event_handler(tep, -1, "kmem", "kmem_cache_free",
+ 				     call_site_handler, NULL);
+ }
+diff --git a/tools/lib/traceevent/plugin_kvm.c b/tools/lib/traceevent/plugin_kvm.c
+index 688e5d97d7a7..472298c2b531 100644
+--- a/tools/lib/traceevent/plugin_kvm.c
++++ b/tools/lib/traceevent/plugin_kvm.c
+@@ -445,40 +445,40 @@ process_is_writable_pte(struct trace_seq *s, unsigned long long *args)
+ 	return pte & PT_WRITABLE_MASK;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+ 	init_disassembler();
+ 
+-	tep_register_event_handler(pevent, -1, "kvm", "kvm_exit",
++	tep_register_event_handler(tep, -1, "kvm", "kvm_exit",
+ 				   kvm_exit_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvm", "kvm_emulate_insn",
++	tep_register_event_handler(tep, -1, "kvm", "kvm_emulate_insn",
+ 				   kvm_emulate_insn_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvm", "kvm_nested_vmexit",
++	tep_register_event_handler(tep, -1, "kvm", "kvm_nested_vmexit",
+ 				   kvm_nested_vmexit_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvm", "kvm_nested_vmexit_inject",
++	tep_register_event_handler(tep, -1, "kvm", "kvm_nested_vmexit_inject",
+ 				   kvm_nested_vmexit_inject_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvmmmu", "kvm_mmu_get_page",
++	tep_register_event_handler(tep, -1, "kvmmmu", "kvm_mmu_get_page",
+ 				   kvm_mmu_get_page_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvmmmu", "kvm_mmu_sync_page",
++	tep_register_event_handler(tep, -1, "kvmmmu", "kvm_mmu_sync_page",
+ 				   kvm_mmu_print_role, NULL);
+ 
+-	tep_register_event_handler(pevent, -1,
++	tep_register_event_handler(tep, -1,
+ 				   "kvmmmu", "kvm_mmu_unsync_page",
+ 				   kvm_mmu_print_role, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvmmmu", "kvm_mmu_zap_page",
++	tep_register_event_handler(tep, -1, "kvmmmu", "kvm_mmu_zap_page",
+ 				   kvm_mmu_print_role, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "kvmmmu",
++	tep_register_event_handler(tep, -1, "kvmmmu",
+ 			"kvm_mmu_prepare_zap_page", kvm_mmu_print_role,
+ 			NULL);
+ 
+-	tep_register_print_function(pevent,
++	tep_register_print_function(tep,
+ 				    process_is_writable_pte,
+ 				    TEP_FUNC_ARG_INT,
+ 				    "is_writable_pte",
+@@ -487,37 +487,37 @@ int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_event_handler(pevent, -1, "kvm", "kvm_exit",
++	tep_unregister_event_handler(tep, -1, "kvm", "kvm_exit",
+ 				     kvm_exit_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvm", "kvm_emulate_insn",
++	tep_unregister_event_handler(tep, -1, "kvm", "kvm_emulate_insn",
+ 				     kvm_emulate_insn_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvm", "kvm_nested_vmexit",
++	tep_unregister_event_handler(tep, -1, "kvm", "kvm_nested_vmexit",
+ 				     kvm_nested_vmexit_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvm", "kvm_nested_vmexit_inject",
++	tep_unregister_event_handler(tep, -1, "kvm", "kvm_nested_vmexit_inject",
+ 				     kvm_nested_vmexit_inject_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvmmmu", "kvm_mmu_get_page",
++	tep_unregister_event_handler(tep, -1, "kvmmmu", "kvm_mmu_get_page",
+ 				     kvm_mmu_get_page_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvmmmu", "kvm_mmu_sync_page",
++	tep_unregister_event_handler(tep, -1, "kvmmmu", "kvm_mmu_sync_page",
+ 				     kvm_mmu_print_role, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1,
++	tep_unregister_event_handler(tep, -1,
+ 				     "kvmmmu", "kvm_mmu_unsync_page",
+ 				     kvm_mmu_print_role, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvmmmu", "kvm_mmu_zap_page",
++	tep_unregister_event_handler(tep, -1, "kvmmmu", "kvm_mmu_zap_page",
+ 				     kvm_mmu_print_role, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "kvmmmu",
++	tep_unregister_event_handler(tep, -1, "kvmmmu",
+ 			"kvm_mmu_prepare_zap_page", kvm_mmu_print_role,
+ 			NULL);
+ 
+-	tep_unregister_print_function(pevent, process_is_writable_pte,
++	tep_unregister_print_function(tep, process_is_writable_pte,
+ 				      "is_writable_pte");
+ }
+diff --git a/tools/lib/traceevent/plugin_mac80211.c b/tools/lib/traceevent/plugin_mac80211.c
+index e38b9477aad2..884303c26b5c 100644
+--- a/tools/lib/traceevent/plugin_mac80211.c
++++ b/tools/lib/traceevent/plugin_mac80211.c
+@@ -87,17 +87,17 @@ static int drv_bss_info_changed(struct trace_seq *s,
+ 	return 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_event_handler(pevent, -1, "mac80211",
++	tep_register_event_handler(tep, -1, "mac80211",
+ 				   "drv_bss_info_changed",
+ 				   drv_bss_info_changed, NULL);
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_event_handler(pevent, -1, "mac80211",
++	tep_unregister_event_handler(tep, -1, "mac80211",
+ 				     "drv_bss_info_changed",
+ 				     drv_bss_info_changed, NULL);
+ }
+diff --git a/tools/lib/traceevent/plugin_sched_switch.c b/tools/lib/traceevent/plugin_sched_switch.c
+index 834c9e378ff8..701c22913cf8 100644
+--- a/tools/lib/traceevent/plugin_sched_switch.c
++++ b/tools/lib/traceevent/plugin_sched_switch.c
+@@ -135,27 +135,27 @@ static int sched_switch_handler(struct trace_seq *s,
+ 	return 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_event_handler(pevent, -1, "sched", "sched_switch",
++	tep_register_event_handler(tep, -1, "sched", "sched_switch",
+ 				   sched_switch_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "sched", "sched_wakeup",
++	tep_register_event_handler(tep, -1, "sched", "sched_wakeup",
+ 				   sched_wakeup_handler, NULL);
+ 
+-	tep_register_event_handler(pevent, -1, "sched", "sched_wakeup_new",
++	tep_register_event_handler(tep, -1, "sched", "sched_wakeup_new",
+ 				   sched_wakeup_handler, NULL);
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_event_handler(pevent, -1, "sched", "sched_switch",
++	tep_unregister_event_handler(tep, -1, "sched", "sched_switch",
+ 				     sched_switch_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "sched", "sched_wakeup",
++	tep_unregister_event_handler(tep, -1, "sched", "sched_wakeup",
+ 				     sched_wakeup_handler, NULL);
+ 
+-	tep_unregister_event_handler(pevent, -1, "sched", "sched_wakeup_new",
++	tep_unregister_event_handler(tep, -1, "sched", "sched_wakeup_new",
+ 				     sched_wakeup_handler, NULL);
+ }
+diff --git a/tools/lib/traceevent/plugin_scsi.c b/tools/lib/traceevent/plugin_scsi.c
+index 4eba25cc1431..5d0387a4b65a 100644
+--- a/tools/lib/traceevent/plugin_scsi.c
++++ b/tools/lib/traceevent/plugin_scsi.c
+@@ -414,9 +414,9 @@ unsigned long long process_scsi_trace_parse_cdb(struct trace_seq *s,
+ 	return 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_print_function(pevent,
++	tep_register_print_function(tep,
+ 				    process_scsi_trace_parse_cdb,
+ 				    TEP_FUNC_ARG_STRING,
+ 				    "scsi_trace_parse_cdb",
+@@ -427,8 +427,8 @@ int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_print_function(pevent, process_scsi_trace_parse_cdb,
++	tep_unregister_print_function(tep, process_scsi_trace_parse_cdb,
+ 				      "scsi_trace_parse_cdb");
+ }
+diff --git a/tools/lib/traceevent/plugin_xen.c b/tools/lib/traceevent/plugin_xen.c
+index bc0496e4c296..993b208d0323 100644
+--- a/tools/lib/traceevent/plugin_xen.c
++++ b/tools/lib/traceevent/plugin_xen.c
+@@ -120,9 +120,9 @@ unsigned long long process_xen_hypercall_name(struct trace_seq *s,
+ 	return 0;
+ }
+ 
+-int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
++int TEP_PLUGIN_LOADER(struct tep_handle *tep)
+ {
+-	tep_register_print_function(pevent,
++	tep_register_print_function(tep,
+ 				    process_xen_hypercall_name,
+ 				    TEP_FUNC_ARG_STRING,
+ 				    "xen_hypercall_name",
+@@ -131,8 +131,8 @@ int TEP_PLUGIN_LOADER(struct tep_handle *pevent)
+ 	return 0;
+ }
+ 
+-void TEP_PLUGIN_UNLOADER(struct tep_handle *pevent)
++void TEP_PLUGIN_UNLOADER(struct tep_handle *tep)
+ {
+-	tep_unregister_print_function(pevent, process_xen_hypercall_name,
++	tep_unregister_print_function(tep, process_xen_hypercall_name,
+ 				      "xen_hypercall_name");
+ }
+-- 
 2.20.1
