@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/44] tools lib traceevent: Change description of few APIs
-Date: Tue,  2 Apr 2019 13:05:20 -0300
-Message-ID: <20190402160549.13544-16-acme@kernel.org>
+Subject: [PATCH 16/44] tools lib traceevent: Coding style fixes
+Date: Tue,  2 Apr 2019 13:05:21 -0300
+Message-ID: <20190402160549.13544-17-acme@kernel.org>
 References: <20190402160549.13544-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,125 +14,157 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-APIs descriptions should describe the purpose of the function, its
-parameters and return value. While working  on man pages implementation,
-I noticed mismatches in the  descriptions of few APIs.  This patch
-changes the description of these APIs, making them consistent with the
-man pages:
-
- - tep_print_num_field()
- - tep_print_func_field()
- - tep_get_header_page_size()
- - tep_get_long_size()
- - tep_set_long_size()
- - tep_get_page_size()
- - tep_set_page_size()
+Fixed few coding style problems in event-parse-api.c
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/linux-trace-devel/20190325145017.30246-2-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190401164343.396759247@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190325145017.30246-3-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190401164343.537086316@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse-api.c | 20 ++++++++++----------
- tools/lib/traceevent/event-parse.c     |  6 ++++--
- 2 files changed, 14 insertions(+), 12 deletions(-)
+ tools/lib/traceevent/event-parse-api.c | 30 +++++++++++++-------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/tools/lib/traceevent/event-parse-api.c b/tools/lib/traceevent/event-parse-api.c
-index d463761a58f4..3686a221e981 100644
+index 3686a221e981..3716a9142aef 100644
 --- a/tools/lib/traceevent/event-parse-api.c
 +++ b/tools/lib/traceevent/event-parse-api.c
-@@ -43,8 +43,8 @@ int tep_get_events_count(struct tep_handle *tep)
-  * @flag: flag, or combination of flags to be set
-  * can be any combination from enum tep_flag
-  *
-- * This sets a flag or mbination of flags  from enum tep_flag
--  */
-+ * This sets a flag or combination of flags from enum tep_flag
-+ */
+@@ -32,7 +32,7 @@ struct tep_event *tep_get_first_event(struct tep_handle *tep)
+  */
+ int tep_get_events_count(struct tep_handle *tep)
+ {
+-	if(tep)
++	if (tep)
+ 		return tep->nr_events;
+ 	return 0;
+ }
+@@ -47,7 +47,7 @@ int tep_get_events_count(struct tep_handle *tep)
+  */
  void tep_set_flag(struct tep_handle *tep, int flag)
  {
- 	if(tep)
-@@ -140,10 +140,10 @@ void tep_set_cpus(struct tep_handle *pevent, int cpus)
+-	if(tep)
++	if (tep)
+ 		tep->flags |= flag;
  }
  
- /**
-- * tep_get_long_size - get the size of a long integer on the current machine
-+ * tep_get_long_size - get the size of a long integer on the traced machine
-  * @pevent: a handle to the tep_handle
-  *
-- * This returns the size of a long integer on the current machine
-+ * This returns the size of a long integer on the traced machine
-  * If @pevent is NULL, 0 is returned.
+@@ -108,7 +108,7 @@ tep_data2host8(struct tep_handle *pevent, unsigned long long data)
+  */
+ int tep_get_header_page_size(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->header_page_size_size;
+ 	return 0;
+ }
+@@ -122,7 +122,7 @@ int tep_get_header_page_size(struct tep_handle *pevent)
+  */
+ int tep_get_cpus(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->cpus;
+ 	return 0;
+ }
+@@ -135,7 +135,7 @@ int tep_get_cpus(struct tep_handle *pevent)
+  */
+ void tep_set_cpus(struct tep_handle *pevent, int cpus)
+ {
+-	if(pevent)
++	if (pevent)
+ 		pevent->cpus = cpus;
+ }
+ 
+@@ -148,7 +148,7 @@ void tep_set_cpus(struct tep_handle *pevent, int cpus)
   */
  int tep_get_long_size(struct tep_handle *pevent)
-@@ -154,11 +154,11 @@ int tep_get_long_size(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->long_size;
+ 	return 0;
  }
- 
- /**
-- * tep_set_long_size - set the size of a long integer on the current machine
-+ * tep_set_long_size - set the size of a long integer on the traced machine
-  * @pevent: a handle to the tep_handle
-  * @size: size, in bytes, of a long integer
-  *
-- * This sets the size of a long integer on the current machine
-+ * This sets the size of a long integer on the traced machine
+@@ -162,7 +162,7 @@ int tep_get_long_size(struct tep_handle *pevent)
   */
  void tep_set_long_size(struct tep_handle *pevent, int long_size)
  {
-@@ -167,10 +167,10 @@ void tep_set_long_size(struct tep_handle *pevent, int long_size)
+-	if(pevent)
++	if (pevent)
+ 		pevent->long_size = long_size;
  }
  
- /**
-- * tep_get_page_size - get the size of a memory page on the current machine
-+ * tep_get_page_size - get the size of a memory page on the traced machine
-  * @pevent: a handle to the tep_handle
-  *
-- * This returns the size of a memory page on the current machine
-+ * This returns the size of a memory page on the traced machine
-  * If @pevent is NULL, 0 is returned.
+@@ -175,7 +175,7 @@ void tep_set_long_size(struct tep_handle *pevent, int long_size)
   */
  int tep_get_page_size(struct tep_handle *pevent)
-@@ -181,11 +181,11 @@ int tep_get_page_size(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->page_size;
+ 	return 0;
  }
- 
- /**
-- * tep_set_page_size - set the size of a memory page on the current machine
-+ * tep_set_page_size - set the size of a memory page on the traced machine
-  * @pevent: a handle to the tep_handle
-  * @_page_size: size of a memory page, in bytes
-  *
-- * This sets the size of a memory page on the current machine
-+ * This sets the size of a memory page on the traced machine
+@@ -189,7 +189,7 @@ int tep_get_page_size(struct tep_handle *pevent)
   */
  void tep_set_page_size(struct tep_handle *pevent, int _page_size)
  {
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index c00aebab3c33..000ab7514be7 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -6453,7 +6453,8 @@ int tep_get_any_field_val(struct trace_seq *s, struct tep_event *event,
-  * @record: The record with the field name.
-  * @err: print default error if failed.
-  *
-- * Returns: 0 on success, -1 field not found, or 1 if buffer is full.
-+ * Returns positive value on success, negative in case of an error,
-+ * or 0 if buffer is full.
+-	if(pevent)
++	if (pevent)
+ 		pevent->page_size = _page_size;
+ }
+ 
+@@ -202,7 +202,7 @@ void tep_set_page_size(struct tep_handle *pevent, int _page_size)
   */
- int tep_print_num_field(struct trace_seq *s, const char *fmt,
- 			struct tep_event *event, const char *name,
-@@ -6485,7 +6486,8 @@ int tep_print_num_field(struct trace_seq *s, const char *fmt,
-  * @record: The record with the field name.
-  * @err: print default error if failed.
-  *
-- * Returns: 0 on success, -1 field not found, or 1 if buffer is full.
-+ * Returns positive value on success, negative in case of an error,
-+ * or 0 if buffer is full.
+ int tep_file_bigendian(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->file_bigendian;
+ 	return 0;
+ }
+@@ -216,7 +216,7 @@ int tep_file_bigendian(struct tep_handle *pevent)
   */
- int tep_print_func_field(struct trace_seq *s, const char *fmt,
- 			 struct tep_event *event, const char *name,
+ void tep_set_file_bigendian(struct tep_handle *pevent, enum tep_endian endian)
+ {
+-	if(pevent)
++	if (pevent)
+ 		pevent->file_bigendian = endian;
+ }
+ 
+@@ -229,7 +229,7 @@ void tep_set_file_bigendian(struct tep_handle *pevent, enum tep_endian endian)
+  */
+ int tep_is_host_bigendian(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->host_bigendian;
+ 	return 0;
+ }
+@@ -243,7 +243,7 @@ int tep_is_host_bigendian(struct tep_handle *pevent)
+  */
+ void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian)
+ {
+-	if(pevent)
++	if (pevent)
+ 		pevent->host_bigendian = endian;
+ }
+ 
+@@ -256,7 +256,7 @@ void tep_set_host_bigendian(struct tep_handle *pevent, enum tep_endian endian)
+  */
+ int tep_is_latency_format(struct tep_handle *pevent)
+ {
+-	if(pevent)
++	if (pevent)
+ 		return pevent->latency_format;
+ 	return 0;
+ }
+@@ -270,6 +270,6 @@ int tep_is_latency_format(struct tep_handle *pevent)
+   */
+ void tep_set_latency_format(struct tep_handle *pevent, int lat)
+ {
+-	if(pevent)
++	if (pevent)
+ 		pevent->latency_format = lat;
+ }
 -- 
 2.20.1
