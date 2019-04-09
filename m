@@ -1,87 +1,96 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [BUG] perf: intel_pt won't display kernel function
-Date: Thu, 4 Apr 2019 19:38:04 +0200
-Message-ID: <20190404173804.GB16733@krava>
-References: <20190403145353.GE32553@kernel.org>
- <20190403151548.GF32553@kernel.org>
- <B07CAAC3-D085-443D-BB0C-05E9A8F3AFB2@fb.com>
- <20190403185053.GH32553@kernel.org>
- <124332A9-146A-446F-A82A-910C8319170E@fb.com>
- <425141B8-8908-4D48-90FD-8806BA9E9E12@fb.com>
- <A476B82A-4550-45F1-9A31-B1AA63C07489@fb.com>
- <20190404091438.GB31233@krava>
- <20190404122530.GC31233@krava>
- <678C87FF-A33E-477C-94C1-533026400B95@fb.com>
+Subject: Re: [PATCH] perf/report: [RFC] Handling OOM in perf report
+Date: Tue, 9 Apr 2019 12:42:05 +0200
+Message-ID: <20190409104205.GB29688@krava>
+References: <20190401142000.17679-1-tmricht@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <678C87FF-A33E-477C-94C1-533026400B95@fb.com>
+In-Reply-To: <20190401142000.17679-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Song Liu <songliubraving@fb.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <andi@firstfloor.org>, "jolsa@kernel.org" <jolsa@kernel.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Apr 04, 2019 at 05:08:55PM +0000, Song Liu wrote:
-> 
-> 
-> > On Apr 4, 2019, at 5:25 AM, Jiri Olsa <jolsa@redhat.com> wrote:
-> > 
-> > On Thu, Apr 04, 2019 at 11:14:38AM +0200, Jiri Olsa wrote:
-> > 
-> > SNIP
-> > 
-> >> Program received signal SIGABRT, Aborted.
-> >> 0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
-> >> Missing separate debuginfos, use: dnf debuginfo-install bzip2-libs-1.0.6-29.fc30.x86_64 elfutils-libelf-0.176-1.fc30.x86_64 elfutils-libs-0.176-1.fc30.x86_64 libgcc-9.0.1-0.10.fc30.x86_64 libunwind-1.3.1-2.fc30.x86_64 libxcrypt-4.4.4-2.fc30.x86_64 numactl-libs-2.0.12-2.fc30.x86_64 perl-libs-5.28.1-434.fc30.x86_64 python2-libs-2.7.16-1.fc30.x86_64 slang-2.3.2-5.fc30.x86_64 xz-libs-5.2.4-5.fc30.x86_64 zlib-1.2.11-15.fc30.x86_64
-> >> (gdb) bt
-> >> #0  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
-> >> #1  0x00007ffff75d0895 in abort () from /lib64/libc.so.6
-> >> #2  0x00007ffff75d0769 in __assert_fail_base.cold () from /lib64/libc.so.6
-> >> #3  0x00007ffff75de596 in __assert_fail () from /lib64/libc.so.6
-> >> #4  0x00000000004fc006 in refcount_sub_and_test (i=1, r=0x1224e88) at /home/jolsa/linux/tools/include/linux/refcount.h:131
-> >> #5  refcount_dec_and_test (r=0x1224e88) at /home/jolsa/linux/tools/include/linux/refcount.h:148
-> >> #6  map__put (map=0x1224df0) at util/map.c:299
-> >> #7  0x00000000004fdb95 in __maps__remove (map=0x1224df0, maps=0xb17d80) at util/map.c:953
-> >> #8  maps__remove (maps=0xb17d80, map=0x1224df0) at util/map.c:959
-> >> #9  0x00000000004f7d8a in map_groups__remove (map=<optimized out>, mg=<optimized out>) at util/map_groups.h:65
-> >> #10 machine__process_ksymbol_unregister (sample=<optimized out>, event=0x7ffff7279670, machine=<optimized out>) at util/machine.c:728
-> >> #11 machine__process_ksymbol (machine=<optimized out>, event=0x7ffff7279670, sample=<optimized out>) at util/machine.c:741
-> >> #12 0x00000000004fffbb in perf_session__deliver_event (session=0xb11390, event=0x7ffff7279670, tool=0x7fffffffc7b0, file_offset=13936) at util/session.c:1362
-> >> #13 0x00000000005039bb in do_flush (show_progress=false, oe=0xb17e80) at util/ordered-events.c:243
-> >> #14 __ordered_events__flush (oe=0xb17e80, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:322
-> >> #15 0x00000000005005e4 in perf_session__process_user_event (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8,
-> >>    file_offset=file_offset@entry=191224) at util/session.c:1402
-> >> #16 0x000000000050091e in perf_session__process_event (file_offset=191224, event=0x7ffff72a4af8, session=0xb11390) at util/session.c:1529
-> >> #17 process_simple (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8, file_offset=file_offset@entry=191224) at util/session.c:1962
-> >> #18 0x0000000000501f44 in reader__process_events (prog=0x7fffffffc680, session=0xb11390, rd=<synthetic pointer>) at util/session.c:1931
-> >> #19 __perf_session__process_events (session=0xb11390) at util/session.c:1985
-> >> #20 perf_session__process_events (session=0xb11390) at util/session.c:2018
-> >> #21 0x000000000045bb42 in __cmd_script (script=0x7fffffffc7b0) at builtin-script.c:2429
-> >> #22 cmd_script (argc=<optimized out>, argv=<optimized out>) at builtin-script.c:3770
-> >> #23 0x00000000004a65cb in run_builtin (p=p@entry=0x994918 <commands+408>, argc=argc@entry=4, argv=argv@entry=0x7fffffffe160) at perf.c:303
-> >> #24 0x000000000042da1e in handle_internal_command (argv=0x7fffffffe160, argc=4) at perf.c:355
-> >> #25 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at perf.c:399
-> >> #26 main (argc=4, argv=0x7fffffffe160) at perf.c:521
-> > 
-> 
-> For some reason, I cannot repro this issue. I tried to load two
-> bpf programs with same name, but that doesn't trigger it either. 
+On Mon, Apr 01, 2019 at 04:20:00PM +0200, Thomas Richter wrote:
 
-for some reason I see multiple same name of bpf programs
-on my setup.. need to check for the reason
+SNIP
+
+> perf_session__process_event() returns to its caller, where -ENOMEM is
+> changed to -EINVAL and processing stops:
+> 
+>  if ((skip = perf_session__process_event(session, event, head)) < 0) {
+>       pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+> 	     head, event->header.size, event->header.type);
+>       err = -EINVAL;
+>       goto out_err;
+>  }
+> 
+> This occured in the FINISHED_ROUND event when it has to process some
+> 10000 entries and ran out of memory.
+> 
+> I understand that my perf.data file might just be too big, but I would
+> like to see some error message indicating OOM error instead of
+> processing failure of a unrelated event.
+
+you can limit the size of the report queue via ~/.perfconfig file:
+
+[report]
+queue-size=1M
+
+above should use only 1M for the queue management data the data
+for sample still get allocated thought.. but it could help
 
 > 
+> However this patch just does what the pr_debug() statement indicates,
+> the event is skipped and processing continues.
+> But at least the root cause is indicated and also shows up in the
+> GUI.
 > 
-> > 
-> > we dont increase the map's reference for same name,
-> > which we need to.. I assume we we re able to hit this
-> > path with bpf maps/dso with same name
-> > 
-> > jirka
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/builtin-report.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> Does the following change fix the issue on your side?
+> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+> index 4054eb1f98ac..7a27b815f7a8 100644
+> --- a/tools/perf/builtin-report.c
+> +++ b/tools/perf/builtin-report.c
+> @@ -283,8 +283,13 @@ static int process_sample_event(struct perf_tool *tool,
+>  		al.map->dso->hit = 1;
+>  
+>  	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
+> -	if (ret < 0)
+> +	if (ret < 0) {
+>  		pr_debug("problem adding hist entry, skipping event\n");
+> +		if (ret == -ENOMEM) {
+> +			pr_err("Running out of memory\n");
+> +			ret = 0;
+> +		}
+> +	}
 
-yes, I'll post full patch later
+
+I think we can propagate the error completely (like below),
+and even warn about ENOMEM specificaly
+
+but I think we should bail out in case of ENOMEM, because
+the data are incomplete and misleading
 
 jirka
+
+
+---
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b17f1c9bc965..eea247a26ad8 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1933,7 +1933,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+ 		       file_offset + head, event->header.size,
+ 		       event->header.type);
+-		err = -EINVAL;
++		err = skip;
+ 		goto out;
+ 	}
+ 
