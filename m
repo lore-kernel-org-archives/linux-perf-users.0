@@ -1,49 +1,82 @@
-From: Linhaifeng <haifeng.lin@huawei.com>
-Subject: perf tools:Is there any tools  to found out the max latency by irq
+From: William Cohen <wcohen@redhat.com>
+Subject: Re: perf tools:Is there any tools to found out the max latency by irq
  or cpu idle
-Date: Fri, 12 Apr 2019 00:57:24 +0000
-Message-ID: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
+Date: Fri, 12 Apr 2019 10:06:20 -0400
+Message-ID: <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
+References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Linhaifeng <haifeng.lin@huawei.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGksIA0KSSBoYXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6DQoNCldo
-aWxlICgxKSB7DQrCoMKgwqAgc3RhcnQgPSByZHRzYygpOw0KwqDCoMKgIHNxcnQgKDEwMjQpO8Kg
-wqDCoMKgwqAgDQrjgIDjgIBlbmQgPSByZHRzYygpOw0K44CA44CAY3ljbGVzID0gZW5kIOKAkyBz
-dGFydDsNCuOAgOOAgHByaW50ZigiY3ljbGVzOiAlZC0lMDJkLSUwMmQgJTAyZDolMDJkOiUwMmQ6
-ICVsdVxuIiwgDQrjgIDjgIDjgIDjgIDjgIDjgIAxOTAwK3RpbWVpbmZvLT50bV95ZWFyLCAxK3Rp
-bWVpbmZvLT50bV9tb24sIHRpbWVpbmZvLT50bV9tZGF5LCB0aW1laW5mby0+dG1faG91ciwgdGlt
-ZWluZm8tPnRtX21pbiwgdGltZWluZm8tPnRtX3NlYywNCuOAgOOAgOOAgOOAgOOAgOOAgGN5Y2xl
-cyk7DQp9DQpJdCBwcmludCB0aGUgY3ljbGVzIG9mIHNxcnQgZXZlcnkgc2Vjb25kIGFuZCBydW4g
-d2l0aCB0YXNrc2V0IOKAk2MgMSAuL3NxcnQuDQpUaGUgcmVzdWx0IG9mIHRlc3QgaXM6DQoNCnNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1MDogNDM5NjgNCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MTog
-NDQwNjANCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MjogNDkwMTINCnNxcnQgMjAxOS0wNC0xMCAy
-Mzo1Mzo1MzogMzgxNzINCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NDogMTMxMDgxNDA4DQpzcXJ0
-IDIwMTktMDQtMTAgMjM6NTM6NTU6IDQzNjAwDQpzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTY6IDQ2
-NzA0DQpzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTc6IDQ2ODgwDQpzcXJ0IDIwMTktMDQtMTAgMjM6
-NTM6NTg6IDQ0MzMyDQrigKbigKYNCnNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTMxMDgxNDA4
-DQrigKbigKYNCnNxcnQgMjAxOS0wNC0xMCAwNDo0MDozNTogMTMxMDgxNDA4DQrigKbigKYNCg0K
-RXZlcnkgMmhvdXIyM21pbiB0aGVyZSB3b3VsZCBiZSBhIGxhcmdlIGN5Y2xlcy4gSSB1c2UgcGVy
-ZiBzY2hlZCBub3QgZm91bmQgYW55IHNjaGVkX3N3aXRjaCBldmVudHMuDQoNCkwyR1dfMjY4MDov
-aG9tZS9mc3Avem4gIyBwZXJmIHNjaGVkIHJlY29yZCAtQyA2LTExIC1vIHBlcmYuc2NoZWQNCl5D
-WyBwZXJmIHJlY29yZDogV29rZW4gdXAgNjQgdGltZXMgdG8gd3JpdGUgZGF0YSBdDQpbIHBlcmYg
-cmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMjA0Ljg3OCBNQiBwZXJmLnNjaGVkICgxOTExMTg5
-IHNhbXBsZXMpIF0NCg0KTDJHV18yNjgwOi9ob21lL2ZzcC96biAjIHBlcmYgc2NoZWQgbGF0ZW5j
-eSAtaSBwZXJmLnNjaGVkIA0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KwqAgVGFza8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgfMKgwqAgUnVudGltZSBtc8KgIHwgU3dpdGNoZXMgfCBBdmVyYWdlIGRlbGF5IG1zIHwg
-TWF4aW11bSBkZWxheSBtcyB8IE1heGltdW0gZGVsYXkgYXTCoMKgwqDCoMKgwqAgfA0KLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCi0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQrCoCBU
-T1RBTDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqAgMC4wMDAgbXMg
-fCDCoMKgwqDCoMKgwqDCoDAgfA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQoNCg0KDQpJcyB0aGVyZSBhbnkgb3RoZXIgdG9vbHMgb2YgcGVyZiB0
-byBmb3VuZCBvdXQgdGhlIG1heCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZSA/DQoNCg0K
+On 4/11/19 8:57 PM, Linhaifeng wrote:
+> Hi, 
+> I have a single thread application like this:
+> 
+> While (1) {
+>     start = rdtsc();
+>     sqrt (1024);      
+> 　　end = rdtsc();
+> 　　cycles = end – start;
+> 　　printf("cycles: %d-%02d-%02d %02d:%02d:%02d: %lu\n", 
+> 　　　　　　1900+timeinfo->tm_year, 1+timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
+> 　　　　　　cycles);
+> }
+> It print the cycles of sqrt every second and run with taskset –c 1 ./sqrt.
+> The result of test is:
+> 
+> sqrt 2019-04-10 23:53:50: 43968
+> sqrt 2019-04-10 23:53:51: 44060
+> sqrt 2019-04-10 23:53:52: 49012
+> sqrt 2019-04-10 23:53:53: 38172
+> sqrt 2019-04-10 23:53:54: 131081408
+> sqrt 2019-04-10 23:53:55: 43600
+> sqrt 2019-04-10 23:53:56: 46704
+> sqrt 2019-04-10 23:53:57: 46880
+> sqrt 2019-04-10 23:53:58: 44332
+> ……
+> sqrt 2019-04-10 02:17:15: 131081408
+> ……
+> sqrt 2019-04-10 04:40:35: 131081408
+> ……
+> 
+> Every 2hour23min there would be a large cycles. I use perf sched not found any sched_switch events.
+
+Hi,
+
+The fact that it is the same value 131081408 every 2 hours 23 minutes looks suspect. One would expect some variation in the counts.  It looks like there is some rollover or overflow issue.  It would be helpful to print out the start and end values to see what is going on with the raw rdstc values.  Maybe the thread is being moved between processors and the TSC are out of sync.  What particular processor model was this running on? Was this running on physical hardware or inside a kvm guest? 
+
+According to the Intel 64 and IA-32 Architecture Software Devloper's Manual Volume 3 (325384-sdm-vol-3abcd.pdf):
+
+The RDTSC instruction reads the time-stamp counter and is guaranteed to return a monotonically increasing
+unique value whenever executed, except for a 64-bit counter wraparound. Intel guarantees that the time-stamp
+counter will not wraparound within 10 years after being reset. The period for counter wrap is longer for Pentium 4,
+Intel Xeon, P6 family, and Pentium processors.
+
+-Will Cohen
+
+
+> 
+> L2GW_2680:/home/fsp/zn # perf sched record -C 6-11 -o perf.sched
+> ^C[ perf record: Woken up 64 times to write data ]
+> [ perf record: Captured and wrote 204.878 MB perf.sched (1911189 samples) ]
+> 
+> L2GW_2680:/home/fsp/zn # perf sched latency -i perf.sched 
+> 
+> -----------------------------------------------------------------------------------------------------------------
+>   Task                  |   Runtime ms  | Switches | Average delay ms | Maximum delay ms | Maximum delay at       |
+> -----------------------------------------------------------------------------------------------------------------
+> -----------------------------------------------------------------------------------------------------------------
+>   TOTAL:                |      0.000 ms |        0 |
+> ---------------------------------------------------
+> 
+> 
+> 
+> Is there any other tools of perf to found out the max latency by irq or cpu idle ?
+> 
+> 
