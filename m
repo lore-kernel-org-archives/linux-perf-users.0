@@ -1,135 +1,49 @@
-From: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf/report: [RFC] Handling OOM in perf report
-Date: Wed, 10 Apr 2019 09:17:30 +0200
-Message-ID: <06273b1f-faea-5d88-1696-eb686ef47a6c@linux.ibm.com>
-References: <20190401142000.17679-1-tmricht@linux.ibm.com>
- <20190409104205.GB29688@krava>
+From: Linhaifeng <haifeng.lin@huawei.com>
+Subject: perf tools:Is there any tools  to found out the max latency by irq
+ or cpu idle
+Date: Fri, 12 Apr 2019 00:57:24 +0000
+Message-ID: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190409104205.GB29688@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/9/19 12:42 PM, Jiri Olsa wrote:
-> On Mon, Apr 01, 2019 at 04:20:00PM +0200, Thomas Richter wrote:
-> 
-> SNIP
-> 
->> perf_session__process_event() returns to its caller, where -ENOMEM is
->> changed to -EINVAL and processing stops:
->>
->>  if ((skip = perf_session__process_event(session, event, head)) < 0) {
->>       pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
->> 	     head, event->header.size, event->header.type);
->>       err = -EINVAL;
->>       goto out_err;
->>  }
->>
->> This occured in the FINISHED_ROUND event when it has to process some
->> 10000 entries and ran out of memory.
->>
->> I understand that my perf.data file might just be too big, but I would
->> like to see some error message indicating OOM error instead of
->> processing failure of a unrelated event.
-> 
-> you can limit the size of the report queue via ~/.perfconfig file:
-> 
-> [report]
-> queue-size=1M
-> 
-> above should use only 1M for the queue management data the data
-> for sample still get allocated thought.. but it could help
-> 
->>
->> However this patch just does what the pr_debug() statement indicates,
->> the event is skipped and processing continues.
->> But at least the root cause is indicated and also shows up in the
->> GUI.
->>
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> ---
->>  tools/perf/builtin-report.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
->> index 4054eb1f98ac..7a27b815f7a8 100644
->> --- a/tools/perf/builtin-report.c
->> +++ b/tools/perf/builtin-report.c
->> @@ -283,8 +283,13 @@ static int process_sample_event(struct perf_tool *tool,
->>  		al.map->dso->hit = 1;
->>  
->>  	ret = hist_entry_iter__add(&iter, &al, rep->max_stack, rep);
->> -	if (ret < 0)
->> +	if (ret < 0) {
->>  		pr_debug("problem adding hist entry, skipping event\n");
->> +		if (ret == -ENOMEM) {
->> +			pr_err("Running out of memory\n");
->> +			ret = 0;
->> +		}
->> +	}
-> 
-> 
-> I think we can propagate the error completely (like below),
-> and even warn about ENOMEM specificaly
-> 
-> but I think we should bail out in case of ENOMEM, because
-> the data are incomplete and misleading
-> 
-> jirka
-> 
-> 
-> ---
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index b17f1c9bc965..eea247a26ad8 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1933,7 +1933,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
->  		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
->  		       file_offset + head, event->header.size,
->  		       event->header.type);
-> -		err = -EINVAL;
-> +		err = skip;
->  		goto out;
->  	}
->  
-> 
-
-Above patch does not help, you simply return -ENOMEM instead of -EINVAL and processing
-stops with no indication that perf ran out of memory. Bailing out in this case is ok.
-
-I am fine with your patch, as long as it gives a reason why processing stopped.
-In the GUI it shows on the bottom line the reason:
-
-  0xf4198 [0x8]: failed to process type: 68 [Cannot allocate memory]
-
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index b17f1c9bc965..e89716175588 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 
-        if (size < sizeof(struct perf_event_header) ||
-            (skip = rd->process(session, event, file_pos)) < 0) {
--               pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-+               pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
-                       file_offset + head, event->header.size,
--                      event->header.type);
--               err = -EINVAL;
-+                      event->header.type, strerror(-skip));
-+               err = skip;
-                goto out;
-        }
- 
-[root@m35lp76 perf]#
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+SGksIA0KSSBoYXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6DQoNCldo
+aWxlICgxKSB7DQrCoMKgwqAgc3RhcnQgPSByZHRzYygpOw0KwqDCoMKgIHNxcnQgKDEwMjQpO8Kg
+wqDCoMKgwqAgDQrjgIDjgIBlbmQgPSByZHRzYygpOw0K44CA44CAY3ljbGVzID0gZW5kIOKAkyBz
+dGFydDsNCuOAgOOAgHByaW50ZigiY3ljbGVzOiAlZC0lMDJkLSUwMmQgJTAyZDolMDJkOiUwMmQ6
+ICVsdVxuIiwgDQrjgIDjgIDjgIDjgIDjgIDjgIAxOTAwK3RpbWVpbmZvLT50bV95ZWFyLCAxK3Rp
+bWVpbmZvLT50bV9tb24sIHRpbWVpbmZvLT50bV9tZGF5LCB0aW1laW5mby0+dG1faG91ciwgdGlt
+ZWluZm8tPnRtX21pbiwgdGltZWluZm8tPnRtX3NlYywNCuOAgOOAgOOAgOOAgOOAgOOAgGN5Y2xl
+cyk7DQp9DQpJdCBwcmludCB0aGUgY3ljbGVzIG9mIHNxcnQgZXZlcnkgc2Vjb25kIGFuZCBydW4g
+d2l0aCB0YXNrc2V0IOKAk2MgMSAuL3NxcnQuDQpUaGUgcmVzdWx0IG9mIHRlc3QgaXM6DQoNCnNx
+cnQgMjAxOS0wNC0xMCAyMzo1Mzo1MDogNDM5NjgNCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MTog
+NDQwNjANCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MjogNDkwMTINCnNxcnQgMjAxOS0wNC0xMCAy
+Mzo1Mzo1MzogMzgxNzINCnNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NDogMTMxMDgxNDA4DQpzcXJ0
+IDIwMTktMDQtMTAgMjM6NTM6NTU6IDQzNjAwDQpzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTY6IDQ2
+NzA0DQpzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTc6IDQ2ODgwDQpzcXJ0IDIwMTktMDQtMTAgMjM6
+NTM6NTg6IDQ0MzMyDQrigKbigKYNCnNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTMxMDgxNDA4
+DQrigKbigKYNCnNxcnQgMjAxOS0wNC0xMCAwNDo0MDozNTogMTMxMDgxNDA4DQrigKbigKYNCg0K
+RXZlcnkgMmhvdXIyM21pbiB0aGVyZSB3b3VsZCBiZSBhIGxhcmdlIGN5Y2xlcy4gSSB1c2UgcGVy
+ZiBzY2hlZCBub3QgZm91bmQgYW55IHNjaGVkX3N3aXRjaCBldmVudHMuDQoNCkwyR1dfMjY4MDov
+aG9tZS9mc3Avem4gIyBwZXJmIHNjaGVkIHJlY29yZCAtQyA2LTExIC1vIHBlcmYuc2NoZWQNCl5D
+WyBwZXJmIHJlY29yZDogV29rZW4gdXAgNjQgdGltZXMgdG8gd3JpdGUgZGF0YSBdDQpbIHBlcmYg
+cmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMjA0Ljg3OCBNQiBwZXJmLnNjaGVkICgxOTExMTg5
+IHNhbXBsZXMpIF0NCg0KTDJHV18yNjgwOi9ob21lL2ZzcC96biAjIHBlcmYgc2NoZWQgbGF0ZW5j
+eSAtaSBwZXJmLnNjaGVkIA0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KwqAgVGFza8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfMKgwqAgUnVudGltZSBtc8KgIHwgU3dpdGNoZXMgfCBBdmVyYWdlIGRlbGF5IG1zIHwg
+TWF4aW11bSBkZWxheSBtcyB8IE1heGltdW0gZGVsYXkgYXTCoMKgwqDCoMKgwqAgfA0KLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCi0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQrCoCBU
+T1RBTDrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqDCoMKgwqAgMC4wMDAgbXMg
+fCDCoMKgwqDCoMKgwqDCoDAgfA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tDQoNCg0KDQpJcyB0aGVyZSBhbnkgb3RoZXIgdG9vbHMgb2YgcGVyZiB0
+byBmb3VuZCBvdXQgdGhlIG1heCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZSA/DQoNCg0K
