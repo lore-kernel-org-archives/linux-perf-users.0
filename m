@@ -1,123 +1,110 @@
-From: Song Liu <songliubraving@fb.com>
-Subject: Re: [PATCH 3/7] perf header: Fix lock/unlock imbalances when
- processing BPF/BTF info
-Date: Fri, 12 Apr 2019 16:14:00 +0000
-Message-ID: <FDB4E0DB-9C30-486E-8A6E-407438F163C9@fb.com>
-References: <20190412142250.20595-1-acme@kernel.org>
- <20190412142250.20595-4-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL 0/7] perf/urgent fixes
+Date: Fri, 12 Apr 2019 18:33:07 +0200
+Message-ID: <20190412163307.GB123006@gmail.com>
+References: <20190412142946.21966-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190412142250.20595-4-acme@kernel.org>
-Content-Language: en-US
-Content-ID: <1F4384D30FEBAC4CBDF006E695174EC4@namprd15.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20190412142946.21966-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, LKML <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, "Gustavo A . R . Silva" <gustavo@embeddedor.com>, Mao Han <han_mao@c-sky.com>, Peter Zijlstra <peterz@infradead.org>, Rikard Falkeborn <rikard.falkeborn@gmail.com>, Tom Lendacky <thomas.lendacky@amd.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> On Apr 12, 2019, at 7:22 AM, Arnaldo Carvalho de Melo <acme@kernel.org> w=
-rote:
->=20
-> From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
->=20
-> Fix lock/unlock imbalances by refactoring the code a bit and adding
-> calls to up_write() before return.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Acked-by: Song Liu <songliubraving@fb.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Addresses-Coverity-ID: 1444315 ("Missing unlock")
-> Addresses-Coverity-ID: 1444316 ("Missing unlock")
-> Fixes: a70a1123174a ("perf bpf: Save BTF information as headers to perf.d=
-ata")
-> Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers=
- to perf.data")
-> Link: http://lkml.kernel.org/r/20190408173355.GA10501@embeddedor
-> [ Simplified the exit path to have just one up_write() + return ]
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 6d3edaae16c6c7d238360f2841212c2b26774d5e:
+> 
+>   x86/perf/amd: Resolve NMI latency issues for active PMCs (2019-04-03 11:40:32 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.1-20190412
+> 
+> for you to fetch changes up to 21e6dfe04861c2c1b529f2759850bc62a80ca050:
+> 
+>   perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user) (2019-04-10 10:25:28 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> core:
+> 
+>   Mao Han:
+> 
+>   - Use hweight64() instead of hweight_long(attr.sample_regs_user) when parsing
+>     samples, this is what the kernel uses and fixes de problem in 32-bit
+>     architectures such as C-SKY that have more than 32 registers that can come
+>     in a sample.
+> 
+> perf stat:
+> 
+>   Jiri Olsa:
+> 
+>   - Disable DIR_FORMAT feature for 'perf stat record', fixing an assert()
+>     failure.
+> 
+> Intel PT:
+> 
+>   Adrian Hunter:
+> 
+>   - Fix use of parent_id in calls_view in export-to-sqlite.py.
+> 
+> BPF:
+> 
+>   Gustavo A. R. Silva:
+> 
+>   - Fix lock/unlock imbalances when processing BPF/BTF info, found by the
+>     coverity tool.
+> 
+> libtraceevent:
+> 
+>   Rikard Falkeborn:
+> 
+>   - Fix missing equality check for strcmp(), detected by the cppcheck tool.
+> 
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (1):
+>       perf scripts python: export-to-sqlite.py: Fix use of parent_id in calls_view
+> 
+> Gustavo A. R. Silva (1):
+>       perf header: Fix lock/unlock imbalances when processing BPF/BTF info
+> 
+> Jiri Olsa (1):
+>       perf stat: Disable DIR_FORMAT feature for 'perf stat record'
+> 
+> Lendacky, Thomas (2):
+>       x86/perf/amd: Remove need to check "running" bit in NMI handler
+>       x86/perf/amd: Fix build failure when CONFIG_HAVE_NMI_WATCHDOG is not set
+> 
+> Mao Han (1):
+>       perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user)
+> 
+> Rikard Falkeborn (1):
+>       tools lib traceevent: Fix missing equality check for strcmp
+> 
+>  arch/x86/events/amd/core.c                    | 21 +++++++++++++++++++--
+>  arch/x86/events/core.c                        | 13 +++----------
+>  tools/lib/traceevent/event-parse.c            |  2 +-
+>  tools/perf/builtin-stat.c                     |  1 +
+>  tools/perf/scripts/python/export-to-sqlite.py |  2 +-
+>  tools/perf/util/evsel.c                       | 12 ++++++------
+>  tools/perf/util/header.c                      | 22 +++++++++++++---------
+>  7 files changed, 44 insertions(+), 29 deletions(-)
 
-Acked-by: Song Liu <songliubraving@fb.com>
+Pulled, thanks a lot Arnaldo!
 
-
-> ---
-> tools/perf/util/header.c | 22 +++++++++++++---------
-> 1 file changed, 13 insertions(+), 9 deletions(-)
->=20
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index b9e693825873..2d2af2ac2b1e 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -2606,6 +2606,7 @@ static int process_bpf_prog_info(struct feat_fd *ff=
-, void *data __maybe_unused)
-> 		perf_env__insert_bpf_prog_info(env, info_node);
-> 	}
->=20
-> +	up_write(&env->bpf_progs.lock);
-> 	return 0;
-> out:
-> 	free(info_linear);
-> @@ -2623,7 +2624,9 @@ static int process_bpf_prog_info(struct feat_fd *ff=
- __maybe_unused, void *data _
-> static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
-> {
-> 	struct perf_env *env =3D &ff->ph->env;
-> +	struct btf_node *node =3D NULL;
-> 	u32 count, i;
-> +	int err =3D -1;
->=20
-> 	if (ff->ph->needs_swap) {
-> 		pr_warning("interpreting btf from systems with endianity is not yet sup=
-ported\n");
-> @@ -2636,31 +2639,32 @@ static int process_bpf_btf(struct feat_fd *ff, vo=
-id *data __maybe_unused)
-> 	down_write(&env->bpf_progs.lock);
->=20
-> 	for (i =3D 0; i < count; ++i) {
-> -		struct btf_node *node;
-> 		u32 id, data_size;
->=20
-> 		if (do_read_u32(ff, &id))
-> -			return -1;
-> +			goto out;
-> 		if (do_read_u32(ff, &data_size))
-> -			return -1;
-> +			goto out;
->=20
-> 		node =3D malloc(sizeof(struct btf_node) + data_size);
-> 		if (!node)
-> -			return -1;
-> +			goto out;
->=20
-> 		node->id =3D id;
-> 		node->data_size =3D data_size;
->=20
-> -		if (__do_read(ff, node->data, data_size)) {
-> -			free(node);
-> -			return -1;
-> -		}
-> +		if (__do_read(ff, node->data, data_size))
-> +			goto out;
->=20
-> 		perf_env__insert_btf(env, node);
-> +		node =3D NULL;
-> 	}
->=20
-> +	err =3D 0;
-> +out:
-> 	up_write(&env->bpf_progs.lock);
-> -	return 0;
-> +	free(node);
-> +	return err;
-> }
->=20
-> struct feature_ops {
-> --=20
-> 2.20.1
->=20
+	Ingo
