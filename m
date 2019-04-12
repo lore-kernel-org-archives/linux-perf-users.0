@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/7] tools lib traceevent: Fix missing equality check for strcmp
-Date: Fri, 12 Apr 2019 11:22:49 -0300
-Message-ID: <20190412142250.20595-7-acme@kernel.org>
+Subject: [PATCH 7/7] perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user)
+Date: Fri, 12 Apr 2019 11:22:50 -0300
+Message-ID: <20190412142250.20595-8-acme@kernel.org>
 References: <20190412142250.20595-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,58 +9,90 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190412142250.20595-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Rikard Falkeborn <rikard.falkeborn@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mao Han <han_mao@c-sky.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Mao Han <han_mao@c-sky.com>
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
+On 32-bits platform with more than 32 registers, the 64 bits mask is
+truncate to the lower 32 bits and the return value of hweight_long will
+always smaller than 32. When kernel outputs more than 32 registers, but
+the user perf program only counts 32, there will be a data mismatch
+result to overflow check fail.
 
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
-
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
-
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
-
-Detected by cppcheck.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: 6a21c0b5c2ab ("perf tools: Add core support for sampling intr machine state regs")
+Fixes: d03f2170546d ("perf tools: Expand perf_event__synthesize_sample()")
+Fixes: 0f6a30150ca2 ("perf tools: Support user regs and stack in sample parsing")
+Link: http://lkml.kernel.org/r/29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 87494c7c619d..981c6ce2da2c 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2233,7 +2233,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 66d066f18b5b..966360844fff 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2368,7 +2368,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 		if (data->user_regs.abi) {
+ 			u64 mask = evsel->attr.sample_regs_user;
  
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
+-			sz = hweight_long(mask) * sizeof(u64);
++			sz = hweight64(mask) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			data->user_regs.mask = mask;
+ 			data->user_regs.regs = (u64 *)array;
+@@ -2424,7 +2424,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 		if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
+ 			u64 mask = evsel->attr.sample_regs_intr;
  
- 	if (strcmp(type, "s8") == 0)
+-			sz = hweight_long(mask) * sizeof(u64);
++			sz = hweight64(mask) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			data->intr_regs.mask = mask;
+ 			data->intr_regs.regs = (u64 *)array;
+@@ -2552,7 +2552,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs.abi) {
+ 			result += sizeof(u64);
+-			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -2580,7 +2580,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs.abi) {
+ 			result += sizeof(u64);
+-			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -2710,7 +2710,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs.abi) {
+ 			*array++ = sample->user_regs.abi;
+-			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
+ 			memcpy(array, sample->user_regs.regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
+@@ -2746,7 +2746,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs.abi) {
+ 			*array++ = sample->intr_regs.abi;
+-			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+ 			memcpy(array, sample->intr_regs.regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
 -- 
 2.20.1
