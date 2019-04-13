@@ -1,110 +1,87 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL 0/7] perf/urgent fixes
-Date: Fri, 12 Apr 2019 18:33:07 +0200
-Message-ID: <20190412163307.GB123006@gmail.com>
-References: <20190412142946.21966-1-acme@kernel.org>
+From: Linhaifeng <haifeng.lin@huawei.com>
+Subject: RE: perf tools:Is there any tools to found out the max latency by
+ irq or cpu idle
+Date: Sat, 13 Apr 2019 06:01:23 +0000
+Message-ID: <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
+References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
+ <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190412142946.21966-1-acme@kernel.org>
+In-Reply-To: <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, "Gustavo A . R . Silva" <gustavo@embeddedor.com>, Mao Han <han_mao@c-sky.com>, Peter Zijlstra <peterz@infradead.org>, Rikard Falkeborn <rikard.falkeborn@gmail.com>, Tom Lendacky <thomas.lendacky@amd.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: William Cohen <wcohen@redhat.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 6d3edaae16c6c7d238360f2841212c2b26774d5e:
-> 
->   x86/perf/amd: Resolve NMI latency issues for active PMCs (2019-04-03 11:40:32 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.1-20190412
-> 
-> for you to fetch changes up to 21e6dfe04861c2c1b529f2759850bc62a80ca050:
-> 
->   perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user) (2019-04-10 10:25:28 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> core:
-> 
->   Mao Han:
-> 
->   - Use hweight64() instead of hweight_long(attr.sample_regs_user) when parsing
->     samples, this is what the kernel uses and fixes de problem in 32-bit
->     architectures such as C-SKY that have more than 32 registers that can come
->     in a sample.
-> 
-> perf stat:
-> 
->   Jiri Olsa:
-> 
->   - Disable DIR_FORMAT feature for 'perf stat record', fixing an assert()
->     failure.
-> 
-> Intel PT:
-> 
->   Adrian Hunter:
-> 
->   - Fix use of parent_id in calls_view in export-to-sqlite.py.
-> 
-> BPF:
-> 
->   Gustavo A. R. Silva:
-> 
->   - Fix lock/unlock imbalances when processing BPF/BTF info, found by the
->     coverity tool.
-> 
-> libtraceevent:
-> 
->   Rikard Falkeborn:
-> 
->   - Fix missing equality check for strcmp(), detected by the cppcheck tool.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (1):
->       perf scripts python: export-to-sqlite.py: Fix use of parent_id in calls_view
-> 
-> Gustavo A. R. Silva (1):
->       perf header: Fix lock/unlock imbalances when processing BPF/BTF info
-> 
-> Jiri Olsa (1):
->       perf stat: Disable DIR_FORMAT feature for 'perf stat record'
-> 
-> Lendacky, Thomas (2):
->       x86/perf/amd: Remove need to check "running" bit in NMI handler
->       x86/perf/amd: Fix build failure when CONFIG_HAVE_NMI_WATCHDOG is not set
-> 
-> Mao Han (1):
->       perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user)
-> 
-> Rikard Falkeborn (1):
->       tools lib traceevent: Fix missing equality check for strcmp
-> 
->  arch/x86/events/amd/core.c                    | 21 +++++++++++++++++++--
->  arch/x86/events/core.c                        | 13 +++----------
->  tools/lib/traceevent/event-parse.c            |  2 +-
->  tools/perf/builtin-stat.c                     |  1 +
->  tools/perf/scripts/python/export-to-sqlite.py |  2 +-
->  tools/perf/util/evsel.c                       | 12 ++++++------
->  tools/perf/util/header.c                      | 22 +++++++++++++---------
->  7 files changed, 44 insertions(+), 29 deletions(-)
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+U29ycnksIHRoZSB2YWx1ZSAxMzEwODE0MDggaXMganVzdCBmb3IgZXhhbXBsZS4gQWN0dWFsbHkg
+dGhlIHJlc3VsdCBpcyBsaWtlIHRoaXM6DQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUwOiA0Mzk2
+OA0KIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1MTogNDQwNjANCiBzcXJ0IDIwMTktMDQtMTAgMjM6
+NTM6NTI6IDQ5MDEyDQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUzOiAzODE3Mg0KIHNxcnQgMjAx
+OS0wNC0xMCAyMzo1Mzo1NDogMTMxMDgxNDA4DQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU1OiA0
+MzYwMA0KIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NjogNDY3MDQNCiBzcXJ0IDIwMTktMDQtMTAg
+MjM6NTM6NTc6IDQ2ODgwDQogc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU4OiA0NDMzMg0KIOKApuKA
+pg0KIHNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTM2MzQ1ODc2DQog4oCm4oCmDQogc3FydCAy
+MDE5LTA0LTEwIDA0OjQwOjM1OiAxMzYzMzU2NDQNCiDigKbigKYNCg0KLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCkZyb206IFdpbGxpYW0gQ29oZW4gW21haWx0bzp3Y29oZW5AcmVkaGF0LmNv
+bV0gDQpTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjA2DQpUbzogTGluaGFpZmVuZyA8aGFpZmVu
+Zy5saW5AaHVhd2VpLmNvbT47IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpTdWJqZWN0OiBSZTogcGVyZiB0b29sczpJcyB0aGVy
+ZSBhbnkgdG9vbHMgdG8gZm91bmQgb3V0IHRoZSBtYXggbGF0ZW5jeSBieSBpcnEgb3IgY3B1IGlk
+bGUNCg0KT24gNC8xMS8xOSA4OjU3IFBNLCBMaW5oYWlmZW5nIHdyb3RlOg0KPiBIaSwNCj4gSSBo
+YXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6DQo+IA0KPiBXaGlsZSAo
+MSkgew0KPiDCoMKgwqAgc3RhcnQgPSByZHRzYygpOw0KPiDCoMKgwqAgc3FydCAoMTAyNCk7wqDC
+oMKgwqDCoCANCj4g44CA44CAZW5kID0gcmR0c2MoKTsNCj4g44CA44CAY3ljbGVzID0gZW5kIOKA
+kyBzdGFydDsNCj4g44CA44CAcHJpbnRmKCJjeWNsZXM6ICVkLSUwMmQtJTAyZCAlMDJkOiUwMmQ6
+JTAyZDogJWx1XG4iLCANCj4g44CA44CA44CA44CA44CA44CAMTkwMCt0aW1laW5mby0+dG1feWVh
+ciwgMSt0aW1laW5mby0+dG1fbW9uLCB0aW1laW5mby0+dG1fbWRheSwgdGltZWluZm8tPnRtX2hv
+dXIsIHRpbWVpbmZvLT50bV9taW4sIHRpbWVpbmZvLT50bV9zZWMsDQo+IOOAgOOAgOOAgOOAgOOA
+gOOAgGN5Y2xlcyk7DQo+IH0NCj4gSXQgcHJpbnQgdGhlIGN5Y2xlcyBvZiBzcXJ0IGV2ZXJ5IHNl
+Y29uZCBhbmQgcnVuIHdpdGggdGFza3NldCDigJNjIDEgLi9zcXJ0Lg0KPiBUaGUgcmVzdWx0IG9m
+IHRlc3QgaXM6DQo+IA0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTA6IDQzOTY4DQo+IHNxcnQg
+MjAxOS0wNC0xMCAyMzo1Mzo1MTogNDQwNjANCj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUyOiA0
+OTAxMg0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTM6IDM4MTcyDQo+IHNxcnQgMjAxOS0wNC0x
+MCAyMzo1Mzo1NDogMTMxMDgxNDA4DQo+IHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NTogNDM2MDAN
+Cj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU2OiA0NjcwNA0KPiBzcXJ0IDIwMTktMDQtMTAgMjM6
+NTM6NTc6IDQ2ODgwDQo+IHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1ODogNDQzMzINCj4g4oCm4oCm
+DQo+IHNxcnQgMjAxOS0wNC0xMCAwMjoxNzoxNTogMTMxMDgxNDA4DQo+IOKApuKApg0KPiBzcXJ0
+IDIwMTktMDQtMTAgMDQ6NDA6MzU6IDEzMTA4MTQwOA0KPiDigKbigKYNCj4gDQo+IEV2ZXJ5IDJo
+b3VyMjNtaW4gdGhlcmUgd291bGQgYmUgYSBsYXJnZSBjeWNsZXMuIEkgdXNlIHBlcmYgc2NoZWQg
+bm90IGZvdW5kIGFueSBzY2hlZF9zd2l0Y2ggZXZlbnRzLg0KDQpIaSwNCg0KVGhlIGZhY3QgdGhh
+dCBpdCBpcyB0aGUgc2FtZSB2YWx1ZSAxMzEwODE0MDggZXZlcnkgMiBob3VycyAyMyBtaW51dGVz
+IGxvb2tzIHN1c3BlY3QuIE9uZSB3b3VsZCBleHBlY3Qgc29tZSB2YXJpYXRpb24gaW4gdGhlIGNv
+dW50cy4gIEl0IGxvb2tzIGxpa2UgdGhlcmUgaXMgc29tZSByb2xsb3ZlciBvciBvdmVyZmxvdyBp
+c3N1ZS4gIEl0IHdvdWxkIGJlIGhlbHBmdWwgdG8gcHJpbnQgb3V0IHRoZSBzdGFydCBhbmQgZW5k
+IHZhbHVlcyB0byBzZWUgd2hhdCBpcyBnb2luZyBvbiB3aXRoIHRoZSByYXcgcmRzdGMgdmFsdWVz
+LiAgTWF5YmUgdGhlIHRocmVhZCBpcyBiZWluZyBtb3ZlZCBiZXR3ZWVuIHByb2Nlc3NvcnMgYW5k
+IHRoZSBUU0MgYXJlIG91dCBvZiBzeW5jLiAgV2hhdCBwYXJ0aWN1bGFyIHByb2Nlc3NvciBtb2Rl
+bCB3YXMgdGhpcyBydW5uaW5nIG9uPyBXYXMgdGhpcyBydW5uaW5nIG9uIHBoeXNpY2FsIGhhcmR3
+YXJlIG9yIGluc2lkZSBhIGt2bSBndWVzdD8gDQoNCkFjY29yZGluZyB0byB0aGUgSW50ZWwgNjQg
+YW5kIElBLTMyIEFyY2hpdGVjdHVyZSBTb2Z0d2FyZSBEZXZsb3BlcidzIE1hbnVhbCBWb2x1bWUg
+MyAoMzI1Mzg0LXNkbS12b2wtM2FiY2QucGRmKToNCg0KVGhlIFJEVFNDIGluc3RydWN0aW9uIHJl
+YWRzIHRoZSB0aW1lLXN0YW1wIGNvdW50ZXIgYW5kIGlzIGd1YXJhbnRlZWQgdG8gcmV0dXJuIGEg
+bW9ub3RvbmljYWxseSBpbmNyZWFzaW5nIHVuaXF1ZSB2YWx1ZSB3aGVuZXZlciBleGVjdXRlZCwg
+ZXhjZXB0IGZvciBhIDY0LWJpdCBjb3VudGVyIHdyYXBhcm91bmQuIEludGVsIGd1YXJhbnRlZXMg
+dGhhdCB0aGUgdGltZS1zdGFtcCBjb3VudGVyIHdpbGwgbm90IHdyYXBhcm91bmQgd2l0aGluIDEw
+IHllYXJzIGFmdGVyIGJlaW5nIHJlc2V0LiBUaGUgcGVyaW9kIGZvciBjb3VudGVyIHdyYXAgaXMg
+bG9uZ2VyIGZvciBQZW50aXVtIDQsIEludGVsIFhlb24sIFA2IGZhbWlseSwgYW5kIFBlbnRpdW0g
+cHJvY2Vzc29ycy4NCg0KLVdpbGwgQ29oZW4NCg0KDQo+IA0KPiBMMkdXXzI2ODA6L2hvbWUvZnNw
+L3puICMgcGVyZiBzY2hlZCByZWNvcmQgLUMgNi0xMSAtbyBwZXJmLnNjaGVkIF5DWyANCj4gcGVy
+ZiByZWNvcmQ6IFdva2VuIHVwIDY0IHRpbWVzIHRvIHdyaXRlIGRhdGEgXSBbIHBlcmYgcmVjb3Jk
+OiBDYXB0dXJlZCANCj4gYW5kIHdyb3RlIDIwNC44NzggTUIgcGVyZi5zY2hlZCAoMTkxMTE4OSBz
+YW1wbGVzKSBdDQo+IA0KPiBMMkdXXzI2ODA6L2hvbWUvZnNwL3puICMgcGVyZiBzY2hlZCBsYXRl
+bmN5IC1pIHBlcmYuc2NoZWQNCj4gDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiDCoCBUYXNrwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB8wqDCoCBSdW50aW1lIG1zwqAgfCBTd2l0Y2hlcyB8IEF2ZXJhZ2Ug
+ZGVsYXkgbXMgDQo+IHwgTWF4aW11bSBkZWxheSBtcyB8IE1heGltdW0gZGVsYXkgYXTCoMKgwqDC
+oMKgwqAgfA0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0NCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IMKgIFRPVEFMOsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoCB8wqDCoMKgwqDCoCAwLjAwMCBtcyB8IMKgwqDCoMKgwqDCoMKgMCB8DQo+IC0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiANCj4gDQo+
+IA0KPiBJcyB0aGVyZSBhbnkgb3RoZXIgdG9vbHMgb2YgcGVyZiB0byBmb3VuZCBvdXQgdGhlIG1h
+eCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZSA/DQo+IA0KPiANCg0K
