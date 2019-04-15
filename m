@@ -1,115 +1,81 @@
-From: William Cohen <wcohen@redhat.com>
-Subject: Re: perf tools:Is there any tools to found out the max latency by irq
- or cpu idle
-Date: Sat, 13 Apr 2019 20:09:19 -0400
-Message-ID: <5b1fc7cf-ddd5-ab2e-d87c-976c914bb01b@redhat.com>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
- <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
- <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf/report: [RFC] Handling OOM in perf report
+Date: Mon, 15 Apr 2019 10:28:09 +0200
+Message-ID: <20190415082809.GA13124@krava>
+References: <20190401142000.17679-1-tmricht@linux.ibm.com>
+ <20190409104205.GB29688@krava>
+ <06273b1f-faea-5d88-1696-eb686ef47a6c@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <06273b1f-faea-5d88-1696-eb686ef47a6c@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linhaifeng <haifeng.lin@huawei.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Thomas-Mich Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/13/19 2:01 AM, Linhaifeng wrote:
-> Sorry, the value 131081408 is just for example. Actually the result is like this:
->  sqrt 2019-04-10 23:53:50: 43968
->  sqrt 2019-04-10 23:53:51: 44060
->  sqrt 2019-04-10 23:53:52: 49012
->  sqrt 2019-04-10 23:53:53: 38172
->  sqrt 2019-04-10 23:53:54: 131081408
->  sqrt 2019-04-10 23:53:55: 43600
->  sqrt 2019-04-10 23:53:56: 46704
->  sqrt 2019-04-10 23:53:57: 46880
->  sqrt 2019-04-10 23:53:58: 44332
->  ……
->  sqrt 2019-04-10 02:17:15: 136345876
->  ……
->  sqrt 2019-04-10 04:40:35: 136335644
->  ……
+On Wed, Apr 10, 2019 at 09:17:30AM +0200, Thomas-Mich Richter wrote:
 
-Hi,
+SNIP
 
-Still it would be interesting to look at the two raw values used to compute the delta to better diagnose what is going on.
+> > 
+> > 
+> > ---
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index b17f1c9bc965..eea247a26ad8 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -1933,7 +1933,7 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+> >  		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+> >  		       file_offset + head, event->header.size,
+> >  		       event->header.type);
+> > -		err = -EINVAL;
+> > +		err = skip;
+> >  		goto out;
+> >  	}
+> >  
+> > 
+> 
+> Above patch does not help, you simply return -ENOMEM instead of -EINVAL and processing
+> stops with no indication that perf ran out of memory. Bailing out in this case is ok.
+> 
+> I am fine with your patch, as long as it gives a reason why processing stopped.
+> In the GUI it shows on the bottom line the reason:
+> 
+>   0xf4198 [0x8]: failed to process type: 68 [Cannot allocate memory]
 
--Will
-> 
-> -----Original Message-----
-> From: William Cohen [mailto:wcohen@redhat.com] 
-> Sent: 2019年4月12日 22:06
-> To: Linhaifeng <haifeng.lin@huawei.com>; linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: Re: perf tools:Is there any tools to found out the max latency by irq or cpu idle
-> 
-> On 4/11/19 8:57 PM, Linhaifeng wrote:
->> Hi,
->> I have a single thread application like this:
->>
->> While (1) {
->>     start = rdtsc();
->>     sqrt (1024);      
->> 　　end = rdtsc();
->> 　　cycles = end – start;
->> 　　printf("cycles: %d-%02d-%02d %02d:%02d:%02d: %lu\n", 
->> 　　　　　　1900+timeinfo->tm_year, 1+timeinfo->tm_mon, timeinfo->tm_mday, timeinfo->tm_hour, timeinfo->tm_min, timeinfo->tm_sec,
->> 　　　　　　cycles);
->> }
->> It print the cycles of sqrt every second and run with taskset –c 1 ./sqrt.
->> The result of test is:
->>
->> sqrt 2019-04-10 23:53:50: 43968
->> sqrt 2019-04-10 23:53:51: 44060
->> sqrt 2019-04-10 23:53:52: 49012
->> sqrt 2019-04-10 23:53:53: 38172
->> sqrt 2019-04-10 23:53:54: 131081408
->> sqrt 2019-04-10 23:53:55: 43600
->> sqrt 2019-04-10 23:53:56: 46704
->> sqrt 2019-04-10 23:53:57: 46880
->> sqrt 2019-04-10 23:53:58: 44332
->> ……
->> sqrt 2019-04-10 02:17:15: 131081408
->> ……
->> sqrt 2019-04-10 04:40:35: 131081408
->> ……
->>
->> Every 2hour23min there would be a large cycles. I use perf sched not found any sched_switch events.
-> 
-> Hi,
-> 
-> The fact that it is the same value 131081408 every 2 hours 23 minutes looks suspect. One would expect some variation in the counts.  It looks like there is some rollover or overflow issue.  It would be helpful to print out the start and end values to see what is going on with the raw rdstc values.  Maybe the thread is being moved between processors and the TSC are out of sync.  What particular processor model was this running on? Was this running on physical hardware or inside a kvm guest? 
-> 
-> According to the Intel 64 and IA-32 Architecture Software Devloper's Manual Volume 3 (325384-sdm-vol-3abcd.pdf):
-> 
-> The RDTSC instruction reads the time-stamp counter and is guaranteed to return a monotonically increasing unique value whenever executed, except for a 64-bit counter wraparound. Intel guarantees that the time-stamp counter will not wraparound within 10 years after being reset. The period for counter wrap is longer for Pentium 4, Intel Xeon, P6 family, and Pentium processors.
-> 
-> -Will Cohen
+looks good, please post the full patch
+
+thanks,
+jirka
+
 > 
 > 
->>
->> L2GW_2680:/home/fsp/zn # perf sched record -C 6-11 -o perf.sched ^C[ 
->> perf record: Woken up 64 times to write data ] [ perf record: Captured 
->> and wrote 204.878 MB perf.sched (1911189 samples) ]
->>
->> L2GW_2680:/home/fsp/zn # perf sched latency -i perf.sched
->>
->> ----------------------------------------------------------------------
->> -------------------------------------------
->>   Task                  |   Runtime ms  | Switches | Average delay ms 
->> | Maximum delay ms | Maximum delay at       |
->> ----------------------------------------------------------------------
->> -------------------------------------------
->> ----------------------------------------------------------------------
->> -------------------------------------------
->>   TOTAL:                |      0.000 ms |        0 |
->> ---------------------------------------------------
->>
->>
->>
->> Is there any other tools of perf to found out the max latency by irq or cpu idle ?
->>
->>
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index b17f1c9bc965..e89716175588 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+>  
+>         if (size < sizeof(struct perf_event_header) ||
+>             (skip = rd->process(session, event, file_pos)) < 0) {
+> -               pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+> +               pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
+>                        file_offset + head, event->header.size,
+> -                      event->header.type);
+> -               err = -EINVAL;
+> +                      event->header.type, strerror(-skip));
+> +               err = skip;
+>                 goto out;
+>         }
+>  
+> [root@m35lp76 perf]#
+> -- 
+> Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+> --
+> Vorsitzender des Aufsichtsrats: Matthias Hartmann
+> Gesch�ftsf�hrung: Dirk Wittkopp
+> Sitz der Gesellschaft: B�blingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 > 
