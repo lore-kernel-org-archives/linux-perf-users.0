@@ -1,102 +1,88 @@
-From: Linhaifeng <haifeng.lin@huawei.com>
-Subject: RE: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Date: Tue, 16 Apr 2019 01:34:07 +0000
-Message-ID: <4099DE2E54AFAD489356C6C9161D533395929531@dggeml522-mbs.china.huawei.com>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
- <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
- <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
- <6e6a98a4-a442-1e10-cf5a-56b6792d42ba@us.ibm.com>
+From: Francis Deslauriers <francis.deslauriers@efficios.com>
+Subject: Tracing Summit 2019: Announcement and Call for Proposals, August
+ 20th, 2019, San Diego, CA
+Date: Tue, 16 Apr 2019 11:54:34 -0400
+Message-ID: <CADcCL0irokZ8Xp7S3eBV728qpL5yipwW+=2QvwiZrixqSdtBog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6e6a98a4-a442-1e10-cf5a-56b6792d42ba@us.ibm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Clarke <pc@us.ibm.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: diamon-discuss@lists.linuxfoundation.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, linux-trace-devel@vger.kernel.org, linux-trace-users@vger.kernel.org, linuxtools-dev@eclipse.org, lttng-dev <lttng-dev@lists.lttng.org>, lwn@lwn.net, tracecompass-dev@eclipse.org
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, info@tracingsummit.org
 List-Id: linux-perf-users.vger.kernel.org
 
-SGksIFBDDQoNClRoYW5rIHlvdSBldmVyeSBtdWNoIQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KRnJvbTogUGF1bCBDbGFya2UgW21haWx0bzpwY0B1cy5pYm0uY29tXSANClNlbnQ6IDIw
-MTnlubQ05pyIMTXml6UgMjA6NTMNClRvOiBMaW5oYWlmZW5nIDxoYWlmZW5nLmxpbkBodWF3ZWku
-Y29tPjsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmcNClN1YmplY3Q6IFJlOiBwZXJmIHRvb2xzOklzIHRoZXJlIGFueSB0b29scyB0
-byBmb3VuZCBvdXQgdGhlIG1heCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZQ0KDQpPbiA0LzEz
-LzE5IDE6MDEgQU0sIExpbmhhaWZlbmcgd3JvdGU6DQo+IFNvcnJ5LCB0aGUgdmFsdWUgMTMxMDgx
-NDA4IGlzIGp1c3QgZm9yIGV4YW1wbGUuIEFjdHVhbGx5IHRoZSByZXN1bHQgaXMgbGlrZSB0aGlz
-Og0KPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUwOiA0Mzk2OA0KPiAgc3FydCAyMDE5LTA0LTEw
-IDIzOjUzOjUxOiA0NDA2MA0KPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUyOiA0OTAxMg0KPiAg
-c3FydCAyMDE5LTA0LTEwIDIzOjUzOjUzOiAzODE3Mg0KPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUz
-OjU0OiAxMzEwODE0MDgNCj4gIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NTogNDM2MDANCj4gIHNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1NjogNDY3MDQNCj4gIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1
-NzogNDY4ODANCj4gIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1ODogNDQzMzINCj4gIOKApuKApg0K
-PiAgc3FydCAyMDE5LTA0LTEwIDAyOjE3OjE1OiAxMzYzNDU4NzYNCj4gIOKApuKApg0KPiAgc3Fy
-dCAyMDE5LTA0LTEwIDA0OjQwOjM1OiAxMzYzMzU2NDQNCj4gIOKApuKApg0KDQpHaXZlbiB0aGUg
-cGVyaW9kaWNpdHksIEknbSB3b25kZXJpbmcgaWYgaXQgY291bGQgYmUgU3lzdGVtIE1hbmFnZW1l
-bnQgSW50ZXJydXB0cyAoU01Jcyk/DQoNCklmIHNvLCBzb21lIEJJT1NlcyBoYXZlIHNldHRpbmdz
-IHRvIG1pdGlnYXRlLCBvdGhlcndpc2UsIHRoZXJlJ3Mgbm90IG11Y2ggdGhhdCBjYW4gYmUgZG9u
-ZSwgcGVyIG15IHVuZGVyc3RhbmRpbmcuDQoNClBDDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogV2lsbGlhbSBDb2hlbiBbbWFpbHRvOndjb2hlbkByZWRoYXQuY29tXQ0K
-PiBTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjA2DQo+IFRvOiBMaW5oYWlmZW5nIDxoYWlmZW5n
-LmxpbkBodWF3ZWkuY29tPjsgDQo+IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBwZXJmIHRvb2xzOklz
-IHRoZXJlIGFueSB0b29scyB0byBmb3VuZCBvdXQgdGhlIG1heCANCj4gbGF0ZW5jeSBieSBpcnEg
-b3IgY3B1IGlkbGUNCj4gDQo+IE9uIDQvMTEvMTkgODo1NyBQTSwgTGluaGFpZmVuZyB3cm90ZToN
-Cj4+IEhpLA0KPj4gSSBoYXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6
-DQo+Pg0KPj4gV2hpbGUgKDEpIHsNCj4+IMKgwqDCoCBzdGFydCA9IHJkdHNjKCk7DQo+PiDCoMKg
-wqAgc3FydCAoMTAyNCk7wqDCoMKgwqDCoCANCj4+IOOAgOOAgGVuZCA9IHJkdHNjKCk7DQo+PiDj
-gIDjgIBjeWNsZXMgPSBlbmQg4oCTIHN0YXJ0Ow0KPj4g44CA44CAcHJpbnRmKCJjeWNsZXM6ICVk
-LSUwMmQtJTAyZCAlMDJkOiUwMmQ6JTAyZDogJWx1XG4iLCANCj4+IOOAgOOAgOOAgOOAgOOAgOOA
-gDE5MDArdGltZWluZm8tPnRtX3llYXIsIDErdGltZWluZm8tPnRtX21vbiwgdGltZWluZm8tPnRt
-X21kYXksIHRpbWVpbmZvLT50bV9ob3VyLCB0aW1laW5mby0+dG1fbWluLCB0aW1laW5mby0+dG1f
-c2VjLA0KPj4g44CA44CA44CA44CA44CA44CAY3ljbGVzKTsNCj4+IH0NCj4+IEl0IHByaW50IHRo
-ZSBjeWNsZXMgb2Ygc3FydCBldmVyeSBzZWNvbmQgYW5kIHJ1biB3aXRoIHRhc2tzZXQg4oCTYyAx
-IC4vc3FydC4NCj4+IFRoZSByZXN1bHQgb2YgdGVzdCBpczoNCj4+DQo+PiBzcXJ0IDIwMTktMDQt
-MTAgMjM6NTM6NTA6IDQzOTY4DQo+PiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTE6IDQ0MDYwDQo+
-PiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTI6IDQ5MDEyDQo+PiBzcXJ0IDIwMTktMDQtMTAgMjM6
-NTM6NTM6IDM4MTcyDQo+PiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTQ6IDEzMTA4MTQwOA0KPj4g
-c3FydCAyMDE5LTA0LTEwIDIzOjUzOjU1OiA0MzYwMA0KPj4gc3FydCAyMDE5LTA0LTEwIDIzOjUz
-OjU2OiA0NjcwNA0KPj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU3OiA0Njg4MA0KPj4gc3FydCAy
-MDE5LTA0LTEwIDIzOjUzOjU4OiA0NDMzMg0KPj4g4oCm4oCmDQo+PiBzcXJ0IDIwMTktMDQtMTAg
-MDI6MTc6MTU6IDEzMTA4MTQwOA0KPj4g4oCm4oCmDQo+PiBzcXJ0IDIwMTktMDQtMTAgMDQ6NDA6
-MzU6IDEzMTA4MTQwOA0KPj4g4oCm4oCmDQo+Pg0KPj4gRXZlcnkgMmhvdXIyM21pbiB0aGVyZSB3
-b3VsZCBiZSBhIGxhcmdlIGN5Y2xlcy4gSSB1c2UgcGVyZiBzY2hlZCBub3QgZm91bmQgYW55IHNj
-aGVkX3N3aXRjaCBldmVudHMuDQo+IA0KPiBIaSwNCj4gDQo+IFRoZSBmYWN0IHRoYXQgaXQgaXMg
-dGhlIHNhbWUgdmFsdWUgMTMxMDgxNDA4IGV2ZXJ5IDIgaG91cnMgMjMgbWludXRlcyBsb29rcyBz
-dXNwZWN0LiBPbmUgd291bGQgZXhwZWN0IHNvbWUgdmFyaWF0aW9uIGluIHRoZSBjb3VudHMuICBJ
-dCBsb29rcyBsaWtlIHRoZXJlIGlzIHNvbWUgcm9sbG92ZXIgb3Igb3ZlcmZsb3cgaXNzdWUuICBJ
-dCB3b3VsZCBiZSBoZWxwZnVsIHRvIHByaW50IG91dCB0aGUgc3RhcnQgYW5kIGVuZCB2YWx1ZXMg
-dG8gc2VlIHdoYXQgaXMgZ29pbmcgb24gd2l0aCB0aGUgcmF3IHJkc3RjIHZhbHVlcy4gIE1heWJl
-IHRoZSB0aHJlYWQgaXMgYmVpbmcgbW92ZWQgYmV0d2VlbiBwcm9jZXNzb3JzIGFuZCB0aGUgVFND
-IGFyZSBvdXQgb2Ygc3luYy4gIFdoYXQgcGFydGljdWxhciBwcm9jZXNzb3IgbW9kZWwgd2FzIHRo
-aXMgcnVubmluZyBvbj8gV2FzIHRoaXMgcnVubmluZyBvbiBwaHlzaWNhbCBoYXJkd2FyZSBvciBp
-bnNpZGUgYSBrdm0gZ3Vlc3Q/IA0KPiANCj4gQWNjb3JkaW5nIHRvIHRoZSBJbnRlbCA2NCBhbmQg
-SUEtMzIgQXJjaGl0ZWN0dXJlIFNvZnR3YXJlIERldmxvcGVyJ3MgTWFudWFsIFZvbHVtZSAzICgz
-MjUzODQtc2RtLXZvbC0zYWJjZC5wZGYpOg0KPiANCj4gVGhlIFJEVFNDIGluc3RydWN0aW9uIHJl
-YWRzIHRoZSB0aW1lLXN0YW1wIGNvdW50ZXIgYW5kIGlzIGd1YXJhbnRlZWQgdG8gcmV0dXJuIGEg
-bW9ub3RvbmljYWxseSBpbmNyZWFzaW5nIHVuaXF1ZSB2YWx1ZSB3aGVuZXZlciBleGVjdXRlZCwg
-ZXhjZXB0IGZvciBhIDY0LWJpdCBjb3VudGVyIHdyYXBhcm91bmQuIEludGVsIGd1YXJhbnRlZXMg
-dGhhdCB0aGUgdGltZS1zdGFtcCBjb3VudGVyIHdpbGwgbm90IHdyYXBhcm91bmQgd2l0aGluIDEw
-IHllYXJzIGFmdGVyIGJlaW5nIHJlc2V0LiBUaGUgcGVyaW9kIGZvciBjb3VudGVyIHdyYXAgaXMg
-bG9uZ2VyIGZvciBQZW50aXVtIDQsIEludGVsIFhlb24sIFA2IGZhbWlseSwgYW5kIFBlbnRpdW0g
-cHJvY2Vzc29ycy4NCj4gDQo+IC1XaWxsIENvaGVuDQo+IA0KPiANCj4+DQo+PiBMMkdXXzI2ODA6
-L2hvbWUvZnNwL3puICMgcGVyZiBzY2hlZCByZWNvcmQgLUMgNi0xMSAtbyBwZXJmLnNjaGVkIF5D
-WyANCj4+IHBlcmYgcmVjb3JkOiBXb2tlbiB1cCA2NCB0aW1lcyB0byB3cml0ZSBkYXRhIF0gWyBw
-ZXJmIHJlY29yZDogDQo+PiBDYXB0dXJlZCBhbmQgd3JvdGUgMjA0Ljg3OCBNQiBwZXJmLnNjaGVk
-ICgxOTExMTg5IHNhbXBsZXMpIF0NCj4+DQo+PiBMMkdXXzI2ODA6L2hvbWUvZnNwL3puICMgcGVy
-ZiBzY2hlZCBsYXRlbmN5IC1pIHBlcmYuc2NoZWQNCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0N
-Cj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IMKgIFRh
-c2vCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIFJ1bnRpbWUgbXPCoCB8
-IFN3aXRjaGVzIHwgQXZlcmFnZSBkZWxheSBtcw0KPj4gfCBNYXhpbXVtIGRlbGF5IG1zIHwgTWF4
-aW11bSBkZWxheSBhdMKgwqDCoMKgwqDCoCB8DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0NCj4+IC0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQ0KPj4gLQ0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-Pj4gwqAgVE9UQUw6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgIDAu
-MDAwIG1zIHwgwqDCoMKgwqDCoMKgwqAwIHwNCj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4NCj4+DQo+Pg0KPj4gSXMgdGhlcmUgYW55IG90
-aGVyIHRvb2xzIG9mIHBlcmYgdG8gZm91bmQgb3V0IHRoZSBtYXggbGF0ZW5jeSBieSBpcnEgb3Ig
-Y3B1IGlkbGUgPw0KPj4NCj4+DQo+IA0KDQo=
+Hi all,
+
+This is a Call for Proposals for the Tracing Summit 2019 [0] which
+will be held in San Diego, California, USA at the Hilton San Diego
+Bayfront, co-located with the Open Source Summit & Embedded Linux
+Conference North America 2019 [1] on August 20th, 2019.
+
+You can subscribe to our mailing list ot get the latest info on the event: [2]
+
+The Tracing Summit is single-day, single-track conference on the topic
+of tracing. The event focuses on the field of software and hardware
+tracing, gathering developers and end-users of tracing and trace
+analysis tools. The main goal of the Tracing Summit is to provide
+space for discussion between people of the various areas that benefit
+from tracing, namely parallel, distributed and/or real-time systems,
+as well as kernel development.
+
+We are welcoming 30 minute presentations from both end users and
+developers, on topics covering, but not limited to:
+-Investigation workflow of Real-Time, latency, and throughput issues,
+-Trace collection and extraction,
+-Trace filtering,
+-Trace aggregation,
+-Trace formats,
+-Tracing multi-core systems,
+-Trace abstraction,
+-Trace modeling,
+-Automated trace analysis (e.g. dependency analysis),
+-Tracing large clusters and distributed systems,
+-Hardware-level tracing (e.g. DSP, GPU, bare-metal),
+-Trace visualisation,
+-Interaction between debugging and tracing,
+-Tracing remote control,
+-Analysis of large trace datasets,
+-Cloud trace collection and analysis,
+-Integration between trace tools,
+-Live tracing & monitoring,
+-Programmable tracing (e.g. eBPF).
+
+Those can cover recently available technologies, ongoing work, and yet
+non-existing technologies (which are compellingly interesting to
+end-users). Please understand that this open forum is not the proper
+place to present sales or marketing pitches, nor technologies which
+are prevented from being freely used in open source.
+
+* Submit you talk today using this form: https://forms.gle/L6mR2ZN3Nt7bUxY98 *
+
+The submission deadline is July 1st 2019 at 23:59 EST.
+
+This year tickets are $100 and seating is limited to 100 people. To
+register, you can add the Tracing Summit as an addon to your Open
+Source Summit ticket [3] or use this link [4] to register solely for
+the Tracing Summit.
+
+The Tracing Summit is sponsored by EfficiOS. We are actively looking
+for sponsors to support the Tracing Summit. Contact us at
+info@tracingsummit.org.
+
+Please send any query about this conference to info@tracingsummit.org.
+
+This event is organized by Francis Deslauriers and Mathieu Desnoyers
+on the behalf of the Linux Foundation Diagnostic and Monitoring
+Workgroup [5].
+
+[0] : https://tracingsummit.org
+[1]: https://events.linuxfoundation.org/events/open-source-summit-north-america-2019
+[2]: http://eepurl.com/goakfv
+[3]: https://www.cvent.com/events/open-source-summit-embedded-linux-conference-north-america-2019/registration-0ed1330c38bd4845be29b91c9d2444ce.aspx?fqp=true
+[4]: https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx?fqp=true
+[5]: https://diamon.org
+
+--
+Francis Deslauriers
+Computer Engineer
+EfficiOS inc.
