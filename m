@@ -1,96 +1,115 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: perf tools build broken after v5.1-rc1
-Date: Mon, 22 Apr 2019 12:20:27 -0300
-Message-ID: <20190422152027.GB11750@kernel.org>
-References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Arnd Bergmann <arnd@arndb.de>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, arcml <linux-snps-arc@lists.infradead.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/report: Report OOM in perf report status line
+Date: Tue, 23 Apr 2019 12:53:03 +0200
+Message-ID: <20190423105303.61683-1-tmricht@linux.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, jolsa@redhat.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
-> When building perf for ARC (v5.1-rc2) I get the following
+An -ENOMEM error is not reported in the GTK GUI.
+Instead this error message pops up on the screen:
+
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
+
+	Processing events... [974K/3M]
+	Error:failed to process sample
+
+	0xf4198 [0x8]: failed to process type: 68
+
+However when I use the same perf.data file with --stdio it works:
+
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
+		| head -12
+
+  # Total Lost Samples: 0
+  #
+  # Samples: 76K of event 'cycles'
+  # Event count (approx.): 99056160000
+  #
+  # Overhead  Command          Shared Object      Symbol
+  # ........  ...............  .................  .........
+  #
+     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
+     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
+     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
+     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
+
+The sample precentage is a bit low.....
+
+The GUI always fails in the FINISHED_ROUND event (68) and does not
+indicate the reason why.
+
+When happened is the following. Perf report calls a lot of functions and
+down deep when a FINISHED_ROUND event is processed, these functions are
+called:
+
+  perf_session__process_event()
+  + perf_session__process_user_event()
+    + process_finished_round()
+      + ordered_events__flush()
+        + __ordered_events__flush()
+	  + do_flush()
+	    + ordered_events__deliver_event()
+	      + perf_session__deliver_event()
+	        + machine__deliver_event()
+	          + perf_evlist__deliver_event()
+	            + process_sample_event()
+	              + hist_entry_iter_add() --> only called in GUI case!!!
+	                + hist_iter__report__callback()
+	                  + symbol__inc_addr_sample()
+
+	                    Now this functions runs out of memory and
+			    returns -ENOMEM. This is reported all the way up
+			    until function
+
+perf_session__process_event() returns to its caller, where -ENOMEM is
+changed to -EINVAL and processing stops:
+
+ if ((skip = perf_session__process_event(session, event, head)) < 0) {
+      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+	     head, event->header.size, event->header.type);
+      err = -EINVAL;
+      goto out_err;
+ }
+
+This occurred in the FINISHED_ROUND event when it has to process some
+10000 entries and ran out of memory.
+
+This patch indicates the root cause and displays it in the status line
+of ther perf report GUI.
+
+Output before (on GUI status line):
+0xf4198 [0x8]: failed to process type: 68
+
+Output after:
+0xf4198 [0x8]: failed to process type: 68 [not enough memory]
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/util/session.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b17f1c9bc965..e89716175588 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
  
-> | In file included from bench/futex-hash.c:26:
-> | bench/futex.h: In function 'futex_wait':
-> | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
+ 	if (size < sizeof(struct perf_event_header) ||
+ 	    (skip = rd->process(session, event, file_pos)) < 0) {
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
++		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
+ 		       file_offset + head, event->header.size,
+-		       event->header.type);
+-		err = -EINVAL;
++		       event->header.type, strerror(-skip));
++		err = skip;
+ 		goto out;
+ 	}
  
-> git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
-> Sync copy of asm-generic/unistd.h with the kernel sources")
-
-Humm, I have to check why this:
-
-[perfbuilder@quaco ~]$ podman images | grep ARC
-docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
-[perfbuilder@quaco ~]$
-
-isn't catching this... :-\
-
-FROM docker.io/fedora:24
-MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
-ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
-ENV CROSS=arc-linux-
-ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
-RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
-RUN wget https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-rc2/${SOURCEFILE}
-<SNIP>
-COPY rx_and_build.sh /
-ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
-ENV ARCH=arc
-ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
-ENV EXTRA_CFLAGS=-matomic
-
-I have to update this to fedora 29 or 30 and get a newer toolchain...
- 
-> The issue is due to hunk below, rightly brought over from commit c8ce48f06503
-> ("asm-generic: Make time32 syscall numbers optional")
- 
-> +#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
->  #define __NR_futex 98
-> -__SC_COMP(__NR_futex, sys_futex, compat_sys_futex)
-> +__SC_3264(__NR_futex, sys_futex_time32, sys_futex)
-> +#endif
- 
-> While __ARCH_WANT_TIME32_SYSCALLS does exist in
-> arch/arc/include/uapi/asm/unistd.h, but not inside tools, essentially we lack a
-> copy such as below which were sync'ed by commit above as well.
- 
->    tools/arch/arm64/include/uapi/asm/unistd.h
->    tools/arch/x86/include/uapi/asm/unistd.h
-
-So yeah, we need to grab those copies that define something that is used
-conditionally by something we have in tools, I'm trying to cook up a
-patch grabbing the missing tools/arch/*/include/uapi/asm/unistd.h files,
-will they fire a container test build that should cover lots of the
-archs.
-
-thanks for the report, will get back here with a report of the results
-or else you'll get the patch flying to Ingo for tip/perf/urgent.
- 
-> A quick fix for ARC will be to create our own version but I presume all existing
-> arches using generic syscall abi are affected. Thoughts ? In lack of ideas I'll
-> send out a patch for ARC.
-> 
-> P.S. Why do we need the unistd.h duplication in tools directory, given it could
-> have used the in-tree unistd headers directly ?
-
-I have to write down the explanation and have it in a file, but we can't
-use anything in the kernel from outside tools/ to avoid adding a burden
-to kernel developers that would then have to make sure that the changes
-that they make outside tools/ don't break things living there.
-
-- Arnaldo
+-- 
+2.16.4
