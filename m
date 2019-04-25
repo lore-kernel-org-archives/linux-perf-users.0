@@ -1,30 +1,173 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] Call for KernelShark logos!
-Date: Wed, 24 Apr 2019 09:50:35 -0400
-Message-ID: <20190424095035.10e55f66@gandalf.local.home>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: perf tools build broken after v5.1-rc1
+Date: Thu, 25 Apr 2019 18:48:00 -0300
+Message-ID: <20190425214800.GC21829@kernel.org>
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190422152027.GB11750@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>, Linux Trace Devel <linux-trace-devel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Cc: Yordan Karadzhov <ykaradzhov@vmware.com>, Slavomir Kaslev <kaslevs@vmware.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Stela Stamenkova <sstamenkova@vmware.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, Johannes Berg <johannes@sipsolutions.net>, Namhyung Kim <namhyung@kernel.org>
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkml <linux-kernel@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Folks,
+Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
+> > When building perf for ARC (v5.1-rc2) I get the following
+>  
+> > | In file included from bench/futex-hash.c:26:
+> > | bench/futex.h: In function 'futex_wait':
+> > | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
+>  
+> > git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
+> > Sync copy of asm-generic/unistd.h with the kernel sources")
+> 
+> Humm, I have to check why this:
+> 
+> [perfbuilder@quaco ~]$ podman images | grep ARC
+> docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
+> [perfbuilder@quaco ~]$
+> 
+> isn't catching this... :-\
+> 
+> FROM docker.io/fedora:24
+> MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
+> ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
+> ENV CROSS=arc-linux-
+> ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
+> RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
+> RUN wget https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-rc2/${SOURCEFILE}
+> <SNIP>
+> COPY rx_and_build.sh /
+> ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
+> ENV ARCH=arc
+> ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
+> ENV EXTRA_CFLAGS=-matomic
 
-KernelShark 1.0 is soon to be released, and we want an official logo
-for it. We currently have a few out there, which you can find here:
+So, now I have a libnuma crossbuilt in this container that allows me to
+build a ARC perf binary linked with zlib and numactl-devel, but only
+after I applied the fix below.
 
-  http://kernelshark.org/logos/
+Can you please provide the feature detection header in the build? I.e.
+what I have with my ARC cross build container right now, after applying
+the patch below is:
 
-If you know of a designer, and want them to submit another candidate,
-please email me and let me know. All submissions should be mailed to
-linux-trace-devel@vger.kernel.org (as an attachment, and of limited
-size. Preferably one image per email). I'll wait approximately a month
-and then will open up voting for the new logo on May 22. And will let
-that run for 2 weeks and will have an official logo by June 7th.
+[perfbuilder@60d5802468f6 perf]$ make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" -C /git/perf/tools/perf O=/tmp/build/perf
+make: Entering directory '/git/perf/tools/perf'
+  BUILD:   Doing 'make -j8' parallel build
+sh: line 0: command: -c: invalid option
+command: usage: command [-pVv] command [arg ...]
 
-Enjoy,
+Auto-detecting system features:
+...                         dwarf: [ OFF ]
+...            dwarf_getlocations: [ OFF ]
+...                         glibc: [ on  ]
+...                          gtk2: [ OFF ]
+...                      libaudit: [ OFF ]
+...                        libbfd: [ OFF ]
+...                        libelf: [ OFF ]
+...                       libnuma: [ on  ]
+...        numa_num_possible_cpus: [ on  ]
+...                       libperl: [ OFF ]
+...                     libpython: [ OFF ]
+...                      libslang: [ OFF ]
+...                     libcrypto: [ OFF ]
+...                     libunwind: [ OFF ]
+...            libdw-dwarf-unwind: [ OFF ]
+...                          zlib: [ OFF ]
+...                          lzma: [ OFF ]
+...                     get_cpuid: [ OFF ]
+...                           bpf: [ on  ]
+...                        libaio: [ OFF ]
+...        disassembler-four-args: [ OFF ]
 
--- Steve
+Makefile.config:339: No libelf found. Disables 'probe' tool, jvmti and BPF support in 'perf record'. Please install libelf-dev, libelf-devel or elfutils-libelf-devel
+Makefile.config:473: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
+Makefile.config:548: Disabling post unwind, no support found.
+Makefile.config:601: No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev
+Makefile.config:613: No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev
+Makefile.config:628: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
+Makefile.config:642: GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev
+Makefile.config:669: Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev
+Makefile.config:696: No python interpreter was found: disables Python support - please install python-devel/python-dev
+Makefile.config:785: No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev
+Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
+make: Leaving directory '/git/perf/tools/perf'
+[perfbuilder@60d5802468f6 perf]$ export
+declare -x ARCH="arc"
+declare -x CROSS="arc-linux-"
+declare -x CROSS_COMPILE="/arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-"
+declare -x DISTTAG="f30container"
+declare -x EXTRA_CFLAGS="-matomic"
+declare -x EXTRA_MAKE_ARGS="NO_LIBBPF=1"
+declare -x FBR="f30"
+declare -x FGC="f30"
+declare -x NUMACTL_SOURCEFILE="github.com-numactl-numactl-archive-master-2019-04-25.zip"
+declare -x PATH="/home/perfbuilder/.local/bin:/home/perfbuilder/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+declare -x SOURCEFILE="arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install.tar.gz"
+declare -x TOOLCHAIN="arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install"
+declare -x container="podman"
+[perfbuilder@60d5802468f6 perf]$ 
+
+commit dd617baf28925cf72fce309232ad9178452e75ab
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Thu Apr 25 18:36:51 2019 -0300
+
+    perf bench numa: Add define for RUSAGE_THREAD if not present
+    
+    While cross building perf to the ARC architecture on a fedora 30 host,
+    we were failing with:
+    
+          CC       /tmp/build/perf/bench/numa.o
+      bench/numa.c: In function ‘worker_thread’:
+      bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
+        getrusage(RUSAGE_THREAD, &rusage);
+                  ^~~~~~~~~~~~~
+                  SIGEV_THREAD
+      bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
+    
+    [perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
+    arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+    [perfbuilder@60d5802468f6 perf]$
+    
+    Trying to reproduce a report by Vineet, I noticed that, with just
+    cross-built zlib and numactl libraries, I ended up with the above
+    failure.
+    
+    So, since RUSAGE_THREAD is available as a define, check for that and
+    numactl libraries, I ended up with the above failure.
+    
+    So, since RUSAGE_THREAD is available as a define in the system headers,
+    check if it is defined in the 'perf bench numa' sources and define it if
+    not.
+    
+    Now it builds and I have to figure out if the problem reported by Vineet
+    only takes place if we have libelf or some other library available.
+    
+    Cc: Arnd Bergmann <arnd@arndb.de>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: linux-snps-arc@lists.infradead.org
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+    Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 98ad783efc69..a7784554a80d 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -39,6 +39,10 @@
+ #include <numa.h>
+ #include <numaif.h>
+ 
++#ifndef RUSAGE_THREAD
++# define RUSAGE_THREAD 1
++#endif
++
+ /*
+  * Regular printout to the terminal, supressed if -q is specified:
+  */
