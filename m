@@ -1,378 +1,241 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: perf tools build broken after v5.1-rc1
-Date: Fri, 26 Apr 2019 16:28:34 -0300
-Message-ID: <20190426192834.GB28586@kernel.org>
+Date: Fri, 26 Apr 2019 16:35:31 -0300
+Message-ID: <20190426193531.GC28586@kernel.org>
 References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
  <20190422152027.GB11750@kernel.org>
  <20190425214800.GC21829@kernel.org>
+ <20190426192834.GB28586@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190425214800.GC21829@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20190426192834.GB28586@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
 To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkml <linux-kernel@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Arnd Bergmann <arnd@arndb.de>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, arcml <linux-snps-arc@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Apr 25, 2019 at 06:48:00PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
-> > > When building perf for ARC (v5.1-rc2) I get the following
-> >  
-> > > | In file included from bench/futex-hash.c:26:
-> > > | bench/futex.h: In function 'futex_wait':
-> > > | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
-> >  
-> > > git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
-> > > Sync copy of asm-generic/unistd.h with the kernel sources")
+Em Fri, Apr 26, 2019 at 04:28:34PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, Apr 25, 2019 at 06:48:00PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:
+> > > > When building perf for ARC (v5.1-rc2) I get the following
+> > >  
+> > > > | In file included from bench/futex-hash.c:26:
+> > > > | bench/futex.h: In function 'futex_wait':
+> > > > | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in this function);
+> > >  
+> > > > git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools headers uapi:
+> > > > Sync copy of asm-generic/unistd.h with the kernel sources")
+> > > 
+> > > Humm, I have to check why this:
+> > > 
+> > > [perfbuilder@quaco ~]$ podman images | grep ARC
+> > > docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
+> > > [perfbuilder@quaco ~]$
+> > > 
+> > > isn't catching this... :-\
+> > > 
+> > > FROM docker.io/fedora:24
+> > > MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
+> > > ENV CROSS=arc-linux-
+> > > ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
+> > > RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
+> > > RUN wget https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-rc2/${SOURCEFILE}
+> > > <SNIP>
+> > > COPY rx_and_build.sh /
+> > > ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
+> > > ENV ARCH=arc
+> > > ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
+> > > ENV EXTRA_CFLAGS=-matomic
 > > 
-> > Humm, I have to check why this:
+> > So, now I have a libnuma crossbuilt in this container that allows me to
+> > build a ARC perf binary linked with zlib and numactl-devel, but only
+> > after I applied the fix below.
 > > 
-> > [perfbuilder@quaco ~]$ podman images | grep ARC
-> > docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-uClibc          4c259582a8e6   5 weeks ago      846 MB
-> > [perfbuilder@quaco ~]$
-> > 
-> > isn't catching this... :-\
-> > 
-> > FROM docker.io/fedora:24
-> > MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>
-> > ENV TOOLCHAIN=arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install
-> > ENV CROSS=arc-linux-
-> > ENV SOURCEFILE=${TOOLCHAIN}.tar.gz
-> > RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc findutils xz
-> > RUN wget https://github.com/foss-for-synopsys-dwc-arc-processors/toolchain/releases/download/arc-2017.09-rc2/${SOURCEFILE}
-> > <SNIP>
-> > COPY rx_and_build.sh /
-> > ENV EXTRA_MAKE_ARGS=NO_LIBBPF=1
-> > ENV ARCH=arc
-> > ENV CROSS_COMPILE=/${TOOLCHAIN}/bin/${CROSS}
-> > ENV EXTRA_CFLAGS=-matomic
+> > Can you please provide the feature detection header in the build? I.e.
+> > what I have with my ARC cross build container right now, after applying
+> > the patch below is:
 > 
-> So, now I have a libnuma crossbuilt in this container that allows me to
-> build a ARC perf binary linked with zlib and numactl-devel, but only
-> after I applied the fix below.
-> 
-> Can you please provide the feature detection header in the build? I.e.
-> what I have with my ARC cross build container right now, after applying
-> the patch below is:
+> So, switched from the uCLibc build system to the glibc based one, so
+> that I could get elfutils building (it needs argp that isn't available
+> with uCLibc) I have it reproduced, see below, now I'm testing with the
+> fix, which is to grab the unistd.h files you noticed missing for the
+> arches that are present in tools/arch/, will post results soon
 
-So, switched from the uCLibc build system to the glibc based one, so
-that I could get elfutils building (it needs argp that isn't available
-with uCLibc) I have it reproduced, see below, now I'm testing with the
-fix, which is to grab the unistd.h files you noticed missing for the
-arches that are present in tools/arch/, will post results soon
+Yep, now it builds:
 
-[perfbuilder@f1798ef8e433 perf]$ make $EXTRA_MAKE_ARGS ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE EXTRA_CFLAGS="$EXTRA_CFLAGS" -C /git/perf/tools/perf O=/tmp/build/perf
-make: Entering directory '/git/perf/tools/perf'
-  BUILD:   Doing 'make -j8' parallel build
-  HOSTCC   /tmp/build/perf/fixdep.o
-  HOSTLD   /tmp/build/perf/fixdep-in.o
-  LINK     /tmp/build/perf/fixdep
-sh: line 0: command: -c: invalid option
-command: usage: command [-pVv] command [arg ...]
+/tmp/build/perf/perf: ELF 32-bit LSB executable, *unknown arch 0xc3* version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-arc.so.2, for GNU/Linux 3.9.0, with debug_info, not stripped
 
-Auto-detecting system features:
-...                         dwarf: [ on  ]
-...            dwarf_getlocations: [ on  ]
-...                         glibc: [ on  ]
-...                          gtk2: [ OFF ]
-...                      libaudit: [ OFF ]
-...                        libbfd: [ OFF ]
-...                        libelf: [ on  ]
-...                       libnuma: [ on  ]
-...        numa_num_possible_cpus: [ on  ]
-...                       libperl: [ OFF ]
-...                     libpython: [ OFF ]
-...                      libslang: [ OFF ]
-...                     libcrypto: [ OFF ]
-...                     libunwind: [ OFF ]
-...            libdw-dwarf-unwind: [ on  ]
-...                          zlib: [ on  ]
-...                          lzma: [ OFF ]
-...                     get_cpuid: [ OFF ]
-...                           bpf: [ on  ]
-...                        libaio: [ on  ]
-...        disassembler-four-args: [ OFF ]
+With this patch:
 
-Makefile.config:441: DWARF register mappings have not been defined for architecture arc, DWARF support disabled
-Makefile.config:473: No sys/sdt.h found, no SDT events are defined, please install systemtap-sdt-devel or systemtap-sdt-dev
-Makefile.config:548: Disabling post unwind, no support found.
-Makefile.config:601: No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev
-Makefile.config:613: No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev
-Makefile.config:628: slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev
-Makefile.config:642: GTK2 not found, disables GTK2 support. Please install gtk2-devel or libgtk2.0-dev
-Makefile.config:669: Missing perl devel files. Disabling perl scripting support, please install perl-ExtUtils-Embed/libperl-dev
-Makefile.config:696: No python interpreter was found: disables Python support - please install python-devel/python-dev
-Makefile.config:754: No bfd.h/libbfd found, please install binutils-dev[el]/zlib-static/libiberty-dev to gain symbol demangling
-Makefile.config:785: No liblzma found, disables xz kernel module decompression, please install xz-devel/liblzma-dev
-Makefile.config:853: No libbabeltrace found, disables 'perf data' CTF format support, please install libbabeltrace-dev[el]/libbabeltrace-ctf-dev
-Makefile.config:897: No openjdk development package found, please install JDK package, e.g. openjdk-8-jdk, java-1.8.0-openjdk-devel
-  GEN      /tmp/build/perf/common-cmds.h
-  CC       /tmp/build/perf/exec-cmd.o
-  CC       /tmp/build/perf/help.o
-  MKDIR    /tmp/build/perf/fd/
-  CC       /tmp/build/perf/fd/array.o
-  MKDIR    /tmp/build/perf/fs/
-  CC       /tmp/build/perf/event-parse.o
-  CC       /tmp/build/perf/pager.o
-  LD       /tmp/build/perf/fd/libapi-in.o
-  CC       /tmp/build/perf/cpu.o
-  MKDIR    /tmp/build/perf/fs/
-  CC       /tmp/build/perf/fs/fs.o
-  CC       /tmp/build/perf/debug.o
-  CC       /tmp/build/perf/fs/tracing_path.o
-  CC       /tmp/build/perf/event-plugin.o
-  CC       /tmp/build/perf/parse-options.o
-  CC       /tmp/build/perf/str_error_r.o
-  CC       /tmp/build/perf/trace-seq.o
-  CC       /tmp/build/perf/run-command.o
-  LD       /tmp/build/perf/fs/libapi-in.o
-  CC       /tmp/build/perf/parse-filter.o
-  LD       /tmp/build/perf/libapi-in.o
-  AR       /tmp/build/perf/libapi.a
-  CC       /tmp/build/perf/sigchain.o
-  CC       /tmp/build/perf/parse-utils.o
-  CC       /tmp/build/perf/kbuffer-parse.o
-  CC       /tmp/build/perf/tep_strerror.o
-  CC       /tmp/build/perf/subcmd-config.o
-  CC       /tmp/build/perf/event-parse-api.o
-  MKDIR    /tmp/build/perf/pmu-events/
-  MKDIR    /tmp/build/perf/pmu-events/
-  LD       /tmp/build/perf/libsubcmd-in.o
-  HOSTCC   /tmp/build/perf/pmu-events/json.o
-  HOSTCC   /tmp/build/perf/pmu-events/jsmn.o
-  LD       /tmp/build/perf/libtraceevent-in.o
-  LINK     /tmp/build/perf/libtraceevent.a
-  AR       /tmp/build/perf/libsubcmd.a
-  MKDIR    /tmp/build/perf/pmu-events/
-  HOSTCC   /tmp/build/perf/pmu-events/jevents.o
-  CC       /tmp/build/perf/plugin_kvm.o
-  CC       /tmp/build/perf/plugin_kmem.o
-  CC       /tmp/build/perf/plugin_jbd2.o
-  CC       /tmp/build/perf/plugin_hrtimer.o
-  CC       /tmp/build/perf/plugin_mac80211.o
-  HOSTLD   /tmp/build/perf/pmu-events/jevents-in.o
-  CC       /tmp/build/perf/plugin_sched_switch.o
-  LD       /tmp/build/perf/plugin_kmem-in.o
-  LD       /tmp/build/perf/plugin_jbd2-in.o
-  LD       /tmp/build/perf/plugin_mac80211-in.o
-  LD       /tmp/build/perf/plugin_hrtimer-in.o
-  LINK     /tmp/build/perf/pmu-events/jevents
-  LD       /tmp/build/perf/plugin_kvm-in.o
-  CC       /tmp/build/perf/plugin_xen.o
-  CC       /tmp/build/perf/plugin_function.o
-  CC       /tmp/build/perf/plugin_scsi.o
-  PERF_VERSION = 5.1.0-rc6
-  CC       /tmp/build/perf/plugin_cfg80211.o
-  GEN      perf-archive
-  GEN      perf-with-kcore
-  LD       /tmp/build/perf/plugin_sched_switch-in.o
-  GEN      /tmp/build/perf/pmu-events/pmu-events.c
-  LINK     /tmp/build/perf/plugin_jbd2.so
-  LINK     /tmp/build/perf/plugin_hrtimer.so
-  CC       /tmp/build/perf/pmu-events/pmu-events.o
-  LD       /tmp/build/perf/plugin_xen-in.o
-  LD       /tmp/build/perf/plugin_cfg80211-in.o
-  LD       /tmp/build/perf/plugin_function-in.o
-  LD       /tmp/build/perf/plugin_scsi-in.o
-  LINK     /tmp/build/perf/plugin_kmem.so
-  LINK     /tmp/build/perf/plugin_kvm.so
-  LINK     /tmp/build/perf/plugin_mac80211.so
-  LINK     /tmp/build/perf/plugin_sched_switch.so
-  LINK     /tmp/build/perf/plugin_function.so
-  LINK     /tmp/build/perf/plugin_xen.so
-  LD       /tmp/build/perf/pmu-events/pmu-events-in.o
-  LINK     /tmp/build/perf/plugin_scsi.so
-  LINK     /tmp/build/perf/plugin_cfg80211.so
-  GEN      /tmp/build/perf/libtraceevent-dynamic-list
-  LD       /tmp/build/perf/libperf-in.o
-  CC       /tmp/build/perf/builtin-config.o
-  CC       /tmp/build/perf/builtin-bench.o
-  CC       /tmp/build/perf/builtin-annotate.o
-  CC       /tmp/build/perf/builtin-diff.o
-  CC       /tmp/build/perf/builtin-ftrace.o
-  CC       /tmp/build/perf/builtin-evlist.o
-  CC       /tmp/build/perf/builtin-help.o
-  CC       /tmp/build/perf/builtin-sched.o
-  CC       /tmp/build/perf/builtin-buildid-list.o
-  CC       /tmp/build/perf/builtin-buildid-cache.o
-  CC       /tmp/build/perf/builtin-kallsyms.o
-  CC       /tmp/build/perf/builtin-list.o
-  CC       /tmp/build/perf/builtin-record.o
-  CC       /tmp/build/perf/builtin-report.o
-  CC       /tmp/build/perf/builtin-stat.o
-  CC       /tmp/build/perf/builtin-timechart.o
-  CC       /tmp/build/perf/builtin-top.o
-  CC       /tmp/build/perf/builtin-script.o
-  CC       /tmp/build/perf/builtin-kmem.o
-  CC       /tmp/build/perf/builtin-lock.o
-  CC       /tmp/build/perf/builtin-kvm.o
-  CC       /tmp/build/perf/builtin-inject.o
-  CC       /tmp/build/perf/builtin-mem.o
-  CC       /tmp/build/perf/builtin-data.o
-  CC       /tmp/build/perf/builtin-version.o
-  CC       /tmp/build/perf/builtin-probe.o
-  CC       /tmp/build/perf/builtin-c2c.o
-  MKDIR    /tmp/build/perf/bench/
-  MKDIR    /tmp/build/perf/tests/
-  CC       /tmp/build/perf/bench/sched-messaging.o
-  MKDIR    /tmp/build/perf/bench/
-  CC       /tmp/build/perf/tests/builtin-test.o
-  CC       /tmp/build/perf/bench/sched-pipe.o
-  CC       /tmp/build/perf/bench/mem-functions.o
-  CC       /tmp/build/perf/bench/futex-hash.o
-  CC       /tmp/build/perf/bench/futex-wake.o
-In file included from bench/futex-hash.c:26:
-bench/futex.h: In function ‘futex_wait’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:46:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h:37:10: note: each undeclared identifier is reported only once for each function it appears in
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:46:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_wake’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:56:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_WAKE, nr_wake, NULL, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_lock_pi’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:65:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_LOCK_PI, 0, timeout, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_unlock_pi’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:74:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_UNLOCK_PI, 0, NULL, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_cmp_requeue’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:86:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_CMP_REQUEUE, nr_wake, nr_requeue, uaddr2,
-         ^~~~~
-bench/futex.h: In function ‘futex_wait’:
-bench/futex.h:47:1: error: control reaches end of non-void function [-Werror=return-type]
- }
- ^
-cc1: all warnings being treated as errors
-mv: cannot stat '/tmp/build/perf/bench/.futex-hash.o.tmp': No such file or directory
-make[4]: *** [/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-hash.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  MKDIR    /tmp/build/perf/tests/
-  MKDIR    /tmp/build/perf/arch/
-  MKDIR    /tmp/build/perf/util/
-  CC       /tmp/build/perf/tests/parse-events.o
-  CC       /tmp/build/perf/util/annotate.o
-  CC       /tmp/build/perf/arch/common.o
-In file included from bench/futex-wake.c:24:
-bench/futex.h: In function ‘futex_wait’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:46:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h:37:10: note: each undeclared identifier is reported only once for each function it appears in
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:46:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_WAIT, val, timeout, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_wake’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:56:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_WAKE, nr_wake, NULL, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_lock_pi’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:65:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_LOCK_PI, 0, timeout, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_unlock_pi’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:74:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_UNLOCK_PI, 0, NULL, NULL, 0, opflags);
-         ^~~~~
-bench/futex.h: In function ‘futex_cmp_requeue’:
-bench/futex.h:37:10: error: ‘SYS_futex’ undeclared (first use in this function); did you mean ‘SYS_tee’?
-  syscall(SYS_futex, uaddr, op | opflags, val, timeout, uaddr2, val3)
-          ^~~~~~~~~
-bench/futex.h:86:9: note: in expansion of macro ‘futex’
-  return futex(uaddr, FUTEX_CMP_REQUEUE, nr_wake, nr_requeue, uaddr2,
-         ^~~~~
-bench/futex.h: In function ‘futex_wait’:
-bench/futex.h:47:1: error: control reaches end of non-void function [-Werror=return-type]
- }
- ^
-bench/futex.h: In function ‘futex_wake’:
-bench/futex.h:57:1: error: control reaches end of non-void function [-Werror=return-type]
- }
- ^
-cc1: all warnings being treated as errors
-  MKDIR    /tmp/build/perf/util/
-mv: cannot stat '/tmp/build/perf/bench/.futex-wake.o.tmp': No such file or directory
-make[4]: *** [/git/perf/tools/build/Makefile.build:96: /tmp/build/perf/bench/futex-wake.o] Error 1
-make[3]: *** [/git/perf/tools/build/Makefile.build:139: bench] Error 2
-make[3]: *** Waiting for unfinished jobs....
-  CC       /tmp/build/perf/util/block-range.o
-  CC       /tmp/build/perf/util/build-id.o
-  MKDIR    /tmp/build/perf/ui/
-  CC       /tmp/build/perf/ui/setup.o
-  CC       /tmp/build/perf/util/config.o
-  MKDIR    /tmp/build/perf/ui/
-  MKDIR    /tmp/build/perf/arch/arc/
-  CC       /tmp/build/perf/ui/progress.o
-  CC       /tmp/build/perf/ui/helpline.o
-  LD       /tmp/build/perf/arch/arc/perf-in.o
-  LD       /tmp/build/perf/arch/perf-in.o
-  CC       /tmp/build/perf/ui/util.o
-  CC       /tmp/build/perf/ui/hist.o
-  CC       /tmp/build/perf/tests/dso-data.o
-  CC       /tmp/build/perf/util/ctype.o
-  MKDIR    /tmp/build/perf/ui/stdio/
-  CC       /tmp/build/perf/ui/stdio/hist.o
-  CC       /tmp/build/perf/tests/attr.o
-  CC       /tmp/build/perf/tests/vmlinux-kallsyms.o
-  CC       /tmp/build/perf/util/db-export.o
-  CC       /tmp/build/perf/tests/openat-syscall.o
-  CC       /tmp/build/perf/tests/openat-syscall-all-cpus.o
-  CC       /tmp/build/perf/tests/openat-syscall-tp-fields.o
-  CC       /tmp/build/perf/util/env.o
-  CC       /tmp/build/perf/util/event.o
-  CC       /tmp/build/perf/util/evlist.o
-  CC       /tmp/build/perf/tests/mmap-basic.o
-  CC       /tmp/build/perf/util/evsel.o
-  CC       /tmp/build/perf/util/evsel_fprintf.o
-  CC       /tmp/build/perf/util/find_bit.o
-  CC       /tmp/build/perf/util/get_current_dir_name.o
-  CC       /tmp/build/perf/util/kallsyms.o
-  CC       /tmp/build/perf/util/levenshtein.o
-  CC       /tmp/build/perf/tests/perf-record.o
-  CC       /tmp/build/perf/util/llvm-utils.o
-  CC       /tmp/build/perf/tests/evsel-roundtrip-name.o
-  CC       /tmp/build/perf/tests/evsel-tp-sched.o
-  LD       /tmp/build/perf/ui/perf-in.o
-  CC       /tmp/build/perf/tests/fdarray.o
-  CC       /tmp/build/perf/util/mmap.o
+commit dd423246b321967eace3f3e0fe73d638050b447c
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon Apr 22 15:21:35 2019 -0300
+
+    WIP
+    
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/arch/arc/include/uapi/asm/unistd.h b/tools/arch/arc/include/uapi/asm/unistd.h
+new file mode 100644
+index 000000000000..5eafa1115162
+--- /dev/null
++++ b/tools/arch/arc/include/uapi/asm/unistd.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright (C) 2004, 2007-2010, 2011-2012 Synopsys, Inc. (www.synopsys.com)
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/******** no-legacy-syscalls-ABI *******/
++
++/*
++ * Non-typical guard macro to enable inclusion twice in ARCH sys.c
++ * That is how the Generic syscall wrapper generator works
++ */
++#if !defined(_UAPI_ASM_ARC_UNISTD_H) || defined(__SYSCALL)
++#define _UAPI_ASM_ARC_UNISTD_H
++
++#define __ARCH_WANT_RENAMEAT
++#define __ARCH_WANT_STAT64
++#define __ARCH_WANT_SET_GET_RLIMIT
++#define __ARCH_WANT_SYS_EXECVE
++#define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_VFORK
++#define __ARCH_WANT_SYS_FORK
++#define __ARCH_WANT_TIME32_SYSCALLS
++
++#define sys_mmap2 sys_mmap_pgoff
++
++#include <asm-generic/unistd.h>
++
++#define NR_syscalls	__NR_syscalls
++
++/* Generic syscall (fs/filesystems.c - lost in asm-generic/unistd.h */
++#define __NR_sysfs		(__NR_arch_specific_syscall + 3)
++
++/* ARC specific syscall */
++#define __NR_cacheflush		(__NR_arch_specific_syscall + 0)
++#define __NR_arc_settls		(__NR_arch_specific_syscall + 1)
++#define __NR_arc_gettls		(__NR_arch_specific_syscall + 2)
++#define __NR_arc_usr_cmpxchg	(__NR_arch_specific_syscall + 4)
++
++__SYSCALL(__NR_cacheflush, sys_cacheflush)
++__SYSCALL(__NR_arc_settls, sys_arc_settls)
++__SYSCALL(__NR_arc_gettls, sys_arc_gettls)
++__SYSCALL(__NR_arc_usr_cmpxchg, sys_arc_usr_cmpxchg)
++__SYSCALL(__NR_sysfs, sys_sysfs)
++
++#undef __SYSCALL
++
++#endif
+diff --git a/tools/arch/hexagon/include/uapi/asm/unistd.h b/tools/arch/hexagon/include/uapi/asm/unistd.h
+new file mode 100644
+index 000000000000..432c4db1b623
+--- /dev/null
++++ b/tools/arch/hexagon/include/uapi/asm/unistd.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Syscall support for Hexagon
++ *
++ * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
++ * 02110-1301, USA.
++ */
++
++/*
++ *  The kernel pulls this unistd.h in three different ways:
++ *  1.  the "normal" way which gets all the __NR defines
++ *  2.  with __SYSCALL defined to produce function declarations
++ *  3.  with __SYSCALL defined to produce syscall table initialization
++ *  See also:  syscalltab.c
++ */
++
++#define sys_mmap2 sys_mmap_pgoff
++#define __ARCH_WANT_RENAMEAT
++#define __ARCH_WANT_STAT64
++#define __ARCH_WANT_SET_GET_RLIMIT
++#define __ARCH_WANT_SYS_EXECVE
++#define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_VFORK
++#define __ARCH_WANT_SYS_FORK
++#define __ARCH_WANT_TIME32_SYSCALLS
++
++#include <asm-generic/unistd.h>
+diff --git a/tools/arch/riscv/include/uapi/asm/unistd.h b/tools/arch/riscv/include/uapi/asm/unistd.h
+new file mode 100644
+index 000000000000..0e2eeeb1fd27
+--- /dev/null
++++ b/tools/arch/riscv/include/uapi/asm/unistd.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++/*
++ * Copyright (C) 2018 David Abdurachmanov <david.abdurachmanov@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifdef __LP64__
++#define __ARCH_WANT_NEW_STAT
++#define __ARCH_WANT_SET_GET_RLIMIT
++#endif /* __LP64__ */
++
++#include <asm-generic/unistd.h>
++
++/*
++ * Allows the instruction cache to be flushed from userspace.  Despite RISC-V
++ * having a direct 'fence.i' instruction available to userspace (which we
++ * can't trap!), that's not actually viable when running on Linux because the
++ * kernel might schedule a process on another hart.  There is no way for
++ * userspace to handle this without invoking the kernel (as it doesn't know the
++ * thread->hart mappings), so we've defined a RISC-V specific system call to
++ * flush the instruction cache.
++ *
++ * __NR_riscv_flush_icache is defined to flush the instruction cache over an
++ * address range, with the flush applying to either all threads or just the
++ * caller.  We don't currently do anything with the address range, that's just
++ * in there for forwards compatibility.
++ */
++#ifndef __NR_riscv_flush_icache
++#define __NR_riscv_flush_icache (__NR_arch_specific_syscall + 15)
++#endif
++__SYSCALL(__NR_riscv_flush_icache, sys_riscv_flush_icache)
