@@ -1,47 +1,281 @@
 From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 Subject: Re: perf tools build broken after v5.1-rc1
-Date: Mon, 29 Apr 2019 17:17:50 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
+Date: Mon, 29 Apr 2019 17:23:57 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A2505863@us01wembx1.internal.synopsys.com>
 References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org>
+ <20190422152027.GB11750@kernel.org> <20190425214800.GC21829@kernel.org>
+ <20190426192834.GB28586@kernel.org> <20190426193531.GC28586@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Arnd Bergmann <arnd@arndb.de>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, arcml <linux-snps-arc@lists.infradead.org>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkml <linux-kernel@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/22/19 8:31 AM, Arnaldo Carvalho de Melo wrote:=0A=
->> A quick fix for ARC will be to create our own version but I presume all =
-existing=0A=
->> arches using generic syscall abi are affected. Thoughts ? In lack of ide=
-as I'll=0A=
->> send out a patch for ARC.=0A=
->>=0A=
->> P.S. Why do we need the unistd.h duplication in tools directory, given i=
-t could=0A=
->> have used the in-tree unistd headers directly ?=0A=
-> I have to write down the explanation and have it in a file, but we can't=
+On 4/26/19 12:35 PM, Arnaldo Carvalho de Melo wrote:=0A=
+> Em Fri, Apr 26, 2019 at 04:28:34PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:=0A=
+>> Em Thu, Apr 25, 2019 at 06:48:00PM -0300, Arnaldo Carvalho de Melo escre=
+veu:=0A=
+>>> Em Mon, Apr 22, 2019 at 12:20:27PM -0300, Arnaldo Carvalho de Melo escr=
+eveu:=0A=
+>>>> Em Fri, Apr 19, 2019 at 04:32:58PM -0700, Vineet Gupta escreveu:=0A=
+>>>>> When building perf for ARC (v5.1-rc2) I get the following=0A=
+>>>>  =0A=
+>>>>> | In file included from bench/futex-hash.c:26:=0A=
+>>>>> | bench/futex.h: In function 'futex_wait':=0A=
+>>>>> | bench/futex.h:37:10: error: 'SYS_futex' undeclared (first use in th=
+is function);=0A=
+>>>>  =0A=
+>>>>> git bisect led to 1a787fc5ba18ac767e635c58d06a0b46876184e3 ("tools he=
+aders uapi:=0A=
+>>>>> Sync copy of asm-generic/unistd.h with the kernel sources")=0A=
+>>>> Humm, I have to check why this:=0A=
+>>>>=0A=
+>>>> [perfbuilder@quaco ~]$ podman images | grep ARC=0A=
+>>>> docker.io/acmel/linux-perf-tools-build-fedora                24-x-ARC-=
+uClibc          4c259582a8e6   5 weeks ago      846 MB=0A=
+>>>> [perfbuilder@quaco ~]$=0A=
+>>>>=0A=
+>>>> isn't catching this... :-\=0A=
+>>>>=0A=
+>>>> FROM docker.io/fedora:24=0A=
+>>>> MAINTAINER Arnaldo Carvalho de Melo <acme@kernel.org>=0A=
+>>>> ENV TOOLCHAIN=3Darc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_in=
+stall=0A=
+>>>> ENV CROSS=3Darc-linux-=0A=
+>>>> ENV SOURCEFILE=3D${TOOLCHAIN}.tar.gz=0A=
+>>>> RUN dnf -y install make flex bison binutils gcc wget tar bzip2 bc find=
+utils xz=0A=
+>>>> RUN wget https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github=
+.com_foss-2Dfor-2Dsynopsys-2Ddwc-2Darc-2Dprocessors_toolchain_releases_down=
+load_arc-2D2017.09-2Drc2_-24-257BSOURCEFILE-257D&d=3DDwIBAg&c=3DDPL6_X_6JkX=
+Fx7AXWqB0tg&r=3D7FgpX6o3vAhwMrMhLh-4ZJey5kjdNUwOL2CWsFwR4T8&m=3DobdUU5ZihUr=
+Fi8F2O4JfVYScd7CLKNItF83dHmezlkU&s=3DoOPRKzvGneimee7GFXWyqqoVfgvHu-jwSMKPbS=
+qwP5M&e=3D=0A=
+>>>> <SNIP>=0A=
+>>>> COPY rx_and_build.sh /=0A=
+>>>> ENV EXTRA_MAKE_ARGS=3DNO_LIBBPF=3D1=0A=
+>>>> ENV ARCH=3Darc=0A=
+>>>> ENV CROSS_COMPILE=3D/${TOOLCHAIN}/bin/${CROSS}=0A=
+>>>> ENV EXTRA_CFLAGS=3D-matomic=0A=
+>>> So, now I have a libnuma crossbuilt in this container that allows me to=
 =0A=
-> use anything in the kernel from outside tools/ to avoid adding a burden=
+>>> build a ARC perf binary linked with zlib and numactl-devel, but only=0A=
+>>> after I applied the fix below.=0A=
+>>>=0A=
+>>> Can you please provide the feature detection header in the build? I.e.=
 =0A=
-> to kernel developers that would then have to make sure that the changes=
+>>> what I have with my ARC cross build container right now, after applying=
 =0A=
-> that they make outside tools/ don't break things living there.=0A=
+>>> the patch below is:=0A=
+>> So, switched from the uCLibc build system to the glibc based one, so=0A=
+>> that I could get elfutils building (it needs argp that isn't available=
 =0A=
-That is a sound guiding principle in general but I don't agree here. unistd=
- is=0A=
-backbone of kernel user interface it has to work and can't possibly be brok=
-en even=0A=
-when kernel devs add a new syscall is added or condition-alize existing one=
-. So=0A=
-adding a copy - and deferring the propagation of in-kernel unistd to usersa=
-pce=0A=
-won't necessarily help with anything and it just adds the burden of keeping=
- them=0A=
-in sync. Granted we won't necessarily need all the bleeding edge (new sysca=
-ll=0A=
-updates) into that header, its still more work.=0A=
+>> with uCLibc) I have it reproduced, see below, now I'm testing with the=
+=0A=
+>> fix, which is to grab the unistd.h files you noticed missing for the=0A=
+>> arches that are present in tools/arch/, will post results soon=0A=
+> Yep, now it builds:=0A=
+>=0A=
+> /tmp/build/perf/perf: ELF 32-bit LSB executable, *unknown arch 0xc3* vers=
+ion 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-arc.so.2, for G=
+NU/Linux 3.9.0, with debug_info, not stripped=0A=
+>=0A=
+> With this patch:=0A=
+>=0A=
+> commit dd423246b321967eace3f3e0fe73d638050b447c=0A=
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>=0A=
+> Date:   Mon Apr 22 15:21:35 2019 -0300=0A=
+>=0A=
+>     WIP=0A=
+>     =0A=
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>=0A=
+>=0A=
+> diff --git a/tools/arch/arc/include/uapi/asm/unistd.h b/tools/arch/arc/in=
+clude/uapi/asm/unistd.h=0A=
+> new file mode 100644=0A=
+> index 000000000000..5eafa1115162=0A=
+> --- /dev/null=0A=
+> +++ b/tools/arch/arc/include/uapi/asm/unistd.h=0A=
+> @@ -0,0 +1,51 @@=0A=
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */=0A=
+> +/*=0A=
+> + * Copyright (C) 2004, 2007-2010, 2011-2012 Synopsys, Inc. (http://www.s=
+ynopsys.com)=0A=
+> + *=0A=
+> + * This program is free software; you can redistribute it and/or modify=
+=0A=
+> + * it under the terms of the GNU General Public License version 2 as=0A=
+> + * published by the Free Software Foundation.=0A=
+> + */=0A=
+> +=0A=
+> +/******** no-legacy-syscalls-ABI *******/=0A=
+> +=0A=
+> +/*=0A=
+> + * Non-typical guard macro to enable inclusion twice in ARCH sys.c=0A=
+> + * That is how the Generic syscall wrapper generator works=0A=
+> + */=0A=
+> +#if !defined(_UAPI_ASM_ARC_UNISTD_H) || defined(__SYSCALL)=0A=
+=0A=
+This guard ifdef is not present in existing tools/arch/*/**/unistd.h , nor =
+in the=0A=
+ones below so I'd suggest just drop it to keep things consistent.=0A=
+If you still want them, best to call it _TOOLS_UAPI_ASM_ARC_UNISTD_H=0A=
+=0A=
+> +#define _UAPI_ASM_ARC_UNISTD_H=0A=
+> +=0A=
+> +#define __ARCH_WANT_RENAMEAT=0A=
+> +#define __ARCH_WANT_STAT64=0A=
+> +#define __ARCH_WANT_SET_GET_RLIMIT=0A=
+> +#define __ARCH_WANT_SYS_EXECVE=0A=
+> +#define __ARCH_WANT_SYS_CLONE=0A=
+> +#define __ARCH_WANT_SYS_VFORK=0A=
+> +#define __ARCH_WANT_SYS_FORK=0A=
+> +#define __ARCH_WANT_TIME32_SYSCALLS=0A=
+> +=0A=
+> +#define sys_mmap2 sys_mmap_pgoff=0A=
+> +=0A=
+> +#include <asm-generic/unistd.h>=0A=
+=0A=
+> +=0A=
+> +#define NR_syscalls	__NR_syscalls=0A=
+> +=0A=
+> +/* Generic syscall (fs/filesystems.c - lost in asm-generic/unistd.h */=
+=0A=
+> +#define __NR_sysfs		(__NR_arch_specific_syscall + 3)=0A=
+> +=0A=
+> +/* ARC specific syscall */=0A=
+> +#define __NR_cacheflush		(__NR_arch_specific_syscall + 0)=0A=
+> +#define __NR_arc_settls		(__NR_arch_specific_syscall + 1)=0A=
+> +#define __NR_arc_gettls		(__NR_arch_specific_syscall + 2)=0A=
+> +#define __NR_arc_usr_cmpxchg	(__NR_arch_specific_syscall + 4)=0A=
+> +=0A=
+> +__SYSCALL(__NR_cacheflush, sys_cacheflush)=0A=
+> +__SYSCALL(__NR_arc_settls, sys_arc_settls)=0A=
+> +__SYSCALL(__NR_arc_gettls, sys_arc_gettls)=0A=
+> +__SYSCALL(__NR_arc_usr_cmpxchg, sys_arc_usr_cmpxchg)=0A=
+> +__SYSCALL(__NR_sysfs, sys_sysfs)=0A=
+> +=0A=
+> +#undef __SYSCALL=0A=
+> +=0A=
+> +#endif=0A=
+> diff --git a/tools/arch/hexagon/include/uapi/asm/unistd.h b/tools/arch/he=
+xagon/include/uapi/asm/unistd.h=0A=
+> new file mode 100644=0A=
+> index 000000000000..432c4db1b623=0A=
+> --- /dev/null=0A=
+> +++ b/tools/arch/hexagon/include/uapi/asm/unistd.h=0A=
+> @@ -0,0 +1,40 @@=0A=
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */=0A=
+> +/*=0A=
+> + * Syscall support for Hexagon=0A=
+> + *=0A=
+> + * Copyright (c) 2010-2011, The Linux Foundation. All rights reserved.=
+=0A=
+> + *=0A=
+> + * This program is free software; you can redistribute it and/or modify=
+=0A=
+> + * it under the terms of the GNU General Public License version 2 and=0A=
+> + * only version 2 as published by the Free Software Foundation.=0A=
+> + *=0A=
+> + * This program is distributed in the hope that it will be useful,=0A=
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of=0A=
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the=0A=
+> + * GNU General Public License for more details.=0A=
+> + *=0A=
+> + * You should have received a copy of the GNU General Public License=0A=
+> + * along with this program; if not, write to the Free Software=0A=
+> + * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA=0A=
+> + * 02110-1301, USA.=0A=
+> + */=0A=
+> +=0A=
+> +/*=0A=
+> + *  The kernel pulls this unistd.h in three different ways:=0A=
+> + *  1.  the "normal" way which gets all the __NR defines=0A=
+> + *  2.  with __SYSCALL defined to produce function declarations=0A=
+> + *  3.  with __SYSCALL defined to produce syscall table initialization=
+=0A=
+> + *  See also:  syscalltab.c=0A=
+> + */=0A=
+> +=0A=
+> +#define sys_mmap2 sys_mmap_pgoff=0A=
+> +#define __ARCH_WANT_RENAMEAT=0A=
+> +#define __ARCH_WANT_STAT64=0A=
+> +#define __ARCH_WANT_SET_GET_RLIMIT=0A=
+> +#define __ARCH_WANT_SYS_EXECVE=0A=
+> +#define __ARCH_WANT_SYS_CLONE=0A=
+> +#define __ARCH_WANT_SYS_VFORK=0A=
+> +#define __ARCH_WANT_SYS_FORK=0A=
+> +#define __ARCH_WANT_TIME32_SYSCALLS=0A=
+> +=0A=
+> +#include <asm-generic/unistd.h>=0A=
+> diff --git a/tools/arch/riscv/include/uapi/asm/unistd.h b/tools/arch/risc=
+v/include/uapi/asm/unistd.h=0A=
+> new file mode 100644=0A=
+> index 000000000000..0e2eeeb1fd27=0A=
+> --- /dev/null=0A=
+> +++ b/tools/arch/riscv/include/uapi/asm/unistd.h=0A=
+> @@ -0,0 +1,42 @@=0A=
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */=0A=
+> +/*=0A=
+> + * Copyright (C) 2018 David Abdurachmanov <david.abdurachmanov@gmail.com=
+>=0A=
+> + *=0A=
+> + * This program is free software; you can redistribute it and/or modify=
+=0A=
+> + * it under the terms of the GNU General Public License version 2 as=0A=
+> + * published by the Free Software Foundation.=0A=
+> + *=0A=
+> + * This program is distributed in the hope that it will be useful,=0A=
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of=0A=
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the=0A=
+> + * GNU General Public License for more details.=0A=
+> + *=0A=
+> + * You should have received a copy of the GNU General Public License=0A=
+> + * along with this program.  If not, see <https://urldefense.proofpoint.=
+com/v2/url?u=3Dhttp-3A__www.gnu.org_licenses_&d=3DDwIBAg&c=3DDPL6_X_6JkXFx7=
+AXWqB0tg&r=3D7FgpX6o3vAhwMrMhLh-4ZJey5kjdNUwOL2CWsFwR4T8&m=3DobdUU5ZihUrFi8=
+F2O4JfVYScd7CLKNItF83dHmezlkU&s=3Dqw-VNuV5RBu7T5rL77GOTAKBzZB-zvizjJ3Haik7x=
+9g&e=3D>.=0A=
+> + */=0A=
+> +=0A=
+> +#ifdef __LP64__=0A=
+> +#define __ARCH_WANT_NEW_STAT=0A=
+> +#define __ARCH_WANT_SET_GET_RLIMIT=0A=
+> +#endif /* __LP64__ */=0A=
+> +=0A=
+> +#include <asm-generic/unistd.h>=0A=
+> +=0A=
+> +/*=0A=
+> + * Allows the instruction cache to be flushed from userspace.  Despite R=
+ISC-V=0A=
+> + * having a direct 'fence.i' instruction available to userspace (which w=
+e=0A=
+> + * can't trap!), that's not actually viable when running on Linux becaus=
+e the=0A=
+> + * kernel might schedule a process on another hart.  There is no way for=
+=0A=
+> + * userspace to handle this without invoking the kernel (as it doesn't k=
+now the=0A=
+> + * thread->hart mappings), so we've defined a RISC-V specific system cal=
+l to=0A=
+> + * flush the instruction cache.=0A=
+> + *=0A=
+> + * __NR_riscv_flush_icache is defined to flush the instruction cache ove=
+r an=0A=
+> + * address range, with the flush applying to either all threads or just =
+the=0A=
+> + * caller.  We don't currently do anything with the address range, that'=
+s just=0A=
+> + * in there for forwards compatibility.=0A=
+> + */=0A=
+> +#ifndef __NR_riscv_flush_icache=0A=
+> +#define __NR_riscv_flush_icache (__NR_arch_specific_syscall + 15)=0A=
+> +#endif=0A=
+> +__SYSCALL(__NR_riscv_flush_icache, sys_riscv_flush_icache)=0A=
+>=0A=
+=0A=
