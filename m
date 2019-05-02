@@ -1,76 +1,92 @@
 From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: Detecting libc in perf (was Re: perf tools build broken after
- v5.1-rc1)
-Date: Thu, 2 May 2019 09:55:26 -0700
-Message-ID: <596d2166-1952-a392-ef05-d3f59abf9fd0@synopsys.com>
+Subject: Re: perf tools build broken after v5.1-rc1
+Date: Thu, 2 May 2019 10:10:15 -0700
+Message-ID: <506c2df7-4088-9a18-91c0-c86b944714da@synopsys.com>
 References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
- <20190422152027.GB11750@kernel.org> <20190425214800.GC21829@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A2505837@us01wembx1.internal.synopsys.com>
- <20190430011818.GE7857@kernel.org>
- <C2D7FE5348E1B147BCA15975FBA2307501A250601B@us01wembx1.internal.synopsys.com>
- <20190430170404.GX23599@brightrain.aerifal.cx>
- <17a86bc7-c1f9-8c3c-8f1d-711e95dac49d@synopsys.com>
- <20190501031215.GZ23599@brightrain.aerifal.cx>
+ <20190422152027.GB11750@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
+ <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
+ <20190501204115.GF21436@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2506BF3@us01wembx1.internal.synopsys.com>
+ <20190502143618.GH21436@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2506D04@us01wembx1.internal.synopsys.com>
+ <20190502164104.GB23984@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190501031215.GZ23599@brightrain.aerifal.cx>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190502164104.GB23984@kernel.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Rich Felker <dalias@libc.org>, Jin Yao <yao.jin@linux.intel.com>
-Cc: "devel@uclibc-ng.org" <devel@uclibc-ng.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, arcml <linux-snps-arc@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rich Felker <dalias@libc.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, arcml <linux-snps-arc@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/30/19 8:12 PM, Rich Felker wrote:
->>> What are you trying to achieve? I was just CC'd and I'm missing the
->>> context.
->>
->> Sorry I added you as a subject matter expert but didn't provide enough context.
->>
->> The original issue [1] was perf failing to build on ARC due to perf tools needing
->> a copy of unistd.h but this thread [2] was a small side issue of auto-detecting
->> libc variaint in perf tools where despite uClibc tools, glibc is declared to be
->> detected, due to uClibc's historical hack of defining __GLIBC__. So __GLIBC__ is
->> not sufficient (and probably not the right interface to begin wtih) to ensure glibc.
->>
->> [1] http://lists.infradead.org/pipermail/linux-snps-arc/2019-April/005676.html
->> [2] http://lists.infradead.org/pipermail/linux-snps-arc/2019-April/005684.html
-> 
-> I think you misunderstood -- 
+On 5/2/19 9:41 AM, Arnaldo Carvalho de Melo wrote:
+>> While this takes care of immediate issues, for the long term, are you open to idea
+>> of removing the header duplicity.
+>
+> In the beginning we used the kernel headers directly, then, acting on
+> advice/complaints from Linus about tooling breaking when changes were
+> made in the kernel sources we were using directly, we moved to have
+> copies and notice when things change so that we could think about what
+> changed and act accordingly, without putting the burden to the kernel
+> developers to keep tools/ building, I want to keep it that way.
+
+Sure, and the reduced duplicity I propose doesn't change that in any way. The onus
+is still on perf maintainers to copy over any unistd changes - in the new regime,
+it will be just lesser since we only care about a handful of syscalls, not the
+entire unistd.
+
+
+> Now you say, validly, that there are bits that are designed to be used
+> by userspace, so for those, we should go back to not copying and using
+> it direcly, elliminating the duplicity you don't like.
+
+Indeed.
+
+> I don't know, I'm used to the duplicity and the checks,
 
 :-)
 
-> I'm asking what you're trying to achieve
-> by detecting whether the libc is glibc, rather than whether it has
-> some particular interface you want to conditionally use. This is a
-> major smell and is usually something wrong that shouldn't be done.
+> not breaking
+> tools even when kernel developers make mistakes in the UAPI headers,
 
-Good question indeed. Back in 2015 I initially ran into some quirks due to subtle
-libc differences.  At the time perf has a fwd ref for strlcpy which exactly
-matched glibc but not uClibc.  see commit  a83d869f300bf91 "(perf tools: Elide
-strlcpy warning with uclibc)" or 0215d59b154 "(tools lib: Reinstate strlcpy()
-header guard with __UCLIBC__)"
+Not sure how replacing the full header with just a small hunk, out of same header
+out-of-line will change anything or cause any more breakage.
 
-But this still used the libc defined symbol __UCLIBC__ or __GLIBC__
+> tools/perf is self container wrt the latest and greatest stuff not
+> present in older environments, and the onus is on perf developers to do
+> the sync.
 
-Your question however pertains to perf glibc feature check where perf generates an
-alternate symbol HAVE_GLIBC_SUPPORT.
+Sure it is, I'm proposing to make their work less, no more.
 
-This is dubious as first of all it detects glibc even for uClibc builds.
 
-Even of we were to improve it, there seems to be no users of this symbol.
+> This specific issue here happened because I made a mistake, which I
+> fixed when reported,
 
-$git grep HAVE_GLIBC_SUPPORT
-perf/Makefile.config:  CFLAGS += -DHAVE_GLIBC_SUPPORT
-perf/builtin-version.c: STATUS(HAVE_GLIBC_SUPPORT, glibc)
+Exactly, it was a genuien mistake with a super prompt followup - your promptness
+is really appreciated and emulation worthy for other maintainers including myself ;-)
 
-So I'd propose to remove it !
+> now I have three containers for cross building for
+> ARC, two versions for the uCLibc based toolchain, one for the glibc one,
+> libnuma, elfutils and zlib are cross build there, so should make it less
+> likely problems like this will happen again.
+
+Ok, well lets leave it at that for now then.
+
+
+>> We could use a "less evil" idiom of copying only the minimal bits (since the sync
+>> onus remains one way or the other)
+>> e.g. I spotted below in bpf code and also seen in other ah-hoc multi arch projects
+>  
+>> #ifdef __NR_xx
+>> # if defined (__arch_y__)
+>>
+>> # elif defined (__arch_z__)
+>>
+>> # endif
+>> #endif
+
+Thx,
+-Vineet
