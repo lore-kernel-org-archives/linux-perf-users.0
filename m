@@ -1,170 +1,83 @@
-From: "Phillips, Kim" <kim.phillips@amd.com>
-Subject: [PATCH] perf/x86/amd: update generic hardware cache events for Family
- 17h
-Date: Thu, 2 May 2019 15:29:47 +0000
-Message-ID: <20190502152931.5696-1-kim.phillips@amd.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: perf tools build broken after v5.1-rc1
+Date: Thu, 2 May 2019 11:41:34 -0400
+Message-ID: <20190502154134.GA23984@kernel.org>
+References: <eeb83498-f37f-e234-4941-2731b81dc78c@synopsys.com>
+ <20190422152027.GB11750@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A250584C@us01wembx1.internal.synopsys.com>
+ <CAK8P3a2JrAApXDws+t=q8AnKFkHJZSox7gsgwW-xEJTfs_mdzw@mail.gmail.com>
+ <20190501204115.GF21436@kernel.org>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2506BF3@us01wembx1.internal.synopsys.com>
+ <20190502143618.GH21436@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <stable-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <E22176CE8C9ABC4EAB2655128356B37F@namprd12.prod.outlook.com>
-Sender: stable-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Cc: "Phillips, Kim" <kim.phillips@amd.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>, "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>, Jiri Olsa <jolsa@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, =?utf-8?B?TWFydGluIExpxaFrYQ==?= <mliska@suse.cz>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>, "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>, Thomas Gleixner <tglx@linutronix.de>, "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190502143618.GH21436@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rich Felker <dalias@libc.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkml <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, arcml <linux-snps-arc@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-RnJvbTogS2ltIFBoaWxsaXBzIDxraW0ucGhpbGxpcHNAYW1kLmNvbT4NCg0KQWRkIGEgbmV3IGFt
-ZF9od19jYWNoZV9ldmVudF9pZHNfZjE3aCBhc3NpZ25tZW50IHN0cnVjdHVyZSBzZXQNCmZvciBB
-TUQgZmFtaWxpZXMgMTdoIGFuZCBhYm92ZSwgc2luY2UgYSBsb3QgaGFzIGNoYW5nZWQuICBTcGVj
-aWZpY2FsbHk6DQoNCkwxIERhdGEgQ2FjaGUNCg0KVGhlIGRhdGEgY2FjaGUgYWNjZXNzIGNvdW50
-ZXIgcmVtYWlucyB0aGUgc2FtZSBvbiBGYW1pbHkgMTdoLg0KDQpGb3IgREMgbWlzc2VzLCBQTUN4
-MDQxJ3MgZGVmaW5pdGlvbiBjaGFuZ2VzIHdpdGggRmFtaWx5IDE3aCwNCnNvIGluc3RlYWQgd2Ug
-dXNlIHRoZSBMMiBjYWNoZSBhY2Nlc3NlcyBmcm9tIEwxIGRhdGEgY2FjaGUNCm1pc3NlcyBjb3Vu
-dGVyIChQTUN4MDYwLHVtYXNrPTB4YzgpLg0KDQpGb3IgREMgaGFyZHdhcmUgcHJlZmV0Y2ggZXZl
-bnRzLCBGYW1pbHkgMTdoIGJyZWFrcyBjb21wYXRpYmlsaXR5DQpmb3IgUE1DeDA2NyAiRGF0YSBQ
-cmVmZXRjaGVyIiwgc28gaW5zdGVhZCwgd2UgdXNlIFBNQ3gwNWEgIkhhcmR3YXJlDQpQcmVmZXRj
-aCBEQyBGaWxscy4iDQoNCkwxIEluc3RydWN0aW9uIENhY2hlDQoNClBNQ3MgMHg4MCBhbmQgMHg4
-MSAoMzItYnl0ZSBJQyBmZXRjaGVzIGFuZCBtaXNzZXMpIGFyZSBiYWNrd2FyZA0KY29tcGF0aWJs
-ZSBvbiBGYW1pbHkgMTdoLg0KDQpGb3IgcHJlZmV0Y2hlcywgd2UgcmVtb3ZlIHRoZSBlcnJvbmVv
-dXMgUE1DeDA0QiBhc3NpZ25tZW50IHdoaWNoDQpjb3VudHMgaG93IG1hbnkgc29mdHdhcmUgZGF0
-YSBjYWNoZSBwcmVmZXRjaCBsb2FkIGluc3RydWN0aW9ucyB3ZXJlDQpkaXNwYXRjaGVkLg0KDQpM
-TCAtIExhc3QgTGV2ZWwgQ2FjaGUNCg0KUmVtb3ZpbmcgUE1DcyA3RCwgN0UsIGFuZCA3RiBhc3Np
-Z25tZW50cywgYXMgdGhleSBkbyBub3QgZXhpc3QNCm9uIEZhbWlseSAxN2gsIHdoZXJlIHRoZSBs
-YXN0IGxldmVsIGNhY2hlIGlzIEwzLiAgTDMgY291bnRlcnMNCmNhbiBiZSBhY2Nlc3NlZCB1c2lu
-ZyB0aGUgZXhpc3RpbmcgQU1EIFVuY29yZSBkcml2ZXIuDQoNCkRhdGEgVExCDQoNCk9uIEludGVs
-IG1hY2hpbmVzLCBkYXRhIFRMQiBhY2Nlc3NlcyAoImRUTEItbG9hZHMiKSBhcmUgYXNzaWduZWQN
-CnRvIGNvdW50ZXJzIHRoYXQgY291bnQgbG9hZC9zdG9yZSBpbnN0cnVjdGlvbnMgcmV0aXJlZC4g
-IFRoaXMNCmlzIGluY29uc2lzdGVudCB3aXRoIGluc3RydWN0aW9uIFRMQiBhY2Nlc3Nlcywgd2hl
-cmUgSW50ZWwNCmltcGxlbWVudGF0aW9ucyByZXBvcnQgaVRMQiBtaXNzZXMgdGhhdCBoaXQgaW4g
-dGhlIFNUTEIuDQoNCklkZWFsbHksIGRUTEItbG9hZHMgd291bGQgY291bnQgaGlnaGVyIGxldmVs
-IGRUTEIgbWlzc2VzIHRoYXQgaGl0DQppbiBsb3dlciBsZXZlbCBUTEJzLCBhbmQgZFRMQi1sb2Fk
-LW1pc3NlcyB3b3VsZCByZXBvcnQgdGhvc2UNCnRoYXQgYWxzbyBtaXNzZWQgaW4gdGhvc2UgbG93
-ZXItbGV2ZWwgVExCcywgdGhlcmVmb3JlIGNhdXNpbmcNCmEgcGFnZSB0YWJsZSB3YWxrLiAgVGhh
-dCB3b3VsZCBiZSBjb25zaXN0ZW50IHdpdGggaW5zdHJ1Y3Rpb24NClRMQiBvcGVyYXRpb24sIHJl
-bW92ZSB0aGUgcmVkdW5kYW5jeSBiZXR3ZWVuIGRUTEItbG9hZHMgYW5kDQpMMS1kY2FjaGUtbG9h
-ZHMsIGFuZCBwcmV2ZW50IHBlcmYgZnJvbSBwcm9kdWNpbmcgYXJ0aWZpY2lhbGx5DQpsb3cgcGVy
-Y2VudGFnZSByYXRpb3MsIGkuZS4gdGhlICIwLjAxJSIgYmVsb3c6DQoNCiAgICAgICAgNDIsNTUw
-LDg2OSAgICAgIEwxLWRjYWNoZS1sb2Fkcw0KICAgICAgICA0MSw1OTEsODYwICAgICAgZFRMQi1s
-b2Fkcw0KICAgICAgICAgICAgIDQsODAyICAgICAgZFRMQi1sb2FkLW1pc3NlcyAgICAgICAgICAj
-ICAgIDAuMDElIG9mIGFsbCBkVExCIGNhY2hlIGhpdHMNCiAgICAgICAgIDcsMjgzLDY4MiAgICAg
-IEwxLWRjYWNoZS1zdG9yZXMNCiAgICAgICAgIDcsOTEyLDM5MiAgICAgIGRUTEItc3RvcmVzDQog
-ICAgICAgICAgICAgICAzMTAgICAgICBkVExCLXN0b3JlLW1pc3Nlcw0KDQpPbiBBTUQgRmFtaWxp
-ZXMgcHJpb3IgdG8gMTdoLCB0aGUgIkRhdGEgQ2FjaGUgQWNjZXNzZXMiIGNvdW50ZXIgaXMNCnVz
-ZWQsIHdoaWNoIGlzIHNsaWdodGx5IGJldHRlciB0aGFuIGxvYWQvc3RvcmUgaW5zdHJ1Y3Rpb25z
-IHJldGlyZWQsDQpidXQgc3RpbGwgY291bnRzIGluIHRlcm1zIG9mIGluZGl2aWR1YWwgbG9hZC9z
-dG9yZSBvcGVyYXRpb25zDQppbnN0ZWFkIG9mIFRMQiBvcGVyYXRpb25zLg0KDQpTbywgZm9yIEFN
-RCBGYW1pbGllcyAxN2ggYW5kIGhpZ2hlciwgdGhpcyBwYXRjaCBhc3NpZ25zICJkVExCLWxvYWRz
-Ig0KdG8gYSBjb3VudGVyIGZvciBMMSBkVExCIG1pc3NlcyB0aGF0IGhpdCBpbiB0aGUgTDIgZFRM
-QiwgYW5kDQoiZFRMQi1sb2FkLW1pc3NlcyIgdG8gYSBjb3VudGVyIGZvciBMMSBEVExCIG1pc3Nl
-cyB0aGF0IGNhdXNlZA0KTDIgRFRMQiBtaXNzZXMgYW5kIHRoZXJlZm9yZSBhbHNvIGNhdXNlZCBw
-YWdlIHRhYmxlIHdhbGtzLiAgVGhpcw0KcmVzdWx0cyBpbiBhIG11Y2ggbW9yZSBhY2N1cmF0ZSB2
-aWV3IG9mIGRhdGEgVExCIHBlcmZvcm1hbmNlOg0KDQogICAgICAgIDYwLDk2MSw3ODEgICAgICBM
-MS1kY2FjaGUtbG9hZHMNCiAgICAgICAgICAgICA0LDYwMSAgICAgIGRUTEItbG9hZHMNCiAgICAg
-ICAgICAgICAgIDk2MyAgICAgIGRUTEItbG9hZC1taXNzZXMgICAgICAgICAgIyAgIDIwLjkzJSBv
-ZiBhbGwgZFRMQiBjYWNoZSBoaXRzDQoNCk5vdGUgdGhhdCBmb3IgYWxsIEFNRCBmYW1pbGllcywg
-ZGF0YSBsb2FkcyBhbmQgc3RvcmVzIGFyZSBjb21iaW5lZA0KaW4gYSBzaW5nbGUgYWNjZXNzZXMg
-Y291bnRlciwgc28gbm8gJ0wxLWRjYWNoZS1zdG9yZXMnIGFyZSByZXBvcnRlZA0Kc2VwYXJhdGVs
-eSwgYW5kIHN0b3JlcyBhcmUgY291bnRlZCB3aXRoIGxvYWRzIGluICdMMS1kY2FjaGUtbG9hZHMn
-Lg0KDQpBbHNvIG5vdGUgdGhhdCB0aGUgIiUgb2YgYWxsIGRUTEIgY2FjaGUgaGl0cyIgc3RyaW5n
-IGlzIG1pc2xlYWRpbmcNCmJlY2F1c2UgKGEpICJkVExCIGNhY2hlIjogYWx0aG91Z2ggVExCcyBj
-YW4gYmUgY29uc2lkZXJlZCBjYWNoZXMgZm9yDQpwYWdlIHRhYmxlcywgaW4gdGhpcyBjb250ZXh0
-LCBpdCBjYW4gYmUgbWlzaW50ZXJwcmV0ZWQgYXMgZGF0YSBjYWNoZQ0KaGl0cyBiZWNhdXNlIHRo
-ZSBmaWd1cmVzIGFyZSBzaW1pbGFyIChhdCBsZWFzdCBvbiBJbnRlbCksIGFuZCAoYikgbm90DQph
-bGwgdGhvc2UgbG9hZHMgKHRlY2huaWNhbGx5IGFjY2Vzc2VzKSB0ZWNobmljYWxseSAiaGl0IiBh
-dCB0aGF0DQpoYXJkd2FyZSBsZXZlbC4gICIlIG9mIGFsbCBkVExCIGFjY2Vzc2VzIiB3b3VsZCBi
-ZSBtb3JlIGNsZWFyL2FjY3VyYXRlLg0KDQpJbnN0cnVjdGlvbiBUTEINCg0KT24gSW50ZWwgbWFj
-aGluZXMsICdpVExCLWxvYWRzJyBtZWFzdXJlIGlUTEIgbWlzc2VzIHRoYXQgaGl0IGluIHRoZQ0K
-U1RMQiwgYW5kICdpVExCLWxvYWQtbWlzc2VzJyBtZWFzdXJlIGlUTEIgbWlzc2VzIHRoYXQgYWxz
-byBtaXNzZWQgaW4NCnRoZSBTVExCIGFuZCBjb21wbGV0ZWQgYSBwYWdlIHRhYmxlIHdhbGsuDQoN
-CkZvciBBTUQgRmFtaWx5IDE3aCBhbmQgYWJvdmUsIGZvciAnaVRMQi1sb2Fkcycgd2UgcmVwbGFj
-ZSB0aGUNCmVycm9uZW91cyBpbnN0cnVjdGlvbiBjYWNoZSBmZXRjaGVzIGNvdW50ZXIgd2l0aCBQ
-TUN4MDg0DQoiTDEgSVRMQiBNaXNzLCBMMiBJVExCIEhpdCIuDQoNCkZvciAnaVRMQi1sb2FkLW1p
-c3Nlcycgd2Ugc3RpbGwgdXNlIFBNQ3gwODUgIkwxIElUTEIgTWlzcywNCkwyIElUTEIgTWlzcyIs
-IGJ1dCBzZXQgYSAweGZmIHVtYXNrIGJlY2F1c2Ugd2l0aG91dCBpdCB0aGUgZXZlbnQNCmRvZXMg
-bm90IGdldCBjb3VudGVkLg0KDQpCcmFuY2ggUHJlZGljdG9yIChCUFUpDQoNClBNQ3MgMHhjMiBh
-bmQgMHhjMyBjb250aW51ZSB0byBiZSB2YWxpZCBhY3Jvc3MgYWxsIEFNRCBGYW1pbGllcy4NCg0K
-Tm9kZSBMZXZlbCBFdmVudHMNCg0KRmFtaWx5IDE3aCBkb2VzIG5vdCBoYXZlIGEgUE1DeDBlOSBj
-b3VudGVyLCBhbmQgY29ycmVzcG9uZGluZyBjb3VudGVycw0KaGF2ZSBub3QgYmVlbiBtYWRlIGF2
-YWlsYWJsZSBwdWJsaWNseSwgc28gZm9yIG5vdywgd2UgbWFyayB0aGVtIGFzDQp1bnN1cHBvcnRl
-ZCBmb3IgRmFtaWxpZXMgMTdoIGFuZCBhYm92ZS4NCg0KUmVmZXJlbmNlOg0KIk9wZW4tU291cmNl
-IFJlZ2lzdGVyIFJlZmVyZW5jZSBGb3IgQU1EIEZhbWlseSAxN2ggUHJvY2Vzc29ycyBNb2RlbHMg
-MDBoLTJGaCINClJlbGVhc2VkIDcvMTcvMjAxOCwgUHVibGljYXRpb24gIzU2MjU1LCBSZXZpc2lv
-biAzLjAzOg0KaHR0cHM6Ly93d3cuYW1kLmNvbS9zeXN0ZW0vZmlsZXMvVGVjaERvY3MvNTYyNTVf
-T1NSUi5wZGYNCg0KU2lnbmVkLW9mZi1ieTogS2ltIFBoaWxsaXBzIDxraW0ucGhpbGxpcHNAYW1k
-LmNvbT4NCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4gIyB2NC45Kw0KQ2M6IEFsZXhhbmRl
-ciBTaGlzaGtpbiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbT4NCkNjOiBBcm5h
-bGRvIENhcnZhbGhvIGRlIE1lbG8gPGFjbWVAa2VybmVsLm9yZz4NCkNjOiBCb3Jpc2xhdiBQZXRr
-b3YgPGJwQGFsaWVuOC5kZT4NCkNjOiBILiBQZXRlciBBbnZpbiA8aHBhQHp5dG9yLmNvbT4NCkNj
-OiBJbmdvIE1vbG5hciA8bWluZ29Aa2VybmVsLm9yZz4NCkNjOiBKYW5ha2FyYWphbiBOYXRhcmFq
-YW4gPEphbmFrYXJhamFuLk5hdGFyYWphbkBhbWQuY29tPg0KQ2M6IEppcmkgT2xzYSA8am9sc2FA
-cmVkaGF0LmNvbT4NCkNjOiBMaW51cyBUb3J2YWxkcyA8dG9ydmFsZHNAbGludXgtZm91bmRhdGlv
-bi5vcmc+DQpDYzogTWFydGluIExpxaFrYSA8bWxpc2thQHN1c2UuY3o+DQpDYzogTmFtaHl1bmcg
-S2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPg0KQ2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5m
-cmFkZWFkLm9yZz4NCkNjOiBQdSBXZW4gPHB1d2VuQGh5Z29uLmNuPg0KQ2M6IFN1cmF2ZWUgU3V0
-aGlrdWxwYW5pdCA8U3VyYXZlZS5TdXRoaWt1bHBhbml0QGFtZC5jb20+DQpDYzogVGhvbWFzIEds
-ZWl4bmVyIDx0Z2x4QGxpbnV0cm9uaXguZGU+DQpDYzogVGhvbWFzIExlbmRhY2t5IDxUaG9tYXMu
-TGVuZGFja3lAYW1kLmNvbT4NCkNjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQpDYzog
-bGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmcNCkZpeGVzOiBlNDBlZDE1NDJkZDcgKCJw
-ZXJmL3g4NjogQWRkIHBlcmYgc3VwcG9ydCBmb3IgQU1EIGZhbWlseS0xN2ggcHJvY2Vzc29ycyIp
-DQotLS0NCiBhcmNoL3g4Ni9ldmVudHMvYW1kL2NvcmUuYyB8IDExMyArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKystDQogMSBmaWxlIGNoYW5nZWQsIDExMCBpbnNlcnRpb25zKCsp
-LCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvZXZlbnRzL2FtZC9jb3Jl
-LmMgYi9hcmNoL3g4Ni9ldmVudHMvYW1kL2NvcmUuYw0KaW5kZXggZDQ1ZjNmYmQyMzJlLi5jNTg5
-NWFkNDE5ZWEgMTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9ldmVudHMvYW1kL2NvcmUuYw0KKysrIGIv
-YXJjaC94ODYvZXZlbnRzL2FtZC9jb3JlLmMNCkBAIC0xMTYsNiArMTE2LDExMCBAQCBzdGF0aWMg
-X19pbml0Y29uc3QgY29uc3QgdTY0IGFtZF9od19jYWNoZV9ldmVudF9pZHMNCiAgfSwNCiB9Ow0K
-IA0KK3N0YXRpYyBfX2luaXRjb25zdCBjb25zdCB1NjQgYW1kX2h3X2NhY2hlX2V2ZW50X2lkc19m
-MTdoDQorCQkJCVtQRVJGX0NPVU5UX0hXX0NBQ0hFX01BWF0NCisJCQkJW1BFUkZfQ09VTlRfSFdf
-Q0FDSEVfT1BfTUFYXQ0KKwkJCQlbUEVSRl9DT1VOVF9IV19DQUNIRV9SRVNVTFRfTUFYXSA9IHsN
-CitbQyhMMUQpXSA9IHsNCisJW0MoT1BfUkVBRCldID0gew0KKwkJW0MoUkVTVUxUX0FDQ0VTUyld
-ID0gMHgwMDQwLCAvKiBEYXRhIENhY2hlIEFjY2Vzc2VzICovDQorCQlbQyhSRVNVTFRfTUlTUyld
-ICAgPSAweGM4NjAsIC8qIEwyJCBhY2Nlc3MgZnJvbSBEQyBNaXNzICovDQorCX0sDQorCVtDKE9Q
-X1dSSVRFKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAwLA0KKwkJW0MoUkVTVUxUX01J
-U1MpXSAgID0gMCwNCisJfSwNCisJW0MoT1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9B
-Q0NFU1MpXSA9IDB4ZmY1YSwgLyogaC93IHByZWZldGNoIERDIEZpbGxzICovDQorCQlbQyhSRVNV
-TFRfTUlTUyldICAgPSAwLA0KKwl9LA0KK30sDQorW0MoTDFJKV0gPSB7DQorCVtDKE9QX1JFQUQp
-XSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDB4MDA4MCwgLyogSW5zdHJ1Y3Rpb24gY2Fj
-aGUgZmV0Y2hlcyAgKi8NCisJCVtDKFJFU1VMVF9NSVNTKV0gICA9IDB4MDA4MSwgLyogSW5zdHJ1
-Y3Rpb24gY2FjaGUgbWlzc2VzICAgKi8NCisJfSwNCisJW0MoT1BfV1JJVEUpXSA9IHsNCisJCVtD
-KFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gLTEsDQorCX0s
-DQorCVtDKE9QX1BSRUZFVENIKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAwLA0KKwkJ
-W0MoUkVTVUxUX01JU1MpXSAgID0gMCwNCisJfSwNCit9LA0KK1tDKExMKV0gPSB7DQorCVtDKE9Q
-X1JFQUQpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDAsDQorCQlbQyhSRVNVTFRfTUlT
-UyldICAgPSAwLA0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJW0MoUkVTVUxUX0FDQ0VT
-UyldID0gMCwNCisJCVtDKFJFU1VMVF9NSVNTKV0gICA9IDAsDQorCX0sDQorCVtDKE9QX1BSRUZF
-VENIKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAwLA0KKwkJW0MoUkVTVUxUX01JU1Mp
-XSAgID0gMCwNCisJfSwNCit9LA0KK1tDKERUTEIpXSA9IHsNCisJW0MoT1BfUkVBRCldID0gew0K
-KwkJW0MoUkVTVUxUX0FDQ0VTUyldID0gMHhmZjQ1LCAvKiBBbGwgTDIgRFRMQiBhY2Nlc3NlcyAq
-Lw0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gMHhmMDQ1LCAvKiBMMiBEVExCIG1pc3NlcyAoUFQg
-d2Fsa3MpICovDQorCX0sDQorCVtDKE9QX1dSSVRFKV0gPSB7DQorCQlbQyhSRVNVTFRfQUNDRVNT
-KV0gPSAwLA0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gMCwNCisJfSwNCisJW0MoT1BfUFJFRkVU
-Q0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDAsDQorCQlbQyhSRVNVTFRfTUlTUyld
-ICAgPSAwLA0KKwl9LA0KK30sDQorW0MoSVRMQildID0gew0KKwlbQyhPUF9SRUFEKV0gPSB7DQor
-CQlbQyhSRVNVTFRfQUNDRVNTKV0gPSAweDAwODQsIC8qIEwxIElUTEIgbWlzc2VzLCBMMiBJVExC
-IGhpdHMgKi8NCisJCVtDKFJFU1VMVF9NSVNTKV0gICA9IDB4ZmY4NSwgLyogTDEgSVRMQiBtaXNz
-ZXMsIEwyIG1pc3NlcyAqLw0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJW0MoUkVTVUxU
-X0FDQ0VTUyldID0gLTEsDQorCQlbQyhSRVNVTFRfTUlTUyldICAgPSAtMSwNCisJfSwNCisJW0Mo
-T1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0KKwkJW0MoUkVT
-VUxUX01JU1MpXSAgID0gLTEsDQorCX0sDQorfSwNCitbQyhCUFUpXSA9IHsNCisJW0MoT1BfUkVB
-RCldID0gew0KKwkJW0MoUkVTVUxUX0FDQ0VTUyldID0gMHgwMGMyLCAvKiBSZXRpcmVkIEJyYW5j
-aCBJbnN0ci4gICAgICAqLw0KKwkJW0MoUkVTVUxUX01JU1MpXSAgID0gMHgwMGMzLCAvKiBSZXRp
-cmVkIE1pc3ByZWRpY3RlZCBCSSAgICAqLw0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJ
-W0MoUkVTVUxUX0FDQ0VTUyldID0gLTEsDQorCQlbQyhSRVNVTFRfTUlTUyldICAgPSAtMSwNCisJ
-fSwNCisJW0MoT1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0K
-KwkJW0MoUkVTVUxUX01JU1MpXSAgID0gLTEsDQorCX0sDQorfSwNCitbQyhOT0RFKV0gPSB7DQor
-CVtDKE9QX1JFQUQpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IDAsDQorCQlbQyhSRVNV
-TFRfTUlTUyldICAgPSAwLA0KKwl9LA0KKwlbQyhPUF9XUklURSldID0gew0KKwkJW0MoUkVTVUxU
-X0FDQ0VTUyldID0gLTEsDQorCQlbQyhSRVNVTFRfTUlTUyldICAgPSAtMSwNCisJfSwNCisJW0Mo
-T1BfUFJFRkVUQ0gpXSA9IHsNCisJCVtDKFJFU1VMVF9BQ0NFU1MpXSA9IC0xLA0KKwkJW0MoUkVT
-VUxUX01JU1MpXSAgID0gLTEsDQorCX0sDQorfSwNCit9Ow0KKw0KIC8qDQogICogQU1EIFBlcmZv
-cm1hbmNlIE1vbml0b3IgSzcgYW5kIGxhdGVyLCB1cCB0byBhbmQgaW5jbHVkaW5nIEZhbWlseSAx
-Nmg6DQogICovDQpAQCAtODY1LDkgKzk2OSwxMiBAQCBfX2luaXQgaW50IGFtZF9wbXVfaW5pdCh2
-b2lkKQ0KIAkJeDg2X3BtdS5hbWRfbmJfY29uc3RyYWludHMgPSAwOw0KIAl9DQogDQotCS8qIEV2
-ZW50cyBhcmUgY29tbW9uIGZvciBhbGwgQU1EcyAqLw0KLQltZW1jcHkoaHdfY2FjaGVfZXZlbnRf
-aWRzLCBhbWRfaHdfY2FjaGVfZXZlbnRfaWRzLA0KLQkgICAgICAgc2l6ZW9mKGh3X2NhY2hlX2V2
-ZW50X2lkcykpOw0KKwlpZiAoYm9vdF9jcHVfZGF0YS54ODYgPj0gMHgxNykNCisJCW1lbWNweSho
-d19jYWNoZV9ldmVudF9pZHMsIGFtZF9od19jYWNoZV9ldmVudF9pZHNfZjE3aCwNCisJCSAgICAg
-ICBzaXplb2YoaHdfY2FjaGVfZXZlbnRfaWRzKSk7DQorCWVsc2UNCisJCW1lbWNweShod19jYWNo
-ZV9ldmVudF9pZHMsIGFtZF9od19jYWNoZV9ldmVudF9pZHMsDQorCQkgICAgICAgc2l6ZW9mKGh3
-X2NhY2hlX2V2ZW50X2lkcykpOw0KIA0KIAlyZXR1cm4gMDsNCiB9DQotLSANCjIuMjEuMA0KDQo=
+Em Thu, May 02, 2019 at 10:36:18AM -0400, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, May 01, 2019 at 09:17:52PM +0000, Vineet Gupta escreveu:
+> > On 5/1/19 1:41 PM, Arnaldo Carvalho de Melo wrote:
+> > >> The 1a787fc5ba18ac7 commit copied over the changes for arm64, but
+> > >> missed all the other architectures changed in c8ce48f06503 and the
+> > >> related commits.
+> > > Right, I have a patch copying the missing headers, and that fixed the
+> > > build with the glibc-based toolchain, but then broke the uCLibc one :-\
+>  
+> > tools/perf/util/cloexec.c  #includes <sys/syscall.h> which for glibc includes
+> > asm/unistd.h
+>  
+> > uClibc <sys/syscall.h> OTOH #include <bits/sysnum.h> containign#define __NR_*
+> > (generated by parsing kernel's unistd). This header does the right thing by
+> > chekcing for redefs, but in the end we still collide with newly added
+> > tools/arc/arc/*/**/unistd.h which doesn't have conditional definitions. I'm sure
+> > this is not an ARC problem, any uClibc build would be affected. Do you have a arm
+> > uclibc toolchain to test ?
+> 
+> This solves it for fedora:29,
+> arc_gnu_2017.09-rc2_prebuilt_uclibc_le_arc700_linux_install,
+> arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install and
+> arc_gnu_2019.03-rc1_prebuilt_glibc_le_archs_linux_install.
+> 
+> Also ok with:
+> 
+>   make -C tools/perf build-test
+> 
+> Now build testing with the full set of containers.
+
+So far, and the alpine ones use musl libc:
+
+[perfbuilder@quaco ~]$ export PERF_TARBALL=http://192.168.124.1/perf/perf-5.1.0-rc6.tar.xz
+[perfbuilder@quaco ~]$ time dm
+   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0
+   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822
+   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0
+   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   5 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0
+   6 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0
+   7 alpine:edge                   : Ok   gcc (Alpine 8.3.0) 8.3.0
+   8 amazonlinux:1                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-28)
+   9 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  10 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  11 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  12 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
+  13 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-36)
+  14 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u2) 4.9.2
+  15 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516
+  16 debian:experimental           : Ok   gcc (Debian 8.3.0-6) 8.3.0
+  17 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 8.3.0-4) 8.3.0
+  18 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 8.3.0-4) 8.3.0
+  19 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 8.3.0-2) 8.3.0
+  20 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 8.3.0-4) 8.3.0
+  21 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
+  22 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  23 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6)
+  24 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1)
+  25 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+
+
+- Arnaldo
