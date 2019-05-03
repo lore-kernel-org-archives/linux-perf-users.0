@@ -1,147 +1,78 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/11] perf report: Report OOM in status line in the GTK UI
-Date: Thu,  2 May 2019 20:25:28 -0400
-Message-ID: <20190503002533.29359-7-acme@kernel.org>
+Subject: [PATCH 07/11] perf cs-etm: Don't check cs_etm_queue::prev_packet
+ validity
+Date: Thu,  2 May 2019 20:25:29 -0400
+Message-ID: <20190503002533.29359-8-acme@kernel.org>
 References: <20190503002533.29359-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190503002533.29359-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulouse <suzuki.poulose@arm.com>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>, Namhyung Kim <namhyung@kernel.org>, Robert Walker <robert.walker@arm.com>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-An -ENOMEM error is not reported in the GTK GUI.  Instead this error
-message pops up on the screen:
+Since cs_etm_queue::prev_packet is allocated for all cases, it will
+never be NULL pointer; now validity checking prev_packet is pointless,
+remove all of them.
 
-[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
-
-	Processing events... [974K/3M]
-	Error:failed to process sample
-
-	0xf4198 [0x8]: failed to process type: 68
-
-However when I use the same perf.data file with --stdio it works:
-
-[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
-		| head -12
-
-  # Total Lost Samples: 0
-  #
-  # Samples: 76K of event 'cycles'
-  # Event count (approx.): 99056160000
-  #
-  # Overhead  Command          Shared Object      Symbol
-  # ........  ...............  .................  .........
-  #
-     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
-     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
-     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
-     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
-
-The sample precentage is a bit low.....
-
-The GUI always fails in the FINISHED_ROUND event (68) and does not
-indicate the reason why.
-
-When happened is the following. Perf report calls a lot of functions and
-down deep when a FINISHED_ROUND event is processed, these functions are
-called:
-
-  perf_session__process_event()
-  + perf_session__process_user_event()
-    + process_finished_round()
-      + ordered_events__flush()
-        + __ordered_events__flush()
-	  + do_flush()
-	    + ordered_events__deliver_event()
-	      + perf_session__deliver_event()
-	        + machine__deliver_event()
-	          + perf_evlist__deliver_event()
-	            + process_sample_event()
-	              + hist_entry_iter_add() --> only called in GUI case!!!
-	                + hist_iter__report__callback()
-	                  + symbol__inc_addr_sample()
-
-	                    Now this functions runs out of memory and
-			    returns -ENOMEM. This is reported all the way up
-			    until function
-
-perf_session__process_event() returns to its caller, where -ENOMEM is
-changed to -EINVAL and processing stops:
-
- if ((skip = perf_session__process_event(session, event, head)) < 0) {
-      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-	     head, event->header.size, event->header.type);
-      err = -EINVAL;
-      goto out_err;
- }
-
-This occurred in the FINISHED_ROUND event when it has to process some
-10000 entries and ran out of memory.
-
-This patch indicates the root cause and displays it in the status line
-of ther perf report GUI.
-
-Output before (on GUI status line):
-
-  0xf4198 [0x8]: failed to process type: 68
-
-Output after:
-
-  0xf4198 [0x8]: failed to process type: 68 [not enough memory]
-
-Committer notes:
-
-the 'skip' variable needs to be initialized to -EINVAL, so that when the
-size is less than sizeof(struct perf_event_attr) we avoid this valid
-compiler warning:
-
-  util/session.c: In function ‘perf_session__process_events’:
-  util/session.c:1936:7: error: ‘skip’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
-     err = skip;
-     ~~~~^~~~~~
-  util/session.c:1874:6: note: ‘skip’ was declared here
-    s64 skip;
-        ^~~~
-  cc1: all warnings being treated as errors
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190423105303.61683-1-tmricht@linux.ibm.com
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Tested-by: Robert Walker <robert.walker@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190428083228.20246-2-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/util/cs-etm.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index b17f1c9bc965..bad5f87ae001 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1928,12 +1928,14 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 
- 	size = event->header.size;
- 
-+	skip = -EINVAL;
-+
- 	if (size < sizeof(struct perf_event_header) ||
- 	    (skip = rd->process(session, event, file_pos)) < 0) {
--		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-+		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
- 		       file_offset + head, event->header.size,
--		       event->header.type);
--		err = -EINVAL;
-+		       event->header.type, strerror(-skip));
-+		err = skip;
- 		goto out;
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 110804936fc3..7777cfc1ad8c 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -981,7 +981,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq)
+ 	 * PREV_PACKET is a branch.
+ 	 */
+ 	if (etm->synth_opts.last_branch &&
+-	    etmq->prev_packet &&
+ 	    etmq->prev_packet->sample_type == CS_ETM_RANGE &&
+ 	    etmq->prev_packet->last_instr_taken_branch)
+ 		cs_etm__update_last_branch_rb(etmq);
+@@ -1014,7 +1013,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq)
+ 		etmq->period_instructions = instrs_over;
  	}
  
+-	if (etm->sample_branches && etmq->prev_packet) {
++	if (etm->sample_branches) {
+ 		bool generate_sample = false;
+ 
+ 		/* Generate sample for tracing on packet */
+@@ -1071,9 +1070,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq)
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+ 	struct cs_etm_packet *tmp;
+ 
+-	if (!etmq->prev_packet)
+-		return 0;
+-
+ 	/* Handle start tracing packet */
+ 	if (etmq->prev_packet->sample_type == CS_ETM_EMPTY)
+ 		goto swap_packet;
 -- 
 2.20.1
