@@ -1,65 +1,147 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/11] perf bench numa: Add define for RUSAGE_THREAD if not
- present
-Date: Thu,  2 May 2019 20:25:27 -0400
-Message-ID: <20190503002533.29359-6-acme@kernel.org>
+Subject: [PATCH 06/11] perf report: Report OOM in status line in the GTK UI
+Date: Thu,  2 May 2019 20:25:28 -0400
+Message-ID: <20190503002533.29359-7-acme@kernel.org>
 References: <20190503002533.29359-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190503002533.29359-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Clark Williams <williams@redhat.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-snps-arc@lists.infradead.org
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-RnJvbTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+CgpXaGlsZSBj
-cm9zcyBidWlsZGluZyBwZXJmIHRvIHRoZSBBUkMgYXJjaGl0ZWN0dXJlIG9uIGEgZmVkb3JhIDMw
-IGhvc3QsCndlIHdlcmUgZmFpbGluZyB3aXRoOgoKICAgICAgQ0MgICAgICAgL3RtcC9idWlsZC9w
-ZXJmL2JlbmNoL251bWEubwogIGJlbmNoL251bWEuYzogSW4gZnVuY3Rpb24g4oCYd29ya2VyX3Ro
-cmVhZOKAmToKICBiZW5jaC9udW1hLmM6MTI2MToxMjogZXJyb3I6IOKAmFJVU0FHRV9USFJFQUTi
-gJkgdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMgZnVuY3Rpb24pOyBkaWQgeW91IG1lYW4g
-4oCYU0lHRVZfVEhSRUFE4oCZPwogICAgZ2V0cnVzYWdlKFJVU0FHRV9USFJFQUQsICZydXNhZ2Up
-OwogICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn4KICAgICAgICAgICAgICBTSUdFVl9USFJFQUQK
-ICBiZW5jaC9udW1hLmM6MTI2MToxMjogbm90ZTogZWFjaCB1bmRlY2xhcmVkIGlkZW50aWZpZXIg
-aXMgcmVwb3J0ZWQgb25seSBvbmNlIGZvciBlYWNoIGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4KCltw
-ZXJmYnVpbGRlckA2MGQ1ODAyNDY4ZjYgcGVyZl0kIC9hcmNfZ251XzIwMTkuMDMtcmMxX3ByZWJ1
-aWx0X3VjbGliY19sZV9hcmNoc19saW51eF9pbnN0YWxsL2Jpbi9hcmMtbGludXgtZ2NjIC0tdmVy
-c2lvbiB8IGhlYWQgLTEKYXJjLWxpbnV4LWdjYyAoQVJDdjIgSVNBIExpbnV4IHVDbGliYyB0b29s
-Y2hhaW4gMjAxOS4wMy1yYzEpIDguMy4xIDIwMTkwMjI1CltwZXJmYnVpbGRlckA2MGQ1ODAyNDY4
-ZjYgcGVyZl0kCgpUcnlpbmcgdG8gcmVwcm9kdWNlIGEgcmVwb3J0IGJ5IFZpbmVldCwgSSBub3Rp
-Y2VkIHRoYXQsIHdpdGgganVzdApjcm9zcy1idWlsdCB6bGliIGFuZCBudW1hY3RsIGxpYnJhcmll
-cywgSSBlbmRlZCB1cCB3aXRoIHRoZSBhYm92ZQpmYWlsdXJlLgoKU28sIHNpbmNlIFJVU0FHRV9U
-SFJFQUQgaXMgYXZhaWxhYmxlIGFzIGEgZGVmaW5lLCBjaGVjayBmb3IgdGhhdCBhbmQKbnVtYWN0
-bCBsaWJyYXJpZXMsIEkgZW5kZWQgdXAgd2l0aCB0aGUgYWJvdmUgZmFpbHVyZS4KClNvLCBzaW5j
-ZSBSVVNBR0VfVEhSRUFEIGlzIGF2YWlsYWJsZSBhcyBhIGRlZmluZSBpbiB0aGUgc3lzdGVtIGhl
-YWRlcnMsCmNoZWNrIGlmIGl0IGlzIGRlZmluZWQgaW4gdGhlICdwZXJmIGJlbmNoIG51bWEnIHNv
-dXJjZXMgYW5kIGRlZmluZSBpdCBpZgpub3QuCgpOb3cgaXQgYnVpbGRzIGFuZCBJIGhhdmUgdG8g
-ZmlndXJlIG91dCBpZiB0aGUgcHJvYmxlbSByZXBvcnRlZCBieSBWaW5lZXQKb25seSB0YWtlcyBw
-bGFjZSBpZiB3ZSBoYXZlIGxpYmVsZiBvciBzb21lIG90aGVyIGxpYnJhcnkgYXZhaWxhYmxlLgoK
-Q2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+CkNjOiBKaXJpIE9sc2EgPGpvbHNhQGtl
-cm5lbC5vcmc+CkNjOiBsaW51eC1zbnBzLWFyY0BsaXN0cy5pbmZyYWRlYWQub3JnCkNjOiBOYW1o
-eXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5vcmc+CkNjOiBWaW5lZXQgR3VwdGEgPFZpbmVldC5H
-dXB0YTFAc3lub3BzeXMuY29tPgpMaW5rOiBodHRwczovL2xrbWwua2VybmVsLm9yZy9uL3RpcC0y
-d2I0cjFnaXI5eHJldmJwcTdxcDBhbWtAZ2l0Lmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogQXJu
-YWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+Ci0tLQogdG9vbHMvcGVyZi9i
-ZW5jaC9udW1hLmMgfCA0ICsrKysKIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKCmRp
-ZmYgLS1naXQgYS90b29scy9wZXJmL2JlbmNoL251bWEuYyBiL3Rvb2xzL3BlcmYvYmVuY2gvbnVt
-YS5jCmluZGV4IDk4YWQ3ODNlZmM2OS4uYTc3ODQ1NTRhODBkIDEwMDY0NAotLS0gYS90b29scy9w
-ZXJmL2JlbmNoL251bWEuYworKysgYi90b29scy9wZXJmL2JlbmNoL251bWEuYwpAQCAtMzksNiAr
-MzksMTAgQEAKICNpbmNsdWRlIDxudW1hLmg+CiAjaW5jbHVkZSA8bnVtYWlmLmg+CiAKKyNpZm5k
-ZWYgUlVTQUdFX1RIUkVBRAorIyBkZWZpbmUgUlVTQUdFX1RIUkVBRCAxCisjZW5kaWYKKwogLyoK
-ICAqIFJlZ3VsYXIgcHJpbnRvdXQgdG8gdGhlIHRlcm1pbmFsLCBzdXByZXNzZWQgaWYgLXEgaXMg
-c3BlY2lmaWVkOgogICovCi0tIAoyLjIwLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1zbnBzLWFyYyBtYWlsaW5nIGxpc3QKbGludXgtc25w
-cy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LXNucHMtYXJj
+From: Thomas Richter <tmricht@linux.ibm.com>
+
+An -ENOMEM error is not reported in the GTK GUI.  Instead this error
+message pops up on the screen:
+
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
+
+	Processing events... [974K/3M]
+	Error:failed to process sample
+
+	0xf4198 [0x8]: failed to process type: 68
+
+However when I use the same perf.data file with --stdio it works:
+
+[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
+		| head -12
+
+  # Total Lost Samples: 0
+  #
+  # Samples: 76K of event 'cycles'
+  # Event count (approx.): 99056160000
+  #
+  # Overhead  Command          Shared Object      Symbol
+  # ........  ...............  .................  .........
+  #
+     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
+     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
+     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
+     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
+
+The sample precentage is a bit low.....
+
+The GUI always fails in the FINISHED_ROUND event (68) and does not
+indicate the reason why.
+
+When happened is the following. Perf report calls a lot of functions and
+down deep when a FINISHED_ROUND event is processed, these functions are
+called:
+
+  perf_session__process_event()
+  + perf_session__process_user_event()
+    + process_finished_round()
+      + ordered_events__flush()
+        + __ordered_events__flush()
+	  + do_flush()
+	    + ordered_events__deliver_event()
+	      + perf_session__deliver_event()
+	        + machine__deliver_event()
+	          + perf_evlist__deliver_event()
+	            + process_sample_event()
+	              + hist_entry_iter_add() --> only called in GUI case!!!
+	                + hist_iter__report__callback()
+	                  + symbol__inc_addr_sample()
+
+	                    Now this functions runs out of memory and
+			    returns -ENOMEM. This is reported all the way up
+			    until function
+
+perf_session__process_event() returns to its caller, where -ENOMEM is
+changed to -EINVAL and processing stops:
+
+ if ((skip = perf_session__process_event(session, event, head)) < 0) {
+      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+	     head, event->header.size, event->header.type);
+      err = -EINVAL;
+      goto out_err;
+ }
+
+This occurred in the FINISHED_ROUND event when it has to process some
+10000 entries and ran out of memory.
+
+This patch indicates the root cause and displays it in the status line
+of ther perf report GUI.
+
+Output before (on GUI status line):
+
+  0xf4198 [0x8]: failed to process type: 68
+
+Output after:
+
+  0xf4198 [0x8]: failed to process type: 68 [not enough memory]
+
+Committer notes:
+
+the 'skip' variable needs to be initialized to -EINVAL, so that when the
+size is less than sizeof(struct perf_event_attr) we avoid this valid
+compiler warning:
+
+  util/session.c: In function ‘perf_session__process_events’:
+  util/session.c:1936:7: error: ‘skip’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+     err = skip;
+     ~~~~^~~~~~
+  util/session.c:1874:6: note: ‘skip’ was declared here
+    s64 skip;
+        ^~~~
+  cc1: all warnings being treated as errors
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190423105303.61683-1-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/session.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index b17f1c9bc965..bad5f87ae001 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1928,12 +1928,14 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+ 
+ 	size = event->header.size;
+ 
++	skip = -EINVAL;
++
+ 	if (size < sizeof(struct perf_event_header) ||
+ 	    (skip = rd->process(session, event, file_pos)) < 0) {
+-		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
++		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
+ 		       file_offset + head, event->header.size,
+-		       event->header.type);
+-		err = -EINVAL;
++		       event->header.type, strerror(-skip));
++		err = skip;
+ 		goto out;
+ 	}
+ 
+-- 
+2.20.1
