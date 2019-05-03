@@ -1,78 +1,68 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/11] perf cs-etm: Don't check cs_etm_queue::prev_packet
- validity
-Date: Thu,  2 May 2019 20:25:29 -0400
-Message-ID: <20190503002533.29359-8-acme@kernel.org>
+Subject: [PATCH 09/11] tools build: Add -ldl to the disassembler-four-args feature test
+Date: Thu,  2 May 2019 20:25:31 -0400
+Message-ID: <20190503002533.29359-10-acme@kernel.org>
 References: <20190503002533.29359-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190503002533.29359-1-acme@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulouse <suzuki.poulose@arm.com>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Leo Yan <leo.yan@linaro.org>, Namhyung Kim <namhyung@kernel.org>, Robert Walker <robert.walker@arm.com>, Jiri Olsa <jolsa@redhat.com>, linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Thomas Backlund <tmb@mageia.org>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Since cs_etm_queue::prev_packet is allocated for all cases, it will
-never be NULL pointer; now validity checking prev_packet is pointless,
-remove all of them.
+Thomas Backlund reported that the perf build was failing on the Mageia 7
+distro, that is because it uses:
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Robert Walker <robert.walker@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
+  cat /tmp/build/perf/feature/test-disassembler-four-args.make.output
+  /usr/bin/ld: /usr/lib64/libbfd.a(plugin.o): in function `try_load_plugin':
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:243:
+  undefined reference to `dlopen'
+  /usr/bin/ld:
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:271:
+  undefined reference to `dlsym'
+  /usr/bin/ld:
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:256:
+  undefined reference to `dlclose'
+  /usr/bin/ld:
+  /home/iurt/rpmbuild/BUILD/binutils-2.32/objs/bfd/../../bfd/plugin.c:246:
+  undefined reference to `dlerror'
+  as we allow dynamic linking and loading
+
+Mageia 7 uses these linker flags:
+  $ rpm --eval %ldflags
+    -Wl,--as-needed -Wl,--no-undefined -Wl,-z,relro -Wl,-O1 -Wl,--build-id -Wl,--enable-new-dtags
+
+So add -ldl to this feature LDFLAGS.
+
+Reported-by: Thomas Backlund <tmb@mageia.org>
+Tested-by: Thomas Backlund <tmb@mageia.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190428083228.20246-2-leo.yan@linaro.org
+Cc: Song Liu <songliubraving@fb.com>
+Link: https://lkml.kernel.org/r/20190501173158.GC21436@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 110804936fc3..7777cfc1ad8c 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -981,7 +981,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq)
- 	 * PREV_PACKET is a branch.
- 	 */
- 	if (etm->synth_opts.last_branch &&
--	    etmq->prev_packet &&
- 	    etmq->prev_packet->sample_type == CS_ETM_RANGE &&
- 	    etmq->prev_packet->last_instr_taken_branch)
- 		cs_etm__update_last_branch_rb(etmq);
-@@ -1014,7 +1013,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq)
- 		etmq->period_instructions = instrs_over;
- 	}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index fe3f97e342fa..6d65874e16c3 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -227,7 +227,7 @@ FEATURE_CHECK_LDFLAGS-libpython-version := $(PYTHON_EMBED_LDOPTS)
  
--	if (etm->sample_branches && etmq->prev_packet) {
-+	if (etm->sample_branches) {
- 		bool generate_sample = false;
+ FEATURE_CHECK_LDFLAGS-libaio = -lrt
  
- 		/* Generate sample for tracing on packet */
-@@ -1071,9 +1070,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq)
- 	struct cs_etm_auxtrace *etm = etmq->etm;
- 	struct cs_etm_packet *tmp;
+-FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes
++FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
  
--	if (!etmq->prev_packet)
--		return 0;
--
- 	/* Handle start tracing packet */
- 	if (etmq->prev_packet->sample_type == CS_ETM_EMPTY)
- 		goto swap_packet;
+ CFLAGS += -fno-omit-frame-pointer
+ CFLAGS += -ggdb3
 -- 
 2.20.1
