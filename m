@@ -1,61 +1,65 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/11] tools lib traceevent: Change tag string for error
-Date: Thu,  2 May 2019 20:25:26 -0400
-Message-ID: <20190503002533.29359-5-acme@kernel.org>
+Subject: [PATCH 05/11] perf bench numa: Add define for RUSAGE_THREAD if not
+ present
+Date: Thu,  2 May 2019 20:25:27 -0400
+Message-ID: <20190503002533.29359-6-acme@kernel.org>
 References: <20190503002533.29359-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190503002533.29359-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Clark Williams <williams@redhat.com>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-snps-arc@lists.infradead.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
-
-The traceevent lib is used by the perf tool, and when executing
-
-  perf test -v 6
-
-it outputs error log on the ARM64 platform:
-
-  running test 33 '*:*'trace-cmd: No such file or directory
-
-  [...]
-
-  trace-cmd: Invalid argument
-
-The trace event parsing code originally came from trace-cmd so it keeps
-the tag string "trace-cmd" for errors, this easily introduces the
-impression that the perf tool launches trace-cmd command for trace event
-parsing, but in fact the related parsing is accomplished by the
-traceevent lib.
-
-This patch changes the tag string to "libtraceevent" so that we can
-avoid confusion and let users to more easily connect the error with
-traceevent lib.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: http://lkml.kernel.org/r/20190424013802.27569-1-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/lib/traceevent/parse-utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/lib/traceevent/parse-utils.c b/tools/lib/traceevent/parse-utils.c
-index 77e4ec6402dd..e99867111387 100644
---- a/tools/lib/traceevent/parse-utils.c
-+++ b/tools/lib/traceevent/parse-utils.c
-@@ -14,7 +14,7 @@
- void __vwarning(const char *fmt, va_list ap)
- {
- 	if (errno)
--		perror("trace-cmd");
-+		perror("libtraceevent");
- 	errno = 0;
- 
- 	fprintf(stderr, "  ");
--- 
-2.20.1
+RnJvbTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+CgpXaGlsZSBj
+cm9zcyBidWlsZGluZyBwZXJmIHRvIHRoZSBBUkMgYXJjaGl0ZWN0dXJlIG9uIGEgZmVkb3JhIDMw
+IGhvc3QsCndlIHdlcmUgZmFpbGluZyB3aXRoOgoKICAgICAgQ0MgICAgICAgL3RtcC9idWlsZC9w
+ZXJmL2JlbmNoL251bWEubwogIGJlbmNoL251bWEuYzogSW4gZnVuY3Rpb24g4oCYd29ya2VyX3Ro
+cmVhZOKAmToKICBiZW5jaC9udW1hLmM6MTI2MToxMjogZXJyb3I6IOKAmFJVU0FHRV9USFJFQUTi
+gJkgdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRoaXMgZnVuY3Rpb24pOyBkaWQgeW91IG1lYW4g
+4oCYU0lHRVZfVEhSRUFE4oCZPwogICAgZ2V0cnVzYWdlKFJVU0FHRV9USFJFQUQsICZydXNhZ2Up
+OwogICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn4KICAgICAgICAgICAgICBTSUdFVl9USFJFQUQK
+ICBiZW5jaC9udW1hLmM6MTI2MToxMjogbm90ZTogZWFjaCB1bmRlY2xhcmVkIGlkZW50aWZpZXIg
+aXMgcmVwb3J0ZWQgb25seSBvbmNlIGZvciBlYWNoIGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4KCltw
+ZXJmYnVpbGRlckA2MGQ1ODAyNDY4ZjYgcGVyZl0kIC9hcmNfZ251XzIwMTkuMDMtcmMxX3ByZWJ1
+aWx0X3VjbGliY19sZV9hcmNoc19saW51eF9pbnN0YWxsL2Jpbi9hcmMtbGludXgtZ2NjIC0tdmVy
+c2lvbiB8IGhlYWQgLTEKYXJjLWxpbnV4LWdjYyAoQVJDdjIgSVNBIExpbnV4IHVDbGliYyB0b29s
+Y2hhaW4gMjAxOS4wMy1yYzEpIDguMy4xIDIwMTkwMjI1CltwZXJmYnVpbGRlckA2MGQ1ODAyNDY4
+ZjYgcGVyZl0kCgpUcnlpbmcgdG8gcmVwcm9kdWNlIGEgcmVwb3J0IGJ5IFZpbmVldCwgSSBub3Rp
+Y2VkIHRoYXQsIHdpdGgganVzdApjcm9zcy1idWlsdCB6bGliIGFuZCBudW1hY3RsIGxpYnJhcmll
+cywgSSBlbmRlZCB1cCB3aXRoIHRoZSBhYm92ZQpmYWlsdXJlLgoKU28sIHNpbmNlIFJVU0FHRV9U
+SFJFQUQgaXMgYXZhaWxhYmxlIGFzIGEgZGVmaW5lLCBjaGVjayBmb3IgdGhhdCBhbmQKbnVtYWN0
+bCBsaWJyYXJpZXMsIEkgZW5kZWQgdXAgd2l0aCB0aGUgYWJvdmUgZmFpbHVyZS4KClNvLCBzaW5j
+ZSBSVVNBR0VfVEhSRUFEIGlzIGF2YWlsYWJsZSBhcyBhIGRlZmluZSBpbiB0aGUgc3lzdGVtIGhl
+YWRlcnMsCmNoZWNrIGlmIGl0IGlzIGRlZmluZWQgaW4gdGhlICdwZXJmIGJlbmNoIG51bWEnIHNv
+dXJjZXMgYW5kIGRlZmluZSBpdCBpZgpub3QuCgpOb3cgaXQgYnVpbGRzIGFuZCBJIGhhdmUgdG8g
+ZmlndXJlIG91dCBpZiB0aGUgcHJvYmxlbSByZXBvcnRlZCBieSBWaW5lZXQKb25seSB0YWtlcyBw
+bGFjZSBpZiB3ZSBoYXZlIGxpYmVsZiBvciBzb21lIG90aGVyIGxpYnJhcnkgYXZhaWxhYmxlLgoK
+Q2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+CkNjOiBKaXJpIE9sc2EgPGpvbHNhQGtl
+cm5lbC5vcmc+CkNjOiBsaW51eC1zbnBzLWFyY0BsaXN0cy5pbmZyYWRlYWQub3JnCkNjOiBOYW1o
+eXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5vcmc+CkNjOiBWaW5lZXQgR3VwdGEgPFZpbmVldC5H
+dXB0YTFAc3lub3BzeXMuY29tPgpMaW5rOiBodHRwczovL2xrbWwua2VybmVsLm9yZy9uL3RpcC0y
+d2I0cjFnaXI5eHJldmJwcTdxcDBhbWtAZ2l0Lmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogQXJu
+YWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+Ci0tLQogdG9vbHMvcGVyZi9i
+ZW5jaC9udW1hLmMgfCA0ICsrKysKIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKCmRp
+ZmYgLS1naXQgYS90b29scy9wZXJmL2JlbmNoL251bWEuYyBiL3Rvb2xzL3BlcmYvYmVuY2gvbnVt
+YS5jCmluZGV4IDk4YWQ3ODNlZmM2OS4uYTc3ODQ1NTRhODBkIDEwMDY0NAotLS0gYS90b29scy9w
+ZXJmL2JlbmNoL251bWEuYworKysgYi90b29scy9wZXJmL2JlbmNoL251bWEuYwpAQCAtMzksNiAr
+MzksMTAgQEAKICNpbmNsdWRlIDxudW1hLmg+CiAjaW5jbHVkZSA8bnVtYWlmLmg+CiAKKyNpZm5k
+ZWYgUlVTQUdFX1RIUkVBRAorIyBkZWZpbmUgUlVTQUdFX1RIUkVBRCAxCisjZW5kaWYKKwogLyoK
+ICAqIFJlZ3VsYXIgcHJpbnRvdXQgdG8gdGhlIHRlcm1pbmFsLCBzdXByZXNzZWQgaWYgLXEgaXMg
+c3BlY2lmaWVkOgogICovCi0tIAoyLjIwLjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1zbnBzLWFyYyBtYWlsaW5nIGxpc3QKbGludXgtc25w
+cy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LXNucHMtYXJj
