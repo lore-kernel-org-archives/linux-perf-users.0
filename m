@@ -1,40 +1,283 @@
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Subject: Re: [PATCH v2] tools/bpf: fix perf build error with uClibc (seen on ARC)
-Date: Sun, 5 May 2019 00:05:06 -0700
-Message-ID: <CAADnVQKOR7NJ=zDLndJpTnVjnkjr1UrtWG_2vwgJK3QcCAADcA@mail.gmail.com>
-References: <CAH3MdRVkUFfwKkgT-pi-RLBpcEf6n0bAwWZOu-=7+qctPTCpkw@mail.gmail.com>
- <1556812610-27957-1-git-send-email-vgupta@synopsys.com> <CAH3MdRWkiFSRA+PRo53_Syx9OBmyj2U_ebap-9iBR8L7xW9UVw@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.0 083/122] perf/x86/amd: Update generic hardware cache events for Family 17h
+Date: Mon,  6 May 2019 16:32:21 +0200
+Message-ID: <20190506143102.230524633@linuxfoundation.org>
+References: <20190506143054.670334917@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAH3MdRWkiFSRA+PRo53_Syx9OBmyj2U_ebap-9iBR8L7xW9UVw@mail.gmail.com>
+In-Reply-To: <20190506143054.670334917@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Y Song <ys114321@gmail.com>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, netdev <netdev@vger.kernel.org>, Wang Nan <wangnan0@huawei.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>, bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-snps-arc@lists.infradead.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jiri Olsa <jolsa@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>, Stephane Eranian <eranian@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Lendacky <Thomas.Lendacky@amd.com>, Vince Weaver <vincent.weaver@main>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, May 2, 2019 at 1:20 PM Y Song <ys114321@gmail.com> wrote:
->
-> On Thu, May 2, 2019 at 8:57 AM Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
-> >
-> > When build perf for ARC recently, there was a build failure due to lack
-> > of __NR_bpf.
-> >
-> > | Auto-detecting system features:
-> > |
-> > | ...                     get_cpuid: [ OFF ]
-> > | ...                           bpf: [ on  ]
-> > |
-> > | #  error __NR_bpf not defined. libbpf does not support your arch.
-> >     ^~~~~
-> > | bpf.c: In function 'sys_bpf':
-> > | bpf.c:66:17: error: '__NR_bpf' undeclared (first use in this function)
-> > |  return syscall(__NR_bpf, cmd, attr, size);
-> > |                 ^~~~~~~~
-> > |                 sys_bpf
-> >
-> > Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
->
-> Acked-by: Yonghong Song <yhs@fb.com>
+From: Kim Phillips <kim.phillips@amd.com>
 
-Applied. Thanks
+commit 0e3b74e26280f2cf8753717a950b97d424da6046 upstream.
+
+Add a new amd_hw_cache_event_ids_f17h assignment structure set
+for AMD families 17h and above, since a lot has changed.  Specifically:
+
+L1 Data Cache
+
+The data cache access counter remains the same on Family 17h.
+
+For DC misses, PMCx041's definition changes with Family 17h,
+so instead we use the L2 cache accesses from L1 data cache
+misses counter (PMCx060,umask=0xc8).
+
+For DC hardware prefetch events, Family 17h breaks compatibility
+for PMCx067 "Data Prefetcher", so instead, we use PMCx05a "Hardware
+Prefetch DC Fills."
+
+L1 Instruction Cache
+
+PMCs 0x80 and 0x81 (32-byte IC fetches and misses) are backward
+compatible on Family 17h.
+
+For prefetches, we remove the erroneous PMCx04B assignment which
+counts how many software data cache prefetch load instructions were
+dispatched.
+
+LL - Last Level Cache
+
+Removing PMCs 7D, 7E, and 7F assignments, as they do not exist
+on Family 17h, where the last level cache is L3.  L3 counters
+can be accessed using the existing AMD Uncore driver.
+
+Data TLB
+
+On Intel machines, data TLB accesses ("dTLB-loads") are assigned
+to counters that count load/store instructions retired.  This
+is inconsistent with instruction TLB accesses, where Intel
+implementations report iTLB misses that hit in the STLB.
+
+Ideally, dTLB-loads would count higher level dTLB misses that hit
+in lower level TLBs, and dTLB-load-misses would report those
+that also missed in those lower-level TLBs, therefore causing
+a page table walk.  That would be consistent with instruction
+TLB operation, remove the redundancy between dTLB-loads and
+L1-dcache-loads, and prevent perf from producing artificially
+low percentage ratios, i.e. the "0.01%" below:
+
+        42,550,869      L1-dcache-loads
+        41,591,860      dTLB-loads
+             4,802      dTLB-load-misses          #    0.01% of all dTLB cache hits
+         7,283,682      L1-dcache-stores
+         7,912,392      dTLB-stores
+               310      dTLB-store-misses
+
+On AMD Families prior to 17h, the "Data Cache Accesses" counter is
+used, which is slightly better than load/store instructions retired,
+but still counts in terms of individual load/store operations
+instead of TLB operations.
+
+So, for AMD Families 17h and higher, this patch assigns "dTLB-loads"
+to a counter for L1 dTLB misses that hit in the L2 dTLB, and
+"dTLB-load-misses" to a counter for L1 DTLB misses that caused
+L2 DTLB misses and therefore also caused page table walks.  This
+results in a much more accurate view of data TLB performance:
+
+        60,961,781      L1-dcache-loads
+             4,601      dTLB-loads
+               963      dTLB-load-misses          #   20.93% of all dTLB cache hits
+
+Note that for all AMD families, data loads and stores are combined
+in a single accesses counter, so no 'L1-dcache-stores' are reported
+separately, and stores are counted with loads in 'L1-dcache-loads'.
+
+Also note that the "% of all dTLB cache hits" string is misleading
+because (a) "dTLB cache": although TLBs can be considered caches for
+page tables, in this context, it can be misinterpreted as data cache
+hits because the figures are similar (at least on Intel), and (b) not
+all those loads (technically accesses) technically "hit" at that
+hardware level.  "% of all dTLB accesses" would be more clear/accurate.
+
+Instruction TLB
+
+On Intel machines, 'iTLB-loads' measure iTLB misses that hit in the
+STLB, and 'iTLB-load-misses' measure iTLB misses that also missed in
+the STLB and completed a page table walk.
+
+For AMD Family 17h and above, for 'iTLB-loads' we replace the
+erroneous instruction cache fetches counter with PMCx084
+"L1 ITLB Miss, L2 ITLB Hit".
+
+For 'iTLB-load-misses' we still use PMCx085 "L1 ITLB Miss,
+L2 ITLB Miss", but set a 0xff umask because without it the event
+does not get counted.
+
+Branch Predictor (BPU)
+
+PMCs 0xc2 and 0xc3 continue to be valid across all AMD Families.
+
+Node Level Events
+
+Family 17h does not have a PMCx0e9 counter, and corresponding counters
+have not been made available publicly, so for now, we mark them as
+unsupported for Families 17h and above.
+
+Reference:
+
+  "Open-Source Register Reference For AMD Family 17h Processors Models 00h-2Fh"
+  Released 7/17/2018, Publication #56255, Revision 3.03:
+  https://www.amd.com/system/files/TechDocs/56255_OSRR.pdf
+
+[ mingo: tidied up the line breaks. ]
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: <stable@vger.kernel.org> # v4.9+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Pu Wen <puwen@hygon.cn>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Fixes: e40ed1542dd7 ("perf/x86: Add perf support for AMD family-17h processors")
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/events/amd/core.c |  111 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 108 insertions(+), 3 deletions(-)
+
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -116,6 +116,110 @@ static __initconst const u64 amd_hw_cach
+  },
+ };
+ 
++static __initconst const u64 amd_hw_cache_event_ids_f17h
++				[PERF_COUNT_HW_CACHE_MAX]
++				[PERF_COUNT_HW_CACHE_OP_MAX]
++				[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
++[C(L1D)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0040, /* Data Cache Accesses */
++		[C(RESULT_MISS)]   = 0xc860, /* L2$ access from DC Miss */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0xff5a, /* h/w prefetch DC Fills */
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(L1I)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0080, /* Instruction cache fetches  */
++		[C(RESULT_MISS)]   = 0x0081, /* Instruction cache misses   */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(LL)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(DTLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0xff45, /* All L2 DTLB accesses */
++		[C(RESULT_MISS)]   = 0xf045, /* L2 DTLB misses (PT walks) */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++},
++[C(ITLB)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x0084, /* L1 ITLB misses, L2 ITLB hits */
++		[C(RESULT_MISS)]   = 0xff85, /* L1 ITLB misses, L2 misses */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++},
++[C(BPU)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0x00c2, /* Retired Branch Instr.      */
++		[C(RESULT_MISS)]   = 0x00c3, /* Retired Mispredicted BI    */
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++},
++[C(NODE)] = {
++	[C(OP_READ)] = {
++		[C(RESULT_ACCESS)] = 0,
++		[C(RESULT_MISS)]   = 0,
++	},
++	[C(OP_WRITE)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++	[C(OP_PREFETCH)] = {
++		[C(RESULT_ACCESS)] = -1,
++		[C(RESULT_MISS)]   = -1,
++	},
++},
++};
++
+ /*
+  * AMD Performance Monitor K7 and later, up to and including Family 16h:
+  */
+@@ -865,9 +969,10 @@ __init int amd_pmu_init(void)
+ 		x86_pmu.amd_nb_constraints = 0;
+ 	}
+ 
+-	/* Events are common for all AMDs */
+-	memcpy(hw_cache_event_ids, amd_hw_cache_event_ids,
+-	       sizeof(hw_cache_event_ids));
++	if (boot_cpu_data.x86 >= 0x17)
++		memcpy(hw_cache_event_ids, amd_hw_cache_event_ids_f17h, sizeof(hw_cache_event_ids));
++	else
++		memcpy(hw_cache_event_ids, amd_hw_cache_event_ids, sizeof(hw_cache_event_ids));
+ 
+ 	return 0;
+ }
