@@ -1,14 +1,14 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 58/75] perf/x86/amd: Update generic hardware cache events for Family 17h
-Date: Mon,  6 May 2019 16:33:06 +0200
-Message-ID: <20190506143058.514793645@linuxfoundation.org>
-References: <20190506143053.287515952@linuxfoundation.org>
+Subject: [PATCH 4.9 54/62] perf/x86/amd: Update generic hardware cache events for Family 17h
+Date: Mon,  6 May 2019 16:33:25 +0200
+Message-ID: <20190506143056.041319166@linuxfoundation.org>
+References: <20190506143051.102535767@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190506143053.287515952@linuxfoundation.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190506143051.102535767@linuxfoundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Jiri Olsa <jolsa@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Pu Wen <puwen@hygon.cn>, Stephane Eranian <eranian@google.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, Thomas Gleixner <tglx@linutronix.de>, Thomas Lendacky <Thomas.Lendacky@amd.com>, Vince Weaver <vincent.weaver@main>
 List-Id: linux-perf-users.vger.kernel.org
@@ -156,7 +156,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/events/amd/core.c
 +++ b/arch/x86/events/amd/core.c
-@@ -116,6 +116,110 @@ static __initconst const u64 amd_hw_cach
+@@ -112,6 +112,110 @@ static __initconst const u64 amd_hw_cach
   },
  };
  
@@ -267,7 +267,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  /*
   * AMD Performance Monitor K7 and later, up to and including Family 16h:
   */
-@@ -861,9 +965,10 @@ __init int amd_pmu_init(void)
+@@ -731,9 +835,10 @@ __init int amd_pmu_init(void)
  		x86_pmu.amd_nb_constraints = 0;
  	}
  
