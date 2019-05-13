@@ -1,44 +1,112 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf docu: Add description for stderr
-Date: Mon, 13 May 2019 10:02:20 +0200
-Message-ID: <20190513080220.91966-1-tmricht@linux.ibm.com>
+Subject: [PATCH] perf report: Fix OOM error in TUI mode on s390
+Date: Mon, 13 May 2019 10:05:51 +0200
+Message-ID: <20190513080551.102768-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Perf report displays recorded data on the screen and emits
-warnings and debug messages in the status line (last one on screen).
-Perf also supports the possibility to write all debug messages
-to stderr (instead of writing them to the status line).
-This is achieved with the following command:
+Debugging a OOM error using the TUI interface revealed this issue
+on s390:
 
- # ./perf --debug stderr=1 report -vvvvv -i ~/fast.data 2>/tmp/2
- # ll /tmp/2
- -rw-rw-r-- 1 tmricht tmricht 5420835 May  7 13:46 /tmp/2
- #
+[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
+....
+00000001119b7158 B radix_tree_node_cachep
+00000001119b8000 B __bss_stop
+00000001119b8000 B _end
+000003ff80002850 t autofs_mount	[autofs4]
+000003ff80002868 t autofs_show_options	[autofs4]
+000003ff80002a98 t autofs_evict_inode	[autofs4]
+....
 
-The usage of variable stderr=1 is not documented, so add it
-to the perf man page.
+There is a huge gap between the last kernel symbol
+__bss_stop/_end and the first kernel module symbol
+autofs_mount (from autofs4 module).
+
+After reading the kernel symbol table via functions:
+
+ dso__load()
+ +--> dso__load_kernel_sym()
+      +--> dso__load_kallsyms()
+	   +--> __dso_load_kallsyms()
+	        +--> symbols__fixup_end()
+
+the symbol __bss_stop has a start address of 1119b8000 and
+an end address of 3ff80002850, as can be seen by this debug statement:
+
+  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
+
+The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
+It is the last kernel symbol and fills up the space until
+the first kernel module symbol.
+
+This size kills the TUI interface when executing the following
+code:
+
+  process_sample_event()
+    hist_entry_iter__add()
+      hist_iter__report_callback()
+        hist_entry__inc_addr_samples()
+          symbol__inc_addr_samples(symbol = __bss_stop)
+            symbol__cycles_hist()
+               annotated_source__alloc_histograms(...,
+				                symbol__size(sym),
+		                                ...)
+
+This function allocates memory to save sample histograms.
+The symbol_size() marco is defined as sym->end - sym->start, which
+results in above value of 0x3fe6e64a850 bytes and
+the call to calloc() in annotated_source__alloc_histograms() fails.
+
+Samples are generated when functions execute.
+To fix this I suggest to allow histogram entries only for functions.
+Therefore ignore symbol entries which are not of type STT_FUNC.
+
+Output before:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
+		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
+		func: 0
+problem adding hist entry, skipping event
+0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
+[tmricht@m83lp54 perf]$
+
+Output after:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
+   symbol__hists notes->src:0x2aa2a70 nr_hists:1
+   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
+   __symbol__inc_addr_samples: addr=0x11094c69e
+   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
+   	=> nr_samples: 1, period: 526008
+[tmricht@m83lp54 perf]$
+
+There is no error about failed memory allocation and the TUI interface
+shows all entries.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- tools/perf/Documentation/perf.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-index 864e37597252..401f0ed67439 100644
---- a/tools/perf/Documentation/perf.txt
-+++ b/tools/perf/Documentation/perf.txt
-@@ -22,6 +22,8 @@ OPTIONS
- 	  verbose          - general debug messages
- 	  ordered-events   - ordered events object debug messages
- 	  data-convert     - data convert command debug messages
-+	  stderr           - write debug output (option -v) to stderr
-+	                     in browser mode
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 09762985c713..5fbe7efb2649 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -929,7 +929,7 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
+ {
+ 	struct annotated_source *src;
  
- --buildid-dir::
- 	Setup buildid cache directory. It has higher priority than
+-	if (sym == NULL)
++	if (sym == NULL || sym->type != STT_FUNC)
+ 		return 0;
+ 	src = symbol__hists(sym, evsel->evlist->nr_entries);
+ 	if (src == NULL)
 -- 
 2.19.1
