@@ -1,328 +1,122 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 4/6] perf scripts python: exported-sql-viewer.py: Add
- copy to clipboard
-Date: Mon, 13 May 2019 17:03:22 -0300
-Message-ID: <20190513200322.GD3198@kernel.org>
-References: <20190503120828.25326-1-adrian.hunter@intel.com>
- <20190503120828.25326-5-adrian.hunter@intel.com>
+Subject: Re: [PATCH] perf vendor events intel: Add uncore_upi JSON support
+Date: Tue, 14 May 2019 09:59:56 -0300
+Message-ID: <20190514125956.GG3198@kernel.org>
+References: <1557234991-130456-1-git-send-email-kan.liang@linux.intel.com>
+ <9e816fed-5d00-c490-21b3-ad9c56dac446@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190503120828.25326-5-adrian.hunter@intel.com>
+In-Reply-To: <9e816fed-5d00-c490-21b3-ad9c56dac446@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Kan Liang <kan.liang@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, May 03, 2019 at 03:08:26PM +0300, Adrian Hunter escreveu:
-> Add support for copying to clipboard. Two menu options are added to copy the
-> selected rows / columns with normal spacing, or as comma-separated-values.
-> In the case of trees, only entire rows can be copied.
-
-Cool, it works:
-
-    Comitter testing:
-
-      $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db
-
-    Select the lines, press control+C and on the same terminal,
-    press control+shift+V and voilà:
-
-    Call Path                           Object           Count  Time (ns)  Time (%)  Branch Count  Branch Count (%)
-      ▼ 14503:14503
-        ▼ _start                        ld-2.28.so           1     156267     100.0         10602             100.0
-            unknown                     unknown              1       2276       1.5             1               0.0
-          ▼ _dl_start                   ld-2.28.so           1     137047      87.7         10088              95.2
-            ▶ unknown                   unknown              4       4127       3.0             4               0.0
-              _dl_setup_hash            ld-2.28.so           1          0       0.0             1               0.0
-            ▶ _dl_sysdep_start          ld-2.28.so           1     131342      95.8          9981              98.9
-          ▼ _dl_init                    ld-2.28.so           1       9142       5.9           326               3.1
-            ▼ call_init.part.0          ld-2.28.so           3       9133      99.9           319              97.9
-              ▶ _init                   libc-2.28.so         1       6877      75.3           110              34.5
-              ▶ check_stdfiles_vtables  libc-2.28.so         1         76       0.8             2               0.6
-              ▶ init_cacheinfo          libc-2.28.so         1       1991      21.8           197              61.8
-          ▶ _start                      simple-retpoline     1       7457       4.8           182               1.7
-
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  .../scripts/python/exported-sql-viewer.py     | 217 ++++++++++++++++++
->  1 file changed, 217 insertions(+)
+Em Mon, May 13, 2019 at 05:29:30PM -0400, Liang, Kan escreveu:
+> Hi Arnaldo,
 > 
-> diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-> index c0fb88d440ba..5804d9705ab7 100755
-> --- a/tools/perf/scripts/python/exported-sql-viewer.py
-> +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-> @@ -898,6 +898,8 @@ class TreeWindowBase(QMdiSubWindow):
->  		self.find_bar = None
->  
->  		self.view = QTreeView()
-> +		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
-> +		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
->  
->  	def DisplayFound(self, ids):
->  		if not len(ids):
-> @@ -1666,6 +1668,8 @@ class BranchWindow(QMdiSubWindow):
->  
->  		self.view = QTreeView()
->  		self.view.setUniformRowHeights(True)
-> +		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
-> +		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
->  		self.view.setModel(self.model)
->  
->  		self.ResizeColumnsToContents()
-> @@ -2278,6 +2282,207 @@ class ResizeColumnsToContentsBase(QObject):
->  		self.data_model.rowsInserted.disconnect(self.UpdateColumnWidths)
->  		self.ResizeColumnsToContents()
->  
-> +# Convert value to CSV
-> +
-> +def ToCSValue(val):
-> +	if '"' in val:
-> +		val = val.replace('"', '""')
-> +	if "," in val or '"' in val:
-> +		val = '"' + val + '"'
-> +	return val
-> +
-> +# Key to sort table model indexes by row / column, assuming fewer than 1000 columns
-> +
-> +glb_max_cols = 1000
-> +
-> +def RowColumnKey(a):
-> +	return a.row() * glb_max_cols + a.column()
-> +
-> +# Copy selected table cells to clipboard
-> +
-> +def CopyTableCellsToClipboard(view, as_csv=False, with_hdr=False):
-> +	indexes = sorted(view.selectedIndexes(), key=RowColumnKey)
-> +	idx_cnt = len(indexes)
-> +	if not idx_cnt:
-> +		return
-> +	if idx_cnt == 1:
-> +		with_hdr=False
-> +	min_row = indexes[0].row()
-> +	max_row = indexes[0].row()
-> +	min_col = indexes[0].column()
-> +	max_col = indexes[0].column()
-> +	for i in indexes:
-> +		min_row = min(min_row, i.row())
-> +		max_row = max(max_row, i.row())
-> +		min_col = min(min_col, i.column())
-> +		max_col = max(max_col, i.column())
-> +	if max_col > glb_max_cols:
-> +		raise RuntimeError("glb_max_cols is too low")
-> +	max_width = [0] * (1 + max_col - min_col)
-> +	for i in indexes:
-> +		c = i.column() - min_col
-> +		max_width[c] = max(max_width[c], len(str(i.data())))
-> +	text = ""
-> +	pad = ""
-> +	sep = ""
-> +	if with_hdr:
-> +		model = indexes[0].model()
-> +		for col in range(min_col, max_col + 1):
-> +			val = model.headerData(col, Qt.Horizontal)
-> +			if as_csv:
-> +				text += sep + ToCSValue(val)
-> +				sep = ","
-> +			else:
-> +				c = col - min_col
-> +				max_width[c] = max(max_width[c], len(val))
-> +				width = max_width[c]
-> +				align = model.headerData(col, Qt.Horizontal, Qt.TextAlignmentRole)
-> +				if align & Qt.AlignRight:
-> +					val = val.rjust(width)
-> +				text += pad + sep + val
-> +				pad = " " * (width - len(val))
-> +				sep = "  "
-> +		text += "\n"
-> +		pad = ""
-> +		sep = ""
-> +	last_row = min_row
-> +	for i in indexes:
-> +		if i.row() > last_row:
-> +			last_row = i.row()
-> +			text += "\n"
-> +			pad = ""
-> +			sep = ""
-> +		if as_csv:
-> +			text += sep + ToCSValue(str(i.data()))
-> +			sep = ","
-> +		else:
-> +			width = max_width[i.column() - min_col]
-> +			if i.data(Qt.TextAlignmentRole) & Qt.AlignRight:
-> +				val = str(i.data()).rjust(width)
-> +			else:
-> +				val = str(i.data())
-> +			text += pad + sep + val
-> +			pad = " " * (width - len(val))
-> +			sep = "  "
-> +	QApplication.clipboard().setText(text)
-> +
-> +def CopyTreeCellsToClipboard(view, as_csv=False, with_hdr=False):
-> +	indexes = view.selectedIndexes()
-> +	if not len(indexes):
-> +		return
-> +
-> +	selection = view.selectionModel()
-> +
-> +	first = None
-> +	for i in indexes:
-> +		above = view.indexAbove(i)
-> +		if not selection.isSelected(above):
-> +			first = i
-> +			break
-> +
-> +	if first is None:
-> +		raise RuntimeError("CopyTreeCellsToClipboard internal error")
-> +
-> +	model = first.model()
-> +	row_cnt = 0
-> +	col_cnt = model.columnCount(first)
-> +	max_width = [0] * col_cnt
-> +
-> +	indent_sz = 2
-> +	indent_str = " " * indent_sz
-> +
-> +	expanded_mark_sz = 2
-> +	if sys.version_info[0] == 3:
-> +		expanded_mark = "\u25BC "
-> +		not_expanded_mark = "\u25B6 "
-> +	else:
-> +		expanded_mark = unicode(chr(0xE2) + chr(0x96) + chr(0xBC) + " ", "utf-8")
-> +		not_expanded_mark =  unicode(chr(0xE2) + chr(0x96) + chr(0xB6) + " ", "utf-8")
-> +	leaf_mark = "  "
-> +
-> +	if not as_csv:
-> +		pos = first
-> +		while True:
-> +			row_cnt += 1
-> +			row = pos.row()
-> +			for c in range(col_cnt):
-> +				i = pos.sibling(row, c)
-> +				if c:
-> +					n = len(str(i.data()))
-> +				else:
-> +					n = len(str(i.data()).strip())
-> +					n += (i.internalPointer().level - 1) * indent_sz
-> +					n += expanded_mark_sz
-> +				max_width[c] = max(max_width[c], n)
-> +			pos = view.indexBelow(pos)
-> +			if not selection.isSelected(pos):
-> +				break
-> +
-> +	text = ""
-> +	pad = ""
-> +	sep = ""
-> +	if with_hdr:
-> +		for c in range(col_cnt):
-> +			val = model.headerData(c, Qt.Horizontal, Qt.DisplayRole).strip()
-> +			if as_csv:
-> +				text += sep + ToCSValue(val)
-> +				sep = ","
-> +			else:
-> +				max_width[c] = max(max_width[c], len(val))
-> +				width = max_width[c]
-> +				align = model.headerData(c, Qt.Horizontal, Qt.TextAlignmentRole)
-> +				if align & Qt.AlignRight:
-> +					val = val.rjust(width)
-> +				text += pad + sep + val
-> +				pad = " " * (width - len(val))
-> +				sep = "   "
-> +		text += "\n"
-> +		pad = ""
-> +		sep = ""
-> +
-> +	pos = first
-> +	while True:
-> +		row = pos.row()
-> +		for c in range(col_cnt):
-> +			i = pos.sibling(row, c)
-> +			val = str(i.data())
-> +			if not c:
-> +				if model.hasChildren(i):
-> +					if view.isExpanded(i):
-> +						mark = expanded_mark
-> +					else:
-> +						mark = not_expanded_mark
-> +				else:
-> +					mark = leaf_mark
-> +				val = indent_str * (i.internalPointer().level - 1) + mark + val.strip()
-> +			if as_csv:
-> +				text += sep + ToCSValue(val)
-> +				sep = ","
-> +			else:
-> +				width = max_width[c]
-> +				if c and i.data(Qt.TextAlignmentRole) & Qt.AlignRight:
-> +					val = val.rjust(width)
-> +				text += pad + sep + val
-> +				pad = " " * (width - len(val))
-> +				sep = "   "
-> +		pos = view.indexBelow(pos)
-> +		if not selection.isSelected(pos):
-> +			break
-> +		text = text.rstrip() + "\n"
-> +		pad = ""
-> +		sep = ""
-> +
-> +	QApplication.clipboard().setText(text)
-> +
-> +def CopyCellsToClipboard(view, as_csv=False, with_hdr=False):
-> +	view.CopyCellsToClipboard(view, as_csv, with_hdr)
-> +
-> +def CopyCellsToClipboardHdr(view):
-> +	CopyCellsToClipboard(view, False, True)
-> +
-> +def CopyCellsToClipboardCSV(view):
-> +	CopyCellsToClipboard(view, True, True)
-> +
->  # Table window
->  
->  class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
-> @@ -2296,6 +2501,8 @@ class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
->  		self.view.verticalHeader().setVisible(False)
->  		self.view.sortByColumn(-1, Qt.AscendingOrder)
->  		self.view.setSortingEnabled(True)
-> +		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
-> +		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
->  
->  		self.ResizeColumnsToContents()
->  
-> @@ -2412,6 +2619,8 @@ class TopCallsWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
->  		self.view.setModel(self.model)
->  		self.view.setEditTriggers(QAbstractItemView.NoEditTriggers)
->  		self.view.verticalHeader().setVisible(False)
-> +		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
-> +		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
->  
->  		self.ResizeColumnsToContents()
->  
-> @@ -2749,6 +2958,8 @@ class MainWindow(QMainWindow):
->  		file_menu.addAction(CreateExitAction(glb.app, self))
->  
->  		edit_menu = menu.addMenu("&Edit")
-> +		edit_menu.addAction(CreateAction("&Copy", "Copy to clipboard", self.CopyToClipboard, self, QKeySequence.Copy))
-> +		edit_menu.addAction(CreateAction("Copy as CS&V", "Copy to clipboard as CSV", self.CopyToClipboardCSV, self))
->  		edit_menu.addAction(CreateAction("&Find...", "Find items", self.Find, self, QKeySequence.Find))
->  		edit_menu.addAction(CreateAction("Fetch &more records...", "Fetch more records", self.FetchMoreRecords, self, [QKeySequence(Qt.Key_F8)]))
->  		edit_menu.addAction(CreateAction("&Shrink Font", "Make text smaller", self.ShrinkFont, self, [QKeySequence("Ctrl+-")]))
-> @@ -2781,6 +2992,12 @@ class MainWindow(QMainWindow):
->  			except:
->  				pass
->  
-> +	def CopyToClipboard(self):
-> +		self.Try(CopyCellsToClipboardHdr)
-> +
-> +	def CopyToClipboardCSV(self):
-> +		self.Try(CopyCellsToClipboardCSV)
-> +
->  	def Find(self):
->  		win = self.mdi_area.activeSubWindow()
->  		if win:
-> -- 
-> 2.17.1
+> Could you please apply this fix?
+
+Sure, please next time specify which arch this should be tested on, as I
+tried it here on a skylake notebook (lenovo t480s) before your patch and
+got:
+
+[root@quaco ~]# perf stat -e UPI_DATA_BANDWIDTH_TX
+event syntax error: 'UPI_DATA_BANDWIDTH_TX'
+                     \___ parser error
+Run 'perf list' for a list of valid events
+
+ Usage: perf stat [<options>] [<command>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+[root@quaco ~]#
+
+Then, looking at 'perf list' /UPI I got just these:
+
+Pipeline:
+<SNIP>
+  UPI
+       [Uops Per Instruction]
+
+Which already probably told me a bit about what this is about, its under
+the "METRIC groups" header
+
+After your patch applied I get:
+
+[root@quaco ~]# perf stat -e UPI_DATA_BANDWIDTH_TX
+event syntax error: 'UPI_DATA_BANDWIDTH_TX'
+                     \___ parser error
+Run 'perf list' for a list of valid events
+
+ Usage: perf stat [<options>] [<command>]
+
+    -e, --event <event>   event selector. use 'perf list' to list available events
+[root@quaco ~]# 
+
+I.e. nothing seem to have changed, but then, to further look at this I
+tried:
+
+# strings ~/bin/perf | grep -i upi
+<SNIP>
+Data Response packets that go direct to Intel UPI. Unit: uncore_upi 
+Counts Data Response (DRS) packets that attempted to go direct to Intel Ultra Path Interconnect (UPI) bypassing the CHA 
+Cycles Intel UPI is in L1 power mode (shutdown). Unit: uncore_upi 
+Counts cycles when the Intel Ultra Path Interconnect (UPI) is in L1 power mode.  L1 is a mode that totally shuts down the UPI link.  Link power states are per link and per direction, so for example the Tx direction could be in one state while Rx was in another, this event only coutns when both links are shutdown
+Cycles the Rx of the Intel UPI is in L0p power mode. Unit: uncore_upi 
+Counts cycles when the the receive side (Rx) of the Intel Ultra Path Interconnect(UPI) is in L0p power mode. L0p is a mode where we disable 60% of the UPI lanes, decreasing our bandwidth in order to save power
+FLITs received which bypassed the Slot0 Receive Buffer. Unit: uncore_upi 
+Valid data FLITs received from any slot. Unit: uncore_upi 
+<SNIP>
+
+So this "UPI" TLA, here, should not mean "UOPS per instruction", but
+Intel's "Ultra Path Interconnect", right? Lemme update the changelog...
+
+/me googles... https://en.wikipedia.org/wiki/Intel_Ultra_Path_Interconnect
+
+So I'd need a Skylake-SP test machine to test this...
+
+Please add such notes in the future, helps reviewing and testing this.
+
+At some point I'd like to have 'perf test' test such stuff with a
+Requires_cpuid/arch, etc.
+
+- Arnaldo
+ 
+> Thanks,
+> Kan
+> 
+> On 5/7/2019 9:16 AM, kan.liang@linux.intel.com wrote:
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> > 
+> > Perf cannot parse UPI events.
+> > 
+> >      #perf stat -e UPI_DATA_BANDWIDTH_TX
+> >      event syntax error: 'UPI_DATA_BANDWIDTH_TX'
+> >                       \___ parser error
+> >      Run 'perf list' for a list of valid events
+> > 
+> > The JSON lists call the box UPI LL, while perf calls it upi.
+> > Add conversion support to json to convert the unit properly.
+> > 
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> > ---
+> >   tools/perf/pmu-events/jevents.c | 1 +
+> >   1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> > index 68c92bb..daaea50 100644
+> > --- a/tools/perf/pmu-events/jevents.c
+> > +++ b/tools/perf/pmu-events/jevents.c
+> > @@ -235,6 +235,7 @@ static struct map {
+> >   	{ "iMPH-U", "uncore_arb" },
+> >   	{ "CPU-M-CF", "cpum_cf" },
+> >   	{ "CPU-M-SF", "cpum_sf" },
+> > +	{ "UPI LL", "uncore_upi" },
+> >   	{}
+> >   };
+> > 
 
 -- 
 
