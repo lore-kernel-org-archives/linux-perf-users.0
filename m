@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/73] tools lib traceevent: Man page for get/set cpus APIs
-Date: Fri, 17 May 2019 16:35:23 -0300
-Message-ID: <20190517193611.4974-26-acme@kernel.org>
+Subject: [PATCH 26/73] tools lib traceevent: Man page for file endian APIs
+Date: Fri, 17 May 2019 16:35:24 -0300
+Message-ID: <20190517193611.4974-27-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -16,36 +16,36 @@ From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
 Create man pages for libtraceevent APIs:
 
- tep_get_cpus(),
- tep_set_cpus()
+  tep_is_file_bigendian(),
+  tep_set_file_bigendian()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-6-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200106.742948683@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-7-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200106.895177252@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-cpus.txt      | 77 +++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+ .../libtraceevent-file_endian.txt             | 91 +++++++++++++++++++
+ 1 file changed, 91 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt b/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt b/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
 new file mode 100644
-index 000000000000..5ad70e43b752
+index 000000000000..f401ad311047
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
-@@ -0,0 +1,77 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+@@ -0,0 +1,91 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_get_cpus, tep_set_cpus - Get / set the number of CPUs, which have a tracing
-+buffer representing it. Note, the buffer may be empty.
++tep_is_file_bigendian, tep_set_file_bigendian - Get / set the endianness of the
++raw data being accessed by the tep handler.
 +
 +SYNOPSIS
 +--------
@@ -53,23 +53,33 @@ index 000000000000..5ad70e43b752
 +--
 +*#include <event-parse.h>*
 +
-+int *tep_get_cpus*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_cpus*(struct tep_handle pass:[*]_tep_, int _cpus_);
-+--
++enum *tep_endian* {
++	TEP_LITTLE_ENDIAN = 0,
++	TEP_BIG_ENDIAN
++};
 +
++bool *tep_is_file_bigendian*(struct tep_handle pass:[*]_tep_);
++void *tep_set_file_bigendian*(struct tep_handle pass:[*]_tep_, enum tep_endian _endian_);
++
++--
 +DESCRIPTION
 +-----------
-+The _tep_get_cpus()_ function gets the number of CPUs, which have a tracing
-+buffer representing it. The _tep_ argument is trace event parser context.
++The _tep_is_file_bigendian()_ function gets the endianness of the raw data,
++being accessed by the tep handler. The _tep_ argument is trace event parser
++context.
 +
-+The _tep_set_cpus()_ function sets the number of CPUs, which have a tracing
-+buffer representing it. The _tep_ argument is trace event parser context.
-+The _cpu_ argument is the number of CPUs with tracing data.
-+
++The _tep_set_file_bigendian()_ function sets the endianness of raw data being
++accessed by the tep handler. The _tep_ argument is trace event parser context.
++[verse]
++--
++The _endian_ argument is the endianness:
++	_TEP_LITTLE_ENDIAN_ - the raw data is in little endian format,
++	_TEP_BIG_ENDIAN_ - the raw data is in big endian format.
++--
 +RETURN VALUE
 +------------
-+The _tep_get_cpus()_ functions returns the number of CPUs, which have tracing
-+data recorded.
++The _tep_is_file_bigendian()_ function returns true if the data is in bigendian
++format, false otherwise.
 +
 +EXAMPLE
 +-------
@@ -79,9 +89,13 @@ index 000000000000..5ad70e43b752
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	tep_set_cpus(tep, 5);
++	tep_set_file_bigendian(tep, TEP_LITTLE_ENDIAN);
 +...
-+	printf("We have tracing data for %d CPUs", tep_get_cpus(tep));
++	if (tep_is_file_bigendian(tep)) {
++		/* The raw data is in big endian */
++	} else {
++		/* The raw data is in little endian */
++	}
 +--
 +
 +FILES
