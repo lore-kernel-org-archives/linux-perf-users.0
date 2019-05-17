@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 65/73] perf parse-regs: Add generic support for arch__intr/user_reg_mask()
-Date: Fri, 17 May 2019 16:36:03 -0300
-Message-ID: <20190517193611.4974-66-acme@kernel.org>
+Subject: [PATCH 66/73] perf regs x86: Add X86 specific arch__intr_reg_mask()
+Date: Fri, 17 May 2019 16:36:04 -0300
+Message-ID: <20190517193611.4974-67-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,118 +9,140 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-There may be different register mask for use with intr or user on some
-platforms, e.g. Icelake.
+XMM registers can be collected on Icelake and later platforms.
 
-Add weak functions arch__intr_reg_mask() and arch__user_reg_mask() to
-return intr and user register mask respectively.
+Add specific arch__intr_reg_mask(), which creating an event to check if
+the kernel and hardware can collect XMM registers.
 
-Check mask before printing or comparing the register name.
+Test on Skylake which doesn't support XMM registers collection. There is
+nothing changed.
 
-Generic code always return PERF_REGS_MASK. No functional change.
+   #perf record -I?
+   available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9
+   R10 R11 R12 R13 R14 R15
 
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+   Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+    -I, --intr-regs[=<any register>]
+                          sample selected machine registers on
+   interrupt, use '-I?' to list register names
+
+   #perf record -I
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.905 MB perf.data (2520 samples) ]
+
+   #perf evlist -v
+   cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type:
+   IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1,
+   inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3,
+   sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol:
+   1, bpf_event: 1, sample_regs_intr: 0xff0fff
+
+Test on Icelake which support XMM registers collection.
+
+   #perf record -I?
+   available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+   R11 R12 R13 R14 R15 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 XMM9
+   XMM10 XMM11 XMM12 XMM13 XMM14 XMM15
+
+   Usage: perf record [<options>] [<command>]
+    or: perf record [<options>] -- <command> [<options>]
+
+    -I, --intr-regs[=<any register>]
+                          sample selected machine registers on
+   interrupt, use '-I?' to list register names
+
+   #perf record -I
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.800 MB perf.data (318 samples) ]
+
+   #perf evlist -v
+   cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type:
+   IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1,
+   inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3,
+   sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol:
+   1, bpf_event: 1, sample_regs_intr: 0xffffffff00ff0fff
+
+Committer notes:
+
+Don't set attr.sample_period as a named struct init, as it is part of an
+unnamed union in 'struct perf_event_attr', and doing so breaks the build
+on older gcc versions, such as:
+
+  gcc version 4.1.2 20080704 (Red Hat 4.1.2-55)
+  gcc version 4.4.7 20120313 (Red Hat 4.4.7-23) (GCC)
+
+  arch/x86/util/perf_regs.c: In function 'arch__intr_reg_mask':
+  arch/x86/util/perf_regs.c:279: error: unknown field 'sample_period' specified in initializer
+  cc1: warnings being treated as errors
+  arch/x86/util/perf_regs.c:279: warning: missing braces around initializer
+  arch/x86/util/perf_regs.c:279: warning: (near initialization for 'attr.<anonymous>')
+
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+[ Only on a lenovo t480s, a skylake machine, where the XMM registers didn't show up in -I?/--user-regs=? as expected ]
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/1557865174-56264-2-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1557865174-56264-3-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-regs-options.c | 13 ++++++++++---
- tools/perf/util/perf_regs.c          | 10 ++++++++++
- tools/perf/util/perf_regs.h          |  2 ++
- 3 files changed, 22 insertions(+), 3 deletions(-)
+ tools/perf/arch/x86/include/perf_regs.h |  1 +
+ tools/perf/arch/x86/util/perf_regs.c    | 28 +++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
-index b21617f2bec1..08581e276225 100644
---- a/tools/perf/util/parse-regs-options.c
-+++ b/tools/perf/util/parse-regs-options.c
-@@ -12,6 +12,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	const struct sample_reg *r;
- 	char *s, *os = NULL, *p;
- 	int ret = -1;
-+	uint64_t mask;
+diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+index b7321337d100..b7cd91a9014f 100644
+--- a/tools/perf/arch/x86/include/perf_regs.h
++++ b/tools/perf/arch/x86/include/perf_regs.h
+@@ -9,6 +9,7 @@
+ void perf_regs_load(u64 *regs);
  
- 	if (unset)
- 		return 0;
-@@ -22,6 +23,11 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 	if (*mode)
- 		return -1;
+ #define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
++#define PERF_XMM_REGS_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
+ #ifndef HAVE_ARCH_X86_64_SUPPORT
+ #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
+ #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index 71d7604dbf0b..7886ca5263e3 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -270,3 +270,31 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
  
-+	if (intr)
-+		mask = arch__intr_reg_mask();
-+	else
-+		mask = arch__user_reg_mask();
-+
- 	/* str may be NULL in case no arg is passed to -I */
- 	if (str) {
- 		/* because str is read-only */
-@@ -37,14 +43,15 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 			if (!strcmp(s, "?")) {
- 				fprintf(stderr, "available registers: ");
- 				for (r = sample_reg_masks; r->name; r++) {
--					fprintf(stderr, "%s ", r->name);
-+					if (r->mask & mask)
-+						fprintf(stderr, "%s ", r->name);
- 				}
- 				fputc('\n', stderr);
- 				/* just printing available regs */
- 				return -1;
- 			}
- 			for (r = sample_reg_masks; r->name; r++) {
--				if (!strcasecmp(s, r->name))
-+				if ((r->mask & mask) && !strcasecmp(s, r->name))
- 					break;
- 			}
- 			if (!r->name) {
-@@ -65,7 +72,7 @@ __parse_regs(const struct option *opt, const char *str, int unset, bool intr)
- 
- 	/* default to all possible regs */
- 	if (*mode == 0)
--		*mode = PERF_REGS_MASK;
-+		*mode = mask;
- error:
- 	free(os);
- 	return ret;
-diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-index 2acfcc527cac..2774cec1f15f 100644
---- a/tools/perf/util/perf_regs.c
-+++ b/tools/perf/util/perf_regs.c
-@@ -13,6 +13,16 @@ int __weak arch_sdt_arg_parse_op(char *old_op __maybe_unused,
- 	return SDT_ARG_SKIP;
+ 	return SDT_ARG_VALID;
  }
- 
-+uint64_t __weak arch__intr_reg_mask(void)
++
++uint64_t arch__intr_reg_mask(void)
 +{
++	struct perf_event_attr attr = {
++		.type			= PERF_TYPE_HARDWARE,
++		.config			= PERF_COUNT_HW_CPU_CYCLES,
++		.sample_type		= PERF_SAMPLE_REGS_INTR,
++		.sample_regs_intr	= PERF_XMM_REGS_MASK,
++		.precise_ip		= 1,
++		.disabled 		= 1,
++		.exclude_kernel		= 1,
++	};
++	int fd;
++	/*
++	 * In an unnamed union, init it here to build on older gcc versions
++	 */
++	attr.sample_period = 1;
++
++	event_attr_init(&attr);
++
++	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
++	if (fd != -1) {
++		close(fd);
++		return (PERF_XMM_REGS_MASK | PERF_REGS_MASK);
++	}
++
 +	return PERF_REGS_MASK;
 +}
-+
-+uint64_t __weak arch__user_reg_mask(void)
-+{
-+	return PERF_REGS_MASK;
-+}
-+
- #ifdef HAVE_PERF_REGS_SUPPORT
- int perf_reg_value(u64 *valp, struct regs_dump *regs, int id)
- {
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 1a15a4bfc28d..cb9c246c8962 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -23,6 +23,8 @@ enum {
- };
- 
- int arch_sdt_arg_parse_op(char *old_op, char **new_op);
-+uint64_t arch__intr_reg_mask(void);
-+uint64_t arch__user_reg_mask(void);
- 
- #ifdef HAVE_PERF_REGS_SUPPORT
- #include <perf_regs.h>
 -- 
 2.20.1
