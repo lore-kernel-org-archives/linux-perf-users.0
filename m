@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/73] perf scripts python: exported-sql-viewer.py: Move view creation
-Date: Fri, 17 May 2019 16:35:11 -0300
-Message-ID: <20190517193611.4974-14-acme@kernel.org>
+Subject: [PATCH 14/73] perf scripts python: exported-sql-viewer.py: Fix error when shrinking / enlarging font
+Date: Fri, 17 May 2019 16:35:12 -0300
+Message-ID: <20190517193611.4974-15-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,57 +14,72 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-As preparation for adding support for copying to clipboard, create view
-in TreeWindowBase instead of derived classes.
+Fix the following error if shrink / enlarge font is used with the help
+window.
+
+  Traceback (most recent call last):
+    File "tools/perf/scripts/python/exported-sql-viewer.py", line 2791, in ShrinkFont
+      ShrinkFont(win.view)
+  AttributeError: 'HelpWindow' object has no attribute 'view'
 
 Committer testing:
 
-Tested using an old .db used to test some older patches:
+Before, matches above output:
 
   $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db
+  Traceback (most recent call last):
+    File "/home/acme/libexec/perf-core/scripts/python/exported-sql-viewer.py", line 2780, in EnlargeFont
+      EnlargeFont(win.view)
+  AttributeError: 'HelpWindow' object has no attribute 'view'
+  $
 
-Nothing breaks.
+After:
+
+No more tracebacks, but the fonts don't get enlarged, which is kinda
+frustrating...
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190503120828.25326-3-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190503120828.25326-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 74ef92f1d19a..db4655168ab1 100755
+index db4655168ab1..fd073e4af8da 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -877,9 +877,10 @@ class TreeWindowBase(QMdiSubWindow):
- 		super(TreeWindowBase, self).__init__(parent)
+@@ -2755,6 +2755,14 @@ class MainWindow(QMainWindow):
+ 		help_menu = menu.addMenu("&Help")
+ 		help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
  
- 		self.model = None
--		self.view = None
- 		self.find_bar = None
- 
-+		self.view = QTreeView()
++	def Try(self, fn):
++		win = self.mdi_area.activeSubWindow()
++		if win:
++			try:
++				fn(win.view)
++			except:
++				pass
 +
- 	def DisplayFound(self, ids):
- 		if not len(ids):
- 			return False
-@@ -921,7 +922,6 @@ class CallGraphWindow(TreeWindowBase):
+ 	def Find(self):
+ 		win = self.mdi_area.activeSubWindow()
+ 		if win:
+@@ -2772,12 +2780,10 @@ class MainWindow(QMainWindow):
+ 				pass
  
- 		self.model = LookupCreateModel("Context-Sensitive Call Graph", lambda x=glb: CallGraphModel(x))
+ 	def ShrinkFont(self):
+-		win = self.mdi_area.activeSubWindow()
+-		ShrinkFont(win.view)
++		self.Try(ShrinkFont)
  
--		self.view = QTreeView()
- 		self.view.setModel(self.model)
+ 	def EnlargeFont(self):
+-		win = self.mdi_area.activeSubWindow()
+-		EnlargeFont(win.view)
++		self.Try(EnlargeFont)
  
- 		for c, w in ((0, 250), (1, 100), (2, 60), (3, 70), (4, 70), (5, 100)):
-@@ -944,7 +944,6 @@ class CallTreeWindow(TreeWindowBase):
- 
- 		self.model = LookupCreateModel("Call Tree", lambda x=glb: CallTreeModel(x))
- 
--		self.view = QTreeView()
- 		self.view.setModel(self.model)
- 
- 		for c, w in ((0, 230), (1, 100), (2, 100), (3, 70), (4, 70), (5, 100)):
+ 	def EventMenu(self, events, reports_menu):
+ 		branches_events = 0
 -- 
 2.20.1
