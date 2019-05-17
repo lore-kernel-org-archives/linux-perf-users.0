@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/73] tools lib traceevent: Man page for page size APIs
-Date: Fri, 17 May 2019 16:35:26 -0300
-Message-ID: <20190517193611.4974-29-acme@kernel.org>
+Subject: [PATCH 29/73] tools lib traceevent: Man page for tep_strerror()
+Date: Fri, 17 May 2019 16:35:27 -0300
+Message-ID: <20190517193611.4974-30-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,38 +14,35 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man pages for libtraceevent APIs:
-
-  tep_get_page_size()
-  tep_set_page_size()
+Create man page for tep_strerror() libtraceevent API.
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-9-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200107.218173559@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-10-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200107.371692630@goodmis.org
+[ Added "always" to state it doesn't matter if it is POSIX or GNU ]
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-page_size.txt | 82 +++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+ .../Documentation/libtraceevent-strerror.txt  | 85 +++++++++++++++++++
+ 1 file changed, 85 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-strerror.txt b/tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
 new file mode 100644
-index 000000000000..452c0cfa1822
+index 000000000000..ee4062a00c9f
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
-@@ -0,0 +1,82 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-strerror.txt
+@@ -0,0 +1,85 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_get_page_size, tep_set_page_size - Get / set the size of a memory page on
-+the machine, where the trace is generated
++tep_strerror - Returns a string describing regular errno and tep error number.
 +
 +SYNOPSIS
 +--------
@@ -53,40 +50,44 @@ index 000000000000..452c0cfa1822
 +--
 +*#include <event-parse.h>*
 +
-+int *tep_get_page_size*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_page_size*(struct tep_handle pass:[*]_tep_, int _page_size_);
-+--
++int *tep_strerror*(struct tep_handle pass:[*]_tep_, enum tep_errno _errnum_, char pass:[*]_buf_, size_t _buflen_);
 +
++--
 +DESCRIPTION
 +-----------
-+The _tep_get_page_size()_ function returns the size of a memory page on
-+the machine, where the trace is generated. The _tep_ argument is trace
-+event parser context.
++The _tep_strerror()_ function converts tep error number into a human
++readable string.
++The _tep_ argument is trace event parser context. The _errnum_ is a regular
++errno, defined in errno.h, or a tep error number. The string, describing this
++error number is copied in the _buf_ argument. The _buflen_ argument is
++the size of the _buf_.
 +
-+The _tep_set_page_size()_ function stores in the _tep_ context the size of a
-+memory page on the machine, where the trace is generated.
-+The _tep_ argument is trace event parser context.
-+The _page_size_ argument is the size of a memory page, in bytes.
++It as a thread safe wrapper around strerror_r(). The library function has two
++different behaviors - POSIX and GNU specific. The _tep_strerror()_ API always
++behaves as the POSIX version - the error string is copied in the user supplied
++buffer.
 +
 +RETURN VALUE
 +------------
-+The _tep_get_page_size()_ function returns size of the memory page, in bytes.
++The _tep_strerror()_ function returns 0, if a valid _errnum_ is passed and the
++string is copied into _buf_. If _errnum_ is not a valid error number,
++-1 is returned and _buf_ is not modified.
 +
 +EXAMPLE
 +-------
 +[source,c]
 +--
-+#include <unistd.h>
 +#include <event-parse.h>
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	int page_size = getpagesize();
-+
-+	tep_set_page_size(tep, page_size);
-+
-+	printf("The page size for this machine is %d\n", tep_get_page_size(tep));
-+
++char buf[32];
++char *pool = calloc(1, 128);
++if (tep == NULL) {
++	tep_strerror(tep, TEP_ERRNO__MEM_ALLOC_FAILED, buf, 32);
++	printf ("The pool is not initialized, %s", buf);
++}
++...
 +--
 +
 +FILES
