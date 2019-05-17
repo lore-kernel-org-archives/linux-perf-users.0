@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/73] tools lib traceevent: Man pages for event fields APIs
-Date: Fri, 17 May 2019 16:35:39 -0300
-Message-ID: <20190517193611.4974-42-acme@kernel.org>
+Subject: [PATCH 40/73] tools lib traceevent: Man page for tep_read_number_field()
+Date: Fri, 17 May 2019 16:35:38 -0300
+Message-ID: <20190517193611.4974-41-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,37 +14,34 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man pages for libtraceevent APIs:
-
-  tep_event_common_fields(),
-  tep_event_fields()
+Create man page for libtraceevent API tep_read_number_field().
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-22-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200109.421670142@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-21-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200109.219394901@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/libtraceevent-fields.txt    | 105 ++++++++++++++++++
- 1 file changed, 105 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-fields.txt
+ .../libtraceevent-field_read.txt              | 81 +++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-fields.txt b/tools/lib/traceevent/Documentation/libtraceevent-fields.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-field_read.txt b/tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
 new file mode 100644
-index 000000000000..1ccb531d5114
+index 000000000000..64e9e25d3fd9
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-fields.txt
-@@ -0,0 +1,105 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-field_read.txt
+@@ -0,0 +1,81 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_event_common_fields, tep_event_fields - Get a list of fields for an event.
++tep_read_number_field - Reads a number from raw data.
 +
 +SYNOPSIS
 +--------
@@ -52,25 +49,20 @@ index 000000000000..1ccb531d5114
 +--
 +*#include <event-parse.h>*
 +
-+struct tep_format_field pass:[*]pass:[*]*tep_event_common_fields*(struct tep_event pass:[*]_event_);
-+struct tep_format_field pass:[*]pass:[*]*tep_event_fields*(struct tep_event pass:[*]_event_);
++int *tep_read_number_field*(struct tep_format_field pass:[*]_field_, const void pass:[*]_data_, unsigned long long pass:[*]_value_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_event_common_fields()_ function returns an array of pointers to common
-+fields for the _event_. The array is allocated in the function and must be freed
-+by free(). The last element of the array is NULL.
-+
-+The _tep_event_fields()_ function returns an array of pointers to event specific
-+fields for the _event_. The array is allocated in the function and must be freed
-+by free(). The last element of the array is NULL.
++The _tep_read_number_field()_ function reads the value of the _field_ from the
++raw _data_ and stores it in the _value_. The function sets the _value_ according
++to the endianness of the raw data and the current machine and stores it in
++_value_.
 +
 +RETURN VALUE
 +------------
-+Both _tep_event_common_fields()_ and _tep_event_fields()_ functions return
-+an array of pointers to tep_format_field structures in case of success, or
-+NULL in case of an error.
++The _tep_read_number_field()_ function retunrs 0 in case of success, or -1 in
++case of an error.
 +
 +EXAMPLE
 +-------
@@ -80,38 +72,19 @@ index 000000000000..1ccb531d5114
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+int i;
-+struct tep_format_field **fields;
-+struct tep_event *event = tep_find_event_by_name(tep, "kvm", "kvm_exit");
-+if (event != NULL) {
-+	fields = tep_event_common_fields(event);
-+	if (fields != NULL) {
-+		i = 0;
-+		while (fields[i]) {
-+			/*
-+			  walk through the list of the common fields
-+			  of the kvm_exit event
-+			*/
-+			i++;
-+		}
-+		free(fields);
-+	}
-+	fields = tep_event_fields(event);
-+	if (fields != NULL) {
-+		i = 0;
-+		while (fields[i]) {
-+			/*
-+			  walk through the list of the event specific
-+			  fields of the kvm_exit event
-+			*/
-+			i++;
-+		}
-+		free(fields);
++struct tep_event *event = tep_find_event_by_name(tep, "timer", "hrtimer_start");
++...
++void process_record(struct tep_record *record)
++{
++	unsigned long long pid;
++	struct tep_format_field *field_pid = tep_find_common_field(event, "common_pid");
++
++	if (tep_read_number_field(field_pid, record->data, &pid) != 0) {
++		/* Failed to get "common_pid" value */
 +	}
 +}
 +...
 +--
-+
 +FILES
 +-----
 +[verse]
