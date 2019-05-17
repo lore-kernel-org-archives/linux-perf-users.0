@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/73] tools lib traceevent: Man page for file endian APIs
-Date: Fri, 17 May 2019 16:35:24 -0300
-Message-ID: <20190517193611.4974-27-acme@kernel.org>
+Subject: [PATCH 27/73] tools lib traceevent: Man page for host endian APIs
+Date: Fri, 17 May 2019 16:35:25 -0300
+Message-ID: <20190517193611.4974-28-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -16,36 +16,37 @@ From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
 Create man pages for libtraceevent APIs:
 
-  tep_is_file_bigendian(),
-  tep_set_file_bigendian()
+  tep_is_bigendian(),
+  tep_is_local_bigendian(),
+  tep_set_local_bigendian()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-7-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200106.895177252@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-8-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200107.063709363@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-file_endian.txt             | 91 +++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+ .../libtraceevent-host_endian.txt             | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt b/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt b/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
 new file mode 100644
-index 000000000000..f401ad311047
+index 000000000000..d5d375eb8d1e
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-file_endian.txt
-@@ -0,0 +1,91 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
+@@ -0,0 +1,104 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_is_file_bigendian, tep_set_file_bigendian - Get / set the endianness of the
-+raw data being accessed by the tep handler.
++tep_is_bigendian, tep_is_local_bigendian, tep_set_local_bigendian - Get / set
++the endianness of the local machine.
 +
 +SYNOPSIS
 +--------
@@ -58,28 +59,38 @@ index 000000000000..f401ad311047
 +	TEP_BIG_ENDIAN
 +};
 +
-+bool *tep_is_file_bigendian*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_file_bigendian*(struct tep_handle pass:[*]_tep_, enum tep_endian _endian_);
-+
++int *tep_is_bigendian*(void);
++bool *tep_is_local_bigendian*(struct tep_handle pass:[*]_tep_);
++void *tep_set_local_bigendian*(struct tep_handle pass:[*]_tep_, enum tep_endian _endian_);
 +--
++
 +DESCRIPTION
 +-----------
-+The _tep_is_file_bigendian()_ function gets the endianness of the raw data,
-+being accessed by the tep handler. The _tep_ argument is trace event parser
-+context.
 +
-+The _tep_set_file_bigendian()_ function sets the endianness of raw data being
-+accessed by the tep handler. The _tep_ argument is trace event parser context.
++The _tep_is_bigendian()_ gets the endianness of the machine, executing
++the function.
++
++The _tep_is_local_bigendian()_ function gets the endianness of the local
++machine, saved in the _tep_ handler. The _tep_ argument is the trace event
++parser context. This API is a bit faster than _tep_is_bigendian()_, as it
++returns cached endianness of the local machine instead of checking it each time.
++
++The _tep_set_local_bigendian()_ function sets the endianness of the local
++machine in the _tep_ handler. The _tep_ argument is trace event parser context.
++The _endian_ argument is the endianness:
 +[verse]
 +--
-+The _endian_ argument is the endianness:
-+	_TEP_LITTLE_ENDIAN_ - the raw data is in little endian format,
-+	_TEP_BIG_ENDIAN_ - the raw data is in big endian format.
++	_TEP_LITTLE_ENDIAN_ - the machine is little endian,
++	_TEP_BIG_ENDIAN_ - the machine is big endian.
 +--
++
 +RETURN VALUE
 +------------
-+The _tep_is_file_bigendian()_ function returns true if the data is in bigendian
-+format, false otherwise.
++The _tep_is_bigendian()_ function returns non zero if the endianness of the
++machine, executing the code, is big endian and zero otherwise.
++
++The _tep_is_local_bigendian()_ function returns true, if the endianness of the
++local machine, saved in the _tep_ handler, is big endian, or false otherwise.
 +
 +EXAMPLE
 +-------
@@ -89,13 +100,16 @@ index 000000000000..f401ad311047
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	tep_set_file_bigendian(tep, TEP_LITTLE_ENDIAN);
++	if (tep_is_bigendian())
++		tep_set_local_bigendian(tep, TEP_BIG_ENDIAN);
++	else
++		tep_set_local_bigendian(tep, TEP_LITTLE_ENDIAN);
 +...
-+	if (tep_is_file_bigendian(tep)) {
-+		/* The raw data is in big endian */
-+	} else {
-+		/* The raw data is in little endian */
-+	}
++	if (tep_is_local_bigendian(tep))
++		printf("This machine you are running on is bigendian\n");
++	else
++		printf("This machine you are running on is little endian\n");
++
 +--
 +
 +FILES
