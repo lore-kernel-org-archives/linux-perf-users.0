@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/73] tools lib traceevent: Man page for host endian APIs
-Date: Fri, 17 May 2019 16:35:25 -0300
-Message-ID: <20190517193611.4974-28-acme@kernel.org>
+Subject: [PATCH 28/73] tools lib traceevent: Man page for page size APIs
+Date: Fri, 17 May 2019 16:35:26 -0300
+Message-ID: <20190517193611.4974-29-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -16,37 +16,36 @@ From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
 Create man pages for libtraceevent APIs:
 
-  tep_is_bigendian(),
-  tep_is_local_bigendian(),
-  tep_set_local_bigendian()
+  tep_get_page_size()
+  tep_set_page_size()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-8-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200107.063709363@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-9-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200107.218173559@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-host_endian.txt             | 104 ++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
+ .../Documentation/libtraceevent-page_size.txt | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt b/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
 new file mode 100644
-index 000000000000..d5d375eb8d1e
+index 000000000000..452c0cfa1822
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-host_endian.txt
-@@ -0,0 +1,104 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-page_size.txt
+@@ -0,0 +1,82 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_is_bigendian, tep_is_local_bigendian, tep_set_local_bigendian - Get / set
-+the endianness of the local machine.
++tep_get_page_size, tep_set_page_size - Get / set the size of a memory page on
++the machine, where the trace is generated
 +
 +SYNOPSIS
 +--------
@@ -54,61 +53,39 @@ index 000000000000..d5d375eb8d1e
 +--
 +*#include <event-parse.h>*
 +
-+enum *tep_endian* {
-+	TEP_LITTLE_ENDIAN = 0,
-+	TEP_BIG_ENDIAN
-+};
-+
-+int *tep_is_bigendian*(void);
-+bool *tep_is_local_bigendian*(struct tep_handle pass:[*]_tep_);
-+void *tep_set_local_bigendian*(struct tep_handle pass:[*]_tep_, enum tep_endian _endian_);
++int *tep_get_page_size*(struct tep_handle pass:[*]_tep_);
++void *tep_set_page_size*(struct tep_handle pass:[*]_tep_, int _page_size_);
 +--
 +
 +DESCRIPTION
 +-----------
++The _tep_get_page_size()_ function returns the size of a memory page on
++the machine, where the trace is generated. The _tep_ argument is trace
++event parser context.
 +
-+The _tep_is_bigendian()_ gets the endianness of the machine, executing
-+the function.
-+
-+The _tep_is_local_bigendian()_ function gets the endianness of the local
-+machine, saved in the _tep_ handler. The _tep_ argument is the trace event
-+parser context. This API is a bit faster than _tep_is_bigendian()_, as it
-+returns cached endianness of the local machine instead of checking it each time.
-+
-+The _tep_set_local_bigendian()_ function sets the endianness of the local
-+machine in the _tep_ handler. The _tep_ argument is trace event parser context.
-+The _endian_ argument is the endianness:
-+[verse]
-+--
-+	_TEP_LITTLE_ENDIAN_ - the machine is little endian,
-+	_TEP_BIG_ENDIAN_ - the machine is big endian.
-+--
++The _tep_set_page_size()_ function stores in the _tep_ context the size of a
++memory page on the machine, where the trace is generated.
++The _tep_ argument is trace event parser context.
++The _page_size_ argument is the size of a memory page, in bytes.
 +
 +RETURN VALUE
 +------------
-+The _tep_is_bigendian()_ function returns non zero if the endianness of the
-+machine, executing the code, is big endian and zero otherwise.
-+
-+The _tep_is_local_bigendian()_ function returns true, if the endianness of the
-+local machine, saved in the _tep_ handler, is big endian, or false otherwise.
++The _tep_get_page_size()_ function returns size of the memory page, in bytes.
 +
 +EXAMPLE
 +-------
 +[source,c]
 +--
++#include <unistd.h>
 +#include <event-parse.h>
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	if (tep_is_bigendian())
-+		tep_set_local_bigendian(tep, TEP_BIG_ENDIAN);
-+	else
-+		tep_set_local_bigendian(tep, TEP_LITTLE_ENDIAN);
-+...
-+	if (tep_is_local_bigendian(tep))
-+		printf("This machine you are running on is bigendian\n");
-+	else
-+		printf("This machine you are running on is little endian\n");
++	int page_size = getpagesize();
++
++	tep_set_page_size(tep, page_size);
++
++	printf("The page size for this machine is %d\n", tep_get_page_size(tep));
 +
 +--
 +
