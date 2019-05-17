@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/73] tools lib traceevent: Man page for header_page APIs
-Date: Fri, 17 May 2019 16:35:22 -0300
-Message-ID: <20190517193611.4974-25-acme@kernel.org>
+Subject: [PATCH 25/73] tools lib traceevent: Man page for get/set cpus APIs
+Date: Fri, 17 May 2019 16:35:23 -0300
+Message-ID: <20190517193611.4974-26-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,39 +14,38 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create a man page for libtraceevent APIs:
+Create man pages for libtraceevent APIs:
 
-  tep_get_header_page_size(),
-  tep_get_header_timestamp_size(),
-  tep_is_old_format()
+ tep_get_cpus(),
+ tep_set_cpus()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-5-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200106.583928896@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-6-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200106.742948683@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-header_page.txt             | 102 ++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
+ .../Documentation/libtraceevent-cpus.txt      | 77 +++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt b/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt b/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
 new file mode 100644
-index 000000000000..615d117dc39f
+index 000000000000..5ad70e43b752
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-header_page.txt
-@@ -0,0 +1,102 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-cpus.txt
+@@ -0,0 +1,77 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_get_header_page_size, tep_get_header_timestamp_size, tep_is_old_format -
-+Get the data stored in the header page, in kernel context.
++tep_get_cpus, tep_set_cpus - Get / set the number of CPUs, which have a tracing
++buffer representing it. Note, the buffer may be empty.
 +
 +SYNOPSIS
 +--------
@@ -54,38 +53,23 @@ index 000000000000..615d117dc39f
 +--
 +*#include <event-parse.h>*
 +
-+int *tep_get_header_page_size*(struct tep_handle pass:[*]_tep_);
-+int *tep_get_header_timestamp_size*(struct tep_handle pass:[*]_tep_);
-+bool *tep_is_old_format*(struct tep_handle pass:[*]_tep_);
++int *tep_get_cpus*(struct tep_handle pass:[*]_tep_);
++void *tep_set_cpus*(struct tep_handle pass:[*]_tep_, int _cpus_);
 +--
++
 +DESCRIPTION
 +-----------
-+These functions retrieve information from kernel context, stored in tracefs
-+events/header_page. Old kernels do not have header page info, so default values
-+from user space context are used.
++The _tep_get_cpus()_ function gets the number of CPUs, which have a tracing
++buffer representing it. The _tep_ argument is trace event parser context.
 +
-+The _tep_get_header_page_size()_ function returns the size of a long integer,
-+in kernel context. The _tep_ argument is trace event parser context.
-+This information is retrieved from tracefs events/header_page, "commit" field.
-+
-+The _tep_get_header_timestamp_size()_ function returns the size of timestamps,
-+in kernel context. The _tep_ argument is trace event parser context. This
-+information is retrieved from tracefs events/header_page, "timestamp" field.
-+
-+The _tep_is_old_format()_ function returns true if the kernel predates
-+the addition of events/header_page, otherwise it returns false.
++The _tep_set_cpus()_ function sets the number of CPUs, which have a tracing
++buffer representing it. The _tep_ argument is trace event parser context.
++The _cpu_ argument is the number of CPUs with tracing data.
 +
 +RETURN VALUE
 +------------
-+The _tep_get_header_page_size()_ function returns the size of a long integer,
-+in bytes.
-+
-+The _tep_get_header_timestamp_size()_ function returns the size of timestamps,
-+in bytes.
-+
-+The _tep_is_old_format()_ function returns true, if an old kernel is used to
-+generate the tracing data, which has no event/header_page. If the kernel is new,
-+or _tep_ is NULL, false is returned.
++The _tep_get_cpus()_ functions returns the number of CPUs, which have tracing
++data recorded.
 +
 +EXAMPLE
 +-------
@@ -95,19 +79,9 @@ index 000000000000..615d117dc39f
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+	int longsize;
-+	int timesize;
-+	bool old;
-+
-+	longsize = tep_get_header_page_size(tep);
-+	timesize = tep_get_header_timestamp_size(tep);
-+	old = tep_is_old_format(tep);
-+
-+	printf ("%s kernel is used to generate the tracing data.\n",
-+		old?"Old":"New");
-+	printf("The size of a long integer is %d bytes.\n", longsize);
-+	printf("The timestamps size is %d bytes.\n", timesize);
++	tep_set_cpus(tep, 5);
 +...
++	printf("We have tracing data for %d CPUs", tep_get_cpus(tep));
 +--
 +
 +FILES
