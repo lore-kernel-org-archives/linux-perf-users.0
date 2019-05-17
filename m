@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/73] tools lib traceevent: Man page for list events APIs
-Date: Fri, 17 May 2019 16:35:33 -0300
-Message-ID: <20190517193611.4974-36-acme@kernel.org>
+Subject: [PATCH 37/73] tools lib traceevent: Man pages for find field APIs
+Date: Fri, 17 May 2019 16:35:35 -0300
+Message-ID: <20190517193611.4974-38-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,38 +14,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man page for libtraceevent APIs:
+Create man pages for libtraceevent APIs:
 
-  tep_list_events()
-  tep_list_events_copy()
+  tep_find_common_field(),
+  tep_find_field()
+  tep_find_any_field()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-16-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200108.367633707@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-18-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.721589427@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-event_list.txt              | 122 ++++++++++++++++++
- 1 file changed, 122 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
+ .../libtraceevent-field_find.txt              | 118 ++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-field_find.txt b/tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
 new file mode 100644
-index 000000000000..fba350e5a4cb
+index 000000000000..0896af5b9eff
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-event_list.txt
-@@ -0,0 +1,122 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-field_find.txt
+@@ -0,0 +1,118 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_list_events, tep_list_events_copy -
-+Get list of events, sorted by given criteria.
++tep_find_common_field, tep_find_field, tep_find_any_field -
++Search for a field in an event.
 +
 +SYNOPSIS
 +--------
@@ -53,44 +54,30 @@ index 000000000000..fba350e5a4cb
 +--
 +*#include <event-parse.h>*
 +
-+enum *tep_event_sort_type* {
-+	_TEP_EVENT_SORT_ID_,
-+	_TEP_EVENT_SORT_NAME_,
-+	_TEP_EVENT_SORT_SYSTEM_,
-+};
-+
-+struct tep_event pass:[*]pass:[*]*tep_list_events*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
-+struct tep_event pass:[*]pass:[*]*tep_list_events_copy*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
++struct tep_format_field pass:[*]*tep_find_common_field*(struct tep_event pass:[*]_event_, const char pass:[*]_name_);
++struct tep_format_field pass:[*]*tep_find_field*(struct tep_event_ormat pass:[*]_event_, const char pass:[*]_name_);
++struct tep_format_field pass:[*]*tep_find_any_field*(struct tep_event pass:[*]_event_, const char pass:[*]_name_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_list_events()_ function returns an array of pointers to the events,
-+sorted by the _sort_type_ criteria. The last element of the array is NULL.
-+The returned memory must not be freed, it is managed by the library.
-+The function is not thread safe. The _tep_ argument is trace event parser
-+context. The _sort_type_ argument is the required sort criteria:
-+[verse]
-+--
-+	_TEP_EVENT_SORT_ID_	- sort by the event ID.
-+	_TEP_EVENT_SORT_NAME_	- sort by the event (name, system, id) triplet.
-+	_TEP_EVENT_SORT_SYSTEM_	- sort by the event (system, name, id) triplet.
-+--
++These functions search for a field with given name in an event. The field
++returned can be used to find the field content from within a data record.
 +
-+The _tep_list_events_copy()_ is a thread safe version of _tep_list_events()_.
-+It has the same behavior, but the returned array is allocated internally and
-+must be freed by the caller. Note that the content of the array must not be
-+freed (see the EXAMPLE below).
++The _tep_find_common_field()_ function searches for a common field with _name_
++in the _event_.
++
++The _tep_find_field()_ function searches for an event specific field with
++_name_ in the _event_.
++
++The _tep_find_any_field()_ function searches for any field with _name_ in the
++_event_.
 +
 +RETURN VALUE
 +------------
-+The _tep_list_events()_ function returns an array of pointers to events.
-+In case of an error, NULL is returned. The returned array must not be freed,
-+it is managed by the library.
-+
-+The _tep_list_events_copy()_ function returns an array of pointers to events.
-+In case of an error, NULL is returned. The returned array must be freed by
-+the caller.
++The _tep_find_common_field(), _tep_find_field()_ and _tep_find_any_field()_
++functions return a pointer to the found field, or NULL in case there is no field
++with the requested name.
 +
 +EXAMPLE
 +-------
@@ -98,34 +85,44 @@ index 000000000000..fba350e5a4cb
 +--
 +#include <event-parse.h>
 +...
-+struct tep_handle *tep = tep_alloc();
-+...
-+int i;
-+struct tep_event_format **events;
++void get_htimer_info(struct tep_handle *tep, struct tep_record *record)
++{
++	struct tep_format_field *field;
++	struct tep_event *event;
++	long long softexpires;
++	int mode;
++	int pid;
 +
-+i=0;
-+events = tep_list_events(tep, TEP_EVENT_SORT_ID);
-+if (events == NULL) {
-+	/* Failed to get the events, sorted by ID */
-+} else {
-+	while(events[i]) {
-+		/* walk through the list of the events, sorted by ID */
-+		i++;
++	event = tep_find_event_by_name(tep, "timer", "hrtimer_start");
++
++	field = tep_find_common_field(event, "common_pid");
++	if (field == NULL) {
++		/* Cannot find "common_pid" field in the event */
++	} else {
++		/* Get pid from the data record */
++		pid = tep_read_number(tep, record->data + field->offset,
++				      field->size);
++	}
++
++	field = tep_find_field(event, "softexpires");
++	if (field == NULL) {
++		/* Cannot find "softexpires" event specific field in the event */
++	} else {
++		/* Get softexpires parameter from the data record */
++		softexpires = tep_read_number(tep, record->data + field->offset,
++					      field->size);
++	}
++
++	field = tep_find_any_field(event, "mode");
++	if (field == NULL) {
++		/* Cannot find "mode" field in the event */
++	} else
++	{
++		/* Get mode parameter from the data record */
++		mode = tep_read_number(tep, record->data + field->offset,
++				       field->size);
 +	}
 +}
-+
-+i=0;
-+events = tep_list_events_copy(tep, TEP_EVENT_SORT_NAME);
-+if (events == NULL) {
-+	/* Failed to get the events, sorted by name */
-+} else {
-+	while(events[i]) {
-+		/* walk through the list of the events, sorted by name */
-+		i++;
-+	}
-+	free(events);
-+}
-+
 +...
 +--
 +
