@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 33/73] tools lib traceevent: Man page for tep_read_number()
-Date: Fri, 17 May 2019 16:35:31 -0300
-Message-ID: <20190517193611.4974-34-acme@kernel.org>
+Subject: [PATCH 34/73] tools lib traceevent: Man pages for event find APIs
+Date: Fri, 17 May 2019 16:35:32 -0300
+Message-ID: <20190517193611.4974-35-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,34 +14,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 
-Create man page for tep_read_number() libtraceevent API.
+Create man pages for libtraceevent APIs:
+
+  tep_find_event()
+  tep_find_event_by_name()
+  tep_find_event_by_record()
 
 Signed-off-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-14-tstoyanov@vmware.com
-Link: http://lkml.kernel.org/r/20190510200108.042164597@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190503091119.23399-15-tstoyanov@vmware.com
+Link: http://lkml.kernel.org/r/20190510200108.197407057@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../libtraceevent-endian_read.txt             | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+ .../libtraceevent-event_find.txt              | 103 ++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt b/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
+diff --git a/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt b/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
 new file mode 100644
-index 000000000000..e64851b6e189
+index 000000000000..7bc062c9f76f
 --- /dev/null
-+++ b/tools/lib/traceevent/Documentation/libtraceevent-endian_read.txt
-@@ -0,0 +1,78 @@
++++ b/tools/lib/traceevent/Documentation/libtraceevent-event_find.txt
+@@ -0,0 +1,103 @@
 +libtraceevent(3)
 +================
 +
 +NAME
 +----
-+tep_read_number - Reads a number from raw data.
++tep_find_event,tep_find_event_by_name,tep_find_event_by_record -
++Find events by given key.
 +
 +SYNOPSIS
 +--------
@@ -49,20 +54,32 @@ index 000000000000..e64851b6e189
 +--
 +*#include <event-parse.h>*
 +
-+unsigned long long *tep_read_number*(struct tep_handle pass:[*]_tep_, const void pass:[*]_ptr_, int _size_);
++struct tep_event pass:[*]*tep_find_event*(struct tep_handle pass:[*]_tep_, int _id_);
++struct tep_event pass:[*]*tep_find_event_by_name*(struct tep_handle pass:[*]_tep_, const char pass:[*]_sys_, const char pass:[*]_name_);
++struct tep_event pass:[*]*tep_find_event_by_record*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_record_);
 +--
 +
 +DESCRIPTION
 +-----------
-+The _tep_read_number()_ function reads an integer from raw data, taking into
-+account the endianness of the raw data and the current host. The _tep_ argument
-+is the trace event parser context. The _ptr_ is a pointer to the raw data, where
-+the integer is, and the _size_ is the size of the integer.
++This set of functions can be used to search for an event, based on a given
++criteria. All functions require a pointer to a _tep_, trace event parser
++context.
++
++The _tep_find_event()_ function searches for an event by given event _id_. The
++event ID is assigned dynamically and can be viewed in event's format file,
++"ID" field.
++
++The tep_find_event_by_name()_ function searches for an event by given
++event _name_, under the system _sys_. If the _sys_ is NULL (not specified),
++the first event with _name_ is returned.
++
++The tep_find_event_by_record()_ function searches for an event from a given
++_record_.
 +
 +RETURN VALUE
 +------------
-+The _tep_read_number()_ function returns the integer in the byte order of
-+the current host. In case of an error, 0 is returned.
++All these functions return a pointer to the found event, or NULL if there is no
++such event.
 +
 +EXAMPLE
 +-------
@@ -72,12 +89,24 @@ index 000000000000..e64851b6e189
 +...
 +struct tep_handle *tep = tep_alloc();
 +...
-+void process_record(struct tep_record *record)
-+{
-+	int offset = 24;
-+	int data = tep_read_number(tep, record->data + offset, 4);
++struct tep_event *event;
 +
-+	/* Read the 4 bytes at the offset 24 of data as an integer */
++event = tep_find_event(tep, 1857);
++if (event == NULL) {
++	/* There is no event with ID 1857 */
++}
++
++event = tep_find_event_by_name(tep, "kvm", "kvm_exit");
++if (event == NULL) {
++	/* There is no kvm_exit event, from kvm system */
++}
++
++void event_from_record(struct tep_record *record)
++{
++ struct tep_event *event = tep_find_event_by_record(tep, record);
++	if (event == NULL) {
++		/* There is no event from given record */
++	}
 +}
 +...
 +--
