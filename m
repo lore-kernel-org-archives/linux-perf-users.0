@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 63/73] perf vendor events arm64: Add Cortex-A57 and Cortex-A72 events
-Date: Fri, 17 May 2019 16:36:01 -0300
-Message-ID: <20190517193611.4974-64-acme@kernel.org>
+Subject: [PATCH 64/73] perf parse-regs: Split parse_regs
+Date: Fri, 17 May 2019 16:36:02 -0300
+Message-ID: <20190517193611.4974-65-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,245 +9,117 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, John Garry <john.garry@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Sean V Kelley <seanvk.dev@oregontracks.org>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-The Cortex-A57 and Cortex-A72 both support all ARMv8 recommended events
-up to the RC_ST_SPEC (0x91) event with the exception of:
+The available registers for --int-regs and --user-regs may be different,
+e.g. XMM registers.
 
-- L1D_CACHE_REFILL_INNER (0x44)
-- L1D_CACHE_REFILL_OUTER (0x45)
-- L1D_TLB_RD (0x4E)
-- L1D_TLB_WR (0x4F)
-- L2D_TLB_REFILL_RD (0x5C)
-- L2D_TLB_REFILL_WR (0x5D)
-- L2D_TLB_RD (0x5E)
-- L2D_TLB_WR (0x5F)
-- STREX_SPEC (0x6F)
+Split parse_regs into two dedicated functions for --int-regs and
+--user-regs respectively.
 
-Create an appropriate JSON file for mapping those events and update the
-mapfile.csv for matching the Cortex-A57 and Cortex-A72 MIDR to that
-file.
+Modify the warning message. "--user-regs=?" should be applied to show
+the available registers for --user-regs.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sean V Kelley <seanvk.dev@oregontracks.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org (moderated list:arm pmu profiling and debugging)
-Link: http://lkml.kernel.org/r/20190513202522.9050-4-f.fainelli@gmail.com
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lkml.kernel.org/r/1557865174-56264-1-git-send-email-kan.liang@linux.intel.com
+[ Changed docs as suggested by Ravi and agreed by Kan ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../arm/cortex-a57-a72/core-imp-def.json      | 179 ++++++++++++++++++
- tools/perf/pmu-events/arch/arm64/mapfile.csv  |   2 +
- 2 files changed, 181 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
+ tools/perf/Documentation/perf-record.txt |  3 ++-
+ tools/perf/builtin-record.c              |  4 ++--
+ tools/perf/util/parse-regs-options.c     | 19 ++++++++++++++++---
+ tools/perf/util/parse-regs-options.h     |  3 ++-
+ 4 files changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
-new file mode 100644
-index 000000000000..0ac9b7927450
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/arm/cortex-a57-a72/core-imp-def.json
-@@ -0,0 +1,179 @@
-+[
-+    {
-+        "ArchStdEvent": "L1D_CACHE_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_VICTIM",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_WB_CLEAN",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_CACHE_INVAL",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L1D_TLB_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_RD",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_REFILL_WR",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_VICTIM",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_WB_CLEAN",
-+    },
-+    {
-+        "ArchStdEvent": "L2D_CACHE_INVAL",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_RD",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_WR",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_SHARED",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_NOT_SHARED",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_NORMAL",
-+    },
-+    {
-+        "ArchStdEvent": "BUS_ACCESS_PERIPH",
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_RD",
-+    },
-+    {
-+        "ArchStdEvent": "MEM_ACCESS_WR",
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_LD_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_ST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "UNALIGNED_LDST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "LDREX_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "STREX_PASS_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "STREX_FAIL_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "LD_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "ST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "LDST_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "DP_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "ASE_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "VFP_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "PC_WRITE_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "CRYPTO_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "BR_IMMED_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "BR_RETURN_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "BR_INDIRECT_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "ISB_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "DSB_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "DMB_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_UNDEF",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SVC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_PABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_DABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_IRQ",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_FIQ",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_SMC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_HVC",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_PABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_DABORT",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_OTHER",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_IRQ",
-+    },
-+    {
-+        "ArchStdEvent": "EXC_TRAP_FIQ",
-+    },
-+    {
-+        "ArchStdEvent": "RC_LD_SPEC",
-+    },
-+    {
-+        "ArchStdEvent": "RC_ST_SPEC",
-+    },
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-index 013155f1eb58..927fcddcb4aa 100644
---- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
-@@ -14,6 +14,8 @@
- #Family-model,Version,Filename,EventType
- 0x00000000410fd030,v1,arm/cortex-a53,core
- 0x00000000420f1000,v1,arm/cortex-a53,core
-+0x00000000410fd070,v1,arm/cortex-a57-a72,core
-+0x00000000410fd080,v1,arm/cortex-a57-a72,core
- 0x00000000420f5160,v1,cavium/thunderx2,core
- 0x00000000430f0af0,v1,cavium/thunderx2,core
- 0x00000000480fd010,v1,hisilicon/hip08,core
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 27b37624c376..de269430720a 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -406,7 +406,8 @@ symbolic names, e.g. on x86, ax, si. To list the available registers use
+ --intr-regs=ax,bx. The list of register is architecture dependent.
+ 
+ --user-regs::
+-Capture user registers at sample time. Same arguments as -I.
++Similar to -I, but capture user registers at sample time. To list the available
++user registers use --user-regs=\?.
+ 
+ --running-time::
+ Record running and enabled time for read events (:S)
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 861395753c25..e2c3a585a61e 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2168,10 +2168,10 @@ static struct option __record_options[] = {
+ 		    "use per-thread mmaps"),
+ 	OPT_CALLBACK_OPTARG('I', "intr-regs", &record.opts.sample_intr_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use '-I?' to list register names", parse_regs),
++		    " use '-I?' to list register names", parse_intr_regs),
+ 	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use '-I?' to list register names", parse_regs),
++		    " use '--user-regs=?' to list register names", parse_user_regs),
+ 	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+ 		    "Record running/enabled time of read (:S) events"),
+ 	OPT_CALLBACK('k', "clockid", &record.opts,
+diff --git a/tools/perf/util/parse-regs-options.c b/tools/perf/util/parse-regs-options.c
+index 9cb187a20fe2..b21617f2bec1 100644
+--- a/tools/perf/util/parse-regs-options.c
++++ b/tools/perf/util/parse-regs-options.c
+@@ -5,8 +5,8 @@
+ #include <subcmd/parse-options.h>
+ #include "util/parse-regs-options.h"
+ 
+-int
+-parse_regs(const struct option *opt, const char *str, int unset)
++static int
++__parse_regs(const struct option *opt, const char *str, int unset, bool intr)
+ {
+ 	uint64_t *mode = (uint64_t *)opt->value;
+ 	const struct sample_reg *r;
+@@ -48,7 +48,8 @@ parse_regs(const struct option *opt, const char *str, int unset)
+ 					break;
+ 			}
+ 			if (!r->name) {
+-				ui__warning("Unknown register \"%s\", check man page or run \"perf record -I?\"\n", s);
++				ui__warning("Unknown register \"%s\", check man page or run \"perf record %s?\"\n",
++					    s, intr ? "-I" : "--user-regs=");
+ 				goto error;
+ 			}
+ 
+@@ -69,3 +70,15 @@ parse_regs(const struct option *opt, const char *str, int unset)
+ 	free(os);
+ 	return ret;
+ }
++
++int
++parse_user_regs(const struct option *opt, const char *str, int unset)
++{
++	return __parse_regs(opt, str, unset, false);
++}
++
++int
++parse_intr_regs(const struct option *opt, const char *str, int unset)
++{
++	return __parse_regs(opt, str, unset, true);
++}
+diff --git a/tools/perf/util/parse-regs-options.h b/tools/perf/util/parse-regs-options.h
+index cdefb1acf6be..2b23d25c6394 100644
+--- a/tools/perf/util/parse-regs-options.h
++++ b/tools/perf/util/parse-regs-options.h
+@@ -2,5 +2,6 @@
+ #ifndef _PERF_PARSE_REGS_OPTIONS_H
+ #define _PERF_PARSE_REGS_OPTIONS_H 1
+ struct option;
+-int parse_regs(const struct option *opt, const char *str, int unset);
++int parse_user_regs(const struct option *opt, const char *str, int unset);
++int parse_intr_regs(const struct option *opt, const char *str, int unset);
+ #endif /* _PERF_PARSE_REGS_OPTIONS_H */
 -- 
 2.20.1
