@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 51/73] perf tools: Introduce Zstd streaming based compression API
-Date: Fri, 17 May 2019 16:35:49 -0300
-Message-ID: <20190517193611.4974-52-acme@kernel.org>
+Subject: [PATCH 52/73] perf record: Implement compression for serial trace streaming
+Date: Fri, 17 May 2019 16:35:50 -0300
+Message-ID: <20190517193611.4974-53-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,13 +14,22 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Implemented functions are based on Zstd streaming compression API.
+Compression is implemented using the functions from zstd.c. As the
+memory to operate on the compression uses mmap->data buffer.
 
-The functions are used in runtime to compress data that come from mmaped
-kernel buffer. zstd_init(), zstd_fini() are used for initialization and
-finalization to allocate and deallocate internal zstd objects.
-zstd_compress_stream_to_records() is used to convert parts of mmaped
-kernel buffer into an array of PERF_RECORD_COMPRESSED records.
+If Zstd streaming compression API fails for some reason the data to be
+compressed are just copied into the memory buffers using plain memcpy().
+
+Compressed trace frame consists of an array of PERF_RECORD_COMPRESSED
+records. Each element of the array is not longer that
+PERF_SAMPLE_MAX_SIZE and consists of perf_event_header followed by the
+compressed chunk that is decompressed on the loading stage.
+
+Comitter notes:
+
+Undo some unnecessary line breaks, remove some unnecessary () around
+zstd_data to then just get its address, and fix conflicts with
+BPF_PROG_INFO/BPF_BTF patchkits.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -28,161 +37,129 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/18bf36f3-b85a-1fe2-dd83-10e0c6069568@linux.intel.com
+Link: http://lkml.kernel.org/r/744df43f-3932-2594-ddef-1e99a3cad03a@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/Build      |  2 ++
- tools/perf/util/compress.h | 42 +++++++++++++++++++++++
- tools/perf/util/zstd.c     | 70 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 114 insertions(+)
- create mode 100644 tools/perf/util/zstd.c
+ tools/perf/builtin-record.c | 51 +++++++++++++++++++++++++++++++++++--
+ tools/perf/util/session.h   |  2 ++
+ 2 files changed, 51 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dd3102301ea..6d5bbc8b589b 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -145,6 +145,8 @@ perf-y += scripting-engines/
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ca6d7488e34b..de9632c69852 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -133,6 +133,9 @@ static int record__write(struct record *rec, struct perf_mmap *map __maybe_unuse
+ 	return 0;
+ }
  
- perf-$(CONFIG_ZLIB) += zlib.o
- perf-$(CONFIG_LZMA) += lzma.o
-+perf-$(CONFIG_ZSTD) += zstd.o
++static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
++			    void *src, size_t src_size);
 +
- perf-y += demangle-java.o
- perf-y += demangle-rust.o
+ #ifdef HAVE_AIO_SUPPORT
+ static int record__aio_write(struct aiocb *cblock, int trace_fd,
+ 		void *buf, size_t size, off_t off)
+@@ -392,6 +395,11 @@ static int record__pushfn(struct perf_mmap *map, void *to, void *bf, size_t size
+ {
+ 	struct record *rec = to;
  
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index 892e92e7e7fc..1041a4fd81e2 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -2,6 +2,11 @@
- #ifndef PERF_COMPRESS_H
- #define PERF_COMPRESS_H
- 
-+#include <stdbool.h>
-+#ifdef HAVE_ZSTD_SUPPORT
-+#include <zstd.h>
-+#endif
-+
- #ifdef HAVE_ZLIB_SUPPORT
- int gzip_decompress_to_file(const char *input, int output_fd);
- bool gzip_is_compressed(const char *input);
-@@ -12,4 +17,41 @@ int lzma_decompress_to_file(const char *input, int output_fd);
- bool lzma_is_compressed(const char *input);
- #endif
- 
-+struct zstd_data {
-+#ifdef HAVE_ZSTD_SUPPORT
-+	ZSTD_CStream	*cstream;
-+#endif
-+};
-+
-+#ifdef HAVE_ZSTD_SUPPORT
-+
-+int zstd_init(struct zstd_data *data, int level);
-+int zstd_fini(struct zstd_data *data);
-+
-+size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
-+				       void *src, size_t src_size, size_t max_record_size,
-+				       size_t process_header(void *record, size_t increment));
-+#else /* !HAVE_ZSTD_SUPPORT */
-+
-+static inline int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline int zstd_fini(struct zstd_data *data __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static inline
-+size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
-+				       void *dst __maybe_unused, size_t dst_size __maybe_unused,
-+				       void *src __maybe_unused, size_t src_size __maybe_unused,
-+				       size_t max_record_size __maybe_unused,
-+				       size_t process_header(void *record, size_t increment) __maybe_unused)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif /* PERF_COMPRESS_H */
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-new file mode 100644
-index 000000000000..359ec9a9d306
---- /dev/null
-+++ b/tools/perf/util/zstd.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <string.h>
-+
-+#include "util/compress.h"
-+#include "util/debug.h"
-+
-+int zstd_init(struct zstd_data *data, int level)
-+{
-+	size_t ret;
-+
-+	data->cstream = ZSTD_createCStream();
-+	if (data->cstream == NULL) {
-+		pr_err("Couldn't create compression stream.\n");
-+		return -1;
++	if (record__comp_enabled(rec)) {
++		size = zstd_compress(rec->session, map->data, perf_mmap__mmap_len(map), bf, size);
++		bf   = map->data;
 +	}
 +
-+	ret = ZSTD_initCStream(data->cstream, level);
-+	if (ZSTD_isError(ret)) {
-+		pr_err("Failed to initialize compression stream: %s\n", ZSTD_getErrorName(ret));
-+		return -1;
+ 	rec->samples++;
+ 	return record__write(rec, map, bf, size);
+ }
+@@ -778,6 +786,37 @@ static void record__adjust_affinity(struct record *rec, struct perf_mmap *map)
+ 	}
+ }
+ 
++static size_t process_comp_header(void *record, size_t increment)
++{
++	struct compressed_event *event = record;
++	size_t size = sizeof(*event);
++
++	if (increment) {
++		event->header.size += increment;
++		return increment;
 +	}
 +
-+	return 0;
++	event->header.type = PERF_RECORD_COMPRESSED;
++	event->header.size = size;
++
++	return size;
 +}
 +
-+int zstd_fini(struct zstd_data *data)
++static size_t zstd_compress(struct perf_session *session, void *dst, size_t dst_size,
++			    void *src, size_t src_size)
 +{
-+	if (data->cstream) {
-+		ZSTD_freeCStream(data->cstream);
-+		data->cstream = NULL;
-+	}
++	size_t compressed;
++	size_t max_record_size = PERF_SAMPLE_MAX_SIZE - sizeof(struct compressed_event) - 1;
 +
-+	return 0;
-+}
++	compressed = zstd_compress_stream_to_records(&session->zstd_data, dst, dst_size, src, src_size,
++						     max_record_size, process_comp_header);
 +
-+size_t zstd_compress_stream_to_records(struct zstd_data *data, void *dst, size_t dst_size,
-+				       void *src, size_t src_size, size_t max_record_size,
-+				       size_t process_header(void *record, size_t increment))
-+{
-+	size_t ret, size, compressed = 0;
-+	ZSTD_inBuffer input = { src, src_size, 0 };
-+	ZSTD_outBuffer output;
-+	void *record;
-+
-+	while (input.pos < input.size) {
-+		record = dst;
-+		size = process_header(record, 0);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+		output = (ZSTD_outBuffer){ dst, (dst_size > max_record_size) ?
-+						max_record_size : dst_size, 0 };
-+		ret = ZSTD_compressStream(data->cstream, &output, &input);
-+		ZSTD_flushStream(data->cstream, &output);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("failed to compress %ld bytes: %s\n",
-+				(long)src_size, ZSTD_getErrorName(ret));
-+			memcpy(dst, src, src_size);
-+			return src_size;
-+		}
-+		size = output.pos;
-+		size = process_header(record, size);
-+		compressed += size;
-+		dst += size;
-+		dst_size -= size;
-+	}
++	session->bytes_transferred += src_size;
++	session->bytes_compressed  += compressed;
 +
 +	return compressed;
 +}
++
+ static int record__mmap_read_evlist(struct record *rec, struct perf_evlist *evlist,
+ 				    bool overwrite, bool synch)
+ {
+@@ -1225,6 +1264,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	fd = perf_data__fd(data);
+ 	rec->session = session;
+ 
++	if (zstd_init(&session->zstd_data, rec->opts.comp_level) < 0) {
++		pr_err("Compression initialization failed.\n");
++		return -1;
++	}
++
++	session->header.env.comp_type  = PERF_COMP_ZSTD;
++	session->header.env.comp_level = rec->opts.comp_level;
++
+ 	record__init_features(rec);
+ 
+ 	if (rec->opts.use_clockid && rec->opts.clockid_res_ns)
+@@ -1565,6 +1612,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 
+ out_delete_session:
++	zstd_fini(&session->zstd_data);
+ 	perf_session__delete(session);
+ 
+ 	if (!opts->no_bpf_event)
+@@ -2294,8 +2342,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	if (rec->opts.nr_cblocks > nr_cblocks_max)
+ 		rec->opts.nr_cblocks = nr_cblocks_max;
+-	if (verbose > 0)
+-		pr_info("nr_cblocks: %d\n", rec->opts.nr_cblocks);
++	pr_debug("nr_cblocks: %d\n", rec->opts.nr_cblocks);
+ 
+ 	pr_debug("affinity: %s\n", affinity_tags[rec->opts.affinity]);
+ 	pr_debug("mmap flush: %d\n", rec->opts.mmap_flush);
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 0e14884f28b2..6c984c895924 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -8,6 +8,7 @@
+ #include "machine.h"
+ #include "data.h"
+ #include "ordered-events.h"
++#include "util/compress.h"
+ #include <linux/kernel.h>
+ #include <linux/rbtree.h>
+ #include <linux/perf_event.h>
+@@ -37,6 +38,7 @@ struct perf_session {
+ 	struct perf_tool	*tool;
+ 	u64			bytes_transferred;
+ 	u64			bytes_compressed;
++	struct zstd_data	zstd_data;
+ };
+ 
+ struct perf_tool;
 -- 
 2.20.1
