@@ -1,10 +1,9 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/73] perf scripts python: exported-sql-viewer.py: Add context menu
-Date: Fri, 17 May 2019 16:35:15 -0300
-Message-ID: <20190517193611.4974-18-acme@kernel.org>
+Subject: [PATCH 18/73] perf scripts python: exported-sql-viewer.py: Add 'About' dialog box
+Date: Fri, 17 May 2019 16:35:16 -0300
+Message-ID: <20190517193611.4974-19-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
@@ -15,127 +14,116 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add a context menu (right-click) that provides options for copying to
-clipboard, including, for trees, the ability to copy only the cell under
-the mouse pointer.
+With support for Python 2 or 3 and PySide 1 or 2 (Qt 4 or 5), it is
+useful to see what versions are in use. Add an 'About' dialog box that
+displays Python, PySide, Qt and database server (SQLite or PostgreSQL)
+version numbers.
 
 Committer testing:
 
   $ python ~acme/libexec/perf-core/scripts/python/exported-sql-viewer.py ~/c/adrian.hunter/simple-retpoline.db
 
-  Simply right click and pick "Copy selection", that at this point has
-  just the first line, not expanded, then see what was copied by pressing
-  shift+control+v on a terminal:
+  Then go to 'Help', then 'About', select all the lines with the mouse
+  press 'Control+C', then, on the same terminal press control+shift+V
+  which shows my current environment:
 
-Call Path,Object,Count,Time (ns),Time (%),Branch Count,Branch Count (%)
-▶ simple-retpolin,,,,,,
-
-  Ditto after expanding, i.e. the selection continues to be just one
-  line:
-
-Call Path           Object   Count   Time (ns)   Time (%)   Branch Count   Branch Count (%)
-▼ simple-retpolin
-
-   Now select all the lines with the mouse and control+shift+v again:
-
-Call Path                     Object             Count   Time (ns)   Time (%)   Branch Count   Branch Count (%)
-  ▼ 14503:14503
-    ▼ _start                  ld-2.28.so             1      156267      100.0          10602              100.0
-      ▶ unknown               unknown                1        2276        1.5              1                0.0
-      ▶ _dl_start             ld-2.28.so             1      137047       87.7          10088               95.2
-      ▶ _dl_init              ld-2.28.so             1        9142        5.9            326                3.1
-      ▼ _start                simple-retpoline       1        7457        4.8            182                1.7
-        ▶ unknown             unknown                1         805       10.8              1                0.5
-        ▶ __libc_start_main   libc-2.28.so           1        6347       85.1            179               98.4
+Python version:     2.7.16
+PySide version:     1
+Qt version:         4.8.7
+SQLite version:     3.26.0
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190503120828.25326-6-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190503120828.25326-7-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+ .../scripts/python/exported-sql-viewer.py     | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index baa2b220238a..affd80ebcae0 100755
+index affd80ebcae0..affed7d149be 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -887,6 +887,8 @@ class TreeWindowBase(QMdiSubWindow):
- 		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
- 		self.view.CopyCellsToClipboard = CopyTreeCellsToClipboard
+@@ -2913,6 +2913,60 @@ class HelpOnlyWindow(QMainWindow):
  
-+		self.context_menu = TreeContextMenu(self.view)
-+
- 	def DisplayFound(self, ids):
- 		if not len(ids):
- 			return False
-@@ -1660,6 +1662,8 @@ class BranchWindow(QMdiSubWindow):
+ 		self.setCentralWidget(self.text)
  
- 		self.ResizeColumnsToContents()
++# PostqreSQL server version
++
++def PostqreSQLServerVersion(db):
++	query = QSqlQuery(db)
++	QueryExec(query, "SELECT VERSION()")
++	if query.next():
++		v_str = query.value(0)
++		v_list = v_str.strip().split(" ")
++		if v_list[0] == "PostgreSQL" and v_list[2] == "on":
++			return v_list[1]
++		return v_str
++	return "Unknown"
++
++# SQLite version
++
++def SQLiteVersion(db):
++	query = QSqlQuery(db)
++	QueryExec(query, "SELECT sqlite_version()")
++	if query.next():
++		return query.value(0)
++	return "Unknown"
++
++# About dialog
++
++class AboutDialog(QDialog):
++
++	def __init__(self, glb, parent=None):
++		super(AboutDialog, self).__init__(parent)
++
++		self.setWindowTitle("About Exported SQL Viewer")
++		self.setMinimumWidth(300)
++
++		pyside_version = "1" if pyside_version_1 else "2"
++
++		text = "<pre>"
++		text += "Python version:     " + sys.version.split(" ")[0] + "\n"
++		text += "PySide version:     " + pyside_version + "\n"
++		text += "Qt version:         " + qVersion() + "\n"
++		if glb.dbref.is_sqlite3:
++			text += "SQLite version:     " + SQLiteVersion(glb.db) + "\n"
++		else:
++			text += "PostqreSQL version: " + PostqreSQLServerVersion(glb.db) + "\n"
++		text += "</pre>"
++
++		self.text = QTextBrowser()
++		self.text.setHtml(text)
++		self.text.setReadOnly(True)
++		self.text.setOpenExternalLinks(True)
++
++		self.vbox = QVBoxLayout()
++		self.vbox.addWidget(self.text)
++
++		self.setLayout(self.vbox);
++
+ # Font resize
  
-+		self.context_menu = TreeContextMenu(self.view)
-+
- 		self.find_bar = FindBar(self, self, True)
+ def ResizeFont(widget, diff):
+@@ -3010,6 +3064,7 @@ class MainWindow(QMainWindow):
  
- 		self.finder = ChildDataItemFinder(self.model.root)
-@@ -2469,6 +2473,39 @@ def CopyCellsToClipboardHdr(view):
- def CopyCellsToClipboardCSV(view):
- 	CopyCellsToClipboard(view, True, True)
+ 		help_menu = menu.addMenu("&Help")
+ 		help_menu.addAction(CreateAction("&Exported SQL Viewer Help", "Helpful information", self.Help, self, QKeySequence.HelpContents))
++		help_menu.addAction(CreateAction("&About Exported SQL Viewer", "About this application", self.About, self))
  
-+# Context menu
-+
-+class ContextMenu(object):
-+
-+	def __init__(self, view):
-+		self.view = view
-+		self.view.setContextMenuPolicy(Qt.CustomContextMenu)
-+		self.view.customContextMenuRequested.connect(self.ShowContextMenu)
-+
-+	def ShowContextMenu(self, pos):
-+		menu = QMenu(self.view)
-+		self.AddActions(menu)
-+		menu.exec_(self.view.mapToGlobal(pos))
-+
-+	def AddCopy(self, menu):
-+		menu.addAction(CreateAction("&Copy selection", "Copy to clipboard", lambda: CopyCellsToClipboardHdr(self.view), self.view))
-+		menu.addAction(CreateAction("Copy selection as CS&V", "Copy to clipboard as CSV", lambda: CopyCellsToClipboardCSV(self.view), self.view))
-+
-+	def AddActions(self, menu):
-+		self.AddCopy(menu)
-+
-+class TreeContextMenu(ContextMenu):
-+
-+	def __init__(self, view):
-+		super(TreeContextMenu, self).__init__(view)
-+
-+	def AddActions(self, menu):
-+		i = self.view.currentIndex()
-+		text = str(i.data()).strip()
-+		if len(text):
-+			menu.addAction(CreateAction('Copy "' + text + '"', "Copy to clipboard", lambda: QApplication.clipboard().setText(text), self.view))
-+		self.AddCopy(menu)
-+
- # Table window
+ 	def Try(self, fn):
+ 		win = self.mdi_area.activeSubWindow()
+@@ -3095,6 +3150,10 @@ class MainWindow(QMainWindow):
+ 	def Help(self):
+ 		HelpWindow(self.glb, self)
  
- class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
-@@ -2492,6 +2529,8 @@ class TableWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
- 
- 		self.ResizeColumnsToContents()
- 
-+		self.context_menu = ContextMenu(self.view)
++	def About(self):
++		dialog = AboutDialog(self.glb, self)
++		dialog.exec_()
 +
- 		self.find_bar = FindBar(self, self, True)
+ # XED Disassembler
  
- 		self.finder = ChildDataItemFinder(self.data_model)
-@@ -2608,6 +2647,8 @@ class TopCallsWindow(QMdiSubWindow, ResizeColumnsToContentsBase):
- 		self.view.setSelectionMode(QAbstractItemView.ContiguousSelection)
- 		self.view.CopyCellsToClipboard = CopyTableCellsToClipboard
- 
-+		self.context_menu = ContextMenu(self.view)
-+
- 		self.ResizeColumnsToContents()
- 
- 		self.find_bar = FindBar(self, self, True)
+ class xed_state_t(Structure):
 -- 
 2.20.1
