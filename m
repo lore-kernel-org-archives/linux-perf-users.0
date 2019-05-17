@@ -1,92 +1,84 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/73] tools pci: Do not delete pcitest.sh in 'make clean'
-Date: Fri, 17 May 2019 16:35:07 -0300
-Message-ID: <20190517193611.4974-10-acme@kernel.org>
+Subject: [PATCH 10/73] perf record: Fix suggestion to get list of registers usable with --user-regs and --intr-regs
+Date: Fri, 17 May 2019 16:35:08 -0300
+Message-ID: <20190517193611.4974-11-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When running 'make -C tools clean' I noticed that a revision controlled
-file was being deleted:
+  $ perf record -h -I
 
-  $ git diff
-  diff --git a/tools/pci/pcitest.sh b/tools/pci/pcitest.sh
-  deleted file mode 100644
-  index 75ed48ff2990..000000000000
-  --- a/tools/pci/pcitest.sh
-  +++ /dev/null
-  @@ -1,72 +0,0 @@
-  -#!/bin/sh
-  -# SPDX-License-Identifier: GPL-2.0
-  -
-  -echo "BAR tests"
-  -echo
-  <SNIP>
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
 
-So I changed the make variables to fix that, testing it should produce
-the same intended result while not deleting revision controlled files.
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use -I ? to list register names
 
-  $ make O=/tmp/build/pci -C tools/pci install
-  make: Entering directory '/home/acme/git/perf/tools/pci'
-  make -f /home/acme/git/perf/tools/build/Makefile.build dir=. obj=pcitest
-  install -d -m 755 /usr/bin;		\
-  for program in /tmp/build/pci/pcitest pcitest.sh; do	\
-  	install $program /usr/bin;	\
-  done
-  install: cannot change permissions of ‘/usr/bin’: Operation not permitted
-  install: cannot create regular file '/usr/bin/pcitest': Permission denied
-  install: cannot create regular file '/usr/bin/pcitest.sh': Permission denied
-  make: *** [Makefile:46: install] Error 1
-  make: Leaving directory '/home/acme/git/perf/tools/pci'
-  $ ls -la /tmp/build/pci/pcitest
-  -rwxrwxr-x. 1 acme acme 27152 May 13 13:52 /tmp/build/pci/pcitest
-  $ /tmp/build/pci/pcitest
-  can't open PCI Endpoint Test device: No such file or directory
+  $ m
+  $ perf record -I ?
+  Workload failed: No such file or directory
+  $
+
+  After:
+
+  $ perf record -h -I
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use '-I?' to list register names
+
+  $
+  $ perf record -I?
+  available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10 R11 R12 R13 R14 R15
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use '-I?' to list register names
   $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 1ce78ce09430 ("tools: PCI: Change pcitest compiling process")
-Link: https://lkml.kernel.org/n/tip-9re6bd7eh9epi3koslkv3ocn@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: bcc84ec65ad1 ("perf record: Add ability to name registers to record")
+Link: https://lkml.kernel.org/n/tip-r0xhfhy5radmkhhcbcfs5izf@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/pci/Makefile | 4 ++--
+ tools/perf/builtin-record.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/pci/Makefile b/tools/pci/Makefile
-index 46e4c2f318c9..f64da817bc03 100644
---- a/tools/pci/Makefile
-+++ b/tools/pci/Makefile
-@@ -14,7 +14,7 @@ MAKEFLAGS += -r
- 
- CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
- 
--ALL_TARGETS := pcitest pcitest.sh
-+ALL_TARGETS := pcitest
- ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
- 
- all: $(ALL_PROGRAMS)
-@@ -44,7 +44,7 @@ clean:
- 
- install: $(ALL_PROGRAMS)
- 	install -d -m 755 $(DESTDIR)$(bindir);		\
--	for program in $(ALL_PROGRAMS); do		\
-+	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
- 		install $$program $(DESTDIR)$(bindir);	\
- 	done
- 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index c5e10552776a..d2b5a22b7249 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2017,10 +2017,10 @@ static struct option __record_options[] = {
+ 		    "use per-thread mmaps"),
+ 	OPT_CALLBACK_OPTARG('I', "intr-regs", &record.opts.sample_intr_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use -I ? to list register names", parse_regs),
++		    " use '-I?' to list register names", parse_regs),
+ 	OPT_CALLBACK_OPTARG(0, "user-regs", &record.opts.sample_user_regs, NULL, "any register",
+ 		    "sample selected machine registers on interrupt,"
+-		    " use -I ? to list register names", parse_regs),
++		    " use '-I?' to list register names", parse_regs),
+ 	OPT_BOOLEAN(0, "running-time", &record.opts.running_time,
+ 		    "Record running/enabled time of read (:S) events"),
+ 	OPT_CALLBACK('k', "clockid", &record.opts,
 -- 
 2.20.1
