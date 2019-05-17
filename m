@@ -1,78 +1,92 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/73] tools x86 uapi asm: Sync the pt_regs.h copy with the kernel sources
-Date: Fri, 17 May 2019 16:35:06 -0300
-Message-ID: <20190517193611.4974-9-acme@kernel.org>
+Subject: [PATCH 09/73] tools pci: Do not delete pcitest.sh in 'make clean'
+Date: Fri, 17 May 2019 16:35:07 -0300
+Message-ID: <20190517193611.4974-10-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
+When running 'make -C tools clean' I noticed that a revision controlled
+file was being deleted:
 
-  878068ea270e ("perf/x86: Support outputting XMM registers")
+  $ git diff
+  diff --git a/tools/pci/pcitest.sh b/tools/pci/pcitest.sh
+  deleted file mode 100644
+  index 75ed48ff2990..000000000000
+  --- a/tools/pci/pcitest.sh
+  +++ /dev/null
+  @@ -1,72 +0,0 @@
+  -#!/bin/sh
+  -# SPDX-License-Identifier: GPL-2.0
+  -
+  -echo "BAR tests"
+  -echo
+  <SNIP>
 
-That will be used in a followup patch to allow users to ask for some or
-all of those registers to be collected in certain contatexts.
+So I changed the make variables to fix that, testing it should produce
+the same intended result while not deleting revision controlled files.
 
-This silences the following perf build warning:
-
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/x86/include/uapi/asm/perf_regs.h'
-  diff -u tools/arch/x86/include/uapi/asm/perf_regs.h arch/x86/include/uapi/asm/perf_regs.h
+  $ make O=/tmp/build/pci -C tools/pci install
+  make: Entering directory '/home/acme/git/perf/tools/pci'
+  make -f /home/acme/git/perf/tools/build/Makefile.build dir=. obj=pcitest
+  install -d -m 755 /usr/bin;		\
+  for program in /tmp/build/pci/pcitest pcitest.sh; do	\
+  	install $program /usr/bin;	\
+  done
+  install: cannot change permissions of ‘/usr/bin’: Operation not permitted
+  install: cannot create regular file '/usr/bin/pcitest': Permission denied
+  install: cannot create regular file '/usr/bin/pcitest.sh': Permission denied
+  make: *** [Makefile:46: install] Error 1
+  make: Leaving directory '/home/acme/git/perf/tools/pci'
+  $ ls -la /tmp/build/pci/pcitest
+  -rwxrwxr-x. 1 acme acme 27152 May 13 13:52 /tmp/build/pci/pcitest
+  $ /tmp/build/pci/pcitest
+  can't open PCI Endpoint Test device: No such file or directory
+  $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/n/tip-6pjnnrzqt3x3n2cd6br3wk7k@git.kernel.org
+Fixes: 1ce78ce09430 ("tools: PCI: Change pcitest compiling process")
+Link: https://lkml.kernel.org/n/tip-9re6bd7eh9epi3koslkv3ocn@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/uapi/asm/perf_regs.h | 23 ++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ tools/pci/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
-index f3329cabce5c..ac67bbea10ca 100644
---- a/tools/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
-@@ -27,8 +27,29 @@ enum perf_event_x86_regs {
- 	PERF_REG_X86_R13,
- 	PERF_REG_X86_R14,
- 	PERF_REG_X86_R15,
--
-+	/* These are the limits for the GPRs. */
- 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
- 	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
-+
-+	/* These all need two bits set because they are 128bit */
-+	PERF_REG_X86_XMM0  = 32,
-+	PERF_REG_X86_XMM1  = 34,
-+	PERF_REG_X86_XMM2  = 36,
-+	PERF_REG_X86_XMM3  = 38,
-+	PERF_REG_X86_XMM4  = 40,
-+	PERF_REG_X86_XMM5  = 42,
-+	PERF_REG_X86_XMM6  = 44,
-+	PERF_REG_X86_XMM7  = 46,
-+	PERF_REG_X86_XMM8  = 48,
-+	PERF_REG_X86_XMM9  = 50,
-+	PERF_REG_X86_XMM10 = 52,
-+	PERF_REG_X86_XMM11 = 54,
-+	PERF_REG_X86_XMM12 = 56,
-+	PERF_REG_X86_XMM13 = 58,
-+	PERF_REG_X86_XMM14 = 60,
-+	PERF_REG_X86_XMM15 = 62,
-+
-+	/* These include both GPRs and XMMX registers */
-+	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
- };
- #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/tools/pci/Makefile b/tools/pci/Makefile
+index 46e4c2f318c9..f64da817bc03 100644
+--- a/tools/pci/Makefile
++++ b/tools/pci/Makefile
+@@ -14,7 +14,7 @@ MAKEFLAGS += -r
+ 
+ CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+ 
+-ALL_TARGETS := pcitest pcitest.sh
++ALL_TARGETS := pcitest
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ all: $(ALL_PROGRAMS)
+@@ -44,7 +44,7 @@ clean:
+ 
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
+-	for program in $(ALL_PROGRAMS); do		\
++	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
+ 		install $$program $(DESTDIR)$(bindir);	\
+ 	done
+ 
 -- 
 2.20.1
