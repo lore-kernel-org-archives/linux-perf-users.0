@@ -1,83 +1,235 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] tools/headers: Synchronize kernel ABI headers
-Date: Sat, 18 May 2019 19:12:57 +0200
-Message-ID: <20190518171257.GA50600@gmail.com>
-References: <20190517193611.4974-1-acme@kernel.org>
- <20190518084223.GB85914@gmail.com>
- <20190518133923.GA7969@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] pert/report: Support s390 diag event display on x86
+Date: Mon, 20 May 2019 16:42:42 +0200
+Message-ID: <20190520144242.53207-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190518133923.GA7969@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Colin King <colin.king@canonical.com>, Donald Yandt <donald.yandt@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Guo Ren <ren_guo@c-sky.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mao Han <han_mao@c-sky.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Stanislav Kozina <skozina@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Richter <tmricht@linux.ibm.com>, Tzvetomir
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Perf report fails to display s390 specific event numbered bd000
+on an x86 platform. For example on s390 this works without error:
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+[root@m35lp76 perf]# uname -m
+s390x
+[root@m35lp76 perf]# ./perf record -e rbd000 -- find / >/dev/null
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.549 MB perf.data ]
+[root@m35lp76 perf]# ./perf report -D --stdio  > /dev/null
+[root@m35lp76 perf]#
 
-> Em Sat, May 18, 2019 at 10:42:23AM +0200, Ingo Molnar escreveu:
-> > Pick up the latest v5.2-to-be kernel ABI headers and synchronize them with tooling:
-> > 
-> >  - arch/x86/entry/syscalls/syscall_64.tbl   => tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  # new syscalls
-> >  - arch/x86/include/asm/cpufeatures.h       => tools/arch/x86/include/asm/cpufeatures.h           # new CPUID flags
-> >  - include/uapi/drm/drm.h                   => tools/include/uapi/drm/drm.h                       # new 'syncobj' DRM ABI
-> >  - include/uapi/drm/i915_drm.h              => tools/include/uapi/drm/i915_drm.h                  # new extensible DRM ABI
-> >  - include/uapi/linux/fcntl.h               => tools/include/uapi/linux/fcntl.h                   # new AT_RECURSIVE
-> >  - include/uapi/linux/fs.h                  => tools/include/uapi/linux/fs.h                      # new SYNC_FILE_RANGE_WRITE_AND_WAIT
-> >  - include/uapi/linux/mount.h               => tools/include/uapi/linux/mount.h                   # new VFS system calls: fspick, fsmount, fsconfig, fsopen, move_mount, open_tree
-> >  - include/uapi/linux/sched.h               => tools/include/uapi/linux/sched.h                   # new CLONE_PIDFD
-> > 
-> > All of these are new ABI additions with no impact on existing tooling,
-> 
-> There is some impact in a number of them, for instance:
-> 
-> [acme@quaco perf]$ diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/x86/entry/syscalls/syscall_64.tbl
-> --- tools/perf/arch/x86/entry/syscalls/syscall_64.tbl	2019-05-13 14:46:03.915894924 -0300
-> +++ arch/x86/entry/syscalls/syscall_64.tbl	2019-05-18 10:27:04.273395657 -0300
-> @@ -343,6 +343,12 @@
->  332	common	statx			__x64_sys_statx
->  333	common	io_pgetevents		__x64_sys_io_pgetevents
->  334	common	rseq			__x64_sys_rseq
-> +335	common	open_tree		__x64_sys_open_tree
-> +336	common	move_mount		__x64_sys_move_mount
-> +337	common	fsopen			__x64_sys_fsopen
-> +338	common	fsconfig		__x64_sys_fsconfig
-> +339	common	fsmount			__x64_sys_fsmount
-> +340	common	fspick			__x64_sys_fspick
->  # don't use numbers 387 through 423, add new calls after the last
->  # 'common' entry
->  424	common	pidfd_send_signal	__x64_sys_pidfd_send_signal
-> [acme@quaco perf]$
-> 
-> These will enable 'perf trace' to know about these syscalls, i.e. we
-> will be able to say:
-> 
->     perf trace -e fs*
-> 
-> And have it trace just those fsopen, fsconfig, fsmount and fspick
-> syscalls (or any other that starts with fs, that is). Looking at this
-> makes one think if we should have a new syscall group like we have here:
-> 
-> [acme@quaco perf]$ ls -la tools/perf/trace/strace/groups/
-> total 16
-> drwxrwxr-x. 2 acme acme 4096 May 13 14:46 .
-> drwxrwxr-x. 3 acme acme 4096 Apr 10 10:20 ..
-> -rw-rw-r--. 1 acme acme  136 May 13 14:46 file
-> -rw-rw-r--. 1 acme acme  584 May 13 14:46 string
-> [acme@quaco perf]$ 
-> 
-> One for file oriented syscalls, the other for syscalls that operate on
-> strings (pathnames, etc).
+Transfering this perf.data file to an x86 platform and executing
+the same report command produces:
 
-Good point, I missed that!
+[root@f29 perf]# uname -m
+x86_64
+[root@f29 perf]# ./perf report -i ~/perf.data.m35lp76 --stdio
+interpreting bpf_prog_info from systems with endianity is not yet supported
+interpreting btf from systems with endianity is not yet supported
+0x8c890 [0x8]: failed to process type: 68
+Error:
+failed to process sample
 
-> So I'll check that tools/perf/trace/beauty/drm_ioctl.sh is sane wrt any
-> new additions to that header, ditto for the other headers, I'll go thru
-> them soon.
+Event bd000 generates auxiliary data which is stored in big endian
+format in the perf data file.
+This error is caused by missing endianess handling on the x86 platform
+when the data is displayed. Fix this by handling s390 auxiliary event
+data depending on the local platform endianness.
 
-Thanks!
+Output after on x86:
 
-	Ingo
+[root@f29 perf]# ./perf report -D -i ~/perf.data.m35lp76 --stdio > /dev/null
+interpreting bpf_prog_info from systems with endianity is not yet supported
+interpreting btf from systems with endianity is not yet supported
+[root@f29 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/s390-cpumsf.c | 95 ++++++++++++++++++++++++++++-------
+ 1 file changed, 77 insertions(+), 18 deletions(-)
+
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+index c215704931dc..884ac79528ff 100644
+--- a/tools/perf/util/s390-cpumsf.c
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -17,8 +17,8 @@
+  *	see Documentation/perf.data-file-format.txt.
+  * PERF_RECORD_AUXTRACE_INFO:
+  *	Defines a table of contains for PERF_RECORD_AUXTRACE records. This
+- *	record is generated during 'perf record' command. Each record contains up
+- *	to 256 entries describing offset and size of the AUXTRACE data in the
++ *	record is generated during 'perf record' command. Each record contains
++ *	up to 256 entries describing offset and size of the AUXTRACE data in the
+  *	perf.data file.
+  * PERF_RECORD_AUXTRACE_ERROR:
+  *	Indicates an error during AUXTRACE collection such as buffer overflow.
+@@ -237,10 +237,33 @@ static int s390_cpumcf_dumpctr(struct s390_cpumsf *sf,
+ 	return rc;
+ }
+ 
+-/* Display s390 CPU measurement facility basic-sampling data entry */
++/* Display s390 CPU measurement facility basic-sampling data entry
++ * Data written on s390 in big endian byte order and contains bit
++ * fields across byte boundaries.
++ */
+ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+-				   struct hws_basic_entry *basic)
++				   struct hws_basic_entry *basicp)
+ {
++	struct hws_basic_entry *basic = basicp;
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	struct hws_basic_entry local;
++	unsigned long word = be64toh(*(unsigned long *)basicp);
++
++	memset(&local, 0, sizeof(local));
++	local.def = be16toh(basicp->def);
++	local.prim_asn = word & 0xffff;
++	local.CL = word >> 30 & 0x3;
++	local.I = word >> 32 & 0x1;
++	local.AS = word >> 33 & 0x3;
++	local.P = word >> 35 & 0x1;
++	local.W = word >> 36 & 0x1;
++	local.T = word >> 37 & 0x1;
++	local.U = word >> 40 & 0xf;
++	local.ia = be64toh(basicp->ia);
++	local.gpp = be64toh(basicp->gpp);
++	local.hpp = be64toh(basicp->hpp);
++	basic = &local;
++#endif
+ 	if (basic->def != 1) {
+ 		pr_err("Invalid AUX trace basic entry [%#08zx]\n", pos);
+ 		return false;
+@@ -258,10 +281,22 @@ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
+ 	return true;
+ }
+ 
+-/* Display s390 CPU measurement facility diagnostic-sampling data entry */
++/* Display s390 CPU measurement facility diagnostic-sampling data entry.
++ * Data written on s390 in big endian byte order and contains bit
++ * fields across byte boundaries.
++ */
+ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
+-				  struct hws_diag_entry *diag)
++				  struct hws_diag_entry *diagp)
+ {
++	struct hws_diag_entry *diag = diagp;
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	struct hws_diag_entry local;
++	unsigned long word = be64toh(*(unsigned long *)diagp);
++
++	local.def = be16toh(diagp->def);
++	local.I = word >> 32 & 0x1;
++	diag = &local;
++#endif
+ 	if (diag->def < S390_CPUMSF_DIAG_DEF_FIRST) {
+ 		pr_err("Invalid AUX trace diagnostic entry [%#08zx]\n", pos);
+ 		return false;
+@@ -272,35 +307,51 @@ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
+ }
+ 
+ /* Return TOD timestamp contained in an trailer entry */
+-static unsigned long long trailer_timestamp(struct hws_trailer_entry *te)
++static unsigned long long trailer_timestamp(struct hws_trailer_entry *te,
++					    int idx)
+ {
+ 	/* te->t set: TOD in STCKE format, bytes 8-15
+ 	 * to->t not set: TOD in STCK format, bytes 0-7
+ 	 */
+ 	unsigned long long ts;
+ 
+-	memcpy(&ts, &te->timestamp[te->t], sizeof(ts));
+-	return ts;
++	memcpy(&ts, &te->timestamp[idx], sizeof(ts));
++	return be64toh(ts);
+ }
+ 
+ /* Display s390 CPU measurement facility trailer entry */
+ static bool s390_cpumsf_trailer_show(const char *color, size_t pos,
+ 				     struct hws_trailer_entry *te)
+ {
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	struct hws_trailer_entry local;
++
++	memset(&local, 0, sizeof(local));
++	local.f = be64toh(te->flags) >> 63 & 0x1;
++	local.a = be64toh(te->flags) >> 62 & 0x1;
++	local.t = be64toh(te->flags) >> 61 & 0x1;
++	local.bsdes = be16toh((be64toh(te->flags) >> 16 & 0xffff));
++	local.dsdes = be16toh((be64toh(te->flags) & 0xffff));
++	memcpy(&local.timestamp, te->timestamp, sizeof(te->timestamp));
++	local.overflow = be64toh(te->overflow);
++	local.clock_base = be64toh(te->progusage[0]) >> 63 & 1;
++	local.progusage2 = be64toh(te->progusage2);
++	te = &local;
++#endif
+ 	if (te->bsdes != sizeof(struct hws_basic_entry)) {
+ 		pr_err("Invalid AUX trace trailer entry [%#08zx]\n", pos);
+ 		return false;
+ 	}
+ 	color_fprintf(stdout, color, "    [%#08zx] Trailer %c%c%c bsdes:%d"
+ 		      " dsdes:%d Overflow:%lld Time:%#llx\n"
+-		      "\t\tC:%d TOD:%#lx 1:%#llx 2:%#llx\n",
++		      "\t\tC:%d TOD:%#lx\n",
+ 		      pos,
+ 		      te->f ? 'F' : ' ',
+ 		      te->a ? 'A' : ' ',
+ 		      te->t ? 'T' : ' ',
+ 		      te->bsdes, te->dsdes, te->overflow,
+-		      trailer_timestamp(te), te->clock_base, te->progusage2,
+-		      te->progusage[0], te->progusage[1]);
++		      trailer_timestamp(te, te->clock_base),
++		      te->clock_base, te->progusage2);
+ 	return true;
+ }
+ 
+@@ -327,13 +378,13 @@ static bool s390_cpumsf_validate(int machine_type,
+ 	*dsdes = *bsdes = 0;
+ 	if (len & (S390_CPUMSF_PAGESZ - 1))	/* Illegal size */
+ 		return false;
+-	if (basic->def != 1)		/* No basic set entry, must be first */
++	if (be16toh(basic->def) != 1)	/* No basic set entry, must be first */
+ 		return false;
+ 	/* Check for trailer entry at end of SDB */
+ 	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
+ 					      - sizeof(*te));
+-	*bsdes = te->bsdes;
+-	*dsdes = te->dsdes;
++	*bsdes = be16toh(te->bsdes);
++	*dsdes = be16toh(te->dsdes);
+ 	if (!te->bsdes && !te->dsdes) {
+ 		/* Very old hardware, use CPUID */
+ 		switch (machine_type) {
+@@ -495,19 +546,27 @@ static bool s390_cpumsf_make_event(size_t pos,
+ static unsigned long long get_trailer_time(const unsigned char *buf)
+ {
+ 	struct hws_trailer_entry *te;
+-	unsigned long long aux_time;
++	unsigned long long aux_time, progusage2;
++	bool clock_base;
+ 
+ 	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
+ 					      - sizeof(*te));
+ 
+-	if (!te->clock_base)	/* TOD_CLOCK_BASE value missing */
++#if __BYTE_ORDER == __LITTLE_ENDIAN
++	clock_base = be64toh(te->progusage[0]) >> 63 & 0x1;
++	progusage2 = be64toh(te->progusage[1]);
++#else
++	clock_base = te->clock_base;
++	progusage2 = te->progusage2;
++#endif
++	if (!clock_base)	/* TOD_CLOCK_BASE value missing */
+ 		return 0;
+ 
+ 	/* Correct calculation to convert time stamp in trailer entry to
+ 	 * nano seconds (taken from arch/s390 function tod_to_ns()).
+ 	 * TOD_CLOCK_BASE is stored in trailer entry member progusage2.
+ 	 */
+-	aux_time = trailer_timestamp(te) - te->progusage2;
++	aux_time = trailer_timestamp(te, clock_base) - progusage2;
+ 	aux_time = (aux_time >> 9) * 125 + (((aux_time & 0x1ff) * 125) >> 9);
+ 	return aux_time;
+ }
+-- 
+2.19.1
