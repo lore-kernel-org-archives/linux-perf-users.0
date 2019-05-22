@@ -1,36 +1,100 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 0/3] Fix OOM in perf report on s390
-Date: Wed, 22 May 2019 16:45:58 +0200
-Message-ID: <20190522144601.50763-1-tmricht@linux.ibm.com>
+Subject: [PATCH 3/3] perf record: Fix s390 missing module symbol and warning for non-root users
+Date: Wed, 22 May 2019 16:46:01 +0200
+Message-ID: <20190522144601.50763-4-tmricht@linux.ibm.com>
+References: <20190522144601.50763-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190522144601.50763-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: brueckner@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch set fixes OOM scenarios on s390 when commands
-perf top or perf report are executed. This often happens
-when debuginfo packages are not installed. Root users
-and non-root users are both affected.
+Command 'perf record' and 'perf report' on a system without kernel
+debuginfo packages uses /proc/kallsyms and /proc/modules to find
+addresses for kernel and module symbols. On x86 this works for root
+and non-root users.
 
-Patch 1: Do not allocate memory for histograms when
-         the symbol is not of type function.
-Patch 2: Reduce the gap between kernel end and and first
-         module start address on perf record.
-Patch 3: Create module maps for non-root user during
-         perf record on s390.
+On s390, when invoked as non-root user, many of the following warnings
+are shown and module symbols are missing:
 
-Thomas Richter (3):
-  perf report: Fix OOM error in TUI mode on s390
-  perf record: Fix kallsym map size for s390
-  perf record: Fix s390 missing module symbol and warning for non-root
-    users
+    proc/{kallsyms,modules} inconsistency while looking for
+        "[sha1_s390]" module!
 
- tools/perf/arch/s390/util/machine.c |  9 ++++++---
- tools/perf/util/annotate.c          |  2 +-
- tools/perf/util/event.c             |  4 ++--
- tools/perf/util/machine.c           | 29 +++++++++++++++++++++++------
- 4 files changed, 32 insertions(+), 12 deletions(-)
+Command 'perf record' creates a list of module start addresses by
+parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
+record for the kernel and each module. The following function call
+sequence is executed:
 
+  machine__create_kernel_maps
+    machine__create_module
+      modules__parse
+        machine__create_module --> for each line in /proc/modules
+          arch__fix_module_text_start
+
+Function arch__fix_module_text_start() is s390 specific. It opens
+file /sys/module/<name>/sections/.text to extract the module's .text
+section start address. On s390 the module loader prepends a header
+before the first section, whereas on x86 the module's text section
+address is identical the the module's load address.
+
+However module section files are root readable only. For non-root the
+read operation fails and machine__create_module() returns an error.
+Command perf record does not generate any PERF_RECORD_MMAP record
+for loaded modules. Later command perf report complains about missing
+module maps.
+
+To fix this function arch__fix_module_text_start() always returns
+success. For root users there is no change, for non-root users
+the module's load address is used as module's text start address
+(the prepended header then counts as part of the text section).
+
+This enable non-root users to use module symbols and avoid the
+warning when perf report is executed.
+
+Output before:
+ [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+ 0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+
+Output after:
+ [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+ 0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+ 0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
+ 0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
+ 0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/arch/s390/util/machine.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index 0b2054007314..a19690a17291 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -5,16 +5,19 @@
+ #include "util.h"
+ #include "machine.h"
+ #include "api/fs/fs.h"
++#include "debug.h"
+ 
+ int arch__fix_module_text_start(u64 *start, const char *name)
+ {
++	u64 m_start = *start;
+ 	char path[PATH_MAX];
+ 
+ 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
+ 				(int)strlen(name) - 2, name + 1);
+-
+-	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
+-		return -1;
++	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
++		pr_debug2("Using module %s start:%#lx\n", path, m_start);
++		*start = m_start;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.19.1
