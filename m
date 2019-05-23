@@ -1,68 +1,115 @@
-From: Thomas-Mich Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH 1/3] perf report: Fix OOM error in TUI mode on s390
-Date: Thu, 23 May 2019 10:12:45 +0200
-Message-ID: <872a9844-2464-d92d-21b9-311174c0bae4@linux.ibm.com>
-References: <20190522144601.50763-1-tmricht@linux.ibm.com>
- <20190522144601.50763-2-tmricht@linux.ibm.com>
- <20190522180812.GI30271@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCHv2] perf report: Fix OOM error in TUI mode on s390
+Date: Thu, 23 May 2019 10:25:21 +0200
+Message-ID: <20190523082521.78080-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190522180812.GI30271@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, heiko.carstens@de.ibm.com
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.vnet.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 5/22/19 8:08 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 22, 2019 at 04:45:59PM +0200, Thomas Richter escreveu:
->
+Debugging a OOM error using the TUI interface revealed this issue
+on s390:
 
+[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
+....
+00000001119b7158 B radix_tree_node_cachep
+00000001119b8000 B __bss_stop
+00000001119b8000 B _end
+000003ff80002850 t autofs_mount	[autofs4]
+000003ff80002868 t autofs_show_options	[autofs4]
+000003ff80002a98 t autofs_evict_inode	[autofs4]
+....
 
-.....
+There is a huge gap between the last kernel symbol
+__bss_stop/_end and the first kernel module symbol
+autofs_mount (from autofs4 module).
 
->>
->> This size kills the TUI interface when executing the following
->> code:
->>
->>   process_sample_event()
->>     hist_entry_iter__add()
->>       hist_iter__report_callback()
->>         hist_entry__inc_addr_samples()
->>           symbol__inc_addr_samples(symbol = __bss_stop)
->>             symbol__cycles_hist()
->>                annotated_source__alloc_histograms(...,
->> 				                symbol__size(sym),
->> 		                                ...)
->>
->> This function allocates memory to save sample histograms.
->> The symbol_size() marco is defined as sym->end - sym->start, which
->> results in above value of 0x3fe6e64a850 bytes and
->> the call to calloc() in annotated_source__alloc_histograms() fails.
-> 
-> Humm, why are we getting samples in that area? Is it some JITted thing
-> like BPF? What is it?
-> 
-> Why not just not consider the calloc failure as fatal, and when/if the
-> user asks for annotation on such symbol, tell the user that it wasn't
-> possible to allocate N bytes for it?
-> 
-> - Arnaldo
+After reading the kernel symbol table via functions:
 
+ dso__load()
+ +--> dso__load_kernel_sym()
+      +--> dso__load_kallsyms()
+	   +--> __dso_load_kallsyms()
+	        +--> symbols__fixup_end()
 
-I have not debugged why this sample address was recorded. BPF code was not
-running.
+the symbol __bss_stop has a start address of 1119b8000 and
+an end address of 3ff80002850, as can be seen by this debug statement:
 
-I have no problem with making calloc() failure no fatal, however we might
-still allocate large memory...
+  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
 
-I will send a new patch.
+The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
+It is the last kernel symbol and fills up the space until
+the first kernel module symbol.
 
+This size kills the TUI interface when executing the following
+code:
+
+  process_sample_event()
+    hist_entry_iter__add()
+      hist_iter__report_callback()
+        hist_entry__inc_addr_samples()
+          symbol__inc_addr_samples(symbol = __bss_stop)
+            symbol__cycles_hist()
+               annotated_source__alloc_histograms(...,
+				                symbol__size(sym),
+		                                ...)
+
+This function allocates memory to save sample histograms.
+The symbol_size() marco is defined as sym->end - sym->start, which
+results in above value of 0x3fe6e64a850 bytes and
+the call to calloc() in annotated_source__alloc_histograms() fails.
+
+The histgram memory allocation might fail, make this failure
+no-fatal and continue processing.
+
+Output before:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
+		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
+		func: 0
+problem adding hist entry, skipping event
+0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
+[tmricht@m83lp54 perf]$
+
+Output after:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
+   symbol__hists notes->src:0x2aa2a70 nr_hists:1
+   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
+   __symbol__inc_addr_samples: addr=0x11094c69e
+   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
+   	=> nr_samples: 1, period: 526008
+[tmricht@m83lp54 perf]$
+
+There is no error about failed memory allocation and the TUI interface
+shows all entries.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+---
+ tools/perf/util/annotate.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 0b8573fd9b05..15be9d271f55 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -932,9 +932,8 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
+ 	if (sym == NULL)
+ 		return 0;
+ 	src = symbol__hists(sym, evsel->evlist->nr_entries);
+-	if (src == NULL)
+-		return -ENOMEM;
+-	return __symbol__inc_addr_samples(sym, map, src, evsel->idx, addr, sample);
++	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
++						   addr, sample) : 0;
+ }
+ 
+ static int symbol__account_cycles(u64 addr, u64 start,
 -- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.19.1
