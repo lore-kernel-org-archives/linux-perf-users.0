@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/44] perf session: Add missing swap ops for namespace events
-Date: Mon, 27 May 2019 19:37:13 -0300
-Message-ID: <20190527223730.11474-28-acme@kernel.org>
+Subject: [PATCH 28/44] perf top: Add --namespaces option
+Date: Mon, 27 May 2019 19:37:14 -0300
+Message-ID: <20190527223730.11474-29-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,57 +14,58 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Namhyung Kim <namhyung@kernel.org>
 
-In case it's recorded in a different arch.
+Since 'perf record' already have this option, let's have it for 'perf top'
+as well.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Hari Bathini <hbathini@linux.vnet.ibm.com> <hbathini@linux.vnet.ibm.com>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Krister Johansen <kjlx@templeofstupid.com>
-Fixes: f3b3614a284d ("perf tools: Add PERF_RECORD_NAMESPACES to include namespaces related info")
-Link: http://lkml.kernel.org/r/20190522053250.207156-3-namhyung@kernel.org
+Link: http://lkml.kernel.org/r/20190522053250.207156-4-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/perf/Documentation/perf-top.txt | 5 +++++
+ tools/perf/builtin-top.c              | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2310a1752983..54cf163347f7 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -647,6 +647,26 @@ static void perf_event__throttle_swap(union perf_event *event,
- 		swap_sample_id_all(event, &event->throttle + 1);
- }
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 44d89fb9c788..cfea87c6f38e 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -262,6 +262,11 @@ Default is to monitor all CPUS.
+ 	The number of threads to run when synthesizing events for existing processes.
+ 	By default, the number of threads equals to the number of online CPUs.
  
-+static void perf_event__namespaces_swap(union perf_event *event,
-+					bool sample_id_all)
-+{
-+	u64 i;
++--namespaces::
++	Record events of type PERF_RECORD_NAMESPACES and display it with the
++	'cgroup_id' sort key.
 +
-+	event->namespaces.pid		= bswap_32(event->namespaces.pid);
-+	event->namespaces.tid		= bswap_32(event->namespaces.tid);
-+	event->namespaces.nr_namespaces	= bswap_64(event->namespaces.nr_namespaces);
 +
-+	for (i = 0; i < event->namespaces.nr_namespaces; i++) {
-+		struct perf_ns_link_info *ns = &event->namespaces.link_info[i];
+ INTERACTIVE PROMPTING KEYS
+ --------------------------
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index fbbb0da43abb..31d78d874fc7 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1208,6 +1208,9 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 	init_process_thread(top);
+ 
++	if (opts->record_namespaces)
++		top->tool.namespace_events = true;
 +
-+		ns->dev = bswap_64(ns->dev);
-+		ns->ino = bswap_64(ns->ino);
-+	}
-+
-+	if (sample_id_all)
-+		swap_sample_id_all(event, &event->namespaces.link_info[i]);
-+}
-+
- static u8 revbyte(u8 b)
- {
- 	int rev = (b >> 4) | ((b & 0xf) << 4);
-@@ -887,6 +907,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
- 	[PERF_RECORD_LOST_SAMPLES]	  = perf_event__all64_swap,
- 	[PERF_RECORD_SWITCH]		  = perf_event__switch_swap,
- 	[PERF_RECORD_SWITCH_CPU_WIDE]	  = perf_event__switch_swap,
-+	[PERF_RECORD_NAMESPACES]	  = perf_event__namespaces_swap,
- 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
- 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
- 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+ 	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+ 						&top->session->machines.host,
+ 						&top->record_opts);
+@@ -1500,6 +1503,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
+ 			"number of thread to run event synthesize"),
++	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
++		    "Record namespaces events"),
+ 	OPT_END()
+ 	};
+ 	struct perf_evlist *sb_evlist = NULL;
 -- 
 2.20.1
