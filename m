@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/44] perf trace beauty clone: Handle CLONE_PIDFD
-Date: Mon, 27 May 2019 19:37:06 -0300
-Message-ID: <20190527223730.11474-21-acme@kernel.org>
+Subject: [PATCH 21/44] tools headers UAPI: Sync linux/fs.h with the kernel
+Date: Mon, 27 May 2019 19:37:07 -0300
+Message-ID: <20190527223730.11474-22-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,44 +10,49 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Christian Brauner <christian@brauner.io>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Amir Goldstein <amir73il@gmail.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-In addition to the older flags. This will allow something like this to
-be implemented in 'perf trace"
+To pick up the changes in:
 
-  perf trace -e clone/PIDFD in flags/
+  c553ea4fdf27 ("fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL writeback")
 
-I.e. ask for strace like tracing, system wide, looking for 'clone'
-syscalls that have the CLONE_PIDFD bit set in the 'flags' arg.
+That should be used to beautify the 'sync_file_range' syscall 'flags'
+arg.
 
-For now we'll just see PIDFD if it is set in the 'flags' arg.
+This silences this perf build warning:
 
-Cc: Christian Brauner <christian@brauner.io>
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
+  diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Amir Goldstein <amir73il@gmail.com>
 Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-drq9h7s8gcv8b87064fp6lb0@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-at3uoqcvmqdkwaysmvbj1wpv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/clone.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/uapi/linux/fs.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
-index 6eb9a6636171..1a8d3be2030e 100644
---- a/tools/perf/trace/beauty/clone.c
-+++ b/tools/perf/trace/beauty/clone.c
-@@ -25,6 +25,7 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size,
- 	P_FLAG(FS);
- 	P_FLAG(FILES);
- 	P_FLAG(SIGHAND);
-+	P_FLAG(PIDFD);
- 	P_FLAG(PTRACE);
- 	P_FLAG(VFORK);
- 	P_FLAG(PARENT);
+diff --git a/tools/include/uapi/linux/fs.h b/tools/include/uapi/linux/fs.h
+index 121e82ce296b..59c71fa8c553 100644
+--- a/tools/include/uapi/linux/fs.h
++++ b/tools/include/uapi/linux/fs.h
+@@ -320,6 +320,9 @@ struct fscrypt_key {
+ #define SYNC_FILE_RANGE_WAIT_BEFORE	1
+ #define SYNC_FILE_RANGE_WRITE		2
+ #define SYNC_FILE_RANGE_WAIT_AFTER	4
++#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
++					 SYNC_FILE_RANGE_WAIT_BEFORE | \
++					 SYNC_FILE_RANGE_WAIT_AFTER)
+ 
+ /*
+  * Flags for preadv2/pwritev2:
 -- 
 2.20.1
