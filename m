@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/44] tools headers UAPI: Sync linux/fs.h with the kernel
-Date: Mon, 27 May 2019 19:37:07 -0300
-Message-ID: <20190527223730.11474-22-acme@kernel.org>
+Subject: [PATCH 22/44] perf beauty: Add generator for sync_file_range's 'flags' arg values
+Date: Mon, 27 May 2019 19:37:08 -0300
+Message-ID: <20190527223730.11474-23-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,17 +15,17 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up the changes in:
+  $ tools/perf/trace/beauty/sync_file_range.sh
+  static const char *sync_file_range_flags[] = {
+          [ilog2(1) + 1] = "WAIT_BEFORE",
+          [ilog2(2) + 1] = "WRITE",
+          [ilog2(4) + 1] = "WAIT_AFTER",
+  };
+  $
 
-  c553ea4fdf27 ("fs/sync.c: sync_file_range(2) may use WB_SYNC_ALL writeback")
-
-That should be used to beautify the 'sync_file_range' syscall 'flags'
-arg.
-
-This silences this perf build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
-  diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+When all are the above are present, then we have something called
+SYNC_FILE_RANGE_WRITE_AND_WAIT, that will be special cased in the
+upcoming scnprintf beautifier for this flags arg.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Amir Goldstein <amir73il@gmail.com>
@@ -34,25 +34,35 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-at3uoqcvmqdkwaysmvbj1wpv@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-uf2vd7bc8fkz65j7yit8dh84@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/fs.h | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/trace/beauty/sync_file_range.sh | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100755 tools/perf/trace/beauty/sync_file_range.sh
 
-diff --git a/tools/include/uapi/linux/fs.h b/tools/include/uapi/linux/fs.h
-index 121e82ce296b..59c71fa8c553 100644
---- a/tools/include/uapi/linux/fs.h
-+++ b/tools/include/uapi/linux/fs.h
-@@ -320,6 +320,9 @@ struct fscrypt_key {
- #define SYNC_FILE_RANGE_WAIT_BEFORE	1
- #define SYNC_FILE_RANGE_WRITE		2
- #define SYNC_FILE_RANGE_WAIT_AFTER	4
-+#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
-+					 SYNC_FILE_RANGE_WAIT_BEFORE | \
-+					 SYNC_FILE_RANGE_WAIT_AFTER)
- 
- /*
-  * Flags for preadv2/pwritev2:
+diff --git a/tools/perf/trace/beauty/sync_file_range.sh b/tools/perf/trace/beauty/sync_file_range.sh
+new file mode 100755
+index 000000000000..7a9282d04e44
+--- /dev/null
++++ b/tools/perf/trace/beauty/sync_file_range.sh
+@@ -0,0 +1,17 @@
++#!/bin/sh
++# SPDX-License-Identifier: LGPL-2.1
++
++if [ $# -ne 1 ] ; then
++	linux_header_dir=tools/include/uapi/linux
++else
++	linux_header_dir=$1
++fi
++
++linux_fs=${linux_header_dir}/fs.h
++
++printf "static const char *sync_file_range_flags[] = {\n"
++regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+SYNC_FILE_RANGE_([[:alnum:]_]+)[[:space:]]+([[:xdigit:]]+)[[:space:]]*.*'
++egrep $regex ${linux_fs} | \
++	sed -r "s/$regex/\2 \1/g"	| \
++	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n"
++printf "};\n"
 -- 
 2.20.1
