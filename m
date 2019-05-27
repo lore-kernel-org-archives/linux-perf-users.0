@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 42/44] perf version: Append 12 git SHA chars to the version string
-Date: Mon, 27 May 2019 19:37:28 -0300
-Message-ID: <20190527223730.11474-43-acme@kernel.org>
+Subject: [PATCH 43/44] perf record: Fix s390 missing module symbol and warning for non-root users
+Date: Mon, 27 May 2019 19:37:29 -0300
+Message-ID: <20190527223730.11474-44-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,47 +9,101 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-Bumping it from just 4:
+Command 'perf record' and 'perf report' on a system without kernel
+debuginfo packages uses /proc/kallsyms and /proc/modules to find
+addresses for kernel and module symbols. On x86 this works for root and
+non-root users.
 
-Before:
+On s390, when invoked as non-root user, many of the following warnings
+are shown and module symbols are missing:
 
-  $ perf -v
-  perf version 5.2.rc1.g80978f
-  $
+    proc/{kallsyms,modules} inconsistency while looking for
+        "[sha1_s390]" module!
 
-After:
+Command 'perf record' creates a list of module start addresses by
+parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
+record for the kernel and each module. The following function call
+sequence is executed:
 
-  $ perf -v
-  perf version 5.2.rc1.g80978fc864c5
-  $
+  machine__create_kernel_maps
+    machine__create_module
+      modules__parse
+        machine__create_module --> for each line in /proc/modules
+          arch__fix_module_text_start
 
-Requested-by: Ingo Molnar <mingo@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-p4yun2nxlo7eeeohyx5v4kw7@git.kernel.org
+Function arch__fix_module_text_start() is s390 specific. It opens
+file /sys/module/<name>/sections/.text to extract the module's .text
+section start address. On s390 the module loader prepends a header
+before the first section, whereas on x86 the module's text section
+address is identical the the module's load address.
+
+However module section files are root readable only. For non-root the
+read operation fails and machine__create_module() returns an error.
+Command perf record does not generate any PERF_RECORD_MMAP record
+for loaded modules. Later command perf report complains about missing
+module maps.
+
+To fix this function arch__fix_module_text_start() always returns
+success. For root users there is no change, for non-root users
+the module's load address is used as module's text start address
+(the prepended header then counts as part of the text section).
+
+This enable non-root users to use module symbols and avoid the
+warning when perf report is executed.
+
+Output before:
+
+  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+
+Output after:
+
+  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+  0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
+  0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
+  0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190522144601.50763-4-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/PERF-VERSION-GEN | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/arch/s390/util/machine.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
-index 3802cee5e188..59241ff342be 100755
---- a/tools/perf/util/PERF-VERSION-GEN
-+++ b/tools/perf/util/PERF-VERSION-GEN
-@@ -19,7 +19,7 @@ TAG=
- if test -d ../../.git -o -f ../../.git
- then
- 	TAG=$(git describe --abbrev=0 --match "v[0-9].[0-9]*" 2>/dev/null )
--	CID=$(git log -1 --abbrev=4 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
-+	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
- elif test -f ../../PERF-VERSION-FILE
- then
- 	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index 0b2054007314..a19690a17291 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -5,16 +5,19 @@
+ #include "util.h"
+ #include "machine.h"
+ #include "api/fs/fs.h"
++#include "debug.h"
+ 
+ int arch__fix_module_text_start(u64 *start, const char *name)
+ {
++	u64 m_start = *start;
+ 	char path[PATH_MAX];
+ 
+ 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
+ 				(int)strlen(name) - 2, name + 1);
+-
+-	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
+-		return -1;
++	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
++		pr_debug2("Using module %s start:%#lx\n", path, m_start);
++		*start = m_start;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
