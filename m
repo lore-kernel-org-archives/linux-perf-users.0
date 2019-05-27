@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/44] tools headers UAPI: Sync linux/sched.h with the kernel
-Date: Mon, 27 May 2019 19:37:05 -0300
-Message-ID: <20190527223730.11474-20-acme@kernel.org>
+Subject: [PATCH 20/44] perf trace beauty clone: Handle CLONE_PIDFD
+Date: Mon, 27 May 2019 19:37:06 -0300
+Message-ID: <20190527223730.11474-21-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,46 +10,44 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527223730.11474-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Christian Brauner <christian@brauner.io>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Christian Brauner <christian@brauner.io>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick up the change in:
+In addition to the older flags. This will allow something like this to
+be implemented in 'perf trace"
 
-  b3e583825266 ("clone: add CLONE_PIDFD")
+  perf trace -e clone/PIDFD in flags/
 
-This requires changes in the 'perf trace' beautification routines for
-the 'clone' syscall args, which is done in a followup patch.
+I.e. ask for strace like tracing, system wide, looking for 'clone'
+syscalls that have the CLONE_PIDFD bit set in the 'flags' arg.
 
-This silences the following perf build warning:
+For now we'll just see PIDFD if it is set in the 'flags' arg.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
-
+Cc: Christian Brauner <christian@brauner.io>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Christian Brauner <christian@brauner.io>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-lenja6gmy26dkt0ybk747qgq@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-drq9h7s8gcv8b87064fp6lb0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/sched.h | 1 +
+ tools/perf/trace/beauty/clone.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index 22627f80063e..ed4ee170bee2 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -10,6 +10,7 @@
- #define CLONE_FS	0x00000200	/* set if fs info shared between processes */
- #define CLONE_FILES	0x00000400	/* set if open files shared between processes */
- #define CLONE_SIGHAND	0x00000800	/* set if signal handlers and blocked signals shared */
-+#define CLONE_PIDFD	0x00001000	/* set if a pidfd should be placed in parent */
- #define CLONE_PTRACE	0x00002000	/* set if we want to let tracing continue on the child too */
- #define CLONE_VFORK	0x00004000	/* set if the parent wants the child to wake it up on mm_release */
- #define CLONE_PARENT	0x00008000	/* set if we want to have the same parent as the cloner */
+diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
+index 6eb9a6636171..1a8d3be2030e 100644
+--- a/tools/perf/trace/beauty/clone.c
++++ b/tools/perf/trace/beauty/clone.c
+@@ -25,6 +25,7 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size,
+ 	P_FLAG(FS);
+ 	P_FLAG(FILES);
+ 	P_FLAG(SIGHAND);
++	P_FLAG(PIDFD);
+ 	P_FLAG(PTRACE);
+ 	P_FLAG(VFORK);
+ 	P_FLAG(PARENT);
 -- 
 2.20.1
