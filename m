@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/44] perf dso: Simplify dso_cache__read function
-Date: Mon, 27 May 2019 19:37:18 -0300
-Message-ID: <20190527223730.11474-33-acme@kernel.org>
+Subject: [PATCH 33/44] perf dso: Add BPF DSO read and size hooks
+Date: Mon, 27 May 2019 19:37:19 -0300
+Message-ID: <20190527223730.11474-34-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-There's no need for the while loop now, also we can connect two (ret >
-0) condition legs together.
+Add BPF related code into DSO reading paths to return size (bpf_size)
+and read the BPF code (bpf_read).
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Song Liu <songliubraving@fb.com>
@@ -24,49 +24,94 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
 Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190508132010.14512-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190508132010.14512-5-jolsa@kernel.org
+[ Use uintptr_t when casting from u64 to u8 pointers ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ tools/perf/util/dso.c | 49 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 7734f50a6912..1e6a045adb8c 100644
+index 1e6a045adb8c..1fb18292c2d3 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -823,25 +823,20 @@ static ssize_t
- dso_cache__read(struct dso *dso, struct machine *machine,
- 		u64 offset, u8 *data, ssize_t size)
+@@ -9,6 +9,8 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <libgen.h>
++#include <bpf/libbpf.h>
++#include "bpf-event.h"
+ #include "compress.h"
+ #include "namespaces.h"
+ #include "path.h"
+@@ -706,6 +708,44 @@ bool dso__data_status_seen(struct dso *dso, enum dso_data_status_seen by)
+ 	return false;
+ }
+ 
++static ssize_t bpf_read(struct dso *dso, u64 offset, char *data)
++{
++	struct bpf_prog_info_node *node;
++	ssize_t size = DSO__DATA_CACHE_SIZE;
++	u64 len;
++	u8 *buf;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	len = node->info_linear->info.jited_prog_len;
++	buf = (u8 *)(uintptr_t)node->info_linear->info.jited_prog_insns;
++
++	if (offset >= len)
++		return -1;
++
++	size = (ssize_t)min(len - offset, (u64)size);
++	memcpy(data, buf + offset, size);
++	return size;
++}
++
++static int bpf_size(struct dso *dso)
++{
++	struct bpf_prog_info_node *node;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	dso->data.file_size = node->info_linear->info.jited_prog_len;
++	return 0;
++}
++
+ static void
+ dso_cache__free(struct dso *dso)
  {
-+	u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
- 	struct dso_cache *cache;
- 	struct dso_cache *old;
- 	ssize_t ret;
+@@ -832,7 +872,11 @@ dso_cache__read(struct dso *dso, struct machine *machine,
+ 	if (!cache)
+ 		return -ENOMEM;
  
--	do {
--		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
--
--		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
--		if (!cache)
--			return -ENOMEM;
--
--		ret = file_read(dso, machine, cache_offset, cache->data);
-+	cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
-+	if (!cache)
-+		return -ENOMEM;
- 
-+	ret = file_read(dso, machine, cache_offset, cache->data);
-+	if (ret > 0) {
+-	ret = file_read(dso, machine, cache_offset, cache->data);
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		ret = bpf_read(dso, cache_offset, cache->data);
++	else
++		ret = file_read(dso, machine, cache_offset, cache->data);
++
+ 	if (ret > 0) {
  		cache->offset = cache_offset;
  		cache->size   = ret;
--	} while (0);
--
+@@ -941,6 +985,9 @@ int dso__data_file_size(struct dso *dso, struct machine *machine)
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR)
+ 		return -1;
  
--	if (ret > 0) {
- 		old = dso_cache__insert(dso, cache);
- 		if (old) {
- 			/* we lose the race */
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return bpf_size(dso);
++
+ 	return file_size(dso, machine);
+ }
+ 
 -- 
 2.20.1
