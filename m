@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/44] perf dso: Separate generic code in dso__data_file_size()
-Date: Mon, 27 May 2019 19:37:16 -0300
-Message-ID: <20190527223730.11474-31-acme@kernel.org>
+Subject: [PATCH 31/44] perf dso: Separate generic code in dso_cache__read
+Date: Mon, 27 May 2019 19:37:17 -0300
+Message-ID: <20190527223730.11474-32-acme@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Moving file specific code in dso__data_file_size function into separate
-file_size function. I'll add bpf specific code in following patches.
+Move the file specific code in the dso_cache__read function to a
+separate file_read function. I'll add BPF specific code in the following
+patches.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Acked-by: Song Liu <songliubraving@fb.com>
@@ -25,53 +26,87 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stanislav Fomichev <sdf@google.com>
-Link: http://lkml.kernel.org/r/20190508132010.14512-2-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190508132010.14512-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ tools/perf/util/dso.c | 48 ++++++++++++++++++++++++-------------------
+ 1 file changed, 27 insertions(+), 21 deletions(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index e059976d9d93..cb6199c1390a 100644
+index cb6199c1390a..7734f50a6912 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -898,18 +898,12 @@ static ssize_t cached_read(struct dso *dso, struct machine *machine,
- 	return r;
+@@ -794,6 +794,31 @@ dso_cache__memcpy(struct dso_cache *cache, u64 offset,
+ 	return cache_size;
  }
  
--int dso__data_file_size(struct dso *dso, struct machine *machine)
-+static int file_size(struct dso *dso, struct machine *machine)
- {
- 	int ret = 0;
- 	struct stat st;
- 	char sbuf[STRERR_BUFSIZE];
- 
--	if (dso->data.file_size)
--		return 0;
--
--	if (dso->data.status == DSO_DATA_STATUS_ERROR)
--		return -1;
--
- 	pthread_mutex_lock(&dso__data_open_lock);
- 
- 	/*
-@@ -938,6 +932,17 @@ int dso__data_file_size(struct dso *dso, struct machine *machine)
- 	return ret;
- }
- 
-+int dso__data_file_size(struct dso *dso, struct machine *machine)
++static ssize_t file_read(struct dso *dso, struct machine *machine,
++			 u64 offset, char *data)
 +{
-+	if (dso->data.file_size)
-+		return 0;
++	ssize_t ret;
 +
-+	if (dso->data.status == DSO_DATA_STATUS_ERROR)
-+		return -1;
++	pthread_mutex_lock(&dso__data_open_lock);
 +
-+	return file_size(dso, machine);
++	/*
++	 * dso->data.fd might be closed if other thread opened another
++	 * file (dso) due to open file limit (RLIMIT_NOFILE).
++	 */
++	try_to_open_dso(dso, machine);
++
++	if (dso->data.fd < 0) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		ret = -errno;
++		goto out;
++	}
++
++	ret = pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset);
++out:
++	pthread_mutex_unlock(&dso__data_open_lock);
++	return ret;
 +}
 +
- /**
-  * dso__data_size - Return dso data size
-  * @dso: dso object
+ static ssize_t
+ dso_cache__read(struct dso *dso, struct machine *machine,
+ 		u64 offset, u8 *data, ssize_t size)
+@@ -803,37 +828,18 @@ dso_cache__read(struct dso *dso, struct machine *machine,
+ 	ssize_t ret;
+ 
+ 	do {
+-		u64 cache_offset;
++		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
+ 
+ 		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
+ 		if (!cache)
+ 			return -ENOMEM;
+ 
+-		pthread_mutex_lock(&dso__data_open_lock);
+-
+-		/*
+-		 * dso->data.fd might be closed if other thread opened another
+-		 * file (dso) due to open file limit (RLIMIT_NOFILE).
+-		 */
+-		try_to_open_dso(dso, machine);
+-
+-		if (dso->data.fd < 0) {
+-			ret = -errno;
+-			dso->data.status = DSO_DATA_STATUS_ERROR;
+-			break;
+-		}
+-
+-		cache_offset = offset & DSO__DATA_CACHE_MASK;
+-
+-		ret = pread(dso->data.fd, cache->data, DSO__DATA_CACHE_SIZE, cache_offset);
+-		if (ret <= 0)
+-			break;
++		ret = file_read(dso, machine, cache_offset, cache->data);
+ 
+ 		cache->offset = cache_offset;
+ 		cache->size   = ret;
+ 	} while (0);
+ 
+-	pthread_mutex_unlock(&dso__data_open_lock);
+ 
+ 	if (ret > 0) {
+ 		old = dso_cache__insert(dso, cache);
 -- 
 2.20.1
