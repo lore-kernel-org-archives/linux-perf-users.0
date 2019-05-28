@@ -1,119 +1,160 @@
-From: "Zhou, David(ChunMing)" <David1.Zhou@amd.com>
-Subject: RE: [PATCH 25/44] tools headers UAPI: Sync drm/drm.h with the kernel
-Date: Tue, 28 May 2019 03:17:24 +0000
-Message-ID: <MN2PR12MB291084F771AC4462BD31AE39B41E0@MN2PR12MB2910.namprd12.prod.outlook.com>
+From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Subject: Re: [PATCH 25/44] tools headers UAPI: Sync drm/drm.h with the kernel
+Date: Tue, 28 May 2019 09:07:03 +0100
+Message-ID: <9dac0e36-237f-34a5-1791-e5e45e0dcc4e@intel.com>
 References: <20190527223730.11474-1-acme@kernel.org>
  <20190527223730.11474-26-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190527223730.11474-26-acme@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, "Koenig, Christian" <Christian.Koenig@amd.com>, Dave Airlie <airlied@redhat.com>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, =?utf-8?B?THVpcyBDbMOhdWRpbyBHb27Dp2FsdmVz?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>, Chunming Zhou <david1.zhou@amd.com>, Dave Airlie <airlied@redhat.com>, =?UTF-8?Q?Luis_Cl=c3=a1udio_Gon=c3=a7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-V2hpY2ggYnJhbmNoIGFyZSB5b3UgYmFzZWQ/IFNlZW1zIGFsbCB0aGUgc3RydWN0cyBhcmUgYWxy
-ZWFkeSBzeW5jZWQgZXhjZXB0IERSTV9DQVBfU1lOQ09CSl9USU1FTElORS4NCg0KLURhdmlkDQoN
-Ci0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBcm5hbGRvIENhcnZhbGhvIGRlIE1l
-bG8gPGFjbWVAa2VybmVsLm9yZz4gDQpTZW50OiBUdWVzZGF5LCBNYXkgMjgsIDIwMTkgNjozNyBB
-TQ0KVG86IEluZ28gTW9sbmFyIDxtaW5nb0BrZXJuZWwub3JnPjsgVGhvbWFzIEdsZWl4bmVyIDx0
-Z2x4QGxpbnV0cm9uaXguZGU+DQpDYzogSmlyaSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgTmFt
-aHl1bmcgS2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPjsgQ2xhcmsgV2lsbGlhbXMgPHdpbGxpYW1z
-QHJlZGhhdC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wZXJmLXVz
-ZXJzQHZnZXIua2VybmVsLm9yZzsgQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhh
-dC5jb20+OyBBZHJpYW4gSHVudGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47IEJyZW5kYW4g
-R3JlZ2cgPGJyZW5kYW4uZC5ncmVnZ0BnbWFpbC5jb20+OyBLb2VuaWcsIENocmlzdGlhbiA8Q2hy
-aXN0aWFuLktvZW5pZ0BhbWQuY29tPjsgWmhvdSwgRGF2aWQoQ2h1bk1pbmcpIDxEYXZpZDEuWmhv
-dUBhbWQuY29tPjsgRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNvbT47IExpb25lbCBMYW5k
-d2VybGluIDxsaW9uZWwuZy5sYW5kd2VybGluQGludGVsLmNvbT47IEx1aXMgQ2zDoXVkaW8gR29u
-w6dhbHZlcyA8bGNsYXVkaW9AcmVkaGF0LmNvbT4NClN1YmplY3Q6IFtQQVRDSCAyNS80NF0gdG9v
-bHMgaGVhZGVycyBVQVBJOiBTeW5jIGRybS9kcm0uaCB3aXRoIHRoZSBrZXJuZWwNCg0KRnJvbTog
-QXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+DQoNClRvIHBpY2sgdXAg
-dGhlIGNoYW5nZXMgaW4gdGhlc2UgY3NldHM6DQoNCiAgMDYwY2ViYjIwY2RiICgiZHJtOiBpbnRy
-b2R1Y2UgYSBjYXBhYmlsaXR5IGZsYWcgZm9yIHN5bmNvYmogdGltZWxpbmUgc3VwcG9ydCIpDQog
-IDUwZDFlYmVmNzllZiAoImRybS9zeW5jb2JqOiBhZGQgdGltZWxpbmUgc2lnbmFsIGlvY3RsIGZv
-ciBzeW5jb2JqIHY1IikNCiAgZWE1Njk5MTBjYmFiICgiZHJtL3N5bmNvYmo6IGFkZCB0cmFuc2l0
-aW9uIGlvdGNscyBiZXR3ZWVuIGJpbmFyeSBhbmQgdGltZWxpbmUgdjIiKQ0KICAyN2I1NzVhOWFh
-MmYgKCJkcm0vc3luY29iajogYWRkIHRpbWVsaW5lIHBheWxvYWQgcXVlcnkgaW9jdGwgdjYiKQ0K
-ICAwMWQ2YzM1NzgzNzkgKCJkcm0vc3luY29iajogYWRkIHN1cHBvcnQgZm9yIHRpbWVsaW5lIHBv
-aW50IHdhaXQgdjgiKQ0KICA3ODMxOTVlYzFjYWQgKCJkcm0vc3luY29iajogZGlzYWJsZSB0aGUg
-dGltZWxpbmUgVUFQSSBmb3Igbm93IHYyIikNCiAgNDgxOTdiYzU2NGM3ICgiZHJtOiBhZGQgc3lu
-Y29iaiB0aW1lbGluZSBzdXBwb3J0IHY5IikNCg0KV2hpY2ggYXV0b21hZ2ljYWxseSByZXN1bHRz
-IGluIHRoZSBmb2xsb3dpbmcgbmV3IGlvY3RscyBiZWluZyByZWNvZ25pemVkIGJ5IHRoZSAncGVy
-ZiB0cmFjZScgaW9jdGwgY21kIGFyZyBiZWF1dGlmaWVyOg0KDQogICQgdG9vbHMvcGVyZi90cmFj
-ZS9iZWF1dHkvZHJtX2lvY3RsLnNoID4gL3RtcC9iZWZvcmUNCiAgJCBjcCBpbmNsdWRlL3VhcGkv
-ZHJtL2RybS5oIHRvb2xzL2luY2x1ZGUvdWFwaS9kcm0vZHJtLmgNCiAgJCB0b29scy9wZXJmL3Ry
-YWNlL2JlYXV0eS9kcm1faW9jdGwuc2ggPiAvdG1wL2FmdGVyDQogICQgZGlmZiAtdSAvdG1wL2Jl
-Zm9yZSAvdG1wL2FmdGVyDQogIC0tLSAvdG1wL2JlZm9yZQkyMDE5LTA1LTIyIDEwOjI1OjMxLjQ0
-MzE1MTE4MiAtMDMwMA0KICArKysgL3RtcC9hZnRlcgkyMDE5LTA1LTIyIDEwOjI1OjQ2LjQ0OTM1
-NDgxOSAtMDMwMA0KICBAQCAtMTAzLDYgKzEwMywxMCBAQA0KICAgCVsweEM3XSA9ICJNT0RFX0xJ
-U1RfTEVTU0VFUyIsDQogICAJWzB4QzhdID0gIk1PREVfR0VUX0xFQVNFIiwNCiAgIAlbMHhDOV0g
-PSAiTU9ERV9SRVZPS0VfTEVBU0UiLA0KICArCVsweENBXSA9ICJTWU5DT0JKX1RJTUVMSU5FX1dB
-SVQiLA0KICArCVsweENCXSA9ICJTWU5DT0JKX1FVRVJZIiwNCiAgKwlbMHhDQ10gPSAiU1lOQ09C
-Sl9UUkFOU0ZFUiIsDQogICsJWzB4Q0RdID0gIlNZTkNPQkpfVElNRUxJTkVfU0lHTkFMIiwNCiAg
-IAlbRFJNX0NPTU1BTkRfQkFTRSArIDB4MDBdID0gIkk5MTVfSU5JVCIsDQogICAJW0RSTV9DT01N
-QU5EX0JBU0UgKyAweDAxXSA9ICJJOTE1X0ZMVVNIIiwNCiAgIAlbRFJNX0NPTU1BTkRfQkFTRSAr
-IDB4MDJdID0gIkk5MTVfRkxJUCIsDQogICAgJA0KDQpJLmUuIHRoZSBzdHJhY2UgbGlrZSByYXdf
-dHJhY2Vwb2ludDpzeXNfZW50ZXIgaGFuZGxlciBpbiAncGVyZiB0cmFjZScNCndpbGwgZ2V0IHRo
-ZSBjbWQgaW50ZWdlciB2YWx1ZSBhbmQgbWFwIGl0IHRvIHRoZSBzdHJpbmcuDQoNCkF0IHNvbWUg
-cG9pbnQgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvIHRyYW5zbGF0ZSBmcm9tIHN0cmluZyB0byBp
-bnRlZ2VyIGFuZCB1c2UgdG8gZmlsdGVyIHVzaW5nIGV4cHJlc3Npb25zIHN1Y2ggYXM6DQoNCiAg
-ICMgcGVyZiB0cmFjZSAtZSBpb2N0bC9jbWQ9PURSTV9JT0NUTF9TWU5DT0JKKi8NCg0KT3Igc29t
-ZSBtb3JlIHN1aXRhYmxlIHN5bnRheCB0byBleHByZXNzIHRoYXQgb25seSB0aGVzZSBpb2N0bHMg
-d2hlbiBhY3Rpbmcgb24gRFJNIGZkcyBzaG91bGQgYmUgc2hvd24uDQoNCkNjOiBBZHJpYW4gSHVu
-dGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT4NCkNjOiBCcmVuZGFuIEdyZWdnIDxicmVuZGFu
-LmQuZ3JlZ2dAZ21haWwuY29tPg0KQ2M6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2Vu
-aWdAYW1kLmNvbT4NCkNjOiBDaHVubWluZyBaaG91IDxkYXZpZDEuemhvdUBhbWQuY29tPg0KQ2M6
-IERhdmUgQWlybGllIDxhaXJsaWVkQHJlZGhhdC5jb20+DQpDYzogSmlyaSBPbHNhIDxqb2xzYUBr
-ZXJuZWwub3JnPg0KQ2M6IExpb25lbCBMYW5kd2VybGluIDxsaW9uZWwuZy5sYW5kd2VybGluQGlu
-dGVsLmNvbT4NCkNjOiBMdWlzIENsw6F1ZGlvIEdvbsOnYWx2ZXMgPGxjbGF1ZGlvQHJlZGhhdC5j
-b20+DQpDYzogTmFtaHl1bmcgS2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPg0KTGluazogaHR0cHM6
-Ly9sa21sLmtlcm5lbC5vcmcvbi90aXAtanJjOW9ndzMzdzR6Z3FjM3B1N28xbDNnQGdpdC5rZXJu
-ZWwub3JnDQpTaWduZWQtb2ZmLWJ5OiBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8gPGFjbWVAcmVk
-aGF0LmNvbT4NCi0tLQ0KIHRvb2xzL2luY2x1ZGUvdWFwaS9kcm0vZHJtLmggfCAzNyArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMzcgaW5zZXJ0
-aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvdG9vbHMvaW5jbHVkZS91YXBpL2RybS9kcm0uaCBiL3Rv
-b2xzL2luY2x1ZGUvdWFwaS9kcm0vZHJtLmggaW5kZXggMzAwZjMzNjYzM2YyLi42NjFkNzNmOWE5
-MTkgMTAwNjQ0DQotLS0gYS90b29scy9pbmNsdWRlL3VhcGkvZHJtL2RybS5oDQorKysgYi90b29s
-cy9pbmNsdWRlL3VhcGkvZHJtL2RybS5oDQpAQCAtNjQ5LDYgKzY0OSw3IEBAIHN0cnVjdCBkcm1f
-Z2VtX29wZW4gew0KICNkZWZpbmUgRFJNX0NBUF9QQUdFX0ZMSVBfVEFSR0VUCTB4MTENCiAjZGVm
-aW5lIERSTV9DQVBfQ1JUQ19JTl9WQkxBTktfRVZFTlQJMHgxMg0KICNkZWZpbmUgRFJNX0NBUF9T
-WU5DT0JKCQkweDEzDQorI2RlZmluZSBEUk1fQ0FQX1NZTkNPQkpfVElNRUxJTkUJMHgxNA0KIA0K
-IC8qKiBEUk1fSU9DVExfR0VUX0NBUCBpb2N0bCBhcmd1bWVudCB0eXBlICovICBzdHJ1Y3QgZHJt
-X2dldF9jYXAgeyBAQCAtNzM1LDggKzczNiwxOCBAQCBzdHJ1Y3QgZHJtX3N5bmNvYmpfaGFuZGxl
-IHsNCiAJX191MzIgcGFkOw0KIH07DQogDQorc3RydWN0IGRybV9zeW5jb2JqX3RyYW5zZmVyIHsN
-CisJX191MzIgc3JjX2hhbmRsZTsNCisJX191MzIgZHN0X2hhbmRsZTsNCisJX191NjQgc3JjX3Bv
-aW50Ow0KKwlfX3U2NCBkc3RfcG9pbnQ7DQorCV9fdTMyIGZsYWdzOw0KKwlfX3UzMiBwYWQ7DQor
-fTsNCisNCiAjZGVmaW5lIERSTV9TWU5DT0JKX1dBSVRfRkxBR1NfV0FJVF9BTEwgKDEgPDwgMCkg
-ICNkZWZpbmUgRFJNX1NZTkNPQkpfV0FJVF9GTEFHU19XQUlUX0ZPUl9TVUJNSVQgKDEgPDwgMSkN
-CisjZGVmaW5lIERSTV9TWU5DT0JKX1dBSVRfRkxBR1NfV0FJVF9BVkFJTEFCTEUgKDEgPDwgMikg
-Lyogd2FpdCBmb3IgdGltZSANCitwb2ludCB0byBiZWNvbWUgYXZhaWxhYmxlICovDQogc3RydWN0
-IGRybV9zeW5jb2JqX3dhaXQgew0KIAlfX3U2NCBoYW5kbGVzOw0KIAkvKiBhYnNvbHV0ZSB0aW1l
-b3V0ICovDQpAQCAtNzQ3LDEyICs3NTgsMzMgQEAgc3RydWN0IGRybV9zeW5jb2JqX3dhaXQgew0K
-IAlfX3UzMiBwYWQ7DQogfTsNCiANCitzdHJ1Y3QgZHJtX3N5bmNvYmpfdGltZWxpbmVfd2FpdCB7
-DQorCV9fdTY0IGhhbmRsZXM7DQorCS8qIHdhaXQgb24gc3BlY2lmaWMgdGltZWxpbmUgcG9pbnQg
-Zm9yIGV2ZXJ5IGhhbmRsZXMqLw0KKwlfX3U2NCBwb2ludHM7DQorCS8qIGFic29sdXRlIHRpbWVv
-dXQgKi8NCisJX19zNjQgdGltZW91dF9uc2VjOw0KKwlfX3UzMiBjb3VudF9oYW5kbGVzOw0KKwlf
-X3UzMiBmbGFnczsNCisJX191MzIgZmlyc3Rfc2lnbmFsZWQ7IC8qIG9ubHkgdmFsaWQgd2hlbiBu
-b3Qgd2FpdGluZyBhbGwgKi8NCisJX191MzIgcGFkOw0KK307DQorDQorDQogc3RydWN0IGRybV9z
-eW5jb2JqX2FycmF5IHsNCiAJX191NjQgaGFuZGxlczsNCiAJX191MzIgY291bnRfaGFuZGxlczsN
-CiAJX191MzIgcGFkOw0KIH07DQogDQorc3RydWN0IGRybV9zeW5jb2JqX3RpbWVsaW5lX2FycmF5
-IHsNCisJX191NjQgaGFuZGxlczsNCisJX191NjQgcG9pbnRzOw0KKwlfX3UzMiBjb3VudF9oYW5k
-bGVzOw0KKwlfX3UzMiBwYWQ7DQorfTsNCisNCisNCiAvKiBRdWVyeSBjdXJyZW50IHNjYW5vdXQg
-c2VxdWVuY2UgbnVtYmVyICovICBzdHJ1Y3QgZHJtX2NydGNfZ2V0X3NlcXVlbmNlIHsNCiAJX191
-MzIgY3J0Y19pZDsJCS8qIHJlcXVlc3RlZCBjcnRjX2lkICovDQpAQCAtOTA5LDYgKzk0MSwxMSBA
-QCBleHRlcm4gIkMiIHsNCiAjZGVmaW5lIERSTV9JT0NUTF9NT0RFX0dFVF9MRUFTRQlEUk1fSU9X
-UigweEM4LCBzdHJ1Y3QgZHJtX21vZGVfZ2V0X2xlYXNlKQ0KICNkZWZpbmUgRFJNX0lPQ1RMX01P
-REVfUkVWT0tFX0xFQVNFCURSTV9JT1dSKDB4QzksIHN0cnVjdCBkcm1fbW9kZV9yZXZva2VfbGVh
-c2UpDQogDQorI2RlZmluZSBEUk1fSU9DVExfU1lOQ09CSl9USU1FTElORV9XQUlUCURSTV9JT1dS
-KDB4Q0EsIHN0cnVjdCBkcm1fc3luY29ial90aW1lbGluZV93YWl0KQ0KKyNkZWZpbmUgRFJNX0lP
-Q1RMX1NZTkNPQkpfUVVFUlkJCURSTV9JT1dSKDB4Q0IsIHN0cnVjdCBkcm1fc3luY29ial90aW1l
-bGluZV9hcnJheSkNCisjZGVmaW5lIERSTV9JT0NUTF9TWU5DT0JKX1RSQU5TRkVSCURSTV9JT1dS
-KDB4Q0MsIHN0cnVjdCBkcm1fc3luY29ial90cmFuc2ZlcikNCisjZGVmaW5lIERSTV9JT0NUTF9T
-WU5DT0JKX1RJTUVMSU5FX1NJR05BTAlEUk1fSU9XUigweENELCBzdHJ1Y3QgZHJtX3N5bmNvYmpf
-dGltZWxpbmVfYXJyYXkpDQorDQogLyoqDQogICogRGV2aWNlIHNwZWNpZmljIGlvY3RscyBzaG91
-bGQgb25seSBiZSBpbiB0aGVpciByZXNwZWN0aXZlIGhlYWRlcnMNCiAgKiBUaGUgZGV2aWNlIHNw
-ZWNpZmljIGlvY3RsIHJhbmdlIGlzIGZyb20gMHg0MCB0byAweDlmLg0KLS0NCjIuMjAuMQ0KDQo=
+On 27/05/2019 23:37, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> To pick up the changes in these csets:
+>
+>    060cebb20cdb ("drm: introduce a capability flag for syncobj timeline support")
+>    50d1ebef79ef ("drm/syncobj: add timeline signal ioctl for syncobj v5")
+>    ea569910cbab ("drm/syncobj: add transition iotcls between binary and timeline v2")
+>    27b575a9aa2f ("drm/syncobj: add timeline payload query ioctl v6")
+>    01d6c3578379 ("drm/syncobj: add support for timeline point wait v8")
+>    783195ec1cad ("drm/syncobj: disable the timeline UAPI for now v2")
+>    48197bc564c7 ("drm: add syncobj timeline support v9")
+>
+> Which automagically results in the following new ioctls being recognized
+> by the 'perf trace' ioctl cmd arg beautifier:
+>
+>    $ tools/perf/trace/beauty/drm_ioctl.sh > /tmp/before
+>    $ cp include/uapi/drm/drm.h tools/include/uapi/drm/drm.h
+>    $ tools/perf/trace/beauty/drm_ioctl.sh > /tmp/after
+>    $ diff -u /tmp/before /tmp/after
+>    --- /tmp/before	2019-05-22 10:25:31.443151182 -0300
+>    +++ /tmp/after	2019-05-22 10:25:46.449354819 -0300
+>    @@ -103,6 +103,10 @@
+>     	[0xC7] = "MODE_LIST_LESSEES",
+>     	[0xC8] = "MODE_GET_LEASE",
+>     	[0xC9] = "MODE_REVOKE_LEASE",
+>    +	[0xCA] = "SYNCOBJ_TIMELINE_WAIT",
+>    +	[0xCB] = "SYNCOBJ_QUERY",
+>    +	[0xCC] = "SYNCOBJ_TRANSFER",
+>    +	[0xCD] = "SYNCOBJ_TIMELINE_SIGNAL",
+>     	[DRM_COMMAND_BASE + 0x00] = "I915_INIT",
+>     	[DRM_COMMAND_BASE + 0x01] = "I915_FLUSH",
+>     	[DRM_COMMAND_BASE + 0x02] = "I915_FLIP",
+>      $
+>
+> I.e. the strace like raw_tracepoint:sys_enter handler in 'perf trace'
+> will get the cmd integer value and map it to the string.
+>
+> At some point it should be possible to translate from string to integer
+> and use to filter using expressions such as:
+>
+>     # perf trace -e ioctl/cmd==DRM_IOCTL_SYNCOBJ*/
+>
+> Or some more suitable syntax to express that only these ioctls when
+> acting on DRM fds should be shown.
+>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+> Cc: Christian König <christian.koenig@amd.com>
+> Cc: Chunming Zhou <david1.zhou@amd.com>
+> Cc: Dave Airlie <airlied@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+> Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-jrc9ogw33w4zgqc3pu7o1l3g@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+
+Acked-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+
+
+> ---
+>   tools/include/uapi/drm/drm.h | 37 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 37 insertions(+)
+>
+> diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
+> index 300f336633f2..661d73f9a919 100644
+> --- a/tools/include/uapi/drm/drm.h
+> +++ b/tools/include/uapi/drm/drm.h
+> @@ -649,6 +649,7 @@ struct drm_gem_open {
+>   #define DRM_CAP_PAGE_FLIP_TARGET	0x11
+>   #define DRM_CAP_CRTC_IN_VBLANK_EVENT	0x12
+>   #define DRM_CAP_SYNCOBJ		0x13
+> +#define DRM_CAP_SYNCOBJ_TIMELINE	0x14
+>   
+>   /** DRM_IOCTL_GET_CAP ioctl argument type */
+>   struct drm_get_cap {
+> @@ -735,8 +736,18 @@ struct drm_syncobj_handle {
+>   	__u32 pad;
+>   };
+>   
+> +struct drm_syncobj_transfer {
+> +	__u32 src_handle;
+> +	__u32 dst_handle;
+> +	__u64 src_point;
+> +	__u64 dst_point;
+> +	__u32 flags;
+> +	__u32 pad;
+> +};
+> +
+>   #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL (1 << 0)
+>   #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT (1 << 1)
+> +#define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE (1 << 2) /* wait for time point to become available */
+>   struct drm_syncobj_wait {
+>   	__u64 handles;
+>   	/* absolute timeout */
+> @@ -747,12 +758,33 @@ struct drm_syncobj_wait {
+>   	__u32 pad;
+>   };
+>   
+> +struct drm_syncobj_timeline_wait {
+> +	__u64 handles;
+> +	/* wait on specific timeline point for every handles*/
+> +	__u64 points;
+> +	/* absolute timeout */
+> +	__s64 timeout_nsec;
+> +	__u32 count_handles;
+> +	__u32 flags;
+> +	__u32 first_signaled; /* only valid when not waiting all */
+> +	__u32 pad;
+> +};
+> +
+> +
+>   struct drm_syncobj_array {
+>   	__u64 handles;
+>   	__u32 count_handles;
+>   	__u32 pad;
+>   };
+>   
+> +struct drm_syncobj_timeline_array {
+> +	__u64 handles;
+> +	__u64 points;
+> +	__u32 count_handles;
+> +	__u32 pad;
+> +};
+> +
+> +
+>   /* Query current scanout sequence number */
+>   struct drm_crtc_get_sequence {
+>   	__u32 crtc_id;		/* requested crtc_id */
+> @@ -909,6 +941,11 @@ extern "C" {
+>   #define DRM_IOCTL_MODE_GET_LEASE	DRM_IOWR(0xC8, struct drm_mode_get_lease)
+>   #define DRM_IOCTL_MODE_REVOKE_LEASE	DRM_IOWR(0xC9, struct drm_mode_revoke_lease)
+>   
+> +#define DRM_IOCTL_SYNCOBJ_TIMELINE_WAIT	DRM_IOWR(0xCA, struct drm_syncobj_timeline_wait)
+> +#define DRM_IOCTL_SYNCOBJ_QUERY		DRM_IOWR(0xCB, struct drm_syncobj_timeline_array)
+> +#define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
+> +#define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
+> +
+>   /**
+>    * Device specific ioctls should only be in their respective headers
+>    * The device specific ioctl range is from 0x40 to 0x9f.
