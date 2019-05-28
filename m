@@ -1,162 +1,85 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 25/44] tools headers UAPI: Sync drm/drm.h with the kernel
-Date: Tue, 28 May 2019 09:53:03 -0300
-Message-ID: <20190528125303.GA2935@redhat.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 05/44] perf data: Fix 'strncat may truncate' build
+ failure with recent gcc
+Date: Tue, 28 May 2019 10:04:21 -0300
+Message-ID: <20190528130421.GB13830@kernel.org>
 References: <20190527223730.11474-1-acme@kernel.org>
- <20190527223730.11474-26-acme@kernel.org>
- <9dac0e36-237f-34a5-1791-e5e45e0dcc4e@intel.com>
+ <20190527223730.11474-6-acme@kernel.org>
+ <CA+49okqviNfP087Z34-P4mJuMYc8_PiNJgTPz0xSAxqtp4iM0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9dac0e36-237f-34a5-1791-e5e45e0dcc4e@intel.com>
+In-Reply-To: <CA+49okqviNfP087Z34-P4mJuMYc8_PiNJgTPz0xSAxqtp4iM0A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Chunming Zhou <david1.zhou@amd.com>, Dave Airlie <airlied@redhat.com>, Luis =?iso-8859-1?Q?Cl=E1udio_Gon=E7alves?= <lclaudio@redhat.com>
+To: Shawn Landden <slandden@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, May 28, 2019 at 09:07:03AM +0100, Lionel Landwerlin escreveu:
-> On 27/05/2019 23:37, Arnaldo Carvalho de Melo wrote:
-> >From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Em Mon, May 27, 2019 at 05:46:26PM -0500, Shawn Landden escreveu:
+> On Mon, May 27, 2019 at 5:38 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> >To pick up the changes in these csets:
+> > From: Shawn Landden <shawn@git.icu>
 > >
-> >   060cebb20cdb ("drm: introduce a capability flag for syncobj timeline support")
-> >   50d1ebef79ef ("drm/syncobj: add timeline signal ioctl for syncobj v5")
-> >   ea569910cbab ("drm/syncobj: add transition iotcls between binary and timeline v2")
-> >   27b575a9aa2f ("drm/syncobj: add timeline payload query ioctl v6")
-> >   01d6c3578379 ("drm/syncobj: add support for timeline point wait v8")
-> >   783195ec1cad ("drm/syncobj: disable the timeline UAPI for now v2")
-> >   48197bc564c7 ("drm: add syncobj timeline support v9")
+> > This strncat() is safe because the buffer was allocated with zalloc(),
+> > however gcc doesn't know that. Since the string always has 4 non-null
+> > bytes, just use memcpy() here.
 > >
-> >Which automagically results in the following new ioctls being recognized
-> >by the 'perf trace' ioctl cmd arg beautifier:
+> >     CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
+> >   In file included from /usr/include/string.h:494,
+> >                    from /home/shawn/linux/tools/lib/traceevent/event-parse.h:27,
+> >                    from util/data-convert-bt.c:22:
+> >   In function ‘strncat’,
+> >       inlined from ‘string_set_value’ at util/data-convert-bt.c:274:4:
+> >   /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin_strncat’ output may be truncated copying 4 bytes from a string of length 4 [-Werror=stringop-truncation]
+> >     136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+> >         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > >
-> >   $ tools/perf/trace/beauty/drm_ioctl.sh > /tmp/before
-> >   $ cp include/uapi/drm/drm.h tools/include/uapi/drm/drm.h
-> >   $ tools/perf/trace/beauty/drm_ioctl.sh > /tmp/after
-> >   $ diff -u /tmp/before /tmp/after
-> >   --- /tmp/before	2019-05-22 10:25:31.443151182 -0300
-> >   +++ /tmp/after	2019-05-22 10:25:46.449354819 -0300
-> >   @@ -103,6 +103,10 @@
-> >    	[0xC7] = "MODE_LIST_LESSEES",
-> >    	[0xC8] = "MODE_GET_LEASE",
-> >    	[0xC9] = "MODE_REVOKE_LEASE",
-> >   +	[0xCA] = "SYNCOBJ_TIMELINE_WAIT",
-> >   +	[0xCB] = "SYNCOBJ_QUERY",
-> >   +	[0xCC] = "SYNCOBJ_TRANSFER",
-> >   +	[0xCD] = "SYNCOBJ_TIMELINE_SIGNAL",
-> >    	[DRM_COMMAND_BASE + 0x00] = "I915_INIT",
-> >    	[DRM_COMMAND_BASE + 0x01] = "I915_FLUSH",
-> >    	[DRM_COMMAND_BASE + 0x02] = "I915_FLIP",
-> >     $
+> > Signed-off-by: Shawn Landden <shawn@git.icu>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Jiri Olsa <jolsa@redhat.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Wang Nan <wangnan0@huawei.com>
+> > LPU-Reference: 20190518183238.10954-1-shawn@git.icu
+> > Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/data-convert-bt.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> >I.e. the strace like raw_tracepoint:sys_enter handler in 'perf trace'
-> >will get the cmd integer value and map it to the string.
-> >
-> >At some point it should be possible to translate from string to integer
-> >and use to filter using expressions such as:
-> >
-> >    # perf trace -e ioctl/cmd==DRM_IOCTL_SYNCOBJ*/
-> >
-> >Or some more suitable syntax to express that only these ioctls when
-> >acting on DRM fds should be shown.
-> >
-> >Cc: Adrian Hunter <adrian.hunter@intel.com>
-> >Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-> >Cc: Christian K�nig <christian.koenig@amd.com>
-> >Cc: Chunming Zhou <david1.zhou@amd.com>
-> >Cc: Dave Airlie <airlied@redhat.com>
-> >Cc: Jiri Olsa <jolsa@kernel.org>
-> >Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-> >Cc: Luis Cl�udio Gon�alves <lclaudio@redhat.com>
-> >Cc: Namhyung Kim <namhyung@kernel.org>
-> >Link: https://lkml.kernel.org/n/tip-jrc9ogw33w4zgqc3pu7o1l3g@git.kernel.org
-> >Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> 
-> Acked-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+> > diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+> > index e0311c9750ad..9097543a818b 100644
+> > --- a/tools/perf/util/data-convert-bt.c
+> > +++ b/tools/perf/util/data-convert-bt.c
+> > @@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *field, const char *string)
+> >                                 if (i > 0)
+> >                                         strncpy(buffer, string, i);
+> >                         }
+> > -                       strncat(buffer + p, numstr, 4);
+> > +                       memcpy(buffer + p, numstr, 4);
+> I took care to have enough context in my patch that you could see what
+> was going on. I wonder if there is a way to make that care
+> propate when people add Signed-off-by: lines.
 
-Thank, added since I'll have to resubmit this branch.
+I just checked and the patch is the same, the description I only changed
+the subject line, so that when one uses:
+
+   git log --oneline
+
+we can know what is the component and what kind of build failure was
+that.
 
 - Arnaldo
- 
-> 
-> >---
-> >  tools/include/uapi/drm/drm.h | 37 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 37 insertions(+)
+
+> >                         p += 3;
+> >                 }
+> >         }
+> > --
+> > 2.20.1
 > >
-> >diff --git a/tools/include/uapi/drm/drm.h b/tools/include/uapi/drm/drm.h
-> >index 300f336633f2..661d73f9a919 100644
-> >--- a/tools/include/uapi/drm/drm.h
-> >+++ b/tools/include/uapi/drm/drm.h
-> >@@ -649,6 +649,7 @@ struct drm_gem_open {
-> >  #define DRM_CAP_PAGE_FLIP_TARGET	0x11
-> >  #define DRM_CAP_CRTC_IN_VBLANK_EVENT	0x12
-> >  #define DRM_CAP_SYNCOBJ		0x13
-> >+#define DRM_CAP_SYNCOBJ_TIMELINE	0x14
-> >  /** DRM_IOCTL_GET_CAP ioctl argument type */
-> >  struct drm_get_cap {
-> >@@ -735,8 +736,18 @@ struct drm_syncobj_handle {
-> >  	__u32 pad;
-> >  };
-> >+struct drm_syncobj_transfer {
-> >+	__u32 src_handle;
-> >+	__u32 dst_handle;
-> >+	__u64 src_point;
-> >+	__u64 dst_point;
-> >+	__u32 flags;
-> >+	__u32 pad;
-> >+};
-> >+
-> >  #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_ALL (1 << 0)
-> >  #define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_FOR_SUBMIT (1 << 1)
-> >+#define DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE (1 << 2) /* wait for time point to become available */
-> >  struct drm_syncobj_wait {
-> >  	__u64 handles;
-> >  	/* absolute timeout */
-> >@@ -747,12 +758,33 @@ struct drm_syncobj_wait {
-> >  	__u32 pad;
-> >  };
-> >+struct drm_syncobj_timeline_wait {
-> >+	__u64 handles;
-> >+	/* wait on specific timeline point for every handles*/
-> >+	__u64 points;
-> >+	/* absolute timeout */
-> >+	__s64 timeout_nsec;
-> >+	__u32 count_handles;
-> >+	__u32 flags;
-> >+	__u32 first_signaled; /* only valid when not waiting all */
-> >+	__u32 pad;
-> >+};
-> >+
-> >+
-> >  struct drm_syncobj_array {
-> >  	__u64 handles;
-> >  	__u32 count_handles;
-> >  	__u32 pad;
-> >  };
-> >+struct drm_syncobj_timeline_array {
-> >+	__u64 handles;
-> >+	__u64 points;
-> >+	__u32 count_handles;
-> >+	__u32 pad;
-> >+};
-> >+
-> >+
-> >  /* Query current scanout sequence number */
-> >  struct drm_crtc_get_sequence {
-> >  	__u32 crtc_id;		/* requested crtc_id */
-> >@@ -909,6 +941,11 @@ extern "C" {
-> >  #define DRM_IOCTL_MODE_GET_LEASE	DRM_IOWR(0xC8, struct drm_mode_get_lease)
-> >  #define DRM_IOCTL_MODE_REVOKE_LEASE	DRM_IOWR(0xC9, struct drm_mode_revoke_lease)
-> >+#define DRM_IOCTL_SYNCOBJ_TIMELINE_WAIT	DRM_IOWR(0xCA, struct drm_syncobj_timeline_wait)
-> >+#define DRM_IOCTL_SYNCOBJ_QUERY		DRM_IOWR(0xCB, struct drm_syncobj_timeline_array)
-> >+#define DRM_IOCTL_SYNCOBJ_TRANSFER	DRM_IOWR(0xCC, struct drm_syncobj_transfer)
-> >+#define DRM_IOCTL_SYNCOBJ_TIMELINE_SIGNAL	DRM_IOWR(0xCD, struct drm_syncobj_timeline_array)
-> >+
-> >  /**
-> >   * Device specific ioctls should only be in their respective headers
-> >   * The device specific ioctl range is from 0x40 to 0x9f.
-> 
+
+-- 
+
+- Arnaldo
