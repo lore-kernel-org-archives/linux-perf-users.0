@@ -1,75 +1,119 @@
-From: Shawn Landden <slandden@gmail.com>
-Subject: Re: [PATCH 05/44] perf data: Fix 'strncat may truncate' build failure
- with recent gcc
-Date: Mon, 27 May 2019 17:46:26 -0500
-Message-ID: <CA+49okqviNfP087Z34-P4mJuMYc8_PiNJgTPz0xSAxqtp4iM0A@mail.gmail.com>
-References: <20190527223730.11474-1-acme@kernel.org> <20190527223730.11474-6-acme@kernel.org>
+From: "Zhou, David(ChunMing)" <David1.Zhou@amd.com>
+Subject: RE: [PATCH 25/44] tools headers UAPI: Sync drm/drm.h with the kernel
+Date: Tue, 28 May 2019 03:17:24 +0000
+Message-ID: <MN2PR12MB291084F771AC4462BD31AE39B41E0@MN2PR12MB2910.namprd12.prod.outlook.com>
+References: <20190527223730.11474-1-acme@kernel.org>
+ <20190527223730.11474-26-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190527223730.11474-6-acme@kernel.org>
+In-Reply-To: <20190527223730.11474-26-acme@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, "Koenig, Christian" <Christian.Koenig@amd.com>, Dave Airlie <airlied@redhat.com>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, =?utf-8?B?THVpcyBDbMOhdWRpbyBHb27Dp2FsdmVz?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, May 27, 2019 at 5:38 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Shawn Landden <shawn@git.icu>
->
-> This strncat() is safe because the buffer was allocated with zalloc(),
-> however gcc doesn't know that. Since the string always has 4 non-null
-> bytes, just use memcpy() here.
->
->     CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
->   In file included from /usr/include/string.h:494,
->                    from /home/shawn/linux/tools/lib/traceevent/event-pars=
-e.h:27,
->                    from util/data-convert-bt.c:22:
->   In function =E2=80=98strncat=E2=80=99,
->       inlined from =E2=80=98string_set_value=E2=80=99 at util/data-conver=
-t-bt.c:274:4:
->   /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: erro=
-r: =E2=80=98__builtin_strncat=E2=80=99 output may be truncated copying 4 by=
-tes from a string of length 4 [-Werror=3Dstringop-truncation]
->     136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (=
-__dest));
->         |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~
->
-> Signed-off-by: Shawn Landden <shawn@git.icu>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> LPU-Reference: 20190518183238.10954-1-shawn@git.icu
-> Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.o=
-rg
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/data-convert-bt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-con=
-vert-bt.c
-> index e0311c9750ad..9097543a818b 100644
-> --- a/tools/perf/util/data-convert-bt.c
-> +++ b/tools/perf/util/data-convert-bt.c
-> @@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *fiel=
-d, const char *string)
->                                 if (i > 0)
->                                         strncpy(buffer, string, i);
->                         }
-> -                       strncat(buffer + p, numstr, 4);
-> +                       memcpy(buffer + p, numstr, 4);
-I took care to have enough context in my patch that you could see what
-was going on. I wonder if there is a way to make that care
-propate when people add Signed-off-by: lines.
->                         p +=3D 3;
->                 }
->         }
-> --
-> 2.20.1
->
+V2hpY2ggYnJhbmNoIGFyZSB5b3UgYmFzZWQ/IFNlZW1zIGFsbCB0aGUgc3RydWN0cyBhcmUgYWxy
+ZWFkeSBzeW5jZWQgZXhjZXB0IERSTV9DQVBfU1lOQ09CSl9USU1FTElORS4NCg0KLURhdmlkDQoN
+Ci0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBcm5hbGRvIENhcnZhbGhvIGRlIE1l
+bG8gPGFjbWVAa2VybmVsLm9yZz4gDQpTZW50OiBUdWVzZGF5LCBNYXkgMjgsIDIwMTkgNjozNyBB
+TQ0KVG86IEluZ28gTW9sbmFyIDxtaW5nb0BrZXJuZWwub3JnPjsgVGhvbWFzIEdsZWl4bmVyIDx0
+Z2x4QGxpbnV0cm9uaXguZGU+DQpDYzogSmlyaSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgTmFt
+aHl1bmcgS2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPjsgQ2xhcmsgV2lsbGlhbXMgPHdpbGxpYW1z
+QHJlZGhhdC5jb20+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wZXJmLXVz
+ZXJzQHZnZXIua2VybmVsLm9yZzsgQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhh
+dC5jb20+OyBBZHJpYW4gSHVudGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT47IEJyZW5kYW4g
+R3JlZ2cgPGJyZW5kYW4uZC5ncmVnZ0BnbWFpbC5jb20+OyBLb2VuaWcsIENocmlzdGlhbiA8Q2hy
+aXN0aWFuLktvZW5pZ0BhbWQuY29tPjsgWmhvdSwgRGF2aWQoQ2h1bk1pbmcpIDxEYXZpZDEuWmhv
+dUBhbWQuY29tPjsgRGF2ZSBBaXJsaWUgPGFpcmxpZWRAcmVkaGF0LmNvbT47IExpb25lbCBMYW5k
+d2VybGluIDxsaW9uZWwuZy5sYW5kd2VybGluQGludGVsLmNvbT47IEx1aXMgQ2zDoXVkaW8gR29u
+w6dhbHZlcyA8bGNsYXVkaW9AcmVkaGF0LmNvbT4NClN1YmplY3Q6IFtQQVRDSCAyNS80NF0gdG9v
+bHMgaGVhZGVycyBVQVBJOiBTeW5jIGRybS9kcm0uaCB3aXRoIHRoZSBrZXJuZWwNCg0KRnJvbTog
+QXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+DQoNClRvIHBpY2sgdXAg
+dGhlIGNoYW5nZXMgaW4gdGhlc2UgY3NldHM6DQoNCiAgMDYwY2ViYjIwY2RiICgiZHJtOiBpbnRy
+b2R1Y2UgYSBjYXBhYmlsaXR5IGZsYWcgZm9yIHN5bmNvYmogdGltZWxpbmUgc3VwcG9ydCIpDQog
+IDUwZDFlYmVmNzllZiAoImRybS9zeW5jb2JqOiBhZGQgdGltZWxpbmUgc2lnbmFsIGlvY3RsIGZv
+ciBzeW5jb2JqIHY1IikNCiAgZWE1Njk5MTBjYmFiICgiZHJtL3N5bmNvYmo6IGFkZCB0cmFuc2l0
+aW9uIGlvdGNscyBiZXR3ZWVuIGJpbmFyeSBhbmQgdGltZWxpbmUgdjIiKQ0KICAyN2I1NzVhOWFh
+MmYgKCJkcm0vc3luY29iajogYWRkIHRpbWVsaW5lIHBheWxvYWQgcXVlcnkgaW9jdGwgdjYiKQ0K
+ICAwMWQ2YzM1NzgzNzkgKCJkcm0vc3luY29iajogYWRkIHN1cHBvcnQgZm9yIHRpbWVsaW5lIHBv
+aW50IHdhaXQgdjgiKQ0KICA3ODMxOTVlYzFjYWQgKCJkcm0vc3luY29iajogZGlzYWJsZSB0aGUg
+dGltZWxpbmUgVUFQSSBmb3Igbm93IHYyIikNCiAgNDgxOTdiYzU2NGM3ICgiZHJtOiBhZGQgc3lu
+Y29iaiB0aW1lbGluZSBzdXBwb3J0IHY5IikNCg0KV2hpY2ggYXV0b21hZ2ljYWxseSByZXN1bHRz
+IGluIHRoZSBmb2xsb3dpbmcgbmV3IGlvY3RscyBiZWluZyByZWNvZ25pemVkIGJ5IHRoZSAncGVy
+ZiB0cmFjZScgaW9jdGwgY21kIGFyZyBiZWF1dGlmaWVyOg0KDQogICQgdG9vbHMvcGVyZi90cmFj
+ZS9iZWF1dHkvZHJtX2lvY3RsLnNoID4gL3RtcC9iZWZvcmUNCiAgJCBjcCBpbmNsdWRlL3VhcGkv
+ZHJtL2RybS5oIHRvb2xzL2luY2x1ZGUvdWFwaS9kcm0vZHJtLmgNCiAgJCB0b29scy9wZXJmL3Ry
+YWNlL2JlYXV0eS9kcm1faW9jdGwuc2ggPiAvdG1wL2FmdGVyDQogICQgZGlmZiAtdSAvdG1wL2Jl
+Zm9yZSAvdG1wL2FmdGVyDQogIC0tLSAvdG1wL2JlZm9yZQkyMDE5LTA1LTIyIDEwOjI1OjMxLjQ0
+MzE1MTE4MiAtMDMwMA0KICArKysgL3RtcC9hZnRlcgkyMDE5LTA1LTIyIDEwOjI1OjQ2LjQ0OTM1
+NDgxOSAtMDMwMA0KICBAQCAtMTAzLDYgKzEwMywxMCBAQA0KICAgCVsweEM3XSA9ICJNT0RFX0xJ
+U1RfTEVTU0VFUyIsDQogICAJWzB4QzhdID0gIk1PREVfR0VUX0xFQVNFIiwNCiAgIAlbMHhDOV0g
+PSAiTU9ERV9SRVZPS0VfTEVBU0UiLA0KICArCVsweENBXSA9ICJTWU5DT0JKX1RJTUVMSU5FX1dB
+SVQiLA0KICArCVsweENCXSA9ICJTWU5DT0JKX1FVRVJZIiwNCiAgKwlbMHhDQ10gPSAiU1lOQ09C
+Sl9UUkFOU0ZFUiIsDQogICsJWzB4Q0RdID0gIlNZTkNPQkpfVElNRUxJTkVfU0lHTkFMIiwNCiAg
+IAlbRFJNX0NPTU1BTkRfQkFTRSArIDB4MDBdID0gIkk5MTVfSU5JVCIsDQogICAJW0RSTV9DT01N
+QU5EX0JBU0UgKyAweDAxXSA9ICJJOTE1X0ZMVVNIIiwNCiAgIAlbRFJNX0NPTU1BTkRfQkFTRSAr
+IDB4MDJdID0gIkk5MTVfRkxJUCIsDQogICAgJA0KDQpJLmUuIHRoZSBzdHJhY2UgbGlrZSByYXdf
+dHJhY2Vwb2ludDpzeXNfZW50ZXIgaGFuZGxlciBpbiAncGVyZiB0cmFjZScNCndpbGwgZ2V0IHRo
+ZSBjbWQgaW50ZWdlciB2YWx1ZSBhbmQgbWFwIGl0IHRvIHRoZSBzdHJpbmcuDQoNCkF0IHNvbWUg
+cG9pbnQgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvIHRyYW5zbGF0ZSBmcm9tIHN0cmluZyB0byBp
+bnRlZ2VyIGFuZCB1c2UgdG8gZmlsdGVyIHVzaW5nIGV4cHJlc3Npb25zIHN1Y2ggYXM6DQoNCiAg
+ICMgcGVyZiB0cmFjZSAtZSBpb2N0bC9jbWQ9PURSTV9JT0NUTF9TWU5DT0JKKi8NCg0KT3Igc29t
+ZSBtb3JlIHN1aXRhYmxlIHN5bnRheCB0byBleHByZXNzIHRoYXQgb25seSB0aGVzZSBpb2N0bHMg
+d2hlbiBhY3Rpbmcgb24gRFJNIGZkcyBzaG91bGQgYmUgc2hvd24uDQoNCkNjOiBBZHJpYW4gSHVu
+dGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT4NCkNjOiBCcmVuZGFuIEdyZWdnIDxicmVuZGFu
+LmQuZ3JlZ2dAZ21haWwuY29tPg0KQ2M6IENocmlzdGlhbiBLw7ZuaWcgPGNocmlzdGlhbi5rb2Vu
+aWdAYW1kLmNvbT4NCkNjOiBDaHVubWluZyBaaG91IDxkYXZpZDEuemhvdUBhbWQuY29tPg0KQ2M6
+IERhdmUgQWlybGllIDxhaXJsaWVkQHJlZGhhdC5jb20+DQpDYzogSmlyaSBPbHNhIDxqb2xzYUBr
+ZXJuZWwub3JnPg0KQ2M6IExpb25lbCBMYW5kd2VybGluIDxsaW9uZWwuZy5sYW5kd2VybGluQGlu
+dGVsLmNvbT4NCkNjOiBMdWlzIENsw6F1ZGlvIEdvbsOnYWx2ZXMgPGxjbGF1ZGlvQHJlZGhhdC5j
+b20+DQpDYzogTmFtaHl1bmcgS2ltIDxuYW1oeXVuZ0BrZXJuZWwub3JnPg0KTGluazogaHR0cHM6
+Ly9sa21sLmtlcm5lbC5vcmcvbi90aXAtanJjOW9ndzMzdzR6Z3FjM3B1N28xbDNnQGdpdC5rZXJu
+ZWwub3JnDQpTaWduZWQtb2ZmLWJ5OiBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8gPGFjbWVAcmVk
+aGF0LmNvbT4NCi0tLQ0KIHRvb2xzL2luY2x1ZGUvdWFwaS9kcm0vZHJtLmggfCAzNyArKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMzcgaW5zZXJ0
+aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvdG9vbHMvaW5jbHVkZS91YXBpL2RybS9kcm0uaCBiL3Rv
+b2xzL2luY2x1ZGUvdWFwaS9kcm0vZHJtLmggaW5kZXggMzAwZjMzNjYzM2YyLi42NjFkNzNmOWE5
+MTkgMTAwNjQ0DQotLS0gYS90b29scy9pbmNsdWRlL3VhcGkvZHJtL2RybS5oDQorKysgYi90b29s
+cy9pbmNsdWRlL3VhcGkvZHJtL2RybS5oDQpAQCAtNjQ5LDYgKzY0OSw3IEBAIHN0cnVjdCBkcm1f
+Z2VtX29wZW4gew0KICNkZWZpbmUgRFJNX0NBUF9QQUdFX0ZMSVBfVEFSR0VUCTB4MTENCiAjZGVm
+aW5lIERSTV9DQVBfQ1JUQ19JTl9WQkxBTktfRVZFTlQJMHgxMg0KICNkZWZpbmUgRFJNX0NBUF9T
+WU5DT0JKCQkweDEzDQorI2RlZmluZSBEUk1fQ0FQX1NZTkNPQkpfVElNRUxJTkUJMHgxNA0KIA0K
+IC8qKiBEUk1fSU9DVExfR0VUX0NBUCBpb2N0bCBhcmd1bWVudCB0eXBlICovICBzdHJ1Y3QgZHJt
+X2dldF9jYXAgeyBAQCAtNzM1LDggKzczNiwxOCBAQCBzdHJ1Y3QgZHJtX3N5bmNvYmpfaGFuZGxl
+IHsNCiAJX191MzIgcGFkOw0KIH07DQogDQorc3RydWN0IGRybV9zeW5jb2JqX3RyYW5zZmVyIHsN
+CisJX191MzIgc3JjX2hhbmRsZTsNCisJX191MzIgZHN0X2hhbmRsZTsNCisJX191NjQgc3JjX3Bv
+aW50Ow0KKwlfX3U2NCBkc3RfcG9pbnQ7DQorCV9fdTMyIGZsYWdzOw0KKwlfX3UzMiBwYWQ7DQor
+fTsNCisNCiAjZGVmaW5lIERSTV9TWU5DT0JKX1dBSVRfRkxBR1NfV0FJVF9BTEwgKDEgPDwgMCkg
+ICNkZWZpbmUgRFJNX1NZTkNPQkpfV0FJVF9GTEFHU19XQUlUX0ZPUl9TVUJNSVQgKDEgPDwgMSkN
+CisjZGVmaW5lIERSTV9TWU5DT0JKX1dBSVRfRkxBR1NfV0FJVF9BVkFJTEFCTEUgKDEgPDwgMikg
+Lyogd2FpdCBmb3IgdGltZSANCitwb2ludCB0byBiZWNvbWUgYXZhaWxhYmxlICovDQogc3RydWN0
+IGRybV9zeW5jb2JqX3dhaXQgew0KIAlfX3U2NCBoYW5kbGVzOw0KIAkvKiBhYnNvbHV0ZSB0aW1l
+b3V0ICovDQpAQCAtNzQ3LDEyICs3NTgsMzMgQEAgc3RydWN0IGRybV9zeW5jb2JqX3dhaXQgew0K
+IAlfX3UzMiBwYWQ7DQogfTsNCiANCitzdHJ1Y3QgZHJtX3N5bmNvYmpfdGltZWxpbmVfd2FpdCB7
+DQorCV9fdTY0IGhhbmRsZXM7DQorCS8qIHdhaXQgb24gc3BlY2lmaWMgdGltZWxpbmUgcG9pbnQg
+Zm9yIGV2ZXJ5IGhhbmRsZXMqLw0KKwlfX3U2NCBwb2ludHM7DQorCS8qIGFic29sdXRlIHRpbWVv
+dXQgKi8NCisJX19zNjQgdGltZW91dF9uc2VjOw0KKwlfX3UzMiBjb3VudF9oYW5kbGVzOw0KKwlf
+X3UzMiBmbGFnczsNCisJX191MzIgZmlyc3Rfc2lnbmFsZWQ7IC8qIG9ubHkgdmFsaWQgd2hlbiBu
+b3Qgd2FpdGluZyBhbGwgKi8NCisJX191MzIgcGFkOw0KK307DQorDQorDQogc3RydWN0IGRybV9z
+eW5jb2JqX2FycmF5IHsNCiAJX191NjQgaGFuZGxlczsNCiAJX191MzIgY291bnRfaGFuZGxlczsN
+CiAJX191MzIgcGFkOw0KIH07DQogDQorc3RydWN0IGRybV9zeW5jb2JqX3RpbWVsaW5lX2FycmF5
+IHsNCisJX191NjQgaGFuZGxlczsNCisJX191NjQgcG9pbnRzOw0KKwlfX3UzMiBjb3VudF9oYW5k
+bGVzOw0KKwlfX3UzMiBwYWQ7DQorfTsNCisNCisNCiAvKiBRdWVyeSBjdXJyZW50IHNjYW5vdXQg
+c2VxdWVuY2UgbnVtYmVyICovICBzdHJ1Y3QgZHJtX2NydGNfZ2V0X3NlcXVlbmNlIHsNCiAJX191
+MzIgY3J0Y19pZDsJCS8qIHJlcXVlc3RlZCBjcnRjX2lkICovDQpAQCAtOTA5LDYgKzk0MSwxMSBA
+QCBleHRlcm4gIkMiIHsNCiAjZGVmaW5lIERSTV9JT0NUTF9NT0RFX0dFVF9MRUFTRQlEUk1fSU9X
+UigweEM4LCBzdHJ1Y3QgZHJtX21vZGVfZ2V0X2xlYXNlKQ0KICNkZWZpbmUgRFJNX0lPQ1RMX01P
+REVfUkVWT0tFX0xFQVNFCURSTV9JT1dSKDB4QzksIHN0cnVjdCBkcm1fbW9kZV9yZXZva2VfbGVh
+c2UpDQogDQorI2RlZmluZSBEUk1fSU9DVExfU1lOQ09CSl9USU1FTElORV9XQUlUCURSTV9JT1dS
+KDB4Q0EsIHN0cnVjdCBkcm1fc3luY29ial90aW1lbGluZV93YWl0KQ0KKyNkZWZpbmUgRFJNX0lP
+Q1RMX1NZTkNPQkpfUVVFUlkJCURSTV9JT1dSKDB4Q0IsIHN0cnVjdCBkcm1fc3luY29ial90aW1l
+bGluZV9hcnJheSkNCisjZGVmaW5lIERSTV9JT0NUTF9TWU5DT0JKX1RSQU5TRkVSCURSTV9JT1dS
+KDB4Q0MsIHN0cnVjdCBkcm1fc3luY29ial90cmFuc2ZlcikNCisjZGVmaW5lIERSTV9JT0NUTF9T
+WU5DT0JKX1RJTUVMSU5FX1NJR05BTAlEUk1fSU9XUigweENELCBzdHJ1Y3QgZHJtX3N5bmNvYmpf
+dGltZWxpbmVfYXJyYXkpDQorDQogLyoqDQogICogRGV2aWNlIHNwZWNpZmljIGlvY3RscyBzaG91
+bGQgb25seSBiZSBpbiB0aGVpciByZXNwZWN0aXZlIGhlYWRlcnMNCiAgKiBUaGUgZGV2aWNlIHNw
+ZWNpZmljIGlvY3RsIHJhbmdlIGlzIGZyb20gMHg0MCB0byAweDlmLg0KLS0NCjIuMjAuMQ0KDQo=
