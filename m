@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/14] perf data: Fix 'strncat may truncate' build failure with recent gcc
-Date: Tue, 28 May 2019 14:50:07 -0300
-Message-ID: <20190528175020.13343-2-acme@kernel.org>
+Subject: [PATCH 04/14] tools arch x86: Sync asm/cpufeatures.h with the with the kernel
+Date: Tue, 28 May 2019 14:50:10 -0300
+Message-ID: <20190528175020.13343-5-acme@kernel.org>
 References: <20190528175020.13343-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,49 +10,55 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190528175020.13343-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Shawn Landden <shawn@git.icu>, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Shawn Landden <shawn@git.icu>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This strncat() is safe because the buffer was allocated with zalloc(),
-however gcc doesn't know that. Since the string always has 4 non-null
-bytes, just use memcpy() here.
+To pick up the changes in:
 
-    CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
-  In file included from /usr/include/string.h:494,
-                   from /home/shawn/linux/tools/lib/traceevent/event-parse.h:27,
-                   from util/data-convert-bt.c:22:
-  In function ‘strncat’,
-      inlined from ‘string_set_value’ at util/data-convert-bt.c:274:4:
-  /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin_strncat’ output may be truncated copying 4 bytes from a string of length 4 [-Werror=stringop-truncation]
-    136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ed5194c2732c ("x86/speculation/mds: Add basic bug infrastructure for MDS")
+  e261f209c366 ("x86/speculation/mds: Add BUG_MSBDS_ONLY")
 
-Signed-off-by: Shawn Landden <shawn@git.icu>
+That don't affect anything in tools/.
+
+This silences this perf build warning:
+
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-LPU-Reference: 20190518183238.10954-1-shawn@git.icu
-Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/n/tip-jp1afecx3ql1jkuirpgkqfad@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data-convert-bt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/arch/x86/include/asm/cpufeatures.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
-index e0311c9750ad..9097543a818b 100644
---- a/tools/perf/util/data-convert-bt.c
-+++ b/tools/perf/util/data-convert-bt.c
-@@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *field, const char *string)
- 				if (i > 0)
- 					strncpy(buffer, string, i);
- 			}
--			strncat(buffer + p, numstr, 4);
-+			memcpy(buffer + p, numstr, 4);
- 			p += 3;
- 		}
- 	}
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index 981ff9479648..75f27ee2c263 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -344,6 +344,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_MD_CLEAR		(18*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+@@ -382,5 +383,7 @@
+ #define X86_BUG_SPECTRE_V2		X86_BUG(16) /* CPU is affected by Spectre variant 2 attack with indirect branches */
+ #define X86_BUG_SPEC_STORE_BYPASS	X86_BUG(17) /* CPU is affected by speculative store bypass attack */
+ #define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
++#define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
++#define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
+ 
+ #endif /* _ASM_X86_CPUFEATURES_H */
 -- 
 2.20.1
