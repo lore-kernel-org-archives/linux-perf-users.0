@@ -1,68 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/41] perf beauty: Add generator for sync_file_range's 'flags' arg values
-Date: Wed, 29 May 2019 10:35:42 -0300
-Message-ID: <20190529133605.21118-19-acme@kernel.org>
+Subject: [PATCH 20/41] perf top: Add --namespaces option
+Date: Wed, 29 May 2019 10:35:44 -0300
+Message-ID: <20190529133605.21118-21-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Amir Goldstein <amir73il@gmail.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hari Bathini <hbathini@linux.vnet.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Krister Johansen <kjlx@templeofstupid.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Namhyung Kim <namhyung@kernel.org>
 
-  $ tools/perf/trace/beauty/sync_file_range.sh
-  static const char *sync_file_range_flags[] = {
-          [ilog2(1) + 1] = "WAIT_BEFORE",
-          [ilog2(2) + 1] = "WRITE",
-          [ilog2(4) + 1] = "WAIT_AFTER",
-  };
-  $
+Since 'perf record' already have this option, let's have it for 'perf top'
+as well.
 
-When all are the above are present, then we have something called
-SYNC_FILE_RANGE_WRITE_AND_WAIT, that will be special cased in the
-upcoming scnprintf beautifier for this flags arg.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Amir Goldstein <amir73il@gmail.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-uf2vd7bc8fkz65j7yit8dh84@git.kernel.org
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Hari Bathini <hbathini@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Krister Johansen <kjlx@templeofstupid.com>
+Link: http://lkml.kernel.org/r/20190522053250.207156-4-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/sync_file_range.sh | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100755 tools/perf/trace/beauty/sync_file_range.sh
+ tools/perf/Documentation/perf-top.txt | 5 +++++
+ tools/perf/builtin-top.c              | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/tools/perf/trace/beauty/sync_file_range.sh b/tools/perf/trace/beauty/sync_file_range.sh
-new file mode 100755
-index 000000000000..7a9282d04e44
---- /dev/null
-+++ b/tools/perf/trace/beauty/sync_file_range.sh
-@@ -0,0 +1,17 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: LGPL-2.1
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index 44d89fb9c788..cfea87c6f38e 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -262,6 +262,11 @@ Default is to monitor all CPUS.
+ 	The number of threads to run when synthesizing events for existing processes.
+ 	By default, the number of threads equals to the number of online CPUs.
+ 
++--namespaces::
++	Record events of type PERF_RECORD_NAMESPACES and display it with the
++	'cgroup_id' sort key.
 +
-+if [ $# -ne 1 ] ; then
-+	linux_header_dir=tools/include/uapi/linux
-+else
-+	linux_header_dir=$1
-+fi
 +
-+linux_fs=${linux_header_dir}/fs.h
+ INTERACTIVE PROMPTING KEYS
+ --------------------------
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index fbbb0da43abb..31d78d874fc7 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1208,6 +1208,9 @@ static int __cmd_top(struct perf_top *top)
+ 
+ 	init_process_thread(top);
+ 
++	if (opts->record_namespaces)
++		top->tool.namespace_events = true;
 +
-+printf "static const char *sync_file_range_flags[] = {\n"
-+regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+SYNC_FILE_RANGE_([[:alnum:]_]+)[[:space:]]+([[:xdigit:]]+)[[:space:]]*.*'
-+egrep $regex ${linux_fs} | \
-+	sed -r "s/$regex/\2 \1/g"	| \
-+	xargs printf "\t[ilog2(%s) + 1] = \"%s\",\n"
-+printf "};\n"
+ 	ret = perf_event__synthesize_bpf_events(top->session, perf_event__process,
+ 						&top->session->machines.host,
+ 						&top->record_opts);
+@@ -1500,6 +1503,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
+ 	OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
+ 			"number of thread to run event synthesize"),
++	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
++		    "Record namespaces events"),
+ 	OPT_END()
+ 	};
+ 	struct perf_evlist *sb_evlist = NULL;
 -- 
 2.20.1
