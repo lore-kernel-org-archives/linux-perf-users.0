@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 40/41] perf intel-pt: Improve sync_switch by processing PERF_RECORD_SWITCH* in events
-Date: Wed, 29 May 2019 10:36:04 -0300
-Message-ID: <20190529133605.21118-41-acme@kernel.org>
+Subject: [PATCH 41/41] perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
+Date: Wed, 29 May 2019 10:36:05 -0300
+Message-ID: <20190529133605.21118-42-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,76 +14,45 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-sync_switch is a facility to synchronize decoding more closely with the
-point in the kernel when the context actually switched.
-
-Improve it by processing "context switch in" events.
+Returning 1 from intel_pt_sync_switch() causes the current tid to be
+set. That negates the need to keep next_tid anymore. Rationalize the
+code to that effect.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190412113830.4126-8-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190412113830.4126-9-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 40 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ tools/perf/util/intel-pt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 03b1da6d1da4..6aaba1146fc8 100644
+index 6aaba1146fc8..7a70693c1b91 100644
 --- a/tools/perf/util/intel-pt.c
 +++ b/tools/perf/util/intel-pt.c
-@@ -1914,6 +1914,44 @@ static int intel_pt_process_switch(struct intel_pt *pt,
- 	return machine__set_current_tid(pt->machine, cpu, -1, tid);
+@@ -1859,7 +1859,6 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
+ 
+ 	switch (ptq->switch_state) {
+ 	case INTEL_PT_SS_NOT_TRACING:
+-		ptq->next_tid = -1;
+ 		break;
+ 	case INTEL_PT_SS_UNKNOWN:
+ 	case INTEL_PT_SS_TRACING:
+@@ -1879,13 +1878,14 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
+ 		ptq->switch_state = INTEL_PT_SS_TRACING;
+ 		break;
+ 	case INTEL_PT_SS_EXPECTING_SWITCH_IP:
+-		ptq->next_tid = tid;
+ 		intel_pt_log("ERROR: cpu %d expecting switch ip\n", cpu);
+ 		break;
+ 	default:
+ 		break;
+ 	}
+ 
++	ptq->next_tid = -1;
++
+ 	return 1;
  }
  
-+static int intel_pt_context_switch_in(struct intel_pt *pt,
-+				      struct perf_sample *sample)
-+{
-+	pid_t pid = sample->pid;
-+	pid_t tid = sample->tid;
-+	int cpu = sample->cpu;
-+
-+	if (pt->sync_switch) {
-+		struct intel_pt_queue *ptq;
-+
-+		ptq = intel_pt_cpu_to_ptq(pt, cpu);
-+		if (ptq && ptq->sync_switch) {
-+			ptq->next_tid = -1;
-+			switch (ptq->switch_state) {
-+			case INTEL_PT_SS_NOT_TRACING:
-+			case INTEL_PT_SS_UNKNOWN:
-+			case INTEL_PT_SS_TRACING:
-+				break;
-+			case INTEL_PT_SS_EXPECTING_SWITCH_EVENT:
-+			case INTEL_PT_SS_EXPECTING_SWITCH_IP:
-+				ptq->switch_state = INTEL_PT_SS_TRACING;
-+				break;
-+			default:
-+				break;
-+			}
-+		}
-+	}
-+
-+	/*
-+	 * If the current tid has not been updated yet, ensure it is now that
-+	 * a "switch in" event has occurred.
-+	 */
-+	if (machine__get_current_tid(pt->machine, cpu) == tid)
-+		return 0;
-+
-+	return machine__set_current_tid(pt->machine, cpu, pid, tid);
-+}
-+
- static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
- 				   struct perf_sample *sample)
- {
-@@ -1925,7 +1963,7 @@ static int intel_pt_context_switch(struct intel_pt *pt, union perf_event *event,
- 
- 	if (pt->have_sched_switch == 3) {
- 		if (!out)
--			return 0;
-+			return intel_pt_context_switch_in(pt, sample);
- 		if (event->header.type != PERF_RECORD_SWITCH_CPU_WIDE) {
- 			pr_err("Expecting CPU-wide context switch event\n");
- 			return -EINVAL;
 -- 
 2.20.1
