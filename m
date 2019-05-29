@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/41] perf version: Append 12 git SHA chars to the version string
-Date: Wed, 29 May 2019 10:35:54 -0300
-Message-ID: <20190529133605.21118-31-acme@kernel.org>
+Subject: [PATCH 31/41] perf machine: Return NULL instead of null-terminating /proc/version array
+Date: Wed, 29 May 2019 10:35:55 -0300
+Message-ID: <20190529133605.21118-32-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,47 +9,41 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Donald Yandt <donald.yandt@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Yanmin Zhang <yanmin_zhang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Donald Yandt <donald.yandt@gmail.com>
 
-Bumping it from just 4:
+Return NULL instead of null-terminating version char array when fgets
+fails due to end-of-file or error.
 
-Before:
-
-  $ perf -v
-  perf version 5.2.rc1.g80978f
-  $
-
-After:
-
-  $ perf -v
-  perf version 5.2.rc1.g80978fc864c5
-  $
-
-Requested-by: Ingo Molnar <mingo@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-p4yun2nxlo7eeeohyx5v4kw7@git.kernel.org
+Signed-off-by: Donald Yandt <donald.yandt@gmail.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Yanmin Zhang <yanmin_zhang@linux.intel.com>
+Fixes: 30ba5b0e66c8 ("perf machine: Null-terminate version char array upon fgets(/proc/version) error")
+Link: http://lkml.kernel.org/r/20190528134128.30841-1-donald.yandt@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/PERF-VERSION-GEN | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/machine.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/PERF-VERSION-GEN b/tools/perf/util/PERF-VERSION-GEN
-index 3802cee5e188..59241ff342be 100755
---- a/tools/perf/util/PERF-VERSION-GEN
-+++ b/tools/perf/util/PERF-VERSION-GEN
-@@ -19,7 +19,7 @@ TAG=
- if test -d ../../.git -o -f ../../.git
- then
- 	TAG=$(git describe --abbrev=0 --match "v[0-9].[0-9]*" 2>/dev/null )
--	CID=$(git log -1 --abbrev=4 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
-+	CID=$(git log -1 --abbrev=12 --pretty=format:"%h" 2>/dev/null) && CID="-g$CID"
- elif test -f ../../PERF-VERSION-FILE
- then
- 	TAG=$(cut -d' ' -f3 ../../PERF-VERSION-FILE | sed -e 's/\"//g')
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index f5569f005cf3..17eec39e775e 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1241,9 +1241,9 @@ static char *get_kernel_version(const char *root_dir)
+ 		return NULL;
+ 
+ 	tmp = fgets(version, sizeof(version), file);
+-	if (!tmp)
+-		*version = '\0';
+ 	fclose(file);
++	if (!tmp)
++		return NULL;
+ 
+ 	name = strstr(version, prefix);
+ 	if (!name)
 -- 
 2.20.1
