@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/41] perf annotate TUI browser: Do not use member from variable within its own initialization
-Date: Wed, 29 May 2019 10:35:56 -0300
-Message-ID: <20190529133605.21118-33-acme@kernel.org>
+Subject: [PATCH 33/41] perf python: Remove -fstack-protector-strong if clang doesn't have it
+Date: Wed, 29 May 2019 10:35:57 -0300
+Message-ID: <20190529133605.21118-34-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,53 +14,53 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Some compilers will complain when using a member of a struct to
-initialize another member, in the same struct initialization.
+Some distros put -fstack-protector-strong in the compiler flags to be
+used to build python extensions, but then, the clang version in that
+distro doesn't know about that, only gcc does.
 
-For instance:
+Check if that is the case and remove it from the set of options used to
+build the python binding with clang.
 
-  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
-  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+Case at hand:
 
-Produce:
+oraclelinux:7
 
-  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
-                                              (!ops.current_entry ||
-                                                ^~~
-  1 error generated.
+  $ head -2 /etc/os-release
+  NAME="Oracle Linux Server"
+  VERSION="7.6"
+  $ grep stack-protector /usr/lib64/python2.7/_sysconfigdata.py | head -1 | cut -c-120
+ 'CFLAGS': '-fno-strict-aliasing -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --para
+  $
+  gcc version 4.8.5 20150623 (Red Hat 4.8.5-36.0.1) (GCC)
+  clang version 3.4.2 (tags/RELEASE_34/dot2-final)
 
-So use an extra variable, initialized just before that struct, to have
-the value used in the expressions used to init two of the struct
-members.
+  clang: error: unknown argument: '-fstack-protector-strong'
+  clang: error: unknown argument: '-fstack-protector-strong'
+  error: command 'clang' failed with exit status 1
+  cp: cannot stat '/tmp/build/perf/python_ext_build/lib/perf*.so': No such file or directory
+  make[2]: *** [/tmp/build/perf/python/perf.so] Error 1
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
-Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-brmp2415zxpbhz45etkgjoma@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/annotate.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 98d934a36d86..b0d089a95dac 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
- 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
- 	struct annotation *notes = browser__annotation(browser);
- 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
-+	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
- 	struct annotation_write_ops ops = {
- 		.first_line		 = row == 0,
--		.current_entry		 = ui_browser__is_current_entry(browser, row),
-+		.current_entry		 = is_current_entry,
- 		.change_color		 = (!notes->options->hide_src_code &&
--					    (!ops.current_entry ||
-+					    (!is_current_entry ||
- 					     (browser->use_navkeypressed &&
- 					      !browser->navkeypressed))),
- 		.width			 = browser->width,
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 5b5a167b43ce..a1a68a2fa917 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -17,6 +17,8 @@ if cc == "clang":
+             vars[var] = sub("-fcf-protection", "", vars[var])
+         if not clang_has_option("-fstack-clash-protection"):
+             vars[var] = sub("-fstack-clash-protection", "", vars[var])
++        if not clang_has_option("-fstack-protector-strong"):
++            vars[var] = sub("-fstack-protector-strong", "", vars[var])
+ 
+ from distutils.core import setup, Extension
+ 
 -- 
 2.20.1
