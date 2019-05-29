@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 31/41] perf machine: Return NULL instead of null-terminating /proc/version array
-Date: Wed, 29 May 2019 10:35:55 -0300
-Message-ID: <20190529133605.21118-32-acme@kernel.org>
+Subject: [PATCH 32/41] perf annotate TUI browser: Do not use member from variable within its own initialization
+Date: Wed, 29 May 2019 10:35:56 -0300
+Message-ID: <20190529133605.21118-33-acme@kernel.org>
 References: <20190529133605.21118-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,41 +9,58 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Donald Yandt <donald.yandt@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Yanmin Zhang <yanmin_zhang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Donald Yandt <donald.yandt@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Return NULL instead of null-terminating version char array when fgets
-fails due to end-of-file or error.
+Some compilers will complain when using a member of a struct to
+initialize another member, in the same struct initialization.
 
-Signed-off-by: Donald Yandt <donald.yandt@gmail.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Yanmin Zhang <yanmin_zhang@linux.intel.com>
-Fixes: 30ba5b0e66c8 ("perf machine: Null-terminate version char array upon fgets(/proc/version) error")
-Link: http://lkml.kernel.org/r/20190528134128.30841-1-donald.yandt@gmail.com
+For instance:
+
+  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
+
+Produce:
+
+  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+                                              (!ops.current_entry ||
+                                                ^~~
+  1 error generated.
+
+So use an extra variable, initialized just before that struct, to have
+the value used in the expressions used to init two of the struct
+members.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
+Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index f5569f005cf3..17eec39e775e 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1241,9 +1241,9 @@ static char *get_kernel_version(const char *root_dir)
- 		return NULL;
- 
- 	tmp = fgets(version, sizeof(version), file);
--	if (!tmp)
--		*version = '\0';
- 	fclose(file);
-+	if (!tmp)
-+		return NULL;
- 
- 	name = strstr(version, prefix);
- 	if (!name)
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 98d934a36d86..b0d089a95dac 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
+ 	struct annotation *notes = browser__annotation(browser);
+ 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
++	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
+ 	struct annotation_write_ops ops = {
+ 		.first_line		 = row == 0,
+-		.current_entry		 = ui_browser__is_current_entry(browser, row),
++		.current_entry		 = is_current_entry,
+ 		.change_color		 = (!notes->options->hide_src_code &&
+-					    (!ops.current_entry ||
++					    (!is_current_entry ||
+ 					     (browser->use_navkeypressed &&
+ 					      !browser->navkeypressed))),
+ 		.width			 = browser->width,
 -- 
 2.20.1
