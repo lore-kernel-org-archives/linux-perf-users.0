@@ -1,58 +1,60 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/41] perf intel-pt: Rationalize intel_pt_sync_switch()'s use of next_tid
-Date: Wed, 29 May 2019 10:36:05 -0300
-Message-ID: <20190529133605.21118-42-acme@kernel.org>
+From: Christian Brauner <christian@brauner.io>
+Subject: Re: [PATCH 17/41] perf trace beauty clone: Handle CLONE_PIDFD
+Date: Wed, 29 May 2019 16:49:16 +0200
+Message-ID: <20190529144915.xe5ug7r3u2efuzme@brauner.io>
 References: <20190529133605.21118-1-acme@kernel.org>
+ <20190529133605.21118-18-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190529133605.21118-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190529133605.21118-18-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Luis =?utf-8?Q?Cl=C3=A1udio_Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+On Wed, May 29, 2019 at 10:35:41AM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> In addition to the older flags. This will allow something like this to
+> be implemented in 'perf trace"
+> 
+>   perf trace -e clone/PIDFD in flags/
+> 
+> I.e. ask for strace like tracing, system wide, looking for 'clone'
+> syscalls that have the CLONE_PIDFD bit set in the 'flags' arg.
+> 
+> For now we'll just see PIDFD if it is set in the 'flags' arg.
+> 
+> Cc: Christian Brauner <christian@brauner.io>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-drq9h7s8gcv8b87064fp6lb0@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Returning 1 from intel_pt_sync_switch() causes the current tid to be
-set. That negates the need to keep next_tid anymore. Rationalize the
-code to that effect.
+Acked-by: Christian Brauner <christian@brauner.io>
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190412113830.4126-9-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/intel-pt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 6aaba1146fc8..7a70693c1b91 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1859,7 +1859,6 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
- 
- 	switch (ptq->switch_state) {
- 	case INTEL_PT_SS_NOT_TRACING:
--		ptq->next_tid = -1;
- 		break;
- 	case INTEL_PT_SS_UNKNOWN:
- 	case INTEL_PT_SS_TRACING:
-@@ -1879,13 +1878,14 @@ static int intel_pt_sync_switch(struct intel_pt *pt, int cpu, pid_t tid,
- 		ptq->switch_state = INTEL_PT_SS_TRACING;
- 		break;
- 	case INTEL_PT_SS_EXPECTING_SWITCH_IP:
--		ptq->next_tid = tid;
- 		intel_pt_log("ERROR: cpu %d expecting switch ip\n", cpu);
- 		break;
- 	default:
- 		break;
- 	}
- 
-+	ptq->next_tid = -1;
-+
- 	return 1;
- }
- 
--- 
-2.20.1
+> ---
+>  tools/perf/trace/beauty/clone.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
+> index 6eb9a6636171..1a8d3be2030e 100644
+> --- a/tools/perf/trace/beauty/clone.c
+> +++ b/tools/perf/trace/beauty/clone.c
+> @@ -25,6 +25,7 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size,
+>  	P_FLAG(FS);
+>  	P_FLAG(FILES);
+>  	P_FLAG(SIGHAND);
+> +	P_FLAG(PIDFD);
+>  	P_FLAG(PTRACE);
+>  	P_FLAG(VFORK);
+>  	P_FLAG(PARENT);
+> -- 
+> 2.20.1
+> 
