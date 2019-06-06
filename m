@@ -1,8 +1,8 @@
-From: Jiri Olsa <jolsa@redhat.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Subject: Re: [PATCH] perf record: Add support to collect callchains from
  kernel or user space only.
-Date: Thu, 6 Jun 2019 09:25:16 +0200
-Message-ID: <20190606072516.GA28792@krava>
+Date: Thu, 6 Jun 2019 11:26:44 -0300
+Message-ID: <20190606142644.GA21245@kernel.org>
 References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -14,7 +14,7 @@ To: ufo19890607 <ufo19890607@gmail.com>
 Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 wrote:
+Em Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 escreveu:
 > From: yuzhoujian <yuzhoujian@didichuxing.com>
 > 
 > One can just record callchains in the kernel or user space with
@@ -32,13 +32,6 @@ On Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 wrote:
 > 	$ perf record -a -g --all-kernel --user-callchains
 > 
 > Signed-off-by: yuzhoujian <yuzhoujian@didichuxing.com>
-
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-
 > ---
 >  tools/perf/Documentation/perf-record.txt | 6 ++++++
 >  tools/perf/builtin-record.c              | 4 ++++
@@ -56,9 +49,35 @@ jirka
 >  
 > +--kernel-callchains::
 > +Collect callchains from kernel space.
+
+Ok, changing this to:
+
+Collect callchains only from kernel space. I.e. this option sets
+perf_event_attr.exclude_callchain_user to 1,
+perf_event_attr.exclude_callchain_kernel to 0.
+
 > +
 > +--user-callchains::
 > +Collect callchains from user space.
+
+And this one to:
+Collect callchains only from user space. I.e. this option sets
+
+perf_event_attr.exclude_callchain_kernel to 1,
+perf_event_attr.exclude_callchain_user to 0.
+
+
+So that the user don't try using:
+
+    pref record --user-callchains --kernel-callchains
+
+expecting to get both user and kernel callchains and instead gets
+nothing.
+
+Ok?
+
+- Arnaldo
+
 > +
 >  --timestamp-filename
 >  Append timestamp to output file name.
@@ -108,4 +127,7 @@ jirka
 >  			if (attr->exclude_user) {
 > -- 
 > 2.14.1
-> 
+
+-- 
+
+- Arnaldo
