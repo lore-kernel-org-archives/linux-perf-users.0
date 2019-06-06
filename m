@@ -1,8 +1,8 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH] perf record: Add support to collect callchains from
  kernel or user space only.
-Date: Thu, 6 Jun 2019 11:29:22 -0300
-Message-ID: <20190606142922.GB21245@kernel.org>
+Date: Thu, 6 Jun 2019 16:46:14 +0200
+Message-ID: <20190606144614.GC12056@krava>
 References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
  <20190606142644.GA21245@kernel.org>
 Mime-Version: 1.0
@@ -11,11 +11,11 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <20190606142644.GA21245@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ufo19890607 <ufo19890607@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: ufo19890607 <ufo19890607@gmail.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, yuzhoujian@didichuxing.com, adrian.hunter@intel.com, wangnan0@huawei.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo escreveu:
+On Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo wrote:
 > Em Thu, May 30, 2019 at 02:29:22PM +0100, ufo19890607 escreveu:
 > > From: yuzhoujian <yuzhoujian@didichuxing.com>
 > > 
@@ -67,11 +67,7 @@ Em Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo escreveu:
 > 
 > perf_event_attr.exclude_callchain_kernel to 1,
 > perf_event_attr.exclude_callchain_user to 0.
-
-Yeah, each of this options just sets the exclude bit for the undesired
-callchains, not setting 0 for the desired, so I'm fixing up the doc I
-suggested accordingly, my comment below remains valid tho:
-
+> 
 > 
 > So that the user don't try using:
 > 
@@ -79,65 +75,8 @@ suggested accordingly, my comment below remains valid tho:
 > 
 > expecting to get both user and kernel callchains and instead gets
 > nothing.
-> 
-> Ok?
-> 
-> - Arnaldo
-> 
-> > +
-> >  --timestamp-filename
-> >  Append timestamp to output file name.
-> >  
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index e2c3a585a61e..dca55997934e 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -2191,6 +2191,10 @@ static struct option __record_options[] = {
-> >  	OPT_BOOLEAN_FLAG(0, "all-user", &record.opts.all_user,
-> >  			 "Configure all used events to run in user space.",
-> >  			 PARSE_OPT_EXCLUSIVE),
-> > +	OPT_BOOLEAN(0, "kernel-callchains", &record.opts.kernel_callchains,
-> > +		    "collect kernel callchains"),
-> > +	OPT_BOOLEAN(0, "user-callchains", &record.opts.user_callchains,
-> > +		    "collect user callchains"),
-> >  	OPT_STRING(0, "clang-path", &llvm_param.clang_path, "clang path",
-> >  		   "clang binary to use for compiling BPF scriptlets"),
-> >  	OPT_STRING(0, "clang-opt", &llvm_param.clang_opt, "clang options",
-> > diff --git a/tools/perf/perf.h b/tools/perf/perf.h
-> > index d59dee61b64d..711e009381ec 100644
-> > --- a/tools/perf/perf.h
-> > +++ b/tools/perf/perf.h
-> > @@ -61,6 +61,8 @@ struct record_opts {
-> >  	bool	     record_switch_events;
-> >  	bool	     all_kernel;
-> >  	bool	     all_user;
-> > +	bool	     kernel_callchains;
-> > +	bool	     user_callchains;
-> >  	bool	     tail_synthesize;
-> >  	bool	     overwrite;
-> >  	bool	     ignore_missing_thread;
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index a6f572a40deb..a606b2833e27 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -680,6 +680,10 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
-> >  
-> >  	attr->sample_max_stack = param->max_stack;
-> >  
-> > +	if (opts->kernel_callchains)
-> > +		attr->exclude_callchain_user = 1;
-> > +	if (opts->user_callchains)
-> > +		attr->exclude_callchain_kernel = 1;
-> >  	if (param->record_mode == CALLCHAIN_LBR) {
-> >  		if (!opts->branch_stack) {
-> >  			if (attr->exclude_user) {
-> > -- 
-> > 2.14.1
-> 
-> -- 
-> 
-> - Arnaldo
 
--- 
+good catch.. we should add the logic to keep both (default)
+in this case.. so do nothing ;-)
 
-- Arnaldo
+jirka
