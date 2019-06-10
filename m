@@ -1,98 +1,71 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH] perf test 6: Fix missing kvm module load for s390
-Date: Fri, 7 Jun 2019 16:50:30 -0300
-Message-ID: <20190607195030.GQ21245@kernel.org>
-References: <20190604053504.43073-1-tmricht@linux.ibm.com>
+From: =?UTF-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
+Subject: Re: [PATCH] perf record: Add support to collect callchains from
+ kernel or user space only.
+Date: Mon, 10 Jun 2019 15:45:40 +0800
+Message-ID: <CAHCio2ghCkRwKZ0XGTeNK90wnry-0i7arT28bsYhHx4BNZuzoA@mail.gmail.com>
+References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
+ <20190606142644.GA21245@kernel.org> <20190606144614.GC12056@krava> <20190606181504.GD21245@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190604053504.43073-1-tmricht@linux.ibm.com>
+In-Reply-To: <20190606181504.GD21245@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.vnet.ibm.com, heiko.carstens@de.ibm.com
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Wind Yu <yuzhoujian@didichuxing.com>, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jun 04, 2019 at 07:35:04AM +0200, Thomas Richter escreveu:
-> Command
-> 
->    # perf test -Fv 6
-> 
-> fails with error
-> 
->    running test 100 'kvm-s390:kvm_s390_create_vm' failed to parse
->     event 'kvm-s390:kvm_s390_create_vm', err -1, str 'unknown tracepoint'
->     event syntax error: 'kvm-s390:kvm_s390_create_vm'
->                          \___ unknown tracepoint
+Hi Arnaldo,  Jirka
 
-Thanks, applied,
+> perf_event_attr.exclude_callchain_kernel to 0
 
-- Arnaldo
- 
-> when the kvm module is not loaded or not built in.
-> 
-> Fix this by adding a valid function which tests if the module
-> is loaded. Loaded modules (or builtin KVM support) have a
-> directory named
->   /sys/kernel/debug/tracing/events/kvm-s390
-> for this tracepoint.
-> 
-> Check for existence of this directory.
-> 
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  tools/perf/tests/parse-events.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 4a69c07f4101..8f3c80e13584 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -18,6 +18,32 @@
->  #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
->  			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
->  
-> +#if defined(__s390x__)
-> +/* Return true if kvm module is available and loaded. Test this
-> + * and retun success when trace point kvm_s390_create_vm
-> + * exists. Otherwise this test always fails.
-> + */
-> +static bool kvm_s390_create_vm_valid(void)
-> +{
-> +	char *eventfile;
-> +	bool rc = false;
-> +
-> +	eventfile = get_events_file("kvm-s390");
-> +
-> +	if (eventfile) {
-> +		DIR *mydir = opendir(eventfile);
-> +
-> +		if (mydir) {
-> +			rc = true;
-> +			closedir(mydir);
-> +		}
-> +		put_events_file(eventfile);
-> +	}
-> +
-> +	return rc;
-> +}
-> +#endif
-> +
->  static int test__checkevent_tracepoint(struct perf_evlist *evlist)
->  {
->  	struct perf_evsel *evsel = perf_evlist__first(evlist);
-> @@ -1642,6 +1668,7 @@ static struct evlist_test test__events[] = {
->  	{
->  		.name  = "kvm-s390:kvm_s390_create_vm",
->  		.check = test__checkevent_tracepoint,
-> +		.valid = kvm_s390_create_vm_valid,
->  		.id    = 100,
->  	},
->  #endif
-> -- 
-> 2.21.0
+I don't think we should set 0 for the desired callchins,  because we
+will set exclude_callchain_user to 1 if perf_evsel is function event.
 
--- 
+void perf_evsel__config(struct perf_evsel *evsel, struct record_opts
+*opts, struct callchain_param *callchain)
+{
+        ...
+        if (perf_evsel__is_function_event(evsel))
+                evsel->attr.exclude_callchain_user =3D 1;
 
-- Arnaldo
+        if (callchain && callchain->enabled && !evsel->no_aux_samples)
+                perf_evsel__config_callchain(evsel, opts, callchain);
+}
+
+If we set exclude_callchain_user to 0 , it will catch user callchain
+for function_event.  So, it will be best to just set the
+exclude_callchain_xxx to 1.
+
+> So that the user don't try using:
+
+    > perf record --user-callchains --kernel-callchains
+
+> expecting to get both user and kernel callchains and instead gets
+> nothing.
+
+I will add a note in the doc.
+
+
+Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> =E4=BA=8E2019=E5=B9=B46=
+=E6=9C=887=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=882:15=E5=86=99=E9=81=
+=93=EF=BC=9A
+>
+> Em Thu, Jun 06, 2019 at 04:46:14PM +0200, Jiri Olsa escreveu:
+> > On Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > So that the user don't try using:
+>
+> > >     pref record --user-callchains --kernel-callchains
+>
+> > > expecting to get both user and kernel callchains and instead gets
+> > > nothing.
+>
+> > good catch.. we should add the logic to keep both (default)
+> > in this case.. so do nothing ;-)
+>
+> Yeah, not using both or using both should amount to the same behaviour.
+>
+> Can be done with a patch on top of what I have in my tree now.
+>
+> - Arnaldo
