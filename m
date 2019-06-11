@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 79/85] perf time-utils: Make perf_time__parse_for_ranges() more logical
-Date: Tue, 11 Jun 2019 15:59:05 -0300
-Message-ID: <20190611185911.11645-80-acme@kernel.org>
+Subject: [PATCH 82/85] perf test 6: Fix missing kvm module load for s390
+Date: Tue, 11 Jun 2019 15:59:08 -0300
+Message-ID: <20190611185911.11645-83-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,52 +9,86 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-Explicit time ranges never contain a percent sign whereas percentage
-ranges always do, so it is possible to call the correct parser.
+Command
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-18-adrian.hunter@intel.com
+   # perf test -Fv 6
+
+fails with error
+
+   running test 100 'kvm-s390:kvm_s390_create_vm' failed to parse
+    event 'kvm-s390:kvm_s390_create_vm', err -1, str 'unknown tracepoint'
+    event syntax error: 'kvm-s390:kvm_s390_create_vm'
+                         \___ unknown tracepoint
+
+when the kvm module is not loaded or not built in.
+
+Fix this by adding a valid function which tests if the module
+is loaded. Loaded modules (or builtin KVM support) have a
+directory named
+  /sys/kernel/debug/tracing/events/kvm-s390
+for this tracepoint.
+
+Check for existence of this directory.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/20190604053504.43073-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/time-utils.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/tests/parse-events.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 9a463752dba8..d942840356e3 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -402,6 +402,7 @@ int perf_time__parse_for_ranges(const char *time_str,
- 				struct perf_time_interval **ranges,
- 				int *range_size, int *range_num)
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 4a69c07f4101..8f3c80e13584 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -18,6 +18,32 @@
+ #define PERF_TP_SAMPLE_TYPE (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME | \
+ 			     PERF_SAMPLE_CPU | PERF_SAMPLE_PERIOD)
+ 
++#if defined(__s390x__)
++/* Return true if kvm module is available and loaded. Test this
++ * and retun success when trace point kvm_s390_create_vm
++ * exists. Otherwise this test always fails.
++ */
++static bool kvm_s390_create_vm_valid(void)
++{
++	char *eventfile;
++	bool rc = false;
++
++	eventfile = get_events_file("kvm-s390");
++
++	if (eventfile) {
++		DIR *mydir = opendir(eventfile);
++
++		if (mydir) {
++			rc = true;
++			closedir(mydir);
++		}
++		put_events_file(eventfile);
++	}
++
++	return rc;
++}
++#endif
++
+ static int test__checkevent_tracepoint(struct perf_evlist *evlist)
  {
-+	bool has_percent = strchr(time_str, '%');
- 	struct perf_time_interval *ptime_range;
- 	int size, num, ret = -EINVAL;
- 
-@@ -409,7 +410,7 @@ int perf_time__parse_for_ranges(const char *time_str,
- 	if (!ptime_range)
- 		return -ENOMEM;
- 
--	if (perf_time__parse_str(ptime_range, time_str) != 0) {
-+	if (has_percent) {
- 		if (session->evlist->first_sample_time == 0 &&
- 		    session->evlist->last_sample_time == 0) {
- 			pr_err("HINT: no first/last sample time found in perf data.\n"
-@@ -427,6 +428,8 @@ int perf_time__parse_for_ranges(const char *time_str,
- 		if (num < 0)
- 			goto error_invalid;
- 	} else {
-+		if (perf_time__parse_str(ptime_range, time_str))
-+			goto error_invalid;
- 		num = 1;
- 	}
- 
+ 	struct perf_evsel *evsel = perf_evlist__first(evlist);
+@@ -1642,6 +1668,7 @@ static struct evlist_test test__events[] = {
+ 	{
+ 		.name  = "kvm-s390:kvm_s390_create_vm",
+ 		.check = test__checkevent_tracepoint,
++		.valid = kvm_s390_create_vm_valid,
+ 		.id    = 100,
+ 	},
+ #endif
 -- 
 2.20.1
