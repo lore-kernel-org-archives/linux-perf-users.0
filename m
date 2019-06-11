@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 84/85] perf report: Support s390 diag event display on x86
-Date: Tue, 11 Jun 2019 15:59:10 -0300
-Message-ID: <20190611185911.11645-85-acme@kernel.org>
+Subject: [PATCH 57/85] perf header: Rename "sibling cores" to "sibling sockets"
+Date: Tue, 11 Jun 2019 15:58:43 -0300
+Message-ID: <20190611185911.11645-58-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,278 +9,52 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Perf report fails to display s390 specific event numbered bd000
-on an x86 platform. For example on s390 this works without error:
+The "sibling cores" actually shows the sibling CPUs of a socket.  The
+name "sibling cores" is very misleading.
 
-[root@m35lp76 perf]# uname -m
-s390x
-[root@m35lp76 perf]# ./perf record -e rbd000 -- find / >/dev/null
-[ perf record: Woken up 3 times to write data ]
-[ perf record: Captured and wrote 0.549 MB perf.data ]
-[root@m35lp76 perf]# ./perf report -D --stdio  > /dev/null
-[root@m35lp76 perf]#
+Rename "sibling cores" to "sibling sockets"
 
-Transfering this perf.data file to an x86 platform and executing
-the same report command produces:
-
-[root@f29 perf]# uname -m
-x86_64
-[root@f29 perf]# ./perf report -i ~/perf.data.m35lp76 --stdio
-interpreting bpf_prog_info from systems with endianity is not yet supported
-interpreting btf from systems with endianity is not yet supported
-0x8c890 [0x8]: failed to process type: 68
-Error:
-failed to process sample
-
-Event bd000 generates auxiliary data which is stored in big endian
-format in the perf data file.
-This error is caused by missing endianess handling on the x86 platform
-when the data is displayed. Fix this by handling s390 auxiliary event
-data depending on the local platform endianness.
-
-Output after on x86:
-
-[root@f29 perf]# ./perf report -D -i ~/perf.data.m35lp76 --stdio > /dev/null
-interpreting bpf_prog_info from systems with endianity is not yet supported
-interpreting btf from systems with endianity is not yet supported
-[root@f29 perf]#
-
-Committer notes:
-
-Fix build breakage on older systems, such as CentOS:6 where using
-nesting calls to the endian.h macros end up redefining local variables:
-
-  util/s390-cpumsf.c: In function 's390_cpumsf_trailer_show':
-  util/s390-cpumsf.c:333: error: declaration of '__v' shadows a previous local
-  util/s390-cpumsf.c:333: error: shadowed declaration is here
-  util/s390-cpumsf.c:333: error: declaration of '__x' shadows a previous local
-  util/s390-cpumsf.c:333: error: shadowed declaration is here
-  util/s390-cpumsf.c:334: error: declaration of '__v' shadows a previous local
-  util/s390-cpumsf.c:334: error: shadowed declaration is here
-  util/s390-cpumsf.c:334: error: declaration of '__x' shadows a previous local
-  util/s390-cpumsf.c:334: error: shadowed declaration is here
-
-  [perfbuilder@455a63ef60dc perf]$ gcc -v |& tail -1
-  gcc version 4.4.7 20120313 (Red Hat 4.4.7-23) (GCC)
-  [perfbuilder@455a63ef60dc perf]$
-
-Since there are several uses of
-
-  be64toh(te->flags)
-
-Introduce a variable to hold that and then use it, avoiding this case
-that causes the above problems:
-
-  -       local.bsdes = be16toh((be64toh(te->flags) >> 16 & 0xffff));
-  +       local.bsdes = be16toh((flags >> 16 & 0xffff));
-
-Its the same construct used in s390_cpumsf_diag_show() where we have a
-'word' variable that is used just once, s390_cpumsf_basic_show() has
-lots of uses and also uses a variable to hold the result of be16toh().
-
-Some of those temp variables needed to be converted from 'unsigned long'
-to 'unsigned long long' so as to build on 32-bit arches such as
-debian:experimental-x-mipsel, the android NDK ones and
-fedora:24-x-ARC-uClibc.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Link: http://lkml.kernel.org/r/20190522064325.25596-1-tmricht@linux.ibm.com
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1559688644-106558-4-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/s390-cpumsf.c | 96 ++++++++++++++++++++++++++++-------
- 1 file changed, 78 insertions(+), 18 deletions(-)
+ tools/perf/Documentation/perf.data-file-format.txt | 2 +-
+ tools/perf/util/header.c                           | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-index c215704931dc..10d36d9b7909 100644
---- a/tools/perf/util/s390-cpumsf.c
-+++ b/tools/perf/util/s390-cpumsf.c
-@@ -17,8 +17,8 @@
-  *	see Documentation/perf.data-file-format.txt.
-  * PERF_RECORD_AUXTRACE_INFO:
-  *	Defines a table of contains for PERF_RECORD_AUXTRACE records. This
-- *	record is generated during 'perf record' command. Each record contains up
-- *	to 256 entries describing offset and size of the AUXTRACE data in the
-+ *	record is generated during 'perf record' command. Each record contains
-+ *	up to 256 entries describing offset and size of the AUXTRACE data in the
-  *	perf.data file.
-  * PERF_RECORD_AUXTRACE_ERROR:
-  *	Indicates an error during AUXTRACE collection such as buffer overflow.
-@@ -237,10 +237,33 @@ static int s390_cpumcf_dumpctr(struct s390_cpumsf *sf,
- 	return rc;
- }
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index 0165e92e717e..de78183f6881 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -168,7 +168,7 @@ struct {
+ };
  
--/* Display s390 CPU measurement facility basic-sampling data entry */
-+/* Display s390 CPU measurement facility basic-sampling data entry
-+ * Data written on s390 in big endian byte order and contains bit
-+ * fields across byte boundaries.
-+ */
- static bool s390_cpumsf_basic_show(const char *color, size_t pos,
--				   struct hws_basic_entry *basic)
-+				   struct hws_basic_entry *basicp)
- {
-+	struct hws_basic_entry *basic = basicp;
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+	struct hws_basic_entry local;
-+	unsigned long long word = be64toh(*(unsigned long long *)basicp);
-+
-+	memset(&local, 0, sizeof(local));
-+	local.def = be16toh(basicp->def);
-+	local.prim_asn = word & 0xffff;
-+	local.CL = word >> 30 & 0x3;
-+	local.I = word >> 32 & 0x1;
-+	local.AS = word >> 33 & 0x3;
-+	local.P = word >> 35 & 0x1;
-+	local.W = word >> 36 & 0x1;
-+	local.T = word >> 37 & 0x1;
-+	local.U = word >> 40 & 0xf;
-+	local.ia = be64toh(basicp->ia);
-+	local.gpp = be64toh(basicp->gpp);
-+	local.hpp = be64toh(basicp->hpp);
-+	basic = &local;
-+#endif
- 	if (basic->def != 1) {
- 		pr_err("Invalid AUX trace basic entry [%#08zx]\n", pos);
- 		return false;
-@@ -258,10 +281,22 @@ static bool s390_cpumsf_basic_show(const char *color, size_t pos,
- 	return true;
- }
+ Example:
+-	sibling cores   : 0-8
++	sibling sockets : 0-8
+ 	sibling dies	: 0-3
+ 	sibling dies	: 4-7
+ 	sibling threads : 0-1
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 64976254431c..06ddb6618ef3 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1460,7 +1460,7 @@ static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
+ 	str = ph->env.sibling_cores;
  
--/* Display s390 CPU measurement facility diagnostic-sampling data entry */
-+/* Display s390 CPU measurement facility diagnostic-sampling data entry.
-+ * Data written on s390 in big endian byte order and contains bit
-+ * fields across byte boundaries.
-+ */
- static bool s390_cpumsf_diag_show(const char *color, size_t pos,
--				  struct hws_diag_entry *diag)
-+				  struct hws_diag_entry *diagp)
- {
-+	struct hws_diag_entry *diag = diagp;
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+	struct hws_diag_entry local;
-+	unsigned long long word = be64toh(*(unsigned long long *)diagp);
-+
-+	local.def = be16toh(diagp->def);
-+	local.I = word >> 32 & 0x1;
-+	diag = &local;
-+#endif
- 	if (diag->def < S390_CPUMSF_DIAG_DEF_FIRST) {
- 		pr_err("Invalid AUX trace diagnostic entry [%#08zx]\n", pos);
- 		return false;
-@@ -272,35 +307,52 @@ static bool s390_cpumsf_diag_show(const char *color, size_t pos,
- }
- 
- /* Return TOD timestamp contained in an trailer entry */
--static unsigned long long trailer_timestamp(struct hws_trailer_entry *te)
-+static unsigned long long trailer_timestamp(struct hws_trailer_entry *te,
-+					    int idx)
- {
- 	/* te->t set: TOD in STCKE format, bytes 8-15
- 	 * to->t not set: TOD in STCK format, bytes 0-7
- 	 */
- 	unsigned long long ts;
- 
--	memcpy(&ts, &te->timestamp[te->t], sizeof(ts));
--	return ts;
-+	memcpy(&ts, &te->timestamp[idx], sizeof(ts));
-+	return be64toh(ts);
- }
- 
- /* Display s390 CPU measurement facility trailer entry */
- static bool s390_cpumsf_trailer_show(const char *color, size_t pos,
- 				     struct hws_trailer_entry *te)
- {
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+	struct hws_trailer_entry local;
-+	const unsigned long long flags = be64toh(te->flags);
-+
-+	memset(&local, 0, sizeof(local));
-+	local.f = flags >> 63 & 0x1;
-+	local.a = flags >> 62 & 0x1;
-+	local.t = flags >> 61 & 0x1;
-+	local.bsdes = be16toh((flags >> 16 & 0xffff));
-+	local.dsdes = be16toh((flags & 0xffff));
-+	memcpy(&local.timestamp, te->timestamp, sizeof(te->timestamp));
-+	local.overflow = be64toh(te->overflow);
-+	local.clock_base = be64toh(te->progusage[0]) >> 63 & 1;
-+	local.progusage2 = be64toh(te->progusage2);
-+	te = &local;
-+#endif
- 	if (te->bsdes != sizeof(struct hws_basic_entry)) {
- 		pr_err("Invalid AUX trace trailer entry [%#08zx]\n", pos);
- 		return false;
+ 	for (i = 0; i < nr; i++) {
+-		fprintf(fp, "# sibling cores   : %s\n", str);
++		fprintf(fp, "# sibling sockets : %s\n", str);
+ 		str += strlen(str) + 1;
  	}
- 	color_fprintf(stdout, color, "    [%#08zx] Trailer %c%c%c bsdes:%d"
- 		      " dsdes:%d Overflow:%lld Time:%#llx\n"
--		      "\t\tC:%d TOD:%#lx 1:%#llx 2:%#llx\n",
-+		      "\t\tC:%d TOD:%#lx\n",
- 		      pos,
- 		      te->f ? 'F' : ' ',
- 		      te->a ? 'A' : ' ',
- 		      te->t ? 'T' : ' ',
- 		      te->bsdes, te->dsdes, te->overflow,
--		      trailer_timestamp(te), te->clock_base, te->progusage2,
--		      te->progusage[0], te->progusage[1]);
-+		      trailer_timestamp(te, te->clock_base),
-+		      te->clock_base, te->progusage2);
- 	return true;
- }
  
-@@ -327,13 +379,13 @@ static bool s390_cpumsf_validate(int machine_type,
- 	*dsdes = *bsdes = 0;
- 	if (len & (S390_CPUMSF_PAGESZ - 1))	/* Illegal size */
- 		return false;
--	if (basic->def != 1)		/* No basic set entry, must be first */
-+	if (be16toh(basic->def) != 1)	/* No basic set entry, must be first */
- 		return false;
- 	/* Check for trailer entry at end of SDB */
- 	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
- 					      - sizeof(*te));
--	*bsdes = te->bsdes;
--	*dsdes = te->dsdes;
-+	*bsdes = be16toh(te->bsdes);
-+	*dsdes = be16toh(te->dsdes);
- 	if (!te->bsdes && !te->dsdes) {
- 		/* Very old hardware, use CPUID */
- 		switch (machine_type) {
-@@ -495,19 +547,27 @@ static bool s390_cpumsf_make_event(size_t pos,
- static unsigned long long get_trailer_time(const unsigned char *buf)
- {
- 	struct hws_trailer_entry *te;
--	unsigned long long aux_time;
-+	unsigned long long aux_time, progusage2;
-+	bool clock_base;
- 
- 	te = (struct hws_trailer_entry *)(buf + S390_CPUMSF_PAGESZ
- 					      - sizeof(*te));
- 
--	if (!te->clock_base)	/* TOD_CLOCK_BASE value missing */
-+#if __BYTE_ORDER == __LITTLE_ENDIAN
-+	clock_base = be64toh(te->progusage[0]) >> 63 & 0x1;
-+	progusage2 = be64toh(te->progusage[1]);
-+#else
-+	clock_base = te->clock_base;
-+	progusage2 = te->progusage2;
-+#endif
-+	if (!clock_base)	/* TOD_CLOCK_BASE value missing */
- 		return 0;
- 
- 	/* Correct calculation to convert time stamp in trailer entry to
- 	 * nano seconds (taken from arch/s390 function tod_to_ns()).
- 	 * TOD_CLOCK_BASE is stored in trailer entry member progusage2.
- 	 */
--	aux_time = trailer_timestamp(te) - te->progusage2;
-+	aux_time = trailer_timestamp(te, clock_base) - progusage2;
- 	aux_time = (aux_time >> 9) * 125 + (((aux_time & 0x1ff) * 125) >> 9);
- 	return aux_time;
- }
 -- 
 2.20.1
