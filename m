@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/85] perf cs-etm: Add handling of switch-CPU-wide events
-Date: Tue, 11 Jun 2019 15:58:27 -0300
-Message-ID: <20190611185911.11645-42-acme@kernel.org>
+Subject: [PATCH 42/85] perf cs-etm: Refactor error path in cs_etm_decoder__new()
+Date: Tue, 11 Jun 2019 15:58:28 -0300
+Message-ID: <20190611185911.11645-43-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,10 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Add handling of SWITCH-CPU-WIDE events in order to add the tid/pid of
-the incoming process to the perf tools machine infrastructure.  This
-information is later retrieved when a contextID packet is found in the
-trace stream.
+There is no point in having two different error goto statement since the
+openCSD API to free a decoder handles NULL pointers.  As such function
+cs_etm_decoder__free() can be called to deal with all aspect of freeing
+decoder memory.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 Tested-by: Leo Yan <leo.yan@linaro.org>
@@ -28,67 +28,42 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: coresight@lists.linaro.org
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-6-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190524173508.29044-7-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0742c50fce46..5322dcaaf654 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1680,6 +1680,42 @@ static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
- 	return 0;
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index 39fe21e1cf93..5dafec421b0d 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -577,7 +577,7 @@ cs_etm_decoder__new(int num_cpu, struct cs_etm_decoder_params *d_params,
+ 	/* init library print logging support */
+ 	ret = cs_etm_decoder__init_def_logger_printing(d_params, decoder);
+ 	if (ret != 0)
+-		goto err_free_decoder_tree;
++		goto err_free_decoder;
+ 
+ 	/* init raw frame logging if required */
+ 	cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
+@@ -587,15 +587,13 @@ cs_etm_decoder__new(int num_cpu, struct cs_etm_decoder_params *d_params,
+ 							 &t_params[i],
+ 							 decoder);
+ 		if (ret != 0)
+-			goto err_free_decoder_tree;
++			goto err_free_decoder;
+ 	}
+ 
+ 	return decoder;
+ 
+-err_free_decoder_tree:
+-	ocsd_destroy_dcd_tree(decoder->dcd_tree);
+ err_free_decoder:
+-	free(decoder);
++	cs_etm_decoder__free(decoder);
+ 	return NULL;
  }
  
-+static int cs_etm__process_switch_cpu_wide(struct cs_etm_auxtrace *etm,
-+					   union perf_event *event)
-+{
-+	struct thread *th;
-+	bool out = event->header.misc & PERF_RECORD_MISC_SWITCH_OUT;
-+
-+	/*
-+	 * Context switch in per-thread mode are irrelevant since perf
-+	 * will start/stop tracing as the process is scheduled.
-+	 */
-+	if (etm->timeless_decoding)
-+		return 0;
-+
-+	/*
-+	 * SWITCH_IN events carry the next process to be switched out while
-+	 * SWITCH_OUT events carry the process to be switched in.  As such
-+	 * we don't care about IN events.
-+	 */
-+	if (!out)
-+		return 0;
-+
-+	/*
-+	 * Add the tid/pid to the log so that we can get a match when
-+	 * we get a contextID from the decoder.
-+	 */
-+	th = machine__findnew_thread(etm->machine,
-+				     event->context_switch.next_prev_pid,
-+				     event->context_switch.next_prev_tid);
-+	if (!th)
-+		return -ENOMEM;
-+
-+	thread__put(th);
-+
-+	return 0;
-+}
-+
- static int cs_etm__process_event(struct perf_session *session,
- 				 union perf_event *event,
- 				 struct perf_sample *sample,
-@@ -1719,6 +1755,8 @@ static int cs_etm__process_event(struct perf_session *session,
- 
- 	if (event->header.type == PERF_RECORD_ITRACE_START)
- 		return cs_etm__process_itrace_start(etm, event);
-+	else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
-+		return cs_etm__process_switch_cpu_wide(etm, event);
- 
- 	return 0;
- }
 -- 
 2.20.1
