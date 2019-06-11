@@ -1,71 +1,59 @@
-From: =?UTF-8?B?56a56Iif6ZSu?= <ufo19890607@gmail.com>
-Subject: Re: [PATCH] perf record: Add support to collect callchains from
- kernel or user space only.
-Date: Mon, 10 Jun 2019 15:45:40 +0800
-Message-ID: <CAHCio2ghCkRwKZ0XGTeNK90wnry-0i7arT28bsYhHx4BNZuzoA@mail.gmail.com>
-References: <1559222962-22891-1-git-send-email-ufo19890607@gmail.com>
- <20190606142644.GA21245@kernel.org> <20190606144614.GC12056@krava> <20190606181504.GD21245@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 01/85] perf data: Add description of header HEADER_BPF_PROG_INFO and HEADER_BPF_BTF
+Date: Tue, 11 Jun 2019 15:57:47 -0300
+Message-ID: <20190611185911.11645-2-acme@kernel.org>
+References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190606181504.GD21245@kernel.org>
+In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, David Ahern <dsahern@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Milian Wolff <milian.wolff@kdab.com>, Wind Yu <yuzhoujian@didichuxing.com>, Adrian Hunter <adrian.hunter@intel.com>, Wang Nan <wangnan0@huawei.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Arnaldo,  Jirka
+From: Song Liu <songliubraving@fb.com>
 
-> perf_event_attr.exclude_callchain_kernel to 0
+This patch addes description of HEADER_BPF_PROG_INFO and HEADER_BPF_BTF to
+perf.data-file-format.txt.
 
-I don't think we should set 0 for the desired callchins,  because we
-will set exclude_callchain_user to 1 if perf_evsel is function event.
+Requested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
+Link: http://lkml.kernel.org/r/20190521064406.2498925-1-songliubraving@fb.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ .../perf/Documentation/perf.data-file-format.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-void perf_evsel__config(struct perf_evsel *evsel, struct record_opts
-*opts, struct callchain_param *callchain)
-{
-        ...
-        if (perf_evsel__is_function_event(evsel))
-                evsel->attr.exclude_callchain_user =3D 1;
-
-        if (callchain && callchain->enabled && !evsel->no_aux_samples)
-                perf_evsel__config_callchain(evsel, opts, callchain);
-}
-
-If we set exclude_callchain_user to 0 , it will catch user callchain
-for function_event.  So, it will be best to just set the
-exclude_callchain_xxx to 1.
-
-> So that the user don't try using:
-
-    > perf record --user-callchains --kernel-callchains
-
-> expecting to get both user and kernel callchains and instead gets
-> nothing.
-
-I will add a note in the doc.
-
-
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> =E4=BA=8E2019=E5=B9=B46=
-=E6=9C=887=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=882:15=E5=86=99=E9=81=
-=93=EF=BC=9A
->
-> Em Thu, Jun 06, 2019 at 04:46:14PM +0200, Jiri Olsa escreveu:
-> > On Thu, Jun 06, 2019 at 11:26:44AM -0300, Arnaldo Carvalho de Melo wrot=
-e:
-> > > So that the user don't try using:
->
-> > >     pref record --user-callchains --kernel-callchains
->
-> > > expecting to get both user and kernel callchains and instead gets
-> > > nothing.
->
-> > good catch.. we should add the logic to keep both (default)
-> > in this case.. so do nothing ;-)
->
-> Yeah, not using both or using both should amount to the same behaviour.
->
-> Can be done with a patch on top of what I have in my tree now.
->
-> - Arnaldo
+diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
+index 6967e9b02be5..022bb8b1c84a 100644
+--- a/tools/perf/Documentation/perf.data-file-format.txt
++++ b/tools/perf/Documentation/perf.data-file-format.txt
+@@ -272,6 +272,22 @@ struct {
+ 
+ Two uint64_t for the time of first sample and the time of last sample.
+ 
++        HEADER_BPF_PROG_INFO = 25,
++
++struct bpf_prog_info_linear, which contains detailed information about
++a BPF program, including type, id, tag, jited/xlated instructions, etc.
++
++        HEADER_BPF_BTF = 26,
++
++Contains BPF Type Format (BTF). For more information about BTF, please
++refer to Documentation/bpf/btf.rst.
++
++struct {
++	u32	id;
++	u32	data_size;
++	char	data[];
++};
++
+         HEADER_COMPRESSED = 27,
+ 
+ struct {
+-- 
+2.20.1
