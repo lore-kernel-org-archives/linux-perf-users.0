@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 66/85] perf intel-pt: Add lookahead callback
-Date: Tue, 11 Jun 2019 15:58:52 -0300
-Message-ID: <20190611185911.11645-67-acme@kernel.org>
+Subject: [PATCH 68/85] perf intel-pt: Factor out intel_pt_reposition()
+Date: Tue, 11 Jun 2019 15:58:54 -0300
+Message-ID: <20190611185911.11645-69-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,59 +14,48 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add a callback function to enable the decoder to lookahead at subsequent
-trace buffers. This will be used to implement a "fast forward" facility
-which will be needed to support efficient time interval filtering.
+Factor out intel_pt_reposition() so it can be reused.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-5-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-7-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 2 ++
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.h | 3 +++
- 2 files changed, 5 insertions(+)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index 9eb778f9c911..13123b195083 100644
+index c06dceb774e9..70bff7bb79f3 100644
 --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
 +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -104,6 +104,7 @@ struct intel_pt_decoder {
- 			 uint64_t *insn_cnt_ptr, uint64_t *ip, uint64_t to_ip,
- 			 uint64_t max_insn_cnt, void *data);
- 	bool (*pgd_ip)(uint64_t ip, void *data);
-+	int (*lookahead)(void *data, intel_pt_lookahead_cb_t cb, void *cb_data);
- 	void *data;
- 	struct intel_pt_state state;
- 	const unsigned char *buf;
-@@ -233,6 +234,7 @@ struct intel_pt_decoder *intel_pt_decoder_new(struct intel_pt_params *params)
- 	decoder->get_trace          = params->get_trace;
- 	decoder->walk_insn          = params->walk_insn;
- 	decoder->pgd_ip             = params->pgd_ip;
-+	decoder->lookahead          = params->lookahead;
- 	decoder->data               = params->data;
- 	decoder->return_compression = params->return_compression;
- 	decoder->branch_enable      = params->branch_enable;
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
-index 6a61773dc44b..de36254c6ac9 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.h
-@@ -102,12 +102,15 @@ struct intel_pt_buffer {
- 	uint64_t trace_nr;
- };
+@@ -494,6 +494,14 @@ static inline void intel_pt_update_sample_time(struct intel_pt_decoder *decoder)
+ 	decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
+ }
  
-+typedef int (*intel_pt_lookahead_cb_t)(struct intel_pt_buffer *, void *);
++static void intel_pt_reposition(struct intel_pt_decoder *decoder)
++{
++	decoder->ip = 0;
++	decoder->pkt_state = INTEL_PT_STATE_NO_PSB;
++	decoder->timestamp = 0;
++	decoder->have_tma = false;
++}
 +
- struct intel_pt_params {
- 	int (*get_trace)(struct intel_pt_buffer *buffer, void *data);
- 	int (*walk_insn)(struct intel_pt_insn *intel_pt_insn,
- 			 uint64_t *insn_cnt_ptr, uint64_t *ip, uint64_t to_ip,
- 			 uint64_t max_insn_cnt, void *data);
- 	bool (*pgd_ip)(uint64_t ip, void *data);
-+	int (*lookahead)(void *data, intel_pt_lookahead_cb_t cb, void *cb_data);
- 	void *data;
- 	bool return_compression;
- 	bool branch_enable;
+ static int intel_pt_get_data(struct intel_pt_decoder *decoder)
+ {
+ 	struct intel_pt_buffer buffer = { .buf = 0, };
+@@ -512,11 +520,8 @@ static int intel_pt_get_data(struct intel_pt_decoder *decoder)
+ 		return -ENODATA;
+ 	}
+ 	if (!buffer.consecutive) {
+-		decoder->ip = 0;
+-		decoder->pkt_state = INTEL_PT_STATE_NO_PSB;
++		intel_pt_reposition(decoder);
+ 		decoder->ref_timestamp = buffer.ref_timestamp;
+-		decoder->timestamp = 0;
+-		decoder->have_tma = false;
+ 		decoder->state.trace_nr = buffer.trace_nr;
+ 		intel_pt_log("Reference timestamp 0x%" PRIx64 "\n",
+ 			     decoder->ref_timestamp);
 -- 
 2.20.1
