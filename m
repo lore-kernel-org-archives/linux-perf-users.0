@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/85] perf data: Document clockid header: HEADER_CLOCKID
-Date: Tue, 11 Jun 2019 15:57:49 -0300
-Message-ID: <20190611185911.11645-4-acme@kernel.org>
+Subject: [PATCH 04/85] perf data: Document directory format header: HEADER_DIR_FORMAT
+Date: Tue, 11 Jun 2019 15:57:50 -0300
+Message-ID: <20190611185911.11645-5-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -15,8 +15,8 @@ List-Id: linux-perf-users.vger.kernel.org
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 We forgot to update the perf.data file format document for the
-HEADER_CLOCKID header, do it now from comments in the patch introducing
-it.
+HEADER_DIR_FORMAT header, do it now from comments in the patch
+introducing it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -27,26 +27,37 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Simon Que <sque@chromium.org>
-Fixes: cf7905165fee ("perf record: Encode -k clockid frequency into Perf trace")
-Link: https://lkml.kernel.org/n/tip-slhnjp06027j3ae17qqetzxj@git.kernel.org
+Fixes: 258031c017c3 ("perf header: Add DIR_FORMAT feature to describe directory data")
+Link: https://lkml.kernel.org/n/tip-jbrzb7ijb5al33gi8br6f9rr@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf.data-file-format.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../Documentation/perf.data-file-format.txt     | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index 99733751695b..600999f89c6d 100644
+index 600999f89c6d..6375e6fb8bac 100644
 --- a/tools/perf/Documentation/perf.data-file-format.txt
 +++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -296,6 +296,12 @@ $ perf report --header-only -I
- # memory nodes (nr 1, block size 0x8000000):
- #    0 [7G]: 0-23,32-69
+@@ -302,6 +302,23 @@ One uint64_t for the clockid frequency, specified, for instance, via 'perf
+ record -k' (see clock_gettime()), to enable timestamps derived metrics
+ conversion into wall clock time on the reporting stage.
  
-+	HEADER_CLOCKID = 23,
++	HEADER_DIR_FORMAT = 24,
 +
-+One uint64_t for the clockid frequency, specified, for instance, via 'perf
-+record -k' (see clock_gettime()), to enable timestamps derived metrics
-+conversion into wall clock time on the reporting stage.
++The data files layout is described by HEADER_DIR_FORMAT feature.  Currently it
++holds only version number (1):
++
++  uint64_t version;
++
++The current version holds only version value (1) means that data files:
++
++- Follow the 'data.*' name format.
++
++- Contain raw events data in standard perf format as read from kernel (and need
++  to be sorted)
++
++Future versions are expected to describe different data files layout according
++to special needs.
 +
          HEADER_BPF_PROG_INFO = 25,
  
