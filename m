@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 85/85] perf trace: Skip unknown syscalls when expanding strace like syscall groups
-Date: Tue, 11 Jun 2019 15:59:11 -0300
-Message-ID: <20190611185911.11645-86-acme@kernel.org>
+Subject: [PATCH 83/85] perf report: Fix OOM error in TUI mode on s390
+Date: Tue, 11 Jun 2019 15:59:09 -0300
+Message-ID: <20190611185911.11645-84-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,102 +9,117 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@redhat.com>, Martin KaFai Lau <kafai@fb.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Song Liu <songliubraving@fb.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Yonghong Song <yhs@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-We have $INSTALL_DIR/share/perf-core/strace/groups/string files with
-syscalls that should be selected when 'string' is used, meaning, in this
-case, syscalls that receive as one of its arguments a string, like a
-pathname.
+Debugging a OOM error using the TUI interface revealed this issue
+on s390:
 
-But those were first selected and tested on x86_64, and end up failing
-in architectures where some of those syscalls are not available, like
-the 'access' syscall on arm64, which makes using 'perf trace -e string'
-in such archs to fail.
+[tmricht@m83lp54 perf]$ cat /proc/kallsyms |sort
+....
+00000001119b7158 B radix_tree_node_cachep
+00000001119b8000 B __bss_stop
+00000001119b8000 B _end
+000003ff80002850 t autofs_mount	[autofs4]
+000003ff80002868 t autofs_show_options	[autofs4]
+000003ff80002a98 t autofs_evict_inode	[autofs4]
+....
 
-Since this the routine doing the validation is used only when reading
-such files, do not fail when some syscall is not found in the
-syscalltbl, instead just use pr_debug() to register that in case people
-are suspicious of problems.
+There is a huge gap between the last kernel symbol
+__bss_stop/_end and the first kernel module symbol
+autofs_mount (from autofs4 module).
 
-Now using 'perf trace -e string' should work on arm64, selecting only
-the syscalls that have a string and are available on that architecture.
+After reading the kernel symbol table via functions:
 
-Reported-by: Leo Yan <leo.yan@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/r/20190610184754.GU21245@kernel.org
+ dso__load()
+ +--> dso__load_kernel_sym()
+      +--> dso__load_kallsyms()
+	   +--> __dso_load_kallsyms()
+	        +--> symbols__fixup_end()
+
+the symbol __bss_stop has a start address of 1119b8000 and
+an end address of 3ff80002850, as can be seen by this debug statement:
+
+  symbols__fixup_end __bss_stop start:0x1119b8000 end:0x3ff80002850
+
+The size of symbol __bss_stop is 0x3fe6e64a850 bytes!
+It is the last kernel symbol and fills up the space until
+the first kernel module symbol.
+
+This size kills the TUI interface when executing the following
+code:
+
+  process_sample_event()
+    hist_entry_iter__add()
+      hist_iter__report_callback()
+        hist_entry__inc_addr_samples()
+          symbol__inc_addr_samples(symbol = __bss_stop)
+            symbol__cycles_hist()
+               annotated_source__alloc_histograms(...,
+				                symbol__size(sym),
+		                                ...)
+
+This function allocates memory to save sample histograms.
+The symbol_size() marco is defined as sym->end - sym->start, which
+results in above value of 0x3fe6e64a850 bytes and
+the call to calloc() in annotated_source__alloc_histograms() fails.
+
+The histgram memory allocation might fail, make this failure
+no-fatal and continue processing.
+
+Output before:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+  __symbol__inc_addr_samples(875): ENOMEM! sym->name=__bss_stop,
+		start=0x1119b8000, addr=0x2aa0005eb08, end=0x3ff80002850,
+		func: 0
+problem adding hist entry, skipping event
+0x938b8 [0x8]: failed to process type: 68 [Cannot allocate memory]
+[tmricht@m83lp54 perf]$
+
+Output after:
+[tmricht@m83lp54 perf]$ ./perf --debug stderr=1 report -vvvvv \
+					      -i ~/slow.data 2>/tmp/2
+[tmricht@m83lp54 perf]$ tail -5 /tmp/2
+   symbol__inc_addr_samples map:0x1597830 start:0x110730000 end:0x3ff80002850
+   symbol__hists notes->src:0x2aa2a70 nr_hists:1
+   symbol__inc_addr_samples sym:unlink_anon_vmas src:0x2aa2a70
+   __symbol__inc_addr_samples: addr=0x11094c69e
+   0x11094c670 unlink_anon_vmas: period++ [addr: 0x11094c69e, 0x2e, evidx=0]
+   	=> nr_samples: 1, period: 526008
+[tmricht@m83lp54 perf]$
+
+There is no error about failed memory allocation and the TUI interface
+shows all entries.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.vnet.ibm.com>
+Link: http://lkml.kernel.org/r/90cb5607-3e12-5167-682d-978eba7dafa8@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ tools/perf/util/annotate.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1a2a605cf068..eb70a4b71755 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- static int trace__validate_ev_qualifier(struct trace *trace)
- {
- 	int err = 0, i;
-+	bool printed_invalid_prefix = false;
- 	size_t nr_allocated;
- 	struct str_node *pos;
- 
-@@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 			if (id >= 0)
- 				goto matches;
- 
--			if (err == 0) {
--				fputs("Error:\tInvalid syscall ", trace->output);
--				err = -EINVAL;
-+			if (!printed_invalid_prefix) {
-+				pr_debug("Skipping unknown syscalls: ");
-+				printed_invalid_prefix = true;
- 			} else {
--				fputs(", ", trace->output);
-+				pr_debug(", ");
- 			}
- 
--			fputs(sc, trace->output);
-+			pr_debug("%s", sc);
-+			continue;
- 		}
- matches:
- 		trace->ev_qualifier_ids.entries[i++] = id;
-@@ -1591,15 +1593,14 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 		}
- 	}
- 
--	if (err < 0) {
--		fputs("\nHint:\ttry 'perf list syscalls:sys_enter_*'"
--		      "\nHint:\tand: 'man syscalls'\n", trace->output);
--out_free:
--		zfree(&trace->ev_qualifier_ids.entries);
--		trace->ev_qualifier_ids.nr = 0;
--	}
- out:
-+	if (printed_invalid_prefix)
-+		pr_debug("\n");
- 	return err;
-+out_free:
-+	zfree(&trace->ev_qualifier_ids.entries);
-+	trace->ev_qualifier_ids.nr = 0;
-+	goto out;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 0b8573fd9b05..15be9d271f55 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -932,9 +932,8 @@ static int symbol__inc_addr_samples(struct symbol *sym, struct map *map,
+ 	if (sym == NULL)
+ 		return 0;
+ 	src = symbol__hists(sym, evsel->evlist->nr_entries);
+-	if (src == NULL)
+-		return -ENOMEM;
+-	return __symbol__inc_addr_samples(sym, map, src, evsel->idx, addr, sample);
++	return (src) ?  __symbol__inc_addr_samples(sym, map, src, evsel->idx,
++						   addr, sample) : 0;
  }
  
- /*
+ static int symbol__account_cycles(u64 addr, u64 start,
 -- 
 2.20.1
