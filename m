@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/85] perf intel-pt: Accumulate cycle count from TSC/TMA/MTC packets
-Date: Tue, 11 Jun 2019 15:58:00 -0300
-Message-ID: <20190611185911.11645-15-acme@kernel.org>
+Subject: [PATCH 15/85] perf intel-pt: Document IPC usage
+Date: Tue, 11 Jun 2019 15:58:01 -0300
+Message-ID: <20190611185911.11645-16-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,134 +14,57 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-When CYC packets are not available, it is still possible to count cycles
-using TSC/TMA/MTC timestamps.
-
-As the timestamp increments in TSC ticks, convert to CPU cycles using
-the current core-to-bus ratio.
-
-Do not accumulate cycles when control flow packet generation is not
-enabled, nor when time has been "lost", typically due to mwait, which is
-indicated by a TSC/TMA packet that is not part of PSB+.
+Add brief documentation about instructions-per-cycle (IPC) information
+derived from Intel PT.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190520113728.14389-12-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190520113728.14389-13-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../util/intel-pt-decoder/intel-pt-decoder.c  | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ tools/perf/Documentation/intel-pt.txt | 30 +++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index 99773445872d..9eb778f9c911 100644
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -163,6 +163,9 @@ struct intel_pt_decoder {
- 	uint64_t last_masked_timestamp;
- 	uint64_t tot_cyc_cnt;
- 	uint64_t sample_tot_cyc_cnt;
-+	uint64_t base_cyc_cnt;
-+	uint64_t cyc_cnt_timestamp;
-+	double tsc_to_cyc;
- 	bool continuous_period;
- 	bool overflow;
- 	bool set_fup_tx_flags;
-@@ -1423,6 +1426,42 @@ static int intel_pt_overflow(struct intel_pt_decoder *decoder)
- 	return -EOVERFLOW;
- }
+diff --git a/tools/perf/Documentation/intel-pt.txt b/tools/perf/Documentation/intel-pt.txt
+index 60d99e5e7921..50c5b60101bd 100644
+--- a/tools/perf/Documentation/intel-pt.txt
++++ b/tools/perf/Documentation/intel-pt.txt
+@@ -103,6 +103,36 @@ The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
+ system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
+ in transaction, respectively.
  
-+static inline void intel_pt_mtc_cyc_cnt_pge(struct intel_pt_decoder *decoder)
-+{
-+	if (decoder->have_cyc)
-+		return;
++Another interesting field that is not printed by default is 'ipc' which can be
++displayed as follows:
 +
-+	decoder->cyc_cnt_timestamp = decoder->timestamp;
-+	decoder->base_cyc_cnt = decoder->tot_cyc_cnt;
-+}
++	perf script --itrace=be -F+ipc
 +
-+static inline void intel_pt_mtc_cyc_cnt_cbr(struct intel_pt_decoder *decoder)
-+{
-+	decoder->tsc_to_cyc = decoder->cbr / decoder->max_non_turbo_ratio_fp;
++There are two ways that instructions-per-cycle (IPC) can be calculated depending
++on the recording.
 +
-+	if (decoder->pge)
-+		intel_pt_mtc_cyc_cnt_pge(decoder);
-+}
++If the 'cyc' config term (see config terms section below) was used, then IPC is
++calculated using the cycle count from CYC packets, otherwise MTC packets are
++used - refer to the 'mtc' config term.  When MTC is used, however, the values
++are less accurate because the timing is less accurate.
 +
-+static inline void intel_pt_mtc_cyc_cnt_upd(struct intel_pt_decoder *decoder)
-+{
-+	uint64_t tot_cyc_cnt, tsc_delta;
++Because Intel PT does not update the cycle count on every branch or instruction,
++the values will often be zero.  When there are values, they will be the number
++of instructions and number of cycles since the last update, and thus represent
++the average IPC since the last IPC for that event type.  Note IPC for "branches"
++events is calculated separately from IPC for "instructions" events.
 +
-+	if (decoder->have_cyc)
-+		return;
++Also note that the IPC instruction count may or may not include the current
++instruction.  If the cycle count is associated with an asynchronous branch
++(e.g. page fault or interrupt), then the instruction count does not include the
++current instruction, otherwise it does.  That is consistent with whether or not
++that instruction has retired when the cycle count is updated.
 +
-+	decoder->sample_cyc = true;
++Another note, in the case of "branches" events, non-taken branches are not
++presently sampled, so IPC values for them do not appear e.g. a CYC packet with a
++TNT packet that starts with a non-taken branch.  To see every possible IPC
++value, "instructions" events can be used e.g. --itrace=i0ns
 +
-+	if (!decoder->pge || decoder->timestamp <= decoder->cyc_cnt_timestamp)
-+		return;
-+
-+	tsc_delta = decoder->timestamp - decoder->cyc_cnt_timestamp;
-+	tot_cyc_cnt = tsc_delta * decoder->tsc_to_cyc + decoder->base_cyc_cnt;
-+
-+	if (tot_cyc_cnt > decoder->tot_cyc_cnt)
-+		decoder->tot_cyc_cnt = tot_cyc_cnt;
-+}
-+
- static void intel_pt_calc_tma(struct intel_pt_decoder *decoder)
- {
- 	uint32_t ctc = decoder->packet.payload;
-@@ -1432,6 +1471,11 @@ static void intel_pt_calc_tma(struct intel_pt_decoder *decoder)
- 	if (!decoder->tsc_ctc_ratio_d)
- 		return;
- 
-+	if (decoder->pge && !decoder->in_psb)
-+		intel_pt_mtc_cyc_cnt_pge(decoder);
-+	else
-+		intel_pt_mtc_cyc_cnt_upd(decoder);
-+
- 	decoder->last_mtc = (ctc >> decoder->mtc_shift) & 0xff;
- 	decoder->ctc_timestamp = decoder->tsc_timestamp - fc;
- 	if (decoder->tsc_ctc_mult) {
-@@ -1487,6 +1531,8 @@ static void intel_pt_calc_mtc_timestamp(struct intel_pt_decoder *decoder)
- 	else
- 		decoder->timestamp = timestamp;
- 
-+	intel_pt_mtc_cyc_cnt_upd(decoder);
-+
- 	decoder->timestamp_insn_cnt = 0;
- 	decoder->last_mtc = mtc;
- 
-@@ -1511,6 +1557,8 @@ static void intel_pt_calc_cbr(struct intel_pt_decoder *decoder)
- 
- 	decoder->cbr = cbr;
- 	decoder->cbr_cyc_to_tsc = decoder->max_non_turbo_ratio_fp / cbr;
-+
-+	intel_pt_mtc_cyc_cnt_cbr(decoder);
- }
- 
- static void intel_pt_calc_cyc_timestamp(struct intel_pt_decoder *decoder)
-@@ -1706,6 +1754,7 @@ static int intel_pt_walk_fup_tip(struct intel_pt_decoder *decoder)
- 				decoder->state.to_ip = decoder->ip;
- 			}
- 			decoder->state.type |= INTEL_PT_TRACE_BEGIN;
-+			intel_pt_mtc_cyc_cnt_pge(decoder);
- 			return 0;
- 
- 		case INTEL_PT_TIP:
-@@ -1776,6 +1825,7 @@ static int intel_pt_walk_trace(struct intel_pt_decoder *decoder)
- 
- 		case INTEL_PT_TIP_PGE: {
- 			decoder->pge = true;
-+			intel_pt_mtc_cyc_cnt_pge(decoder);
- 			if (decoder->packet.count == 0) {
- 				intel_pt_log_at("Skipping zero TIP.PGE",
- 						decoder->pos);
-@@ -2138,6 +2188,7 @@ static int intel_pt_walk_to_ip(struct intel_pt_decoder *decoder)
- 
- 		case INTEL_PT_TIP_PGE:
- 			decoder->pge = true;
-+			intel_pt_mtc_cyc_cnt_pge(decoder);
- 			if (intel_pt_have_ip(decoder))
- 				intel_pt_set_ip(decoder);
- 			if (!decoder->ip)
+ While it is possible to create scripts to analyze the data, an alternative
+ approach is available to export the data to a sqlite or postgresql database.
+ Refer to script export-to-sqlite.py or export-to-postgresql.py for more details,
 -- 
 2.20.1
