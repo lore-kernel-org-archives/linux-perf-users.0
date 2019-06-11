@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 68/85] perf intel-pt: Factor out intel_pt_reposition()
-Date: Tue, 11 Jun 2019 15:58:54 -0300
-Message-ID: <20190611185911.11645-69-acme@kernel.org>
+Subject: [PATCH 67/85] perf intel-pt: Factor out intel_pt_8b_tsc()
+Date: Tue, 11 Jun 2019 15:58:53 -0300
+Message-ID: <20190611185911.11645-68-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,48 +14,60 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Factor out intel_pt_reposition() so it can be reused.
+Factor out intel_pt_8b_tsc() so it can be reused.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-7-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ .../util/intel-pt-decoder/intel-pt-decoder.c  | 26 ++++++++++++-------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-index c06dceb774e9..70bff7bb79f3 100644
+index 13123b195083..c06dceb774e9 100644
 --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
 +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -494,6 +494,14 @@ static inline void intel_pt_update_sample_time(struct intel_pt_decoder *decoder)
- 	decoder->sample_insn_cnt = decoder->timestamp_insn_cnt;
+@@ -1369,6 +1369,21 @@ static int intel_pt_mode_tsx(struct intel_pt_decoder *decoder, bool *no_tip)
+ 	return 0;
  }
  
-+static void intel_pt_reposition(struct intel_pt_decoder *decoder)
++static uint64_t intel_pt_8b_tsc(uint64_t timestamp, uint64_t ref_timestamp)
 +{
-+	decoder->ip = 0;
-+	decoder->pkt_state = INTEL_PT_STATE_NO_PSB;
-+	decoder->timestamp = 0;
-+	decoder->have_tma = false;
++	timestamp |= (ref_timestamp & (0xffULL << 56));
++
++	if (timestamp < ref_timestamp) {
++		if (ref_timestamp - timestamp > (1ULL << 55))
++			timestamp += (1ULL << 56);
++	} else {
++		if (timestamp - ref_timestamp > (1ULL << 55))
++			timestamp -= (1ULL << 56);
++	}
++
++	return timestamp;
 +}
 +
- static int intel_pt_get_data(struct intel_pt_decoder *decoder)
+ static void intel_pt_calc_tsc_timestamp(struct intel_pt_decoder *decoder)
  {
- 	struct intel_pt_buffer buffer = { .buf = 0, };
-@@ -512,11 +520,8 @@ static int intel_pt_get_data(struct intel_pt_decoder *decoder)
- 		return -ENODATA;
- 	}
- 	if (!buffer.consecutive) {
--		decoder->ip = 0;
--		decoder->pkt_state = INTEL_PT_STATE_NO_PSB;
-+		intel_pt_reposition(decoder);
- 		decoder->ref_timestamp = buffer.ref_timestamp;
--		decoder->timestamp = 0;
--		decoder->have_tma = false;
- 		decoder->state.trace_nr = buffer.trace_nr;
- 		intel_pt_log("Reference timestamp 0x%" PRIx64 "\n",
- 			     decoder->ref_timestamp);
+ 	uint64_t timestamp;
+@@ -1376,15 +1391,8 @@ static void intel_pt_calc_tsc_timestamp(struct intel_pt_decoder *decoder)
+ 	decoder->have_tma = false;
+ 
+ 	if (decoder->ref_timestamp) {
+-		timestamp = decoder->packet.payload |
+-			    (decoder->ref_timestamp & (0xffULL << 56));
+-		if (timestamp < decoder->ref_timestamp) {
+-			if (decoder->ref_timestamp - timestamp > (1ULL << 55))
+-				timestamp += (1ULL << 56);
+-		} else {
+-			if (timestamp - decoder->ref_timestamp > (1ULL << 55))
+-				timestamp -= (1ULL << 56);
+-		}
++		timestamp = intel_pt_8b_tsc(decoder->packet.payload,
++					    decoder->ref_timestamp);
+ 		decoder->tsc_timestamp = timestamp;
+ 		decoder->timestamp = timestamp;
+ 		decoder->ref_timestamp = 0;
 -- 
 2.20.1
