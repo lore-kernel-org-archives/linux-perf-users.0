@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 71/85] perf intel-pt: Factor out intel_pt_get_buffer()
-Date: Tue, 11 Jun 2019 15:58:57 -0300
-Message-ID: <20190611185911.11645-72-acme@kernel.org>
+Subject: [PATCH 72/85] perf intel-pt: Add support for lookahead
+Date: Tue, 11 Jun 2019 15:58:58 -0300
+Message-ID: <20190611185911.11645-73-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,97 +14,95 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Factor out intel_pt_get_buffer() so it can be reused.
+Implement the lookahead callback to let the decoder access subsequent
+buffers. intel_pt_lookahead() manages the buffer lifetime and calls the
+decoder for each buffer until the decoder returns a non-zero value.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-10-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-11-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 60 +++++++++++++++++++++++---------------
- 1 file changed, 37 insertions(+), 23 deletions(-)
+ tools/perf/util/intel-pt.c | 59 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 3cff8fe2eaa0..4a61c73c9711 100644
+index 4a61c73c9711..3e3a01318b76 100644
 --- a/tools/perf/util/intel-pt.c
 +++ b/tools/perf/util/intel-pt.c
-@@ -239,32 +239,13 @@ static int intel_pt_do_fix_overlap(struct intel_pt *pt, struct auxtrace_buffer *
+@@ -278,7 +278,63 @@ static int intel_pt_get_buffer(struct intel_pt_queue *ptq,
  	return 0;
  }
  
 -/* This function assumes data is processed sequentially only */
--static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
-+static int intel_pt_get_buffer(struct intel_pt_queue *ptq,
-+			       struct auxtrace_buffer *buffer,
-+			       struct auxtrace_buffer *old_buffer,
-+			       struct intel_pt_buffer *b)
- {
--	struct intel_pt_queue *ptq = data;
--	struct auxtrace_buffer *buffer = ptq->buffer;
--	struct auxtrace_buffer *old_buffer = ptq->old_buffer;
--	struct auxtrace_queue *queue;
- 	bool might_overlap;
- 
--	if (ptq->stop) {
--		b->len = 0;
--		return 0;
--	}
--
--	queue = &ptq->pt->queues.queue_array[ptq->queue_nr];
--
--	buffer = auxtrace_buffer__next(queue, buffer);
--	if (!buffer) {
--		if (old_buffer)
--			auxtrace_buffer__drop_data(old_buffer);
--		b->len = 0;
--		return 0;
--	}
--
--	ptq->buffer = buffer;
--
- 	if (!buffer->data) {
- 		int fd = perf_data__fd(ptq->pt->session->data);
- 
-@@ -294,6 +275,39 @@ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
- 		b->consecutive = true;
- 	}
- 
-+	return 0;
++/* Do not drop buffers with references - refer intel_pt_get_trace() */
++static void intel_pt_lookahead_drop_buffer(struct intel_pt_queue *ptq,
++					   struct auxtrace_buffer *buffer)
++{
++	if (!buffer || buffer == ptq->buffer || buffer == ptq->old_buffer)
++		return;
++
++	auxtrace_buffer__drop_data(buffer);
 +}
 +
-+/* This function assumes data is processed sequentially only */
-+static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
++/* Must be serialized with respect to intel_pt_get_trace() */
++static int intel_pt_lookahead(void *data, intel_pt_lookahead_cb_t cb,
++			      void *cb_data)
 +{
 +	struct intel_pt_queue *ptq = data;
 +	struct auxtrace_buffer *buffer = ptq->buffer;
 +	struct auxtrace_buffer *old_buffer = ptq->old_buffer;
 +	struct auxtrace_queue *queue;
-+	int err;
-+
-+	if (ptq->stop) {
-+		b->len = 0;
-+		return 0;
-+	}
++	int err = 0;
 +
 +	queue = &ptq->pt->queues.queue_array[ptq->queue_nr];
 +
-+	buffer = auxtrace_buffer__next(queue, buffer);
-+	if (!buffer) {
-+		if (old_buffer)
-+			auxtrace_buffer__drop_data(old_buffer);
-+		b->len = 0;
-+		return 0;
++	while (1) {
++		struct intel_pt_buffer b = { .len = 0 };
++
++		buffer = auxtrace_buffer__next(queue, buffer);
++		if (!buffer)
++			break;
++
++		err = intel_pt_get_buffer(ptq, buffer, old_buffer, &b);
++		if (err)
++			break;
++
++		if (b.len) {
++			intel_pt_lookahead_drop_buffer(ptq, old_buffer);
++			old_buffer = buffer;
++		} else {
++			intel_pt_lookahead_drop_buffer(ptq, buffer);
++			continue;
++		}
++
++		err = cb(&b, cb_data);
++		if (err)
++			break;
 +	}
 +
-+	ptq->buffer = buffer;
++	if (buffer != old_buffer)
++		intel_pt_lookahead_drop_buffer(ptq, buffer);
++	intel_pt_lookahead_drop_buffer(ptq, old_buffer);
 +
-+	err = intel_pt_get_buffer(ptq, buffer, old_buffer, b);
-+	if (err)
-+		return err;
++	return err;
++}
 +
- 	if (ptq->step_through_buffers)
- 		ptq->stop = true;
++/*
++ * This function assumes data is processed sequentially only.
++ * Must be serialized with respect to intel_pt_lookahead()
++ */
+ static int intel_pt_get_trace(struct intel_pt_buffer *b, void *data)
+ {
+ 	struct intel_pt_queue *ptq = data;
+@@ -827,6 +883,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
  
+ 	params.get_trace = intel_pt_get_trace;
+ 	params.walk_insn = intel_pt_walk_next_insn;
++	params.lookahead = intel_pt_lookahead;
+ 	params.data = ptq;
+ 	params.return_compression = intel_pt_return_compression(pt);
+ 	params.branch_enable = intel_pt_branch_enable(pt);
 -- 
 2.20.1
