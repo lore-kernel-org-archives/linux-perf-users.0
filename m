@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 76/85] perf time-utils: Prevent percentage time range overlap
-Date: Tue, 11 Jun 2019 15:59:02 -0300
-Message-ID: <20190611185911.11645-77-acme@kernel.org>
+Subject: [PATCH 74/85] perf time-utils: Treat time ranges consistently
+Date: Tue, 11 Jun 2019 15:59:00 -0300
+Message-ID: <20190611185911.11645-75-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,34 +14,46 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Prevent percentage time range overlap. This is only a 1 nanosecond
-change but makes the results more logical e.g. a sample cannot be in
-both the first 10% and the second 20%.
+Currently, options allow only 1 explicit (non-percentage) time range.
+In preparation for adding support for multiple explicit time ranges,
+treat time ranges consistently.
+
+Instead of treating some time ranges as inclusive and some as excluding
+the end time, treat all time ranges as inclusive. This is only a 1
+nanosecond change but is necessary to treat multiple explicit time
+ranges in a consistent manner.
 
 Note, there is a later patch that adds a test for time-utils.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-15-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-13-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/time-utils.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/time-utils.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 69441faab3d0..3e87c21c293c 100644
+index 20663a460df3..1d67cf1216c7 100644
 --- a/tools/perf/util/time-utils.c
 +++ b/tools/perf/util/time-utils.c
-@@ -148,6 +148,9 @@ static int set_percent_time(struct perf_time_interval *ptime, double start_pcnt,
- 	ptime->start = start + round(start_pcnt * total);
- 	ptime->end = start + round(end_pcnt * total);
+@@ -389,13 +389,12 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
+ 		ptime = &ptime_buf[i];
  
-+	if (ptime->end > ptime->start && ptime->end != end)
-+		ptime->end -= 1;
-+
- 	return 0;
+ 		if (timestamp >= ptime->start &&
+-		    ((timestamp < ptime->end && i < num - 1) ||
+-		     (timestamp <= ptime->end && i == num - 1))) {
+-			break;
++		    (timestamp <= ptime->end || !ptime->end)) {
++			return false;
+ 		}
+ 	}
+ 
+-	return (i == num) ? true : false;
++	return true;
  }
  
+ int perf_time__parse_for_ranges(const char *time_str,
 -- 
 2.20.1
