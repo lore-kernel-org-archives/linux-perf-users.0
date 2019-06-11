@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 74/85] perf time-utils: Treat time ranges consistently
-Date: Tue, 11 Jun 2019 15:59:00 -0300
-Message-ID: <20190611185911.11645-75-acme@kernel.org>
+Subject: [PATCH 77/85] perf time-utils: Fix --time documentation
+Date: Tue, 11 Jun 2019 15:59:03 -0300
+Message-ID: <20190611185911.11645-78-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,46 +14,76 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Currently, options allow only 1 explicit (non-percentage) time range.
-In preparation for adding support for multiple explicit time ranges,
-treat time ranges consistently.
-
-Instead of treating some time ranges as inclusive and some as excluding
-the end time, treat all time ranges as inclusive. This is only a 1
-nanosecond change but is necessary to treat multiple explicit time
-ranges in a consistent manner.
-
-Note, there is a later patch that adds a test for time-utils.
+Correct some punctuation and spelling and correct the format to show
+that the time resolution is nanoseconds not microseconds.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-13-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-16-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/time-utils.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-diff.txt   | 6 +++---
+ tools/perf/Documentation/perf-report.txt | 6 +++---
+ tools/perf/Documentation/perf-script.txt | 6 +++---
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 20663a460df3..1d67cf1216c7 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -389,13 +389,12 @@ bool perf_time__ranges_skip_sample(struct perf_time_interval *ptime_buf,
- 		ptime = &ptime_buf[i];
+diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
+index da7809b15cc9..5732f69580ab 100644
+--- a/tools/perf/Documentation/perf-diff.txt
++++ b/tools/perf/Documentation/perf-diff.txt
+@@ -142,9 +142,9 @@ OPTIONS
+ 	  perf diff --time 0%-10%,30%-40%
  
- 		if (timestamp >= ptime->start &&
--		    ((timestamp < ptime->end && i < num - 1) ||
--		     (timestamp <= ptime->end && i == num - 1))) {
--			break;
-+		    (timestamp <= ptime->end || !ptime->end)) {
-+			return false;
- 		}
- 	}
+ 	It also supports analyzing samples within a given time window
+-	<start>,<stop>. Times have the format seconds.microseconds. If 'start'
+-	is not given (i.e., time string is ',x.y') then analysis starts at
+-	the beginning of the file. If stop time is not given (i.e, time
++	<start>,<stop>. Times have the format seconds.nanoseconds. If 'start'
++	is not given (i.e. time string is ',x.y') then analysis starts at
++	the beginning of the file. If stop time is not given (i.e. time
+ 	string is 'x.y,') then analysis goes to the end of the file. Time string is
+ 	'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
+ 	perf.data files.
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index f441baa794ce..3de029f6881d 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -412,12 +412,12 @@ OPTIONS
  
--	return (i == num) ? true : false;
-+	return true;
- }
+ --time::
+ 	Only analyze samples within given time window: <start>,<stop>. Times
+-	have the format seconds.microseconds. If start is not given (i.e., time
++	have the format seconds.nanoseconds. If start is not given (i.e. time
+ 	string is ',x.y') then analysis starts at the beginning of the file. If
+-	stop time is not given (i.e, time string is 'x.y,') then analysis goes
++	stop time is not given (i.e. time string is 'x.y,') then analysis goes
+ 	to end of file.
  
- int perf_time__parse_for_ranges(const char *time_str,
+-	Also support time percent with multiple time range. Time string is
++	Also support time percent with multiple time ranges. Time string is
+ 	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
+ 
+ 	For example:
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index c59fd52e9e91..878349cce968 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -361,12 +361,12 @@ include::itrace.txt[]
+ 
+ --time::
+ 	Only analyze samples within given time window: <start>,<stop>. Times
+-	have the format seconds.microseconds. If start is not given (i.e., time
++	have the format seconds.nanoseconds. If start is not given (i.e. time
+ 	string is ',x.y') then analysis starts at the beginning of the file. If
+-	stop time is not given (i.e, time string is 'x.y,') then analysis goes
++	stop time is not given (i.e. time string is 'x.y,') then analysis goes
+ 	to end of file.
+ 
+-	Also support time percent with multipe time range. Time string is
++	Also support time percent with multiple time ranges. Time string is
+ 	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
+ 
+ 	For example:
 -- 
 2.20.1
