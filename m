@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 40/85] perf cs-etm: Add handling of itrace start events
-Date: Tue, 11 Jun 2019 15:58:26 -0300
-Message-ID: <20190611185911.11645-41-acme@kernel.org>
+Subject: [PATCH 41/85] perf cs-etm: Add handling of switch-CPU-wide events
+Date: Tue, 11 Jun 2019 15:58:27 -0300
+Message-ID: <20190611185911.11645-42-acme@kernel.org>
 References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Add handling of ITRACE events in order to add the tid/pid of the
-executing process to the perf tools machine infrastructure.  This
+Add handling of SWITCH-CPU-WIDE events in order to add the tid/pid of
+the incoming process to the perf tools machine infrastructure.  This
 information is later retrieved when a contextID packet is found in the
 trace stream.
 
@@ -28,26 +28,39 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: coresight@lists.linaro.org
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-5-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190524173508.29044-6-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ tools/perf/util/cs-etm.c | 38 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index de488b43f440..0742c50fce46 100644
+index 0742c50fce46..5322dcaaf654 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -1657,6 +1657,29 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+@@ -1680,6 +1680,42 @@ static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
  	return 0;
  }
  
-+static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
-+					union perf_event *event)
++static int cs_etm__process_switch_cpu_wide(struct cs_etm_auxtrace *etm,
++					   union perf_event *event)
 +{
 +	struct thread *th;
++	bool out = event->header.misc & PERF_RECORD_MISC_SWITCH_OUT;
 +
++	/*
++	 * Context switch in per-thread mode are irrelevant since perf
++	 * will start/stop tracing as the process is scheduled.
++	 */
 +	if (etm->timeless_decoding)
++		return 0;
++
++	/*
++	 * SWITCH_IN events carry the next process to be switched out while
++	 * SWITCH_OUT events carry the process to be switched in.  As such
++	 * we don't care about IN events.
++	 */
++	if (!out)
 +		return 0;
 +
 +	/*
@@ -55,8 +68,8 @@ index de488b43f440..0742c50fce46 100644
 +	 * we get a contextID from the decoder.
 +	 */
 +	th = machine__findnew_thread(etm->machine,
-+				     event->itrace_start.pid,
-+				     event->itrace_start.tid);
++				     event->context_switch.next_prev_pid,
++				     event->context_switch.next_prev_tid);
 +	if (!th)
 +		return -ENOMEM;
 +
@@ -68,15 +81,14 @@ index de488b43f440..0742c50fce46 100644
  static int cs_etm__process_event(struct perf_session *session,
  				 union perf_event *event,
  				 struct perf_sample *sample,
-@@ -1694,6 +1717,9 @@ static int cs_etm__process_event(struct perf_session *session,
- 		return cs_etm__process_timeless_queues(etm,
- 						       event->fork.tid);
+@@ -1719,6 +1755,8 @@ static int cs_etm__process_event(struct perf_session *session,
  
-+	if (event->header.type == PERF_RECORD_ITRACE_START)
-+		return cs_etm__process_itrace_start(etm, event);
-+
+ 	if (event->header.type == PERF_RECORD_ITRACE_START)
+ 		return cs_etm__process_itrace_start(etm, event);
++	else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
++		return cs_etm__process_switch_cpu_wide(etm, event);
+ 
  	return 0;
  }
- 
 -- 
 2.20.1
