@@ -1,280 +1,57 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 50/85] perf cs-etm: Add support for multiple traceID queues
-Date: Tue, 11 Jun 2019 15:58:36 -0300
-Message-ID: <20190611185911.11645-51-acme@kernel.org>
-References: <20190611185911.11645-1-acme@kernel.org>
+From: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: sys_exit: NR -1
+Date: Wed, 12 Jun 2019 12:02:53 +0530
+Message-ID: <1560320989.8h9se8cb9p.naveen@linux.ibm.com>
+References: <2f004b41-4f6f-3e6f-227a-cb199b8429d2@us.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <2f004b41-4f6f-3e6f-227a-cb199b8429d2@us.ibm.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Paul Clarke <pc@us.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Paul Clarke wrote:
+> What are the circumstances in which raw_syscalls:sys_exit reports "-1" fo=
+r the syscall ID?
+>=20
+>     perf  5375 [007] 59632.478528:   raw_syscalls:sys_enter: NR 1 (3, 9fb=
+888, 8, 2d83740, 1, 7ffff)
+>     perf  5375 [007] 59632.478532:    raw_syscalls:sys_exit: NR 1 =3D 8
+>     perf  5375 [007] 59632.478538:   raw_syscalls:sys_enter: NR 15 (11, 7=
+ffffca734b0, 7ffffca73380, 2d83740, 1, 7ffff)
+>     perf  5375 [007] 59632.478539:    raw_syscalls:sys_exit: NR -1 =3D 8
+>     perf  5375 [007] 59632.478543:   raw_syscalls:sys_enter: NR 16 (4, 24=
+01, 0, 2d83740, 1, 0)
+>     perf  5375 [007] 59632.478551:    raw_syscalls:sys_exit: NR 16 =3D 0
 
-When operating in CPU-wide trace mode with a source/sink topology of N:1
-packets with multiple traceID will end up in the same cs_etm_queue.  In
-order to properly decode packets they need to be split in different
-queues, i.e one queue per traceID.
+Which architecture?
+For powerpc, see:
 
-As such add support for multiple traceID per cs_etm_queue by adding a
-new cs_etm_traceid_queue every time a new traceID is discovered in the
-trace stream.
+static inline int syscall_get_nr(struct task_struct *task, struct pt_regs *=
+regs)
+{
+	/*
+	 * Note that we are returning an int here. That means 0xffffffff, ie.
+	 * 32-bit negative 1, will be interpreted as -1 on a 64-bit kernel.
+	 * This is important for seccomp so that compat tasks can set r0 =3D -1
+	 * to reject the syscall.
+	 */
+	return TRAP(regs) =3D=3D 0xc00 ? regs->gpr[0] : -1;
+}
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-15-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Makefile.config |   3 +
- tools/perf/util/cs-etm.c   | 131 ++++++++++++++++++++++++++++++-------
- 2 files changed, 110 insertions(+), 24 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 85fbcd265351..51dd00f65709 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -413,6 +413,9 @@ ifdef CORESIGHT
-   $(call feature_check,libopencsd)
-   ifeq ($(feature-libopencsd), 1)
-     CFLAGS += -DHAVE_CSTRACE_SUPPORT $(LIBOPENCSD_CFLAGS)
-+    ifeq ($(feature-reallocarray), 0)
-+      CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
-+    endif
-     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
-     EXTLIBS += $(OPENCSDLIBS)
-     $(call detected,CONFIG_LIBOPENCSD)
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 2483293266d8..afc2491f9f2a 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -29,6 +29,7 @@
- #include "thread.h"
- #include "thread_map.h"
- #include "thread-stack.h"
-+#include <tools/libc_compat.h>
- #include "util.h"
- 
- #define MAX_TIMESTAMP (~0ULL)
-@@ -82,7 +83,9 @@ struct cs_etm_queue {
- 	u64 offset;
- 	const unsigned char *buf;
- 	size_t buf_len, buf_used;
--	struct cs_etm_traceid_queue *traceid_queues;
-+	/* Conversion between traceID and index in traceid_queues array */
-+	struct intlist *traceid_queues_list;
-+	struct cs_etm_traceid_queue **traceid_queues;
- };
- 
- static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
-@@ -208,31 +211,71 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- static struct cs_etm_traceid_queue
- *cs_etm__etmq_get_traceid_queue(struct cs_etm_queue *etmq, u8 trace_chan_id)
- {
--	struct cs_etm_traceid_queue *tidq;
-+	int idx;
-+	struct int_node *inode;
-+	struct intlist *traceid_queues_list;
-+	struct cs_etm_traceid_queue *tidq, **traceid_queues;
- 	struct cs_etm_auxtrace *etm = etmq->etm;
- 
--	if (!etm->timeless_decoding)
--		return NULL;
-+	if (etm->timeless_decoding)
-+		trace_chan_id = CS_ETM_PER_THREAD_TRACEID;
- 
--	tidq = etmq->traceid_queues;
-+	traceid_queues_list = etmq->traceid_queues_list;
- 
--	if (tidq)
--		return tidq;
-+	/*
-+	 * Check if the traceid_queue exist for this traceID by looking
-+	 * in the queue list.
-+	 */
-+	inode = intlist__find(traceid_queues_list, trace_chan_id);
-+	if (inode) {
-+		idx = (int)(intptr_t)inode->priv;
-+		return etmq->traceid_queues[idx];
-+	}
- 
-+	/* We couldn't find a traceid_queue for this traceID, allocate one */
- 	tidq = malloc(sizeof(*tidq));
- 	if (!tidq)
- 		return NULL;
- 
- 	memset(tidq, 0, sizeof(*tidq));
- 
-+	/* Get a valid index for the new traceid_queue */
-+	idx = intlist__nr_entries(traceid_queues_list);
-+	/* Memory for the inode is free'ed in cs_etm_free_traceid_queues () */
-+	inode = intlist__findnew(traceid_queues_list, trace_chan_id);
-+	if (!inode)
-+		goto out_free;
-+
-+	/* Associate this traceID with this index */
-+	inode->priv = (void *)(intptr_t)idx;
-+
- 	if (cs_etm__init_traceid_queue(etmq, tidq, trace_chan_id))
- 		goto out_free;
- 
--	etmq->traceid_queues = tidq;
-+	/* Grow the traceid_queues array by one unit */
-+	traceid_queues = etmq->traceid_queues;
-+	traceid_queues = reallocarray(traceid_queues,
-+				      idx + 1,
-+				      sizeof(*traceid_queues));
-+
-+	/*
-+	 * On failure reallocarray() returns NULL and the original block of
-+	 * memory is left untouched.
-+	 */
-+	if (!traceid_queues)
-+		goto out_free;
-+
-+	traceid_queues[idx] = tidq;
-+	etmq->traceid_queues = traceid_queues;
- 
--	return etmq->traceid_queues;
-+	return etmq->traceid_queues[idx];
- 
- out_free:
-+	/*
-+	 * Function intlist__remove() removes the inode from the list
-+	 * and delete the memory associated to it.
-+	 */
-+	intlist__remove(traceid_queues_list, inode);
- 	free(tidq);
- 
- 	return NULL;
-@@ -412,6 +455,44 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	return cs_etm__process_timeless_queues(etm, -1);
- }
- 
-+static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
-+{
-+	int idx;
-+	uintptr_t priv;
-+	struct int_node *inode, *tmp;
-+	struct cs_etm_traceid_queue *tidq;
-+	struct intlist *traceid_queues_list = etmq->traceid_queues_list;
-+
-+	intlist__for_each_entry_safe(inode, tmp, traceid_queues_list) {
-+		priv = (uintptr_t)inode->priv;
-+		idx = priv;
-+
-+		/* Free this traceid_queue from the array */
-+		tidq = etmq->traceid_queues[idx];
-+		thread__zput(tidq->thread);
-+		zfree(&tidq->event_buf);
-+		zfree(&tidq->last_branch);
-+		zfree(&tidq->last_branch_rb);
-+		zfree(&tidq->prev_packet);
-+		zfree(&tidq->packet);
-+		zfree(&tidq);
-+
-+		/*
-+		 * Function intlist__remove() removes the inode from the list
-+		 * and delete the memory associated to it.
-+		 */
-+		intlist__remove(traceid_queues_list, inode);
-+	}
-+
-+	/* Then the RB tree itself */
-+	intlist__delete(traceid_queues_list);
-+	etmq->traceid_queues_list = NULL;
-+
-+	/* finally free the traceid_queues array */
-+	free(etmq->traceid_queues);
-+	etmq->traceid_queues = NULL;
-+}
-+
- static void cs_etm__free_queue(void *priv)
- {
- 	struct cs_etm_queue *etmq = priv;
-@@ -419,14 +500,8 @@ static void cs_etm__free_queue(void *priv)
- 	if (!etmq)
- 		return;
- 
--	thread__zput(etmq->traceid_queues->thread);
- 	cs_etm_decoder__free(etmq->decoder);
--	zfree(&etmq->traceid_queues->event_buf);
--	zfree(&etmq->traceid_queues->last_branch);
--	zfree(&etmq->traceid_queues->last_branch_rb);
--	zfree(&etmq->traceid_queues->prev_packet);
--	zfree(&etmq->traceid_queues->packet);
--	zfree(&etmq->traceid_queues);
-+	cs_etm__free_traceid_queues(etmq);
- 	free(etmq);
- }
- 
-@@ -497,19 +572,21 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	u8  cpumode;
- 	u64 offset;
- 	int len;
--	struct	 thread *thread;
--	struct	 machine *machine;
--	struct	 addr_location al;
--
--	(void)trace_chan_id;
-+	struct thread *thread;
-+	struct machine *machine;
-+	struct addr_location al;
-+	struct cs_etm_traceid_queue *tidq;
- 
- 	if (!etmq)
- 		return 0;
- 
- 	machine = etmq->etm->machine;
- 	cpumode = cs_etm__cpu_mode(etmq, address);
-+	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
-+	if (!tidq)
-+		return 0;
- 
--	thread = etmq->traceid_queues->thread;
-+	thread = tidq->thread;
- 	if (!thread) {
- 		if (cpumode != PERF_RECORD_MISC_KERNEL)
- 			return 0;
-@@ -545,6 +622,10 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
- 	if (!etmq)
- 		return NULL;
- 
-+	etmq->traceid_queues_list = intlist__new(NULL);
-+	if (!etmq->traceid_queues_list)
-+		goto out_free;
-+
- 	/* Use metadata to fill in trace parameters for trace decoder */
- 	t_params = zalloc(sizeof(*t_params) * etm->num_cpu);
- 
-@@ -579,6 +660,7 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
- out_free_decoder:
- 	cs_etm_decoder__free(etmq->decoder);
- out_free:
-+	intlist__delete(etmq->traceid_queues_list);
- 	free(etmq);
- 
- 	return NULL;
-@@ -1280,8 +1362,9 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 				 struct cs_etm_packet *packet,
- 				 u64 end_addr)
- {
--	u16 instr16;
--	u32 instr32;
-+	/* Initialise to keep compiler happy */
-+	u16 instr16 = 0;
-+	u32 instr32 = 0;
- 	u64 addr;
- 
- 	switch (packet->isa) {
--- 
-2.20.1
+- Naveen
+
+=
