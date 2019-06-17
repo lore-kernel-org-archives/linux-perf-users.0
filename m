@@ -1,145 +1,381 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH v1 2/5] KVM: arm/arm64: Adjust entry/exit and trap related
- tracepoints
-Date: Mon, 17 Jun 2019 12:19:11 +0100
-Message-ID: <4d16d690-e93b-7b89-3251-aa4bd8489715@arm.com>
-References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
- <1560330526-15468-3-git-send-email-yuzenghui@huawei.com>
- <977f8f8c-72b4-0287-4b1c-47a0d6f1fd6e@arm.com>
- <e78a9798-cce3-a360-37c3-0ad359944b85@huawei.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Mon, 17 Jun 2019 20:48:56 +0200
+Message-ID: <20190617184856.GA37768@gmail.com>
+References: <20190611185911.11645-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e78a9798-cce3-a360-37c3-0ad359944b85@huawei.com>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20190611185911.11645-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zenghui Yu <yuzenghui@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, christoffer.dall@arm.com, marc.zyngier@arm.com, acme@redhat.com, peterz@infradead.org, mingo@redhat.com, ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, wanghaibin.wang@huawei.com, xiexiangyou@huawei.com, linuxarm@huawei.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Song Liu <songliubraving@fb.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Thomas Richter <tmricht@linux.ibm.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Zenghui,
 
-On 13/06/2019 12:28, Zenghui Yu wrote:
-> On 2019/6/12 20:49, James Morse wrote:
->> On 12/06/2019 10:08, Zenghui Yu wrote:
->>> Currently, we use trace_kvm_exit() to report exception type (e.g.,
->>> "IRQ", "TRAP") and exception class (ESR_ELx's bit[31:26]) together.
->>> But hardware only saves the exit class to ESR_ELx on synchronous
->>> exceptions, not on asynchronous exceptions. When the guest exits
->>> due to external interrupts, we will get tracing output like:
->>>
->>>     "kvm_exit: IRQ: HSR_EC: 0x0000 (UNKNOWN), PC: 0xffff87259e30"
->>>
->>> Obviously, "HSR_EC" here is meaningless.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
->> I assume we do it this way so there is only one guest-exit tracepoint that catches all
->> exits.
->> I don't think its a problem if user-space has to know the EC isn't set for asynchronous
->> exceptions, this is a property of the architecture and anything using these trace-points
->> is already arch specific.
-
-> Actually, *no* problem in current implementation, and I'm OK to still
-> keep the EC in trace_kvm_exit().  What I really want to do is adding the
-> EC in trace_trap_enter (the new tracepoint), will explain it later.
-
-
->>> This patch splits "exit" and "trap" events by adding two tracepoints
->>> explicitly in handle_trap_exceptions(). Let trace_kvm_exit() report VM
->>> exit events, and trace_kvm_trap_exit() report VM trap events.
->>>
->>> These tracepoints are adjusted also in preparation for supporting
->>> 'perf kvm stat' on arm64.
->>
->> Because the existing tracepoints are ABI, I don't think we can change them.
->>
->> We can add new ones if there is something that a user reasonably needs to trace, and can't
->> be done any other way.
->>
->> What can't 'perf kvm stat' do with the existing trace points?
-
-> First, how does 'perf kvm stat' interact with tracepoints?
-
-Start at the beginning, good idea. (I've never used this thing!)
-
-
-> We have three handlers for a specific event (e.g., "VM-EXIT") --
-> "is_begin_event", "is_end_event", "decode_key". The first two handlers
-> make use of two existing tracepoints ("kvm:kvm_exit" & "kvm:kvm_entry")
-> to check when the VM-EXIT events started/ended, thus the time difference
-> stats, event start/end time etc. can be calculated.
-
-> "is_begin_event" handler gets a *key* from the "ret" field (exit_code)
-> of "kvm:kvm_exit" payload, and "decode_key" handler makes use of the
-> *key* to find out the reason for the VM-EXIT event. Of course we should
-> maintain the mapping between exit_code and exit_reason in userspace.
-
-Interpreting 'ret' is going to get tricky if we change those values on a whim. Its
-internal to the KVM arch code.
-
-
-> These are all what *patch #4* had done, #4 is a simple patch to review!
-
-> Oh, we can also set "vcpu_id_str" to achieve per vcpu event record, but
-> currently, we only have the "vcpu_pc" field in "kvm:kvm_entry", without
-> something like "vcpu_id".
-
-Heh, so from the trace-point data, you can't know which on is vcpu-0 and which is vcpu-1.
-
-
-> OK, next comes the more important question - what should/can we do to
-> the tracepoints in preparation of 'perf kvm stat' on arm64?
+> Hi Ingo,
 > 
-> From the article you've provided, it's clear that we can't remove the EC
-> from trace_kvm_exit(). But can we add something like "vcpu_id" into
-> (at least) trace_kvm_entry(), just like what this patch has done?
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> Test results at the end of this message, as usual.
+> 
+> - Arnaldo
+> 
+> The following changes since commit 3384c78631dd722c2cdc5c57fbdd39fc1b5a9f2d:
+> 
+>   Merge branch 'x86/topology' into perf/core, to prepare for new patches (2019-06-03 11:58:45 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.3-20190611
+> 
+> for you to fetch changes up to 04c41bcb862bbec1fb225243ecf07a3219593f81:
+> 
+>   perf trace: Skip unknown syscalls when expanding strace like syscall groups (2019-06-10 17:50:04 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf record:
+> 
+>   Alexey Budankov:
+> 
+>   - Allow mixing --user-regs with --call-graph=dwarf, making sure that
+>     the minimal set of registers for DWARF unwinding is present in the
+>     set of user registers requested to be present in each sample, while
+>     warning the user that this may make callchains unreliable if more
+>     that the minimal set of registers is needed to unwind.
+> 
+>   yuzhoujian:
+> 
+>   - Add support to collect callchains from kernel or user space only,
+>     IOW allow setting the perf_event_attr.exclude_callchain_{kernel,user}
+>     bits from the command line.
+> 
+> perf trace:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Remove x86_64 specific syscall numbers from the augmented_raw_syscalls
+>     BPF in-kernel collector of augmented raw_syscalls:sys_{enter,exit}
+>     payloads, use instead the syscall numbers obtainer either by the
+>     arch specific syscalltbl generators or from audit-libs.
+> 
+>   - Allow 'perf trace' to ask for the number of bytes to collect for
+>     string arguments, for now ask for PATH_MAX, i.e. the whole
+>     pathnames, which ends up being just a way to speficy which syscall
+>     args are pathnames and thus should be read using bpf_probe_read_str().
+> 
+>   - Skip unknown syscalls when expanding strace like syscall groups.
+>     This helps using the 'string' group of syscalls to work in arm64,
+>     where some of the syscalls present in x86_64 that deal with
+>     strings, for instance 'access', are deprecated and this should not
+>     be asked for tracing.
+> 
+>   Leo Yan:
+> 
+>   - Exit when failing to build eBPF program.
+> 
+> perf config:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Bail out when a handler returns failure for a key-value pair. This
+>     helps with cases where processing a key-value pair is not just a
+>     matter of setting some tool specific knob, involving, for instance
+>     building a BPF program to then attach to the list of events 'perf
+>     trace' will use, e.g. augmented_raw_syscalls.c.
+> 
+> perf.data:
+> 
+>   Kan Liang:
+> 
+>   - Read and store die ID information available in new Intel processors
+>     in CPUID.1F in the CPU topology written in the perf.data header.
+> 
+> perf stat:
+> 
+>   Kan Liang:
+> 
+>   - Support per-die aggregation.
+> 
+> Documentation:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Update perf.data documentation about the CPU_TOPOLOGY, MEM_TOPOLOGY,
+>     CLOCKID and DIR_FORMAT headers.
+> 
+>   Song Liu:
+> 
+>   - Add description of headers HEADER_BPF_PROG_INFO and HEADER_BPF_BTF.
+> 
+>   Leo Yan:
+> 
+>   - Update default value for llvm.clang-bpf-cmd-template in 'man perf-config'.
+> 
+> JVMTI:
+> 
+>   Jiri Olsa:
+> 
+>   - Address gcc string overflow warning for strncpy()
+> 
+> core:
+> 
+>   - Remove superfluous nthreads system_wide setup in perf_evsel__alloc_fd().
+> 
+> Intel PT:
+> 
+>   Adrian Hunter:
+> 
+>   - Add support for samples to contain IPC ratio, collecting cycles
+>     information from CYC packets, showing the IPC info periodically, because
+>     Intel PT does not update the cycle count on every branch or instruction,
+>     the incremental values will often be zero.  When there are values, they
+>     will be the number of instructions and number of cycles since the last
+>     update, and thus represent the average IPC since the last IPC value.
+> 
+>     E.g.:
+> 
+>     # perf record --cpu 1 -m200000 -a -e intel_pt/cyc/u sleep 0.0001
+>     rounding mmap pages size to 1024M (262144 pages)
+>     [ perf record: Woken up 0 times to write data ]
+>     [ perf record: Captured and wrote 2.208 MB perf.data ]
+>     # perf script --insn-trace --xed -F+ipc,-dso,-cpu,-tid
+>     #
+>     <SNIP + add line numbering to make sense of IPC counts e.g.: (18/3)>
+>     1   cc1 63501.650479626: 7f5219ac27bf _int_free+0x3f   jnz 0x7f5219ac2af0       IPC: 0.81 (36/44)
+>     2   cc1 63501.650479626: 7f5219ac27c5 _int_free+0x45   cmp $0x1f, %rbp
+>     3   cc1 63501.650479626: 7f5219ac27c9 _int_free+0x49   jbe 0x7f5219ac2b00
+>     4   cc1 63501.650479626: 7f5219ac27cf _int_free+0x4f   test $0x8, %al
+>     5   cc1 63501.650479626: 7f5219ac27d1 _int_free+0x51   jnz 0x7f5219ac2b00
+>     6   cc1 63501.650479626: 7f5219ac27d7 _int_free+0x57   movq  0x13c58a(%rip), %rcx
+>     7   cc1 63501.650479626: 7f5219ac27de _int_free+0x5e   mov %rdi, %r12
+>     8   cc1 63501.650479626: 7f5219ac27e1 _int_free+0x61   movq  %fs:(%rcx), %rax
+>     9   cc1 63501.650479626: 7f5219ac27e5 _int_free+0x65   test %rax, %rax
+>    10   cc1 63501.650479626: 7f5219ac27e8 _int_free+0x68   jz 0x7f5219ac2821
+>    11   cc1 63501.650479626: 7f5219ac27ea _int_free+0x6a   leaq  -0x11(%rbp), %rdi
+>    12   cc1 63501.650479626: 7f5219ac27ee _int_free+0x6e   mov %rdi, %rsi
+>    13   cc1 63501.650479626: 7f5219ac27f1 _int_free+0x71   shr $0x4, %rsi
+>    14   cc1 63501.650479626: 7f5219ac27f5 _int_free+0x75   cmpq  %rsi, 0x13caf4(%rip)
+>    15   cc1 63501.650479626: 7f5219ac27fc _int_free+0x7c   jbe 0x7f5219ac2821
+>    16   cc1 63501.650479626: 7f5219ac2821 _int_free+0xa1   cmpq  0x13f138(%rip), %rbp
+>    17   cc1 63501.650479626: 7f5219ac2828 _int_free+0xa8   jnbe 0x7f5219ac28d8
+>    18   cc1 63501.650479626: 7f5219ac28d8 _int_free+0x158  testb  $0x2, 0x8(%rbx)
+>    19   cc1 63501.650479628: 7f5219ac28dc _int_free+0x15c  jnz 0x7f5219ac2ab0       IPC: 6.00 (18/3)
+>     <SNIP>
+> 
+>   - Allow using time ranges with Intel PT, i.e. these features, already
+>     present but not optimially usable with Intel PT, should be now:
+> 
+>         Select the second 10% time slice:
+> 
+>         $ perf script --time 10%/2
+> 
+>         Select from 0% to 10% time slice:
+> 
+>         $ perf script --time 0%-10%
+> 
+>         Select the first and second 10% time slices:
+> 
+>         $ perf script --time 10%/1,10%/2
+> 
+>         Select from 0% to 10% and 30% to 40% slices:
+> 
+>         $ perf script --time 0%-10%,30%-40%
+> 
+> cs-etm (ARM):
+> 
+>   Mathieu Poirier:
+> 
+>   - Add support for CPU-wide trace scenarios.
+> 
+> s390:
+> 
+>   Thomas Richter:
+> 
+>   - Fix missing kvm module load for s390.
+> 
+>   - Fix OOM error in TUI mode on s390
+> 
+>   - Support s390 diag event display when doing analysis on !s390
+>     architectures.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (38):
+>       perf intel-pt: Factor out intel_pt_update_sample_time
+>       perf intel-pt: Accumulate cycle count from CYC packets
+>       perf tools: Add IPC information to perf_sample
+>       perf intel-pt: Add support for samples to contain IPC ratio
+>       perf script: Add output of IPC ratio
+>       perf intel-pt: Record when decoding PSB+ packets
+>       perf intel-pt: Re-factor TIP cases in intel_pt_walk_to_ip
+>       perf intel-pt: Accumulate cycle count from TSC/TMA/MTC packets
+>       perf intel-pt: Document IPC usage
+>       perf thread-stack: Accumulate IPC information
+>       perf db-export: Add brief documentation
+>       perf db-export: Export IPC information
+>       perf scripts python: export-to-sqlite.py: Export IPC information
+>       perf scripts python: export-to-postgresql.py: Export IPC information
+>       perf scripts python: exported-sql-viewer.py: Add IPC information to the Branch reports
+>       perf scripts python: exported-sql-viewer.py: Add CallGraphModelParams
+>       perf scripts python: exported-sql-viewer.py: Add IPC information to Call Graph Graph
+>       perf scripts python: exported-sql-viewer.py: Add IPC information to Call Tree
+>       perf scripts python: exported-sql-viewer.py: Select find text when find bar is activated
+>       perf auxtrace: Add perf time interval to itrace_synth_ops
+>       perf script: Set perf time interval in itrace_synth_ops
+>       perf report: Set perf time interval in itrace_synth_ops
+>       perf intel-pt: Add lookahead callback
+>       perf intel-pt: Factor out intel_pt_8b_tsc()
+>       perf intel-pt: Factor out intel_pt_reposition()
+>       perf intel-pt: Add reposition parameter to intel_pt_get_data()
+>       perf intel-pt: Add intel_pt_fast_forward()
+>       perf intel-pt: Factor out intel_pt_get_buffer()
+>       perf intel-pt: Add support for lookahead
+>       perf intel-pt: Add support for efficient time interval filtering
+>       perf time-utils: Treat time ranges consistently
+>       perf time-utils: Factor out set_percent_time()
+>       perf time-utils: Prevent percentage time range overlap
+>       perf time-utils: Fix --time documentation
+>       perf time-utils: Simplify perf_time__parse_for_ranges() error paths slightly
+>       perf time-utils: Make perf_time__parse_for_ranges() more logical
+>       perf tests: Add a test for time-utils
+>       perf time-utils: Add support for multiple explicit time intervals
+> 
+> Alexey Budankov (1):
+>       perf record: Allow mixing --user-regs with --call-graph=dwarf
+> 
+> Arnaldo Carvalho de Melo (13):
+>       perf data: Document memory topology header: HEADER_MEM_TOPOLOGY
+>       perf data: Document clockid header: HEADER_CLOCKID
+>       perf data: Document directory format header: HEADER_DIR_FORMAT
+>       perf augmented_raw_syscalls: Tell which args are filenames and how many bytes to copy
+>       perf augmented_raw_syscalls: Move the probe_read_str to a separate function
+>       perf augmented_raw_syscalls: Change helper to consider just the augmented_filename part
+>       perf augmented_raw_syscalls: Move reading filename to the loop
+>       perf trace: Consume the augmented_raw_syscalls payload
+>       perf trace: Associate more argument names with the filename beautifier
+>       perf config: Bail out when a handler returns failure for a key-value pair
+>       perf data: Fix perf.data documentation for HEADER_CPU_TOPOLOGY
+>       perf cs-etm: Remove duplicate GENMASK() define, use linux/bits.h instead
+>       perf trace: Skip unknown syscalls when expanding strace like syscall groups
+> 
+> Jiri Olsa (2):
+>       perf jvmti: Address gcc string overflow warning for strncpy()
+>       perf evsel: Remove superfluous nthreads system_wide setup in alloc_fd()
+> 
+> Kan Liang (5):
+>       perf cpumap: Retrieve die id information
+>       perf header: Add die information in CPU topology
+>       perf stat: Support per-die aggregation
+>       perf header: Rename "sibling cores" to "sibling sockets"
+>       perf tools: Apply new CPU topology sysfs attributes
+> 
+> Leo Yan (3):
+>       perf symbols: Remove unused variable 'err'
+>       perf trace: Exit when failing to build eBPF program
+>       perf config: Update default value for llvm.clang-bpf-cmd-template
+> 
+> Mathieu Poirier (18):
+>       perf cs-etm: Configure contextID tracing in CPU-wide mode
+>       perf cs-etm: Configure timestamp generation in CPU-wide mode
+>       perf cs-etm: Configure SWITCH_EVENTS in CPU-wide mode
+>       perf cs-etm: Add handling of itrace start events
+>       perf cs-etm: Add handling of switch-CPU-wide events
+>       perf cs-etm: Refactor error path in cs_etm_decoder__new()
+>       perf cs-etm: Move packet queue out of decoder structure
+>       perf cs-etm: Fix indentation in function cs_etm__process_decoder_queue()
+>       perf cs-etm: Introduce the concept of trace ID queues
+>       perf cs-etm: Get rid of unused cpu in struct cs_etm_queue
+>       perf cs-etm: Move thread to traceid_queue
+>       perf cs-etm: Move tid/pid to traceid_queue
+>       perf cs-etm: Use traceID aware memory callback API
+>       perf cs-etm: Add support for multiple traceID queues
+>       perf cs-etm: Linking PE contextID with perf thread mechanic
+>       perf cs-etm: Add notion of time to decoding code
+>       perf cs-etm: Add support for CPU-wide trace scenarios
+>       perf cs-etm: Properly set the value of 'old' and 'head' in snapshot mode
+> 
+> Song Liu (1):
+>       perf data: Add description of header HEADER_BPF_PROG_INFO and HEADER_BPF_BTF
+> 
+> Thomas Richter (3):
+>       perf test 6: Fix missing kvm module load for s390
+>       perf report: Fix OOM error in TUI mode on s390
+>       perf report: Support s390 diag event display on x86
+> 
+> yuzhoujian (1):
+>       perf record: Add support to collect callchains from kernel or user space only
+> 
+>  tools/perf/Documentation/db-export.txt             |   41 +
+>  tools/perf/Documentation/intel-pt.txt              |   30 +
+>  tools/perf/Documentation/perf-config.txt           |    9 +-
+>  tools/perf/Documentation/perf-diff.txt             |   14 +-
+>  tools/perf/Documentation/perf-record.txt           |   11 +
+>  tools/perf/Documentation/perf-report.txt           |    9 +-
+>  tools/perf/Documentation/perf-script.txt           |   14 +-
+>  tools/perf/Documentation/perf-stat.txt             |   10 +
+>  tools/perf/Documentation/perf.data-file-format.txt |   97 +-
+>  tools/perf/Makefile.config                         |    3 +
+>  tools/perf/arch/arm/util/cs-etm.c                  |  313 +++++-
+>  tools/perf/builtin-record.c                        |    4 +
+>  tools/perf/builtin-report.c                        |    8 +-
+>  tools/perf/builtin-script.c                        |   31 +-
+>  tools/perf/builtin-stat.c                          |   87 +-
+>  tools/perf/builtin-trace.c                         |   84 +-
+>  tools/perf/examples/bpf/augmented_raw_syscalls.c   |  281 ++----
+>  tools/perf/jvmti/libjvmti.c                        |    4 +-
+>  tools/perf/perf.h                                  |    2 +
+>  tools/perf/scripts/python/export-to-postgresql.py  |   36 +-
+>  tools/perf/scripts/python/export-to-sqlite.py      |   36 +-
+>  tools/perf/scripts/python/exported-sql-viewer.py   |  294 ++++--
+>  tools/perf/tests/Build                             |    1 +
+>  tools/perf/tests/builtin-test.c                    |    4 +
+>  tools/perf/tests/parse-events.c                    |   27 +
+>  tools/perf/tests/tests.h                           |    1 +
+>  tools/perf/tests/time-utils-test.c                 |  251 +++++
+>  tools/perf/util/annotate.c                         |    5 +-
+>  tools/perf/util/auxtrace.h                         |   34 +
+>  tools/perf/util/config.c                           |    8 +-
+>  tools/perf/util/cpumap.c                           |   64 +-
+>  tools/perf/util/cpumap.h                           |   10 +-
+>  tools/perf/util/cputopo.c                          |   84 +-
+>  tools/perf/util/cputopo.h                          |    2 +
+>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  268 +++--
+>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.h    |   39 +-
+>  tools/perf/util/cs-etm.c                           | 1026 +++++++++++++++-----
+>  tools/perf/util/cs-etm.h                           |   94 ++
+>  tools/perf/util/env.c                              |    1 +
+>  tools/perf/util/env.h                              |    3 +
+>  tools/perf/util/event.h                            |    2 +
+>  tools/perf/util/evsel.c                            |   16 +-
+>  tools/perf/util/header.c                           |   96 +-
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  329 ++++++-
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.h  |    6 +
+>  tools/perf/util/intel-pt.c                         |  354 ++++++-
+>  tools/perf/util/perf_regs.h                        |    4 +
+>  tools/perf/util/s390-cpumsf.c                      |   96 +-
+>  .../util/scripting-engines/trace-event-python.c    |    8 +-
+>  tools/perf/util/smt.c                              |    8 +-
+>  tools/perf/util/stat-display.c                     |   29 +-
+>  tools/perf/util/stat-shadow.c                      |    1 +
+>  tools/perf/util/stat.c                             |    1 +
+>  tools/perf/util/stat.h                             |    1 +
+>  tools/perf/util/symbol-elf.c                       |    3 +-
+>  tools/perf/util/thread-stack.c                     |   14 +
+>  tools/perf/util/thread-stack.h                     |    4 +
+>  tools/perf/util/time-utils.c                       |  132 ++-
+>  58 files changed, 3581 insertions(+), 863 deletions(-)
+>  create mode 100644 tools/perf/Documentation/db-export.txt
+>  create mode 100644 tools/perf/tests/time-utils-test.c
 
-Adding something is still likely to break a badly written user-space that is trying to
-parse the trace information. A regex picking out the last argument will now get a
-different value.
+Pulled, thanks a lot Arnaldo!
 
-
-> If not, which means we have to keep the existing tracepoints totally
-> unchanged, then 'perf kvm stat' will have no way to record/report per
-> vcpu VM-EXIT events (other arch like X86, powerpc, s390 etc. have this
-> capability, if I understand it correctly).
-
-Well, you get the events, but you don't know which vCPU is which. You can map this back to
-the pid of the host thread assuming user-space isn't moving vcpu between host threads.
-
-If we're really stuck: Adding tracepoints to KVM-core's vcpu get/put, that export the
-vcpu_id would let you map pid->vcpu_id, which you can then use for the batch of enter/exit
-events that come before a final vcpu put.
-grepping "vpu_id" shows perf has a mapping for which arch-specific argument in enter/exit
-is the vcpu-id. Done with this core-code mapping, you could drop that code...
-
-But I'd be a little nervous adding a new trace-point to work around an ABI problem, as we
-may have just moved the ABI problem! (What does a user of a vcpu_put tracepoint really need?)
-
-
-> As for TRAP events, should we consider adding two new tracepoints --
-> "kvm_trap_enter" and "kvm_trap_exit", to keep tracking of the trap
-> handling process? We should also record the EC in "kvm_trap_enter", which will be used as
-> *key* in TRAP event's "is_begin_event" handler.
-
-The EC can't change between trace_kvm_exit() and handle_exit(), so you already have this.
-
-What are the 'trap' trace points needed for? You get the timing and 'exception class' from
-the guest enter/exit tracepoints. What about handle_exit() can't you work out from this?
-
-
-> Patch #5 tells us the whole story, it's simple too.
-
-(I only skimmed the perf patches, I'll go back now that I know a little more about what
-you're doing)
-
-
-> What do you suggest?
-
-We can explore the vcpu_load()/vcpu_put() trace idea, (it may not work for some other
-reason). I'd like to understand what the 'trap' tracepoints are needed for.
-
-
-Thanks,
-
-James
+	Ingo
