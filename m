@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/25] perf intel-pt: Prepare to synthesize PEBS samples
-Date: Fri, 21 Jun 2019 14:38:12 -0300
-Message-ID: <20190621173831.13780-7-acme@kernel.org>
+Subject: [PATCH 07/25] perf intel-pt: Factor out common sample preparation for re-use
+Date: Fri, 21 Jun 2019 14:38:13 -0300
+Message-ID: <20190621173831.13780-8-acme@kernel.org>
 References: <20190621173831.13780-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,59 +14,65 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add infrastructure to prepare for synthesizing PEBS samples but leave
-the actual synthesis to later patches.
+Factor out common sample preparation for re-use when synthesizing PEBS
+samples.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190610072803.10456-5-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190610072803.10456-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ tools/perf/util/intel-pt.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 893cef494a43..cc91c1413c22 100644
+index cc91c1413c22..a2d90b2f1f11 100644
 --- a/tools/perf/util/intel-pt.c
 +++ b/tools/perf/util/intel-pt.c
-@@ -101,6 +101,9 @@ struct intel_pt {
- 	u64 pwrx_id;
- 	u64 cbr_id;
- 
-+	bool sample_pebs;
-+	struct perf_evsel *pebs_evsel;
-+
- 	u64 tsc_bit;
- 	u64 mtc_bit;
- 	u64 mtc_freq_bits;
-@@ -1535,6 +1538,11 @@ static int intel_pt_synth_pwrx_sample(struct intel_pt_queue *ptq)
- 					    pt->pwr_events_sample_type);
+@@ -1182,28 +1182,37 @@ static inline bool intel_pt_skip_event(struct intel_pt *pt)
+ 	       pt->num_events++ < pt->synth_opts.initial_skip;
  }
  
-+static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq __maybe_unused)
++static void intel_pt_prep_a_sample(struct intel_pt_queue *ptq,
++				   union perf_event *event,
++				   struct perf_sample *sample)
 +{
-+	return 0;
++	event->sample.header.type = PERF_RECORD_SAMPLE;
++	event->sample.header.size = sizeof(struct perf_event_header);
++
++	sample->pid = ptq->pid;
++	sample->tid = ptq->tid;
++	sample->cpu = ptq->cpu;
++	sample->insn_len = ptq->insn_len;
++	memcpy(sample->insn, ptq->insn, INTEL_PT_INSN_BUF_SZ);
 +}
 +
- static int intel_pt_synth_error(struct intel_pt *pt, int code, int cpu,
- 				pid_t pid, pid_t tid, u64 ip, u64 timestamp)
+ static void intel_pt_prep_b_sample(struct intel_pt *pt,
+ 				   struct intel_pt_queue *ptq,
+ 				   union perf_event *event,
+ 				   struct perf_sample *sample)
  {
-@@ -1622,6 +1630,16 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
- 		ptq->ipc_cyc_cnt = ptq->state->tot_cyc_cnt;
- 	}
- 
-+	/*
-+	 * Do PEBS first to allow for the possibility that the PEBS timestamp
-+	 * precedes the current timestamp.
-+	 */
-+	if (pt->sample_pebs && state->type & INTEL_PT_BLK_ITEMS) {
-+		err = intel_pt_synth_pebs_sample(ptq);
-+		if (err)
-+			return err;
-+	}
++	intel_pt_prep_a_sample(ptq, event, sample);
 +
- 	if (pt->sample_pwr_events && (state->type & INTEL_PT_PWR_EVT)) {
- 		if (state->type & INTEL_PT_CBR_CHG) {
- 			err = intel_pt_synth_cbr_sample(ptq);
+ 	if (!pt->timeless_decoding)
+ 		sample->time = tsc_to_perf_time(ptq->timestamp, &pt->tc);
+ 
+ 	sample->ip = ptq->state->from_ip;
+ 	sample->cpumode = intel_pt_cpumode(pt, sample->ip);
+-	sample->pid = ptq->pid;
+-	sample->tid = ptq->tid;
+ 	sample->addr = ptq->state->to_ip;
+ 	sample->period = 1;
+-	sample->cpu = ptq->cpu;
+ 	sample->flags = ptq->flags;
+-	sample->insn_len = ptq->insn_len;
+-	memcpy(sample->insn, ptq->insn, INTEL_PT_INSN_BUF_SZ);
+ 
+-	event->sample.header.type = PERF_RECORD_SAMPLE;
+ 	event->sample.header.misc = sample->cpumode;
+-	event->sample.header.size = sizeof(struct perf_event_header);
+ }
+ 
+ static int intel_pt_inject_event(union perf_event *event,
 -- 
 2.20.1
