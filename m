@@ -1,127 +1,261 @@
-From: Francis Deslauriers <francis.deslauriers@efficios.com>
-Subject: Re: Tracing Summit 2019: Announcement and Call for Proposals, August
- 20th, 2019, San Diego, CA
-Date: Wed, 19 Jun 2019 10:47:05 -0400
-Message-ID: <CADcCL0gpbfk28_E1otW0Ttz0Osot3CYymh=t5fVR77WrqoU6uQ@mail.gmail.com>
-References: <CADcCL0irokZ8Xp7S3eBV728qpL5yipwW+=2QvwiZrixqSdtBog@mail.gmail.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v1 2/5] KVM: arm/arm64: Adjust entry/exit and trap related
+ tracepoints
+Date: Fri, 21 Jun 2019 21:25:42 +0800
+Message-ID: <34bcb641-9815-cda7-69e0-98ed477e84a6@huawei.com>
+References: <1560330526-15468-1-git-send-email-yuzenghui@huawei.com>
+ <1560330526-15468-3-git-send-email-yuzenghui@huawei.com>
+ <977f8f8c-72b4-0287-4b1c-47a0d6f1fd6e@arm.com>
+ <e78a9798-cce3-a360-37c3-0ad359944b85@huawei.com>
+ <4d16d690-e93b-7b89-3251-aa4bd8489715@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADcCL0irokZ8Xp7S3eBV728qpL5yipwW+=2QvwiZrixqSdtBog@mail.gmail.com>
+In-Reply-To: <4d16d690-e93b-7b89-3251-aa4bd8489715@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: diamon-discuss@lists.linuxfoundation.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, linux-trace-devel@vger.kernel.org, linux-trace-users@vger.kernel.org, linuxtools-dev@eclipse.org, lttng-dev <lttng-dev@lists.lttng.org>, lwn@lwn.net, tracecompass-dev@eclipse.org
-Cc: info@tracingsummit.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: James Morse <james.morse@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, christoffer.dall@arm.com, marc.zyngier@arm.com, acme@redhat.com, peterz@infradead.org, mingo@redhat.com, ganapatrao.kulkarni@cavium.com, catalin.marinas@arm.com, will.deacon@arm.com, mark.rutland@arm.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, wanghaibin.wang@huawei.com, xiexiangyou@huawei.com, linuxarm@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi all,
-This is a friendly reminder that the deadline for submitting talk
-proposals for the Tracing Summit 2019 [1] is coming up soon (July
-1st). Submit you talk today through this form:
-https://forms.gle/L6mR2ZN3Nt7bUxY98.
+Hi James,
 
-The Tracing Summit 2019 will be held in San Diego, California on
-August 20th, 2019, at the Hilton San Diego Bayfront, co-located with
-the Open Source Summit & Embedded Linux Conference North America 2019
+sorry for the late reply.
 
-This year tickets are $100 and seating is limited to 100 people. To
-register, you can add the Tracing Summit as an addon to your Open
-Source Summit ticket or use this link to register solely for the
-Tracing Summit:
-https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx.
+On 2019/6/17 19:19, James Morse wrote:
+> Hi Zenghui,
+> 
+> On 13/06/2019 12:28, Zenghui Yu wrote:
+>> On 2019/6/12 20:49, James Morse wrote:
+>>> On 12/06/2019 10:08, Zenghui Yu wrote:
+>>>> Currently, we use trace_kvm_exit() to report exception type (e.g.,
+>>>> "IRQ", "TRAP") and exception class (ESR_ELx's bit[31:26]) together.
+>>>> But hardware only saves the exit class to ESR_ELx on synchronous
+>>>> exceptions, not on asynchronous exceptions. When the guest exits
+>>>> due to external interrupts, we will get tracing output like:
+>>>>
+>>>>      "kvm_exit: IRQ: HSR_EC: 0x0000 (UNKNOWN), PC: 0xffff87259e30"
+>>>>
+>>>> Obviously, "HSR_EC" here is meaningless.
+> 
+>>> I assume we do it this way so there is only one guest-exit tracepoint that catches all
+>>> exits.
+>>> I don't think its a problem if user-space has to know the EC isn't set for asynchronous
+>>> exceptions, this is a property of the architecture and anything using these trace-points
+>>> is already arch specific.
+> 
+>> Actually, *no* problem in current implementation, and I'm OK to still
+>> keep the EC in trace_kvm_exit().  What I really want to do is adding the
+>> EC in trace_trap_enter (the new tracepoint), will explain it later.
+> 
+> 
+>>>> This patch splits "exit" and "trap" events by adding two tracepoints
+>>>> explicitly in handle_trap_exceptions(). Let trace_kvm_exit() report VM
+>>>> exit events, and trace_kvm_trap_exit() report VM trap events.
+>>>>
+>>>> These tracepoints are adjusted also in preparation for supporting
+>>>> 'perf kvm stat' on arm64.
+>>>
+>>> Because the existing tracepoints are ABI, I don't think we can change them.
+>>>
+>>> We can add new ones if there is something that a user reasonably needs to trace, and can't
+>>> be done any other way.
+>>>
+>>> What can't 'perf kvm stat' do with the existing trace points?
+> 
+>> First, how does 'perf kvm stat' interact with tracepoints?
+> 
+> Start at the beginning, good idea. (I've never used this thing!)
+> 
+> 
+>> We have three handlers for a specific event (e.g., "VM-EXIT") --
+>> "is_begin_event", "is_end_event", "decode_key". The first two handlers
+>> make use of two existing tracepoints ("kvm:kvm_exit" & "kvm:kvm_entry")
+>> to check when the VM-EXIT events started/ended, thus the time difference
+>> stats, event start/end time etc. can be calculated.
+> 
+>> "is_begin_event" handler gets a *key* from the "ret" field (exit_code)
+>> of "kvm:kvm_exit" payload, and "decode_key" handler makes use of the
+>> *key* to find out the reason for the VM-EXIT event. Of course we should
+>> maintain the mapping between exit_code and exit_reason in userspace.
+> 
+> Interpreting 'ret' is going to get tricky if we change those values on a whim. Its
+> internal to the KVM arch code.
 
-We are actively looking for sponsors to support the Tracing Summit.
-Contact us at info@tracingsummit.org.
+Yes. We have to keep the definition of 'ret' and the mapping
+(kvm_arm_exception_type) consistent between user side and kernel side.
+Specifically,
+kernel side: arch/arm64/include/asm/kvm_asm.h
+user side:   tools/perf/arch/arm64/util/aarch64_guest_exits.h (patch #4)
 
-More info: https://tracingsummit.org/wiki/TracingSummit2019
+Do we have a better approach?
 
-Thank you,
+>> These are all what *patch #4* had done, #4 is a simple patch to review!
+> 
+>> Oh, we can also set "vcpu_id_str" to achieve per vcpu event record, but
+>> currently, we only have the "vcpu_pc" field in "kvm:kvm_entry", without
+>> something like "vcpu_id".
+> 
+> Heh, so from the trace-point data, you can't know which on is vcpu-0 and which is vcpu-1.
 
-On behalf of the Diagnostic and Monitoring Workgroup,
-Tracing Summit organizers
+Yes!
 
-Le mar. 16 avr. 2019, à 11 h 54, Francis Deslauriers
-<francis.deslauriers@efficios.com> a écrit :
->
-> Hi all,
->
-> This is a Call for Proposals for the Tracing Summit 2019 [0] which
-> will be held in San Diego, California, USA at the Hilton San Diego
-> Bayfront, co-located with the Open Source Summit & Embedded Linux
-> Conference North America 2019 [1] on August 20th, 2019.
->
-> You can subscribe to our mailing list ot get the latest info on the event: [2]
->
-> The Tracing Summit is single-day, single-track conference on the topic
-> of tracing. The event focuses on the field of software and hardware
-> tracing, gathering developers and end-users of tracing and trace
-> analysis tools. The main goal of the Tracing Summit is to provide
-> space for discussion between people of the various areas that benefit
-> from tracing, namely parallel, distributed and/or real-time systems,
-> as well as kernel development.
->
-> We are welcoming 30 minute presentations from both end users and
-> developers, on topics covering, but not limited to:
-> -Investigation workflow of Real-Time, latency, and throughput issues,
-> -Trace collection and extraction,
-> -Trace filtering,
-> -Trace aggregation,
-> -Trace formats,
-> -Tracing multi-core systems,
-> -Trace abstraction,
-> -Trace modeling,
-> -Automated trace analysis (e.g. dependency analysis),
-> -Tracing large clusters and distributed systems,
-> -Hardware-level tracing (e.g. DSP, GPU, bare-metal),
-> -Trace visualisation,
-> -Interaction between debugging and tracing,
-> -Tracing remote control,
-> -Analysis of large trace datasets,
-> -Cloud trace collection and analysis,
-> -Integration between trace tools,
-> -Live tracing & monitoring,
-> -Programmable tracing (e.g. eBPF).
->
-> Those can cover recently available technologies, ongoing work, and yet
-> non-existing technologies (which are compellingly interesting to
-> end-users). Please understand that this open forum is not the proper
-> place to present sales or marketing pitches, nor technologies which
-> are prevented from being freely used in open source.
->
-> * Submit you talk today using this form: https://forms.gle/L6mR2ZN3Nt7bUxY98 *
->
-> The submission deadline is July 1st 2019 at 23:59 EST.
->
-> This year tickets are $100 and seating is limited to 100 people. To
-> register, you can add the Tracing Summit as an addon to your Open
-> Source Summit ticket [3] or use this link [4] to register solely for
-> the Tracing Summit.
->
-> The Tracing Summit is sponsored by EfficiOS. We are actively looking
-> for sponsors to support the Tracing Summit. Contact us at
-> info@tracingsummit.org.
->
-> Please send any query about this conference to info@tracingsummit.org.
->
-> This event is organized by Francis Deslauriers and Mathieu Desnoyers
-> on the behalf of the Linux Foundation Diagnostic and Monitoring
-> Workgroup [5].
->
-> [0] : https://tracingsummit.org
-> [1]: https://events.linuxfoundation.org/events/open-source-summit-north-america-2019
-> [2]: http://eepurl.com/goakfv
-> [3]: https://www.cvent.com/events/open-source-summit-embedded-linux-conference-north-america-2019/registration-0ed1330c38bd4845be29b91c9d2444ce.aspx?fqp=true
-> [4]: https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx?fqp=true
-> [5]: https://diamon.org
->
-> --
-> Francis Deslauriers
-> Computer Engineer
-> EfficiOS inc.
+>> OK, next comes the more important question - what should/can we do to
+>> the tracepoints in preparation of 'perf kvm stat' on arm64?
+>>
+>>  From the article you've provided, it's clear that we can't remove the EC
+>> from trace_kvm_exit(). But can we add something like "vcpu_id" into
+>> (at least) trace_kvm_entry(), just like what this patch has done?
+> 
+> Adding something is still likely to break a badly written user-space that is trying to
+> parse the trace information. A regex picking out the last argument will now get a
+> different value.
+> 
+> 
+>> If not, which means we have to keep the existing tracepoints totally
+>> unchanged, then 'perf kvm stat' will have no way to record/report per
+>> vcpu VM-EXIT events (other arch like X86, powerpc, s390 etc. have this
+>> capability, if I understand it correctly).
+> 
+> Well, you get the events, but you don't know which vCPU is which. You can map this back to
+> the pid of the host thread assuming user-space isn't moving vcpu between host threads.
+> 
+> If we're really stuck: Adding tracepoints to KVM-core's vcpu get/put, that export the
+> vcpu_id would let you map pid->vcpu_id, which you can then use for the batch of enter/exit
+> events that come before a final vcpu put.
+> grepping "vpu_id" shows perf has a mapping for which arch-specific argument in enter/exit
+> is the vcpu-id. Done with this core-code mapping, you could drop that code...
+
+Yes. In the current 'perf kvm' implementation, we make use of the
+"vcpu id" field (specified by vcpu_id_str, differ between arch) of
+"kvm:kvm_entry" tracepoint payload, to achieve per vcpu record/report.
+(Details in per_vcpu_record() in tools/perf/builtin-kvm.c)
+
+Adding tracepoints in vcpu_load()/vcpu_put() might be a good idea, we
+can get "vcpu id" information without breaking existing tracepoint ABI.
+And I think other arch will benefit from this way, for those who haven't
+supported 'perf kvm stat' yet and don't have "vcpu id" info in the
+"kvm:kvm_entry" tracepoint.
+
+But there is at least one problem (as I can see)... KVM will not always
+do a vcpu_load()/vcpu_put(), while guest always enters/exits.
+In the worst case, if KVM can always handle guest's exits, perf will not
+have a chance to catch vcpu_load()/vcpu_put(). And still, we fail to get
+per vcpu statistical analysis.
+
+I've written a simple patch to prove this, attached at the end of this
+mail. I run 'perf kvm stat record/report' against a 4-VCPU guest, but
+only vcpu-3 will be reported, as only vcpu-3 is doing some MMIO access
+and we have to return to user space (and vcpu_load() will be invoked).
+
+I'm not sure if I (likely) missed some important points you've provided.
+
+> But I'd be a little nervous adding a new trace-point to work around an ABI problem, as we
+> may have just moved the ABI problem! (What does a user of a vcpu_put tracepoint really need?)
+> 
+> 
+>> As for TRAP events, should we consider adding two new tracepoints --
+>> "kvm_trap_enter" and "kvm_trap_exit", to keep tracking of the trap
+>> handling process? We should also record the EC in "kvm_trap_enter", which will be used as
+>> *key* in TRAP event's "is_begin_event" handler.
+> 
+> The EC can't change between trace_kvm_exit() and handle_exit(), so you already have this.
+> 
+> What are the 'trap' trace points needed for? You get the timing and 'exception class' from
+> the guest enter/exit tracepoints. What about handle_exit() can't you work out from this?
+
+In short, these two trap tracepoints are for patch #5.
+Some users (me) may want to know, how many traps a guest has in a given
+period of time, how many times a particular type of trap (e.g., Dabort)
+has occurred, and how long each trap has been processed. That's what
+patch #5 does, you can get these info through 'perf kvm stat report
+--event=trap'.
+
+If we use guest enter/exit tracepoints to support TRAP events, there
+will be two problems:
+   1) the timing becomes inaccurate (longer than the real timing)
+   2) the reported 'EC' becomes "Unknown" in the case when guest exits
+      due to IRQ, as we set 'esr_ec' to 0 on asynchronous exceptions,
+      in trace_kvm_exit.
+
+>> Patch #5 tells us the whole story, it's simple too.
+> 
+> (I only skimmed the perf patches, I'll go back now that I know a little more about what
+> you're doing)
+
+Much appreciated :)
+
+>> What do you suggest?
+> 
+> We can explore the vcpu_load()/vcpu_put() trace idea, (it may not work for some other
+> reason). I'd like to understand what the 'trap' tracepoints are needed for.
+
+Thanks for your suggestion!
+
+
+Btw, I have collected some useful links, attached here, to share with
+someone who're interested in this series.
+
+[1] the initial idea for 'perf kvm stat':
+https://events.static.linuxfound.org/images/stories/pdf/lcjp2012_guangrong.pdf
+[2] a discussion on improving kvm_exit tracepoint:
+https://patchwork.kernel.org/patch/7097311/
+
+
+Thanks,
+zenghui
 
 
 
+---8<---
+
+Two tracepoints have already been added in vcpu_load/put().
+
+---
+  tools/perf/arch/arm64/util/kvm-stat.c | 2 ++
+  tools/perf/builtin-kvm.c              | 7 ++++++-
+  2 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/arch/arm64/util/kvm-stat.c 
+b/tools/perf/arch/arm64/util/kvm-stat.c
+index 41b28de..a91fe7d 100644
+--- a/tools/perf/arch/arm64/util/kvm-stat.c
++++ b/tools/perf/arch/arm64/util/kvm-stat.c
+@@ -103,6 +103,8 @@ static void trap_event_decode_key(struct 
+perf_kvm_stat *kvm __maybe_unused,
+  	"kvm:kvm_exit",
+  	"kvm:kvm_trap_enter",
+  	"kvm:kvm_trap_exit",
++	"kvm:vcpu_load",
++	"kvm:vcpu_put",
+  	NULL,
+  };
+
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index dbb6f73..f011fcf 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -81,6 +81,11 @@ bool exit_event_begin(struct perf_evsel *evsel,
+  	return false;
+  }
+
++static bool kvm_vcpu_load_event(struct perf_evsel *evsel)
++{
++	return !strcmp(evsel->name, "kvm:vcpu_load");
++}
++
+  bool kvm_entry_event(struct perf_evsel *evsel)
+  {
+  	return !strcmp(evsel->name, kvm_entry_trace);
+@@ -400,7 +405,7 @@ struct vcpu_event_record *per_vcpu_record(struct 
+thread *thread,
+  					  struct perf_sample *sample)
+  {
+  	/* Only kvm_entry records vcpu id. */
+-	if (!thread__priv(thread) && kvm_entry_event(evsel)) {
++	if (!thread__priv(thread) && kvm_vcpu_load_event(evsel)) {
+  		struct vcpu_event_record *vcpu_record;
+
+  		vcpu_record = zalloc(sizeof(*vcpu_record));
 -- 
-Francis Deslauriers
-Computer Engineer
-EfficiOS inc.
