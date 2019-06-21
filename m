@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/25] tools build: Add test to check if slang.h is in /usr/include/slang/
-Date: Fri, 21 Jun 2019 14:38:29 -0300
-Message-ID: <20190621173831.13780-24-acme@kernel.org>
+Subject: [PATCH 24/25] perf build: Handle slang being in /usr/include and in /usr/include/slang/
+Date: Fri, 21 Jun 2019 14:38:30 -0300
+Message-ID: <20190621173831.13780-25-acme@kernel.org>
 References: <20190621173831.13780-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,85 +14,96 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A few odd old distros (rhel5, 6, yeah, lots of those out in use, in many
-cases we want to use upstream perf on it) have the slang header files in
-/usr/include/slang/, so add a test that will be performed only when
-test-all.c (the one with the most common sane settings) fails, either
-because we're in one of these odd distros with slang/slang.h or because
-something else failed (say libelf is not present).
+In some distros slang.h may be in a /usr/include 'slang' subdir, so use
+the if slang is not explicitely disabled (by using NO_SLANG=1) and its
+feature test for the common case (having /usr/include/slang.h) failed,
+use the results for the test that checks if it is in slang/slang.h.
 
-So for the common case nothing changes, no additional test is performed.
+Change the only file in perf that includes slang.h to use
+HAVE_SLANG_INCLUDE_SUBDIR and forget about this for good.
 
-Next step is to check in perf the result of these tests.
+On a rhel6 system now we have:
+
+  $ /tmp/build/perf/perf -vv | grep slang
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+  $ ldd /tmp/build/perf/perf | grep libslang
+  	libslang.so.2 => /usr/lib64/libslang.so.2 (0x00007fa2d5a8d000)
+  $ grep slang /tmp/build/perf/FEATURE-DUMP
+  feature-libslang=0
+  feature-libslang-include-subdir=1
+  $ cat /etc/redhat-release
+  CentOS release 6.10 (Final)
+  $
+
+While on fedora:29:
+
+  $ /tmp/build/perf/perf -vv | grep slang
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+  $ ldd /tmp/build/perf/perf | grep slang
+  	libslang.so.2 => /lib64/libslang.so.2 (0x00007f8eb11a7000)
+  $ grep slang /tmp/build/perf/FEATURE-DUMP
+  feature-libslang=1
+  feature-libslang-include-subdir=1
+  $
+  $ cat /etc/fedora-release
+  Fedora release 29 (Twenty Nine)
+  $
+
+The feature-libslang-include-subdir=1 line is because the 'gettid()'
+test was added to test-all.c as the new glibc has an implementation for
+that, so we soon should have it not failing, i.e. should be the common
+case soon. Perhaps I should move it out till it becomes the norm...
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Fainelli <f.fainelli@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Fixes: 1955c8cf5e26 ("perf tools: Don't hardcode host include path for libslang")
-Link: https://lkml.kernel.org/n/tip-2sy7hbwkx68jr6n97qxgg0c6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-bkgtpsu3uit821fuwsdhj9gd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature                       | 2 +-
- tools/build/feature/Makefile                       | 4 ++++
- tools/build/feature/test-libslang-include-subdir.c | 7 +++++++
- 3 files changed, 12 insertions(+), 1 deletion(-)
- create mode 100644 tools/build/feature/test-libslang-include-subdir.c
+ tools/perf/Makefile.config | 11 ++++++++---
+ tools/perf/ui/libslang.h   |  5 +++++
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 50377cc2f5f9..86b793dffbc4 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -53,6 +53,7 @@ FEATURE_TESTS_BASIC :=                  \
-         libpython                       \
-         libpython-version               \
-         libslang                        \
-+        libslang-include-subdir         \
-         libcrypto                       \
-         libunwind                       \
-         pthread-attr-setaffinity-np     \
-@@ -114,7 +115,6 @@ FEATURE_DISPLAY ?=              \
-          numa_num_possible_cpus \
-          libperl                \
-          libpython              \
--         libslang               \
-          libcrypto              \
-          libunwind              \
-          libdw-dwarf-unwind     \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 7ef7cf04a292..0658b8cd0e53 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -31,6 +31,7 @@ FILES=                                          \
-          test-libpython.bin                     \
-          test-libpython-version.bin             \
-          test-libslang.bin                      \
-+         test-libslang-include-subdir.bin       \
-          test-libcrypto.bin                     \
-          test-libunwind.bin                     \
-          test-libunwind-debug-frame.bin         \
-@@ -184,6 +185,9 @@ $(OUTPUT)test-libaudit.bin:
- $(OUTPUT)test-libslang.bin:
- 	$(BUILD) -lslang
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e04b7a81d221..89ac5a1f1550 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -644,9 +644,14 @@ endif
  
-+$(OUTPUT)test-libslang-include-subdir.bin:
-+	$(BUILD) -lslang
+ ifndef NO_SLANG
+   ifneq ($(feature-libslang), 1)
+-    msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
+-    NO_SLANG := 1
+-  else
++    ifneq ($(feature-libslang-include-subdir), 1)
++      msg := $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev);
++      NO_SLANG := 1
++    else
++      CFLAGS += -DHAVE_SLANG_INCLUDE_SUBDIR
++    endif
++  endif
++  ifndef NO_SLANG
+     # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
+     CFLAGS += -DHAVE_SLANG_SUPPORT
+     EXTLIBS += -lslang
+diff --git a/tools/perf/ui/libslang.h b/tools/perf/ui/libslang.h
+index c0686cda39a5..991e692b9b46 100644
+--- a/tools/perf/ui/libslang.h
++++ b/tools/perf/ui/libslang.h
+@@ -10,7 +10,12 @@
+ #ifndef HAVE_LONG_LONG
+ #define HAVE_LONG_LONG __GLIBC_HAVE_LONG_LONG
+ #endif
 +
- $(OUTPUT)test-libcrypto.bin:
- 	$(BUILD) -lcrypto
- 
-diff --git a/tools/build/feature/test-libslang-include-subdir.c b/tools/build/feature/test-libslang-include-subdir.c
-new file mode 100644
-index 000000000000..3ea47ec7590e
---- /dev/null
-+++ b/tools/build/feature/test-libslang-include-subdir.c
-@@ -0,0 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
++#ifdef HAVE_SLANG_INCLUDE_SUBDIR
 +#include <slang/slang.h>
-+
-+int main(void)
-+{
-+	return SLsmg_init_smg();
-+}
++#else
+ #include <slang.h>
++#endif
+ 
+ #if SLANG_VERSION < 20104
+ #define slsmg_printf(msg, args...) \
 -- 
 2.20.1
