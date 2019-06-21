@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/25] perf trace: Fix exclusion of not available syscall names from selector list
-Date: Fri, 21 Jun 2019 14:38:21 -0300
-Message-ID: <20190621173831.13780-16-acme@kernel.org>
+Subject: [PATCH 16/25] perf trace: Streamline validation of select syscall names list
+Date: Fri, 21 Jun 2019 14:38:22 -0300
+Message-ID: <20190621173831.13780-17-acme@kernel.org>
 References: <20190621173831.13780-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,16 +14,14 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We were just skipping the syscalls not available in a particular
-architecture without reflecting this in the number of entries in the
-ev_qualifier_ids.nr variable, fix it.
+Rename the 'i' variable to 'nr_used' and use set 'nr_allocated' since
+the start of this function, leaving the final assignment of the longer
+named trace->ev_qualifier_ids.nr state to 'nr_used' at the end of the
+function.
 
-This was done with the most minimalistic way, reusing the index variable
-'i', a followup patch will further clean this by making 'i' renamed to
-'nr_used' and using 'nr_allocated' in a few more places.
+No change in behaviour intended.
 
-Reported-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
@@ -31,48 +29,69 @@ Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Mike Leach <mike.leach@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Fixes: 04c41bcb862b ("perf trace: Skip unknown syscalls when expanding strace like syscall groups")
-Link: https://lkml.kernel.org/r/20190613181514.GC1402@kernel.org
+Link: https://lkml.kernel.org/n/tip-kpgyn8xjdjgt0timrrnniquv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-trace.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 12f5ad98f8c1..fa9eb467eb4c 100644
+index fa9eb467eb4c..d5b2e4d8bf41 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1527,9 +1527,9 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 
- static int trace__validate_ev_qualifier(struct trace *trace)
+@@ -1529,11 +1529,10 @@ static int trace__validate_ev_qualifier(struct trace *trace)
  {
--	int err = 0, i;
-+	int err = 0;
+ 	int err = 0;
  	bool printed_invalid_prefix = false;
--	size_t nr_allocated;
-+	size_t nr_allocated, i;
+-	size_t nr_allocated, i;
  	struct str_node *pos;
++	size_t nr_used = 0, nr_allocated = strlist__nr_entries(trace->ev_qualifier);
  
- 	trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
-@@ -1574,7 +1574,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+-	trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
+-	trace->ev_qualifier_ids.entries = malloc(trace->ev_qualifier_ids.nr *
++	trace->ev_qualifier_ids.entries = malloc(nr_allocated *
+ 						 sizeof(trace->ev_qualifier_ids.entries[0]));
+ 
+ 	if (trace->ev_qualifier_ids.entries == NULL) {
+@@ -1543,9 +1542,6 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 		goto out;
+ 	}
+ 
+-	nr_allocated = trace->ev_qualifier_ids.nr;
+-	i = 0;
+-
+ 	strlist__for_each_entry(pos, trace->ev_qualifier) {
+ 		const char *sc = pos->s;
+ 		int id = syscalltbl__id(trace->sctbl, sc), match_next = -1;
+@@ -1566,7 +1562,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 			continue;
+ 		}
+ matches:
+-		trace->ev_qualifier_ids.entries[i++] = id;
++		trace->ev_qualifier_ids.entries[nr_used++] = id;
+ 		if (match_next == -1)
+ 			continue;
+ 
+@@ -1574,7 +1570,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
  			id = syscalltbl__strglobmatch_next(trace->sctbl, sc, &match_next);
  			if (id < 0)
  				break;
--			if (nr_allocated == trace->ev_qualifier_ids.nr) {
-+			if (nr_allocated == i) {
+-			if (nr_allocated == i) {
++			if (nr_allocated == nr_used) {
  				void *entries;
  
  				nr_allocated += 8;
-@@ -1587,11 +1587,11 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+@@ -1587,11 +1583,11 @@ static int trace__validate_ev_qualifier(struct trace *trace)
  				}
  				trace->ev_qualifier_ids.entries = entries;
  			}
--			trace->ev_qualifier_ids.nr++;
- 			trace->ev_qualifier_ids.entries[i++] = id;
+-			trace->ev_qualifier_ids.entries[i++] = id;
++			trace->ev_qualifier_ids.entries[nr_used++] = id;
  		}
  	}
  
-+	trace->ev_qualifier_ids.nr = i;
+-	trace->ev_qualifier_ids.nr = i;
++	trace->ev_qualifier_ids.nr = nr_used;
  out:
  	if (printed_invalid_prefix)
  		pr_debug("\n");
