@@ -1,186 +1,453 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Sat, 22 Jun 2019 08:28:59 +0200
-Message-ID: <20190622062859.GA39787@gmail.com>
-References: <20190621173831.13780-1-acme@kernel.org>
+From: Matt Hart <matthew.hart@linaro.org>
+Subject: Re: [PATCH v2 bpf-next 04/11] libbpf: refactor map initialization
+Date: Wed, 26 Jun 2019 15:48:35 +0100
+Message-ID: <CAH+k93H5ddp7cMBGtyn9DNPvv1MymGCsShJ1-3tezLPUnxt6vw@mail.gmail.com>
+References: <20190617192700.2313445-1-andriin@fb.com> <20190617192700.2313445-5-andriin@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190621173831.13780-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, John Garry <john.garry@huawei.com>, Laura Abbott <labbott@redhat.com>, Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Raphael Gault <raphael.gault@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190617192700.2313445-5-andriin@fb.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andrii Nakryiko <andriin@fb.com>, linux-perf-users@vger.kernel.org
+Cc: andrii.nakryiko@gmail.com, ast@fb.com, daniel@iogearbox.net, netdev@vger.kernel.org, bpf@vger.kernel.org, kernel-team@fb.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi all,
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+I noticed perf fails to build for armv7 on linux next, due to this
+compile error:
+$ make -C tools/perf ARCH=3Darm CROSS_COMPILE=3Darm-linux-gnueabihf-
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 3ce5aceb5dee298b082adfa2baa0df5a447c1b0b:
-> 
->   Merge tag 'perf-core-for-mingo-5.3-20190611' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2019-06-17 20:48:14 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.3-20190621
-> 
-> for you to fetch changes up to 3469fa84c1631face938efc42b3f488a2c2504e0:
-> 
->   tools build: Fix the zstd test in the test-all.c common case feature test (2019-06-18 18:44:24 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> perf trace:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Fix exclusion of not available syscall names from selector list.
-> 
->   - Fixup pointer arithmetic when consuming augmented syscall args.
-> 
-> Intel PT:
-> 
->   Adrian Hunter:
-> 
->   - Add support for decoding PEBS via PT packets. See:
-> 
->       https://software.intel.com/en-us/articles/intel-sdm
->       May 2019 version: Vol. 3B 18.5.5.2 PEBS output to Intel® Processor Trace
-> 
->   for more details about it.
-> 
-> ARM64:
-> 
->   John Garry:
-> 
->   - Fix uncore PMU alias list for ARM64
-> 
->   Raphael Gault:
-> 
->   - Compile tests unconditionally.
-> 
-> cs-etm:
-> 
->   Mathieu Poirier:
-> 
->   - Optimize option setup for CPU-wide sessions.
-> 
-> build:
-> 
->   Florian Fainelli:
-> 
->   - Don't hardcode host include path for libslang, fixing up building with it
->     in cross build environments.
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Check if gettid() is available before providing helper, fixing the build
->     when using the latest glibc version, where a helper for gettid() is finally
->     present.
-> 
->   - Fix building with libslang in systems where it is located in slang/slang.h.
-> 
->   - Fix fast path test for zstd library.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (11):
->       perf intel-pt: Add new packets for PEBS via PT
->       perf intel-pt: Add Intel PT packet decoder test
->       perf intel-pt: Add decoder support for PEBS via PT
->       perf intel-pt: Prepare to synthesize PEBS samples
->       perf intel-pt: Factor out common sample preparation for re-use
->       perf intel-pt: Synthesize PEBS sample basic information
->       perf intel-pt: Add gp registers to synthesized PEBS sample
->       perf intel-pt: Add XMM registers to synthesized PEBS sample
->       perf intel-pt: Add LBR information to synthesized PEBS sample
->       perf intel-pt: Add memory information to synthesized PEBS sample
->       perf intel-pt: Add callchain to synthesized PEBS sample
-> 
-> Arnaldo Carvalho de Melo (10):
->       tools build: Check if gettid() is available before providing helper
->       perf trace: Fix exclusion of not available syscall names from selector list
->       perf trace: Streamline validation of select syscall names list
->       tools build feature tests: Add missing SPDX headers
->       perf tests: Add missing SPDX headers
->       perf trace: Fixup pointer arithmetic when consuming augmented syscall args
->       perf evsel: Make perf_evsel__name() accept a NULL argument
->       tools build: Add test to check if slang.h is in /usr/include/slang/
->       perf build: Handle slang being in /usr/include and in /usr/include/slang/
->       tools build: Fix the zstd test in the test-all.c common case feature test
-> 
-> Florian Fainelli (1):
->       perf tools: Don't hardcode host include path for libslang
-> 
-> John Garry (1):
->       perf pmu: Fix uncore PMU alias list for ARM64
-> 
-> Mathieu Poirier (1):
->       perf: cs-etm: Optimize option setup for CPU-wide sessions
-> 
-> Raphael Gault (1):
->       perf tests arm64: Compile tests unconditionally
-> 
->  tools/build/Makefile.feature                       |   3 +-
->  tools/build/feature/Makefile                       |  10 +-
->  tools/build/feature/test-all.c                     |   7 +-
->  tools/build/feature/test-fortify-source.c          |   1 +
->  tools/build/feature/test-gettid.c                  |  11 +
->  tools/build/feature/test-hello.c                   |   1 +
->  tools/build/feature/test-libslang-include-subdir.c |   7 +
->  tools/build/feature/test-setns.c                   |   1 +
->  tools/perf/Makefile.config                         |  16 +-
->  tools/perf/arch/arm/util/cs-etm.c                  |  20 +-
->  tools/perf/arch/arm64/Build                        |   2 +-
->  tools/perf/arch/arm64/tests/Build                  |   2 +-
->  tools/perf/arch/x86/include/arch-tests.h           |   1 +
->  tools/perf/arch/x86/tests/Build                    |   2 +-
->  tools/perf/arch/x86/tests/arch-tests.c             |   4 +
->  .../arch/x86/tests/intel-pt-pkt-decoder-test.c     | 304 +++++++++++++++++++++
->  tools/perf/builtin-trace.c                         |  20 +-
->  tools/perf/jvmti/jvmti_agent.c                     |   2 +
->  tools/perf/tests/Build                             |   2 +
->  tools/perf/tests/bp_account.c                      |   1 +
->  tools/perf/tests/bpf-script-example.c              |   1 +
->  tools/perf/tests/bpf-script-test-kbuild.c          |   1 +
->  tools/perf/tests/bpf-script-test-prologue.c        |   1 +
->  tools/perf/tests/bpf-script-test-relocation.c      |   1 +
->  tools/perf/tests/bpf.c                             |   1 +
->  tools/perf/tests/map_groups.c                      |   1 +
->  tools/perf/tests/mem.c                             |   1 +
->  tools/perf/tests/mem2node.c                        |   1 +
->  tools/perf/tests/shell/lib/probe.sh                |   1 +
->  tools/perf/tests/shell/probe_vfs_getname.sh        |   3 +-
->  .../tests/shell/record+probe_libc_inet_pton.sh     |   1 +
->  .../tests/shell/record+script_probe_vfs_getname.sh |   1 +
->  tools/perf/tests/shell/record+zstd_comp_decomp.sh  |   2 +
->  tools/perf/tests/shell/trace+probe_vfs_getname.sh  |   1 +
->  tools/perf/ui/libslang.h                           |   5 +
->  tools/perf/util/evsel.c                            |   8 +-
->  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  | 114 +++++++-
->  .../perf/util/intel-pt-decoder/intel-pt-decoder.h  | 137 ++++++++++
->  .../util/intel-pt-decoder/intel-pt-pkt-decoder.c   | 140 +++++++++-
->  .../util/intel-pt-decoder/intel-pt-pkt-decoder.h   |  21 +-
->  tools/perf/util/intel-pt.c                         | 296 +++++++++++++++++++-
->  tools/perf/util/pmu.c                              |  28 +-
->  42 files changed, 1115 insertions(+), 68 deletions(-)
->  create mode 100644 tools/build/feature/test-gettid.c
->  create mode 100644 tools/build/feature/test-libslang-include-subdir.c
->  create mode 100644 tools/perf/arch/x86/tests/intel-pt-pkt-decoder-test.c
+  CC       libbpf_probes.o
+In file included from libbpf.c:27:
+libbpf.c: In function =E2=80=98bpf_object__add_map=E2=80=99:
+/home/matt/git/linux-next/tools/include/linux/kernel.h:45:17: error:
+comparison of distinct pointer types lacks a cast [-Werror]
+  (void) (&_max1 =3D=3D &_max2);  \
+                 ^~
+libbpf.c:776:12: note: in expansion of macro =E2=80=98max=E2=80=99
+  new_cap =3D max(4ul, obj->maps_cap * 3 / 2);
+            ^~~
 
-Pulled, thanks a lot Arnaldo!
+So I bisected it and came down to this patch.
+Commit bf82927125dd25003d76ed5541da704df21de57a
 
-	Ingo
+Full verbose bisect script https://hastebin.com/odoyujofav.coffeescript
+
+Is this a case that perf code needs updating to match the change, or
+is the change broken?
+
+
+
+On Tue, 25 Jun 2019 at 16:53, Andrii Nakryiko <andriin@fb.com> wrote:
+>
+> User and global data maps initialization has gotten pretty complicated
+> and unnecessarily convoluted. This patch splits out the logic for global
+> data map and user-defined map initialization. It also removes the
+> restriction of pre-calculating how many maps will be initialized,
+> instead allowing to keep adding new maps as they are discovered, which
+> will be used later for BTF-defined map definitions.
+>
+> Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+> ---
+>  tools/lib/bpf/libbpf.c | 247 ++++++++++++++++++++++-------------------
+>  1 file changed, 133 insertions(+), 114 deletions(-)
+>
+> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> index 7ee44d8877c5..88609dca4f7d 100644
+> --- a/tools/lib/bpf/libbpf.c
+> +++ b/tools/lib/bpf/libbpf.c
+> @@ -234,6 +234,7 @@ struct bpf_object {
+>         size_t nr_programs;
+>         struct bpf_map *maps;
+>         size_t nr_maps;
+> +       size_t maps_cap;
+>         struct bpf_secdata sections;
+>
+>         bool loaded;
+> @@ -763,21 +764,51 @@ int bpf_object__variable_offset(const struct bpf_ob=
+ject *obj, const char *name,
+>         return -ENOENT;
+>  }
+>
+> -static bool bpf_object__has_maps(const struct bpf_object *obj)
+> +static struct bpf_map *bpf_object__add_map(struct bpf_object *obj)
+>  {
+> -       return obj->efile.maps_shndx >=3D 0 ||
+> -              obj->efile.data_shndx >=3D 0 ||
+> -              obj->efile.rodata_shndx >=3D 0 ||
+> -              obj->efile.bss_shndx >=3D 0;
+> +       struct bpf_map *new_maps;
+> +       size_t new_cap;
+> +       int i;
+> +
+> +       if (obj->nr_maps < obj->maps_cap)
+> +               return &obj->maps[obj->nr_maps++];
+> +
+> +       new_cap =3D max(4ul, obj->maps_cap * 3 / 2);
+> +       new_maps =3D realloc(obj->maps, new_cap * sizeof(*obj->maps));
+> +       if (!new_maps) {
+> +               pr_warning("alloc maps for object failed\n");
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       obj->maps_cap =3D new_cap;
+> +       obj->maps =3D new_maps;
+> +
+> +       /* zero out new maps */
+> +       memset(obj->maps + obj->nr_maps, 0,
+> +              (obj->maps_cap - obj->nr_maps) * sizeof(*obj->maps));
+> +       /*
+> +        * fill all fd with -1 so won't close incorrect fd (fd=3D0 is std=
+in)
+> +        * when failure (zclose won't close negative fd)).
+> +        */
+> +       for (i =3D obj->nr_maps; i < obj->maps_cap; i++) {
+> +               obj->maps[i].fd =3D -1;
+> +               obj->maps[i].inner_map_fd =3D -1;
+> +       }
+> +
+> +       return &obj->maps[obj->nr_maps++];
+>  }
+>
+>  static int
+> -bpf_object__init_internal_map(struct bpf_object *obj, struct bpf_map *ma=
+p,
+> -                             enum libbpf_map_type type, Elf_Data *data,
+> -                             void **data_buff)
+> +bpf_object__init_internal_map(struct bpf_object *obj, enum libbpf_map_ty=
+pe type,
+> +                             Elf_Data *data, void **data_buff)
+>  {
+> -       struct bpf_map_def *def =3D &map->def;
+>         char map_name[BPF_OBJ_NAME_LEN];
+> +       struct bpf_map_def *def;
+> +       struct bpf_map *map;
+> +
+> +       map =3D bpf_object__add_map(obj);
+> +       if (IS_ERR(map))
+> +               return PTR_ERR(map);
+>
+>         map->libbpf_type =3D type;
+>         map->offset =3D ~(typeof(map->offset))0;
+> @@ -789,6 +820,7 @@ bpf_object__init_internal_map(struct bpf_object *obj,=
+ struct bpf_map *map,
+>                 return -ENOMEM;
+>         }
+>
+> +       def =3D &map->def;
+>         def->type =3D BPF_MAP_TYPE_ARRAY;
+>         def->key_size =3D sizeof(int);
+>         def->value_size =3D data->d_size;
+> @@ -808,29 +840,58 @@ bpf_object__init_internal_map(struct bpf_object *ob=
+j, struct bpf_map *map,
+>         return 0;
+>  }
+>
+> -static int bpf_object__init_maps(struct bpf_object *obj, int flags)
+> +static int bpf_object__init_global_data_maps(struct bpf_object *obj)
+> +{
+> +       int err;
+> +
+> +       if (!obj->caps.global_data)
+> +               return 0;
+> +       /*
+> +        * Populate obj->maps with libbpf internal maps.
+> +        */
+> +       if (obj->efile.data_shndx >=3D 0) {
+> +               err =3D bpf_object__init_internal_map(obj, LIBBPF_MAP_DAT=
+A,
+> +                                                   obj->efile.data,
+> +                                                   &obj->sections.data);
+> +               if (err)
+> +                       return err;
+> +       }
+> +       if (obj->efile.rodata_shndx >=3D 0) {
+> +               err =3D bpf_object__init_internal_map(obj, LIBBPF_MAP_ROD=
+ATA,
+> +                                                   obj->efile.rodata,
+> +                                                   &obj->sections.rodata=
+);
+> +               if (err)
+> +                       return err;
+> +       }
+> +       if (obj->efile.bss_shndx >=3D 0) {
+> +               err =3D bpf_object__init_internal_map(obj, LIBBPF_MAP_BSS=
+,
+> +                                                   obj->efile.bss, NULL)=
+;
+> +               if (err)
+> +                       return err;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static int bpf_object__init_user_maps(struct bpf_object *obj, bool stric=
+t)
+>  {
+> -       int i, map_idx, map_def_sz =3D 0, nr_syms, nr_maps =3D 0, nr_maps=
+_glob =3D 0;
+> -       bool strict =3D !(flags & MAPS_RELAX_COMPAT);
+>         Elf_Data *symbols =3D obj->efile.symbols;
+> +       int i, map_def_sz =3D 0, nr_maps =3D 0, nr_syms;
+>         Elf_Data *data =3D NULL;
+> -       int ret =3D 0;
+> +       Elf_Scn *scn;
+> +
+> +       if (obj->efile.maps_shndx < 0)
+> +               return 0;
+>
+>         if (!symbols)
+>                 return -EINVAL;
+> -       nr_syms =3D symbols->d_size / sizeof(GElf_Sym);
+> -
+> -       if (obj->efile.maps_shndx >=3D 0) {
+> -               Elf_Scn *scn =3D elf_getscn(obj->efile.elf,
+> -                                         obj->efile.maps_shndx);
+>
+> -               if (scn)
+> -                       data =3D elf_getdata(scn, NULL);
+> -               if (!scn || !data) {
+> -                       pr_warning("failed to get Elf_Data from map secti=
+on %d\n",
+> -                                  obj->efile.maps_shndx);
+> -                       return -EINVAL;
+> -               }
+> +       scn =3D elf_getscn(obj->efile.elf, obj->efile.maps_shndx);
+> +       if (scn)
+> +               data =3D elf_getdata(scn, NULL);
+> +       if (!scn || !data) {
+> +               pr_warning("failed to get Elf_Data from map section %d\n"=
+,
+> +                          obj->efile.maps_shndx);
+> +               return -EINVAL;
+>         }
+>
+>         /*
+> @@ -840,16 +901,8 @@ static int bpf_object__init_maps(struct bpf_object *=
+obj, int flags)
+>          *
+>          * TODO: Detect array of map and report error.
+>          */
+> -       if (obj->caps.global_data) {
+> -               if (obj->efile.data_shndx >=3D 0)
+> -                       nr_maps_glob++;
+> -               if (obj->efile.rodata_shndx >=3D 0)
+> -                       nr_maps_glob++;
+> -               if (obj->efile.bss_shndx >=3D 0)
+> -                       nr_maps_glob++;
+> -       }
+> -
+> -       for (i =3D 0; data && i < nr_syms; i++) {
+> +       nr_syms =3D symbols->d_size / sizeof(GElf_Sym);
+> +       for (i =3D 0; i < nr_syms; i++) {
+>                 GElf_Sym sym;
+>
+>                 if (!gelf_getsym(symbols, i, &sym))
+> @@ -858,79 +911,56 @@ static int bpf_object__init_maps(struct bpf_object =
+*obj, int flags)
+>                         continue;
+>                 nr_maps++;
+>         }
+> -
+> -       if (!nr_maps && !nr_maps_glob)
+> -               return 0;
+> -
+>         /* Assume equally sized map definitions */
+> -       if (data) {
+> -               pr_debug("maps in %s: %d maps in %zd bytes\n", obj->path,
+> -                        nr_maps, data->d_size);
+> -
+> -               map_def_sz =3D data->d_size / nr_maps;
+> -               if (!data->d_size || (data->d_size % nr_maps) !=3D 0) {
+> -                       pr_warning("unable to determine map definition si=
+ze "
+> -                                  "section %s, %d maps in %zd bytes\n",
+> -                                  obj->path, nr_maps, data->d_size);
+> -                       return -EINVAL;
+> -               }
+> -       }
+> -
+> -       nr_maps +=3D nr_maps_glob;
+> -       obj->maps =3D calloc(nr_maps, sizeof(obj->maps[0]));
+> -       if (!obj->maps) {
+> -               pr_warning("alloc maps for object failed\n");
+> -               return -ENOMEM;
+> -       }
+> -       obj->nr_maps =3D nr_maps;
+> -
+> -       for (i =3D 0; i < nr_maps; i++) {
+> -               /*
+> -                * fill all fd with -1 so won't close incorrect
+> -                * fd (fd=3D0 is stdin) when failure (zclose won't close
+> -                * negative fd)).
+> -                */
+> -               obj->maps[i].fd =3D -1;
+> -               obj->maps[i].inner_map_fd =3D -1;
+> +       pr_debug("maps in %s: %d maps in %zd bytes\n",
+> +                obj->path, nr_maps, data->d_size);
+> +
+> +       map_def_sz =3D data->d_size / nr_maps;
+> +       if (!data->d_size || (data->d_size % nr_maps) !=3D 0) {
+> +               pr_warning("unable to determine map definition size "
+> +                          "section %s, %d maps in %zd bytes\n",
+> +                          obj->path, nr_maps, data->d_size);
+> +               return -EINVAL;
+>         }
+>
+> -       /*
+> -        * Fill obj->maps using data in "maps" section.
+> -        */
+> -       for (i =3D 0, map_idx =3D 0; data && i < nr_syms; i++) {
+> +       /* Fill obj->maps using data in "maps" section.  */
+> +       for (i =3D 0; i < nr_syms; i++) {
+>                 GElf_Sym sym;
+>                 const char *map_name;
+>                 struct bpf_map_def *def;
+> +               struct bpf_map *map;
+>
+>                 if (!gelf_getsym(symbols, i, &sym))
+>                         continue;
+>                 if (sym.st_shndx !=3D obj->efile.maps_shndx)
+>                         continue;
+>
+> -               map_name =3D elf_strptr(obj->efile.elf,
+> -                                     obj->efile.strtabidx,
+> +               map =3D bpf_object__add_map(obj);
+> +               if (IS_ERR(map))
+> +                       return PTR_ERR(map);
+> +
+> +               map_name =3D elf_strptr(obj->efile.elf, obj->efile.strtab=
+idx,
+>                                       sym.st_name);
+>                 if (!map_name) {
+>                         pr_warning("failed to get map #%d name sym string=
+ for obj %s\n",
+> -                                  map_idx, obj->path);
+> +                                  i, obj->path);
+>                         return -LIBBPF_ERRNO__FORMAT;
+>                 }
+>
+> -               obj->maps[map_idx].libbpf_type =3D LIBBPF_MAP_UNSPEC;
+> -               obj->maps[map_idx].offset =3D sym.st_value;
+> +               map->libbpf_type =3D LIBBPF_MAP_UNSPEC;
+> +               map->offset =3D sym.st_value;
+>                 if (sym.st_value + map_def_sz > data->d_size) {
+>                         pr_warning("corrupted maps section in %s: last ma=
+p \"%s\" too small\n",
+>                                    obj->path, map_name);
+>                         return -EINVAL;
+>                 }
+>
+> -               obj->maps[map_idx].name =3D strdup(map_name);
+> -               if (!obj->maps[map_idx].name) {
+> +               map->name =3D strdup(map_name);
+> +               if (!map->name) {
+>                         pr_warning("failed to alloc map name\n");
+>                         return -ENOMEM;
+>                 }
+> -               pr_debug("map %d is \"%s\"\n", map_idx,
+> -                        obj->maps[map_idx].name);
+> +               pr_debug("map %d is \"%s\"\n", i, map->name);
+>                 def =3D (struct bpf_map_def *)(data->d_buf + sym.st_value=
+);
+>                 /*
+>                  * If the definition of the map in the object file fits i=
+n
+> @@ -939,7 +969,7 @@ static int bpf_object__init_maps(struct bpf_object *o=
+bj, int flags)
+>                  * calloc above.
+>                  */
+>                 if (map_def_sz <=3D sizeof(struct bpf_map_def)) {
+> -                       memcpy(&obj->maps[map_idx].def, def, map_def_sz);
+> +                       memcpy(&map->def, def, map_def_sz);
+>                 } else {
+>                         /*
+>                          * Here the map structure being read is bigger th=
+an what
+> @@ -959,37 +989,30 @@ static int bpf_object__init_maps(struct bpf_object =
+*obj, int flags)
+>                                                 return -EINVAL;
+>                                 }
+>                         }
+> -                       memcpy(&obj->maps[map_idx].def, def,
+> -                              sizeof(struct bpf_map_def));
+> +                       memcpy(&map->def, def, sizeof(struct bpf_map_def)=
+);
+>                 }
+> -               map_idx++;
+>         }
+> +       return 0;
+> +}
+>
+> -       if (!obj->caps.global_data)
+> -               goto finalize;
+> +static int bpf_object__init_maps(struct bpf_object *obj, int flags)
+> +{
+> +       bool strict =3D !(flags & MAPS_RELAX_COMPAT);
+> +       int err;
+>
+> -       /*
+> -        * Populate rest of obj->maps with libbpf internal maps.
+> -        */
+> -       if (obj->efile.data_shndx >=3D 0)
+> -               ret =3D bpf_object__init_internal_map(obj, &obj->maps[map=
+_idx++],
+> -                                                   LIBBPF_MAP_DATA,
+> -                                                   obj->efile.data,
+> -                                                   &obj->sections.data);
+> -       if (!ret && obj->efile.rodata_shndx >=3D 0)
+> -               ret =3D bpf_object__init_internal_map(obj, &obj->maps[map=
+_idx++],
+> -                                                   LIBBPF_MAP_RODATA,
+> -                                                   obj->efile.rodata,
+> -                                                   &obj->sections.rodata=
+);
+> -       if (!ret && obj->efile.bss_shndx >=3D 0)
+> -               ret =3D bpf_object__init_internal_map(obj, &obj->maps[map=
+_idx++],
+> -                                                   LIBBPF_MAP_BSS,
+> -                                                   obj->efile.bss, NULL)=
+;
+> -finalize:
+> -       if (!ret)
+> +       err =3D bpf_object__init_user_maps(obj, strict);
+> +       if (err)
+> +               return err;
+> +
+> +       err =3D bpf_object__init_global_data_maps(obj);
+> +       if (err)
+> +               return err;
+> +
+> +       if (obj->nr_maps) {
+>                 qsort(obj->maps, obj->nr_maps, sizeof(obj->maps[0]),
+>                       compare_bpf_map);
+> -       return ret;
+> +       }
+> +       return 0;
+>  }
+>
+>  static bool section_have_execinstr(struct bpf_object *obj, int idx)
+> @@ -1262,14 +1285,10 @@ static int bpf_object__elf_collect(struct bpf_obj=
+ect *obj, int flags)
+>                 return -LIBBPF_ERRNO__FORMAT;
+>         }
+>         err =3D bpf_object__load_btf(obj, btf_data, btf_ext_data);
+> -       if (err)
+> -               return err;
+> -       if (bpf_object__has_maps(obj)) {
+> +       if (!err)
+>                 err =3D bpf_object__init_maps(obj, flags);
+> -               if (err)
+> -                       return err;
+> -       }
+> -       err =3D bpf_object__init_prog_names(obj);
+> +       if (!err)
+> +               err =3D bpf_object__init_prog_names(obj);
+>         return err;
+>  }
+>
+> --
+> 2.17.1
+>
