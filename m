@@ -1,194 +1,110 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/43] perf thread-stack: Fix thread stack return from kernel for kernel-only case
-Date: Mon,  1 Jul 2019 23:25:35 -0300
-Message-ID: <20190702022616.1259-3-acme@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
+ sources
+Date: Tue, 2 Jul 2019 14:12:40 +0200
+Message-ID: <20190702121240.GB12694@krava>
 References: <20190702022616.1259-1-acme@kernel.org>
+ <20190702022616.1259-24-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190702022616.1259-24-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+On Mon, Jul 01, 2019 at 11:25:56PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Same implementation, will be used to replace ad-hoc equivalent code in
+> tools/.
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Andr� Goddard Rosa <andre.goddard@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-dig691cg9ripvoiprpidthw7@git.kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/include/linux/string.h |  4 +++-
+>  tools/lib/string.c           | 14 ++++++++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> index 6c3e2cc274c5..cee239350a6b 100644
+> --- a/tools/include/linux/string.h
+> +++ b/tools/include/linux/string.h
+> @@ -29,4 +29,6 @@ static inline bool strstarts(const char *str, const char *prefix)
+>  	return strncmp(str, prefix, strlen(prefix)) == 0;
+>  }
+>  
+> -#endif /* _LINUX_STRING_H_ */
+> +extern char * __must_check skip_spaces(const char *);
+> +
+> +#endif /* _TOOLS_LINUX_STRING_H_ */
+> diff --git a/tools/lib/string.c b/tools/lib/string.c
+> index 93b3d4b6feac..50d400822bb3 100644
+> --- a/tools/lib/string.c
+> +++ b/tools/lib/string.c
+> @@ -17,6 +17,7 @@
+>  #include <string.h>
+>  #include <errno.h>
+>  #include <linux/string.h>
+> +#include <linux/ctype.h>
+>  #include <linux/compiler.h>
+>  
+>  /**
+> @@ -106,3 +107,16 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+>  	}
+>  	return ret;
+>  }
+> +
+> +/**
+> + * skip_spaces - Removes leading whitespace from @str.
+> + * @str: The string to be stripped.
+> + *
+> + * Returns a pointer to the first non-whitespace character in @str.
+> + */
+> +char *skip_spaces(const char *str)
+> +{
+> +	while (isspace(*str))
+> +		++str;
+> +	return (char *)str;
+> +}
+> -- 
+> 2.20.1
+> 
 
-Commit f08046cb3082 ("perf thread-stack: Represent jmps to the start of a
-different symbol") had the side-effect of introducing more stack entries
-before return from kernel space.
+this breaks objtool build, because it adds _ctype dependency via isspace call
+patch below fixes it for me
 
-When user space is also traced, those entries are popped before entry to
-user space, but when user space is not traced, they get stuck at the
-bottom of the stack, making the stack grow progressively larger.
+jirka
 
-Fix by detecting a return-from-kernel branch type, and popping kernel
-addresses from the stack then.
 
-Note, the problem and fix affect the exported Call Graph / Tree but not
-the callindent option used by "perf script --call-trace".
-
-Example:
-
-  perf-with-kcore record example -e intel_pt//k -- ls
-  perf-with-kcore script example --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py example.db branches calls
-  ~/libexec/perf-core/scripts/python/exported-sql-viewer.py example.db
-
-  Menu option: Reports -> Context-Sensitive Call Graph
-
-  Before: (showing Call Path column only)
-
-    Call Path
-    ▶ perf
-    ▼ ls
-      ▼ 12111:12111
-        ▶ setup_new_exec
-        ▶ __task_pid_nr_ns
-        ▶ perf_event_pid_type
-        ▶ perf_event_comm_output
-        ▶ perf_iterate_ctx
-        ▶ perf_iterate_sb
-        ▶ perf_event_comm
-        ▶ __set_task_comm
-        ▶ load_elf_binary
-        ▶ search_binary_handler
-        ▶ __do_execve_file.isra.41
-        ▶ __x64_sys_execve
-        ▶ do_syscall_64
-        ▼ entry_SYSCALL_64_after_hwframe
-          ▼ swapgs_restore_regs_and_return_to_usermode
-            ▼ native_iret
-              ▶ error_entry
-              ▶ do_page_fault
-              ▼ error_exit
-                ▼ retint_user
-                  ▶ prepare_exit_to_usermode
-                  ▼ native_iret
-                    ▶ error_entry
-                    ▶ do_page_fault
-                    ▼ error_exit
-                      ▼ retint_user
-                        ▶ prepare_exit_to_usermode
-                        ▼ native_iret
-                          ▶ error_entry
-                          ▶ do_page_fault
-                          ▼ error_exit
-                            ▼ retint_user
-                              ▶ prepare_exit_to_usermode
-                              ▶ native_iret
-
-  After: (showing Call Path column only)
-
-    Call Path
-    ▶ perf
-    ▼ ls
-      ▼ 12111:12111
-        ▶ setup_new_exec
-        ▶ __task_pid_nr_ns
-        ▶ perf_event_pid_type
-        ▶ perf_event_comm_output
-        ▶ perf_iterate_ctx
-        ▶ perf_iterate_sb
-        ▶ perf_event_comm
-        ▶ __set_task_comm
-        ▶ load_elf_binary
-        ▶ search_binary_handler
-        ▶ __do_execve_file.isra.41
-        ▶ __x64_sys_execve
-        ▶ do_syscall_64
-        ▶ entry_SYSCALL_64_after_hwframe
-        ▶ page_fault
-        ▼ entry_SYSCALL_64
-          ▼ do_syscall_64
-            ▶ __x64_sys_brk
-            ▶ __x64_sys_access
-            ▶ __x64_sys_openat
-            ▶ __x64_sys_newfstat
-            ▶ __x64_sys_mmap
-            ▶ __x64_sys_close
-            ▶ __x64_sys_read
-            ▶ __x64_sys_mprotect
-            ▶ __x64_sys_arch_prctl
-            ▶ __x64_sys_munmap
-            ▶ exit_to_usermode_loop
-            ▶ __x64_sys_set_tid_address
-            ▶ __x64_sys_set_robust_list
-            ▶ __x64_sys_rt_sigaction
-            ▶ __x64_sys_rt_sigprocmask
-            ▶ __x64_sys_prlimit64
-            ▶ __x64_sys_statfs
-            ▶ __x64_sys_ioctl
-            ▶ __x64_sys_getdents64
-            ▶ __x64_sys_write
-            ▶ __x64_sys_exit_group
-
-Committer notes:
-
-The first arg to the perf-with-kcore needs to be the same for the
-'record' and 'script' lines, otherwise we'll record the perf.data file
-and kcore_dir/ files in one directory ('example') to then try to use it
-from the 'bep' directory, fix the instructions above it so that both use
-'example'.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: f08046cb3082 ("perf thread-stack: Represent jmps to the start of a different symbol")
-Link: http://lkml.kernel.org/r/20190619064429.14940-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/thread-stack.c | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index c485186a8b6d..4c826a2e08d8 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -628,6 +628,23 @@ static int thread_stack__bottom(struct thread_stack *ts,
- 				     true, false);
- }
+diff --git a/tools/objtool/Build b/tools/objtool/Build
+index 749becdf5b90..8dc4f0848362 100644
+--- a/tools/objtool/Build
++++ b/tools/objtool/Build
+@@ -9,6 +9,7 @@ objtool-y += special.o
+ objtool-y += objtool.o
  
-+static int thread_stack__pop_ks(struct thread *thread, struct thread_stack *ts,
-+				struct perf_sample *sample, u64 ref)
-+{
-+	u64 tm = sample->time;
-+	int err;
-+
-+	/* Return to userspace, so pop all kernel addresses */
-+	while (thread_stack__in_kernel(ts)) {
-+		err = thread_stack__call_return(thread, ts, --ts->cnt,
-+						tm, ref, true);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
- static int thread_stack__no_call_return(struct thread *thread,
- 					struct thread_stack *ts,
- 					struct perf_sample *sample,
-@@ -910,7 +927,18 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 			ts->rstate = X86_RETPOLINE_DETECTED;
+ objtool-y += libstring.o
++objtool-y += libctype.o
+ objtool-y += str_error_r.o
  
- 	} else if (sample->flags & PERF_IP_FLAG_RETURN) {
--		if (!sample->ip || !sample->addr)
-+		if (!sample->addr) {
-+			u32 return_from_kernel = PERF_IP_FLAG_SYSCALLRET |
-+						 PERF_IP_FLAG_INTERRUPT;
-+
-+			if (!(sample->flags & return_from_kernel))
-+				return 0;
-+
-+			/* Pop kernel stack */
-+			return thread_stack__pop_ks(thread, ts, sample, ref);
-+		}
-+
-+		if (!sample->ip)
- 			return 0;
+ CFLAGS += -I$(srctree)/tools/lib
+@@ -17,6 +18,10 @@ $(OUTPUT)libstring.o: ../lib/string.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
  
- 		/* x86 retpoline 'return' doesn't match the stack */
--- 
-2.20.1
++$(OUTPUT)libctype.o: ../lib/ctype.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
+ $(OUTPUT)str_error_r.o: ../lib/str_error_r.c FORCE
+ 	$(call rule_mkdir)
+ 	$(call if_changed_dep,cc_o_c)
