@@ -1,41 +1,59 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 23/43] tools lib: Adopt skip_spaces() from the kernel
- sources
-Date: Tue, 2 Jul 2019 11:02:55 -0300
-Message-ID: <20190702140255.GC15462@kernel.org>
+Subject: Re: [PATCH 32/43] tools lib: Adopt strim() from the kernel
+Date: Tue, 2 Jul 2019 13:00:32 -0300
+Message-ID: <20190702160032.GH15462@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
- <20190702022616.1259-24-acme@kernel.org>
- <20190702121240.GB12694@krava>
- <20190702134603.GA15462@kernel.org>
- <20190702134815.GB15462@kernel.org>
- <20190702135432.GC12694@krava>
+ <20190702022616.1259-33-acme@kernel.org>
+ <CAGje9yTfFrUxj-vSX=Au856Fe_307aQqD=YrbGeWfHESQ6Rw8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190702135432.GC12694@krava>
+In-Reply-To: <CAGje9yTfFrUxj-vSX=Au856Fe_307aQqD=YrbGeWfHESQ6Rw8w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+To: =?iso-8859-1?Q?Andr=E9?= Goddard Rosa <andre.goddard@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Clark Williams <williams@redhat.com>, Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jul 02, 2019 at 03:54:32PM +0200, Jiri Olsa escreveu:
-> On Tue, Jul 02, 2019 at 10:48:15AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Jul 02, 2019 at 10:46:03AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Tue, Jul 02, 2019 at 02:12:40PM +0200, Jiri Olsa escreveu:
-> > > > this breaks objtool build, because it adds _ctype dependency via isspace call
-> > > > patch below fixes it for me
+Em Mon, Jul 01, 2019 at 11:33:20PM -0400, André Goddard Rosa escreveu:
+> On Mon, Jul 1, 2019 at 22:28 Arnaldo Carvalho de Melo <acme@kernel.org>
+> wrote:
+> 
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> >
+> > Since we're working on moving stuff out of tools/perf/util/ to
+> > tools/lib/, take the opportunity to adopt routines from the kernel that
+> > are equivalent, so that tools/ code look more like the kernel.
 
-> > > Thanks for  spotting this, I'll have it in my next pull request.
+<SNIP>
 
-> > I'm adding a Signed-off-by: you, ok?
+> > +char *strim(char *s)
+> > +{
+> > +       size_t size;
+> > +       char *end;
+> > +
+> > +       size = strlen(s);
+> > +       if (!size)
+> > +               return s;
+> > +
+> > +       end = s + size - 1;
+> > +       while (end >= s && isspace(*end))
+> > +               end--;
+> > +       *(end + 1) = '\0';
+> > +
+> > +       return skip_spaces(s);
+> > +}
+> > --
+> > 2.20.1
+> 
+> 
+> Small nit: could call skip_spaces() firstly and save its pointer to return
+> later and then remove the trailing spaces. That’ll make strlen() iterate
+> over a smaller string.
 
-> sure, I did not post full patch, because I thought you might thought
-> of some other solution
-
-I think this is it for now, at some point we need to make a
-tools/lib/liblinux.{a,so} to group what we're getting from the linux
-lib/ directory to adapt and use in tools/ living code and then, as a
-a starter, tools/objtool/ and tools/perf/ should link with it.
+Hey, this is just  a copy of what is in the kernel sources, so as soon
+as this gets improved there we'll grab a copy again can you do that for
+the kernel first? :-)
 
 - Arnaldo
