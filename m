@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/43] perf tools: Use linux/ctype.h in more places
-Date: Mon,  1 Jul 2019 23:25:55 -0300
-Message-ID: <20190702022616.1259-23-acme@kernel.org>
+Subject: [PATCH 18/43] perf symbols: We need util.h in symbol-elf.c for zfree()
+Date: Mon,  1 Jul 2019 23:25:51 -0300
+Message-ID: <20190702022616.1259-19-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,59 +14,29 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-There were a few places where we still were using the libc version of
-ctype.h, switch to the one in tools/lib/ctype.c that the rest of perf
-uses.
+Continuing to untangle the headers, we're about to remove the old odd
+baggage that is tools/perf/util/include/linux/ctype.h.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-wa4nz4kt61eze88eprk20tfd@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-gapezcq3p8bzrsi96vdtq0o0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/util/header.c | 2 +-
- tools/perf/util/metricgroup.c      | 2 +-
- tools/perf/util/time-utils.c       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/symbol-elf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 3db85cd2069e..a25896135abe 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -11,7 +11,7 @@
- #include <unistd.h>
- #include <stdio.h>
- #include <string.h>
--#include <ctype.h>
-+#include <linux/ctype.h>
- 
- #include "../../util/header.h"
- #include "../../util/util.h"
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 699e020737d9..a0cf3cd95ced 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -17,7 +17,7 @@
- #include "pmu-events/pmu-events.h"
- #include "strlist.h"
- #include <assert.h>
--#include <ctype.h>
-+#include <linux/ctype.h>
- 
- struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 					 struct perf_evsel *evsel,
-diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
-index 2b48816a2d2e..369fa19dd596 100644
---- a/tools/perf/util/time-utils.c
-+++ b/tools/perf/util/time-utils.c
-@@ -7,7 +7,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <math.h>
--#include <ctype.h>
-+#include <linux/ctype.h>
- 
- #include "perf.h"
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index fdc5bd7dbb90..f04ef851ae86 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -14,6 +14,7 @@
+ #include "machine.h"
+ #include "vdso.h"
  #include "debug.h"
++#include "util.h"
+ #include "sane_ctype.h"
+ #include <symbol/kallsyms.h>
+ 
 -- 
 2.20.1
