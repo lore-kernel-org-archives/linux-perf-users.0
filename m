@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/43] perf probe: Use skip_spaces() for argv handling
-Date: Mon,  1 Jul 2019 23:26:00 -0300
-Message-ID: <20190702022616.1259-28-acme@kernel.org>
+Subject: [PATCH 28/43] perf strfilter: Use skip_spaces()
+Date: Mon,  1 Jul 2019 23:26:01 -0300
+Message-ID: <20190702022616.1259-29-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,59 +14,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The skip_sep() routine has the same implementation as skip_spaces(),
-recently adopted from the kernel, sources, switch to it.
+No change in behaviour.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0ix211a81z2016dl5nmtdci4@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-p9rtamq7lvre9zhti70azfwe@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/string.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+ tools/perf/util/strfilter.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/string.c b/tools/perf/util/string.c
-index 084c3e4e9400..d28e723e2790 100644
---- a/tools/perf/util/string.c
-+++ b/tools/perf/util/string.c
-@@ -69,18 +69,6 @@ s64 perf_atoll(const char *str)
- 	return -1;
- }
+diff --git a/tools/perf/util/strfilter.c b/tools/perf/util/strfilter.c
+index 2c3a2904ebcd..90ea2b209cbb 100644
+--- a/tools/perf/util/strfilter.c
++++ b/tools/perf/util/strfilter.c
+@@ -5,6 +5,7 @@
  
--/*
-- * Helper function for splitting a string into an argv-like array.
-- * originally copied from lib/argv_split.c
-- */
--static const char *skip_sep(const char *cp)
--{
--	while (*cp && isspace(*cp))
--		cp++;
--
--	return cp;
--}
--
- static const char *skip_arg(const char *cp)
+ #include <errno.h>
+ #include <linux/ctype.h>
++#include <linux/string.h>
+ 
+ /* Operators */
+ static const char *OP_and	= "&";	/* Logical AND */
+@@ -37,8 +38,7 @@ static const char *get_token(const char *s, const char **e)
  {
- 	while (*cp && !isspace(*cp))
-@@ -94,7 +82,7 @@ static int count_argc(const char *str)
- 	int count = 0;
+ 	const char *p;
  
- 	while (*str) {
--		str = skip_sep(str);
-+		str = skip_spaces(str);
- 		if (*str) {
- 			count++;
- 			str = skip_arg(str);
-@@ -148,7 +136,7 @@ char **argv_split(const char *str, int *argcp)
- 	argvp = argv;
+-	while (isspace(*s))	/* Skip spaces */
+-		s++;
++	s = skip_spaces(s);
  
- 	while (*str) {
--		str = skip_sep(str);
-+		str = skip_spaces(str);
- 
- 		if (*str) {
- 			const char *p = str;
+ 	if (*s == '\0') {
+ 		p = s;
 -- 
 2.20.1
