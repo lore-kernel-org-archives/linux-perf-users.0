@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/43] perf intel-pt: Synthesize CBR events when last seen value changes
-Date: Mon,  1 Jul 2019 23:25:41 -0300
-Message-ID: <20190702022616.1259-9-acme@kernel.org>
+Subject: [PATCH 09/43] perf db-export: Export synth events
+Date: Mon,  1 Jul 2019 23:25:42 -0300
+Message-ID: <20190702022616.1259-10-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,136 +14,102 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-The first core-to-bus ratio (CBR) event will not be shown if --itrace
-'s' option (skip initial number of events) is used, nor if time
-intervals are specified that do not include the start of tracing. Change
-the logic to record the last CBR value seen by the user, and synthesize
-CBR events whenever that changes.
+Synthesized events are samples but with architecture-specific data
+stored in sample->raw_data. They are identified by attribute type
+PERF_TYPE_SYNTH.  Add a function to export them.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190622093248.581-5-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190622093248.581-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 65 ++++++++++++++++++++++++--------------
- 1 file changed, 41 insertions(+), 24 deletions(-)
+ .../scripting-engines/trace-event-python.c    | 46 ++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 550db6e77968..470aaae9d930 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -171,6 +171,7 @@ struct intel_pt_queue {
- 	u64 last_in_cyc_cnt;
- 	u64 last_br_insn_cnt;
- 	u64 last_br_cyc_cnt;
-+	unsigned int cbr_seen;
- 	char insn[INTEL_PT_INSN_BUF_SZ];
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 6acb379b53ec..112bed65232f 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -112,6 +112,7 @@ struct tables {
+ 	PyObject		*sample_handler;
+ 	PyObject		*call_path_handler;
+ 	PyObject		*call_return_handler;
++	PyObject		*synth_handler;
+ 	bool			db_export_mode;
  };
  
-@@ -1052,6 +1053,8 @@ static int intel_pt_setup_queue(struct intel_pt *pt,
- 			ptq->cpu = queue->cpu;
- 		ptq->tid = queue->tid;
- 
-+		ptq->cbr_seen = UINT_MAX;
-+
- 		if (pt->sampling_mode && !pt->snapshot_mode &&
- 		    pt->timeless_decoding)
- 			ptq->step_through_buffers = true;
-@@ -1184,6 +1187,17 @@ static inline bool intel_pt_skip_event(struct intel_pt *pt)
- 	       pt->num_events++ < pt->synth_opts.initial_skip;
+@@ -947,6 +948,12 @@ static int tuple_set_string(PyObject *t, unsigned int pos, const char *s)
+ 	return PyTuple_SetItem(t, pos, _PyUnicode_FromString(s));
  }
  
-+/*
-+ * Cannot count CBR as skipped because it won't go away until cbr == cbr_seen.
-+ * Also ensure CBR is first non-skipped event by allowing for 4 more samples
-+ * from this decoder state.
-+ */
-+static inline bool intel_pt_skip_cbr_event(struct intel_pt *pt)
++static int tuple_set_bytes(PyObject *t, unsigned int pos, void *bytes,
++			   unsigned int sz)
 +{
-+	return pt->synth_opts.initial_skip &&
-+	       pt->num_events + 4 < pt->synth_opts.initial_skip;
++	return PyTuple_SetItem(t, pos, _PyBytes_FromStringAndSize(bytes, sz));
 +}
 +
- static void intel_pt_prep_a_sample(struct intel_pt_queue *ptq,
- 				   union perf_event *event,
- 				   struct perf_sample *sample)
-@@ -1429,9 +1443,11 @@ static int intel_pt_synth_cbr_sample(struct intel_pt_queue *ptq)
- 	struct perf_synth_intel_cbr raw;
- 	u32 flags;
- 
--	if (intel_pt_skip_event(pt))
-+	if (intel_pt_skip_cbr_event(pt))
- 		return 0;
- 
-+	ptq->cbr_seen = ptq->state->cbr;
-+
- 	intel_pt_prep_p_sample(pt, ptq, event, &sample);
- 
- 	sample.id = ptq->pt->cbr_id;
-@@ -1868,8 +1884,7 @@ static inline bool intel_pt_is_switch_ip(struct intel_pt_queue *ptq, u64 ip)
+ static int python_export_evsel(struct db_export *dbe, struct perf_evsel *evsel)
+ {
+ 	struct tables *tables = container_of(dbe, struct tables, dbe);
+@@ -1105,8 +1112,8 @@ static int python_export_branch_type(struct db_export *dbe, u32 branch_type,
+ 	return 0;
  }
  
- #define INTEL_PT_PWR_EVT (INTEL_PT_MWAIT_OP | INTEL_PT_PWR_ENTRY | \
--			  INTEL_PT_EX_STOP | INTEL_PT_PWR_EXIT | \
--			  INTEL_PT_CBR_CHG)
-+			  INTEL_PT_EX_STOP | INTEL_PT_PWR_EXIT)
- 
- static int intel_pt_sample(struct intel_pt_queue *ptq)
+-static int python_export_sample(struct db_export *dbe,
+-				struct export_sample *es)
++static void python_export_sample_table(struct db_export *dbe,
++				       struct export_sample *es)
  {
-@@ -1901,31 +1916,33 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
- 			return err;
- 	}
+ 	struct tables *tables = container_of(dbe, struct tables, dbe);
+ 	PyObject *t;
+@@ -1141,6 +1148,33 @@ static int python_export_sample(struct db_export *dbe,
+ 	call_object(tables->sample_handler, t, "sample_table");
  
--	if (pt->sample_pwr_events && (state->type & INTEL_PT_PWR_EVT)) {
--		if (state->type & INTEL_PT_CBR_CHG) {
-+	if (pt->sample_pwr_events) {
-+		if (ptq->state->cbr != ptq->cbr_seen) {
- 			err = intel_pt_synth_cbr_sample(ptq);
- 			if (err)
- 				return err;
- 		}
--		if (state->type & INTEL_PT_MWAIT_OP) {
--			err = intel_pt_synth_mwait_sample(ptq);
--			if (err)
--				return err;
--		}
--		if (state->type & INTEL_PT_PWR_ENTRY) {
--			err = intel_pt_synth_pwre_sample(ptq);
--			if (err)
--				return err;
--		}
--		if (state->type & INTEL_PT_EX_STOP) {
--			err = intel_pt_synth_exstop_sample(ptq);
--			if (err)
--				return err;
--		}
--		if (state->type & INTEL_PT_PWR_EXIT) {
--			err = intel_pt_synth_pwrx_sample(ptq);
--			if (err)
--				return err;
-+		if (state->type & INTEL_PT_PWR_EVT) {
-+			if (state->type & INTEL_PT_MWAIT_OP) {
-+				err = intel_pt_synth_mwait_sample(ptq);
-+				if (err)
-+					return err;
-+			}
-+			if (state->type & INTEL_PT_PWR_ENTRY) {
-+				err = intel_pt_synth_pwre_sample(ptq);
-+				if (err)
-+					return err;
-+			}
-+			if (state->type & INTEL_PT_EX_STOP) {
-+				err = intel_pt_synth_exstop_sample(ptq);
-+				if (err)
-+					return err;
-+			}
-+			if (state->type & INTEL_PT_PWR_EXIT) {
-+				err = intel_pt_synth_pwrx_sample(ptq);
-+				if (err)
-+					return err;
-+			}
- 		}
- 	}
+ 	Py_DECREF(t);
++}
++
++static void python_export_synth(struct db_export *dbe, struct export_sample *es)
++{
++	struct tables *tables = container_of(dbe, struct tables, dbe);
++	PyObject *t;
++
++	t = tuple_new(3);
++
++	tuple_set_u64(t, 0, es->db_id);
++	tuple_set_u64(t, 1, es->evsel->attr.config);
++	tuple_set_bytes(t, 2, es->sample->raw_data, es->sample->raw_size);
++
++	call_object(tables->synth_handler, t, "synth_data");
++
++	Py_DECREF(t);
++}
++
++static int python_export_sample(struct db_export *dbe,
++				struct export_sample *es)
++{
++	struct tables *tables = container_of(dbe, struct tables, dbe);
++
++	python_export_sample_table(dbe, es);
++
++	if (es->evsel->attr.type == PERF_TYPE_SYNTH && tables->synth_handler)
++		python_export_synth(dbe, es);
  
+ 	return 0;
+ }
+@@ -1477,6 +1511,14 @@ static void set_table_handlers(struct tables *tables)
+ 	SET_TABLE_HANDLER(sample);
+ 	SET_TABLE_HANDLER(call_path);
+ 	SET_TABLE_HANDLER(call_return);
++
++	/*
++	 * Synthesized events are samples but with architecture-specific data
++	 * stored in sample->raw_data. They are exported via
++	 * python_export_sample() and consequently do not need a separate export
++	 * callback.
++	 */
++	tables->synth_handler = get_handler("synth_data");
+ }
+ 
+ #if PY_MAJOR_VERSION < 3
 -- 
 2.20.1
