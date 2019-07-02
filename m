@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/43] perf header: Use skip_spaces() in __write_cpudesc()
-Date: Mon,  1 Jul 2019 23:25:58 -0300
-Message-ID: <20190702022616.1259-26-acme@kernel.org>
+Subject: [PATCH 26/43] perf time-utils: Use skip_spaces()
+Date: Mon,  1 Jul 2019 23:25:59 -0300
+Message-ID: <20190702022616.1259-27-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,46 +9,47 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190702022616.1259-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Stephane Eranian <eranian@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Jin Yao <yao.jin@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-No change in behaviour.
+No change in behaviour intended.
 
-Cc: Stephane Eranian <eranian@google.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0dbfpi70aa66s6mtd8z6p391@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-cpugv7qd5vzhbtvnlydo90jv@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/util/time-utils.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fca9dbaf61ae..1eb15f7517b0 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -13,6 +13,7 @@
- #include <linux/list.h>
- #include <linux/kernel.h>
- #include <linux/bitops.h>
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 369fa19dd596..c2abc259b51d 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <stdlib.h>
+ #include <string.h>
 +#include <linux/string.h>
- #include <linux/stringify.h>
- #include <sys/stat.h>
- #include <sys/utsname.h>
-@@ -416,10 +417,8 @@ static int __write_cpudesc(struct feat_fd *ff, const char *cpuinfo_proc)
- 	while (*p) {
- 		if (isspace(*p)) {
- 			char *r = p + 1;
--			char *q = r;
-+			char *q = skip_spaces(r);
- 			*p = ' ';
--			while (*q && isspace(*q))
--				q++;
- 			if (q != (p+1))
- 				while ((*r++ = *q++));
- 		}
+ #include <sys/time.h>
+ #include <linux/time64.h>
+ #include <time.h>
+@@ -141,10 +142,7 @@ static int perf_time__parse_strs(struct perf_time_interval *ptime,
+ 	for (i = 0, p = str; i < num - 1; i++) {
+ 		arg = p;
+ 		/* Find next comma, there must be one */
+-		p = strchr(p, ',') + 1;
+-		/* Skip white space */
+-		while (isspace(*p))
+-			p++;
++		p = skip_spaces(strchr(p, ',') + 1);
+ 		/* Skip the value, must not contain space or comma */
+ 		while (*p && !isspace(*p)) {
+ 			if (*p++ == ',') {
 -- 
 2.20.1
