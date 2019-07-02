@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 29/43] perf metricgroup: Use strsep()
-Date: Mon,  1 Jul 2019 23:26:02 -0300
-Message-ID: <20190702022616.1259-30-acme@kernel.org>
+Subject: [PATCH 30/43] perf report: Use skip_spaces()
+Date: Mon,  1 Jul 2019 23:26:03 -0300
+Message-ID: <20190702022616.1259-31-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,34 +14,31 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-No change in behaviour intended, trivial optimization done by avoiding
-looking for spaces in 'g' right after setting it to "No_group".
+No change in behaviour intended.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-f2siadtp3hb5o0l1w7bvd8bk@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-lcywlfqbi37nhegmhl1ar6wg@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/metricgroup.c | 3 +--
+ tools/perf/builtin-report.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index a0cf3cd95ced..90cd84e2a503 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -308,10 +308,9 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
- 				struct mep *me;
- 				char *s;
- 
-+				g = skip_spaces(g);
- 				if (*g == 0)
- 					g = "No_group";
--				while (isspace(*g))
--					g++;
- 				if (filter && !strstr(g, filter))
- 					continue;
- 				if (raw)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 91a3762b4211..aef59f318a67 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -941,8 +941,7 @@ parse_time_quantum(const struct option *opt, const char *arg,
+ 		pr_err("time quantum cannot be 0");
+ 		return -1;
+ 	}
+-	while (isspace(*end))
+-		end++;
++	end = skip_spaces(end);
+ 	if (*end == 0)
+ 		return 0;
+ 	if (!strcmp(end, "s")) {
 -- 
 2.20.1
