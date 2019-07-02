@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/43] tools x86 machine: Add missing util.h to pick up 'page_size'
-Date: Mon,  1 Jul 2019 23:25:49 -0300
-Message-ID: <20190702022616.1259-17-acme@kernel.org>
+Subject: [PATCH 19/43] perf tools: Remove old baggage that is util/include/linux/ctype.h
+Date: Mon,  1 Jul 2019 23:25:52 -0300
+Message-ID: <20190702022616.1259-20-acme@kernel.org>
 References: <20190702022616.1259-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,29 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We're getting it by sheer luck, add that util.h to get the 'page_size'
-definition.
+It was just including a ../util.h that wasn't even there:
+
+  $ cat tools/perf/util/include/linux/../util.h
+  cat: tools/perf/util/include/linux/../util.h: No such file or directory
+  $
+
+This would make kallsyms.h get util.h somehow and then files including
+it would get util.h defined stuff, a mess, fix it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-347078mgj3d2jfygtxs4ntti@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-wlzwken4psiat4zvfbvaoqiw@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/machine.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/symbol/kallsyms.h           | 1 -
+ tools/perf/util/include/linux/ctype.h | 1 -
+ 2 files changed, 2 deletions(-)
+ delete mode 100644 tools/perf/util/include/linux/ctype.h
 
-diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
-index 4520ac53caa9..0e508f26f83a 100644
---- a/tools/perf/arch/x86/util/machine.c
-+++ b/tools/perf/arch/x86/util/machine.c
-@@ -3,6 +3,7 @@
- #include <linux/string.h>
- #include <stdlib.h>
+diff --git a/tools/lib/symbol/kallsyms.h b/tools/lib/symbol/kallsyms.h
+index bd988f7b18d4..2b238f181d97 100644
+--- a/tools/lib/symbol/kallsyms.h
++++ b/tools/lib/symbol/kallsyms.h
+@@ -3,7 +3,6 @@
+ #define __TOOLS_KALLSYMS_H_ 1
  
-+#include "../../util/util.h"
- #include "../../util/machine.h"
- #include "../../util/map.h"
- #include "../../util/symbol.h"
+ #include <elf.h>
+-#include <linux/ctype.h>
+ #include <linux/types.h>
+ 
+ #ifndef KSYM_NAME_LEN
+diff --git a/tools/perf/util/include/linux/ctype.h b/tools/perf/util/include/linux/ctype.h
+deleted file mode 100644
+index a53d4ee1e0b7..000000000000
+--- a/tools/perf/util/include/linux/ctype.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include "../util.h"
 -- 
 2.20.1
