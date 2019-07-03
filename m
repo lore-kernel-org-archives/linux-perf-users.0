@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/18] perf hists: Add block_info in hist_entry
-Date: Wed,  3 Jul 2019 00:27:31 -0300
-Message-ID: <20190703032746.21692-4-acme@kernel.org>
+Subject: [PATCH 04/18] perf diff: Check if all data files with branch stacks
+Date: Wed,  3 Jul 2019 00:27:32 -0300
+Message-ID: <20190703032746.21692-5-acme@kernel.org>
 References: <20190703032746.21692-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,20 +14,17 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-The block_info contains the program basic block information, i.e,
-contains the start address and the end address of this basic block and
-how much cycles it takes.
+We will expand perf diff to support diff cycles of individual programs
+blocks, so it requires all data files having branch stacks.
 
-We need to compare, sort and even print out the basic block by some
-orders, i.e. sort by cycles.
+This patch checks HEADER_BRANCH_STACK in header, and only set the flag
+has_br_stack when HEADER_BRANCH_STACK are set in all data files.
 
-For this purpose, we add block_info field to hist_entry. In order not to
-impact current interface, we creates a new function
-hists__add_entry_block.
-
- v6:
+ v2:
  ---
- Remove the 'ops' argument in hists__add_entry_block
+ Move check_file_brstack() from __cmd_diff() to cmd_diff().
+ Because later patch will check flag 'has_br_stack' before
+ ui_init().
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -36,110 +33,65 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1561713784-30533-3-git-send-email-yao.jin@linux.intel.com
+Link: http://lkml.kernel.org/r/1561713784-30533-4-git-send-email-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/hist.c | 20 ++++++++++++++++++--
- tools/perf/util/hist.h |  5 +++++
- tools/perf/util/sort.h |  1 +
- 3 files changed, 24 insertions(+), 2 deletions(-)
+ tools/perf/builtin-diff.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index fb3271fd420c..c4defff151ed 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -574,6 +574,8 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
- 			 */
- 			mem_info__zput(entry->mem_info);
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 6e7920793729..a7e04202955c 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -32,6 +32,7 @@ struct perf_diff {
+ 	struct perf_time_interval	*ptime_range;
+ 	int				 range_size;
+ 	int				 range_num;
++	bool				 has_br_stack;
+ };
  
-+			block_info__zput(entry->block_info);
-+
- 			/* If the map of an existing hist_entry has
- 			 * become out-of-date due to an exec() or
- 			 * similar, update it.  Otherwise we will
-@@ -645,6 +647,7 @@ __hists__add_entry(struct hists *hists,
- 		   struct symbol *sym_parent,
- 		   struct branch_info *bi,
- 		   struct mem_info *mi,
-+		   struct block_info *block_info,
- 		   struct perf_sample *sample,
- 		   bool sample_self,
- 		   struct hist_entry_ops *ops)
-@@ -677,6 +680,7 @@ __hists__add_entry(struct hists *hists,
- 		.hists	= hists,
- 		.branch_info = bi,
- 		.mem_info = mi,
-+		.block_info = block_info,
- 		.transaction = sample->transaction,
- 		.raw_data = sample->raw_data,
- 		.raw_size = sample->raw_size,
-@@ -699,7 +703,7 @@ struct hist_entry *hists__add_entry(struct hists *hists,
- 				    struct perf_sample *sample,
- 				    bool sample_self)
- {
--	return __hists__add_entry(hists, al, sym_parent, bi, mi,
-+	return __hists__add_entry(hists, al, sym_parent, bi, mi, NULL,
- 				  sample, sample_self, NULL);
+ /* Diff command specific HPP columns. */
+@@ -873,6 +874,31 @@ static int parse_time_str(struct data__file *d, char *abstime_ostr,
+ 	return ret;
  }
  
-@@ -712,10 +716,22 @@ struct hist_entry *hists__add_entry_ops(struct hists *hists,
- 					struct perf_sample *sample,
- 					bool sample_self)
- {
--	return __hists__add_entry(hists, al, sym_parent, bi, mi,
-+	return __hists__add_entry(hists, al, sym_parent, bi, mi, NULL,
- 				  sample, sample_self, ops);
- }
- 
-+struct hist_entry *hists__add_entry_block(struct hists *hists,
-+					  struct addr_location *al,
-+					  struct block_info *block_info)
++static int check_file_brstack(void)
 +{
-+	struct hist_entry entry = {
-+		.block_info = block_info,
-+		.hists = hists,
-+	}, *he = hists__findnew_entry(hists, &entry, al, false);
++	struct data__file *d;
++	bool has_br_stack;
++	int i;
 +
-+	return he;
++	data__for_each_file(i, d) {
++		d->session = perf_session__new(&d->data, false, &pdiff.tool);
++		if (!d->session) {
++			pr_err("Failed to open %s\n", d->data.path);
++			return -1;
++		}
++
++		has_br_stack = perf_header__has_feat(&d->session->header,
++						     HEADER_BRANCH_STACK);
++		perf_session__delete(d->session);
++		if (!has_br_stack)
++			return 0;
++	}
++
++	/* Set only all files having branch stacks */
++	pdiff.has_br_stack = true;
++	return 0;
 +}
 +
- static int
- iter_next_nop_entry(struct hist_entry_iter *iter __maybe_unused,
- 		    struct addr_location *al __maybe_unused)
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 76ff6c6d03b8..c670122b4e40 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -16,6 +16,7 @@ struct addr_location;
- struct map_symbol;
- struct mem_info;
- struct branch_info;
-+struct block_info;
- struct symbol;
+ static int __cmd_diff(void)
+ {
+ 	struct data__file *d;
+@@ -1487,6 +1513,9 @@ int cmd_diff(int argc, const char **argv)
+ 	if (data_init(argc, argv) < 0)
+ 		return -1;
  
- enum hist_filter {
-@@ -149,6 +150,10 @@ struct hist_entry *hists__add_entry_ops(struct hists *hists,
- 					struct perf_sample *sample,
- 					bool sample_self);
- 
-+struct hist_entry *hists__add_entry_block(struct hists *hists,
-+					  struct addr_location *al,
-+					  struct block_info *bi);
++	if (check_file_brstack() < 0)
++		return -1;
 +
- int hist_entry_iter__add(struct hist_entry_iter *iter, struct addr_location *al,
- 			 int max_stack_depth, void *arg);
+ 	if (ui_init() < 0)
+ 		return -1;
  
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index ce376a73f964..43623fa874b2 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -144,6 +144,7 @@ struct hist_entry {
- 	long			time;
- 	struct hists		*hists;
- 	struct mem_info		*mem_info;
-+	struct block_info	*block_info;
- 	void			*raw_data;
- 	u32			raw_size;
- 	int			num_res;
 -- 
 2.20.1
