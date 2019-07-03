@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/18] perf tools: Fix typos / broken sentences
-Date: Wed,  3 Jul 2019 00:27:41 -0300
-Message-ID: <20190703032746.21692-14-acme@kernel.org>
+Subject: [PATCH 14/18] perf vendor events intel: Metric fixes for SKX/CLX
+Date: Wed,  3 Jul 2019 00:27:42 -0300
+Message-ID: <20190703032746.21692-15-acme@kernel.org>
 References: <20190703032746.21692-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,42 +14,79 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-- Fix a typo in the man page
-- Fix a tip that doesn't make any sense.
+- Add a missing filter for the DRAM_Latency / DRAM_Parallel_Reads metrics
+- Remove the useless PMM_* metrics from Skylake
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190628220900.13741-1-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20190628220737.13259-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt | 2 +-
- tools/perf/Documentation/tips.txt        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ .../arch/x86/cascadelakex/clx-metrics.json    |  4 ++--
+ .../arch/x86/skylakex/skx-metrics.json        | 22 ++-----------------
+ 2 files changed, 4 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 8c4372819e11..987261d158d4 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -89,7 +89,7 @@ OPTIONS
- 	- socket: processor socket number the task ran at the time of sample
- 	- srcline: filename and line number executed at the time of sample.  The
- 	DWARF debugging info must be provided.
--	- srcfile: file name of the source file of the same. Requires dwarf
-+	- srcfile: file name of the source file of the samples. Requires dwarf
- 	information.
- 	- weight: Event specific weight, e.g. memory latency or transaction
- 	abort cost. This is the global weight.
-diff --git a/tools/perf/Documentation/tips.txt b/tools/perf/Documentation/tips.txt
-index 869965d629ce..825745a645c1 100644
---- a/tools/perf/Documentation/tips.txt
-+++ b/tools/perf/Documentation/tips.txt
-@@ -38,6 +38,6 @@ To report cacheline events from previous recording: perf c2c report
- To browse sample contexts use perf report --sample 10 and select in context menu
- To separate samples by time use perf report --sort time,overhead,sym
- To set sample time separation other than 100ms with --sort time use --time-quantum
--Add -I to perf report to sample register values visible in perf report context.
-+Add -I to perf record to sample register values, which will be visible in perf report sample context.
- To show IPC for sampling periods use perf record -e '{cycles,instructions}:S' and then browse context
- To show context switches in perf report sample context add --switch-events to perf record.
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+index 1a1a3501180a..a382b115633d 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+@@ -314,13 +314,13 @@
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
++	"MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x35\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+-        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
++	"MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1\\\\\\,config\\=0x40433@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+index 56e03ba771f4..35b255fa6a79 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -314,35 +314,17 @@
+         "MetricName": "DRAM_BW_Use"
+     },
+     {
+-        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
++	"MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x35\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+-        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
++	"MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,config\\=0x40433@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1\\\\\\,config\\=0x40433@",
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
+-    {
+-        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
+-        "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
+-        "MetricGroup": "Memory_Lat",
+-        "MetricName": "MEM_PMM_Read_Latency"
+-    },
+-    {
+-        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
+-        "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
+-        "MetricGroup": "Memory_BW",
+-        "MetricName": "PMM_Read_BW"
+-    },
+-    {
+-        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
+-        "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
+-        "MetricGroup": "Memory_BW",
+-        "MetricName": "PMM_Write_BW"
+-    },
+     {
+         "MetricExpr": "cha_0@event\\=0x0@",
+         "BriefDescription": "Socket actual clocks when any core is active on that socket",
 -- 
 2.20.1
