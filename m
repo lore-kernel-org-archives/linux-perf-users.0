@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/8] perf tests: Fix record+probe_libc_inet_pton.sh for powerpc64
-Date: Mon,  8 Jul 2019 12:42:04 -0300
-Message-ID: <20190708154207.11403-6-acme@kernel.org>
+Subject: [PATCH 6/8] perf annotate TUI browser: Do not use member from variable within its own initialization
+Date: Mon,  8 Jul 2019 12:42:05 -0300
+Message-ID: <20190708154207.11403-7-acme@kernel.org>
 References: <20190708154207.11403-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,81 +9,58 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190708154207.11403-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Sandipan Das <sandipan@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-'probe libc's inet_pton & backtrace it with ping' testcase sometimes
-fails on powerpc because distro ping binary does not have symbol
-information and thus it prints "[unknown]" function name in the
-backtrace.
+Some compilers will complain when using a member of a struct to
+initialize another member, in the same struct initialization.
 
-Accept "[unknown]" as valid function name for powerpc as well.
+For instance:
 
- # perf test -v "probe libc's inet_pton & backtrace it with ping"
+  debian:8      Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  oraclelinux:7 clang version 3.4.2 (tags/RELEASE_34/dot2-final)
 
-Before:
+Produce:
 
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79695
-  ping 79718 [077] 96483.787025: probe_libc:inet_pton: (7fff83a754c8)
-  7fff83a754c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fff83a2c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  1171830f4 [unknown] (/usr/bin/ping)
-  FAIL: expected backtrace entry
-  ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$"
-  got "1171830f4 [unknown] (/usr/bin/ping)"
-  test child finished with -1
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: FAILED!
+  ui/browsers/annotate.c:104:12: error: variable 'ops' is uninitialized when used within its own initialization [-Werror,-Wuninitialized]
+                                              (!ops.current_entry ||
+                                                ^~~
+  1 error generated.
 
-After:
+So use an extra variable, initialized just before that struct, to have
+the value used in the expressions used to init two of the struct
+members.
 
-  59: probe libc's inet_pton & backtrace it with ping       :
-  --- start ---
-  test child forked, pid 79085
-  ping 79108 [045] 96400.214177: probe_libc:inet_pton: (7fffbb9654c8)
-  7fffbb9654c8 __GI___inet_pton+0x8 (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91b7a0 gaih_inet.constprop.7+0x1020
-  (/usr/lib64/power9/libc-2.28.so)
-  7fffbb91c170 getaddrinfo+0x160 (/usr/lib64/power9/libc-2.28.so)
-  132e830f4 [unknown] (/usr/bin/ping)
-  test child finished with 0
-  ---- end ----
-  probe libc's inet_pton & backtrace it with ping: Ok
-
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Reviewed-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sandipan Das <sandipan@linux.ibm.com>
-Fixes: 1632936480a5 ("perf tests: Fix record+probe_libc_inet_pton.sh without ping's debuginfo")
-Link: http://lkml.kernel.org/r/1561630614-3216-1-git-send-email-s1seetee@linux.vnet.ibm.com
+Fixes: c298304bd747 ("perf annotate: Use a ops table for annotation_line__write()")
+Link: https://lkml.kernel.org/n/tip-f9nexro58q62l3o9hez8hr0i@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/ui/browsers/annotate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 61c9f8fc6fa1..58a99a292930 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -44,7 +44,7 @@ trace_libc_inet_pton_backtrace() {
- 		eventattr='max-stack=4'
- 		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
- 		echo "getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc\)$" >> $expected
--		echo ".*\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
-+		echo ".*(\+0x[[:xdigit:]]+|\[unknown\])[[:space:]]\(.*/bin/ping.*\)$" >> $expected
- 		;;
- 	*)
- 		eventattr='max-stack=3'
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 98d934a36d86..b0d089a95dac 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -97,11 +97,12 @@ static void annotate_browser__write(struct ui_browser *browser, void *entry, int
+ 	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
+ 	struct annotation *notes = browser__annotation(browser);
+ 	struct annotation_line *al = list_entry(entry, struct annotation_line, node);
++	const bool is_current_entry = ui_browser__is_current_entry(browser, row);
+ 	struct annotation_write_ops ops = {
+ 		.first_line		 = row == 0,
+-		.current_entry		 = ui_browser__is_current_entry(browser, row),
++		.current_entry		 = is_current_entry,
+ 		.change_color		 = (!notes->options->hide_src_code &&
+-					    (!ops.current_entry ||
++					    (!is_current_entry ||
+ 					     (browser->use_navkeypressed &&
+ 					      !browser->navkeypressed))),
+ 		.width			 = browser->width,
 -- 
 2.20.1
