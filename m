@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/25] perf evsel: perf_evsel__name(NULL) is valid, no need to check evsel
-Date: Tue,  9 Jul 2019 15:31:10 -0300
-Message-ID: <20190709183126.30257-10-acme@kernel.org>
+Subject: [PATCH 08/25] perf session: Fix potential NULL pointer dereference found by the smatch tool
+Date: Tue,  9 Jul 2019 15:31:09 -0300
+Message-ID: <20190709183126.30257-9-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,49 +9,78 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Leo Yan <leo.yan@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexios Zavras <alexios.zavras@intel.com>, Andi Kleen <ak@linux.intel.com>, Changbin Du <changbin.du@intel.com>, "David S . Miller" <davem@davemloft.net>, Davidlohr Bueso <dave@stgolabs.net>, Eric Saint-Etienne <eric.saint.etienne@oracle.com>, Jin Yao <yao.jin@linux.intel.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-It'll return "unknown", no need to open code it.
+Based on the following report from Smatch, fix the potential
+NULL pointer dereference check.
 
+  tools/perf/util/session.c:1252
+  dump_read() error: we previously assumed 'evsel' could be null
+  (see line 1249)
+
+  tools/perf/util/session.c
+  1240 static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+  1241 {
+  1242         struct read_event *read_event = &event->read;
+  1243         u64 read_format;
+  1244
+  1245         if (!dump_trace)
+  1246                 return;
+  1247
+  1248         printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
+  1249                evsel ? perf_evsel__name(evsel) : "FAIL",
+  1250                event->read.value);
+  1251
+  1252         read_format = evsel->attr.read_format;
+                             ^^^^^^^
+
+'evsel' could be NULL pointer, for this case this patch directly bails
+out without dumping read_event.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Changbin Du <changbin.du@intel.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-4okvjmm18arjrcyfhuahgfxm@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190702103420.27540-9-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 2 +-
- tools/perf/util/session.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/session.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index aef59f318a67..93d4b12e248e 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -298,7 +298,7 @@ static int process_read_event(struct perf_tool *tool,
- 	struct report *rep = container_of(tool, struct report, tool);
- 
- 	if (rep->show_threads) {
--		const char *name = evsel ? perf_evsel__name(evsel) : "unknown";
-+		const char *name = perf_evsel__name(evsel);
- 		int err = perf_read_values_add_value(&rep->show_threads_values,
- 					   event->read.pid, event->read.tid,
- 					   evsel->idx,
 diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 2e61dd6a3574..e3463df18493 100644
+index 54cf163347f7..2e61dd6a3574 100644
 --- a/tools/perf/util/session.c
 +++ b/tools/perf/util/session.c
-@@ -1246,7 +1246,7 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
- 		return;
- 
- 	printf(": %d %d %s %" PRIu64 "\n", event->read.pid, event->read.tid,
--	       evsel ? perf_evsel__name(evsel) : "FAIL",
-+	       perf_evsel__name(evsel),
+@@ -1249,6 +1249,9 @@ static void dump_read(struct perf_evsel *evsel, union perf_event *event)
+ 	       evsel ? perf_evsel__name(evsel) : "FAIL",
  	       event->read.value);
  
- 	if (!evsel)
++	if (!evsel)
++		return;
++
+ 	read_format = evsel->attr.read_format;
+ 
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
 -- 
 2.21.0
