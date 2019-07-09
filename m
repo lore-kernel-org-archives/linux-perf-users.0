@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/25] perf intel-bts: Fix potential NULL pointer dereference found by the smatch tool
-Date: Tue,  9 Jul 2019 15:31:25 -0300
-Message-ID: <20190709183126.30257-25-acme@kernel.org>
+Subject: [PATCH 25/25] perf intel-pt: Fix potential NULL pointer dereference found by the smatch tool
+Date: Tue,  9 Jul 2019 15:31:26 -0300
+Message-ID: <20190709183126.30257-26-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -17,29 +17,34 @@ From: Leo Yan <leo.yan@linaro.org>
 Based on the following report from Smatch, fix the potential NULL
 pointer dereference check.
 
-  tools/perf/util/intel-bts.c:898
-  intel_bts_process_auxtrace_info() error: we previously assumed
-  'session->itrace_synth_opts' could be null (see line 894)
+  tools/perf/util/intel-pt.c:3200
+  intel_pt_process_auxtrace_info() error: we previously assumed
+  'session->itrace_synth_opts' could be null (see line 3196)
 
-  tools/perf/util/intel-bts.c:899
-  intel_bts_process_auxtrace_info() warn: variable dereferenced before
-  check 'session->itrace_synth_opts' (see line 898)
+  tools/perf/util/intel-pt.c:3206
+  intel_pt_process_auxtrace_info() warn: variable dereferenced before
+  check 'session->itrace_synth_opts' (see line 3200)
 
-  tools/perf/util/intel-bts.c
-  894         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
-  895                 bts->synth_opts = *session->itrace_synth_opts;
-  896         } else {
-  897                 itrace_synth_opts__set_default(&bts->synth_opts,
-  898                                 session->itrace_synth_opts->default_no_sample);
-                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  899                 if (session->itrace_synth_opts)
-                          ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  900                         bts->synth_opts.thread_stack =
-  901                                 session->itrace_synth_opts->thread_stack;
-  902         }
+  tools/perf/util/intel-pt.c
+  3196         if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
+  3197                 pt->synth_opts = *session->itrace_synth_opts;
+  3198         } else {
+  3199                 itrace_synth_opts__set_default(&pt->synth_opts,
+  3200                                 session->itrace_synth_opts->default_no_sample);
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3201                 if (!session->itrace_synth_opts->default_no_sample &&
+  3202                     !session->itrace_synth_opts->inject) {
+  3203                         pt->synth_opts.branches = false;
+  3204                         pt->synth_opts.callchain = true;
+  3205                 }
+  3206                 if (session->itrace_synth_opts)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  3207                         pt->synth_opts.thread_stack =
+  3208                                 session->itrace_synth_opts->thread_stack;
+  3209         }
 
 'session->itrace_synth_opts' is impossible to be a NULL pointer in
-intel_bts_process_auxtrace_info(), thus this patch removes the NULL test
+intel_pt_process_auxtrace_info(), thus this patch removes the NULL test
 for 'session->itrace_synth_opts'.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
@@ -51,31 +56,49 @@ Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190708143937.7722-3-leo.yan@linaro.org
+Link: http://lkml.kernel.org/r/20190708143937.7722-4-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-bts.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ tools/perf/util/intel-pt.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 5a21bcdb8ef7..5560e95afdda 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -891,13 +891,12 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 	if (dump_trace)
- 		return 0;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index c76a96f777fb..df061599fef4 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -3210,7 +3210,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		goto err_delete_thread;
+ 	}
  
 -	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
 +	if (session->itrace_synth_opts->set) {
- 		bts->synth_opts = *session->itrace_synth_opts;
+ 		pt->synth_opts = *session->itrace_synth_opts;
  	} else {
- 		itrace_synth_opts__set_default(&bts->synth_opts,
- 				session->itrace_synth_opts->default_no_sample);
+ 		itrace_synth_opts__set_default(&pt->synth_opts,
+@@ -3220,8 +3220,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 			pt->synth_opts.branches = false;
+ 			pt->synth_opts.callchain = true;
+ 		}
 -		if (session->itrace_synth_opts)
--			bts->synth_opts.thread_stack =
-+		bts->synth_opts.thread_stack =
+-			pt->synth_opts.thread_stack =
++		pt->synth_opts.thread_stack =
  				session->itrace_synth_opts->thread_stack;
  	}
  
+@@ -3241,11 +3240,9 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 		pt->cbr2khz = tsc_freq / pt->max_non_turbo_ratio / 1000;
+ 	}
+ 
+-	if (session->itrace_synth_opts) {
+-		err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
+-		if (err)
+-			goto err_delete_thread;
+-	}
++	err = intel_pt_setup_time_ranges(pt, session->itrace_synth_opts);
++	if (err)
++		goto err_delete_thread;
+ 
+ 	if (pt->synth_opts.calls)
+ 		pt->branches_filter |= PERF_IP_FLAG_CALL | PERF_IP_FLAG_ASYNC |
 -- 
 2.21.0
