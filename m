@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/25] perf parse-events: Remove unused variable 'i'
-Date: Tue,  9 Jul 2019 15:31:18 -0300
-Message-ID: <20190709183126.30257-18-acme@kernel.org>
+Subject: [PATCH 18/25] perf parse-events: Remove unused variable: error
+Date: Tue,  9 Jul 2019 15:31:19 -0300
+Message-ID: <20190709183126.30257-19-acme@kernel.org>
 References: <20190709183126.30257-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Luke Mujica <lukemujica@google.com>
 
-Remove the 'int i' because it is declared but not used in parse-events.y
-or in the generated parse-events.c.
+Remove the 'error' variable because it is declared but not used in
+parse-events.y or in the generated parse-events.c.
 
 Signed-off-by: Luke Mujica <lukemujica@google.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -24,23 +24,23 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190703222509.109616-1-lukemujica@google.com
+Link: http://lkml.kernel.org/r/20190703222509.109616-2-lukemujica@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
  tools/perf/util/parse-events.y | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 6ad8d4914969..172dbb73941f 100644
+index 172dbb73941f..f1c36ed1cf36 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -626,7 +626,6 @@ PE_TERM
- PE_NAME array '=' PE_NAME
+@@ -480,7 +480,6 @@ event_bpf_file:
+ PE_BPF_OBJECT opt_event_config
  {
- 	struct parse_events_term *term;
--	int i;
+ 	struct parse_events_state *parse_state = _parse_state;
+-	struct parse_events_error *error = parse_state->error;
+ 	struct list_head *list;
  
- 	ABORT_ON(parse_events_term__str(&term, PARSE_EVENTS__TERM_TYPE_USER,
- 					$1, $4, &@1, &@4));
+ 	ALLOC_LIST(list);
 -- 
 2.21.0
