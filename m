@@ -1,637 +1,286 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/json: Add JSON files for s390 machine type 8561
-Date: Fri, 12 Jul 2019 14:31:13 +0200
-Message-ID: <20190712123113.100882-1-tmricht@linux.ibm.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Sat, 13 Jul 2019 11:13:56 +0200
+Message-ID: <20190713091356.GA81998@gmail.com>
+References: <20190709183126.30257-1-acme@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190709183126.30257-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.ibm.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, David Carrillo Cisneros <davidca@fb.com>, Leo Yan <leo.yan@linaro.org>, Luke Mujica <lukemujica@google.com>, Numfor Mbiziwo-Tiapo <nums@google.com>, Song Liu <songliubraving@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-    Add CPU measurement counter facility event description files (json
-    files) for IBM machine types 8561 and 8562.
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
----
- .../pmu-events/arch/s390/cf_m8561/basic.json  |  58 +++
- .../pmu-events/arch/s390/cf_m8561/crypto.json | 114 ++++++
- .../arch/s390/cf_m8561/crypto6.json           |  30 ++
- .../arch/s390/cf_m8561/extended.json          | 373 ++++++++++++++++++
- tools/perf/pmu-events/arch/s390/mapfile.csv   |   1 +
- 5 files changed, 576 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/s390/cf_m8561/basic.json
- create mode 100644 tools/perf/pmu-events/arch/s390/cf_m8561/crypto.json
- create mode 100644 tools/perf/pmu-events/arch/s390/cf_m8561/crypto6.json
- create mode 100644 tools/perf/pmu-events/arch/s390/cf_m8561/extended.json
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_m8561/basic.json b/tools/perf/pmu-events/arch/s390/cf_m8561/basic.json
-new file mode 100644
-index 000000000000..17fb5241928b
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/s390/cf_m8561/basic.json
-@@ -0,0 +1,58 @@
-+[
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "0",
-+		"EventName": "CPU_CYCLES",
-+		"BriefDescription": "CPU Cycles",
-+		"PublicDescription": "Cycle Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "1",
-+		"EventName": "INSTRUCTIONS",
-+		"BriefDescription": "Instructions",
-+		"PublicDescription": "Instruction Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "2",
-+		"EventName": "L1I_DIR_WRITES",
-+		"BriefDescription": "L1I Directory Writes",
-+		"PublicDescription": "Level-1 I-Cache Directory Write Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "3",
-+		"EventName": "L1I_PENALTY_CYCLES",
-+		"BriefDescription": "L1I Penalty Cycles",
-+		"PublicDescription": "Level-1 I-Cache Penalty Cycle Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "4",
-+		"EventName": "L1D_DIR_WRITES",
-+		"BriefDescription": "L1D Directory Writes",
-+		"PublicDescription": "Level-1 D-Cache Directory Write Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "5",
-+		"EventName": "L1D_PENALTY_CYCLES",
-+		"BriefDescription": "L1D Penalty Cycles",
-+		"PublicDescription": "Level-1 D-Cache Penalty Cycle Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "32",
-+		"EventName": "PROBLEM_STATE_CPU_CYCLES",
-+		"BriefDescription": "Problem-State CPU Cycles",
-+		"PublicDescription": "Problem-State Cycle Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "33",
-+		"EventName": "PROBLEM_STATE_INSTRUCTIONS",
-+		"BriefDescription": "Problem-State Instructions",
-+		"PublicDescription": "Problem-State Instruction Count"
-+	},
-+]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_m8561/crypto.json b/tools/perf/pmu-events/arch/s390/cf_m8561/crypto.json
-new file mode 100644
-index 000000000000..db286f19e7b6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/s390/cf_m8561/crypto.json
-@@ -0,0 +1,114 @@
-+[
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "64",
-+		"EventName": "PRNG_FUNCTIONS",
-+		"BriefDescription": "PRNG Functions",
-+		"PublicDescription": "Total number of the PRNG functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "65",
-+		"EventName": "PRNG_CYCLES",
-+		"BriefDescription": "PRNG Cycles",
-+		"PublicDescription": "Total number of CPU cycles when the DEA/AES coprocessor is busy performing PRNG functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "66",
-+		"EventName": "PRNG_BLOCKED_FUNCTIONS",
-+		"BriefDescription": "PRNG Blocked Functions",
-+		"PublicDescription": "Total number of the PRNG functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "67",
-+		"EventName": "PRNG_BLOCKED_CYCLES",
-+		"BriefDescription": "PRNG Blocked Cycles",
-+		"PublicDescription": "Total number of CPU cycles blocked for the PRNG functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "68",
-+		"EventName": "SHA_FUNCTIONS",
-+		"BriefDescription": "SHA Functions",
-+		"PublicDescription": "Total number of SHA functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "69",
-+		"EventName": "SHA_CYCLES",
-+		"BriefDescription": "SHA Cycles",
-+		"PublicDescription": "Total number of CPU cycles when the SHA coprocessor is busy performing the SHA functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "70",
-+		"EventName": "SHA_BLOCKED_FUNCTIONS",
-+		"BriefDescription": "SHA Blocked Functions",
-+		"PublicDescription": "Total number of the SHA functions that are issued by the CPU and are blocked because the SHA coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "71",
-+		"EventName": "SHA_BLOCKED_CYCLES",
-+		"BriefDescription": "SHA Bloced Cycles",
-+		"PublicDescription": "Total number of CPU cycles blocked for the SHA functions issued by the CPU because the SHA coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "72",
-+		"EventName": "DEA_FUNCTIONS",
-+		"BriefDescription": "DEA Functions",
-+		"PublicDescription": "Total number of the DEA functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "73",
-+		"EventName": "DEA_CYCLES",
-+		"BriefDescription": "DEA Cycles",
-+		"PublicDescription": "Total number of CPU cycles when the DEA/AES coprocessor is busy performing the DEA functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "74",
-+		"EventName": "DEA_BLOCKED_FUNCTIONS",
-+		"BriefDescription": "DEA Blocked Functions",
-+		"PublicDescription": "Total number of the DEA functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "75",
-+		"EventName": "DEA_BLOCKED_CYCLES",
-+		"BriefDescription": "DEA Blocked Cycles",
-+		"PublicDescription": "Total number of CPU cycles blocked for the DEA functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "76",
-+		"EventName": "AES_FUNCTIONS",
-+		"BriefDescription": "AES Functions",
-+		"PublicDescription": "Total number of AES functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "77",
-+		"EventName": "AES_CYCLES",
-+		"BriefDescription": "AES Cycles",
-+		"PublicDescription": "Total number of CPU cycles when the DEA/AES coprocessor is busy performing the AES functions issued by the CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "78",
-+		"EventName": "AES_BLOCKED_FUNCTIONS",
-+		"BriefDescription": "AES Blocked Functions",
-+		"PublicDescription": "Total number of AES functions that are issued by the CPU and are blocked because the DEA/AES coprocessor is busy performing a function issued by another CPU"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "79",
-+		"EventName": "AES_BLOCKED_CYCLES",
-+		"BriefDescription": "AES Blocked Cycles",
-+		"PublicDescription": "Total number of CPU cycles blocked for the AES functions issued by the CPU because the DEA/AES coprocessor is busy performing a function issued by another CPU"
-+	},
-+]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_m8561/crypto6.json b/tools/perf/pmu-events/arch/s390/cf_m8561/crypto6.json
-new file mode 100644
-index 000000000000..5e36bc2468d0
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/s390/cf_m8561/crypto6.json
-@@ -0,0 +1,30 @@
-+[
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "80",
-+		"EventName": "ECC_FUNCTION_COUNT",
-+		"BriefDescription": "ECC Function Count",
-+		"PublicDescription": "Long ECC function Count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "81",
-+		"EventName": "ECC_CYCLES_COUNT",
-+		"BriefDescription": "ECC Cycles Count",
-+		"PublicDescription": "Long ECC Function cycles count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "82",
-+		"EventName": "ECC_BLOCKED_FUNCTION_COUNT",
-+		"BriefDescription": "Ecc Blocked Function Count",
-+		"PublicDescription": "Long ECC blocked function count"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "83",
-+		"EventName": "ECC_BLOCKED_CYCLES_COUNT",
-+		"BriefDescription": "ECC Blocked Cycles Count",
-+		"PublicDescription": "Long ECC blocked cycles count"
-+	},
-+]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_m8561/extended.json b/tools/perf/pmu-events/arch/s390/cf_m8561/extended.json
-new file mode 100644
-index 000000000000..89e070727e1b
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/s390/cf_m8561/extended.json
-@@ -0,0 +1,373 @@
-+[
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "128",
-+		"EventName": "L1D_RO_EXCL_WRITES",
-+		"BriefDescription": "L1D Read-only Exclusive Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "129",
-+		"EventName": "DTLB2_WRITES",
-+		"BriefDescription": "DTLB2 Writes",
-+		"PublicDescription": "A translation has been written into The Translation Lookaside Buffer 2 (TLB2) and the request was made by the data cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "130",
-+		"EventName": "DTLB2_MISSES",
-+		"BriefDescription": "DTLB2 Misses",
-+		"PublicDescription": "A TLB2 miss is in progress for a request made by the data cache. Incremented by one for every TLB2 miss in progress for the Level-1 Data cache on this cycle"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "131",
-+		"EventName": "DTLB2_HPAGE_WRITES",
-+		"BriefDescription": "DTLB2 One-Megabyte Page Writes",
-+		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page or a Last Host Translation was done"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "132",
-+		"EventName": "DTLB2_GPAGE_WRITES",
-+		"BriefDescription": "DTLB2 Two-Gigabyte Page Writes",
-+		"PublicDescription": "A translation entry for a two-gigabyte page was written into the Level-2 TLB"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "133",
-+		"EventName": "L1D_L2D_SOURCED_WRITES",
-+		"BriefDescription": "L1D L2D Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from the Level-2 Data cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "134",
-+		"EventName": "ITLB2_WRITES",
-+		"BriefDescription": "ITLB2 Writes",
-+		"PublicDescription": "A translation entry has been written into the Translation Lookaside Buffer 2 (TLB2) and the request was made by the instruction cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "135",
-+		"EventName": "ITLB2_MISSES",
-+		"BriefDescription": "ITLB2 Misses",
-+		"PublicDescription": "A TLB2 miss is in progress for a request made by the instruction cache. Incremented by one for every TLB2 miss in progress for the Level-1 Instruction cache in a cycle"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "136",
-+		"EventName": "L1I_L2I_SOURCED_WRITES",
-+		"BriefDescription": "L1I L2I Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from the Level-2 Instruction cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "137",
-+		"EventName": "TLB2_PTE_WRITES",
-+		"BriefDescription": "TLB2 PTE Writes",
-+		"PublicDescription": "A translation entry was written into the Page Table Entry array in the Level-2 TLB"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "138",
-+		"EventName": "TLB2_CRSTE_WRITES",
-+		"BriefDescription": "TLB2 CRSTE Writes",
-+		"PublicDescription": "Translation entries were written into the Combined Region and Segment Table Entry array and the Page Table Entry array in the Level-2 TLB"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "139",
-+		"EventName": "TLB2_ENGINES_BUSY",
-+		"BriefDescription": "TLB2 Engines Busy",
-+		"PublicDescription": "The number of Level-2 TLB translation engines busy in a cycle"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "140",
-+		"EventName": "TX_C_TEND",
-+		"BriefDescription": "Completed TEND instructions in constrained TX mode",
-+		"PublicDescription": "A TEND instruction has completed in a constrained transactional-execution mode"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "141",
-+		"EventName": "TX_NC_TEND",
-+		"BriefDescription": "Completed TEND instructions in non-constrained TX mode",
-+		"PublicDescription": "A TEND instruction has completed in a non-constrained transactional-execution mode"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "143",
-+		"EventName": "L1C_TLB2_MISSES",
-+		"BriefDescription": "L1C TLB2 Misses",
-+		"PublicDescription": "Increments by one for any cycle where a level-1 cache or level-2 TLB miss is in progress"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "144",
-+		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1D On-Chip L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "145",
-+		"EventName": "L1D_ONCHIP_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1D On-Chip Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "146",
-+		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1D On-Chip L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Chip Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "147",
-+		"EventName": "L1D_ONCLUSTER_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1D On-Cluster L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Cluster Level-3 cache withountervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "148",
-+		"EventName": "L1D_ONCLUSTER_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1D On-Cluster Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Cluster memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "149",
-+		"EventName": "L1D_ONCLUSTER_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1D On-Cluster L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an On-Cluster Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "150",
-+		"EventName": "L1D_OFFCLUSTER_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1D Off-Cluster L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "151",
-+		"EventName": "L1D_OFFCLUSTER_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1D Off-Cluster Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Cluster memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "152",
-+		"EventName": "L1D_OFFCLUSTER_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1D Off-Cluster L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "153",
-+		"EventName": "L1D_OFFDRAWER_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1D Off-Drawer L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "154",
-+		"EventName": "L1D_OFFDRAWER_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1D Off-Drawer Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "155",
-+		"EventName": "L1D_OFFDRAWER_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1D Off-Drawer L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "156",
-+		"EventName": "L1D_ONDRAWER_L4_SOURCED_WRITES",
-+		"BriefDescription": "L1D On-Drawer L4 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Drawer Level-4 cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "157",
-+		"EventName": "L1D_OFFDRAWER_L4_SOURCED_WRITES",
-+		"BriefDescription": "L1D Off-Drawer L4 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from Off-Drawer Level-4 cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "158",
-+		"EventName": "L1D_ONCHIP_L3_SOURCED_WRITES_RO",
-+		"BriefDescription": "L1D On-Chip L3 Sourced Writes read-only",
-+		"PublicDescription": "A directory write to the Level-1 Data cache directory where the returned cache line was sourced from On-Chip L3 but a read-only invalidate was done to remove other copies of the cache line"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "162",
-+		"EventName": "L1I_ONCHIP_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1I On-Chip L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from an On-Chip Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "163",
-+		"EventName": "L1I_ONCHIP_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1I On-Chip Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from On-Chip memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "164",
-+		"EventName": "L1I_ONCHIP_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1I On-Chip L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache ine was sourced from an On-Chip Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "165",
-+		"EventName": "L1I_ONCLUSTER_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1I On-Cluster L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Cluster Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "166",
-+		"EventName": "L1I_ONCLUSTER_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1I On-Cluster Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an On-Cluster memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "167",
-+		"EventName": "L1I_ONCLUSTER_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1I On-Cluster L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Cluster Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "168",
-+		"EventName": "L1I_OFFCLUSTER_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1I Off-Cluster L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "169",
-+		"EventName": "L1I_OFFCLUSTER_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1I Off-Cluster Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Cluster memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "170",
-+		"EventName": "L1I_OFFCLUSTER_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1I Off-Cluster L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Cluster Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "171",
-+		"EventName": "L1I_OFFDRAWER_L3_SOURCED_WRITES",
-+		"BriefDescription": "L1I Off-Drawer L3 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache without intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "172",
-+		"EventName": "L1I_OFFDRAWER_MEMORY_SOURCED_WRITES",
-+		"BriefDescription": "L1I Off-Drawer Memory Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer memory"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "173",
-+		"EventName": "L1I_OFFDRAWER_L3_SOURCED_WRITES_IV",
-+		"BriefDescription": "L1I Off-Drawer L3 Sourced Writes with Intervention",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from an Off-Drawer Level-3 cache with intervention"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "174",
-+		"EventName": "L1I_ONDRAWER_L4_SOURCED_WRITES",
-+		"BriefDescription": "L1I On-Drawer L4 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from On-Drawer Level-4 cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "175",
-+		"EventName": "L1I_OFFDRAWER_L4_SOURCED_WRITES",
-+		"BriefDescription": "L1I Off-Drawer L4 Sourced Writes",
-+		"PublicDescription": "A directory write to the Level-1 Instruction cache directory where the returned cache line was sourced from Off-Drawer Level-4 cache"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "224",
-+		"EventName": "BCD_DFP_EXECUTION_SLOTS",
-+		"BriefDescription": "BCD DFP Execution Slots",
-+		"PublicDescription": "Count of floating point execution slots used for finished Binary Coded Decimal to Decimal Floating Point conversions. Instructions: CDZT, CXZT, CZDT, CZXT"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "225",
-+		"EventName": "VX_BCD_EXECUTION_SLOTS",
-+		"BriefDescription": "VX BCD Execution Slots",
-+		"PublicDescription": "Count of floating point execution slots used for finished vector arithmetic Binary Coded Decimal instructions. Instructions: VAP, VSP, VMPVMSP, VDP, VSDP, VRP, VLIP, VSRP, VPSOPVCP, VTP, VPKZ, VUPKZ, VCVB, VCVBG, VCVDVCVDG"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "226",
-+		"EventName": "DECIMAL_INSTRUCTIONS",
-+		"BriefDescription": "Decimal Instructions",
-+		"PublicDescription": "Decimal instructions dispatched. Instructions: CVB, CVD, AP, CP, DP, ED, EDMK, MP, SRP, SP, ZAP"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "232",
-+		"EventName": "LAST_HOST_TRANSLATIONS",
-+		"BriefDescription": "Last host translation done",
-+		"PublicDescription": "Last Host Translation done"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "243",
-+		"EventName": "TX_NC_TABORT",
-+		"BriefDescription": "Aborted transactions in non-constrained TX mode",
-+		"PublicDescription": "A transaction abort has occurred in a non-constrained transactional-execution mode"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "244",
-+		"EventName": "TX_C_TABORT_NO_SPECIAL",
-+		"BriefDescription": "Aborted transactions in constrained TX mode not using special completion logic",
-+		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is not using any special logic to allow the transaction to complete"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "245",
-+		"EventName": "TX_C_TABORT_SPECIAL",
-+		"BriefDescription": "Aborted transactions in constrained TX mode using special completion logic",
-+		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "448",
-+		"EventName": "MT_DIAG_CYCLES_ONE_THR_ACTIVE",
-+		"BriefDescription": "Cycle count with one thread active",
-+		"PublicDescription": "Cycle count with one thread active"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "449",
-+		"EventName": "MT_DIAG_CYCLES_TWO_THR_ACTIVE",
-+		"BriefDescription": "Cycle count with two threads active",
-+		"PublicDescription": "Cycle count with two threads active"
-+	},
-+]
-diff --git a/tools/perf/pmu-events/arch/s390/mapfile.csv b/tools/perf/pmu-events/arch/s390/mapfile.csv
-index 78bcf7f8e206..bd3fc577139c 100644
---- a/tools/perf/pmu-events/arch/s390/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/s390/mapfile.csv
-@@ -4,3 +4,4 @@ Family-model,Version,Filename,EventType
- ^IBM.282[78].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_zec12,core
- ^IBM.296[45].*[13]\.[1-5].[[:xdigit:]]+$,1,cf_z13,core
- ^IBM.390[67].*[13]\.[1-5].[[:xdigit:]]+$,3,cf_z14,core
-+^IBM.856[12].*3\.6.[[:xdigit:]]+$,3,cf_m8561,core
--- 
-2.19.1
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit d1d59b817939821bee149e870ce7723f61ffb512:
+> 
+>   Merge tag 'perf-urgent-for-mingo-5.3-20190708-2' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2019-07-09 13:22:03 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.3-20190709
+> 
+> for you to fetch changes up to 323fd749821daab0f327ec86d707c4542963cdb0:
+> 
+>   perf intel-pt: Fix potential NULL pointer dereference found by the smatch tool (2019-07-09 10:13:28 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> Intel PT:
+> 
+>   Adrian Hunter:
+> 
+>   - Fix DROP VIEW power_events_view in the postgresql and sqlite export-db
+>     python scripts.
+> 
+> perf script:
+> 
+>   Song Liu:
+> 
+>   - Assume native_arch for pipe mode, fixing a segfault.
+> 
+> perf inject:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - The tool->read() call may pass a NULL evsel, handle it.
+> 
+> core:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Move zalloc/zfree.c to tools/lib, further eroding tools/perf/util.[ch]
+> 
+>   - Use zfree() where applicable instead of open coded equivalent.
+> 
+>   - Add stdlib.h and some other headers to places where its needed and were
+>     getting via util.h, that doesn't need that anymore.
+> 
+>   - Use list_del_init() more thoroughly.
+> 
+> Miscellaneous:
+> 
+>   Leo Yan:
+> 
+>   - Fix use after free and potential NULL pointer derefs detected by the
+>     smatch tool in various places.
+> 
+>   Luke Mujica:
+> 
+>   - Remove a couple unused variables in the parse-events code.
+> 
+>   Numfor Mbiziwo-Tiapo:
+> 
+>   - Initialize variable to suppress memory sanitizer warning in the
+>     mmap-thread-lookup 'perf test' entry.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Adrian Hunter (2):
+>       perf scripts python: export-to-postgresql.py: Fix DROP VIEW power_events_view
+>       perf scripts python: export-to-sqlite.py: Fix DROP VIEW power_events_view
+> 
+> Arnaldo Carvalho de Melo (9):
+>       perf inject: The tool->read() call may pass a NULL evsel, handle it
+>       perf evsel: perf_evsel__name(NULL) is valid, no need to check evsel
+>       perf tools: Add missing headers, mostly stdlib.h
+>       perf namespaces: Move the conditional setns() prototype to namespaces.h
+>       perf tools: Move get_current_dir_name() cond prototype out of util.h
+>       tools lib: Adopt zalloc()/zfree() from tools/perf
+>       perf tools: Use zfree() where applicable
+>       perf tools: Use list_del_init() more thorougly
+>       perf metricgroup: Add missing list_del_init() when flushing egroups list
+> 
+> Leo Yan (10):
+>       perf stat: Fix use-after-freed pointer detected by the smatch tool
+>       perf top: Fix potential NULL pointer dereference detected by the smatch tool
+>       perf annotate: Fix dereferencing freed memory found by the smatch tool
+>       perf trace: Fix potential NULL pointer dereference found by the smatch tool
+>       perf map: Fix potential NULL pointer dereference found by smatch tool
+>       perf session: Fix potential NULL pointer dereference found by the smatch tool
+>       perf cs-etm: Fix potential NULL pointer dereference found by the smatch tool
+>       perf hists browser: Fix potential NULL pointer dereference found by the smatch tool
+>       perf intel-bts: Fix potential NULL pointer dereference found by the smatch tool
+>       perf intel-pt: Fix potential NULL pointer dereference found by the smatch tool
+> 
+> Luke Mujica (2):
+>       perf parse-events: Remove unused variable 'i'
+>       perf parse-events: Remove unused variable: error
+> 
+> Numfor Mbiziwo-Tiapo (1):
+>       perf test mmap-thread-lookup: Initialize variable to suppress memory sanitizer warning
+> 
+> Song Liu (1):
+>       perf script: Assume native_arch for pipe mode
+> 
+>  tools/include/linux/zalloc.h                       | 12 +++++
+>  tools/lib/zalloc.c                                 | 15 ++++++
+>  tools/perf/MANIFEST                                |  1 +
+>  tools/perf/arch/arm/annotate/instructions.c        |  1 +
+>  tools/perf/arch/arm/util/auxtrace.c                |  1 +
+>  tools/perf/arch/arm/util/cs-etm.c                  |  1 +
+>  tools/perf/arch/arm64/util/arm-spe.c               |  1 +
+>  tools/perf/arch/common.c                           |  3 +-
+>  tools/perf/arch/powerpc/util/perf_regs.c           |  4 +-
+>  tools/perf/arch/s390/util/auxtrace.c               |  1 +
+>  tools/perf/arch/s390/util/header.c                 |  3 +-
+>  tools/perf/arch/x86/util/event.c                   |  2 +-
+>  tools/perf/arch/x86/util/intel-bts.c               |  2 +-
+>  tools/perf/arch/x86/util/intel-pt.c                |  2 +-
+>  tools/perf/arch/x86/util/perf_regs.c               |  2 +-
+>  tools/perf/bench/futex-hash.c                      |  3 +-
+>  tools/perf/bench/futex-lock-pi.c                   |  3 +-
+>  tools/perf/bench/mem-functions.c                   |  2 +-
+>  tools/perf/bench/numa.c                            |  2 +-
+>  tools/perf/builtin-annotate.c                      |  2 +-
+>  tools/perf/builtin-bench.c                         |  2 +-
+>  tools/perf/builtin-c2c.c                           |  2 +-
+>  tools/perf/builtin-config.c                        |  1 +
+>  tools/perf/builtin-diff.c                          |  2 +-
+>  tools/perf/builtin-ftrace.c                        |  2 +-
+>  tools/perf/builtin-help.c                          |  2 +
+>  tools/perf/builtin-inject.c                        |  2 +-
+>  tools/perf/builtin-kmem.c                          |  2 +-
+>  tools/perf/builtin-kvm.c                           |  2 +-
+>  tools/perf/builtin-lock.c                          | 10 ++--
+>  tools/perf/builtin-probe.c                         |  2 +-
+>  tools/perf/builtin-record.c                        |  4 +-
+>  tools/perf/builtin-report.c                        |  4 +-
+>  tools/perf/builtin-sched.c                         |  2 +-
+>  tools/perf/builtin-script.c                        |  5 +-
+>  tools/perf/builtin-stat.c                          |  8 ++--
+>  tools/perf/builtin-timechart.c                     |  4 +-
+>  tools/perf/builtin-top.c                           |  8 +++-
+>  tools/perf/builtin-trace.c                         |  7 +--
+>  tools/perf/perf.c                                  |  2 +-
+>  tools/perf/pmu-events/jevents.c                    |  2 +-
+>  tools/perf/scripts/python/export-to-postgresql.py  |  2 +-
+>  tools/perf/scripts/python/export-to-sqlite.py      |  2 +-
+>  tools/perf/tests/dwarf-unwind.c                    |  5 +-
+>  tools/perf/tests/expr.c                            |  3 +-
+>  tools/perf/tests/llvm.c                            |  1 +
+>  tools/perf/tests/mem2node.c                        |  3 +-
+>  tools/perf/tests/mmap-thread-lookup.c              |  2 +-
+>  tools/perf/tests/sample-parsing.c                  |  1 +
+>  tools/perf/tests/switch-tracking.c                 |  3 +-
+>  tools/perf/tests/thread-map.c                      |  3 +-
+>  tools/perf/tests/vmlinux-kallsyms.c                |  1 +
+>  tools/perf/ui/browser.c                            |  2 +-
+>  tools/perf/ui/browser.h                            |  1 +
+>  tools/perf/ui/browsers/annotate.c                  |  2 +-
+>  tools/perf/ui/browsers/hists.c                     | 17 +++++--
+>  tools/perf/ui/browsers/map.c                       |  1 +
+>  tools/perf/ui/browsers/res_sample.c                |  6 +--
+>  tools/perf/ui/browsers/scripts.c                   |  4 +-
+>  tools/perf/ui/gtk/annotate.c                       |  2 +-
+>  tools/perf/ui/gtk/util.c                           |  3 +-
+>  tools/perf/ui/stdio/hist.c                         |  2 +-
+>  tools/perf/ui/tui/setup.c                          |  1 +
+>  tools/perf/ui/tui/util.c                           |  2 +-
+>  tools/perf/util/Build                              |  5 ++
+>  tools/perf/util/annotate.c                         | 13 ++---
+>  tools/perf/util/arm-spe.c                          |  2 +-
+>  tools/perf/util/auxtrace.c                         | 11 ++---
+>  tools/perf/util/bpf-loader.c                       |  3 +-
+>  tools/perf/util/build-id.c                         |  1 +
+>  tools/perf/util/call-path.c                        |  5 +-
+>  tools/perf/util/callchain.c                        | 12 ++---
+>  tools/perf/util/cgroup.c                           |  4 +-
+>  tools/perf/util/comm.c                             |  2 +-
+>  tools/perf/util/config.c                           |  3 +-
+>  tools/perf/util/counts.c                           |  2 +-
+>  tools/perf/util/cpumap.c                           |  2 +-
+>  tools/perf/util/cputopo.c                          |  5 +-
+>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c    |  1 +
+>  tools/perf/util/cs-etm.c                           |  8 ++--
+>  tools/perf/util/data-convert-bt.c                  |  4 +-
+>  tools/perf/util/data.c                             |  3 +-
+>  tools/perf/util/db-export.c                        |  7 +--
+>  tools/perf/util/debug.c                            |  1 +
+>  tools/perf/util/demangle-java.c                    |  3 +-
+>  tools/perf/util/dso.c                              |  5 +-
+>  tools/perf/util/dwarf-aux.c                        |  2 +-
+>  tools/perf/util/env.c                              | 11 +++--
+>  tools/perf/util/event.c                            |  3 +-
+>  tools/perf/util/evlist.c                           |  2 +-
+>  tools/perf/util/evsel.c                            |  4 +-
+>  tools/perf/util/get_current_dir_name.c             |  6 +--
+>  tools/perf/util/get_current_dir_name.h             |  8 ++++
+>  tools/perf/util/header.c                           |  8 ++--
+>  tools/perf/util/help-unknown-cmd.c                 |  2 +
+>  tools/perf/util/hist.c                             | 20 ++++----
+>  tools/perf/util/intel-bts.c                        |  7 ++-
+>  .../perf/util/intel-pt-decoder/intel-pt-decoder.c  |  2 +-
+>  tools/perf/util/intel-pt.c                         | 15 +++---
+>  tools/perf/util/jitdump.c                          |  7 ++-
+>  tools/perf/util/llvm-utils.c                       |  4 +-
+>  tools/perf/util/machine.c                          |  6 +--
+>  tools/perf/util/map.c                              |  9 ++--
+>  tools/perf/util/mem2node.c                         |  2 +-
+>  tools/perf/util/metricgroup.c                      | 10 ++--
+>  tools/perf/util/mmap.c                             |  1 +
+>  tools/perf/util/namespaces.c                       |  3 +-
+>  tools/perf/util/namespaces.h                       |  4 ++
+>  tools/perf/util/ordered-events.c                   |  6 +--
+>  tools/perf/util/parse-branch-options.c             |  2 +-
+>  tools/perf/util/parse-events.c                     |  3 +-
+>  tools/perf/util/parse-events.y                     |  2 -
+>  tools/perf/util/parse-regs-options.c               |  8 +++-
+>  tools/perf/util/pmu.c                              |  4 +-
+>  tools/perf/util/probe-event.c                      | 55 ++++++++++------------
+>  tools/perf/util/probe-file.c                       |  2 +-
+>  tools/perf/util/probe-finder.c                     |  2 +-
+>  tools/perf/util/pstack.c                           |  2 +-
+>  tools/perf/util/python-ext-sources                 |  1 +
+>  tools/perf/util/s390-cpumsf.c                      | 11 ++---
+>  tools/perf/util/session.c                          |  7 ++-
+>  tools/perf/util/setns.c                            |  4 +-
+>  tools/perf/util/srccode.c                          | 11 +++--
+>  tools/perf/util/srcline.c                          |  2 +-
+>  tools/perf/util/stat-shadow.c                      |  3 +-
+>  tools/perf/util/stat.c                             |  3 +-
+>  tools/perf/util/strbuf.c                           |  3 +-
+>  tools/perf/util/strfilter.c                        |  3 +-
+>  tools/perf/util/strlist.c                          |  2 +-
+>  tools/perf/util/svghelper.c                        |  2 +-
+>  tools/perf/util/symbol-elf.c                       | 18 +++----
+>  tools/perf/util/symbol-minimal.c                   |  3 +-
+>  tools/perf/util/symbol.c                           |  1 +
+>  tools/perf/util/syscalltbl.c                       |  2 +-
+>  tools/perf/util/target.c                           |  2 +-
+>  tools/perf/util/thread-stack.c                     |  3 +-
+>  tools/perf/util/thread.c                           |  6 +--
+>  tools/perf/util/thread_map.c                       |  4 +-
+>  tools/perf/util/trace-event-info.c                 |  1 +
+>  tools/perf/util/trace-event-scripting.c            |  2 +-
+>  tools/perf/util/unwind-libdw.c                     |  1 +
+>  tools/perf/util/unwind-libunwind-local.c           |  3 +-
+>  tools/perf/util/usage.c                            |  3 ++
+>  tools/perf/util/util.h                             | 17 -------
+>  tools/perf/util/values.c                           |  2 +-
+>  tools/perf/util/vdso.c                             |  1 +
+>  tools/perf/util/xyarray.c                          |  2 +-
+>  147 files changed, 375 insertions(+), 279 deletions(-)
+>  create mode 100644 tools/include/linux/zalloc.h
+>  create mode 100644 tools/lib/zalloc.c
+>  create mode 100644 tools/perf/util/get_current_dir_name.h
+
+Pulled, thanks a lot Arnaldo!
+
+	Ingo
