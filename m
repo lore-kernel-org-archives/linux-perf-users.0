@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/28] perf db-export: Factor out db_export__comm()
-Date: Mon, 15 Jul 2019 18:11:46 -0300
-Message-ID: <20190715211200.10984-15-acme@kernel.org>
+Subject: [PATCH 15/28] perf db-export: Also export thread's current comm
+Date: Mon, 15 Jul 2019 18:11:47 -0300
+Message-ID: <20190715211200.10984-16-acme@kernel.org>
 References: <20190715211200.10984-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,78 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-In preparation for exporting the current comm for a thread, factor out
-db_export__comm().
+Currently, the initial comm of the main thread is exported. Export also
+a thread's current comm. That better supports the tracing of
+multi-threaded applications that set different comms for different
+threads to make it easier to distinguish them.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190710085810.1650-12-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190710085810.1650-13-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/db-export.c | 30 +++++++++++++++++++++++-------
- tools/perf/util/db-export.h |  2 ++
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ tools/perf/util/db-export.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index b0504d3eb130..b1e581c13963 100644
+index b1e581c13963..5057fdd7f62d 100644
 --- a/tools/perf/util/db-export.c
 +++ b/tools/perf/util/db-export.c
-@@ -78,6 +78,26 @@ int db_export__thread(struct db_export *dbe, struct thread *thread,
- 	return 0;
- }
+@@ -299,6 +299,7 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 	};
+ 	struct thread *main_thread;
+ 	struct comm *comm = NULL;
++	struct comm *curr_comm;
+ 	int err;
  
-+static int __db_export__comm(struct db_export *dbe, struct comm *comm,
-+			     struct thread *thread)
-+{
-+	comm->db_id = ++dbe->comm_last_db_id;
-+
-+	if (dbe->export_comm)
-+		return dbe->export_comm(dbe, comm, thread);
-+
-+	return 0;
-+}
-+
-+int db_export__comm(struct db_export *dbe, struct comm *comm,
-+		    struct thread *thread)
-+{
-+	if (comm->db_id)
-+		return 0;
-+
-+	return __db_export__comm(dbe, comm, thread);
-+}
-+
- /*
-  * Export the "exec" comm. The "exec" comm is the program / application command
-  * name at the time it first executes. It is used to group threads for the same
-@@ -92,13 +112,9 @@ int db_export__exec_comm(struct db_export *dbe, struct comm *comm,
- 	if (comm->db_id)
- 		return 0;
+ 	err = db_export__evsel(dbe, evsel);
+@@ -350,6 +351,13 @@ int db_export__sample(struct db_export *dbe, union perf_event *event,
+ 		}
+ 	}
  
--	comm->db_id = ++dbe->comm_last_db_id;
--
--	if (dbe->export_comm) {
--		err = dbe->export_comm(dbe, comm, main_thread);
--		if (err)
--			return err;
--	}
-+	err = __db_export__comm(dbe, comm, main_thread);
-+	if (err)
-+		return err;
++	curr_comm = thread__comm(thread);
++	if (curr_comm) {
++		err = db_export__comm(dbe, curr_comm, thread);
++		if (err)
++			goto out_put;
++	}
++
+ 	es.db_id = ++dbe->sample_last_db_id;
  
- 	/*
- 	 * Record the main thread for this comm. Note that the main thread can
-diff --git a/tools/perf/util/db-export.h b/tools/perf/util/db-export.h
-index 29f7c3b035a7..f5f0865f07e1 100644
---- a/tools/perf/util/db-export.h
-+++ b/tools/perf/util/db-export.h
-@@ -77,6 +77,8 @@ int db_export__evsel(struct db_export *dbe, struct perf_evsel *evsel);
- int db_export__machine(struct db_export *dbe, struct machine *machine);
- int db_export__thread(struct db_export *dbe, struct thread *thread,
- 		      struct machine *machine, struct thread *main_thread);
-+int db_export__comm(struct db_export *dbe, struct comm *comm,
-+		    struct thread *thread);
- int db_export__exec_comm(struct db_export *dbe, struct comm *comm,
- 			 struct thread *main_thread);
- int db_export__comm_thread(struct db_export *dbe, struct comm *comm,
+ 	err = db_ids_from_al(dbe, al, &es.dso_db_id, &es.sym_db_id, &es.offset);
 -- 
 2.21.0
