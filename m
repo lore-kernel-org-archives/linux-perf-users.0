@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/28] perf test: Auto bump rlimit(MEMLOCK) for BPF test sake
-Date: Mon, 15 Jul 2019 18:11:34 -0300
-Message-ID: <20190715211200.10984-3-acme@kernel.org>
+Subject: [PATCH 03/28] perf trace: Auto bump rlimit(MEMLOCK) for eBPF maps sake
+Date: Mon, 15 Jul 2019 18:11:35 -0300
+Message-ID: <20190715211200.10984-4-acme@kernel.org>
 References: <20190715211200.10984-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,86 +14,92 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I noticed that the 'perf test bpf' was failing:
+Circa v5.2 this started to fail:
 
-  # perf test bpf
-  41: BPF filter                                            :
-  41.1: Basic BPF filtering                                 : Skip
-  41.2: BPF pinning                                         : Skip
-  41.3: BPF prologue generation                             : Skip
-  41.4: BPF relocation checker                              : Skip
-  # ulimit -l
-  64
+  # perf trace -e /wb/augmented_raw_syscalls.o
+  event syntax error: '/wb/augmented_raw_syscalls.o'
+                       \___ Operation not permitted
+
+  (add -v to see detail)
+  Run 'perf list' for a list of valid events
+
+   Usage: perf trace [<options>] [<command>]
+      or: perf trace [<options>] -- <command> [<options>]
+      or: perf trace record [<options>] [<command>]
+      or: perf trace record [<options>] -- <command> [<options>]
+
+      -e, --event <event>   event/syscall selector. use 'perf list' to list available events
   #
 
-Using verbose mode we get just a line bout -EPERF being returned from
-libbpf's bpf_load_program_xattr(), that ends up being used in 'perf
-test bpf' initial program loading capability query:
+In verbose mode we some -EPERM when creating a BPF map:
 
-  Missing basic BPF support, skip this test: Operation not permitted
+  # perf trace -v -e /wb/augmented_raw_syscalls.o
+  <SNIP>
+  libbpf: failed to create map (name: '__augmented_syscalls__'): Operation not permitted
+  libbpf: failed to load object '/wb/augmented_raw_syscalls.o'
+  bpf: load objects failed: err=-1: (Operation not permitted)
+  event syntax error: '/wb/augmented_raw_syscalls.o'
+                       \___ Operation not permitted
 
-Not that informative, but on a separate problem when creating BPF maps
-bumping rlimit(MEMLOCK) helped, so I tried it here as well, works:
+  (add -v to see detail)
+  Run 'perf list' for a list of valid events
 
-  # ulimit -l 128
-  # perf test bpf
-  41: BPF filter                                            :
-  41.1: Basic BPF filtering                                 : Ok
-  41.2: BPF pinning                                         : Ok
-  41.3: BPF prologue generation                             : Ok
-  41.4: BPF relocation checker                              : Ok
+   Usage: perf trace [<options>] [<command>]
+      or: perf trace [<options>] -- <command> [<options>]
+      or: perf trace record [<options>] [<command>]
+      or: perf trace record [<options>] -- <command> [<options>]
+
+      -e, --event <event>   event/syscall selector. use 'perf list' to list available events
   #
 
-So use the recently added rlimit__bump_memlock() helper:
+If we bumped 'ulimit -l 128' to get it from the 64k default to double that, it
+worked, so use the recently added rlimit__bump_memlock() helper:
 
-  # ulimit -l 64
-  # perf test bpf
-  41: BPF filter                                            :
-  41.1: Basic BPF filtering                                 : Ok
-  41.2: BPF pinning                                         : Ok
-  41.3: BPF prologue generation                             : Ok
-  41.4: BPF relocation checker                              : Ok
-  # ulimit -l
-  64
+  # perf trace -e /wb/augmented_raw_syscalls.o -e open*,*sleep sleep 1
+       0.000 ( 0.007 ms): sleep/28042 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
+       0.022 ( 0.004 ms): sleep/28042 openat(dfd: CWD, filename: "/lib64/libc.so.6", flags: RDONLY|CLOEXEC) = 3
+       0.201 ( 0.007 ms): sleep/28042 openat(dfd: CWD, filename: "", flags: RDONLY|CLOEXEC)                 = 3
+       0.241 (1000.421 ms): sleep/28042 nanosleep(rqtp: 0x7ffd6c3e6ed0)                                       = 0
   #
-
-I.e. the bumping of memlock is restricted to the 'perf test' instance,
-not changing the global value.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
 Cc: Daniel Borkmann <daniel@iogearbox.net>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-b9fubkhr4jm192lu7y8hgjvo@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-j6f2ioa6hj9dinzpjvlhcjoc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/builtin-trace.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 66a82badc1d1..c3bec9d2c201 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -21,6 +21,7 @@
- #include <subcmd/parse-options.h>
- #include "string2.h"
- #include "symbol.h"
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 1aa2ed096f65..4f0bbffee05f 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -19,6 +19,7 @@
+ #include <api/fs/tracing_path.h>
+ #include <bpf/bpf.h>
+ #include "util/bpf_map.h"
 +#include "util/rlimit.h"
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <subcmd/exec-cmd.h>
-@@ -727,6 +728,11 @@ int cmd_test(int argc, const char **argv)
+ #include "builtin.h"
+ #include "util/cgroup.h"
+ #include "util/color.h"
+@@ -3864,6 +3865,15 @@ int cmd_trace(int argc, const char **argv)
+ 		goto out;
+ 	}
  
- 	if (skip != NULL)
- 		skiplist = intlist__new(skip);
 +	/*
-+	 * Tests that create BPF maps, for instance, need more than the 64K
-+	 * default:
++	 * Parsing .perfconfig may entail creating a BPF event, that may need
++	 * to create BPF maps, so bump RLIM_MEMLOCK as the default 64K setting
++	 * is too small. This affects just this process, not touching the
++	 * global setting. If it fails we'll get something in 'perf trace -v'
++	 * to help diagnose the problem.
 +	 */
 +	rlimit__bump_memlock();
- 
- 	return __cmd_test(argc, argv, skiplist);
- }
++
+ 	err = perf_config(trace__config, &trace);
+ 	if (err)
+ 		goto out;
 -- 
 2.21.0
