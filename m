@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/37] perf trace beauty: Make connect's addrlen be printed as an int, not hex
-Date: Mon, 22 Jul 2019 14:38:24 -0300
-Message-ID: <20190722173839.22898-23-acme@kernel.org>
+Subject: [PATCH 23/37] perf trace beauty: Disable fd->pathname when close() not enabled
+Date: Mon, 22 Jul 2019 14:38:25 -0300
+Message-ID: <20190722173839.22898-24-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,83 +15,83 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  # perf trace -e connec* ssh www.bla.com
-  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  connect(4<socket:[16610959]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 110) = 0
-  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  connect(5, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 16) = 0
-  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 16) = 0
-  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET6, port: 22, addr: ::ffff:146.112.61.108 }, 28) = 0
-  ^Cconnect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 16) = -1 (unknown) (INTERNAL ERROR: strerror_r(512, [buf], 128)=22)
-  #
+As we invalidate the fd->pathname table in the SCA_CLOSE_FD beautifier,
+if we don't have it we may end up keeping an fd->pathname association
+that then gets misprinted.
 
-Argh, the SCA_FD needs to invalidate its cache when close is done...
-
-It works if the 'close' syscall is not filtered out ;-\
-
-  # perf trace -e close,connec* ssh www.bla.com
-  close(3)                                = 0
-  close(3</usr/lib64/libpcre2-8.so.0.8.0>) = 0
-  close(3)                                = 0
-  close(3</usr/lib64/libkrb5.so.3.3>)     = 0
-  close(3</usr/lib64/libkrb5.so.3.3>)     = 0
-  close(3)                                = 0
-  close(3</usr/lib64/libk5crypto.so.3.1>) = 0
-  close(3</usr/lib64/libk5crypto.so.3.1>) = 0
-  close(3</usr/lib64/libcom_err.so.2.1>)  = 0
-  close(3</usr/lib64/libcom_err.so.2.1>)  = 0
-  close(3)                                = 0
-  close(3</usr/lib64/libkrb5support.so.0.1>) = 0
-  close(3</usr/lib64/libkrb5support.so.0.1>) = 0
-  close(3</usr/lib64/libkeyutils.so.1.8>) = 0
-  close(3</usr/lib64/libkeyutils.so.1.8>) = 0
-  close(3)                                = 0
-  close(3)                                = 0
-  close(3)                                = 0
-  close(3)                                = 0
-  close(4)                                = 0
-  close(3)                                = 0
-  close(3)                                = 0
-  connect(3</etc/nsswitch.conf>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  close(3</etc/nsswitch.conf>)            = 0
-  connect(3</usr/lib64/libnss_sss.so.2>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
-  close(3</usr/lib64/libnss_sss.so.2>)    = 0
-  close(3</usr/lib64/libnss_sss.so.2>)    = 0
-  close(3)                                = 0
-  close(3)                                = 0
-  connect(4<socket:[16616519]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 110) = 0
-  ^C
-  #
-
-Will disable this beautifier when 'close' is filtered out...
+The previous behaviour continues when the close() syscall is enabled,
+which may still be a a problem if we lose records (i.e. we may lose a
+'close' record and then get that fd reused by socket()) but then the
+tool will notify that records are being lost and the user will be warned
+that some of the heuristics will fall apart.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ekuiciyx4znchvy95c8p1yyi@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-b7t6h8sq9lebemvfy2zh3qq1@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 5258399a1c94..123d7efc12e8 100644
+index 123d7efc12e8..94c33bb573c1 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -725,7 +725,8 @@ static struct syscall_fmt {
- 	{ .name	    = "close",
- 	  .arg = { [0] = { .scnprintf = SCA_CLOSE_FD, /* fd */ }, }, },
- 	{ .name	    = "connect",
--	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ }, }, },
-+	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ },
-+		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
- 	{ .name	    = "epoll_ctl",
- 	  .arg = { [1] = STRARRAY(op, epoll_ctl_ops), }, },
- 	{ .name	    = "eventfd2",
+@@ -127,6 +127,7 @@ struct trace {
+ 	unsigned int		min_stack;
+ 	int			raw_augmented_syscalls_args_size;
+ 	bool			raw_augmented_syscalls;
++	bool			fd_path_disabled;
+ 	bool			sort_events;
+ 	bool			not_ev_qualifier;
+ 	bool			live;
+@@ -1178,7 +1179,7 @@ static const char *thread__fd_path(struct thread *thread, int fd,
+ {
+ 	struct thread_trace *ttrace = thread__priv(thread);
+ 
+-	if (ttrace == NULL)
++	if (ttrace == NULL || trace->fd_path_disabled)
+ 		return NULL;
+ 
+ 	if (fd < 0)
+@@ -2097,7 +2098,7 @@ static int trace__sys_exit(struct trace *trace, struct perf_evsel *evsel,
+ 
+ 	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
+ 
+-	if (sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
++	if (!trace->fd_path_disabled && sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
+ 		trace__set_fd_pathname(thread, ret, ttrace->filename.name);
+ 		ttrace->filename.pending_open = false;
+ 		++trace->stats.vfs_getname;
+@@ -3206,7 +3207,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (trace->syscalls.prog_array.sys_enter)
+ 		trace__init_syscalls_bpf_prog_array_maps(trace);
+ 
+-
+ 	if (trace->ev_qualifier_ids.nr > 0) {
+ 		err = trace__set_ev_qualifier_filter(trace);
+ 		if (err < 0)
+@@ -3218,6 +3218,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		}
+ 	}
+ 
++	/*
++	 * If the "close" syscall is not traced, then we will not have the
++	 * opportunity to, in syscall_arg__scnprintf_close_fd() invalidate the
++	 * fd->pathname table and were ending up showing the last value set by
++	 * syscalls opening a pathname and associating it with a descriptor or
++	 * reading it from /proc/pid/fd/ in cases where that doesn't make
++	 * sense.
++	 *
++	 *  So just disable this beautifier (SCA_FD, SCA_FDAT) when 'close' is
++	 *  not in use.
++	 */
++	trace->fd_path_disabled = !trace__syscall_enabled(trace, syscalltbl__id(trace->sctbl, "close"));
++
+ 	err = perf_evlist__apply_filters(evlist, &evsel);
+ 	if (err < 0)
+ 		goto out_error_apply_filters;
 -- 
 2.21.0
