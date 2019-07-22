@@ -1,67 +1,59 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/37] perf trace beauty: Beautify bind's sockaddr arg
-Date: Mon, 22 Jul 2019 14:38:28 -0300
-Message-ID: <20190722173839.22898-27-acme@kernel.org>
+Subject: [PATCH 27/37] perf stat: Always separate stalled cycles per insn
+Date: Mon, 22 Jul 2019 14:38:29 -0300
+Message-ID: <20190722173839.22898-28-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-By reusing the "connect" BPF collector.
+The "stalled cycles per insn" is appended to "instructions" when the CPU
+has this hardware counter directly. We should always make it a separate
+line, which also aligns to the output when we hit the "if (total &&
+avg)" branch.
 
-Testing it system wide and stopping/starting sshd:
+Before:
 
-  # perf trace -e bind
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(247, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/10327 bind(258, { .family: PF_NETLINK }, 12)  = 0
-  :6507/6507 bind(24, { .family: PF_NETLINK }, 12)   = 0
-  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(242, { .family: PF_NETLINK }, 12)  = 0
-  sshd/6514 bind(3, { .family: PF_NETLINK }, 12)    = 0
-  sshd/6514 bind(5, { .family: PF_INET, port: 22, addr: 0.0.0.0 }, 16) = 0
-  sshd/6514 bind(7, { .family: PF_INET6, port: 22, addr: :: }, 28) = 0
-  DNS Res~er #18/10327 bind(229, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(231, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(229, { .family: PF_NETLINK }, 12)  = 0
-  ^C#
+  $ sudo perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  4565048704,,instructions,64114578096,100.00,1.34,insn per cycle,,
+  3396325133,,cycles,64146628546,100.00,,
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-m2hmxqrckxxw2ciki0tu889u@git.kernel.org
+After:
+
+  $ sudo ./tools/perf/perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  6721924,,instructions,24026790339,100.00,0.22,insn per cycle
+  ,,,,,0.00,stalled cycles per insn
+  30939953,,cycles,24025512526,100.00,,
+
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190517221039.8975-1-xiyou.wangcong@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 010aa9e9a561..d403b09812d1 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -710,8 +710,10 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_X86_ARCH_PRCTL_CODE, /* code */ },
- 		   [1] = { .scnprintf = SCA_PTR, /* arg2 */ }, }, },
- 	{ .name	    = "bind",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_connect", },
- 	  .arg = { [0] = { .scnprintf = SCA_INT, /* fd */ },
--		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ }, }, },
-+		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ },
-+		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
- 	{ .name	    = "bpf",
- 	  .arg = { [0] = STRARRAY(cmd, bpf_cmd), }, },
- 	{ .name	    = "brk",	    .hexret = true,
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 656065af4971..accb1bf1cfd8 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -819,7 +819,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					"stalled cycles per insn",
+ 					ratio);
+ 		} else if (have_frontend_stalled) {
+-			print_metric(config, ctxp, NULL, NULL,
++			out->new_line(config, ctxp);
++			print_metric(config, ctxp, NULL, "%7.2f ",
+ 				     "stalled cycles per insn", 0);
+ 		}
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
 -- 
 2.21.0
