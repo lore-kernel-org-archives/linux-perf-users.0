@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/37] perf augmented_raw_syscalls: Support copying two string syscall args
-Date: Mon, 22 Jul 2019 14:38:15 -0300
-Message-ID: <20190722173839.22898-14-acme@kernel.org>
+Subject: [PATCH 14/37] perf trace: Look for default name for entries in the syscalls prog array
+Date: Mon, 22 Jul 2019 14:38:16 -0300
+Message-ID: <20190722173839.22898-15-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,82 +15,90 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Starting with the renameat and renameat2 syscall, that both receive as
-second and fourth parameters a pathname:
-
-  # perf trace -e rename* mv one ANOTHER
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  mv: cannot stat 'one': No such file or directory
-  renameat2(AT_FDCWD, "one", AT_FDCWD, "ANOTHER", RENAME_NOREPLACE) = -1 ENOENT (No such file or directory)
-  #
-
-Since the per CPU scratch buffer map has space for two maximum sized
-pathnames, the verifier is satisfied that there will be no overrun.
+I.e. just look for "!syscalls:sys_enter_" or "exit_" plus the syscall
+name, that way we need just to add entries to the
+augmented_raw_syscalls.c BPF source to add handlers.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x2uboyg5kx2wqeru288209b6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-6xavwddruokp6ohs7tf4qilb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c                    |  2 ++
- .../examples/bpf/augmented_raw_syscalls.c     | 20 +++++++++++++++++++
- 2 files changed, 22 insertions(+)
+ tools/perf/builtin-trace.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a681b8c2ee4e..c64f7c99db15 100644
+index c64f7c99db15..5258399a1c94 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -873,9 +873,11 @@ static struct syscall_fmt {
+@@ -830,13 +830,11 @@ static struct syscall_fmt {
+ 	{ .name	    = "newfstatat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
+ 	{ .name	    = "open",
+-	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_open", },
+ 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "open_by_handle_at",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "openat",
+-	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_openat", },
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "perf_event_open",
+@@ -873,7 +871,6 @@ static struct syscall_fmt {
  	{ .name	    = "recvmsg",
  	  .arg = { [2] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ }, }, },
  	{ .name	    = "renameat",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
+-	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
  	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
  		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ }, }, },
  	{ .name	    = "renameat2",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ },
- 		   [4] = { .scnprintf = SCA_RENAMEAT2_FLAGS, /* flags */ }, }, },
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index ce308b9a317c..df52d92e1c69 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -70,6 +70,7 @@ pid_filter(pids_filtered);
- struct augmented_args_filename {
-        struct syscall_enter_args args;
-        struct augmented_filename filename;
-+       struct augmented_filename filename2;
- };
+@@ -2778,12 +2775,27 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
+ {
+ 	struct bpf_program *prog;
  
- bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
-@@ -148,6 +149,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
- 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
+-	if (prog_name == NULL)
++	if (prog_name == NULL) {
++		char default_prog_name[256];
++		scnprintf(default_prog_name, sizeof(default_prog_name), "!syscalls:sys_%s_%s", type, sc->name);
++		prog = trace__find_bpf_program_by_title(trace, default_prog_name);
++		if (prog != NULL)
++			goto out_found;
++		if (sc->fmt && sc->fmt->alias) {
++			scnprintf(default_prog_name, sizeof(default_prog_name), "!syscalls:sys_%s_%s", type, sc->fmt->alias);
++			prog = trace__find_bpf_program_by_title(trace, default_prog_name);
++			if (prog != NULL)
++				goto out_found;
++		}
+ 		goto out_unaugmented;
++	}
+ 
+ 	prog = trace__find_bpf_program_by_title(trace, prog_name);
+-	if (prog != NULL)
++
++	if (prog != NULL) {
++out_found:
+ 		return prog;
++	}
+ 
+ 	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
+ 		 prog_name, type, sc->name);
+@@ -2798,12 +2810,8 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+ 	if (sc == NULL)
+ 		return;
+ 
+-	if (sc->fmt != NULL) {
+-		sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_enter, "enter");
+-		sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_exit,  "exit");
+-	} else {
+-		sc->bpf_prog.sys_enter = sc->bpf_prog.sys_exit = trace->syscalls.unaugmented_prog;
+-	}
++	sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_enter : NULL, "enter");
++	sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_exit  : NULL,  "exit");
  }
  
-+SEC("!syscalls:sys_enter_renameat")
-+int sys_enter_renameat(struct syscall_enter_args *args)
-+{
-+	int key = 0;
-+	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	const void *oldpath_arg = (const void *)args->args[1],
-+		   *newpath_arg = (const void *)args->args[3];
-+	unsigned int len = sizeof(augmented_args->args), oldpath_len;
-+
-+        if (augmented_args == NULL)
-+                return 1; /* Failure: don't filter */
-+
-+	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
-+	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
-+
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+}
-+
- SEC("raw_syscalls:sys_enter")
- int sys_enter(struct syscall_enter_args *args)
- {
+ static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
 -- 
 2.21.0
