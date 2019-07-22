@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/37] perf bpf: Do not attach a BPF prog to a tracepoint if its name starts with !
-Date: Mon, 22 Jul 2019 14:38:04 -0300
-Message-ID: <20190722173839.22898-3-acme@kernel.org>
+Subject: [PATCH 03/37] perf evsel: Store backpointer to attached bpf_object
+Date: Mon, 22 Jul 2019 14:38:05 -0300
+Message-ID: <20190722173839.22898-4-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,63 +15,111 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-With BPF_MAP_TYPE_PROG_ARRAY + bpf_tail_call() we want to have BPF
-programs, i.e. functions in a object file that perf's BPF loader
-shouldn't try to attach to anything, i.e. "!syscalls:sys_enter_open"
-should just stay there, not be attached to a tracepoint with that name,
-it'll be used by, for instance, 'perf trace' to associate with syscalls
-that copy, in addition to the syscall raw args, a filename pointed by
-the first arg, i.e. multiple syscalls that need copying the same pointer
-arg in the same way, as a filename, for instance, will share the same
-BPF program/function.
-
-Right now when perf's BPF loader sees a function with a name
-"sys:name" it'll look for a tracepoint and will associate that BPF
-program with it, say:
-
-  SEC("raw_syscalls:sys_enter")
-  int sys_enter(struct syscall_enter_args *args)
-  {
-     //SNIP
-  }
-
-Will crate a perf_evsel tracepoint event and then associate with it that
-BPF program.
-
-This convention at some point will switch to the one used by the BPF
-loader in libbpf, but to experiment with BPF_MAP_TYPE_PROG_ARRAY in
-'perf trace' lets do this, that will not require changing too much
-stuff.
+We may want to get to this bpf_object, to search for other BPF programs,
+etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-lk6dasjr1yf9rtvl292b2hpc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-3y8hrb6lszjfi23vjlic3cib@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/util/bpf-loader.c   | 4 ++--
+ tools/perf/util/bpf-loader.h   | 2 +-
+ tools/perf/util/evsel.c        | 1 +
+ tools/perf/util/evsel.h        | 3 +++
+ tools/perf/util/parse-events.c | 3 ++-
+ 5 files changed, 9 insertions(+), 4 deletions(-)
 
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index c61974a50aa5..6d0dfb777a79 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -763,7 +763,7 @@ int bpf__foreach_event(struct bpf_object *obj,
+ 
+ 		if (priv->is_tp) {
+ 			fd = bpf_program__fd(prog);
+-			err = (*func)(priv->sys_name, priv->evt_name, fd, arg);
++			err = (*func)(priv->sys_name, priv->evt_name, fd, obj, arg);
+ 			if (err) {
+ 				pr_debug("bpf: tracepoint call back failed, stop iterate\n");
+ 				return err;
+@@ -788,7 +788,7 @@ int bpf__foreach_event(struct bpf_object *obj,
+ 				return fd;
+ 			}
+ 
+-			err = (*func)(tev->group, tev->event, fd, arg);
++			err = (*func)(tev->group, tev->event, fd, obj, arg);
+ 			if (err) {
+ 				pr_debug("bpf: call back failed, stop iterate\n");
+ 				return err;
+diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
+index 3f46856e3330..8c3441a4b72c 100644
+--- a/tools/perf/util/bpf-loader.h
++++ b/tools/perf/util/bpf-loader.h
+@@ -46,7 +46,7 @@ struct parse_events_term;
+ #define PERF_BPF_PROBE_GROUP "perf_bpf_probe"
+ 
+ typedef int (*bpf_prog_iter_callback_t)(const char *group, const char *event,
+-					int fd, void *arg);
++					int fd, struct bpf_object *obj, void *arg);
+ 
+ #ifdef HAVE_LIBBPF_SUPPORT
+ struct bpf_object *bpf__prepare_load(const char *filename, bool source);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ebb46da4dfe5..b787ec778049 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -234,6 +234,7 @@ void perf_evsel__init(struct perf_evsel *evsel,
+ 	evsel->scale	   = 1.0;
+ 	evsel->max_events  = ULONG_MAX;
+ 	evsel->evlist	   = NULL;
++	evsel->bpf_obj	   = NULL;
+ 	evsel->bpf_fd	   = -1;
+ 	INIT_LIST_HEAD(&evsel->node);
+ 	INIT_LIST_HEAD(&evsel->config_terms);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index cad54e8ba522..b27935a6d36c 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -82,6 +82,8 @@ enum perf_tool_event {
+ 	PERF_TOOL_DURATION_TIME = 1,
+ };
+ 
++struct bpf_object;
++
+ /** struct perf_evsel - event selector
+  *
+  * @evlist - evlist this evsel is in, if it is in one.
+@@ -152,6 +154,7 @@ struct perf_evsel {
+ 	char			*group_name;
+ 	bool			cmdline_group_boundary;
+ 	struct list_head	config_terms;
++	struct bpf_object	*bpf_obj;
+ 	int			bpf_fd;
+ 	bool			auto_merge_stats;
+ 	bool			merged_stat;
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 371ff3aee769..fac6b32ef94a 100644
+index fac6b32ef94a..0540303e5e97 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -639,6 +639,15 @@ static int add_bpf_event(const char *group, const char *event, int fd,
- 	struct list_head *list = param->list;
- 	struct perf_evsel *pos;
- 	int err;
-+	/*
-+	 * Check if we should add the event, i.e. if it is a TP but starts with a '!',
-+	 * then don't add the tracepoint, this will be used for something else, like
-+	 * adding to a BPF_MAP_TYPE_PROG_ARRAY.
-+	 *
-+	 * See tools/perf/examples/bpf/augmented_raw_syscalls.c
-+	 */
-+	if (group[0] == '!')
-+		return 0;
+@@ -630,7 +630,7 @@ struct __add_bpf_event_param {
+ 	struct list_head *head_config;
+ };
  
- 	pr_debug("add bpf event %s:%s and attach bpf program %d\n",
- 		 group, event, fd);
+-static int add_bpf_event(const char *group, const char *event, int fd,
++static int add_bpf_event(const char *group, const char *event, int fd, struct bpf_object *obj,
+ 			 void *_param)
+ {
+ 	LIST_HEAD(new_evsels);
+@@ -672,6 +672,7 @@ static int add_bpf_event(const char *group, const char *event, int fd,
+ 		pr_debug("adding %s:%s to %p\n",
+ 			 group, event, pos);
+ 		pos->bpf_fd = fd;
++		pos->bpf_obj = obj;
+ 	}
+ 	list_splice(&new_evsels, list);
+ 	return 0;
 -- 
 2.21.0
