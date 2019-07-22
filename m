@@ -1,140 +1,90 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/37] perf session: Fix loading of compressed data split across adjacent records
-Date: Mon, 22 Jul 2019 14:38:30 -0300
-Message-ID: <20190722173839.22898-29-acme@kernel.org>
+Subject: [PATCH 29/37] perf trace beauty: Add BPF augmenter for the 'rename' syscall
+Date: Mon, 22 Jul 2019 14:38:31 -0300
+Message-ID: <20190722173839.22898-30-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fix decompression failure found during the loading of compressed trace
-collected on larger scale systems (>48 cores).
+I.e. two strings:
 
-The error happened due to lack of decompression space for a mmaped
-buffer data chunk split across adjacent PERF_RECORD_COMPRESSED records.
+  # perf trace -e rename
+  systemd/1 rename("/run/systemd/units/.#invocation:dnf-makecache.service970761b7f2840dcc", "/run/systemd/units/invocation:dnf-makecache.service") = 0
+  systemd-journa/715 rename("/run/systemd/journal/streams/.#9:17539785BJDblc", "/run/systemd/journal/streams/9:17539785") = 0
+  mv/1936 rename("/tmp/build/perf/fd/.array.o.tmp", "/tmp/build/perf/fd/.array.o.cmd") = 0
+  sh/1949 rename("/tmp/build/perf/.cpu.o.tmp", "/tmp/build/perf/.cpu.o.cmd") = 0
+  mv/1954 rename("/tmp/build/perf/fs/.tracing_path.o.tmp", "/tmp/build/perf/fs/.tracing_path.o.cmd") = 0
+  mv/1963 rename("/tmp/build/perf/common-cmds.h+", "/tmp/build/perf/common-cmds.h") = 0
+  :1975/1975 rename("/tmp/build/perf/.exec-cmd.o.tmp", "/tmp/build/perf/.exec-cmd.o.cmd") = 0
+  mv/1979 rename("/tmp/build/perf/fs/.fs.o.tmp", "/tmp/build/perf/fs/.fs.o.cmd") = 0
+  mv/2005 rename("/tmp/build/perf/.debug.o.tmp", "/tmp/build/perf/.debug.o.cmd") = 0
+  mv/2012 rename("/tmp/build/perf/.str_error_r.o.tmp", "/tmp/build/perf/.str_error_r.o.cmd") = 0
+  mv/2019 rename("/tmp/build/perf/.help.o.tmp", "/tmp/build/perf/.help.o.cmd") = 0
+  mv/2031 rename("/tmp/build/perf/.trace-seq.o.tmp", "/tmp/build/perf/.trace-seq.o.cmd") = 0
+  make/2038  ... [continued]: rename())             = 0
+  :2038/2038 rename("/tmp/build/perf/.event-plugin.o.tmp", "/tmp/build/perf/.event-plugin.o.cmd") ...
+  ar/2035 rename("/tmp/build/perf/stzwBX3a", "/tmp/build/perf/libapi.a") = 0
+  mv/2051 rename("/tmp/build/perf/.parse-utils.o.tmp", "/tmp/build/perf/.parse-utils.o.cmd") = 0
+  mv/2069 rename("/tmp/build/perf/.subcmd-config.o.tmp", "/tmp/build/perf/.subcmd-config.o.cmd") = 0
+  make/2080 rename("/tmp/build/perf/.parse-filter.o.tmp", "/tmp/build/perf/.parse-filter.o.cmd") = 0
+  mv/2099 rename("/tmp/build/perf/.pager.o.tmp", "/tmp/build/perf/.pager.o.cmd") = 0
+  :2124/2124 rename("/tmp/build/perf/.sigchain.o.tmp", "/tmp/build/perf/.sigchain.o.cmd") = 0
+  make/2140 rename("/tmp/build/perf/.event-parse.o.tmp", "/tmp/build/perf/.event-parse.o.cmd") = 0
+  mv/2164 rename("/tmp/build/perf/.kbuffer-parse.o.tmp", "/tmp/build/perf/.kbuffer-parse.o.cmd") = 0
+  sh/2174 rename("/tmp/build/perf/.run-command.o.tmp", "/tmp/build/perf/.run-command.o.cmd") = 0
+  mv/2190 rename("/tmp/build/perf/.tep_strerror.o.tmp", "/tmp/build/perf/.tep_strerror.o.cmd") = 0
+  :2261/2261 rename("/tmp/build/perf/.event-parse-api.o.tmp", "/tmp/build/perf/.event-parse-api.o.cmd") = 0
+  :2480/2480 rename("/tmp/build/perf/stLv3kG2", "/tmp/build/perf/libtraceevent.a") = 0
+  ^C#
 
-  $ perf report -i bt.16384.data --stats
-  failed to decompress (B): 63869 -> 0 : Destination buffer is too small
-  user stack dump failure
-  Can't parse sample, err = -14
-  0x2637e436 [0x4080]: failed to process type: 9
-  Error:
-  failed to process sample
-
-  $ perf test 71
-  71: Zstd perf.data compression/decompression              : Ok
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/4d839e1b-9c48-89c4-9702-a12217420611@linux.intel.com
+Link: https://lkml.kernel.org/n/tip-6hh2rl27uri6gsxhmk6q3hx5@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 22 ++++++++++++++--------
- tools/perf/util/session.h |  1 +
- tools/perf/util/zstd.c    |  4 ++--
- 3 files changed, 17 insertions(+), 10 deletions(-)
+ .../examples/bpf/augmented_raw_syscalls.c     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d0fd6c614e68..37efa1f43d8b 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -36,10 +36,16 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	void *src;
- 	size_t decomp_size, src_size;
- 	u64 decomp_last_rem = 0;
--	size_t decomp_len = session->header.env.comp_mmap_len;
-+	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
- 	struct decomp *decomp, *decomp_last = session->decomp_last;
- 
--	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-+	if (decomp_last) {
-+		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		decomp_len += decomp_last_rem;
-+	}
-+
-+	mmap_len = sizeof(struct decomp) + decomp_len;
-+	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
- 		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
- 	if (decomp == MAP_FAILED) {
- 		pr_err("Couldn't allocate memory for decompression\n");
-@@ -47,10 +53,10 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	}
- 
- 	decomp->file_pos = file_offset;
-+	decomp->mmap_len = mmap_len;
- 	decomp->head = 0;
- 
--	if (decomp_last) {
--		decomp_last_rem = decomp_last->size - decomp_last->head;
-+	if (decomp_last_rem) {
- 		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
- 		decomp->size = decomp_last_rem;
- 	}
-@@ -61,7 +67,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
- 	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
- 				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
- 	if (!decomp_size) {
--		munmap(decomp, sizeof(struct decomp) + decomp_len);
-+		munmap(decomp, mmap_len);
- 		pr_err("Couldn't decompress data\n");
- 		return -1;
- 	}
-@@ -255,15 +261,15 @@ static void perf_session__delete_threads(struct perf_session *session)
- static void perf_session__release_decomp_events(struct perf_session *session)
- {
- 	struct decomp *next, *decomp;
--	size_t decomp_len;
-+	size_t mmap_len;
- 	next = session->decomp;
--	decomp_len = session->header.env.comp_mmap_len;
- 	do {
- 		decomp = next;
- 		if (decomp == NULL)
- 			break;
- 		next = decomp->next;
--		munmap(decomp, decomp_len + sizeof(struct decomp));
-+		mmap_len = decomp->mmap_len;
-+		munmap(decomp, mmap_len);
- 	} while (1);
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 9c2228b01ee6..79787cf4fce9 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -197,6 +197,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
+ 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
  }
  
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index dd8920b745bc..863dbad87849 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -46,6 +46,7 @@ struct perf_session {
- struct decomp {
- 	struct decomp *next;
- 	u64 file_pos;
-+	size_t mmap_len;
- 	u64 head;
- 	size_t size;
- 	char data[];
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index 23bdb9884576..d2202392ffdb 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -99,8 +99,8 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
- 	while (input.pos < input.size) {
- 		ret = ZSTD_decompressStream(data->dstream, &output, &input);
- 		if (ZSTD_isError(ret)) {
--			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
--			       src_size, output.size, ZSTD_getErrorName(ret));
-+			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
-+			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
- 			break;
- 		}
- 		output.dst  = dst + output.pos;
++SEC("!syscalls:sys_enter_rename")
++int sys_enter_rename(struct syscall_enter_args *args)
++{
++	int key = 0;
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
++	const void *oldpath_arg = (const void *)args->args[0],
++		   *newpath_arg = (const void *)args->args[1];
++	unsigned int len = sizeof(augmented_args->args), oldpath_len;
++
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
++	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
++}
++
+ SEC("!syscalls:sys_enter_renameat")
+ int sys_enter_renameat(struct syscall_enter_args *args)
+ {
 -- 
 2.21.0
