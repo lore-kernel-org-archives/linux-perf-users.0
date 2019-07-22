@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/37] perf trace: Allow specifying the bpf prog to augment specific syscalls
-Date: Mon, 22 Jul 2019 14:38:10 -0300
-Message-ID: <20190722173839.22898-9-acme@kernel.org>
+Subject: [PATCH 09/37] perf trace: Put the per-syscall entry/exit prog_array BPF map infrastructure in place
+Date: Mon, 22 Jul 2019 14:38:11 -0300
+Message-ID: <20190722173839.22898-10-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,160 +15,191 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This is a step in the direction of being able to use a
-BPF_MAP_TYPE_PROG_ARRAY to handle syscalls that need to copy pointer
-payloads in addition to the raw tracepoint syscall args.
+I.e. look for "syscalls_sys_enter" and "syscalls_sys_exit" BPF maps of
+type PROG_ARRAY and populate it with the handlers as specified per
+syscall, for now only 'open' is wiring it to something, in time all
+syscalls that need to copy arguments entering a syscall or returning
+from one will set these to the right handlers, reusing when possible
+pre-existing ones.
 
-There is a first example in
-tools/perf/examples/bpf/augmented_raw_syscalls.c for the 'open' syscall.
-
-Next step is to introduce the prog array map and use this 'open'
-augmenter, then use that augmenter in other syscalls that also only copy
-the first arg as a string, and then show how to use with a syscall that
-reads more than one filename, like 'rename', etc.
+Next step is to use bpf_tail_call() into that.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-pys4v57x5qqrybb4cery2mc8@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-t0p4u43i9vbpzs1xtowna3gb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c                    | 50 ++++++++++++++++++-
- .../examples/bpf/augmented_raw_syscalls.c     | 23 +++++++++
- 2 files changed, 71 insertions(+), 2 deletions(-)
+ tools/perf/builtin-trace.c                    | 76 ++++++++++++++++++-
+ .../examples/bpf/augmented_raw_syscalls.c     | 14 ++++
+ 2 files changed, 86 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 07df952a0d7f..6cc696edf24a 100644
+index 6cc696edf24a..fb8b8e78d7b5 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -690,6 +690,10 @@ struct syscall_arg_fmt {
- static struct syscall_fmt {
- 	const char *name;
- 	const char *alias;
-+	struct {
-+		const char *sys_enter,
-+			   *sys_exit;
-+	}	   bpf_prog_name;
- 	struct syscall_arg_fmt arg[6];
- 	u8	   nr_args;
- 	bool	   errpid;
-@@ -823,6 +827,7 @@ static struct syscall_fmt {
- 	{ .name	    = "newfstatat",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
- 	{ .name	    = "open",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_open", },
- 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "open_by_handle_at",
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
-@@ -967,6 +972,10 @@ struct syscall {
- 	struct tep_event    *tp_format;
- 	int		    nr_args;
- 	int		    args_size;
-+	struct {
-+		struct bpf_program *sys_enter,
-+				   *sys_exit;
-+	}		    bpf_prog;
- 	bool		    is_exit;
- 	bool		    is_open;
- 	struct tep_format_field *args;
-@@ -2742,6 +2751,39 @@ static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace,
- 	return bpf_object__find_program_by_title(trace->bpf_obj, name);
+@@ -1,4 +1,3 @@
+-// SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * builtin-trace.c
+  *
+@@ -83,6 +82,10 @@ struct trace {
+ 		int		max;
+ 		struct syscall  *table;
+ 		struct bpf_map  *map;
++		struct { // per syscall BPF_MAP_TYPE_PROG_ARRAY
++			struct bpf_map  *sys_enter,
++					*sys_exit;
++		}		prog_array;
+ 		struct {
+ 			struct perf_evsel *sys_enter,
+ 					  *sys_exit,
+@@ -1619,6 +1622,22 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 	goto out;
  }
  
-+static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, struct syscall *sc,
-+							const char *prog_name, const char *type)
++static __maybe_unused bool trace__syscall_enabled(struct trace *trace, int id)
 +{
-+	struct bpf_program *prog;
++	bool in_ev_qualifier;
 +
-+	if (prog_name == NULL)
-+		goto out_unaugmented;
++	if (trace->ev_qualifier_ids.nr == 0)
++		return true;
 +
-+	prog = trace__find_bpf_program_by_title(trace, prog_name);
-+	if (prog != NULL)
-+		return prog;
++	in_ev_qualifier = bsearch(&id, trace->ev_qualifier_ids.entries,
++				  trace->ev_qualifier_ids.nr, sizeof(int), intcmp) != NULL;
 +
-+	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
-+		 prog_name, type, sc->name);
-+out_unaugmented:
-+	return trace->syscalls.unaugmented_prog;
++	if (in_ev_qualifier)
++	       return !trace->not_ev_qualifier;
++
++	return trace->not_ev_qualifier;
 +}
 +
-+static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+ /*
+  * args is to be interpreted as a series of longs but we need to handle
+  * 8-byte unaligned accesses. args points to raw_data within the event
+@@ -2784,6 +2803,18 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+ 	}
+ }
+ 
++static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
 +{
 +	struct syscall *sc = trace__syscall_info(trace, NULL, id);
++	return sc ? bpf_program__fd(sc->bpf_prog.sys_enter) : bpf_program__fd(trace->syscalls.unaugmented_prog);
++}
 +
-+	if (sc == NULL)
-+		return;
-+
-+	if (sc->fmt != NULL) {
-+		sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_enter, "enter");
-+		sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_exit,  "exit");
-+	} else {
-+		sc->bpf_prog.sys_enter = sc->bpf_prog.sys_exit = trace->syscalls.unaugmented_prog;
-+	}
++static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
++{
++	struct syscall *sc = trace__syscall_info(trace, NULL, id);
++	return sc ? bpf_program__fd(sc->bpf_prog.sys_exit) : bpf_program__fd(trace->syscalls.unaugmented_prog);
 +}
 +
  static void trace__init_bpf_map_syscall_args(struct trace *trace, int id, struct bpf_map_syscall_entry *entry)
  {
  	struct syscall *sc = trace__syscall_info(trace, NULL, id);
-@@ -2773,8 +2815,10 @@ static int trace__set_ev_qualifier_bpf_filter(struct trace *trace)
- 	for (i = 0; i < trace->ev_qualifier_ids.nr; ++i) {
- 		int key = trace->ev_qualifier_ids.entries[i];
- 
--		if (value.enabled)
-+		if (value.enabled) {
- 			trace__init_bpf_map_syscall_args(trace, key, &value);
-+			trace__init_syscall_bpf_progs(trace, key);
-+		}
- 
- 		err = bpf_map_update_elem(fd, &key, &value, BPF_EXIST);
- 		if (err)
-@@ -2793,8 +2837,10 @@ static int __trace__init_syscalls_bpf_map(struct trace *trace, bool enabled)
+@@ -2837,10 +2868,8 @@ static int __trace__init_syscalls_bpf_map(struct trace *trace, bool enabled)
  	int err = 0, key;
  
  	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
--		if (enabled)
-+		if (enabled) {
+-		if (enabled) {
++		if (enabled)
  			trace__init_bpf_map_syscall_args(trace, key, &value);
-+			trace__init_syscall_bpf_progs(trace, key);
-+		}
+-			trace__init_syscall_bpf_progs(trace, key);
+-		}
  
  		err = bpf_map_update_elem(fd, &key, &value, BPF_ANY);
  		if (err)
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index 48a536b1be6d..66b33b299349 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -94,6 +94,29 @@ int syscall_unaugmented(struct syscall_enter_args *args)
- 	return 1;
+@@ -2859,6 +2888,34 @@ static int trace__init_syscalls_bpf_map(struct trace *trace)
+ 
+ 	return __trace__init_syscalls_bpf_map(trace, enabled);
+ }
++
++static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
++{
++	int map_enter_fd = bpf_map__fd(trace->syscalls.prog_array.sys_enter),
++	    map_exit_fd  = bpf_map__fd(trace->syscalls.prog_array.sys_exit);
++	int err = 0, key;
++
++	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
++		int prog_fd;
++
++		if (!trace__syscall_enabled(trace, key))
++			continue;
++
++		trace__init_syscall_bpf_progs(trace, key);
++
++		// It'll get at least the "!raw_syscalls:unaugmented"
++		prog_fd = trace__bpf_prog_sys_enter_fd(trace, key);
++		err = bpf_map_update_elem(map_enter_fd, &key, &prog_fd, BPF_ANY);
++		if (err)
++			break;
++		prog_fd = trace__bpf_prog_sys_exit_fd(trace, key);
++		err = bpf_map_update_elem(map_exit_fd, &key, &prog_fd, BPF_ANY);
++		if (err)
++			break;
++	}
++
++	return err;
++}
+ #else
+ static int trace__set_ev_qualifier_bpf_filter(struct trace *trace __maybe_unused)
+ {
+@@ -2875,6 +2932,11 @@ static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace
+ {
+ 	return NULL;
+ }
++
++static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace __maybe_unused)
++{
++	return 0;
++}
+ #endif // HAVE_LIBBPF_SUPPORT
+ 
+ static int trace__set_ev_qualifier_filter(struct trace *trace)
+@@ -3129,6 +3191,10 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (trace->syscalls.map)
+ 		trace__init_syscalls_bpf_map(trace);
+ 
++	if (trace->syscalls.prog_array.sys_enter)
++		trace__init_syscalls_bpf_prog_array_maps(trace);
++
++
+ 	if (trace->ev_qualifier_ids.nr > 0) {
+ 		err = trace__set_ev_qualifier_filter(trace);
+ 		if (err < 0)
+@@ -3754,6 +3820,8 @@ static void trace__set_bpf_map_filtered_pids(struct trace *trace)
+ static void trace__set_bpf_map_syscalls(struct trace *trace)
+ {
+ 	trace->syscalls.map = trace__find_bpf_map_by_name(trace, "syscalls");
++	trace->syscalls.prog_array.sys_enter = trace__find_bpf_map_by_name(trace, "syscalls_sys_enter");
++	trace->syscalls.prog_array.sys_exit  = trace__find_bpf_map_by_name(trace, "syscalls_sys_exit");
  }
  
+ static int trace__config(const char *var, const char *value, void *arg)
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 66b33b299349..c66474a6ccf4 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -33,6 +33,20 @@ struct syscall {
+ 
+ bpf_map(syscalls, ARRAY, int, struct syscall, 512);
+ 
 +/*
-+ * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
-+ * augmented_filename_map what was read by that raw_syscalls:sys_enter and go
-+ * on from there, reading the first syscall arg as a string, i.e. open's
-+ * filename.
++ * What to augment at entry?
++ *
++ * Pointer arg payloads (filenames, etc) passed from userspace to the kernel
 + */
-+SEC("!syscalls:sys_enter_open")
-+int sys_enter_open(struct syscall_enter_args *args)
-+{
-+	int key = 0;
-+	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	const void *filename_arg = (const void *)args->args[0];
-+	unsigned int len = sizeof(augmented_args->args);
++bpf_map(syscalls_sys_enter, PROG_ARRAY, u32, u32, 512);
 +
-+        if (augmented_args == NULL)
-+                return 1; /* Failure: don't filter */
++/*
++ * What to augment at exit?
++ *
++ * Pointer arg payloads returned from the kernel (struct stat, etc) to userspace.
++ */
++bpf_map(syscalls_sys_exit, PROG_ARRAY, u32, u32, 512);
 +
-+	len += augmented_filename__read(&augmented_args->filename, filename_arg, sizeof(augmented_args->filename.value));
-+
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
-+}
-+
- SEC("raw_syscalls:sys_enter")
- int sys_enter(struct syscall_enter_args *args)
- {
+ struct syscall_enter_args {
+ 	unsigned long long common_tp_fields;
+ 	long		   syscall_nr;
 -- 
 2.21.0
