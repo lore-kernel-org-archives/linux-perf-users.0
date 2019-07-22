@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/37] perf trace beauty: Disable fd->pathname when close() not enabled
-Date: Mon, 22 Jul 2019 14:38:25 -0300
-Message-ID: <20190722173839.22898-24-acme@kernel.org>
+Subject: [PATCH 24/37] perf trace beauty: Do not try to use the fd->pathname beautifier for bind/connect fd arg
+Date: Mon, 22 Jul 2019 14:38:26 -0300
+Message-ID: <20190722173839.22898-25-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,83 +15,51 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As we invalidate the fd->pathname table in the SCA_CLOSE_FD beautifier,
-if we don't have it we may end up keeping an fd->pathname association
-that then gets misprinted.
+Doesn't make sense and also we now beautify the sockaddr, which provides
+enough info:
 
-The previous behaviour continues when the close() syscall is enabled,
-which may still be a a problem if we lose records (i.e. we may lose a
-'close' record and then get that fd reused by socket()) but then the
-tool will notify that records are being lost and the user will be warned
-that some of the heuristics will fall apart.
+  # trace -e close,socket,connec* ssh www.bla.com
+  <SNIP>
+  close(5)                                = 0
+  socket(PF_INET, SOCK_DGRAM|CLOEXEC|NONBLOCK, IPPROTO_IP) = 5
+  connect(5, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 16) = 0
+  close(5)                                = 0
+  socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) = 5
+  ^C#
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-b7t6h8sq9lebemvfy2zh3qq1@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-h9drpb7ail808d2mh4n7tla4@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ tools/perf/builtin-trace.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 123d7efc12e8..94c33bb573c1 100644
+index 94c33bb573c1..010aa9e9a561 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -127,6 +127,7 @@ struct trace {
- 	unsigned int		min_stack;
- 	int			raw_augmented_syscalls_args_size;
- 	bool			raw_augmented_syscalls;
-+	bool			fd_path_disabled;
- 	bool			sort_events;
- 	bool			not_ev_qualifier;
- 	bool			live;
-@@ -1178,7 +1179,7 @@ static const char *thread__fd_path(struct thread *thread, int fd,
- {
- 	struct thread_trace *ttrace = thread__priv(thread);
- 
--	if (ttrace == NULL)
-+	if (ttrace == NULL || trace->fd_path_disabled)
- 		return NULL;
- 
- 	if (fd < 0)
-@@ -2097,7 +2098,7 @@ static int trace__sys_exit(struct trace *trace, struct perf_evsel *evsel,
- 
- 	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
- 
--	if (sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
-+	if (!trace->fd_path_disabled && sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
- 		trace__set_fd_pathname(thread, ret, ttrace->filename.name);
- 		ttrace->filename.pending_open = false;
- 		++trace->stats.vfs_getname;
-@@ -3206,7 +3207,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	if (trace->syscalls.prog_array.sys_enter)
- 		trace__init_syscalls_bpf_prog_array_maps(trace);
- 
--
- 	if (trace->ev_qualifier_ids.nr > 0) {
- 		err = trace__set_ev_qualifier_filter(trace);
- 		if (err < 0)
-@@ -3218,6 +3218,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		}
- 	}
- 
-+	/*
-+	 * If the "close" syscall is not traced, then we will not have the
-+	 * opportunity to, in syscall_arg__scnprintf_close_fd() invalidate the
-+	 * fd->pathname table and were ending up showing the last value set by
-+	 * syscalls opening a pathname and associating it with a descriptor or
-+	 * reading it from /proc/pid/fd/ in cases where that doesn't make
-+	 * sense.
-+	 *
-+	 *  So just disable this beautifier (SCA_FD, SCA_FDAT) when 'close' is
-+	 *  not in use.
-+	 */
-+	trace->fd_path_disabled = !trace__syscall_enabled(trace, syscalltbl__id(trace->sctbl, "close"));
-+
- 	err = perf_evlist__apply_filters(evlist, &evsel);
- 	if (err < 0)
- 		goto out_error_apply_filters;
+@@ -710,7 +710,8 @@ static struct syscall_fmt {
+ 	  .arg = { [0] = { .scnprintf = SCA_X86_ARCH_PRCTL_CODE, /* code */ },
+ 		   [1] = { .scnprintf = SCA_PTR, /* arg2 */ }, }, },
+ 	{ .name	    = "bind",
+-	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ }, }, },
++	  .arg = { [0] = { .scnprintf = SCA_INT, /* fd */ },
++		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ }, }, },
+ 	{ .name	    = "bpf",
+ 	  .arg = { [0] = STRARRAY(cmd, bpf_cmd), }, },
+ 	{ .name	    = "brk",	    .hexret = true,
+@@ -726,7 +727,8 @@ static struct syscall_fmt {
+ 	{ .name	    = "close",
+ 	  .arg = { [0] = { .scnprintf = SCA_CLOSE_FD, /* fd */ }, }, },
+ 	{ .name	    = "connect",
+-	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ },
++	  .arg = { [0] = { .scnprintf = SCA_INT, /* fd */ },
++		   [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ },
+ 		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
+ 	{ .name	    = "epoll_ctl",
+ 	  .arg = { [1] = STRARRAY(op, epoll_ctl_ops), }, },
 -- 
 2.21.0
