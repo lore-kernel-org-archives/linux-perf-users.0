@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/37] perf trace beauty: Beautify 'sendto's sockaddr arg
-Date: Mon, 22 Jul 2019 14:38:27 -0300
-Message-ID: <20190722173839.22898-26-acme@kernel.org>
+Subject: [PATCH 26/37] perf trace beauty: Beautify bind's sockaddr arg
+Date: Mon, 22 Jul 2019 14:38:28 -0300
+Message-ID: <20190722173839.22898-27-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,69 +15,53 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-By just writing the collector in the augmented_raw_syscalls.c BPF
-program:
+By reusing the "connect" BPF collector.
 
-  # perf trace -e sendto
-  <SNIP>
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  Socket Thread/3573 sendto(247, 0x7fb32d49c000, 120, NONE, { .family: PF_UNSPEC }, NULL) = 120
-  DNS Res~er #18/11374 sendto(242, 0x7fb342cfe420, 20, NONE, { .family: PF_NETLINK }, 0xc) = 20
-  DNS Res~er #18/11374 sendto(242, 0x7fb342cfcca0, 42, MSG_NOSIGNAL, { .family: PF_UNSPEC }, NULL) = 42
-  DNS Res~er #18/11374 sendto(242, 0x7fb342cfcccc, 42, MSG_NOSIGNAL, { .family: PF_UNSPEC }, NULL) = 42
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  Socket Thread/3573 sendto(242, 0x7fb308bb1c08, 296, NONE, { .family: PF_UNSPEC }, NULL) = 296
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ping/23492 sendto(3, 0x56253bbef700, 64, NONE, { .family: PF_INET, port: 0, addr: 10.10.161.32 }, 0x10) = 64
-  ^C
-  #
+Testing it system wide and stopping/starting sshd:
+
+  # perf trace -e bind
+  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
+  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #19/4833 bind(247, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #18/10327 bind(258, { .family: PF_NETLINK }, 12)  = 0
+  :6507/6507 bind(24, { .family: PF_NETLINK }, 12)   = 0
+  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #18/15132 bind(242, { .family: PF_NETLINK }, 12)  = 0
+  sshd/6514 bind(3, { .family: PF_NETLINK }, 12)    = 0
+  sshd/6514 bind(5, { .family: PF_INET, port: 22, addr: 0.0.0.0 }, 16) = 0
+  sshd/6514 bind(7, { .family: PF_INET6, port: 22, addr: :: }, 28) = 0
+  DNS Res~er #18/10327 bind(229, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #18/15132 bind(231, { .family: PF_NETLINK }, 12)  = 0
+  DNS Res~er #19/4833 bind(229, { .family: PF_NETLINK }, 12)  = 0
+  ^C#
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-p0l0rlvq19v5zf8qc2x2itow@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-m2hmxqrckxxw2ciki0tu889u@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/perf/builtin-trace.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index d7a292d7ee2f..9c2228b01ee6 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -142,6 +142,27 @@ int sys_enter_connect(struct syscall_enter_args *args)
- 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
- }
- 
-+SEC("!syscalls:sys_enter_sendto")
-+int sys_enter_sendto(struct syscall_enter_args *args)
-+{
-+	int key = 0;
-+	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
-+	const void *sockaddr_arg = (const void *)args->args[4];
-+	unsigned int socklen = args->args[5];
-+	unsigned int len = sizeof(augmented_args->args);
-+
-+        if (augmented_args == NULL)
-+                return 1; /* Failure: don't filter */
-+
-+	if (socklen > sizeof(augmented_args->saddr))
-+		socklen = sizeof(augmented_args->saddr);
-+
-+	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
-+
-+	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
-+}
-+
- SEC("!syscalls:sys_enter_open")
- int sys_enter_open(struct syscall_enter_args *args)
- {
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 010aa9e9a561..d403b09812d1 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -710,8 +710,10 @@ static struct syscall_fmt {
+ 	  .arg = { [0] = { .scnprintf = SCA_X86_ARCH_PRCTL_CODE, /* code */ },
+ 		   [1] = { .scnprintf = SCA_PTR, /* arg2 */ }, }, },
+ 	{ .name	    = "bind",
++	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_connect", },
+ 	  .arg = { [0] = { .scnprintf = SCA_INT, /* fd */ },
+-		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ }, }, },
++		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ },
++		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
+ 	{ .name	    = "bpf",
+ 	  .arg = { [0] = STRARRAY(cmd, bpf_cmd), }, },
+ 	{ .name	    = "brk",	    .hexret = true,
 -- 
 2.21.0
