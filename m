@@ -1,52 +1,64 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/37] perf trace: Add "sendfile64" alias to the "sendfile" syscall
-Date: Mon, 22 Jul 2019 14:38:36 -0300
-Message-ID: <20190722173839.22898-35-acme@kernel.org>
+Subject: [PATCH 35/37] perf probe: Set pev->nargs to zero after freeing pev->args entries
+Date: Mon, 22 Jul 2019 14:38:37 -0300
+Message-ID: <20190722173839.22898-36-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190722173839.22898-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We were looking in tracefs for:
+So that, when perf_add_probe_events() fails, like in:
 
-  /sys/kernel/debug/tracing/events/syscalls/sys_enter_sendfile/format when
+  # perf probe icmp_rcv:64 "type=icmph->type"
+  Failed to find 'icmph' in this function.
+    Error: Failed to add events.
+  Segmentation fault (core dumped)
+  #
 
-what is there is just
+We don't segfault.
 
-  /sys/kernel/debug/tracing/events/syscalls/sys_enter_sendfile/format
+clear_perf_probe_event() was zeroing the whole pev, and since the switch
+to zfree() for the members in the pev, that memset() was removed, which
+left nargs with its original value, in the above case 1.
 
-Its the same id, 40 in x86_64, so just add an alias and let the existing
-logic take care of that.
+With the memset the same pev could be passed to clear_perf_probe_event()
+multiple times, since all it would have would be zeroes, and free()
+accepts zero, the loop would not happen and we would just memset it
+again to zeroes.
+
+Without it we got that segfault, so zero nargs to keep it like it was,
+next cset will avoid calling clear_perf_probe_event() for the same pevs
+in case of failure.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-km2hmg7hru6u4pawi5fi903q@git.kernel.org
+Fixes: d8f9da240495 ("perf tools: Use zfree() where applicable")
+Link: https://lkml.kernel.org/n/tip-802f2jypnwqsvyavvivs8464@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 1 +
+ tools/perf/util/probe-event.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 200fbe33d5de..ca28c48f812e 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -895,6 +895,7 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_SECCOMP_OP,	   /* op */ },
- 		   [1] = { .scnprintf = SCA_SECCOMP_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "select", .timeout = true, },
-+	{ .name	    = "sendfile", .alias = "sendfile64", },
- 	{ .name	    = "sendmmsg",
- 	  .arg = { [3] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "sendmsg",
+diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+index 0c3b55d0617d..4acd3457d39d 100644
+--- a/tools/perf/util/probe-event.c
++++ b/tools/perf/util/probe-event.c
+@@ -2219,6 +2219,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
+ 			field = next;
+ 		}
+ 	}
++	pev->nargs = 0;
+ 	zfree(&pev->args);
+ }
+ 
 -- 
 2.21.0
