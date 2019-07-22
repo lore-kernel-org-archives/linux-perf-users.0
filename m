@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/37] perf probe: Set pev->nargs to zero after freeing pev->args entries
-Date: Mon, 22 Jul 2019 14:38:37 -0300
-Message-ID: <20190722173839.22898-36-acme@kernel.org>
+Subject: [PATCH 36/37] perf probe: Avoid calling freeing routine multiple times for same pointer
+Date: Mon, 22 Jul 2019 14:38:38 -0300
+Message-ID: <20190722173839.22898-37-acme@kernel.org>
 References: <20190722173839.22898-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,51 +14,43 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that, when perf_add_probe_events() fails, like in:
-
-  # perf probe icmp_rcv:64 "type=icmph->type"
-  Failed to find 'icmph' in this function.
-    Error: Failed to add events.
-  Segmentation fault (core dumped)
-  #
-
-We don't segfault.
-
-clear_perf_probe_event() was zeroing the whole pev, and since the switch
-to zfree() for the members in the pev, that memset() was removed, which
-left nargs with its original value, in the above case 1.
-
-With the memset the same pev could be passed to clear_perf_probe_event()
-multiple times, since all it would have would be zeroes, and free()
-accepts zero, the loop would not happen and we would just memset it
-again to zeroes.
-
-Without it we got that segfault, so zero nargs to keep it like it was,
-next cset will avoid calling clear_perf_probe_event() for the same pevs
-in case of failure.
+When perf_add_probe_events() we call cleanup_perf_probe_events() for the
+pev pointer it receives, then, as part of handling this failure the main
+'perf probe' goes on and calls cleanup_params() and that will again call
+cleanup_perf_probe_events()for the same pointer, so just set nevents to
+zero when handling the failure of perf_add_probe_events() to avoid the
+double free.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: d8f9da240495 ("perf tools: Use zfree() where applicable")
-Link: https://lkml.kernel.org/n/tip-802f2jypnwqsvyavvivs8464@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-x8qgma4g813z96dvtw9w219q@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-probe.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 0c3b55d0617d..4acd3457d39d 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -2219,6 +2219,7 @@ void clear_perf_probe_event(struct perf_probe_event *pev)
- 			field = next;
- 		}
- 	}
-+	pev->nargs = 0;
- 	zfree(&pev->args);
- }
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 6418782951a4..3d0ffd41fb55 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -698,6 +698,16 @@ __cmd_probe(int argc, const char **argv)
  
+ 		ret = perf_add_probe_events(params.events, params.nevents);
+ 		if (ret < 0) {
++
++			/*
++			 * When perf_add_probe_events() fails it calls
++			 * cleanup_perf_probe_events(pevs, npevs), i.e.
++			 * cleanup_perf_probe_events(params.events, params.nevents), which
++			 * will call clear_perf_probe_event(), so set nevents to zero
++			 * to avoid cleanup_params() to call clear_perf_probe_event() again
++			 * on the same pevs.
++			 */
++			params.nevents = 0;
+ 			pr_err_with_code("  Error: Failed to add events.", ret);
+ 			return ret;
+ 		}
 -- 
 2.21.0
