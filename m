@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/10] perf stat: Fix segfault for event group in repeat mode
-Date: Tue, 23 Jul 2019 17:05:25 -0300
-Message-ID: <20190723200530.14090-6-acme@kernel.org>
+Subject: [PATCH 06/10] perf stat: Always separate stalled cycles per insn
+Date: Tue, 23 Jul 2019 17:05:26 -0300
+Message-ID: <20190723200530.14090-7-acme@kernel.org>
 References: <20190723200530.14090-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,89 +9,51 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190723200530.14090-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Numfor Mbiziwo-Tiapo <nums@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, Mark Drayton <mbd@fb.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-Numfor Mbiziwo-Tiapo reported segfault on stat of event group in repeat
-mode:
+The "stalled cycles per insn" is appended to "instructions" when the CPU
+has this hardware counter directly. We should always make it a separate
+line, which also aligns to the output when we hit the "if (total &&
+avg)" branch.
 
-  # perf stat -e '{cycles,instructions}' -r 10 ls
+Before:
 
-It's caused by memory corruption due to not cleaned evsel's id array and
-index, which needs to be rebuilt in every stat iteration. Currently the
-ids index grows, while the array (which is also not freed) has the same
-size.
+  $ sudo perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  4565048704,,instructions,64114578096,100.00,1.34,insn per cycle,,
+  3396325133,,cycles,64146628546,100.00,,
 
-Fixing this by releasing id array and zeroing ids index in
-perf_evsel__close function.
+After:
 
-We also need to keep the evsel_list alive for stat record (which is
-disabled in repeat mode).
+  $ sudo ./tools/perf/perf stat --all-cpus --field-separator , --log-fd 1 -einstructions,cycles -- sleep 1
+  6721924,,instructions,24026790339,100.00,0.22,insn per cycle
+  ,,,,,0.00,stalled cycles per insn
+  30939953,,cycles,24025512526,100.00,,
 
-Reported-by: Numfor Mbiziwo-Tiapo <nums@google.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Mark Drayton <mbd@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190715142121.GC6032@krava
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190517221039.8975-1-xiyou.wangcong@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 9 ++++++++-
- tools/perf/util/evsel.c   | 2 ++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-shadow.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b55a534b4de0..352cf39d7c2f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -607,7 +607,13 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 	 * group leaders.
- 	 */
- 	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
--	perf_evlist__close(evsel_list);
-+
-+	/*
-+	 * We need to keep evsel_list alive, because it's processed
-+	 * later the evsel_list will be closed after.
-+	 */
-+	if (!STAT_RECORD)
-+		perf_evlist__close(evsel_list);
- 
- 	return WEXITSTATUS(status);
- }
-@@ -1997,6 +2003,7 @@ int cmd_stat(int argc, const char **argv)
- 			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 656065af4971..accb1bf1cfd8 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -819,7 +819,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 					"stalled cycles per insn",
+ 					ratio);
+ 		} else if (have_frontend_stalled) {
+-			print_metric(config, ctxp, NULL, NULL,
++			out->new_line(config, ctxp);
++			print_metric(config, ctxp, NULL, "%7.2f ",
+ 				     "stalled cycles per insn", 0);
  		}
- 
-+		perf_evlist__close(evsel_list);
- 		perf_session__delete(perf_stat.session);
- 	}
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ebb46da4dfe5..52459dd5ad0c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
- 	xyarray__delete(evsel->sample_id);
- 	evsel->sample_id = NULL;
- 	zfree(&evsel->id);
-+	evsel->ids = 0;
- }
- 
- static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
-@@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
- 
- 	perf_evsel__close_fd(evsel);
- 	perf_evsel__free_fd(evsel);
-+	perf_evsel__free_id(evsel);
- }
- 
- int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
 -- 
 2.21.0
