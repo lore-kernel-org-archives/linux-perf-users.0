@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/10] perf script: Fix --max-blocks man page description
-Date: Tue, 23 Jul 2019 17:05:21 -0300
-Message-ID: <20190723200530.14090-2-acme@kernel.org>
+Subject: [PATCH 02/10] perf script: Improve man page description of metrics
+Date: Tue, 23 Jul 2019 17:05:22 -0300
+Message-ID: <20190723200530.14090-3-acme@kernel.org>
 References: <20190723200530.14090-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,29 +14,35 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-The --max-blocks description was using the old name brstackasm.  Use
-brstackinsn instead.
+Clarify that a metric is based on events, not referring to itself. Also
+some improvements with the sentences.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lkml.kernel.org/r/20190711181922.18765-1-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20190711181922.18765-3-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-script.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index d4e2e18a5881..042b9e5dcc32 100644
+index 042b9e5dcc32..caaab28f8400 100644
 --- a/tools/perf/Documentation/perf-script.txt
 +++ b/tools/perf/Documentation/perf-script.txt
-@@ -384,7 +384,7 @@ include::itrace.txt[]
- 	perf script --time 0%-10%,30%-40%
+@@ -228,11 +228,11 @@ OPTIONS
  
- --max-blocks::
--	Set the maximum number of program blocks to print with brstackasm for
-+	Set the maximum number of program blocks to print with brstackinsn for
- 	each sample.
+ 	With the metric option perf script can compute metrics for
+ 	sampling periods, similar to perf stat. This requires
+-	specifying a group with multiple metrics with the :S option
++	specifying a group with multiple events defining metrics with the :S option
+ 	for perf record. perf will sample on the first event, and
+-	compute metrics for all the events in the group. Please note
++	print computed metrics for all the events in the group. Please note
+ 	that the metric computed is averaged over the whole sampling
+-	period, not just for the sample point.
++	period (since the last sample), not just for the sample point.
  
- --reltime::
+ 	For sample events it's possible to display misc field with -F +misc option,
+ 	following letters are displayed for each bit:
 -- 
 2.21.0
