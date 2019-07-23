@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/10] perf tools: Fix proper buffer size for feature processing
-Date: Tue, 23 Jul 2019 17:05:24 -0300
-Message-ID: <20190723200530.14090-5-acme@kernel.org>
+Subject: [PATCH 05/10] perf stat: Fix segfault for event group in repeat mode
+Date: Tue, 23 Jul 2019 17:05:25 -0300
+Message-ID: <20190723200530.14090-6-acme@kernel.org>
 References: <20190723200530.14090-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,49 +9,89 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190723200530.14090-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Carrillo-Cisneros <davidcc@google.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Numfor Mbiziwo-Tiapo <nums@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, Mark Drayton <mbd@fb.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
 
-After Song Liu's segfault fix for pipe mode, Arnaldo reported following
-error:
+Numfor Mbiziwo-Tiapo reported segfault on stat of event group in repeat
+mode:
 
-  # perf record -o - | perf script
-  0x514 [0x1ac]: failed to process type: 80
+  # perf stat -e '{cycles,instructions}' -r 10 ls
 
-It's caused by wrong buffer size setup in feature processing, which
-makes cpu topology feature fail, because it's using buffer size to
-recognize its header version.
+It's caused by memory corruption due to not cleaned evsel's id array and
+index, which needs to be rebuilt in every stat iteration. Currently the
+ids index grows, while the array (which is also not freed) has the same
+size.
 
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixing this by releasing id array and zeroing ids index in
+perf_evsel__close function.
+
+We also need to keep the evsel_list alive for stat record (which is
+disabled in repeat mode).
+
+Reported-by: Numfor Mbiziwo-Tiapo <nums@google.com>
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Mark Drayton <mbd@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Song Liu <songliubraving@fb.com>
-Fixes: e9def1b2e74e ("perf tools: Add feature header record to pipe-mode")
-Link: http://lkml.kernel.org/r/20190715140426.32509-1-jolsa@kernel.org
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lkml.kernel.org/r/20190715142121.GC6032@krava
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-stat.c | 9 ++++++++-
+ tools/perf/util/evsel.c   | 2 ++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index c24db7f4909c..20111f8da5cb 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3747,7 +3747,7 @@ int perf_event__process_feature(struct perf_session *session,
- 		return 0;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b55a534b4de0..352cf39d7c2f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -607,7 +607,13 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	 * group leaders.
+ 	 */
+ 	read_counters(&(struct timespec) { .tv_nsec = t1-t0 });
+-	perf_evlist__close(evsel_list);
++
++	/*
++	 * We need to keep evsel_list alive, because it's processed
++	 * later the evsel_list will be closed after.
++	 */
++	if (!STAT_RECORD)
++		perf_evlist__close(evsel_list);
  
- 	ff.buf  = (void *)fe->data;
--	ff.size = event->header.size - sizeof(event->header);
-+	ff.size = event->header.size - sizeof(*fe);
- 	ff.ph = &session->header;
+ 	return WEXITSTATUS(status);
+ }
+@@ -1997,6 +2003,7 @@ int cmd_stat(int argc, const char **argv)
+ 			perf_session__write_header(perf_stat.session, evsel_list, fd, true);
+ 		}
  
- 	if (feat_ops[feat].process(&ff, NULL))
++		perf_evlist__close(evsel_list);
+ 		perf_session__delete(perf_stat.session);
+ 	}
+ 
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index ebb46da4dfe5..52459dd5ad0c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1291,6 +1291,7 @@ static void perf_evsel__free_id(struct perf_evsel *evsel)
+ 	xyarray__delete(evsel->sample_id);
+ 	evsel->sample_id = NULL;
+ 	zfree(&evsel->id);
++	evsel->ids = 0;
+ }
+ 
+ static void perf_evsel__free_config_terms(struct perf_evsel *evsel)
+@@ -2077,6 +2078,7 @@ void perf_evsel__close(struct perf_evsel *evsel)
+ 
+ 	perf_evsel__close_fd(evsel);
+ 	perf_evsel__free_fd(evsel);
++	perf_evsel__free_id(evsel);
+ }
+ 
+ int perf_evsel__open_per_cpu(struct perf_evsel *evsel,
 -- 
 2.21.0
