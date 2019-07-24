@@ -1,125 +1,141 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Date: Tue, 23 Jul 2019 23:42:14 +0200
-Message-ID: <20190723214214.GA56614@gmail.com>
-References: <20190723200530.14090-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190723200530.14090-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Denis Bakhvalov <denis.bakhvalov@intel.com>, Numfor Mbiziwo-Tiapo <nums@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/2] perf/record: Fix module size on s390
+Date: Wed, 24 Jul 2019 14:27:02 +0200
+Message-ID: <20190724122703.3996-1-tmricht@linux.ibm.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.ibm.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>, stable@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+On s390 the modules loaded in memory have the text segment
+located after the GOT and Relocation table. This can be seen
+with this output:
+  [root@m35lp76 perf]# fgrep qeth /proc/modules
+  qeth 151552 1 qeth_l2, Live 0x000003ff800b2000
+  ...
+  [root@m35lp76 perf]# cat /sys/module/qeth/sections/.text
+  0x000003ff800b3990
+  [root@m35lp76 perf]#
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+There is an offset of 0x1990 bytes. The size of the qeth module
+is 151552 bytes (0x25000 in hex).
+The location of the GOT/relocation table at the beginning of a
+module is unique to s390.
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit e0c5c5e308ee9b3548844f0d88da937782b895ef:
-> 
->   Merge tag 'perf-core-for-mingo-5.3-20190715' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-07-18 00:32:52 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.3-20190723
-> 
-> for you to fetch changes up to 39e7317e37f7f0be366d1201c283f968c17268da:
-> 
->   perf build: Do not use -Wshadow on gcc < 4.8 (2019-07-23 09:04:54 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf.data:
-> 
->   Alexey Budankov:
-> 
->   - Fix loading of compressed data split across adjacent records
-> 
->   Jiri Olsa:
-> 
->   - Fix buffer size setting for processing CPU topology perf.data header.
-> 
-> perf stat:
-> 
->   Jiri Olsa:
-> 
->   - Fix segfault for event group in repeat mode
-> 
->   Cong Wang:
-> 
->   - Always separate "stalled cycles per insn" line, it was being appended to
->     the "instructions" line.
-> 
-> perf script:
-> 
->   Andi Kleen:
-> 
->   - Fix --max-blocks man page description.
-> 
->   - Improve man page description of metrics.
-> 
->   - Fix off by one in brstackinsn IPC computation.
-> 
-> perf probe:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Avoid calling freeing routine multiple times for same pointer.
-> 
-> perf build:
-> 
->   - Do not use -Wshadow on gcc < 4.8, avoiding too strict warnings
->     treated as errors, breaking the build.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Alexey Budankov (1):
->       perf session: Fix loading of compressed data split across adjacent records
-> 
-> Andi Kleen (3):
->       perf script: Fix --max-blocks man page description
->       perf script: Improve man page description of metrics
->       perf script: Fix off by one in brstackinsn IPC computation
-> 
-> Arnaldo Carvalho de Melo (3):
->       perf probe: Set pev->nargs to zero after freeing pev->args entries
->       perf probe: Avoid calling freeing routine multiple times for same pointer
->       perf build: Do not use -Wshadow on gcc < 4.8
-> 
-> Cong Wang (1):
->       perf stat: Always separate stalled cycles per insn
-> 
-> Jiri Olsa (2):
->       perf tools: Fix proper buffer size for feature processing
->       perf stat: Fix segfault for event group in repeat mode
-> 
->  tools/perf/Documentation/perf-script.txt |  8 ++++----
->  tools/perf/builtin-probe.c               | 10 ++++++++++
->  tools/perf/builtin-script.c              |  2 +-
->  tools/perf/builtin-stat.c                |  9 ++++++++-
->  tools/perf/util/evsel.c                  |  2 ++
->  tools/perf/util/header.c                 |  2 +-
->  tools/perf/util/probe-event.c            |  1 +
->  tools/perf/util/session.c                | 22 ++++++++++++++--------
->  tools/perf/util/session.h                |  1 +
->  tools/perf/util/stat-shadow.c            |  3 ++-
->  tools/perf/util/zstd.c                   |  4 ++--
->  tools/scripts/Makefile.include           |  9 ++++++++-
->  12 files changed, 54 insertions(+), 19 deletions(-)
+commit 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+adjusts the start address of a module in the map structures, but
+does not adjust the size of the modules. This leads to overlapping
+of module maps as this example shows:
 
-Pulled, thanks a lot Arnaldo!
+[root@m35lp76 perf] # ./perf report -D
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x25000)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x8000)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
 
-	Ingo
+The module qeth.ko has an adjusted start address modified to b3990,
+but its size is unchanged and the module ends at 0x3ff800d8990.
+This end address overlaps with the next modules start address of
+0x3ff800d85a0.
+
+When the size of the leading GOT/Relocation table stored in the
+beginning of the text segment (0x1990 bytes) is subtracted from
+module qeth end address, there are no overlaps anymore:
+
+   0x3ff800d8990 - 0x1990 = 0x0x3ff800d7000
+
+which is the same as
+
+   0x3ff800b2000 + 0x25000 = 0x0x3ff800d7000.
+
+To fix this issue, also adjust the modules size in function
+arch__fix_module_text_start(). Add another function parameter
+named size and reduce the size of the module when the text segment
+start address is changed.
+
+Output after:
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x23670)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x7a60)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
+
+Fixes: 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+Cc: <stable@vger.kernel.org> # v4.9+
+Reported-by: Stefan Liebler <stli@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+---
+ tools/perf/arch/s390/util/machine.c | 14 +++++++++++++-
+ tools/perf/util/machine.c           |  3 ++-
+ tools/perf/util/machine.h           |  2 +-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index a19690a17291..de26b1441a48 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -7,7 +7,7 @@
+ #include "api/fs/fs.h"
+ #include "debug.h"
+ 
+-int arch__fix_module_text_start(u64 *start, const char *name)
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
+ {
+ 	u64 m_start = *start;
+ 	char path[PATH_MAX];
+@@ -17,6 +17,18 @@ int arch__fix_module_text_start(u64 *start, const char *name)
+ 	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
+ 		pr_debug2("Using module %s start:%#lx\n", path, m_start);
+ 		*start = m_start;
++	} else {
++		/* Successful read of the modules segment text start address.
++		 * Calculate difference between module start address
++		 * in memory and module text segment start address.
++		 * For example module load address is 0x3ff8011b000
++		 * (from /proc/modules) and module text segment start
++		 * address is 0x3ff8011b870 (from file above).
++		 *
++		 * Adjust the module size and subtract the GOT table
++		 * size located at the beginning of the module.
++		 */
++		*size -= (*start - m_start);
+ 	}
+ 
+ 	return 0;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index dc7aafe45a2b..081fe4bdebaa 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1365,6 +1365,7 @@ static int machine__set_modules_path(struct machine *machine)
+ 	return map_groups__set_modules_path_dir(&machine->kmaps, modules_path, 0);
+ }
+ int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
++				u64 *size __maybe_unused,
+ 				const char *name __maybe_unused)
+ {
+ 	return 0;
+@@ -1376,7 +1377,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
+ 	struct machine *machine = arg;
+ 	struct map *map;
+ 
+-	if (arch__fix_module_text_start(&start, name) < 0)
++	if (arch__fix_module_text_start(&start, &size, name) < 0)
+ 		return -1;
+ 
+ 	map = machine__findnew_module_map(machine, start, name);
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index f70ab98a7bde..7aa38da26427 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -222,7 +222,7 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
+ 
+ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 					const char *filename);
+-int arch__fix_module_text_start(u64 *start, const char *name);
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
+ 
+ int machine__load_kallsyms(struct machine *machine, const char *filename);
+ 
+-- 
+2.21.0
