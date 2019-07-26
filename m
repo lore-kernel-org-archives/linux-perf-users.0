@@ -1,160 +1,27 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH 2/2] perf/top: Fix s390 gap between kernel end and module start
-Date: Wed, 24 Jul 2019 14:27:03 +0200
-Message-ID: <20190724122703.3996-2-tmricht@linux.ibm.com>
-References: <20190724122703.3996-1-tmricht@linux.ibm.com>
+From: James Clark <James.Clark@arm.com>
+Subject: [PATCH 0/1] perf tools: Add PMU event JSON files for ARM Cortex-A76
+ and, Neoverse N1.
+Date: Fri, 26 Jul 2019 13:19:51 +0000
+Message-ID: <4ae020be-180e-4cb6-4b84-a2d519b466ef@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190724122703.3996-1-tmricht@linux.ibm.com>
+Content-Language: en-US
+Content-ID: <83D3AC53F68B26438FB169720BCBCF41@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: brueckner@linux.ibm.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>, stable@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-During execution of command 'perf top' the error message:
-
-   Not enough memory for annotating '__irf_end' symbol!)
-
-is emitted from this call sequence:
-  __cmd_top
-    perf_top__mmap_read
-      perf_top__mmap_read_idx
-        perf_event__process_sample
-          hist_entry_iter__add
-            hist_iter__top_callback
-              perf_top__record_precise_ip
-                hist_entry__inc_addr_samples
-                  symbol__inc_addr_samples
-                    symbol__get_annotation
-                      symbol__alloc_hist
-
-In this function the size of symbol __irf_end is calculated. The size
-of a symbol is the difference between its start and end address.
-When the symbol was read the first time, its start and end was set to:
-   symbol__new: __irf_end 0xe954d0-0xe954d0
-which is correct and maps with /proc/kallsyms:
-
-   root@s8360046:~/linux-4.15.0/tools/perf# fgrep _irf_end /proc/kallsyms
-   0000000000e954d0 t __irf_end
-   root@s8360046:~/linux-4.15.0/tools/perf#
-
-In function symbol__alloc_hist() the end of symbol __irf_end is
-
-  symbol__alloc_hist sym:__irf_end start:0xe954d0 end:0x3ff80045a8
-
-which is identical with the first module entry in /proc/kallsyms
-
-This results in a symbol size of __irf_req for histogram analyses of
-70334140059072 bytes and a malloc() for this requested size fails.
-
-The root cause of this is function
-  __dso__load_kallsyms()
-  +-> symbols__fixup_end()
-
-Function symbols__fixup_end() enlarges the last symbol in the
-kallsyms map
-   # fgrep __irf_end /proc/kallsyms
-   0000000000e954d0 t __irf_end
-   #
-
-to the start address of the first module:
-   # cat /proc/kallsyms | sort  | egrep ' [tT] '
-   ....
-   0000000000e952d0 T __security_initcall_end
-   0000000000e954d0 T __initramfs_size
-   0000000000e954d0 t __irf_end
-   000003ff800045a8 T fc_get_event_number       [scsi_transport_fc]
-   000003ff800045d0 t store_fc_vport_disable    [scsi_transport_fc]
-   000003ff800046a8 T scsi_is_fc_rport  [scsi_transport_fc]
-   000003ff800046d0 t fc_target_setup   [scsi_transport_fc]
-
-On s390 the kernel is located around memory address 0x200, 0x10000
-or 0x100000, depending on linux version. Modules however start some-
-where around 0x3ff xxxx xxxx.
-
-This is different than x86 and produces a large gap for which
-histogram allocation fails.
-
-Fix this by detecting the kernel's last symbol and do no
-adjustment for it. Introduce a weak function and handle s390 specifics.
-
-Cc: <stable@vger.kernel.org>
-Reported-by: Klaus Theurich <klaus.theurich@de.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
----
- tools/perf/arch/s390/util/machine.c | 17 +++++++++++++++++
- tools/perf/util/symbol.c            |  7 ++++++-
- tools/perf/util/symbol.h            |  1 +
- 3 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
-index de26b1441a48..c8c86a0c9b79 100644
---- a/tools/perf/arch/s390/util/machine.c
-+++ b/tools/perf/arch/s390/util/machine.c
-@@ -6,6 +6,7 @@
- #include "machine.h"
- #include "api/fs/fs.h"
- #include "debug.h"
-+#include "symbol.h"
- 
- int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
- {
-@@ -33,3 +34,19 @@ int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
- 
- 	return 0;
- }
-+
-+/* On s390 kernel text segment start is located at very low memory addresses,
-+ * for example 0x10000. Modules are located at very high memory addresses,
-+ * for example 0x3ff xxxx xxxx. The gap between end of kernel text segment
-+ * and beginning of first module's text segment is very big.
-+ * Therefore do not fill this gap and do not assign it to the kernel dso map.
-+ */
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
-+{
-+	if (strchr(p->name, '[') == NULL && strchr(c->name, '['))
-+		/* Last kernel symbol mapped to end of page */
-+		p->end = roundup(p->end, page_size);
-+	else
-+		p->end = c->start;
-+	pr_debug4("%s sym:%s end:%#lx\n", __func__, p->name, p->end);
-+}
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 5cbad55cd99d..3b49eb4e3ed9 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -91,6 +91,11 @@ static int prefix_underscores_count(const char *str)
- 	return tail - str;
- }
- 
-+void __weak arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
-+{
-+	p->end = c->start;
-+}
-+
- const char * __weak arch__normalize_symbol_name(const char *name)
- {
- 	return name;
-@@ -217,7 +222,7 @@ void symbols__fixup_end(struct rb_root_cached *symbols)
- 		curr = rb_entry(nd, struct symbol, rb_node);
- 
- 		if (prev->end == prev->start && prev->end != curr->start)
--			prev->end = curr->start;
-+			arch__symbols__fixup_end(prev, curr);
- 	}
- 
- 	/* Last entry */
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 9a8fe012910a..f30ab608ea54 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -277,6 +277,7 @@ const char *arch__normalize_symbol_name(const char *name);
- #define SYMBOL_A 0
- #define SYMBOL_B 1
- 
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c);
- int arch__compare_symbol_names(const char *namea, const char *nameb);
- int arch__compare_symbol_names_n(const char *namea, const char *nameb,
- 				 unsigned int n);
--- 
-2.21.0
+SGksDQoNCkknbSBhIGRldmVsb3BlciBhdCBBUk0gYW5kIEknbSBuZXcgdG8gdXBzdHJlYW1pbmcg
+aGVyZS4gSSdkIGxpa2UgdG8gc3VibWl0IHRoaXMgcGF0Y2ggZm9yDQpldmVudCBjb3VudGVycyBm
+b3IgdHdvIG5ldyBBUk0gQ1BVcy4NCg0KQXQgc29tZSBwb2ludCBpbiB0aGUgZnV0dXJlIEkgd2ls
+bCBhbHNvIGNvbnRpbnVlIHdvcmsgYXJvdW5kIGFybS1zcGUuYyB0byBpbXByb3ZlIFNQRSBzdXBw
+b3J0Lg0KDQoNClRoYW5rcw0KSmFtZXMNCklNUE9SVEFOVCBOT1RJQ0U6IFRoZSBjb250ZW50cyBv
+ZiB0aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGNvbmZpZGVudGlhbCBhbmQgbWF5
+IGFsc28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFyZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVu
+dCwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGltbWVkaWF0ZWx5IGFuZCBkbyBub3QgZGlzY2xv
+c2UgdGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBwZXJzb24sIHVzZSBpdCBmb3IgYW55IHB1cnBv
+c2UsIG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9ybWF0aW9uIGluIGFueSBtZWRpdW0uIFRoYW5r
+IHlvdS4NCg==
