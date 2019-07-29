@@ -1,101 +1,125 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/12] tools headers UAPI: Sync sched.h with the kernel
-Date: Mon, 29 Jul 2019 18:14:54 -0300
-Message-ID: <20190729211456.6380-8-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Date: Mon, 29 Jul 2019 23:24:51 +0200
+Message-ID: <20190729212451.GA44602@gmail.com>
 References: <20190729211456.6380-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20190729211456.6380-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Christian Brauner <christian@brauner.io>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>, Patrick Bellasi <patrick.bellasi@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>, Numfor Mbiziwo-Tiapo <nums@google.com>, Vince Weaver <vincent.weaver@maine.edu>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-  a509a7cd7974 ("sched/uclamp: Extend sched_setattr() to support utilization clamping")
-  1d6362fa0cfc ("sched/core: Allow sched_setattr() to use the current policy")
-  7f192e3cd316 ("fork: add clone3")
+> Hi Ingo,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 289a2d22b5b611d85030795802a710e9f520df29:
+> 
+>   perf/x86/intel: Mark expected switch fall-throughs (2019-07-25 15:57:03 +0200)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.3-20190729
+> 
+> for you to fetch changes up to 8aa259b10a6a759c50137bbbf225df0c17ca5d27:
+> 
+>   libbpf: fix missing __WORDSIZE definition (2019-07-29 10:18:08 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> perf header:
+> 
+>   Vince Weaver:
+> 
+>   - Fix divide by zero error if f_header.attr_size==0, found using a perf tool fuzzer.
+> 
+>   Numfor Mbiziwo-Tiapo:
+> 
+>   - Silence use of uninitialized value warning pointed out by clang's MSAN tool.
+> 
+> libbpf:
+> 
+>   Andrii Nakryiko:
+> 
+>   - Fix missing __WORDSIZE definition in some systems, such as musl libc (Alpine Linux).
+> 
+> tools header UAPI:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Sync headers to address perf build warnings:
+> 
+>     - syscalls_64.tbl and generic unistd.h to pick up clone3 and pidfd_open.
+> 
+>     - With new ioctls: kvm.h, drm.h and usbdevice_fs.h.
+> 
+>     - No tooling change: mman.h, sched.h and if_link.h.
+> 
+> Documentation:
+> 
+>   Vince Weaver:
+> 
+>   - Fix perf.data documentation units for memory size, its kB, not bytes.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andrii Nakryiko (1):
+>       libbpf: fix missing __WORDSIZE definition
+> 
+> Arnaldo Carvalho de Melo (8):
+>       tools include UAPI: Sync x86's syscalls_64.tbl and generic unistd.h to pick up clone3 and pidfd_open
+>       tools headers UAPI: Update tools's copy of kvm.h headers
+>       tools headers UAPI: Update tools's copy of mman.h headers
+>       tools headers UAPI: Update tools's copy of drm.h headers
+>       tools perf beauty: Fix usbdevfs_ioctl table generator to handle _IOC()
+>       tools headers UAPI: Sync usbdevice_fs.h with the kernels to get new ioctl
+>       tools headers UAPI: Sync sched.h with the kernel
+>       tools headers UAPI: Sync if_link.h with the kernel
+> 
+> Numfor Mbiziwo-Tiapo (1):
+>       perf header: Fix use of unitialized value warning
+> 
+> Vince Weaver (2):
+>       perf header: Fix divide by zero error if f_header.attr_size==0
+>       perf tools: Fix perf.data documentation units for memory size
+> 
+>  tools/arch/arm/include/uapi/asm/kvm.h              |  12 ++
+>  tools/arch/arm64/include/uapi/asm/kvm.h            |  10 +
+>  tools/arch/powerpc/include/uapi/asm/mman.h         |   4 -
+>  tools/arch/sparc/include/uapi/asm/mman.h           |   4 -
+>  tools/arch/x86/include/uapi/asm/kvm.h              |  22 ++-
+>  tools/arch/x86/include/uapi/asm/vmx.h              |   1 -
+>  tools/include/uapi/asm-generic/mman-common.h       |  15 +-
+>  tools/include/uapi/asm-generic/mman.h              |  10 +-
+>  tools/include/uapi/asm-generic/unistd.h            |   8 +-
+>  tools/include/uapi/drm/drm.h                       |   1 +
+>  tools/include/uapi/drm/i915_drm.h                  | 209 ++++++++++++++++++++-
+>  tools/include/uapi/linux/if_link.h                 |   5 +
+>  tools/include/uapi/linux/kvm.h                     |   3 +
+>  tools/include/uapi/linux/sched.h                   |  30 ++-
+>  tools/include/uapi/linux/usbdevice_fs.h            |  26 +++
+>  tools/lib/bpf/hashmap.h                            |   5 +
+>  tools/perf/Documentation/perf.data-file-format.txt |   2 +-
+>  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |   2 +
+>  tools/perf/trace/beauty/usbdevfs_ioctl.sh          |   9 +-
+>  tools/perf/util/header.c                           |   9 +-
+>  20 files changed, 352 insertions(+), 35 deletions(-)
 
-And silence this perf build warning:
+Pulled, thanks a lot Arnaldo!
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
-
-No changes in tools/ due to the above.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Christian Brauner <christian@brauner.io>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Patrick Bellasi <patrick.bellasi@arm.com>
-Link: https://lkml.kernel.org/n/tip-mtrpsjrux5hgyr5uf8l1aa46@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/uapi/linux/sched.h | 30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index ed4ee170bee2..b3105ac1381a 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -2,6 +2,8 @@
- #ifndef _UAPI_LINUX_SCHED_H
- #define _UAPI_LINUX_SCHED_H
- 
-+#include <linux/types.h>
-+
- /*
-  * cloning flags:
-  */
-@@ -31,6 +33,20 @@
- #define CLONE_NEWNET		0x40000000	/* New network namespace */
- #define CLONE_IO		0x80000000	/* Clone io context */
- 
-+/*
-+ * Arguments for the clone3 syscall
-+ */
-+struct clone_args {
-+	__aligned_u64 flags;
-+	__aligned_u64 pidfd;
-+	__aligned_u64 child_tid;
-+	__aligned_u64 parent_tid;
-+	__aligned_u64 exit_signal;
-+	__aligned_u64 stack;
-+	__aligned_u64 stack_size;
-+	__aligned_u64 tls;
-+};
-+
- /*
-  * Scheduling policies
-  */
-@@ -51,9 +67,21 @@
- #define SCHED_FLAG_RESET_ON_FORK	0x01
- #define SCHED_FLAG_RECLAIM		0x02
- #define SCHED_FLAG_DL_OVERRUN		0x04
-+#define SCHED_FLAG_KEEP_POLICY		0x08
-+#define SCHED_FLAG_KEEP_PARAMS		0x10
-+#define SCHED_FLAG_UTIL_CLAMP_MIN	0x20
-+#define SCHED_FLAG_UTIL_CLAMP_MAX	0x40
-+
-+#define SCHED_FLAG_KEEP_ALL	(SCHED_FLAG_KEEP_POLICY | \
-+				 SCHED_FLAG_KEEP_PARAMS)
-+
-+#define SCHED_FLAG_UTIL_CLAMP	(SCHED_FLAG_UTIL_CLAMP_MIN | \
-+				 SCHED_FLAG_UTIL_CLAMP_MAX)
- 
- #define SCHED_FLAG_ALL	(SCHED_FLAG_RESET_ON_FORK	| \
- 			 SCHED_FLAG_RECLAIM		| \
--			 SCHED_FLAG_DL_OVERRUN)
-+			 SCHED_FLAG_DL_OVERRUN		| \
-+			 SCHED_FLAG_KEEP_ALL		| \
-+			 SCHED_FLAG_UTIL_CLAMP)
- 
- #endif /* _UAPI_LINUX_SCHED_H */
--- 
-2.21.0
+	Ingo
