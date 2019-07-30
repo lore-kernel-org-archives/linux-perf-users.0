@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 087/107] libperf: Adopt the readn()/writen() functions from tools/perf
-Date: Mon, 29 Jul 2019 23:55:50 -0300
-Message-ID: <20190730025610.22603-88-acme@kernel.org>
+Subject: [PATCH 088/107] libperf: Adopt perf_evsel__alloc_fd() function from tools/perf
+Date: Mon, 29 Jul 2019 23:55:51 -0300
+Message-ID: <20190730025610.22603-89-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,12 +14,9 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the readn()/writen() functions into libperf.
+Move the perf_evsel__alloc_fd() function from perf to libperf.
 
-Keep those non-namespaced names because they will be shared only between
-perf and libperf.
-
-Again, these are not exported functions.
+It's not exported.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -28,170 +25,99 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-61-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-62-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/Build                  |  1 +
- tools/perf/lib/include/internal/lib.h | 10 ++++++
- tools/perf/lib/lib.c                  | 46 +++++++++++++++++++++++++++
- tools/perf/util/util.c                | 40 -----------------------
- tools/perf/util/util.h                |  4 +--
- 5 files changed, 58 insertions(+), 43 deletions(-)
- create mode 100644 tools/perf/lib/include/internal/lib.h
- create mode 100644 tools/perf/lib/lib.c
+ tools/perf/lib/evsel.c                  | 21 +++++++++++++++++++++
+ tools/perf/lib/include/internal/evsel.h |  2 ++
+ tools/perf/util/evsel.c                 | 18 +-----------------
+ 3 files changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
-index 4f78ec0b4e10..c31f1c111f8f 100644
---- a/tools/perf/lib/Build
-+++ b/tools/perf/lib/Build
-@@ -5,6 +5,7 @@ libperf-y += evsel.o
- libperf-y += evlist.o
- libperf-y += zalloc.o
- libperf-y += xyarray.o
-+libperf-y += lib.o
- 
- $(OUTPUT)zalloc.o: ../../lib/zalloc.c FORCE
- 	$(call rule_mkdir)
-diff --git a/tools/perf/lib/include/internal/lib.h b/tools/perf/lib/include/internal/lib.h
-new file mode 100644
-index 000000000000..0b56f1201dc9
---- /dev/null
-+++ b/tools/perf/lib/include/internal/lib.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LIBPERF_INTERNAL_LIB_H
-+#define __LIBPERF_INTERNAL_LIB_H
-+
-+#include <unistd.h>
-+
-+ssize_t readn(int fd, void *buf, size_t n);
-+ssize_t writen(int fd, const void *buf, size_t n);
-+
-+#endif /* __LIBPERF_INTERNAL_CPUMAP_H */
-diff --git a/tools/perf/lib/lib.c b/tools/perf/lib/lib.c
-new file mode 100644
-index 000000000000..2a81819c3b8c
---- /dev/null
-+++ b/tools/perf/lib/lib.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <unistd.h>
-+#include <stdbool.h>
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index ddc3ad447bfb..027f1edb4e8e 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -1,9 +1,12 @@
+ // SPDX-License-Identifier: GPL-2.0
 +#include <errno.h>
-+#include <linux/kernel.h>
-+#include <internal/lib.h>
+ #include <perf/evsel.h>
+ #include <linux/list.h>
+ #include <internal/evsel.h>
+ #include <linux/zalloc.h>
+ #include <stdlib.h>
++#include <internal/xyarray.h>
++#include <linux/string.h>
+ 
+ void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr)
+ {
+@@ -25,3 +28,21 @@ void perf_evsel__delete(struct perf_evsel *evsel)
+ {
+ 	free(evsel);
+ }
 +
-+static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
++#define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
++
++int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
 +{
-+	void *buf_start = buf;
-+	size_t left = n;
++	evsel->fd = xyarray__new(ncpus, nthreads, sizeof(int));
 +
-+	while (left) {
-+		/* buf must be treated as const if !is_read. */
-+		ssize_t ret = is_read ? read(fd, buf, left) :
-+					write(fd, buf, left);
-+
-+		if (ret < 0 && errno == EINTR)
-+			continue;
-+		if (ret <= 0)
-+			return ret;
-+
-+		left -= ret;
-+		buf  += ret;
++	if (evsel->fd) {
++		int cpu, thread;
++		for (cpu = 0; cpu < ncpus; cpu++) {
++			for (thread = 0; thread < nthreads; thread++) {
++				FD(evsel, cpu, thread) = -1;
++			}
++		}
 +	}
 +
-+	BUG_ON((size_t)(buf - buf_start) != n);
-+	return n;
++	return evsel->fd != NULL ? 0 : -ENOMEM;
 +}
+diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
+index 29eca9576546..3cb9a0f5f32e 100644
+--- a/tools/perf/lib/include/internal/evsel.h
++++ b/tools/perf/lib/include/internal/evsel.h
+@@ -20,4 +20,6 @@ struct perf_evsel {
+ 	int			 nr_members;
+ };
+ 
++int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads);
 +
-+/*
-+ * Read exactly 'n' bytes or return an error.
-+ */
-+ssize_t readn(int fd, void *buf, size_t n)
-+{
-+	return ion(true, fd, buf, n);
-+}
-+
-+/*
-+ * Write exactly 'n' bytes or return an error.
-+ */
-+ssize_t writen(int fd, const void *buf, size_t n)
-+{
-+	/* ion does not modify buf. */
-+	return ion(false, fd, (void *)buf, n);
-+}
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index a61535cf1bca..9c3c97697387 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -384,46 +384,6 @@ int copyfile(const char *from, const char *to)
- 	return copyfile_mode(from, to, 0755);
+ #endif /* __LIBPERF_INTERNAL_EVSEL_H */
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 8b9a00598677..d3c8488f7069 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1153,22 +1153,6 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
  }
  
--static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
+-static int perf_evsel__alloc_fd(struct evsel *evsel, int ncpus, int nthreads)
 -{
--	void *buf_start = buf;
--	size_t left = n;
+-	evsel->core.fd = xyarray__new(ncpus, nthreads, sizeof(int));
 -
--	while (left) {
--		/* buf must be treated as const if !is_read. */
--		ssize_t ret = is_read ? read(fd, buf, left) :
--					write(fd, buf, left);
--
--		if (ret < 0 && errno == EINTR)
--			continue;
--		if (ret <= 0)
--			return ret;
--
--		left -= ret;
--		buf  += ret;
+-	if (evsel->core.fd) {
+-		int cpu, thread;
+-		for (cpu = 0; cpu < ncpus; cpu++) {
+-			for (thread = 0; thread < nthreads; thread++) {
+-				FD(evsel, cpu, thread) = -1;
+-			}
+-		}
 -	}
 -
--	BUG_ON((size_t)(buf - buf_start) != n);
--	return n;
+-	return evsel->core.fd != NULL ? 0 : -ENOMEM;
 -}
 -
--/*
-- * Read exactly 'n' bytes or return an error.
-- */
--ssize_t readn(int fd, void *buf, size_t n)
--{
--	return ion(true, fd, buf, n);
--}
--
--/*
-- * Write exactly 'n' bytes or return an error.
-- */
--ssize_t writen(int fd, const void *buf, size_t n)
--{
--	/* ion does not modify buf. */
--	return ion(false, fd, (void *)buf, n);
--}
--
- size_t hex_width(u64 v)
+ static int perf_evsel__run_ioctl(struct evsel *evsel,
+ 			  int ioc,  void *arg)
  {
- 	size_t n = 1;
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index dc7a469921e9..0dab140c6517 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -11,6 +11,7 @@
- #include <stddef.h>
- #include <linux/compiler.h>
- #include <sys/types.h>
-+#include <internal/lib.h>
+@@ -1866,7 +1850,7 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		nthreads = threads->nr;
  
- /* General helper functions */
- void usage(const char *err) __noreturn;
-@@ -30,9 +31,6 @@ int copyfile_mode(const char *from, const char *to, mode_t mode);
- int copyfile_ns(const char *from, const char *to, struct nsinfo *nsi);
- int copyfile_offset(int ifd, loff_t off_in, int ofd, loff_t off_out, u64 size);
+ 	if (evsel->core.fd == NULL &&
+-	    perf_evsel__alloc_fd(evsel, cpus->nr, nthreads) < 0)
++	    perf_evsel__alloc_fd(&evsel->core, cpus->nr, nthreads) < 0)
+ 		return -ENOMEM;
  
--ssize_t readn(int fd, void *buf, size_t n);
--ssize_t writen(int fd, const void *buf, size_t n);
--
- size_t hex_width(u64 v);
- 
- extern unsigned int page_size;
+ 	if (evsel->cgrp) {
 -- 
 2.21.0
