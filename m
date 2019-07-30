@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 105/107] libperf: Add perf_evsel__enable/disable test
-Date: Mon, 29 Jul 2019 23:56:08 -0300
-Message-ID: <20190730025610.22603-106-acme@kernel.org>
+Subject: [PATCH 104/107] libperf: Add perf_evlist__enable/disable test
+Date: Mon, 29 Jul 2019 23:56:07 -0300
+Message-ID: <20190730025610.22603-105-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add simple perf_evsel enable/disable test together with evsel counter
+Add simple perf_evlist enable/disable test together with evlist counter
 reading interface.
 
 Committer testing:
@@ -50,17 +50,17 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-79-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-78-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/tests/test-evsel.c | 43 +++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ tools/perf/lib/tests/test-evlist.c | 63 ++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
-index 268712292f60..2c648fe5617e 100644
---- a/tools/perf/lib/tests/test-evsel.c
-+++ b/tools/perf/lib/tests/test-evsel.c
-@@ -70,12 +70,55 @@ static int test_stat_thread(void)
+diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
+index f24c531afcb6..4e1407f20ffd 100644
+--- a/tools/perf/lib/tests/test-evlist.c
++++ b/tools/perf/lib/tests/test-evlist.c
+@@ -111,12 +111,75 @@ static int test_stat_thread(void)
  	return 0;
  }
  
@@ -68,8 +68,14 @@ index 268712292f60..2c648fe5617e 100644
 +{
 +	struct perf_counts_values counts = { .val = 0 };
 +	struct perf_thread_map *threads;
++	struct perf_evlist *evlist;
 +	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
++	struct perf_event_attr attr1 = {
++		.type	  = PERF_TYPE_SOFTWARE,
++		.config	  = PERF_COUNT_SW_CPU_CLOCK,
++		.disabled = 1,
++	};
++	struct perf_event_attr attr2 = {
 +		.type	  = PERF_TYPE_SOFTWARE,
 +		.config	  = PERF_COUNT_SW_TASK_CLOCK,
 +		.disabled = 1,
@@ -81,26 +87,40 @@ index 268712292f60..2c648fe5617e 100644
 +
 +	perf_thread_map__set_pid(threads, 0, 0);
 +
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel);
++	evlist = perf_evlist__new();
++	__T("failed to create evlist", evlist);
 +
-+	err = perf_evsel__open(evsel, NULL, threads);
++	evsel = perf_evsel__new(&attr1);
++	__T("failed to create evsel1", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	evsel = perf_evsel__new(&attr2);
++	__T("failed to create evsel2", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	perf_evlist__set_maps(evlist, NULL, threads);
++
++	err = perf_evlist__open(evlist);
 +	__T("failed to open evsel", err == 0);
 +
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	__T("failed to read value for evsel", counts.val == 0);
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		perf_evsel__read(evsel, 0, 0, &counts);
++		__T("failed to read value for evsel", counts.val == 0);
++	}
 +
-+	err = perf_evsel__enable(evsel);
-+	__T("failed to enable evsel", err == 0);
++	perf_evlist__enable(evlist);
 +
-+	perf_evsel__read(evsel, 0, 0, &counts);
-+	__T("failed to read value for evsel", counts.val != 0);
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		perf_evsel__read(evsel, 0, 0, &counts);
++		__T("failed to read value for evsel", counts.val != 0);
++	}
 +
-+	err = perf_evsel__disable(evsel);
-+	__T("failed to enable evsel", err == 0);
++	perf_evlist__disable(evlist);
 +
-+	perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
++	perf_evlist__close(evlist);
++	perf_evlist__delete(evlist);
 +
 +	perf_thread_map__put(threads);
 +	return 0;
