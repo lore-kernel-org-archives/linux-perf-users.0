@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 078/107] libperf: Add own_cpus to struct perf_evsel
-Date: Mon, 29 Jul 2019 23:55:41 -0300
-Message-ID: <20190730025610.22603-79-acme@kernel.org>
+Subject: [PATCH 079/107] libperf: Add threads to struct perf_evsel
+Date: Mon, 29 Jul 2019 23:55:42 -0300
+Message-ID: <20190730025610.22603-80-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move own_cpus from tools/perf's evsel to libbpf's perf_evsel.
+Move 'threads' from tools/perf's evsel to libperf's perf_evsel struct.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -23,158 +23,200 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-52-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-53-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/internal/evsel.h |  1 +
- tools/perf/tests/event_update.c         |  4 ++--
- tools/perf/util/evlist.c                |  6 +++---
- tools/perf/util/evsel.c                 |  4 ++--
- tools/perf/util/evsel.h                 |  1 -
- tools/perf/util/header.c                | 10 +++++-----
- tools/perf/util/parse-events.c          |  2 +-
- 7 files changed, 14 insertions(+), 14 deletions(-)
+ tools/perf/builtin-record.c                            | 2 +-
+ tools/perf/builtin-script.c                            | 4 ++--
+ tools/perf/lib/include/internal/evsel.h                | 2 ++
+ tools/perf/util/evlist.c                               | 6 +++---
+ tools/perf/util/evsel.c                                | 4 ++--
+ tools/perf/util/evsel.h                                | 1 -
+ tools/perf/util/scripting-engines/trace-event-python.c | 2 +-
+ tools/perf/util/stat-display.c                         | 6 +++---
+ tools/perf/util/stat.c                                 | 6 +++---
+ 9 files changed, 17 insertions(+), 16 deletions(-)
 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 090aaa2cf4b3..27ff899bed88 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -739,7 +739,7 @@ static int record__open(struct record *rec)
+ 
+ 	evlist__for_each_entry(evlist, pos) {
+ try_again:
+-		if (evsel__open(pos, pos->core.cpus, pos->threads) < 0) {
++		if (evsel__open(pos, pos->core.cpus, pos->core.threads) < 0) {
+ 			if (perf_evsel__fallback(pos, errno, msg, sizeof(msg))) {
+ 				if (verbose > 0)
+ 					ui__warning("%s\n", msg);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 35f07dde5ad4..a787c5cb1331 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1899,7 +1899,7 @@ static struct scripting_ops	*scripting_ops;
+ 
+ static void __process_stat(struct evsel *counter, u64 tstamp)
+ {
+-	int nthreads = thread_map__nr(counter->threads);
++	int nthreads = thread_map__nr(counter->core.threads);
+ 	int ncpus = perf_evsel__nr_cpus(counter);
+ 	int cpu, thread;
+ 	static int header_printed;
+@@ -1921,7 +1921,7 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
+ 
+ 			printf("%3d %8d %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %15" PRIu64 " %s\n",
+ 				counter->core.cpus->map[cpu],
+-				thread_map__pid(counter->threads, thread),
++				thread_map__pid(counter->core.threads, thread),
+ 				counts->val,
+ 				counts->ena,
+ 				counts->run,
 diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
-index b2c76e1a6244..d15d8ccfa3dc 100644
+index d15d8ccfa3dc..8340fd883a3d 100644
 --- a/tools/perf/lib/include/internal/evsel.h
 +++ b/tools/perf/lib/include/internal/evsel.h
-@@ -11,6 +11,7 @@ struct perf_evsel {
+@@ -6,12 +6,14 @@
+ #include <linux/perf_event.h>
+ 
+ struct perf_cpu_map;
++struct perf_thread_map;
+ 
+ struct perf_evsel {
  	struct list_head	 node;
  	struct perf_event_attr	 attr;
  	struct perf_cpu_map	*cpus;
-+	struct perf_cpu_map	*own_cpus;
+ 	struct perf_cpu_map	*own_cpus;
++	struct perf_thread_map	*threads;
  };
  
  #endif /* __LIBPERF_INTERNAL_EVSEL_H */
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index 2bc5145284c0..c37ff49c07c7 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -109,11 +109,11 @@ int test__event_update(struct test *test __maybe_unused, int subtest __maybe_unu
- 	TEST_ASSERT_VAL("failed to synthesize attr update name",
- 			!perf_event__synthesize_event_update_name(&tmp.tool, evsel, process_event_name));
- 
--	evsel->own_cpus = perf_cpu_map__new("1,2,3");
-+	evsel->core.own_cpus = perf_cpu_map__new("1,2,3");
- 
- 	TEST_ASSERT_VAL("failed to synthesize attr update cpus",
- 			!perf_event__synthesize_event_update_cpus(&tmp.tool, evsel, process_event_cpus));
- 
--	perf_cpu_map__put(evsel->own_cpus);
-+	perf_cpu_map__put(evsel->core.own_cpus);
- 	return 0;
- }
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 713968130d1d..d203305ac187 100644
+index d203305ac187..5ce8fc730453 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -159,12 +159,12 @@ static void __perf_evlist__propagate_maps(struct evlist *evlist,
- 	 * We already have cpus for evsel (via PMU sysfs) so
- 	 * keep it, if there's no target cpu list defined.
- 	 */
--	if (!evsel->own_cpus || evlist->has_user_cpus) {
-+	if (!evsel->core.own_cpus || evlist->has_user_cpus) {
- 		perf_cpu_map__put(evsel->core.cpus);
- 		evsel->core.cpus = perf_cpu_map__get(evlist->cpus);
--	} else if (evsel->core.cpus != evsel->own_cpus) {
-+	} else if (evsel->core.cpus != evsel->core.own_cpus) {
- 		perf_cpu_map__put(evsel->core.cpus);
--		evsel->core.cpus = perf_cpu_map__get(evsel->own_cpus);
-+		evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
+@@ -167,8 +167,8 @@ static void __perf_evlist__propagate_maps(struct evlist *evlist,
+ 		evsel->core.cpus = perf_cpu_map__get(evsel->core.own_cpus);
  	}
  
- 	perf_thread_map__put(evsel->threads);
+-	perf_thread_map__put(evsel->threads);
+-	evsel->threads = perf_thread_map__get(evlist->threads);
++	perf_thread_map__put(evsel->core.threads);
++	evsel->core.threads = perf_thread_map__get(evlist->threads);
+ }
+ 
+ static void perf_evlist__propagate_maps(struct evlist *evlist)
+@@ -1407,7 +1407,7 @@ int evlist__open(struct evlist *evlist)
+ 	perf_evlist__update_id_pos(evlist);
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		err = evsel__open(evsel, evsel->core.cpus, evsel->threads);
++		err = evsel__open(evsel, evsel->core.cpus, evsel->core.threads);
+ 		if (err < 0)
+ 			goto out_err;
+ 	}
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 651f66ee902e..c5f6ee6d5f3b 100644
+index c5f6ee6d5f3b..f7758ce0dd5c 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1125,7 +1125,7 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		attr->exclude_user   = 1;
- 	}
- 
--	if (evsel->own_cpus || evsel->unit)
-+	if (evsel->core.own_cpus || evsel->unit)
- 		evsel->core.attr.read_format |= PERF_FORMAT_ID;
- 
- 	/*
-@@ -1326,7 +1326,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 	perf_evsel__free_config_terms(evsel);
+@@ -1327,7 +1327,7 @@ void perf_evsel__exit(struct evsel *evsel)
  	cgroup__put(evsel->cgrp);
  	perf_cpu_map__put(evsel->core.cpus);
--	perf_cpu_map__put(evsel->own_cpus);
-+	perf_cpu_map__put(evsel->core.own_cpus);
- 	perf_thread_map__put(evsel->threads);
+ 	perf_cpu_map__put(evsel->core.own_cpus);
+-	perf_thread_map__put(evsel->threads);
++	perf_thread_map__put(evsel->core.threads);
  	zfree(&evsel->group_name);
  	zfree(&evsel->name);
+ 	perf_evsel__object.fini(evsel);
+@@ -3065,7 +3065,7 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+ int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist)
+ {
+ 	struct perf_cpu_map *cpus = evsel->core.cpus;
+-	struct perf_thread_map *threads = evsel->threads;
++	struct perf_thread_map *threads = evsel->core.threads;
+ 
+ 	if (perf_evsel__alloc_id(evsel, cpus->nr, threads->nr))
+ 		return -ENOMEM;
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 8ece5edf65ac..2eff837f10bd 100644
+index 2eff837f10bd..57b5523b480c 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
 @@ -123,7 +123,6 @@ struct evsel {
  	u64			db_id;
  	struct cgroup		*cgrp;
  	void			*handler;
--	struct perf_cpu_map	*own_cpus;
- 	struct perf_thread_map *threads;
+-	struct perf_thread_map *threads;
  	unsigned int		sample_size;
  	int			id_pos;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index fa914ba8cd56..f97df418d661 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3861,10 +3861,10 @@ perf_event__synthesize_event_update_cpus(struct perf_tool *tool,
- 	int max, err;
- 	u16 type;
+ 	int			is_pos;
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index c5f520e0885b..32c17a727450 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -1392,7 +1392,7 @@ process_stat(struct evsel *counter, int cpu, int thread, u64 tstamp,
+ static void python_process_stat(struct perf_stat_config *config,
+ 				struct evsel *counter, u64 tstamp)
+ {
+-	struct perf_thread_map *threads = counter->threads;
++	struct perf_thread_map *threads = counter->core.threads;
+ 	struct perf_cpu_map *cpus = counter->core.cpus;
+ 	int cpu, thread;
  
--	if (!evsel->own_cpus)
-+	if (!evsel->core.own_cpus)
- 		return 0;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e84f8063c2db..7c938135398b 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -116,9 +116,9 @@ static void aggr_printout(struct perf_stat_config *config,
+ 	case AGGR_THREAD:
+ 		fprintf(config->output, "%*s-%*d%s",
+ 			config->csv_output ? 0 : 16,
+-			perf_thread_map__comm(evsel->threads, id),
++			perf_thread_map__comm(evsel->core.threads, id),
+ 			config->csv_output ? 0 : -8,
+-			thread_map__pid(evsel->threads, id),
++			thread_map__pid(evsel->core.threads, id),
+ 			config->csv_sep);
+ 		break;
+ 	case AGGR_GLOBAL:
+@@ -744,7 +744,7 @@ static void print_aggr_thread(struct perf_stat_config *config,
+ 			      struct evsel *counter, char *prefix)
+ {
+ 	FILE *output = config->output;
+-	int nthreads = thread_map__nr(counter->threads);
++	int nthreads = thread_map__nr(counter->core.threads);
+ 	int ncpus = cpu_map__nr(counter->core.cpus);
+ 	int thread, sorted_threads, id;
+ 	struct perf_aggr_thread_value *buf;
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 632bf72cf780..1e351462ca49 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -158,7 +158,7 @@ static void perf_evsel__free_prev_raw_counts(struct evsel *evsel)
+ static int perf_evsel__alloc_stats(struct evsel *evsel, bool alloc_raw)
+ {
+ 	int ncpus = perf_evsel__nr_cpus(evsel);
+-	int nthreads = thread_map__nr(evsel->threads);
++	int nthreads = thread_map__nr(evsel->core.threads);
  
--	ev = cpu_map_data__alloc(evsel->own_cpus, &size, &type, &max);
-+	ev = cpu_map_data__alloc(evsel->core.own_cpus, &size, &type, &max);
- 	if (!ev)
- 		return -ENOMEM;
+ 	if (perf_evsel__alloc_stat_priv(evsel) < 0 ||
+ 	    perf_evsel__alloc_counts(evsel, ncpus, nthreads) < 0 ||
+@@ -308,7 +308,7 @@ process_counter_values(struct perf_stat_config *config, struct evsel *evsel,
+ static int process_counter_maps(struct perf_stat_config *config,
+ 				struct evsel *counter)
+ {
+-	int nthreads = thread_map__nr(counter->threads);
++	int nthreads = thread_map__nr(counter->core.threads);
+ 	int ncpus = perf_evsel__nr_cpus(counter);
+ 	int cpu, thread;
  
-@@ -3874,7 +3874,7 @@ perf_event__synthesize_event_update_cpus(struct perf_tool *tool,
- 	ev->id   = evsel->id[0];
+@@ -485,7 +485,7 @@ int create_perf_stat_counter(struct evsel *evsel,
+ 	if (target__has_cpu(target) && !target__has_per_thread(target))
+ 		return perf_evsel__open_per_cpu(evsel, evsel__cpus(evsel));
  
- 	cpu_map_data__synthesize((struct cpu_map_data *) ev->data,
--				 evsel->own_cpus,
-+				 evsel->core.own_cpus,
- 				 type, max);
+-	return perf_evsel__open_per_thread(evsel, evsel->threads);
++	return perf_evsel__open_per_thread(evsel, evsel->core.threads);
+ }
  
- 	err = process(tool, (union perf_event*) ev, NULL, NULL);
-@@ -3985,7 +3985,7 @@ int perf_event__synthesize_extra_attr(struct perf_tool *tool,
- 			}
- 		}
- 
--		if (counter->own_cpus) {
-+		if (counter->core.own_cpus) {
- 			err = perf_event__synthesize_event_update_cpus(tool, counter, process);
- 			if (err < 0) {
- 				pr_err("Couldn't synthesize evsel cpus.\n");
-@@ -4082,7 +4082,7 @@ int perf_event__process_event_update(struct perf_tool *tool __maybe_unused,
- 
- 		map = cpu_map__new_data(&ev_cpus->cpus);
- 		if (map)
--			evsel->own_cpus = map;
-+			evsel->core.own_cpus = map;
- 		else
- 			pr_err("failed to get event_update cpus\n");
- 	default:
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index a27771eca9c2..8182b1e66ec6 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -334,7 +334,7 @@ __add_event(struct list_head *list, int *idx,
- 
- 	(*idx)++;
- 	evsel->core.cpus   = perf_cpu_map__get(cpus);
--	evsel->own_cpus    = perf_cpu_map__get(cpus);
-+	evsel->core.own_cpus = perf_cpu_map__get(cpus);
- 	evsel->system_wide = pmu ? pmu->is_uncore : false;
- 	evsel->auto_merge_stats = auto_merge_stats;
- 
+ int perf_stat_synthesize_config(struct perf_stat_config *config,
 -- 
 2.21.0
