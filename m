@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 066/107] libperf: Add perf_evlist__add() function
-Date: Mon, 29 Jul 2019 23:55:29 -0300
-Message-ID: <20190730025610.22603-67-acme@kernel.org>
+Subject: [PATCH 067/107] libperf: Add perf_evlist__remove() function
+Date: Mon, 29 Jul 2019 23:55:30 -0300
+Message-ID: <20190730025610.22603-68-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_evlist__add() function to add a perf_evsel in a perf_evlist
-struct.
+Adding perf_evlist__remove() function to remove a perf_evsel from
+a perf_evlist struct.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -24,75 +24,65 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-40-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-41-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c              | 7 +++++++
- tools/perf/lib/include/perf/evlist.h | 3 +++
+ tools/perf/lib/evlist.c              | 6 ++++++
+ tools/perf/lib/include/perf/evlist.h | 2 ++
  tools/perf/lib/libperf.map           | 1 +
  tools/perf/util/evlist.c             | 2 +-
- 4 files changed, 12 insertions(+), 1 deletion(-)
+ 4 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index fdc8c1894b37..e5f187fa4e57 100644
+index e5f187fa4e57..023fe4b44131 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -2,8 +2,15 @@
- #include <perf/evlist.h>
- #include <linux/list.h>
- #include <internal/evlist.h>
-+#include <internal/evsel.h>
- 
- void perf_evlist__init(struct perf_evlist *evlist)
+@@ -14,3 +14,9 @@ void perf_evlist__add(struct perf_evlist *evlist,
  {
- 	INIT_LIST_HEAD(&evlist->entries);
+ 	list_add_tail(&evsel->node, &evlist->entries);
  }
 +
-+void perf_evlist__add(struct perf_evlist *evlist,
-+		      struct perf_evsel *evsel)
++void perf_evlist__remove(struct perf_evlist *evlist,
++			 struct perf_evsel *evsel)
 +{
-+	list_add_tail(&evsel->node, &evlist->entries);
++	list_del_init(&evsel->node);
 +}
 diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index 1ddfcca0bd01..6992568b14a0 100644
+index 6992568b14a0..e0c87995c6ff 100644
 --- a/tools/perf/lib/include/perf/evlist.h
 +++ b/tools/perf/lib/include/perf/evlist.h
-@@ -5,7 +5,10 @@
- #include <perf/core.h>
- 
- struct perf_evlist;
-+struct perf_evsel;
- 
+@@ -10,5 +10,7 @@ struct perf_evsel;
  LIBPERF_API void perf_evlist__init(struct perf_evlist *evlist);
-+LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
-+				  struct perf_evsel *evsel);
+ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
+ 				  struct perf_evsel *evsel);
++LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
++				     struct perf_evsel *evsel);
  
  #endif /* __LIBPERF_EVLIST_H */
 diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 5ca6ff6fcdfa..06ccf31eb24d 100644
+index 06ccf31eb24d..168339f89a2e 100644
 --- a/tools/perf/lib/libperf.map
 +++ b/tools/perf/lib/libperf.map
-@@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
- 		perf_thread_map__put;
+@@ -12,6 +12,7 @@ LIBPERF_0.0.1 {
  		perf_evsel__init;
  		perf_evlist__init;
-+		perf_evlist__add;
+ 		perf_evlist__add;
++		perf_evlist__remove;
  	local:
  		*;
  };
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index f4aa6cf80559..f2b86f49ab8d 100644
+index f2b86f49ab8d..9b0108c23010 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -180,8 +180,8 @@ static void perf_evlist__propagate_maps(struct evlist *evlist)
- 
- void evlist__add(struct evlist *evlist, struct evsel *entry)
+@@ -194,7 +194,7 @@ void evlist__add(struct evlist *evlist, struct evsel *entry)
+ void evlist__remove(struct evlist *evlist, struct evsel *evsel)
  {
-+	perf_evlist__add(&evlist->core, &entry->core);
- 	entry->evlist = evlist;
--	list_add_tail(&entry->core.node, &evlist->core.entries);
- 	entry->idx = evlist->nr_entries;
- 	entry->tracking = !entry->idx;
+ 	evsel->evlist = NULL;
+-	list_del_init(&evsel->core.node);
++	perf_evlist__remove(&evlist->core, &evsel->core);
+ 	evlist->nr_entries -= 1;
+ }
  
 -- 
 2.21.0
