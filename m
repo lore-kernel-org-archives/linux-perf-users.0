@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 006/107] perf trace: Order -e syscalls table
-Date: Mon, 29 Jul 2019 23:54:29 -0300
-Message-ID: <20190730025610.22603-7-acme@kernel.org>
+Subject: [PATCH 003/107] perf evsel: Store backpointer to attached bpf_object
+Date: Mon, 29 Jul 2019 23:54:26 -0300
+Message-ID: <20190730025610.22603-4-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,45 +15,111 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The ev_qualifier is an array with the syscall ids passed via -e on the
-command line, sort it as we'll search it when setting up the
-BPF_MAP_TYPE_PROG_ARRAY.
+We may want to get to this bpf_object, to search for other BPF programs,
+etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-c8hprylp3ai6e0z9burn2r3s@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-3y8hrb6lszjfi23vjlic3cib@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/bpf-loader.c   | 4 ++--
+ tools/perf/util/bpf-loader.h   | 2 +-
+ tools/perf/util/evsel.c        | 1 +
+ tools/perf/util/evsel.h        | 3 +++
+ tools/perf/util/parse-events.c | 3 ++-
+ 5 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index bfd739a321d1..9bd5ecd6a8dd 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1528,6 +1528,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	return syscall__set_arg_fmts(sc);
- }
+diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
+index c61974a50aa5..6d0dfb777a79 100644
+--- a/tools/perf/util/bpf-loader.c
++++ b/tools/perf/util/bpf-loader.c
+@@ -763,7 +763,7 @@ int bpf__foreach_event(struct bpf_object *obj,
  
-+static int intcmp(const void *a, const void *b)
-+{
-+	const int *one = a, *another = b;
+ 		if (priv->is_tp) {
+ 			fd = bpf_program__fd(prog);
+-			err = (*func)(priv->sys_name, priv->evt_name, fd, arg);
++			err = (*func)(priv->sys_name, priv->evt_name, fd, obj, arg);
+ 			if (err) {
+ 				pr_debug("bpf: tracepoint call back failed, stop iterate\n");
+ 				return err;
+@@ -788,7 +788,7 @@ int bpf__foreach_event(struct bpf_object *obj,
+ 				return fd;
+ 			}
+ 
+-			err = (*func)(tev->group, tev->event, fd, arg);
++			err = (*func)(tev->group, tev->event, fd, obj, arg);
+ 			if (err) {
+ 				pr_debug("bpf: call back failed, stop iterate\n");
+ 				return err;
+diff --git a/tools/perf/util/bpf-loader.h b/tools/perf/util/bpf-loader.h
+index 3f46856e3330..8c3441a4b72c 100644
+--- a/tools/perf/util/bpf-loader.h
++++ b/tools/perf/util/bpf-loader.h
+@@ -46,7 +46,7 @@ struct parse_events_term;
+ #define PERF_BPF_PROBE_GROUP "perf_bpf_probe"
+ 
+ typedef int (*bpf_prog_iter_callback_t)(const char *group, const char *event,
+-					int fd, void *arg);
++					int fd, struct bpf_object *obj, void *arg);
+ 
+ #ifdef HAVE_LIBBPF_SUPPORT
+ struct bpf_object *bpf__prepare_load(const char *filename, bool source);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 52459dd5ad0c..7d1757a2ec46 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -234,6 +234,7 @@ void perf_evsel__init(struct perf_evsel *evsel,
+ 	evsel->scale	   = 1.0;
+ 	evsel->max_events  = ULONG_MAX;
+ 	evsel->evlist	   = NULL;
++	evsel->bpf_obj	   = NULL;
+ 	evsel->bpf_fd	   = -1;
+ 	INIT_LIST_HEAD(&evsel->node);
+ 	INIT_LIST_HEAD(&evsel->config_terms);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index cad54e8ba522..b27935a6d36c 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -82,6 +82,8 @@ enum perf_tool_event {
+ 	PERF_TOOL_DURATION_TIME = 1,
+ };
+ 
++struct bpf_object;
 +
-+	return *one - *another;
-+}
-+
- static int trace__validate_ev_qualifier(struct trace *trace)
+ /** struct perf_evsel - event selector
+  *
+  * @evlist - evlist this evsel is in, if it is in one.
+@@ -152,6 +154,7 @@ struct perf_evsel {
+ 	char			*group_name;
+ 	bool			cmdline_group_boundary;
+ 	struct list_head	config_terms;
++	struct bpf_object	*bpf_obj;
+ 	int			bpf_fd;
+ 	bool			auto_merge_stats;
+ 	bool			merged_stat;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index fac6b32ef94a..0540303e5e97 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -630,7 +630,7 @@ struct __add_bpf_event_param {
+ 	struct list_head *head_config;
+ };
+ 
+-static int add_bpf_event(const char *group, const char *event, int fd,
++static int add_bpf_event(const char *group, const char *event, int fd, struct bpf_object *obj,
+ 			 void *_param)
  {
- 	int err = 0;
-@@ -1591,6 +1598,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+ 	LIST_HEAD(new_evsels);
+@@ -672,6 +672,7 @@ static int add_bpf_event(const char *group, const char *event, int fd,
+ 		pr_debug("adding %s:%s to %p\n",
+ 			 group, event, pos);
+ 		pos->bpf_fd = fd;
++		pos->bpf_obj = obj;
  	}
- 
- 	trace->ev_qualifier_ids.nr = nr_used;
-+	qsort(trace->ev_qualifier_ids.entries, nr_used, sizeof(int), intcmp);
- out:
- 	if (printed_invalid_prefix)
- 		pr_debug("\n");
+ 	list_splice(&new_evsels, list);
+ 	return 0;
 -- 
 2.21.0
