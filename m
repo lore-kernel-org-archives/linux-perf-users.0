@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 075/107] libperf: Add perf_evlist__delete() function
-Date: Mon, 29 Jul 2019 23:55:38 -0300
-Message-ID: <20190730025610.22603-76-acme@kernel.org>
+Subject: [PATCH 058/107] libperf: Add perf_thread_map struct
+Date: Mon, 29 Jul 2019 23:55:21 -0300
+Message-ID: <20190730025610.22603-59-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,24 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_evlist__delete() function to delete a perf_evlist instance.
+Add perf_thread_map struct to libperf.
+
+It's added as a declaration into into:
+
+  include/perf/threadmap.h
+
+which will be included by users.
+
+The perf_thread_map struct definition is added into:
+
+  include/internal/threadmap.h
+
+which is not to be included by users, but shared within perf and
+libperf.
+
+We tried the total separation of the perf_thread_map struct in libperf,
+but it lead to complications and much bigger changes in perf code, so we
+decided to share the declaration.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -23,58 +40,101 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-49-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-32-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c              | 6 ++++++
- tools/perf/lib/include/perf/evlist.h | 1 +
- tools/perf/lib/libperf.map           | 1 +
- 3 files changed, 8 insertions(+)
+ tools/perf/lib/Build                        |  1 +
+ tools/perf/lib/include/internal/threadmap.h | 21 +++++++++++++++++++++
+ tools/perf/lib/include/perf/threadmap.h     |  7 +++++++
+ tools/perf/lib/threadmap.c                  |  5 +++++
+ tools/perf/util/thread_map.h                | 13 +------------
+ 5 files changed, 35 insertions(+), 12 deletions(-)
+ create mode 100644 tools/perf/lib/include/internal/threadmap.h
+ create mode 100644 tools/perf/lib/include/perf/threadmap.h
+ create mode 100644 tools/perf/lib/threadmap.c
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 979ee423490f..087ef76ea8fd 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -4,6 +4,7 @@
- #include <internal/evlist.h>
- #include <internal/evsel.h>
- #include <linux/zalloc.h>
-+#include <stdlib.h>
- 
- void perf_evlist__init(struct perf_evlist *evlist)
- {
-@@ -54,3 +55,8 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
- 
- 	return next;
- }
+diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+index 195b274db49a..9beadfc81a71 100644
+--- a/tools/perf/lib/Build
++++ b/tools/perf/lib/Build
+@@ -1,2 +1,3 @@
+ libperf-y += core.o
+ libperf-y += cpumap.o
++libperf-y += threadmap.o
+diff --git a/tools/perf/lib/include/internal/threadmap.h b/tools/perf/lib/include/internal/threadmap.h
+new file mode 100644
+index 000000000000..c8088005a9ab
+--- /dev/null
++++ b/tools/perf/lib/include/internal/threadmap.h
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_INTERNAL_THREADMAP_H
++#define __LIBPERF_INTERNAL_THREADMAP_H
 +
-+void perf_evlist__delete(struct perf_evlist *evlist)
-+{
-+	free(evlist);
-+}
-diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index 5092b622935b..9a126fd0773c 100644
---- a/tools/perf/lib/include/perf/evlist.h
-+++ b/tools/perf/lib/include/perf/evlist.h
-@@ -13,6 +13,7 @@ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
- LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
- 				     struct perf_evsel *evsel);
- LIBPERF_API struct perf_evlist *perf_evlist__new(void);
-+LIBPERF_API void perf_evlist__delete(struct perf_evlist *evlist);
- LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
- 						 struct perf_evsel *evsel);
++#include <linux/refcount.h>
++#include <sys/types.h>
++#include <unistd.h>
++
++struct thread_map_data {
++	pid_t	 pid;
++	char	*comm;
++};
++
++struct perf_thread_map {
++	refcount_t	refcnt;
++	int		nr;
++	int		err_thread;
++	struct thread_map_data map[];
++};
++
++#endif /* __LIBPERF_INTERNAL_THREADMAP_H */
+diff --git a/tools/perf/lib/include/perf/threadmap.h b/tools/perf/lib/include/perf/threadmap.h
+new file mode 100644
+index 000000000000..dc3a3837b56f
+--- /dev/null
++++ b/tools/perf/lib/include/perf/threadmap.h
+@@ -0,0 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_THREADMAP_H
++#define __LIBPERF_THREADMAP_H
++
++struct perf_thread_map;
++
++#endif /* __LIBPERF_THREADMAP_H */
+diff --git a/tools/perf/lib/threadmap.c b/tools/perf/lib/threadmap.c
+new file mode 100644
+index 000000000000..163dc609b909
+--- /dev/null
++++ b/tools/perf/lib/threadmap.c
+@@ -0,0 +1,5 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <perf/threadmap.h>
++#include <stdlib.h>
++#include <linux/refcount.h>
++#include <internal/threadmap.h>
+diff --git a/tools/perf/util/thread_map.h b/tools/perf/util/thread_map.h
+index 9358b1b6e657..5a7be6f8934f 100644
+--- a/tools/perf/util/thread_map.h
++++ b/tools/perf/util/thread_map.h
+@@ -5,18 +5,7 @@
+ #include <sys/types.h>
+ #include <stdio.h>
+ #include <linux/refcount.h>
+-
+-struct thread_map_data {
+-	pid_t    pid;
+-	char	*comm;
+-};
+-
+-struct perf_thread_map {
+-	refcount_t refcnt;
+-	int nr;
+-	int err_thread;
+-	struct thread_map_data map[];
+-};
++#include <internal/threadmap.h>
  
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index c0968226f7b6..153e77cd6739 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -14,6 +14,7 @@ LIBPERF_0.0.1 {
- 		perf_evsel__new;
- 		perf_evsel__init;
- 		perf_evlist__new;
-+		perf_evlist__delete;
- 		perf_evlist__init;
- 		perf_evlist__add;
- 		perf_evlist__remove;
+ struct thread_map_event;
+ 
 -- 
 2.21.0
