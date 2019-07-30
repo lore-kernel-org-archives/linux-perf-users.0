@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 054/107] libperf: Add debug output support
-Date: Mon, 29 Jul 2019 23:55:17 -0300
-Message-ID: <20190730025610.22603-55-acme@kernel.org>
+Subject: [PATCH 055/107] libperf: Add perf_cpu_map struct
+Date: Mon, 29 Jul 2019 23:55:18 -0300
+Message-ID: <20190730025610.22603-56-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,24 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_set_print() function to allow setting an output function
-for warn/info/debug messages.
+Add perf_cpu_map struct to libperf.
+
+It's added as a declaration into:
+
+  include/perf/cpumap.h
+
+which will be included by users.
+
+The perf_cpu_map struct definition is added into:
+
+  include/internal/cpumap.h
+
+which is not to be included by users, but shared within perf and
+libperf.
+
+We tried the total separation of the perf_cpu_map struct in libperf, but
+it lead to complications and much bigger changes in perf code, so we
+decided to share the declaration.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -24,115 +40,90 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-28-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-29-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/core.c              | 34 ++++++++++++++++++++++++++++++
- tools/perf/lib/include/perf/core.h | 13 ++++++++++++
- tools/perf/lib/internal.h          | 18 ++++++++++++++++
- tools/perf/lib/libperf.map         |  2 ++
- 4 files changed, 67 insertions(+)
- create mode 100644 tools/perf/lib/internal.h
+ tools/perf/lib/Build                     |  1 +
+ tools/perf/lib/cpumap.c                  |  5 +++++
+ tools/perf/lib/include/internal/cpumap.h | 13 +++++++++++++
+ tools/perf/lib/include/perf/cpumap.h     |  7 +++++++
+ tools/perf/util/cpumap.h                 |  7 +------
+ 5 files changed, 27 insertions(+), 6 deletions(-)
+ create mode 100644 tools/perf/lib/cpumap.c
+ create mode 100644 tools/perf/lib/include/internal/cpumap.h
+ create mode 100644 tools/perf/lib/include/perf/cpumap.h
 
-diff --git a/tools/perf/lib/core.c b/tools/perf/lib/core.c
-index e69de29bb2d1..29d5e3348718 100644
---- a/tools/perf/lib/core.c
-+++ b/tools/perf/lib/core.c
-@@ -0,0 +1,34 @@
+diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
+index 5196958cec01..195b274db49a 100644
+--- a/tools/perf/lib/Build
++++ b/tools/perf/lib/Build
+@@ -1 +1,2 @@
+ libperf-y += core.o
++libperf-y += cpumap.o
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+new file mode 100644
+index 000000000000..86a199c26f20
+--- /dev/null
++++ b/tools/perf/lib/cpumap.c
+@@ -0,0 +1,5 @@
 +// SPDX-License-Identifier: GPL-2.0-only
++#include <perf/cpumap.h>
++#include <stdlib.h>
++#include <linux/refcount.h>
++#include <internal/cpumap.h>
+diff --git a/tools/perf/lib/include/internal/cpumap.h b/tools/perf/lib/include/internal/cpumap.h
+new file mode 100644
+index 000000000000..53ce95374b05
+--- /dev/null
++++ b/tools/perf/lib/include/internal/cpumap.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LIBPERF_INTERNAL_CPUMAP_H
++#define __LIBPERF_INTERNAL_CPUMAP_H
 +
-+#define __printf(a, b)  __attribute__((format(printf, a, b)))
++#include <linux/refcount.h>
 +
-+#include <stdio.h>
-+#include <stdarg.h>
-+#include <perf/core.h>
-+#include "internal.h"
-+
-+static int __base_pr(enum libperf_print_level level, const char *format,
-+		     va_list args)
-+{
-+	return vfprintf(stderr, format, args);
-+}
-+
-+static libperf_print_fn_t __libperf_pr = __base_pr;
-+
-+void libperf_set_print(libperf_print_fn_t fn)
-+{
-+	__libperf_pr = fn;
-+}
-+
-+__printf(2, 3)
-+void libperf_print(enum libperf_print_level level, const char *format, ...)
-+{
-+	va_list args;
-+
-+	if (!__libperf_pr)
-+		return;
-+
-+	va_start(args, format);
-+	__libperf_pr(level, format, args);
-+	va_end(args);
-+}
-diff --git a/tools/perf/lib/include/perf/core.h b/tools/perf/lib/include/perf/core.h
-index e2e4b43c9131..c341a7b2c874 100644
---- a/tools/perf/lib/include/perf/core.h
-+++ b/tools/perf/lib/include/perf/core.h
-@@ -2,8 +2,21 @@
- #ifndef __LIBPERF_CORE_H
- #define __LIBPERF_CORE_H
- 
-+#include <stdarg.h>
-+
- #ifndef LIBPERF_API
- #define LIBPERF_API __attribute__((visibility("default")))
- #endif
- 
-+enum libperf_print_level {
-+	LIBPERF_WARN,
-+	LIBPERF_INFO,
-+	LIBPERF_DEBUG,
++struct perf_cpu_map {
++	refcount_t	refcnt;
++	int		nr;
++	int		map[];
 +};
 +
-+typedef int (*libperf_print_fn_t)(enum libperf_print_level level,
-+				  const char *, va_list ap);
-+
-+LIBPERF_API void libperf_set_print(libperf_print_fn_t fn);
-+
- #endif /* __LIBPERF_CORE_H */
-diff --git a/tools/perf/lib/internal.h b/tools/perf/lib/internal.h
++#endif /* __LIBPERF_INTERNAL_CPUMAP_H */
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
 new file mode 100644
-index 000000000000..dc92f241732e
+index 000000000000..8355d3ce7d0c
 --- /dev/null
-+++ b/tools/perf/lib/internal.h
-@@ -0,0 +1,18 @@
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -0,0 +1,7 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __LIBPERF_INTERNAL_H
-+#define __LIBPERF_INTERNAL_H
++#ifndef __LIBPERF_CPUMAP_H
++#define __LIBPERF_CPUMAP_H
 +
-+void libperf_print(enum libperf_print_level level,
-+		   const char *format, ...)
-+	__attribute__((format(printf, 2, 3)));
++struct perf_cpu_map;
 +
-+#define __pr(level, fmt, ...)   \
-+do {                            \
-+	libperf_print(level, "libperf: " fmt, ##__VA_ARGS__);     \
-+} while (0)
-+
-+#define pr_warning(fmt, ...)    __pr(LIBPERF_WARN, fmt, ##__VA_ARGS__)
-+#define pr_info(fmt, ...)       __pr(LIBPERF_INFO, fmt, ##__VA_ARGS__)
-+#define pr_debug(fmt, ...)      __pr(LIBPERF_DEBUG, fmt, ##__VA_ARGS__)
-+
-+#endif /* __LIBPERF_INTERNAL_H */
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index a8e913988edf..3536242c545c 100644
---- a/tools/perf/lib/libperf.map
-+++ b/tools/perf/lib/libperf.map
-@@ -1,4 +1,6 @@
- LIBPERF_0.0.1 {
-+	global:
-+		libperf_set_print;
- 	local:
- 		*;
- };
++#endif /* __LIBPERF_CPUMAP_H */
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index 22729beae959..c2ba9ae195f7 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -5,16 +5,11 @@
+ #include <stdio.h>
+ #include <stdbool.h>
+ #include <linux/refcount.h>
++#include <internal/cpumap.h>
+ 
+ #include "perf.h"
+ #include "util/debug.h"
+ 
+-struct perf_cpu_map {
+-	refcount_t refcnt;
+-	int nr;
+-	int map[];
+-};
+-
+ struct perf_cpu_map *cpu_map__new(const char *cpu_list);
+ struct perf_cpu_map *cpu_map__empty_new(int nr);
+ struct perf_cpu_map *cpu_map__dummy_new(void);
 -- 
 2.21.0
