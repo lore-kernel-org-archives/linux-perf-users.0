@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 095/107] libperf: Adopt simplified perf_evlist__open()/close() functions from tools/perf
-Date: Mon, 29 Jul 2019 23:55:58 -0300
-Message-ID: <20190730025610.22603-96-acme@kernel.org>
+Subject: [PATCH 096/107] libperf: Adopt perf_evlist__enable()/disable() functions from perf
+Date: Mon, 29 Jul 2019 23:55:59 -0300
+Message-ID: <20190730025610.22603-97-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,18 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the following functions:
+Adopt the following functions from tools/perf:
 
-  perf_evlist__open()
-  perf_evlist__close()
-
-It's a simplified version of perf's evlist__open() without the sampling
-id index calculations. We can try to merge it in the future when we need
-it in some new libperf user.
-
-Also adopt some helper evlist traversing macros. In the future we can
-remove them from util/evlist.h, but that requires also some other
-changes.
+  perf_evlist__enable()
+  perf_evlist__disable()
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -34,129 +26,61 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-69-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-70-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c                  | 27 +++++++++++++++++++
- tools/perf/lib/include/internal/evlist.h | 34 ++++++++++++++++++++++++
- tools/perf/lib/include/perf/evlist.h     |  2 ++
- tools/perf/lib/libperf.map               |  2 ++
- 4 files changed, 65 insertions(+)
+ tools/perf/lib/evlist.c              | 16 ++++++++++++++++
+ tools/perf/lib/include/perf/evlist.h |  2 ++
+ tools/perf/lib/libperf.map           |  2 ++
+ 3 files changed, 20 insertions(+)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 6a2308ef9868..5dda96b1d4da 100644
+index 5dda96b1d4da..f4dc9a208332 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <perf/evlist.h>
-+#include <perf/evsel.h>
- #include <linux/list.h>
- #include <internal/evlist.h>
- #include <internal/evsel.h>
-@@ -114,3 +115,29 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
- 
- 	perf_evlist__propagate_maps(evlist);
+@@ -141,3 +141,19 @@ void perf_evlist__close(struct perf_evlist *evlist)
+ 	perf_evlist__for_each_entry_reverse(evlist, evsel)
+ 		perf_evsel__close(evsel);
  }
 +
-+int perf_evlist__open(struct perf_evlist *evlist)
-+{
-+	struct perf_evsel *evsel;
-+	int err;
-+
-+	perf_evlist__for_each_entry(evlist, evsel) {
-+		err = perf_evsel__open(evsel, evsel->cpus, evsel->threads);
-+		if (err < 0)
-+			goto out_err;
-+	}
-+
-+	return 0;
-+
-+out_err:
-+	perf_evlist__close(evlist);
-+	return err;
-+}
-+
-+void perf_evlist__close(struct perf_evlist *evlist)
++void perf_evlist__enable(struct perf_evlist *evlist)
 +{
 +	struct perf_evsel *evsel;
 +
-+	perf_evlist__for_each_entry_reverse(evlist, evsel)
-+		perf_evsel__close(evsel);
++	perf_evlist__for_each_entry(evlist, evsel)
++		perf_evsel__enable(evsel);
 +}
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index b7b43dbc9b82..448891f06e3e 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -2,6 +2,8 @@
- #ifndef __LIBPERF_INTERNAL_EVLIST_H
- #define __LIBPERF_INTERNAL_EVLIST_H
- 
-+#include <linux/list.h>
 +
- struct perf_cpu_map;
- struct perf_thread_map;
- 
-@@ -13,4 +15,36 @@ struct perf_evlist {
- 	struct perf_thread_map	*threads;
- };
- 
-+/**
-+ * __perf_evlist__for_each_entry - iterate thru all the evsels
-+ * @list: list_head instance to iterate
-+ * @evsel: struct perf_evsel iterator
-+ */
-+#define __perf_evlist__for_each_entry(list, evsel) \
-+	list_for_each_entry(evsel, list, node)
++void perf_evlist__disable(struct perf_evlist *evlist)
++{
++	struct perf_evsel *evsel;
 +
-+/**
-+ * evlist__for_each_entry - iterate thru all the evsels
-+ * @evlist: perf_evlist instance to iterate
-+ * @evsel: struct perf_evsel iterator
-+ */
-+#define perf_evlist__for_each_entry(evlist, evsel) \
-+	__perf_evlist__for_each_entry(&(evlist)->entries, evsel)
-+
-+/**
-+ * __perf_evlist__for_each_entry_reverse - iterate thru all the evsels in reverse order
-+ * @list: list_head instance to iterate
-+ * @evsel: struct evsel iterator
-+ */
-+#define __perf_evlist__for_each_entry_reverse(list, evsel) \
-+	list_for_each_entry_reverse(evsel, list, node)
-+
-+/**
-+ * perf_evlist__for_each_entry_reverse - iterate thru all the evsels in reverse order
-+ * @evlist: evlist instance to iterate
-+ * @evsel: struct evsel iterator
-+ */
-+#define perf_evlist__for_each_entry_reverse(evlist, evsel) \
-+	__perf_evlist__for_each_entry_reverse(&(evlist)->entries, evsel)
-+
- #endif /* __LIBPERF_INTERNAL_EVLIST_H */
++	perf_evlist__for_each_entry(evlist, evsel)
++		perf_evsel__disable(evsel);
++}
 diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index b1d8dee018d6..6d3dda743541 100644
+index 6d3dda743541..38365f8f3fba 100644
 --- a/tools/perf/lib/include/perf/evlist.h
 +++ b/tools/perf/lib/include/perf/evlist.h
-@@ -18,6 +18,8 @@ LIBPERF_API struct perf_evlist *perf_evlist__new(void);
- LIBPERF_API void perf_evlist__delete(struct perf_evlist *evlist);
- LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
+@@ -20,6 +20,8 @@ LIBPERF_API struct perf_evsel* perf_evlist__next(struct perf_evlist *evlist,
  						 struct perf_evsel *evsel);
-+LIBPERF_API int perf_evlist__open(struct perf_evlist *evlist);
-+LIBPERF_API void perf_evlist__close(struct perf_evlist *evlist);
+ LIBPERF_API int perf_evlist__open(struct perf_evlist *evlist);
+ LIBPERF_API void perf_evlist__close(struct perf_evlist *evlist);
++LIBPERF_API void perf_evlist__enable(struct perf_evlist *evlist);
++LIBPERF_API void perf_evlist__disable(struct perf_evlist *evlist);
  
  #define perf_evlist__for_each_evsel(evlist, pos)	\
  	for ((pos) = perf_evlist__next((evlist), NULL);	\
 diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 9f43b5cda031..4f966ddd5e53 100644
+index 4f966ddd5e53..2068e3d52227 100644
 --- a/tools/perf/lib/libperf.map
 +++ b/tools/perf/lib/libperf.map
-@@ -25,6 +25,8 @@ LIBPERF_0.0.1 {
- 		perf_evsel__threads;
- 		perf_evlist__new;
+@@ -27,6 +27,8 @@ LIBPERF_0.0.1 {
  		perf_evlist__delete;
-+		perf_evlist__open;
-+		perf_evlist__close;
+ 		perf_evlist__open;
+ 		perf_evlist__close;
++		perf_evlist__enable;
++		perf_evlist__disable;
  		perf_evlist__init;
  		perf_evlist__add;
  		perf_evlist__remove;
