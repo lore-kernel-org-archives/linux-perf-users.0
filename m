@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 013/107] perf augmented_raw_syscalls: Support copying two string syscall args
-Date: Mon, 29 Jul 2019 23:54:36 -0300
-Message-ID: <20190730025610.22603-14-acme@kernel.org>
+Subject: [PATCH 016/107] perf augmented_raw_syscalls: Augment sockaddr arg in 'connect'
+Date: Mon, 29 Jul 2019 23:54:39 -0300
+Message-ID: <20190730025610.22603-17-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,82 +15,98 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Starting with the renameat and renameat2 syscall, that both receive as
-second and fourth parameters a pathname:
+We already had a beautifier for an augmented sockaddr payload, but that
+was when we were hooking on each syscalls:sys_enter_foo tracepoints,
+since now we're almost doing that by doing a tail call from
+raw_syscalls:sys_enter, its almost the same, we can reuse it straight
+away.
 
-  # perf trace -e rename* mv one ANOTHER
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  mv: cannot stat 'one': No such file or directory
-  renameat2(AT_FDCWD, "one", AT_FDCWD, "ANOTHER", RENAME_NOREPLACE) = -1 ENOENT (No such file or directory)
-  #
-
-Since the per CPU scratch buffer map has space for two maximum sized
-pathnames, the verifier is satisfied that there will be no overrun.
+  # perf trace -e connec* ssh www.bla.com
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(4<socket:[16604782]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 0x6e) = 0
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(5</etc/hosts>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(5</etc/hosts>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 0x6e) = -1 ENOENT (No such file or directory)
+  connect(5</etc/hosts>, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 0x10) = 0
+  connect(5</etc/hosts>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 0x10) = 0
+  connect(5</etc/hosts>, { .family: PF_INET6, port: 22, addr: ::ffff:146.112.61.108 }, 0x1c) = 0
+  ^C#
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-x2uboyg5kx2wqeru288209b6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-5xkrbcpjsgnr3zt1aqdd7nvc@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c                    |  2 ++
- .../examples/bpf/augmented_raw_syscalls.c     | 20 +++++++++++++++++++
- 2 files changed, 22 insertions(+)
+ .../examples/bpf/augmented_raw_syscalls.c     | 35 ++++++++++++++++---
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a681b8c2ee4e..c64f7c99db15 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -873,9 +873,11 @@ static struct syscall_fmt {
- 	{ .name	    = "recvmsg",
- 	  .arg = { [2] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ }, }, },
- 	{ .name	    = "renameat",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ }, }, },
- 	{ .name	    = "renameat2",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
- 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
- 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ },
- 		   [4] = { .scnprintf = SCA_RENAMEAT2_FLAGS, /* flags */ }, }, },
 diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index ce308b9a317c..df52d92e1c69 100644
+index 77bb6a0edce3..d7a292d7ee2f 100644
 --- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
 +++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -70,6 +70,7 @@ pid_filter(pids_filtered);
- struct augmented_args_filename {
+@@ -16,6 +16,7 @@
+ 
+ #include <unistd.h>
+ #include <linux/limits.h>
++#include <linux/socket.h>
+ #include <pid_filter.h>
+ 
+ /* bpf-output associated map */
+@@ -69,10 +70,13 @@ pid_filter(pids_filtered);
+ 
+ struct augmented_args_payload {
         struct syscall_enter_args args;
-        struct augmented_filename filename;
-+       struct augmented_filename filename2;
+-       struct {
+-	       struct augmented_filename filename;
+-	       struct augmented_filename filename2;
+-       };
++       union {
++		struct {
++			struct augmented_filename filename,
++						  filename2;
++		};
++		struct sockaddr_storage saddr;
++	};
  };
  
- bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
-@@ -148,6 +149,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
- 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
+ bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
+@@ -112,11 +116,32 @@ int syscall_unaugmented(struct syscall_enter_args *args)
  }
  
-+SEC("!syscalls:sys_enter_renameat")
-+int sys_enter_renameat(struct syscall_enter_args *args)
+ /*
+- * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
++ * These will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
+  * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
+  * on from there, reading the first syscall arg as a string, i.e. open's
+  * filename.
+  */
++SEC("!syscalls:sys_enter_connect")
++int sys_enter_connect(struct syscall_enter_args *args)
 +{
 +	int key = 0;
-+	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	const void *oldpath_arg = (const void *)args->args[1],
-+		   *newpath_arg = (const void *)args->args[3];
-+	unsigned int len = sizeof(augmented_args->args), oldpath_len;
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
++	const void *sockaddr_arg = (const void *)args->args[1];
++	unsigned int socklen = args->args[2];
++	unsigned int len = sizeof(augmented_args->args);
 +
 +        if (augmented_args == NULL)
 +                return 1; /* Failure: don't filter */
 +
-+	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
-+	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
++	if (socklen > sizeof(augmented_args->saddr))
++		socklen = sizeof(augmented_args->saddr);
++
++	probe_read(&augmented_args->saddr, socklen, sockaddr_arg);
 +
 +	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
-+	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len + socklen);
 +}
 +
- SEC("raw_syscalls:sys_enter")
- int sys_enter(struct syscall_enter_args *args)
+ SEC("!syscalls:sys_enter_open")
+ int sys_enter_open(struct syscall_enter_args *args)
  {
 -- 
 2.21.0
