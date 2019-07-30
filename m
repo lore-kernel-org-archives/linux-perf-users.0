@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 005/107] perf trace: Look up maps just on the __augmented_syscalls__ BPF object
-Date: Mon, 29 Jul 2019 23:54:28 -0300
-Message-ID: <20190730025610.22603-6-acme@kernel.org>
+Subject: [PATCH 007/107] perf trace: Add BPF handler for unaugmented syscalls
+Date: Mon, 29 Jul 2019 23:54:30 -0300
+Message-ID: <20190730025610.22603-8-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,73 +10,116 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190730025610.22603-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We can conceivably have multiple BPF object files for other purposes, so
-better look just on the BPF object containing the __augmented_syscalls__
-map for all things augmented_syscalls related.
+Will be used to assign to syscalls that don't need augmentation, i.e.
+those with just integer args.
+
+All syscalls will be in a BPF_MAP_TYPE_PROG_ARRAY, and the
+bpf_tail_call() keyed by the syscall id will either find nothing in
+place, which means the syscall is being filtered, or a function that
+will either add things like filenames to the ring buffer, right after
+the raw syscall args, or be this unaugmented handler that will just
+return 1, meaning don't filter the original
+raw_syscalls:sys_{enter,exit} tracepoint.
+
+For now it is not really being used, this is just leg work to break the
+patch into smaller pieces.
+
+It introduces a trace__find_bpf_program_by_title() helper that in turn
+uses libbpf's bpf_object__find_program_by_title() on the BPF object with
+the __augmented_syscalls__ map. "title" is how libbpf calls the SEC()
+argument for functions, i.e. the ELF section that follows a convention
+to specify what BPF program (a function with this SEC() marking) should
+be connected to which tracepoint, kprobes, etc.
+
+In perf anything that is of the form SEC("sys:event_name") will be
+connected to that tracepoint by perf's BPF loader.
+
+In this case its something that will be bpf_tail_call()ed from either
+the "raw_syscalls:sys_enter" or "raw_syscall:sys_exit" tracepoints, so
+its named "!raw_syscalls:unaugmented" to convey that idea, i.e. its not
+going to be directly attached to a tracepoint, thus it starts with a
+"!".
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-3jt8knkuae9lt705r1lns202@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-meucpjx2u0slpkayx56lxqq6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ tools/perf/builtin-trace.c                       | 16 ++++++++++++++++
+ tools/perf/examples/bpf/augmented_raw_syscalls.c |  6 ++++++
+ 2 files changed, 22 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 6aa080845a84..bfd739a321d1 100644
+index 9bd5ecd6a8dd..07df952a0d7f 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3669,28 +3669,22 @@ static int trace__parse_cgroups(const struct option *opt, const char *str, int u
- 	return 0;
+@@ -88,6 +88,7 @@ struct trace {
+ 					  *sys_exit,
+ 					  *augmented;
+ 		}		events;
++		struct bpf_program *unaugmented_prog;
+ 	} syscalls;
+ 	struct {
+ 		struct bpf_map *map;
+@@ -2733,6 +2734,14 @@ static int trace__set_ev_qualifier_tp_filter(struct trace *trace)
  }
  
--static struct bpf_map *bpf__find_map_by_name(const char *name)
-+static struct bpf_map *trace__find_bpf_map_by_name(struct trace *trace, const char *name)
- {
--	struct bpf_object *obj, *tmp;
--
--	bpf_object__for_each_safe(obj, tmp) {
--		struct bpf_map *map = bpf_object__find_map_by_name(obj, name);
--		if (map)
--			return map;
--
--	}
+ #ifdef HAVE_LIBBPF_SUPPORT
++static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace, const char *name)
++{
 +	if (trace->bpf_obj == NULL)
 +		return NULL;
- 
--	return NULL;
-+	return bpf_object__find_map_by_name(trace->bpf_obj, name);
- }
- 
- static void trace__set_bpf_map_filtered_pids(struct trace *trace)
++
++	return bpf_object__find_program_by_title(trace->bpf_obj, name);
++}
++
+ static void trace__init_bpf_map_syscall_args(struct trace *trace, int id, struct bpf_map_syscall_entry *entry)
  {
--	trace->filter_pids.map = bpf__find_map_by_name("pids_filtered");
-+	trace->filter_pids.map = trace__find_bpf_map_by_name(trace, "pids_filtered");
- }
- 
- static void trace__set_bpf_map_syscalls(struct trace *trace)
+ 	struct syscall *sc = trace__syscall_info(trace, NULL, id);
+@@ -2814,6 +2823,12 @@ static int trace__init_syscalls_bpf_map(struct trace *trace __maybe_unused)
  {
--	trace->syscalls.map = bpf__find_map_by_name("syscalls");
-+	trace->syscalls.map = trace__find_bpf_map_by_name(trace, "syscalls");
+ 	return 0;
+ }
++
++static struct bpf_program *trace__find_bpf_program_by_title(struct trace *trace __maybe_unused,
++							    const char *name __maybe_unused)
++{
++	return NULL;
++}
+ #endif // HAVE_LIBBPF_SUPPORT
+ 
+ static int trace__set_ev_qualifier_filter(struct trace *trace)
+@@ -3914,6 +3929,7 @@ int cmd_trace(int argc, const char **argv)
+ 
+ 		trace__set_bpf_map_filtered_pids(&trace);
+ 		trace__set_bpf_map_syscalls(&trace);
++		trace.syscalls.unaugmented_prog = trace__find_bpf_program_by_title(&trace, "!raw_syscalls:unaugmented");
+ 	}
+ 
+ 	err = bpf__setup_stdout(trace.evlist);
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 2f822bb51717..48a536b1be6d 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -88,6 +88,12 @@ unsigned int augmented_filename__read(struct augmented_filename *augmented_filen
+ 	return len;
  }
  
- static int trace__config(const char *var, const char *value, void *arg)
-@@ -3924,7 +3918,7 @@ int cmd_trace(int argc, const char **argv)
- 	err = -1;
- 
- 	if (map_dump_str) {
--		trace.dump.map = bpf__find_map_by_name(map_dump_str);
-+		trace.dump.map = trace__find_bpf_map_by_name(&trace, map_dump_str);
- 		if (trace.dump.map == NULL) {
- 			pr_err("ERROR: BPF map \"%s\" not found\n", map_dump_str);
- 			goto out;
++SEC("!raw_syscalls:unaugmented")
++int syscall_unaugmented(struct syscall_enter_args *args)
++{
++	return 1;
++}
++
+ SEC("raw_syscalls:sys_enter")
+ int sys_enter(struct syscall_enter_args *args)
+ {
 -- 
 2.21.0
