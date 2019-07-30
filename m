@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 015/107] perf augmented_raw_syscalls: Rename augmented_args_filename to augmented_args_payload
-Date: Mon, 29 Jul 2019 23:54:38 -0300
-Message-ID: <20190730025610.22603-16-acme@kernel.org>
+Subject: [PATCH 017/107] perf trace beauty: Make connect's addrlen be printed as an int, not hex
+Date: Mon, 29 Jul 2019 23:54:40 -0300
+Message-ID: <20190730025610.22603-18-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,96 +15,83 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It'll get other stuff in there than just filenames, starting with
-sockaddr for 'connect' and 'bind'.
+  # perf trace -e connec* ssh www.bla.com
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(3</var/lib/sss/mc/passwd>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(4<socket:[16610959]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 110) = 0
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(7, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(5, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 53, addr: 192.168.44.1 }, 16) = 0
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 16) = 0
+  connect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET6, port: 22, addr: ::ffff:146.112.61.108 }, 28) = 0
+  ^Cconnect(5</usr/lib64/libnss_mdns4_minimal.so.2>, { .family: PF_INET, port: 22, addr: 146.112.61.108 }, 16) = -1 (unknown) (INTERNAL ERROR: strerror_r(512, [buf], 128)=22)
+  #
+
+Argh, the SCA_FD needs to invalidate its cache when close is done...
+
+It works if the 'close' syscall is not filtered out ;-\
+
+  # perf trace -e close,connec* ssh www.bla.com
+  close(3)                                = 0
+  close(3</usr/lib64/libpcre2-8.so.0.8.0>) = 0
+  close(3)                                = 0
+  close(3</usr/lib64/libkrb5.so.3.3>)     = 0
+  close(3</usr/lib64/libkrb5.so.3.3>)     = 0
+  close(3)                                = 0
+  close(3</usr/lib64/libk5crypto.so.3.1>) = 0
+  close(3</usr/lib64/libk5crypto.so.3.1>) = 0
+  close(3</usr/lib64/libcom_err.so.2.1>)  = 0
+  close(3</usr/lib64/libcom_err.so.2.1>)  = 0
+  close(3)                                = 0
+  close(3</usr/lib64/libkrb5support.so.0.1>) = 0
+  close(3</usr/lib64/libkrb5support.so.0.1>) = 0
+  close(3</usr/lib64/libkeyutils.so.1.8>) = 0
+  close(3</usr/lib64/libkeyutils.so.1.8>) = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  close(4)                                = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  connect(3</etc/nsswitch.conf>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  close(3</etc/nsswitch.conf>)            = 0
+  connect(3</usr/lib64/libnss_sss.so.2>, { .family: PF_LOCAL, path: /var/run/nscd/socket }, 110) = -1 ENOENT (No such file or directory)
+  close(3</usr/lib64/libnss_sss.so.2>)    = 0
+  close(3</usr/lib64/libnss_sss.so.2>)    = 0
+  close(3)                                = 0
+  close(3)                                = 0
+  connect(4<socket:[16616519]>, { .family: PF_LOCAL, path: /var/lib/sss/pipes/nss }, 110) = 0
+  ^C
+  #
+
+Will disable this beautifier when 'close' is filtered out...
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-bsexidtsn91ehdpzcd6n5fm9@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ekuiciyx4znchvy95c8p1yyi@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../examples/bpf/augmented_raw_syscalls.c     | 22 ++++++++++---------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index df52d92e1c69..77bb6a0edce3 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -67,13 +67,15 @@ struct augmented_filename {
- 
- pid_filter(pids_filtered);
- 
--struct augmented_args_filename {
-+struct augmented_args_payload {
-        struct syscall_enter_args args;
--       struct augmented_filename filename;
--       struct augmented_filename filename2;
-+       struct {
-+	       struct augmented_filename filename;
-+	       struct augmented_filename filename2;
-+       };
- };
- 
--bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
-+bpf_map(augmented_args_tmp, PERCPU_ARRAY, int, struct augmented_args_payload, 1);
- 
- static inline
- unsigned int augmented_filename__read(struct augmented_filename *augmented_filename,
-@@ -111,7 +113,7 @@ int syscall_unaugmented(struct syscall_enter_args *args)
- 
- /*
-  * This will be tail_called from SEC("raw_syscalls:sys_enter"), so will find in
-- * augmented_filename_map what was read by that raw_syscalls:sys_enter and go
-+ * augmented_args_tmp what was read by that raw_syscalls:sys_enter and go
-  * on from there, reading the first syscall arg as a string, i.e. open's
-  * filename.
-  */
-@@ -119,7 +121,7 @@ SEC("!syscalls:sys_enter_open")
- int sys_enter_open(struct syscall_enter_args *args)
- {
- 	int key = 0;
--	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
- 	const void *filename_arg = (const void *)args->args[0];
- 	unsigned int len = sizeof(augmented_args->args);
- 
-@@ -136,7 +138,7 @@ SEC("!syscalls:sys_enter_openat")
- int sys_enter_openat(struct syscall_enter_args *args)
- {
- 	int key = 0;
--	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
- 	const void *filename_arg = (const void *)args->args[1];
- 	unsigned int len = sizeof(augmented_args->args);
- 
-@@ -153,7 +155,7 @@ SEC("!syscalls:sys_enter_renameat")
- int sys_enter_renameat(struct syscall_enter_args *args)
- {
- 	int key = 0;
--	struct augmented_args_filename *augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
- 	const void *oldpath_arg = (const void *)args->args[1],
- 		   *newpath_arg = (const void *)args->args[3];
- 	unsigned int len = sizeof(augmented_args->args), oldpath_len;
-@@ -171,7 +173,7 @@ int sys_enter_renameat(struct syscall_enter_args *args)
- SEC("raw_syscalls:sys_enter")
- int sys_enter(struct syscall_enter_args *args)
- {
--	struct augmented_args_filename *augmented_args;
-+	struct augmented_args_payload *augmented_args;
- 	/*
- 	 * We start len, the amount of data that will be in the perf ring
- 	 * buffer, if this is not filtered out by one of pid_filter__has(),
-@@ -185,7 +187,7 @@ int sys_enter(struct syscall_enter_args *args)
- 	struct syscall *syscall;
- 	int key = 0;
- 
--        augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-+        augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
-         if (augmented_args == NULL)
-                 return 1;
- 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 5258399a1c94..123d7efc12e8 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -725,7 +725,8 @@ static struct syscall_fmt {
+ 	{ .name	    = "close",
+ 	  .arg = { [0] = { .scnprintf = SCA_CLOSE_FD, /* fd */ }, }, },
+ 	{ .name	    = "connect",
+-	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ }, }, },
++	  .arg = { [1] = { .scnprintf = SCA_SOCKADDR, /* servaddr */ },
++		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
+ 	{ .name	    = "epoll_ctl",
+ 	  .arg = { [1] = STRARRAY(op, epoll_ctl_ops), }, },
+ 	{ .name	    = "eventfd2",
 -- 
 2.21.0
