@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 038/107] perf evsel: Rename perf_evsel__new() to evsel__new()
-Date: Mon, 29 Jul 2019 23:55:01 -0300
-Message-ID: <20190730025610.22603-39-acme@kernel.org>
+Subject: [PATCH 037/107] perf evsel: Rename perf_evsel__delete() to evsel__delete()
+Date: Mon, 29 Jul 2019 23:55:00 -0300
+Message-ID: <20190730025610.22603-38-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Rename perf_evsel__new() to evsel__new(), so we don't have a name clash
-when we add perf_evsel__new() in libperf.
+Remame perf_evsel__delete() to evsel__delete(), so we don't have a name
+clash when we add perf_evsel__delete() in libperf.
+
+Also renaming perf_evsel__delete_priv() to evsel__delete_priv().
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -24,103 +26,214 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-12-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-11-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c     | 2 +-
- tools/perf/tests/sw-clock.c    | 2 +-
- tools/perf/util/evsel.c        | 2 +-
- tools/perf/util/evsel.h        | 2 +-
- tools/perf/util/header.c       | 4 ++--
- tools/perf/util/parse-events.c | 2 +-
- 6 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/builtin-inject.c                |  4 ++--
+ tools/perf/builtin-trace.c                 | 12 ++++++------
+ tools/perf/tests/evsel-tp-sched.c          |  4 ++--
+ tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
+ tools/perf/tests/openat-syscall.c          |  2 +-
+ tools/perf/util/evlist.c                   |  4 ++--
+ tools/perf/util/evsel.c                    |  4 ++--
+ tools/perf/util/evsel.h                    |  2 +-
+ tools/perf/util/parse-events.c             |  4 ++--
+ 9 files changed, 19 insertions(+), 19 deletions(-)
 
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index d2131fc863be..917c8fb4baa5 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -623,7 +623,7 @@ static void strip_fini(struct perf_inject *inject)
+ 		    ok_to_remove(evlist, evsel)) {
+ 			pr_debug("Deleting %s\n", perf_evsel__name(evsel));
+ 			perf_evlist__remove(evlist, evsel);
+-			perf_evsel__delete(evsel);
++			evsel__delete(evsel);
+ 		}
+ 	}
+ }
+@@ -725,7 +725,7 @@ static int __cmd_inject(struct perf_inject *inject)
+ 				pr_debug("Deleting %s\n",
+ 					 perf_evsel__name(evsel));
+ 				perf_evlist__remove(session->evlist, evsel);
+-				perf_evsel__delete(evsel);
++				evsel__delete(evsel);
+ 			}
+ 			if (inject->strip)
+ 				strip_fini(inject);
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 0f7d1859a2d1..c5eb47f4e42e 100644
+index e133204b3bb9..0f7d1859a2d1 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -2657,7 +2657,7 @@ static struct evsel *perf_evsel__new_pgfault(u64 config)
+@@ -274,10 +274,10 @@ static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
+ 	({ struct syscall_tp *sc = evsel->priv;\
+ 	   perf_evsel__init_tp_ptr_field(evsel, &sc->name, #name); })
  
- 	event_attr_init(&attr);
+-static void perf_evsel__delete_priv(struct evsel *evsel)
++static void evsel__delete_priv(struct evsel *evsel)
+ {
+ 	zfree(&evsel->priv);
+-	perf_evsel__delete(evsel);
++	evsel__delete(evsel);
+ }
  
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel)
- 		evsel->handler = trace__pgfault;
+ static int perf_evsel__init_syscall_tp(struct evsel *evsel)
+@@ -368,7 +368,7 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
+ 	return evsel;
  
-diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
-index 1c7d8adb43d0..247d3734686e 100644
---- a/tools/perf/tests/sw-clock.c
-+++ b/tools/perf/tests/sw-clock.c
-@@ -49,7 +49,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
- 		return -1;
+ out_delete:
+-	perf_evsel__delete_priv(evsel);
++	evsel__delete_priv(evsel);
+ 	return NULL;
+ }
+ 
+@@ -2638,7 +2638,7 @@ static bool perf_evlist__add_vfs_getname(struct evlist *evlist)
+ 
+ 		list_del_init(&evsel->node);
+ 		evsel->evlist = NULL;
+-		perf_evsel__delete(evsel);
++		evsel__delete(evsel);
  	}
  
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel == NULL) {
- 		pr_debug("perf_evsel__new\n");
- 		goto out_delete_evlist;
+ 	return found;
+@@ -2739,9 +2739,9 @@ static int trace__add_syscall_newtp(struct trace *trace)
+ 	return ret;
+ 
+ out_delete_sys_exit:
+-	perf_evsel__delete_priv(sys_exit);
++	evsel__delete_priv(sys_exit);
+ out_delete_sys_enter:
+-	perf_evsel__delete_priv(sys_enter);
++	evsel__delete_priv(sys_enter);
+ 	goto out;
+ }
+ 
+diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
+index 0170e9d2e329..261e6eaaee99 100644
+--- a/tools/perf/tests/evsel-tp-sched.c
++++ b/tools/perf/tests/evsel-tp-sched.c
+@@ -64,7 +64,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 	if (perf_evsel__test_field(evsel, "next_prio", 4, true))
+ 		ret = -1;
+ 
+-	perf_evsel__delete(evsel);
++	evsel__delete(evsel);
+ 
+ 	evsel = perf_evsel__newtp("sched", "sched_wakeup");
+ 
+@@ -85,6 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
+ 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
+ 		ret = -1;
+ 
+-	perf_evsel__delete(evsel);
++	evsel__delete(evsel);
+ 	return ret;
+ }
+diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
+index 4bf73896695a..001a0e8e6998 100644
+--- a/tools/perf/tests/openat-syscall-all-cpus.c
++++ b/tools/perf/tests/openat-syscall-all-cpus.c
+@@ -118,7 +118,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
+ out_close_fd:
+ 	perf_evsel__close_fd(evsel);
+ out_evsel_delete:
+-	perf_evsel__delete(evsel);
++	evsel__delete(evsel);
+ out_cpu_map_delete:
+ 	cpu_map__put(cpus);
+ out_thread_map_delete:
+diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
+index f3efadd05863..20e353fbfdd0 100644
+--- a/tools/perf/tests/openat-syscall.c
++++ b/tools/perf/tests/openat-syscall.c
+@@ -59,7 +59,7 @@ int test__openat_syscall_event(struct test *test __maybe_unused, int subtest __m
+ out_close_fd:
+ 	perf_evsel__close_fd(evsel);
+ out_evsel_delete:
+-	perf_evsel__delete(evsel);
++	evsel__delete(evsel);
+ out_thread_map_delete:
+ 	thread_map__put(threads);
+ 	return err;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 9fa3663068b4..986d20c15778 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -121,7 +121,7 @@ static void perf_evlist__purge(struct evlist *evlist)
+ 	evlist__for_each_entry_safe(evlist, n, pos) {
+ 		list_del_init(&pos->node);
+ 		pos->evlist = NULL;
+-		perf_evsel__delete(pos);
++		evsel__delete(pos);
+ 	}
+ 
+ 	evlist->nr_entries = 0;
+@@ -277,7 +277,7 @@ static int perf_evlist__add_attrs(struct evlist *evlist,
+ 
+ out_delete_partial_list:
+ 	__evlist__for_each_entry_safe(&head, n, evsel)
+-		perf_evsel__delete(evsel);
++		evsel__delete(evsel);
+ 	return -1;
+ }
+ 
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index de379b63f1ce..c9723c2d57c9 100644
+index 97bee83f0f98..de379b63f1ce 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -301,7 +301,7 @@ struct evsel *perf_evsel__new_cycles(bool precise)
- 	 * to kick in when we return and before perf_evsel__open() is called.
- 	 */
- new_event:
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel == NULL)
- 		goto out;
+@@ -316,7 +316,7 @@ struct evsel *perf_evsel__new_cycles(bool precise)
+ out:
+ 	return evsel;
+ error_free:
+-	perf_evsel__delete(evsel);
++	evsel__delete(evsel);
+ 	evsel = NULL;
+ 	goto out;
+ }
+@@ -1333,7 +1333,7 @@ void perf_evsel__exit(struct evsel *evsel)
+ 	perf_evsel__object.fini(evsel);
+ }
  
+-void perf_evsel__delete(struct evsel *evsel)
++void evsel__delete(struct evsel *evsel)
+ {
+ 	perf_evsel__exit(evsel);
+ 	free(evsel);
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 20b4e31b63a9..ecea51a918e0 100644
+index af230d92fbef..20b4e31b63a9 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -219,7 +219,7 @@ int perf_evsel__object_config(size_t object_size,
+@@ -240,7 +240,7 @@ struct tep_event *event_format__new(const char *sys, const char *name);
  
- struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
+ void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+ void perf_evsel__exit(struct evsel *evsel);
+-void perf_evsel__delete(struct evsel *evsel);
++void evsel__delete(struct evsel *evsel);
  
--static inline struct evsel *perf_evsel__new(struct perf_event_attr *attr)
-+static inline struct evsel *evsel__new(struct perf_event_attr *attr)
- {
- 	return perf_evsel__new_idx(attr, 0);
- }
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 29bbfd699226..7760ddc4bc18 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3583,7 +3583,7 @@ int perf_session__read_header(struct perf_session *session)
- 		}
- 
- 		tmp = lseek(fd, 0, SEEK_CUR);
--		evsel = perf_evsel__new(&f_attr.attr);
-+		evsel = evsel__new(&f_attr.attr);
- 
- 		if (evsel == NULL)
- 			goto out_delete_evlist;
-@@ -4021,7 +4021,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
- 			return -ENOMEM;
- 	}
- 
--	evsel = perf_evsel__new(&event->attr.attr);
-+	evsel = evsel__new(&event->attr.attr);
- 	if (evsel == NULL)
- 		return -ENOMEM;
+ struct callchain_param;
  
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index cc63367f6e45..40087cf74dd1 100644
+index 6a4bfc7ab0c1..cc63367f6e45 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -2318,7 +2318,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 	if (tmap == NULL)
- 		return false;
+@@ -662,7 +662,7 @@ static int add_bpf_event(const char *group, const char *event, int fd, struct bp
+ 			 group, event);
+ 		list_for_each_entry_safe(evsel, tmp, &new_evsels, node) {
+ 			list_del_init(&evsel->node);
+-			perf_evsel__delete(evsel);
++			evsel__delete(evsel);
+ 		}
+ 		return err;
+ 	}
+@@ -2334,7 +2334,7 @@ static bool is_event_supported(u8 type, unsigned config)
+ 			evsel->attr.exclude_kernel = 1;
+ 			ret = perf_evsel__open(evsel, NULL, tmap) >= 0;
+ 		}
+-		perf_evsel__delete(evsel);
++		evsel__delete(evsel);
+ 	}
  
--	evsel = perf_evsel__new(&attr);
-+	evsel = evsel__new(&attr);
- 	if (evsel) {
- 		open_return = perf_evsel__open(evsel, NULL, tmap);
- 		ret = open_return >= 0;
+ 	thread_map__put(tmap);
 -- 
 2.21.0
