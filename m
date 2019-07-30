@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 103/107] libperf: Add perf_evsel tests
-Date: Mon, 29 Jul 2019 23:56:06 -0300
-Message-ID: <20190730025610.22603-104-acme@kernel.org>
+Subject: [PATCH 105/107] libperf: Add perf_evsel__enable/disable test
+Date: Mon, 29 Jul 2019 23:56:08 -0300
+Message-ID: <20190730025610.22603-106-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add 2 simple perf_evsel tests to test counters reading interface through
-the struct evsel object.
+Add simple perf_evsel enable/disable test together with evsel counter
+reading interface.
 
 Committer testing:
 
@@ -50,80 +50,29 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-77-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-79-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/tests/Makefile     |  2 +-
- tools/perf/lib/tests/test-evsel.c | 82 +++++++++++++++++++++++++++++++
- 2 files changed, 83 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/lib/tests/test-evsel.c
+ tools/perf/lib/tests/test-evsel.c | 43 +++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makefile
-index e66ed090f08e..1ee4e9ba848b 100644
---- a/tools/perf/lib/tests/Makefile
-+++ b/tools/perf/lib/tests/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- 
--TESTS = test-cpumap test-threadmap test-evlist
-+TESTS = test-cpumap test-threadmap test-evlist test-evsel
- 
- TESTS_SO := $(addsuffix -so,$(TESTS))
- TESTS_A  := $(addsuffix -a,$(TESTS))
 diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
-new file mode 100644
-index 000000000000..268712292f60
---- /dev/null
+index 268712292f60..2c648fe5617e 100644
+--- a/tools/perf/lib/tests/test-evsel.c
 +++ b/tools/perf/lib/tests/test-evsel.c
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/perf_event.h>
-+#include <perf/cpumap.h>
-+#include <perf/threadmap.h>
-+#include <perf/evsel.h>
-+#include <internal/tests.h>
-+
-+static int test_stat_cpu(void)
-+{
-+	struct perf_cpu_map *cpus;
-+	struct perf_evsel *evsel;
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_SOFTWARE,
-+		.config	= PERF_COUNT_SW_CPU_CLOCK,
-+	};
-+	int err, cpu, tmp;
-+
-+	cpus = perf_cpu_map__new(NULL);
-+	__T("failed to create cpus", cpus);
-+
-+	evsel = perf_evsel__new(&attr);
-+	__T("failed to create evsel", evsel);
-+
-+	err = perf_evsel__open(evsel, cpus, NULL);
-+	__T("failed to open evsel", err == 0);
-+
-+	perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
-+		struct perf_counts_values counts = { .val = 0 };
-+
-+		perf_evsel__read(evsel, cpu, 0, &counts);
-+		__T("failed to read value for evsel", counts.val != 0);
-+	}
-+
-+	perf_evsel__close(evsel);
-+	perf_evsel__delete(evsel);
-+
-+	perf_cpu_map__put(cpus);
-+	return 0;
-+}
-+
-+static int test_stat_thread(void)
+@@ -70,12 +70,55 @@ static int test_stat_thread(void)
+ 	return 0;
+ }
+ 
++static int test_stat_thread_enable(void)
 +{
 +	struct perf_counts_values counts = { .val = 0 };
 +	struct perf_thread_map *threads;
 +	struct perf_evsel *evsel;
 +	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_SOFTWARE,
-+		.config	= PERF_COUNT_SW_TASK_CLOCK,
++		.type	  = PERF_TYPE_SOFTWARE,
++		.config	  = PERF_COUNT_SW_TASK_CLOCK,
++		.disabled = 1,
 +	};
 +	int err;
 +
@@ -139,7 +88,16 @@ index 000000000000..268712292f60
 +	__T("failed to open evsel", err == 0);
 +
 +	perf_evsel__read(evsel, 0, 0, &counts);
++	__T("failed to read value for evsel", counts.val == 0);
++
++	err = perf_evsel__enable(evsel);
++	__T("failed to enable evsel", err == 0);
++
++	perf_evsel__read(evsel, 0, 0, &counts);
 +	__T("failed to read value for evsel", counts.val != 0);
++
++	err = perf_evsel__disable(evsel);
++	__T("failed to enable evsel", err == 0);
 +
 +	perf_evsel__close(evsel);
 +	perf_evsel__delete(evsel);
@@ -148,15 +106,15 @@ index 000000000000..268712292f60
 +	return 0;
 +}
 +
-+int main(int argc, char **argv)
-+{
-+	__T_START;
-+
-+	test_stat_cpu();
-+	test_stat_thread();
-+
-+	__T_OK;
-+	return 0;
-+}
+ int main(int argc, char **argv)
+ {
+ 	__T_START;
+ 
+ 	test_stat_cpu();
+ 	test_stat_thread();
++	test_stat_thread_enable();
+ 
+ 	__T_OK;
+ 	return 0;
 -- 
 2.21.0
