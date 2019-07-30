@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 098/107] libperf: Add install targets
-Date: Mon, 29 Jul 2019 23:56:01 -0300
-Message-ID: <20190730025610.22603-99-acme@kernel.org>
+Subject: [PATCH 102/107] libperf: Add perf_evlist test
+Date: Mon, 29 Jul 2019 23:56:05 -0300
+Message-ID: <20190730025610.22603-103-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,33 +14,29 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add install targets (mostly copied from tools/lib/bpf), it's now
-possible to install libperf with:
+Add 2 simple perf_evlist tests to test counters reading interface
+through the struct evlist object.
 
-  $ make DESTDIR=/tmp/krava  install
-    INSTALL  libperf.a
-    INSTALL  libperf.so
-    INSTALL  libperf.so.0
-    INSTALL  libperf.so.0.0.1
-    INSTALL  headers
-    INSTALL  libperf.pc
+Committer testing:
 
-  $ find /tmp/krava/
-  /tmp/krava/
-  /tmp/krava/include
-  /tmp/krava/include/perf
-  /tmp/krava/include/perf/evsel.h
-  /tmp/krava/include/perf/evlist.h
-  /tmp/krava/include/perf/threadmap.h
-  /tmp/krava/include/perf/cpumap.h
-  /tmp/krava/include/perf/core.h
-  /tmp/krava/lib64
-  /tmp/krava/lib64/pkgconfig
-  /tmp/krava/lib64/pkgconfig/libperf.pc
-  /tmp/krava/lib64/libperf.so.0.0.1
-  /tmp/krava/lib64/libperf.so.0
-  /tmp/krava/lib64/libperf.so
-  /tmp/krava/lib64/libperf.a
+  # make -C tools/perf/lib tests
+  make: Entering directory '/home/acme/git/perf/tools/perf/lib'
+    LINK     test-cpumap-a
+    LINK     test-threadmap-a
+    LINK     test-evlist-a
+    LINK     test-cpumap-so
+    LINK     test-threadmap-so
+    LINK     test-evlist-so
+  running static:
+  - running test-cpumap.c...OK
+  - running test-threadmap.c...OK
+  - running test-evlist.c...OK
+  running dynamic:
+  - running test-cpumap.c...OK
+  - running test-threadmap.c...OK
+  - running test-evlist.c...OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf/lib'
+  #
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -50,140 +46,154 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-72-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-76-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/Makefile            | 69 +++++++++++++++++++++++++++++-
- tools/perf/lib/libperf.pc.template | 11 +++++
- 2 files changed, 78 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/lib/libperf.pc.template
+ tools/perf/lib/tests/Makefile      |   2 +-
+ tools/perf/lib/tests/test-evlist.c | 123 +++++++++++++++++++++++++++++
+ 2 files changed, 124 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/lib/tests/test-evlist.c
 
-diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
-index cd571ec648ad..f1b3d4c6d5f0 100644
---- a/tools/perf/lib/Makefile
-+++ b/tools/perf/lib/Makefile
-@@ -14,9 +14,31 @@ srctree := $(patsubst %/,%,$(dir $(srctree)))
- #$(info Determined 'srctree' to be $(srctree))
- endif
+diff --git a/tools/perf/lib/tests/Makefile b/tools/perf/lib/tests/Makefile
+index 5dc84003e3a7..e66ed090f08e 100644
+--- a/tools/perf/lib/tests/Makefile
++++ b/tools/perf/lib/tests/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
  
-+INSTALL = install
-+
-+# Use DESTDIR for installing into a different root directory.
-+# This is useful for building a package. The program will be
-+# installed in this directory as if it was the root directory.
-+# Then the build tool can move it later.
-+DESTDIR ?=
-+DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
-+
- include $(srctree)/tools/scripts/Makefile.include
- include $(srctree)/tools/scripts/Makefile.arch
+-TESTS = test-cpumap test-threadmap
++TESTS = test-cpumap test-threadmap test-evlist
  
-+ifeq ($(LP64), 1)
-+  libdir_relative = lib64
-+else
-+  libdir_relative = lib
-+endif
-+
-+prefix ?=
-+libdir = $(prefix)/$(libdir_relative)
-+
-+# Shell quotes
-+libdir_SQ = $(subst ','\'',$(libdir))
-+libdir_relative_SQ = $(subst ','\'',$(libdir_relative))
-+
- ifeq ("$(origin V)", "command line")
-   VERBOSE = $(V)
- endif
-@@ -49,6 +71,8 @@ override CFLAGS += -fvisibility=hidden
- all:
- 
- export srctree OUTPUT CC LD CFLAGS V
-+export DESTDIR DESTDIR_SQ
-+
- include $(srctree)/tools/build/Makefile.include
- 
- VERSION_SCRIPT := libperf.map
-@@ -60,6 +84,9 @@ VERSION       = $(LIBPERF_VERSION).$(LIBPERF_PATCHLEVEL).$(LIBPERF_EXTRAVERSION)
- LIBPERF_SO := $(OUTPUT)libperf.so.$(VERSION)
- LIBPERF_A  := $(OUTPUT)libperf.a
- LIBPERF_IN := $(OUTPUT)libperf-in.o
-+LIBPERF_PC := $(OUTPUT)libperf.pc
-+
-+LIBPERF_ALL := $(LIBPERF_A) $(OUTPUT)libperf.so*
- 
- $(LIBPERF_IN): FORCE
- 	$(Q)$(MAKE) $(build)=libperf
-@@ -74,14 +101,52 @@ $(LIBPERF_SO): $(LIBPERF_IN)
- 	@ln -sf $(@F) $(OUTPUT)libperf.so.$(LIBPERF_VERSION)
- 
- 
--libs: $(LIBPERF_A) $(LIBPERF_SO)
-+libs: $(LIBPERF_A) $(LIBPERF_SO) $(LIBPERF_PC)
- 
- all: fixdep
- 	$(Q)$(MAKE) libs
- 
- clean:
- 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
--                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS
-+                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS $(LIBPERF_PC)
-+
-+$(LIBPERF_PC):
-+	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
-+		-e "s|@LIBDIR@|$(libdir_SQ)|" \
-+		-e "s|@VERSION@|$(VERSION)|" \
-+		< libperf.pc.template > $@
-+
-+define do_install_mkdir
-+	if [ ! -d '$(DESTDIR_SQ)$1' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$1'; \
-+	fi
-+endef
-+
-+define do_install
-+	if [ ! -d '$(DESTDIR_SQ)$2' ]; then             \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$2'; \
-+	fi;                                             \
-+	$(INSTALL) $1 $(if $3,-m $3,) '$(DESTDIR_SQ)$2'
-+endef
-+
-+install_lib: libs
-+	$(call QUIET_INSTALL, $(LIBPERF_ALL)) \
-+		$(call do_install_mkdir,$(libdir_SQ)); \
-+		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
-+
-+install_headers:
-+	$(call QUIET_INSTALL, headers) \
-+		$(call do_install,include/perf/core.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/cpumap.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/threadmap.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/evlist.h,$(prefix)/include/perf,644); \
-+		$(call do_install,include/perf/evsel.h,$(prefix)/include/perf,644);
-+
-+install_pkgconfig: $(LIBPERF_PC)
-+	$(call QUIET_INSTALL, $(LIBPERF_PC)) \
-+		$(call do_install,$(LIBPERF_PC),$(libdir_SQ)/pkgconfig,644)
-+
-+install: install_lib install_headers install_pkgconfig
- 
- FORCE:
- 
-diff --git a/tools/perf/lib/libperf.pc.template b/tools/perf/lib/libperf.pc.template
+ TESTS_SO := $(addsuffix -so,$(TESTS))
+ TESTS_A  := $(addsuffix -a,$(TESTS))
+diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
 new file mode 100644
-index 000000000000..117e4a237b55
+index 000000000000..f24c531afcb6
 --- /dev/null
-+++ b/tools/perf/lib/libperf.pc.template
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
++++ b/tools/perf/lib/tests/test-evlist.c
+@@ -0,0 +1,123 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/perf_event.h>
++#include <perf/cpumap.h>
++#include <perf/threadmap.h>
++#include <perf/evlist.h>
++#include <perf/evsel.h>
++#include <internal/tests.h>
 +
-+prefix=@PREFIX@
-+libdir=@LIBDIR@
-+includedir=${prefix}/include
++static int test_stat_cpu(void)
++{
++	struct perf_cpu_map *cpus;
++	struct perf_evlist *evlist;
++	struct perf_evsel *evsel;
++	struct perf_event_attr attr1 = {
++		.type	= PERF_TYPE_SOFTWARE,
++		.config	= PERF_COUNT_SW_CPU_CLOCK,
++	};
++	struct perf_event_attr attr2 = {
++		.type	= PERF_TYPE_SOFTWARE,
++		.config	= PERF_COUNT_SW_TASK_CLOCK,
++	};
++	int err, cpu, tmp;
 +
-+Name: libperf
-+Description: perf library
-+Version: @VERSION@
-+Libs: -L${libdir} -lperf
-+Cflags: -I${includedir}
++	cpus = perf_cpu_map__new(NULL);
++	__T("failed to create cpus", cpus);
++
++	evlist = perf_evlist__new();
++	__T("failed to create evlist", evlist);
++
++	evsel = perf_evsel__new(&attr1);
++	__T("failed to create evsel1", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	evsel = perf_evsel__new(&attr2);
++	__T("failed to create evsel2", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	perf_evlist__set_maps(evlist, cpus, NULL);
++
++	err = perf_evlist__open(evlist);
++	__T("failed to open evsel", err == 0);
++
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		cpus = perf_evsel__cpus(evsel);
++
++		perf_cpu_map__for_each_cpu(cpu, tmp, cpus) {
++			struct perf_counts_values counts = { .val = 0 };
++
++			perf_evsel__read(evsel, cpu, 0, &counts);
++			__T("failed to read value for evsel", counts.val != 0);
++		}
++	}
++
++	perf_evlist__close(evlist);
++	perf_evlist__delete(evlist);
++
++	perf_cpu_map__put(cpus);
++	return 0;
++}
++
++static int test_stat_thread(void)
++{
++	struct perf_counts_values counts = { .val = 0 };
++	struct perf_thread_map *threads;
++	struct perf_evlist *evlist;
++	struct perf_evsel *evsel;
++	struct perf_event_attr attr1 = {
++		.type	= PERF_TYPE_SOFTWARE,
++		.config	= PERF_COUNT_SW_CPU_CLOCK,
++	};
++	struct perf_event_attr attr2 = {
++		.type	= PERF_TYPE_SOFTWARE,
++		.config	= PERF_COUNT_SW_TASK_CLOCK,
++	};
++	int err;
++
++	threads = perf_thread_map__new_dummy();
++	__T("failed to create threads", threads);
++
++	perf_thread_map__set_pid(threads, 0, 0);
++
++	evlist = perf_evlist__new();
++	__T("failed to create evlist", evlist);
++
++	evsel = perf_evsel__new(&attr1);
++	__T("failed to create evsel1", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	evsel = perf_evsel__new(&attr2);
++	__T("failed to create evsel2", evsel);
++
++	perf_evlist__add(evlist, evsel);
++
++	perf_evlist__set_maps(evlist, NULL, threads);
++
++	err = perf_evlist__open(evlist);
++	__T("failed to open evsel", err == 0);
++
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		perf_evsel__read(evsel, 0, 0, &counts);
++		__T("failed to read value for evsel", counts.val != 0);
++	}
++
++	perf_evlist__close(evlist);
++	perf_evlist__delete(evlist);
++
++	perf_thread_map__put(threads);
++	return 0;
++}
++
++int main(int argc, char **argv)
++{
++	__T_START;
++
++	test_stat_cpu();
++	test_stat_thread();
++
++	__T_OK;
++	return 0;
++}
 -- 
 2.21.0
