@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 072/107] libperf: Add perf_evlist__new() function
-Date: Mon, 29 Jul 2019 23:55:35 -0300
-Message-ID: <20190730025610.22603-73-acme@kernel.org>
+Subject: [PATCH 073/107] libperf: Add perf_evsel__new() function
+Date: Mon, 29 Jul 2019 23:55:36 -0300
+Message-ID: <20190730025610.22603-74-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add perf_evlist__new() function to create and init a perf_evlist struct
+Add a perf_evsel__new() function to create and init a perf_evsel struct
 dynamicaly.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
@@ -24,62 +24,61 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-46-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-47-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c              | 11 +++++++++++
- tools/perf/lib/include/perf/evlist.h |  1 +
- tools/perf/lib/libperf.map           |  1 +
+ tools/perf/lib/evsel.c              | 11 +++++++++++
+ tools/perf/lib/include/perf/evsel.h |  1 +
+ tools/perf/lib/libperf.map          |  1 +
  3 files changed, 13 insertions(+)
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 1b27fd2de9b9..0517deb4cb1c 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -3,6 +3,7 @@
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index 17cba35becc7..8e91738c5c38 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -2,9 +2,20 @@
+ #include <perf/evsel.h>
  #include <linux/list.h>
- #include <internal/evlist.h>
  #include <internal/evsel.h>
 +#include <linux/zalloc.h>
  
- void perf_evlist__init(struct perf_evlist *evlist)
+ void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr)
  {
-@@ -23,3 +24,13 @@ void perf_evlist__remove(struct perf_evlist *evlist,
- 	list_del_init(&evsel->node);
- 	evlist->nr_entries -= 1;
+ 	INIT_LIST_HEAD(&evsel->node);
+ 	evsel->attr = *attr;
  }
 +
-+struct perf_evlist *perf_evlist__new(void)
++struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
 +{
-+	struct perf_evlist *evlist = zalloc(sizeof(*evlist));
++	struct perf_evsel *evsel = zalloc(sizeof(*evsel));
 +
-+	if (evlist != NULL)
-+		perf_evlist__init(evlist);
++	if (evsel != NULL)
++		perf_evsel__init(evsel, attr);
 +
-+	return evlist;
++	return evsel;
 +}
-diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
-index e0c87995c6ff..7255a60869a1 100644
---- a/tools/perf/lib/include/perf/evlist.h
-+++ b/tools/perf/lib/include/perf/evlist.h
-@@ -12,5 +12,6 @@ LIBPERF_API void perf_evlist__add(struct perf_evlist *evlist,
- 				  struct perf_evsel *evsel);
- LIBPERF_API void perf_evlist__remove(struct perf_evlist *evlist,
- 				     struct perf_evsel *evsel);
-+LIBPERF_API struct perf_evlist *perf_evlist__new(void);
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index 295583b89f46..21b66fc1937f 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -9,5 +9,6 @@ struct perf_event_attr;
  
- #endif /* __LIBPERF_EVLIST_H */
+ LIBPERF_API void perf_evsel__init(struct perf_evsel *evsel,
+ 				  struct perf_event_attr *attr);
++LIBPERF_API struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr);
+ 
+ #endif /* __LIBPERF_EVSEL_H */
 diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index e38473a8f32f..5e685d6c7a95 100644
+index 5e685d6c7a95..e3eac9b60726 100644
 --- a/tools/perf/lib/libperf.map
 +++ b/tools/perf/lib/libperf.map
-@@ -12,6 +12,7 @@ LIBPERF_0.0.1 {
+@@ -11,6 +11,7 @@ LIBPERF_0.0.1 {
+ 		perf_thread_map__comm;
  		perf_thread_map__get;
  		perf_thread_map__put;
++		perf_evsel__new;
  		perf_evsel__init;
-+		perf_evlist__new;
+ 		perf_evlist__new;
  		perf_evlist__init;
- 		perf_evlist__add;
- 		perf_evlist__remove;
 -- 
 2.21.0
