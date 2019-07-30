@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 092/107] libperf: Adopt perf_evsel__enable()/disable()/apply_filter() functions
-Date: Mon, 29 Jul 2019 23:55:55 -0300
-Message-ID: <20190730025610.22603-93-acme@kernel.org>
+Subject: [PATCH 093/107] libperf: Add perf_cpu_map__for_each_cpu() macro
+Date: Mon, 29 Jul 2019 23:55:56 -0300
+Message-ID: <20190730025610.22603-94-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,20 +14,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the following functions:
+Add the following macro to libperf:
 
-  evsel__enable()
-  evsel__disable()
-  evsel__apply_filter()
+  perf_cpu_map__for_each_cpu()
 
-to libperf with the following names:
+And its related functions:
 
-  perf_evsel__enable()
-  perf_evsel__disable()
-  perf_evsel__apply_filter()
+  perf_cpu_map__cpu()
+  perf_cpu_map__nr()
 
-Export only perf_evsel__enable()/disable(), keeping the
-perf_evsel__apply_filter() one private for the moment.
+That will allow hiding how it is implemented.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -36,183 +32,64 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-66-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-67-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evsel.c                  | 36 +++++++++++++++++++++++++
- tools/perf/lib/include/internal/evsel.h |  1 +
- tools/perf/lib/include/perf/evsel.h     |  2 ++
- tools/perf/lib/libperf.map              |  2 ++
- tools/perf/util/evlist.c                |  2 +-
- tools/perf/util/evsel.c                 | 29 ++------------------
- tools/perf/util/evsel.h                 |  1 -
- 7 files changed, 44 insertions(+), 29 deletions(-)
+ tools/perf/lib/cpumap.c              | 13 +++++++++++++
+ tools/perf/lib/include/perf/cpumap.h |  7 +++++++
+ tools/perf/lib/libperf.map           |  2 ++
+ 3 files changed, 22 insertions(+)
 
-diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
-index 390fcf9107c1..c3f3722e9f91 100644
---- a/tools/perf/lib/evsel.c
-+++ b/tools/perf/lib/evsel.c
-@@ -14,6 +14,7 @@
- #include <internal/threadmap.h>
- #include <internal/lib.h>
- #include <linux/string.h>
-+#include <sys/ioctl.h>
- 
- void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr)
- {
-@@ -179,3 +180,38 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 
- 	return 0;
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index a5d4f7ff7174..1ddb69e796e5 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -224,3 +224,16 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+ out:
+ 	return cpus;
  }
 +
-+static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
-+				 int ioc,  void *arg)
++int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
 +{
-+	int cpu, thread;
++	if (idx < cpus->nr)
++		return cpus->map[idx];
 +
-+	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
-+		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+			int fd = FD(evsel, cpu, thread),
-+			    err = ioctl(fd, ioc, arg);
-+
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	return 0;
++	return -1;
 +}
 +
-+int perf_evsel__enable(struct perf_evsel *evsel)
++int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
 +{
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
++	return cpus ? cpus->nr : 1;
 +}
+diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
+index b4a9283a5dfa..1b6e7db3fa2b 100644
+--- a/tools/perf/lib/include/perf/cpumap.h
++++ b/tools/perf/lib/include/perf/cpumap.h
+@@ -12,5 +12,12 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
+ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
++LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
++LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
 +
-+int perf_evsel__disable(struct perf_evsel *evsel)
-+{
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
-+}
-+
-+int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
-+{
-+	return perf_evsel__run_ioctl(evsel,
-+				     PERF_EVENT_IOC_SET_FILTER,
-+				     (void *)filter);
-+}
-diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
-index 89bae3720d67..8b854d1c9b45 100644
---- a/tools/perf/lib/include/internal/evsel.h
-+++ b/tools/perf/lib/include/internal/evsel.h
-@@ -24,5 +24,6 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads);
- void perf_evsel__close_fd(struct perf_evsel *evsel);
- void perf_evsel__free_fd(struct perf_evsel *evsel);
- int perf_evsel__read_size(struct perf_evsel *evsel);
-+int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
++#define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
++	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
++	     (idx) < perf_cpu_map__nr(cpus);			\
++	     (idx)++, (cpu) = perf_cpu_map__cpu(cpus, idx))
  
- #endif /* __LIBPERF_INTERNAL_EVSEL_H */
-diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
-index 16ae3f873280..0db18dfabdb8 100644
---- a/tools/perf/lib/include/perf/evsel.h
-+++ b/tools/perf/lib/include/perf/evsel.h
-@@ -30,5 +30,7 @@ LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *
- LIBPERF_API void perf_evsel__close(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
- 				 struct perf_counts_values *count);
-+LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
-+LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
- 
- #endif /* __LIBPERF_EVSEL_H */
+ #endif /* __LIBPERF_CPUMAP_H */
 diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-index 2e23cf420cce..5bd491ac1762 100644
+index 5bd491ac1762..d4d34bea0b40 100644
 --- a/tools/perf/lib/libperf.map
 +++ b/tools/perf/lib/libperf.map
-@@ -13,6 +13,8 @@ LIBPERF_0.0.1 {
- 		perf_thread_map__put;
- 		perf_evsel__new;
- 		perf_evsel__delete;
-+		perf_evsel__enable;
-+		perf_evsel__disable;
- 		perf_evsel__init;
- 		perf_evsel__open;
- 		perf_evsel__close;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index c6b4883b2d49..c4489a1ad6bc 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1109,7 +1109,7 @@ int perf_evlist__apply_filters(struct evlist *evlist, struct evsel **err_evsel)
- 		 * filters only work for tracepoint event, which doesn't have cpu limit.
- 		 * So evlist and evsel should always be same.
- 		 */
--		err = evsel__apply_filter(evsel, evsel->filter);
-+		err = perf_evsel__apply_filter(&evsel->core, evsel->filter);
- 		if (err) {
- 			*err_evsel = evsel;
- 			break;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 0957ec24f518..64bc32ed6dfa 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1153,31 +1153,6 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
- }
- 
--static int perf_evsel__run_ioctl(struct evsel *evsel,
--			  int ioc,  void *arg)
--{
--	int cpu, thread;
--
--	for (cpu = 0; cpu < xyarray__max_x(evsel->core.fd); cpu++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->core.fd); thread++) {
--			int fd = FD(evsel, cpu, thread),
--			    err = ioctl(fd, ioc, arg);
--
--			if (err)
--				return err;
--		}
--	}
--
--	return 0;
--}
--
--int evsel__apply_filter(struct evsel *evsel, const char *filter)
--{
--	return perf_evsel__run_ioctl(evsel,
--				     PERF_EVENT_IOC_SET_FILTER,
--				     (void *)filter);
--}
--
- int perf_evsel__set_filter(struct evsel *evsel, const char *filter)
- {
- 	char *new_filter = strdup(filter);
-@@ -1220,7 +1195,7 @@ int perf_evsel__append_addr_filter(struct evsel *evsel, const char *filter)
- 
- int evsel__enable(struct evsel *evsel)
- {
--	int err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
-+	int err = perf_evsel__enable(&evsel->core);
- 
- 	if (!err)
- 		evsel->disabled = false;
-@@ -1230,7 +1205,7 @@ int evsel__enable(struct evsel *evsel)
- 
- int evsel__disable(struct evsel *evsel)
- {
--	int err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
-+	int err = perf_evsel__disable(&evsel->core);
- 	/*
- 	 * We mark it disabled here so that tools that disable a event can
- 	 * ignore events after they disable it. I.e. the ring buffer may have
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 57e315d8158e..0989fb2eb1ec 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -287,7 +287,6 @@ int perf_evsel__set_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_tp_filter(struct evsel *evsel, const char *filter);
- int perf_evsel__append_addr_filter(struct evsel *evsel,
- 				   const char *filter);
--int evsel__apply_filter(struct evsel *evsel, const char *filter);
- int evsel__enable(struct evsel *evsel);
- int evsel__disable(struct evsel *evsel);
- 
+@@ -6,6 +6,8 @@ LIBPERF_0.0.1 {
+ 		perf_cpu_map__put;
+ 		perf_cpu_map__new;
+ 		perf_cpu_map__read;
++		perf_cpu_map__nr;
++		perf_cpu_map__cpu;
+ 		perf_thread_map__new_dummy;
+ 		perf_thread_map__set_pid;
+ 		perf_thread_map__comm;
 -- 
 2.21.0
