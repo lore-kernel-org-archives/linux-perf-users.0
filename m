@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 051/107] libperf: Add build version support
-Date: Mon, 29 Jul 2019 23:55:14 -0300
-Message-ID: <20190730025610.22603-52-acme@kernel.org>
+Subject: [PATCH 052/107] libperf: Add libperf to the python.so build
+Date: Mon, 29 Jul 2019 23:55:15 -0300
+Message-ID: <20190730025610.22603-53-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,30 +14,15 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add a shared library version, generating the following files:
-
-  $ ll tools/perf/lib/libperf.so*
-  libperf.so -> libperf.so.0.0.1
-  libperf.so.0 -> libperf.so.0.0.1
-  libperf.so.0.0.1
+Link libperf.a with python.so.
 
 Committer testing:
 
-One has to build just libbperf to get this, building perf so far doesn't
-trigger this, i.e. I tried:
+Continues to work:
 
-  $ make O=/tmp/build/perf -C tools/perf
-
-And the files above were not created, so one has to do:
-
-  $ make O=/tmp/build/perf -C tools/perf/lib/
-  make: Entering directory '/home/acme/git/perf/tools/perf/lib'
-    LINK     /tmp/build/perf/libperf.so.0.0.1
-  make: Leaving directory '/home/acme/git/perf/tools/perf/lib'
-  $ ls -la /tmp/build/perf/*.so.*
-  lrwxrwxrwx. 1 acme acme    16 Jul 22 15:37 /tmp/build/perf/libperf.so.0 -> libperf.so.0.0.1
-  -rwxrwxr-x. 1 acme acme 16368 Jul 22 15:37 /tmp/build/perf/libperf.so.0.0.1
-  $
+  # perf test python
+  18: 'import perf' in python                               : Ok
+  #
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -47,75 +32,45 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-25-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-26-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/Makefile    | 20 +++++++++++++++++---
- tools/perf/lib/libperf.map |  4 ++++
- 2 files changed, 21 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/lib/libperf.map
+ tools/perf/Makefile.perf | 1 +
+ tools/perf/util/setup.py | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
-index 33046e7c6a2a..cd571ec648ad 100644
---- a/tools/perf/lib/Makefile
-+++ b/tools/perf/lib/Makefile
-@@ -1,6 +1,10 @@
- # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
- # Most of this file is copied from tools/lib/bpf/Makefile
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 6e7e7d44ffac..67512a12276b 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -307,6 +307,7 @@ LIBBPF = $(BPF_PATH)libbpf.a
+ LIBSUBCMD = $(SUBCMD_PATH)libsubcmd.a
  
-+LIBPERF_VERSION = 0
-+LIBPERF_PATCHLEVEL = 0
-+LIBPERF_EXTRAVERSION = 1
-+
- MAKEFLAGS += --no-print-directory
+ LIBPERF = $(LIBPERF_PATH)libperf.a
++export LIBPERF
  
- ifeq ($(srctree),)
-@@ -47,7 +51,13 @@ all:
- export srctree OUTPUT CC LD CFLAGS V
- include $(srctree)/tools/build/Makefile.include
+ # python extension build directories
+ PYTHON_EXTBUILD     := $(OUTPUT)python_ext_build/
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index a1a68a2fa917..d48f9cd58964 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -48,6 +48,7 @@ build_lib = getenv('PYTHON_EXTBUILD_LIB')
+ build_tmp = getenv('PYTHON_EXTBUILD_TMP')
+ libtraceevent = getenv('LIBTRACEEVENT')
+ libapikfs = getenv('LIBAPI')
++libperf = getenv('LIBPERF')
  
--LIBPERF_SO := $(OUTPUT)libperf.so
-+VERSION_SCRIPT := libperf.map
-+
-+PATCHLEVEL    = $(LIBPERF_PATCHLEVEL)
-+EXTRAVERSION  = $(LIBPERF_EXTRAVERSION)
-+VERSION       = $(LIBPERF_VERSION).$(LIBPERF_PATCHLEVEL).$(LIBPERF_EXTRAVERSION)
-+
-+LIBPERF_SO := $(OUTPUT)libperf.so.$(VERSION)
- LIBPERF_A  := $(OUTPUT)libperf.a
- LIBPERF_IN := $(OUTPUT)libperf-in.o
+ ext_sources = [f.strip() for f in open('util/python-ext-sources')
+ 				if len(f.strip()) > 0 and f[0] != '#']
+@@ -64,7 +65,7 @@ perf = Extension('perf',
+ 		  include_dirs = ['util/include'],
+ 		  libraries = extra_libraries,
+ 		  extra_compile_args = cflags,
+-		  extra_objects = [libtraceevent, libapikfs],
++		  extra_objects = [libtraceevent, libapikfs, libperf],
+                  )
  
-@@ -58,7 +68,11 @@ $(LIBPERF_A): $(LIBPERF_IN)
- 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN)
- 
- $(LIBPERF_SO): $(LIBPERF_IN)
--	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so $^ -o $@
-+	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so \
-+                                    -Wl,--version-script=$(VERSION_SCRIPT) $^ -o $@
-+	@ln -sf $(@F) $(OUTPUT)libperf.so
-+	@ln -sf $(@F) $(OUTPUT)libperf.so.$(LIBPERF_VERSION)
-+
- 
- libs: $(LIBPERF_A) $(LIBPERF_SO)
- 
-@@ -67,7 +81,7 @@ all: fixdep
- 
- clean:
- 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
--                *.o *~ *.a *.so .*.d .*.cmd LIBPERF-CFLAGS
-+                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS
- 
- FORCE:
- 
-diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
-new file mode 100644
-index 000000000000..a8e913988edf
---- /dev/null
-+++ b/tools/perf/lib/libperf.map
-@@ -0,0 +1,4 @@
-+LIBPERF_0.0.1 {
-+	local:
-+		*;
-+};
+ setup(name='perf',
 -- 
 2.21.0
