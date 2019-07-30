@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 037/107] perf evsel: Rename perf_evsel__delete() to evsel__delete()
-Date: Mon, 29 Jul 2019 23:55:00 -0300
-Message-ID: <20190730025610.22603-38-acme@kernel.org>
+Subject: [PATCH 039/107] perf evlist: Rename perf_evlist__add() to evlist__add()
+Date: Mon, 29 Jul 2019 23:55:02 -0300
+Message-ID: <20190730025610.22603-40-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,10 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Remame perf_evsel__delete() to evsel__delete(), so we don't have a name
-clash when we add perf_evsel__delete() in libperf.
-
-Also renaming perf_evsel__delete_priv() to evsel__delete_priv().
+Rename perf_evlist__add() to evlist__add(), so we don't have a name
+clash when we add perf_evlist__add() in libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -26,214 +24,228 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-11-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-13-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-inject.c                |  4 ++--
- tools/perf/builtin-trace.c                 | 12 ++++++------
- tools/perf/tests/evsel-tp-sched.c          |  4 ++--
- tools/perf/tests/openat-syscall-all-cpus.c |  2 +-
- tools/perf/tests/openat-syscall.c          |  2 +-
- tools/perf/util/evlist.c                   |  4 ++--
- tools/perf/util/evsel.c                    |  4 ++--
- tools/perf/util/evsel.h                    |  2 +-
- tools/perf/util/parse-events.c             |  4 ++--
- 9 files changed, 19 insertions(+), 19 deletions(-)
+ tools/perf/builtin-trace.c                  | 12 ++++++------
+ tools/perf/tests/mmap-basic.c               |  2 +-
+ tools/perf/tests/openat-syscall-tp-fields.c |  2 +-
+ tools/perf/tests/sw-clock.c                 |  2 +-
+ tools/perf/util/evlist.c                    | 16 ++++++++--------
+ tools/perf/util/evlist.h                    |  2 +-
+ tools/perf/util/header.c                    |  4 ++--
+ tools/perf/util/python.c                    |  2 +-
+ 8 files changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index d2131fc863be..917c8fb4baa5 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -623,7 +623,7 @@ static void strip_fini(struct perf_inject *inject)
- 		    ok_to_remove(evlist, evsel)) {
- 			pr_debug("Deleting %s\n", perf_evsel__name(evsel));
- 			perf_evlist__remove(evlist, evsel);
--			perf_evsel__delete(evsel);
-+			evsel__delete(evsel);
- 		}
- 	}
- }
-@@ -725,7 +725,7 @@ static int __cmd_inject(struct perf_inject *inject)
- 				pr_debug("Deleting %s\n",
- 					 perf_evsel__name(evsel));
- 				perf_evlist__remove(session->evlist, evsel);
--				perf_evsel__delete(evsel);
-+				evsel__delete(evsel);
- 			}
- 			if (inject->strip)
- 				strip_fini(inject);
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e133204b3bb9..0f7d1859a2d1 100644
+index c5eb47f4e42e..89ae4737ef74 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -274,10 +274,10 @@ static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
- 	({ struct syscall_tp *sc = evsel->priv;\
- 	   perf_evsel__init_tp_ptr_field(evsel, &sc->name, #name); })
+@@ -2616,7 +2616,7 @@ static int trace__record(struct trace *trace, int argc, const char **argv)
  
--static void perf_evsel__delete_priv(struct evsel *evsel)
-+static void evsel__delete_priv(struct evsel *evsel)
+ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
+ 
+-static bool perf_evlist__add_vfs_getname(struct evlist *evlist)
++static bool evlist__add_vfs_getname(struct evlist *evlist)
  {
- 	zfree(&evsel->priv);
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- }
+ 	bool found = false;
+ 	struct evsel *evsel, *tmp;
+@@ -2719,8 +2719,8 @@ static int trace__add_syscall_newtp(struct trace *trace)
+ 	perf_evsel__config_callchain(sys_enter, &trace->opts, &callchain_param);
+ 	perf_evsel__config_callchain(sys_exit, &trace->opts, &callchain_param);
  
- static int perf_evsel__init_syscall_tp(struct evsel *evsel)
-@@ -368,7 +368,7 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
- 	return evsel;
+-	perf_evlist__add(evlist, sys_enter);
+-	perf_evlist__add(evlist, sys_exit);
++	evlist__add(evlist, sys_enter);
++	evlist__add(evlist, sys_exit);
  
- out_delete:
--	perf_evsel__delete_priv(evsel);
-+	evsel__delete_priv(evsel);
- 	return NULL;
- }
+ 	if (callchain_param.enabled && !trace->kernel_syscallchains) {
+ 		/*
+@@ -3264,7 +3264,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 			goto out_error_raw_syscalls;
  
-@@ -2638,7 +2638,7 @@ static bool perf_evlist__add_vfs_getname(struct evlist *evlist)
- 
- 		list_del_init(&evsel->node);
- 		evsel->evlist = NULL;
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
+ 		if (trace->trace_syscalls)
+-			trace->vfs_getname = perf_evlist__add_vfs_getname(evlist);
++			trace->vfs_getname = evlist__add_vfs_getname(evlist);
  	}
  
- 	return found;
-@@ -2739,9 +2739,9 @@ static int trace__add_syscall_newtp(struct trace *trace)
- 	return ret;
+ 	if ((trace->trace_pgfaults & TRACE_PFMAJ)) {
+@@ -3272,7 +3272,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		if (pgfault_maj == NULL)
+ 			goto out_error_mem;
+ 		perf_evsel__config_callchain(pgfault_maj, &trace->opts, &callchain_param);
+-		perf_evlist__add(evlist, pgfault_maj);
++		evlist__add(evlist, pgfault_maj);
+ 	}
  
- out_delete_sys_exit:
--	perf_evsel__delete_priv(sys_exit);
-+	evsel__delete_priv(sys_exit);
- out_delete_sys_enter:
--	perf_evsel__delete_priv(sys_enter);
-+	evsel__delete_priv(sys_enter);
- 	goto out;
- }
+ 	if ((trace->trace_pgfaults & TRACE_PFMIN)) {
+@@ -3280,7 +3280,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		if (pgfault_min == NULL)
+ 			goto out_error_mem;
+ 		perf_evsel__config_callchain(pgfault_min, &trace->opts, &callchain_param);
+-		perf_evlist__add(evlist, pgfault_min);
++		evlist__add(evlist, pgfault_min);
+ 	}
  
-diff --git a/tools/perf/tests/evsel-tp-sched.c b/tools/perf/tests/evsel-tp-sched.c
-index 0170e9d2e329..261e6eaaee99 100644
---- a/tools/perf/tests/evsel-tp-sched.c
-+++ b/tools/perf/tests/evsel-tp-sched.c
-@@ -64,7 +64,7 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "next_prio", 4, true))
- 		ret = -1;
+ 	if (trace->sched &&
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 7f96bb72f7e5..16b8a4e5de8f 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -82,7 +82,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 		evsels[i]->attr.wakeup_events = 1;
+ 		perf_evsel__set_sample_id(evsels[i], false);
  
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
+-		perf_evlist__add(evlist, evsels[i]);
++		evlist__add(evlist, evsels[i]);
  
- 	evsel = perf_evsel__newtp("sched", "sched_wakeup");
+ 		if (perf_evsel__open(evsels[i], cpus, threads) < 0) {
+ 			pr_debug("failed to open counter: %s, "
+diff --git a/tools/perf/tests/openat-syscall-tp-fields.c b/tools/perf/tests/openat-syscall-tp-fields.c
+index 0263420f4495..f822c3c181f3 100644
+--- a/tools/perf/tests/openat-syscall-tp-fields.c
++++ b/tools/perf/tests/openat-syscall-tp-fields.c
+@@ -48,7 +48,7 @@ int test__syscall_openat_tp_fields(struct test *test __maybe_unused, int subtest
+ 		goto out_delete_evlist;
+ 	}
  
-@@ -85,6 +85,6 @@ int test__perf_evsel__tp_sched_test(struct test *test __maybe_unused, int subtes
- 	if (perf_evsel__test_field(evsel, "target_cpu", 4, true))
- 		ret = -1;
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
  
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- 	return ret;
- }
-diff --git a/tools/perf/tests/openat-syscall-all-cpus.c b/tools/perf/tests/openat-syscall-all-cpus.c
-index 4bf73896695a..001a0e8e6998 100644
---- a/tools/perf/tests/openat-syscall-all-cpus.c
-+++ b/tools/perf/tests/openat-syscall-all-cpus.c
-@@ -118,7 +118,7 @@ int test__openat_syscall_event_on_all_cpus(struct test *test __maybe_unused, int
- out_close_fd:
- 	perf_evsel__close_fd(evsel);
- out_evsel_delete:
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- out_cpu_map_delete:
- 	cpu_map__put(cpus);
- out_thread_map_delete:
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index f3efadd05863..20e353fbfdd0 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -59,7 +59,7 @@ int test__openat_syscall_event(struct test *test __maybe_unused, int subtest __m
- out_close_fd:
- 	perf_evsel__close_fd(evsel);
- out_evsel_delete:
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- out_thread_map_delete:
- 	thread_map__put(threads);
- 	return err;
+ 	err = perf_evlist__create_maps(evlist, &opts.target);
+ 	if (err < 0) {
+diff --git a/tools/perf/tests/sw-clock.c b/tools/perf/tests/sw-clock.c
+index 247d3734686e..3ab11291174c 100644
+--- a/tools/perf/tests/sw-clock.c
++++ b/tools/perf/tests/sw-clock.c
+@@ -54,7 +54,7 @@ static int __test__sw_clock_freq(enum perf_sw_ids clock_id)
+ 		pr_debug("perf_evsel__new\n");
+ 		goto out_delete_evlist;
+ 	}
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
+ 
+ 	cpus = cpu_map__dummy_new();
+ 	threads = thread_map__new_by_tid(getpid());
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 9fa3663068b4..986d20c15778 100644
+index 986d20c15778..7741e12bdcb0 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -121,7 +121,7 @@ static void perf_evlist__purge(struct evlist *evlist)
- 	evlist__for_each_entry_safe(evlist, n, pos) {
- 		list_del_init(&pos->node);
- 		pos->evlist = NULL;
--		perf_evsel__delete(pos);
-+		evsel__delete(pos);
- 	}
- 
- 	evlist->nr_entries = 0;
-@@ -277,7 +277,7 @@ static int perf_evlist__add_attrs(struct evlist *evlist,
- 
- out_delete_partial_list:
- 	__evlist__for_each_entry_safe(&head, n, evsel)
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
- 	return -1;
+@@ -177,7 +177,7 @@ static void perf_evlist__propagate_maps(struct evlist *evlist)
+ 		__perf_evlist__propagate_maps(evlist, evsel);
  }
  
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 97bee83f0f98..de379b63f1ce 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -316,7 +316,7 @@ struct evsel *perf_evsel__new_cycles(bool precise)
- out:
- 	return evsel;
- error_free:
--	perf_evsel__delete(evsel);
-+	evsel__delete(evsel);
- 	evsel = NULL;
- 	goto out;
- }
-@@ -1333,7 +1333,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 	perf_evsel__object.fini(evsel);
- }
- 
--void perf_evsel__delete(struct evsel *evsel)
-+void evsel__delete(struct evsel *evsel)
+-void perf_evlist__add(struct evlist *evlist, struct evsel *entry)
++void evlist__add(struct evlist *evlist, struct evsel *entry)
  {
- 	perf_evsel__exit(evsel);
- 	free(evsel);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index af230d92fbef..20b4e31b63a9 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -240,7 +240,7 @@ struct tep_event *event_format__new(const char *sys, const char *name);
+ 	entry->evlist = evlist;
+ 	list_add_tail(&entry->node, &evlist->entries);
+@@ -204,7 +204,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
  
- void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
- void perf_evsel__exit(struct evsel *evsel);
--void perf_evsel__delete(struct evsel *evsel);
-+void evsel__delete(struct evsel *evsel);
- 
- struct callchain_param;
- 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6a4bfc7ab0c1..cc63367f6e45 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -662,7 +662,7 @@ static int add_bpf_event(const char *group, const char *event, int fd, struct bp
- 			 group, event);
- 		list_for_each_entry_safe(evsel, tmp, &new_evsels, node) {
- 			list_del_init(&evsel->node);
--			perf_evsel__delete(evsel);
-+			evsel__delete(evsel);
- 		}
- 		return err;
+ 	__evlist__for_each_entry_safe(list, temp, evsel) {
+ 		list_del_init(&evsel->node);
+-		perf_evlist__add(evlist, evsel);
++		evlist__add(evlist, evsel);
  	}
-@@ -2334,7 +2334,7 @@ static bool is_event_supported(u8 type, unsigned config)
- 			evsel->attr.exclude_kernel = 1;
- 			ret = perf_evsel__open(evsel, NULL, tmap) >= 0;
- 		}
--		perf_evsel__delete(evsel);
-+		evsel__delete(evsel);
- 	}
+ }
  
- 	thread_map__put(tmap);
+@@ -237,7 +237,7 @@ int __perf_evlist__add_default(struct evlist *evlist, bool precise)
+ 	if (evsel == NULL)
+ 		return -ENOMEM;
+ 
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
+ 	return 0;
+ }
+ 
+@@ -253,11 +253,11 @@ int perf_evlist__add_dummy(struct evlist *evlist)
+ 	if (evsel == NULL)
+ 		return -ENOMEM;
+ 
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
+ 	return 0;
+ }
+ 
+-static int perf_evlist__add_attrs(struct evlist *evlist,
++static int evlist__add_attrs(struct evlist *evlist,
+ 				  struct perf_event_attr *attrs, size_t nr_attrs)
+ {
+ 	struct evsel *evsel, *n;
+@@ -289,7 +289,7 @@ int __perf_evlist__add_default_attrs(struct evlist *evlist,
+ 	for (i = 0; i < nr_attrs; i++)
+ 		event_attr_init(attrs + i);
+ 
+-	return perf_evlist__add_attrs(evlist, attrs, nr_attrs);
++	return evlist__add_attrs(evlist, attrs, nr_attrs);
+ }
+ 
+ struct evsel *
+@@ -330,7 +330,7 @@ int perf_evlist__add_newtp(struct evlist *evlist,
+ 		return -1;
+ 
+ 	evsel->handler = handler;
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
+ 	return 0;
+ }
+ 
+@@ -1854,7 +1854,7 @@ int perf_evlist__add_sb_event(struct evlist **evlist,
+ 
+ 	evsel->side_band.cb = cb;
+ 	evsel->side_band.data = data;
+-	perf_evlist__add(*evlist, evsel);
++	evlist__add(*evlist, evsel);
+ 	return 0;
+ 
+ out_err:
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 12a5fd6972df..d52b29a1d852 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -73,7 +73,7 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ void perf_evlist__exit(struct evlist *evlist);
+ void evlist__delete(struct evlist *evlist);
+ 
+-void perf_evlist__add(struct evlist *evlist, struct evsel *entry);
++void evlist__add(struct evlist *evlist, struct evsel *entry);
+ void perf_evlist__remove(struct evlist *evlist, struct evsel *evsel);
+ 
+ int __perf_evlist__add_default(struct evlist *evlist, bool precise);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 7760ddc4bc18..5e0093251f26 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3593,7 +3593,7 @@ int perf_session__read_header(struct perf_session *session)
+ 		 * Do it before so that if perf_evsel__alloc_id fails, this
+ 		 * entry gets purged too at evlist__delete().
+ 		 */
+-		perf_evlist__add(session->evlist, evsel);
++		evlist__add(session->evlist, evsel);
+ 
+ 		nr_ids = f_attr.ids.size / sizeof(u64);
+ 		/*
+@@ -4025,7 +4025,7 @@ int perf_event__process_attr(struct perf_tool *tool __maybe_unused,
+ 	if (evsel == NULL)
+ 		return -ENOMEM;
+ 
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
+ 
+ 	ids = event->header.size;
+ 	ids -= (void *)&event->attr.id - (void *)event;
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index ade4e85c6d81..48c951a4a76b 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -974,7 +974,7 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
+ 	Py_INCREF(pevsel);
+ 	evsel = &((struct pyrf_evsel *)pevsel)->evsel;
+ 	evsel->idx = evlist->nr_entries;
+-	perf_evlist__add(evlist, evsel);
++	evlist__add(evlist, evsel);
+ 
+ 	return Py_BuildValue("i", evlist->nr_entries);
+ }
 -- 
 2.21.0
