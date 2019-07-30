@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 033/107] perf evsel: Rename perf_evsel__init() to evsel__init()
-Date: Mon, 29 Jul 2019 23:54:56 -0300
-Message-ID: <20190730025610.22603-34-acme@kernel.org>
+Subject: [PATCH 034/107] perf evlist: Rename perf_evlist__init() to evlist__init()
+Date: Mon, 29 Jul 2019 23:54:57 -0300
+Message-ID: <20190730025610.22603-35-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Rename perf_evsel__init() to evsel__init(), so we don't have a name
-clash when we add perf_evsel__init() in libperf.
+Rename perf_evlist__init() to evlist__init(), so we don't have a name
+clash when we add perf_evlist__init() in libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -24,71 +24,63 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190721112506.12306-7-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190721112506.12306-8-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c  | 8 ++++----
- tools/perf/util/evsel.h  | 3 +--
+ tools/perf/util/evlist.c | 6 +++---
+ tools/perf/util/evlist.h | 4 ++--
  tools/perf/util/python.c | 2 +-
- 3 files changed, 6 insertions(+), 7 deletions(-)
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f7f97ca6e96d..97bee83f0f98 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -223,8 +223,8 @@ bool perf_evsel__is_function_event(struct evsel *evsel)
- #undef FUNCTION_EVENT
- }
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c234fa4ba92a..4fcd55c8a8d5 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -41,8 +41,8 @@ int sigqueue(pid_t pid, int sig, const union sigval value);
+ #define FD(e, x, y) (*(int *)xyarray__entry(e->fd, x, y))
+ #define SID(e, x, y) xyarray__entry(e->sample_id, x, y)
  
--void perf_evsel__init(struct evsel *evsel,
--		      struct perf_event_attr *attr, int idx)
-+void evsel__init(struct evsel *evsel,
-+		 struct perf_event_attr *attr, int idx)
+-void perf_evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+-		       struct perf_thread_map *threads)
++void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
++		  struct perf_thread_map *threads)
  {
- 	evsel->idx	   = idx;
- 	evsel->tracking	   = !idx;
-@@ -255,7 +255,7 @@ struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx)
+ 	int i;
  
- 	if (!evsel)
- 		return NULL;
--	perf_evsel__init(evsel, attr, idx);
-+	evsel__init(evsel, attr, idx);
+@@ -60,7 +60,7 @@ struct evlist *perf_evlist__new(void)
+ 	struct evlist *evlist = zalloc(sizeof(*evlist));
  
- 	if (perf_evsel__is_bpf_output(evsel)) {
- 		evsel->attr.sample_type |= (PERF_SAMPLE_RAW | PERF_SAMPLE_TIME |
-@@ -350,7 +350,7 @@ struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx)
- 		event_attr_init(&attr);
- 		attr.config = evsel->tp_format->id;
- 		attr.sample_period = 1;
--		perf_evsel__init(evsel, &attr, idx);
-+		evsel__init(evsel, &attr, idx);
- 	}
+ 	if (evlist != NULL)
+-		perf_evlist__init(evlist, NULL, NULL);
++		evlist__init(evlist, NULL, NULL);
  
- 	return evsel;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 3caabd8a4aa6..af230d92fbef 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -238,8 +238,7 @@ struct evsel *perf_evsel__new_cycles(bool precise);
- 
- struct tep_event *event_format__new(const char *sys, const char *name);
- 
--void perf_evsel__init(struct evsel *evsel,
--		      struct perf_event_attr *attr, int idx);
-+void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
- void perf_evsel__exit(struct evsel *evsel);
- void perf_evsel__delete(struct evsel *evsel);
+ 	return evlist;
+ }
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 54f1c3e2b721..d6a3fa461566 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -68,8 +68,8 @@ struct evsel_str_handler {
+ struct evlist *perf_evlist__new(void);
+ struct evlist *perf_evlist__new_default(void);
+ struct evlist *perf_evlist__new_dummy(void);
+-void perf_evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+-		       struct perf_thread_map *threads);
++void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
++		  struct perf_thread_map *threads);
+ void perf_evlist__exit(struct evlist *evlist);
+ void perf_evlist__delete(struct evlist *evlist);
  
 diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index ed57b6b5ed91..f6fe3c90828f 100644
+index f6fe3c90828f..ade4e85c6d81 100644
 --- a/tools/perf/util/python.c
 +++ b/tools/perf/util/python.c
-@@ -782,7 +782,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
- 	attr.sample_id_all  = sample_id_all;
- 	attr.size	    = sizeof(attr);
+@@ -873,7 +873,7 @@ static int pyrf_evlist__init(struct pyrf_evlist *pevlist,
  
--	perf_evsel__init(&pevsel->evsel, &attr, idx);
-+	evsel__init(&pevsel->evsel, &attr, idx);
+ 	threads = ((struct pyrf_thread_map *)pthreads)->threads;
+ 	cpus = ((struct pyrf_cpu_map *)pcpus)->cpus;
+-	perf_evlist__init(&pevlist->evlist, cpus, threads);
++	evlist__init(&pevlist->evlist, cpus, threads);
  	return 0;
  }
  
