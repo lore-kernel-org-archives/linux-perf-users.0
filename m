@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 018/107] perf trace beauty: Disable fd->pathname when close() not enabled
-Date: Mon, 29 Jul 2019 23:54:41 -0300
-Message-ID: <20190730025610.22603-19-acme@kernel.org>
+Subject: [PATCH 014/107] perf trace: Look for default name for entries in the syscalls prog array
+Date: Mon, 29 Jul 2019 23:54:37 -0300
+Message-ID: <20190730025610.22603-15-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,83 +15,90 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As we invalidate the fd->pathname table in the SCA_CLOSE_FD beautifier,
-if we don't have it we may end up keeping an fd->pathname association
-that then gets misprinted.
-
-The previous behaviour continues when the close() syscall is enabled,
-which may still be a a problem if we lose records (i.e. we may lose a
-'close' record and then get that fd reused by socket()) but then the
-tool will notify that records are being lost and the user will be warned
-that some of the heuristics will fall apart.
+I.e. just look for "!syscalls:sys_enter_" or "exit_" plus the syscall
+name, that way we need just to add entries to the
+augmented_raw_syscalls.c BPF source to add handlers.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-b7t6h8sq9lebemvfy2zh3qq1@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-6xavwddruokp6ohs7tf4qilb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ tools/perf/builtin-trace.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 123d7efc12e8..94c33bb573c1 100644
+index c64f7c99db15..5258399a1c94 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -127,6 +127,7 @@ struct trace {
- 	unsigned int		min_stack;
- 	int			raw_augmented_syscalls_args_size;
- 	bool			raw_augmented_syscalls;
-+	bool			fd_path_disabled;
- 	bool			sort_events;
- 	bool			not_ev_qualifier;
- 	bool			live;
-@@ -1178,7 +1179,7 @@ static const char *thread__fd_path(struct thread *thread, int fd,
+@@ -830,13 +830,11 @@ static struct syscall_fmt {
+ 	{ .name	    = "newfstatat",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* dfd */ }, }, },
+ 	{ .name	    = "open",
+-	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_open", },
+ 	  .arg = { [1] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "open_by_handle_at",
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "openat",
+-	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_openat", },
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT,	/* dfd */ },
+ 		   [2] = { .scnprintf = SCA_OPEN_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "perf_event_open",
+@@ -873,7 +871,6 @@ static struct syscall_fmt {
+ 	{ .name	    = "recvmsg",
+ 	  .arg = { [2] = { .scnprintf = SCA_MSG_FLAGS, /* flags */ }, }, },
+ 	{ .name	    = "renameat",
+-	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_renameat", },
+ 	  .arg = { [0] = { .scnprintf = SCA_FDAT, /* olddirfd */ },
+ 		   [2] = { .scnprintf = SCA_FDAT, /* newdirfd */ }, }, },
+ 	{ .name	    = "renameat2",
+@@ -2778,12 +2775,27 @@ static struct bpf_program *trace__find_syscall_bpf_prog(struct trace *trace, str
  {
- 	struct thread_trace *ttrace = thread__priv(thread);
+ 	struct bpf_program *prog;
  
--	if (ttrace == NULL)
-+	if (ttrace == NULL || trace->fd_path_disabled)
- 		return NULL;
+-	if (prog_name == NULL)
++	if (prog_name == NULL) {
++		char default_prog_name[256];
++		scnprintf(default_prog_name, sizeof(default_prog_name), "!syscalls:sys_%s_%s", type, sc->name);
++		prog = trace__find_bpf_program_by_title(trace, default_prog_name);
++		if (prog != NULL)
++			goto out_found;
++		if (sc->fmt && sc->fmt->alias) {
++			scnprintf(default_prog_name, sizeof(default_prog_name), "!syscalls:sys_%s_%s", type, sc->fmt->alias);
++			prog = trace__find_bpf_program_by_title(trace, default_prog_name);
++			if (prog != NULL)
++				goto out_found;
++		}
+ 		goto out_unaugmented;
++	}
  
- 	if (fd < 0)
-@@ -2097,7 +2098,7 @@ static int trace__sys_exit(struct trace *trace, struct perf_evsel *evsel,
- 
- 	ret = perf_evsel__sc_tp_uint(evsel, ret, sample);
- 
--	if (sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
-+	if (!trace->fd_path_disabled && sc->is_open && ret >= 0 && ttrace->filename.pending_open) {
- 		trace__set_fd_pathname(thread, ret, ttrace->filename.name);
- 		ttrace->filename.pending_open = false;
- 		++trace->stats.vfs_getname;
-@@ -3206,7 +3207,6 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 	if (trace->syscalls.prog_array.sys_enter)
- 		trace__init_syscalls_bpf_prog_array_maps(trace);
- 
--
- 	if (trace->ev_qualifier_ids.nr > 0) {
- 		err = trace__set_ev_qualifier_filter(trace);
- 		if (err < 0)
-@@ -3218,6 +3218,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		}
- 	}
- 
-+	/*
-+	 * If the "close" syscall is not traced, then we will not have the
-+	 * opportunity to, in syscall_arg__scnprintf_close_fd() invalidate the
-+	 * fd->pathname table and were ending up showing the last value set by
-+	 * syscalls opening a pathname and associating it with a descriptor or
-+	 * reading it from /proc/pid/fd/ in cases where that doesn't make
-+	 * sense.
-+	 *
-+	 *  So just disable this beautifier (SCA_FD, SCA_FDAT) when 'close' is
-+	 *  not in use.
-+	 */
-+	trace->fd_path_disabled = !trace__syscall_enabled(trace, syscalltbl__id(trace->sctbl, "close"));
+ 	prog = trace__find_bpf_program_by_title(trace, prog_name);
+-	if (prog != NULL)
 +
- 	err = perf_evlist__apply_filters(evlist, &evsel);
- 	if (err < 0)
- 		goto out_error_apply_filters;
++	if (prog != NULL) {
++out_found:
+ 		return prog;
++	}
+ 
+ 	pr_debug("Couldn't find BPF prog \"%s\" to associate with syscalls:sys_%s_%s, not augmenting it\n",
+ 		 prog_name, type, sc->name);
+@@ -2798,12 +2810,8 @@ static void trace__init_syscall_bpf_progs(struct trace *trace, int id)
+ 	if (sc == NULL)
+ 		return;
+ 
+-	if (sc->fmt != NULL) {
+-		sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_enter, "enter");
+-		sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt->bpf_prog_name.sys_exit,  "exit");
+-	} else {
+-		sc->bpf_prog.sys_enter = sc->bpf_prog.sys_exit = trace->syscalls.unaugmented_prog;
+-	}
++	sc->bpf_prog.sys_enter = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_enter : NULL, "enter");
++	sc->bpf_prog.sys_exit  = trace__find_syscall_bpf_prog(trace, sc, sc->fmt ? sc->fmt->bpf_prog_name.sys_exit  : NULL,  "exit");
+ }
+ 
+ static int trace__bpf_prog_sys_enter_fd(struct trace *trace, int id)
 -- 
 2.21.0
