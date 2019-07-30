@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 021/107] perf trace beauty: Beautify bind's sockaddr arg
-Date: Mon, 29 Jul 2019 23:54:44 -0300
-Message-ID: <20190730025610.22603-22-acme@kernel.org>
+Subject: [PATCH 022/107] perf trace beauty: Add BPF augmenter for the 'rename' syscall
+Date: Mon, 29 Jul 2019 23:54:45 -0300
+Message-ID: <20190730025610.22603-23-acme@kernel.org>
 References: <20190730025610.22603-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,53 +15,76 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-By reusing the "connect" BPF collector.
+I.e. two strings:
 
-Testing it system wide and stopping/starting sshd:
-
-  # perf trace -e bind
-  LLVM: dumping /home/acme/git/perf/tools/perf/examples/bpf/augmented_raw_syscalls.o
-  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(247, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(243, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/10327 bind(258, { .family: PF_NETLINK }, 12)  = 0
-  :6507/6507 bind(24, { .family: PF_NETLINK }, 12)   = 0
-  DNS Res~er #19/4833 bind(238, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(242, { .family: PF_NETLINK }, 12)  = 0
-  sshd/6514 bind(3, { .family: PF_NETLINK }, 12)    = 0
-  sshd/6514 bind(5, { .family: PF_INET, port: 22, addr: 0.0.0.0 }, 16) = 0
-  sshd/6514 bind(7, { .family: PF_INET6, port: 22, addr: :: }, 28) = 0
-  DNS Res~er #18/10327 bind(229, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #18/15132 bind(231, { .family: PF_NETLINK }, 12)  = 0
-  DNS Res~er #19/4833 bind(229, { .family: PF_NETLINK }, 12)  = 0
+  # perf trace -e rename
+  systemd/1 rename("/run/systemd/units/.#invocation:dnf-makecache.service970761b7f2840dcc", "/run/systemd/units/invocation:dnf-makecache.service") = 0
+  systemd-journa/715 rename("/run/systemd/journal/streams/.#9:17539785BJDblc", "/run/systemd/journal/streams/9:17539785") = 0
+  mv/1936 rename("/tmp/build/perf/fd/.array.o.tmp", "/tmp/build/perf/fd/.array.o.cmd") = 0
+  sh/1949 rename("/tmp/build/perf/.cpu.o.tmp", "/tmp/build/perf/.cpu.o.cmd") = 0
+  mv/1954 rename("/tmp/build/perf/fs/.tracing_path.o.tmp", "/tmp/build/perf/fs/.tracing_path.o.cmd") = 0
+  mv/1963 rename("/tmp/build/perf/common-cmds.h+", "/tmp/build/perf/common-cmds.h") = 0
+  :1975/1975 rename("/tmp/build/perf/.exec-cmd.o.tmp", "/tmp/build/perf/.exec-cmd.o.cmd") = 0
+  mv/1979 rename("/tmp/build/perf/fs/.fs.o.tmp", "/tmp/build/perf/fs/.fs.o.cmd") = 0
+  mv/2005 rename("/tmp/build/perf/.debug.o.tmp", "/tmp/build/perf/.debug.o.cmd") = 0
+  mv/2012 rename("/tmp/build/perf/.str_error_r.o.tmp", "/tmp/build/perf/.str_error_r.o.cmd") = 0
+  mv/2019 rename("/tmp/build/perf/.help.o.tmp", "/tmp/build/perf/.help.o.cmd") = 0
+  mv/2031 rename("/tmp/build/perf/.trace-seq.o.tmp", "/tmp/build/perf/.trace-seq.o.cmd") = 0
+  make/2038  ... [continued]: rename())             = 0
+  :2038/2038 rename("/tmp/build/perf/.event-plugin.o.tmp", "/tmp/build/perf/.event-plugin.o.cmd") ...
+  ar/2035 rename("/tmp/build/perf/stzwBX3a", "/tmp/build/perf/libapi.a") = 0
+  mv/2051 rename("/tmp/build/perf/.parse-utils.o.tmp", "/tmp/build/perf/.parse-utils.o.cmd") = 0
+  mv/2069 rename("/tmp/build/perf/.subcmd-config.o.tmp", "/tmp/build/perf/.subcmd-config.o.cmd") = 0
+  make/2080 rename("/tmp/build/perf/.parse-filter.o.tmp", "/tmp/build/perf/.parse-filter.o.cmd") = 0
+  mv/2099 rename("/tmp/build/perf/.pager.o.tmp", "/tmp/build/perf/.pager.o.cmd") = 0
+  :2124/2124 rename("/tmp/build/perf/.sigchain.o.tmp", "/tmp/build/perf/.sigchain.o.cmd") = 0
+  make/2140 rename("/tmp/build/perf/.event-parse.o.tmp", "/tmp/build/perf/.event-parse.o.cmd") = 0
+  mv/2164 rename("/tmp/build/perf/.kbuffer-parse.o.tmp", "/tmp/build/perf/.kbuffer-parse.o.cmd") = 0
+  sh/2174 rename("/tmp/build/perf/.run-command.o.tmp", "/tmp/build/perf/.run-command.o.cmd") = 0
+  mv/2190 rename("/tmp/build/perf/.tep_strerror.o.tmp", "/tmp/build/perf/.tep_strerror.o.cmd") = 0
+  :2261/2261 rename("/tmp/build/perf/.event-parse-api.o.tmp", "/tmp/build/perf/.event-parse-api.o.cmd") = 0
+  :2480/2480 rename("/tmp/build/perf/stLv3kG2", "/tmp/build/perf/libtraceevent.a") = 0
   ^C#
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-m2hmxqrckxxw2ciki0tu889u@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-6hh2rl27uri6gsxhmk6q3hx5@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../examples/bpf/augmented_raw_syscalls.c     | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 010aa9e9a561..d403b09812d1 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -710,8 +710,10 @@ static struct syscall_fmt {
- 	  .arg = { [0] = { .scnprintf = SCA_X86_ARCH_PRCTL_CODE, /* code */ },
- 		   [1] = { .scnprintf = SCA_PTR, /* arg2 */ }, }, },
- 	{ .name	    = "bind",
-+	  .bpf_prog_name = { .sys_enter = "!syscalls:sys_enter_connect", },
- 	  .arg = { [0] = { .scnprintf = SCA_INT, /* fd */ },
--		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ }, }, },
-+		   [1] = { .scnprintf = SCA_SOCKADDR, /* umyaddr */ },
-+		   [2] = { .scnprintf = SCA_INT, /* addrlen */ }, }, },
- 	{ .name	    = "bpf",
- 	  .arg = { [0] = STRARRAY(cmd, bpf_cmd), }, },
- 	{ .name	    = "brk",	    .hexret = true,
+diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+index 9c2228b01ee6..79787cf4fce9 100644
+--- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
++++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
+@@ -197,6 +197,25 @@ int sys_enter_openat(struct syscall_enter_args *args)
+ 	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
+ }
+ 
++SEC("!syscalls:sys_enter_rename")
++int sys_enter_rename(struct syscall_enter_args *args)
++{
++	int key = 0;
++	struct augmented_args_payload *augmented_args = bpf_map_lookup_elem(&augmented_args_tmp, &key);
++	const void *oldpath_arg = (const void *)args->args[0],
++		   *newpath_arg = (const void *)args->args[1];
++	unsigned int len = sizeof(augmented_args->args), oldpath_len;
++
++        if (augmented_args == NULL)
++                return 1; /* Failure: don't filter */
++
++	oldpath_len = augmented_filename__read(&augmented_args->filename, oldpath_arg, sizeof(augmented_args->filename.value));
++	len += oldpath_len + augmented_filename__read((void *)(&augmented_args->filename) + oldpath_len, newpath_arg, sizeof(augmented_args->filename.value));
++
++	/* If perf_event_output fails, return non-zero so that it gets recorded unaugmented */
++	return perf_event_output(args, &__augmented_syscalls__, BPF_F_CURRENT_CPU, augmented_args, len);
++}
++
+ SEC("!syscalls:sys_enter_renameat")
+ int sys_enter_renameat(struct syscall_enter_args *args)
+ {
 -- 
 2.21.0
