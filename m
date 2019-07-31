@@ -1,34 +1,36 @@
-From: Francis Deslauriers <francis.deslauriers@efficios.com>
-Subject: Tracing Summit 2019 - Schedule Release
-Date: Tue, 30 Jul 2019 10:28:45 -0400
-Message-ID: <CADcCL0inG5r6Hmw2nWRX=3oihYCJenSr939T6DT9332V_4TKpA@mail.gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 107/107] perf vendor events power9: Added missing event descriptions
+Date: Wed, 31 Jul 2019 21:56:40 +1000
+Message-ID: <87a7cuqux3.fsf@concordia.ellerman.id.au>
+References: <20190730025610.22603-1-acme@kernel.org> <20190730025610.22603-108-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190730025610.22603-108-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: diamon-discuss@lists.linuxfoundation.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, linux-trace-devel@vger.kernel.org, linuxtools-dev@eclipse.org, lttng-dev <lttng-dev@lists.lttng.org>, lwn@lwn.net, tracecompass-dev@eclipse.org
-Cc: info@tracingsummit.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>, Carl Love <cel@us.ibm.com>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Paul Clarke <pc@us.ibm.com>, Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>, linuxppc-dev@ozlabs.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi all,
+Arnaldo Carvalho de Melo <acme@kernel.org> writes:
+> From: Michael Petlan <mpetlan@redhat.com>
+>
+> Documentation source:
+>
+> https://wiki.raptorcs.com/w/images/6/6b/POWER9_PMU_UG_v12_28NOV2018_pub.pdf
+>
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> Cc: Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>
+> Cc: Carl Love <cel@us.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> Cc: Paul Clarke <pc@us.ibm.com>
+> Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
+> Cc: linuxppc-dev@ozlabs.org
+> LPU-Reference: 20190719100837.7503-1-mpetlan@redhat.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We're happy to announce the schedule for the Tracing Summit 2019 is now
-available. We are going to have an amazing conference with diverse topics such
-as trace analysis, GPU tracing, distributed systems tracing and more.
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Checkout the schedule and talk abstracts on the website.[1]
-
-Tracing Summit 2019 will be held in San Diego, California on August 20th, 2019,
-Don't forget to register for the summit either when buying your Open Source
-Summit ticket or using this link [2]!
-
-See you in August!
-
-The Tracing Summit Organizers
-[1] https://tracingsummit.org/wiki/TracingSummit2019
-[2] https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx?fqp=true
-
--- 
-Francis Deslauriers
-Computer Engineer
-EfficiOS inc.
+cheers
