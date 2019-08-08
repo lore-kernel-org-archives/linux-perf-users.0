@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/10] perf bench numa: Fix cpu0 binding
-Date: Thu,  8 Aug 2019 15:53:49 -0300
-Message-ID: <20190808185358.20125-2-acme@kernel.org>
+Subject: [PATCH 02/10] perf annotate: Fix printing of unaugmented disassembled instructions from BPF
+Date: Thu,  8 Aug 2019 15:53:50 -0300
+Message-ID: <20190808185358.20125-3-acme@kernel.org>
 References: <20190808185358.20125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,56 +9,59 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190808185358.20125-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Michael reported an issue with perf bench numa failing with binding to
-cpu0 with '-0' option.
+The code to disassemble BPF programs uses binutil's disassembling
+routines, and those use in turn fprintf to print to a memstream FILE,
+adding a newline at the end of each line, which ends up confusing the
+TUI routines called from:
 
-  # perf bench numa mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd
-  # Running 'numa/mem' benchmark:
+  annotate_browser__write()
+    annotate_line__write()
+      annotate_browser__printf()
+        ui_browser__vprintf()
+          SLsmg_vprintf()
 
-   # Running main, "perf bench numa numa-mem -p 3 -t 1 -P 512 -s 100 -zZcm0 --thp 1 -M 1 -ddd"
-  binding to node 0, mask: 0000000000000001 => -1
-  perf: bench/numa.c:356: bind_to_memnode: Assertion `!(ret)' failed.
-  Aborted (core dumped)
+The SLsmg_vprintf() function in the slang library gets confused with the
+terminating newline, so make the disasm_line__parse() function that
+parses the lines produced by the BPF specific disassembler (that uses
+binutil's libopcodes) and the lines produced by the objdump based
+disassembler used for everything else (and that doesn't adds this
+terminating newline) trim the end of the line in addition of the
+beginning.
 
-This happens when the cpu0 is not part of node0, which is the benchmark
-assumption and we can see that's not the case for some powerpc servers.
+This way when disasm_line->ops.raw, i.e. for instructions without a
+special scnprintf() method, we'll not have that \n getting in the way of
+filling the screen right after the instruction with spaces to avoid
+leaving what was on the screen before and thus garbling the annotation
+screen, breaking scrolling, etc.
 
-Using correct node for cpu0 binding.
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Link: http://lkml.kernel.org/r/20190801142642.28004-1-jolsa@kernel.org
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
+Link: https://lkml.kernel.org/n/tip-unbr5a5efakobfr6rhxq99ta@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/numa.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index a640ca7aaada..513cb2f2fa32 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -379,8 +379,10 @@ static u8 *alloc_data(ssize_t bytes0, int map_flags,
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ac9ad2330f93..163536720149 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1122,7 +1122,7 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+ 		goto out;
  
- 	/* Allocate and initialize all memory on CPU#0: */
- 	if (init_cpu0) {
--		orig_mask = bind_to_node(0);
--		bind_to_memnode(0);
-+		int node = numa_node_of_cpu(0);
-+
-+		orig_mask = bind_to_node(node);
-+		bind_to_memnode(node);
- 	}
+ 	(*rawp)[0] = tmp;
+-	*rawp = skip_spaces(*rawp);
++	*rawp = strim(*rawp);
  
- 	bytes = bytes0 + HPSIZE;
+ 	return 0;
+ 
 -- 
 2.21.0
