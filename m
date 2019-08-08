@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/10] perf annotate: Fix printing of unaugmented disassembled instructions from BPF
-Date: Thu,  8 Aug 2019 15:53:50 -0300
-Message-ID: <20190808185358.20125-3-acme@kernel.org>
+Subject: [PATCH 03/10] perf db-export: Fix thread__exec_comm()
+Date: Thu,  8 Aug 2019 15:53:51 -0300
+Message-ID: <20190808185358.20125-4-acme@kernel.org>
 References: <20190808185358.20125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,59 +9,137 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190808185358.20125-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-The code to disassemble BPF programs uses binutil's disassembling
-routines, and those use in turn fprintf to print to a memstream FILE,
-adding a newline at the end of each line, which ends up confusing the
-TUI routines called from:
+Threads synthesized from /proc have comms with a start time of zero, and
+not marked as "exec". Currently, there can be 2 such comms. The first is
+created by processing a synthesized fork event and is set to the
+parent's comm string, and the second by processing a synthesized comm
+event set to the thread's current comm string.
 
-  annotate_browser__write()
-    annotate_line__write()
-      annotate_browser__printf()
-        ui_browser__vprintf()
-          SLsmg_vprintf()
+In the absence of an "exec" comm, thread__exec_comm() picks the last
+(oldest) comm, which, in the case above, is the parent's comm string.
+For a main thread, that is very probably wrong. Use the second-to-last
+in that case.
 
-The SLsmg_vprintf() function in the slang library gets confused with the
-terminating newline, so make the disasm_line__parse() function that
-parses the lines produced by the BPF specific disassembler (that uses
-binutil's libopcodes) and the lines produced by the objdump based
-disassembler used for everything else (and that doesn't adds this
-terminating newline) trim the end of the line in addition of the
-beginning.
+This affects only db-export because it is the only user of
+thread__exec_comm().
 
-This way when disasm_line->ops.raw, i.e. for instructions without a
-special scnprintf() method, we'll not have that \n getting in the way of
-filling the screen right after the instruction with spaces to avoid
-leaving what was on the screen before and thus garbling the annotation
-screen, breaking scrolling, etc.
+Example:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Fixes: 6987561c9e86 ("perf annotate: Enable annotation of BPF programs")
-Link: https://lkml.kernel.org/n/tip-unbr5a5efakobfr6rhxq99ta@git.kernel.org
+  $ sudo perf record -a -o pt-a-sleep-1 -e intel_pt//u -- sleep 1
+  $ sudo chown ahunter pt-a-sleep-1
+
+Before:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kthreadd    3           78          78
+  5           sudo        4           15180       15180
+  5           sudo        5           15180       15182
+  7           kworker/4:  6           10335       10335
+  8           kthreadd    7           55          55
+  10          systemd     8           865         865
+  10          systemd     9           865         875
+  13          perf        10          15181       15181
+  15          sleep       10          15181       15181
+  16          kworker/3:  11          14179       14179
+  17          kthreadd    12          29376       29376
+  19          systemd     13          746         746
+  21          systemd     14          401         401
+  23          systemd     15          879         879
+  23          systemd     16          879         945
+  25          kthreadd    17          556         556
+  27          kworker/u1  18          14136       14136
+  28          kworker/u1  19          15021       15021
+  29          kthreadd    20          509         509
+  31          systemd     21          836         836
+  31          systemd     22          836         967
+  33          systemd     23          1148        1148
+  33          systemd     24          1148        1163
+  35          kworker/2:  25          17988       17988
+  36          kworker/0:  26          13478       13478
+
+After:
+
+  $ perf script -i pt-a-sleep-1 --itrace=bep -s tools/perf/scripts/python/export-to-sqlite.py pt-a-sleep-1b.db branches calls
+  $ sqlite3 -header -column pt-a-sleep-1b.db 'select * from comm_threads_view'
+  comm_id     command     thread_id   pid         tid
+  ----------  ----------  ----------  ----------  ----------
+  1           swapper     1           0           0
+  2           rcu_sched   2           10          10
+  3           kswapd0     3           78          78
+  4           perf        4           15180       15180
+  4           perf        5           15180       15182
+  6           kworker/4:  6           10335       10335
+  7           kcompactd0  7           55          55
+  8           accounts-d  8           865         865
+  8           accounts-d  9           865         875
+  10          perf        10          15181       15181
+  12          sleep       10          15181       15181
+  13          kworker/3:  11          14179       14179
+  14          kworker/1:  12          29376       29376
+  15          haveged     13          746         746
+  16          systemd-jo  14          401         401
+  17          NetworkMan  15          879         879
+  17          NetworkMan  16          879         945
+  19          irq/131-iw  17          556         556
+  20          kworker/u1  18          14136       14136
+  21          kworker/u1  19          15021       15021
+  22          kworker/u1  20          509         509
+  23          thermald    21          836         836
+  23          thermald    22          836         967
+  25          unity-sett  23          1148        1148
+  25          unity-sett  24          1148        1163
+  27          kworker/2:  25          17988       17988
+  28          kworker/0:  26          13478       13478
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 65de51f93ebf ("perf tools: Identify which comms are from exec")
+Link: http://lkml.kernel.org/r/20190808064823.14846-1-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/thread.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ac9ad2330f93..163536720149 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1122,7 +1122,7 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- 		goto out;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 873ab505ca80..590793cc5142 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -214,14 +214,24 @@ struct comm *thread__comm(const struct thread *thread)
  
- 	(*rawp)[0] = tmp;
--	*rawp = skip_spaces(*rawp);
-+	*rawp = strim(*rawp);
+ struct comm *thread__exec_comm(const struct thread *thread)
+ {
+-	struct comm *comm, *last = NULL;
++	struct comm *comm, *last = NULL, *second_last = NULL;
  
- 	return 0;
+ 	list_for_each_entry(comm, &thread->comm_list, list) {
+ 		if (comm->exec)
+ 			return comm;
++		second_last = last;
+ 		last = comm;
+ 	}
+ 
++	/*
++	 * 'last' with no start time might be the parent's comm of a synthesized
++	 * thread (created by processing a synthesized fork event). For a main
++	 * thread, that is very probably wrong. Prefer a later comm to avoid
++	 * that case.
++	 */
++	if (second_last && !last->start && thread->pid_ == thread->tid)
++		return second_last;
++
+ 	return last;
+ }
  
 -- 
 2.21.0
