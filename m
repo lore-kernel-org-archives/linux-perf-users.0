@@ -1,73 +1,151 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/10] perf tools: Fix include paths in ui directory
-Date: Thu,  8 Aug 2019 15:53:55 -0300
-Message-ID: <20190808185358.20125-8-acme@kernel.org>
+Subject: [PATCH 08/10] perf record: Fix module size on s390
+Date: Thu,  8 Aug 2019 15:53:56 -0300
+Message-ID: <20190808185358.20125-9-acme@kernel.org>
 References: <20190808185358.20125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
 In-Reply-To: <20190808185358.20125-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Stefan Liebler <stli@linux.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-These paths point to the wrong location but still work because they get
-picked up by a -I flag that happens to direct to the correct file. Fix
-paths to point to the correct location without -I flags.
+On s390 the modules loaded in memory have the text segment located after
+the GOT and Relocation table. This can be seen with this output:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190731225441.233800-1-irogers@google.com
+  [root@m35lp76 perf]# fgrep qeth /proc/modules
+  qeth 151552 1 qeth_l2, Live 0x000003ff800b2000
+  ...
+  [root@m35lp76 perf]# cat /sys/module/qeth/sections/.text
+  0x000003ff800b3990
+  [root@m35lp76 perf]#
+
+There is an offset of 0x1990 bytes. The size of the qeth module is
+151552 bytes (0x25000 in hex).
+
+The location of the GOT/relocation table at the beginning of a module is
+unique to s390.
+
+commit 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+adjusts the start address of a module in the map structures, but does
+not adjust the size of the modules. This leads to overlapping of module
+maps as this example shows:
+
+[root@m35lp76 perf] # ./perf report -D
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x25000)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x8000)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
+
+The module qeth.ko has an adjusted start address modified to b3990, but
+its size is unchanged and the module ends at 0x3ff800d8990.  This end
+address overlaps with the next modules start address of 0x3ff800d85a0.
+
+When the size of the leading GOT/Relocation table stored in the
+beginning of the text segment (0x1990 bytes) is subtracted from module
+qeth end address, there are no overlaps anymore:
+
+   0x3ff800d8990 - 0x1990 = 0x0x3ff800d7000
+
+which is the same as
+
+   0x3ff800b2000 + 0x25000 = 0x0x3ff800d7000.
+
+To fix this issue, also adjust the modules size in function
+arch__fix_module_text_start(). Add another function parameter named size
+and reduce the size of the module when the text segment start address is
+changed.
+
+Output after:
+     0 0 0xfb0 [0xa0]: PERF_RECORD_MMAP -1/0: [0x3ff800b3990(0x23670)
+          @ 0]:  x /lib/modules/.../qeth.ko.xz
+     0 0 0x1050 [0xb0]: PERF_RECORD_MMAP -1/0: [0x3ff800d85a0(0x7a60)
+          @ 0]:  x /lib/modules/.../ip6_tables.ko.xz
+
+Reported-by: Stefan Liebler <stli@linux.ibm.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: stable@vger.kernel.org
+Fixes: 203d8a4aa6ed ("perf s390: Fix 'start' address of module's map")
+Link: http://lkml.kernel.org/r/20190724122703.3996-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browser.c      | 9 +++++----
- tools/perf/ui/tui/progress.c | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/arch/s390/util/machine.c | 14 +++++++++++++-
+ tools/perf/util/machine.c           |  3 ++-
+ tools/perf/util/machine.h           |  2 +-
+ 3 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index f80c51d53565..d227d74b28f8 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -1,7 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "../string2.h"
--#include "../config.h"
--#include "../../perf.h"
-+#include "../util/util.h"
-+#include "../util/string2.h"
-+#include "../util/config.h"
-+#include "../perf.h"
- #include "libslang.h"
- #include "ui.h"
- #include "util.h"
-@@ -14,7 +15,7 @@
- #include "browser.h"
- #include "helpline.h"
- #include "keysyms.h"
--#include "../color.h"
-+#include "../util/color.h"
- #include <linux/ctype.h>
- #include <linux/zalloc.h>
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index a19690a17291..de26b1441a48 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -7,7 +7,7 @@
+ #include "api/fs/fs.h"
+ #include "debug.h"
  
-diff --git a/tools/perf/ui/tui/progress.c b/tools/perf/ui/tui/progress.c
-index bc134b82829d..5a24dd3ce4db 100644
---- a/tools/perf/ui/tui/progress.c
-+++ b/tools/perf/ui/tui/progress.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/kernel.h>
--#include "../cache.h"
-+#include "../../util/cache.h"
- #include "../progress.h"
- #include "../libslang.h"
- #include "../ui.h"
+-int arch__fix_module_text_start(u64 *start, const char *name)
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name)
+ {
+ 	u64 m_start = *start;
+ 	char path[PATH_MAX];
+@@ -17,6 +17,18 @@ int arch__fix_module_text_start(u64 *start, const char *name)
+ 	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
+ 		pr_debug2("Using module %s start:%#lx\n", path, m_start);
+ 		*start = m_start;
++	} else {
++		/* Successful read of the modules segment text start address.
++		 * Calculate difference between module start address
++		 * in memory and module text segment start address.
++		 * For example module load address is 0x3ff8011b000
++		 * (from /proc/modules) and module text segment start
++		 * address is 0x3ff8011b870 (from file above).
++		 *
++		 * Adjust the module size and subtract the GOT table
++		 * size located at the beginning of the module.
++		 */
++		*size -= (*start - m_start);
+ 	}
+ 
+ 	return 0;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index cf826eca3aaf..83b2fbbeeb90 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1378,6 +1378,7 @@ static int machine__set_modules_path(struct machine *machine)
+ 	return map_groups__set_modules_path_dir(&machine->kmaps, modules_path, 0);
+ }
+ int __weak arch__fix_module_text_start(u64 *start __maybe_unused,
++				u64 *size __maybe_unused,
+ 				const char *name __maybe_unused)
+ {
+ 	return 0;
+@@ -1389,7 +1390,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
+ 	struct machine *machine = arg;
+ 	struct map *map;
+ 
+-	if (arch__fix_module_text_start(&start, name) < 0)
++	if (arch__fix_module_text_start(&start, &size, name) < 0)
+ 		return -1;
+ 
+ 	map = machine__findnew_module_map(machine, start, name);
+diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
+index f70ab98a7bde..7aa38da26427 100644
+--- a/tools/perf/util/machine.h
++++ b/tools/perf/util/machine.h
+@@ -222,7 +222,7 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
+ 
+ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
+ 					const char *filename);
+-int arch__fix_module_text_start(u64 *start, const char *name);
++int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
+ 
+ int machine__load_kallsyms(struct machine *machine, const char *filename);
+ 
 -- 
 2.21.0
