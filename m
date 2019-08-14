@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/28] perf.data documentation: Clarify HEADER_SAMPLE_TOPOLOGY format
-Date: Wed, 14 Aug 2019 15:40:49 -0300
-Message-ID: <20190814184051.3125-27-acme@kernel.org>
+Subject: [PATCH 28/28] perf ui: No need to set ui_browser to 1 twice
+Date: Wed, 14 Aug 2019 15:40:51 -0300
+Message-ID: <20190814184051.3125-29-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,66 +9,36 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Chong Jiang <chongjiang@chromium.org>, Peter Zijlstra <peterz@infradead.org>, Simon Que <sque@chromium.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Vince Weaver <vincent.weaver@maine.edu>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The perf.data file format documentation for HEADER_SAMPLE_TOPOLOGY
-specifies the layout in a confusing manner that doesn't match the rest
-of the document.  This patch attempts to describe things consistent with
-the rest of the file.
+We need to do it only when fallbacking from GTK to the TUI.
 
-Signed-off-by: Vince Weaver <vincent.weaver@maine.edu>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Chong Jiang <chongjiang@chromium.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Simon Que <sque@chromium.org>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1908011425240.14303@macbook-air
+Link: https://lkml.kernel.org/n/tip-dda0acxqef1k72n9z4myjbjt@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../Documentation/perf.data-file-format.txt   | 25 +++++++++++--------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ tools/perf/ui/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index d030c87ed9f5..b0152e1095c5 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -298,16 +298,21 @@ Physical memory map and its node assignments.
- 
- The format of data in MEM_TOPOLOGY is as follows:
- 
--   0 - version          | for future changes
--   8 - block_size_bytes | /sys/devices/system/memory/block_size_bytes
--  16 - count            | number of nodes
--
--For each node we store map of physical indexes:
--
--  32 - node id          | node index
--  40 - size             | size of bitmap
--  48 - bitmap           | bitmap of memory indexes that belongs to node
--                        | /sys/devices/system/node/node<NODE>/memory<INDEX>
-+	u64 version;            // Currently 1
-+	u64 block_size_bytes;   // /sys/devices/system/memory/block_size_bytes
-+	u64 count;              // number of nodes
-+
-+struct memory_node {
-+        u64 node_id;            // node index
-+        u64 size;               // size of bitmap
-+        struct bitmap {
-+		/* size of bitmap again */
-+                u64 bitmapsize;
-+		/* bitmap of memory indexes that belongs to node     */
-+		/* /sys/devices/system/node/node<NODE>/memory<INDEX> */
-+                u64 entries[(bitmapsize/64)+1];
-+        }
-+}[count];
- 
- The MEM_TOPOLOGY can be displayed with following command:
- 
+diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
+index 44fe824e96cd..3bc7c9a6fae9 100644
+--- a/tools/perf/ui/setup.c
++++ b/tools/perf/ui/setup.c
+@@ -89,9 +89,9 @@ void setup_browser(bool fallback_to_pager)
+ 		printf("GTK browser requested but could not find %s\n",
+ 		       PERF_GTK_DSO);
+ 		sleep(1);
++		use_browser = 1;
+ 		/* fall through */
+ 	case 1:
+-		use_browser = 1;
+ 		if (ui__init() == 0)
+ 			break;
+ 		/* fall through */
 -- 
 2.21.0
