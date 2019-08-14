@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/28] perf trace: Fix segmentation fault when access syscall info on arm64
-Date: Wed, 14 Aug 2019 15:40:32 -0300
-Message-ID: <20190814184051.3125-10-acme@kernel.org>
+Subject: [PATCH 10/28] perf hist: Remove dummy entries when finding real ones.
+Date: Wed, 14 Aug 2019 15:40:33 -0300
+Message-ID: <20190814184051.3125-11-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,72 +9,79 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@redhat.com>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-'perf trace' reports the segmentation fault as below on Arm64:
+When he have an event group we have multiple struct hist instances, one
+per evsel, and in each of these hists we may have hist_entries that
+point to the same thing being observed, say a symbol, i.e. if we're
+looking at instructions and cycles, then we'll have one hist_entry in
+the "instructions" evsel and another in the "cycles" evsel.
 
-  # perf trace -e string -e augmented_raw_syscalls.c
-  LLVM: dumping tools/perf/examples/bpf/augmented_raw_syscalls.o
-  perf: Segmentation fault
-  Obtained 12 stack frames.
-  perf(sighandler_dump_stack+0x47) [0xaaaaac96ac87]
-  linux-vdso.so.1(+0x5b7) [0xffffadbeb5b7]
-  /lib/aarch64-linux-gnu/libc.so.6(strlen+0x10) [0xfffface7d5d0]
-  /lib/aarch64-linux-gnu/libc.so.6(_IO_vfprintf+0x1ac7) [0xfffface49f97]
-  /lib/aarch64-linux-gnu/libc.so.6(__vsnprintf_chk+0xc7) [0xffffacedfbe7]
-  perf(scnprintf+0x97) [0xaaaaac9ca3ff]
-  perf(+0x997bb) [0xaaaaac8e37bb]
-  perf(cmd_trace+0x28e7) [0xaaaaac8ec09f]
-  perf(+0xd4a13) [0xaaaaac91ea13]
-  perf(main+0x62f) [0xaaaaac8a147f]
-  /lib/aarch64-linux-gnu/libc.so.6(__libc_start_main+0xe3) [0xfffface22d23]
-  perf(+0x57723) [0xaaaaac8a1723]
-  Segmentation fault
+We need to link those to then show one column for each. When we're
+looking at some other pair of events, say instructions and cache misses,
+we may have just the "instructions" hist entry and not one for "cache
+misses", as instructions not necessarily generate cache misses, as the
+logic expects one hist_entry per evsel, we end up adding "dummy"
+hist_entries.
 
-This issue is introduced by commit 30a910d7d3e0 ("perf trace:
-Preallocate the syscall table"), it allocates trace->syscalls.table[]
-array and the element count is 'trace->sctbl->syscalls.nr_entries'; but
-on Arm64, the system call number is not continuously used; e.g. the
-syscall maximum id is 436 but the real entries is only 281.
+This is enough for 'perf report', that does this matching operation
+(hists__match()) just once after processing all events, but for 'perf
+top', we do this at each refresh, so we may finally find events matching
+and then we need to trow away the dummies and link with the real events.
 
-So the table is allocated with 'nr_entries' as the element count, but it
-accesses the table with the syscall id, which might be out of the bound
-of the array and cause the segmentation fault.
+So if we find a match, traverse the link of matches and trow away
+dummies for that hists.
 
-This patch allocates trace->syscalls.table[] with the element count is
-'trace->sctbl->syscalls.max_id + 1', this allows any id to access the
-table without out of the bound.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Fixes: 30a910d7d3e0 ("perf trace: Preallocate the syscall table")
-Link: http://lkml.kernel.org/r/20190809104752.27338-1-leo.yan@linaro.org
+Link: https://lkml.kernel.org/n/tip-dwvtjqqifsbsczeb35q6mqkk@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/hist.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 75eb3811e942..d553d06a9aeb 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1492,7 +1492,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	const char *name = syscalltbl__name(trace->sctbl, id);
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index d923a5bb7b48..8efbf58dc3d0 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -2436,7 +2436,7 @@ void hists__match(struct hists *leader, struct hists *other)
+ {
+ 	struct rb_root_cached *root;
+ 	struct rb_node *nd;
+-	struct hist_entry *pos, *pair;
++	struct hist_entry *pos, *pair, *pos_pair, *tmp_pair;
  
- 	if (trace->syscalls.table == NULL) {
--		trace->syscalls.table = calloc(trace->sctbl->syscalls.nr_entries, sizeof(*sc));
-+		trace->syscalls.table = calloc(trace->sctbl->syscalls.max_id + 1, sizeof(*sc));
- 		if (trace->syscalls.table == NULL)
- 			return -ENOMEM;
+ 	if (symbol_conf.report_hierarchy) {
+ 		/* hierarchy report always collapses entries */
+@@ -2453,8 +2453,24 @@ void hists__match(struct hists *leader, struct hists *other)
+ 		pos  = rb_entry(nd, struct hist_entry, rb_node_in);
+ 		pair = hists__find_entry(other, pos);
+ 
+-		if (pair && list_empty(&pair->pairs.node))
++		if (pair && list_empty(&pair->pairs.node)) {
++			list_for_each_entry_safe(pos_pair, tmp_pair, &pos->pairs.head, pairs.node) {
++				if (pos_pair->hists == other) {
++					/*
++					 * XXX maybe decayed entries can appear
++					 * here?  but then we would have use
++					 * after free, as decayed entries are
++					 * freed see hists__delete_entry
++					 */
++					BUG_ON(!pos_pair->dummy);
++					list_del_init(&pos_pair->pairs.node);
++					hist_entry__delete(pos_pair);
++					break;
++				}
++			}
++
+ 			hist_entry__add_pair(pair, pos);
++		}
  	}
+ }
+ 
 -- 
 2.21.0
