@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/28] perf top: Collapse and resort all evsels in a group
-Date: Wed, 14 Aug 2019 15:40:34 -0300
-Message-ID: <20190814184051.3125-12-acme@kernel.org>
+Subject: [PATCH 12/28] tools build: Add capability-related feature detection
+Date: Wed, 14 Aug 2019 15:40:35 -0300
+Message-ID: <20190814184051.3125-13-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,126 +9,192 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Igor Lubashev <ilubashe@akamai.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, James Morris <jmorris@namei.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Igor Lubashev <ilubashe@akamai.com>
 
-And link them, i.e. find the hist entries in the non-leader events and
-link them to the ones in the leader.
+Add utilities to help checking capabilities of the running procss.  Make
+perf link with libcap, if it is available. If no libcap-dev[el], assume
+no capabilities.
 
-This should be the same thing already done for the 'perf report' case,
-but now we do it periodically.
+Committer testing:
 
-With this in place we get percentages in from the second overhead column
-on, not just on the first (the leader).
+  $ make O=/tmp/build/perf -C tools/perf install-bin
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+    BUILD:   Doing 'make -j8' parallel build
 
-Try it using:
+  Auto-detecting system features:
+  <SNIP>
+  ...                        libbfd: [ on  ]
+  ...                        libcap: [ OFF ]
+  ...                        libelf: [ on  ]
+  <SNIP>
+  Makefile.config:833: No libcap found, disables capability support, please install libcap-devel/libcap-dev
+  <SNIP>
+  $ grep libcap /tmp/build/perf/FEATURE-DUMP
+  feature-libcap=0
+  $ cat /tmp/build/perf/feature/test-libcap.make.output
+  test-libcap.c:2:10: fatal error: sys/capability.h: No such file or directory
+      2 | #include <sys/capability.h>
+        |          ^~~~~~~~~~~~~~~~~~
+  compilation terminated.
+  $
 
-  perf top --stdio -e '{cycles,instructions}'
+Now install libcap-devel and try again:
 
-You should see something like:
+  $ make O=/tmp/build/perf -C tools/perf install-bin
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+    BUILD:   Doing 'make -j8' parallel build
+  Warning: Kernel ABI header at 'tools/include/linux/bits.h' differs from latest version at 'include/linux/bits.h'
+  diff -u tools/include/linux/bits.h include/linux/bits.h
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
 
-   PerfTop:   20776 irqs/sec  kernel:68.7%  exact:  0.0% lost: 0/0 drop: 0/0 [cycles],  (all, 8 CPUs)
-  ---------------------------------------------------------------------------------------------------
+  Auto-detecting system features:
+  <SNIP>
+  ...                        libbfd: [ on  ]
+  ...                        libcap: [ on  ]
+  ...                        libelf: [ on  ]
+  <SNIP>>
+    CC       /tmp/build/perf/jvmti/libjvmti.o
+  <SNIP>>
+  $ grep libcap /tmp/build/perf/FEATURE-DUMP
+  feature-libcap=1
+  $ cat /tmp/build/perf/feature/test-libcap.make.output
+  $ ldd /tmp/build/perf/feature/test-libcap.make.bin
+  ldd: /tmp/build/perf/feature/test-libcap.make.bin: No such file or directory
+  $ ldd /tmp/build/perf/feature/test-libcap.bin
+  	linux-vdso.so.1 (0x00007ffc35bfe000)
+  	libcap.so.2 => /lib64/libcap.so.2 (0x00007ff9c62ff000)
+  	libc.so.6 => /lib64/libc.so.6 (0x00007ff9c6139000)
+  	/lib64/ld-linux-x86-64.so.2 (0x00007ff9c6326000)
+  $
 
-     4.44%   0.44%  [kernel]                 [k] do_syscall_64
-     2.27%   0.17%  [kernel]                 [k] entry_SYSCALL_64
-     1.73%   0.27%  [kernel]                 [k] syscall_return_via_sysret
-     1.60%   0.91%  [kernel]                 [k] _raw_spin_lock_irqsave
-     1.45%   3.53%  libglib-2.0.so.0.6000.4  [.] g_string_insert_unichar
-     1.39%   0.21%  [kernel]                 [k] copy_user_enhanced_fast_string
-     1.26%   1.15%  [kernel]                 [k] psi_task_change
-     1.16%   0.14%  libpixman-1.so.0.38.0    [.] 0x000000000006f403
-     1.00%   0.32%  [kernel]                 [k] __sched_text_start
-     0.97%   2.11%  [kernel]                 [k] n_tty_write
-     0.96%   0.04%  [kernel]                 [k] queued_spin_lock_slowpath
-     0.93%   0.88%  [kernel]                 [k] menu_select
-     0.87%   0.14%  [kernel]                 [k] try_to_wake_up
-     0.77%   0.10%  libpixman-1.so.0.38.0    [.] 0x000000000006f40b
-     0.73%   0.09%  libpixman-1.so.0.38.0    [.] 0x000000000006f413
-     0.69%   0.48%  libc-2.29.so             [.] __memmove_avx_unaligned_erms
-     0.68%   0.29%  [kernel]                 [k] _raw_spin_lock_irq
-     0.61%   0.04%  libpixman-1.so.0.38.0    [.] 0x000000000006f423
-     0.60%   0.37%  [kernel]                 [k] native_sched_clock
-     0.57%   0.23%  [kernel]                 [k] do_idle
-     0.57%   0.23%  [kernel]                 [k] __fget
-     0.56%   0.30%  [kernel]                 [k] __switch_to_asm
-     0.56%   0.00%  libc-2.29.so             [.] __memset_avx2_erms
-     0.52%   0.32%  [kernel]                 [k] _raw_spin_lock
-     0.49%   0.24%  [kernel]                 [k] n_tty_poll
-     0.49%   0.54%  libglib-2.0.so.0.6000.4  [.] g_mutex_lock
-     0.48%   0.62%  [kernel]                 [k] _raw_spin_unlock_irqrestore
-     0.47%   0.27%  [kernel]                 [k] __switch_to
-     0.47%   0.25%  [kernel]                 [k] pick_next_task_fair
-     0.45%   0.17%  [kernel]                 [k] filldir64
-     0.40%   0.16%  [kernel]                 [k] update_rq_clock
-     0.39%   0.19%  [kernel]                 [k] enqueue_task_fair
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-uw8cjeifxvjpkjp6x2iil0ar@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+[ split from a larger patch ]
+Link: http://lkml.kernel.org/r/8a1e76cf5c7c9796d0d4d240fbaa85305298aafa.1565188228.git.ilubashe@akamai.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+ tools/build/Makefile.feature      |  2 ++
+ tools/build/feature/Makefile      |  4 ++++
+ tools/build/feature/test-libcap.c | 20 ++++++++++++++++++++
+ tools/perf/Makefile.config        | 11 +++++++++++
+ tools/perf/Makefile.perf          |  2 ++
+ 5 files changed, 39 insertions(+)
+ create mode 100644 tools/build/feature/test-libcap.c
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 94e34853a238..78e7efc597a6 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -264,6 +264,30 @@ static void perf_top__show_details(struct perf_top *top)
- 	pthread_mutex_unlock(&notes->lock);
- }
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 86b793dffbc4..8a19753cc26a 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -42,6 +42,7 @@ FEATURE_TESTS_BASIC :=                  \
+         gtk2-infobar                    \
+         libaudit                        \
+         libbfd                          \
++        libcap                          \
+         libelf                          \
+         libelf-getphdrnum               \
+         libelf-gelf_getnote             \
+@@ -110,6 +111,7 @@ FEATURE_DISPLAY ?=              \
+          gtk2                   \
+          libaudit               \
+          libbfd                 \
++         libcap                 \
+          libelf                 \
+          libnuma                \
+          numa_num_possible_cpus \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 0658b8cd0e53..8499385365c0 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -20,6 +20,7 @@ FILES=                                          \
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
+          test-cplus-demangle.bin                \
++         test-libcap.bin			\
+          test-libelf.bin                        \
+          test-libelf-getphdrnum.bin             \
+          test-libelf-gelf_getnote.bin           \
+@@ -105,6 +106,9 @@ $(OUTPUT)test-fortify-source.bin:
+ $(OUTPUT)test-bionic.bin:
+ 	$(BUILD)
  
-+static void evlist__resort_hists(struct evlist *evlist)
++$(OUTPUT)test-libcap.bin:
++	$(BUILD) -lcap
++
+ $(OUTPUT)test-libelf.bin:
+ 	$(BUILD) -lelf
+ 
+diff --git a/tools/build/feature/test-libcap.c b/tools/build/feature/test-libcap.c
+new file mode 100644
+index 000000000000..d2a2e152195f
+--- /dev/null
++++ b/tools/build/feature/test-libcap.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <sys/capability.h>
++#include <linux/capability.h>
++
++int main(void)
 +{
-+	struct evsel *pos;
++	cap_flag_value_t val;
++	cap_t caps = cap_get_proc();
 +
-+	evlist__for_each_entry(evlist, pos) {
-+		struct hists *hists = evsel__hists(pos);
++	if (!caps)
++		return 1;
 +
-+		hists__collapse_resort(hists, NULL);
++	if (cap_get_flag(caps, CAP_SYS_ADMIN, CAP_EFFECTIVE, &val) != 0)
++		return 1;
 +
-+		/* Non-group events are considered as leader */
-+		if (symbol_conf.event_group &&
-+		    !perf_evsel__is_group_leader(pos)) {
-+			struct hists *leader_hists = evsel__hists(pos->leader);
++	if (cap_free(caps) != 0)
++		return 1;
 +
-+			hists__match(leader_hists, hists);
-+			hists__link(leader_hists, hists);
-+		}
-+	}
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		perf_evsel__output_resort(pos, NULL);
-+	}
++	return 0;
 +}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index e4988f49ea79..9a06787fedc6 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -824,6 +824,17 @@ ifndef NO_LIBZSTD
+   endif
+ endif
+ 
++ifndef NO_LIBCAP
++  ifeq ($(feature-libcap), 1)
++    CFLAGS += -DHAVE_LIBCAP_SUPPORT
++    EXTLIBS += -lcap
++    $(call detected,CONFIG_LIBCAP)
++  else
++    msg := $(warning No libcap found, disables capability support, please install libcap-devel/libcap-dev);
++    NO_LIBCAP := 1
++  endif
++endif
 +
- static void perf_top__print_sym_table(struct perf_top *top)
- {
- 	char bf[160];
-@@ -304,8 +328,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
- 		}
- 	}
- 
--	hists__collapse_resort(hists, NULL);
--	perf_evsel__output_resort(evsel, NULL);
-+	evlist__resort_hists(top->evlist);
- 
- 	hists__output_recalc_col_len(hists, top->print_entries - printed);
- 	putchar('\n');
-@@ -570,8 +593,7 @@ static void perf_top__sort_new_samples(void *arg)
- 		}
- 	}
- 
--	hists__collapse_resort(hists, NULL);
--	perf_evsel__output_resort(evsel, NULL);
-+	evlist__resort_hists(t->evlist);
- 
- 	if (t->lost || t->drop)
- 		pr_warning("Too slow to read ring buffer (change period (-c/-F) or limit CPUs (-C)\n");
+ ifndef NO_BACKTRACE
+   ifeq ($(feature-backtrace), 1)
+     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 67512a12276b..f9807d8c005b 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -88,6 +88,8 @@ include ../scripts/utilities.mak
+ #
+ # Define NO_LIBBPF if you do not want BPF support
+ #
++# Define NO_LIBCAP if you do not want process capabilities considered by perf
++#
+ # Define NO_SDT if you do not want to define SDT event in perf tools,
+ # note that it doesn't disable SDT scanning support.
+ #
 -- 
 2.21.0
