@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/28] perf config: Document the PERF_CONFIG environment variable
-Date: Wed, 14 Aug 2019 15:40:26 -0300
-Message-ID: <20190814184051.3125-4-acme@kernel.org>
+Subject: [PATCH 04/28] perf test vfs_getname: Disable ~/.perfconfig to get default output
+Date: Wed, 14 Aug 2019 15:40:27 -0300
+Message-ID: <20190814184051.3125-5-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,39 +15,68 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-There was a provision for setting this variable, but not the
-getenv("PERF_CONFIG") call to set it, as this was fixed in the previous
-cset, document that it can be used to ask for using an alternative
-.perfconfig file or to disable reading whatever file exists in the
-system or home directory, i.e. using:
+To get the expected output we have to ignore whatever changes the user
+has in its ~/.perfconfig file, so set PERF_CONFIG to /dev/null to
+achieve that.
 
-  export PERF_CONFIG=/dev/null
+Before:
+
+  # egrep 'trace|show_' ~/.perfconfig
+  [trace]
+  	show_zeros = yes
+  	show_duration = no
+  	show_timestamp = no
+  	show_arg_names = no
+  	show_prefix = yes
+  # echo $PERF_CONFIG
+
+  # perf test "trace + vfs_getname"
+  70: Check open filename arg using perf trace + vfs_getname: FAILED!
+  # export PERF_CONFIG=/dev/null
+  # perf test "trace + vfs_getname"
+  70: Check open filename arg using perf trace + vfs_getname: Ok
+  #
+
+After:
+
+  # egrep 'trace|show_' ~/.perfconfig
+  [trace]
+  	show_zeros = yes
+  	show_duration = no
+  	show_timestamp = no
+  	show_arg_names = no
+  	show_prefix = yes
+  # echo $PERF_CONFIG
+
+  # perf test "trace + vfs_getname"
+  70: Check open filename arg using perf trace + vfs_getname: Ok
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Taeung Song <treeze.taeung@gmail.com>
-Link: https://lkml.kernel.org/n/tip-0u4o967hsk7j0o50zp9ctn89@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-3up27pexg5i3exuzqrvt4m8u@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt | 4 ++++
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index e4aa268d2e38..c599623a1f3d 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -40,6 +40,10 @@ The '$HOME/.perfconfig' file is used to store a per-user configuration.
- The file '$(sysconfdir)/perfconfig' can be used to
- store a system-wide default configuration.
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 45d269b0157e..11cc2af13f2b 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -32,6 +32,10 @@ if [ $err -ne 0 ] ; then
+ 	exit $err
+ fi
  
-+One an disable reading config files by setting the PERF_CONFIG environment
-+variable to /dev/null, or provide an alternate config file by setting that
-+variable.
++# Do not use whatever ~/.perfconfig file, it may change the output
++# via trace.{show_timestamp,show_prefix,etc}
++export PERF_CONFIG=/dev/null
 +
- When reading or writing, the values are read from the system and user
- configuration files by default, and options '--system' and '--user'
- can be used to tell the command to read from or write to only that location.
+ trace_open_vfs_getname
+ err=$?
+ rm -f ${file}
 -- 
 2.21.0
