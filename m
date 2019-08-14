@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/28] perf ui: No need to set ui_browser to 1 twice
-Date: Wed, 14 Aug 2019 15:40:51 -0300
-Message-ID: <20190814184051.3125-29-acme@kernel.org>
+Subject: [PATCH 27/28] perf record: Support aarch64 random socket_id assignment
+Date: Wed, 14 Aug 2019 15:40:50 -0300
+Message-ID: <20190814184051.3125-28-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,36 +9,77 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190814184051.3125-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 
-We need to do it only when fallbacking from GTK to the TUI.
+Same as in the commit 01766229533f ("perf record: Support s390 random
+socket_id assignment"), aarch64 also have this problem.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Without this fix:
+
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  socket_id number is too big.You may need to upgrade the perf tool.
+
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # Core ID and Socket ID information is not available
+  ...
+
+With this fix:
+  [root@localhost perf]# ./perf report --header -I -v
+  ...
+  cpumask list: 0-31
+  cpumask list: 32-63
+  cpumask list: 64-95
+  cpumask list: 96-127
+
+  # ========
+  # captured on    : Thu Aug  1 22:58:38 2019
+  # header version : 1
+  ...
+  # CPU 0: Core ID 0, Socket ID 36
+  # CPU 1: Core ID 1, Socket ID 36
+  ...
+  # CPU 126: Core ID 126, Socket ID 8442
+  # CPU 127: Core ID 127, Socket ID 8442
+  ...
+
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-dda0acxqef1k72n9z4myjbjt@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
+Link: http://lkml.kernel.org/r/1564717737-21602-1-git-send-email-tanxiaojun@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/header.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/setup.c b/tools/perf/ui/setup.c
-index 44fe824e96cd..3bc7c9a6fae9 100644
---- a/tools/perf/ui/setup.c
-+++ b/tools/perf/ui/setup.c
-@@ -89,9 +89,9 @@ void setup_browser(bool fallback_to_pager)
- 		printf("GTK browser requested but could not find %s\n",
- 		       PERF_GTK_DSO);
- 		sleep(1);
-+		use_browser = 1;
- 		/* fall through */
- 	case 1:
--		use_browser = 1;
- 		if (ui__init() == 0)
- 			break;
- 		/* fall through */
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b04c2b6b28b3..1f2965a07bef 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2252,8 +2252,10 @@ static int process_cpu_topology(struct feat_fd *ff, void *data __maybe_unused)
+ 	/* On s390 the socket_id number is not related to the numbers of cpus.
+ 	 * The socket_id number might be higher than the numbers of cpus.
+ 	 * This depends on the configuration.
++	 * AArch64 is the same.
+ 	 */
+-	if (ph->env.arch && !strncmp(ph->env.arch, "s390", 4))
++	if (ph->env.arch && (!strncmp(ph->env.arch, "s390", 4)
++			  || !strncmp(ph->env.arch, "aarch64", 7)))
+ 		do_core_id_test = false;
+ 
+ 	for (i = 0; i < (u32)cpu_nr; i++) {
 -- 
 2.21.0
