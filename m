@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/28] perf config: Honour $PERF_CONFIG env var to specify alternate .perfconfig
-Date: Wed, 14 Aug 2019 15:40:25 -0300
-Message-ID: <20190814184051.3125-3-acme@kernel.org>
+Subject: [PATCH 03/28] perf config: Document the PERF_CONFIG environment variable
+Date: Wed, 14 Aug 2019 15:40:26 -0300
+Message-ID: <20190814184051.3125-4-acme@kernel.org>
 References: <20190814184051.3125-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,38 +15,39 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We had this comment in Documentation/perf_counter/config.c, i.e. since
-when we got this from the git sources, but never really did that
-getenv("PERF_CONFIG"), do it now as I need to disable whatever
-~/.perfconfig root has so that tests parsing tool output are done for
-the expected default output or that we specify an alternate config file
-that when read will make the tools produce expected output.
+There was a provision for setting this variable, but not the
+getenv("PERF_CONFIG") call to set it, as this was fixed in the previous
+cset, document that it can be used to ask for using an alternative
+.perfconfig file or to disable reading whatever file exists in the
+system or home directory, i.e. using:
+
+  export PERF_CONFIG=/dev/null
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Taeung Song <treeze.taeung@gmail.com>
-Fixes: 078006012401 ("perf_counter tools: add in basic glue from Git")
-Link: https://lkml.kernel.org/n/tip-jo209zac9rut0dz1rqvbdlgm@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0u4o967hsk7j0o50zp9ctn89@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/perf.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/Documentation/perf-config.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index 97e2628ea5dd..d4e4d53e8b44 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -441,6 +441,9 @@ int main(int argc, const char **argv)
+diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+index e4aa268d2e38..c599623a1f3d 100644
+--- a/tools/perf/Documentation/perf-config.txt
++++ b/tools/perf/Documentation/perf-config.txt
+@@ -40,6 +40,10 @@ The '$HOME/.perfconfig' file is used to store a per-user configuration.
+ The file '$(sysconfdir)/perfconfig' can be used to
+ store a system-wide default configuration.
  
- 	srandom(time(NULL));
- 
-+	/* Setting $PERF_CONFIG makes perf read _only_ the given config file. */
-+	config_exclusive_filename = getenv("PERF_CONFIG");
++One an disable reading config files by setting the PERF_CONFIG environment
++variable to /dev/null, or provide an alternate config file by setting that
++variable.
 +
- 	err = perf_config(perf_default_config, NULL);
- 	if (err)
- 		return err;
+ When reading or writing, the values are read from the system and user
+ configuration files by default, and options '--system' and '--user'
+ can be used to tell the command to read from or write to only that location.
 -- 
 2.21.0
