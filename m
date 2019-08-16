@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/17] perf evswitch: Move enoent error message printing to separate function
-Date: Fri, 16 Aug 2019 17:16:46 -0300
-Message-ID: <20190816201653.19332-11-acme@kernel.org>
+Subject: [PATCH 11/17] perf evswitch: Add hint when not finding specified on/off events
+Date: Fri, 16 Aug 2019 17:16:47 -0300
+Message-ID: <20190816201653.19332-12-acme@kernel.org>
 References: <20190816201653.19332-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,50 +14,76 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Allows adding hints there, will be done in followup patch.
+If the user specifies a on or off switch event and it isn't in the
+perf.data file, provide a hint about how to see the events in the
+perf.data evlist:
+
+  # perf script --switch-on=syscall:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep
+  ERROR: event_on event not found (syscall:sys_enter_nanosleep)
+  HINT:  use 'perf evlist' to see the available event names
+  #
+  # perf evlist
+  sched:sched_kthread_stop
+  sched:sched_kthread_stop_ret
+  sched:sched_waking
+  sched:sched_wakeup
+  sched:sched_wakeup_new
+  sched:sched_switch
+  sched:sched_migrate_task
+  sched:sched_process_free
+  sched:sched_process_exit
+  sched:sched_wait_task
+  sched:sched_process_wait
+  sched:sched_process_fork
+  sched:sched_process_exec
+  sched:sched_stat_wait
+  sched:sched_stat_sleep
+  sched:sched_stat_iowait
+  sched:sched_stat_blocked
+  sched:sched_stat_runtime
+  sched:sched_pi_setprio
+  sched:sched_move_numa
+  sched:sched_stick_numa
+  sched:sched_swap_numa
+  sched:sched_wake_idle_without_ipi
+  syscalls:sys_enter_clock_nanosleep
+  syscalls:sys_exit_clock_nanosleep
+  syscalls:sys_enter_nanosleep
+  syscalls:sys_exit_nanosleep
+  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
+  #
+  # perf script --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep
+       sleep 20919 [001] 109866.144411:  sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [ns]
+       sleep 20919 [001] 109866.144412:        sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
+     swapper     0 [001] 109867.144568:        sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
+     swapper     0 [001] 109867.144586:        sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
+  #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-1kvrdi7weuz3hxycwvarcu6v@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-iijjvdlyad973oskdq8gmi5w@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evswitch.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/evswitch.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/evswitch.c b/tools/perf/util/evswitch.c
-index b57b5f0816f5..71daed615a2c 100644
+index 71daed615a2c..3ba72f743d3c 100644
 --- a/tools/perf/util/evswitch.c
 +++ b/tools/perf/util/evswitch.c
-@@ -31,12 +31,17 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
- 	return false;
+@@ -33,7 +33,9 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
+ 
+ static int evswitch__fprintf_enoent(FILE *fp, const char *evtype, const char *evname)
+ {
+-	return fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
++	int printed = fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
++
++	return printed += fprintf(fp, "HINT:  use 'perf evlist' to see the available event names\n");
  }
  
-+static int evswitch__fprintf_enoent(FILE *fp, const char *evtype, const char *evname)
-+{
-+	return fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
-+}
-+
  int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
- {
- 	if (evswitch->on_name) {
- 		evswitch->on = perf_evlist__find_evsel_by_str(evlist, evswitch->on_name);
- 		if (evswitch->on == NULL) {
--			fprintf(fp, "switch-on event not found (%s)\n", evswitch->on_name);
-+			evswitch__fprintf_enoent(fp, "on", evswitch->on_name);
- 			return -ENOENT;
- 		}
- 		evswitch->discarding = true;
-@@ -45,7 +50,7 @@ int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
- 	if (evswitch->off_name) {
- 		evswitch->off = perf_evlist__find_evsel_by_str(evlist, evswitch->off_name);
- 		if (evswitch->off == NULL) {
--			fprintf(fp, "switch-off event not found (%s)\n", evswitch->off_name);
-+			evswitch__fprintf_enoent(fp, "off", evswitch->off_name);
- 			return -ENOENT;
- 		}
- 	}
 -- 
 2.21.0
