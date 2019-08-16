@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/17] perf evswitch: Add hint when not finding specified on/off events
-Date: Fri, 16 Aug 2019 17:16:47 -0300
-Message-ID: <20190816201653.19332-12-acme@kernel.org>
+Subject: [PATCH 12/17] perf trace: Add --switch-on/--switch-off events
+Date: Fri, 16 Aug 2019 17:16:48 -0300
+Message-ID: <20190816201653.19332-13-acme@kernel.org>
 References: <20190816201653.19332-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,49 +14,40 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-If the user specifies a on or off switch event and it isn't in the
-perf.data file, provide a hint about how to see the events in the
-perf.data evlist:
+Just like with 'perf script':
 
-  # perf script --switch-on=syscall:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep
-  ERROR: event_on event not found (syscall:sys_enter_nanosleep)
-  HINT:  use 'perf evlist' to see the available event names
+  # perf trace -e sched:*,syscalls:*sleep* sleep 1
+       0.000 :28345/28345 sched:sched_waking:comm=perf pid=28346 prio=120 target_cpu=005
+       0.005 :28345/28345 sched:sched_wakeup:perf:28346 [120] success=1 CPU:005
+       0.383 sleep/28346 sched:sched_process_exec:filename=/usr/bin/sleep pid=28346 old_pid=28346
+       0.613 sleep/28346 sched:sched_stat_runtime:comm=sleep pid=28346 runtime=607375 [ns] vruntime=23289041218 [ns]
+       0.689 sleep/28346 syscalls:sys_enter_nanosleep:rqtp: 0x7ffc491789b0
+       0.693 sleep/28346 sched:sched_stat_runtime:comm=sleep pid=28346 runtime=72021 [ns] vruntime=23289113239 [ns]
+       0.694 sleep/28346 sched:sched_switch:sleep:28346 [120] S ==> swapper/5:0 [120]
+    1000.787 :0/0 sched:sched_waking:comm=sleep pid=28346 prio=120 target_cpu=005
+    1000.824 :0/0 sched:sched_wakeup:sleep:28346 [120] success=1 CPU:005
+    1000.908 sleep/28346 syscalls:sys_exit_nanosleep:0x0
+    1001.218 sleep/28346 sched:sched_process_exit:comm=sleep pid=28346 prio=120
+  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep sleep 1
+       0.000 sleep/28349 sched:sched_stat_runtime:comm=sleep pid=28349 runtime=603036 [ns] vruntime=23873537697 [ns]
+       0.001 sleep/28349 sched:sched_switch:sleep:28349 [120] S ==> swapper/4:0 [120]
+    1000.392 :0/0 sched:sched_waking:comm=sleep pid=28349 prio=120 target_cpu=004
+    1000.443 :0/0 sched:sched_wakeup:sleep:28349 [120] success=1 CPU:004
+    1000.540 sleep/28349 syscalls:sys_exit_nanosleep:0x0
+    1000.852 sleep/28349 sched:sched_process_exit:comm=sleep pid=28349 prio=120
+  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep sleep 1
+       0.000 sleep/28352 sched:sched_stat_runtime:comm=sleep pid=28352 runtime=610543 [ns] vruntime=24811686681 [ns]
+       0.001 sleep/28352 sched:sched_switch:sleep:28352 [120] S ==> swapper/0:0 [120]
+    1000.397 :0/0 sched:sched_waking:comm=sleep pid=28352 prio=120 target_cpu=000
+    1000.440 :0/0 sched:sched_wakeup:sleep:28352 [120] success=1 CPU:000
   #
-  # perf evlist
-  sched:sched_kthread_stop
-  sched:sched_kthread_stop_ret
-  sched:sched_waking
-  sched:sched_wakeup
-  sched:sched_wakeup_new
-  sched:sched_switch
-  sched:sched_migrate_task
-  sched:sched_process_free
-  sched:sched_process_exit
-  sched:sched_wait_task
-  sched:sched_process_wait
-  sched:sched_process_fork
-  sched:sched_process_exec
-  sched:sched_stat_wait
-  sched:sched_stat_sleep
-  sched:sched_stat_iowait
-  sched:sched_stat_blocked
-  sched:sched_stat_runtime
-  sched:sched_pi_setprio
-  sched:sched_move_numa
-  sched:sched_stick_numa
-  sched:sched_swap_numa
-  sched:sched_wake_idle_without_ipi
-  syscalls:sys_enter_clock_nanosleep
-  syscalls:sys_exit_clock_nanosleep
-  syscalls:sys_enter_nanosleep
-  syscalls:sys_exit_nanosleep
-  # Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events
-  #
-  # perf script --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep
-       sleep 20919 [001] 109866.144411:  sched:sched_stat_runtime: comm=sleep pid=20919 runtime=521249 [ns] vruntime=202919398131 [ns]
-       sleep 20919 [001] 109866.144412:        sched:sched_switch: sleep:20919 [120] S ==> swapper/1:0 [120]
-     swapper     0 [001] 109867.144568:        sched:sched_waking: comm=sleep pid=20919 prio=120 target_cpu=001
-     swapper     0 [001] 109867.144586:        sched:sched_wakeup: sleep:20919 [120] success=1 CPU:001
+  # perf trace -e sched:*,syscalls:*sleep* --switch-on=syscalls:sys_enter_nanosleep --switch-off=syscalls:sys_exit_nanosleep --show-on-off sleep 1
+       0.000 sleep/28367 syscalls:sys_enter_nanosleep:rqtp: 0x7fffd1a25fc0
+       0.004 sleep/28367 sched:sched_stat_runtime:comm=sleep pid=28367 runtime=628760 [ns] vruntime=22170052672 [ns]
+       0.005 sleep/28367 sched:sched_switch:sleep:28367 [120] S ==> swapper/2:0 [120]
+    1000.367 :0/0 sched:sched_waking:comm=sleep pid=28367 prio=120 target_cpu=002
+    1000.412 :0/0 sched:sched_wakeup:sleep:28367 [120] success=1 CPU:002
+    1000.512 sleep/28367 syscalls:sys_exit_nanosleep:0x0
   #
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -64,26 +55,81 @@ Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-iijjvdlyad973oskdq8gmi5w@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-t3ngpt1brcc1fm9gep9gxm4q@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evswitch.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-trace.txt |  9 +++++++++
+ tools/perf/builtin-trace.c              | 10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/tools/perf/util/evswitch.c b/tools/perf/util/evswitch.c
-index 71daed615a2c..3ba72f743d3c 100644
---- a/tools/perf/util/evswitch.c
-+++ b/tools/perf/util/evswitch.c
-@@ -33,7 +33,9 @@ bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index fc6e43262c41..25b74fdb36fa 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -176,6 +176,15 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	only at exit time or when a syscall is interrupted, i.e. in those cases this
+ 	option is equivalent to the number of lines printed.
  
- static int evswitch__fprintf_enoent(FILE *fp, const char *evtype, const char *evname)
- {
--	return fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
-+	int printed = fprintf(fp, "ERROR: switch-%s event not found (%s)\n", evtype, evname);
++--switch-on EVENT_NAME::
++	Only consider events after this event is found.
 +
-+	return printed += fprintf(fp, "HINT:  use 'perf evlist' to see the available event names\n");
- }
++--switch-off EVENT_NAME::
++	Stop considering events after this event is found.
++
++--show-on-off-events::
++	Show the --switch-on/off events too.
++
+ --max-stack::
+         Set the stack depth limit when parsing the callchain, anything
+         beyond the specified depth will be ignored. Note that at this point
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index d553d06a9aeb..bc44ed29e05a 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -27,6 +27,7 @@
+ #include "util/env.h"
+ #include "util/event.h"
+ #include "util/evlist.h"
++#include "util/evswitch.h"
+ #include <subcmd/exec-cmd.h>
+ #include "util/machine.h"
+ #include "util/map.h"
+@@ -106,6 +107,7 @@ struct trace {
+ 	unsigned long		nr_events;
+ 	unsigned long		nr_events_printed;
+ 	unsigned long		max_events;
++	struct evswitch		evswitch;
+ 	struct strlist		*ev_qualifier;
+ 	struct {
+ 		size_t		nr;
+@@ -2680,6 +2682,9 @@ static void trace__handle_event(struct trace *trace, union perf_event *event, st
+ 		return;
+ 	}
  
- int evswitch__init(struct evswitch *evswitch, struct evlist *evlist, FILE *fp)
++	if (evswitch__discard(&trace->evswitch, evsel))
++		return;
++
+ 	trace__set_base_time(trace, evsel, sample);
+ 
+ 	if (evsel->core.attr.type == PERF_TYPE_TRACEPOINT &&
+@@ -4157,6 +4162,7 @@ int cmd_trace(int argc, const char **argv)
+ 	OPT_UINTEGER('D', "delay", &trace.opts.initial_delay,
+ 		     "ms to wait before starting measurement after program "
+ 		     "start"),
++	OPTS_EVSWITCH(&trace.evswitch),
+ 	OPT_END()
+ 	};
+ 	bool __maybe_unused max_stack_user_set = true;
+@@ -4380,6 +4386,10 @@ int cmd_trace(int argc, const char **argv)
+ 		}
+ 	}
+ 
++	err = evswitch__init(&trace.evswitch, trace.evlist, stderr);
++	if (err)
++		goto out_close;
++
+ 	err = target__validate(&trace.opts.target);
+ 	if (err) {
+ 		target__strerror(&trace.opts.target, err, bf, sizeof(bf));
 -- 
 2.21.0
