@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/17] perf evswitch: Move switch logic to use in other tools
-Date: Fri, 16 Aug 2019 17:16:42 -0300
-Message-ID: <20190816201653.19332-7-acme@kernel.org>
+Subject: [PATCH 07/17] perf evswitch: Add the names of on/off events
+Date: Fri, 16 Aug 2019 17:16:43 -0300
+Message-ID: <20190816201653.19332-8-acme@kernel.org>
 References: <20190816201653.19332-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,118 +14,84 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Now other tools that want switching can use an evswitch for that, just
-set it up and add it to the PERF_RECORD_SAMPLE processing function.
+So that we can have macros for the OPT_ entries and also for finding
+those in an evlist, this way other tools will use this very easily.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Florian Weimer <fweimer@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: William Cohen <wcohen@redhat.com>
-Link: https://lkml.kernel.org/n/tip-b1trj1q97qwfv251l66q3noj@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-q0og1xoqqi0w38ve5u0a43k2@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 23 ++---------------------
- tools/perf/util/Build       |  1 +
- tools/perf/util/evswitch.c  | 31 +++++++++++++++++++++++++++++++
- tools/perf/util/evswitch.h  |  2 ++
- 4 files changed, 36 insertions(+), 21 deletions(-)
- create mode 100644 tools/perf/util/evswitch.c
+ tools/perf/builtin-script.c | 18 ++++++++----------
+ tools/perf/util/evswitch.h  |  1 +
+ 2 files changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index fff02e0d70c4..e7b950e977a9 100644
+index e7b950e977a9..177e4e91b199 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -1807,28 +1807,9 @@ static void process_event(struct perf_script *script,
- 	if (!show_event(sample, evsel, thread, al))
- 		return;
+@@ -3400,8 +3400,6 @@ int cmd_script(int argc, const char **argv)
+ 	struct utsname uts;
+ 	char *script_path = NULL;
+ 	const char **__argv;
+-	const char *event_switch_on  = NULL,
+-		   *event_switch_off = NULL;
+ 	int i, j, err = 0;
+ 	struct perf_script script = {
+ 		.tool = {
+@@ -3545,9 +3543,9 @@ int cmd_script(int argc, const char **argv)
+ 		   "file", "file saving guest os /proc/kallsyms"),
+ 	OPT_STRING(0, "guestmodules", &symbol_conf.default_guest_modules,
+ 		   "file", "file saving guest os /proc/modules"),
+-	OPT_STRING(0, "switch-on", &event_switch_on,
++	OPT_STRING(0, "switch-on", &script.evswitch.on_name,
+ 		   "event", "Consider events after the ocurrence of this event"),
+-	OPT_STRING(0, "switch-off", &event_switch_off,
++	OPT_STRING(0, "switch-off", &script.evswitch.off_name,
+ 		   "event", "Stop considering events after the ocurrence of this event"),
+ 	OPT_BOOLEAN(0, "show-on-off-events", &script.evswitch.show_on_off_events,
+ 		    "Show the on/off switch events, used with --switch-on"),
+@@ -3875,20 +3873,20 @@ int cmd_script(int argc, const char **argv)
+ 						  script.range_num);
+ 	}
  
--	if (script->evswitch.on && script->evswitch.discarding) {
--		if (script->evswitch.on != evsel)
--			return;
--
--		script->evswitch.discarding = false;
--
--		if (!script->evswitch.show_on_off_events)
--			return;
--
--		goto print_it;
--	}
--
--	if (script->evswitch.off && !script->evswitch.discarding) {
--		if (script->evswitch.off != evsel)
--			goto print_it;
--
--		script->evswitch.discarding = true;
-+	if (evswitch__discard(&script->evswitch, evsel))
-+		return;
+-	if (event_switch_on) {
+-		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, event_switch_on);
++	if (script.evswitch.on_name) {
++		script.evswitch.on = perf_evlist__find_evsel_by_str(session->evlist, script.evswitch.on_name);
+ 		if (script.evswitch.on == NULL) {
+-			fprintf(stderr, "switch-on event not found (%s)\n", event_switch_on);
++			fprintf(stderr, "switch-on event not found (%s)\n", script.evswitch.on_name);
+ 			err = -ENOENT;
+ 			goto out_delete;
+ 		}
+ 		script.evswitch.discarding = true;
+ 	}
  
--		if (!script->evswitch.show_on_off_events)
--			return;
--	}
--print_it:
- 	++es->samples;
- 
- 	perf_sample__fprintf_start(sample, thread, evsel,
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 7cda749059a9..b922c8c297ca 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -9,6 +9,7 @@ perf-y += event.o
- perf-y += evlist.o
- perf-y += evsel.o
- perf-y += evsel_fprintf.o
-+perf-y += evswitch.o
- perf-y += find_bit.o
- perf-y += get_current_dir_name.o
- perf-y += kallsyms.o
-diff --git a/tools/perf/util/evswitch.c b/tools/perf/util/evswitch.c
-new file mode 100644
-index 000000000000..c87f988d81c8
---- /dev/null
-+++ b/tools/perf/util/evswitch.c
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+// Copyright (C) 2019, Red Hat Inc, Arnaldo Carvalho de Melo <acme@redhat.com>
-+
-+#include "evswitch.h"
-+
-+bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel)
-+{
-+	if (evswitch->on && evswitch->discarding) {
-+		if (evswitch->on != evsel)
-+			return true;
-+
-+		evswitch->discarding = false;
-+
-+		if (!evswitch->show_on_off_events)
-+			return true;
-+
-+		return false;
-+	}
-+
-+	if (evswitch->off && !evswitch->discarding) {
-+		if (evswitch->off != evsel)
-+			return false;
-+
-+		evswitch->discarding = true;
-+
-+		if (!evswitch->show_on_off_events)
-+			return true;
-+	}
-+
-+	return false;
-+}
+-	if (event_switch_off) {
+-		script.evswitch.off = perf_evlist__find_evsel_by_str(session->evlist, event_switch_off);
++	if (script.evswitch.off_name) {
++		script.evswitch.off = perf_evlist__find_evsel_by_str(session->evlist, script.evswitch.off_name);
+ 		if (script.evswitch.off == NULL) {
+-			fprintf(stderr, "switch-off event not found (%s)\n", event_switch_off);
++			fprintf(stderr, "switch-off event not found (%s)\n", script.evswitch.off_name);
+ 			err = -ENOENT;
+ 			goto out_delete;
+ 		}
 diff --git a/tools/perf/util/evswitch.h b/tools/perf/util/evswitch.h
-index bb88e8002f39..bae3a22ad719 100644
+index bae3a22ad719..891164504080 100644
 --- a/tools/perf/util/evswitch.h
 +++ b/tools/perf/util/evswitch.h
-@@ -13,4 +13,6 @@ struct evswitch {
+@@ -9,6 +9,7 @@ struct evsel;
+ 
+ struct evswitch {
+ 	struct evsel *on, *off;
++	const char   *on_name, *off_name;
+ 	bool	     discarding;
  	bool	     show_on_off_events;
  };
- 
-+bool evswitch__discard(struct evswitch *evswitch, struct evsel *evsel);
-+
- #endif /* __PERF_EVSWITCH_H */
 -- 
 2.21.0
