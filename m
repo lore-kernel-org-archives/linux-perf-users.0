@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/17] perf map: Use zalloc for map_groups
-Date: Fri, 16 Aug 2019 17:16:51 -0300
-Message-ID: <20190816201653.19332-16-acme@kernel.org>
+Subject: [PATCH 17/17] perf unwind: Remove unnecessary test
+Date: Fri, 16 Aug 2019 17:16:53 -0300
+Message-ID: <20190816201653.19332-18-acme@kernel.org>
 References: <20190816201653.19332-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,9 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: John Keeping <john@metanate.com>
 
-In the next commit we will add new fields to map_groups and we need
-these to be null if no value is assigned.  The simplest way to achieve
-this is to request zeroed memory from the allocator.
+If dwarf_callchain_users is false, then unwind__prepare_access() will
+not set unwind_libunwind_ops so the remaining test here is sufficient.
 
 Signed-off-by: John Keeping <john@metanate.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
@@ -25,24 +24,34 @@ Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: john keeping <john@metanate.com>
-Link: http://lkml.kernel.org/r/20190815100146.28842-1-john@metanate.com
+Link: http://lkml.kernel.org/r/20190815100146.28842-3-john@metanate.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/unwind-libunwind.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 668410b1d426..44b556812e4b 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -636,7 +636,7 @@ bool map_groups__empty(struct map_groups *mg)
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index b843f9d0a9ea..6499b22b158b 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -69,18 +69,12 @@ int unwind__prepare_access(struct map_groups *mg, struct map *map,
  
- struct map_groups *map_groups__new(struct machine *machine)
+ void unwind__flush_access(struct map_groups *mg)
  {
--	struct map_groups *mg = malloc(sizeof(*mg));
-+	struct map_groups *mg = zalloc(sizeof(*mg));
+-	if (!dwarf_callchain_users)
+-		return;
+-
+ 	if (mg->unwind_libunwind_ops)
+ 		mg->unwind_libunwind_ops->flush_access(mg);
+ }
  
- 	if (mg != NULL)
- 		map_groups__init(mg, machine);
+ void unwind__finish_access(struct map_groups *mg)
+ {
+-	if (!dwarf_callchain_users)
+-		return;
+-
+ 	if (mg->unwind_libunwind_ops)
+ 		mg->unwind_libunwind_ops->finish_access(mg);
+ }
 -- 
 2.21.0
