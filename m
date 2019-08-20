@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/17] perf ui browser: Allow specifying message to show when no samples are available to display
-Date: Tue, 20 Aug 2019 16:27:30 -0300
-Message-ID: <20190820192733.19180-15-acme@kernel.org>
+Subject: [PATCH 15/17] perf top: Show info message while collecting samples
+Date: Tue, 20 Aug 2019 16:27:31 -0300
+Message-ID: <20190820192733.19180-16-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,43 +14,31 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The 'perf top' tool will use that to avoid having a initial blank screen
-while collecting the minimum number of samples to sort and display.
+Give visual cue about what is happening while initially collecting the
+minimal set of samples to collect/sort/display.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-89ciceg8cy4442he3t0jzo3f@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-xcui60p1v6ozijfam2o89ya8@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browser.c | 2 ++
- tools/perf/ui/browser.h | 1 +
- 2 files changed, 3 insertions(+)
+ tools/perf/ui/browsers/hists.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
-index d227d74b28f8..c797a853d3a0 100644
---- a/tools/perf/ui/browser.c
-+++ b/tools/perf/ui/browser.c
-@@ -347,6 +347,8 @@ static int __ui_browser__refresh(struct ui_browser *browser)
- 	SLsmg_fill_region(browser->y + row + browser->extra_title_lines, browser->x,
- 			  browser->rows - row, width, ' ');
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index b195b1ba625b..30547fdb0787 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2894,6 +2894,9 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 	if (symbol_conf.col_width_list_str)
+ 		perf_hpp__set_user_width(symbol_conf.col_width_list_str);
  
-+	if (browser->nr_entries == 0 && browser->no_samples_msg)
-+		__ui__info_window(NULL, browser->no_samples_msg, NULL);
- 	return 0;
- }
- 
-diff --git a/tools/perf/ui/browser.h b/tools/perf/ui/browser.h
-index dc1444136658..3678eb88f119 100644
---- a/tools/perf/ui/browser.h
-+++ b/tools/perf/ui/browser.h
-@@ -23,6 +23,7 @@ struct ui_browser {
- 	void	      *priv;
- 	const char    *title;
- 	char	      *helpline;
-+	const char    *no_samples_msg;
- 	void 	      (*refresh_dimensions)(struct ui_browser *browser);
- 	unsigned int  (*refresh)(struct ui_browser *browser);
- 	void	      (*write)(struct ui_browser *browser, void *entry, int row);
++	if (!is_report_browser(hbt))
++		browser->b.no_samples_msg = "Collecting samples...";
++
+ 	while (1) {
+ 		struct thread *thread = NULL;
+ 		struct map *map = NULL;
 -- 
 2.21.0
