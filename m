@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/17] tools headers: Add limits.h to access __WORDSIZE
-Date: Tue, 20 Aug 2019 16:27:17 -0300
-Message-ID: <20190820192733.19180-2-acme@kernel.org>
+Subject: [PATCH 02/17] perf tools: tools/include should come before tools/uapi/include
+Date: Tue, 20 Aug 2019 16:27:18 -0300
+Message-ID: <20190820192733.19180-3-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,29 +14,37 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We need to make sure limits.h is included before checking if we can use
-__WORDSIZE, do it.
+The next cset will grap const.h copies from the kernel to keep bits.h
+in sync as it started to use linux/const.h, that in turn includes
+uapi/linux/const.h.
+
+So now we have a file with the same name in tools/include and
+tools/uapi/include, and one includes the other, we need to have
+tools/include/uapi/ after tools/include/ for this to work, fix it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5yfoed4rnsck2n3cwhm9mvth@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-qzjqxa1wdrt51kwadyqawnuj@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/linux/bitops.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/Makefile.config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
-index 0b0ef3abc966..140c8362f113 100644
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -3,6 +3,7 @@
- #define _TOOLS_LINUX_BITOPS_H_
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 9a06787fedc6..bf8caa7d17f6 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -280,9 +280,9 @@ endif
+ INC_FLAGS += -I$(src-perf)/lib/include
+ INC_FLAGS += -I$(src-perf)/util/include
+ INC_FLAGS += -I$(src-perf)/arch/$(SRCARCH)/include
+-INC_FLAGS += -I$(srctree)/tools/include/uapi
+ INC_FLAGS += -I$(srctree)/tools/include/
+ INC_FLAGS += -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi
++INC_FLAGS += -I$(srctree)/tools/include/uapi
+ INC_FLAGS += -I$(srctree)/tools/arch/$(SRCARCH)/include/
+ INC_FLAGS += -I$(srctree)/tools/arch/$(SRCARCH)/
  
- #include <asm/types.h>
-+#include <limits.h>
- #ifndef __WORDSIZE
- #define __WORDSIZE (__SIZEOF_LONG__ * 8)
- #endif
 -- 
 2.21.0
