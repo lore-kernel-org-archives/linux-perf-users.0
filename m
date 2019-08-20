@@ -1,61 +1,62 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/17] tools arch x86: Sync asm/cpufeatures.h with the with the kernel
-Date: Tue, 20 Aug 2019 16:27:21 -0300
-Message-ID: <20190820192733.19180-6-acme@kernel.org>
+Subject: [PATCH 07/17] tools lib traceevent: Fix "robust" test of do_generate_dynamic_list_file
+Date: Tue, 20 Aug 2019 16:27:23 -0300
+Message-ID: <20190820192733.19180-8-acme@kernel.org>
 References: <20190820192733.19180-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190820192733.19180-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, David Carrillo-Cisneros <davidcc@google.com>, He Kuang <hekuang@huawei.com>, Michal rarek <mmarek@suse.com>, Paul Turner <pjt@google.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Wang Nan <wangnan0@huawei.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-To pick up the changes in:
+The tools/lib/traceevent/Makefile had a test added to it to detect a failure
+of the "nm" when making the dynamic list file (whatever that is). The
+problem is that the test sorts the values "U W w" and some versions of sort
+will place "w" ahead of "W" (even though it has a higher ASCII value, and
+break the test.
 
-  f36cf386e3fe ("x86/speculation/swapgs: Exclude ATOMs from speculation through SWAPGS")
-  18ec54fdd6d1 ("x86/speculation: Prepare entry code for Spectre v1 swapgs mitigations")
+Add 'tr "w" "W"' to merge the two and not worry about the ordering.
 
-That don't affect anything in tools/.
-
-This silences this perf build warning:
-
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h' differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
-  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm/cpufeatures.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: David Carrillo-Cisneros <davidcc@google.com>
+Cc: He Kuang <hekuang@huawei.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/n/tip-860dq1qie2cpnfghlpcnxrzr@git.kernel.org
+Cc: Michal rarek <mmarek@suse.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Cc: Wang Nan <wangnan0@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 6467753d61399 ("tools lib traceevent: Robustify do_generate_dynamic_list_file")
+Link: http://lkml.kernel.org/r/20190805130150.25acfeb1@gandalf.local.home
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/asm/cpufeatures.h | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/traceevent/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 998c2cc08363..e880f2408e29 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -281,6 +281,8 @@
- #define X86_FEATURE_CQM_OCCUP_LLC	(11*32+ 1) /* LLC occupancy monitoring */
- #define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
- #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
-+#define X86_FEATURE_FENCE_SWAPGS_USER	(11*32+ 4) /* "" LFENCE in user entry SWAPGS path */
-+#define X86_FEATURE_FENCE_SWAPGS_KERNEL	(11*32+ 5) /* "" LFENCE in kernel entry SWAPGS path */
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index 3292c290654f..8352d53dcb5a 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -266,8 +266,8 @@ endef
  
- /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
- #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
-@@ -394,5 +396,6 @@
- #define X86_BUG_L1TF			X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
- #define X86_BUG_MDS			X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
- #define X86_BUG_MSBDS_ONLY		X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
-+#define X86_BUG_SWAPGS			X86_BUG(21) /* CPU is affected by speculation through SWAPGS */
- 
- #endif /* _ASM_X86_CPUFEATURES_H */
+ define do_generate_dynamic_list_file
+ 	symbol_type=`$(NM) -u -D $1 | awk 'NF>1 {print $$1}' | \
+-	xargs echo "U W w" | tr ' ' '\n' | sort -u | xargs echo`;\
+-	if [ "$$symbol_type" = "U W w" ];then				\
++	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
++	if [ "$$symbol_type" = "U W" ];then				\
+ 		(echo '{';						\
+ 		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
+ 		echo '};';						\
 -- 
 2.21.0
