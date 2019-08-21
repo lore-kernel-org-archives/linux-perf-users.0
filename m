@@ -1,33 +1,65 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Tue, 20 Aug 2019 16:44:59 -0300
-Message-ID: <20190820194459.GF3929@kernel.org>
-References: <20190820192733.19180-1-acme@kernel.org>
- <20190820193953.GA12100@gmail.com>
+From: James Clark <James.Clark@arm.com>
+Subject: Re: [RFC PATCH 3/3] perf report: add --spe options for arm-spe
+Date: Wed, 21 Aug 2019 12:38:10 +0000
+Message-ID: <8e8deead-6d59-9203-a01a-fe63362ebdf0@arm.com>
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-4-git-send-email-tanxiaojun@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190820193953.GA12100@gmail.com>
+In-Reply-To: <1564738813-10944-4-git-send-email-tanxiaojun@huawei.com>
+Content-Language: en-US
+Content-ID: <AB474E42E6D57B4E8EF98A8302A3F913@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Tan Xiaojun <tanxiaojun@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>
+Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeremy Linton <Jeremy.Linton@arm.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Aug 20, 2019 at 09:39:53PM +0200, Ingo Molnar escreveu:
-> Pulled, thanks a lot Arnaldo!
-
-Wow, that was fast, thanks!
- 
-> This one's very nice:
-> 
-> > Arnaldo Carvalho de Melo (10):
-> >       perf top: Show info message while collecting samples
-> 
-> :-)
-
-Yeah, we need to polish these kind of little details, pressing 'C' and
-getting callchains enabled/disabled would be nice as well in 'perf top',
-just thought about that :-)
-
-- Arnaldo
+SGksDQoNCkkgYWxzbyBoYWQgYSBsb29rIGF0IHRoaXMgYW5kIGhhZCBhIHF1ZXN0aW9uIGFib3V0
+IHRoZSAtLXNwZSBvcHRpb24uDQpJdCBzZWVtcyB0aGF0IHdoYXRldmVyIG9wdGlvbnMgSSBnaXZl
+IGl0LCB0aGUgb3V0cHV0IGlzIHRoZSBzYW1lOg0KDQoJcGVyZiByZXBvcnQgDQpBbmQNCglwZXJm
+IHJlcG9ydCAtLXNwZT10DQoNCkJvdGggZ2l2ZSB0aGUgc2FtZSByZXN1bHQ6DQoNCgkjIFNhbXBs
+ZXM6IDQgIG9mIGV2ZW50ICdsbGMtbWlzcycNCgkjIEV2ZW50IGNvdW50IChhcHByb3guKTogNA0K
+CSMNCgkjIENoaWxkcmVuICAgICAgU2VsZiAgQ29tbWFuZCAgU2hhcmVkIE9iamVjdCAgICAgIFN5
+bWJvbCAgICAgICAgICAgICAgICAgICAgDQoJIyAuLi4uLi4uLiAgLi4uLi4uLi4gIC4uLi4uLi4g
+IC4uLi4uLi4uLi4uLi4uLi4uICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLg0KCSMNCgkuLi4N
+CgkjIFNhbXBsZXM6IDAgIG9mIGV2ZW50ICd0bGItbWlzcycNCgkjIEV2ZW50IGNvdW50IChhcHBy
+b3guKTogMA0KCSMNCgkjIENoaWxkcmVuICAgICAgU2VsZiAgQ29tbWFuZCAgU2hhcmVkIE9iamVj
+dCAgU3ltYm9sDQoJIyAuLi4uLi4uLiAgLi4uLi4uLi4gIC4uLi4uLi4gIC4uLi4uLi4uLi4uLi4g
+IC4uLi4uLg0KCSMNCg0KCSMgU2FtcGxlczogODMgIG9mIGV2ZW50ICdicmFuY2gtbWlzcycNCgkj
+IEV2ZW50IGNvdW50IChhcHByb3guKTogODMNCgkjDQoJIyBDaGlsZHJlbiAgICAgIFNlbGYgIENv
+bW1hbmQgIFNoYXJlZCBPYmplY3QgICAgICBTeW1ib2wgICAgICAgICAgICAgICAgICAgDQoJIyAu
+Li4uLi4uLiAgLi4uLi4uLi4gIC4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uICAuLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uDQoJIw0KCS4uLg0KDQpJIHdvdWxkIGhhdmUgZXhwZWN0ZWQgaXQgdG8g
+bm90IGluY2x1ZGUgdGhlIGJyYW5jaCBhbmQgTExDIHNlY3Rpb25zIGZvciB0aGUgc2Vjb25kDQpj
+b21tYW5kIHdpdGggLS1zcGU9dC4NCg0KQW5kIHRoYXQgbGVhZHMgbWUgdG8gYW5vdGhlciBwb2lu
+dC4gRG9lcyBpdCBtYWtlIHNlbnNlIHRvIGhhdmUgdGhpcyBvcHRpb24gYXMgYSBwb3N0DQpwcm9j
+ZXNzaW5nIHN0ZXA/IFNQRSBhbHJlYWR5IGhhcyBzdXBwb3J0IGZvciBmaWx0ZXJpbmcgZXZlbnRz
+IGF0IGNvbGxlY3Rpb24gdGltZSB3aXRoDQp0aGUgUE1TRkNSX0VMMSByZWdpc3Rlci4NCg0KU2hv
+dWxkIHdlIHRyeSB0byBtYWtlIHRoZSBpbnRlcmZhY2UgbW9yZSBsaWtlIFBFQlMsIHdoZXJlIHlv
+dSBzcGVjaWZ5IHdoaWNoIGV2ZW50cyB5b3UNCmFyZSBpbnRlcmVzdGVkIGluIGRvaW5nIHByZWNp
+c2UgdHJhY2luZyBvbiBsaWtlIHRoaXM/DQoNCglwZXJmIHJlY29yZCAtZSBicmFuY2gtbWlzc2Vz
+OnBwDQoNCkFuZCB0aGVuIHBlcmYgY291bGQgdXNlIHRoZSBtb2RpZmllciB0byBjb25maWd1cmUg
+U1BFIHNvIHRoYXQgaXQgb25seSByZWNvcmRzIGJyYW5jaA0KbWlzc2VzPyBUaGUgYmVuZWZpdHMg
+b2YgdGhpcyB3b3VsZCBiZSBrZWVwaW5nIHRoZSB1c2VyIGludGVyZmFjZSBmb3IgcHJlY2lzZSB0
+cmFjaW5nDQpzaW1pbGFyIGJldHdlZW4gcGxhdGZvcm1zLg0KDQpUaGFua3MNCkphbWVzDQoNCk9u
+IDAyLzA4LzIwMTkgMTA6NDAsIFRhbiBYaWFvanVuIHdyb3RlOg0KPiBUaGUgcHJldmlvdXMgcGF0
+Y2ggYWRkZWQgc3VwcG9ydCBpbiAicGVyZiByZXBvcnQiIGZvciBzb21lIGFybS1zcGUNCj4gZXZl
+bnRzKGxsYy1taXNzLCB0bGItbWlzcywgYnJhbmNoLW1pc3MpLiBUaGlzIHBhdGNoIGFkZHMgdGhl
+aXIgaGVscA0KPiBpbnN0cnVjdGlvbnMuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUYW4gWGlhb2p1
+biA8dGFueGlhb2p1bkBodWF3ZWkuY29tPg0KPiAtLS0NCj4gIHRvb2xzL3BlcmYvRG9jdW1lbnRh
+dGlvbi9wZXJmLXJlcG9ydC50eHQgfCA5ICsrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDkg
+aW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvRG9jdW1lbnRhdGlv
+bi9wZXJmLXJlcG9ydC50eHQgYi90b29scy9wZXJmL0RvY3VtZW50YXRpb24vcGVyZi1yZXBvcnQu
+dHh0DQo+IGluZGV4IDk4NzI2MWQuLmQ5OThkNGIgMTAwNjQ0DQo+IC0tLSBhL3Rvb2xzL3BlcmYv
+RG9jdW1lbnRhdGlvbi9wZXJmLXJlcG9ydC50eHQNCj4gKysrIGIvdG9vbHMvcGVyZi9Eb2N1bWVu
+dGF0aW9uL3BlcmYtcmVwb3J0LnR4dA0KPiBAQCAtNDQ1LDYgKzQ0NSwxNSBAQCBpbmNsdWRlOjpp
+dHJhY2UudHh0W10NCj4gIA0KPiAgCVRvIGRpc2FibGUgZGVjb2RpbmcgZW50aXJlbHksIHVzZSAt
+LW5vLWl0cmFjZS4NCj4gIA0KPiArLS1zcGU6Og0KPiArCU9wdGlvbnMgZm9yIGRlY29kaW5nIGFy
+bS1zcGUgdHJhY2luZyBkYXRhLiBUaGUgb3B0aW9ucyBhcmU6DQo+ICsNCj4gKwkJbAlzeW50aGVz
+aXplIGxsYyBtaXNzIGV2ZW50cw0KPiArCQl0CXN5bnRoZXNpemUgdGxiIG1pc3MgZXZlbnRzDQo+
+ICsJCWIJc3ludGhlc2l6ZSBicmFuY2ggbWlzcyBldmVudHMNCj4gKw0KPiArCVRoZSBkZWZhdWx0
+IGlzIGFsbCBldmVudHMgaS5lLiB0aGUgc2FtZSBhcyAtLXNwZT1sdGINCj4gKw0KPiAgLS1mdWxs
+LXNvdXJjZS1wYXRoOjoNCj4gIAlTaG93IHRoZSBmdWxsIHBhdGggZm9yIHNvdXJjZSBmaWxlcyBm
+b3Igc3JjbGluZSBvdXRwdXQuDQo+ICANCj4gDQo=
