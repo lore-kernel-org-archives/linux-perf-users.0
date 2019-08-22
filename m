@@ -1,42 +1,54 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/25] perf arm64: Add missing debug.h header
-Date: Thu, 22 Aug 2019 18:00:40 -0300
-Message-ID: <20190822210100.3461-6-acme@kernel.org>
-References: <20190822210100.3461-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH] Fixes hang in zstd compression test by changing the
+ source of random data.
+Date: Thu, 22 Aug 2019 18:24:07 -0300
+Message-ID: <20190822212407.GJ3929@kernel.org>
+References: <3d8cc701-df4e-f949-1715-5118b530e990@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190822210100.3461-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <3d8cc701-df4e-f949-1715-5118b530e990@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+To: James Clark <James.Clark@arm.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "alexey.budankov@linux.intel.com" <alexey.budankov@linux.intel.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jeremy Linton <Jeremy.Linton@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Em Thu, Aug 22, 2019 at 01:55:15PM +0000, James Clark escreveu:
+> Running 'perf test' with zstd compression linked will hang at the test
+> 'Zstd perf.data compression/decompression' because /dev/random blocks
+> reads until there is enough entropy. This means that the test will
+> appear to never complete unless the mouse is continually moved while
+> running it.
 
-This file uses pr_debug() but isn't including debug.h, getting it by
-luck, fix it.
+message came mangled, had to do it by hand and then hook up your header
+so as to get the correct date, attribution, etc, please check
+Documentation/process/email-clients.rst,
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-t7pisnsdfh88kclpw52jcwl7@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/arch/arm64/util/header.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-index 602caf550e7f..e41defaaa2e6 100644
---- a/tools/perf/arch/arm64/util/header.c
-+++ b/tools/perf/arch/arm64/util/header.c
-@@ -1,6 +1,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <api/fs/fs.h>
-+#include "debug.h"
- #include "header.h"
+- Arnaldo
  
- #define MIDR "/regs/identification/midr_el1"
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/tests/shell/record+zstd_comp_decomp.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+> index 899604d1..63a91ec 100755
+> --- a/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+> +++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+> @@ -13,7 +13,7 @@ skip_if_no_z_record() {
+>  collect_z_record() {
+>  	echo "Collecting compressed record file:"
+>  	$perf_tool record -o $trace_file -g -z -F 5000 -- \
+> -		dd count=500 if=/dev/random of=/dev/null
+> +		dd count=500 if=/dev/urandom of=/dev/null
+>  }
+>  
+>  check_compressed_stats() {
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.21.0
+
+- Arnaldo
