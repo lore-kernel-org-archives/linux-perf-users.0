@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/25] perf evlist: Add missing xyarray.h header
-Date: Thu, 22 Aug 2019 18:00:46 -0300
-Message-ID: <20190822210100.3461-12-acme@kernel.org>
+Subject: [PATCH 12/25] perf script: Add missing counts.h
+Date: Thu, 22 Aug 2019 18:00:47 -0300
+Message-ID: <20190822210100.3461-13-acme@kernel.org>
 References: <20190822210100.3461-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,30 +14,30 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It gets it very indirectly, via evsel.h -> counts.h, and since counts.h
-doesn't need xyarray.h at all, add it here before we remove it there.
+It is getting this via evsel.h, that don't strictly need counts.h, just
+forward declarations for some structs, so add it here before we remove
+it from there.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-hkizv6gojwfklj9ezaiiztll@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-q4shpvlxyjqz7val1hyrdak9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/builtin-script.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 8582560b59af..68b7c949017e 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -37,6 +37,8 @@
- #include <perf/evsel.h>
- #include <perf/cpumap.h>
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 1764efd16cd4..e957b870869b 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3,6 +3,7 @@
  
-+#include <internal/xyarray.h>
-+
- #ifdef LACKS_SIGQUEUE_PROTOTYPE
- int sigqueue(pid_t pid, int sig, const union sigval value);
- #endif
+ #include "perf.h"
+ #include "util/cache.h"
++#include "util/counts.h"
+ #include "util/debug.h"
+ #include <subcmd/exec-cmd.h>
+ #include "util/header.h"
 -- 
 2.21.0
