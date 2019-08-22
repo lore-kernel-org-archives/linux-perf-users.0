@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/25] perf evsel: Remove needless counts.h header from util/evsel.h
-Date: Thu, 22 Aug 2019 18:00:52 -0300
-Message-ID: <20190822210100.3461-18-acme@kernel.org>
+Subject: [PATCH 18/25] perf evsel: Remove needless stddef.h from util/evsel.h
+Date: Thu, 22 Aug 2019 18:00:53 -0300
+Message-ID: <20190822210100.3461-19-acme@kernel.org>
 References: <20190822210100.3461-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,50 +14,30 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We need only a struct forward declaration, so prune the header
-dependency tree a bit more.
+We added it in 07ac002f2fcc ("perf evsel: Introduce is_group_member
+method") but we already ditched that function, and there was nothing
+else left that needed NULL nor anything else from stddef.h, ditch it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-oqvgf04w4ku8xasrz79zquim@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-1zy0xfsy61x81f3fpyx5znco@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 1 +
- tools/perf/util/evsel.h | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/evsel.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 477c47c84971..7b4350681d64 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -26,6 +26,7 @@
- #include "asm/bug.h"
- #include "callchain.h"
- #include "cgroup.h"
-+#include "counts.h"
- #include "event.h"
- #include "evsel.h"
- #include "evlist.h"
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index da91d6f57f44..296390541030 100644
+index 296390541030..1f749a783d8f 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -11,7 +11,6 @@
- #include <perf/evsel.h>
- #include "symbol_conf.h"
- #include "cpumap.h"
--#include "counts.h"
+@@ -4,7 +4,6 @@
  
- struct evsel;
- 
-@@ -93,6 +92,7 @@ enum perf_tool_event {
- };
- 
- struct bpf_object;
-+struct perf_counts;
- struct xyarray;
- 
- /** struct evsel - event selector
+ #include <linux/list.h>
+ #include <stdbool.h>
+-#include <stddef.h>
+ #include <linux/perf_event.h>
+ #include <linux/types.h>
+ #include <internal/evsel.h>
 -- 
 2.21.0
