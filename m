@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/33] perf cacheline: Move cacheline related routines to separate files
-Date: Mon, 26 Aug 2019 22:36:05 -0300
-Message-ID: <20190827013634.3173-5-acme@kernel.org>
+Subject: [PATCH 05/33] perf srcline: Add missing srcline.h header to files needing its defs
+Date: Mon, 26 Aug 2019 22:36:06 -0300
+Message-ID: <20190827013634.3173-6-acme@kernel.org>
 References: <20190827013634.3173-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,186 +14,118 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To disentangle util/sort.h a bit more.
+When srcline was introduced it wrongly added the include to util/sort.h,
+even with that header not needing the definitions it provides, fix it by
+adding it to the places that need it as a pre patch to remove srcline.h
+from sort.h.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-6kbf2cauas06rbqp15pyter5@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-shuebppedtye8hrgxk15qe3x@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-c2c.c    |  1 +
- tools/perf/util/Build       |  1 +
- tools/perf/util/cacheline.c | 26 ++++++++++++++++++++++++++
- tools/perf/util/cacheline.h | 21 +++++++++++++++++++++
- tools/perf/util/sort.c      |  1 +
- tools/perf/util/sort.h      | 12 ------------
- tools/perf/util/util.c      | 20 --------------------
- tools/perf/util/util.h      |  1 -
- 8 files changed, 50 insertions(+), 33 deletions(-)
- create mode 100644 tools/perf/util/cacheline.c
- create mode 100644 tools/perf/util/cacheline.h
+ tools/perf/builtin-diff.c   | 2 ++
+ tools/perf/builtin-report.c | 1 +
+ tools/perf/builtin-script.c | 1 +
+ tools/perf/util/annotate.c  | 2 ++
+ tools/perf/util/machine.c   | 2 ++
+ tools/perf/util/sort.c      | 1 +
+ 6 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 211143720078..73782d99ee5a 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -26,6 +26,7 @@
- #include "hist.h"
- #include "sort.h"
- #include "tool.h"
-+#include "cacheline.h"
- #include "data.h"
- #include "event.h"
- #include "evlist.h"
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index b922c8c297ca..2e3856471e61 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -1,6 +1,7 @@
- perf-y += annotate.o
- perf-y += block-range.o
- perf-y += build-id.o
-+perf-y += cacheline.o
- perf-y += config.o
- perf-y += ctype.o
- perf-y += db-export.o
-diff --git a/tools/perf/util/cacheline.c b/tools/perf/util/cacheline.c
-new file mode 100644
-index 000000000000..9361d3f61f75
---- /dev/null
-+++ b/tools/perf/util/cacheline.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "cacheline.h"
-+#include "../perf.h"
-+#include <unistd.h>
-+
-+#ifdef _SC_LEVEL1_DCACHE_LINESIZE
-+#define cache_line_size(cacheline_sizep) *cacheline_sizep = sysconf(_SC_LEVEL1_DCACHE_LINESIZE)
-+#else
-+#include <api/fs/fs.h>
-+#include "debug.h"
-+static void cache_line_size(int *cacheline_sizep)
-+{
-+	if (sysfs__read_int("devices/system/cpu/cpu0/cache/index0/coherency_line_size", cacheline_sizep))
-+		pr_debug("cannot determine cache line size");
-+}
-+#endif
-+
-+int cacheline_size(void)
-+{
-+	static int size;
-+
-+	if (!size)
-+		cache_line_size(&size);
-+
-+	return size;
-+}
-diff --git a/tools/perf/util/cacheline.h b/tools/perf/util/cacheline.h
-new file mode 100644
-index 000000000000..dec8c0fb1f4a
---- /dev/null
-+++ b/tools/perf/util/cacheline.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef PERF_CACHELINE_H
-+#define PERF_CACHELINE_H
-+
-+#include <linux/compiler.h>
-+
-+int __pure cacheline_size(void);
-+
-+static inline u64 cl_address(u64 address)
-+{
-+	/* return the cacheline of the address */
-+	return (address & ~(cacheline_size() - 1));
-+}
-+
-+static inline u64 cl_offset(u64 address)
-+{
-+	/* return the cacheline of the address */
-+	return (address & (cacheline_size() - 1));
-+}
-+
-+#endif // PERF_CACHELINE_H
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index f9a38a1dd4d1..904ff4b2f57f 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -6,6 +6,7 @@
- #include <linux/time64.h>
- #include "sort.h"
- #include "hist.h"
-+#include "cacheline.h"
- #include "comm.h"
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index e91c0d798181..51c37e53b3d8 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -15,6 +15,7 @@
+ #include "util/session.h"
+ #include "util/tool.h"
+ #include "util/sort.h"
++#include "util/srcline.h"
+ #include "util/symbol.h"
+ #include "util/data.h"
+ #include "util/config.h"
+@@ -22,6 +23,7 @@
+ #include "util/annotate.h"
+ #include "util/map.h"
+ #include <linux/zalloc.h>
++#include <subcmd/parse-options.h>
+ 
+ #include <errno.h>
+ #include <inttypes.h>
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 79dfb1139f94..318b0b95c14c 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -28,6 +28,7 @@
+ #include "util/evswitch.h"
+ #include "util/header.h"
+ #include "util/session.h"
++#include "util/srcline.h"
+ #include "util/tool.h"
+ 
+ #include <subcmd/parse-options.h>
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ee05621d3bd6..6f389b33fbe5 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -11,6 +11,7 @@
+ #include "util/session.h"
+ #include "util/tool.h"
+ #include "util/map.h"
++#include "util/srcline.h"
+ #include "util/symbol.h"
+ #include "util/thread.h"
+ #include "util/trace-event.h"
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index e0518dc4c4d2..3bd1691f0be7 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -22,6 +22,7 @@
+ #include "cache.h"
  #include "map.h"
  #include "symbol.h"
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 5e34676a98e8..4ae155c6a808 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -204,18 +204,6 @@ static inline float hist_entry__get_percent_limit(struct hist_entry *he)
- 	return period * 100.0 / total_period;
- }
++#include "srcline.h"
+ #include "units.h"
+ #include "debug.h"
+ #include "annotate.h"
+@@ -37,6 +38,7 @@
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <bpf/libbpf.h>
++#include <subcmd/parse-options.h>
  
--static inline u64 cl_address(u64 address)
--{
--	/* return the cacheline of the address */
--	return (address & ~(cacheline_size() - 1));
--}
--
--static inline u64 cl_offset(u64 address)
--{
--	/* return the cacheline of the address */
--	return (address & (cacheline_size() - 1));
--}
--
- enum sort_mode {
- 	SORT_MODE__NORMAL,
- 	SORT_MODE__BRANCH,
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 6fd130a5d8f2..44211e483fbf 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -43,26 +43,6 @@ void perf_set_multithreaded(void)
- 
- unsigned int page_size;
- 
--#ifdef _SC_LEVEL1_DCACHE_LINESIZE
--#define cache_line_size(cacheline_sizep) *cacheline_sizep = sysconf(_SC_LEVEL1_DCACHE_LINESIZE)
--#else
--static void cache_line_size(int *cacheline_sizep)
--{
--	if (sysfs__read_int("devices/system/cpu/cpu0/cache/index0/coherency_line_size", cacheline_sizep))
--		pr_debug("cannot determine cache line size");
--}
--#endif
--
--int cacheline_size(void)
--{
--	static int size;
--
--	if (!size)
--		cache_line_size(&size);
--
--	return size;
--}
--
- int sysctl_perf_event_max_stack = PERF_MAX_STACK_DEPTH;
- int sysctl_perf_event_max_contexts_per_stack = PERF_MAX_CONTEXTS_PER_STACK;
- 
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 0dab140c6517..45a5c6f20197 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -34,7 +34,6 @@ int copyfile_offset(int ifd, loff_t off_in, int ofd, loff_t off_out, u64 size);
- size_t hex_width(u64 v);
- 
- extern unsigned int page_size;
--int __pure cacheline_size(void);
- 
- int sysctl__max_stack(void);
- 
+ /* FIXME: For the HE_COLORSET */
+ #include "ui/browser.h"
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index f7c1a7e6c4ba..47430afd3c2d 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -10,11 +10,13 @@
+ #include "hist.h"
+ #include "machine.h"
+ #include "map.h"
++#include "srcline.h"
+ #include "symbol.h"
+ #include "sort.h"
+ #include "strlist.h"
+ #include "target.h"
+ #include "thread.h"
++#include "util.h"
+ #include "vdso.h"
+ #include <stdbool.h>
+ #include <sys/types.h>
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 904ff4b2f57f..c522bdde3f71 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -13,6 +13,7 @@
+ #include "thread.h"
+ #include "evsel.h"
+ #include "evlist.h"
++#include "srcline.h"
+ #include "strlist.h"
+ #include "strbuf.h"
+ #include <traceevent/event-parse.h>
 -- 
 2.21.0
