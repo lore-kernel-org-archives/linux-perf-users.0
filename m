@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/33] libperf: Add PERF_RECORD_SAMPLE 'struct sample_event' to perf/event.h
-Date: Mon, 26 Aug 2019 22:36:29 -0300
-Message-ID: <20190827013634.3173-29-acme@kernel.org>
+Subject: [PATCH 30/33] perf tools: Rename perf_event::ksymbol_event to perf_event::ksymbol
+Date: Mon, 26 Aug 2019 22:36:31 -0300
+Message-ID: <20190827013634.3173-31-acme@kernel.org>
 References: <20190827013634.3173-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,113 +9,118 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190827013634.3173-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Move the PERF_RECORD_SAMPLE event definition to libperf's event.h header
-include.
+Just like all the other meta events, that extra _event suffix is just
+redundant, ditch it.
 
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190825181752.722-13-jolsa@kernel.org
+Cc: Song Liu <songliubraving@fb.com>
+Link: https://lkml.kernel.org/n/tip-0q8b2xnfs17q0g523oej75s0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 5 +++++
- tools/perf/util/event.h             | 5 -----
- tools/perf/util/evlist.c            | 2 +-
- tools/perf/util/evsel.c             | 8 ++++----
- 4 files changed, 10 insertions(+), 10 deletions(-)
+ tools/perf/util/bpf-event.c |  2 +-
+ tools/perf/util/event.c     |  6 +++---
+ tools/perf/util/event.h     |  2 +-
+ tools/perf/util/machine.c   | 16 ++++++++--------
+ 4 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 585c9d82dba3..e768a2dfbe53 100644
---- a/tools/perf/lib/include/perf/event.h
-+++ b/tools/perf/lib/include/perf/event.h
-@@ -104,4 +104,9 @@ struct bpf_event {
- 	__u8			 tag[BPF_TAG_SIZE];  // prog tag
- };
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 3be8c480fa1f..69795c32ecf3 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -161,7 +161,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
+ 					       union perf_event *event,
+ 					       struct record_opts *opts)
+ {
+-	struct perf_record_ksymbol *ksymbol_event = &event->ksymbol_event;
++	struct perf_record_ksymbol *ksymbol_event = &event->ksymbol;
+ 	struct perf_record_bpf_event *bpf_event = &event->bpf_event;
+ 	struct bpf_prog_info_linear *info_linear;
+ 	struct perf_tool *tool = session->tool;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 4447cd25e3f2..bdeaad434e52 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -1486,9 +1486,9 @@ static size_t perf_event__fprintf_lost(union perf_event *event, FILE *fp)
+ size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp)
+ {
+ 	return fprintf(fp, " addr %" PRI_lx64 " len %u type %u flags 0x%x name %s\n",
+-		       event->ksymbol_event.addr, event->ksymbol_event.len,
+-		       event->ksymbol_event.ksym_type,
+-		       event->ksymbol_event.flags, event->ksymbol_event.name);
++		       event->ksymbol.addr, event->ksymbol.len,
++		       event->ksymbol.ksym_type,
++		       event->ksymbol.flags, event->ksymbol.name);
+ }
  
-+struct sample_event {
-+	struct perf_event_header header;
-+	__u64			 array[];
-+};
-+
- #endif /* __LIBPERF_EVENT_H */
+ size_t perf_event__fprintf_bpf_event(union perf_event *event, FILE *fp)
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 091a0690a280..dee0ee57efc2 100644
+index 25f5309a3442..34190e01f307 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -37,11 +37,6 @@
- /* perf sample has 16 bits size limit */
- #define PERF_SAMPLE_MAX_SIZE (1 << 16)
+@@ -561,7 +561,7 @@ union perf_event {
+ 	struct perf_record_throttle	throttle;
+ 	struct perf_record_sample	sample;
+ 	struct perf_record_bpf_event	bpf_event;
+-	struct perf_record_ksymbol	ksymbol_event;
++	struct perf_record_ksymbol	ksymbol;
+ 	struct attr_event		attr;
+ 	struct event_update_event	event_update;
+ 	struct event_type_event		event_type;
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 823aaf7b1b83..86b7fd24b1e1 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -713,20 +713,20 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	struct symbol *sym;
+ 	struct map *map;
  
--struct sample_event {
--	struct perf_event_header        header;
--	u64 array[];
--};
--
- struct regs_dump {
- 	u64 abi;
- 	u64 mask;
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index ff415680fe0a..47bc54111f57 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -587,7 +587,7 @@ struct evsel *perf_evlist__id2evsel_strict(struct evlist *evlist,
- static int perf_evlist__event2id(struct evlist *evlist,
- 				 union perf_event *event, u64 *id)
- {
--	const u64 *array = event->sample.array;
-+	const __u64 *array = event->sample.array;
- 	ssize_t n;
+-	map = map_groups__find(&machine->kmaps, event->ksymbol_event.addr);
++	map = map_groups__find(&machine->kmaps, event->ksymbol.addr);
+ 	if (!map) {
+-		map = dso__new_map(event->ksymbol_event.name);
++		map = dso__new_map(event->ksymbol.name);
+ 		if (!map)
+ 			return -ENOMEM;
  
- 	n = (event->header.size - sizeof(event->header)) >> 3;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 9fadd5857ccc..778262f68d5c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2009,7 +2009,7 @@ static int perf_evsel__parse_id_sample(const struct evsel *evsel,
- 				       struct perf_sample *sample)
- {
- 	u64 type = evsel->core.attr.sample_type;
--	const u64 *array = event->sample.array;
-+	const __u64 *array = event->sample.array;
- 	bool swapped = evsel->needs_swap;
- 	union u64_swap u;
+-		map->start = event->ksymbol_event.addr;
+-		map->end = map->start + event->ksymbol_event.len;
++		map->start = event->ksymbol.addr;
++		map->end = map->start + event->ksymbol.len;
+ 		map_groups__insert(&machine->kmaps, map);
+ 	}
  
-@@ -2099,7 +2099,7 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	sym = symbol__new(map->map_ip(map, map->start),
+-			  event->ksymbol_event.len,
+-			  0, 0, event->ksymbol_event.name);
++			  event->ksymbol.len,
++			  0, 0, event->ksymbol.name);
+ 	if (!sym)
+ 		return -ENOMEM;
+ 	dso__insert_symbol(map->dso, sym);
+@@ -739,7 +739,7 @@ static int machine__process_ksymbol_unregister(struct machine *machine,
  {
- 	u64 type = evsel->core.attr.sample_type;
- 	bool swapped = evsel->needs_swap;
--	const u64 *array;
-+	const __u64 *array;
- 	u16 max_size = event->header.size;
- 	const void *endp = (void *)event + max_size;
- 	u64 sz;
-@@ -2378,7 +2378,7 @@ int perf_evsel__parse_sample_timestamp(struct evsel *evsel,
- 				       u64 *timestamp)
- {
- 	u64 type = evsel->core.attr.sample_type;
--	const u64 *array;
-+	const __u64 *array;
+ 	struct map *map;
  
- 	if (!(type & PERF_SAMPLE_TIME))
- 		return -1;
-@@ -2529,7 +2529,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
- 				  u64 read_format,
- 				  const struct perf_sample *sample)
- {
--	u64 *array;
-+	__u64 *array;
- 	size_t sz;
- 	/*
- 	 * used for cross-endian analysis. See git commit 65014ab3
+-	map = map_groups__find(&machine->kmaps, event->ksymbol_event.addr);
++	map = map_groups__find(&machine->kmaps, event->ksymbol.addr);
+ 	if (map)
+ 		map_groups__remove(&machine->kmaps, map);
+ 
+@@ -753,7 +753,7 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
+ 	if (dump_trace)
+ 		perf_event__fprintf_ksymbol(event, stdout);
+ 
+-	if (event->ksymbol_event.flags & PERF_RECORD_KSYMBOL_FLAGS_UNREGISTER)
++	if (event->ksymbol.flags & PERF_RECORD_KSYMBOL_FLAGS_UNREGISTER)
+ 		return machine__process_ksymbol_unregister(machine, event,
+ 							   sample);
+ 	return machine__process_ksymbol_register(machine, event, sample);
 -- 
 2.21.0
