@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/33] perf tests: Fixes hang in zstd compression test by changing the source of random data
-Date: Mon, 26 Aug 2019 22:36:08 -0300
-Message-ID: <20190827013634.3173-8-acme@kernel.org>
+Subject: [PATCH 08/33] perf trace beauty ioctl: Fix off-by-one error in cmd->string table
+Date: Mon, 26 Aug 2019 22:36:09 -0300
+Message-ID: <20190827013634.3173-9-acme@kernel.org>
 References: <20190827013634.3173-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,42 +9,81 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190827013634.3173-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, James Clark <James.Clark@arm.com>, James Clark <james.clark@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Jeremy Linton <jeremy.linton@arm.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Benjamin Peterson <benjamin@python.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: James Clark <James.Clark@arm.com>
+From: Benjamin Peterson <benjamin@python.org>
 
-Running 'perf test' with zstd compression linked will hang at the test
-'Zstd perf.data compression/decompression' because /dev/random blocks
-reads until there is enough entropy. This means that the test will
-appear to never complete unless the mouse is continually moved while
-running it.
+While tracing a program that calls isatty(3), I noticed that strace
+reported TCGETS for the request argument of the underlying ioctl(2)
+syscall while perf trace reported TCSETS. strace is corrrect. The bug in
+perf was due to the tty ioctl beauty table starting at 0x5400 rather
+than 0x5401.
 
-Signed-off-by: James Clark <james.clark@arm.com>
+Committer testing:
+
+  Using augmented_raw_syscalls.o and settings to make 'perf trace'
+  use strace formatting, i.e. with this in ~/.perfconfig
+
+  # cat ~/.perfconfig
+  [trace]
+	add_events = /home/acme/git/linux/tools/perf/examples/bpf/augmented_raw_syscalls.c
+	show_zeros = yes
+	show_duration = no
+	no_inherit = yes
+	show_timestamp = no
+	show_arg_names = no
+	args_alignment = 40
+	show_prefix = yes
+
+  # strace -e ioctl stty > /dev/null
+  ioctl(0, TCGETS, {B38400 opost isig icanon echo ...}) = 0
+  ioctl(1, TIOCGWINSZ, 0x7fff8a9b0860)    = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1, TCGETS, 0x7fff8a9b0540)        = -1 ENOTTY (Inappropriate ioctl for device)
+  +++ exited with 0 +++
+  #
+
+Before:
+
+  # perf trace -e ioctl stty > /dev/null
+  ioctl(0, TCSETS, 0x7fff2cf79f20)        = 0
+  ioctl(1, TIOCSWINSZ, 0x7fff2cf79f40)    = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1, TCSETS, 0x7fff2cf79c20)        = -1 ENOTTY (Inappropriate ioctl for device)
+  #
+
+After:
+
+  # perf trace -e ioctl stty > /dev/null
+  ioctl(0, TCGETS, 0x7ffed0763920)        = 0
+  ioctl(1, TIOCGWINSZ, 0x7ffed0763940)    = -1 ENOTTY (Inappropriate ioctl for device)
+  ioctl(1, TCGETS, 0x7ffed0763620)        = -1 ENOTTY (Inappropriate ioctl for device)
+  #
+
+Signed-off-by: Benjamin Peterson <benjamin@python.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jeremy Linton <jeremy.linton@arm.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/3d8cc701-df4e-f949-1715-5118b530e990@arm.com
+Fixes: 1cc47f2d46206d67285aea0ca7e8450af571da13 ("perf trace beauty ioctl: Improve 'cmd' beautifier")
+Link: http://lkml.kernel.org/r/20190823033625.18814-1-benjamin@python.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/record+zstd_comp_decomp.sh | 2 +-
+ tools/perf/trace/beauty/ioctl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-index 899604d17b85..63a91ec473bb 100755
---- a/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-+++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
-@@ -13,7 +13,7 @@ skip_if_no_z_record() {
- collect_z_record() {
- 	echo "Collecting compressed record file:"
- 	$perf_tool record -o $trace_file -g -z -F 5000 -- \
--		dd count=500 if=/dev/random of=/dev/null
-+		dd count=500 if=/dev/urandom of=/dev/null
- }
- 
- check_compressed_stats() {
+diff --git a/tools/perf/trace/beauty/ioctl.c b/tools/perf/trace/beauty/ioctl.c
+index 52242fa4072b..e19eb6ea361d 100644
+--- a/tools/perf/trace/beauty/ioctl.c
++++ b/tools/perf/trace/beauty/ioctl.c
+@@ -21,7 +21,7 @@
+ static size_t ioctl__scnprintf_tty_cmd(int nr, int dir, char *bf, size_t size)
+ {
+ 	static const char *ioctl_tty_cmd[] = {
+-	"TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
++	[_IOC_NR(TCGETS)] = "TCGETS", "TCSETS", "TCSETSW", "TCSETSF", "TCGETA", "TCSETA", "TCSETAW",
+ 	"TCSETAF", "TCSBRK", "TCXONC", "TCFLSH", "TIOCEXCL", "TIOCNXCL", "TIOCSCTTY",
+ 	"TIOCGPGRP", "TIOCSPGRP", "TIOCOUTQ", "TIOCSTI", "TIOCGWINSZ", "TIOCSWINSZ",
+ 	"TIOCMGET", "TIOCMBIS", "TIOCMBIC", "TIOCMSET", "TIOCGSOFTCAR", "TIOCSSOFTCAR",
 -- 
 2.21.0
