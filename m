@@ -1,68 +1,49 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/33] libperf: Add PERF_RECORD_COMM 'struct comm_event' to perf/event.h
-Date: Mon, 26 Aug 2019 22:36:20 -0300
-Message-ID: <20190827013634.3173-20-acme@kernel.org>
-References: <20190827013634.3173-1-acme@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: BoF on LPC 2019 : Linux Perf advancements for compute intensive
+ and server systems
+Date: Tue, 27 Aug 2019 09:48:02 +0200
+Message-ID: <20190827074802.GA22896@krava>
+References: <43216530-4410-6cc4-aa4a-51fa7e7c1b0c@linux.intel.com>
+ <20190826135536.GA24801@kernel.org>
+ <da687997-6280-2613-a389-f7b94c600c2b@linux.intel.com>
+ <20190826175758.GH5447@tassilo.jf.intel.com>
+ <20190826221021.GB21761@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190827013634.3173-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190826221021.GB21761@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Andi Kleen <ak@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Kan Liang <kan.liang@linux.intel.com>, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, Song Liu <songliubraving@fb.com>, "Jin, Yao" <yao.jin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Kees Cook <keescook@chromium.org>, Jonatan Corbet <corbet@lwn.net>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+On Mon, Aug 26, 2019 at 07:10:21PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Aug 26, 2019 at 10:57:58AM -0700, Andi Kleen escreveu:
+> > > 
+> > > > 
+> > > > All those are already merged, after long reviewing phases and lots of
+> > > > testing, right?
+> > > 
+> > > Right. These changes now constitute parts of the Linux kernel source tree.
+> > 
+> > Might be better to focus on future areas that haven't been merged yet.
+> 
+> Agreed, we can have a initial, short report on what has been done to
+> address these issues, and I think Alexey could take care of that, but
+> then we should try and list here what else in addition to what Ian et
+> all listed on their talk.
+> 
+> And perhaps even things that ammeliorate the problems they list there,
+> i.e. Ian, Stephane, the things that Alexey listed were already
+> tested/considered by you guys?
 
-Moving comm_event event definition into libperf's event.h
-header include.
+there's also ongoing work on adding threads to perf record:
+  https://lore.kernel.org/lkml/20180913125450.21342-1-jolsa@kernel.org/#t
 
-In order to keep libperf simple, we switch 'u64/u32/u16/u8'
-types used events to their generic '__u*' versions.
+currently being stuck on me sending the perf_sesion changes
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190825181752.722-4-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/lib/include/perf/event.h | 6 ++++++
- tools/perf/util/event.h             | 6 ------
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Alexey ran some initial benchmarks and it seems to perform nicely,
+not sure we discussed the results on list thought
 
-diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index c82e0c2c004b..3729a7d9253e 100644
---- a/tools/perf/lib/include/perf/event.h
-+++ b/tools/perf/lib/include/perf/event.h
-@@ -30,4 +30,10 @@ struct mmap2_event {
- 	char			 filename[PATH_MAX];
- };
- 
-+struct comm_event {
-+	struct perf_event_header header;
-+	__u32			 pid, tid;
-+	char			 comm[16];
-+};
-+
- #endif /* __LIBPERF_EVENT_H */
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index af252be8ca5b..e8973a783267 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -27,12 +27,6 @@
- #define PRI_lx64 PRIx64
- #endif
- 
--struct comm_event {
--	struct perf_event_header header;
--	u32 pid, tid;
--	char comm[16];
--};
--
- struct namespaces_event {
- 	struct perf_event_header header;
- 	u32 pid, tid;
--- 
-2.21.0
+jirka
