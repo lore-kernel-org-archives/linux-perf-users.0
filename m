@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/37] libperf: Add 'union perf_event' to perf/event.h
-Date: Thu, 29 Aug 2019 11:39:12 -0300
-Message-ID: <20190829143917.29745-33-acme@kernel.org>
+Subject: [PATCH 34/37] libperf: Move 'enum perf_user_event_type' to perf/event.h
+Date: Thu, 29 Aug 2019 11:39:14 -0300
+Message-ID: <20190829143917.29745-35-acme@kernel.org>
 References: <20190829143917.29745-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -21,104 +21,80 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190828135717.7245-22-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190828135717.7245-24-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 36 +++++++++++++++++++++++++++++
- tools/perf/util/event.h             | 36 -----------------------------
- 2 files changed, 36 insertions(+), 36 deletions(-)
+ tools/perf/lib/include/perf/event.h | 23 +++++++++++++++++++++++
+ tools/perf/util/event.h             | 23 -----------------------
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
 diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index ef7a46e82a6d..a5b08ef118a7 100644
+index 1655c744ec2b..18106899cb4e 100644
 --- a/tools/perf/lib/include/perf/event.h
 +++ b/tools/perf/lib/include/perf/event.h
-@@ -323,4 +323,40 @@ struct compressed_event {
+@@ -323,6 +323,29 @@ struct perf_record_compressed {
  	char			 data[];
  };
  
-+union perf_event {
-+	struct perf_event_header	header;
-+	struct perf_record_mmap		mmap;
-+	struct perf_record_mmap2	mmap2;
-+	struct perf_record_comm		comm;
-+	struct perf_record_namespaces	namespaces;
-+	struct perf_record_fork		fork;
-+	struct perf_record_lost		lost;
-+	struct perf_record_lost_samples	lost_samples;
-+	struct perf_record_read		read;
-+	struct perf_record_throttle	throttle;
-+	struct perf_record_sample	sample;
-+	struct perf_record_bpf_event	bpf;
-+	struct perf_record_ksymbol	ksymbol;
-+	struct attr_event		attr;
-+	struct event_update_event	event_update;
-+	struct event_type_event		event_type;
-+	struct tracing_data_event	tracing_data;
-+	struct build_id_event		build_id;
-+	struct id_index_event		id_index;
-+	struct auxtrace_info_event	auxtrace_info;
-+	struct auxtrace_event		auxtrace;
-+	struct auxtrace_error_event	auxtrace_error;
-+	struct aux_event		aux;
-+	struct itrace_start_event	itrace_start;
-+	struct context_switch_event	context_switch;
-+	struct thread_map_event		thread_map;
-+	struct cpu_map_event		cpu_map;
-+	struct stat_config_event	stat_config;
-+	struct stat_event		stat;
-+	struct stat_round_event		stat_round;
-+	struct time_conv_event		time_conv;
-+	struct feature_event		feat;
-+	struct compressed_event		pack;
++enum perf_user_event_type { /* above any possible kernel type */
++	PERF_RECORD_USER_TYPE_START		= 64,
++	PERF_RECORD_HEADER_ATTR			= 64,
++	PERF_RECORD_HEADER_EVENT_TYPE		= 65, /* deprecated */
++	PERF_RECORD_HEADER_TRACING_DATA		= 66,
++	PERF_RECORD_HEADER_BUILD_ID		= 67,
++	PERF_RECORD_FINISHED_ROUND		= 68,
++	PERF_RECORD_ID_INDEX			= 69,
++	PERF_RECORD_AUXTRACE_INFO		= 70,
++	PERF_RECORD_AUXTRACE			= 71,
++	PERF_RECORD_AUXTRACE_ERROR		= 72,
++	PERF_RECORD_THREAD_MAP			= 73,
++	PERF_RECORD_CPU_MAP			= 74,
++	PERF_RECORD_STAT_CONFIG			= 75,
++	PERF_RECORD_STAT			= 76,
++	PERF_RECORD_STAT_ROUND			= 77,
++	PERF_RECORD_EVENT_UPDATE		= 78,
++	PERF_RECORD_TIME_CONV			= 79,
++	PERF_RECORD_HEADER_FEATURE		= 80,
++	PERF_RECORD_COMPRESSED			= 81,
++	PERF_RECORD_HEADER_MAX
 +};
 +
- #endif /* __LIBPERF_EVENT_H */
+ union perf_event {
+ 	struct perf_event_header		header;
+ 	struct perf_record_mmap			mmap;
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index ee2ee23e4c46..e15eed53ce90 100644
+index a7341e14eb48..4c0c5232bd41 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -337,42 +337,6 @@ enum {
- 	PERF_STAT_ROUND_TYPE__FINAL	= 1,
- };
+@@ -146,29 +146,6 @@ struct perf_sample {
+ 	 PERF_MEM_S(LOCK, NA) |\
+ 	 PERF_MEM_S(TLB, NA))
  
--union perf_event {
--	struct perf_event_header	header;
--	struct perf_record_mmap		mmap;
--	struct perf_record_mmap2	mmap2;
--	struct perf_record_comm		comm;
--	struct perf_record_namespaces	namespaces;
--	struct perf_record_fork		fork;
--	struct perf_record_lost		lost;
--	struct perf_record_lost_samples	lost_samples;
--	struct perf_record_read		read;
--	struct perf_record_throttle	throttle;
--	struct perf_record_sample	sample;
--	struct perf_record_bpf_event	bpf;
--	struct perf_record_ksymbol	ksymbol;
--	struct attr_event		attr;
--	struct event_update_event	event_update;
--	struct event_type_event		event_type;
--	struct tracing_data_event	tracing_data;
--	struct build_id_event		build_id;
--	struct id_index_event		id_index;
--	struct auxtrace_info_event	auxtrace_info;
--	struct auxtrace_event		auxtrace;
--	struct auxtrace_error_event	auxtrace_error;
--	struct aux_event		aux;
--	struct itrace_start_event	itrace_start;
--	struct context_switch_event	context_switch;
--	struct thread_map_event		thread_map;
--	struct cpu_map_event		cpu_map;
--	struct stat_config_event	stat_config;
--	struct stat_event		stat;
--	struct stat_round_event		stat_round;
--	struct time_conv_event		time_conv;
--	struct feature_event		feat;
--	struct compressed_event		pack;
+-enum perf_user_event_type { /* above any possible kernel type */
+-	PERF_RECORD_USER_TYPE_START		= 64,
+-	PERF_RECORD_HEADER_ATTR			= 64,
+-	PERF_RECORD_HEADER_EVENT_TYPE		= 65, /* deprecated */
+-	PERF_RECORD_HEADER_TRACING_DATA		= 66,
+-	PERF_RECORD_HEADER_BUILD_ID		= 67,
+-	PERF_RECORD_FINISHED_ROUND		= 68,
+-	PERF_RECORD_ID_INDEX			= 69,
+-	PERF_RECORD_AUXTRACE_INFO		= 70,
+-	PERF_RECORD_AUXTRACE			= 71,
+-	PERF_RECORD_AUXTRACE_ERROR		= 72,
+-	PERF_RECORD_THREAD_MAP			= 73,
+-	PERF_RECORD_CPU_MAP			= 74,
+-	PERF_RECORD_STAT_CONFIG			= 75,
+-	PERF_RECORD_STAT			= 76,
+-	PERF_RECORD_STAT_ROUND			= 77,
+-	PERF_RECORD_EVENT_UPDATE		= 78,
+-	PERF_RECORD_TIME_CONV			= 79,
+-	PERF_RECORD_HEADER_FEATURE		= 80,
+-	PERF_RECORD_COMPRESSED			= 81,
+-	PERF_RECORD_HEADER_MAX
 -};
 -
- void perf_event__print_totals(void);
- 
- struct perf_tool;
+ enum auxtrace_error_type {
+ 	PERF_AUXTRACE_ERROR_ITRACE  = 1,
+ 	PERF_AUXTRACE_ERROR_MAX
 -- 
 2.21.0
