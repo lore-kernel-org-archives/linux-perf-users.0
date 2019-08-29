@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/37] libperf: Add PERF_RECORD_ID_INDEX 'struct id_index_event' to perf/event.h
-Date: Thu, 29 Aug 2019 11:38:58 -0300
-Message-ID: <20190829143917.29745-19-acme@kernel.org>
+Subject: [PATCH 13/37] libperf: Add PERF_RECORD_CPU_MAP 'struct cpu_map_event' to perf/event.h
+Date: Thu, 29 Aug 2019 11:38:53 -0300
+Message-ID: <20190829143917.29745-14-acme@kernel.org>
 References: <20190829143917.29745-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,102 +14,94 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the PERF_RECORD_ID_INDEX event definition to libperf's event.h.
+Move the PERF_RECORD_CPU_MAP event definition to libperf's event.h.
 
-In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
-events to their generic '__u*' versions.
-
-Add the PRI_ld64 define, so we can use it in printf output.
+In order to keep libperf simple, we switch 'u64/u32/u16/u8'
+types used events to their generic '__u*' versions.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190828135717.7245-8-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190828135717.7245-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/perf/event.h | 13 +++++++++++++
- tools/perf/util/event.h             | 15 ++-------------
- tools/perf/util/session.c           |  8 ++++----
- 3 files changed, 19 insertions(+), 17 deletions(-)
+ tools/perf/lib/include/perf/event.h | 26 ++++++++++++++++++++++++++
+ tools/perf/util/event.h             | 26 --------------------------
+ 2 files changed, 26 insertions(+), 26 deletions(-)
 
 diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
-index 5e6b6d16793c..c68523c4fa01 100644
+index bb66da57d366..469be778fdc1 100644
 --- a/tools/perf/lib/include/perf/event.h
 +++ b/tools/perf/lib/include/perf/event.h
-@@ -188,4 +188,17 @@ struct build_id_event {
- 	char			 filename[];
+@@ -115,4 +115,30 @@ struct attr_event {
+ 	__u64			 id[];
  };
  
-+struct id_index_entry {
-+	__u64			 id;
-+	__u64			 idx;
-+	__u64			 cpu;
-+	__u64			 tid;
++enum {
++	PERF_CPU_MAP__CPUS = 0,
++	PERF_CPU_MAP__MASK = 1,
 +};
 +
-+struct id_index_event {
++struct cpu_map_entries {
++	__u16			 nr;
++	__u16			 cpu[];
++};
++
++struct cpu_map_mask {
++	__u16			 nr;
++	__u16			 long_size;
++	unsigned long		 mask[];
++};
++
++struct cpu_map_data {
++	__u16			 type;
++	char			 data[];
++};
++
++struct cpu_map_event {
 +	struct perf_event_header header;
-+	__u64			 nr;
-+	struct id_index_entry	 entries[0];
++	struct cpu_map_data	 data;
 +};
 +
  #endif /* __LIBPERF_EVENT_H */
 diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 4b6cf89f31db..82315d2845fe 100644
+index 21fa6c2acea4..84bf67353635 100644
 --- a/tools/perf/util/event.h
 +++ b/tools/perf/util/event.h
-@@ -22,9 +22,11 @@
-  */
- #define PRI_lu64 "l" PRIu64
- #define PRI_lx64 "l" PRIx64
-+#define PRI_ld64 "l" PRId64
- #else
- #define PRI_lu64 PRIu64
- #define PRI_lx64 PRIx64
-+#define PRI_ld64 PRId64
- #endif
- 
- #define PERF_SAMPLE_MASK				\
-@@ -330,19 +332,6 @@ struct events_stats {
+@@ -337,32 +337,6 @@ struct events_stats {
  	u32 nr_proc_map_timeout;
  };
  
--struct id_index_entry {
--	u64 id;
--	u64 idx;
--	u64 cpu;
--	u64 tid;
+-enum {
+-	PERF_CPU_MAP__CPUS = 0,
+-	PERF_CPU_MAP__MASK = 1,
 -};
 -
--struct id_index_event {
--	struct perf_event_header header;
--	u64 nr;
--	struct id_index_entry entries[0];
+-struct cpu_map_entries {
+-	u16	nr;
+-	u16	cpu[];
 -};
 -
- struct auxtrace_info_event {
- 	struct perf_event_header header;
- 	u32 type;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index a275f2e15b94..aa9667424c1c 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2393,10 +2393,10 @@ int perf_event__process_id_index(struct perf_session *session,
- 		struct perf_sample_id *sid;
- 
- 		if (dump_trace) {
--			fprintf(stdout,	" ... id: %"PRIu64, e->id);
--			fprintf(stdout,	"  idx: %"PRIu64, e->idx);
--			fprintf(stdout,	"  cpu: %"PRId64, e->cpu);
--			fprintf(stdout,	"  tid: %"PRId64"\n", e->tid);
-+			fprintf(stdout,	" ... id: %"PRI_lu64, e->id);
-+			fprintf(stdout,	"  idx: %"PRI_lu64, e->idx);
-+			fprintf(stdout,	"  cpu: %"PRI_ld64, e->cpu);
-+			fprintf(stdout,	"  tid: %"PRI_ld64"\n", e->tid);
- 		}
- 
- 		sid = perf_evlist__id2sid(evlist, e->id);
+-struct cpu_map_mask {
+-	u16	nr;
+-	u16	long_size;
+-	unsigned long mask[];
+-};
+-
+-struct cpu_map_data {
+-	u16	type;
+-	char	data[];
+-};
+-
+-struct cpu_map_event {
+-	struct perf_event_header	header;
+-	struct cpu_map_data		data;
+-};
+-
+ enum {
+ 	PERF_EVENT_UPDATE__UNIT  = 0,
+ 	PERF_EVENT_UPDATE__SCALE = 1,
 -- 
 2.21.0
