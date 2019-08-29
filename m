@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/37] perf clang: Delete needless util-cxx.h header
-Date: Thu, 29 Aug 2019 11:38:49 -0300
-Message-ID: <20190829143917.29745-10-acme@kernel.org>
+Subject: [PATCH 10/37] perf top: Decay all events in the evlist
+Date: Thu, 29 Aug 2019 11:38:50 -0300
+Message-ID: <20190829143917.29745-11-acme@kernel.org>
 References: <20190829143917.29745-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,114 +9,99 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, He Kuang <hekuang@huawei.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Namhyung Kim <namhyung@kernel.org>
 
-It was put in place just to make sure the 'new' C++ operator wouldn't
-clash with some argument name in util.h, but there is not anymore any
-such argument and also the reason stated for util.h to be included there
-was to get the __maybe_unused definition, that is in linux/compiler.h,
-so use that instead and nuke util-cxx.h.
+Currently perf top only decays entries in a selected evsel.  I don't
+know whether it's intended (maybe due to performance reason?) but anyway
+it might show incorrect output when event group is used since users will
+see leader event is decayed but others are not.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: He Kuang <hekuang@huawei.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: https://lkml.kernel.org/n/tip-1r5tvfnwiydjxhukgqs6bi11@git.kernel.org
+This patch moves the decay code into perf_top__resort_hists() so that
+stdio and TUI code shared the logic.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/20190827231555.121411-1-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-loader.c       |  1 +
- tools/perf/util/c++/clang-c.h      |  2 +-
- tools/perf/util/c++/clang-test.cpp |  4 +++-
- tools/perf/util/util-cxx.h         | 27 ---------------------------
- 4 files changed, 5 insertions(+), 29 deletions(-)
- delete mode 100644 tools/perf/util/util-cxx.h
+ tools/perf/builtin-top.c | 38 +++++++++++++-------------------------
+ 1 file changed, 13 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-index e20d7c5e1925..80a828e75cf6 100644
---- a/tools/perf/util/bpf-loader.c
-+++ b/tools/perf/util/bpf-loader.c
-@@ -23,6 +23,7 @@
- #include "probe-finder.h" // for MAX_PROBES
- #include "parse-events.h"
- #include "strfilter.h"
-+#include "util.h"
- #include "llvm-utils.h"
- #include "c++/clang-c.h"
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 42ba733c9045..104dbb1095c5 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -265,13 +265,23 @@ static void perf_top__show_details(struct perf_top *top)
+ 	pthread_mutex_unlock(&notes->lock);
+ }
  
-diff --git a/tools/perf/util/c++/clang-c.h b/tools/perf/util/c++/clang-c.h
-index e513366f2ee0..2df8a45bd088 100644
---- a/tools/perf/util/c++/clang-c.h
-+++ b/tools/perf/util/c++/clang-c.h
-@@ -3,7 +3,6 @@
- #define PERF_UTIL_CLANG_C_H
+-static void evlist__resort_hists(struct evlist *evlist)
++static void perf_top__resort_hists(struct perf_top *t)
+ {
++	struct evlist *evlist = t->evlist;
+ 	struct evsel *pos;
  
- #include <stddef.h>	/* for size_t */
--#include <util-cxx.h>	/* for __maybe_unused */
+ 	evlist__for_each_entry(evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
  
- #ifdef __cplusplus
- extern "C" {
-@@ -22,6 +21,7 @@ extern int perf_clang__compile_bpf(const char *filename,
- #else
++		if (evlist->enabled) {
++			if (t->zero) {
++				hists__delete_entries(hists);
++			} else {
++				hists__decay_entries(hists, t->hide_user_symbols,
++						     t->hide_kernel_symbols);
++			}
++		}
++
+ 		hists__collapse_resort(hists, NULL);
  
- #include <errno.h>
-+#include <linux/compiler.h>	/* for __maybe_unused */
+ 		/* Non-group events are considered as leader */
+@@ -320,16 +330,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
+ 		return;
+ 	}
  
- static inline void perf_clang__init(void) { }
- static inline void perf_clang__cleanup(void) { }
-diff --git a/tools/perf/util/c++/clang-test.cpp b/tools/perf/util/c++/clang-test.cpp
-index 7b042a5ebc68..21b23605f78b 100644
---- a/tools/perf/util/c++/clang-test.cpp
-+++ b/tools/perf/util/c++/clang-test.cpp
-@@ -1,10 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "clang.h"
- #include "clang-c.h"
-+extern "C" {
-+#include "../util.h"
-+}
- #include "llvm/IR/Function.h"
- #include "llvm/IR/LLVMContext.h"
- 
--#include <util-cxx.h>
- #include <tests/llvm.h>
- #include <string>
- 
-diff --git a/tools/perf/util/util-cxx.h b/tools/perf/util/util-cxx.h
-deleted file mode 100644
-index 80a99e458d4e..000000000000
---- a/tools/perf/util/util-cxx.h
-+++ /dev/null
-@@ -1,27 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Support C++ source use utilities defined in util.h
-- */
+-	if (top->evlist->enabled) {
+-		if (top->zero) {
+-			hists__delete_entries(hists);
+-		} else {
+-			hists__decay_entries(hists, top->hide_user_symbols,
+-					     top->hide_kernel_symbols);
+-		}
+-	}
 -
--#ifndef PERF_UTIL_UTIL_CXX_H
--#define PERF_UTIL_UTIL_CXX_H
+-	evlist__resort_hists(top->evlist);
++	perf_top__resort_hists(top);
+ 
+ 	hists__output_recalc_col_len(hists, top->print_entries - printed);
+ 	putchar('\n');
+@@ -577,24 +578,11 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
+ static void perf_top__sort_new_samples(void *arg)
+ {
+ 	struct perf_top *t = arg;
+-	struct evsel *evsel = t->sym_evsel;
+-	struct hists *hists;
+ 
+ 	if (t->evlist->selected != NULL)
+ 		t->sym_evsel = t->evlist->selected;
+ 
+-	hists = evsel__hists(evsel);
 -
--#ifdef __cplusplus
--extern "C" {
--#endif
+-	if (t->evlist->enabled) {
+-		if (t->zero) {
+-			hists__delete_entries(hists);
+-		} else {
+-			hists__decay_entries(hists, t->hide_user_symbols,
+-					     t->hide_kernel_symbols);
+-		}
+-	}
 -
--/*
-- * Now 'new' is the only C++ keyword found in util.h:
-- * in tools/include/linux/rbtree.h
-- *
-- * Other keywords, like class and delete, should be
-- * redefined if necessary.
-- */
--#define new _new
--#include "util.h"
--#undef new
--
--#ifdef __cplusplus
--}
--#endif
--#endif
+-	evlist__resort_hists(t->evlist);
++	perf_top__resort_hists(t);
+ 
+ 	if (t->lost || t->drop)
+ 		pr_warning("Too slow to read ring buffer (change period (-c/-F) or limit CPUs (-C)\n");
 -- 
 2.21.0
