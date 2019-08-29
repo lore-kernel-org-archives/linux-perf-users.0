@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/37] perf tools: Remove needless util.h include from builtin.h
-Date: Thu, 29 Aug 2019 11:38:47 -0300
-Message-ID: <20190829143917.29745-8-acme@kernel.org>
+Subject: [PATCH 06/37] perf tools: Warn that perf_event_paranoid can restrict kernel symbols
+Date: Thu, 29 Aug 2019 11:38:46 -0300
+Message-ID: <20190829143917.29745-7-acme@kernel.org>
 References: <20190829143917.29745-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,61 +9,70 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Igor Lubashev <ilubashe@akamai.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, James Morris <jmorris@namei.org>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Igor Lubashev <ilubashe@akamai.com>
 
-And fix up places where util.h is needed but was obtained indirectly via
-builtin.h.
+Warn that /proc/sys/kernel/perf_event_paranoid can also restrict kernel
+symbols.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Igor Lubashev <ilubashe@akamai.com>
+Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-a01ig3c4t76ye5wkqmtgk9qn@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/1566869956-7154-6-git-send-email-ilubashe@akamai.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-buildid-cache.c | 1 +
- tools/perf/builtin.h               | 2 --
- tools/perf/perf.c                  | 1 +
- 3 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c | 2 +-
+ tools/perf/builtin-top.c    | 2 +-
+ tools/perf/builtin-trace.c  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-index 10457b10e568..7dde3ef0398f 100644
---- a/tools/perf/builtin-buildid-cache.c
-+++ b/tools/perf/builtin-buildid-cache.c
-@@ -25,6 +25,7 @@
- #include "util/session.h"
- #include "util/symbol.h"
- #include "util/time-utils.h"
-+#include "util/util.h"
- #include "util/probe-file.h"
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 359bb8f33e57..afe558449677 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2372,7 +2372,7 @@ int cmd_record(int argc, const char **argv)
+ 	if (symbol_conf.kptr_restrict && !perf_evlist__exclude_kernel(rec->evlist))
+ 		pr_warning(
+ "WARNING: Kernel address maps (/proc/{kallsyms,modules}) are restricted,\n"
+-"check /proc/sys/kernel/kptr_restrict.\n\n"
++"check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
+ "Samples in kernel functions may not be resolved if a suitable vmlinux\n"
+ "file is not found in the buildid cache or in the vmlinux path.\n\n"
+ "Samples in kernel modules won't be resolved at all.\n\n"
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 5970723cd55a..29e910fb2d9a 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -770,7 +770,7 @@ static void perf_event__process_sample(struct perf_tool *tool,
+ 		if (!perf_evlist__exclude_kernel(top->session->evlist)) {
+ 			ui__warning(
+ "Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
+-"Check /proc/sys/kernel/kptr_restrict.\n\n"
++"Check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
+ "Kernel%s samples will not be resolved.\n",
+ 			  al.map && map__has_symbols(al.map) ?
+ 			  " modules" : "");
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 8ea62fd2591d..58a75dd3a571 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1382,7 +1382,7 @@ static char *trace__machine__resolve_kernel_addr(void *vmachine, unsigned long l
  
- static int build_id_cache__kcore_buildid(const char *proc_dir, char *sbuildid)
-diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-index 999fe9170122..14a2db622a7b 100644
---- a/tools/perf/builtin.h
-+++ b/tools/perf/builtin.h
-@@ -2,8 +2,6 @@
- #ifndef BUILTIN_H
- #define BUILTIN_H
- 
--#include "util/util.h"
--
- extern const char perf_usage_string[];
- extern const char perf_more_info_string[];
- 
-diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-index d4e4d53e8b44..34763a9b873d 100644
---- a/tools/perf/perf.c
-+++ b/tools/perf/perf.c
-@@ -18,6 +18,7 @@
- #include "util/bpf-loader.h"
- #include "util/debug.h"
- #include "util/event.h"
-+#include "util/util.h"
- #include <api/fs/fs.h>
- #include <api/fs/tracing_path.h>
- #include <errno.h>
+ 	if (symbol_conf.kptr_restrict) {
+ 		pr_warning("Kernel address maps (/proc/{kallsyms,modules}) are restricted.\n\n"
+-			   "Check /proc/sys/kernel/kptr_restrict.\n\n"
++			   "Check /proc/sys/kernel/kptr_restrict and /proc/sys/kernel/perf_event_paranoid.\n\n"
+ 			   "Kernel samples will not be resolved.\n");
+ 		machine->kptr_restrict_warned = true;
+ 		return NULL;
 -- 
 2.21.0
