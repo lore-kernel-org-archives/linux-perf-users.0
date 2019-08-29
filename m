@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/37] perf top: Decay all events in the evlist
-Date: Thu, 29 Aug 2019 11:38:50 -0300
-Message-ID: <20190829143917.29745-11-acme@kernel.org>
+Subject: [PATCH 12/37] libperf: Add PERF_RECORD_HEADER_ATTR 'struct attr_event' to perf/event.h
+Date: Thu, 29 Aug 2019 11:38:52 -0300
+Message-ID: <20190829143917.29745-13-acme@kernel.org>
 References: <20190829143917.29745-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,99 +9,59 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190829143917.29745-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Currently perf top only decays entries in a selected evsel.  I don't
-know whether it's intended (maybe due to performance reason?) but anyway
-it might show incorrect output when event group is used since users will
-see leader event is decayed but others are not.
+Move the PERF_RECORD_HEADER_ATTR event definition to libperf's event.h.
 
-This patch moves the decay code into perf_top__resort_hists() so that
-stdio and TUI code shared the logic.
+In order to keep libperf simple, we switch 'u64/u32/u16/u8' types used
+events to their generic '__u*' versions.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190827231555.121411-1-namhyung@kernel.org
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190828135717.7245-2-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 38 +++++++++++++-------------------------
- 1 file changed, 13 insertions(+), 25 deletions(-)
+ tools/perf/lib/include/perf/event.h | 6 ++++++
+ tools/perf/util/event.h             | 6 ------
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 42ba733c9045..104dbb1095c5 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -265,13 +265,23 @@ static void perf_top__show_details(struct perf_top *top)
- 	pthread_mutex_unlock(&notes->lock);
- }
+diff --git a/tools/perf/lib/include/perf/event.h b/tools/perf/lib/include/perf/event.h
+index 36ad3a4a79e6..bb66da57d366 100644
+--- a/tools/perf/lib/include/perf/event.h
++++ b/tools/perf/lib/include/perf/event.h
+@@ -109,4 +109,10 @@ struct perf_record_sample {
+ 	__u64			 array[];
+ };
  
--static void evlist__resort_hists(struct evlist *evlist)
-+static void perf_top__resort_hists(struct perf_top *t)
- {
-+	struct evlist *evlist = t->evlist;
- 	struct evsel *pos;
- 
- 	evlist__for_each_entry(evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 
-+		if (evlist->enabled) {
-+			if (t->zero) {
-+				hists__delete_entries(hists);
-+			} else {
-+				hists__decay_entries(hists, t->hide_user_symbols,
-+						     t->hide_kernel_symbols);
-+			}
-+		}
++struct attr_event {
++	struct perf_event_header header;
++	struct perf_event_attr	 attr;
++	__u64			 id[];
++};
 +
- 		hists__collapse_resort(hists, NULL);
+ #endif /* __LIBPERF_EVENT_H */
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 429a3fe52d6c..21fa6c2acea4 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -363,12 +363,6 @@ struct cpu_map_event {
+ 	struct cpu_map_data		data;
+ };
  
- 		/* Non-group events are considered as leader */
-@@ -320,16 +330,7 @@ static void perf_top__print_sym_table(struct perf_top *top)
- 		return;
- 	}
- 
--	if (top->evlist->enabled) {
--		if (top->zero) {
--			hists__delete_entries(hists);
--		} else {
--			hists__decay_entries(hists, top->hide_user_symbols,
--					     top->hide_kernel_symbols);
--		}
--	}
+-struct attr_event {
+-	struct perf_event_header header;
+-	struct perf_event_attr attr;
+-	u64 id[];
+-};
 -
--	evlist__resort_hists(top->evlist);
-+	perf_top__resort_hists(top);
- 
- 	hists__output_recalc_col_len(hists, top->print_entries - printed);
- 	putchar('\n');
-@@ -577,24 +578,11 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
- static void perf_top__sort_new_samples(void *arg)
- {
- 	struct perf_top *t = arg;
--	struct evsel *evsel = t->sym_evsel;
--	struct hists *hists;
- 
- 	if (t->evlist->selected != NULL)
- 		t->sym_evsel = t->evlist->selected;
- 
--	hists = evsel__hists(evsel);
--
--	if (t->evlist->enabled) {
--		if (t->zero) {
--			hists__delete_entries(hists);
--		} else {
--			hists__decay_entries(hists, t->hide_user_symbols,
--					     t->hide_kernel_symbols);
--		}
--	}
--
--	evlist__resort_hists(t->evlist);
-+	perf_top__resort_hists(t);
- 
- 	if (t->lost || t->drop)
- 		pr_warning("Too slow to read ring buffer (change period (-c/-F) or limit CPUs (-C)\n");
+ enum {
+ 	PERF_EVENT_UPDATE__UNIT  = 0,
+ 	PERF_EVENT_UPDATE__SCALE = 1,
 -- 
 2.21.0
