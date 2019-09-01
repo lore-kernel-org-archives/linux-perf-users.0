@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/47] perf env: Remove env.h from other headers where just a fwd decl is needed
-Date: Sun,  1 Sep 2019 09:22:56 -0300
-Message-ID: <20190901122326.5793-18-acme@kernel.org>
+Subject: [PATCH 18/47] perf event: Remove needless include directives from event.h
+Date: Sun,  1 Sep 2019 09:22:57 -0300
+Message-ID: <20190901122326.5793-19-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,95 +14,144 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-And fixup the fallout of c files not building due to now missing
-headers.
+bpf.h and build-id.h are not needed at all in event.h, remove them.
+
+And fixup the fallout of files that were getting needed stuff from this
+now pruned include.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-sw8k3kpla98pr3rqypbjk9hf@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-rdm3dgtlrndmmnlc4bafsg3b@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/common.h    | 4 +++-
- tools/perf/tests/mem2node.c | 2 ++
- tools/perf/util/cputopo.h   | 1 -
- tools/perf/util/mem2node.c  | 2 ++
- tools/perf/util/mem2node.h  | 3 ++-
- 5 files changed, 9 insertions(+), 3 deletions(-)
+ tools/perf/arch/powerpc/util/unwind-libdw.c |  1 +
+ tools/perf/arch/x86/util/perf_regs.c        |  1 +
+ tools/perf/perf.c                           |  1 +
+ tools/perf/util/bpf-event.h                 |  1 +
+ tools/perf/util/callchain.h                 |  1 +
+ tools/perf/util/config.c                    |  2 ++
+ tools/perf/util/debug.c                     |  1 +
+ tools/perf/util/event.h                     | 18 ++++++++++++------
+ 8 files changed, 20 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/arch/common.h b/tools/perf/arch/common.h
-index c298a446d1f6..e965ed8bb328 100644
---- a/tools/perf/arch/common.h
-+++ b/tools/perf/arch/common.h
-@@ -2,7 +2,9 @@
- #ifndef ARCH_PERF_COMMON_H
- #define ARCH_PERF_COMMON_H
- 
--#include "../util/env.h"
-+#include <stdbool.h>
-+
-+struct perf_env;
- 
- int perf_env__lookup_objdump(struct perf_env *env, const char **path);
- bool perf_env__single_address_space(struct perf_env *env);
-diff --git a/tools/perf/tests/mem2node.c b/tools/perf/tests/mem2node.c
-index 73b2855acaf4..7672ade70f20 100644
---- a/tools/perf/tests/mem2node.c
-+++ b/tools/perf/tests/mem2node.c
-@@ -1,10 +1,12 @@
+diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/arch/powerpc/util/unwind-libdw.c
+index 7a1f05ef2fc0..abf2dbc7f829 100644
+--- a/tools/perf/arch/powerpc/util/unwind-libdw.c
++++ b/tools/perf/arch/powerpc/util/unwind-libdw.c
+@@ -1,5 +1,6 @@
  // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
- #include <linux/bitmap.h>
+ #include <elfutils/libdwfl.h>
 +#include <linux/kernel.h>
- #include <linux/zalloc.h>
- #include <perf/cpumap.h>
- #include "cpumap.h"
- #include "debug.h"
-+#include "env.h"
- #include "mem2node.h"
- #include "tests.h"
- 
-diff --git a/tools/perf/util/cputopo.h b/tools/perf/util/cputopo.h
-index bae2f1d41856..7bf6b811f715 100644
---- a/tools/perf/util/cputopo.h
-+++ b/tools/perf/util/cputopo.h
-@@ -3,7 +3,6 @@
- #define __PERF_CPUTOPO_H
- 
- #include <linux/types.h>
--#include "env.h"
- 
- struct cpu_topology {
- 	u32	  core_sib;
-diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
-index 14fb9e72aeeb..797d86a1ab09 100644
---- a/tools/perf/util/mem2node.c
-+++ b/tools/perf/util/mem2node.c
-@@ -1,8 +1,10 @@
+ #include "../../util/unwind-libdw.h"
+ #include "../../util/perf_regs.h"
+ #include "../../util/event.h"
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index 99ea60211e16..c218b83e063b 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -2,6 +2,7 @@
  #include <errno.h>
- #include <inttypes.h>
- #include <linux/bitmap.h>
+ #include <string.h>
+ #include <regex.h>
 +#include <linux/kernel.h>
  #include <linux/zalloc.h>
+ 
+ #include "../../perf-sys.h"
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index e0910637a82d..8763b2c0fbfd 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -10,6 +10,7 @@
+ #include "builtin.h"
+ #include "perf.h"
+ 
++#include "util/build-id.h"
+ #include "util/cache.h"
+ #include "util/env.h"
+ #include <subcmd/exec-cmd.h>
+diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+index 417b78835ea0..a01c2fd68c03 100644
+--- a/tools/perf/util/bpf-event.h
++++ b/tools/perf/util/bpf-event.h
+@@ -13,6 +13,7 @@ struct machine;
+ union perf_event;
+ struct perf_env;
+ struct perf_sample;
++struct perf_session;
+ struct record_opts;
+ struct evlist;
+ struct target;
+diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+index 45b9ed49e2b1..b042ceef4114 100644
+--- a/tools/perf/util/callchain.h
++++ b/tools/perf/util/callchain.h
+@@ -8,6 +8,7 @@
+ #include "map_symbol.h"
+ #include "branch.h"
+ 
++struct evsel;
+ struct map;
+ 
+ #define HELP_PAD "\t\t\t\t"
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index eb5308c41ed1..7ebf9e31ae22 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -17,6 +17,8 @@
+ #include "util/event.h"  /* proc_map_timeout */
+ #include "util/hist.h"  /* perf_hist_config */
+ #include "util/llvm-utils.h"   /* perf_llvm_config */
++#include "build-id.h"
++#include "debug.h"
+ #include "config.h"
  #include "debug.h"
-+#include "env.h"
- #include "mem2node.h"
- 
- struct phys_entry {
-diff --git a/tools/perf/util/mem2node.h b/tools/perf/util/mem2node.h
-index 59c4752a2181..8dfa2b58d0cd 100644
---- a/tools/perf/util/mem2node.h
-+++ b/tools/perf/util/mem2node.h
-@@ -2,8 +2,9 @@
- #define __MEM2NODE_H
- 
- #include <linux/rbtree.h>
--#include "env.h"
+ #include <sys/types.h>
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 522887ee4c02..143d379d4608 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -8,6 +8,7 @@
+ #include <stdlib.h>
+ #include <sys/wait.h>
+ #include <api/debug.h>
++#include <linux/kernel.h>
+ #include <linux/time64.h>
+ #ifdef HAVE_BACKTRACE_SUPPORT
+ #include <execinfo.h>
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index f56d268f06e3..006aa432be19 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -1,17 +1,23 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __PERF_RECORD_H
+ #define __PERF_RECORD_H
+-
+-#include <limits.h>
++/*
++ * The linux/stddef.h isn't need here, but is needed for __always_inline used
++ * in files included from uapi/linux/perf_event.h such as
++ * /usr/include/linux/swab.h and /usr/include/linux/byteorder/little_endian.h,
++ * detected in at least musl libc, used in Alpine Linux. -acme
++ */
+ #include <stdio.h>
+-#include <linux/kernel.h>
+-#include <linux/bpf.h>
+-#include <linux/perf_event.h>
++#include <linux/stddef.h>
+ #include <perf/event.h>
 +#include <linux/types.h>
  
-+struct perf_env;
- struct phys_entry;
+-#include "build-id.h"
+ #include "perf_regs.h"
  
- struct mem2node {
++struct dso;
++struct machine;
++struct perf_event_attr;
++
+ #ifdef __LP64__
+ /*
+  * /usr/include/inttypes.h uses just 'lu' for PRIu64, but we end up defining
 -- 
 2.21.0
