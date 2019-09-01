@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 25/47] perf symbols: Move symsrc prototypes to a separate header
-Date: Sun,  1 Sep 2019 09:23:04 -0300
-Message-ID: <20190901122326.5793-26-acme@kernel.org>
+Subject: [PATCH 28/47] perf tools: Move 'struct events_stats' and prototypes to separate header
+Date: Sun,  1 Sep 2019 09:23:07 -0300
+Message-ID: <20190901122326.5793-29-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,239 +14,204 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that we can remove dso.h from symbol.h and reduce the header
-dependency tree.
-
-Fixup cases where struct dso guts are needed but were obtained via
-symbol.h, indirectly.
+This will allow us to untangle the header dependency a bit more, as some
+places will not need event.h anymore.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ip683cegt306ncu3gsz7ii21@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-enqncj29ovzaat3cd9203rwl@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/sym-handling.c |  1 +
- tools/perf/builtin-probe.c                  |  1 +
- tools/perf/ui/browsers/map.c                |  1 +
- tools/perf/ui/gtk/annotate.c                |  1 +
- tools/perf/util/symbol-elf.c                |  1 +
- tools/perf/util/symbol-minimal.c            |  2 +
- tools/perf/util/symbol.c                    |  1 +
- tools/perf/util/symbol.h                    | 36 ++--------------
- tools/perf/util/symbol_fprintf.c            |  1 +
- tools/perf/util/symsrc.h                    | 46 +++++++++++++++++++++
- 10 files changed, 58 insertions(+), 33 deletions(-)
- create mode 100644 tools/perf/util/symsrc.h
+ tools/perf/util/auxtrace.h     |  5 ++++
+ tools/perf/util/event.h        | 42 ----------------------------
+ tools/perf/util/events_stats.h | 51 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/evlist.h       |  2 +-
+ tools/perf/util/hist.h         |  4 +--
+ tools/perf/util/sort.h         |  1 -
+ 6 files changed, 58 insertions(+), 47 deletions(-)
+ create mode 100644 tools/perf/util/events_stats.h
 
-diff --git a/tools/perf/arch/powerpc/util/sym-handling.c b/tools/perf/arch/powerpc/util/sym-handling.c
-index b0a67eaf2ce8..8a4b717e0a53 100644
---- a/tools/perf/arch/powerpc/util/sym-handling.c
-+++ b/tools/perf/arch/powerpc/util/sym-handling.c
-@@ -5,6 +5,7 @@
-  */
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index b5ac24c770d4..c539e7b6ed56 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -30,6 +30,11 @@ struct record_opts;
+ struct perf_record_auxtrace_info;
+ struct events_stats;
  
- #include "debug.h"
-+#include "dso.h"
- #include "symbol.h"
- #include "map.h"
- #include "probe-event.h"
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 8950c05ef8fd..6dce1724a378 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -18,6 +18,7 @@
- 
- #include "builtin.h"
- #include "namespaces.h"
-+#include "util/build-id.h"
- #include "util/strlist.h"
- #include "util/strfilter.h"
- #include "util/symbol.h"
-diff --git a/tools/perf/ui/browsers/map.c b/tools/perf/ui/browsers/map.c
-index 4c545b92e20d..893b065971f6 100644
---- a/tools/perf/ui/browsers/map.c
-+++ b/tools/perf/ui/browsers/map.c
-@@ -8,6 +8,7 @@
- #include "../../util/util.h"
- #include "../../util/debug.h"
- #include "../../util/map.h"
-+#include "../../util/dso.h"
- #include "../../util/symbol.h"
- #include "../browser.h"
- #include "../helpline.h"
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index d7f984436dec..8e744af24f7c 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -5,6 +5,7 @@
- #include "util/annotate.h"
- #include "util/evsel.h"
- #include "util/map.h"
-+#include "util/dso.h"
- #include "util/symbol.h"
- #include "ui/helpline.h"
- #include <inttypes.h>
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 6d22437e88ae..9428639872a6 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -10,6 +10,7 @@
- #include "map.h"
- #include "map_groups.h"
- #include "symbol.h"
-+#include "symsrc.h"
- #include "demangle-java.h"
- #include "demangle-rust.h"
- #include "machine.h"
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index 3bc8b7e3300e..7e2813ec9498 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "dso.h"
- #include "symbol.h"
-+#include "symsrc.h"
- #include "util.h"
- 
- #include <errno.h>
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index b11a69681662..e5ffe61ad66b 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -25,6 +25,7 @@
- #include "machine.h"
- #include "map.h"
- #include "symbol.h"
-+#include "symsrc.h"
- #include "strlist.h"
- #include "intlist.h"
- #include "namespaces.h"
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 22660c7614a5..5a58407c2945 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -20,8 +20,7 @@
- #endif
- #include <elf.h>
- 
--#include "dso.h"
--
-+struct dso;
- struct map;
- struct map_groups;
- struct option;
-@@ -148,37 +147,6 @@ struct addr_location {
- 	s32	      socket;
- };
- 
--struct symsrc {
--	char *name;
--	int fd;
--	enum dso_binary_type type;
--
--#ifdef HAVE_LIBELF_SUPPORT
--	Elf *elf;
--	GElf_Ehdr ehdr;
--
--	Elf_Scn *opdsec;
--	size_t opdidx;
--	GElf_Shdr opdshdr;
--
--	Elf_Scn *symtab;
--	GElf_Shdr symshdr;
--
--	Elf_Scn *dynsym;
--	size_t dynsym_idx;
--	GElf_Shdr dynshdr;
--
--	bool adjust_symbols;
--	bool is_64_bit;
--#endif
--};
--
--void symsrc__destroy(struct symsrc *ss);
--int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
--		 enum dso_binary_type type);
--bool symsrc__has_symtab(struct symsrc *ss);
--bool symsrc__possibly_runtime(struct symsrc *ss);
--
- int dso__load(struct dso *dso, struct map *map);
- int dso__load_vmlinux(struct dso *dso, struct map *map,
- 		      const char *vmlinux, bool vmlinux_allocated);
-@@ -232,6 +200,8 @@ bool symbol__restricted_filename(const char *filename,
- int symbol__config_symfs(const struct option *opt __maybe_unused,
- 			 const char *dir, int unset __maybe_unused);
- 
-+struct symsrc;
-+
- int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		  struct symsrc *runtime_ss, int kmodule);
- int dso__synthesize_plt_symbols(struct dso *dso, struct symsrc *ss);
-diff --git a/tools/perf/util/symbol_fprintf.c b/tools/perf/util/symbol_fprintf.c
-index 02e89b02c2ce..35c936ce33ef 100644
---- a/tools/perf/util/symbol_fprintf.c
-+++ b/tools/perf/util/symbol_fprintf.c
-@@ -3,6 +3,7 @@
- #include <inttypes.h>
- #include <stdio.h>
- 
-+#include "dso.h"
- #include "map.h"
- #include "symbol.h"
- 
-diff --git a/tools/perf/util/symsrc.h b/tools/perf/util/symsrc.h
-new file mode 100644
-index 000000000000..2665b4bde751
---- /dev/null
-+++ b/tools/perf/util/symsrc.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_SYMSRC_
-+#define __PERF_SYMSRC_ 1
-+
-+#include <stdbool.h>
-+#include <stddef.h>
-+#include "dso.h"
-+
-+#ifdef HAVE_LIBELF_SUPPORT
-+#include <libelf.h>
-+#include <gelf.h>
-+#endif
-+#include <elf.h>
-+
-+struct symsrc {
-+	char		     *name;
-+	int		     fd;
-+	enum dso_binary_type type;
-+
-+#ifdef HAVE_LIBELF_SUPPORT
-+	Elf		     *elf;
-+	GElf_Ehdr	     ehdr;
-+
-+	Elf_Scn		     *opdsec;
-+	size_t		     opdidx;
-+	GElf_Shdr	     opdshdr;
-+
-+	Elf_Scn		     *symtab;
-+	GElf_Shdr	     symshdr;
-+
-+	Elf_Scn		     *dynsym;
-+	size_t		     dynsym_idx;
-+	GElf_Shdr	     dynshdr;
-+
-+	bool		     adjust_symbols;
-+	bool		     is_64_bit;
-+#endif
++enum auxtrace_error_type {
++       PERF_AUXTRACE_ERROR_ITRACE  = 1,
++       PERF_AUXTRACE_ERROR_MAX
 +};
 +
-+int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name, enum dso_binary_type type);
-+void symsrc__destroy(struct symsrc *ss);
+ /* Auxtrace records must have the same alignment as perf event records */
+ #define PERF_AUXTRACE_RECORD_ALIGNMENT 8
+ 
+diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+index 006aa432be19..47ad81d47b1a 100644
+--- a/tools/perf/util/event.h
++++ b/tools/perf/util/event.h
+@@ -151,11 +151,6 @@ struct perf_sample {
+ 	 PERF_MEM_S(LOCK, NA) |\
+ 	 PERF_MEM_S(TLB, NA))
+ 
+-enum auxtrace_error_type {
+-	PERF_AUXTRACE_ERROR_ITRACE  = 1,
+-	PERF_AUXTRACE_ERROR_MAX
+-};
+-
+ /* Attribute type for custom synthesized events */
+ #define PERF_TYPE_SYNTH		(INT_MAX + 1U)
+ 
+@@ -277,43 +272,6 @@ static inline void *perf_synth__raw_data(void *p)
+ 
+ #define perf_sample__bad_synth_size(s, d) ((s)->raw_size < sizeof(d) - 4)
+ 
+-/*
+- * The kernel collects the number of events it couldn't send in a stretch and
+- * when possible sends this number in a PERF_RECORD_LOST event. The number of
+- * such "chunks" of lost events is stored in .nr_events[PERF_EVENT_LOST] while
+- * total_lost tells exactly how many events the kernel in fact lost, i.e. it is
+- * the sum of all struct perf_record_lost.lost fields reported.
+- *
+- * The kernel discards mixed up samples and sends the number in a
+- * PERF_RECORD_LOST_SAMPLES event. The number of lost-samples events is stored
+- * in .nr_events[PERF_RECORD_LOST_SAMPLES] while total_lost_samples tells
+- * exactly how many samples the kernel in fact dropped, i.e. it is the sum of
+- * all struct perf_record_lost_samples.lost fields reported.
+- *
+- * The total_period is needed because by default auto-freq is used, so
+- * multipling nr_events[PERF_EVENT_SAMPLE] by a frequency isn't possible to get
+- * the total number of low level events, it is necessary to to sum all struct
+- * perf_record_sample.period and stash the result in total_period.
+- */
+-struct events_stats {
+-	u64 total_period;
+-	u64 total_non_filtered_period;
+-	u64 total_lost;
+-	u64 total_lost_samples;
+-	u64 total_aux_lost;
+-	u64 total_aux_partial;
+-	u64 total_invalid_chains;
+-	u32 nr_events[PERF_RECORD_HEADER_MAX];
+-	u32 nr_non_filtered_samples;
+-	u32 nr_lost_warned;
+-	u32 nr_unknown_events;
+-	u32 nr_invalid_chains;
+-	u32 nr_unknown_id;
+-	u32 nr_unprocessable_samples;
+-	u32 nr_auxtrace_errors[PERF_AUXTRACE_ERROR_MAX];
+-	u32 nr_proc_map_timeout;
+-};
+-
+ enum {
+ 	PERF_STAT_ROUND_TYPE__INTERVAL	= 0,
+ 	PERF_STAT_ROUND_TYPE__FINAL	= 1,
+diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
+new file mode 100644
+index 000000000000..859cb34fcff2
+--- /dev/null
++++ b/tools/perf/util/events_stats.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __PERF_EVENTS_STATS_
++#define __PERF_EVENTS_STATS_
 +
-+bool symsrc__has_symtab(struct symsrc *ss);
-+bool symsrc__possibly_runtime(struct symsrc *ss);
++#include <stdio.h>
++#include <perf/event.h>
++#include <linux/types.h>
++#include "auxtrace.h"
 +
-+#endif /* __PERF_SYMSRC_ */
++/*
++ * The kernel collects the number of events it couldn't send in a stretch and
++ * when possible sends this number in a PERF_RECORD_LOST event. The number of
++ * such "chunks" of lost events is stored in .nr_events[PERF_EVENT_LOST] while
++ * total_lost tells exactly how many events the kernel in fact lost, i.e. it is
++ * the sum of all struct perf_record_lost.lost fields reported.
++ *
++ * The kernel discards mixed up samples and sends the number in a
++ * PERF_RECORD_LOST_SAMPLES event. The number of lost-samples events is stored
++ * in .nr_events[PERF_RECORD_LOST_SAMPLES] while total_lost_samples tells
++ * exactly how many samples the kernel in fact dropped, i.e. it is the sum of
++ * all struct perf_record_lost_samples.lost fields reported.
++ *
++ * The total_period is needed because by default auto-freq is used, so
++ * multipling nr_events[PERF_EVENT_SAMPLE] by a frequency isn't possible to get
++ * the total number of low level events, it is necessary to to sum all struct
++ * perf_record_sample.period and stash the result in total_period.
++ */
++struct events_stats {
++	u64 total_period;
++	u64 total_non_filtered_period;
++	u64 total_lost;
++	u64 total_lost_samples;
++	u64 total_aux_lost;
++	u64 total_aux_partial;
++	u64 total_invalid_chains;
++	u32 nr_events[PERF_RECORD_HEADER_MAX];
++	u32 nr_non_filtered_samples;
++	u32 nr_lost_warned;
++	u32 nr_unknown_events;
++	u32 nr_invalid_chains;
++	u32 nr_unknown_id;
++	u32 nr_unprocessable_samples;
++	u32 nr_auxtrace_errors[PERF_AUXTRACE_ERROR_MAX];
++	u32 nr_proc_map_timeout;
++};
++
++void events_stats__inc(struct events_stats *stats, u32 type);
++
++size_t events_stats__fprintf(struct events_stats *stats, FILE *fp);
++
++#endif /* __PERF_EVENTS_STATS_ */
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index ee288644e9e4..a55f0f2546e5 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -9,7 +9,7 @@
+ #include <api/fd/array.h>
+ #include <stdio.h>
+ #include <internal/evlist.h>
+-#include "event.h"
++#include "events_stats.h"
+ #include "evsel.h"
+ #include "mmap.h"
+ #include <signal.h>
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 1c0a635e5e32..34803e33dc80 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -6,8 +6,8 @@
+ #include <linux/types.h>
+ #include <pthread.h>
+ #include "evsel.h"
+-#include "header.h"
+ #include "color.h"
++#include "events_stats.h"
+ 
+ struct hist_entry;
+ struct hist_entry_ops;
+@@ -190,8 +190,6 @@ void hists__reset_stats(struct hists *hists);
+ void hists__inc_stats(struct hists *hists, struct hist_entry *h);
+ void hists__inc_nr_events(struct hists *hists, u32 type);
+ void hists__inc_nr_samples(struct hists *hists, bool filtered);
+-void events_stats__inc(struct events_stats *stats, u32 type);
+-size_t events_stats__fprintf(struct events_stats *stats, FILE *fp);
+ 
+ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
+ 		      int max_cols, float min_pcnt, FILE *fp,
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 3d7cef73924c..7b93f34ac1f4 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -9,7 +9,6 @@
+ #include "symbol_conf.h"
+ #include "callchain.h"
+ #include "values.h"
+-
+ #include "hist.h"
+ 
+ struct option;
 -- 
 2.21.0
