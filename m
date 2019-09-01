@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/47] perf session: Replace MAX_NR_CPUS with perf_env::nr_cpus_online
-Date: Sun,  1 Sep 2019 09:22:44 -0300
-Message-ID: <20190901122326.5793-6-acme@kernel.org>
+Subject: [PATCH 08/47] libperf: Warn when exceeding MAX_NR_CPUS in cpumap
+Date: Sun,  1 Sep 2019 09:22:47 -0300
+Message-ID: <20190901122326.5793-9-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,9 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kyle Meyer <meyerk@hpe.com>
 
-nr_cpus, the number of CPUs online during a record session bound by
-MAX_NR_CPUS, can be used as a dynamic alternative for MAX_NR_CPUS in
-perf_session__cpu_bitmap.
+Display a warning when attempting to profile more than MAX_NR_CPU CPUs.
+This patch should not change any behavior.
 
 Signed-off-by: Kyle Meyer <kyle.meyer@hpe.com>
 Reviewed-by: Jiri Olsa <jolsa@redhat.com>
@@ -24,32 +23,35 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Russ Anderson <russ.anderson@hpe.com>
-Link: http://lore.kernel.org/lkml/20190827214352.94272-5-meyerk@stormcage.eag.rdlabs.hpecorp.net
+Link: http://lore.kernel.org/lkml/20190827214352.94272-8-meyerk@stormcage.eag.rdlabs.hpecorp.net
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/session.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/lib/cpumap.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 7350b0dfbc1e..13486bcf74a0 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2292,6 +2292,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
- {
- 	int i, err = -1;
- 	struct perf_cpu_map *map;
-+	int nr_cpus = min(session->header.env.nr_cpus_online, MAX_NR_CPUS);
+diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
+index 2834753576b2..1f0e6f334237 100644
+--- a/tools/perf/lib/cpumap.c
++++ b/tools/perf/lib/cpumap.c
+@@ -100,6 +100,9 @@ struct perf_cpu_map *perf_cpu_map__read(FILE *file)
+ 		if (prev >= 0) {
+ 			int new_max = nr_cpus + cpu - prev - 1;
  
- 	for (i = 0; i < PERF_TYPE_MAX; ++i) {
- 		struct evsel *evsel;
-@@ -2316,7 +2317,7 @@ int perf_session__cpu_bitmap(struct perf_session *session,
- 	for (i = 0; i < map->nr; i++) {
- 		int cpu = map->map[i];
++			WARN_ONCE(new_max >= MAX_NR_CPUS, "Perf can support %d CPUs. "
++							  "Consider raising MAX_NR_CPUS\n", MAX_NR_CPUS);
++
+ 			if (new_max >= max_entries) {
+ 				max_entries = new_max + MAX_NR_CPUS / 2;
+ 				tmp = realloc(tmp_cpus, max_entries * sizeof(int));
+@@ -192,6 +195,9 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+ 			end_cpu = start_cpu;
+ 		}
  
--		if (cpu >= MAX_NR_CPUS) {
-+		if (cpu >= nr_cpus) {
- 			pr_err("Requested CPU %d too large. "
- 			       "Consider raising MAX_NR_CPUS\n", cpu);
- 			goto out_delete_map;
++		WARN_ONCE(end_cpu >= MAX_NR_CPUS, "Perf can support %d CPUs. "
++						  "Consider raising MAX_NR_CPUS\n", MAX_NR_CPUS);
++
+ 		for (; start_cpu <= end_cpu; start_cpu++) {
+ 			/* check for duplicates */
+ 			for (i = 0; i < nr_cpus; i++)
 -- 
 2.21.0
