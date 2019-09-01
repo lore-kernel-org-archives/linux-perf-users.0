@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/47] perf tools: Remove needless libtraceevent include directives
-Date: Sun,  1 Sep 2019 09:22:48 -0300
-Message-ID: <20190901122326.5793-10-acme@kernel.org>
+Subject: [PATCH 12/47] perf time-utils: Adopt rdclock() from perf.h
+Date: Sun,  1 Sep 2019 09:22:51 -0300
+Message-ID: <20190901122326.5793-13-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,65 +9,96 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190901122326.5793-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Remove traceevent/event-parse.h and traceevent/trace-seq.h from places
-where it is not needed.
-
-Should avoid rebuilding those files when these traceevent headers get
-changed.
+Seems to be a better place for this function to live, further shrinking
+the hodge-podge that perf.h was.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: https://lkml.kernel.org/n/tip-26hn75jn9rdealn4uqtzend6@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0zzt1u9rpyjukdy1ccr2u5r9@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-timechart.c | 1 -
- tools/perf/util/session.c      | 1 -
- tools/perf/util/trace-event.h  | 1 -
- 3 files changed, 3 deletions(-)
+ tools/perf/builtin-stat.c    | 1 +
+ tools/perf/perf.h            | 9 ---------
+ tools/perf/util/event.c      | 1 +
+ tools/perf/util/time-utils.h | 9 +++++++++
+ 4 files changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index 1ff81a790931..1a74499f3311 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -10,7 +10,6 @@
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index a7e8c26635db..2741bcb049fb 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -62,6 +62,7 @@
+ #include "util/string2.h"
+ #include "util/metricgroup.h"
+ #include "util/target.h"
++#include "util/time-utils.h"
+ #include "util/top.h"
+ #include "asm/bug.h"
  
- #include <errno.h>
- #include <inttypes.h>
--#include <traceevent/event-parse.h>
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index 7a1a92127b9b..74014033df60 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -2,17 +2,8 @@
+ #ifndef _PERF_PERF_H
+ #define _PERF_PERF_H
  
- #include "builtin.h"
- #include "util/color.h"
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 13486bcf74a0..9eb843e5e6f0 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -4,7 +4,6 @@
- #include <linux/err.h>
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
--#include <traceevent/event-parse.h>
- #include <api/fs/fs.h>
+-#include <time.h>
+ #include <stdbool.h>
  
- #include <byteswap.h>
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 258d79071d81..2e158387b3d7 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -3,7 +3,6 @@
- #define _PERF_UTIL_TRACE_EVENT_H
+-static inline unsigned long long rdclock(void)
+-{
+-	struct timespec ts;
+-
+-	clock_gettime(CLOCK_MONOTONIC, &ts);
+-	return ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+-}
+-
+ #ifndef MAX_NR_CPUS
+ #define MAX_NR_CPUS			2048
+ #endif
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index c9d1f83c747a..7fa7a303e476 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -21,6 +21,7 @@
+ #include "strlist.h"
+ #include "thread.h"
+ #include "thread_map.h"
++#include "time-utils.h"
+ #include <linux/ctype.h>
+ #include "map.h"
+ #include "symbol.h"
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index 72a42ea1d513..4f42988eb2f7 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -3,6 +3,7 @@
+ #define _TIME_UTILS_H_
  
- #include <traceevent/event-parse.h>
--#include <traceevent/trace-seq.h>
- #include "parse-events.h"
+ #include <stddef.h>
++#include <time.h>
+ #include <linux/types.h>
  
- struct machine;
+ struct perf_time_interval {
+@@ -34,4 +35,12 @@ int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
+ 
+ int fetch_current_timestamp(char *buf, size_t sz);
+ 
++static inline unsigned long long rdclock(void)
++{
++	struct timespec ts;
++
++	clock_gettime(CLOCK_MONOTONIC, &ts);
++	return ts.tv_sec * 1000000000ULL + ts.tv_nsec;
++}
++
+ #endif
 -- 
 2.21.0
