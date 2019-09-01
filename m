@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 42/47] perf: Update .gitignore file
-Date: Sun,  1 Sep 2019 09:23:21 -0300
-Message-ID: <20190901122326.5793-43-acme@kernel.org>
+Subject: [PATCH 43/47] perf intel-pt: Remove inat.c from build dependency list
+Date: Sun,  1 Sep 2019 09:23:22 -0300
+Message-ID: <20190901122326.5793-44-acme@kernel.org>
 References: <20190901122326.5793-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,13 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-After a "make tools/perf", git reports the following untracked files:
-
-  tools/perf/feature/
-  tools/perf/fixdep
-  tools/perf/libtraceevent-dynamic-list
-
-Add these generated files to perf's .gitignore file.
+intel-pt-insn-decoder.c includes inat.c directly, so it already has an
+implicit dependency on inat.c.  The Build file dependency is redundant.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
@@ -28,22 +23,24 @@ Acked-by: Peter Zijlstra <peterz@infradead.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: x86@kernel.org
-Link: http://lore.kernel.org/lkml/03acbc6c2fbc72054861f6c301875db75db33030.1567118001.git.jpoimboe@redhat.com
+Link: http://lore.kernel.org/lkml/53776d6d29bc9eceb571d52df8fa32250c58a0f3.1567118001.git.jpoimboe@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/.gitignore | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/intel-pt-decoder/Build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/.gitignore b/tools/perf/.gitignore
-index 3e5135dded16..bf1252dc2cb0 100644
---- a/tools/perf/.gitignore
-+++ b/tools/perf/.gitignore
-@@ -34,3 +34,6 @@ arch/*/include/generated/
- trace/beauty/generated/
- pmu-events/pmu-events.c
- pmu-events/jevents
-+feature/
-+fixdep
-+libtraceevent-dynamic-list
+diff --git a/tools/perf/util/intel-pt-decoder/Build b/tools/perf/util/intel-pt-decoder/Build
+index 23bf788f84b9..acb18a3463c3 100644
+--- a/tools/perf/util/intel-pt-decoder/Build
++++ b/tools/perf/util/intel-pt-decoder/Build
+@@ -9,7 +9,7 @@ $(OUTPUT)util/intel-pt-decoder/inat-tables.c: $(inat_tables_script) $(inat_table
+ 
+ # Busybox's diff doesn't have -I, avoid warning in the case
+ 
+-$(OUTPUT)util/intel-pt-decoder/intel-pt-insn-decoder.o: util/intel-pt-decoder/intel-pt-insn-decoder.c util/intel-pt-decoder/inat.c $(OUTPUT)util/intel-pt-decoder/inat-tables.c
++$(OUTPUT)util/intel-pt-decoder/intel-pt-insn-decoder.o: util/intel-pt-decoder/intel-pt-insn-decoder.c $(OUTPUT)util/intel-pt-decoder/inat-tables.c
+ 	@(diff -I 2>&1 | grep -q 'option requires an argument' && \
+ 	test -d ../../kernel -a -d ../../tools -a -d ../perf && ( \
+ 	((diff -B -I'^#include' util/intel-pt-decoder/insn.c ../../arch/x86/lib/insn.c >/dev/null) || \
 -- 
 2.21.0
