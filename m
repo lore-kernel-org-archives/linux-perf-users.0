@@ -1,83 +1,50 @@
-From: yuzhoujian <ufo19890607@gmail.com>
-Subject: [PATCH] Add input file_name support for perf sched {map|latency|replay|timehist}
-Date: Tue,  3 Sep 2019 16:55:35 +0800
-Message-ID: <20190903085535.23913-1-ufo19890607@gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf jvmti: Link against tools/lib/string.h to have weak strlcpy()
+Date: Wed,  4 Sep 2019 11:39:34 +0200
+Message-ID: <20190904093934.10456-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, dsahern@gmail.com, namhyung@kernel.org, milian.wolff@kdab.com, arnaldo.melo@gmail.com, windyu@tencent.com, adrian.hunter@intel.com, wangnan0@huawei.com
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: brueckner@linux.ibm.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: YuZhoujian <windyu@tencent.com>
+That is needed in systems such some S/390 distros.
 
-Just add '-i' option for perf sched {map|latency|replay|timehist}
+ [root@m35lp76 perf]# readelf -s jvmti/jvmti-in.o | fgrep strlcpy
+   408: 0000000000002bc8   216 FUNC    WEAK   DEFAULT  116 strlcpy
+ [root@m35lp76 perf]#
 
-Signed-off-by: YuZhoujian <windyu@tencent.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- tools/perf/Documentation/perf-sched.txt | 7 +++++++
- tools/perf/builtin-sched.c              | 4 ++++
- 2 files changed, 11 insertions(+)
+ tools/perf/jvmti/Build | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 63f938b887dd..182c223d3d9b 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -80,6 +80,9 @@ OPTIONS
+diff --git a/tools/perf/jvmti/Build b/tools/perf/jvmti/Build
+index eaeb8cb5379b..202cadaaf097 100644
+--- a/tools/perf/jvmti/Build
++++ b/tools/perf/jvmti/Build
+@@ -1,8 +1,21 @@
+ jvmti-y += libjvmti.o
+ jvmti-y += jvmti_agent.o
  
- OPTIONS for 'perf sched map'
- ----------------------------
-+-i::
-+--input=<file>::
-+        Input file name. (default: perf.data unless stdin is a fifo)
- 
- --compact::
- 	Show only CPUs with activity. Helps visualizing on high core
-@@ -96,6 +99,10 @@ OPTIONS for 'perf sched map'
- 
- OPTIONS for 'perf sched timehist'
- ---------------------------------
-+-i::
-+--input=<file>::
-+        Input file name. (default: perf.data unless stdin is a fifo)
++# For strlcpy
++jvmti-y += libstring.o libctype.o
 +
- -k::
- --vmlinux=<file>::
-     vmlinux pathname
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 025151dcb651..8e51fbb88549 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3374,6 +3374,7 @@ int cmd_sched(int argc, const char **argv)
- 	const struct option latency_options[] = {
- 	OPT_STRING('s', "sort", &sched.sort_order, "key[,key2...]",
- 		   "sort by key(s): runtime, switch, avg, max"),
-+	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_INTEGER('C', "CPU", &sched.profile_cpu,
- 		    "CPU to profile on"),
- 	OPT_BOOLEAN('p', "pids", &sched.skip_merge,
-@@ -3381,11 +3382,13 @@ int cmd_sched(int argc, const char **argv)
- 	OPT_PARENT(sched_options)
- 	};
- 	const struct option replay_options[] = {
-+	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
- 		     "repeat the workload replay N times (-1: infinite)"),
- 	OPT_PARENT(sched_options)
- 	};
- 	const struct option map_options[] = {
-+	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_BOOLEAN(0, "compact", &sched.map.comp,
- 		    "map output in compact mode"),
- 	OPT_STRING(0, "color-pids", &sched.map.color_pids_str, "pids",
-@@ -3397,6 +3400,7 @@ int cmd_sched(int argc, const char **argv)
- 	OPT_PARENT(sched_options)
- 	};
- 	const struct option timehist_options[] = {
-+	OPT_STRING('i', "input", &input_name, "file", "input file name"),
- 	OPT_STRING('k', "vmlinux", &symbol_conf.vmlinux_name,
- 		   "file", "vmlinux pathname"),
- 	OPT_STRING(0, "kallsyms", &symbol_conf.kallsyms_name,
+ CFLAGS_jvmti         = -fPIC -DPIC -I$(JDIR)/include -I$(JDIR)/include/linux
+ CFLAGS_REMOVE_jvmti  = -Wmissing-declarations
+ CFLAGS_REMOVE_jvmti += -Wstrict-prototypes
+ CFLAGS_REMOVE_jvmti += -Wextra
+ CFLAGS_REMOVE_jvmti += -Wwrite-strings
++
++CFLAGS_libstring.o += -Wno-unused-parameter -DETC_PERFCONFIG="BUILD_STR($(ETC_PERFCONFIG_SQ))"
++
++$(OUTPUT)jvmti/libstring.o: ../lib/string.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
++
++$(OUTPUT)jvmti/libctype.o: ../lib/ctype.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
 -- 
-2.23.0.37.g745f681
+2.21.0
