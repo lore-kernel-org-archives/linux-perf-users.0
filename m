@@ -1,7 +1,7 @@
 From: Kim Phillips <kim.phillips@amd.com>
-Subject: [PATCH 4/5] perf list: allow plurals for metric, metricgroup
-Date: Thu, 19 Sep 2019 15:43:05 -0500
-Message-ID: <20190919204306.12598-4-kim.phillips@amd.com>
+Subject: [PATCH 5/5] perf list: specify metrics are to be used with -M
+Date: Thu, 19 Sep 2019 15:43:06 -0500
+Message-ID: <20190919204306.12598-5-kim.phillips@amd.com>
 References: <20190919204306.12598-1-kim.phillips@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,44 +13,43 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: kim.phillips@amd.com, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Borislav Petkov <bp@suse.de>, Martin Liska <mliska@suse.cz>, Luke Mujica <lukemujica@google.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Enhance usability by allowing the same plurality used in the output title, for
-the command line parameter.
-
-BEFORE, perf deceitfully acts as if there are no metrics to be had:
+Output of 'perf list metrics' before:
 
   $ perf list metrics
 
   List of pre-defined events (to be used in -e):
 
-  Metric Groups:
+  Metrics:
 
-  $
+    C2_Pkg_Residency
+         [C2 residency percent per package]
+  ...
 
-But singular 'metric' shows a list of metrics:
+This misleads the uninitiated user to try:
 
-$ perf list metric
+  $ perf stat -e C2_Pkg_Residency
 
-List of pre-defined events (to be used in -e):
+which gets:
 
-Metrics:
+  event syntax error: 'C2_Pkg_Residency'
+                       \___ parser error
+  Run 'perf list' for a list of valid events
 
-  IPC
-       [Instructions Per Cycle (per logical thread)]
-  UPI
-       [Uops Per Instruction]
+Explicitly clarify that metrics and metricgroups are meant to
+be used with -M, and correct the grammar for the -e equivalent
+statement.
 
-AFTER, when asking for 'metrics', we actually see the metrics get listed:
+Output of 'perf list metrics' after:
 
-$ perf list metrics
+  $ perf list metrics
 
-List of pre-defined events (to be used in -e):
+  List of pre-defined events (to be used with -e):
 
-Metrics:
+  Metrics (to be used with -M):
 
-  IPC
-       [Instructions Per Cycle (per logical thread)]
-  UPI
-       [Uops Per Instruction]
+    C2_Pkg_Residency
+         [C2 residency percent per package]
+  ...
 
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
@@ -68,26 +67,40 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org
-Fixes: 71b0acce78d1 ("perf list: Add metric groups to perf list")
 ---
- tools/perf/builtin-list.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-list.c     | 2 +-
+ tools/perf/util/metricgroup.c | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index e290f6b348d8..08e62ae9d37e 100644
+index 08e62ae9d37e..be8e878aa556 100644
 --- a/tools/perf/builtin-list.c
 +++ b/tools/perf/builtin-list.c
-@@ -81,9 +81,9 @@ int cmd_list(int argc, const char **argv)
- 						long_desc_flag, details_flag);
- 		else if (strcmp(argv[i], "sdt") == 0)
- 			print_sdt_events(NULL, NULL, raw_dump);
--		else if (strcmp(argv[i], "metric") == 0)
-+		else if (strcmp(argv[i], "metric") == 0 || strcmp(argv[i], "metrics") == 0)
- 			metricgroup__print(true, false, NULL, raw_dump, details_flag);
--		else if (strcmp(argv[i], "metricgroup") == 0)
-+		else if (strcmp(argv[i], "metricgroup") == 0 || strcmp(argv[i], "metricgroups") == 0)
- 			metricgroup__print(false, true, NULL, raw_dump, details_flag);
- 		else if ((sep = strchr(argv[i], ':')) != NULL) {
- 			int sep_idx;
+@@ -51,7 +51,7 @@ int cmd_list(int argc, const char **argv)
+ 	setup_pager();
+ 
+ 	if (!raw_dump && pager_in_use())
+-		printf("\nList of pre-defined events (to be used in -e):\n\n");
++		printf("\nList of pre-defined events (to be used with -e):\n\n");
+ 
+ 	if (argc == 0) {
+ 		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a7c0424dbda3..f116848be9f7 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -377,9 +377,10 @@ void metricgroup__print(bool metrics, bool metricgroups, char *filter,
+ 	}
+ 
+ 	if (metricgroups && !raw)
+-		printf("\nMetric Groups:\n\n");
++		printf("\nMetric Groups");
+ 	else if (metrics && !raw)
+-		printf("\nMetrics:\n\n");
++		printf("\nMetrics");
++	printf(" (to be used with -M):\n\n");
+ 
+ 	for (node = rb_first_cached(&groups.entries); node; node = next) {
+ 		struct mep *me = container_of(node, struct mep, nd);
 -- 
 2.23.0
