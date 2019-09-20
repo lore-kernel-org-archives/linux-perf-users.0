@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/31] perf hist: Add missing 'struct branch_stack' forward declaration
-Date: Fri, 20 Sep 2019 11:25:29 -0300
-Message-ID: <20190920142542.12047-19-acme@kernel.org>
+Subject: [PATCH 20/31] perf sched: Add missing event.h include directive
+Date: Fri, 20 Sep 2019 11:25:31 -0300
+Message-ID: <20190920142542.12047-21-acme@kernel.org>
 References: <20190920142542.12047-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,28 +14,29 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Its needed, was being obtained indirectly, fix it.
+We use what is defined there, were getting it by luck, indirectly, fix
+it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-srzphk0ehptfn3zqmpkgsi65@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-e1cdt9557ctpvs3jb9c16qe6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/hist.h | 1 +
+ tools/perf/builtin-sched.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 34803e33dc80..6a186b668303 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -15,6 +15,7 @@ struct addr_location;
- struct map_symbol;
- struct mem_info;
- struct branch_info;
-+struct branch_stack;
- struct block_info;
- struct symbol;
- struct ui_progress;
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 511e19a7aafa..f0b828c201cc 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -24,6 +24,7 @@
+ #include "util/trace-event.h"
+ 
+ #include "util/debug.h"
++#include "util/event.h"
+ 
+ #include <linux/kernel.h>
+ #include <linux/log2.h>
 -- 
 2.21.0
