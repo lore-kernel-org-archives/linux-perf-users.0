@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 29/31] perf kvm: Move kvm-stat header file from conditional inclusion to common include section
-Date: Fri, 20 Sep 2019 11:25:40 -0300
-Message-ID: <20190920142542.12047-30-acme@kernel.org>
+Subject: [PATCH 31/31] perf kvm stat: Set 'trace_cycles' as default event for 'perf kvm record' in powerpc
+Date: Fri, 20 Sep 2019 11:25:42 -0300
+Message-ID: <20190920142542.12047-32-acme@kernel.org>
 References: <20190920142542.12047-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,15 +14,11 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Anju T Sudhakar <anju@linux.vnet.ibm.com>
 
-Move kvm-stat header file to the common include section, and make the
-definitions in the header file under the conditional inclusion `#ifdef
-HAVE_KVM_STAT_SUPPORT`.
-
-This helps to define other 'perf kvm' related function prototypes in
-kvm-stat header file, which may not need kvm-stat support.
+Use 'trace_imc/trace_cycles' as the default event for 'perf kvm record'
+in powerpc.
 
 Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-By: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
@@ -30,52 +26,53 @@ Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20190718181749.30612-1-anju@linux.vnet.ibm.com
+Link: http://lore.kernel.org/lkml/20190718181749.30612-3-anju@linux.vnet.ibm.com
+[ Add missing pmu.h header, needed because this patch uses pmu_have_event() ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-kvm.c   | 2 +-
- tools/perf/util/kvm-stat.h | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/arch/powerpc/util/kvm-stat.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index ac6d6e061dc5..2b822be87673 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -21,6 +21,7 @@
- #include "util/top.h"
- #include "util/data.h"
- #include "util/ordered-events.h"
-+#include "util/kvm-stat.h"
- #include "ui/ui.h"
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index ec5b771029e4..9cc1c4a9dec4 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -5,6 +5,7 @@
+ #include "util/debug.h"
+ #include "util/evsel.h"
+ #include "util/evlist.h"
++#include "util/pmu.h"
  
- #include <sys/prctl.h>
-@@ -59,7 +60,6 @@ static const char *get_filename_for_perf_kvm(void)
- }
+ #include "book3s_hv_exits.h"
+ #include "book3s_hcalls.h"
+@@ -177,8 +178,9 @@ int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __maybe_unused)
+ /*
+  * Incase of powerpc architecture, pmu registers are programmable
+  * by guest kernel. So monitoring guest via host may not provide
+- * valid samples. It is better to fail the "perf kvm record"
+- * with default "cycles" event to monitor guest in powerpc.
++ * valid samples with default 'cycles' event. It is better to use
++ * 'trace_imc/trace_cycles' event for guest profiling, since it
++ * can track the guest instruction pointer in the trace-record.
+  *
+  * Function to parse the arguments and return appropriate values.
+  */
+@@ -202,8 +204,14 @@ int kvm_add_default_arch_event(int *argc, const char **argv)
  
- #ifdef HAVE_KVM_STAT_SUPPORT
--#include "util/kvm-stat.h"
+ 	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
+ 	if (!event) {
+-		free(tmp);
+-		return -EINVAL;
++		if (pmu_have_event("trace_imc", "trace_cycles")) {
++			argv[j++] = strdup("-e");
++			argv[j++] = strdup("trace_imc/trace_cycles/");
++			*argc += 2;
++		} else {
++			free(tmp);
++			return -EINVAL;
++		}
+ 	}
  
- void exit_event_get_key(struct evsel *evsel,
- 			struct perf_sample *sample,
-diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-index 46913637085b..8fd6ec20662c 100644
---- a/tools/perf/util/kvm-stat.h
-+++ b/tools/perf/util/kvm-stat.h
-@@ -2,6 +2,8 @@
- #ifndef __PERF_KVM_STAT_H
- #define __PERF_KVM_STAT_H
- 
-+#ifdef HAVE_KVM_STAT_SUPPORT
-+
- #include "tool.h"
- #include "stat.h"
- #include "record.h"
-@@ -144,5 +146,6 @@ extern const int decode_str_len;
- extern const char *kvm_exit_reason;
- extern const char *kvm_entry_trace;
- extern const char *kvm_exit_trace;
-+#endif /* HAVE_KVM_STAT_SUPPORT */
- 
- #endif /* __PERF_KVM_STAT_H */
+ 	free(tmp);
 -- 
 2.21.0
