@@ -1,26 +1,68 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 3/5] perf vendor events: minor fixes to the README
-Date: Mon, 23 Sep 2019 10:53:12 -0300
-Message-ID: <20190923135312.GB16544@kernel.org>
-References: <20190919204306.12598-1-kim.phillips@amd.com>
- <20190919204306.12598-3-kim.phillips@amd.com>
- <20190919220928.GH8537@tassilo.jf.intel.com>
+Subject: Re: [PATCH 3/3] perf/java: Add detection of java-11-openjdk-devel
+ package
+Date: Tue, 24 Sep 2019 16:48:31 -0300
+Message-ID: <20190924194831.GC20773@kernel.org>
+References: <20190909114116.50469-1-tmricht@linux.ibm.com>
+ <20190909114116.50469-4-tmricht@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190919220928.GH8537@tassilo.jf.intel.com>
+In-Reply-To: <20190909114116.50469-4-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@amd.com>, Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Borislav Petkov <bp@suse.de>, Martin Liska <mliska@suse.cz>, Luke Mujica <lukemujica@google.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, brueckner@linux.ibm.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Sep 19, 2019 at 03:09:28PM -0700, Andi Kleen escreveu:
-> For all the patches except the last
+Em Mon, Sep 09, 2019 at 01:41:16PM +0200, Thomas Richter escreveu:
+> With Java 11 there is no seperate JRE anymore.
+> Details: https://coderanch.com/t/701603/java/JRE-JDK
+> Therefore the detection of the JRE needs to be adapted.
 > 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> This change works for s390 and x86.
+> I have not tested other platforms.
 
-Thanks, applying all but the last till we get that further discussed.
+    Committer testing:
+
+    Continues to work with the OpenJDK 8:
+
+      $ rm -f ~acme/lib64/libperf-jvmti.so
+      $ rpm -qa | grep jdk-devel
+      java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
+      $ git log --oneline -1
+      a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
+      $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
+      $ ls -la ~acme/lib64/libperf-jvmti.so
+      -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
+      $
+
+
+Thanks, applied.
+
+- Arnaldo
+ 
+> Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>  tools/perf/Makefile.config | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 89ac5a1f1550..3da374911852 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -908,7 +908,7 @@ ifndef NO_JVMTI
+>      JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+>    else
+>      ifneq (,$(wildcard /usr/sbin/alternatives))
+> -      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
+> +      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
+>      endif
+>    endif
+>    ifndef JDIR
+> -- 
+> 2.21.0
 
 -- 
 
