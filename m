@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/66] perf tools: Rename perf_evlist__purge() to evlist__purge()
-Date: Wed, 25 Sep 2019 21:31:58 -0300
-Message-ID: <20190926003244.13962-21-acme@kernel.org>
+Subject: [PATCH 21/66] libperf: Link libapi.a in libperf.so
+Date: Wed, 25 Sep 2019 21:31:59 -0300
+Message-ID: <20190926003244.13962-22-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,41 +14,83 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Rename (perf_evlist__purge) to evlist__purge(), so we don't have a
-name clash when we add (perf_evlist__purge) in libperf.
+Linking libapi.a in libperf.so, because we are about to use some of the
+API functions in it.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-9-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-10-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/lib/Makefile | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 4c5b7040c02b..c96c743cc1d2 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -124,7 +124,7 @@ static void perf_evlist__update_id_pos(struct evlist *evlist)
- 	perf_evlist__set_id_pos(evlist);
- }
+diff --git a/tools/perf/lib/Makefile b/tools/perf/lib/Makefile
+index e325c0503dc6..54466cc84544 100644
+--- a/tools/perf/lib/Makefile
++++ b/tools/perf/lib/Makefile
+@@ -59,7 +59,13 @@ else
+   CFLAGS := -g -Wall
+ endif
  
--static void perf_evlist__purge(struct evlist *evlist)
-+static void evlist__purge(struct evlist *evlist)
- {
- 	struct evsel *pos, *n;
+-INCLUDES = -I$(srctree)/tools/perf/lib/include -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/ -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
++INCLUDES = \
++-I$(srctree)/tools/perf/lib/include \
++-I$(srctree)/tools/lib/ \
++-I$(srctree)/tools/include \
++-I$(srctree)/tools/arch/$(SRCARCH)/include/ \
++-I$(srctree)/tools/arch/$(SRCARCH)/include/uapi \
++-I$(srctree)/tools/include/uapi
  
-@@ -155,7 +155,7 @@ void evlist__delete(struct evlist *evlist)
- 	perf_thread_map__put(evlist->core.threads);
- 	evlist->core.cpus = NULL;
- 	evlist->core.threads = NULL;
--	perf_evlist__purge(evlist);
-+	evlist__purge(evlist);
- 	evlist__exit(evlist);
- 	free(evlist);
- }
+ # Append required CFLAGS
+ override CFLAGS += $(EXTRA_WARNINGS)
+@@ -88,13 +94,34 @@ LIBPERF_PC := $(OUTPUT)libperf.pc
+ 
+ LIBPERF_ALL := $(LIBPERF_A) $(OUTPUT)libperf.so*
+ 
++LIB_DIR := $(srctree)/tools/lib/api/
++
++ifneq ($(OUTPUT),)
++ifneq ($(subdir),)
++  API_PATH=$(OUTPUT)/../lib/api/
++else
++  API_PATH=$(OUTPUT)
++endif
++else
++  API_PATH=$(LIB_DIR)
++endif
++
++LIBAPI = $(API_PATH)libapi.a
++
++$(LIBAPI): FORCE
++	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) $(OUTPUT)libapi.a
++
++$(LIBAPI)-clean:
++	$(call QUIET_CLEAN, libapi)
++	$(Q)$(MAKE) -C $(LIB_DIR) O=$(OUTPUT) clean >/dev/null
++
+ $(LIBPERF_IN): FORCE
+ 	$(Q)$(MAKE) $(build)=libperf
+ 
+ $(LIBPERF_A): $(LIBPERF_IN)
+ 	$(QUIET_AR)$(RM) $@ && $(AR) rcs $@ $(LIBPERF_IN)
+ 
+-$(LIBPERF_SO): $(LIBPERF_IN)
++$(LIBPERF_SO): $(LIBPERF_IN) $(LIBAPI)
+ 	$(QUIET_LINK)$(CC) --shared -Wl,-soname,libperf.so \
+                                     -Wl,--version-script=$(VERSION_SCRIPT) $^ -o $@
+ 	@ln -sf $(@F) $(OUTPUT)libperf.so
+@@ -106,7 +133,7 @@ libs: $(LIBPERF_A) $(LIBPERF_SO) $(LIBPERF_PC)
+ all: fixdep
+ 	$(Q)$(MAKE) libs
+ 
+-clean:
++clean: $(LIBAPI)-clean
+ 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
+                 *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS $(LIBPERF_PC)
+ 	$(Q)$(MAKE) -C tests clean
 -- 
 2.21.0
