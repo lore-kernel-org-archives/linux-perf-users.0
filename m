@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/66] libperf: Move 'id' from 'struct evsel' to 'struct perf_evsel'
-Date: Wed, 25 Sep 2019 21:32:16 -0300
-Message-ID: <20190926003244.13962-39-acme@kernel.org>
+Subject: [PATCH 40/66] libperf: Move 'heads' from 'struct evlist' to 'struct perf_evlist'
+Date: Wed, 25 Sep 2019 21:32:18 -0300
+Message-ID: <20190926003244.13962-41-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,264 +14,117 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Move the 'id' array from 'struct evsel' to libperf's 'struct perf_evsel'.
-
-Committer note:
-
-Fix the tools/perf/util/cs-etm.c build, i.e. aarch64's CoreSight.
+Move 'heads' hash table from 'struct evlist' to 'struct perf_evlist'.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-25-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-27-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/internal/evsel.h |  1 +
- tools/perf/util/cs-etm.c                |  2 +-
- tools/perf/util/evlist.c                |  2 +-
- tools/perf/util/evsel.c                 |  6 +++---
- tools/perf/util/evsel.h                 |  1 -
- tools/perf/util/header.c                | 10 +++++-----
- tools/perf/util/intel-bts.c             |  2 +-
- tools/perf/util/intel-pt.c              |  8 ++++----
- tools/perf/util/synthetic-events.c      | 12 ++++++------
- 9 files changed, 22 insertions(+), 22 deletions(-)
+ tools/perf/lib/evlist.c                  |  4 ++++
+ tools/perf/lib/include/internal/evlist.h |  4 ++++
+ tools/perf/util/evlist.c                 | 10 +++-------
+ tools/perf/util/evlist.h                 |  4 ----
+ 4 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/lib/include/internal/evsel.h b/tools/perf/lib/include/internal/evsel.h
-index 1ddb969f7807..e7171948c347 100644
---- a/tools/perf/lib/include/internal/evsel.h
-+++ b/tools/perf/lib/include/internal/evsel.h
-@@ -18,6 +18,7 @@ struct perf_evsel {
- 	struct perf_thread_map	*threads;
- 	struct xyarray		*fd;
- 	struct xyarray		*sample_id;
-+	u64			*id;
+diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
+index f4dc9a208332..2bdd9d2c79d9 100644
+--- a/tools/perf/lib/evlist.c
++++ b/tools/perf/lib/evlist.c
+@@ -11,6 +11,10 @@
  
- 	/* parse modifier helper */
- 	int			 nr_members;
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 6021974577d5..4ba0f871f086 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1298,7 +1298,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
- 	attr.read_format = evsel->core.attr.read_format;
+ void perf_evlist__init(struct perf_evlist *evlist)
+ {
++	int i;
++
++	for (i = 0; i < PERF_EVLIST__HLIST_SIZE; ++i)
++		INIT_HLIST_HEAD(&evlist->heads[i]);
+ 	INIT_LIST_HEAD(&evlist->entries);
+ 	evlist->nr_entries = 0;
+ }
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index 8a4eb66fbf3a..c5a06890fd6a 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -5,6 +5,9 @@
+ #include <linux/list.h>
+ #include <api/fd/array.h>
  
- 	/* create new id val to be a fixed offset from evsel id */
--	id = evsel->id[0] + 1000000000;
-+	id = evsel->core.id[0] + 1000000000;
++#define PERF_EVLIST__HLIST_BITS 8
++#define PERF_EVLIST__HLIST_SIZE (1 << PERF_EVLIST__HLIST_BITS)
++
+ struct perf_cpu_map;
+ struct perf_thread_map;
  
- 	if (!id)
- 		id = 1;
+@@ -17,6 +20,7 @@ struct perf_evlist {
+ 	int			 nr_mmaps;
+ 	size_t			 mmap_len;
+ 	struct fdarray		 pollfd;
++	struct hlist_head	 heads[PERF_EVLIST__HLIST_SIZE];
+ };
+ 
+ /**
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 84b409802298..24f03f245525 100644
+index 5e43fb9da359..c6af7c622612 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -482,7 +482,7 @@ void perf_evlist__id_add(struct evlist *evlist, struct evsel *evsel,
- 			 int cpu, int thread, u64 id)
+@@ -55,10 +55,6 @@ int sigqueue(pid_t pid, int sig, const union sigval value);
+ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ 		  struct perf_thread_map *threads)
  {
- 	perf_evlist__id_hash(evlist, evsel, cpu, thread, id);
--	evsel->id[evsel->ids++] = id;
-+	evsel->core.id[evsel->ids++] = id;
+-	int i;
+-
+-	for (i = 0; i < PERF_EVLIST__HLIST_SIZE; ++i)
+-		INIT_HLIST_HEAD(&evlist->heads[i]);
+ 	perf_evlist__init(&evlist->core);
+ 	perf_evlist__set_maps(&evlist->core, cpus, threads);
+ 	fdarray__init(&evlist->core.pollfd, 64);
+@@ -475,7 +471,7 @@ static void perf_evlist__id_hash(struct evlist *evlist,
+ 	sid->id = id;
+ 	sid->evsel = evsel;
+ 	hash = hash_64(sid->id, PERF_EVLIST__HLIST_BITS);
+-	hlist_add_head(&sid->node, &evlist->heads[hash]);
++	hlist_add_head(&sid->node, &evlist->core.heads[hash]);
  }
  
- int perf_evlist__id_add_fd(struct evlist *evlist,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index cb1ada8cf4a4..9c1b4f4a5fa3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1239,8 +1239,8 @@ int perf_evsel__alloc_id(struct evsel *evsel, int ncpus, int nthreads)
- 	if (evsel->core.sample_id == NULL)
- 		return -ENOMEM;
+ void perf_evlist__id_add(struct evlist *evlist, struct evsel *evsel,
+@@ -549,7 +545,7 @@ struct perf_sample_id *perf_evlist__id2sid(struct evlist *evlist, u64 id)
+ 	int hash;
  
--	evsel->id = zalloc(ncpus * nthreads * sizeof(u64));
--	if (evsel->id == NULL) {
-+	evsel->core.id = zalloc(ncpus * nthreads * sizeof(u64));
-+	if (evsel->core.id == NULL) {
- 		xyarray__delete(evsel->core.sample_id);
- 		evsel->core.sample_id = NULL;
- 		return -ENOMEM;
-@@ -1253,7 +1253,7 @@ static void perf_evsel__free_id(struct evsel *evsel)
- {
- 	xyarray__delete(evsel->core.sample_id);
- 	evsel->core.sample_id = NULL;
--	zfree(&evsel->id);
-+	zfree(&evsel->core.id);
- 	evsel->ids = 0;
- }
+ 	hash = hash_64(id, PERF_EVLIST__HLIST_BITS);
+-	head = &evlist->heads[hash];
++	head = &evlist->core.heads[hash];
  
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 2d2c6cad81f8..0d2aa933ceb3 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -116,7 +116,6 @@ struct evsel {
- 	struct perf_evsel	core;
- 	struct evlist	*evlist;
- 	char			*filter;
--	u64			*id;
- 	struct perf_counts	*counts;
- 	struct perf_counts	*prev_raw_counts;
- 	int			idx;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 0167f9697172..2b0681ab08aa 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -530,7 +530,7 @@ static int write_event_desc(struct feat_fd *ff,
- 		/*
- 		 * write unique ids for this event
- 		 */
--		ret = do_write(ff, evsel->id, evsel->ids * sizeof(u64));
-+		ret = do_write(ff, evsel->core.id, evsel->ids * sizeof(u64));
- 		if (ret < 0)
- 			return ret;
- 	}
-@@ -1590,7 +1590,7 @@ static void free_event_desc(struct evsel *events)
+ 	hlist_for_each_entry(sid, head, node)
+ 		if (sid->id == id)
+@@ -635,7 +631,7 @@ struct evsel *perf_evlist__event2evsel(struct evlist *evlist,
+ 		return first;
  
- 	for (evsel = events; evsel->core.attr.size; evsel++) {
- 		zfree(&evsel->name);
--		zfree(&evsel->id);
-+		zfree(&evsel->core.id);
- 	}
+ 	hash = hash_64(id, PERF_EVLIST__HLIST_BITS);
+-	head = &evlist->heads[hash];
++	head = &evlist->core.heads[hash];
  
- 	free(events);
-@@ -1657,7 +1657,7 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
- 		if (!id)
- 			goto error;
- 		evsel->ids = nr;
--		evsel->id = id;
-+		evsel->core.id = id;
+ 	hlist_for_each_entry(sid, head, node) {
+ 		if (sid->id == id)
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 4fcdf93eb19c..ad9c0ba57a91 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -48,12 +48,8 @@ enum bkw_mmap_state {
+ 	BKW_MMAP_EMPTY,
+ };
  
- 		for (j = 0 ; j < nr; j++) {
- 			if (do_read_u64(ff, id))
-@@ -1701,7 +1701,7 @@ static void print_event_desc(struct feat_fd *ff, FILE *fp)
- 
- 		if (evsel->ids) {
- 			fprintf(fp, ", id = {");
--			for (j = 0, id = evsel->id; j < evsel->ids; j++, id++) {
-+			for (j = 0, id = evsel->core.id; j < evsel->ids; j++, id++) {
- 				if (j)
- 					fputc(',', fp);
- 				fprintf(fp, " %"PRIu64, *id);
-@@ -3068,7 +3068,7 @@ int perf_session__write_header(struct perf_session *session,
- 
- 	evlist__for_each_entry(session->evlist, evsel) {
- 		evsel->id_offset = lseek(fd, 0, SEEK_CUR);
--		err = do_write(&ff, evsel->id, evsel->ids * sizeof(u64));
-+		err = do_write(&ff, evsel->core.id, evsel->ids * sizeof(u64));
- 		if (err < 0) {
- 			pr_debug("failed to write perf header\n");
- 			return err;
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 3888d4cd3ed1..c94360cd9c00 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -795,7 +795,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
--	id = evsel->id[0] + 1000000000;
-+	id = evsel->core.id[0] + 1000000000;
- 	if (!id)
- 		id = 1;
- 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index bcdc0359f7cf..24ca5d5908ca 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1705,7 +1705,7 @@ static int intel_pt_synth_pebs_sample(struct intel_pt_queue *ptq)
- 	struct intel_pt *pt = ptq->pt;
- 	struct evsel *evsel = pt->pebs_evsel;
- 	u64 sample_type = evsel->core.attr.sample_type;
--	u64 id = evsel->id[0];
-+	u64 id = evsel->core.id[0];
- 	u8 cpumode;
- 
- 	if (intel_pt_skip_event(pt))
-@@ -2720,7 +2720,7 @@ static void intel_pt_set_event_name(struct evlist *evlist, u64 id,
- 	struct evsel *evsel;
- 
- 	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->id && evsel->id[0] == id) {
-+		if (evsel->core.id && evsel->core.id[0] == id) {
- 			if (evsel->name)
- 				zfree(&evsel->name);
- 			evsel->name = strdup(name);
-@@ -2776,7 +2776,7 @@ static int intel_pt_synth_events(struct intel_pt *pt,
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
--	id = evsel->id[0] + 1000000000;
-+	id = evsel->core.id[0] + 1000000000;
- 	if (!id)
- 		id = 1;
- 
-@@ -2903,7 +2903,7 @@ static void intel_pt_setup_pebs_events(struct intel_pt *pt)
- 		return;
- 
- 	evlist__for_each_entry(pt->session->evlist, evsel) {
--		if (evsel->core.attr.aux_output && evsel->id) {
-+		if (evsel->core.attr.aux_output && evsel->core.id) {
- 			pt->sample_pebs = true;
- 			pt->pebs_evsel = evsel;
- 			return;
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 8322028a9a97..907ac3971959 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1442,7 +1442,7 @@ int perf_event__synthesize_id_index(struct perf_tool *tool, perf_event__handler_
- 
- 			e = &ev->id_index.entries[i++];
- 
--			e->id = evsel->id[j];
-+			e->id = evsel->core.id[j];
- 
- 			sid = perf_evlist__id2sid(evlist, e->id);
- 			if (!sid) {
-@@ -1515,7 +1515,7 @@ int perf_event__synthesize_event_update_unit(struct perf_tool *tool, struct evse
- 	struct perf_record_event_update *ev;
- 	int err;
- 
--	ev = event_update_event__new(size + 1, PERF_EVENT_UPDATE__UNIT, evsel->id[0]);
-+	ev = event_update_event__new(size + 1, PERF_EVENT_UPDATE__UNIT, evsel->core.id[0]);
- 	if (ev == NULL)
- 		return -ENOMEM;
- 
-@@ -1532,7 +1532,7 @@ int perf_event__synthesize_event_update_scale(struct perf_tool *tool, struct evs
- 	struct perf_record_event_update_scale *ev_data;
- 	int err;
- 
--	ev = event_update_event__new(sizeof(*ev_data), PERF_EVENT_UPDATE__SCALE, evsel->id[0]);
-+	ev = event_update_event__new(sizeof(*ev_data), PERF_EVENT_UPDATE__SCALE, evsel->core.id[0]);
- 	if (ev == NULL)
- 		return -ENOMEM;
- 
-@@ -1550,7 +1550,7 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
- 	size_t len = strlen(evsel->name);
- 	int err;
- 
--	ev = event_update_event__new(len + 1, PERF_EVENT_UPDATE__NAME, evsel->id[0]);
-+	ev = event_update_event__new(len + 1, PERF_EVENT_UPDATE__NAME, evsel->core.id[0]);
- 	if (ev == NULL)
- 		return -ENOMEM;
- 
-@@ -1578,7 +1578,7 @@ int perf_event__synthesize_event_update_cpus(struct perf_tool *tool, struct evse
- 	ev->header.type = PERF_RECORD_EVENT_UPDATE;
- 	ev->header.size = (u16)size;
- 	ev->type	= PERF_EVENT_UPDATE__CPUS;
--	ev->id		= evsel->id[0];
-+	ev->id		= evsel->core.id[0];
- 
- 	cpu_map_data__synthesize((struct perf_record_cpu_map_data *)ev->data,
- 				 evsel->core.own_cpus, type, max);
-@@ -1596,7 +1596,7 @@ int perf_event__synthesize_attrs(struct perf_tool *tool, struct evlist *evlist,
- 
- 	evlist__for_each_entry(evlist, evsel) {
- 		err = perf_event__synthesize_attr(tool, &evsel->core.attr, evsel->ids,
--						  evsel->id, process);
-+						  evsel->core.id, process);
- 		if (err) {
- 			pr_debug("failed to create perf header attribute\n");
- 			return err;
+-#define PERF_EVLIST__HLIST_BITS 8
+-#define PERF_EVLIST__HLIST_SIZE (1 << PERF_EVLIST__HLIST_BITS)
+-
+ struct evlist {
+ 	struct perf_evlist core;
+-	struct hlist_head heads[PERF_EVLIST__HLIST_SIZE];
+ 	int		 nr_groups;
+ 	bool		 enabled;
+ 	int		 id_pos;
 -- 
 2.21.0
