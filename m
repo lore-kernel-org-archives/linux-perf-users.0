@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 61/66] perf stat: Fix free memory access / memory leaks in metrics
-Date: Wed, 25 Sep 2019 21:32:39 -0300
-Message-ID: <20190926003244.13962-62-acme@kernel.org>
+Subject: [PATCH 63/66] perf vendor events: Remove P8 HW events which are not supported
+Date: Wed, 25 Sep 2019 21:32:41 -0300
+Message-ID: <20190926003244.13962-64-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,114 +9,70 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
 
-Make sure to not free the name passed in by the caller, but free all the
-allocated ids when parsing expressions.
+This patch is to remove following hardware events
+from JSON file which are not supported on POWER8.
 
-The loop at the end knows that the first entry shouldn't be freed, so
-make sure the caller name is the first entry.
+pm_l3_p0_grp_pump
+pm_l3_p0_lco_data
+pm_l3_p0_lco_no_data
+pm_l3_p0_lco_rty
 
-Fixes
+  Note: Unfortunately power8 event list is not publicly available.
 
-  % perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
-
-  valgrind:
-       1.009943231 ==21527== Invalid read of size 1
-  ==21527==    at 0x483CB74: strcmp (vg_replace_strmem.c:849)
-  ==21527==    by 0x582CF8: collect_all_aliases (stat-display.c:554)
-  ==21527==    by 0x582EB3: collect_data (stat-display.c:577)
-  ==21527==    by 0x583A32: print_counter_aggr (stat-display.c:806)
-  ==21527==    by 0x584FAD: perf_evlist__print_counters (stat-display.c:1200)
-  ==21527==    by 0x45133A: print_counters (builtin-stat.c:655)
-  ==21527==    by 0x450629: process_interval (builtin-stat.c:353)
-  ==21527==    by 0x450FBD: __run_perf_stat (builtin-stat.c:564)
-  ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
-  ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
-  ==21527==    by 0x4D557D: run_builtin (perf.c:310)
-  ==21527==    by 0x4D57EA: handle_internal_command (perf.c:362)
-  ==21527==  Address 0x12826cd0 is 0 bytes inside a block of size 25 free'd
-  ==21527==    at 0x4839A0C: free (vg_replace_malloc.c:540)
-  ==21527==    by 0x627041: __zfree (zalloc.c:13)
-  ==21527==    by 0x57F66A: generic_metric (stat-shadow.c:814)
-  ==21527==    by 0x580B21: perf_stat__print_shadow_stats (stat-shadow.c:1057)
-  ==21527==    by 0x58418E: print_metric_headers (stat-display.c:943)
-  ==21527==    by 0x5844BC: print_interval (stat-display.c:1004)
-  ==21527==    by 0x584DEB: perf_evlist__print_counters (stat-display.c:1172)
-  ==21527==    by 0x45133A: print_counters (builtin-stat.c:655)
-  ==21527==    by 0x450629: process_interval (builtin-stat.c:353)
-  ==21527==    by 0x450FBD: __run_perf_stat (builtin-stat.c:564)
-  ==21527==    by 0x451285: run_perf_stat (builtin-stat.c:636)
-  ==21527==    by 0x454619: cmd_stat (builtin-stat.c:1966)
-  ==21527==  Block was alloc'd at
-  ==21527==    at 0x483880B: malloc (vg_replace_malloc.c:309)
-  ==21527==    by 0x51677DE: strdup (in /usr/lib64/libc-2.29.so)
-  ==21527==    by 0x506457: parse_events_name (parse-events.c:1754)
-  ==21527==    by 0x5550BB: parse_events_parse (parse-events.y:214)
-  ==21527==    by 0x50694D: parse_events__scanner (parse-events.c:1887)
-  ==21527==    by 0x506AEF: parse_events (parse-events.c:1927)
-  ==21527==    by 0x521D8B: metricgroup__parse_groups (metricgroup.c:527)
-  ==21527==    by 0x45156F: parse_metric_groups (builtin-stat.c:721)
-  ==21527==    by 0x6228A9: get_value (parse-options.c:243)
-  ==21527==    by 0x62363F: parse_short_opt (parse-options.c:348)
-  ==21527==    by 0x62363F: parse_options_step (parse-options.c:536)
-  ==21527==    by 0x62363F: parse_options_subcommand (parse-options.c:651)
-  ==21527==    by 0x453C1D: cmd_stat (builtin-stat.c:1718)
-  ==21527==    by 0x4D557D: run_builtin (perf.c:310)
-
-and also a leak report.
-
-Committer testing:
-
-Before:
-
-  # perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
-  #           time      CPU_Utilization
-       1.000470810                      free(): double free detected in tcache 2
-  Aborted (core dumped)
-  #
-
-After:
-
-  # perf stat -M IpB,IpCall,IpTB,IPC,Retiring_SMT,Frontend_Bound_SMT,Kernel_Utilization,CPU_Utilization --metric-only -a -I 1000 sleep 2
-  #           time      CPU_Utilization
-       1.000494752                  0.1
-       2.001105112                  0.1
-  #
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: http://lore.kernel.org/lkml/20190923233339.25326-3-andi@firstfloor.org
+Fixes: c3b4d5c4afb0 ("perf vendor events: Remove P8 HW events which are not supported")
+Signed-off-by: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Acked-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20190909065624.11956.3992.stgit@localhost.localdomain
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../pmu-events/arch/powerpc/power8/other.json | 24 -------------------
+ 1 file changed, 24 deletions(-)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 70c87fdb2a43..2c41d47f6f83 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -738,6 +738,8 @@ static void generic_metric(struct perf_stat_config *config,
- 	char *n, *pn;
- 
- 	expr__ctx_init(&pctx);
-+	/* Must be first id entry */
-+	expr__add_id(&pctx, name, avg);
- 	for (i = 0; metric_events[i]; i++) {
- 		struct saved_value *v;
- 		struct stats *stats;
-@@ -776,8 +778,6 @@ static void generic_metric(struct perf_stat_config *config,
- 			expr__add_id(&pctx, n, avg_stats(stats)*scale);
- 	}
- 
--	expr__add_id(&pctx, name, avg);
--
- 	if (!metric_events[i]) {
- 		const char *p = metric_expr;
- 
+diff --git a/tools/perf/pmu-events/arch/powerpc/power8/other.json b/tools/perf/pmu-events/arch/powerpc/power8/other.json
+index 9dc2f6b70354..b2a3df07fbc4 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power8/other.json
++++ b/tools/perf/pmu-events/arch/powerpc/power8/other.json
+@@ -1775,30 +1775,6 @@
+     "BriefDescription": "L3 Load Prefetches",
+     "PublicDescription": ""
+   },
+-  {,
+-    "EventCode": "0xa29084",
+-    "EventName": "PM_L3_P0_GRP_PUMP",
+-    "BriefDescription": "L3 pf sent with grp scope port 0",
+-    "PublicDescription": ""
+-  },
+-  {,
+-    "EventCode": "0x528084",
+-    "EventName": "PM_L3_P0_LCO_DATA",
+-    "BriefDescription": "lco sent with data port 0",
+-    "PublicDescription": ""
+-  },
+-  {,
+-    "EventCode": "0x518080",
+-    "EventName": "PM_L3_P0_LCO_NO_DATA",
+-    "BriefDescription": "dataless l3 lco sent port 0",
+-    "PublicDescription": ""
+-  },
+-  {,
+-    "EventCode": "0xa4908c",
+-    "EventName": "PM_L3_P0_LCO_RTY",
+-    "BriefDescription": "L3 LCO received retry port 0",
+-    "PublicDescription": ""
+-  },
+   {,
+     "EventCode": "0x84908d",
+     "EventName": "PM_L3_PF0_ALLOC",
 -- 
 2.21.0
