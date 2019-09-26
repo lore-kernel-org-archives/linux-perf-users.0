@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 65/66] perf build: Add detection of java-11-openjdk-devel package
-Date: Wed, 25 Sep 2019 21:32:43 -0300
-Message-ID: <20190926003244.13962-66-acme@kernel.org>
+Subject: [PATCH 66/66] perf parser: Remove needless include directives
+Date: Wed, 25 Sep 2019 21:32:44 -0300
+Message-ID: <20190926003244.13962-67-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,59 +9,52 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190926003244.13962-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Andreas Krebbel <krebbel@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Hendrik Brueckner <brueckner@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-With Java 11 there is no seperate JRE anymore.
+They go on accumulating there like the debug.h one, that was introduced
+here:
 
-Details:
+  f23610245c1a ("perf list: Add debug support for outputing alias string")
 
-  https://coderanch.com/t/701603/java/JRE-JDK
+But then, when that need is removed via:
 
-Therefore the detection of the JRE needs to be adapted.
+  2073ad3326b7 ("perf tools: Factor out PMU matching in parser")
 
-This change works for s390 and x86.  I have not tested other platforms.
+The thing stays there, so continue the house cleaning spree...
 
-Committer testing:
+list.h not needed, no macros from there are used, and 'struct
+list_head' is in linux/types.h, ditto for util.h, no need for that as
+well.
 
-Continues to work with the OpenJDK 8:
-
-  $ rm -f ~acme/lib64/libperf-jvmti.so
-  $ rpm -qa | grep jdk-devel
-  java-1.8.0-openjdk-devel-1.8.0.222.b10-0.fc30.x86_64
-  $ git log --oneline -1
-  a51937170f33 (HEAD -> perf/core) perf build: Add detection of java-11-openjdk-devel package
-  $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf ; make -C tools/perf O=/tmp/build/perf install > /dev/null 2>1
-  $ ls -la ~acme/lib64/libperf-jvmti.so
-  -rwxr-xr-x. 1 acme acme 230744 Sep 24 16:46 /home/acme/lib64/libperf-jvmti.so
-  $
-
-Suggested-by: Andreas Krebbel <krebbel@linux.ibm.com>
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Hendrik Brueckner <brueckner@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20190909114116.50469-4-tmricht@linux.ibm.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-zkxr3mf6inun8m5mbnil4u0d@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/parse-events.y | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a269d78456b6..46f7fba2306c 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -924,7 +924,7 @@ ifndef NO_JVMTI
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-   else
-     ifneq (,$(wildcard /usr/sbin/alternatives))
--      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed 's%/jre/bin/java.%%g')
-+      JDIR=$(shell /usr/sbin/alternatives --display java | tail -1 | cut -d' ' -f 5 | sed -e 's%/jre/bin/java.%%g' -e 's%/bin/java.%%g')
-     endif
-   endif
-   ifndef JDIR
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 65809ad67808..48126ae4cd13 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -11,12 +11,9 @@
+ #include <fnmatch.h>
+ #include <stdio.h>
+ #include <linux/compiler.h>
+-#include <linux/list.h>
+ #include <linux/types.h>
+-#include "util.h"
+ #include "pmu.h"
+ #include "evsel.h"
+-#include "debug.h"
+ #include "parse-events.h"
+ #include "parse-events-bison.h"
+ 
 -- 
 2.21.0
