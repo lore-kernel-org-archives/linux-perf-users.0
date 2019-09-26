@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/66] perf tools: Rename perf_evlist__alloc_mmap() to evlist__alloc_mmap()
-Date: Wed, 25 Sep 2019 21:31:56 -0300
-Message-ID: <20190926003244.13962-19-acme@kernel.org>
+Subject: [PATCH 19/66] perf tools: Rename perf_evlist__exit() to evlist__exit()
+Date: Wed, 25 Sep 2019 21:31:57 -0300
+Message-ID: <20190926003244.13962-20-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,52 +14,69 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Rename perf_evlist__alloc_mmap() to evlist__alloc_mmap(), so we don't
-have a name clash when we add perf_evlist__alloc_mmap() to libperf.
+Rename perf_evlist__exit() to evlist__exit(), so we don't have a name
+clash when we add perf_evlist__exit() to libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: http://lore.kernel.org/lkml/20190913132355.21634-7-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20190913132355.21634-8-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/evlist.c | 4 ++--
+ tools/perf/util/evlist.h | 2 +-
+ tools/perf/util/python.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 888472c7bf9c..5bde2e5bf0e3 100644
+index 5bde2e5bf0e3..4c5b7040c02b 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -693,8 +693,8 @@ void evlist__munmap(struct evlist *evlist)
- 	zfree(&evlist->overwrite_mmap);
+@@ -137,7 +137,7 @@ static void perf_evlist__purge(struct evlist *evlist)
+ 	evlist->core.nr_entries = 0;
  }
  
--static struct mmap *perf_evlist__alloc_mmap(struct evlist *evlist,
--						 bool overwrite)
-+static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
-+				       bool overwrite)
+-void perf_evlist__exit(struct evlist *evlist)
++void evlist__exit(struct evlist *evlist)
  {
- 	int i;
- 	struct mmap *map;
-@@ -752,7 +752,7 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
- 			maps = evlist->overwrite_mmap;
+ 	zfree(&evlist->mmap);
+ 	zfree(&evlist->overwrite_mmap);
+@@ -156,7 +156,7 @@ void evlist__delete(struct evlist *evlist)
+ 	evlist->core.cpus = NULL;
+ 	evlist->core.threads = NULL;
+ 	perf_evlist__purge(evlist);
+-	perf_evlist__exit(evlist);
++	evlist__exit(evlist);
+ 	free(evlist);
+ }
  
- 			if (!maps) {
--				maps = perf_evlist__alloc_mmap(evlist, true);
-+				maps = evlist__alloc_mmap(evlist, true);
- 				if (!maps)
- 					return -1;
- 				evlist->overwrite_mmap = maps;
-@@ -1004,7 +1004,7 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 				  .comp_level = comp_level };
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index f07501602353..b33c5d67410a 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -65,7 +65,7 @@ struct evlist *perf_evlist__new_default(void);
+ struct evlist *perf_evlist__new_dummy(void);
+ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+ 		  struct perf_thread_map *threads);
+-void perf_evlist__exit(struct evlist *evlist);
++void evlist__exit(struct evlist *evlist);
+ void evlist__delete(struct evlist *evlist);
  
- 	if (!evlist->mmap)
--		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
-+		evlist->mmap = evlist__alloc_mmap(evlist, false);
- 	if (!evlist->mmap)
- 		return -ENOMEM;
+ void evlist__add(struct evlist *evlist, struct evsel *entry);
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index b102d174b868..60a6b6e8e176 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -884,7 +884,7 @@ static int pyrf_evlist__init(struct pyrf_evlist *pevlist,
+ 
+ static void pyrf_evlist__delete(struct pyrf_evlist *pevlist)
+ {
+-	perf_evlist__exit(&pevlist->evlist);
++	evlist__exit(&pevlist->evlist);
+ 	Py_TYPE(pevlist)->tp_free((PyObject*)pevlist);
+ }
  
 -- 
 2.21.0
