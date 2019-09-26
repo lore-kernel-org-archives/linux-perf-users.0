@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/66] libtraceevent: Man pages fix, changes in event printing APIs
-Date: Wed, 25 Sep 2019 21:31:48 -0300
-Message-ID: <20190926003244.13962-11-acme@kernel.org>
+Subject: [PATCH 11/66] libtraceevent: Add tep_get_event() in event-parse.h
+Date: Wed, 25 Sep 2019 21:31:49 -0300
+Message-ID: <20190926003244.13962-12-acme@kernel.org>
 References: <20190926003244.13962-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,10 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
 
-APIs for printing various trace event information were redesigned to be
-more simple. However, the main libtraceevent man page was not updated
-with those changes. The documentation is updated to describe the new
-event print API.
+The tep_get_event() function is an official libtracevent API, described
+in the library man pages. However, it cannot be used by the library users because
+it is not declared in the event-parse.h file, where all libtracevent APIs are.
+The function declaration is added in event-parse.h file.
 
 Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -25,57 +25,26 @@ Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/linux-trace-devel/20190808113636.13299-3-tz.stoyanov@gmail.com
-Link: http://lore.kernel.org/lkml/20190919212541.869643036@goodmis.org
+Link: http://lore.kernel.org/linux-trace-devel/20190808113721.13539-1-tz.stoyanov@gmail.com
+Link: http://lore.kernel.org/lkml/20190919212542.058025937@goodmis.org
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../lib/traceevent/Documentation/libtraceevent.txt  | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ tools/lib/traceevent/event-parse.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/lib/traceevent/Documentation/libtraceevent.txt b/tools/lib/traceevent/Documentation/libtraceevent.txt
-index 00519503c8de..d530a7ce8fb2 100644
---- a/tools/lib/traceevent/Documentation/libtraceevent.txt
-+++ b/tools/lib/traceevent/Documentation/libtraceevent.txt
-@@ -26,15 +26,12 @@ Management of tep handler data structure and access of its members:
- 	void *tep_set_long_size*(struct tep_handle pass:[*]_tep_, int _long_size_);
- 	int *tep_get_page_size*(struct tep_handle pass:[*]_tep_);
- 	void *tep_set_page_size*(struct tep_handle pass:[*]_tep_, int _page_size_);
--	bool *tep_is_latency_format*(struct tep_handle pass:[*]_tep_);
--	void *tep_set_latency_format*(struct tep_handle pass:[*]_tep_, int _lat_);
- 	int *tep_get_header_page_size*(struct tep_handle pass:[*]_tep_);
- 	int *tep_get_header_timestamp_size*(struct tep_handle pass:[*]_tep_);
- 	bool *tep_is_old_format*(struct tep_handle pass:[*]_tep_);
- 	int *tep_strerror*(struct tep_handle pass:[*]_tep_, enum tep_errno _errnum_, char pass:[*]_buf_, size_t _buflen_);
+diff --git a/tools/lib/traceevent/event-parse.h b/tools/lib/traceevent/event-parse.h
+index d438ee44289f..b77837f75a0d 100644
+--- a/tools/lib/traceevent/event-parse.h
++++ b/tools/lib/traceevent/event-parse.h
+@@ -441,6 +441,8 @@ int tep_register_print_string(struct tep_handle *tep, const char *fmt,
+ 			      unsigned long long addr);
+ bool tep_is_pid_registered(struct tep_handle *tep, int pid);
  
- Register / unregister APIs:
--	int *tep_register_trace_clock*(struct tep_handle pass:[*]_tep_, const char pass:[*]_trace_clock_);
- 	int *tep_register_function*(struct tep_handle pass:[*]_tep_, char pass:[*]_name_, unsigned long long _addr_, char pass:[*]_mod_);
- 	int *tep_register_event_handler*(struct tep_handle pass:[*]_tep_, int _id_, const char pass:[*]_sys_name_, const char pass:[*]_event_name_, tep_event_handler_func _func_, void pass:[*]_context_);
- 	int *tep_unregister_event_handler*(struct tep_handle pass:[*]tep, int id, const char pass:[*]sys_name, const char pass:[*]event_name, tep_event_handler_func func, void pass:[*]_context_);
-@@ -57,14 +54,7 @@ Event related APIs:
- 	int *tep_get_events_count*(struct tep_handle pass:[*]_tep_);
- 	struct tep_event pass:[*]pass:[*]*tep_list_events*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
- 	struct tep_event pass:[*]pass:[*]*tep_list_events_copy*(struct tep_handle pass:[*]_tep_, enum tep_event_sort_type _sort_type_);
--
--Event printing:
--	void *tep_print_event*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_record pass:[*]_record_, bool _use_trace_clock_);
--	void *tep_print_event_data*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]_record_);
--	void *tep_event_info*(struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]_record_);
--	void *tep_print_event_task*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]_record_);
--	void *tep_print_event_time*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_event pass:[*]_event_, struct tep_record pass:[*]record, bool _use_trace_clock_);
--	void *tep_set_print_raw*(struct tep_handle pass:[*]_tep_, int _print_raw_);
-+	void *tep_print_event*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_record pass:[*]_record_, const char pass:[*]_fmt_, _..._);
- 
- Event finding:
- 	struct tep_event pass:[*]*tep_find_event*(struct tep_handle pass:[*]_tep_, int _id_);
-@@ -116,7 +106,6 @@ Filter management:
- 	int *tep_filter_compare*(struct tep_event_filter pass:[*]_filter1_, struct tep_event_filter pass:[*]_filter2_);
- 
- Parsing various data from the records:
--	void *tep_data_latency_format*(struct tep_handle pass:[*]_tep_, struct trace_seq pass:[*]_s_, struct tep_record pass:[*]_record_);
- 	int *tep_data_type*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
- 	int *tep_data_pid*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
- 	int *tep_data_preempt_count*(struct tep_handle pass:[*]_tep_, struct tep_record pass:[*]_rec_);
++struct tep_event *tep_get_event(struct tep_handle *tep, int index);
++
+ #define TEP_PRINT_INFO		"INFO"
+ #define TEP_PRINT_INFO_RAW	"INFO_RAW"
+ #define TEP_PRINT_COMM		"COMM"
 -- 
 2.21.0
