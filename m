@@ -1,60 +1,35 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 57/66] perf evsel: Introduce evsel_fprintf.h
-Date: Thu, 26 Sep 2019 12:06:09 -0300
-Message-ID: <20190926150609.GA10129@kernel.org>
-References: <20190926003244.13962-1-acme@kernel.org>
- <20190926003244.13962-58-acme@kernel.org>
- <20190926111518.GC24257@krava>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH 1/2] perf vendor events s390: Add JSON transaction for machine type 8561
+Date: Fri, 27 Sep 2019 10:11:46 +0200
+Message-ID: <20190927081147.18345-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190926111518.GC24257@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: gor@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Sep 26, 2019 at 01:15:18PM +0200, Jiri Olsa escreveu:
-> On Wed, Sep 25, 2019 at 09:32:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > We already had evsel_fprintf.c, add its counterpart, so that we can
-> > reduce evsel.h a bit more.
-> > 
-> > We needed a new perf_event_attr_fprintf.c file so as to have a separate
-> > object to link with the python binding in tools/perf/util/python-ext-sources
-> > and not drag symbol_conf, etc into the python binding.
-> > 
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Link: https://lkml.kernel.org/n/tip-06bdmt1062d9unzgqmxwlv88@git.kernel.org
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/builtin-evlist.c               |   1 +
-> >  tools/perf/builtin-sched.c                |   1 +
-> >  tools/perf/builtin-script.c               |   1 +
-> >  tools/perf/builtin-trace.c                |   2 +
-> >  tools/perf/util/Build                     |   1 +
-> >  tools/perf/util/evsel.c                   | 153 +---------------------
-> >  tools/perf/util/evsel.h                   |  51 +-------
-> >  tools/perf/util/evsel_fprintf.c           |   1 +
-> >  tools/perf/util/evsel_fprintf.h           |  50 +++++++
-> >  tools/perf/util/header.c                  |   1 +
-> >  tools/perf/util/perf_event_attr_fprintf.c | 148 +++++++++++++++++++++
-> >  tools/perf/util/python-ext-sources        |   1 +
-> >  12 files changed, 218 insertions(+), 193 deletions(-)
-> >  create mode 100644 tools/perf/util/evsel_fprintf.h
-> >  create mode 100644 tools/perf/util/perf_event_attr_fprintf.c
-> 
-> hum, I see this file in this patch, but not when I checkout yours perf/core
+Add s390 transaction counter definition for machine 8561. This
+is the same file as for the predecessor machine.
 
-I made a mistake and had to force push it, it went on the signed tag to
-Ingo, so what made upstream is sane, now what is in my perf/core branch
-should be as well:
+Fixes: 6e67d77d673d7 ("perf vendor events s390: Add JSON files for machine type 8561")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json | 7 +++++++
+ 1 file changed, 7 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json
 
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evsel_fprintf.h?h=perf/core
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/perf_event_attr_fprintf.c?h=perf/core
-
-- Arnaldo
+diff --git a/tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json b/tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json
+new file mode 100644
+index 000000000000..1a0034f79f73
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/s390/cf_m8561/transaction.json
+@@ -0,0 +1,7 @@
++[
++  {
++    "BriefDescription": "Transaction count",
++    "MetricName": "transaction",
++    "MetricExpr": "TX_C_TEND + TX_NC_TEND + TX_NC_TABORT + TX_C_TABORT_SPECIAL + TX_C_TABORT_NO_SPECIAL"
++  }
++]
+-- 
+2.19.1
