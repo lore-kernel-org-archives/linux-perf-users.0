@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/24] perf docs: Correct and clarify jitdump spec
-Date: Tue,  1 Oct 2019 08:12:06 -0300
-Message-ID: <20191001111216.7208-15-acme@kernel.org>
+Subject: [PATCH 15/24] perf script brstackinsn: Fix recovery from LBR/binary mismatch
+Date: Tue,  1 Oct 2019 08:12:07 -0300
+Message-ID: <20191001111216.7208-16-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,58 +9,74 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Steve MacLean <Steve.MacLean@microsoft.com>, Steve MacLean <Steve.MacLean@Microsoft.com>, Stephane Eranian <eranian@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Brian Robbins <brianrob@microsoft.com>, Davidlohr Bueso <dave@stgolabs.net>, Eric Saint-Etienne <eric.saint.etienne@oracle.com>, Jiri Olsa <jolsa@redhat.com>, John Keeping <john@metanate.com>, John Salem <josalem@microsoft.com>, Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Tom
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Steve MacLean <Steve.MacLean@microsoft.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-Specification claims latest version of jitdump file format is 2. Current
-jit dump reading code treats 1 as the latest version.
+When the LBR data and the instructions in a binary do not match the loop
+printing instructions could get confused and print a long stream of
+bogus <bad> instructions.
 
-Correct spec to match code.
+The problem was that if the instruction decoder cannot decode an
+instruction it ilen wasn't initialized, so the loop going through the
+basic block would continue with the previous value.
 
-The original language made it unclear the value to be written in the
-magic field.
+Harden the code to avoid such problems:
 
-Revise language that the writer always writes the same value. Specify
-that the reader uses the value to detect endian mismatches.
+- Make sure ilen is always freshly initialized and is 0 for bad
+  instructions.
 
-Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
-Acked-by: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Brian Robbins <brianrob@microsoft.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Keeping <john@metanate.com>
-Cc: John Salem <josalem@microsoft.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
-Link: http://lore.kernel.org/lkml/BN8PR21MB1362F63CDE7AC69736FC7F9EF7800@BN8PR21MB1362.namprd21.prod.outlook.com
+- Do not overrun the code buffer while printing instructions
+
+- Print a warning message if the final jump is not on an instruction
+  boundary.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20190927233546.11533-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/jitdump-specification.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-script.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/jitdump-specification.txt b/tools/perf/Documentation/jitdump-specification.txt
-index 4c62b0713651..52152d156ad9 100644
---- a/tools/perf/Documentation/jitdump-specification.txt
-+++ b/tools/perf/Documentation/jitdump-specification.txt
-@@ -36,8 +36,8 @@ III/ Jitdump file header format
- Each jitdump file starts with a fixed size header containing the following fields in order:
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 286fc70d7402..67be8d31afab 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1063,7 +1063,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 			continue;
  
+ 		insn = 0;
+-		for (off = 0;; off += ilen) {
++		for (off = 0; off < (unsigned)len; off += ilen) {
+ 			uint64_t ip = start + off;
  
--* uint32_t magic     : a magic number tagging the file type. The value is 4-byte long and represents the string "JiTD" in ASCII form. It is 0x4A695444 or 0x4454694a depending on the endianness. The field can be used to detect the endianness of the file
--* uint32_t version   : a 4-byte value representing the format version. It is currently set to 2
-+* uint32_t magic     : a magic number tagging the file type. The value is 4-byte long and represents the string "JiTD" in ASCII form. It written is as 0x4A695444. The reader will detect an endian mismatch when it reads 0x4454694a.
-+* uint32_t version   : a 4-byte value representing the format version. It is currently set to 1
- * uint32_t total_size: size in bytes of file header
- * uint32_t elf_mach  : ELF architecture encoding (ELF e_machine value as specified in /usr/include/elf.h)
- * uint32_t pad1      : padding. Reserved for future use
+ 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+@@ -1074,6 +1074,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 					printed += print_srccode(thread, x.cpumode, ip);
+ 				break;
+ 			} else {
++				ilen = 0;
+ 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
+ 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
+ 				if (ilen == 0)
+@@ -1083,6 +1084,8 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 				insn++;
+ 			}
+ 		}
++		if (off != (unsigned)len)
++			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+ 	}
+ 
+ 	/*
+@@ -1123,6 +1126,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 		goto out;
+ 	}
+ 	for (off = 0; off <= end - start; off += ilen) {
++		ilen = 0;
+ 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
+ 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
+ 		if (ilen == 0)
 -- 
 2.21.0
