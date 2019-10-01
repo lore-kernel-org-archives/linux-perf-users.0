@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/24] tools headers kvm: Sync kvm headers with the kernel sources
-Date: Tue,  1 Oct 2019 08:12:00 -0300
-Message-ID: <20191001111216.7208-9-acme@kernel.org>
+Subject: [PATCH 09/24] perf llvm: Don't access out-of-scope array
+Date: Tue,  1 Oct 2019 08:12:01 -0300
+Message-ID: <20191001111216.7208-10-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,139 +9,56 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Janosch Frank <frankja@linux.ibm.com>, Liran Alon <liran.alon@oracle.com>, Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>, Thomas Huth <thuth@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, stable@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Wang Nan <wangnan0@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Ian Rogers <irogers@google.com>
 
-To pick the changes in:
+The 'test_dir' variable is assigned to the 'release' array which is
+out-of-scope 3 lines later.
 
-  200824f55eef ("KVM: s390: Disallow invalid bits in kvm_valid_regs and kvm_dirty_regs")
-  4a53d99dd0c2 ("KVM: VMX: Introduce exit reason for receiving INIT signal on guest-mode")
-  7396d337cfad ("KVM: x86: Return to userspace with internal error on unexpected exit reason")
-  92f35b751c71 ("KVM: arm/arm64: vgic: Allow more than 256 vcpus for KVM_IRQ_LINE")
+Extend the scope of the 'release' array so that an out-of-scope array
+isn't accessed.
 
-None of them trigger any changes in tooling, this time this is just to silence
-these perf build warnings:
+Bug detected by clang's address sanitizer.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
-  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h' differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
-  diff -u tools/arch/x86/include/uapi/asm/vmx.h arch/x86/include/uapi/asm/vmx.h
-  Warning: Kernel ABI header at 'tools/arch/s390/include/uapi/asm/kvm.h' differs from latest version at 'arch/s390/include/uapi/asm/kvm.h'
-  diff -u tools/arch/s390/include/uapi/asm/kvm.h arch/s390/include/uapi/asm/kvm.h
-  Warning: Kernel ABI header at 'tools/arch/arm/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm/include/uapi/asm/kvm.h'
-  diff -u tools/arch/arm/include/uapi/asm/kvm.h arch/arm/include/uapi/asm/kvm.h
-  Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
-  diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi/asm/kvm.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Liran Alon <liran.alon@oracle.com>
-Cc: Marc Zyngier <maz@kernel.org>
+Fixes: 07bc5c699a3d ("perf tools: Make fetch_kernel_version() publicly available")
+Cc: stable@vger.kernel.org # v4.4+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Thomas Huth <thuth@redhat.com>
-Link: https://lkml.kernel.org/n/tip-akuugvvjxte26kzv23zp5d2z@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lore.kernel.org/lkml/20190926220018.25402-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm/include/uapi/asm/kvm.h   | 4 +++-
- tools/arch/arm64/include/uapi/asm/kvm.h | 4 +++-
- tools/arch/s390/include/uapi/asm/kvm.h  | 6 ++++++
- tools/arch/x86/include/uapi/asm/vmx.h   | 2 ++
- tools/include/uapi/linux/kvm.h          | 3 +++
- 5 files changed, 17 insertions(+), 2 deletions(-)
+ tools/perf/util/llvm-utils.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/arch/arm/include/uapi/asm/kvm.h b/tools/arch/arm/include/uapi/asm/kvm.h
-index a4217c1a5d01..2769360f195c 100644
---- a/tools/arch/arm/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm/include/uapi/asm/kvm.h
-@@ -266,8 +266,10 @@ struct kvm_vcpu_events {
- #define   KVM_DEV_ARM_ITS_CTRL_RESET		4
+diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+index 8d04e3d070b1..8b14e4a7f1dc 100644
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -233,14 +233,14 @@ static int detect_kbuild_dir(char **kbuild_dir)
+ 	const char *prefix_dir = "";
+ 	const char *suffix_dir = "";
  
- /* KVM_IRQ_LINE irq field index values */
-+#define KVM_ARM_IRQ_VCPU2_SHIFT		28
-+#define KVM_ARM_IRQ_VCPU2_MASK		0xf
- #define KVM_ARM_IRQ_TYPE_SHIFT		24
--#define KVM_ARM_IRQ_TYPE_MASK		0xff
-+#define KVM_ARM_IRQ_TYPE_MASK		0xf
- #define KVM_ARM_IRQ_VCPU_SHIFT		16
- #define KVM_ARM_IRQ_VCPU_MASK		0xff
- #define KVM_ARM_IRQ_NUM_SHIFT		0
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index 9a507716ae2f..67c21f9bdbad 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -325,8 +325,10 @@ struct kvm_vcpu_events {
- #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
- 
- /* KVM_IRQ_LINE irq field index values */
-+#define KVM_ARM_IRQ_VCPU2_SHIFT		28
-+#define KVM_ARM_IRQ_VCPU2_MASK		0xf
- #define KVM_ARM_IRQ_TYPE_SHIFT		24
--#define KVM_ARM_IRQ_TYPE_MASK		0xff
-+#define KVM_ARM_IRQ_TYPE_MASK		0xf
- #define KVM_ARM_IRQ_VCPU_SHIFT		16
- #define KVM_ARM_IRQ_VCPU_MASK		0xff
- #define KVM_ARM_IRQ_NUM_SHIFT		0
-diff --git a/tools/arch/s390/include/uapi/asm/kvm.h b/tools/arch/s390/include/uapi/asm/kvm.h
-index 47104e5b47fd..436ec7636927 100644
---- a/tools/arch/s390/include/uapi/asm/kvm.h
-+++ b/tools/arch/s390/include/uapi/asm/kvm.h
-@@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
- #define KVM_SYNC_GSCB   (1UL << 9)
- #define KVM_SYNC_BPBC   (1UL << 10)
- #define KVM_SYNC_ETOKEN (1UL << 11)
++	/* _UTSNAME_LENGTH is 65 */
++	char release[128];
 +
-+#define KVM_SYNC_S390_VALID_FIELDS \
-+	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
-+	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
-+	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
-+
- /* length and alignment of the sdnx as a power of two */
- #define SDNXC 8
- #define SDNXL (1UL << SDNXC)
-diff --git a/tools/arch/x86/include/uapi/asm/vmx.h b/tools/arch/x86/include/uapi/asm/vmx.h
-index f0b0c90dd398..f01950aa7fae 100644
---- a/tools/arch/x86/include/uapi/asm/vmx.h
-+++ b/tools/arch/x86/include/uapi/asm/vmx.h
-@@ -31,6 +31,7 @@
- #define EXIT_REASON_EXCEPTION_NMI       0
- #define EXIT_REASON_EXTERNAL_INTERRUPT  1
- #define EXIT_REASON_TRIPLE_FAULT        2
-+#define EXIT_REASON_INIT_SIGNAL			3
+ 	char *autoconf_path;
  
- #define EXIT_REASON_PENDING_INTERRUPT   7
- #define EXIT_REASON_NMI_WINDOW          8
-@@ -90,6 +91,7 @@
- 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
- 	{ EXIT_REASON_EXTERNAL_INTERRUPT,    "EXTERNAL_INTERRUPT" }, \
- 	{ EXIT_REASON_TRIPLE_FAULT,          "TRIPLE_FAULT" }, \
-+	{ EXIT_REASON_INIT_SIGNAL,           "INIT_SIGNAL" }, \
- 	{ EXIT_REASON_PENDING_INTERRUPT,     "PENDING_INTERRUPT" }, \
- 	{ EXIT_REASON_NMI_WINDOW,            "NMI_WINDOW" }, \
- 	{ EXIT_REASON_TASK_SWITCH,           "TASK_SWITCH" }, \
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 5e3f12d5359e..233efbb1c81c 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -243,6 +243,8 @@ struct kvm_hyperv_exit {
- #define KVM_INTERNAL_ERROR_SIMUL_EX	2
- /* Encounter unexpected vm-exit due to delivery event. */
- #define KVM_INTERNAL_ERROR_DELIVERY_EV	3
-+/* Encounter unexpected vm-exit reason */
-+#define KVM_INTERNAL_ERROR_UNEXPECTED_EXIT_REASON	4
+ 	int err;
  
- /* for KVM_RUN, returned by mmap(vcpu_fd, offset=0) */
- struct kvm_run {
-@@ -996,6 +998,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
- #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
- #define KVM_CAP_PMU_EVENT_FILTER 173
-+#define KVM_CAP_ARM_IRQ_LINE_LAYOUT_2 174
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
+ 	if (!test_dir) {
+-		/* _UTSNAME_LENGTH is 65 */
+-		char release[128];
+-
+ 		err = fetch_kernel_version(NULL, release,
+ 					   sizeof(release));
+ 		if (err)
 -- 
 2.21.0
