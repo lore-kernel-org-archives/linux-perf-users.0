@@ -1,50 +1,112 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/24] tools headers uapi: Sync drm/i915_drm.h with the kernel sources
-Date: Tue,  1 Oct 2019 08:11:56 -0300
-Message-ID: <20191001111216.7208-5-acme@kernel.org>
+Subject: [PATCH 06/24] tools headers uapi: Sync linux/usbdevice_fs.h with the kernel sources
+Date: Tue,  1 Oct 2019 08:11:58 -0300
+Message-ID: <20191001111216.7208-7-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Alan Stern <stern@rowland.harvard.edu>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick the change in:
+To pick up the changes from:
 
-  bf73fc0fa9cf ("drm/i915: Show support for accurate sw PMU busyness tracking")
+  4ed3350539aa ("USB: usbfs: Add a capability flag for runtime suspend")
+  7794f486ed0b ("usbfs: Add ioctls for runtime power management")
 
-That don't result in any changes in tooling, just silences this perf
-build warning:
+This triggers these changes in the kernel sources, automagically
+supporting these new ioctls in the 'perf trace' beautifiers.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/drm/i915_drm.h' differs from latest version at 'include/uapi/drm/i915_drm.h'
-  diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
+Soon this will be used in things like filter expressions for tracepoints
+in 'perf record', 'perf trace', 'perf top', i.e. filter expressions will
+do a lookup to turn things like USBDEVFS_WAIT_FOR_RESUME into _IO('U',
+35) before associating the tracepoint expression to tracepoint perf
+event.
 
+  $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > before
+  $ cp include/uapi/linux/usbdevice_fs.h tools/include/uapi/linux/usbdevice_fs.h
+  $ git diff
+  diff --git a/tools/include/uapi/linux/usbdevice_fs.h b/tools/include/uapi/linux/usbdevice_fs.h
+  index 78efe870c2b7..cf525cddeb94 100644
+  --- a/tools/include/uapi/linux/usbdevice_fs.h
+  +++ b/tools/include/uapi/linux/usbdevice_fs.h
+  @@ -158,6 +158,7 @@ struct usbdevfs_hub_portinfo {
+   #define USBDEVFS_CAP_MMAP                      0x20
+   #define USBDEVFS_CAP_DROP_PRIVILEGES           0x40
+   #define USBDEVFS_CAP_CONNINFO_EX               0x80
+  +#define USBDEVFS_CAP_SUSPEND                   0x100
+
+   /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
+
+  @@ -223,5 +224,8 @@ struct usbdevfs_streams {
+    * extending size of the data returned.
+    */
+   #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
+  +#define USBDEVFS_FORBID_SUSPEND    _IO('U', 33)
+  +#define USBDEVFS_ALLOW_SUSPEND     _IO('U', 34)
+  +#define USBDEVFS_WAIT_FOR_RESUME   _IO('U', 35)
+
+   #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
+  $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > after
+  $ diff -u before after
+  --- before	2019-09-27 11:41:50.634867620 -0300
+  +++ after	2019-09-27 11:42:07.453102978 -0300
+  @@ -24,6 +24,9 @@
+   	[30] = "DROP_PRIVILEGES",
+   	[31] = "GET_SPEED",
+   	[32] = "CONNINFO_EX",
+  +	[33] = "FORBID_SUSPEND",
+  +	[34] = "ALLOW_SUSPEND",
+  +	[35] = "WAIT_FOR_RESUME",
+   	[3] = "RESETEP",
+   	[4] = "SETINTERFACE",
+   	[5] = "SETCONFIGURATION",
+  $
+
+This addresses the following perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/usbdevice_fs.h' differs from latest version at 'include/uapi/linux/usbdevice_fs.h'
+  diff -u tools/include/uapi/linux/usbdevice_fs.h include/uapi/linux/usbdevice_fs.h
+
+Cc: Alan Stern <stern@rowland.harvard.edu>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-o651nt7vpz93tu3nmx4f3xql@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-x1rb109b9nfi7pukota82xhj@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/drm/i915_drm.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/include/uapi/linux/usbdevice_fs.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/include/uapi/drm/i915_drm.h b/tools/include/uapi/drm/i915_drm.h
-index 328d05e77d9f..469dc512cca3 100644
---- a/tools/include/uapi/drm/i915_drm.h
-+++ b/tools/include/uapi/drm/i915_drm.h
-@@ -521,6 +521,7 @@ typedef struct drm_i915_irq_wait {
- #define   I915_SCHEDULER_CAP_PRIORITY	(1ul << 1)
- #define   I915_SCHEDULER_CAP_PREEMPTION	(1ul << 2)
- #define   I915_SCHEDULER_CAP_SEMAPHORES	(1ul << 3)
-+#define   I915_SCHEDULER_CAP_ENGINE_BUSY_STATS	(1ul << 4)
+diff --git a/tools/include/uapi/linux/usbdevice_fs.h b/tools/include/uapi/linux/usbdevice_fs.h
+index 78efe870c2b7..cf525cddeb94 100644
+--- a/tools/include/uapi/linux/usbdevice_fs.h
++++ b/tools/include/uapi/linux/usbdevice_fs.h
+@@ -158,6 +158,7 @@ struct usbdevfs_hub_portinfo {
+ #define USBDEVFS_CAP_MMAP			0x20
+ #define USBDEVFS_CAP_DROP_PRIVILEGES		0x40
+ #define USBDEVFS_CAP_CONNINFO_EX		0x80
++#define USBDEVFS_CAP_SUSPEND			0x100
  
- #define I915_PARAM_HUC_STATUS		 42
+ /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
  
+@@ -223,5 +224,8 @@ struct usbdevfs_streams {
+  * extending size of the data returned.
+  */
+ #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
++#define USBDEVFS_FORBID_SUSPEND    _IO('U', 33)
++#define USBDEVFS_ALLOW_SUSPEND     _IO('U', 34)
++#define USBDEVFS_WAIT_FOR_RESUME   _IO('U', 35)
+ 
+ #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
 -- 
 2.21.0
