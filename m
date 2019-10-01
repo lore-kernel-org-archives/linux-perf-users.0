@@ -1,57 +1,77 @@
-From: Eric Biggers <ebiggers@google.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Subject: Re: [PATCH 07/24] tools headers uapi: Sync linux/fs.h with the
  kernel sources
-Date: Tue, 1 Oct 2019 11:45:21 -0700
-Message-ID: <20191001184521.GA15756@google.com>
+Date: Tue, 1 Oct 2019 15:57:41 -0300
+Message-ID: <20191001185741.GD13904@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
  <20191001111216.7208-8-acme@kernel.org>
+ <20191001184521.GA15756@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191001111216.7208-8-acme@kernel.org>
+In-Reply-To: <20191001184521.GA15756@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Oct 01, 2019 at 08:11:59AM -0300, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Em Tue, Oct 01, 2019 at 11:45:21AM -0700, Eric Biggers escreveu:
+> On Tue, Oct 01, 2019 at 08:11:59AM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > To pick the changes from:
+> > 
+> >   78a1b96bcf7a ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS ioctl")
+> >   23c688b54016 ("fscrypt: allow unprivileged users to add/remove keys for v2 policies")
+> >   5dae460c2292 ("fscrypt: v2 encryption policy support")
+> >   5a7e29924dac ("fscrypt: add FS_IOC_GET_ENCRYPTION_KEY_STATUS ioctl")
+> >   b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
+> >   22d94f493bfb ("fscrypt: add FS_IOC_ADD_ENCRYPTION_KEY ioctl")
+> >   3b6df59bc4d2 ("fscrypt: use FSCRYPT_* definitions, not FS_*")
+> >   2336d0deb2d4 ("fscrypt: use FSCRYPT_ prefix for uapi constants")
+> >   7af0ab0d3aab ("fs, fscrypt: move uapi definitions to new header <linux/fscrypt.h>")
+> > 
+> > That don't trigger any changes in tooling, as it so far is used only
+> > for:
+> > 
+> >   $ grep -l 'fs\.h' tools/perf/trace/beauty/*.sh | xargs grep regex=
+> >   tools/perf/trace/beauty/rename_flags.sh:regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+RENAME_([[:alnum:]_]+)[[:space:]]+\(1[[:space:]]*<<[[:space:]]*([[:xdigit:]]+)[[:space:]]*\)[[:space:]]*.*'
+> >   tools/perf/trace/beauty/sync_file_range.sh:regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+SYNC_FILE_RANGE_([[:alnum:]_]+)[[:space:]]+([[:xdigit:]]+)[[:space:]]*.*'
+> >   tools/perf/trace/beauty/usbdevfs_ioctl.sh:regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)(\(\w+\))?[[:space:]]+_IO[CWR]{0,2}\([[:space:]]*(_IOC_\w+,[[:space:]]*)?'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
+> >   tools/perf/trace/beauty/usbdevfs_ioctl.sh:regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
+> >   $
+> > 
+> > This silences this perf build warning:
+> > 
+> >   Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
+> >   diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Eric Biggers <ebiggers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Link: https://lkml.kernel.org/n/tip-44g48exl9br9ba0t64chqb4i@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> To pick the changes from:
-> 
->   78a1b96bcf7a ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS ioctl")
->   23c688b54016 ("fscrypt: allow unprivileged users to add/remove keys for v2 policies")
->   5dae460c2292 ("fscrypt: v2 encryption policy support")
->   5a7e29924dac ("fscrypt: add FS_IOC_GET_ENCRYPTION_KEY_STATUS ioctl")
->   b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
->   22d94f493bfb ("fscrypt: add FS_IOC_ADD_ENCRYPTION_KEY ioctl")
->   3b6df59bc4d2 ("fscrypt: use FSCRYPT_* definitions, not FS_*")
->   2336d0deb2d4 ("fscrypt: use FSCRYPT_ prefix for uapi constants")
->   7af0ab0d3aab ("fs, fscrypt: move uapi definitions to new header <linux/fscrypt.h>")
-> 
-> That don't trigger any changes in tooling, as it so far is used only
-> for:
-> 
->   $ grep -l 'fs\.h' tools/perf/trace/beauty/*.sh | xargs grep regex=
->   tools/perf/trace/beauty/rename_flags.sh:regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+RENAME_([[:alnum:]_]+)[[:space:]]+\(1[[:space:]]*<<[[:space:]]*([[:xdigit:]]+)[[:space:]]*\)[[:space:]]*.*'
->   tools/perf/trace/beauty/sync_file_range.sh:regex='^[[:space:]]*#[[:space:]]*define[[:space:]]+SYNC_FILE_RANGE_([[:alnum:]_]+)[[:space:]]+([[:xdigit:]]+)[[:space:]]*.*'
->   tools/perf/trace/beauty/usbdevfs_ioctl.sh:regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)(\(\w+\))?[[:space:]]+_IO[CWR]{0,2}\([[:space:]]*(_IOC_\w+,[[:space:]]*)?'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
->   tools/perf/trace/beauty/usbdevfs_ioctl.sh:regex="^#[[:space:]]*define[[:space:]]+USBDEVFS_(\w+)[[:space:]]+_IO[WR]{0,2}\([[:space:]]*'U'[[:space:]]*,[[:space:]]*([[:digit:]]+).*"
->   $
-> 
-> This silences this perf build warning:
-> 
->   Warning: Kernel ABI header at 'tools/include/uapi/linux/fs.h' differs from latest version at 'include/uapi/linux/fs.h'
->   diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
-> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Eric Biggers <ebiggers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-44g48exl9br9ba0t64chqb4i@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> What's the reason why you don't just use the include/uapi/ headers directly?
 
-What's the reason why you don't just use the include/uapi/ headers directly?
+We can't use anything from outside tools/perf/ to build it, sometimes
+things get changed by kernel developers and tooling breaks.
 
-- Eric
+Another reason is that we want to be able to do:
+
+[acme@quaco perf]$ make help | grep perf
+  perf-tar-src-pkg    - Build perf-5.3.0.tar source tarball
+  perf-targz-src-pkg  - Build perf-5.3.0.tar.gz source tarball
+  perf-tarbz2-src-pkg - Build perf-5.3.0.tar.bz2 source tarball
+  perf-tarxz-src-pkg  - Build perf-5.3.0.tar.xz source tarball
+[acme@quaco perf]$
+
+Take that tarball, transfer it to an older system and still have it
+building and working.
+
+We also use the build warnings as hints that something needs to be
+changed in tooling to pick up new kernel features, such as new ioctls,
+syscall arguments to handle in 'perf trace', etc.
+
+- Arnaldo
