@@ -1,112 +1,88 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/24] perf annotate: Don't return -1 for error when doing BPF disassembly
-Date: Tue,  1 Oct 2019 08:12:16 -0300
-Message-ID: <20191001111216.7208-25-acme@kernel.org>
-References: <20191001111216.7208-1-acme@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH 06/24] tools headers uapi: Sync linux/usbdevice_fs.h with
+ the kernel sources
+Date: Tue, 1 Oct 2019 09:59:55 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1910010957340.1991-100000@iolanthe.rowland.org>
+References: <20191001111216.7208-7-acme@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
+In-Reply-To: <20191001111216.7208-7-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Russell King - ARM Linux admin <linux@armlinux.org.uk>, Song Liu <songliubraving@fb.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, 1 Oct 2019, Arnaldo Carvalho de Melo wrote:
 
-Return errno when open_memstream() fails and add two new speciall error
-codes for when an invalid, non BPF file or one without BTF is passed to
-symbol__disassemble_bpf(), so that its callers can rely on
-symbol__strerror_disassemble() to convert that to a human readable error
-message that can help figure out what is wrong, with hints even.
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> To pick up the changes from:
+> 
+>   4ed3350539aa ("USB: usbfs: Add a capability flag for runtime suspend")
+>   7794f486ed0b ("usbfs: Add ioctls for runtime power management")
+> 
+> This triggers these changes in the kernel sources, automagically
+> supporting these new ioctls in the 'perf trace' beautifiers.
+> 
+> Soon this will be used in things like filter expressions for tracepoints
+> in 'perf record', 'perf trace', 'perf top', i.e. filter expressions will
+> do a lookup to turn things like USBDEVFS_WAIT_FOR_RESUME into _IO('U',
+> 35) before associating the tracepoint expression to tracepoint perf
+> event.
+> 
+>   $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > before
+>   $ cp include/uapi/linux/usbdevice_fs.h tools/include/uapi/linux/usbdevice_fs.h
+>   $ git diff
+>   diff --git a/tools/include/uapi/linux/usbdevice_fs.h b/tools/include/uapi/linux/usbdevice_fs.h
+>   index 78efe870c2b7..cf525cddeb94 100644
+>   --- a/tools/include/uapi/linux/usbdevice_fs.h
+>   +++ b/tools/include/uapi/linux/usbdevice_fs.h
+>   @@ -158,6 +158,7 @@ struct usbdevfs_hub_portinfo {
+>    #define USBDEVFS_CAP_MMAP                      0x20
+>    #define USBDEVFS_CAP_DROP_PRIVILEGES           0x40
+>    #define USBDEVFS_CAP_CONNINFO_EX               0x80
+>   +#define USBDEVFS_CAP_SUSPEND                   0x100
+> 
+>    /* USBDEVFS_DISCONNECT_CLAIM flags & struct */
+> 
+>   @@ -223,5 +224,8 @@ struct usbdevfs_streams {
+>     * extending size of the data returned.
+>     */
+>    #define USBDEVFS_CONNINFO_EX(len)  _IOC(_IOC_READ, 'U', 32, len)
+>   +#define USBDEVFS_FORBID_SUSPEND    _IO('U', 33)
+>   +#define USBDEVFS_ALLOW_SUSPEND     _IO('U', 34)
+>   +#define USBDEVFS_WAIT_FOR_RESUME   _IO('U', 35)
+> 
+>    #endif /* _UAPI_LINUX_USBDEVICE_FS_H */
+>   $ tools/perf/trace/beauty/usbdevfs_ioctl.sh  > after
+>   $ diff -u before after
+>   --- before	2019-09-27 11:41:50.634867620 -0300
+>   +++ after	2019-09-27 11:42:07.453102978 -0300
+>   @@ -24,6 +24,9 @@
+>    	[30] = "DROP_PRIVILEGES",
+>    	[31] = "GET_SPEED",
+>    	[32] = "CONNINFO_EX",
+>   +	[33] = "FORBID_SUSPEND",
+>   +	[34] = "ALLOW_SUSPEND",
+>   +	[35] = "WAIT_FOR_RESUME",
+>    	[3] = "RESETEP",
+>    	[4] = "SETINTERFACE",
+>    	[5] = "SETCONFIGURATION",
+>   $
+> 
+> This addresses the following perf build warning:
+> 
+>   Warning: Kernel ABI header at 'tools/include/uapi/linux/usbdevice_fs.h' differs from latest version at 'include/uapi/linux/usbdevice_fs.h'
+>   diff -u tools/include/uapi/linux/usbdevice_fs.h include/uapi/linux/usbdevice_fs.h
 
-Cc: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-usevw9r2gcipfcrbpaueurw0@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/annotate.c | 19 +++++++++++++++----
- tools/perf/util/annotate.h |  2 ++
- 2 files changed, 17 insertions(+), 4 deletions(-)
+This may sound silly, and undoubtedly the question has been asked 
+before.  Nevertheless...
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index b49ecdd51188..4036c7f7b0fb 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1637,6 +1637,13 @@ int symbol__strerror_disassemble(struct symbol *sym __maybe_unused, struct map *
- 	case SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING:
- 		scnprintf(buf, buflen, "Problems while parsing the CPUID in the arch specific initialization.");
- 		break;
-+	case SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE:
-+		scnprintf(buf, buflen, "Invalid BPF file: %s.", dso->long_name);
-+		break;
-+	case SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF:
-+		scnprintf(buf, buflen, "The %s BPF file has no BTF section, compile with -g or use pahole -J.",
-+			  dso->long_name);
-+		break;
- 	default:
- 		scnprintf(buf, buflen, "Internal error: Invalid %d error code\n", errnum);
- 		break;
-@@ -1719,13 +1726,13 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 	char tpath[PATH_MAX];
- 	size_t buf_size;
- 	int nr_skip = 0;
--	int ret = -1;
- 	char *buf;
- 	bfd *bfdf;
-+	int ret;
- 	FILE *s;
- 
- 	if (dso->binary_type != DSO_BINARY_TYPE__BPF_PROG_INFO)
--		return -1;
-+		return SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE;
- 
- 	pr_debug("%s: handling sym %s addr %" PRIx64 " len %" PRIx64 "\n", __func__,
- 		  sym->name, sym->start, sym->end - sym->start);
-@@ -1738,8 +1745,10 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 	assert(bfd_check_format(bfdf, bfd_object));
- 
- 	s = open_memstream(&buf, &buf_size);
--	if (!s)
-+	if (!s) {
-+		ret = errno;
- 		goto out;
-+	}
- 	init_disassemble_info(&info, s,
- 			      (fprintf_ftype) fprintf);
- 
-@@ -1748,8 +1757,10 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 
- 	info_node = perf_env__find_bpf_prog_info(dso->bpf_prog.env,
- 						 dso->bpf_prog.id);
--	if (!info_node)
-+	if (!info_node) {
-+		return SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
- 		goto out;
-+	}
- 	info_linear = info_node->info_linear;
- 	sub_id = dso->bpf_prog.sub_id;
- 
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 116e21f49da6..d76fd0e81f46 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -372,6 +372,8 @@ enum symbol_disassemble_errno {
- 	SYMBOL_ANNOTATE_ERRNO__NO_LIBOPCODES_FOR_BPF,
- 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_CPUID_PARSING,
- 	SYMBOL_ANNOTATE_ERRNO__ARCH_INIT_REGEXP,
-+	SYMBOL_ANNOTATE_ERRNO__BPF_INVALID_FILE,
-+	SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF,
- 
- 	__SYMBOL_ANNOTATE_ERRNO__END,
- };
--- 
-2.21.0
+Why go to the time and trouble to detect differences between 
+tools/include/uapi/linux/usbdevice_fs.h and 
+include/uapi/linux/usbdevice_fs.h?  Why not just make the first a 
+symbolic link to the second?  Or get rid of the first entirely, and 
+change the source code so that it #include's the second?
+
+Alan Stern
