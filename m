@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/24] perf tools: Propagate get_cpuid() error
-Date: Tue,  1 Oct 2019 08:12:09 -0300
-Message-ID: <20191001111216.7208-18-acme@kernel.org>
+Subject: [PATCH 18/24] perf evsel: Fall back to global 'perf_env' in perf_evsel__env()
+Date: Tue,  1 Oct 2019 08:12:10 -0300
+Message-ID: <20191001111216.7208-19-acme@kernel.org>
 References: <20191001111216.7208-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,130 +14,64 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For consistency, propagate the exact cause for get_cpuid() to have
-failed.
+I.e. if evsel->evlist or evsel->evlist->env isn't set, return the
+environment for the running machine, as that would be set if reading
+from a perf.data file.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9ig269f7ktnhh99g4l15vpu2@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-uqq4grmhbi12rwb0lfpo6lfu@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/util/header.c | 3 ++-
- tools/perf/arch/s390/util/header.c    | 9 +++++----
- tools/perf/arch/x86/util/header.c     | 3 ++-
- tools/perf/builtin-kvm.c              | 7 ++++---
- 4 files changed, 13 insertions(+), 9 deletions(-)
+ tools/perf/util/evsel.c  | 3 ++-
+ tools/perf/util/python.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index b6b7bc7e31a1..3b4cdfc5efd6 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -30,7 +31,7 @@ get_cpuid(char *buffer, size_t sz)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
- }
- 
- char *
-diff --git a/tools/perf/arch/s390/util/header.c b/tools/perf/arch/s390/util/header.c
-index 8b0b018d896a..7933f6871c81 100644
---- a/tools/perf/arch/s390/util/header.c
-+++ b/tools/perf/arch/s390/util/header.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <string.h>
-@@ -54,7 +55,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	sysinfo = fopen(SYSINFO, "r");
- 	if (sysinfo == NULL)
--		return -1;
-+		return errno;
- 
- 	while ((read = getline(&line, &line_sz, sysinfo)) != -1) {
- 		if (!strncmp(line, SYSINFO_MANU, strlen(SYSINFO_MANU))) {
-@@ -89,7 +90,7 @@ int get_cpuid(char *buffer, size_t sz)
- 
- 	/* Missing manufacturer, type or model information should not happen */
- 	if (!manufacturer[0] || !type[0] || !model[0])
--		return -1;
-+		return EINVAL;
- 
- 	/*
- 	 * Scan /proc/service_levels and return the CPU-MF counter facility
-@@ -133,14 +134,14 @@ int get_cpuid(char *buffer, size_t sz)
- 	else
- 		nbytes = snprintf(buffer, sz, "%s,%s,%s", manufacturer, type,
- 				  model);
--	return (nbytes >= sz) ? -1 : 0;
-+	return (nbytes >= sz) ? ENOBUFS : 0;
- }
- 
- char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 5591af81a070..abc7fda4a0fe 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -30,6 +30,7 @@
+ #include "counts.h"
+ #include "event.h"
+ #include "evsel.h"
++#include "util/env.h"
+ #include "util/evsel_config.h"
+ #include "util/evsel_fprintf.h"
+ #include "evlist.h"
+@@ -2512,7 +2513,7 @@ struct perf_env *perf_evsel__env(struct evsel *evsel)
  {
- 	char *buf = malloc(128);
- 
--	if (buf && get_cpuid(buf, 128) < 0)
-+	if (buf && get_cpuid(buf, 128))
- 		zfree(&buf);
- 	return buf;
- }
-diff --git a/tools/perf/arch/x86/util/header.c b/tools/perf/arch/x86/util/header.c
-index 662ecf84a421..aa6deb463bf3 100644
---- a/tools/perf/arch/x86/util/header.c
-+++ b/tools/perf/arch/x86/util/header.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <sys/types.h>
-+#include <errno.h>
- #include <unistd.h>
- #include <stdio.h>
- #include <stdlib.h>
-@@ -58,7 +59,7 @@ __get_cpuid(char *buffer, size_t sz, const char *fmt)
- 		buffer[nb-1] = '\0';
- 		return 0;
- 	}
--	return -1;
-+	return ENOBUFS;
+ 	if (evsel && evsel->evlist)
+ 		return evsel->evlist->env;
+-	return NULL;
++	return &perf_env;
  }
  
- int
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 2227e2f42c09..58a9e0989491 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -705,14 +705,15 @@ static int process_sample_event(struct perf_tool *tool,
+ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 53f31053a27a..02460362256d 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -14,6 +14,7 @@
+ #include "thread_map.h"
+ #include "trace-event.h"
+ #include "mmap.h"
++#include "util/env.h"
+ #include <internal/lib.h>
+ #include "../perf-sys.h"
  
- static int cpu_isa_config(struct perf_kvm_stat *kvm)
- {
--	char buf[64], *cpuid;
-+	char buf[128], *cpuid;
- 	int err;
+@@ -53,6 +54,11 @@ int parse_callchain_record(const char *arg __maybe_unused,
+ 	return 0;
+ }
  
- 	if (kvm->live) {
- 		err = get_cpuid(buf, sizeof(buf));
- 		if (err != 0) {
--			pr_err("Failed to look up CPU type\n");
--			return err;
-+			pr_err("Failed to look up CPU type: %s\n",
-+			       str_error_r(err, buf, sizeof(buf)));
-+			return -err;
- 		}
- 		cpuid = buf;
- 	} else
++/*
++ * Add this one here not to drag util/env.c
++ */
++struct perf_env perf_env;
++
+ /*
+  * Support debug printing even though util/debug.c is not linked.  That means
+  * implementing 'verbose' and 'eprintf'.
 -- 
 2.21.0
