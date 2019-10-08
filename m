@@ -1,206 +1,483 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent improvements and fixes
-Date: Mon, 7 Oct 2019 15:16:55 +0200
-Message-ID: <20191007131655.GA78239@gmail.com>
-References: <20191001111216.7208-1-acme@kernel.org>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
+Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
+ events
+Date: Tue, 8 Oct 2019 13:59:39 +0800
+Message-ID: <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+ <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
+ <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
+ <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191001111216.7208-1-acme@kernel.org>
+In-Reply-To: <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Brian Robbins <brianrob@microsoft.com>, Ian Rogers <irogers@google.com>, Russell King - ARM Linux admin <linux@armlinux.org.uk>, Steve MacLean <Steve.MacLean@Microsoft.com>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: James Clark <James.Clark@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@amd.com>
+Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Al Grant <Al.Grant@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+On 2019/10/4 21:46, James Clark wrote:
+> Hi Xiaojun,
+> 
+> I wanted to ask if you are still working on this?
+> 
+> I've noticed that it doesn't apply cleanly to perf/core anymore and I was working on re-basing it.
+> Would you be interested in me posting my progress?
+> 
+> I was also interested in decoding the "data source" of events and displaying that information. Does this
+> clash with any of your current work?
+> 
+> 
+> Thanks
+> James
+> 
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Hi, James,
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling, mostly small fixes, just one extra
-> header copied due to linux/fs.h now having parts of it moved to
-> linux/fscrypt.h that then needs syncing so that tooling continues to
-> build on older systems.
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit da05b5ea12c1e50b2988a63470d6b69434796f8b:
-> 
->   Merge branch 'timers-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip (2019-09-26 15:53:17 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.4-20191001
-> 
-> for you to fetch changes up to 11aad897f6d1a28eae3b7e5b293647c522d65819:
-> 
->   perf annotate: Don't return -1 for error when doing BPF disassembly (2019-09-30 17:30:06 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf script:
-> 
->   Andi Kleen:
-> 
->     - Fix recovery from LBR/binary mismatch in the "brstackinsn" --field.
-> 
-> perf annotate:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Propagate errors so that meaningful messages can be presented to the
->     user in case of problems.
-> 
-> perf map:
-> 
->   Steve MacLean:
-> 
->   - Fix handling of maps partially overlapped, resolving symbols in the
->     ranges not replaced by new mmaps.
-> 
-> perf tests:
-> 
->   Ian Rogers:
-> 
->   - Use raise() instead of NULL derefs to avoid causing a SIGILL rather than a
->     SIGSEGV for optimized builds that turn NULL derefs into ud2 instructions.
-> 
-> perf LLVM:
-> 
->   Ian Rogers:
-> 
->   - Don't access out-of-scope array.
-> 
-> perf inject:
-> 
->   Steve MacLean:
-> 
->   - Fix JIT_CODE_MOVE filename, that was having a u64 truncaded into a 32-bit
->     snprintf format and also a missing ".so" suffix in another case.
-> 
-> libsubcmd:
-> 
->   Ian Rogers:
-> 
->   - Make _FORTIFY_SOURCE defines dependent on the feature, avoiding
->     false positives with with memory sanitizers such as LLVM's ASan.
-> 
-> Vendor specific events:
-> 
-> Intel:
-> 
->   Andi Kleen:
-> 
->   - Fix period for Intel fixed counters.
-> 
-> s390:
-> 
->   Thomas Richter (2):
-> 
->   - Fix some event details transaction for machine type 8561.
-> 
-> tools headers UAPI:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Sync headers with the kernel, catching new usbdevfs ioctls and
->     madvise behaviours to properly decode in 'perf trace' output.
-> 
-> Documentation:
-> 
->   Steve MacLean:
-> 
->   - Correct and clarify jitdump spec.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Andi Kleen (2):
->       perf script brstackinsn: Fix recovery from LBR/binary mismatch
->       perf jevents: Fix period for Intel fixed counters
-> 
-> Arnaldo Carvalho de Melo (13):
->       tools headers uapi: Sync drm/i915_drm.h with the kernel sources
->       tools headers uapi: Sync asm-generic/mman-common.h with the kernel
->       tools headers uapi: Sync linux/usbdevice_fs.h with the kernel sources
->       tools headers uapi: Sync linux/fs.h with the kernel sources
->       tools headers kvm: Sync kvm headers with the kernel sources
->       perf tools: Propagate get_cpuid() error
->       perf evsel: Fall back to global 'perf_env' in perf_evsel__env()
->       perf annotate: Propagate perf_env__arch() error
->       perf annotate: Fix the signedness of failure returns
->       perf annotate: Propagate the symbol__annotate() error return
->       perf annotate: Fix arch specific ->init() failure errors
->       perf annotate: Return appropriate error code for allocation failures
->       perf annotate: Don't return -1 for error when doing BPF disassembly
-> 
-> Ian Rogers (4):
->       libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
->       perf tests: Avoid raising SEGV using an obvious NULL dereference
->       perf docs: Allow man page date to be specified
->       perf llvm: Don't access out-of-scope array
-> 
-> Steve MacLean (3):
->       perf map: Fix overlapped map handling
->       perf inject jit: Fix JIT_CODE_MOVE filename
->       perf docs: Correct and clarify jitdump spec
-> 
-> Thomas Richter (2):
->       perf vendor events s390: Add JSON transaction for machine type 8561
->       perf vendor events s390: Use s390 machine name instead of type 8561
-> 
->  tools/arch/arm/include/uapi/asm/kvm.h              |   4 +-
->  tools/arch/arm64/include/uapi/asm/kvm.h            |   4 +-
->  tools/arch/s390/include/uapi/asm/kvm.h             |   6 +
->  tools/arch/x86/include/uapi/asm/vmx.h              |   2 +
->  tools/include/uapi/asm-generic/mman-common.h       |   3 +
->  tools/include/uapi/drm/i915_drm.h                  |   1 +
->  tools/include/uapi/linux/fs.h                      |  55 +------
->  tools/include/uapi/linux/fscrypt.h                 | 181 +++++++++++++++++++++
->  tools/include/uapi/linux/kvm.h                     |   3 +
->  tools/include/uapi/linux/usbdevice_fs.h            |   4 +
->  tools/lib/subcmd/Makefile                          |   8 +-
->  tools/perf/Documentation/asciidoc.conf             |   3 +
->  tools/perf/Documentation/jitdump-specification.txt |   4 +-
->  tools/perf/arch/arm/annotate/instructions.c        |   4 +-
->  tools/perf/arch/arm64/annotate/instructions.c      |   4 +-
->  tools/perf/arch/powerpc/util/header.c              |   3 +-
->  tools/perf/arch/s390/annotate/instructions.c       |   6 +-
->  tools/perf/arch/s390/util/header.c                 |   9 +-
->  tools/perf/arch/x86/annotate/instructions.c        |   6 +-
->  tools/perf/arch/x86/util/header.c                  |   3 +-
->  tools/perf/builtin-kvm.c                           |   7 +-
->  tools/perf/builtin-script.c                        |   6 +-
->  tools/perf/check-headers.sh                        |   1 +
->  .../arch/s390/{cf_m8561 => cf_z15}/basic.json      |   0
->  .../arch/s390/{cf_m8561 => cf_z15}/crypto.json     |   0
->  .../arch/s390/{cf_m8561 => cf_z15}/crypto6.json    |   0
->  .../arch/s390/{cf_m8561 => cf_z15}/extended.json   |   0
->  .../pmu-events/arch/s390/cf_z15/transaction.json   |   7 +
->  tools/perf/pmu-events/arch/s390/mapfile.csv        |   2 +-
->  tools/perf/pmu-events/jevents.c                    |  12 +-
->  tools/perf/tests/perf-hooks.c                      |   3 +-
->  tools/perf/util/annotate.c                         |  35 +++-
->  tools/perf/util/annotate.h                         |   4 +
->  tools/perf/util/evsel.c                            |   3 +-
->  tools/perf/util/jitdump.c                          |   6 +-
->  tools/perf/util/llvm-utils.c                       |   6 +-
->  tools/perf/util/map.c                              |   3 +
->  tools/perf/util/python.c                           |   6 +
->  38 files changed, 315 insertions(+), 99 deletions(-)
->  create mode 100644 tools/include/uapi/linux/fscrypt.h
->  rename tools/perf/pmu-events/arch/s390/{cf_m8561 => cf_z15}/basic.json (100%)
->  rename tools/perf/pmu-events/arch/s390/{cf_m8561 => cf_z15}/crypto.json (100%)
->  rename tools/perf/pmu-events/arch/s390/{cf_m8561 => cf_z15}/crypto6.json (100%)
->  rename tools/perf/pmu-events/arch/s390/{cf_m8561 => cf_z15}/extended.json (100%)
->  create mode 100644 tools/perf/pmu-events/arch/s390/cf_z15/transaction.json
+Sorry, I did not respond in time because of the National Day holiday in China.
 
-Pulled, thanks a lot Arnaldo!
+I am still doing this, but I have been scheduled for other tasks some time ago, so that there is no obvious progress on spe.
 
-	Ingo
+By the way, you mentioned before that you want the spe event to be in the form of "event:pp" like pebs. Is that the whole framework should be made similar to pebs? Or is it just a modification to the command format? For the former, this may be a bit difficult. For the latter, there is currently no modification to the record part, so "-c -F, etc." is only for instructions rather than events, so it may be misunderstood by users.
+
+So I haven't figured out how to do. What do you think of this?
+
+Thanks.
+Xiaojun.
+
+> On 09/08/2019 07:12, Tan Xiaojun wrote:
+>> On 2019/8/9 5:00, Jeremy Linton wrote:
+>>> Hi,
+>>>
+>>> First thanks for posting this!
+>>>
+>>> I ran this on our DAWN platform and it does what it says. Its a pretty reasonable start, but I get -1's in the command row rather than "dd" (or similar) and this also results in [unknown] for the shared object and most userspace addresses. This is quite possibly something I'm not doing right, but I didn't spend a lot of time testing/debugging it.
+>>>
+>>> I did a quick glance at the code to, and had a couple comments, although I'm not a perf tool expert.
+>>>
+>>
+>> Hi,
+>>
+>> Thank you for your reply.
+>>
+>> I have only recently started working on this aspect of the perf tool, so your reply is very important to me.
+>>
+>> I need to be sorry, my example here is not complete, until you said that I found that I only posted a part of the example. The complete example is as follows:
+>>
+>> Example usage:
+>>
+>> # perf record -e arm_spe/ts_enable=1,pa_enable=1/ dd if=/dev/zero of=/dev/null count=10000
+>> # perf report
+>>
+>> --------------------------------------------------------------------
+>> ...
+>> # Samples: 37  of event 'llc-miss'
+>> # Event count (approx.): 37
+>> #
+>> # Children      Self  Command  Shared Object      Symbol
+>> # ........  ........  .......  .................  ....................................
+>> #
+>>     37.84%    37.84%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>>     16.22%    16.22%  dd       [kernel.kallsyms]  [k] copy_page
+>>      5.41%     5.41%  dd       [kernel.kallsyms]  [k] find_vma
+>>      5.41%     5.41%  dd       [kernel.kallsyms]  [k] perf_event_mmap
+>>      5.41%     5.41%  dd       [kernel.kallsyms]  [k] zap_pte_range
+>>      5.41%     5.41%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+>>      5.41%     5.41%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>>      2.70%     2.70%  dd       [kernel.kallsyms]  [k] __remove_shared_vm_struct.isra.1
+>>      2.70%     2.70%  dd       [kernel.kallsyms]  [k] kmem_cache_free
+>>      2.70%     2.70%  dd       [kernel.kallsyms]  [k] ttwu_do_wakeup.isra.19
+>>      2.70%     2.70%  dd       dd                 [.] 0x000000000000d9d8
+>>      2.70%     2.70%  dd       ld-2.28.so         [.] _dl_relocate_object
+>>      2.70%     2.70%  dd       libc-2.28.so       [.] __unregister_atfork
+>>      2.70%     2.70%  dd       libc-2.28.so       [.] _dl_addr
+>>
+>>
+>> # Samples: 8  of event 'tlb-miss'
+>> # Event count (approx.): 8
+>> #
+>> # Children      Self  Command  Shared Object      Symbol
+>> # ........  ........  .......  .................  .................................
+>> #
+>>     12.50%    12.50%  dd       [kernel.kallsyms]  [k] __audit_syscall_entry
+>>     12.50%    12.50%  dd       [kernel.kallsyms]  [k] kmem_cache_free
+>>     12.50%    12.50%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>>     12.50%    12.50%  dd       [kernel.kallsyms]  [k] ttwu_do_wakeup.isra.19
+>>     12.50%    12.50%  dd       dd                 [.] 0x000000000000d9d8
+>>     12.50%    12.50%  dd       libc-2.28.so       [.] __unregister_atfork
+>>     12.50%    12.50%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>>     12.50%    12.50%  dd       libc-2.28.so       [.] vfprintf
+>>
+>>
+>> # Samples: 12  of event 'branch-miss'
+>> # Event count (approx.): 12
+>> #
+>> # Children      Self  Command  Shared Object      Symbol
+>> # ........  ........  .......  .................  ..........................
+>> #
+>>     16.67%    16.67%  dd       libc-2.28.so       [.] read_alias_file
+>>      8.33%     8.33%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
+>>      8.33%     8.33%  dd       [kernel.kallsyms]  [k] __arch_copy_to_user
+>>      8.33%     8.33%  dd       [kernel.kallsyms]  [k] lookup_fast
+>>      8.33%     8.33%  dd       [kernel.kallsyms]  [k] strncpy_from_user
+>>      8.33%     8.33%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+>>      8.33%     8.33%  dd       ld-2.28.so         [.] check_match
+>>      8.33%     8.33%  dd       libc-2.28.so       [.] __GI___printf_fp_l
+>>      8.33%     8.33%  dd       libc-2.28.so       [.] _dl_addr
+>>      8.33%     8.33%  dd       libc-2.28.so       [.] _int_malloc
+>>      8.33%     8.33%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>>
+>>
+>>
+>>>
+>>> On 8/2/19 4:40 AM, Tan Xiaojun wrote:
+>>>> After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+>>>> Profiling Extensions (SPE) support") is merged, "perf record" and
+>>>> "perf report --dump-raw-trace" have been supported. However, the
+>>>> raw data that is dumped cannot be used without parsing.
+>>>>
+>>>> This patch is to improve the "perf report" support for spe, and
+>>>> further process the data. Currently, support for the three events
+>>>> of llc-miss, tlb-miss, and branch-miss is added.
+>>>>
+>>>> Example usage:
+>>>>
+>>>> --------------------------------------------------------------------
+>>>> ...
+>>>>      37.84%    37.84%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>>>>      16.22%    16.22%  dd       [kernel.kallsyms]  [k] copy_page
+>>>>       5.41%     5.41%  dd       [kernel.kallsyms]  [k] find_vma
+>>>>       5.41%     5.41%  dd       [kernel.kallsyms]  [k] perf_event_mmap
+>>>>       5.41%     5.41%  dd       [kernel.kallsyms]  [k] zap_pte_range
+>>>>       5.41%     5.41%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+>>>>       5.41%     5.41%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>>>>       2.70%     2.70%  dd       [kernel.kallsyms]  [k] __remove_shared_vm_struct.isra.1
+>>>>       2.70%     2.70%  dd       [kernel.kallsyms]  [k] kmem_cache_free
+>>>>       2.70%     2.70%  dd       [kernel.kallsyms]  [k] ttwu_do_wakeup.isra.19
+>>>>       2.70%     2.70%  dd       dd                 [.] 0x000000000000d9d8
+>>>>       2.70%     2.70%  dd       ld-2.28.so         [.] _dl_relocate_object
+>>>>       2.70%     2.70%  dd       libc-2.28.so       [.] __unregister_atfork
+>>>>       2.70%     2.70%  dd       libc-2.28.so       [.] _dl_addr
+>>>>
+>>>>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] __audit_syscall_entry
+>>>>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] kmem_cache_free
+>>>>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>>>>      12.50%    12.50%  dd       [kernel.kallsyms]  [k] ttwu_do_wakeup.isra.19
+>>>>      12.50%    12.50%  dd       dd                 [.] 0x000000000000d9d8
+>>>>      12.50%    12.50%  dd       libc-2.28.so       [.] __unregister_atfork
+>>>>      12.50%    12.50%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>>>>      12.50%    12.50%  dd       libc-2.28.so       [.] vfprintf
+>>>>
+>>>>      16.67%    16.67%  dd       libc-2.28.so       [.] read_alias_file
+>>>>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
+>>>>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] __arch_copy_to_user
+>>>>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] lookup_fast
+>>>>       8.33%     8.33%  dd       [kernel.kallsyms]  [k] strncpy_from_user
+>>>>       8.33%     8.33%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+>>>>       8.33%     8.33%  dd       ld-2.28.so         [.] check_match
+>>>>       8.33%     8.33%  dd       libc-2.28.so       [.] __GI___printf_fp_l
+>>>>       8.33%     8.33%  dd       libc-2.28.so       [.] _dl_addr
+>>>>       8.33%     8.33%  dd       libc-2.28.so       [.] _int_malloc
+>>>>       8.33%     8.33%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+>>>>
+>>>> --------------------------------------------------------------------
+>>>>
+>>>> After that, more analysis and processing of the raw data of spe
+>>>> will be done.
+>>>>
+>>>> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+>>>> ---
+>>>>   tools/perf/builtin-report.c                        |   5 +
+>>>>   tools/perf/util/arm-spe-decoder/Build              |   2 +-
+>>>>   tools/perf/util/arm-spe-decoder/arm-spe-decoder.c  | 214 ++++++
+>>>>   tools/perf/util/arm-spe-decoder/arm-spe-decoder.h  |  51 ++
+>>>>   .../util/arm-spe-decoder/arm-spe-pkt-decoder.h     |   2 +
+>>>>   tools/perf/util/arm-spe.c                          | 715 ++++++++++++++++++++-
+>>>>   tools/perf/util/auxtrace.c                         |  45 ++
+>>>>   tools/perf/util/auxtrace.h                         |  27 +
+>>>>   tools/perf/util/session.h                          |   2 +
+>>>>   9 files changed, 1028 insertions(+), 35 deletions(-)
+>>>>   create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+>>>>   create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+>>>>
+>>>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>>>> index abf0b9b..fadc8eb 100644
+>>>> --- a/tools/perf/builtin-report.c
+>>>> +++ b/tools/perf/builtin-report.c
+>>>> @@ -1007,6 +1007,7 @@ int cmd_report(int argc, const char **argv)
+>>>>   {
+>>>>       struct perf_session *session;
+>>>>       struct itrace_synth_opts itrace_synth_opts = { .set = 0, };
+>>>> +    struct arm_spe_synth_opts arm_spe_synth_opts;
+>>>>       struct stat st;
+>>>>       bool has_br_stack = false;
+>>>>       int branch_mode = -1;
+>>>> @@ -1165,6 +1166,9 @@ int cmd_report(int argc, const char **argv)
+>>>>       OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
+>>>>                   "Instruction Tracing options\n" ITRACE_HELP,
+>>>>                   itrace_parse_synth_opts),
+>>>> +    OPT_CALLBACK_OPTARG(0, "spe", &arm_spe_synth_opts, NULL, "spe opts",
+>>>> +                "ARM SPE Tracing options",
+>>>> +                arm_spe_parse_synth_opts),
+>>>>       OPT_BOOLEAN(0, "full-source-path", &srcline_full_filename,
+>>>>               "Show full source file name path for source lines"),
+>>>>       OPT_BOOLEAN(0, "show-ref-call-graph", &symbol_conf.show_ref_callgraph,
+>>>> @@ -1266,6 +1270,7 @@ int cmd_report(int argc, const char **argv)
+>>>>       }
+>>>>         session->itrace_synth_opts = &itrace_synth_opts;
+>>>> +    session->arm_spe_synth_opts = &arm_spe_synth_opts;
+>>>>         report.session = session;
+>>>>   diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
+>>>> index 16efbc2..f8dae13 100644
+>>>> --- a/tools/perf/util/arm-spe-decoder/Build
+>>>> +++ b/tools/perf/util/arm-spe-decoder/Build
+>>>> @@ -1 +1 @@
+>>>> -perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
+>>>> +perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o arm-spe-decoder.o
+>>>> diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+>>>> new file mode 100644
+>>>> index 0000000..8008375
+>>>> --- /dev/null
+>>>> +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+>>>> @@ -0,0 +1,214 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * arm_spe_decoder.c: ARM SPE support
+>>>> + */
+>>>> +
+>>>> +#ifndef _GNU_SOURCE
+>>>> +#define _GNU_SOURCE
+>>>> +#endif
+>>>> +#include <stdlib.h>
+>>>> +#include <stdbool.h>
+>>>> +#include <string.h>
+>>>> +#include <errno.h>
+>>>> +#include <stdint.h>
+>>>> +#include <inttypes.h>
+>>>> +#include <linux/compiler.h>
+>>>> +#include <linux/zalloc.h>
+>>>> +
+>>>> +#include "../util.h"
+>>>> +#include "../auxtrace.h"
+>>>> +
+>>>> +#include "arm-spe-pkt-decoder.h"
+>>>> +#include "arm-spe-decoder.h"
+>>>> +
+>>>> +struct arm_spe_decoder {
+>>>> +    int (*get_trace)(struct arm_spe_buffer *buffer, void *data);
+>>>> +    void *data;
+>>>> +    struct arm_spe_state state;
+>>>> +    const unsigned char *buf;
+>>>> +    size_t len;
+>>>> +    uint64_t pos;
+>>>> +    struct arm_spe_pkt packet;
+>>>> +    int pkt_step;
+>>>> +    int pkt_len;
+>>>> +    int last_packet_type;
+>>>> +
+>>>> +    uint64_t last_ip;
+>>>> +    uint64_t ip;
+>>>> +    uint64_t timestamp;
+>>>> +    uint64_t sample_timestamp;
+>>>> +    const unsigned char *next_buf;
+>>>> +    size_t next_len;
+>>>> +    unsigned char temp_buf[ARM_SPE_PKT_MAX_SZ];
+>>>> +};
+>>>> +
+>>>> +static uint64_t arm_spe_calc_ip(uint64_t payload)
+>>>> +{
+>>>> +    uint64_t ip = (payload & ~(0xffULL << 56));
+>>>> +
+>>>> +    /* fill high 8 bits for kernel virtual address */
+>>>> +    if (ip & 0x1000000000000ULL)
+>>>
+>>> It might be better to use VA_START here if possible.
+>>>
+>>
+>> Yes, it's better, but I don't know how to use VA_START in user mode code. So I wrote it directly.
+>>
+>>>> +        ip |= (uint64_t)0xff00000000000000ULL;
+>>>> +
+>>>> +    return ip;
+>>>> +}
+>>>> +
+>>>> +struct arm_spe_decoder *arm_spe_decoder_new(struct arm_spe_params *params)
+>>>> +{
+>>>> +    struct arm_spe_decoder *decoder;
+>>>> +
+>>>> +    if (!params->get_trace)
+>>>> +        return NULL;
+>>>> +
+>>>> +    decoder = zalloc(sizeof(struct arm_spe_decoder));
+>>>> +    if (!decoder)
+>>>> +        return NULL;
+>>>> +
+>>>> +    decoder->get_trace          = params->get_trace;
+>>>> +    decoder->data               = params->data;
+>>>> +
+>>>> +    return decoder;
+>>>> +}
+>>>> +
+>>>> +void arm_spe_decoder_free(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    free(decoder);
+>>>> +}
+>>>> +
+>>>> +static int arm_spe_bad_packet(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    decoder->pkt_len = 1;
+>>>> +    decoder->pkt_step = 1;
+>>>> +    pr_debug("ERROR: Bad packet\n");
+>>>> +
+>>>> +    return -EBADMSG;
+>>>> +}
+>>>> +
+>>>> +
+>>>> +static int arm_spe_get_data(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    struct arm_spe_buffer buffer = { .buf = 0, };
+>>>> +    int ret;
+>>>> +
+>>>> +    decoder->pkt_step = 0;
+>>>> +
+>>>> +    pr_debug("Getting more data\n");
+>>>> +    ret = decoder->get_trace(&buffer, decoder->data);
+>>>> +    if (ret)
+>>>> +        return ret;
+>>>> +
+>>>> +    decoder->buf = buffer.buf;
+>>>> +    decoder->len = buffer.len;
+>>>> +    if (!decoder->len) {
+>>>> +        pr_debug("No more data\n");
+>>>> +        return -ENODATA;
+>>>> +    }
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int arm_spe_get_next_data(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    return arm_spe_get_data(decoder);
+>>>> +}
+>>>> +
+>>>> +static int arm_spe_get_next_packet(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    int ret;
+>>>> +
+>>>> +    decoder->last_packet_type = decoder->packet.type;
+>>>> +
+>>>> +    do {
+>>>> +        decoder->pos += decoder->pkt_step;
+>>>> +        decoder->buf += decoder->pkt_step;
+>>>> +        decoder->len -= decoder->pkt_step;
+>>>> +
+>>>> +
+>>>> +        if (!decoder->len) {
+>>>> +            ret = arm_spe_get_next_data(decoder);
+>>>> +            if (ret)
+>>>> +                return ret;
+>>>> +        }
+>>>> +
+>>>> +        ret = arm_spe_get_packet(decoder->buf, decoder->len,
+>>>> +                &decoder->packet);
+>>>> +        if (ret <= 0)
+>>>> +            return arm_spe_bad_packet(decoder);
+>>>> +
+>>>> +        decoder->pkt_len = ret;
+>>>> +        decoder->pkt_step = ret;
+>>>> +    } while (decoder->packet.type == ARM_SPE_PAD);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int arm_spe_walk_trace(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    int err;
+>>>> +    int idx;
+>>>> +    uint64_t payload;
+>>>> +
+>>>> +    while (1) {
+>>>> +        err = arm_spe_get_next_packet(decoder);
+>>>> +        if (err)
+>>>> +            return err;
+>>>> +
+>>>> +        idx = decoder->packet.index;
+>>>> +        payload = decoder->packet.payload;
+>>>> +
+>>>> +        switch (decoder->packet.type) {
+>>>> +        case ARM_SPE_TIMESTAMP:
+>>>> +            decoder->sample_timestamp = payload;
+>>>> +            return 0;
+>>>> +        case ARM_SPE_END:
+>>>> +            decoder->sample_timestamp = 0;
+>>>> +            return 0;
+>>>> +        case ARM_SPE_ADDRESS:
+>>>> +            decoder->ip = arm_spe_calc_ip(payload);
+>>>> +            if (idx == 0)
+>>>> +                decoder->state.from_ip = decoder->ip;
+>>>> +            else if (idx == 1)
+>>>> +                decoder->state.to_ip = decoder->ip;
+>>>> +            break;
+>>>> +        case ARM_SPE_COUNTER:
+>>>> +            break;
+>>>> +        case ARM_SPE_CONTEXT:
+>>>> +            break;
+>>>> +        case ARM_SPE_OP_TYPE:
+>>>> +            break;
+>>>> +        case ARM_SPE_EVENTS:
+>>>> +            if (payload & 0x20)
+>>>> +                decoder->state.type |= ARM_SPE_TLB_MISS;
+>>>> +            if (payload & 0x80)
+>>>> +                decoder->state.type |= ARM_SPE_BRANCH_MISS;
+>>>> +            if (idx > 1 && (payload & 0x200))
+>>>> +                decoder->state.type |= ARM_SPE_LLC_MISS;
+>>>> +
+>>>> +            break;
+>>>> +        case ARM_SPE_DATA_SOURCE:
+>>>> +            break;
+>>>> +        case ARM_SPE_BAD:
+>>>> +            break;
+>>>> +        case ARM_SPE_PAD:
+>>>> +            break;
+>>>> +        default:
+>>>> +            pr_err("Get Packet Error!\n");
+>>>> +            return -ENOSYS;
+>>>> +        }
+>>>> +    }
+>>>> +}
+>>>
+>>> This code looks very similar to  arm_spe_pkt_desc(), I can't help but think they should be consolidated in some way. If nothing else the magic 0x20, 0x80, etc ARM_SPE_EVENTS should be defined somewhere and shared.
+>>>
+>>
+>> Yes, I wrote it with reference to it. What you said makes sense. I will try to modify it later.
+>>
+>> Xiaojun.
+>>
+>>>
+>>>> +
+>>>> +const struct arm_spe_state *arm_spe_decode(struct arm_spe_decoder *decoder)
+>>>> +{
+>>>> +    int err;
+>>>> +
+>>>> +    decoder->state.type = 0;
+>>>> +
+>>>> +    err = arm_spe_walk_trace(decoder);
+>>>> +    if (err)
+>>>> +        decoder->state.err = err;
+>>>> +
+>>>> +    decoder->state.timestamp = decoder->sample_timestamp;
+>>>> +
+>>>> +    return &decoder->state;
+>>>
+>>> (trimming remainder)
+>>>
+>>>
+>>> .
+>>>
+>>
+>>
+> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+> 
