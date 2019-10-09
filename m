@@ -1,8 +1,8 @@
 From: Tan Xiaojun <tanxiaojun@huawei.com>
 Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
  events
-Date: Wed, 9 Oct 2019 10:43:11 +0800
-Message-ID: <7061ae3e-8ca7-3ab0-2a5c-685b55158d5a@huawei.com>
+Date: Wed, 9 Oct 2019 11:06:41 +0800
+Message-ID: <2a9ace55-c7c2-09b2-1d46-368cef1d8b5d@huawei.com>
 References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
  <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
  <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
@@ -34,6 +34,8 @@ On 2019/10/4 21:46, James Clark wrote:
 > Thanks
 > James
 > 
+
+(Sorry, you may have received a lot of this email because I am suddenly not on the mail-list, I need to confirm it.)
 
 Hi, James,
 
