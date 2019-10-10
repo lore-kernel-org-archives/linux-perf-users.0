@@ -1,66 +1,63 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
- events
-Date: Wed, 9 Oct 2019 19:49:35 +0800
-Message-ID: <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
-References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
- <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
- <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
- <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
- <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
- <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
- <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
- <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
+From: Francis Deslauriers <francis.deslauriers@efficios.com>
+Subject: Tracing Summit 2019 - Videos
+Date: Thu, 10 Oct 2019 12:38:16 -0400
+Message-ID: <CADcCL0hUPVg7_sonU-5Ab3g2tPHF18=ZMoC_x9v+Qyg-xuRROw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Clark <James.Clark@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@amd.com>
-Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Al Grant <Al.Grant@arm.com>, nd <nd@arm.com>
+Content-Type: multipart/mixed; boundary="===============1983407317001353949=="
+Return-path: <lttng-dev-bounces@lists.lttng.org>
+List-Unsubscribe: <https://lists.lttng.org/cgi-bin/mailman/options/lttng-dev>,
+ <mailto:lttng-dev-request@lists.lttng.org?subject=unsubscribe>
+List-Archive: <https://lists.lttng.org/pipermail/lttng-dev>
+List-Post: <mailto:lttng-dev@lists.lttng.org>
+List-Help: <mailto:lttng-dev-request@lists.lttng.org?subject=help>
+List-Subscribe: <https://lists.lttng.org/cgi-bin/mailman/listinfo/lttng-dev>,
+ <mailto:lttng-dev-request@lists.lttng.org?subject=subscribe>
+Errors-To: lttng-dev-bounces@lists.lttng.org
+Sender: "lttng-dev" <lttng-dev-bounces@lists.lttng.org>
+To: diamon-discuss@lists.linuxfoundation.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, linux-trace-devel@vger.kernel.org, linuxtools-dev@eclipse.org, lttng-dev <lttng-dev@lists.lttng.org>, lwn@lwn.net, tracecompass-dev@eclipse.org
+Cc: info@tracingsummit.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2019/10/9 19:09, Tan Xiaojun wrote:
-> On 2019/10/9 17:48, James Clark wrote:
->> Hi Xiaojun,
->>
->>> By the way, you mentioned before that you want the spe event to be in the form of "event:pp" like pebs. Is that the whole framework should be made similar to pebs? Or is it just a modification to the command format? 
->>
->> We're currently still investigating if it makes sense to modify the Perf event open syscall to use SPE when the "precise_ip" attribute is set. And then synthesize samples using the SPE data when available. This would keep the syscall interface more consistent between architectures.
->>
->> And if tools other than Perf want more precise data, they don't have to be aware of SPE or any of the implementation defined details of it. For example the 'data source' encoding can be different from one micro architecture to the next. The kernel is probably the best place to handle this.
->>
->> At the moment, every tool that wants to use the Perf syscall to get precise data on ARM would have to be aware of SPE and implement their own decoding.
->>
-> 
-> Hi James,
-> 
-> What do you mean when the user specifies "event:pp", if the SPE is available, configure and record the spe data directly via the perf event open syscall?
-> (perf.data itself is the same as using -e arm_spe_0//xxx?)
+--===============1983407317001353949==
+Content-Type: multipart/alternative; boundary="000000000000ed6ea9059491078b"
 
-I mean, for the perf record, if the user does not add ":pp" to these events, the original process is taken, and if ":pp" is added, the spe process is taken.
+--000000000000ed6ea9059491078b
+Content-Type: text/plain; charset="UTF-8"
 
-Xiaojun.
+Hi all,
+The videos of the Tracing Summit 2019 talks are now available on Youtube
+here:
+https://www.youtube.com/playlist?list=PLuo4E47p5_7ZeRpUZEUyF2kWyA6KzTTkI.
 
-> 
-> OK. If I have not misunderstood, I think I know how to do it.
-> Thank you.
-> 
->>> For the former, this may be a bit difficult. For the latter, there is currently no modification to the record part, so "-c -F, etc." is only for instructions rather than events, so it may be misunderstood by users.
->>>
->>> So I haven't figured out how to do. What do you think of this?
->>
->> I think the patch at the moment is a good start to make SPE more accessible. And the changes I mentioned above wouldn't change the fact that the raw SPE data would still be available via the SPE PMU. So I think continuing with the patch as-is for now is the best idea.
->>
-> 
-> Yes. I agree.
-> 
-> Xiaojun.
-> 
->>
->> James
->>
->>
-> 
+See you all next year!
+
+-- 
+Francis Deslauriers
+Computer Engineer
+EfficiOS inc.
+
+--000000000000ed6ea9059491078b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi all,<br>The videos of the Tracing Summit 2019 talks are=
+ now available on Youtube here: <a href=3D"https://www.youtube.com/playlist=
+?list=3DPLuo4E47p5_7ZeRpUZEUyF2kWyA6KzTTkI">https://www.youtube.com/playlis=
+t?list=3DPLuo4E47p5_7ZeRpUZEUyF2kWyA6KzTTkI</a>.<br><br>See you all next ye=
+ar! <br><br>-- <br>Francis Deslauriers<br>Computer Engineer<br>EfficiOS inc=
+.</div>
+
+--000000000000ed6ea9059491078b--
+
+--===============1983407317001353949==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+lttng-dev mailing list
+lttng-dev@lists.lttng.org
+https://lists.lttng.org/cgi-bin/mailman/listinfo/lttng-dev
+
+--===============1983407317001353949==--
