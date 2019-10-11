@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/69] perf scripts python: exported-sql-viewer.py: Add LookupModel()
-Date: Fri, 11 Oct 2019 17:04:59 -0300
-Message-ID: <20191011200559.7156-10-acme@kernel.org>
+Subject: [PATCH 10/69] perf scripts python: exported-sql-viewer.py: Add HBoxLayout and VBoxLayout
+Date: Fri, 11 Oct 2019 17:05:00 -0300
+Message-ID: <20191011200559.7156-11-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,35 +14,71 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add LookupModel() to find a model in the model cache without creating it.
+Add layout classes HBoxLayout and VBoxLayout.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20190821083216.1340-2-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20190821083216.1340-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/python/exported-sql-viewer.py | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../scripts/python/exported-sql-viewer.py     | 41 ++++++++++++++-----
+ 1 file changed, 31 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 61b3911d91e6..18ad04654adc 100755
+index 18ad04654adc..9767a5f802e5 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -341,6 +341,15 @@ def LookupCreateModel(model_name, create_fn):
- 	model_cache_lock.release()
- 	return model
+@@ -980,20 +980,41 @@ class CallTreeModel(CallGraphModelBase):
+ 		ids.insert(0, query.value(1))
+ 		return ids
  
-+def LookupModel(model_name):
-+	model_cache_lock.acquire()
-+	try:
-+		model = model_cache[model_name]
-+	except:
-+		model = None
-+	model_cache_lock.release()
-+	return model
+-# Vertical widget layout
++# Vertical layout
+ 
+-class VBox():
++class HBoxLayout(QHBoxLayout):
+ 
+-	def __init__(self, w1, w2, w3=None):
+-		self.vbox = QWidget()
+-		self.vbox.setLayout(QVBoxLayout())
++	def __init__(self, *children):
++		super(HBoxLayout, self).__init__()
 +
- # Find bar
++		self.layout().setContentsMargins(0, 0, 0, 0)
++		for child in children:
++			if child.isWidgetType():
++				self.layout().addWidget(child)
++			else:
++				self.layout().addLayout(child)
++
++# Horizontal layout
++
++class VBoxLayout(QVBoxLayout):
  
- class FindBar():
+-		self.vbox.layout().setContentsMargins(0, 0, 0, 0)
++	def __init__(self, *children):
++		super(VBoxLayout, self).__init__()
+ 
+-		self.vbox.layout().addWidget(w1)
+-		self.vbox.layout().addWidget(w2)
+-		if w3:
+-			self.vbox.layout().addWidget(w3)
++		self.layout().setContentsMargins(0, 0, 0, 0)
++		for child in children:
++			if child.isWidgetType():
++				self.layout().addWidget(child)
++			else:
++				self.layout().addLayout(child)
++
++# Vertical layout widget
++
++class VBox():
++
++	def __init__(self, *children):
++		self.vbox = QWidget()
++		self.vbox.setLayout(VBoxLayout(*children))
+ 
+ 	def Widget(self):
+ 		return self.vbox
 -- 
 2.21.0
