@@ -1,32 +1,25 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/69] perf tools: Make usage of test_attr__* optional for perf-sys.h
-Date: Fri, 11 Oct 2019 17:05:05 -0300
-Message-ID: <20191011200559.7156-16-acme@kernel.org>
+Subject: [PATCH 16/69] samples/bpf: fix build by setting HAVE_ATTR_TEST to zero
+Date: Fri, 11 Oct 2019 17:05:06 -0300
+Message-ID: <20191011200559.7156-17-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>, Song Liu <songliubraving@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org, netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>, KP Singh <kpsingh@google.com>, Song Liu <songliubraving@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org, netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Björn Töpel <bjorn.topel@intel.com>
 
-For users of perf-sys.h outside perf, e.g. samples/bpf/bpf_load.c, it's
-convenient not to depend on test_attr__*.
+To remove that test_attr__{enabled/open} are used by perf-sys.h, we
+set HAVE_ATTR_TEST to zero.
 
-After commit 91854f9a077e ("perf tools: Move everything related to
-sys_perf_event_open() to perf-sys.h"), all users of perf-sys.h will
-depend on test_attr__enabled and test_attr__open.
-
-This commit enables a user to define HAVE_ATTR_TEST to zero in order
-to omit the test dependency.
-
-Fixes: 91854f9a077e ("perf tools: Move everything related to sys_perf_event_open() to perf-sys.h")
 Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Tested-by: KP Singh <kpsingh@google.com>
 Acked-by: Song Liu <songliubraving@fb.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
@@ -35,35 +28,23 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: bpf@vger.kernel.org
 Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191001113307.27796-2-bjorn.topel@gmail.com
+Link: http://lore.kernel.org/lkml/20191001113307.27796-3-bjorn.topel@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/perf-sys.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ samples/bpf/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/perf-sys.h b/tools/perf/perf-sys.h
-index 63e4349a772a..15e458e150bd 100644
---- a/tools/perf/perf-sys.h
-+++ b/tools/perf/perf-sys.h
-@@ -15,7 +15,9 @@ void test_attr__init(void);
- void test_attr__open(struct perf_event_attr *attr, pid_t pid, int cpu,
- 		     int fd, int group_fd, unsigned long flags);
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 1d9be26b4edd..42b571cde177 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -176,6 +176,7 @@ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/bpf/
+ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
+ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
+ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/perf
++KBUILD_HOSTCFLAGS += -DHAVE_ATTR_TEST=0
  
--#define HAVE_ATTR_TEST
-+#ifndef HAVE_ATTR_TEST
-+#define HAVE_ATTR_TEST 1
-+#endif
+ HOSTCFLAGS_bpf_load.o += -I$(objtree)/usr/include -Wno-unused-variable
  
- static inline int
- sys_perf_event_open(struct perf_event_attr *attr,
-@@ -27,7 +29,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
- 	fd = syscall(__NR_perf_event_open, attr, pid, cpu,
- 		     group_fd, flags);
- 
--#ifdef HAVE_ATTR_TEST
-+#if HAVE_ATTR_TEST
- 	if (unlikely(test_attr__enabled))
- 		test_attr__open(attr, pid, cpu, fd, group_fd, flags);
- #endif
 -- 
 2.21.0
