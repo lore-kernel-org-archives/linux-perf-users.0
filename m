@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 64/69] libperf: Move the pollfd allocation from tools/perf to libperf
-Date: Fri, 11 Oct 2019 17:05:54 -0300
-Message-ID: <20191011200559.7156-65-acme@kernel.org>
+Subject: [PATCH 65/69] libperf: Introduce perf_evlist__exit()
+Date: Fri, 11 Oct 2019 17:05:55 -0300
+Message-ID: <20191011200559.7156-66-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,72 +14,89 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-It's needed in libperf only, so move it to the perf_evlist__mmap_ops()
-function.
+Add the perf_evlist__exit() function, so far it's not exported and added
+only for internal use for perf and libperf.
+
+USe it to release cpus/threads and pollfd array.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-24-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-25-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c  | 5 +++++
- tools/perf/util/evlist.c | 4 ----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/lib/evlist.c                  | 12 +++++++++++-
+ tools/perf/lib/include/internal/evlist.h |  2 ++
+ tools/perf/util/evlist.c                 |  6 +-----
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index f9a802d2ceb5..5ae1da97d2e6 100644
+index 5ae1da97d2e6..7ba98f0e6365 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -34,6 +34,7 @@ void perf_evlist__init(struct perf_evlist *evlist)
- 		INIT_HLIST_HEAD(&evlist->heads[i]);
- 	INIT_LIST_HEAD(&evlist->entries);
- 	evlist->nr_entries = 0;
-+	fdarray__init(&evlist->pollfd, 64);
+@@ -109,13 +109,23 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
+ 	return next;
  }
  
- static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
-@@ -114,6 +115,7 @@ void perf_evlist__delete(struct perf_evlist *evlist)
++void perf_evlist__exit(struct perf_evlist *evlist)
++{
++	perf_cpu_map__put(evlist->cpus);
++	perf_thread_map__put(evlist->threads);
++	evlist->cpus = NULL;
++	evlist->threads = NULL;
++	fdarray__exit(&evlist->pollfd);
++}
++
+ void perf_evlist__delete(struct perf_evlist *evlist)
+ {
+ 	if (evlist == NULL)
  		return;
  
  	perf_evlist__munmap(evlist);
-+	fdarray__exit(&evlist->pollfd);
+-	fdarray__exit(&evlist->pollfd);
++	perf_evlist__close(evlist);
++	perf_evlist__exit(evlist);
  	free(evlist);
  }
  
-@@ -525,6 +527,9 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			return -ENOMEM;
- 	}
+diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
+index b2019700cdc0..0721512ffb19 100644
+--- a/tools/perf/lib/include/internal/evlist.h
++++ b/tools/perf/lib/include/internal/evlist.h
+@@ -48,6 +48,8 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
+ 			  struct perf_evlist_mmap_ops *ops,
+ 			  struct perf_mmap_param *mp);
  
-+	if (evlist->pollfd.entries == NULL && perf_evlist__alloc_pollfd(evlist) < 0)
-+		return -ENOMEM;
++void perf_evlist__exit(struct perf_evlist *evlist);
 +
- 	if (perf_cpu_map__empty(cpus))
- 		return mmap_per_thread(evlist, ops, mp);
- 
+ /**
+  * __perf_evlist__for_each_entry - iterate thru all the evsels
+  * @list: list_head instance to iterate
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3f4f11f27b94..5192c6583c96 100644
+index 5192c6583c96..031ace3696a2 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -58,7 +58,6 @@ void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+@@ -138,7 +138,7 @@ void evlist__exit(struct evlist *evlist)
  {
- 	perf_evlist__init(&evlist->core);
- 	perf_evlist__set_maps(&evlist->core, cpus, threads);
--	fdarray__init(&evlist->core.pollfd, 64);
- 	evlist->workload.pid = -1;
- 	evlist->bkw_mmap_state = BKW_MMAP_NOTREADY;
+ 	zfree(&evlist->mmap);
+ 	zfree(&evlist->overwrite_mmap);
+-	fdarray__exit(&evlist->core.pollfd);
++	perf_evlist__exit(&evlist->core);
  }
-@@ -829,9 +828,6 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 	if (!evlist->mmap)
- 		return -ENOMEM;
  
--	if (evlist->core.pollfd.entries == NULL && perf_evlist__alloc_pollfd(&evlist->core) < 0)
--		return -ENOMEM;
--
- 	evlist->core.mmap_len = evlist__mmap_size(pages);
- 	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
- 	mp.core.mask = evlist->core.mmap_len - page_size - 1;
+ void evlist__delete(struct evlist *evlist)
+@@ -148,10 +148,6 @@ void evlist__delete(struct evlist *evlist)
+ 
+ 	evlist__munmap(evlist);
+ 	evlist__close(evlist);
+-	perf_cpu_map__put(evlist->core.cpus);
+-	perf_thread_map__put(evlist->core.threads);
+-	evlist->core.cpus = NULL;
+-	evlist->core.threads = NULL;
+ 	evlist__purge(evlist);
+ 	evlist__exit(evlist);
+ 	free(evlist);
 -- 
 2.21.0
