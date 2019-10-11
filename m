@@ -1,50 +1,51 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/69] samples/bpf: fix build by setting HAVE_ATTR_TEST to zero
-Date: Fri, 11 Oct 2019 17:05:06 -0300
-Message-ID: <20191011200559.7156-17-acme@kernel.org>
+Subject: [PATCH 17/69] perf script: Allow --time with --reltime
+Date: Fri, 11 Oct 2019 17:05:07 -0300
+Message-ID: <20191011200559.7156-18-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>, KP Singh <kpsingh@google.com>, Song Liu <songliubraving@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org, netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Björn Töpel <bjorn.topel@intel.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-To remove that test_attr__{enabled/open} are used by perf-sys.h, we
-set HAVE_ATTR_TEST to zero.
+The original --reltime patch forbid --time with --reltime.
 
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Tested-by: KP Singh <kpsingh@google.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191001113307.27796-3-bjorn.topel@gmail.com
+But it turns out --time doesn't really care about --reltime, because the
+relative time is only used at final output, while the time filtering
+always works earlier on absolute time.
+
+So just remove the check and allow combining the two options.
+
+Fixes: 90b10f47c0ee ("perf script: Support relative time")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Link: http://lore.kernel.org/lkml/20191002164642.1719-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- samples/bpf/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-script.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 1d9be26b4edd..42b571cde177 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -176,6 +176,7 @@ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/bpf/
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
- KBUILD_HOSTCFLAGS += -I$(srctree)/tools/perf
-+KBUILD_HOSTCFLAGS += -DHAVE_ATTR_TEST=0
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 67be8d31afab..1c797a948ada 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3605,11 +3605,6 @@ int cmd_script(int argc, const char **argv)
+ 		}
+ 	}
  
- HOSTCFLAGS_bpf_load.o += -I$(objtree)/usr/include -Wno-unused-variable
- 
+-	if (script.time_str && reltime) {
+-		fprintf(stderr, "Don't combine --reltime with --time\n");
+-		return -1;
+-	}
+-
+ 	if (itrace_synth_opts.callchain &&
+ 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
+ 		scripting_max_stack = itrace_synth_opts.callchain_sz;
 -- 
 2.21.0
