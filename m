@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 60/69] perf evlist: Introduce perf_evlist__mmap_cb_get()
-Date: Fri, 11 Oct 2019 17:05:50 -0300
-Message-ID: <20191011200559.7156-61-acme@kernel.org>
+Subject: [PATCH 61/69] perf evlist: Introduce perf_evlist__mmap_cb_mmap()
+Date: Fri, 11 Oct 2019 17:05:51 -0300
+Message-ID: <20191011200559.7156-62-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,62 +14,50 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add the perf_evlist__mmap_cb_get() function to return 'struct perf_mmap'
-object during perf_evlist__mmap_ops() call.
-
-The array of 'struct mmap' is allocated via evlist__alloc_mmap(), in
-this callback we simply returns pointer to the base object.
+Add the perf_evlist__mmap_cb_mmap() function to call perf specific
+mmap__mmap() function during perf_evlist__mmap_ops() call.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-20-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-21-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ tools/perf/util/evlist.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 11716f2b965a..f50ee5cb6554 100644
+index f50ee5cb6554..d57b684b4b7b 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -750,6 +750,29 @@ perf_evlist__mmap_cb_idx(struct perf_evlist *_evlist,
- 	auxtrace_mmap_params__set_idx(&mp->auxtrace_mp, evlist, idx, per_cpu);
+@@ -773,6 +773,16 @@ perf_evlist__mmap_cb_get(struct perf_evlist *_evlist, bool overwrite, int idx)
+ 	return &maps[idx].core;
  }
  
-+static struct perf_mmap*
-+perf_evlist__mmap_cb_get(struct perf_evlist *_evlist, bool overwrite, int idx)
++static int
++perf_evlist__mmap_cb_mmap(struct perf_mmap *_map, struct perf_mmap_param *_mp,
++			  int output, int cpu)
 +{
-+	struct evlist *evlist = container_of(_evlist, struct evlist, core);
-+	struct mmap *maps = evlist->mmap;
++	struct mmap *map = container_of(_map, struct mmap, core);
++	struct mmap_params *mp = container_of(_mp, struct mmap_params, core);
 +
-+	if (overwrite) {
-+		maps = evlist->overwrite_mmap;
-+
-+		if (!maps) {
-+			maps = evlist__alloc_mmap(evlist, true);
-+			if (!maps)
-+				return NULL;
-+
-+			evlist->overwrite_mmap = maps;
-+			if (evlist->bkw_mmap_state == BKW_MMAP_NOTREADY)
-+				perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
-+		}
-+	}
-+
-+	return &maps[idx].core;
++	return mmap__mmap(map, mp, output, cpu);
 +}
 +
  static int evlist__mmap_per_cpu(struct evlist *evlist,
  				     struct mmap_params *mp)
  {
-@@ -948,6 +971,7 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+@@ -970,8 +980,9 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 		.comp_level	= comp_level
  	};
  	struct perf_evlist_mmap_ops ops __maybe_unused = {
- 		.idx = perf_evlist__mmap_cb_idx,
-+		.get = perf_evlist__mmap_cb_get,
+-		.idx = perf_evlist__mmap_cb_idx,
+-		.get = perf_evlist__mmap_cb_get,
++		.idx  = perf_evlist__mmap_cb_idx,
++		.get  = perf_evlist__mmap_cb_get,
++		.mmap = perf_evlist__mmap_cb_mmap,
  	};
  
  	if (!evlist->mmap)
