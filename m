@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 42/69] libperf: Add perf_mmap__init() function
-Date: Fri, 11 Oct 2019 17:05:32 -0300
-Message-ID: <20191011200559.7156-43-acme@kernel.org>
+Subject: [PATCH 43/69] libperf: Add 'struct perf_mmap_param'
+Date: Fri, 11 Oct 2019 17:05:33 -0300
+Message-ID: <20191011200559.7156-44-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,87 +14,114 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add perf_mmap__init() function to initialize 'struct perf_mmap' objects.
-
-Add it to a new mmap.c source file, that will carry all the mmap related
-functions.
+Add libperf's version of mmap params 'struct perf_mmap_param' object
+with the basics: 'prot' and 'mask'.  Encapsulate it in the current
+'struct mmap_params' object.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-2-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-3-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/Build                   | 1 +
- tools/perf/lib/include/internal/mmap.h | 2 ++
- tools/perf/lib/mmap.c                  | 9 +++++++++
- tools/perf/util/evlist.c               | 5 ++---
- 4 files changed, 14 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/lib/mmap.c
+ tools/perf/lib/include/internal/mmap.h |  5 +++++
+ tools/perf/util/evlist.c               | 14 +++++++++-----
+ tools/perf/util/mmap.c                 |  4 ++--
+ tools/perf/util/mmap.h                 |  3 ++-
+ 4 files changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/lib/Build b/tools/perf/lib/Build
-index c31f1c111f8f..2ef9a4ec6d99 100644
---- a/tools/perf/lib/Build
-+++ b/tools/perf/lib/Build
-@@ -3,6 +3,7 @@ libperf-y += cpumap.o
- libperf-y += threadmap.o
- libperf-y += evsel.o
- libperf-y += evlist.o
-+libperf-y += mmap.o
- libperf-y += zalloc.o
- libperf-y += xyarray.o
- libperf-y += lib.o
 diff --git a/tools/perf/lib/include/internal/mmap.h b/tools/perf/lib/include/internal/mmap.h
-index ba1e519c15b9..e25890de6a55 100644
+index e25890de6a55..b26806b36bb6 100644
 --- a/tools/perf/lib/include/internal/mmap.h
 +++ b/tools/perf/lib/include/internal/mmap.h
-@@ -29,4 +29,6 @@ struct perf_mmap {
+@@ -29,6 +29,11 @@ struct perf_mmap {
  	char		 event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
  };
  
-+void perf_mmap__init(struct perf_mmap *map, bool overwrite);
++struct perf_mmap_param {
++	int	prot;
++	int	mask;
++};
 +
+ void perf_mmap__init(struct perf_mmap *map, bool overwrite);
+ 
  #endif /* __LIBPERF_INTERNAL_MMAP_H */
-diff --git a/tools/perf/lib/mmap.c b/tools/perf/lib/mmap.c
-new file mode 100644
-index 000000000000..3da6177510e6
---- /dev/null
-+++ b/tools/perf/lib/mmap.c
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <internal/mmap.h>
-+
-+void perf_mmap__init(struct perf_mmap *map, bool overwrite)
-+{
-+	map->fd = -1;
-+	map->overwrite = overwrite;
-+	refcount_set(&map->refcnt, 0);
-+}
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index e33b46aca5cb..6c8de0865670 100644
+index 6c8de0865670..3a19a7cb95b1 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -629,8 +629,6 @@ static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
- 		return NULL;
+@@ -667,7 +667,7 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 		int fd;
+ 		int cpu;
  
- 	for (i = 0; i < evlist->core.nr_mmaps; i++) {
--		map[i].core.fd = -1;
--		map[i].core.overwrite = overwrite;
- 		/*
- 		 * When the perf_mmap() call is made we grab one refcount, plus
- 		 * one extra to let perf_mmap__consume() get the last
-@@ -640,8 +638,9 @@ static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
- 		 * Each PERF_EVENT_IOC_SET_OUTPUT points to this mmap and
- 		 * thus does perf_mmap__get() on it.
- 		 */
--		refcount_set(&map[i].core.refcnt, 0);
-+		perf_mmap__init(&map[i].core, overwrite);
- 	}
-+
- 	return map;
- }
+-		mp->prot = PROT_READ | PROT_WRITE;
++		mp->core.prot = PROT_READ | PROT_WRITE;
+ 		if (evsel->core.attr.write_backward) {
+ 			output = _output_overwrite;
+ 			maps = evlist->overwrite_mmap;
+@@ -680,7 +680,7 @@ static int evlist__mmap_per_evsel(struct evlist *evlist, int idx,
+ 				if (evlist->bkw_mmap_state == BKW_MMAP_NOTREADY)
+ 					perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
+ 			}
+-			mp->prot &= ~PROT_WRITE;
++			mp->core.prot &= ~PROT_WRITE;
+ 		}
+ 
+ 		if (evsel->core.system_wide && thread)
+@@ -921,8 +921,12 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 	 * Its value is decided by evsel's write_backward.
+ 	 * So &mp should not be passed through const pointer.
+ 	 */
+-	struct mmap_params mp = { .nr_cblocks = nr_cblocks, .affinity = affinity, .flush = flush,
+-				  .comp_level = comp_level };
++	struct mmap_params mp = {
++		.nr_cblocks	= nr_cblocks,
++		.affinity	= affinity,
++		.flush		= flush,
++		.comp_level	= comp_level
++	};
+ 
+ 	if (!evlist->mmap)
+ 		evlist->mmap = evlist__alloc_mmap(evlist, false);
+@@ -934,7 +938,7 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
+ 
+ 	evlist->core.mmap_len = evlist__mmap_size(pages);
+ 	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
+-	mp.mask = evlist->core.mmap_len - page_size - 1;
++	mp.core.mask = evlist->core.mmap_len - page_size - 1;
+ 
+ 	auxtrace_mmap_params__init(&mp.auxtrace_mp, evlist->core.mmap_len,
+ 				   auxtrace_pages, auxtrace_overwrite);
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index a35dc57d5995..a496ced5ed2a 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -370,8 +370,8 @@ int perf_mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
+ 	 */
+ 	refcount_set(&map->core.refcnt, 2);
+ 	map->core.prev = 0;
+-	map->core.mask = mp->mask;
+-	map->core.base = mmap(NULL, perf_mmap__mmap_len(map), mp->prot,
++	map->core.mask = mp->core.mask;
++	map->core.base = mmap(NULL, perf_mmap__mmap_len(map), mp->core.prot,
+ 			 MAP_SHARED, fd, 0);
+ 	if (map->core.base == MAP_FAILED) {
+ 		pr_debug2("failed to mmap perf event ring buffer, error %d\n",
+diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
+index e567c1c875bd..4ff75d8aeb05 100644
+--- a/tools/perf/util/mmap.h
++++ b/tools/perf/util/mmap.h
+@@ -37,7 +37,8 @@ struct mmap {
+ };
+ 
+ struct mmap_params {
+-	int prot, mask, nr_cblocks, affinity, flush, comp_level;
++	struct perf_mmap_param core;
++	int nr_cblocks, affinity, flush, comp_level;
+ 	struct auxtrace_mmap_params auxtrace_mp;
+ };
  
 -- 
 2.21.0
