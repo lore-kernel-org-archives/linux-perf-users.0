@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 37/69] perf trace: Introduce a strtoul() method for 'struct strarrays'
-Date: Fri, 11 Oct 2019 17:05:27 -0300
-Message-ID: <20191011200559.7156-38-acme@kernel.org>
+Subject: [PATCH 38/69] perf trace: Expand strings in filters to integers
+Date: Fri, 11 Oct 2019 17:05:28 -0300
+Message-ID: <20191011200559.7156-39-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,105 +15,176 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-And also for 'struct strarray', since its needed to implement
-strarrays__strtoul(). This just traverses the entries and when finding a
-match, returns (offset + index), i.e. the value associated with the
-searched string.
+So that one can try things like:
 
-E.g. "EFER" (MSR_EFER) returns:
+  # perf trace -e msr:* --filter="msr!=FS_BASE && msr != IA32_TSC_DEADLINE && msr != 0x830 && msr != 0x83f && msr !=IA32_SPEC_CTRL" --filter-pids 3750
 
-  # grep -w EFER -B2 /tmp/build/perf/trace/beauty/generated/x86_arch_MSRs_array.c
-  #define x86_64_specific_MSRs_offset 0xc0000080
-  static const char *x86_64_specific_MSRs[] = {
-	[0xc0000080 - x86_64_specific_MSRs_offset] = "EFER",
+That, at this point in the patchset, without any strtoul in place for
+tracepoint arguments, will result in:
+
+  No resolver (strtoul) for "msr" in "msr:read_msr", can't set filter "(msr!=FS_BASE && msr != IA32_TSC_DEADLINE && msr != 0x830 && msr != 0x83f && msr !=IA32_SPEC_CTRL) && (common_pid != 25407 && common_pid != 3750)"
   #
 
-  0xc0000080
-
-This will be auto-attached to 'struct syscall_arg_fmt' entries
-associated with strarrays as soon as we add a ->strarray and ->strarrays
-to 'struct syscall_arg_fmt'.
+See you in the next cset!
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-r2hpaahf8lishyb1owko9vs1@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-dx5j70fv2rgkeezd1cb3hv2p@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 28 ++++++++++++++++++++++++++++
- tools/perf/trace/beauty/beauty.h |  5 +++++
- 2 files changed, 33 insertions(+)
+ tools/perf/builtin-trace.c | 130 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 130 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index faa5bf4a5a3a..50a1aeb997ae 100644
+index 50a1aeb997ae..515a800efc9c 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -477,6 +477,34 @@ size_t strarrays__scnprintf(struct strarrays *sas, char *bf, size_t size, const
- 	return printed;
+@@ -3484,6 +3484,133 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
+ 	return __trace__deliver_event(trace, event->event);
  }
  
-+bool strarray__strtoul(struct strarray *sa, char *bf, size_t size, u64 *ret)
++static struct syscall_arg_fmt *perf_evsel__syscall_arg_fmt(struct evsel *evsel, char *arg)
 +{
-+	int i;
++	struct tep_format_field *field;
++	struct syscall_arg_fmt *fmt = evsel->priv;
 +
-+	for (i = 0; i < sa->nr_entries; ++i) {
-+		if (sa->entries[i] && strncmp(sa->entries[i], bf, size) == 0 && sa->entries[i][size] == '\0') {
-+			*ret = sa->offset + i;
-+			return true;
++	if (evsel->tp_format == NULL || fmt == NULL)
++		return NULL;
++
++	for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
++		if (strcmp(field->name, arg) == 0)
++			return fmt;
++
++	return NULL;
++}
++
++static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel *evsel)
++{
++	char *tok, *left = evsel->filter, *new_filter = evsel->filter;
++
++	while ((tok = strpbrk(left, "=<>!")) != NULL) {
++		char *right = tok + 1, *right_end;
++
++		if (*right == '=')
++			++right;
++
++		while (isspace(*right))
++			++right;
++
++		if (*right == '\0')
++			break;
++
++		while (!isalpha(*left))
++			if (++left == tok) {
++				/*
++				 * Bail out, can't find the name of the argument that is being
++				 * used in the filter, let it try to set this filter, will fail later.
++				 */
++				return 0;
++			}
++
++		right_end = right + 1;
++		while (isalnum(*right_end) || *right_end == '_')
++			++right_end;
++
++		if (isalpha(*right)) {
++			struct syscall_arg_fmt *fmt;
++			int left_size = tok - left,
++			    right_size = right_end - right;
++			char arg[128];
++
++			while (isspace(left[left_size - 1]))
++				--left_size;
++
++			scnprintf(arg, sizeof(arg), "%.*s", left_size, left);
++
++			fmt = perf_evsel__syscall_arg_fmt(evsel, arg);
++			if (fmt == NULL) {
++				pr_debug("\"%s\" not found in \"%s\", can't set filter \"%s\"\n",
++					 arg, evsel->name, evsel->filter);
++				return -1;
++			}
++
++			pr_debug2("trying to expand \"%s\" \"%.*s\" \"%.*s\" -> ",
++				 arg, (int)(right - tok), tok, right_size, right);
++
++			if (fmt->strtoul) {
++				u64 val;
++				if (fmt->strtoul(right, right_size, NULL, &val)) {
++					char *n, expansion[19];
++					int expansion_lenght = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
++					int expansion_offset = right - new_filter;
++
++					pr_debug("%s", expansion);
++
++					if (asprintf(&n, "%.*s%s%s", expansion_offset, new_filter, expansion, right_end) < 0) {
++						pr_debug(" out of memory!\n");
++						free(new_filter);
++						return -1;
++					}
++					if (new_filter != evsel->filter)
++						free(new_filter);
++					left = n + expansion_offset + expansion_lenght;
++					new_filter = n;
++				} else {
++					pr_err("\"%.*s\" not found for \"%s\" in \"%s\", can't set filter \"%s\"\n",
++					       right_size, right, arg, evsel->name, evsel->filter);
++					return -1;
++				}
++			} else {
++				pr_err("No resolver (strtoul) for \"%s\" in \"%s\", can't set filter \"%s\"\n",
++				       arg, evsel->name, evsel->filter);
++				return -1;
++			}
++
++			pr_debug("\n");
++		} else {
++			left = right_end;
 +		}
 +	}
 +
-+	return false;
-+}
-+
-+bool strarrays__strtoul(struct strarrays *sas, char *bf, size_t size, u64 *ret)
-+{
-+	int i;
-+
-+	for (i = 0; i < sas->nr_entries; ++i) {
-+		struct strarray *sa = sas->entries[i];
-+
-+		if (strarray__strtoul(sa, bf, size, ret))
-+			return true;
++	if (new_filter != evsel->filter) {
++		pr_debug("New filter for %s: %s\n", evsel->name, new_filter);
++		perf_evsel__set_filter(evsel, new_filter);
++		free(new_filter);
 +	}
 +
-+	return false;
++	return 0;
 +}
 +
- size_t syscall_arg__scnprintf_strarrays(char *bf, size_t size,
- 					struct syscall_arg *arg)
++static int trace__expand_filters(struct trace *trace, struct evsel **err_evsel)
++{
++	struct evlist *evlist = trace->evlist;
++	struct evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->filter == NULL)
++			continue;
++
++		if (trace__expand_filter(trace, evsel)) {
++			*err_evsel = evsel;
++			return -1;
++		}
++	}
++
++	return 0;
++}
++
+ static int trace__run(struct trace *trace, int argc, const char **argv)
  {
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index aa3fac8bd1be..919ac4548bd8 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -5,6 +5,7 @@
- #include <linux/kernel.h>
- #include <linux/types.h>
- #include <sys/types.h>
-+#include <stdbool.h>
+ 	struct evlist *evlist = trace->evlist;
+@@ -3625,6 +3752,9 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	 */
+ 	trace->fd_path_disabled = !trace__syscall_enabled(trace, syscalltbl__id(trace->sctbl, "close"));
  
- struct strarray {
- 	u64	    offset;
-@@ -29,6 +30,8 @@ struct strarray {
- size_t strarray__scnprintf(struct strarray *sa, char *bf, size_t size, const char *intfmt, bool show_prefix, int val);
- size_t strarray__scnprintf_flags(struct strarray *sa, char *bf, size_t size, bool show_prefix, unsigned long flags);
- 
-+bool strarray__strtoul(struct strarray *sa, char *bf, size_t size, u64 *ret);
-+
- struct trace;
- struct thread;
- 
-@@ -51,6 +54,8 @@ struct strarrays {
- 
- size_t strarrays__scnprintf(struct strarrays *sas, char *bf, size_t size, const char *intfmt, bool show_prefix, int val);
- 
-+bool strarrays__strtoul(struct strarrays *sas, char *bf, size_t size, u64 *ret);
-+
- size_t pid__scnprintf_fd(struct trace *trace, pid_t pid, int fd, char *bf, size_t size);
- 
- extern struct strarray strarray__socket_families;
++	err = trace__expand_filters(trace, &evsel);
++	if (err)
++		goto out_delete_evlist;
+ 	err = perf_evlist__apply_filters(evlist, &evsel);
+ 	if (err < 0)
+ 		goto out_error_apply_filters;
 -- 
 2.21.0
