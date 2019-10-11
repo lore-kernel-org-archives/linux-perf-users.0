@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/69] perf trace: Allocate an array of beautifiers for tracepoint args
-Date: Fri, 11 Oct 2019 17:05:09 -0300
-Message-ID: <20191011200559.7156-20-acme@kernel.org>
+Subject: [PATCH 20/69] perf trace: Move some scnprintf methods from syscall to syscall_arg_fmt
+Date: Fri, 11 Oct 2019 17:05:10 -0300
+Message-ID: <20191011200559.7156-21-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,60 +15,82 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This will work similar to the syscall args, we'll allocate an array
-of 'struct syscall_arg_fmt' for the tracepoint args and then init them
-using the same algorithm used for the defaults for syscall args, i.e.
-using its types and sometimes names as hints to find the right scnprintf
-routine to beautify them from numbers into strings.
-
-Next step is to stop using libtracevent to printf tracepoints, as we'll
-have more beautifiers than int provides, modulo perhaps some plugins.
+Since all they operate on is on a syscall_arg_fmt instance, so move them
+to allow use it from the upcoming tracepoint fprintf routine.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-dcl135relxvf6ljisjg13aqg@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ynttrs1l75f0x9tk67spd7jd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d52dd2bad980..aa70602c2808 100644
+index aa70602c2808..82d39ef43d9c 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1574,6 +1574,19 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	return syscall__set_arg_fmts(sc);
+@@ -1715,22 +1715,22 @@ static size_t syscall__scnprintf_name(struct syscall *sc, char *bf, size_t size,
+  * as mount 'flags' argument that needs ignoring some magic flag, see comment
+  * in tools/perf/trace/beauty/mount_flags.c
+  */
+-static unsigned long syscall__mask_val(struct syscall *sc, struct syscall_arg *arg, unsigned long val)
++static unsigned long syscall_arg_fmt__mask_val(struct syscall_arg_fmt *fmt, struct syscall_arg *arg, unsigned long val)
+ {
+-	if (sc->arg_fmt && sc->arg_fmt[arg->idx].mask_val)
+-		return sc->arg_fmt[arg->idx].mask_val(arg, val);
++	if (fmt && fmt->mask_val)
++		return fmt->mask_val(arg, val);
+ 
+ 	return val;
  }
  
-+static int perf_evsel__init_tp_arg_scnprintf(struct evsel *evsel)
-+{
-+	int nr_args = evsel->tp_format->format.nr_fields;
-+
-+	evsel->priv = calloc(nr_args, sizeof(struct syscall_arg_fmt));
-+	if (evsel->priv != NULL) {
-+		syscall_arg_fmt__init_array(evsel->priv, evsel->tp_format->format.fields);
-+		return 0;
-+	}
-+
-+	return -ENOMEM;
-+}
-+
- static int intcmp(const void *a, const void *b)
+-static size_t syscall__scnprintf_val(struct syscall *sc, char *bf, size_t size,
+-				     struct syscall_arg *arg, unsigned long val)
++static size_t syscall_arg_fmt__scnprintf_val(struct syscall_arg_fmt *fmt, char *bf, size_t size,
++					     struct syscall_arg *arg, unsigned long val)
  {
- 	const int *one = a, *another = b;
-@@ -3936,8 +3949,10 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
- 		if (evsel->priv || !evsel->tp_format)
- 			continue;
+-	if (sc->arg_fmt && sc->arg_fmt[arg->idx].scnprintf) {
++	if (fmt && fmt->scnprintf) {
+ 		arg->val = val;
+-		if (sc->arg_fmt[arg->idx].parm)
+-			arg->parm = sc->arg_fmt[arg->idx].parm;
+-		return sc->arg_fmt[arg->idx].scnprintf(bf, size, arg);
++		if (fmt->parm)
++			arg->parm = fmt->parm;
++		return fmt->scnprintf(bf, size, arg);
+ 	}
+ 	return scnprintf(bf, size, "%ld", val);
+ }
+@@ -1776,7 +1776,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			 * Some syscall args need some mask, most don't and
+ 			 * return val untouched.
+ 			 */
+-			val = syscall__mask_val(sc, &arg, val);
++			val = syscall_arg_fmt__mask_val(&sc->arg_fmt[arg.idx], &arg, val);
  
--		if (strcmp(evsel->tp_format->system, "syscalls"))
-+		if (strcmp(evsel->tp_format->system, "syscalls")) {
-+			perf_evsel__init_tp_arg_scnprintf(evsel);
- 			continue;
-+		}
+ 			/*
+  			 * Suppress this argument if its value is zero and
+@@ -1797,7 +1797,8 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			if (trace->show_arg_names)
+ 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
  
- 		if (perf_evsel__init_syscall_tp(evsel))
- 			return -1;
+-			printed += syscall__scnprintf_val(sc, bf + printed, size - printed, &arg, val);
++			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
++								  bf + printed, size - printed, &arg, val);
+ 		}
+ 	} else if (IS_ERR(sc->tp_format)) {
+ 		/*
+@@ -1812,7 +1813,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			if (printed)
+ 				printed += scnprintf(bf + printed, size - printed, ", ");
+ 			printed += syscall__scnprintf_name(sc, bf + printed, size - printed, &arg);
+-			printed += syscall__scnprintf_val(sc, bf + printed, size - printed, &arg, val);
++			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx], bf + printed, size - printed, &arg, val);
+ next_arg:
+ 			++arg.idx;
+ 			bit <<= 1;
 -- 
 2.21.0
