@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 66/69] libperf: Introduce perf_evlist__purge()
-Date: Fri, 11 Oct 2019 17:05:56 -0300
-Message-ID: <20191011200559.7156-67-acme@kernel.org>
+Subject: [PATCH 67/69] libperf: Adopt perf_evlist__filter_pollfd() from tools/perf
+Date: Fri, 11 Oct 2019 17:05:57 -0300
+Message-ID: <20191011200559.7156-68-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,82 +14,99 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add a static perf_evlist__purge() function to purge evsels from a evlist.
-
-Add also perf_evlist__for_each_entry_safe() which is used by
-perf_evlist__purge().
+Introduce the perf_evlist__filter_pollfd function and export it in the
+perf/evlist.h header, so that libperf users can check if the descriptor
+is still alive.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191007125344.14268-26-jolsa@kernel.org
+Link: http://lore.kernel.org/lkml/20191007125344.14268-27-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c                  | 13 +++++++++++++
- tools/perf/lib/include/internal/evlist.h | 18 ++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ tools/perf/lib/evlist.c              | 15 +++++++++++++++
+ tools/perf/lib/include/perf/evlist.h |  2 ++
+ tools/perf/lib/libperf.map           |  1 +
+ tools/perf/util/evlist.c             | 12 +-----------
+ 4 files changed, 19 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 7ba98f0e6365..9534ad9a572f 100644
+index 9534ad9a572f..65045614c938 100644
 --- a/tools/perf/lib/evlist.c
 +++ b/tools/perf/lib/evlist.c
-@@ -109,6 +109,18 @@ perf_evlist__next(struct perf_evlist *evlist, struct perf_evsel *prev)
- 	return next;
+@@ -313,6 +313,21 @@ int perf_evlist__add_pollfd(struct perf_evlist *evlist, int fd,
+ 	return pos;
  }
  
-+static void perf_evlist__purge(struct perf_evlist *evlist)
++static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
++					 void *arg __maybe_unused)
 +{
-+	struct perf_evsel *pos, *n;
++	struct perf_mmap *map = fda->priv[fd].ptr;
 +
-+	perf_evlist__for_each_entry_safe(evlist, n, pos) {
-+		list_del_init(&pos->node);
-+		perf_evsel__delete(pos);
-+	}
-+
-+	evlist->nr_entries = 0;
++	if (map)
++		perf_mmap__put(map);
 +}
 +
- void perf_evlist__exit(struct perf_evlist *evlist)
++int perf_evlist__filter_pollfd(struct perf_evlist *evlist, short revents_and_mask)
++{
++	return fdarray__filter(&evlist->pollfd, revents_and_mask,
++			       perf_evlist__munmap_filtered, NULL);
++}
++
+ int perf_evlist__poll(struct perf_evlist *evlist, int timeout)
  {
- 	perf_cpu_map__put(evlist->cpus);
-@@ -125,6 +137,7 @@ void perf_evlist__delete(struct perf_evlist *evlist)
+ 	return fdarray__poll(&evlist->pollfd, timeout);
+diff --git a/tools/perf/lib/include/perf/evlist.h b/tools/perf/lib/include/perf/evlist.h
+index 28b6a12a8a2b..16f526e74d13 100644
+--- a/tools/perf/lib/include/perf/evlist.h
++++ b/tools/perf/lib/include/perf/evlist.h
+@@ -32,6 +32,8 @@ LIBPERF_API void perf_evlist__set_maps(struct perf_evlist *evlist,
+ 				       struct perf_cpu_map *cpus,
+ 				       struct perf_thread_map *threads);
+ LIBPERF_API int perf_evlist__poll(struct perf_evlist *evlist, int timeout);
++LIBPERF_API int perf_evlist__filter_pollfd(struct perf_evlist *evlist,
++					   short revents_and_mask);
  
- 	perf_evlist__munmap(evlist);
- 	perf_evlist__close(evlist);
-+	perf_evlist__purge(evlist);
- 	perf_evlist__exit(evlist);
- 	free(evlist);
+ LIBPERF_API int perf_evlist__mmap(struct perf_evlist *evlist, int pages);
+ LIBPERF_API void perf_evlist__munmap(struct perf_evlist *evlist);
+diff --git a/tools/perf/lib/libperf.map b/tools/perf/lib/libperf.map
+index 5a18fd1aacf2..2184aba36c3f 100644
+--- a/tools/perf/lib/libperf.map
++++ b/tools/perf/lib/libperf.map
+@@ -42,6 +42,7 @@ LIBPERF_0.0.1 {
+ 		perf_evlist__poll;
+ 		perf_evlist__mmap;
+ 		perf_evlist__munmap;
++		perf_evlist__filter_pollfd;
+ 		perf_mmap__consume;
+ 		perf_mmap__read_init;
+ 		perf_mmap__read_done;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 031ace3696a2..21b77efa802c 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -423,19 +423,9 @@ int evlist__add_pollfd(struct evlist *evlist, int fd)
+ 	return perf_evlist__add_pollfd(&evlist->core, fd, NULL, POLLIN);
  }
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index 0721512ffb19..be0b25a70730 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -82,6 +82,24 @@ void perf_evlist__exit(struct perf_evlist *evlist);
- #define perf_evlist__for_each_entry_reverse(evlist, evsel) \
- 	__perf_evlist__for_each_entry_reverse(&(evlist)->entries, evsel)
  
-+/**
-+ * __perf_evlist__for_each_entry_safe - safely iterate thru all the evsels
-+ * @list: list_head instance to iterate
-+ * @tmp: struct evsel temp iterator
-+ * @evsel: struct evsel iterator
-+ */
-+#define __perf_evlist__for_each_entry_safe(list, tmp, evsel) \
-+	list_for_each_entry_safe(evsel, tmp, list, node)
-+
-+/**
-+ * perf_evlist__for_each_entry_safe - safely iterate thru all the evsels
-+ * @evlist: evlist instance to iterate
-+ * @evsel: struct evsel iterator
-+ * @tmp: struct evsel temp iterator
-+ */
-+#define perf_evlist__for_each_entry_safe(evlist, tmp, evsel) \
-+	__perf_evlist__for_each_entry_safe(&(evlist)->entries, tmp, evsel)
-+
- static inline struct perf_evsel *perf_evlist__first(struct perf_evlist *evlist)
+-static void perf_evlist__munmap_filtered(struct fdarray *fda, int fd,
+-					 void *arg __maybe_unused)
+-{
+-	struct perf_mmap *map = fda->priv[fd].ptr;
+-
+-	if (map)
+-		perf_mmap__put(map);
+-}
+-
+ int evlist__filter_pollfd(struct evlist *evlist, short revents_and_mask)
  {
- 	return list_entry(evlist->entries.next, struct perf_evsel, node);
+-	return fdarray__filter(&evlist->core.pollfd, revents_and_mask,
+-			       perf_evlist__munmap_filtered, NULL);
++	return perf_evlist__filter_pollfd(&evlist->core, revents_and_mask);
+ }
+ 
+ int evlist__poll(struct evlist *evlist, int timeout)
 -- 
 2.21.0
