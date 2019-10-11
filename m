@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/69] perf scripts python: exported-sql-viewer.py: Add global time range calculations
-Date: Fri, 11 Oct 2019 17:05:01 -0300
-Message-ID: <20191011200559.7156-12-acme@kernel.org>
+Subject: [PATCH 12/69] perf scripts python: exported-sql-viewer.py: Tidy up Call tree call_time
+Date: Fri, 11 Oct 2019 17:05:02 -0300
+Message-ID: <20191011200559.7156-13-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,153 +14,69 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add calculations to determine a time range that encompasses all data.
+Record call_time on tree nodes and re-name the misnamed "count" parameter.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20190821083216.1340-4-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20190821083216.1340-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../scripts/python/exported-sql-viewer.py     | 113 +++++++++++++++++-
- 1 file changed, 109 insertions(+), 4 deletions(-)
+ tools/perf/scripts/python/exported-sql-viewer.py | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
-index 9767a5f802e5..0dcc9a03b1b0 100755
+index 0dcc9a03b1b0..06b8d55977bc 100755
 --- a/tools/perf/scripts/python/exported-sql-viewer.py
 +++ b/tools/perf/scripts/python/exported-sql-viewer.py
-@@ -2088,10 +2088,8 @@ class SampleTimeRangesDataItem(LineEditDataItem):
- 		QueryExec(query, "SELECT id, time FROM samples ORDER BY id DESC LIMIT 1")
- 		if query.next():
- 			self.last_id = int(query.value(0))
--			self.last_time = int(query.value(1))
--		QueryExec(query, "SELECT time FROM samples WHERE time != 0 ORDER BY id LIMIT 1")
--		if query.next():
--			self.first_time = int(query.value(0))
-+		self.first_time = int(glb.HostStartTime())
-+		self.last_time = int(glb.HostFinishTime())
- 		if placeholder_text:
- 			placeholder_text += ", between " + str(self.first_time) + " and " + str(self.last_time)
+@@ -794,15 +794,16 @@ class CallGraphModel(CallGraphModelBase):
  
-@@ -3500,6 +3498,9 @@ class Glb():
- 			self.have_disassembler = True
- 		except:
- 			self.have_disassembler = False
-+		self.host_machine_id = 0
-+		self.host_start_time = 0
-+		self.host_finish_time = 0
+ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
- 	def FileFromBuildId(self, build_id):
- 		file_name = self.buildid_dir + build_id[0:2] + "/" + build_id[2:] + "/elf"
-@@ -3532,6 +3533,110 @@ class Glb():
- 			except:
- 				pass
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+ 		super(CallTreeLevelTwoPlusItemBase, self).__init__(glb, params, row, parent_item)
+ 		self.comm_id = comm_id
+ 		self.thread_id = thread_id
+ 		self.calls_id = calls_id
++		self.call_time = call_time
++		self.time = time
+ 		self.insn_cnt = insn_cnt
+ 		self.cyc_cnt = cyc_cnt
+ 		self.branch_count = branch_count
+-		self.time = time
  
-+	def GetHostMachineId(self):
-+		query = QSqlQuery(self.db)
-+		QueryExec(query, "SELECT id FROM machines WHERE pid = -1")
-+		if query.next():
-+			self.host_machine_id = query.value(0)
-+		else:
-+			self.host_machine_id = 0
-+		return self.host_machine_id
-+
-+	def HostMachineId(self):
-+		if self.host_machine_id:
-+			return self.host_machine_id
-+		return self.GetHostMachineId()
-+
-+	def SelectValue(self, sql):
-+		query = QSqlQuery(self.db)
-+		try:
-+			QueryExec(query, sql)
-+		except:
-+			return None
-+		if query.next():
-+			return Decimal(query.value(0))
-+		return None
-+
-+	def SwitchesMinTime(self, machine_id):
-+		return self.SelectValue("SELECT time"
-+					" FROM context_switches"
-+					" WHERE time != 0 AND machine_id = " + str(machine_id) +
-+					" ORDER BY id LIMIT 1")
-+
-+	def SwitchesMaxTime(self, machine_id):
-+		return self.SelectValue("SELECT time"
-+					" FROM context_switches"
-+					" WHERE time != 0 AND machine_id = " + str(machine_id) +
-+					" ORDER BY id DESC LIMIT 1")
-+
-+	def SamplesMinTime(self, machine_id):
-+		return self.SelectValue("SELECT time"
-+					" FROM samples"
-+					" WHERE time != 0 AND machine_id = " + str(machine_id) +
-+					" ORDER BY id LIMIT 1")
-+
-+	def SamplesMaxTime(self, machine_id):
-+		return self.SelectValue("SELECT time"
-+					" FROM samples"
-+					" WHERE time != 0 AND machine_id = " + str(machine_id) +
-+					" ORDER BY id DESC LIMIT 1")
-+
-+	def CallsMinTime(self, machine_id):
-+		return self.SelectValue("SELECT calls.call_time"
-+					" FROM calls"
-+					" INNER JOIN threads ON threads.thread_id = calls.thread_id"
-+					" WHERE calls.call_time != 0 AND threads.machine_id = " + str(machine_id) +
-+					" ORDER BY calls.id LIMIT 1")
-+
-+	def CallsMaxTime(self, machine_id):
-+		return self.SelectValue("SELECT calls.return_time"
-+					" FROM calls"
-+					" INNER JOIN threads ON threads.thread_id = calls.thread_id"
-+					" WHERE calls.return_time != 0 AND threads.machine_id = " + str(machine_id) +
-+					" ORDER BY calls.return_time DESC LIMIT 1")
-+
-+	def GetStartTime(self, machine_id):
-+		t0 = self.SwitchesMinTime(machine_id)
-+		t1 = self.SamplesMinTime(machine_id)
-+		t2 = self.CallsMinTime(machine_id)
-+		if t0 is None or (not(t1 is None) and t1 < t0):
-+			t0 = t1
-+		if t0 is None or (not(t2 is None) and t2 < t0):
-+			t0 = t2
-+		return t0
-+
-+	def GetFinishTime(self, machine_id):
-+		t0 = self.SwitchesMaxTime(machine_id)
-+		t1 = self.SamplesMaxTime(machine_id)
-+		t2 = self.CallsMaxTime(machine_id)
-+		if t0 is None or (not(t1 is None) and t1 > t0):
-+			t0 = t1
-+		if t0 is None or (not(t2 is None) and t2 > t0):
-+			t0 = t2
-+		return t0
-+
-+	def HostStartTime(self):
-+		if self.host_start_time:
-+			return self.host_start_time
-+		self.host_start_time = self.GetStartTime(self.HostMachineId())
-+		return self.host_start_time
-+
-+	def HostFinishTime(self):
-+		if self.host_finish_time:
-+			return self.host_finish_time
-+		self.host_finish_time = self.GetFinishTime(self.HostMachineId())
-+		return self.host_finish_time
-+
-+	def StartTime(self, machine_id):
-+		if machine_id == self.HostMachineId():
-+			return self.HostStartTime()
-+		return self.GetStartTime(machine_id)
-+
-+	def FinishTime(self, machine_id):
-+		if machine_id == self.HostMachineId():
-+			return self.HostFinishTime()
-+		return self.GetFinishTime(machine_id)
-+
- # Database reference
+ 	def Select(self):
+ 		self.query_done = True
+@@ -839,17 +840,17 @@ class CallTreeLevelTwoPlusItemBase(CallGraphLevelItemBase):
  
- class DBRef():
+ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ 
+-	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, count, time, insn_cnt, cyc_cnt, branch_count, parent_item):
+-		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, time, insn_cnt, cyc_cnt, branch_count, parent_item)
++	def __init__(self, glb, params, row, comm_id, thread_id, calls_id, name, dso, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item):
++		super(CallTreeLevelThreeItem, self).__init__(glb, params, row, comm_id, thread_id, calls_id, call_time, time, insn_cnt, cyc_cnt, branch_count, parent_item)
+ 		dso = dsoname(dso)
+ 		if self.params.have_ipc:
+ 			insn_pcnt = PercentToOneDP(insn_cnt, parent_item.insn_cnt)
+ 			cyc_pcnt = PercentToOneDP(cyc_cnt, parent_item.cyc_cnt)
+ 			br_pcnt = PercentToOneDP(branch_count, parent_item.branch_count)
+ 			ipc = CalcIPC(cyc_cnt, insn_cnt)
+-			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
++			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(insn_cnt), insn_pcnt, str(cyc_cnt), cyc_pcnt, ipc, str(branch_count), br_pcnt ]
+ 		else:
+-			self.data = [ name, dso, str(count), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
++			self.data = [ name, dso, str(call_time), str(time), PercentToOneDP(time, parent_item.time), str(branch_count), PercentToOneDP(branch_count, parent_item.branch_count) ]
+ 		self.dbid = calls_id
+ 
+ # Call tree data model level two item
+@@ -857,7 +858,7 @@ class CallTreeLevelThreeItem(CallTreeLevelTwoPlusItemBase):
+ class CallTreeLevelTwoItem(CallTreeLevelTwoPlusItemBase):
+ 
+ 	def __init__(self, glb, params, row, comm_id, thread_id, pid, tid, parent_item):
+-		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, parent_item)
++		super(CallTreeLevelTwoItem, self).__init__(glb, params, row, comm_id, thread_id, 0, 0, 0, 0, 0, 0, parent_item)
+ 		if self.params.have_ipc:
+ 			self.data = [str(pid) + ":" + str(tid), "", "", "", "", "", "", "", "", "", "", ""]
+ 		else:
 -- 
 2.21.0
