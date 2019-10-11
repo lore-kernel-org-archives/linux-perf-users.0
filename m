@@ -1,51 +1,98 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/69] perf script: Allow --time with --reltime
-Date: Fri, 11 Oct 2019 17:05:07 -0300
-Message-ID: <20191011200559.7156-18-acme@kernel.org>
+Subject: [PATCH 18/69] perf trace: Factor out the initialization of syscal_arg_fmt->scnprintf
+Date: Fri, 11 Oct 2019 17:05:08 -0300
+Message-ID: <20191011200559.7156-19-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The original --reltime patch forbid --time with --reltime.
+We set the default scnprint routines for the syscall args based on its
+type or on heuristics based on its names, now we'll use this for
+tracepoints as well, so move it out of syscall__set_arg_fmts() and into
+a routine that receive just an array of syscall_arg_fmt entries + the
+tracepoint format fields list.
 
-But it turns out --time doesn't really care about --reltime, because the
-relative time is only used at final output, while the time filtering
-always works earlier on absolute time.
-
-So just remove the check and allow combining the two options.
-
-Fixes: 90b10f47c0ee ("perf script: Support relative time")
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191002164642.1719-1-andi@firstfloor.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-xs3x0zzyes06c7scdsjn01ty@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 5 -----
- 1 file changed, 5 deletions(-)
+ tools/perf/builtin-trace.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 67be8d31afab..1c797a948ada 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3605,11 +3605,6 @@ int cmd_script(int argc, const char **argv)
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 6c7025370ec0..d52dd2bad980 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1467,15 +1467,16 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ 	return 0;
+ }
+ 
+-static int syscall__set_arg_fmts(struct syscall *sc)
++static struct tep_format_field *
++syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field)
+ {
+-	struct tep_format_field *field, *last_field = NULL;
+-	int idx = 0, len;
++	struct tep_format_field *last_field = NULL;
++	int len;
+ 
+-	for (field = sc->args; field; field = field->next, ++idx) {
++	for (; field; field = field->next, ++arg) {
+ 		last_field = field;
+ 
+-		if (sc->fmt && sc->fmt->arg[idx].scnprintf)
++		if (arg->scnprintf)
+ 			continue;
+ 
+ 		len = strlen(field->name);
+@@ -1483,13 +1484,13 @@ static int syscall__set_arg_fmts(struct syscall *sc)
+ 		if (strcmp(field->type, "const char *") == 0 &&
+ 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+ 		     strstr(field->name, "path") != NULL))
+-			sc->arg_fmt[idx].scnprintf = SCA_FILENAME;
++			arg->scnprintf = SCA_FILENAME;
+ 		else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr"))
+-			sc->arg_fmt[idx].scnprintf = SCA_PTR;
++			arg->scnprintf = SCA_PTR;
+ 		else if (strcmp(field->type, "pid_t") == 0)
+-			sc->arg_fmt[idx].scnprintf = SCA_PID;
++			arg->scnprintf = SCA_PID;
+ 		else if (strcmp(field->type, "umode_t") == 0)
+-			sc->arg_fmt[idx].scnprintf = SCA_MODE_T;
++			arg->scnprintf = SCA_MODE_T;
+ 		else if ((strcmp(field->type, "int") == 0 ||
+ 			  strcmp(field->type, "unsigned int") == 0 ||
+ 			  strcmp(field->type, "long") == 0) &&
+@@ -1501,10 +1502,17 @@ static int syscall__set_arg_fmts(struct syscall *sc)
+ 			 * 23 unsigned int
+ 			 * 7 unsigned long
+ 			 */
+-			sc->arg_fmt[idx].scnprintf = SCA_FD;
++			arg->scnprintf = SCA_FD;
  		}
  	}
  
--	if (script.time_str && reltime) {
--		fprintf(stderr, "Don't combine --reltime with --time\n");
--		return -1;
--	}
--
- 	if (itrace_synth_opts.callchain &&
- 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
- 		scripting_max_stack = itrace_synth_opts.callchain_sz;
++	return last_field;
++}
++
++static int syscall__set_arg_fmts(struct syscall *sc)
++{
++	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args);
++
+ 	if (last_field)
+ 		sc->args_size = last_field->offset + last_field->size;
+ 
 -- 
 2.21.0
