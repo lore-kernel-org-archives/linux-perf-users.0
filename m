@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/69] perf evlist: Factor out asprintf routine to build a tracepoint pid filter
-Date: Fri, 11 Oct 2019 17:05:22 -0300
-Message-ID: <20191011200559.7156-33-acme@kernel.org>
+Subject: [PATCH 33/69] perf evlist: Introduce append_tp_filter() method
+Date: Fri, 11 Oct 2019 17:05:23 -0300
+Message-ID: <20191011200559.7156-34-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,69 +15,68 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Will be used to append such lists to existing filters.
+Will be used by 'perf trace' to support 'perf trace --filter', we need
+to append to any pre-existing filter.
+
+When parse_filter() gets invoked to process --filter, it'll set the
+filter to that specified on the command line, later on, when we filter
+out 'perf trace' own pid to avoid an event feedback loop, we need to
+preserve the command line filter put in place by parse_filter().
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-798vlyqfqw938ehoe8etivx1@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-h9rot08qmxlnfmte0holt68x@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ tools/perf/util/evlist.c | 20 ++++++++++++++++++++
+ tools/perf/util/evlist.h |  2 ++
+ 2 files changed, 22 insertions(+)
 
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index b4c43ac4583f..c1b46080426b 100644
+index c1b46080426b..1650d242a1c8 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -1053,6 +1053,9 @@ int perf_evlist__set_tp_filter(struct evlist *evlist, const char *filter)
- 	struct evsel *evsel;
- 	int err = 0;
- 
-+	if (filter == NULL)
-+		return -1;
-+
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
- 			continue;
-@@ -1065,16 +1068,15 @@ int perf_evlist__set_tp_filter(struct evlist *evlist, const char *filter)
+@@ -1068,6 +1068,26 @@ int perf_evlist__set_tp_filter(struct evlist *evlist, const char *filter)
  	return err;
  }
  
--int perf_evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids)
-+static char *asprintf__tp_filter_pids(size_t npids, pid_t *pids)
- {
- 	char *filter;
--	int ret = -1;
- 	size_t i;
- 
- 	for (i = 0; i < npids; ++i) {
- 		if (i == 0) {
- 			if (asprintf(&filter, "common_pid != %d", pids[i]) < 0)
--				return -1;
-+				return NULL;
- 		} else {
- 			char *tmp;
- 
-@@ -1086,8 +1088,17 @@ int perf_evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *
- 		}
- 	}
- 
--	ret = perf_evlist__set_tp_filter(evlist, filter);
-+	return filter;
- out_free:
-+	free(filter);
-+	return NULL;
++int perf_evlist__append_tp_filter(struct evlist *evlist, const char *filter)
++{
++	struct evsel *evsel;
++	int err = 0;
++
++	if (filter == NULL)
++		return -1;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
++			continue;
++
++		err = perf_evsel__append_tp_filter(evsel, filter);
++		if (err)
++			break;
++	}
++
++	return err;
 +}
 +
-+int perf_evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids)
-+{
-+	char *filter = asprintf__tp_filter_pids(npids, pids);
-+	int ret = perf_evlist__set_tp_filter(evlist, filter);
+ static char *asprintf__tp_filter_pids(size_t npids, pid_t *pids)
+ {
+ 	char *filter;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 00eab9435847..c58fd1908bfc 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -140,6 +140,8 @@ int perf_evlist__set_tp_filter(struct evlist *evlist, const char *filter);
+ int perf_evlist__set_tp_filter_pid(struct evlist *evlist, pid_t pid);
+ int perf_evlist__set_tp_filter_pids(struct evlist *evlist, size_t npids, pid_t *pids);
+ 
++int perf_evlist__append_tp_filter(struct evlist *evlist, const char *filter);
 +
- 	free(filter);
- 	return ret;
- }
+ struct evsel *
+ perf_evlist__find_tracepoint_by_id(struct evlist *evlist, int id);
+ 
 -- 
 2.21.0
