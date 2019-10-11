@@ -1,99 +1,77 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/69] perf beauty: Hook up the x86 MSR table generator
-Date: Fri, 11 Oct 2019 17:05:18 -0300
-Message-ID: <20191011200559.7156-29-acme@kernel.org>
+Subject: [PATCH 29/69] perf trace: Allow associating scnprintf routines with well known arg names
+Date: Fri, 11 Oct 2019 17:05:19 -0300
+Message-ID: <20191011200559.7156-30-acme@kernel.org>
 References: <20191011200559.7156-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This way we generate the source with the table for later use by plugins,
-etc.
+For instance 'msr' appears in several tracepoints, so we can associate
+it with a single scnprintf() routine auto-generated from kernel headers,
+as will be done in followup patches.
 
-I.e. after running:
-
-  $ make -C tools/perf O=/tmp/build/perf
-
-We end up with:
-
-  $ head /tmp/build/perf/trace/beauty/generated/x86_arch_MSRs_array.c
-  static const char *x86_MSRs[] = {
-  	[0x00000000] = "IA32_P5_MC_ADDR",
-  	[0x00000001] = "IA32_P5_MC_TYPE",
-  	[0x00000010] = "IA32_TSC",
-  	[0x00000017] = "IA32_PLATFORM_ID",
-  	[0x0000001b] = "IA32_APICBASE",
-  	[0x00000020] = "KNC_PERFCTR0",
-  	[0x00000021] = "KNC_PERFCTR1",
-  	[0x00000028] = "KNC_EVNTSEL0",
-  	[0x00000029] = "KNC_EVNTSEL1",
-  $
-
-Now its just a matter of using it, first in a libtracevent plugin.
-
-At some point we should move tools/perf/trace/beauty to tools/beauty/,
-so that it can be used more generally and even made available externally
-like libbpf, libperf, libtraevent, etc.
+Start with an empty array of associations.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-b3rmutg4igcohx6kpo67qh4j@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-89ptht6s5fez82lykuwq1eyb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/builtin-trace.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 902c792f326a..45c14dc24f4b 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -407,6 +407,7 @@ linux_uapi_dir := $(srctree)/tools/include/uapi/linux
- asm_generic_uapi_dir := $(srctree)/tools/include/uapi/asm-generic
- arch_asm_uapi_dir := $(srctree)/tools/arch/$(SRCARCH)/include/uapi/asm/
- x86_arch_asm_uapi_dir := $(srctree)/tools/arch/x86/include/uapi/asm/
-+x86_arch_asm_dir := $(srctree)/tools/arch/x86/include/asm/
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 8303d83cb93c..d52972ca6123 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1479,6 +1479,27 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ 	return 0;
+ }
  
- beauty_outdir := $(OUTPUT)trace/beauty/generated
- beauty_ioctl_outdir := $(beauty_outdir)/ioctl
-@@ -543,6 +544,12 @@ x86_arch_prctl_code_tbl := $(srctree)/tools/perf/trace/beauty/x86_arch_prctl.sh
- $(x86_arch_prctl_code_array): $(x86_arch_asm_uapi_dir)/prctl.h $(x86_arch_prctl_code_tbl)
- 	$(Q)$(SHELL) '$(x86_arch_prctl_code_tbl)' $(x86_arch_asm_uapi_dir) > $@
- 
-+x86_arch_MSRs_array := $(beauty_outdir)/x86_arch_MSRs_array.c
-+x86_arch_MSRs_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_msr.sh
++static struct syscall_arg_fmt syscall_arg_fmts__by_name[] = {
++};
 +
-+$(x86_arch_MSRs_array): $(x86_arch_asm_dir)/msr-index.h $(x86_arch_MSRs_tbl)
-+	$(Q)$(SHELL) '$(x86_arch_MSRs_tbl)' $(x86_arch_asm_dir) > $@
++static int syscall_arg_fmt__cmp(const void *name, const void *fmtp)
++{
++       const struct syscall_arg_fmt *fmt = fmtp;
++       return strcmp(name, fmt->name);
++}
 +
- rename_flags_array := $(beauty_outdir)/rename_flags_array.c
- rename_flags_tbl := $(srctree)/tools/perf/trace/beauty/rename_flags.sh
++static struct syscall_arg_fmt *
++__syscall_arg_fmt__find_by_name(struct syscall_arg_fmt *fmts, const int nmemb, const char *name)
++{
++       return bsearch(name, fmts, nmemb, sizeof(struct syscall_arg_fmt), syscall_arg_fmt__cmp);
++}
++
++static struct syscall_arg_fmt *syscall_arg_fmt__find_by_name(const char *name)
++{
++       const int nmemb = ARRAY_SIZE(syscall_arg_fmts__by_name);
++       return __syscall_arg_fmt__find_by_name(syscall_arg_fmts__by_name, nmemb, name);
++}
++
+ static struct tep_format_field *
+ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field)
+ {
+@@ -1518,6 +1539,11 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			 * 7 unsigned long
+ 			 */
+ 			arg->scnprintf = SCA_FD;
++               } else {
++			struct syscall_arg_fmt *fmt = syscall_arg_fmt__find_by_name(field->name);
++
++			if (fmt)
++				arg->scnprintf = fmt->scnprintf;
+ 		}
+ 	}
  
-@@ -677,6 +684,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
- 	$(perf_ioctl_array) \
- 	$(prctl_option_array) \
- 	$(usbdevfs_ioctl_array) \
-+	$(x86_arch_MSRs_array) \
- 	$(x86_arch_prctl_code_array) \
- 	$(rename_flags_array) \
- 	$(arch_errno_name_array) \
-@@ -981,6 +989,7 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
- 		$(OUTPUT)$(perf_ioctl_array) \
- 		$(OUTPUT)$(prctl_option_array) \
- 		$(OUTPUT)$(usbdevfs_ioctl_array) \
-+		$(OUTPUT)$(x86_arch_MSRs_array) \
- 		$(OUTPUT)$(x86_arch_prctl_code_array) \
- 		$(OUTPUT)$(rename_flags_array) \
- 		$(OUTPUT)$(arch_errno_name_array) \
 -- 
 2.21.0
