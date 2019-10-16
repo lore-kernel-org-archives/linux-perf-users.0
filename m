@@ -1,43 +1,54 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Tue, 15 Oct 2019 07:25:56 +0200
-Message-ID: <20191015052556.GA70364@gmail.com>
-References: <20191011200559.7156-1-acme@kernel.org>
+From: James Clark <James.Clark@arm.com>
+Subject: Re: [RFC PATCH 2/3] perf tools: Add support for "report" for some spe
+ events
+Date: Wed, 16 Oct 2019 10:12:43 +0000
+Message-ID: <58bed363-41ee-e425-a36e-e3c69d1a4e90@arm.com>
+References: <1564738813-10944-1-git-send-email-tanxiaojun@huawei.com>
+ <1564738813-10944-3-git-send-email-tanxiaojun@huawei.com>
+ <0ac06995-273c-034d-52a3-921ea0337be2@arm.com>
+ <016c1ce8-7220-75a2-43fa-0efe150f897c@huawei.com>
+ <805660ca-1cf3-4c7f-3aa2-61fed59afa8b@arm.com>
+ <637836d6-c884-1a55-7730-eeb45b590d39@huawei.com>
+ <b7e5ca2d-8c6c-8ab8-637e-a9aaebaf62a5@arm.com>
+ <2b1fc8c7-c0b9-f4b9-a24f-444bc22129af@huawei.com>
+ <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191011200559.7156-1-acme@kernel.org>
+In-Reply-To: <335fedb8-128c-7d34-c5e8-15cd660fe12e@huawei.com>
+Content-Language: en-US
+Content-ID: <6D50A32F91C7D94A9752A1E7B029CD57@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, John Garry <john.garry@huawei.com>, KP Singh <kpsingh@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Tan Xiaojun <tanxiaojun@huawei.com>, Jeremy Linton <Jeremy.Linton@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@amd.com>
+Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Al Grant <Al.Grant@arm.com>, nd <nd@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi Xiaojun,
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>
+>> What do you mean when the user specifies "event:pp", if the SPE is avail=
+able, configure and record the spe data directly via the perf event open sy=
+scall?
+>> (perf.data itself is the same as using -e arm_spe_0//xxx?)
+>=20
+> I mean, for the perf record, if the user does not add ":pp" to these even=
+ts, the original process is taken, and if ":pp" is added, the spe process i=
+s taken.
+>=20
 
-> Hi Ingo,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit f733c6b508bcaa3441ba1eacf16efb9abd47489f:
-> 
->   perf/core: Fix inheritance of aux_output groups (2019-10-07 16:50:42 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191011
-> 
-> for you to fetch changes up to cebf7d51a6c3babc4d0589da7aec0de1af0a5691:
-> 
->   perf diff: Report noisy for cycles diff (2019-10-11 10:57:00 -0300)
+Yes we think this is the best way to do it considering that SPE has been im=
+plemented as a separate PMU and it will be very difficult to do it in the K=
+ernel when the precise_ip attribute is set.
 
-Pulled, thanks a lot Arnaldo!
+I think doing everything in userspace is easiest. This will at least mean t=
+hat users of Perf don't have to be aware of the details of SPE to get preci=
+se sample data.
 
-	Ingo
+So if the user specifies "event:p" when SPE is available, the SPE PMU is au=
+tomatically configured data is recorded. If the user also specifies -e arm_=
+spe_0//xxx and wants to do some manual configuration, then that could overr=
+ide the automatic configuration.
+
+
+James
