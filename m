@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/11] tools headers UAPI: Sync sched.h with the kernel
-Date: Thu, 17 Oct 2019 13:03:00 -0300
-Message-ID: <20191017160301.20888-11-acme@kernel.org>
+Subject: [PATCH 11/11] perf kmem: Fix memory leak in compact_gfp_flags()
+Date: Thu, 17 Oct 2019 13:03:01 -0300
+Message-ID: <20191017160301.20888-12-acme@kernel.org>
 References: <20191017160301.20888-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,83 +9,42 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191017160301.20888-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Aleksa Sarai <cyphar@cyphar.com>, Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Feilong Lin <linfeilong@huawei.com>, Hu Shiyuan <hushiyuan@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-To get the changes in:
+The memory @orig_flags is allocated by strdup(), it is freed on the
+normal path, but leak to free on the error path.
 
-  78f6face5af3 ("sched: add kernel-doc for struct clone_args")
-  f14c234b4bc5 ("clone3: switch to copy_struct_from_user()")
+Fix this by adding free(orig_flags) on the error path.
 
-This file gets rebuilt, but no changes ensues:
-
-   CC       /tmp/build/perf/trace/beauty/clone.o
-
-This addresses this perf build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
-  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Fixes: 0e11115644b3 ("perf kmem: Print gfp flags in human readable string")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-xqruu8wohwlbc57udg1g0xzx@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/f9e9f458-96f3-4a97-a1d5-9feec2420e07@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/sched.h | 30 ++++++++++++++++++++++++++++--
- 1 file changed, 28 insertions(+), 2 deletions(-)
+ tools/perf/builtin-kmem.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
-index b3105ac1381a..99335e1f4a27 100644
---- a/tools/include/uapi/linux/sched.h
-+++ b/tools/include/uapi/linux/sched.h
-@@ -33,8 +33,31 @@
- #define CLONE_NEWNET		0x40000000	/* New network namespace */
- #define CLONE_IO		0x80000000	/* Clone io context */
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 1e61e353f579..9661671cc26e 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -691,6 +691,7 @@ static char *compact_gfp_flags(char *gfp_flags)
+ 			new = realloc(new_flags, len + strlen(cpt) + 2);
+ 			if (new == NULL) {
+ 				free(new_flags);
++				free(orig_flags);
+ 				return NULL;
+ 			}
  
--/*
-- * Arguments for the clone3 syscall
-+#ifndef __ASSEMBLY__
-+/**
-+ * struct clone_args - arguments for the clone3 syscall
-+ * @flags:       Flags for the new process as listed above.
-+ *               All flags are valid except for CSIGNAL and
-+ *               CLONE_DETACHED.
-+ * @pidfd:       If CLONE_PIDFD is set, a pidfd will be
-+ *               returned in this argument.
-+ * @child_tid:   If CLONE_CHILD_SETTID is set, the TID of the
-+ *               child process will be returned in the child's
-+ *               memory.
-+ * @parent_tid:  If CLONE_PARENT_SETTID is set, the TID of
-+ *               the child process will be returned in the
-+ *               parent's memory.
-+ * @exit_signal: The exit_signal the parent process will be
-+ *               sent when the child exits.
-+ * @stack:       Specify the location of the stack for the
-+ *               child process.
-+ * @stack_size:  The size of the stack for the child process.
-+ * @tls:         If CLONE_SETTLS is set, the tls descriptor
-+ *               is set to tls.
-+ *
-+ * The structure is versioned by size and thus extensible.
-+ * New struct members must go at the end of the struct and
-+ * must be properly 64bit aligned.
-  */
- struct clone_args {
- 	__aligned_u64 flags;
-@@ -46,6 +69,9 @@ struct clone_args {
- 	__aligned_u64 stack_size;
- 	__aligned_u64 tls;
- };
-+#endif
-+
-+#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
- 
- /*
-  * Scheduling policies
 -- 
 2.21.0
