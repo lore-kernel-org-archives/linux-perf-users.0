@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/11] perf tools: Fix resource leak of closedir() on the error paths
-Date: Thu, 17 Oct 2019 13:02:53 -0300
-Message-ID: <20191017160301.20888-4-acme@kernel.org>
+Subject: [PATCH 07/11] tools headers kvm: Sync kvm headers with the kernel sources
+Date: Thu, 17 Oct 2019 13:02:57 -0300
+Message-ID: <20191017160301.20888-8-acme@kernel.org>
 References: <20191017160301.20888-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,74 +9,72 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191017160301.20888-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Daniel Borkmann <daniel@iogearbox.net>, Feilong Lin <linfeilong@huawei.com>, Hu Shiyuan <hushiyuan@huawei.com>, Igor Lubashev <ilubashe@akamai.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Martin KaFai Lau <kafai@fb.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Arnaldo
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, Paolo Bonzini <pbonzini@redhat.com>, Tao Xu <tao3.xu@intel.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Both build_mem_topology() and rm_rf_depth_pat() have resource leaks of
-closedir() on the error paths.
+To pick the changes in:
 
-Fix this by calling closedir() before function returns.
+  bf653b78f960 ("KVM: vmx: Introduce handle_unexpected_vmexit and handle WAITPKG vmexit")
 
-Fixes: e2091cedd51b ("perf tools: Add MEM_TOPOLOGY feature to perf data file")
-Fixes: cdb6b0235f17 ("perf tools: Add pattern name checking to rm_rf")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
+That trigger these changes in tooling:
+
+    CC       /tmp/build/perf/arch/x86/util/kvm-stat.o
+    INSTALL  GTK UI
+    DESCEND  plugins
+  make[3]: Nothing to be done for '/tmp/build/perf/plugins/libtraceevent-dynamic-list'.
+    INSTALL  trace_plugins
+    LD       /tmp/build/perf/arch/x86/util/perf-in.o
+    LD       /tmp/build/perf/arch/x86/perf-in.o
+    LD       /tmp/build/perf/arch/perf-in.o
+    LD       /tmp/build/perf/perf-in.o
+    LINK     /tmp/build/perf/perf
+
+And this is not just because that header is included, kvm-stat.c
+uses the VMX_EXIT_REASONS define and it got changed by the above cset.
+
+And addresses this perf build warnings:
+
+  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/vmx.h' differs from latest version at 'arch/x86/include/uapi/asm/vmx.h'
+  diff -u tools/arch/x86/include/uapi/asm/vmx.h arch/x86/include/uapi/asm/vmx.h
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lore.kernel.org/lkml/cd5f7cd2-b80d-6add-20a1-32f4f43e0744@huawei.com
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Tao Xu <tao3.xu@intel.com>
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: https://lkml.kernel.org/n/tip-gr1eel0hckmi5l3p2ewdpfxh@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 4 +++-
- tools/perf/util/util.c   | 6 ++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ tools/arch/x86/include/uapi/asm/vmx.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 86d9396cb131..becc2d109423 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1296,8 +1296,10 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
- 			continue;
+diff --git a/tools/arch/x86/include/uapi/asm/vmx.h b/tools/arch/x86/include/uapi/asm/vmx.h
+index f01950aa7fae..3eb8411ab60e 100644
+--- a/tools/arch/x86/include/uapi/asm/vmx.h
++++ b/tools/arch/x86/include/uapi/asm/vmx.h
+@@ -86,6 +86,8 @@
+ #define EXIT_REASON_PML_FULL            62
+ #define EXIT_REASON_XSAVES              63
+ #define EXIT_REASON_XRSTORS             64
++#define EXIT_REASON_UMWAIT              67
++#define EXIT_REASON_TPAUSE              68
  
- 		if (WARN_ONCE(cnt >= size,
--			      "failed to write MEM_TOPOLOGY, way too many nodes\n"))
-+			"failed to write MEM_TOPOLOGY, way too many nodes\n")) {
-+			closedir(dir);
- 			return -1;
-+		}
+ #define VMX_EXIT_REASONS \
+ 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
+@@ -144,7 +146,9 @@
+ 	{ EXIT_REASON_RDSEED,                "RDSEED" }, \
+ 	{ EXIT_REASON_PML_FULL,              "PML_FULL" }, \
+ 	{ EXIT_REASON_XSAVES,                "XSAVES" }, \
+-	{ EXIT_REASON_XRSTORS,               "XRSTORS" }
++	{ EXIT_REASON_XRSTORS,               "XRSTORS" }, \
++	{ EXIT_REASON_UMWAIT,                "UMWAIT" }, \
++	{ EXIT_REASON_TPAUSE,                "TPAUSE" }
  
- 		ret = memory_node__read(&nodes[cnt++], idx);
- 	}
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 5eda6e19c947..ae56c766eda1 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -154,8 +154,10 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
- 		if (!strcmp(d->d_name, ".") || !strcmp(d->d_name, ".."))
- 			continue;
- 
--		if (!match_pat(d->d_name, pat))
--			return -2;
-+		if (!match_pat(d->d_name, pat)) {
-+			ret =  -2;
-+			break;
-+		}
- 
- 		scnprintf(namebuf, sizeof(namebuf), "%s/%s",
- 			  path, d->d_name);
+ #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
+ #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
 -- 
 2.21.0
