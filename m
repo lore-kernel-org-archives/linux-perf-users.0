@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/11] tools headers kvm: Sync kvm.h headers with the kernel sources
-Date: Thu, 17 Oct 2019 13:02:59 -0300
-Message-ID: <20191017160301.20888-10-acme@kernel.org>
+Subject: [PATCH 10/11] tools headers UAPI: Sync sched.h with the kernel
+Date: Thu, 17 Oct 2019 13:03:00 -0300
+Message-ID: <20191017160301.20888-11-acme@kernel.org>
 References: <20191017160301.20888-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,60 +9,83 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191017160301.20888-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Anup Patel <Anup.Patel@wdc.com>, Paolo Bonzini <pbonzini@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Aleksa Sarai <cyphar@cyphar.com>, Christian Brauner <christian.brauner@ubuntu.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To pick the changes in:
+To get the changes in:
 
-  344c6c804703 ("KVM/Hyper-V: Add new KVM capability KVM_CAP_HYPERV_DIRECT_TLBFLUSH")
-  dee04eee9182 ("KVM: RISC-V: Add KVM_REG_RISCV for ONE_REG interface")
+  78f6face5af3 ("sched: add kernel-doc for struct clone_args")
+  f14c234b4bc5 ("clone3: switch to copy_struct_from_user()")
 
-These trigger the rebuild of this object:
+This file gets rebuilt, but no changes ensues:
 
-  CC       /tmp/build/perf/trace/beauty/ioctl.o
+   CC       /tmp/build/perf/trace/beauty/clone.o
 
-But do not result in any change in tooling, as the additions are not
-being used in any table generatator.
+This addresses this perf build warning:
 
-This silences this perf build warning:
-
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs from latest version at 'include/uapi/linux/kvm.h'
-  diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Anup Patel <Anup.Patel@wdc.com>
+Cc: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Link: https://lkml.kernel.org/n/tip-d1v48a0qfoe98u5v9tn3mu5u@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-xqruu8wohwlbc57udg1g0xzx@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/kvm.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/include/uapi/linux/sched.h | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 233efbb1c81c..52641d8ca9e8 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -999,6 +999,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_PTRAUTH_GENERIC 172
- #define KVM_CAP_PMU_EVENT_FILTER 173
- #define KVM_CAP_ARM_IRQ_LINE_LAYOUT_2 174
-+#define KVM_CAP_HYPERV_DIRECT_TLBFLUSH 175
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index b3105ac1381a..99335e1f4a27 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -33,8 +33,31 @@
+ #define CLONE_NEWNET		0x40000000	/* New network namespace */
+ #define CLONE_IO		0x80000000	/* Clone io context */
  
- #ifdef KVM_CAP_IRQ_ROUTING
+-/*
+- * Arguments for the clone3 syscall
++#ifndef __ASSEMBLY__
++/**
++ * struct clone_args - arguments for the clone3 syscall
++ * @flags:       Flags for the new process as listed above.
++ *               All flags are valid except for CSIGNAL and
++ *               CLONE_DETACHED.
++ * @pidfd:       If CLONE_PIDFD is set, a pidfd will be
++ *               returned in this argument.
++ * @child_tid:   If CLONE_CHILD_SETTID is set, the TID of the
++ *               child process will be returned in the child's
++ *               memory.
++ * @parent_tid:  If CLONE_PARENT_SETTID is set, the TID of
++ *               the child process will be returned in the
++ *               parent's memory.
++ * @exit_signal: The exit_signal the parent process will be
++ *               sent when the child exits.
++ * @stack:       Specify the location of the stack for the
++ *               child process.
++ * @stack_size:  The size of the stack for the child process.
++ * @tls:         If CLONE_SETTLS is set, the tls descriptor
++ *               is set to tls.
++ *
++ * The structure is versioned by size and thus extensible.
++ * New struct members must go at the end of the struct and
++ * must be properly 64bit aligned.
+  */
+ struct clone_args {
+ 	__aligned_u64 flags;
+@@ -46,6 +69,9 @@ struct clone_args {
+ 	__aligned_u64 stack_size;
+ 	__aligned_u64 tls;
+ };
++#endif
++
++#define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
  
-@@ -1145,6 +1146,7 @@ struct kvm_dirty_tlb {
- #define KVM_REG_S390		0x5000000000000000ULL
- #define KVM_REG_ARM64		0x6000000000000000ULL
- #define KVM_REG_MIPS		0x7000000000000000ULL
-+#define KVM_REG_RISCV		0x8000000000000000ULL
- 
- #define KVM_REG_SIZE_SHIFT	52
- #define KVM_REG_SIZE_MASK	0x00f0000000000000ULL
+ /*
+  * Scheduling policies
 -- 
 2.21.0
