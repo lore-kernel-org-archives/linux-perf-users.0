@@ -1,120 +1,50 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/57] perf trace: Support tracepoint dynamic char arrays
-Date: Mon, 21 Oct 2019 10:37:55 -0300
-Message-ID: <20191021133834.25998-19-acme@kernel.org>
+Subject: [PATCH 19/57] perf vendor events arm64: Fix Hisi hip08 DDRC PMU eventname
+Date: Mon, 21 Oct 2019 10:37:56 -0300
+Message-ID: <20191021133834.25998-20-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: John Garry <john.garry@huawei.com>
 
-Things like:
+The "EventName" for the DDRC precharge command event is incorrect, so
+fix it.
 
-  # grep __data_loc /sys/kernel/debug/tracing/events/sched/sched_process_exec/format
-	field:__data_loc char[] filename;	offset:8;	size:4;	signed:1;
-  #
-
-That, at that offset (8) and with that size(8) have an integer that
-contains the real length and offset for the contents of that array.
-
-Now this works:
-
-  # perf trace --max-events 1 -e sched:*exec -a
-     0.000 sed/19441 sched:sched_process_exec(filename: "/usr/bin/sync", pid: 19441 (sync), old_pid: 19441 (sync))
-  #
-
-As when using the libtraceevent based beautifier:
-
-  # perf trace --libtraceevent --max-events 1 -e sched:*exec -a
-     0.000 sync/19463 sched:sched_process_exec(filename=/usr/bin/sync pid=19463 old_pid=19463)
-  #
-
-I.e. that 'filename' is implemented as a dynamic char array.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
+Fixes: 57cc732479ba ("perf jevents: Add support for Hisi hip08 DDRC PMU aliasing")
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-950p0m842fe6n7sxsdwqj5i2@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1567612484-195727-2-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 19 ++++++++++++++-----
- tools/perf/trace/beauty/beauty.h |  2 ++
- 2 files changed, 16 insertions(+), 5 deletions(-)
+ .../perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index cdee22dac2b3..907eaf316f5b 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -563,7 +563,7 @@ static size_t syscall_arg__scnprintf_char_array(char *bf, size_t size, struct sy
- 	// XXX Hey, maybe for sched:sched_switch prev/next comm fields we can
- 	//     fill missing comms using thread__set_comm()...
- 	//     here or in a special syscall_arg__scnprintf_pid_sched_tp...
--	return scnprintf(bf, size, "\"%-.*s\"", arg->fmt->nr_entries, arg->val);
-+	return scnprintf(bf, size, "\"%-.*s\"", arg->fmt->nr_entries ?: arg->len, arg->val);
- }
- 
- #define SCA_CHAR_ARRAY syscall_arg__scnprintf_char_array
-@@ -1559,7 +1559,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 			arg->scnprintf = SCA_PID;
- 		else if (strcmp(field->type, "umode_t") == 0)
- 			arg->scnprintf = SCA_MODE_T;
--		else if ((field->flags & TEP_FIELD_IS_ARRAY) && strstarts(field->type, "char")) {
-+		else if ((field->flags & TEP_FIELD_IS_ARRAY) && strstr(field->type, "char")) {
- 			arg->scnprintf = SCA_CHAR_ARRAY;
- 			arg->nr_entries = field->arraylen;
- 		} else if ((strcmp(field->type, "int") == 0 ||
-@@ -2523,10 +2523,19 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		if (syscall_arg.mask & bit)
- 			continue;
- 
-+		syscall_arg.len = 0;
- 		syscall_arg.fmt = arg;
--		if (field->flags & TEP_FIELD_IS_ARRAY)
--			val = (uintptr_t)(sample->raw_data + field->offset);
--		else
-+		if (field->flags & TEP_FIELD_IS_ARRAY) {
-+			int offset = field->offset;
-+
-+			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-+				offset = format_field__intval(field, sample, evsel->needs_swap);
-+				syscall_arg.len = offset >> 16;
-+				offset &= 0xffff;
-+			}
-+
-+			val = (uintptr_t)(sample->raw_data + offset);
-+		} else
- 			val = format_field__intval(field, sample, evsel->needs_swap);
- 		/*
- 		 * Some syscall args need some mask, most don't and
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 77ad80a399fd..0dee0cf4fda8 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -87,6 +87,7 @@ struct syscall_arg_fmt;
- 
- /**
-  * @val: value of syscall argument being formatted
-+ * @len: for tracepoint dynamic arrays, if fmt->nr_entries == 0, then its not a fixed array, look at arg->len
-  * @args: All the args, use syscall_args__val(arg, nth) to access one
-  * @augmented_args: Extra data that can be collected, for instance, with eBPF for expanding the pathname for open, etc
-  * @augmented_args_size: augmented_args total payload size
-@@ -109,6 +110,7 @@ struct syscall_arg {
- 	struct thread *thread;
- 	struct trace  *trace;
- 	void	      *parm;
-+	u16	      len;
- 	u8	      idx;
- 	u8	      mask;
- 	bool	      show_string_prefix;
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+index 0d1556fcdffe..99f4fc425564 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
+@@ -15,7 +15,7 @@
+    },
+    {
+ 	    "EventCode": "0x04",
+-	    "EventName": "uncore_hisi_ddrc.flux_wr",
++	    "EventName": "uncore_hisi_ddrc.pre_cmd",
+ 	    "BriefDescription": "DDRC precharge commands",
+ 	    "PublicDescription": "DDRC precharge commands",
+ 	    "Unit": "hisi_sccl,ddrc",
 -- 
 2.21.0
