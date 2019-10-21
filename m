@@ -1,144 +1,63 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 49/57] libperf: Keep count of failed tests
-Date: Mon, 21 Oct 2019 10:38:26 -0300
-Message-ID: <20191021133834.25998-50-acme@kernel.org>
+Subject: [PATCH 52/57] libbeauty: Introduce syscall_arg__strtoul_strarrays()
+Date: Mon, 21 Oct 2019 10:38:29 -0300
+Message-ID: <20191021133834.25998-53-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Keep the count of failed tests, so we get better output with failures,
-like:
+To allow going from string to integer for 'struct strarrays'.
 
-  # make tests
-  ...
-  running static:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...FAILED test-evlist.c:53 failed to create evsel2
-  FAILED test-evlist.c:163 failed to create evsel2
-  FAILED test-evlist.c:287 failed count
-    FAILED (3)
-  - running test-evsel.c...OK
-  running dynamic:
-  - running test-cpumap.c...OK
-  - running test-threadmap.c...OK
-  - running test-evlist.c...FAILED test-evlist.c:53 failed to create evsel2
-  FAILED test-evlist.c:163 failed to create evsel2
-  FAILED test-evlist.c:287 failed count
-    FAILED (3)
-  - running test-evsel.c...OK
- ...
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-9-jolsa@kernel.org
+Link: https://lkml.kernel.org/n/tip-b1ia3xzcy72hv0u4m168fcd0@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/include/internal/tests.h | 20 +++++++++++++++++---
- tools/perf/lib/tests/test-cpumap.c      |  2 +-
- tools/perf/lib/tests/test-evlist.c      |  2 +-
- tools/perf/lib/tests/test-evsel.c       |  2 +-
- tools/perf/lib/tests/test-threadmap.c   |  2 +-
- 5 files changed, 21 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c       | 5 +++++
+ tools/perf/trace/beauty/beauty.h | 3 +++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/tools/perf/lib/include/internal/tests.h b/tools/perf/lib/include/internal/tests.h
-index b7a20cd24ee1..2093e8868a67 100644
---- a/tools/perf/lib/include/internal/tests.h
-+++ b/tools/perf/lib/include/internal/tests.h
-@@ -4,14 +4,28 @@
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 0e7fc7cc42d9..265ea876f00b 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -540,6 +540,11 @@ bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *ar
+ 	return strarray__strtoul(arg->parm, bf, size, ret);
+ }
  
- #include <stdio.h>
- 
--#define __T_START fprintf(stdout, "- running %s...", __FILE__)
--#define __T_OK    fprintf(stdout, "OK\n")
--#define __T_FAIL  fprintf(stdout, "FAIL\n")
-+int tests_failed;
++bool syscall_arg__strtoul_strarrays(char *bf, size_t size, struct syscall_arg *arg, u64 *ret)
++{
++	return strarrays__strtoul(arg->parm, bf, size, ret);
++}
 +
-+#define __T_START					\
-+do {							\
-+	fprintf(stdout, "- running %s...", __FILE__);	\
-+	fflush(NULL);					\
-+	tests_failed = 0;				\
-+} while (0)
+ size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg)
+ {
+ 	return strarray__scnprintf_flags(arg->parm, bf, size, arg->show_string_prefix, arg->val);
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index 1b8a30e5dcf9..10801660a71f 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -125,6 +125,9 @@ size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct sysca
+ bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
+ #define STUL_STRARRAY syscall_arg__strtoul_strarray
+ 
++bool syscall_arg__strtoul_strarrays(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
++#define STUL_STRARRAYS syscall_arg__strtoul_strarrays
 +
-+#define __T_END								\
-+do {									\
-+	if (tests_failed)						\
-+		fprintf(stdout, "  FAILED (%d)\n", tests_failed);	\
-+	else								\
-+		fprintf(stdout, "OK\n");				\
-+} while (0)
+ size_t syscall_arg__scnprintf_x86_irq_vectors(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_X86_IRQ_VECTORS syscall_arg__scnprintf_x86_irq_vectors
  
- #define __T(text, cond)                                                          \
- do {                                                                             \
- 	if (!(cond)) {                                                           \
- 		fprintf(stderr, "FAILED %s:%d %s\n", __FILE__, __LINE__, text);  \
-+		tests_failed++;                                                  \
- 		return -1;                                                       \
- 	}                                                                        \
- } while (0)
-diff --git a/tools/perf/lib/tests/test-cpumap.c b/tools/perf/lib/tests/test-cpumap.c
-index aa34c20df07e..c8d45091e7c2 100644
---- a/tools/perf/lib/tests/test-cpumap.c
-+++ b/tools/perf/lib/tests/test-cpumap.c
-@@ -26,6 +26,6 @@ int main(int argc, char **argv)
- 	perf_cpu_map__put(cpus);
- 	perf_cpu_map__put(cpus);
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
-diff --git a/tools/perf/lib/tests/test-evlist.c b/tools/perf/lib/tests/test-evlist.c
-index 741bc1bb4524..6d8ebe0c2504 100644
---- a/tools/perf/lib/tests/test-evlist.c
-+++ b/tools/perf/lib/tests/test-evlist.c
-@@ -408,6 +408,6 @@ int main(int argc, char **argv)
- 	test_mmap_thread();
- 	test_mmap_cpus();
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
-diff --git a/tools/perf/lib/tests/test-evsel.c b/tools/perf/lib/tests/test-evsel.c
-index 1b6c4285ac2b..135722ac965b 100644
---- a/tools/perf/lib/tests/test-evsel.c
-+++ b/tools/perf/lib/tests/test-evsel.c
-@@ -130,6 +130,6 @@ int main(int argc, char **argv)
- 	test_stat_thread();
- 	test_stat_thread_enable();
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
-diff --git a/tools/perf/lib/tests/test-threadmap.c b/tools/perf/lib/tests/test-threadmap.c
-index 8c5f47247d9e..7dc4d6fbedde 100644
---- a/tools/perf/lib/tests/test-threadmap.c
-+++ b/tools/perf/lib/tests/test-threadmap.c
-@@ -26,6 +26,6 @@ int main(int argc, char **argv)
- 	perf_thread_map__put(threads);
- 	perf_thread_map__put(threads);
- 
--	__T_OK;
-+	__T_END;
- 	return 0;
- }
 -- 
 2.21.0
