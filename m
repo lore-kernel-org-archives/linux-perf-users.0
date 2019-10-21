@@ -1,172 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 44/57] libperf: Move mmap allocation to perf_evlist__mmap_ops::get
-Date: Mon, 21 Oct 2019 10:38:21 -0300
-Message-ID: <20191021133834.25998-45-acme@kernel.org>
+Subject: [PATCH 36/57] libbeauty: Introduce syscall_arg__strtoul_strarray()
+Date: Mon, 21 Oct 2019 10:38:13 -0300
+Message-ID: <20191021133834.25998-37-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, David Ahern <dsahern@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Move allocation of the mmap array into perf_evlist__mmap_ops::get, to
-centralize the mmap allocation.
+To go from strarrays strings to its indexes.
 
-Also move nr_mmap setup to perf_evlist__mmap_ops so it's centralized and
-shared by both perf and libperf mmap code.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20191017105918.20873-3-jolsa@kernel.org
+Link: https://lkml.kernel.org/n/tip-wta0qvo207z27huib2c4ijxq@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/lib/evlist.c  | 42 ++++++++++++++++++++++++----------------
- tools/perf/util/evlist.c | 24 +++++++++--------------
- 2 files changed, 34 insertions(+), 32 deletions(-)
+ tools/perf/builtin-trace.c       | 6 ++++++
+ tools/perf/trace/beauty/beauty.h | 3 +++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 854efff1519d..73aac6bb2ac5 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -338,10 +338,6 @@ static struct perf_mmap* perf_evlist__alloc_mmap(struct perf_evlist *evlist, boo
- 	int i;
- 	struct perf_mmap *map;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 3502417dc7f2..0294b17ed510 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -535,6 +535,11 @@ static size_t syscall_arg__scnprintf_strarray(char *bf, size_t size,
  
--	evlist->nr_mmaps = perf_cpu_map__nr(evlist->cpus);
--	if (perf_cpu_map__empty(evlist->cpus))
--		evlist->nr_mmaps = perf_thread_map__nr(evlist->threads);
--
- 	map = zalloc(evlist->nr_mmaps * sizeof(struct perf_mmap));
- 	if (!map)
- 		return NULL;
-@@ -384,18 +380,22 @@ static void perf_evlist__set_sid_idx(struct perf_evlist *evlist,
- static struct perf_mmap*
- perf_evlist__mmap_cb_get(struct perf_evlist *evlist, bool overwrite, int idx)
- {
--	struct perf_mmap *map = &evlist->mmap[idx];
-+	struct perf_mmap *maps;
+ #define SCA_STRARRAY syscall_arg__scnprintf_strarray
  
--	if (overwrite) {
--		if (!evlist->mmap_ovw) {
--			evlist->mmap_ovw = perf_evlist__alloc_mmap(evlist, true);
--			if (!evlist->mmap_ovw)
--				return NULL;
--		}
--		map = &evlist->mmap_ovw[idx];
-+	maps = overwrite ? evlist->mmap_ovw : evlist->mmap;
-+
-+	if (!maps) {
-+		maps = perf_evlist__alloc_mmap(evlist, overwrite);
-+		if (!maps)
-+			return NULL;
-+
-+		if (overwrite)
-+			evlist->mmap_ovw = maps;
-+		else
-+			evlist->mmap = maps;
- 	}
- 
--	return map;
-+	return &maps[idx];
- }
- 
- #define FD(e, x, y) (*(int *) xyarray__entry(e->fd, x, y))
-@@ -556,6 +556,17 @@ mmap_per_cpu(struct perf_evlist *evlist, struct perf_evlist_mmap_ops *ops,
- 	return -1;
- }
- 
-+static int perf_evlist__nr_mmaps(struct perf_evlist *evlist)
++bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *arg, u64 *ret)
 +{
-+	int nr_mmaps;
-+
-+	nr_mmaps = perf_cpu_map__nr(evlist->cpus);
-+	if (perf_cpu_map__empty(evlist->cpus))
-+		nr_mmaps = perf_thread_map__nr(evlist->threads);
-+
-+	return nr_mmaps;
++	return strarray__strtoul(arg->parm, bf, size, ret);
 +}
 +
- int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 			  struct perf_evlist_mmap_ops *ops,
- 			  struct perf_mmap_param *mp)
-@@ -567,10 +578,7 @@ int perf_evlist__mmap_ops(struct perf_evlist *evlist,
- 	if (!ops || !ops->get || !ops->mmap)
- 		return -EINVAL;
- 
--	if (!evlist->mmap)
--		evlist->mmap = perf_evlist__alloc_mmap(evlist, false);
--	if (!evlist->mmap)
--		return -ENOMEM;
-+	evlist->nr_mmaps = perf_evlist__nr_mmaps(evlist);
- 
- 	perf_evlist__for_each_entry(evlist, evsel) {
- 		if ((evsel->attr.read_format & PERF_FORMAT_ID) &&
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 6cda5a311ba5..5cded4ec5806 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -599,9 +599,6 @@ static struct mmap *evlist__alloc_mmap(struct evlist *evlist,
- 	int i;
- 	struct mmap *map;
- 
--	evlist->core.nr_mmaps = perf_cpu_map__nr(evlist->core.cpus);
--	if (perf_cpu_map__empty(evlist->core.cpus))
--		evlist->core.nr_mmaps = perf_thread_map__nr(evlist->core.threads);
- 	map = zalloc(evlist->core.nr_mmaps * sizeof(struct mmap));
- 	if (!map)
- 		return NULL;
-@@ -639,19 +636,21 @@ static struct perf_mmap*
- perf_evlist__mmap_cb_get(struct perf_evlist *_evlist, bool overwrite, int idx)
+ size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg)
  {
- 	struct evlist *evlist = container_of(_evlist, struct evlist, core);
--	struct mmap *maps = evlist->mmap;
-+	struct mmap *maps;
+ 	return strarray__scnprintf_flags(arg->parm, bf, size, arg->show_string_prefix, arg->val);
+@@ -824,6 +829,7 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
  
--	if (overwrite) {
--		maps = evlist->overwrite_mmap;
-+	maps = overwrite ? evlist->overwrite_mmap : evlist->mmap;
+ #define STRARRAY(name, array) \
+ 	  { .scnprintf	= SCA_STRARRAY, \
++	    .strtoul	= STUL_STRARRAY, \
+ 	    .parm	= &strarray__##array, }
  
--		if (!maps) {
--			maps = evlist__alloc_mmap(evlist, true);
--			if (!maps)
--				return NULL;
-+	if (!maps) {
-+		maps = evlist__alloc_mmap(evlist, overwrite);
-+		if (!maps)
-+			return NULL;
+ #define STRARRAY_FLAGS(name, array) \
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index 232b64d70096..1b8a30e5dcf9 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -122,6 +122,9 @@ unsigned long syscall_arg__val(struct syscall_arg *arg, u8 idx);
+ size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_STRARRAY_FLAGS syscall_arg__scnprintf_strarray_flags
  
-+		if (overwrite) {
- 			evlist->overwrite_mmap = maps;
- 			if (evlist->bkw_mmap_state == BKW_MMAP_NOTREADY)
- 				perf_evlist__toggle_bkw_mmap(evlist, BKW_MMAP_RUNNING);
-+		} else {
-+			evlist->mmap = maps;
- 		}
- 	}
++bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
++#define STUL_STRARRAY syscall_arg__strtoul_strarray
++
+ size_t syscall_arg__scnprintf_x86_irq_vectors(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_X86_IRQ_VECTORS syscall_arg__scnprintf_x86_irq_vectors
  
-@@ -812,11 +811,6 @@ int evlist__mmap_ex(struct evlist *evlist, unsigned int pages,
- 		.mmap = perf_evlist__mmap_cb_mmap,
- 	};
- 
--	if (!evlist->mmap)
--		evlist->mmap = evlist__alloc_mmap(evlist, false);
--	if (!evlist->mmap)
--		return -ENOMEM;
--
- 	evlist->core.mmap_len = evlist__mmap_size(pages);
- 	pr_debug("mmap size %zuB\n", evlist->core.mmap_len);
- 	mp.core.mask = evlist->core.mmap_len - page_size - 1;
 -- 
 2.21.0
