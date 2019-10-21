@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 34/57] perf scripting engines: Iterate on tep event arrays directly
-Date: Mon, 21 Oct 2019 10:38:11 -0300
-Message-ID: <20191021133834.25998-35-acme@kernel.org>
+Subject: [PATCH 22/57] perf vendor events arm64: Add some missing events for Hisi hip08 HHA PMU
+Date: Mon, 21 Oct 2019 10:37:59 -0300
+Message-ID: <20191021133834.25998-23-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,106 +9,75 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Daniel Bristot de Oliveira <bristot@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Jiri Olsa <jolsa@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: John Garry <john.garry@huawei.com>
 
-Instead of calling a useless (and broken) helper function to get the
-next event of a tep event array, just get the array directly and iterate
-over it.
+Add some more missing events.
 
-Note, the broken part was from trace_find_next_event() which after this
-will no longer be used, and can be removed.
+A trivial typo is also fixed.
 
-Committer notes:
-
-This fixes a segfault when generating python scripts from perf.data
-files with multiple tracepoint events, i.e. the following use case is
-fixed by this patch:
-
-  # perf record -e sched:* sleep 1
-  [ perf record: Woken up 31 times to write data ]
-  [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
-  # perf script -g python
-  Segmentation fault (core dumped)
-  #
-
-Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
-Link: http://lore.kernel.org/lkml/20191017210636.061448713@goodmis.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1567612484-195727-5-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/scripting-engines/trace-event-perl.c   | 8 ++++++--
- tools/perf/util/scripting-engines/trace-event-python.c | 9 +++++++--
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ .../arm64/hisilicon/hip08/uncore-hha.json     | 23 ++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 15961854ba67..741f040648b5 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -539,10 +539,11 @@ static int perl_stop_script(void)
- 
- static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.pl", outfile);
-@@ -603,8 +604,11 @@ sub print_backtrace\n\
- }\n\n\
- ");
- 
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
- 		fprintf(ofp, "\tmy (");
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 5d341efc3237..93c03b39cd9c 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1687,10 +1687,11 @@ static int python_stop_script(void)
- 
- static int python_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.py", outfile);
-@@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
- 	fprintf(ofp, "def trace_end():\n");
- 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
-+
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "def %s__%s(", event->system, event->name);
- 		fprintf(ofp, "event_name, ");
- 		fprintf(ofp, "context, ");
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+index 447d3064de90..3be418a248ea 100644
+--- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+@@ -20,6 +20,13 @@
+ 	    "PublicDescription": "The number of all operations received by the HHA from another SCCL in this socket",
+ 	    "Unit": "hisi_sccl,hha",
+    },
++   {
++	    "EventCode": "0x03",
++	    "EventName": "uncore_hisi_hha.rx_ccix",
++	    "BriefDescription": "Count of the number of operations that HHA has received from CCIX",
++	    "PublicDescription": "Count of the number of operations that HHA has received from CCIX",
++	    "Unit": "hisi_sccl,hha",
++   },
+    {
+ 	    "EventCode": "0x1c",
+ 	    "EventName": "uncore_hisi_hha.rd_ddr_64b",
+@@ -29,7 +36,7 @@
+    },
+    {
+ 	    "EventCode": "0x1d",
+-	    "EventName": "uncore_hisi_hha.wr_dr_64b",
++	    "EventName": "uncore_hisi_hha.wr_ddr_64b",
+ 	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
+ 	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
+ 	    "Unit": "hisi_sccl,hha",
+@@ -48,4 +55,18 @@
+ 	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
+ 	    "Unit": "hisi_sccl,hha",
+    },
++   {
++	    "EventCode": "0x20",
++	    "EventName": "uncore_hisi_hha.spill_num",
++	    "BriefDescription": "Count of the number of spill operations that the HHA has sent",
++	    "PublicDescription": "Count of the number of spill operations that the HHA has sent",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x21",
++	    "EventName": "uncore_hisi_hha.spill_success",
++	    "BriefDescription": "Count of the number of successful spill operations that the HHA has sent",
++	    "PublicDescription": "Count of the number of successful spill operations that the HHA has sent",
++	    "Unit": "hisi_sccl,hha",
++   },
+ ]
 -- 
 2.21.0
