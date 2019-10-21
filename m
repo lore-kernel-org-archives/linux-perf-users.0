@@ -1,89 +1,181 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 35/57] perf tools: Remove unused trace_find_next_event()
-Date: Mon, 21 Oct 2019 10:38:12 -0300
-Message-ID: <20191021133834.25998-36-acme@kernel.org>
+Subject: [PATCH 38/57] perf trace: Pass a syscall_arg to syscall_arg_fmt->strtoul()
+Date: Mon, 21 Oct 2019 10:38:15 -0300
+Message-ID: <20191021133834.25998-39-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Andrew Morton <akpm@linux-foundation.org>, Jiri Olsa <jolsa@redhat.com>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, linux-trace-devel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Brendan Gregg <brendan.d.gregg@gmail.com>, David Ahern <dsahern@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-trace_find_next_event() was buggy and pretty much a useless helper. As
-there are no more users, just remove it.
+With just what we need for the STUL_STRARRAY, i.e. the 'struct strarray'
+pointer to be used, just like with syscall_arg_fmt->scnprintf() for the
+other direction (number -> string).
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
+With this all the strarrays that are associated with syscalls can be
+used with '-e syscalls:sys_enter_SYSCALLNAME --filter', and soon will be
+possible as well to use with the strace-like shorter form, with just the
+syscall names, i.e. something like:
+
+   -e lseek/whence==END/
+
+For now we have to use the longer form:
+
+    # perf trace -e syscalls:sys_enter_lseek
+       0.000 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+       0.031 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+       0.046 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+    5003.528 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+    5003.575 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+    5003.593 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+   10002.017 pool/2242 syscalls:sys_enter_lseek(fd: 14<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+   10002.051 pool/2242 syscalls:sys_enter_lseek(fd: 15<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+   10002.068 pool/2242 syscalls:sys_enter_lseek(fd: 16<anon_inode:[timerfd]>, offset: 0, whence: CUR)
+  ^C# perf trace -e syscalls:sys_enter_lseek --filter="whence!=CUR"
+       0.000 sshd/24476 syscalls:sys_enter_lseek(fd: 3, offset: 9032, whence: SET)
+       0.060 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 9032, whence: SET)
+       0.187 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 118632, whence: SET)
+       0.203 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 118632, whence: SET)
+       0.349 sshd/24476 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libcrypt.so.2.0.0>, offset: 61936, whence: SET)
+  ^C#
+
+And for those curious about what are those lseek(DSO, offset, SET), well, its the loader:
+
+  # perf trace -e syscalls:sys_enter_lseek/max-stack=16/ --filter="whence!=CUR"
+     0.000 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 9032, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+     0.067 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 9032, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object_from_fd (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+     0.198 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 118632, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+     0.219 sshd/24495 syscalls:sys_enter_lseek(fd: 3</usr/lib64/libgcrypt.so.20.2.5>, offset: 118632, whence: SET)
+                                       __libc_lseek64 (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object_from_fd (/usr/lib64/ld-2.29.so)
+                                       _dl_map_object (/usr/lib64/ld-2.29.so)
+  ^C#
+
+:-)
+
+With this we can use strings in strarrays in filters, which allows us to
+reuse all these that are in place for syscalls:
+
+  $ find tools/perf/trace/beauty/ -name "*.c" | xargs grep -w DEFINE_STRARRAY
+  tools/perf/trace/beauty/fcntl.c:	static DEFINE_STRARRAY(fcntl_setlease, "F_");
+  tools/perf/trace/beauty/mmap.c:       static DEFINE_STRARRAY(mmap_flags, "MAP_");
+  tools/perf/trace/beauty/mmap.c:       static DEFINE_STRARRAY(madvise_advices, "MADV_");
+  tools/perf/trace/beauty/sync_file_range.c:       static DEFINE_STRARRAY(sync_file_range_flags, "SYNC_FILE_RANGE_");
+  tools/perf/trace/beauty/socket.c:	static DEFINE_STRARRAY(socket_ipproto, "IPPROTO_");
+  tools/perf/trace/beauty/mount_flags.c:	static DEFINE_STRARRAY(mount_flags, "MS_");
+  tools/perf/trace/beauty/pkey_alloc.c:	static DEFINE_STRARRAY(pkey_alloc_access_rights, "PKEY_");
+  tools/perf/trace/beauty/sockaddr.c:DEFINE_STRARRAY(socket_families, "PF_");
+  tools/perf/trace/beauty/tracepoints/x86_irq_vectors.c:static DEFINE_STRARRAY(x86_irq_vectors, "_VECTOR");
+  tools/perf/trace/beauty/tracepoints/x86_msr.c:static DEFINE_STRARRAY(x86_MSRs, "MSR_");
+  tools/perf/trace/beauty/prctl.c:	static DEFINE_STRARRAY(prctl_options, "PR_");
+  tools/perf/trace/beauty/prctl.c:	static DEFINE_STRARRAY(prctl_set_mm_options, "PR_SET_MM_");
+  tools/perf/trace/beauty/fspick.c:       static DEFINE_STRARRAY(fspick_flags, "FSPICK_");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(ioctl_tty_cmd, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(drm_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(sndrv_pcm_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(sndrv_ctl_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(kvm_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(vhost_virtio_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(vhost_virtio_ioctl_read_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(perf_ioctl_cmds, "");
+  tools/perf/trace/beauty/ioctl.c:	static DEFINE_STRARRAY(usbdevfs_ioctl_cmds, "");
+  tools/perf/trace/beauty/fsmount.c:       static DEFINE_STRARRAY(fsmount_attr_flags, "MOUNT_ATTR_");
+  tools/perf/trace/beauty/renameat.c:       static DEFINE_STRARRAY(rename_flags, "RENAME_");
+  tools/perf/trace/beauty/kcmp.c:	static DEFINE_STRARRAY(kcmp_types, "KCMP_");
+  tools/perf/trace/beauty/move_mount.c:       static DEFINE_STRARRAY(move_mount_flags, "MOVE_MOUNT_");
+  $
+
+Well, some, as the mmap flags are like:
+
+  $ tools/perf/trace/beauty/mmap_flags.sh
+  static const char *mmap_flags[] = {
+  	[ilog2(0x40) + 1] = "32BIT",
+  	[ilog2(0x01) + 1] = "SHARED",
+  	[ilog2(0x02) + 1] = "PRIVATE",
+  	[ilog2(0x10) + 1] = "FIXED",
+  	[ilog2(0x20) + 1] = "ANONYMOUS",
+  	[ilog2(0x008000) + 1] = "POPULATE",
+  	[ilog2(0x010000) + 1] = "NONBLOCK",
+  	[ilog2(0x020000) + 1] = "STACK",
+  	[ilog2(0x040000) + 1] = "HUGETLB",
+  	[ilog2(0x080000) + 1] = "SYNC",
+  	[ilog2(0x100000) + 1] = "FIXED_NOREPLACE",
+  	[ilog2(0x0100) + 1] = "GROWSDOWN",
+  	[ilog2(0x0800) + 1] = "DENYWRITE",
+  	[ilog2(0x1000) + 1] = "EXECUTABLE",
+  	[ilog2(0x2000) + 1] = "LOCKED",
+  	[ilog2(0x4000) + 1] = "NORESERVE",
+  };
+  $
+
+So we'll need a strarray__strtoul_flags() that will break donw the flags
+into tokens separated by '|' before doing the lookup and then go on
+reconstructing the value from, say:
+
+      # perf trace -e syscalls:sys_enter_mmap --filter="flags==PRIVATE|FIXED|DENYWRITE"
+
+into:
+
+      # perf trace -e syscalls:sys_enter_mmap --filter="flags==0x2|0x10|0x0800"
+
+and finally into:
+
+      # perf trace -e syscalls:sys_enter_mmap --filter="flags==0x812"
+
+That is what we see if we don't use the augmented view obtained from:
+
+  # perf trace -e mmap
+  <SNIP>
+  211792.885 procmail/15393 mmap(addr: 0x7fcd11645000, len: 8192, prot: READ, flags: PRIVATE|FIXED|DENYWRITE, fd: 8, off: 0xa000) = 0x7fcd11645000
+  <SNIP>
+
+But plain use tracefs:
+
+        procmail-15559 [000] .... 54557.178262: sys_mmap(addr: 7f5c9bf7a000, len: 9b000, prot: 1, flags: 812, fd: 3, off: a9000)
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191017210636.224045576@goodmis.org
+Link: https://lkml.kernel.org/n/tip-c6mgkjt8ujnc263eld5tb7q3@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/trace-event-parse.c | 31 -----------------------------
- tools/perf/util/trace-event.h       |  2 --
- 2 files changed, 33 deletions(-)
+ tools/perf/builtin-trace.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index 5d6bfc70b210..9634f0ae57be 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -173,37 +173,6 @@ int parse_event_file(struct tep_handle *pevent,
- 	return tep_parse_event(pevent, buf, size, sys);
- }
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 1aaf7b28eec4..0e7fc7cc42d9 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3696,7 +3696,11 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
  
--struct tep_event *trace_find_next_event(struct tep_handle *pevent,
--					struct tep_event *event)
--{
--	static int idx;
--	int events_count;
--	struct tep_event *all_events;
--
--	all_events = tep_get_first_event(pevent);
--	events_count = tep_get_events_count(pevent);
--	if (!pevent || !all_events || events_count < 1)
--		return NULL;
--
--	if (!event) {
--		idx = 0;
--		return all_events;
--	}
--
--	if (idx < events_count && event == (all_events + idx)) {
--		idx++;
--		if (idx == events_count)
--			return NULL;
--		return (all_events + idx);
--	}
--
--	for (idx = 1; idx < events_count; idx++) {
--		if (event == (all_events + (idx - 1)))
--			return (all_events + idx);
--	}
--	return NULL;
--}
--
- struct flag {
- 	const char *name;
- 	unsigned long long value;
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 2e158387b3d7..72fdf2a3577c 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -47,8 +47,6 @@ void parse_saved_cmdline(struct tep_handle *pevent, char *file, unsigned int siz
- 
- ssize_t trace_report(int fd, struct trace_event *tevent, bool repipe);
- 
--struct tep_event *trace_find_next_event(struct tep_handle *pevent,
--					struct tep_event *event);
- unsigned long long read_size(struct tep_event *event, void *ptr, int size);
- unsigned long long eval_flag(const char *flag);
- 
+ 			if (fmt->strtoul) {
+ 				u64 val;
+-				if (fmt->strtoul(right, right_size, NULL, &val)) {
++				struct syscall_arg syscall_arg = {
++					.parm = fmt->parm,
++				};
++
++				if (fmt->strtoul(right, right_size, &syscall_arg, &val)) {
+ 					char *n, expansion[19];
+ 					int expansion_lenght = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
+ 					int expansion_offset = right - new_filter;
 -- 
 2.21.0
