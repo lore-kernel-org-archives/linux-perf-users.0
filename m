@@ -1,144 +1,108 @@
-From: "tip-bot2 for Thomas Richter" <tip-bot2@linutronix.de>
-Subject: [tip: perf/urgent] perf/aux: Fix tracking of auxiliary trace buffer
- allocation
-Date: Mon, 21 Oct 2019 09:35:04 -0000
-Message-ID: <157165050422.29376.10692255781840811810.tip-bot2@tip-bot2>
-References: <20191021083354.67868-1-tmricht@linux.ibm.com>
-Reply-To: linux-kernel@vger.kernel.org
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Date: Mon, 21 Oct 2019 09:20:28 -0300
+Message-ID: <20191021122028.GA10134@kernel.org>
+References: <20191017160301.20888-1-acme@kernel.org>
+ <20191021062354.GA22042@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191021083354.67868-1-tmricht@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20191021062354.GA22042@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Cc: Thomas Richter <tmricht@linux.ibm.com>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Linus Torvalds <torvalds@linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, acme@kernel.org, gor@linux.ibm.com, hechaol@fb.com, heiko.carstens@de.ibm.com, linux-perf-users@vger.kernel.org, songliubraving@fb.com, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, "Gustavo A . R . Silva" <gustavo@embeddedor.com>, Thomas Richter <tmricht@linux.ibm.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
+Em Mon, Oct 21, 2019 at 08:23:54AM +0200, Ingo Molnar escreveu:
+> * Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > 	Please consider pulling,
 
-Commit-ID:     5e6c3c7b1ec217c1c4c95d9148182302b9969b97
-Gitweb:        https://git.kernel.org/tip/5e6c3c7b1ec217c1c4c95d9148182302b9969b97
-Author:        Thomas Richter <tmricht@linux.ibm.com>
-AuthorDate:    Mon, 21 Oct 2019 10:33:54 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 21 Oct 2019 11:31:24 +02:00
+<SNIP>
 
-perf/aux: Fix tracking of auxiliary trace buffer allocation
-
-The following commit from the v5.4 merge window:
-
-  d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
-
-... breaks auxiliary trace buffer tracking.
-
-If I run command 'perf record -e rbd000' to record samples and saving
-them in the **auxiliary** trace buffer then the value of 'locked_vm' becomes
-negative after all trace buffers have been allocated and released:
-
-During allocation the values increase:
-
-  [52.250027] perf_mmap user->locked_vm:0x87 pinned_vm:0x0 ret:0
-  [52.250115] perf_mmap user->locked_vm:0x107 pinned_vm:0x0 ret:0
-  [52.250251] perf_mmap user->locked_vm:0x188 pinned_vm:0x0 ret:0
-  [52.250326] perf_mmap user->locked_vm:0x208 pinned_vm:0x0 ret:0
-  [52.250441] perf_mmap user->locked_vm:0x289 pinned_vm:0x0 ret:0
-  [52.250498] perf_mmap user->locked_vm:0x309 pinned_vm:0x0 ret:0
-  [52.250613] perf_mmap user->locked_vm:0x38a pinned_vm:0x0 ret:0
-  [52.250715] perf_mmap user->locked_vm:0x408 pinned_vm:0x2 ret:0
-  [52.250834] perf_mmap user->locked_vm:0x408 pinned_vm:0x83 ret:0
-  [52.250915] perf_mmap user->locked_vm:0x408 pinned_vm:0x103 ret:0
-  [52.251061] perf_mmap user->locked_vm:0x408 pinned_vm:0x184 ret:0
-  [52.251146] perf_mmap user->locked_vm:0x408 pinned_vm:0x204 ret:0
-  [52.251299] perf_mmap user->locked_vm:0x408 pinned_vm:0x285 ret:0
-  [52.251383] perf_mmap user->locked_vm:0x408 pinned_vm:0x305 ret:0
-  [52.251544] perf_mmap user->locked_vm:0x408 pinned_vm:0x386 ret:0
-  [52.251634] perf_mmap user->locked_vm:0x408 pinned_vm:0x406 ret:0
-  [52.253018] perf_mmap user->locked_vm:0x408 pinned_vm:0x487 ret:0
-  [52.253197] perf_mmap user->locked_vm:0x408 pinned_vm:0x508 ret:0
-  [52.253374] perf_mmap user->locked_vm:0x408 pinned_vm:0x589 ret:0
-  [52.253550] perf_mmap user->locked_vm:0x408 pinned_vm:0x60a ret:0
-  [52.253726] perf_mmap user->locked_vm:0x408 pinned_vm:0x68b ret:0
-  [52.253903] perf_mmap user->locked_vm:0x408 pinned_vm:0x70c ret:0
-  [52.254084] perf_mmap user->locked_vm:0x408 pinned_vm:0x78d ret:0
-  [52.254263] perf_mmap user->locked_vm:0x408 pinned_vm:0x80e ret:0
-
-The value of user->locked_vm increases to a limit then the memory
-is tracked by pinned_vm.
-
-During deallocation the size is subtracted from pinned_vm until
-it hits a limit. Then a larger value is subtracted from locked_vm
-leading to a large number (because of type unsigned):
-
-  [64.267797] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x78d
-  [64.267826] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x70c
-  [64.267848] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x68b
-  [64.267869] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x60a
-  [64.267891] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x589
-  [64.267911] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x508
-  [64.267933] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x487
-  [64.267952] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x406
-  [64.268883] perf_mmap_close mmap_user->locked_vm:0x307 pinned_vm:0x406
-  [64.269117] perf_mmap_close mmap_user->locked_vm:0x206 pinned_vm:0x406
-  [64.269433] perf_mmap_close mmap_user->locked_vm:0x105 pinned_vm:0x406
-  [64.269536] perf_mmap_close mmap_user->locked_vm:0x4 pinned_vm:0x404
-  [64.269797] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff84 pinned_vm:0x303
-  [64.270105] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff04 pinned_vm:0x202
-  [64.270374] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe84 pinned_vm:0x101
-  [64.270628] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe04 pinned_vm:0x0
-
-This value sticks for the user until system is rebooted, causing
-follow-on system calls using locked_vm resource limit to fail.
-
-Note: There is no issue using the normal trace buffer.
-
-In fact the issue is in perf_mmap_close(). During allocation auxiliary
-trace buffer memory is either traced as 'extra' and added to 'pinned_vm'
-or trace as 'user_extra' and added to 'locked_vm'. This applies for
-normal trace buffers and auxiliary trace buffer.
-
-However in function perf_mmap_close() all auxiliary trace buffer is
-subtraced from 'locked_vm' and never from 'pinned_vm'. This breaks the
-ballance.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: acme@kernel.org
-Cc: gor@linux.ibm.com
-Cc: hechaol@fb.com
-Cc: heiko.carstens@de.ibm.com
-Cc: linux-perf-users@vger.kernel.org
-Cc: songliubraving@fb.com
-Fixes: d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
-Link: https://lkml.kernel.org/r/20191021083354.67868-1-tmricht@linux.ibm.com
-[ Minor readability edits. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/events/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 9ec0b0b..f5d7950 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5607,8 +5607,10 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		perf_pmu_output_stop(event);
+> >  tools/perf/util/header.c              |  4 +++-
+> >  tools/perf/util/util.c                |  6 ++++--
+> >  12 files changed, 65 insertions(+), 17 deletions(-)
  
- 		/* now it's safe to free the pages */
--		atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
--		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
-+		if (!rb->aux_mmap_locked)
-+			atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
-+		else
-+			atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
+> Pulled, thanks a lot Arnaldo!
+
+Thanks!
  
- 		/* this has to be the last one */
- 		rb_free_aux(rb);
+> A minor bugreport:
+ 
+> There's a new nuisance message that I noticed when 'perf top' is started: 
+> a "vmlinux file has not been found" - with a "press any key" - but the 
+> message doesn't actually wait for the keypress, it's cleared on the first 
+> screen refresh...
+
+I'll investigate the problems reported after pushing out the current
+perf/core lot, thanks for the detailed report!
+
+- Arnaldo
+ 
+> I'd argue that both the keypress action and the warning message is 
+> superfluous:
+> 
+>  - It annoys users while not actually giving any straightforward way to 
+>    fix it. It's displayed on every startup of perf top, which is highly 
+>    distracting.
+> 
+>  - At least on Ubuntu it appears to be wrong, because the vmlinux is 
+>    available and symbol resolution/annotation appears to be working fine:
+> 
+> 	# uname -a
+> 	Linux dagon 5.4.0-rc3-custom-00557-gb6c81ae120e0 #1 SMP PREEMPT Sun Oct 20 15:28:00 CEST 2019 x86_64 x86_64 x86_64 GNU/Linux
+> 
+> 	# dpkg -l | grep gb6c81ae120e
+> 	ii  linux-headers-5.4.0-rc3-custom-00557-gb6c81ae120e0   5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux kernel headers for 5.4.0-rc3-custom-00557-gb6c81ae120e0 on amd64
+> 	ii  linux-image-5.4.0-rc3-custom-00557-gb6c81ae120e0     5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux kernel, version 5.4.0-rc3-custom-00557-gb6c81ae120e0
+> 	ii  linux-image-5.4.0-rc3-custom-00557-gb6c81ae120e0-dbg 5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux kernel debugging symbols for 5.4.0-rc3-custom-00557-gb6c81ae120e0
+> 	ii  linux-libc-dev:amd64                                 5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux support headers for userspace development
+> 
+>    Note that the 'dbg' package is installed which includes the vmlinux, 
+>    and perf does seem to find it:
+> 
+> 	# dpkg-query -L linux-image-5.4.0-rc3-custom-00557-gb6c81ae120e0-dbg | grep vmlinux$
+> 	/usr/lib/debug/lib/modules/5.4.0-rc3-custom-00557-gb6c81ae120e0/vmlinux
+> 
+>    I can see annotated kernel functions just fine.
+> 
+>  - Finally, when I run perf as root then kallsyms and /proc/kcore is used 
+>    to annotate the kernel. So the 'cannot resolve' message cannot even be 
+>    true. :-)
+> 
+> Instead I believe some sort of explanation should be printed in the 
+> natural flow when there's an unknown symbol or someone tries to enter a 
+> kernel symbol that cannot be further resolved. Even there it probably 
+> shouldn't be a 'warning' message, but something printed in-line where 
+> usually we'd see the annotated output - to disrupt the normal workflow as 
+> little as possible.
+> 
+> Secondly, there also appears to be a TUI weirdness when the annotated 
+> kernel functions are small (or weird): the blue cursor is stuck at the 
+> top and I cannot move between the annotated instructions with the down/up 
+> arrow:
+> 
+> Samples: 13M of event 'cycles', 4000 Hz, Event count (approx.): 1272420588851
+> clear_page_rep  /usr/lib/debug/boot/vmlinux-5.4.0-rc3-custom-00557-gb6c81ae120e0 [Percent: local period]
+>   0.01 │     mov  $0x200,%ecx                                                                                                                                                                      ▒
+>        │   xorl %eax,%eax                                                                                                                                                                          ▒
+>   0.01 │     xor  %eax,%eax                                                                                                                                                                        ▒
+>        │   rep stosq                                                                                                                                                                               ▒
+>  99.27 │     rep  stos %rax,%es:(%rdi)                                                                                                                                                             ▒
+>        │   ret                                                                                                                                                                                     ▒
+>   0.71 │   ← retq                         
+> 
+> I can still exit the screen with 'q', and can move around in larger 
+> annotated kernel functions. Not sure whether it's related to function 
+> size, or perhaps to the 'hottest' instruction that the cursor is normally 
+> placed at.
+> 
+> Thanks,
+> 
+> 	Ingo
+
+-- 
+
+- Arnaldo
