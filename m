@@ -1,189 +1,108 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Date: Mon, 21 Oct 2019 08:23:54 +0200
-Message-ID: <20191021062354.GA22042@gmail.com>
-References: <20191017160301.20888-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/core: Fix tracking of auxiliary trace buffer allocation
+Date: Mon, 21 Oct 2019 10:33:54 +0200
+Message-ID: <20191021083354.67868-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191017160301.20888-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, "Gustavo A . R . Silva" <gustavo@embeddedor.com>, Thomas Richter <tmricht@linux.ibm.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, songliubraving@fb.com, hechaol@fb.com, acme@kernel.org, mingo@redhat.com, peterz@infradead.org
+Cc: heiko.carstens@de.ibm.com, gor@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+commit d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
+breaks auxiliary trace buffer tracking.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+I run command 'perf record -e rbd000' to record samples and saving
+them in the **auxiliary** trace buffer. The value of 'locked_vm' becomes
+negative after all trace buffers have been allocated and released:
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 4f5cafb5cb8471e54afdc9054d973535614f7675:
-> 
->   Linux 5.4-rc3 (2019-10-13 16:37:36 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.4-20191017
-> 
-> for you to fetch changes up to 1abecfcaa7bba21c9985e0136fa49836164dd8fd:
-> 
->   perf kmem: Fix memory leak in compact_gfp_flags() (2019-10-16 10:08:32 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf buildid-cache:
-> 
->   Adrian Hunter:
-> 
->   - Fix mode setting in copyfile_mode_ns() when copying /proc/kcore.
-> 
-> perf evlist:
-> 
->   Andi Kleen:
-> 
->   - Fix freeing id arrays.
-> 
-> tools headers:
-> 
->   - Sync sched.h anc kvm.h headers with the kernel sources.
-> 
-> perf jvmti:
-> 
->   Thomas Richter:
-> 
->   - Link against tools/lib/ctype.o to have weak strlcpy().
-> 
-> perf annotate:
-> 
->   Gustavo A. R. Silva:
-> 
->   - Fix multiple memory and file descriptor leaks, found by coverity.
-> 
-> perf c2c/kmem:
-> 
->   Yunfeng Ye:
-> 
->    - Fix leaks in error handling paths in 'perf c2c', 'perf kmem',  found by
->      internal static analysis tool.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Adrian Hunter (1):
->       perf tools: Fix mode setting in copyfile_mode_ns()
-> 
-> Andi Kleen (1):
->       perf evlist: Fix fix for freed id arrays
-> 
-> Arnaldo Carvalho de Melo (4):
->       tools headers kvm: Sync kvm headers with the kernel sources
->       tools headers kvm: Sync kvm headers with the kernel sources
->       tools headers kvm: Sync kvm.h headers with the kernel sources
->       tools headers UAPI: Sync sched.h with the kernel
-> 
-> Gustavo A. R. Silva (1):
->       perf annotate: Fix multiple memory and file descriptor leaks
-> 
-> Thomas Richter (1):
->       perf jvmti: Link against tools/lib/ctype.h to have weak strlcpy()
-> 
-> Yunfeng Ye (3):
->       perf tools: Fix resource leak of closedir() on the error paths
->       perf c2c: Fix memory leak in build_cl_output()
->       perf kmem: Fix memory leak in compact_gfp_flags()
-> 
->  tools/arch/x86/include/uapi/asm/svm.h |  1 +
->  tools/arch/x86/include/uapi/asm/vmx.h |  6 +++++-
->  tools/include/uapi/linux/kvm.h        |  2 ++
->  tools/include/uapi/linux/sched.h      | 30 ++++++++++++++++++++++++++++--
->  tools/perf/builtin-c2c.c              | 14 +++++++++-----
->  tools/perf/builtin-kmem.c             |  1 +
->  tools/perf/jvmti/Build                |  6 +++++-
->  tools/perf/util/annotate.c            |  2 +-
->  tools/perf/util/copyfile.c            |  8 +++++---
->  tools/perf/util/evlist.c              |  2 +-
->  tools/perf/util/header.c              |  4 +++-
->  tools/perf/util/util.c                |  6 ++++--
->  12 files changed, 65 insertions(+), 17 deletions(-)
+During allocation the values increase
+[52.250027] perf_mmap user->locked_vm:0x87 pinned_vm:0x0 ret:0
+[52.250115] perf_mmap user->locked_vm:0x107 pinned_vm:0x0 ret:0
+[52.250251] perf_mmap user->locked_vm:0x188 pinned_vm:0x0 ret:0
+[52.250326] perf_mmap user->locked_vm:0x208 pinned_vm:0x0 ret:0
+[52.250441] perf_mmap user->locked_vm:0x289 pinned_vm:0x0 ret:0
+[52.250498] perf_mmap user->locked_vm:0x309 pinned_vm:0x0 ret:0
+[52.250613] perf_mmap user->locked_vm:0x38a pinned_vm:0x0 ret:0
+[52.250715] perf_mmap user->locked_vm:0x408 pinned_vm:0x2 ret:0
+[52.250834] perf_mmap user->locked_vm:0x408 pinned_vm:0x83 ret:0
+[52.250915] perf_mmap user->locked_vm:0x408 pinned_vm:0x103 ret:0
+[52.251061] perf_mmap user->locked_vm:0x408 pinned_vm:0x184 ret:0
+[52.251146] perf_mmap user->locked_vm:0x408 pinned_vm:0x204 ret:0
+[52.251299] perf_mmap user->locked_vm:0x408 pinned_vm:0x285 ret:0
+[52.251383] perf_mmap user->locked_vm:0x408 pinned_vm:0x305 ret:0
+[52.251544] perf_mmap user->locked_vm:0x408 pinned_vm:0x386 ret:0
+[52.251634] perf_mmap user->locked_vm:0x408 pinned_vm:0x406 ret:0
+[52.253018] perf_mmap user->locked_vm:0x408 pinned_vm:0x487 ret:0
+[52.253197] perf_mmap user->locked_vm:0x408 pinned_vm:0x508 ret:0
+[52.253374] perf_mmap user->locked_vm:0x408 pinned_vm:0x589 ret:0
+[52.253550] perf_mmap user->locked_vm:0x408 pinned_vm:0x60a ret:0
+[52.253726] perf_mmap user->locked_vm:0x408 pinned_vm:0x68b ret:0
+[52.253903] perf_mmap user->locked_vm:0x408 pinned_vm:0x70c ret:0
+[52.254084] perf_mmap user->locked_vm:0x408 pinned_vm:0x78d ret:0
+[52.254263] perf_mmap user->locked_vm:0x408 pinned_vm:0x80e ret:0
 
-Pulled, thanks a lot Arnaldo!
+The value of user->locked_vm increases to a limit then the memory
+is tracked by pinned_vm.
 
-A minor bugreport:
+During deallocation the size is subtracted from pinned_vm until
+it hits a limit. Then a larger value is subtracted from locked_vm
+leading to a large number (because of type unsigned):
+[64.267797] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x78d
+[64.267826] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x70c
+[64.267848] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x68b
+[64.267869] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x60a
+[64.267891] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x589
+[64.267911] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x508
+[64.267933] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x487
+[64.267952] perf_mmap_close mmap_user->locked_vm:0x408 pinned_vm:0x406
+[64.268883] perf_mmap_close mmap_user->locked_vm:0x307 pinned_vm:0x406
+[64.269117] perf_mmap_close mmap_user->locked_vm:0x206 pinned_vm:0x406
+[64.269433] perf_mmap_close mmap_user->locked_vm:0x105 pinned_vm:0x406
+[64.269536] perf_mmap_close mmap_user->locked_vm:0x4 pinned_vm:0x404
+[64.269797] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff84 pinned_vm:0x303
+[64.270105] perf_mmap_close mmap_user->locked_vm:0xffffffffffffff04 pinned_vm:0x202
+[64.270374] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe84 pinned_vm:0x101
+[64.270628] perf_mmap_close mmap_user->locked_vm:0xfffffffffffffe04 pinned_vm:0x0
 
-There's a new nuisance message that I noticed when 'perf top' is started: 
-a "vmlinux file has not been found" - with a "press any key" - but the 
-message doesn't actually wait for the keypress, it's cleared on the first 
-screen refresh...
+This value sticks for the user until system is rebooted, causing
+follow-on system calls using locked_vm resource limit to fail.
 
-I'd argue that both the keypress action and the warning message is 
-superfluous:
+Note: There is no issue using the normal trace buffer.
 
- - It annoys users while not actually giving any straightforward way to 
-   fix it. It's displayed on every startup of perf top, which is highly 
-   distracting.
+In fact the issue is in perf_mmap_close(). During allocation auxiliary
+trace buffer memory is either traced as 'extra' and added to 'pinned_vm'
+or trace as 'user_extra' and added to 'locked_vm'. This applies for
+normal trace buffers and auxiliary trace buffer.
 
- - At least on Ubuntu it appears to be wrong, because the vmlinux is 
-   available and symbol resolution/annotation appears to be working fine:
+However in function perf_mmap_close() all auxiliary trace buffer is
+subtraced from 'locked_vm' and never from 'pinned_vm'. This breaks the
+ballance.
 
-	# uname -a
-	Linux dagon 5.4.0-rc3-custom-00557-gb6c81ae120e0 #1 SMP PREEMPT Sun Oct 20 15:28:00 CEST 2019 x86_64 x86_64 x86_64 GNU/Linux
+Fixes: d44248a41337 ("perf/core: Rework memory accounting in perf_mmap()")
 
-	# dpkg -l | grep gb6c81ae120e
-	ii  linux-headers-5.4.0-rc3-custom-00557-gb6c81ae120e0   5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux kernel headers for 5.4.0-rc3-custom-00557-gb6c81ae120e0 on amd64
-	ii  linux-image-5.4.0-rc3-custom-00557-gb6c81ae120e0     5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux kernel, version 5.4.0-rc3-custom-00557-gb6c81ae120e0
-	ii  linux-image-5.4.0-rc3-custom-00557-gb6c81ae120e0-dbg 5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux kernel debugging symbols for 5.4.0-rc3-custom-00557-gb6c81ae120e0
-	ii  linux-libc-dev:amd64                                 5.4.0-rc3-custom-00557-gb6c81ae120e0-1                     amd64        Linux support headers for userspace development
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ kernel/events/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-   Note that the 'dbg' package is installed which includes the vmlinux, 
-   and perf does seem to find it:
-
-	# dpkg-query -L linux-image-5.4.0-rc3-custom-00557-gb6c81ae120e0-dbg | grep vmlinux$
-	/usr/lib/debug/lib/modules/5.4.0-rc3-custom-00557-gb6c81ae120e0/vmlinux
-
-   I can see annotated kernel functions just fine.
-
- - Finally, when I run perf as root then kallsyms and /proc/kcore is used 
-   to annotate the kernel. So the 'cannot resolve' message cannot even be 
-   true. :-)
-
-Instead I believe some sort of explanation should be printed in the 
-natural flow when there's an unknown symbol or someone tries to enter a 
-kernel symbol that cannot be further resolved. Even there it probably 
-shouldn't be a 'warning' message, but something printed in-line where 
-usually we'd see the annotated output - to disrupt the normal workflow as 
-little as possible.
-
-Secondly, there also appears to be a TUI weirdness when the annotated 
-kernel functions are small (or weird): the blue cursor is stuck at the 
-top and I cannot move between the annotated instructions with the down/up 
-arrow:
-
-Samples: 13M of event 'cycles', 4000 Hz, Event count (approx.): 1272420588851
-clear_page_rep  /usr/lib/debug/boot/vmlinux-5.4.0-rc3-custom-00557-gb6c81ae120e0 [Percent: local period]
-  0.01 │     mov  $0x200,%ecx                                                                                                                                                                      ▒
-       │   xorl %eax,%eax                                                                                                                                                                          ▒
-  0.01 │     xor  %eax,%eax                                                                                                                                                                        ▒
-       │   rep stosq                                                                                                                                                                               ▒
- 99.27 │     rep  stos %rax,%es:(%rdi)                                                                                                                                                             ▒
-       │   ret                                                                                                                                                                                     ▒
-  0.71 │   ← retq                         
-
-I can still exit the screen with 'q', and can move around in larger 
-annotated kernel functions. Not sure whether it's related to function 
-size, or perhaps to the 'hottest' instruction that the cursor is normally 
-placed at.
-
-Thanks,
-
-	Ingo
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 9ec0b0bfddbd..90ba23043af0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5607,8 +5607,12 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 		perf_pmu_output_stop(event);
+ 
+ 		/* now it's safe to free the pages */
+-		atomic_long_sub(rb->aux_nr_pages, &mmap_user->locked_vm);
+-		atomic64_sub(rb->aux_mmap_locked, &vma->vm_mm->pinned_vm);
++		if (!rb->aux_mmap_locked)
++			atomic_long_sub(rb->aux_nr_pages,
++					&mmap_user->locked_vm);
++		else
++			atomic64_sub(rb->aux_mmap_locked,
++				     &vma->vm_mm->pinned_vm);
+ 
+ 		/* this has to be the last one */
+ 		rb_free_aux(rb);
+-- 
+2.21.0
