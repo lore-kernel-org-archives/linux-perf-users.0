@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 30/57] perf trace: Introduce accessors to trace specific evsel->priv
-Date: Mon, 21 Oct 2019 10:38:07 -0300
-Message-ID: <20191021133834.25998-31-acme@kernel.org>
+Subject: [PATCH 28/57] perf trace: Hook the 'vec' tracepoint argument with the x86 IRQ vectors scnprintf/strtoul
+Date: Mon, 21 Oct 2019 10:38:05 -0300
+Message-ID: <20191021133834.25998-29-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,155 +10,89 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191021133834.25998-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, David Ahern <dsahern@gmail.com>, =?UTF-8?q?Luis=20Cl=C3=A1udio=20Gon=C3=A7alves?= <lclaudio@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We're using evsel->priv in syscalls:sys_{enter,exit}_SYSCALL and in
-raw_syscalls:sys_{enter,exit} to cache the offset of the common fields,
-the multiplexor id/syscall_id in the sys_enter case and syscall_id + ret
-for sys_exit.
+Ended up only being useful when filtering multiple irq_vectors
+tracepoints, as we end up having a tracepoint for each of the entries,
+i.e.:
 
-And for the rest of the tracepoints we use it to have a syscall_arg_fmt
-array to have scnprintf/strtoul for tracepoint args.
+This will always come with the "RESCHEDULE_VECTOR" in the 'vector' arg:
 
-So we better clearly mark them with accessors so that we can move to
-having a 'struct evsel_trace' struct for all 'perf trace' specific
-evsel->priv usage.
+  # perf trace --max-events 8 -e irq_vectors:reschedule*
+     0.000 cc1/29067 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     0.004 cc1/29067 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+     0.553 cc1/29067 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     0.556 cc1/29067 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+     1.182 cc1/29067 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     1.185 cc1/29067 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+     1.203 :29052/29052 irq_vectors:reschedule_entry(vector: RESCHEDULE)
+     1.206 :29052/29052 irq_vectors:reschedule_exit(vector: RESCHEDULE)
+  #
+
+While filtering that value will produce nothing:
+
+  # perf trace --max-events 8 -e irq_vectors:reschedule* --filter="vector != RESCHEDULE"
+  ^C#
+
+Maybe it'll be useful for those other tracepoints:
+
+  # perf list irq_vectors:vector_*
+
+  List of pre-defined events (to be used in -e):
+
+    irq_vectors:vector_activate                        [Tracepoint event]
+    irq_vectors:vector_alloc                           [Tracepoint event]
+    irq_vectors:vector_alloc_managed                   [Tracepoint event]
+    irq_vectors:vector_clear                           [Tracepoint event]
+    irq_vectors:vector_config                          [Tracepoint event]
+    irq_vectors:vector_deactivate                      [Tracepoint event]
+    irq_vectors:vector_free_moved                      [Tracepoint event]
+    irq_vectors:vector_reserve                         [Tracepoint event]
+    irq_vectors:vector_reserve_managed                 [Tracepoint event]
+    irq_vectors:vector_setup                           [Tracepoint event]
+    irq_vectors:vector_teardown                        [Tracepoint event]
+    irq_vectors:vector_update                          [Tracepoint event]
+  #
+
+But since we have it done, keep it.
+
+This at least served to teach me that all those irq vectors have a entry
+and an exit tracepoint that I can then use just like with
+raw_syscalls:sys_{enter,exit}, i.e. pair them, use just a
+trace__irq_vectors_entry() + trace__irq_vectors_exit() and use the
+'vector' arg as I use the 'syscall id' one for syscalls.
+
+Then the default for 'perf trace' will include irq_vectors in addition
+to syscalls.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-dcoyxfslg7atz821tz9aupjh@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-wer4cwbbqub3o7sa8h1j3uzb@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 43 ++++++++++++++++++++++++++++----------
- 1 file changed, 32 insertions(+), 11 deletions(-)
+ tools/perf/builtin-trace.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index cafd18466dfa..e0be1df555a2 100644
+index 58bbe85d4166..e71605c99080 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -285,6 +285,27 @@ struct syscall_tp {
- 	};
+@@ -1528,7 +1528,8 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+ }
+ 
+ static struct syscall_arg_fmt syscall_arg_fmts__by_name[] = {
+-	{ .name = "msr", .scnprintf = SCA_X86_MSR, .strtoul = STUL_X86_MSR, }
++	{ .name = "msr",	.scnprintf = SCA_X86_MSR,	  .strtoul = STUL_X86_MSR,	   },
++	{ .name = "vector",	.scnprintf = SCA_X86_IRQ_VECTORS, .strtoul = STUL_X86_IRQ_VECTORS, },
  };
  
-+/*
-+ * Used with raw_syscalls:sys_{enter,exit} and with the
-+ * syscalls:sys_{enter,exit}_SYSCALL tracepoints
-+ */
-+static inline struct syscall_tp *__evsel__syscall_tp(struct evsel *evsel)
-+{
-+	struct syscall_tp *sc = evsel->priv;
-+
-+	return sc;
-+}
-+
-+/*
-+ * Used with all the other tracepoints.
-+ */
-+static inline struct syscall_arg_fmt *__evsel__syscall_arg_fmt(struct evsel *evsel)
-+{
-+	struct syscall_arg_fmt *fmt = evsel->priv;
-+
-+	return fmt;
-+}
-+
- static int perf_evsel__init_tp_uint_field(struct evsel *evsel,
- 					  struct tp_field *field,
- 					  const char *name)
-@@ -298,7 +319,7 @@ static int perf_evsel__init_tp_uint_field(struct evsel *evsel,
- }
- 
- #define perf_evsel__init_sc_tp_uint_field(evsel, name) \
--	({ struct syscall_tp *sc = evsel->priv;\
-+	({ struct syscall_tp *sc = __evsel__syscall_tp(evsel);\
- 	   perf_evsel__init_tp_uint_field(evsel, &sc->name, #name); })
- 
- static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
-@@ -314,7 +335,7 @@ static int perf_evsel__init_tp_ptr_field(struct evsel *evsel,
- }
- 
- #define perf_evsel__init_sc_tp_ptr_field(evsel, name) \
--	({ struct syscall_tp *sc = evsel->priv;\
-+	({ struct syscall_tp *sc = __evsel__syscall_tp(evsel);\
- 	   perf_evsel__init_tp_ptr_field(evsel, &sc->name, #name); })
- 
- static void evsel__delete_priv(struct evsel *evsel)
-@@ -364,14 +385,14 @@ static int perf_evsel__init_augmented_syscall_tp(struct evsel *evsel, struct evs
- 
- static int perf_evsel__init_augmented_syscall_tp_args(struct evsel *evsel)
- {
--	struct syscall_tp *sc = evsel->priv;
-+	struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 	return __tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64));
- }
- 
- static int perf_evsel__init_augmented_syscall_tp_ret(struct evsel *evsel)
- {
--	struct syscall_tp *sc = evsel->priv;
-+	struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 	return __tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap);
- }
-@@ -416,11 +437,11 @@ static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *
- }
- 
- #define perf_evsel__sc_tp_uint(evsel, name, sample) \
--	({ struct syscall_tp *fields = evsel->priv; \
-+	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
- 	   fields->name.integer(&fields->name, sample); })
- 
- #define perf_evsel__sc_tp_ptr(evsel, name, sample) \
--	({ struct syscall_tp *fields = evsel->priv; \
-+	({ struct syscall_tp *fields = __evsel__syscall_tp(evsel); \
- 	   fields->name.pointer(&fields->name, sample); })
- 
- size_t strarray__scnprintf_suffix(struct strarray *sa, char *bf, size_t size, const char *intfmt, bool show_suffix, int val)
-@@ -2518,7 +2539,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 	char bf[2048];
- 	size_t size = sizeof(bf);
- 	struct tep_format_field *field = evsel->tp_format->format.fields;
--	struct syscall_arg_fmt *arg = evsel->priv;
-+	struct syscall_arg_fmt *arg = __evsel__syscall_arg_fmt(evsel);
- 	size_t printed = 0;
- 	unsigned long val;
- 	u8 bit = 1;
-@@ -3557,7 +3578,7 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
- static struct syscall_arg_fmt *perf_evsel__syscall_arg_fmt(struct evsel *evsel, char *arg)
- {
- 	struct tep_format_field *field;
--	struct syscall_arg_fmt *fmt = evsel->priv;
-+	struct syscall_arg_fmt *fmt = __evsel__syscall_arg_fmt(evsel);
- 
- 	if (evsel->tp_format == NULL || fmt == NULL)
- 		return NULL;
-@@ -4315,12 +4336,12 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
- 			return -1;
- 
- 		if (!strncmp(evsel->tp_format->name, "sys_enter_", 10)) {
--			struct syscall_tp *sc = evsel->priv;
-+			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 			if (__tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64)))
- 				return -1;
- 		} else if (!strncmp(evsel->tp_format->name, "sys_exit_", 9)) {
--			struct syscall_tp *sc = evsel->priv;
-+			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
- 
- 			if (__tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap))
- 				return -1;
-@@ -4856,7 +4877,7 @@ int cmd_trace(int argc, const char **argv)
- init_augmented_syscall_tp:
- 				if (perf_evsel__init_augmented_syscall_tp(evsel, evsel))
- 					goto out;
--				sc = evsel->priv;
-+				sc = __evsel__syscall_tp(evsel);
- 				/*
- 				 * For now with BPF raw_augmented we hook into
- 				 * raw_syscalls:sys_enter and there we get all
+ static int syscall_arg_fmt__cmp(const void *name, const void *fmtp)
 -- 
 2.21.0
