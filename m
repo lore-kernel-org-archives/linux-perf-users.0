@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 31/57] perf trace: Hide evsel->access further, simplify code
-Date: Mon, 21 Oct 2019 10:38:08 -0300
-Message-ID: <20191021133834.25998-32-acme@kernel.org>
+Subject: [PATCH 33/57] perf trace: Initialize evsel_trace->fmt for syscalls:sys_enter_* tracepoints
+Date: Mon, 21 Oct 2019 10:38:10 -0300
+Message-ID: <20191021133834.25998-34-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,149 +15,121 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Next step will be to have a 'struct evsel_trace' to allow for handling
-the syscalls tracepoints via the strace-like code while reusing parts of
-that code with the other tracepoints, where we don't have things like
-the 'syscall_nr' or 'ret' ((raw_)?syscalls:sys_{enter,exit}(_SYSCALL)?)
-args that we want to cache offsets and have been using evsel->priv for
-that, while for the other tracepoints we'll have just an array of
-'struct syscall_arg_fmt' (i.e. ->scnprint() for number->string and
-->strtoul() string->number conversions and other state those functions
-need).
+From the syscall_fmts->arg entries for formatting strace-like syscalls.
+
+This is when resolving the string "whence" on a filter expression for
+the syscalls:sys_enter_lseek:
+
+  Breakpoint 3, perf_evsel__syscall_arg_fmt (evsel=0xc91ed0, arg=0x7fffffff7cd0 "whence") at builtin-trace.c:3626
+  3626	{
+  (gdb) n
+  3628		struct syscall_arg_fmt *fmt = __evsel__syscall_arg_fmt(evsel);
+  (gdb) n
+  3630		if (evsel->tp_format == NULL || fmt == NULL)
+  (gdb) n
+  3633		for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
+  (gdb) n
+  3634			if (strcmp(field->name, arg) == 0)
+  (gdb) p field->name
+  $3 = 0xc945e0 "__syscall_nr"
+  (gdb) n
+  3633		for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
+  (gdb) p *fmt
+  $4 = {scnprintf = 0x0, strtoul = 0x0, mask_val = 0x0, parm = 0x0, name = 0x0, nr_entries = 0, show_zero = false}
+  (gdb) n
+  3634			if (strcmp(field->name, arg) == 0)
+  (gdb) p field->name
+  $5 = 0xc94690 "fd"
+  (gdb) n
+  3633		for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
+  (gdb) n
+  3634			if (strcmp(field->name, arg) == 0)
+  (gdb) n
+  3633		for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
+  (gdb) n
+  3634			if (strcmp(field->name, arg) == 0)
+  (gdb) p *fmt
+  $9 = {scnprintf = 0x489be2 <syscall_arg__scnprintf_strarray>, strtoul = 0x0, mask_val = 0x0, parm = 0xa2da80 <strarray.whences>, name = 0x0,
+    nr_entries = 0, show_zero = false}
+  (gdb) p field->name
+  $10 = 0xc947b0 "whence"
+  (gdb) p fmt->parm
+  $11 = (void *) 0xa2da80 <strarray.whences>
+  (gdb) p *(struct strarray *)fmt->parm
+  $12 = {offset = 0, nr_entries = 5, prefix = 0x724d37 "SEEK_", entries = 0xa2da40 <whences>}
+  (gdb) p (struct strarray *)fmt->parm)->entries
+  Junk after end of expression.
+  (gdb) p ((struct strarray *)fmt->parm)->entries
+  $13 = (const char **) 0xa2da40 <whences>
+  (gdb) p ((struct strarray *)fmt->parm)->entries[0]
+  $14 = 0x724d21 "SET"
+  (gdb) p ((struct strarray *)fmt->parm)->entries[1]
+  $15 = 0x724d25 "CUR"
+  (gdb) p ((struct strarray *)fmt->parm)->entries[2]
+  $16 = 0x724d29 "END"
+  (gdb) p ((struct strarray *)fmt->parm)->entries[2]
+  $17 = 0x724d29 "END"
+  (gdb) p ((struct strarray *)fmt->parm)->entries[3]
+  $18 = 0x724d2d "DATA"
+  (gdb) p ((struct strarray *)fmt->parm)->entries[4]
+  $19 = 0x724d32 "HOLE"
+  (gdb)
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-fre21jbyoqxmmquxcho7oa0x@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-lc8h9jgvbnboe0g7ic8tra1y@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 57 +++++++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 26 deletions(-)
+ tools/perf/builtin-trace.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index e0be1df555a2..1d2ed2823202 100644
+index 5792278065f6..3502417dc7f2 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -296,6 +296,15 @@ static inline struct syscall_tp *__evsel__syscall_tp(struct evsel *evsel)
- 	return sc;
+@@ -4366,6 +4366,25 @@ static void evlist__set_default_evsel_handler(struct evlist *evlist, void *handl
+ 	}
  }
  
-+static struct syscall_tp *evsel__syscall_tp(struct evsel *evsel)
++static void evsel__set_syscall_arg_fmt(struct evsel *evsel, const char *name)
 +{
-+	if (evsel->priv == NULL) {
-+		evsel->priv = zalloc(sizeof(struct syscall_tp));
-+	}
-+
-+	return __evsel__syscall_tp(evsel);
-+}
-+
- /*
-  * Used with all the other tracepoints.
-  */
-@@ -306,6 +315,15 @@ static inline struct syscall_arg_fmt *__evsel__syscall_arg_fmt(struct evsel *evs
- 	return fmt;
- }
- 
-+static struct syscall_arg_fmt *evsel__syscall_arg_fmt(struct evsel *evsel)
-+{
-+	if (evsel->priv == NULL) {
-+		evsel->priv = calloc(evsel->tp_format->format.nr_fields, sizeof(struct syscall_arg_fmt));
-+	}
-+
-+	return __evsel__syscall_arg_fmt(evsel);
-+}
-+
- static int perf_evsel__init_tp_uint_field(struct evsel *evsel,
- 					  struct tp_field *field,
- 					  const char *name)
-@@ -346,41 +364,34 @@ static void evsel__delete_priv(struct evsel *evsel)
- 
- static int perf_evsel__init_syscall_tp(struct evsel *evsel)
- {
--	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
-+	struct syscall_tp *sc = evsel__syscall_tp(evsel);
- 
--	if (evsel->priv != NULL) {
-+	if (sc != NULL) {
- 		if (perf_evsel__init_tp_uint_field(evsel, &sc->id, "__syscall_nr") &&
- 		    perf_evsel__init_tp_uint_field(evsel, &sc->id, "nr"))
--			goto out_delete;
-+			return -ENOENT;
- 		return 0;
- 	}
- 
- 	return -ENOMEM;
--out_delete:
--	zfree(&evsel->priv);
--	return -ENOENT;
- }
- 
- static int perf_evsel__init_augmented_syscall_tp(struct evsel *evsel, struct evsel *tp)
- {
--	struct syscall_tp *sc = evsel->priv = malloc(sizeof(struct syscall_tp));
-+	struct syscall_tp *sc = evsel__syscall_tp(evsel);
- 
--	if (evsel->priv != NULL) {
-+	if (sc != NULL) {
- 		struct tep_format_field *syscall_id = perf_evsel__field(tp, "id");
- 		if (syscall_id == NULL)
- 			syscall_id = perf_evsel__field(tp, "__syscall_nr");
--		if (syscall_id == NULL)
--			goto out_delete;
--		if (__tp_field__init_uint(&sc->id, syscall_id->size, syscall_id->offset, evsel->needs_swap))
--			goto out_delete;
-+		if (syscall_id == NULL ||
-+		    __tp_field__init_uint(&sc->id, syscall_id->size, syscall_id->offset, evsel->needs_swap))
-+			return -EINVAL;
- 
- 		return 0;
- 	}
- 
- 	return -ENOMEM;
--out_delete:
--	zfree(&evsel->priv);
--	return -EINVAL;
- }
- 
- static int perf_evsel__init_augmented_syscall_tp_args(struct evsel *evsel)
-@@ -399,20 +410,15 @@ static int perf_evsel__init_augmented_syscall_tp_ret(struct evsel *evsel)
- 
- static int perf_evsel__init_raw_syscall_tp(struct evsel *evsel, void *handler)
- {
--	evsel->priv = malloc(sizeof(struct syscall_tp));
--	if (evsel->priv != NULL) {
-+	if (evsel__syscall_tp(evsel) != NULL) {
- 		if (perf_evsel__init_sc_tp_uint_field(evsel, id))
--			goto out_delete;
-+			return -ENOENT;
- 
- 		evsel->handler = handler;
- 		return 0;
- 	}
- 
- 	return -ENOMEM;
--
--out_delete:
--	zfree(&evsel->priv);
--	return -ENOENT;
- }
- 
- static struct evsel *perf_evsel__raw_syscall_newtp(const char *direction, void *handler)
-@@ -1690,11 +1696,10 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 
- static int perf_evsel__init_tp_arg_scnprintf(struct evsel *evsel)
- {
--	int nr_args = evsel->tp_format->format.nr_fields;
 +	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
++
++	if (fmt) {
++		struct syscall_fmt *scfmt = syscall_fmt__find(name);
++
++		if (scfmt) {
++			int skip = 0;
++
++			if (strcmp(evsel->tp_format->format.fields->name, "__syscall_nr") == 0 ||
++			    strcmp(evsel->tp_format->format.fields->name, "nr") == 0)
++				++skip;
++
++			memcpy(fmt + skip, scfmt->arg, (evsel->tp_format->format.nr_fields - skip) * sizeof(*fmt));
++		}
++	}
++}
++
+ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
+ {
+ 	struct evsel *evsel;
+@@ -4387,11 +4406,15 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
  
--	evsel->priv = calloc(nr_args, sizeof(struct syscall_arg_fmt));
--	if (evsel->priv != NULL) {
--		syscall_arg_fmt__init_array(evsel->priv, evsel->tp_format->format.fields);
-+	if (fmt != NULL) {
-+		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields);
- 		return 0;
+ 			if (__tp_field__init_ptr(&sc->args, sc->id.offset + sizeof(u64)))
+ 				return -1;
++
++			evsel__set_syscall_arg_fmt(evsel, evsel->tp_format->name + sizeof("sys_enter_") - 1);
+ 		} else if (!strncmp(evsel->tp_format->name, "sys_exit_", 9)) {
+ 			struct syscall_tp *sc = __evsel__syscall_tp(evsel);
+ 
+ 			if (__tp_field__init_uint(&sc->ret, sizeof(u64), sc->id.offset + sizeof(u64), evsel->needs_swap))
+ 				return -1;
++
++			evsel__set_syscall_arg_fmt(evsel, evsel->tp_format->name + sizeof("sys_exit_") - 1);
+ 		}
  	}
  
 -- 
