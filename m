@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 55/57] libbeauty: Introduce strarray__strtoul_flags()
-Date: Mon, 21 Oct 2019 10:38:32 -0300
-Message-ID: <20191021133834.25998-56-acme@kernel.org>
+Subject: [PATCH 56/57] perf trace: Wire up strarray__strtoul_flags()
+Date: Mon, 21 Oct 2019 10:38:33 -0300
+Message-ID: <20191021133834.25998-57-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,13 +15,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Counterpart of strarray__scnprintf_flags(), i.e. from a expression like:
+Now anything that uses STRARRAY_FLAGS, like the 'fsmount' syscall will
+support mapping or-ed strings back to a value that can be used in a
+filter.
 
-   # perf trace -e syscalls:sys_enter_mmap --filter="flags==PRIVATE|FIXED|DENYWRITE"
-
-I.e. that "flags==PRIVATE|FIXED|DENYWRITE", turn that into
-
-   # perf trace -e syscalls:sys_enter_mmap --filter=0x812
+In some cases, where STRARRAY_FLAGS isn't used but instead the scnprintf
+is a special one because of specific needs, like for mmap, then one has
+to set the ->pars to the strarray. See the next cset.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -30,87 +30,50 @@ Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-8xst3zrqqogax7fmfzwymvbl@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-r2lpqo7dfsrhi4ll0npsb3u7@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c       | 45 +++++++++++++++++++++++++++++++-
- tools/perf/trace/beauty/beauty.h |  1 +
- 2 files changed, 45 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c       | 6 ++++++
+ tools/perf/trace/beauty/beauty.h | 3 +++
+ 2 files changed, 9 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 72ef3b395504..73c5c14b52eb 100644
+index 73c5c14b52eb..7bb84c4a8f29 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -586,6 +586,49 @@ bool strarray__strtoul(struct strarray *sa, char *bf, size_t size, u64 *ret)
- 	return false;
+@@ -540,6 +540,11 @@ bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *ar
+ 	return strarray__strtoul(arg->parm, bf, size, ret);
  }
  
-+bool strarray__strtoul_flags(struct strarray *sa, char *bf, size_t size, u64 *ret)
++bool syscall_arg__strtoul_strarray_flags(char *bf, size_t size, struct syscall_arg *arg, u64 *ret)
 +{
-+	u64 val = 0;
-+	char *tok = bf, *sep, *end;
-+
-+	*ret = 0;
-+
-+	while (size != 0) {
-+		int toklen = size;
-+
-+		sep = memchr(tok, '|', size);
-+		if (sep != NULL) {
-+			size -= sep - tok + 1;
-+
-+			end = sep - 1;
-+			while (end > tok && isspace(*end))
-+				--end;
-+
-+			toklen = end - tok + 1;
-+		}
-+
-+		while (isspace(*tok))
-+			++tok;
-+
-+		if (isalpha(*tok) || *tok == '_') {
-+			if (!strarray__strtoul(sa, tok, toklen, &val))
-+				return false;
-+		} else {
-+			bool is_hexa = tok[0] == 0 && (tok[1] = 'x' || tok[1] == 'X');
-+
-+			val = strtoul(tok, NULL, is_hexa ? 16 : 0);
-+		}
-+
-+		*ret |= (1 << (val - 1));
-+
-+		if (sep == NULL)
-+			break;
-+		tok = sep + 1;
-+	}
-+
-+	return true;
++	return strarray__strtoul_flags(arg->parm, bf, size, ret);
 +}
 +
- bool strarrays__strtoul(struct strarrays *sas, char *bf, size_t size, u64 *ret)
+ bool syscall_arg__strtoul_strarrays(char *bf, size_t size, struct syscall_arg *arg, u64 *ret)
  {
- 	int i;
-@@ -3676,7 +3719,7 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
- 			}
+ 	return strarrays__strtoul(arg->parm, bf, size, ret);
+@@ -882,6 +887,7 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
  
- 		right_end = right + 1;
--		while (isalnum(*right_end) || *right_end == '_')
-+		while (isalnum(*right_end) || *right_end == '_' || *right_end == '|')
- 			++right_end;
+ #define STRARRAY_FLAGS(name, array) \
+ 	  { .scnprintf	= SCA_STRARRAY_FLAGS, \
++	    .strtoul	= STUL_STRARRAY_FLAGS, \
+ 	    .parm	= &strarray__##array, }
  
- 		if (isalpha(*right)) {
+ #include "trace/beauty/arch_errno_names.c"
 diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 10801660a71f..e12b2228b892 100644
+index e12b2228b892..5a61043c2ff7 100644
 --- a/tools/perf/trace/beauty/beauty.h
 +++ b/tools/perf/trace/beauty/beauty.h
-@@ -32,6 +32,7 @@ size_t strarray__scnprintf_suffix(struct strarray *sa, char *bf, size_t size, co
- size_t strarray__scnprintf_flags(struct strarray *sa, char *bf, size_t size, bool show_prefix, unsigned long flags);
+@@ -126,6 +126,9 @@ size_t syscall_arg__scnprintf_strarray_flags(char *bf, size_t size, struct sysca
+ bool syscall_arg__strtoul_strarray(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
+ #define STUL_STRARRAY syscall_arg__strtoul_strarray
  
- bool strarray__strtoul(struct strarray *sa, char *bf, size_t size, u64 *ret);
-+bool strarray__strtoul_flags(struct strarray *sa, char *bf, size_t size, u64 *ret);
++bool syscall_arg__strtoul_strarray_flags(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
++#define STUL_STRARRAY_FLAGS syscall_arg__strtoul_strarray_flags
++
+ bool syscall_arg__strtoul_strarrays(char *bf, size_t size, struct syscall_arg *arg, u64 *ret);
+ #define STUL_STRARRAYS syscall_arg__strtoul_strarrays
  
- struct trace;
- struct thread;
 -- 
 2.21.0
