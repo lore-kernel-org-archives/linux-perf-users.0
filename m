@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/57] libbeauty: Add a generator for x86's IRQ vectors -> strings
-Date: Mon, 21 Oct 2019 10:38:01 -0300
-Message-ID: <20191021133834.25998-25-acme@kernel.org>
+Subject: [PATCH 25/57] libbeauty: Hook up the x86 irq_vectors table generator
+Date: Mon, 21 Oct 2019 10:38:02 -0300
+Message-ID: <20191021133834.25998-26-acme@kernel.org>
 References: <20191021133834.25998-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,11 +15,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We'll wire this up with the 'vector' arg in irq_vectors:*, etc:
+I.e. after running:
 
-Just run it straight away and check what it produces:
+  $ make -C tools/perf O=/tmp/build/perf
 
-  $ tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
+We end up with:
+
+  $ cat /tmp/build/perf/trace/beauty/generated/x86_arch_irq_vectors_array.c
   static const char *x86_irq_vectors[] = {
   	[0x02] = "NMI",
   	[0x12] = "MCE",
@@ -47,51 +49,57 @@ Just run it straight away and check what it produces:
   };
   $
 
+Now its just a matter of using it, associating it to tracepoint arguments named
+'vector', all of which can be correctly used with this table, for int args.
+
+At some point we should move tools/perf/trace/beauty to tools/beauty/,
+so that it can be used more generally and even made available externally
+like libbpf, libperf, libtraceevent, etc.
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: David Ahern <dsahern@gmail.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-cpl1pa7kkwn0llufi5qw4li8@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-0p2df4kq1afrxbck4e4ct34r@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- .../beauty/tracepoints/x86_irq_vectors.sh     | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100755 tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
+ tools/perf/Makefile.perf | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-new file mode 100755
-index 000000000000..f920003723b3
---- /dev/null
-+++ b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-@@ -0,0 +1,27 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: LGPL-2.1
-+# (C) 2019, Arnaldo Carvalho de Melo <acme@redhat.com>
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 8f1ba986d3bf..1cd294468a1f 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -546,6 +546,12 @@ x86_arch_prctl_code_tbl := $(srctree)/tools/perf/trace/beauty/x86_arch_prctl.sh
+ $(x86_arch_prctl_code_array): $(x86_arch_asm_uapi_dir)/prctl.h $(x86_arch_prctl_code_tbl)
+ 	$(Q)$(SHELL) '$(x86_arch_prctl_code_tbl)' $(x86_arch_asm_uapi_dir) > $@
+ 
++x86_arch_irq_vectors_array := $(beauty_outdir)/x86_arch_irq_vectors_array.c
++x86_arch_irq_vectors_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
 +
-+if [ $# -ne 1 ] ; then
-+	arch_x86_header_dir=tools/arch/x86/include/asm/
-+else
-+	arch_x86_header_dir=$1
-+fi
++$(x86_arch_irq_vectors_array): $(x86_arch_asm_dir)/irq_vectors.h $(x86_arch_irq_vectors_tbl)
++	$(Q)$(SHELL) '$(x86_arch_irq_vectors_tbl)' $(x86_arch_asm_dir) > $@
 +
-+x86_irq_vectors=${arch_x86_header_dir}/irq_vectors.h
-+
-+# FIRST_EXTERNAL_VECTOR is not that useful, find what is its number
-+# and then replace whatever is using it and that is useful, which at
-+# the time of writing of this script was: IRQ_MOVE_CLEANUP_VECTOR.
-+
-+first_external_regex='^#define[[:space:]]+FIRST_EXTERNAL_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
-+first_external_vector=$(egrep ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
-+
-+printf "static const char *x86_irq_vectors[] = {\n"
-+regex='^#define[[:space:]]+([[:alnum:]_]+)_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
-+sed -r "s/FIRST_EXTERNAL_VECTOR/${first_external_vector}/g" ${x86_irq_vectors} | \
-+egrep ${regex} | \
-+	sed -r "s/${regex}/\2 \1/g" | sort -n | \
-+	xargs printf "\t[%s] = \"%s\",\n"
-+printf "};\n\n"
-+
+ x86_arch_MSRs_array := $(beauty_outdir)/x86_arch_MSRs_array.c
+ x86_arch_MSRs_tbl := $(srctree)/tools/perf/trace/beauty/tracepoints/x86_msr.sh
+ 
+@@ -686,6 +692,7 @@ prepare: $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)common-cmds.h archheaders $(drm_ioc
+ 	$(perf_ioctl_array) \
+ 	$(prctl_option_array) \
+ 	$(usbdevfs_ioctl_array) \
++	$(x86_arch_irq_vectors_array) \
+ 	$(x86_arch_MSRs_array) \
+ 	$(x86_arch_prctl_code_array) \
+ 	$(rename_flags_array) \
+@@ -991,6 +998,7 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)$(perf_ioctl_array) \
+ 		$(OUTPUT)$(prctl_option_array) \
+ 		$(OUTPUT)$(usbdevfs_ioctl_array) \
++		$(OUTPUT)$(x86_arch_irq_vectors_array) \
+ 		$(OUTPUT)$(x86_arch_MSRs_array) \
+ 		$(OUTPUT)$(x86_arch_prctl_code_array) \
+ 		$(OUTPUT)$(rename_flags_array) \
 -- 
 2.21.0
