@@ -1,163 +1,114 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
-Date: Thu, 24 Oct 2019 22:48:30 +0800
-Message-ID: <20191024144830.16534-5-tanxiaojun@huawei.com>
-References: <20191024144830.16534-1-tanxiaojun@huawei.com>
+From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Subject: Re: Linux-next: 20191022: perf: bpf_helpers_doc.py: not found
+Date: Thu, 24 Oct 2019 13:05:54 -0500
+Message-ID: <CAEUSe79P0z4N=3TnF9ytWfemX8NqY1Mr_zt6PDgMAZQb=4ChpA@mail.gmail.com>
+References: <CA+G9fYvWdkmmkrq7hvADZ-1qnUNEwRULoTPfOQDnu1aZW8cDEA@mail.gmail.com>
+ <20191023024149.GA29009@leoy-ThinkPad-X240s>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191024144830.16534-1-tanxiaojun@huawei.com>
+In-Reply-To: <20191023024149.GA29009@leoy-ThinkPad-X240s>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, adrian.hunter@intel.com, yao.jin@linux.intel.com, tmricht@linux.ibm.com, brueckner@linux.ibm.com, songliubraving@fb.com, gregkh@linuxfoundation.org, kim.phillips@arm.com, James.Clark@arm.com, jeremy.linton@arm.com
-Cc: gengdongjiu@huawei.com, wxf.wang@hisilicon.com, liwei391@huawei.com, tanxiaojun@huawei.com, huawei.libin@huawei.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, sfr@canb.auug.org.au
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, lkft-triage@lists.linaro.org
 List-Id: linux-perf-users.vger.kernel.org
 
-At the suggestion of James Clark, use spe to support the precise
-ip of some events. Currently its support event is:
-branch-misses.
+Hello!
 
-Example usage:
+On Tue, 22 Oct 2019 at 21:42, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Hi Naresh,
+>
+> On Tue, Oct 22, 2019 at 09:04:04PM +0530, Naresh Kamboju wrote:
+> > We have noticed perf (OE recipe) build failure on linux next 20191022.
+> > do you see this failure ?
+> >
+> > /bin/sh: 1: perf/1.0-r9/perf-1.0/scripts/bpf_helpers_doc.py: not found
+> > Makefile:184: recipe for target 'bpf_helper_defs.h' failed
+> > make[3]: *** [bpf_helper_defs.h] Error 127
+> > make[3]: *** Deleting file 'bpf_helper_defs.h'
+> > Makefile.perf:765: recipe for target 'perf/1.0-r9/perf-1.0/libbpf.a' fa=
+iled
+> > make[2]: *** [perf/1.0-r9/perf-1.0/libbpf.a] Error 2
+>
+> I tested for two methods with linux-next, one is native building mode
+> for Arm64 building on DB410c board, another is cross compiling Arm64
+> binary on my x86 laptop.  Both cannot reproduce this failure.
+>
+> After read your shared build log and I think the building process is
+> expected: Perf tool tries to build libbpf, so it changes to the
+> building folder 'BPF_DIR' (which is under $(srctree)/tools/lib/bpf/),
+> then failed to find file $(srctree)/scripts/bpf_helpers_doc.py.
+>
+> Here $(srctree) means the kernel's root folder.
+>
+> Seems to me, this failure is caused by missing to sync kernel files
+> $linux_src/scripts to the OE folder 'perf/1.0-r9/perf-1.0/scripts'?
 
-$ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
-(:p/pp/ppp is same for this case.)
+Yes, this is exactly the reason. As of e01a75c159691 (merged on
+next-20191022), we need to include linux/scripts into the source
+directory for OpenEmbedded to build Perf. We have now sent a fix to
+OE-core.
 
-$ ./perf report --stdio
-("--stdio is not necessary")
+By the way, while looking at this, we found this unresolved conflict
+in the tree:
+-----8<----------8<----------8<-----
+  $ git show 2b5d5b1927a8c
+  commit 2b5d5b1927a8c17bf3ce5b4f781c6ba11e02cadd
+  Merge: c1e45431c592 ae79d5588a04
+  Author: Ingo Molnar <mingo@kernel.org>
+  Date:   Mon Oct 21 07:13:15 2019 +0200
 
---------------------------------------------------------------------
-...
- # Samples: 14  of event 'branch-misses:pp'
- # Event count (approx.): 14
- #
- # Children      Self  Command  Shared Object      Symbol
- # ........  ........  .......  .................  ..........................
- #
-    14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
-    14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
-     7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
-     7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
-     7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
-     7.14%     7.14%  dd       ld-2.28.so         [.] check_match
-     7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
-     7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
-     7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
-...
---------------------------------------------------------------------
+      Merge branch 'perf/core'
 
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
----
- tools/perf/util/arm-spe.c | 44 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/arm-spe.h |  3 +++
- tools/perf/util/evlist.c  |  2 ++
- 3 files changed, 49 insertions(+)
+      Conflicts:
+              tools/perf/check-headers.sh
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 596a48df6f4e..9851d1ed6d75 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -35,6 +35,19 @@
- 
- #define MAX_TIMESTAMP (~0ULL)
- 
-+#define SPE_ATTR_TS_ENABLE		BIT(0)
-+#define SPE_ATTR_PA_ENABLE		BIT(1)
-+#define SPE_ATTR_PCT_ENABLE		BIT(2)
-+#define SPE_ATTR_JITTER			BIT(16)
-+#define SPE_ATTR_BRANCH_FILTER		BIT(32)
-+#define SPE_ATTR_LOAD_FILTER		BIT(33)
-+#define SPE_ATTR_STORE_FILTER		BIT(34)
-+
-+#define SPE_ATTR_EV_RETIRED		BIT(1)
-+#define SPE_ATTR_EV_CACHE		BIT(3)
-+#define SPE_ATTR_EV_TLB			BIT(5)
-+#define SPE_ATTR_EV_BRANCH		BIT(7)
-+
- struct arm_spe {
- 	struct auxtrace			auxtrace;
- 	struct auxtrace_queues		queues;
-@@ -771,6 +784,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 	attr.sample_id_all = evsel->core.attr.sample_id_all;
- 	attr.read_format = evsel->core.attr.read_format;
- 
-+	/* If it is in the precise ip mode, there is no need to
-+	 * synthesize new events. */
-+	if (!strncmp(evsel->name, "branch-misses", 13)) {
-+		spe->sample_branch_miss = true;
-+		spe->branch_miss_id = evsel->core.id[0];
-+
-+		return 0;
-+	}
-+
- 	/* create new id val to be a fixed offset from evsel id */
- 	id = evsel->core.id[0] + 1000000000;
- 
-@@ -880,3 +902,25 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	free(spe);
- 	return err;
- }
-+
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
-+{
-+	struct perf_pmu *pmu;
-+
-+	/* Currently only supports precise_ip for branch-misses on arm64 */
-+	if (!strcmp(perf_env__arch(evlist->env), "arm64")
-+			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
-+			&& evsel->core.attr.precise_ip) {
-+		pmu = perf_pmu__find("arm_spe_0");
-+		if (pmu) {
-+			evsel->pmu_name = pmu->name;
-+			evsel->core.attr.type = PERF_RECORD_AUXTRACE;
-+			evsel->core.attr.config = SPE_ATTR_TS_ENABLE
-+						| SPE_ATTR_PA_ENABLE
-+						| SPE_ATTR_JITTER
-+						| SPE_ATTR_BRANCH_FILTER;
-+			evsel->core.attr.precise_ip = 0;
-+			evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
-+		}
-+	}
-+}
-diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-index 98d3235781c3..8b1fb191d03a 100644
---- a/tools/perf/util/arm-spe.h
-+++ b/tools/perf/util/arm-spe.h
-@@ -20,6 +20,8 @@ enum {
- union perf_event;
- struct perf_session;
- struct perf_pmu;
-+struct evlist;
-+struct evsel;
- 
- struct auxtrace_record *arm_spe_recording_init(int *err,
- 					       struct perf_pmu *arm_spe_pmu);
-@@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
- 
- struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
-+void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
- #endif
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index d277a98e62df..8a83d2b98209 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -9,6 +9,7 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <poll.h>
-+#include "arm-spe.h"
- #include "cpumap.h"
- #include "util/mmap.h"
- #include "thread_map.h"
-@@ -181,6 +182,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
- 	struct evsel *evsel, *temp;
- 
- 	__evlist__for_each_entry_safe(list, temp, evsel) {
-+		arm_spe_precise_ip_support(evlist, evsel);
- 		list_del_init(&evsel->core.node);
- 		evlist__add(evlist, evsel);
- 	}
--- 
-2.17.1
+  diff --cc tools/perf/check-headers.sh
+  index 499235a41162,93c46d38024e..1f73e6f7438c
+  --- a/tools/perf/check-headers.sh
+  +++ b/tools/perf/check-headers.sh
+  @@@ -28,7 -28,7 +28,11 @@@ arch/x86/include/asm/disabled-features.
+    arch/x86/include/asm/required-features.h
+    arch/x86/include/asm/cpufeatures.h
+    arch/x86/include/asm/inat_types.h
+  ++<<<<<<< HEAD
+   +arch/x86/include/asm/emulate_prefix.h
+  ++=3D=3D=3D=3D=3D=3D=3D
+  + arch/x86/include/asm/msr-index.h
+  ++>>>>>>> perf/core
+    arch/x86/include/uapi/asm/prctl.h
+    arch/x86/lib/x86-opcode-map.txt
+    arch/x86/tools/gen-insn-attr-x86.awk
+----->8---------->8---------->8-----
+
+That's still on next-20191024.
+
+Greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
+
+
+
+> Thanks,
+> Leo Yan
+>
+> > Metadata:
+> > -----------------------------------------------------------------------=
+-
+> > kernel: 5.4.0-rc4
+> > git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-ne=
+xt.git
+> > git branch: master
+> > git commit: a722f75b2923b4fd44c17e7255e822ac48fe85f0
+> > git describe: next-20191022
+> > Test details: https://qa-reports.linaro.org/lkft/linux-next-oe/build/ne=
+xt-20191022
+> >
+> > Full build log:
+> > https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=
+=3Dlkft,MACHINE=3Dhikey,label=3Ddocker-lkft/631/consoleText
+> >
+> > - Naresh
