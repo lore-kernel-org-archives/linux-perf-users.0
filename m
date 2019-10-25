@@ -1,87 +1,94 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: linux-next: bad merge resolution in the tip tree (Was: Linux-next:
- 20191022: perf: bpf_helpers_doc.py: not found)
-Date: Fri, 25 Oct 2019 09:14:12 +1100
-Message-ID: <20191025091412.77bea416@canb.auug.org.au>
-References: <CA+G9fYvWdkmmkrq7hvADZ-1qnUNEwRULoTPfOQDnu1aZW8cDEA@mail.gmail.com>
-        <20191023024149.GA29009@leoy-ThinkPad-X240s>
-        <CAEUSe79P0z4N=3TnF9ytWfemX8NqY1Mr_zt6PDgMAZQb=4ChpA@mail.gmail.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
+Subject: Re: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
+Date: Fri, 25 Oct 2019 10:42:52 +0800
+Message-ID: <38c18a3e-1b9a-05fe-63f6-920af2f53fc7@huawei.com>
+References: <20191024144830.16534-1-tanxiaojun@huawei.com>
+ <20191024144830.16534-5-tanxiaojun@huawei.com>
+ <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rQjFlvQ/A_Sb7.IYHqDhM55";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEUSe79P0z4N=3TnF9ytWfemX8NqY1Mr_zt6PDgMAZQb=4ChpA@mail.gmail.com>
+In-Reply-To: <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Daniel =?UTF-8?B?RMOtYXo=?= <daniel.diaz@linaro.org>, Leo Yan <leo.yan@linaro.org>, Naresh Kamboju <naresh.kamboju@linaro.org>, Linux-Next Mailing List <linux-next@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, lkft-triage@lists.linaro.org
+To: James Clark <James.Clark@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
+Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
---Sig_/rQjFlvQ/A_Sb7.IYHqDhM55
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 2019/10/25 0:29, James Clark wrote:
+> Hi Xiaojun,
+> 
+> This looks really good. I tried this, but got an error:
+> 
+>     ./perf record -e branch-misses:p ls
+>     Error:
+>     The branch-misses:p event is not supported.
 
-Hi Ingo,
+Hi, James,
 
-On Thu, 24 Oct 2019 13:05:54 -0500 Daniel D=C3=ADaz <daniel.diaz@linaro.org=
-> wrote:
->
-> By the way, while looking at this, we found this unresolved conflict
-> in the tree:
-> -----8<----------8<----------8<-----
->   $ git show 2b5d5b1927a8c
->   commit 2b5d5b1927a8c17bf3ce5b4f781c6ba11e02cadd
->   Merge: c1e45431c592 ae79d5588a04
->   Author: Ingo Molnar <mingo@kernel.org>
->   Date:   Mon Oct 21 07:13:15 2019 +0200
->=20
->       Merge branch 'perf/core'
->=20
->       Conflicts:
->               tools/perf/check-headers.sh
->=20
->   diff --cc tools/perf/check-headers.sh
->   index 499235a41162,93c46d38024e..1f73e6f7438c
->   --- a/tools/perf/check-headers.sh
->   +++ b/tools/perf/check-headers.sh
->   @@@ -28,7 -28,7 +28,11 @@@ arch/x86/include/asm/disabled-features.
->     arch/x86/include/asm/required-features.h
->     arch/x86/include/asm/cpufeatures.h
->     arch/x86/include/asm/inat_types.h
->   ++<<<<<<< HEAD
->    +arch/x86/include/asm/emulate_prefix.h
->   ++=3D=3D=3D=3D=3D=3D=3D
->   + arch/x86/include/asm/msr-index.h
->   ++>>>>>>> perf/core =20
->     arch/x86/include/uapi/asm/prctl.h
->     arch/x86/lib/x86-opcode-map.txt
->     arch/x86/tools/gen-insn-attr-x86.awk
-> ----->8---------->8---------->8----- =20
->=20
-> That's still on next-20191024.
->=20
-> Greetings!
->=20
-> Daniel D=C3=ADaz
-> daniel.diaz@linaro.org
+I can't reproduce this problem. If the current system doesn't support spe, it shouldn't report an error. I use the latest codes of the mainline:
 
---=20
-Cheers,
-Stephen Rothwell
+commit f116b96685a046a89c25d4a6ba2da489145c8888 (mainline/master)
+Merge: f632bfaa33ed 603d9299da32
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu Oct 24 06:13:45 2019 -0400
 
---Sig_/rQjFlvQ/A_Sb7.IYHqDhM55
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+    Merge tag 'mfd-fixes-5.4' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
 
------BEGIN PGP SIGNATURE-----
+I will go and see why this will be reported.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl2yIjQACgkQAVBC80lX
-0GxC5gf/anJx6HndU8+qLPUfGyZwQH0nsqze2ppYHbaiovBAxrUPZ3F6AFLCihdc
-cakYc0X887BZNddUDPvFdF+zCQhWBnXXub1UzDZhecq7RbJWTjFD9yW/Rs1yRzYJ
-O/vYDRNDtYK/qJELnpExsHmInlA630gwWifiOFInhiMJksRRpeNlCOnk1dWD5U5G
-z84dLfIHJxw+ZEAGUr0DsTeFinzb8CxXzx95kz/Ggb+TWoPioq1doExBzBSDji++
-QUoKKZ9+3UbTzQwCk7CdIbPmhGXfKKZoMmvLeIpcfXnybWADDZam1VyRMgss7O5O
-R8CpVoRYm93iHoD/jHEcouzq5R8n1Q==
-=YiY5
------END PGP SIGNATURE-----
+> 
+> 
+> I would have expected to use the event name that is listed in the SPE documentation for branch misses which is br_mis_pred or br_mis_pred_retired:
+> 
+>     E[7], byte 0 bit [7]
+>     Mispredicted. The defined values of this bit are:
+>     0 Did not cause correction to the predicted program flow.
+>     1 A branch that caused a correction to the predicted program flow.
+> 
+>     If PMUv3 is implemented this Event is required to be implemented consistently with either BR_MIS_PRED or BR_MIS_PRED_RETIRED.
+> 
 
---Sig_/rQjFlvQ/A_Sb7.IYHqDhM55--
+Do you mean that I can add these as new events to perf? If we think of them as new events, what should we do if the user does not add :pp for them?
+(Or for these events, users can only add :pp to use them?)
+
+> 
+> +       if (!strcmp(perf_env__arch(evlist->env), "arm64")
+> +                       && evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
+> +                       && evsel->core.attr.precise_ip) {
+> 
+> As I mentioned above PERF_COUNT_HW_BRANCH_MISSESdoesn't seem to match up with the actual event counter that is associated with this SPE event (BR_MIS_PRED). The fix for this is probably as simple as adding an OR for the other aliases for branch mispredicts.
+
+What you mean is that we can filter with spe events(like BR_MIS_PRED) first, and if we have other events that are exactly the same(no more for now), then we can handle them by adding OR in the future?
+
+> 
+> +               pmu = perf_pmu__find("arm_spe_0");
+> +               if (pmu) {
+> +                       evsel->pmu_name = pmu->name;
+> +                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
+> +                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
+> +                                               | SPE_ATTR_PA_ENABLE
+> 
+> I wouldn't set physical addresses by default as this requires root. I would leave that to the user if they want to manually configure SPE.
+
+Yes. You are right. I got a error for this case. I will fix it.
+
+------------------
+./perf record -e branch-misses:p ls
+Error:
+You may not have permission to collect stats.
+...
+------------------
+
+Thanks.
+Xiaojun.
+
+> 
+> I have only looked briefly and I will do some more testing.
+> 
+> 
+> Thanks
+> James
+> 
+> 
