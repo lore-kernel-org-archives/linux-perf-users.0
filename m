@@ -1,94 +1,63 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: Re: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
-Date: Fri, 25 Oct 2019 10:42:52 +0800
-Message-ID: <38c18a3e-1b9a-05fe-63f6-920af2f53fc7@huawei.com>
-References: <20191024144830.16534-1-tanxiaojun@huawei.com>
- <20191024144830.16534-5-tanxiaojun@huawei.com>
- <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
+From: James Clark <James.Clark@arm.com>
+Subject: [PATCH] Fixes issue when debugging debug builds of Perf.
+Date: Mon, 28 Oct 2019 11:34:01 +0000
+Message-ID: <20191028113340.4282-1-james.clark@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Clark <James.Clark@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
-Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
+To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: nd <nd@arm.com>, "acme@redhat.com" <acme@redhat.com>, "irogers@google.com" <irogers@google.com>, James Clark <James.Clark@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2019/10/25 0:29, James Clark wrote:
-> Hi Xiaojun,
-> 
-> This looks really good. I tried this, but got an error:
-> 
->     ./perf record -e branch-misses:p ls
->     Error:
->     The branch-misses:p event is not supported.
+When a 'make DEBUG=3D1' build is done, the command parser
+is still built with -O6 and is hard to step through.
 
-Hi, James,
+This change also moves EXTRA_WARNINGS and EXTRA_FLAGS to
+the end of the compilation line, otherwise they cannot be
+used to override the default values.
 
-I can't reproduce this problem. If the current system doesn't support spe, it shouldn't report an error. I use the latest codes of the mainline:
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/lib/subcmd/Makefile | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-commit f116b96685a046a89c25d4a6ba2da489145c8888 (mainline/master)
-Merge: f632bfaa33ed 603d9299da32
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu Oct 24 06:13:45 2019 -0400
-
-    Merge tag 'mfd-fixes-5.4' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
-
-I will go and see why this will be reported.
-
-> 
-> 
-> I would have expected to use the event name that is listed in the SPE documentation for branch misses which is br_mis_pred or br_mis_pred_retired:
-> 
->     E[7], byte 0 bit [7]
->     Mispredicted. The defined values of this bit are:
->     0 Did not cause correction to the predicted program flow.
->     1 A branch that caused a correction to the predicted program flow.
-> 
->     If PMUv3 is implemented this Event is required to be implemented consistently with either BR_MIS_PRED or BR_MIS_PRED_RETIRED.
-> 
-
-Do you mean that I can add these as new events to perf? If we think of them as new events, what should we do if the user does not add :pp for them?
-(Or for these events, users can only add :pp to use them?)
-
-> 
-> +       if (!strcmp(perf_env__arch(evlist->env), "arm64")
-> +                       && evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
-> +                       && evsel->core.attr.precise_ip) {
-> 
-> As I mentioned above PERF_COUNT_HW_BRANCH_MISSESdoesn't seem to match up with the actual event counter that is associated with this SPE event (BR_MIS_PRED). The fix for this is probably as simple as adding an OR for the other aliases for branch mispredicts.
-
-What you mean is that we can filter with spe events(like BR_MIS_PRED) first, and if we have other events that are exactly the same(no more for now), then we can handle them by adding OR in the future?
-
-> 
-> +               pmu = perf_pmu__find("arm_spe_0");
-> +               if (pmu) {
-> +                       evsel->pmu_name = pmu->name;
-> +                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
-> +                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
-> +                                               | SPE_ATTR_PA_ENABLE
-> 
-> I wouldn't set physical addresses by default as this requires root. I would leave that to the user if they want to manually configure SPE.
-
-Yes. You are right. I got a error for this case. I will fix it.
-
-------------------
-./perf record -e branch-misses:p ls
-Error:
-You may not have permission to collect stats.
-...
-------------------
-
-Thanks.
-Xiaojun.
-
-> 
-> I have only looked briefly and I will do some more testing.
-> 
-> 
-> Thanks
-> James
-> 
-> 
+diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+index 5b2cd5e58df0..1c777a72bb39 100644
+--- a/tools/lib/subcmd/Makefile
++++ b/tools/lib/subcmd/Makefile
+@@ -19,8 +19,7 @@ MAKEFLAGS +=3D --no-print-directory
+=20
+ LIBFILE =3D $(OUTPUT)libsubcmd.a
+=20
+-CFLAGS :=3D $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
+-CFLAGS +=3D -ggdb3 -Wall -Wextra -std=3Dgnu99 -fPIC
++CFLAGS :=3D -ggdb3 -Wall -Wextra -std=3Dgnu99 -fPIC
+=20
+ ifeq ($(DEBUG),0)
+   ifeq ($(feature-fortify-source), 1)
+@@ -28,7 +27,9 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
+=20
+-ifeq ($(CC_NO_CLANG), 0)
++ifeq ($(DEBUG),1)
++  CFLAGS +=3D -O0
++else ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS +=3D -O3
+ else
+   CFLAGS +=3D -O6
+@@ -43,6 +44,8 @@ CFLAGS +=3D -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=3D6=
+4 -D_GNU_SOURCE
+=20
+ CFLAGS +=3D -I$(srctree)/tools/include/
+=20
++CFLAGS +=3D $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
++
+ SUBCMD_IN :=3D $(OUTPUT)libsubcmd-in.o
+=20
+ all:
+--=20
+2.23.0
