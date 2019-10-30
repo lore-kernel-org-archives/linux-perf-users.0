@@ -1,73 +1,114 @@
-From: James Clark <James.Clark@arm.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Subject: Re: [PATCH] Fixes issue when debugging debug builds of Perf.
-Date: Wed, 30 Oct 2019 11:03:43 +0000
-Message-ID: <578c3a3a-2972-2b95-b98c-aee78950f5bb@arm.com>
+Date: Wed, 30 Oct 2019 12:13:36 -0300
+Message-ID: <20191030151336.GD27327@kernel.org>
 References: <20191028113340.4282-1-james.clark@arm.com>
- <20191029140052.GB4922@kernel.org> <20191029141852.GC4922@kernel.org>
+ <20191029140052.GB4922@kernel.org>
+ <20191029141852.GC4922@kernel.org>
  <20191029142647.GD4922@kernel.org>
+ <578c3a3a-2972-2b95-b98c-aee78950f5bb@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191029142647.GD4922@kernel.org>
-Content-Language: en-US
-Content-ID: <8BC226332A3B4344A7CF0E593EA674EF@eurprd08.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <578c3a3a-2972-2b95-b98c-aee78950f5bb@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd <nd@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+To: James Clark <James.Clark@arm.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd <nd@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGkgQXJuYWxkbywNCg0KVGhhbmtzIGZvciB0aGF0LCB5ZXMgc2VwYXJhdGluZyB0aGVtIGxvb2tz
-IGJldHRlci4NCkkgd2lsbCB0cnkgdG8gYnJlYWsgZG93biBjb21taXRzIGluIHRoZSBmdXR1cmUu
-DQoNCj4gVGhlIHBhdGNoIGNhbWUgbWFuZ2xlZCwgc28gSSdtIGFwcGx5aW5nIGJ5IGhhbmQsIGFu
-ZCBzZXBhcmF0aW5nIGl0IGludG8NCj4gdHdvIHBhdGNoZXMsIHRoZSBmaXJzdCBmb3IgdGhlIGZp
-cnN0IHBhcmFncmFwaCBhbmQgdGhlIG90aGVyIGZvciB0aGUNCj4gc2Vjb25kLCBvaz8NCg0KQnkg
-bWFuZ2xlZCBkbyB5b3UgbWVhbiB0aGUgcXVvdGVkIHByaW50YWJsZXMgIj0zRCIgYW5kICI9MjAi
-Pw0KDQpJdCBzZWVtcyBsaWtlIGdpdCBzZW5kLWVtYWlsIGZhbGxzIGJhY2sgdG8gdGhpcyBiZWhh
-dmlvciBieSBkZWZhdWx0Og0KDQogICAgICAgICANCiAgICAgLS10cmFuc2Zlci1lbmNvZGluZz0o
-N2JpdHw4Yml0fHF1b3RlZC1wcmludGFibGV8YmFzZTY0fGF1dG8pDQoNCiAgICAgICBTcGVjaWZ5
-IHRoZSB0cmFuc2ZlciBlbmNvZGluZyB0byBiZSB1c2VkIHRvIHNlbmQgdGhlIG1lc3NhZ2Ugb3Zl
-ciBTTVRQLg0KICAgICAgIDdiaXQgd2lsbCBmYWlsIHVwb24gZW5jb3VudGVyaW5nIGEgbm9uLUFT
-Q0lJIG1lc3NhZ2UuIHF1b3RlZC1wcmludGFibGUgY2FuIGJlDQogICAgICAgdXNlZnVsIHdoZW4g
-dGhlIHJlcG9zaXRvcnkgY29udGFpbnMgZmlsZXMgdGhhdCBjb250YWluIGNhcnJpYWdlIHJldHVy
-bnMsIGJ1dA0KICAgICAgIG1ha2VzIHRoZSByYXcgcGF0Y2ggZW1haWwgZmlsZSAoYXMgc2F2ZWQg
-ZnJvbSBhIE1VQSkgbXVjaCBoYXJkZXIgdG8gaW5zcGVjdA0KICAgICAgIG1hbnVhbGx5LiBiYXNl
-NjQgaXMgZXZlbiBtb3JlIGZvb2wgcHJvb2YsIGJ1dCBhbHNvIGV2ZW4gbW9yZSBvcGFxdWUuIGF1
-dG8gd2lsbA0KICAgICAgIHVzZSA4Yml0IHdoZW4gcG9zc2libGUsIGFuZCBxdW90ZWQtcHJpbnRh
-YmxlIG90aGVyd2lzZS4NCg0KDQpJIGNvcGllZCBteSByYXcgcGF0Y2ggYW5kIHdhcyBhYmxlIHRv
-IHN1Y2Nlc3NmdWxseSBhcHBseSBpdCB3aXRoIGdpdCBhbSwgZXZlbiB3aXRoIHRoaXMgZXNjYXBp
-bmcuIEFsdGhvdWdoIEkNCmRpZCB1cGdyYWRlIHRvIGEgbmV3ZXIgdmVyc2lvbiBvZiBnaXQgKDIu
-MjMuMCkuDQoNCklmIEkgdmlldyB0aGUgcGF0Y2ggdGhhdCB5b3UgY3JlYXRlZCwgdGhlbiBpdCBk
-b2Vzbid0IGhhdmUgcXVvdGVkIHByaW50YWJsZSBlc2NhcGluZy4gU28gdGhlcmUgZG9lcw0Kc2Vl
-bSB0byBiZSBhIGRpZmZlcmVuY2Ugc29tZXdoZXJlLg0KRG8geW91IHRoaW5rIEkgc2hvdWxkIHVz
-ZSAiZ2l0IHNlbmQtZW1haWwgLS10cmFuc2Zlci1lbmNvZGluZz03Yml0Ij8NCg0KDQpUaGFua3MN
-CkphbWVzDQoNCk9uIDI5LzEwLzIwMTkgMTQ6MjYsIEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyB3
-cm90ZToNCj4gRW0gVHVlLCBPY3QgMjksIDIwMTkgYXQgMTE6MTg6NTJBTSAtMDMwMCwgQXJuYWxk
-byBDYXJ2YWxobyBkZSBNZWxvIGVzY3JldmV1Og0KPj4gQW5kIGhlcmUgaXMgdGhlIGZpcnN0IHBh
-dGNoIG91dCBvZiB5b3VyIGxhcmdlciBvbmUsIEkgY2hhbmdlZCB0aGUNCj4+IHN1YmplY3QgbGlu
-ZSB0byByZWZsZWN0IHRoYXQgdGhpcyBpcyBub3QgdG9vbHMvcGVyZiBzcGVjaWZpYywgYXMNCj4+
-IHRvb2xzL29ianRvb2wvIGFsc28gdXNlcyBsaWJzdWJjbWQsIGFkZGVkIEpvc2gsIG9ianRvb2wn
-cyBtYWludGFpbmVyIHNvDQo+PiB0aGF0IGhlIGlzIG1hZGUgYXdhcmUuDQo+IA0KPiBBbmQgdGhl
-IHNlY29uZCBwYXRjaDoNCj4gDQo+IA0KPiBjb21taXQgZDAzODE0NDlmZDlhYjczM2VjMmRhZjUy
-NzI2M2RhOWY3M2YxZTk0ZQ0KPiBBdXRob3I6IEphbWVzIENsYXJrIDxKYW1lcy5DbGFya0Bhcm0u
-Y29tPg0KPiBEYXRlOiAgIE1vbiBPY3QgMjggMTE6MzQ6MDEgMjAxOSArMDAwMA0KPiANCj4gICAg
-IGxpYnN1YmNtZDogVXNlIC1PMCB3aXRoIERFQlVHPTENCj4gICAgIA0KPiAgICAgV2hlbiBhICdt
-YWtlIERFQlVHPTEnIGJ1aWxkIGlzIGRvbmUsIHRoZSBjb21tYW5kIHBhcnNlciBpcyBzdGlsbCBi
-dWlsdA0KPiAgICAgd2l0aCAtTzYgYW5kIGlzIGhhcmQgdG8gc3RlcCB0aHJvdWdoLCBmaXggaXQg
-bWFraW5nIGl0IHVzZSAtTzAgaW4gdGhhdA0KPiAgICAgY2FzZS4NCj4gICAgIA0KPiAgICAgU2ln
-bmVkLW9mZi1ieTogSmFtZXMgQ2xhcmsgPGphbWVzLmNsYXJrQGFybS5jb20+DQo+ICAgICBDYzog
-QWRyaWFuIEh1bnRlciA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+DQo+ICAgICBDYzogSWFuIFJv
-Z2VycyA8aXJvZ2Vyc0Bnb29nbGUuY29tPg0KPiAgICAgQ2M6IEppcmkgT2xzYSA8am9sc2FAa2Vy
-bmVsLm9yZz4NCj4gICAgIENjOiBKb3NoIFBvaW1ib2V1ZiA8anBvaW1ib2VAcmVkaGF0LmNvbT4N
-Cj4gICAgIENjOiBOYW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5vcmc+DQo+ICAgICBDYzog
-bmQgPG5kQGFybS5jb20+DQo+ICAgICBMaW5rOiBodHRwOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwv
-MjAxOTEwMjgxMTMzNDAuNDI4Mi0xLWphbWVzLmNsYXJrQGFybS5jb20NCj4gICAgIFsgc3BsaXQg
-ZnJvbSBhIGxhcmdlciBwYXRjaCBdDQo+ICAgICBTaWduZWQtb2ZmLWJ5OiBBcm5hbGRvIENhcnZh
-bGhvIGRlIE1lbG8gPGFjbWVAcmVkaGF0LmNvbT4NCj4gDQo+IGRpZmYgLS1naXQgYS90b29scy9s
-aWIvc3ViY21kL01ha2VmaWxlIGIvdG9vbHMvbGliL3N1YmNtZC9NYWtlZmlsZQ0KPiBpbmRleCAz
-NTJjNjA2MmRlYmEuLjFjNzc3YTcyYmIzOSAxMDA2NDQNCj4gLS0tIGEvdG9vbHMvbGliL3N1YmNt
-ZC9NYWtlZmlsZQ0KPiArKysgYi90b29scy9saWIvc3ViY21kL01ha2VmaWxlDQo+IEBAIC0yNyw3
-ICsyNyw5IEBAIGlmZXEgKCQoREVCVUcpLDApDQo+ICAgIGVuZGlmDQo+ICBlbmRpZg0KPiAgDQo+
-IC1pZmVxICgkKENDX05PX0NMQU5HKSwgMCkNCj4gK2lmZXEgKCQoREVCVUcpLDEpDQo+ICsgIENG
-TEFHUyArPSAtTzANCj4gK2Vsc2UgaWZlcSAoJChDQ19OT19DTEFORyksIDApDQo+ICAgIENGTEFH
-UyArPSAtTzMNCj4gIGVsc2UNCj4gICAgQ0ZMQUdTICs9IC1PNg0KPiANCg==
+Em Wed, Oct 30, 2019 at 11:03:43AM +0000, James Clark escreveu:
+> Hi Arnaldo,
+> 
+> Thanks for that, yes separating them looks better.
+> I will try to break down commits in the future.
+> 
+> > The patch came mangled, so I'm applying by hand, and separating it into
+> > two patches, the first for the first paragraph and the other for the
+> > second, ok?
+> 
+> By mangled do you mean the quoted printables "=3D" and "=20"?
+> 
+> It seems like git send-email falls back to this behavior by default:
+> 
+>          
+>      --transfer-encoding=(7bit|8bit|quoted-printable|base64|auto)
+> 
+>        Specify the transfer encoding to be used to send the message over SMTP.
+>        7bit will fail upon encountering a non-ASCII message. quoted-printable can be
+>        useful when the repository contains files that contain carriage returns, but
+>        makes the raw patch email file (as saved from a MUA) much harder to inspect
+>        manually. base64 is even more fool proof, but also even more opaque. auto will
+>        use 8bit when possible, and quoted-printable otherwise.
+> 
+> 
+> I copied my raw patch and was able to successfully apply it with git am, even with this escaping. Although I
+> did upgrade to a newer version of git (2.23.0).
+> 
+> If I view the patch that you created, then it doesn't have quoted printable escaping. So there does
+> seem to be a difference somewhere.
+> Do you think I should use "git send-email --transfer-encoding=7bit"?
+
+Well, I'm using mutt defaults, I'd say take a look at:
+
+~/git/linux/Documentation/process/email-clients.rst
+
+There is a sesion for your mail agent, maybe it helps.
+
+- Arnaldo
+ 
+> 
+> Thanks
+> James
+> 
+> On 29/10/2019 14:26, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Oct 29, 2019 at 11:18:52AM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> And here is the first patch out of your larger one, I changed the
+> >> subject line to reflect that this is not tools/perf specific, as
+> >> tools/objtool/ also uses libsubcmd, added Josh, objtool's maintainer so
+> >> that he is made aware.
+> > 
+> > And the second patch:
+> > 
+> > 
+> > commit d0381449fd9ab733ec2daf527263da9f73f1e94e
+> > Author: James Clark <James.Clark@arm.com>
+> > Date:   Mon Oct 28 11:34:01 2019 +0000
+> > 
+> >     libsubcmd: Use -O0 with DEBUG=1
+> >     
+> >     When a 'make DEBUG=1' build is done, the command parser is still built
+> >     with -O6 and is hard to step through, fix it making it use -O0 in that
+> >     case.
+> >     
+> >     Signed-off-by: James Clark <james.clark@arm.com>
+> >     Cc: Adrian Hunter <adrian.hunter@intel.com>
+> >     Cc: Ian Rogers <irogers@google.com>
+> >     Cc: Jiri Olsa <jolsa@kernel.org>
+> >     Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+> >     Cc: Namhyung Kim <namhyung@kernel.org>
+> >     Cc: nd <nd@arm.com>
+> >     Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
+> >     [ split from a larger patch ]
+> >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
+> > index 352c6062deba..1c777a72bb39 100644
+> > --- a/tools/lib/subcmd/Makefile
+> > +++ b/tools/lib/subcmd/Makefile
+> > @@ -27,7 +27,9 @@ ifeq ($(DEBUG),0)
+> >    endif
+> >  endif
+> >  
+> > -ifeq ($(CC_NO_CLANG), 0)
+> > +ifeq ($(DEBUG),1)
+> > +  CFLAGS += -O0
+> > +else ifeq ($(CC_NO_CLANG), 0)
+> >    CFLAGS += -O3
+> >  else
+> >    CFLAGS += -O6
+> > 
+
+-- 
+
+- Arnaldo
