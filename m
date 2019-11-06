@@ -1,55 +1,72 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/3] perf tools: Fix time sorting
-Date: Tue,  5 Nov 2019 15:18:18 -0300
-Message-ID: <20191105181818.26748-4-acme@kernel.org>
-References: <20191105181818.26748-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Date: Wed, 6 Nov 2019 16:10:51 -0300
+Message-ID: <20191106191051.GE3636@kernel.org>
+References: <20191017160301.20888-1-acme@kernel.org>
+ <20191021062354.GA22042@gmail.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191105181818.26748-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191021062354.GA22042@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, "Gustavo A . R . Silva" <gustavo@embeddedor.com>, Thomas Richter <tmricht@linux.ibm.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+Em Mon, Oct 21, 2019 at 08:23:54AM +0200, Ingo Molnar escreveu:
+> Secondly, there also appears to be a TUI weirdness when the annotated 
+> kernel functions are small (or weird): the blue cursor is stuck at the 
+> top and I cannot move between the annotated instructions with the down/up 
+> arrow:
+> 
+> Samples: 13M of event 'cycles', 4000 Hz, Event count (approx.): 1272420588851
+> clear_page_rep  /usr/lib/debug/boot/vmlinux-5.4.0-rc3-custom-00557-gb6c81ae120e0 [Percent: local period]
+>   0.01 │     mov  $0x200,%ecx                                                                                                                                                                      ▒
+>        │   xorl %eax,%eax                                                                                                                                                                          ▒
+>   0.01 │     xor  %eax,%eax                                                                                                                                                                        ▒
+>        │   rep stosq                                                                                                                                                                               ▒
+>  99.27 │     rep  stos %rax,%es:(%rdi)                                                                                                                                                             ▒
+>        │   ret                                                                                                                                                                                     ▒
+>   0.71 │   ← retq                         
+> 
+> I can still exit the screen with 'q', and can move around in larger 
+> annotated kernel functions. Not sure whether it's related to function 
+> size, or perhaps to the 'hottest' instruction that the cursor is normally 
+> placed at.
 
-The final sort might get confused when the comparison is done over
-bigger numbers than int like for -s time.
+I couldn't reproduce this one so far, with another small function,
+clear_page_erms, what happens is that the cursor seems to be hidden at the
+bottom, if you press the "magic" 'D' hotkey it will tell (at the bottom of the
+screen) that the idx is at 18, which  for a function with just 8 output lines
+doesn't make sense:
 
-Check the following report for longer workloads:
+Samples: 12K of event 'cycles', 4000 Hz, Event count (approx.): 2219443843
+clear_page_erms  /proc/kcore [Percent: local period]
+Percent│                                                                 ◆
+       │                                                                 ▒
+       │                                                                 ▒
+       │    Disassembly of section load0:                                ▒
+       │                                                                 ▒
+       │    ffffffffab9d17c0 <load0>:                                    ▒
+       │      mov  $0x1000,%ecx                                          ▒
+       │      xor  %eax,%eax                                             ▒
+100.00 │      rep  stos %al,%es:(%rdi)                                   ▒
+       │    ← retq                                                       ▒
+                                                                         ▒
+1: nr_ent=20, height=35, idx=18, top_idx=1, nr_asm_entries=8
 
-  $ perf report -s time -F time,overhead --stdio
+Doesn't make sense, there aren't 20 entries nor the idx is 18, the
+nr_asm_entries is right, I'll try to follow up on this one...
 
-Fix hist_entry__sort() to properly return int64_t and not possible cut
-int.
-
-Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 679a1d75090c..7b6eaf5e0bda 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1625,7 +1625,7 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
- 	return 0;
- }
+But you can in these cases try to go on pressin the up arrow till the cursor
+appears, etc.
  
--static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
- {
- 	struct hists *hists = a->hists;
- 	struct perf_hpp_fmt *fmt;
+> Thanks,
+> 
+> 	Ingo
+
 -- 
-2.21.0
+
+- Arnaldo
