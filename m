@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/63] perf probe: Fix to show ranges of variables in functions without entry_pc
-Date: Thu,  7 Nov 2019 15:59:32 -0300
-Message-ID: <20191107190011.23924-25-acme@kernel.org>
+Subject: [PATCH 25/63] perf auxtrace: Add auxtrace_cache__remove()
+Date: Thu,  7 Nov 2019 15:59:33 -0300
+Message-ID: <20191107190011.23924-26-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,94 +9,83 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Fix to show ranges of variables (--range and --vars option) in functions
-which DIE has only ranges but no entry_pc attribute.
+Add auxtrace_cache__remove(). Intel PT uses an auxtrace_cache to store
+the results of code-walking, so that the same block of instructions does
+not have to be decoded repeatedly. However, when there are text poke
+events, the associated cache entries need to be removed.
 
-Without this fix:
-
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-  	@<clear_tasks_mm_cpumask+0>
-  		(No matched variables)
-
-With this fix:
-
-  # perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-	@<clear_tasks_mm_cpumask+0>
-		[VAL]	int	cpu	@<clear_tasks_mm_cpumask+[0-35,317-317,2052-2059]>
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  (No matched variables)
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe --range -V clear_tasks_mm_cpumask
-  Available variables at clear_tasks_mm_cpumask
-          @<clear_tasks_mm_cpumask+0>
-                  [VAL]   int     cpu     @<clear_tasks_mm_cpumask+[0-23,23-105,105-106,106-106,1843-1850,1850-1862]>
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf probe clear_tasks_mm_cpumask cpu
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask with cpu)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  [root@quaco ~]# perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c with cpu)
-  [root@quaco ~]#
-  [root@quaco ~]# perf trace -e probe:*cpumask
-  ^C[root@quaco ~]#
-
-Fixes: 349e8d261131 ("perf probe: Add --range option to show a variable's location range")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199323018.8075.8179744380479673672.stgit@devnote2
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: x86@kernel.org
+Link: http://lore.kernel.org/lkml/20191025130000.13032-6-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/auxtrace.c | 28 ++++++++++++++++++++++++++++
+ tools/perf/util/auxtrace.h |  1 +
+ 2 files changed, 29 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index e0c507d6b3b4..ac82fd937e4b 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1019,7 +1019,7 @@ static int die_get_var_innermost_scope(Dwarf_Die *sp_die, Dwarf_Die *vr_die,
- 	bool first = true;
- 	const char *name;
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 8470dfe9fe97..c555c3ccd79d 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1457,6 +1457,34 @@ int auxtrace_cache__add(struct auxtrace_cache *c, u32 key,
+ 	return 0;
+ }
  
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
++static struct auxtrace_cache_entry *auxtrace_cache__rm(struct auxtrace_cache *c,
++						       u32 key)
++{
++	struct auxtrace_cache_entry *entry;
++	struct hlist_head *hlist;
++	struct hlist_node *n;
++
++	if (!c)
++		return NULL;
++
++	hlist = &c->hashtable[hash_32(key, c->bits)];
++	hlist_for_each_entry_safe(entry, n, hlist, hash) {
++		if (entry->key == key) {
++			hlist_del(&entry->hash);
++			return entry;
++		}
++	}
++
++	return NULL;
++}
++
++void auxtrace_cache__remove(struct auxtrace_cache *c, u32 key)
++{
++	struct auxtrace_cache_entry *entry = auxtrace_cache__rm(c, key);
++
++	auxtrace_cache__free_entry(c, entry);
++}
++
+ void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key)
+ {
+ 	struct auxtrace_cache_entry *entry;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index f201f36bc35f..3f4aa5427d76 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -489,6 +489,7 @@ void *auxtrace_cache__alloc_entry(struct auxtrace_cache *c);
+ void auxtrace_cache__free_entry(struct auxtrace_cache *c, void *entry);
+ int auxtrace_cache__add(struct auxtrace_cache *c, u32 key,
+ 			struct auxtrace_cache_entry *entry);
++void auxtrace_cache__remove(struct auxtrace_cache *c, u32 key);
+ void *auxtrace_cache__lookup(struct auxtrace_cache *c, u32 key);
  
-@@ -1082,7 +1082,7 @@ int die_get_var_range(Dwarf_Die *sp_die, Dwarf_Die *vr_die, struct strbuf *buf)
- 	bool first = true;
- 	const char *name;
- 
--	ret = dwarf_entrypc(sp_die, &entry);
-+	ret = die_entrypc(sp_die, &entry);
- 	if (ret)
- 		return ret;
- 
+ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
 -- 
 2.21.0
