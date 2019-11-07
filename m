@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/63] perf probe: Walk function lines in lexical blocks
-Date: Thu,  7 Nov 2019 15:59:24 -0300
-Message-ID: <20191107190011.23924-17-acme@kernel.org>
+Subject: [PATCH 17/63] perf probe: Fix to show function entry line as probe-able
+Date: Thu,  7 Nov 2019 15:59:25 -0300
+Message-ID: <20191107190011.23924-18-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,68 +14,82 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Since some inlined functions are in lexical blocks of given function, we
-have to recursively walk through the DIE tree.  Without this fix,
-perf-probe -L can miss the inlined functions which is in a lexical block
-(like if (..) { func() } case.)
+Fix die_walk_lines() to list the function entry line correctly.  Since
+the dwarf_entrypc() does not return the entry pc if the DIE has only
+range attribute, __die_walk_funclines() fails to list the declaration
+line (entry line) in that case.
 
-However, even though, to walk the lines in a given function, we don't
-need to follow the children DIE of inlined functions because those do
-not have any lines in the specified function.
+To solve this issue, this introduces die_entrypc() which correctly
+returns the entry PC (the first address range) even if the DIE has only
+range attribute. With this fix die_walk_lines() shows the function entry
+line is able to probe correctly.
 
-We need to walk though whole trees only if we walk all lines in a given
-file, because an inlined function can include another inlined function
-in the same file.
-
-Fixes: b0e9cb2802d4 ("perf probe: Fix to search nested inlined functions in CU")
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190836514.1859.15996864849678136353.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157190837419.1859.4619125803596816752.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ tools/perf/util/dwarf-aux.c | 24 +++++++++++++++++++++++-
+ tools/perf/util/dwarf-aux.h |  3 +++
+ 2 files changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 2ec24c3bed44..929b7c0567f4 100644
+index 929b7c0567f4..063f71da6b63 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -678,10 +678,9 @@ static int __die_walk_funclines_cb(Dwarf_Die *in_die, void *data)
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
- 		}
-+		if (!lw->recursive)
-+			return DIE_FIND_CB_SIBLING;
- 	}
--	if (!lw->recursive)
--		/* Don't need to search recursively */
--		return DIE_FIND_CB_SIBLING;
+@@ -307,6 +307,28 @@ bool die_is_func_def(Dwarf_Die *dw_die)
+ 		dwarf_attr(dw_die, DW_AT_declaration, &attr) == NULL);
+ }
  
- 	if (addr) {
- 		fname = dwarf_decl_file(in_die);
-@@ -728,6 +727,10 @@ static int __die_walk_culines_cb(Dwarf_Die *sp_die, void *data)
- {
- 	struct __line_walk_param *lw = data;
++/**
++ * die_entrypc - Returns entry PC (the lowest address) of a DIE
++ * @dw_die: a DIE
++ * @addr: where to store entry PC
++ *
++ * Since dwarf_entrypc() does not return entry PC if the DIE has only address
++ * range, we have to use this to retrieve the lowest address from the address
++ * range attribute.
++ */
++int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
++{
++	Dwarf_Addr base, end;
++
++	if (!addr)
++		return -EINVAL;
++
++	if (dwarf_entrypc(dw_die, addr) == 0)
++		return 0;
++
++	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
++}
++
+ /**
+  * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
+  * @dw_die: a DIE
+@@ -713,7 +735,7 @@ static int __die_walk_funclines(Dwarf_Die *sp_die, bool recursive,
+ 	/* Handle function declaration line */
+ 	fname = dwarf_decl_file(sp_die);
+ 	if (fname && dwarf_decl_line(sp_die, &lineno) == 0 &&
+-	    dwarf_entrypc(sp_die, &addr) == 0) {
++	    die_entrypc(sp_die, &addr) == 0) {
+ 		lw.retval = callback(fname, lineno, addr, data);
+ 		if (lw.retval != 0)
+ 			goto done;
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index f204e5892403..506006e0cf66 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -29,6 +29,9 @@ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
+ /* Get DW_AT_linkage_name (should be NULL for C binary) */
+ const char *die_get_linkage_name(Dwarf_Die *dw_die);
  
-+	/*
-+	 * Since inlined function can include another inlined function in
-+	 * the same file, we need to walk in it recursively.
-+	 */
- 	lw->retval = __die_walk_funclines(sp_die, true, lw->callback, lw->data);
- 	if (lw->retval != 0)
- 		return DWARF_CB_ABORT;
-@@ -817,8 +820,9 @@ int die_walk_lines(Dwarf_Die *rt_die, line_walk_callback_t callback, void *data)
- 	 */
- 	if (rt_die != cu_die)
- 		/*
--		 * Don't need walk functions recursively, because nested
--		 * inlined functions don't have lines of the specified DIE.
-+		 * Don't need walk inlined functions recursively, because
-+		 * inner inlined functions don't have the lines of the
-+		 * specified function.
- 		 */
- 		ret = __die_walk_funclines(rt_die, false, callback, data);
- 	else {
++/* Get the lowest PC in DIE (including range list) */
++int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr);
++
+ /* Ensure that this DIE is a subprogram and definition (not declaration) */
+ bool die_is_func_def(Dwarf_Die *dw_die);
+ 
 -- 
 2.21.0
