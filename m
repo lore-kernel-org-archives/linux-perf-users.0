@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/63] perf jevents: Fix resource leak in process_mapfile() and main()
-Date: Thu,  7 Nov 2019 15:59:26 -0300
-Message-ID: <20191107190011.23924-19-acme@kernel.org>
+Subject: [PATCH 19/63] perf probe: Fix wrong address verification
+Date: Thu,  7 Nov 2019 15:59:27 -0300
+Message-ID: <20191107190011.23924-20-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,104 +9,127 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Feilong Lin <linfeilong@huawei.com>, Hu Shiyuan <hushiyuan@huawei.com>, Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Luke Mujica <lukemujica@google.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Zenghui Yu <yuzenghui@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-There are memory leaks and file descriptor resource leaks in
-process_mapfile() and main().
+Since there are some DIE which has only ranges instead of the
+combination of entrypc/highpc, address verification must use
+dwarf_haspc() instead of dwarf_entrypc/dwarf_highpc.
 
-Fix this by adding free(), fclose() and free_arch_std_events() on the
-error paths.
+Also, the ranges only DIE will have a partial code in different section
+(e.g. unlikely code will be in text.unlikely as "FUNC.cold" symbol). In
+that case, we can not use dwarf_entrypc() or die_entrypc(), because the
+offset from original DIE can be a minus value.
 
-Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
-Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
-Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Feilong Lin <linfeilong@huawei.com>
-Cc: Hu Shiyuan <hushiyuan@huawei.com>
+Instead, this simply gets the symbol and offset from symtab.
+
+Without this patch;
+
+  # perf probe -D clear_tasks_mm_cpumask:1
+  Failed to get entry address of clear_tasks_mm_cpumask
+    Error: Failed to add events.
+
+And with this patch:
+
+  # perf probe -D clear_tasks_mm_cpumask:1
+  p:probe/clear_tasks_mm_cpumask clear_tasks_mm_cpumask+0
+  p:probe/clear_tasks_mm_cpumask_1 clear_tasks_mm_cpumask+5
+  p:probe/clear_tasks_mm_cpumask_2 clear_tasks_mm_cpumask+8
+  p:probe/clear_tasks_mm_cpumask_3 clear_tasks_mm_cpumask+16
+  p:probe/clear_tasks_mm_cpumask_4 clear_tasks_mm_cpumask+82
+
+Committer testing:
+
+I managed to reproduce the above:
+
+  [root@quaco ~]# perf probe -D clear_tasks_mm_cpumask:1
+  p:probe/clear_tasks_mm_cpumask _text+919968
+  p:probe/clear_tasks_mm_cpumask_1 _text+919973
+  p:probe/clear_tasks_mm_cpumask_2 _text+919976
+  [root@quaco ~]#
+
+But then when trying to actually put the probe in place, it fails if I
+use :0 as the offset:
+
+  [root@quaco ~]# perf probe -L clear_tasks_mm_cpumask | head -5
+  <clear_tasks_mm_cpumask@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/kernel/cpu.c:0>
+        0  void clear_tasks_mm_cpumask(int cpu)
+        1  {
+        2  	struct task_struct *p;
+
+  [root@quaco ~]# perf probe clear_tasks_mm_cpumask:0
+  Probe point 'clear_tasks_mm_cpumask' not found.
+    Error: Failed to add events.
+  [root@quaco
+
+The next patch is needed to fix this case.
+
+Fixes: 576b523721b7 ("perf probe: Fix probing symbols with optimization suffix")
+Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Luke Mujica <lukemujica@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
+Link: http://lore.kernel.org/lkml/157199318513.8075.10463906803299647907.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 32 ++++++++++----------------------
+ 1 file changed, 10 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 7d69727f44bd..079c77b6a2fd 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -772,6 +772,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	char *line, *p;
- 	int line_num;
- 	char *tblname;
-+	int ret = 0;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index cd9f95e5044e..2b6513e5725c 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -604,38 +604,26 @@ static int convert_to_trace_point(Dwarf_Die *sp_die, Dwfl_Module *mod,
+ 				  const char *function,
+ 				  struct probe_trace_point *tp)
+ {
+-	Dwarf_Addr eaddr, highaddr;
++	Dwarf_Addr eaddr;
+ 	GElf_Sym sym;
+ 	const char *symbol;
  
- 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
- 
-@@ -783,6 +784,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	if (!mapfp) {
- 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
- 				fpath);
-+		free(line);
- 		return -1;
+ 	/* Verify the address is correct */
+-	if (dwarf_entrypc(sp_die, &eaddr) != 0) {
+-		pr_warning("Failed to get entry address of %s\n",
+-			   dwarf_diename(sp_die));
+-		return -ENOENT;
+-	}
+-	if (dwarf_highpc(sp_die, &highaddr) != 0) {
+-		pr_warning("Failed to get end address of %s\n",
+-			   dwarf_diename(sp_die));
+-		return -ENOENT;
+-	}
+-	if (paddr > highaddr) {
+-		pr_warning("Offset specified is greater than size of %s\n",
++	if (!dwarf_haspc(sp_die, paddr)) {
++		pr_warning("Specified offset is out of %s\n",
+ 			   dwarf_diename(sp_die));
+ 		return -EINVAL;
  	}
  
-@@ -809,7 +811,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 			/* TODO Deal with lines longer than 16K */
- 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
- 					prog, fpath, line_num);
--			return -1;
-+			ret = -1;
-+			goto out;
- 		}
- 		line[strlen(line)-1] = '\0';
- 
-@@ -839,7 +842,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 
- out:
- 	print_mapping_table_suffix(outfp);
--	return 0;
-+	fclose(mapfp);
-+	free(line);
-+	return ret;
- }
- 
- /*
-@@ -1136,6 +1141,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1148,6 +1154,7 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	} else if (rc < 0) {
- 		/* Make build fail */
-+		fclose(eventsfp);
- 		free_arch_std_events();
- 		return 1;
- 	} else if (rc) {
-@@ -1165,6 +1172,8 @@ int main(int argc, char *argv[])
- 	if (process_mapfile(eventsfp, mapfile)) {
- 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
- 		/* Make build fail */
-+		fclose(eventsfp);
-+		free_arch_std_events();
- 		return 1;
+-	symbol = dwarf_diename(sp_die);
++	/* Try to get actual symbol name from symtab */
++	symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
+ 	if (!symbol) {
+-		/* Try to get the symbol name from symtab */
+-		symbol = dwfl_module_addrsym(mod, paddr, &sym, NULL);
+-		if (!symbol) {
+-			pr_warning("Failed to find symbol at 0x%lx\n",
+-				   (unsigned long)paddr);
+-			return -ENOENT;
+-		}
+-		eaddr = sym.st_value;
++		pr_warning("Failed to find symbol at 0x%lx\n",
++			   (unsigned long)paddr);
++		return -ENOENT;
  	}
- 
++	eaddr = sym.st_value;
++
+ 	tp->offset = (unsigned long)(paddr - eaddr);
+ 	tp->address = (unsigned long)paddr;
+ 	tp->symbol = strdup(symbol);
 -- 
 2.21.0
