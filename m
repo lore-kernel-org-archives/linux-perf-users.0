@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/63] perf data: Move perf_dir_version into data.h
-Date: Thu,  7 Nov 2019 15:59:10 -0300
-Message-ID: <20191107190011.23924-3-acme@kernel.org>
+Subject: [PATCH 03/63] perf data: Rename directory "header" file to "data"
+Date: Thu,  7 Nov 2019 15:59:11 -0300
+Message-ID: <20191107190011.23924-4-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,48 +14,44 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-perf_dir_version belongs to struct perf_data which is declared in data.h.
-To allow its use in inline perf_data functions, move perf_dir_version to
-data.h
+In preparation to support a single file directory format, rename "header"
+to "data" because "header" is a mis-leading name when there is only 1 file.
+Note, in the multi-file case, the "header" file also contains data.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191004083121.12182-3-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191004083121.12182-4-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.h   | 4 ++++
- tools/perf/util/header.h | 4 ----
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/data.c | 2 +-
+ tools/perf/util/util.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 259868a39019..218fe9a16801 100644
---- a/tools/perf/util/data.h
-+++ b/tools/perf/util/data.h
-@@ -9,6 +9,10 @@ enum perf_data_mode {
- 	PERF_DATA_MODE_READ,
- };
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 8993253c5564..df173f0bf654 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -306,7 +306,7 @@ static int open_dir(struct perf_data *data)
+ 	 * So far we open only the header, so we can read the data version and
+ 	 * layout.
+ 	 */
+-	if (asprintf(&data->file.path, "%s/header", data->path) < 0)
++	if (asprintf(&data->file.path, "%s/data", data->path) < 0)
+ 		return -1;
  
-+enum perf_dir_version {
-+	PERF_DIR_VERSION	= 1,
-+};
-+
- struct perf_data_file {
- 	char		*path;
- 	int		 fd;
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index ca53a929e9fd..840f95cee349 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -52,10 +52,6 @@ enum perf_header_version {
- 	PERF_HEADER_VERSION_2,
- };
- 
--enum perf_dir_version {
--	PERF_DIR_VERSION	= 1,
--};
--
- struct perf_file_section {
- 	u64 offset;
- 	u64 size;
+ 	if (perf_data__is_write(data) &&
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index ae56c766eda1..3096654377c2 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -185,7 +185,7 @@ static int rm_rf_depth_pat(const char *path, int depth, const char **pat)
+ int rm_rf_perf_data(const char *path)
+ {
+ 	const char *pat[] = {
+-		"header",
++		"data",
+ 		"data.*",
+ 		NULL,
+ 	};
 -- 
 2.21.0
