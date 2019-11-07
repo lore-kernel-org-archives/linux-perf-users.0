@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 28/63] perf map: Check if the map still has some refcounts on exit
-Date: Thu,  7 Nov 2019 15:59:36 -0300
-Message-ID: <20191107190011.23924-29-acme@kernel.org>
+Subject: [PATCH 29/63] perf map: Allow map__next() to receive a NULL arg
+Date: Thu,  7 Nov 2019 15:59:37 -0300
+Message-ID: <20191107190011.23924-30-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,32 +14,43 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We were checking just if it was still on some rb tree, but that is not
-the only way that this map can still have references, map->refcnt is
-there exactly for this, use it.
+Just like free(), return NULL in that case, will simplify the
+for_each_entry_safe() iterators.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-hany65tbeavsax7n3xvwl9pc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-pbde2ucn49khnrebclys9pny@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/map.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index eec9b282c047..c9ba49566981 100644
+index c9ba49566981..86d8d187f872 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -288,7 +288,7 @@ bool map__has_symbols(const struct map *map)
- 
- static void map__exit(struct map *map)
- {
--	BUG_ON(!RB_EMPTY_NODE(&map->rb_node));
-+	BUG_ON(refcount_read(&map->refcnt) != 0);
- 	dso__zput(map->dso);
+@@ -1007,7 +1007,7 @@ struct map *maps__first(struct maps *maps)
+ 	return NULL;
  }
  
+-struct map *map__next(struct map *map)
++static struct map *__map__next(struct map *map)
+ {
+ 	struct rb_node *next = rb_next(&map->rb_node);
+ 
+@@ -1016,6 +1016,11 @@ struct map *map__next(struct map *map)
+ 	return NULL;
+ }
+ 
++struct map *map__next(struct map *map)
++{
++	return map ? __map__next(map) : NULL;
++}
++
+ struct kmap *__map__kmap(struct map *map)
+ {
+ 	if (!map->dso || !map->dso->kernel)
 -- 
 2.21.0
