@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/63] libsubcmd: Move EXTRA_FLAGS to the end to allow overriding existing flags
-Date: Thu,  7 Nov 2019 15:59:40 -0300
-Message-ID: <20191107190011.23924-33-acme@kernel.org>
+Subject: [PATCH 33/63] libsubcmd: Use -O0 with DEBUG=1
+Date: Thu,  7 Nov 2019 15:59:41 -0300
+Message-ID: <20191107190011.23924-34-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,13 +14,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: James Clark <James.Clark@arm.com>
 
-Move EXTRA_WARNINGS and EXTRA_FLAGS to the end of the compilation line,
-otherwise they cannot be used to override the default values.
+When a 'make DEBUG=1' build is done, the command parser is still built
+with -O6 and is hard to step through, fix it making it use -O0 in that
+case.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@arm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
@@ -29,31 +29,23 @@ Link: http://lore.kernel.org/lkml/20191028113340.4282-1-james.clark@arm.com
 [ split from a larger patch ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/subcmd/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/lib/subcmd/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index 5b2cd5e58df0..352c6062deba 100644
+index 352c6062deba..1c777a72bb39 100644
 --- a/tools/lib/subcmd/Makefile
 +++ b/tools/lib/subcmd/Makefile
-@@ -19,8 +19,7 @@ MAKEFLAGS += --no-print-directory
+@@ -27,7 +27,9 @@ ifeq ($(DEBUG),0)
+   endif
+ endif
  
- LIBFILE = $(OUTPUT)libsubcmd.a
- 
--CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+CFLAGS := -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
- 
- ifeq ($(DEBUG),0)
-   ifeq ($(feature-fortify-source), 1)
-@@ -43,6 +42,8 @@ CFLAGS += -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE
- 
- CFLAGS += -I$(srctree)/tools/include/
- 
-+CFLAGS += $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
-+
- SUBCMD_IN := $(OUTPUT)libsubcmd-in.o
- 
- all:
+-ifeq ($(CC_NO_CLANG), 0)
++ifeq ($(DEBUG),1)
++  CFLAGS += -O0
++else ifeq ($(CC_NO_CLANG), 0)
+   CFLAGS += -O3
+ else
+   CFLAGS += -O6
 -- 
 2.21.0
