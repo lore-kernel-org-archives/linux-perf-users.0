@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/63] perf probe: Fix to show function entry line as probe-able
-Date: Thu,  7 Nov 2019 15:59:25 -0300
-Message-ID: <20191107190011.23924-18-acme@kernel.org>
+Subject: [PATCH 18/63] perf jevents: Fix resource leak in process_mapfile() and main()
+Date: Thu,  7 Nov 2019 15:59:26 -0300
+Message-ID: <20191107190011.23924-19-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,87 +9,104 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Feilong Lin <linfeilong@huawei.com>, Hu Shiyuan <hushiyuan@huawei.com>, Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Luke Mujica <lukemujica@google.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Zenghui Yu <yuzenghui@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-Fix die_walk_lines() to list the function entry line correctly.  Since
-the dwarf_entrypc() does not return the entry pc if the DIE has only
-range attribute, __die_walk_funclines() fails to list the declaration
-line (entry line) in that case.
+There are memory leaks and file descriptor resource leaks in
+process_mapfile() and main().
 
-To solve this issue, this introduces die_entrypc() which correctly
-returns the entry PC (the first address range) even if the DIE has only
-range attribute. With this fix die_walk_lines() shows the function entry
-line is able to probe correctly.
+Fix this by adding free(), fclose() and free_arch_std_events() on the
+error paths.
 
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Fixes: 80eeb67fe577 ("perf jevents: Program to convert JSON file")
+Fixes: 3f056b66647b ("perf jevents: Make build fail on JSON parse error")
+Fixes: e9d32c1bf0cd ("perf vendor events: Add support for arch standard events")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Feilong Lin <linfeilong@huawei.com>
+Cc: Hu Shiyuan <hushiyuan@huawei.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Luke Mujica <lukemujica@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157190837419.1859.4619125803596816752.stgit@devnote2
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Link: http://lore.kernel.org/lkml/d7907042-ec9c-2bef-25b4-810e14602f89@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dwarf-aux.c | 24 +++++++++++++++++++++++-
- tools/perf/util/dwarf-aux.h |  3 +++
- 2 files changed, 26 insertions(+), 1 deletion(-)
+ tools/perf/pmu-events/jevents.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 929b7c0567f4..063f71da6b63 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -307,6 +307,28 @@ bool die_is_func_def(Dwarf_Die *dw_die)
- 		dwarf_attr(dw_die, DW_AT_declaration, &attr) == NULL);
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 7d69727f44bd..079c77b6a2fd 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -772,6 +772,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	char *line, *p;
+ 	int line_num;
+ 	char *tblname;
++	int ret = 0;
+ 
+ 	pr_info("%s: Processing mapfile %s\n", prog, fpath);
+ 
+@@ -783,6 +784,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 	if (!mapfp) {
+ 		pr_info("%s: Error %s opening %s\n", prog, strerror(errno),
+ 				fpath);
++		free(line);
+ 		return -1;
+ 	}
+ 
+@@ -809,7 +811,8 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 			/* TODO Deal with lines longer than 16K */
+ 			pr_info("%s: Mapfile %s: line %d too long, aborting\n",
+ 					prog, fpath, line_num);
+-			return -1;
++			ret = -1;
++			goto out;
+ 		}
+ 		line[strlen(line)-1] = '\0';
+ 
+@@ -839,7 +842,9 @@ static int process_mapfile(FILE *outfp, char *fpath)
+ 
+ out:
+ 	print_mapping_table_suffix(outfp);
+-	return 0;
++	fclose(mapfp);
++	free(line);
++	return ret;
  }
  
-+/**
-+ * die_entrypc - Returns entry PC (the lowest address) of a DIE
-+ * @dw_die: a DIE
-+ * @addr: where to store entry PC
-+ *
-+ * Since dwarf_entrypc() does not return entry PC if the DIE has only address
-+ * range, we have to use this to retrieve the lowest address from the address
-+ * range attribute.
-+ */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr)
-+{
-+	Dwarf_Addr base, end;
-+
-+	if (!addr)
-+		return -EINVAL;
-+
-+	if (dwarf_entrypc(dw_die, addr) == 0)
-+		return 0;
-+
-+	return dwarf_ranges(dw_die, 0, &base, addr, &end) < 0 ? -ENOENT : 0;
-+}
-+
- /**
-  * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
-  * @dw_die: a DIE
-@@ -713,7 +735,7 @@ static int __die_walk_funclines(Dwarf_Die *sp_die, bool recursive,
- 	/* Handle function declaration line */
- 	fname = dwarf_decl_file(sp_die);
- 	if (fname && dwarf_decl_line(sp_die, &lineno) == 0 &&
--	    dwarf_entrypc(sp_die, &addr) == 0) {
-+	    die_entrypc(sp_die, &addr) == 0) {
- 		lw.retval = callback(fname, lineno, addr, data);
- 		if (lw.retval != 0)
- 			goto done;
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index f204e5892403..506006e0cf66 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -29,6 +29,9 @@ int cu_walk_functions_at(Dwarf_Die *cu_die, Dwarf_Addr addr,
- /* Get DW_AT_linkage_name (should be NULL for C binary) */
- const char *die_get_linkage_name(Dwarf_Die *dw_die);
- 
-+/* Get the lowest PC in DIE (including range list) */
-+int die_entrypc(Dwarf_Die *dw_die, Dwarf_Addr *addr);
-+
- /* Ensure that this DIE is a subprogram and definition (not declaration) */
- bool die_is_func_def(Dwarf_Die *dw_die);
+ /*
+@@ -1136,6 +1141,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1148,6 +1154,7 @@ int main(int argc, char *argv[])
+ 		goto empty_map;
+ 	} else if (rc < 0) {
+ 		/* Make build fail */
++		fclose(eventsfp);
+ 		free_arch_std_events();
+ 		return 1;
+ 	} else if (rc) {
+@@ -1165,6 +1172,8 @@ int main(int argc, char *argv[])
+ 	if (process_mapfile(eventsfp, mapfile)) {
+ 		pr_info("%s: Error processing mapfile %s\n", prog, mapfile);
+ 		/* Make build fail */
++		fclose(eventsfp);
++		free_arch_std_events();
+ 		return 1;
+ 	}
  
 -- 
 2.21.0
