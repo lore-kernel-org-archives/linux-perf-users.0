@@ -1,10 +1,9 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/15] perf symbols: Stop using map->groups, we can use kmaps instead
-Date: Tue, 12 Nov 2019 15:37:44 -0300
-Message-ID: <20191112183757.28660-3-acme@kernel.org>
+Subject: [PATCH 03/15] perf map_groups: Pass the object to map_groups__find_ams()
+Date: Tue, 12 Nov 2019 15:37:45 -0300
+Message-ID: <20191112183757.28660-4-acme@kernel.org>
 References: <20191112183757.28660-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191112183757.28660-1-acme@kernel.org>
@@ -15,77 +14,101 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To test that that function is being called I just added a probe on that
-place, enabled it via 'perf trace' asking for at most 16 levels of
-backtraces, system wide, and then ran 'perf top' on another xterm,
-voilà:
-
-  # perf probe -x ~/bin/perf dso__process_kernel_symbol
-  Added new event:
-    probe_perf:dso__process_kernel_symbol (on dso__process_kernel_symbol in /home/acme/bin/perf)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe_perf:dso__process_kernel_symbol -aR sleep 1
-
-  # perf trace -e probe_perf:dso__process_kernel_symbol/max-stack=16/ --max-events=2
-  # perf trace -e probe_perf:dso__process_kernel_symbol/max-stack=16/ --max-events=2
-       0.000 :17345/17345 probe_perf:dso__process_kernel_symbol(__probe_ip: 5680224)
-                                         dso__process_kernel_symbol (/home/acme/bin/perf)
-                                         dso__load_vmlinux (/home/acme/bin/perf)
-                                         dso__load_vmlinux_path (/home/acme/bin/perf)
-                                         dso__load (/home/acme/bin/perf)
-                                         map__load (/home/acme/bin/perf)
-                                         thread__find_map (/home/acme/bin/perf)
-                                         machine__resolve (/home/acme/bin/perf)
-                                         deliver_event (/home/acme/bin/perf)
-                                         __ordered_events__flush.part.0 (/home/acme/bin/perf)
-                                         process_thread (/home/acme/bin/perf)
-                                         start_thread (/usr/lib64/libpthread-2.29.so)
-       0.064 :17345/17345 probe_perf:dso__process_kernel_symbol(__probe_ip: 5680224)
-                                         dso__process_kernel_symbol (/home/acme/bin/perf)
-                                         dso__load_vmlinux (/home/acme/bin/perf)
-                                         dso__load_vmlinux_path (/home/acme/bin/perf)
-                                         dso__load (/home/acme/bin/perf)
-                                         map__load (/home/acme/bin/perf)
-                                         thread__find_map (/home/acme/bin/perf)
-                                         machine__resolve (/home/acme/bin/perf)
-                                         deliver_event (/home/acme/bin/perf)
-                                         __ordered_events__flush.part.0 (/home/acme/bin/perf)
-                                         process_thread (/home/acme/bin/perf)
-                                         start_thread (/usr/lib64/libpthread-2.29.so)
-  #
-  # perf stat -e probe_perf:dso__process_kernel_symbol
-  ^C
-   Performance counter stats for 'system wide':
-
-           107,308      probe_perf:dso__process_kernel_symbol
-
-       8.215399813 seconds time elapsed
-  #
+We were just passing a map to look for and reuse its map->groups member,
+but the idea is that this is going away, as a map can be in multiple
+rb_trees when being reused via a map_node, so do as all the other
+map_groups methods and pass as its first arg the object being operated
+on.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-5fy66x5hr5ct9pmw84jkiwvm@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-nmi2pbggqloogwl6vxrvex5a@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/symbol-elf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/arch/s390/annotate/instructions.c | 2 +-
+ tools/perf/util/annotate.c                   | 6 +++---
+ tools/perf/util/map.c                        | 6 +++---
+ tools/perf/util/map_groups.h                 | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 66f4be1df573..16776d5fbaea 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -934,7 +934,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		 * we still are sure to have a reference to this DSO via
- 		 * *curr_map->dso.
- 		 */
--		dsos__add(&map->groups->machine->dsos, curr_dso);
-+		dsos__add(&kmaps->machine->dsos, curr_dso);
- 		/* kmaps already got it */
- 		map__put(curr_map);
- 		dso__set_loaded(curr_dso);
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index a50e70baf918..20050fb54948 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -38,7 +38,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
+ 		return -1;
+ 	target.addr = map__objdump_2mem(map, ops->target.addr);
+ 
+-	if (map_groups__find_ams(&target) == 0 &&
++	if (map_groups__find_ams(map->groups, &target) == 0 &&
+ 	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
+ 		ops->target.sym = target.sym;
+ 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index bee0fee122f8..ecc024495f56 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -271,7 +271,7 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
+ find_target:
+ 	target.addr = map__objdump_2mem(map, ops->target.addr);
+ 
+-	if (map_groups__find_ams(&target) == 0 &&
++	if (map_groups__find_ams(map->groups, &target) == 0 &&
+ 	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
+ 		ops->target.sym = target.sym;
+ 
+@@ -391,7 +391,7 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
+ 	 * Actual navigation will come next, with further understanding of how
+ 	 * the symbol searching and disassembly should be done.
+ 	 */
+-	if (map_groups__find_ams(&target) == 0 &&
++	if (map_groups__find_ams(map->groups, &target) == 0 &&
+ 	    map__rip_2objdump(target.map, map->map_ip(target.map, target.addr)) == ops->target.addr)
+ 		ops->target.sym = target.sym;
+ 
+@@ -1544,7 +1544,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
+ 			.addr = dl->ops.target.addr,
+ 		};
+ 
+-		if (!map_groups__find_ams(&target) &&
++		if (!map_groups__find_ams(map->groups, &target) &&
+ 		    target.sym->start == target.al_addr)
+ 			dl->ops.target.sym = target.sym;
+ 	}
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index a4d889c0fa88..db842568f4be 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -703,12 +703,12 @@ struct symbol *map_groups__find_symbol_by_name(struct map_groups *mg,
+ 	return maps__find_symbol_by_name(&mg->maps, name, mapp);
+ }
+ 
+-int map_groups__find_ams(struct addr_map_symbol *ams)
++int map_groups__find_ams(struct map_groups *mg, struct addr_map_symbol *ams)
+ {
+ 	if (ams->addr < ams->map->start || ams->addr >= ams->map->end) {
+-		if (ams->map->groups == NULL)
++		if (mg == NULL)
+ 			return -1;
+-		ams->map = map_groups__find(ams->map->groups, ams->addr);
++		ams->map = map_groups__find(mg, ams->addr);
+ 		if (ams->map == NULL)
+ 			return -1;
+ 	}
+diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/map_groups.h
+index bfbdbf5a443a..99cb810acc7c 100644
+--- a/tools/perf/util/map_groups.h
++++ b/tools/perf/util/map_groups.h
+@@ -100,7 +100,7 @@ struct symbol *map_groups__find_symbol_by_name(struct map_groups *mg, const char
+ 
+ struct addr_map_symbol;
+ 
+-int map_groups__find_ams(struct addr_map_symbol *ams);
++int map_groups__find_ams(struct map_groups *mg, struct addr_map_symbol *ams);
+ 
+ int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp);
+ 
 -- 
 2.21.0
