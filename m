@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/15] perf unwind: Use 'struct map_symbol' in 'struct unwind_entry'
-Date: Tue, 12 Nov 2019 15:37:48 -0300
-Message-ID: <20191112183757.28660-7-acme@kernel.org>
+Subject: [PATCH 05/15] perf annotate: Pass a 'map_symbol' in places receiving a pair of 'map' and 'symbol' pointers
+Date: Tue, 12 Nov 2019 15:37:47 -0300
+Message-ID: <20191112183757.28660-6-acme@kernel.org>
 References: <20191112183757.28660-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,140 +14,462 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To help in passing that info around to callchain routines that, for the
-same reason, are moving to use 'struct map_symbol'.
+We are already passing things like:
+
+  symbol__annotate(ms->sym, ms->map, ...)
+
+So shorten the signature of such functions to receive the 'map_symbol'
+pointer.
+
+This also paves the way to having the 'struct map_groups' pointer in the
+'struct map_symbol' so that we can get rid of 'struct map'->groups.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-epsiibeprpxa8qpwji47uskc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-23yx8v1t41nzpkpi7rdrozww@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/dwarf-unwind.c          |  2 +-
- tools/perf/util/machine.c                | 17 +++++++++--------
- tools/perf/util/unwind-libdw.c           |  6 +++---
- tools/perf/util/unwind-libunwind-local.c |  6 +++---
- tools/perf/util/unwind.h                 |  8 +++-----
- 5 files changed, 19 insertions(+), 20 deletions(-)
+ tools/perf/builtin-annotate.c     |  4 +--
+ tools/perf/builtin-report.c       |  2 +-
+ tools/perf/builtin-top.c          |  6 ++--
+ tools/perf/ui/browsers/annotate.c | 24 ++++++-------
+ tools/perf/ui/gtk/annotate.c      | 27 ++++++++-------
+ tools/perf/util/annotate.c        | 56 +++++++++++++++----------------
+ tools/perf/util/annotate.h        | 22 +++++-------
+ 7 files changed, 66 insertions(+), 75 deletions(-)
 
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index 4f4ecbcbe87e..779ce280a0e9 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -59,7 +59,7 @@ int test_dwarf_unwind__krava_1(struct thread *thread);
- static int unwind_entry(struct unwind_entry *entry, void *arg)
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 6ab0cc45b287..680c59fafeaf 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -301,9 +301,9 @@ static int hist_entry__tty_annotate(struct hist_entry *he,
+ 				    struct perf_annotate *ann)
  {
- 	unsigned long *cnt = (unsigned long *) arg;
--	char *symbol = entry->sym ? entry->sym->name : NULL;
-+	char *symbol = entry->ms.sym ? entry->ms.sym->name : NULL;
- 	static const char *funcs[MAX_STACK] = {
- 		"test__arch_unwind_sample",
- 		"test_dwarf_unwind__thread",
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index e768ef24633f..3874bb89ac79 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2448,9 +2448,10 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+ 	if (!ann->use_stdio2)
+-		return symbol__tty_annotate(he->ms.sym, he->ms.map, evsel, &ann->opts);
++		return symbol__tty_annotate(&he->ms, evsel, &ann->opts);
+ 
+-	return symbol__tty_annotate2(he->ms.sym, he->ms.map, evsel, &ann->opts);
++	return symbol__tty_annotate2(&he->ms, evsel, &ann->opts);
+ }
+ 
+ static void hists__find_annotations(struct hists *hists,
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1e81985b7d56..585805f51f15 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -680,7 +680,7 @@ static int hists__resort_cb(struct hist_entry *he, void *arg)
+ 	if (rep->symbol_ipc && sym && !sym->annotate2) {
+ 		struct evsel *evsel = hists_to_evsel(he->hists);
+ 
+-		symbol__annotate2(sym, he->ms.map, evsel,
++		symbol__annotate2(&he->ms, evsel,
+ 				  &annotation__default_options, NULL);
+ 	}
+ 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 14c52e4d47f6..dc80044bc46f 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -143,12 +143,12 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+ 		return err;
+ 	}
+ 
+-	err = symbol__annotate(sym, map, evsel, 0, &top->annotation_opts, NULL);
++	err = symbol__annotate(&he->ms, evsel, 0, &top->annotation_opts, NULL);
+ 	if (err == 0) {
+ 		top->sym_filter_entry = he;
+ 	} else {
+ 		char msg[BUFSIZ];
+-		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
++		symbol__strerror_disassemble(&he->ms, err, msg, sizeof(msg));
+ 		pr_err("Couldn't annotate %s: %s\n", sym->name, msg);
+ 	}
+ 
+@@ -257,7 +257,7 @@ static void perf_top__show_details(struct perf_top *top)
+ 	printf("Showing %s for %s\n", perf_evsel__name(top->sym_evsel), symbol->name);
+ 	printf("  Events  Pcnt (>=%d%%)\n", top->annotation_opts.min_pcnt);
+ 
+-	more = symbol__annotate_printf(symbol, he->ms.map, top->sym_evsel, &top->annotation_opts);
++	more = symbol__annotate_printf(&he->ms, top->sym_evsel, &top->annotation_opts);
+ 
+ 	if (top->evlist->enabled) {
+ 		if (top->zero)
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 82207db8f97c..ad1fe5b6d0cd 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -410,7 +410,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+ 				    struct evsel *evsel,
+ 				    struct hist_browser_timer *hbt)
+ {
+-	struct map_symbol *ms = browser->b.priv;
++	struct map_symbol *ms = browser->b.priv, target_ms;
+ 	struct disasm_line *dl = disasm_line(browser->selection);
+ 	struct annotation *notes;
+ 	char title[SYM_TITLE_MAX_SIZE];
+@@ -430,8 +430,10 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+ 		return true;
+ 	}
+ 
++	target_ms.map = ms->map;
++	target_ms.sym = dl->ops.target.sym;
+ 	pthread_mutex_unlock(&notes->lock);
+-	symbol__tui_annotate(dl->ops.target.sym, ms->map, evsel, hbt, browser->opts);
++	symbol__tui_annotate(&target_ms, evsel, hbt, browser->opts);
+ 	sym_title(ms->sym, ms->map, title, sizeof(title), browser->opts->percent_type);
+ 	ui_browser__show_title(&browser->b, title);
+ 	return true;
+@@ -874,7 +876,7 @@ int map_symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 			     struct hist_browser_timer *hbt,
+ 			     struct annotation_options *opts)
+ {
+-	return symbol__tui_annotate(ms->sym, ms->map, evsel, hbt, opts);
++	return symbol__tui_annotate(ms, evsel, hbt, opts);
+ }
+ 
+ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+@@ -888,16 +890,12 @@ int hist_entry__tui_annotate(struct hist_entry *he, struct evsel *evsel,
+ 	return map_symbol__tui_annotate(&he->ms, evsel, hbt, opts);
+ }
+ 
+-int symbol__tui_annotate(struct symbol *sym, struct map *map,
+-			 struct evsel *evsel,
++int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 			 struct hist_browser_timer *hbt,
+ 			 struct annotation_options *opts)
+ {
++	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+-	struct map_symbol ms = {
+-		.map = map,
+-		.sym = sym,
+-	};
+ 	struct annotate_browser browser = {
+ 		.b = {
+ 			.refresh = annotate_browser__refresh,
+@@ -905,7 +903,7 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 			.write	 = annotate_browser__write,
+ 			.filter  = disasm_line__filter,
+ 			.extra_title_lines = 1, /* for hists__scnprintf_title() */
+-			.priv	 = &ms,
++			.priv	 = ms,
+ 			.use_navkeypressed = true,
+ 		},
+ 		.opts = opts,
+@@ -915,13 +913,13 @@ int symbol__tui_annotate(struct symbol *sym, struct map *map,
+ 	if (sym == NULL)
+ 		return -1;
+ 
+-	if (map->dso->annotate_warned)
++	if (ms->map->dso->annotate_warned)
+ 		return -1;
+ 
+-	err = symbol__annotate2(sym, map, evsel, opts, &browser.arch);
++	err = symbol__annotate2(ms, evsel, opts, &browser.arch);
+ 	if (err) {
+ 		char msg[BUFSIZ];
+-		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
++		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
+ 		ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
+ 		goto out_free_offsets;
+ 	}
+diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
+index 8e744af24f7c..22cc240f7371 100644
+--- a/tools/perf/ui/gtk/annotate.c
++++ b/tools/perf/ui/gtk/annotate.c
+@@ -54,10 +54,10 @@ static int perf_gtk__get_percent(char *buf, size_t size, struct symbol *sym,
+ 	return ret;
+ }
+ 
+-static int perf_gtk__get_offset(char *buf, size_t size, struct symbol *sym,
+-				struct map *map, struct disasm_line *dl)
++static int perf_gtk__get_offset(char *buf, size_t size, struct map_symbol *ms,
++				struct disasm_line *dl)
+ {
+-	u64 start = map__rip_2objdump(map, sym->start);
++	u64 start = map__rip_2objdump(ms->map, ms->sym->start);
+ 
+ 	strcpy(buf, "");
+ 
+@@ -91,10 +91,11 @@ static int perf_gtk__get_line(char *buf, size_t size, struct disasm_line *dl)
+ 	return ret;
+ }
+ 
+-static int perf_gtk__annotate_symbol(GtkWidget *window, struct symbol *sym,
+-				struct map *map, struct evsel *evsel,
++static int perf_gtk__annotate_symbol(GtkWidget *window, struct map_symbol *ms,
++				struct evsel *evsel,
+ 				struct hist_browser_timer *hbt __maybe_unused)
+ {
++	struct symbol *sym = ms->sym;
+ 	struct disasm_line *pos, *n;
+ 	struct annotation *notes;
+ 	GType col_types[MAX_ANN_COLS];
+@@ -144,7 +145,7 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct symbol *sym,
+ 
+ 		if (ret)
+ 			gtk_list_store_set(store, &iter, ANN_COL__PERCENT, s, -1);
+-		if (perf_gtk__get_offset(s, sizeof(s), sym, map, pos))
++		if (perf_gtk__get_offset(s, sizeof(s), ms, pos))
+ 			gtk_list_store_set(store, &iter, ANN_COL__OFFSET, s, -1);
+ 		if (perf_gtk__get_line(s, sizeof(s), pos))
+ 			gtk_list_store_set(store, &iter, ANN_COL__LINE, s, -1);
+@@ -160,23 +161,23 @@ static int perf_gtk__annotate_symbol(GtkWidget *window, struct symbol *sym,
  	return 0;
  }
  
--static int append_inlines(struct callchain_cursor *cursor,
--			  struct map *map, struct symbol *sym, u64 ip)
-+static int append_inlines(struct callchain_cursor *cursor, struct map_symbol *ms, u64 ip)
+-static int symbol__gtk_annotate(struct symbol *sym, struct map *map,
+-				struct evsel *evsel,
++static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 				struct hist_browser_timer *hbt)
  {
 +	struct symbol *sym = ms->sym;
-+	struct map *map = ms->map;
- 	struct inline_node *inline_node;
- 	struct inline_list *ilist;
- 	u64 addr;
-@@ -2488,22 +2489,22 @@ static int unwind_entry(struct unwind_entry *entry, void *arg)
- 	const char *srcline = NULL;
- 	u64 addr = entry->ip;
+ 	GtkWidget *window;
+ 	GtkWidget *notebook;
+ 	GtkWidget *scrolled_window;
+ 	GtkWidget *tab_label;
+ 	int err;
  
--	if (symbol_conf.hide_unresolved && entry->sym == NULL)
-+	if (symbol_conf.hide_unresolved && entry->ms.sym == NULL)
- 		return 0;
- 
--	if (append_inlines(cursor, entry->map, entry->sym, entry->ip) == 0)
-+	if (append_inlines(cursor, &entry->ms, entry->ip) == 0)
- 		return 0;
- 
- 	/*
- 	 * Convert entry->ip from a virtual address to an offset in
- 	 * its corresponding binary.
- 	 */
--	if (entry->map)
--		addr = map__map_ip(entry->map, entry->ip);
-+	if (entry->ms.map)
-+		addr = map__map_ip(entry->ms.map, entry->ip);
- 
--	srcline = callchain_srcline(entry->map, entry->sym, addr);
-+	srcline = callchain_srcline(entry->ms.map, entry->ms.sym, addr);
- 	return callchain_cursor_append(cursor, entry->ip,
--				       entry->map, entry->sym,
-+				       entry->ms.map, entry->ms.sym,
- 				       false, NULL, 0, 0, 0, srcline);
- }
- 
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 15f6e46d7124..73c00d776a5f 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -80,9 +80,9 @@ static int entry(u64 ip, struct unwind_info *ui)
- 	if (__report_module(&al, ip, ui))
+-	if (map->dso->annotate_warned)
++	if (ms->map->dso->annotate_warned)
  		return -1;
  
--	e->ip  = ip;
--	e->map = al.map;
--	e->sym = al.sym;
-+	e->ip	  = ip;
-+	e->ms.map = al.map;
-+	e->ms.sym = al.sym;
+-	err = symbol__annotate(sym, map, evsel, 0, &annotation__default_options, NULL);
++	err = symbol__annotate(ms, evsel, 0, &annotation__default_options, NULL);
+ 	if (err) {
+ 		char msg[BUFSIZ];
+-		symbol__strerror_disassemble(sym, map, err, msg, sizeof(msg));
++		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
+ 		ui__error("Couldn't annotate %s: %s\n", sym->name, msg);
+ 		return -1;
+ 	}
+@@ -234,7 +235,7 @@ static int symbol__gtk_annotate(struct symbol *sym, struct map *map,
+ 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), scrolled_window,
+ 				 tab_label);
  
- 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
- 		 al.sym ? al.sym->name : "''",
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 1800887b2255..6e3873dd9a31 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -575,9 +575,9 @@ static int entry(u64 ip, struct thread *thread,
- 	struct unwind_entry e;
- 	struct addr_location al;
+-	perf_gtk__annotate_symbol(scrolled_window, sym, map, evsel, hbt);
++	perf_gtk__annotate_symbol(scrolled_window, ms, evsel, hbt);
+ 	return 0;
+ }
  
--	e.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
--	e.ip  = ip;
--	e.map = al.map;
-+	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
-+	e.ip     = ip;
-+	e.ms.map = al.map;
+@@ -242,7 +243,7 @@ int hist_entry__gtk_annotate(struct hist_entry *he,
+ 			     struct evsel *evsel,
+ 			     struct hist_browser_timer *hbt)
+ {
+-	return symbol__gtk_annotate(he->ms.sym, he->ms.map, evsel, hbt);
++	return symbol__gtk_annotate(&he->ms, evsel, hbt);
+ }
  
- 	pr_debug("unwind: %s:ip = 0x%" PRIx64 " (0x%" PRIx64 ")\n",
- 		 al.sym ? al.sym->name : "''",
-diff --git a/tools/perf/util/unwind.h b/tools/perf/util/unwind.h
-index 3a7d00c20d86..50337c966979 100644
---- a/tools/perf/util/unwind.h
-+++ b/tools/perf/util/unwind.h
-@@ -4,17 +4,15 @@
+ void perf_gtk__show_annotations(void)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ecc024495f56..78ef3cc2eb66 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1583,10 +1583,9 @@ static void delete_last_nop(struct symbol *sym)
+ 	}
+ }
  
- #include <linux/compiler.h>
- #include <linux/types.h>
-+#include "util/map_symbol.h"
+-int symbol__strerror_disassemble(struct symbol *sym __maybe_unused, struct map *map,
+-			      int errnum, char *buf, size_t buflen)
++int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, size_t buflen)
+ {
+-	struct dso *dso = map->dso;
++	struct dso *dso = ms->map->dso;
  
--struct map;
- struct map_groups;
- struct perf_sample;
--struct symbol;
- struct thread;
+ 	BUG_ON(buflen == 0);
  
- struct unwind_entry {
--	struct map	*map;
--	struct symbol	*sym;
--	u64		ip;
-+	struct map_symbol ms;
-+	u64		  ip;
+@@ -2143,11 +2142,10 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel)
+ 	annotation__calc_percent(notes, evsel, symbol__size(sym));
+ }
+ 
+-int symbol__annotate(struct symbol *sym, struct map *map,
+-		     struct evsel *evsel, size_t privsize,
+-		     struct annotation_options *options,
+-		     struct arch **parch)
++int symbol__annotate(struct map_symbol *ms, struct evsel *evsel, size_t privsize,
++		     struct annotation_options *options, struct arch **parch)
+ {
++	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	struct annotate_args args = {
+ 		.privsize	= privsize,
+@@ -2177,9 +2175,8 @@ int symbol__annotate(struct symbol *sym, struct map *map,
+ 		}
+ 	}
+ 
+-	args.ms.map = map;
+-	args.ms.sym = sym;
+-	notes->start = map__rip_2objdump(map, sym->start);
++	args.ms = *ms;
++	notes->start = map__rip_2objdump(ms->map, sym->start);
+ 
+ 	return symbol__disassemble(sym, &args);
+ }
+@@ -2335,10 +2332,11 @@ static int annotated_source__addr_fmt_width(struct list_head *lines, u64 start)
+ 	return 0;
+ }
+ 
+-int symbol__annotate_printf(struct symbol *sym, struct map *map,
+-			    struct evsel *evsel,
++int symbol__annotate_printf(struct map_symbol *ms, struct evsel *evsel,
+ 			    struct annotation_options *opts)
+ {
++	struct map *map = ms->map;
++	struct symbol *sym = ms->sym;
+ 	struct dso *dso = map->dso;
+ 	char *filename;
+ 	const char *d_filename;
+@@ -2742,30 +2740,29 @@ static void annotation__calc_lines(struct annotation *notes, struct map *map,
+ 	resort_source_line(root, &tmp_root);
+ }
+ 
+-static void symbol__calc_lines(struct symbol *sym, struct map *map,
+-			       struct rb_root *root,
++static void symbol__calc_lines(struct map_symbol *ms, struct rb_root *root,
+ 			       struct annotation_options *opts)
+ {
+-	struct annotation *notes = symbol__annotation(sym);
++	struct annotation *notes = symbol__annotation(ms->sym);
+ 
+-	annotation__calc_lines(notes, map, root, opts);
++	annotation__calc_lines(notes, ms->map, root, opts);
+ }
+ 
+-int symbol__tty_annotate2(struct symbol *sym, struct map *map,
+-			  struct evsel *evsel,
++int symbol__tty_annotate2(struct map_symbol *ms, struct evsel *evsel,
+ 			  struct annotation_options *opts)
+ {
+-	struct dso *dso = map->dso;
++	struct dso *dso = ms->map->dso;
++	struct symbol *sym = ms->sym;
+ 	struct rb_root source_line = RB_ROOT;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	char buf[1024];
+ 
+-	if (symbol__annotate2(sym, map, evsel, opts, NULL) < 0)
++	if (symbol__annotate2(ms, evsel, opts, NULL) < 0)
+ 		return -1;
+ 
+ 	if (opts->print_lines) {
+ 		srcline_full_filename = opts->full_path;
+-		symbol__calc_lines(sym, map, &source_line, opts);
++		symbol__calc_lines(ms, &source_line, opts);
+ 		print_summary(&source_line, dso->long_name);
+ 	}
+ 
+@@ -2779,25 +2776,25 @@ int symbol__tty_annotate2(struct symbol *sym, struct map *map,
+ 	return 0;
+ }
+ 
+-int symbol__tty_annotate(struct symbol *sym, struct map *map,
+-			 struct evsel *evsel,
++int symbol__tty_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 			 struct annotation_options *opts)
+ {
+-	struct dso *dso = map->dso;
++	struct dso *dso = ms->map->dso;
++	struct symbol *sym = ms->sym;
+ 	struct rb_root source_line = RB_ROOT;
+ 
+-	if (symbol__annotate(sym, map, evsel, 0, opts, NULL) < 0)
++	if (symbol__annotate(ms, evsel, 0, opts, NULL) < 0)
+ 		return -1;
+ 
+ 	symbol__calc_percent(sym, evsel);
+ 
+ 	if (opts->print_lines) {
+ 		srcline_full_filename = opts->full_path;
+-		symbol__calc_lines(sym, map, &source_line, opts);
++		symbol__calc_lines(ms, &source_line, opts);
+ 		print_summary(&source_line, dso->long_name);
+ 	}
+ 
+-	symbol__annotate_printf(sym, map, evsel, opts);
++	symbol__annotate_printf(ms, evsel, opts);
+ 
+ 	annotated_source__purge(symbol__annotation(sym)->src);
+ 
+@@ -3051,9 +3048,10 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
+ 				 wops->write_graph);
+ }
+ 
+-int symbol__annotate2(struct symbol *sym, struct map *map, struct evsel *evsel,
++int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
+ 		      struct annotation_options *options, struct arch **parch)
+ {
++	struct symbol *sym = ms->sym;
+ 	struct annotation *notes = symbol__annotation(sym);
+ 	size_t size = symbol__size(sym);
+ 	int nr_pcnt = 1, err;
+@@ -3065,7 +3063,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct evsel *evsel,
+ 	if (perf_evsel__is_group_event(evsel))
+ 		nr_pcnt = evsel->core.nr_members;
+ 
+-	err = symbol__annotate(sym, map, evsel, 0, options, parch);
++	err = symbol__annotate(ms, evsel, 0, options, parch);
+ 	if (err)
+ 		goto out_free_offsets;
+ 
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 3528bd4f8f21..7075d98f69d9 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -349,11 +349,11 @@ int hist_entry__inc_addr_samples(struct hist_entry *he, struct perf_sample *samp
+ struct annotated_source *symbol__hists(struct symbol *sym, int nr_hists);
+ void symbol__annotate_zero_histograms(struct symbol *sym);
+ 
+-int symbol__annotate(struct symbol *sym, struct map *map,
++int symbol__annotate(struct map_symbol *ms,
+ 		     struct evsel *evsel, size_t privsize,
+ 		     struct annotation_options *options,
+ 		     struct arch **parch);
+-int symbol__annotate2(struct symbol *sym, struct map *map,
++int symbol__annotate2(struct map_symbol *ms,
+ 		      struct evsel *evsel,
+ 		      struct annotation_options *options,
+ 		      struct arch **parch);
+@@ -380,11 +380,9 @@ enum symbol_disassemble_errno {
+ 	__SYMBOL_ANNOTATE_ERRNO__END,
  };
  
- typedef int (*unwind_entry_cb_t)(struct unwind_entry *entry, void *arg);
+-int symbol__strerror_disassemble(struct symbol *sym, struct map *map,
+-				 int errnum, char *buf, size_t buflen);
++int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, size_t buflen);
+ 
+-int symbol__annotate_printf(struct symbol *sym, struct map *map,
+-			    struct evsel *evsel,
++int symbol__annotate_printf(struct map_symbol *ms, struct evsel *evsel,
+ 			    struct annotation_options *options);
+ void symbol__annotate_zero_histogram(struct symbol *sym, int evidx);
+ void symbol__annotate_decay_histogram(struct symbol *sym, int evidx);
+@@ -395,20 +393,16 @@ int map_symbol__annotation_dump(struct map_symbol *ms, struct evsel *evsel,
+ 
+ bool ui__has_annotation(void);
+ 
+-int symbol__tty_annotate(struct symbol *sym, struct map *map,
+-			 struct evsel *evsel, struct annotation_options *opts);
++int symbol__tty_annotate(struct map_symbol *ms, struct evsel *evsel, struct annotation_options *opts);
+ 
+-int symbol__tty_annotate2(struct symbol *sym, struct map *map,
+-			  struct evsel *evsel, struct annotation_options *opts);
++int symbol__tty_annotate2(struct map_symbol *ms, struct evsel *evsel, struct annotation_options *opts);
+ 
+ #ifdef HAVE_SLANG_SUPPORT
+-int symbol__tui_annotate(struct symbol *sym, struct map *map,
+-			 struct evsel *evsel,
++int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 			 struct hist_browser_timer *hbt,
+ 			 struct annotation_options *opts);
+ #else
+-static inline int symbol__tui_annotate(struct symbol *sym __maybe_unused,
+-				struct map *map __maybe_unused,
++static inline int symbol__tui_annotate(struct map_symbol *ms __maybe_unused,
+ 				struct evsel *evsel  __maybe_unused,
+ 				struct hist_browser_timer *hbt __maybe_unused,
+ 				struct annotation_options *opts __maybe_unused)
 -- 
 2.21.0
