@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/15] perf annotate: Stop using map->groups, use map_symbol->mg instead
-Date: Tue, 12 Nov 2019 15:37:53 -0300
-Message-ID: <20191112183757.28660-12-acme@kernel.org>
+Subject: [PATCH 12/15] perf map: Combine maps__fixup_overlappings with its only use
+Date: Tue, 12 Nov 2019 15:37:54 -0300
+Message-ID: <20191112183757.28660-13-acme@kernel.org>
 References: <20191112183757.28660-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,75 +14,65 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-These were the last uses of map->groups, next cset will nuke it.
+In the process we can kill some of the struct map->groups usage, trying
+to get rid of this per-full struct map fields getting in the way of
+sharing a map across father/parent processes.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-n3g0foos7l7uxq9nar0zo0vj@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-e50eqtqw3za24vmbjnqmmcs6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/s390/annotate/instructions.c | 2 +-
- tools/perf/ui/browsers/annotate.c            | 1 +
- tools/perf/util/annotate.c                   | 6 +++---
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ tools/perf/util/map.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
-index bdd7ab34ce4f..2a6662e42f89 100644
---- a/tools/perf/arch/s390/annotate/instructions.c
-+++ b/tools/perf/arch/s390/annotate/instructions.c
-@@ -38,7 +38,7 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
- 		return -1;
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 6c59f55026c1..27d8508f8a44 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -752,8 +752,9 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
+ 	map->groups = mg;
+ }
  
--	if (map_groups__find_ams(map->groups, &target) == 0 &&
-+	if (map_groups__find_ams(ms->mg, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
+-static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
++int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
+ {
++	struct maps *maps = &mg->maps;
+ 	struct rb_root *root;
+ 	struct rb_node *next, *first;
+ 	int err = 0;
+@@ -818,7 +819,7 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			}
  
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index ad1fe5b6d0cd..992705c78bd0 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -430,6 +430,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 		return true;
- 	}
+ 			before->end = map->start;
+-			__map_groups__insert(pos->groups, before);
++			__map_groups__insert(mg, before);
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(before, fp);
+ 			map__put(before);
+@@ -835,7 +836,7 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			after->start = map->end;
+ 			after->pgoff += map->end - pos->start;
+ 			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
+-			__map_groups__insert(pos->groups, after);
++			__map_groups__insert(mg, after);
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(after, fp);
+ 			map__put(after);
+@@ -853,12 +854,6 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 	return err;
+ }
  
-+	target_ms.mg  = ms->mg;
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
- 	pthread_mutex_unlock(&notes->lock);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e0a9e9e49bb1..5ea9a4534848 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -271,7 +271,7 @@ static int call__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- find_target:
- 	target.addr = map__objdump_2mem(map, ops->target.addr);
- 
--	if (map_groups__find_ams(map->groups, &target) == 0 &&
-+	if (map_groups__find_ams(ms->mg, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-@@ -391,7 +391,7 @@ static int jump__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- 	 * Actual navigation will come next, with further understanding of how
- 	 * the symbol searching and disassembly should be done.
- 	 */
--	if (map_groups__find_ams(map->groups, &target) == 0 &&
-+	if (map_groups__find_ams(ms->mg, &target) == 0 &&
- 	    map__rip_2objdump(target.ms.map, map->map_ip(target.ms.map, target.addr)) == ops->target.addr)
- 		ops->target.sym = target.ms.sym;
- 
-@@ -1545,7 +1545,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
- 			.ms = { .map = map, },
- 		};
- 
--		if (!map_groups__find_ams(map->groups, &target) &&
-+		if (!map_groups__find_ams(args->ms.mg, &target) &&
- 		    target.ms.sym->start == target.al_addr)
- 			dl->ops.target.sym = target.ms.sym;
- 	}
+-int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map,
+-				   FILE *fp)
+-{
+-	return maps__fixup_overlappings(&mg->maps, map, fp);
+-}
+-
+ /*
+  * XXX This should not really _copy_ te maps, but refcount them.
+  */
 -- 
 2.21.0
