@@ -1,93 +1,124 @@
-From: James Clark <James.Clark@arm.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 Subject: Re: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
-Date: Wed, 13 Nov 2019 14:47:43 +0000
-Message-ID: <609eb078-7998-9e4a-ca04-6c40a8a47f84@arm.com>
+Date: Fri, 15 Nov 2019 10:59:44 +0800
+Message-ID: <7137fecb-a0bd-6dee-14c9-5753e56d39a1@huawei.com>
 References: <20191024144830.16534-1-tanxiaojun@huawei.com>
  <20191024144830.16534-5-tanxiaojun@huawei.com>
  <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
  <38c18a3e-1b9a-05fe-63f6-920af2f53fc7@huawei.com>
+ <609eb078-7998-9e4a-ca04-6c40a8a47f84@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38c18a3e-1b9a-05fe-63f6-920af2f53fc7@huawei.com>
+In-Reply-To: <609eb078-7998-9e4a-ca04-6c40a8a47f84@arm.com>
 Content-Language: en-US
-Content-ID: <14A112AD9D913E45AA94E34218DE033C@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tan Xiaojun <tanxiaojun@huawei.com>
+To: James Clark <James.Clark@arm.com>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGkgWGlhb2p1biwNCg0KPiBJIGNhbid0IHJlcHJvZHVjZSB0aGlzIHByb2JsZW0uIElmIHRoZSBj
-dXJyZW50IHN5c3RlbSBkb2Vzbid0IHN1cHBvcnQgc3BlLCBpdCBzaG91bGRuJ3QgcmVwb3J0IGFu
-IGVycm9yLiBJIHVzZSB0aGUgbGF0ZXN0IGNvZGVzIG9mIHRoZSBtYWlubGluZToNCg0KSSB0aGlu
-ayB0aGUgcHJvYmxlbSBpcyByZWxhdGVkIHRvIHRoZSAndHlwZScgYXR0cmlidXRlIG9mIHRoZSBl
-dmVudC4gVG8gb3BlbiB0aGUgU1BFIFBNVSB0aGUgZXZlbnQgdHlwZSBvbiB0aGUgcGxhdGZvcm0g
-SSdtIHVzaW5nIGlzICc3Jy4gSWYgSSBjaGFuZ2UNCnRoZSBjb2RlIGxpa2UgdGhpcywgdGhlIHBy
-b2JsZW0gaXMgZml4ZWQ6DQoNCkBAIC05MTQsMTMgKzkxNCwyNyBAQCB2b2lkIGFybV9zcGVfcHJl
-Y2lzZV9pcF9zdXBwb3J0KHN0cnVjdCBldmxpc3QgKmV2bGlzdCwgc3RydWN0IGV2c2VsICpldnNl
-bCkNCiAgICAgICAgICAgICAgICBwbXUgPSBwZXJmX3BtdV9fZmluZCgiYXJtX3NwZV8wIik7DQog
-ICAgICAgICAgICAgICAgaWYgKHBtdSkgew0KICAgICAgICAgICAgICAgICAgICAgICAgZXZzZWwt
-PnBtdV9uYW1lID0gcG11LT5uYW1lOw0KLSAgICAgICAgICAgICAgICAgICAgICAgZXZzZWwtPmNv
-cmUuYXR0ci50eXBlID0gUEVSRl9SRUNPUkRfQVVYVFJBQ0U7DQotICAgICAgICAgICAgICAgICAg
-ICAgICBldnNlbC0+Y29yZS5hdHRyLmNvbmZpZyA9IFNQRV9BVFRSX1RTX0VOQUJMRQ0KLSAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCBTUEVfQVRUUl9QQV9F
-TkFCTEUNCi0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
-U1BFX0FUVFJfSklUVEVSDQorICAgICAgICAgICAgICAgICAgICAgICBldnNlbC0+Y29yZS5hdHRy
-LnR5cGUgPSBwbXUtPnR5cGU7DQorICAgICAgICAgICAgICAgICAgICAgICBldnNlbC0+Y29yZS5h
-dHRyLmNvbmZpZyB8PSBTUEVfQVRUUl9UU19FTkFCTEUNCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgU1BFX0FUVFJfQlJBTkNIX0ZJTFRFUjsNCg0KQWxz
-byBkbyB5b3UgdGhpbmsgaml0dGVyIHNob3VsZCBiZSBlbmFibGVkIGJ5IGRlZmF1bHQ/IEkgdGhv
-dWdodCB0aGF0IGl0IG1pZ2h0IG1ha2UgdGhlIGRhdGEgbGVzcyBwcmVjaXNlLCBzbyBJIHJlbW92
-ZWQgaXQgaGVyZS4NCg0KLUphbWVzDQoNCj4gDQo+IGNvbW1pdCBmMTE2Yjk2Njg1YTA0NmE4OWMy
-NWQ0YTZiYTJkYTQ4OTE0NWM4ODg4IChtYWlubGluZS9tYXN0ZXIpDQo+IE1lcmdlOiBmNjMyYmZh
-YTMzZWQgNjAzZDkyOTlkYTMyDQo+IEF1dGhvcjogTGludXMgVG9ydmFsZHMgPHRvcnZhbGRzQGxp
-bnV4LWZvdW5kYXRpb24ub3JnPg0KPiBEYXRlOiAgIFRodSBPY3QgMjQgMDY6MTM6NDUgMjAxOSAt
-MDQwMA0KPiANCj4gICAgIE1lcmdlIHRhZyAnbWZkLWZpeGVzLTUuNCcgb2YgZ2l0Oi8vZ2l0Lmtl
-cm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2xlZS9tZmQNCj4gDQo+IEkgd2lsbCBn
-byBhbmQgc2VlIHdoeSB0aGlzIHdpbGwgYmUgcmVwb3J0ZWQuDQo+IA0KPj4NCj4+DQo+PiBJIHdv
-dWxkIGhhdmUgZXhwZWN0ZWQgdG8gdXNlIHRoZSBldmVudCBuYW1lIHRoYXQgaXMgbGlzdGVkIGlu
-IHRoZSBTUEUgZG9jdW1lbnRhdGlvbiBmb3IgYnJhbmNoIG1pc3NlcyB3aGljaCBpcyBicl9taXNf
-cHJlZCBvciBicl9taXNfcHJlZF9yZXRpcmVkOg0KPj4NCj4+IMKgwqDCoCBFWzddLCBieXRlIDAg
-Yml0IFs3XQ0KPj4gwqDCoMKgIE1pc3ByZWRpY3RlZC4gVGhlIGRlZmluZWQgdmFsdWVzIG9mIHRo
-aXMgYml0IGFyZToNCj4+IMKgwqDCoCAwIERpZCBub3QgY2F1c2UgY29ycmVjdGlvbiB0byB0aGUg
-cHJlZGljdGVkIHByb2dyYW0gZmxvdy4NCj4+IMKgwqDCoCAxIEEgYnJhbmNoIHRoYXQgY2F1c2Vk
-IGEgY29ycmVjdGlvbiB0byB0aGUgcHJlZGljdGVkIHByb2dyYW0gZmxvdy4NCj4+DQo+PiDCoMKg
-wqAgSWYgUE1VdjMgaXMgaW1wbGVtZW50ZWQgdGhpcyBFdmVudCBpcyByZXF1aXJlZCB0byBiZSBp
-bXBsZW1lbnRlZCBjb25zaXN0ZW50bHkgd2l0aCBlaXRoZXIgQlJfTUlTX1BSRUQgb3IgQlJfTUlT
-X1BSRURfUkVUSVJFRC4NCj4+DQo+IA0KPiBEbyB5b3UgbWVhbiB0aGF0IEkgY2FuIGFkZCB0aGVz
-ZSBhcyBuZXcgZXZlbnRzIHRvIHBlcmY/IElmIHdlIHRoaW5rIG9mIHRoZW0gYXMgbmV3IGV2ZW50
-cywgd2hhdCBzaG91bGQgd2UgZG8gaWYgdGhlIHVzZXIgZG9lcyBub3QgYWRkIDpwcCBmb3IgdGhl
-bT8NCj4gKE9yIGZvciB0aGVzZSBldmVudHMsIHVzZXJzIGNhbiBvbmx5IGFkZCA6cHAgdG8gdXNl
-IHRoZW0/KQ0KPiANCj4+DQo+PiArwqDCoMKgwqDCoMKgIGlmICghc3RyY21wKHBlcmZfZW52X19h
-cmNoKGV2bGlzdC0+ZW52KSwgImFybTY0IikNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAmJiBldnNlbC0+Y29yZS5hdHRyLmNvbmZpZyA9PSBQRVJGX0NP
-VU5UX0hXX0JSQU5DSF9NSVNTRVMNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCAmJiBldnNlbC0+Y29yZS5hdHRyLnByZWNpc2VfaXApIHsNCj4+DQo+PiBB
-cyBJIG1lbnRpb25lZCBhYm92ZSBQRVJGX0NPVU5UX0hXX0JSQU5DSF9NSVNTRVNkb2Vzbid0IHNl
-ZW0gdG8gbWF0Y2ggdXAgd2l0aCB0aGUgYWN0dWFsIGV2ZW50IGNvdW50ZXIgdGhhdCBpcyBhc3Nv
-Y2lhdGVkIHdpdGggdGhpcyBTUEUgZXZlbnQgKEJSX01JU19QUkVEKS4gVGhlIGZpeCBmb3IgdGhp
-cyBpcyBwcm9iYWJseSBhcyBzaW1wbGUgYXMgYWRkaW5nIGFuIE9SIGZvciB0aGUgb3RoZXIgYWxp
-YXNlcyBmb3IgYnJhbmNoIG1pc3ByZWRpY3RzLg0KPiANCj4gV2hhdCB5b3UgbWVhbiBpcyB0aGF0
-IHdlIGNhbiBmaWx0ZXIgd2l0aCBzcGUgZXZlbnRzKGxpa2UgQlJfTUlTX1BSRUQpIGZpcnN0LCBh
-bmQgaWYgd2UgaGF2ZSBvdGhlciBldmVudHMgdGhhdCBhcmUgZXhhY3RseSB0aGUgc2FtZShubyBt
-b3JlIGZvciBub3cpLCB0aGVuIHdlIGNhbiBoYW5kbGUgdGhlbSBieSBhZGRpbmcgT1IgaW4gdGhl
-IGZ1dHVyZT8NCj4gDQo+Pg0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcG11ID0g
-cGVyZl9wbXVfX2ZpbmQoImFybV9zcGVfMCIpOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgaWYgKHBtdSkgew0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGV2c2VsLT5wbXVfbmFtZSA9IHBtdS0+bmFtZTsNCj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBldnNlbC0+Y29yZS5hdHRyLnR5cGUgPSBQ
-RVJGX1JFQ09SRF9BVVhUUkFDRTsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBldnNlbC0+Y29yZS5hdHRyLmNvbmZpZyA9IFNQRV9BVFRSX1RTX0VOQUJM
-RQ0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgU1BFX0FUVFJfUEFf
-RU5BQkxFDQo+Pg0KPj4gSSB3b3VsZG4ndCBzZXQgcGh5c2ljYWwgYWRkcmVzc2VzIGJ5IGRlZmF1
-bHQgYXMgdGhpcyByZXF1aXJlcyByb290LiBJIHdvdWxkIGxlYXZlIHRoYXQgdG8gdGhlIHVzZXIg
-aWYgdGhleSB3YW50IHRvIG1hbnVhbGx5IGNvbmZpZ3VyZSBTUEUuDQo+IA0KPiBZZXMuIFlvdSBh
-cmUgcmlnaHQuIEkgZ290IGEgZXJyb3IgZm9yIHRoaXMgY2FzZS4gSSB3aWxsIGZpeCBpdC4NCj4g
-DQo+IC0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAuL3BlcmYgcmVjb3JkIC1lIGJyYW5jaC1taXNzZXM6
-cCBscw0KPiBFcnJvcjoNCj4gWW91IG1heSBub3QgaGF2ZSBwZXJtaXNzaW9uIHRvIGNvbGxlY3Qg
-c3RhdHMuDQo+IC4uLg0KPiAtLS0tLS0tLS0tLS0tLS0tLS0NCj4gDQo+IFRoYW5rcy4NCj4gWGlh
-b2p1bi4NCj4gDQo+Pg0KPj4gSSBoYXZlIG9ubHkgbG9va2VkIGJyaWVmbHkgYW5kIEkgd2lsbCBk
-byBzb21lIG1vcmUgdGVzdGluZy4NCj4+DQo+Pg0KPj4gVGhhbmtzDQo+PiBKYW1lcw0KPj4NCj4+
-DQo+IA0KPiANCg==
+On 2019/11/13 22:47, James Clark wrote:
+> Hi Xiaojun,
+> 
+>> I can't reproduce this problem. If the current system doesn't support spe, it shouldn't report an error. I use the latest codes of the mainline:
+> 
+> I think the problem is related to the 'type' attribute of the event. To open the SPE PMU the event type on the platform I'm using is '7'. If I change
+> the code like this, the problem is fixed:
+> 
+> @@ -914,13 +914,27 @@ void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
+>                 pmu = perf_pmu__find("arm_spe_0");
+>                 if (pmu) {
+>                         evsel->pmu_name = pmu->name;
+> -                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
+> -                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
+> -                                               | SPE_ATTR_PA_ENABLE
+> -                                               | SPE_ATTR_JITTER
+> +                       evsel->core.attr.type = pmu->type;
+> +                       evsel->core.attr.config |= SPE_ATTR_TS_ENABLE
+>                                                 | SPE_ATTR_BRANCH_FILTER;
+> 
+
+Hi, James,
+OK. Thank you for your fix.
+
+> Also do you think jitter should be enabled by default? I thought that it might make the data less precise, so I removed it here.
+
+Since the interval for sampling without "jitter" is fixed (default 1024 on our server), I was worried that not adding it would result in the same result for each record, and some instructions could not be collected each time.
+
+However, after many tests, it is not clear from the results that there is a significant difference between them (enable it or not).
+
+So I am confused, whether to enable it or not.
+
+Thanks.
+Xiaojun.
+
+> 
+> -James
+> 
+>>
+>> commit f116b96685a046a89c25d4a6ba2da489145c8888 (mainline/master)
+>> Merge: f632bfaa33ed 603d9299da32
+>> Author: Linus Torvalds <torvalds@linux-foundation.org>
+>> Date:   Thu Oct 24 06:13:45 2019 -0400
+>>
+>>     Merge tag 'mfd-fixes-5.4' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
+>>
+>> I will go and see why this will be reported.
+>>
+>>>
+>>>
+>>> I would have expected to use the event name that is listed in the SPE documentation for branch misses which is br_mis_pred or br_mis_pred_retired:
+>>>
+>>>     E[7], byte 0 bit [7]
+>>>     Mispredicted. The defined values of this bit are:
+>>>     0 Did not cause correction to the predicted program flow.
+>>>     1 A branch that caused a correction to the predicted program flow.
+>>>
+>>>     If PMUv3 is implemented this Event is required to be implemented consistently with either BR_MIS_PRED or BR_MIS_PRED_RETIRED.
+>>>
+>>
+>> Do you mean that I can add these as new events to perf? If we think of them as new events, what should we do if the user does not add :pp for them?
+>> (Or for these events, users can only add :pp to use them?)
+>>
+>>>
+>>> +       if (!strcmp(perf_env__arch(evlist->env), "arm64")
+>>> +                       && evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
+>>> +                       && evsel->core.attr.precise_ip) {
+>>>
+>>> As I mentioned above PERF_COUNT_HW_BRANCH_MISSESdoesn't seem to match up with the actual event counter that is associated with this SPE event (BR_MIS_PRED). The fix for this is probably as simple as adding an OR for the other aliases for branch mispredicts.
+>>
+>> What you mean is that we can filter with spe events(like BR_MIS_PRED) first, and if we have other events that are exactly the same(no more for now), then we can handle them by adding OR in the future?
+>>
+>>>
+>>> +               pmu = perf_pmu__find("arm_spe_0");
+>>> +               if (pmu) {
+>>> +                       evsel->pmu_name = pmu->name;
+>>> +                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
+>>> +                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
+>>> +                                               | SPE_ATTR_PA_ENABLE
+>>>
+>>> I wouldn't set physical addresses by default as this requires root. I would leave that to the user if they want to manually configure SPE.
+>>
+>> Yes. You are right. I got a error for this case. I will fix it.
+>>
+>> ------------------
+>> ./perf record -e branch-misses:p ls
+>> Error:
+>> You may not have permission to collect stats.
+>> ...
+>> ------------------
+>>
+>> Thanks.
+>> Xiaojun.
+>>
+>>>
+>>> I have only looked briefly and I will do some more testing.
+>>>
+>>>
+>>> Thanks
+>>> James
+>>>
+>>>
+>>
+>>
