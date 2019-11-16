@@ -1,132 +1,29 @@
-From: lqqq341 <liuqi115@hisilicon.com>
-Subject: [PATCH] Perf stat: Fix the ratio comments of miss-events
-Date: Sat, 16 Nov 2019 15:48:41 +0800
-Message-ID: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH] Perf stat: Fix the ratio comments of miss-events
+Date: Sat, 16 Nov 2019 06:45:19 -0800
+Message-ID: <87pnhrg9s0.fsf@linux.intel.com>
+References: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
+        (lqqq's message of "Sat, 16 Nov 2019 15:48:41 +0800")
 Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, ak@linux.intel.com
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linuxarm@huawei.com, john.garry@huawei.com, zhangshaokun@hisilicon.com, huangdaode@hisilicon.com, linyunsheng@huawei.com, liuqi115@hisilicon.com
+To: lqqq341 <liuqi115@hisilicon.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linuxarm@huawei.com, john.garry@huawei.com, zhangshaokun@hisilicon.com, huangdaode@hisilicon.com, linyunsheng@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Qi Liu <liuqi115@hisilicon.com>
+lqqq341 <liuqi115@hisilicon.com> writes:
 
-Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
-iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
-is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
-L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
-accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
-cache and LL-cache are fixed in the same way.
+> From: Qi Liu <liuqi115@hisilicon.com>
+>
+> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
+> iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
+> is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
+> L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
+> accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
+> cache and LL-cache are fixed in the same way.
 
-Signed-off-by: Qi Liu <liuqi115@hisilicon.com>
----
- tools/perf/util/stat-shadow.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 2c41d47..a3bdf2b 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -506,7 +506,8 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
- 
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
- 
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%",
-+			  "of all L1-dcache accesses", ratio);
- }
- 
- static void print_l1_icache_misses(struct perf_stat_config *config,
-@@ -527,7 +528,8 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
- 
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%",
-+			  "of all L1-icache accesses", ratio);
- }
- 
- static void print_dtlb_cache_misses(struct perf_stat_config *config,
-@@ -547,7 +549,8 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
- 
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%",
-+			  "of all dTLB cache accesses", ratio);
- }
- 
- static void print_itlb_cache_misses(struct perf_stat_config *config,
-@@ -567,7 +570,8 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
- 
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%",
-+			  "of all iTLB cache accesses", ratio);
- }
- 
- static void print_ll_cache_misses(struct perf_stat_config *config,
-@@ -587,7 +591,8 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
- 
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%",
-+			  "of all LL-cache accesses", ratio);
- }
- 
- /*
-@@ -872,7 +877,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
- 			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL,
-+				     "of all L1-dcache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
-@@ -882,7 +888,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
- 			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL,
-+				     "of all L1-icache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
-@@ -892,7 +899,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
- 			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL,
-+				     "of all dTLB cache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
-@@ -902,7 +910,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
- 			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL,
-+				     "of all iTLB cache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
-@@ -912,7 +921,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
- 			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL,
-+				     "of all LL-cache accesses", 0);
- 	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
- 		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
- 
--- 
-2.8.1
+-Andi
