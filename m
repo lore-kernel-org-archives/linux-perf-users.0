@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/25] perf probe: Verify given line is a representive line
-Date: Tue, 19 Nov 2019 08:32:39 -0300
-Message-ID: <20191119113245.19593-20-acme@kernel.org>
+Subject: [PATCH 20/25] perf probe: Do not show non representive lines by perf-probe -L
+Date: Tue, 19 Nov 2019 08:32:40 -0300
+Message-ID: <20191119113245.19593-21-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,34 +14,66 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Verify user given probe line is a representive line (which doesn't share
-the address with other lines or the line is the least line among the
-lines which shares same address), and if not, it shows what is the
-representive line.
+Since perf probe -L shows non representive lines, it can be mislead
+users where user can put probes.  This prevents to show such non
+representive lines so that user can understand which lines user can
+probe.
 
-Without this fix, user can put a probe on the lines which is not a a
-representive line. But since this is not a representive line, perf probe
--l shows a representive line number instead of user given line number.
-e.g. (put kernel_read:3, but listed as kernel_read:2)
+  # perf probe -L kernel_read
+  <kernel_read@/build/linux-pvZVvI/linux-5.0.0/fs/read_write.c:0>
+        0  ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+           {
+        2         mm_segment_t old_fs;
+                  ssize_t result;
 
-  # perf probe -a kernel_read:3
-  Added new event:
-    probe:kernel_read    (on kernel_read:3)
+                  old_fs = get_fs();
+        6         set_fs(get_ds());
+                  /* The cast to a user pointer is valid due to the set_fs() */
+        8         result = vfs_read(file, (void __user *)buf, count, pos);
+        9         set_fs(old_fs);
+       10         return result;
+           }
+           EXPORT_SYMBOL(kernel_read);
 
-  You can now use it in all perf tools, such as:
+Committer testing:
 
-  	perf record -e probe:kernel_read -aR sleep 1
+Before:
 
-  # perf probe -l
-    probe:kernel_read    (on kernel_read:2@linux-5.0.0/fs/read_write.c)
+  # perf probe -L kernel_read
+  <kernel_read@/usr/src/debug/kernel-5.3.fc30/linux-5.3.8-200.fc30.x86_64/fs/read_write.c:0>
+        0  ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+        1  {
+        2         mm_segment_t old_fs;
+        3         ssize_t result;
 
-With this fix, perf probe doesn't allow user to put a probe on a
-representive line, and tell what is the representive line.
+        5         old_fs = get_fs();
+        6         set_fs(KERNEL_DS);
+                  /* The cast to a user pointer is valid due to the set_fs() */
+        8         result = vfs_read(file, (void __user *)buf, count, pos);
+        9         set_fs(old_fs);
+       10         return result;
+           }
+           EXPORT_SYMBOL(kernel_read);
+  #
 
-  # perf probe -a kernel_read:3
-  This line is sharing the addrees with other lines.
-  Please try to probe at kernel_read:2 instead.
-    Error: Failed to add events.
+See the 1, 3, 5 lines? They shouldn't be there, after this patch:
+
+  # perf probe -L kernel_read
+  <kernel_read@/usr/src/debug/kernel-5.3.fc30/linux-5.3.8-200.fc30.x86_64/fs/read_write.c:0>
+        0  ssize_t kernel_read(struct file *file, void *buf, size_t count, loff_t *pos)
+           {
+        2         mm_segment_t old_fs;
+                  ssize_t result;
+
+                  old_fs = get_fs();
+        6         set_fs(KERNEL_DS);
+                  /* The cast to a user pointer is valid due to the set_fs() */
+        8         result = vfs_read(file, (void __user *)buf, count, pos);
+        9         set_fs(old_fs);
+       10         return result;
+           }
+           EXPORT_SYMBOL(kernel_read);
+  #
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -50,65 +82,35 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157406472071.24476.14915451439785001021.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157406473064.24476.2913278267727587314.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-finder.c | 36 ++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ tools/perf/util/probe-finder.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 9ecea45da4ca..ef1b320cedf8 100644
+index ef1b320cedf8..f12ad507a822 100644
 --- a/tools/perf/util/probe-finder.c
 +++ b/tools/perf/util/probe-finder.c
-@@ -776,6 +776,39 @@ static Dwarf_Die *find_best_scope(struct probe_finder *pf, Dwarf_Die *die_mem)
- 	return fsp.found ? die_mem : NULL;
- }
- 
-+static int verify_representive_line(struct probe_finder *pf, const char *fname,
-+				int lineno, Dwarf_Addr addr)
-+{
-+	const char *__fname, *__func = NULL;
-+	Dwarf_Die die_mem;
-+	int __lineno;
-+
-+	/* Verify line number and address by reverse search */
-+	if (cu_find_lineinfo(&pf->cu_die, addr, &__fname, &__lineno) < 0)
-+		return 0;
-+
-+	pr_debug2("Reversed line: %s:%d\n", __fname, __lineno);
-+	if (strcmp(fname, __fname) || lineno == __lineno)
-+		return 0;
-+
-+	pr_warning("This line is sharing the addrees with other lines.\n");
-+
-+	if (pf->pev->point.function) {
-+		/* Find best match function name and lines */
-+		pf->addr = addr;
-+		if (find_best_scope(pf, &die_mem)
-+		    && die_match_name(&die_mem, pf->pev->point.function)
-+		    && dwarf_decl_line(&die_mem, &lineno) == 0) {
-+			__func = dwarf_diename(&die_mem);
-+			__lineno -= lineno;
-+		}
-+	}
-+	pr_warning("Please try to probe at %s:%d instead.\n",
-+		   __func ? : __fname, __lineno);
-+
-+	return -ENOENT;
-+}
-+
- static int probe_point_line_walker(const char *fname, int lineno,
- 				   Dwarf_Addr addr, void *data)
+@@ -1734,12 +1734,19 @@ static int line_range_walk_cb(const char *fname, int lineno,
+ 			      void *data)
  {
-@@ -786,6 +819,9 @@ static int probe_point_line_walker(const char *fname, int lineno,
- 	if (lineno != pf->lno || strtailcmp(fname, pf->fname) != 0)
+ 	struct line_finder *lf = data;
++	const char *__fname;
++	int __lineno;
+ 	int err;
+ 
+ 	if ((strtailcmp(fname, lf->fname) != 0) ||
+ 	    (lf->lno_s > lineno || lf->lno_e < lineno))
  		return 0;
  
-+	if (verify_representive_line(pf, fname, lineno, addr))
-+		return -ENOENT;
++	/* Make sure this line can be reversable */
++	if (cu_find_lineinfo(&lf->cu_die, addr, &__fname, &__lineno) > 0
++	    && (lineno != __lineno || strcmp(fname, __fname)))
++		return 0;
 +
- 	pf->addr = addr;
- 	sc_die = find_best_scope(pf, &die_mem);
- 	if (!sc_die) {
+ 	err = line_range_add_line(fname, lineno, lf->lr);
+ 	if (err < 0 && err != -EEXIST)
+ 		return err;
 -- 
 2.21.0
