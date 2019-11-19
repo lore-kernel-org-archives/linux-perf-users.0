@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/25] perf probe: Support multiprobe event
-Date: Tue, 19 Nov 2019 08:32:42 -0300
-Message-ID: <20191119113245.19593-23-acme@kernel.org>
+Subject: [PATCH 24/25] perf probe: Trace a magic number if variable is not found
+Date: Tue, 19 Nov 2019 08:32:44 -0300
+Message-ID: <20191119113245.19593-25-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,139 +9,222 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <tom.zanussi@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Support multiprobe event if the event is based on function and lines and
-kernel supports it. In this case, perf probe creates the first probe
-with an event, and tries to append following probes on that event, since
-those probes must be on the same source code line.
+Trace a magic number as immediate value if the target variable is not
+found at some probe points which is based on one probe event.
 
-Before this patch;
+This feature is good for the case if you trace a source code line with
+some local variables, which is compiled into several instructions and
+some of the variables are optimized out on some instructions.
 
-  # perf probe -a vfs_read:18
-  Added new events:
-    probe:vfs_read_L18   (on vfs_read:18)
-    probe:vfs_read_L18_1 (on vfs_read:18)
+Even if so, with this feature, perf probe trace a magic number instead
+of such disappeared variables and fold those probes on one event.
 
-  You can now use it in all perf tools, such as:
+E.g. without this patch:
 
-  	perf record -e probe:vfs_read_L18_1 -aR sleep 1
+  # perf probe -D "pud_page_vaddr pud"
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  Failed to find 'pud' in this function.
+  p:probe/pud_page_vaddr _text+23480787 pud=%ax:x64
+  p:probe/pud_page_vaddr _text+23808453 pud=%bp:x64
+  p:probe/pud_page_vaddr _text+23558082 pud=%ax:x64
+  p:probe/pud_page_vaddr _text+328373 pud=%r8:x64
+  p:probe/pud_page_vaddr _text+348448 pud=%bx:x64
+  p:probe/pud_page_vaddr _text+23816818 pud=%bx:x64
 
-  #
+With this patch:
 
-After this patch (on multiprobe supported kernel)
-  # perf probe -a vfs_read:18
-  Added new events:
-    probe:vfs_read_L18   (on vfs_read:18)
-    probe:vfs_read_L18   (on vfs_read:18)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:vfs_read_L18 -aR sleep 1
-
-  #
-
-Committer testing:
-
-On a kernel that doesn't support multiprobe events, after this patch:
-
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  # grep append /sys/kernel/debug/tracing/README
-  	    be modified by appending '.descending' or '.ascending' to a
-  	    can be modified by appending any of the following modifiers
-  #
-  # perf probe -a vfs_read:18
-  Added new events:
-    probe:vfs_read_L18   (on vfs_read:18)
-    probe:vfs_read_L18_1 (on vfs_read:18)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:vfs_read_L18_1 -aR sleep 1
-
-  # perf probe -l
-    probe:vfs_read_L18   (on vfs_read:18@fs/read_write.c)
-    probe:vfs_read_L18_1 (on vfs_read:18@fs/read_write.c)
-  #
+  # perf probe -D "pud_page_vaddr pud" | head
+  spurious_kernel_fault is blacklisted function, skip it.
+  vmalloc_fault is blacklisted function, skip it.
+  p:probe/pud_page_vaddr _text+23480787 pud=%ax:x64
+  p:probe/pud_page_vaddr _text+149051 pud=\deade12d:x64
+  p:probe/pud_page_vaddr _text+23808453 pud=%bp:x64
+  p:probe/pud_page_vaddr _text+315926 pud=\deade12d:x64
+  p:probe/pud_page_vaddr _text+23807209 pud=\deade12d:x64
+  p:probe/pud_page_vaddr _text+23557365 pud=%ax:x64
+  p:probe/pud_page_vaddr _text+314097 pud=%di:x64
+  p:probe/pud_page_vaddr _text+314015 pud=\deade12d:x64
+  p:probe/pud_page_vaddr _text+313893 pud=\deade12d:x64
+  p:probe/pud_page_vaddr _text+324083 pud=\deade12d:x64
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157406475010.24476.586290752591512351.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157406476931.24476.6261475888681844285.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c | 9 +++++++--
- tools/perf/util/probe-file.c  | 7 +++++++
- tools/perf/util/probe-file.h  | 1 +
- 3 files changed, 15 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-event.c  |  2 +-
+ tools/perf/util/probe-event.h  |  3 ++
+ tools/perf/util/probe-finder.c | 62 +++++++++++++++++++++++++++++++---
+ tools/perf/util/probe-finder.h |  1 +
+ 4 files changed, 63 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 5c86d2cf6338..8f963a193a5d 100644
+index 8f963a193a5d..52b2d165453a 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -2738,8 +2738,13 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
- 	if (tev->event == NULL || tev->group == NULL)
- 		return -ENOMEM;
+@@ -46,7 +46,7 @@
+ #define PERFPROBE_GROUP "probe"
  
--	/* Add added event name to namelist */
--	strlist__add(namelist, event);
-+	/*
-+	 * Add new event name to namelist if multiprobe event is NOT
-+	 * supported, since we have to use new event name for following
-+	 * probes in that case.
-+	 */
-+	if (!multiprobe_event_is_supported())
-+		strlist__add(namelist, event);
- 	return 0;
- }
+ bool probe_event_dry_run;	/* Dry run flag */
+-struct probe_conf probe_conf;
++struct probe_conf probe_conf = { .magic_num = DEFAULT_PROBE_MAGIC_NUM };
  
-diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-index b659466ea498..a63f1a19b0e8 100644
---- a/tools/perf/util/probe-file.c
-+++ b/tools/perf/util/probe-file.c
-@@ -1007,6 +1007,7 @@ enum ftrace_readme {
- 	FTRACE_README_KRETPROBE_OFFSET,
- 	FTRACE_README_UPROBE_REF_CTR,
- 	FTRACE_README_USER_ACCESS,
-+	FTRACE_README_MULTIPROBE_EVENT,
- 	FTRACE_README_END,
+ #define semantic_error(msg ...) pr_err("Semantic error :" msg)
+ 
+diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
+index 96a319cd2378..4f0eb3a20c36 100644
+--- a/tools/perf/util/probe-event.h
++++ b/tools/perf/util/probe-event.h
+@@ -16,10 +16,13 @@ struct probe_conf {
+ 	bool	no_inlines;
+ 	bool	cache;
+ 	int	max_probes;
++	unsigned long	magic_num;
  };
+ extern struct probe_conf probe_conf;
+ extern bool probe_event_dry_run;
  
-@@ -1020,6 +1021,7 @@ static struct {
- 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
- 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
- 	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
-+	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
- };
- 
- static bool scan_ftrace_readme(enum ftrace_readme type)
-@@ -1085,3 +1087,8 @@ bool user_access_is_supported(void)
- {
- 	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
- }
++#define DEFAULT_PROBE_MAGIC_NUM	0xdeade12d	/* u32: 3735937325 */
 +
-+bool multiprobe_event_is_supported(void)
+ struct symbol;
+ 
+ /* kprobe-tracer and uprobe-tracer tracing point */
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 33e90054ad84..38d6cd22779f 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -536,6 +536,14 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
+ 		return 0;
+ }
+ 
++static void print_var_not_found(const char *varname)
 +{
-+	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
++	pr_err("Failed to find the location of the '%s' variable at this address.\n"
++	       " Perhaps it has been optimized out.\n"
++	       " Use -V with the --range option to show '%s' location range.\n",
++		varname, varname);
 +}
-diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-index 986c1c94f64f..850d1b52d60a 100644
---- a/tools/perf/util/probe-file.h
-+++ b/tools/perf/util/probe-file.h
-@@ -71,6 +71,7 @@ bool probe_type_is_available(enum probe_type type);
- bool kretprobe_offset_is_supported(void);
- bool uprobe_ref_ctr_is_supported(void);
- bool user_access_is_supported(void);
-+bool multiprobe_event_is_supported(void);
- #else	/* ! HAVE_LIBELF_SUPPORT */
- static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
++
+ /* Show a variables in kprobe event format */
+ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
  {
+@@ -547,11 +555,11 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
+ 
+ 	ret = convert_variable_location(vr_die, pf->addr, pf->fb_ops,
+ 					&pf->sp_die, pf->machine, pf->tvar);
++	if (ret == -ENOENT && pf->skip_empty_arg)
++		/* This can be found in other place. skip it */
++		return 0;
+ 	if (ret == -ENOENT || ret == -EINVAL) {
+-		pr_err("Failed to find the location of the '%s' variable at this address.\n"
+-		       " Perhaps it has been optimized out.\n"
+-		       " Use -V with the --range option to show '%s' location range.\n",
+-		       pf->pvar->var, pf->pvar->var);
++		print_var_not_found(pf->pvar->var);
+ 	} else if (ret == -ENOTSUP)
+ 		pr_err("Sorry, we don't support this variable location yet.\n");
+ 	else if (ret == 0 && pf->pvar->field) {
+@@ -598,6 +606,8 @@ static int find_variable(Dwarf_Die *sc_die, struct probe_finder *pf)
+ 		/* Search again in global variables */
+ 		if (!die_find_variable_at(&pf->cu_die, pf->pvar->var,
+ 						0, &vr_die)) {
++			if (pf->skip_empty_arg)
++				return 0;
+ 			pr_warning("Failed to find '%s' in this function.\n",
+ 				   pf->pvar->var);
+ 			ret = -ENOENT;
+@@ -1384,6 +1394,44 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
+ 	return ret;
+ }
+ 
++static int fill_empty_trace_arg(struct perf_probe_event *pev,
++				struct probe_trace_event *tevs, int ntevs)
++{
++	char **valp;
++	char *type;
++	int i, j, ret;
++
++	for (i = 0; i < pev->nargs; i++) {
++		type = NULL;
++		for (j = 0; j < ntevs; j++) {
++			if (tevs[j].args[i].value) {
++				type = tevs[j].args[i].type;
++				break;
++			}
++		}
++		if (j == ntevs) {
++			print_var_not_found(pev->args[i].var);
++			return -ENOENT;
++		}
++		for (j = 0; j < ntevs; j++) {
++			valp = &tevs[j].args[i].value;
++			if (*valp)
++				continue;
++
++			ret = asprintf(valp, "\\%lx", probe_conf.magic_num);
++			if (ret < 0)
++				return -ENOMEM;
++			/* Note that type can be NULL */
++			if (type) {
++				tevs[j].args[i].type = strdup(type);
++				if (!tevs[j].args[i].type)
++					return -ENOMEM;
++			}
++		}
++	}
++	return 0;
++}
++
+ /* Find probe_trace_events specified by perf_probe_event from debuginfo */
+ int debuginfo__find_trace_events(struct debuginfo *dbg,
+ 				 struct perf_probe_event *pev,
+@@ -1402,7 +1450,13 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
+ 	tf.tevs = *tevs;
+ 	tf.ntevs = 0;
+ 
++	if (pev->nargs != 0 && immediate_value_is_supported())
++		tf.pf.skip_empty_arg = true;
++
+ 	ret = debuginfo__find_probes(dbg, &tf.pf);
++	if (ret >= 0 && tf.pf.skip_empty_arg)
++		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
++
+ 	if (ret < 0) {
+ 		for (i = 0; i < tf.ntevs; i++)
+ 			clear_probe_trace_event(&tf.tevs[i]);
+diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
+index 670c477bf8cf..11be10080613 100644
+--- a/tools/perf/util/probe-finder.h
++++ b/tools/perf/util/probe-finder.h
+@@ -87,6 +87,7 @@ struct probe_finder {
+ 	unsigned int		machine;	/* Target machine arch */
+ 	struct perf_probe_arg	*pvar;		/* Current target variable */
+ 	struct probe_trace_arg	*tvar;		/* Current result variable */
++	bool			skip_empty_arg;	/* Skip non-exist args */
+ };
+ 
+ struct trace_event_finder {
 -- 
 2.21.0
