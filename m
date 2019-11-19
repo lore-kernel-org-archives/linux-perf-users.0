@@ -1,168 +1,216 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: Re: [RFC v2 4/4] perf tools: Support "branch-misses:pp" on arm64
-Date: Mon, 18 Nov 2019 15:05:58 +0800
-Message-ID: <41943f9a-9a52-43b4-67aa-1c669703dfc9@huawei.com>
-References: <20191024144830.16534-1-tanxiaojun@huawei.com>
- <20191024144830.16534-5-tanxiaojun@huawei.com>
- <AM4PR0802MB224263700592195B3BAE9D5AE26A0@AM4PR0802MB2242.eurprd08.prod.outlook.com>
- <38c18a3e-1b9a-05fe-63f6-920af2f53fc7@huawei.com>
- <609eb078-7998-9e4a-ca04-6c40a8a47f84@arm.com>
- <7137fecb-a0bd-6dee-14c9-5753e56d39a1@huawei.com>
- <b89f09fd-e9c4-9112-6a6a-16f9632ccbe3@arm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL] perf/core improvements and fixes
+Date: Tue, 19 Nov 2019 08:32:20 -0300
+Message-ID: <20191119113245.19593-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b89f09fd-e9c4-9112-6a6a-16f9632ccbe3@arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Clark <James.Clark@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2019/11/15 19:37, James Clark wrote:
-> Hi Xiaojun,
-> 
-> If the difference is not noticeable I think it would be better to leave it disabled. Presumably if the user
-> supplies the ":p" argument they are interested in the data being as precise as possible.
-> 
-> If they want to enable jitter, then can always configure the SPE event manually.
-> 
+Hi Ingo/Thomas,
 
-Hi,++ James,
+	Please consider pulling,
 
-OK. Agree.
+Best regards,
 
-> I have a question about what kind of approach you think we should take for multiple events that are provided with :p.
-> For example "perf record -e branch-misses:p -e cache-misses:p ...". In your current implementation this will
-> give the error "There may be only one SPE event". I think this is fine for a first implementation. But I wonder if there
-> is a way of supporting multiple SPE events?
-> 
-> From the documentation it seems like the filter events are ANDed together:
-> 
-> 	PMSEVFR_EL1.
-> 	Controls sample filtering by events. The overall filter is the logical AND of these filters. For example, if E[3] and E[5] are both set to 1,
-> 	only samples that have both event 3 (Level 1 unified or data cache refill) and event 5 set (TLB walk) are recorded
-> 
-> Which means that if we kept adding filters for new event types, there would be no events received because they wouldn't satisfy the filter requirements
-> of being caused by a branch miss AND a cache miss for example. I have asked internally about whether this is a mistake or not.
-> 
+- Arnaldo
 
-Yes, this is a problem, and you mentioned that we have to define several new spe events for this, and I am still considering how to add them.(I originally wanted to add them to the spe driver, but this will not avoid the problem of multiple spe events you mentioned above.)
 
-Based on scenarios where no new spe events are added, if the user specifies multiple spe events, I think we need to analyze these events and classify the spe events. If there are multiple, we need to keep only one (but record all spe events name or alias like "branch-misses, cache-misses" in some variables) and disable event_filter. Then "perf report" can create new selectors for these synthetic events and output them.
+The following changes since commit e1e9b78d3957a267346a86c8f2c433f6a332af65:
 
-Thanks.
-Xiaojun.
+  perf parse: Use YYABORT to clear stack after failure, plugging leaks (2019-11-12 08:34:16 -0300)
 
-> 
-> Thanks
-> James
-> 
-> On 15/11/2019 02:59, Tan Xiaojun wrote:
->> On 2019/11/13 22:47, James Clark wrote:
->>> Hi Xiaojun,
->>>
->>>> I can't reproduce this problem. If the current system doesn't support spe, it shouldn't report an error. I use the latest codes of the mainline:
->>>
->>> I think the problem is related to the 'type' attribute of the event. To open the SPE PMU the event type on the platform I'm using is '7'. If I change
->>> the code like this, the problem is fixed:
->>>
->>> @@ -914,13 +914,27 @@ void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
->>>                 pmu = perf_pmu__find("arm_spe_0");
->>>                 if (pmu) {
->>>                         evsel->pmu_name = pmu->name;
->>> -                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
->>> -                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
->>> -                                               | SPE_ATTR_PA_ENABLE
->>> -                                               | SPE_ATTR_JITTER
->>> +                       evsel->core.attr.type = pmu->type;
->>> +                       evsel->core.attr.config |= SPE_ATTR_TS_ENABLE
->>>                                                 | SPE_ATTR_BRANCH_FILTER;
->>>
->>
->> Hi, James,
->> OK. Thank you for your fix.
->>
->>> Also do you think jitter should be enabled by default? I thought that it might make the data less precise, so I removed it here.
->>
->> Since the interval for sampling without "jitter" is fixed (default 1024 on our server), I was worried that not adding it would result in the same result for each record, and some instructions could not be collected each time.
->>
->> However, after many tests, it is not clear from the results that there is a significant difference between them (enable it or not).
->>
->> So I am confused, whether to enable it or not.
->>
->> Thanks.
->> Xiaojun.
->>
->>>
->>> -James
->>>
->>>>
->>>> commit f116b96685a046a89c25d4a6ba2da489145c8888 (mainline/master)
->>>> Merge: f632bfaa33ed 603d9299da32
->>>> Author: Linus Torvalds <torvalds@linux-foundation.org>
->>>> Date:   Thu Oct 24 06:13:45 2019 -0400
->>>>
->>>>     Merge tag 'mfd-fixes-5.4' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
->>>>
->>>> I will go and see why this will be reported.
->>>>
->>>>>
->>>>>
->>>>> I would have expected to use the event name that is listed in the SPE documentation for branch misses which is br_mis_pred or br_mis_pred_retired:
->>>>>
->>>>>     E[7], byte 0 bit [7]
->>>>>     Mispredicted. The defined values of this bit are:
->>>>>     0 Did not cause correction to the predicted program flow.
->>>>>     1 A branch that caused a correction to the predicted program flow.
->>>>>
->>>>>     If PMUv3 is implemented this Event is required to be implemented consistently with either BR_MIS_PRED or BR_MIS_PRED_RETIRED.
->>>>>
->>>>
->>>> Do you mean that I can add these as new events to perf? If we think of them as new events, what should we do if the user does not add :pp for them?
->>>> (Or for these events, users can only add :pp to use them?)
->>>>
->>>>>
->>>>> +       if (!strcmp(perf_env__arch(evlist->env), "arm64")
->>>>> +                       && evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
->>>>> +                       && evsel->core.attr.precise_ip) {
->>>>>
->>>>> As I mentioned above PERF_COUNT_HW_BRANCH_MISSESdoesn't seem to match up with the actual event counter that is associated with this SPE event (BR_MIS_PRED). The fix for this is probably as simple as adding an OR for the other aliases for branch mispredicts.
->>>>
->>>> What you mean is that we can filter with spe events(like BR_MIS_PRED) first, and if we have other events that are exactly the same(no more for now), then we can handle them by adding OR in the future?
->>>>
->>>>>
->>>>> +               pmu = perf_pmu__find("arm_spe_0");
->>>>> +               if (pmu) {
->>>>> +                       evsel->pmu_name = pmu->name;
->>>>> +                       evsel->core.attr.type = PERF_RECORD_AUXTRACE;
->>>>> +                       evsel->core.attr.config = SPE_ATTR_TS_ENABLE
->>>>> +                                               | SPE_ATTR_PA_ENABLE
->>>>>
->>>>> I wouldn't set physical addresses by default as this requires root. I would leave that to the user if they want to manually configure SPE.
->>>>
->>>> Yes. You are right. I got a error for this case. I will fix it.
->>>>
->>>> ------------------
->>>> ./perf record -e branch-misses:p ls
->>>> Error:
->>>> You may not have permission to collect stats.
->>>> ...
->>>> ------------------
->>>>
->>>> Thanks.
->>>> Xiaojun.
->>>>
->>>>>
->>>>> I have only looked briefly and I will do some more testing.
->>>>>
->>>>>
->>>>> Thanks
->>>>> James
->>>>>
->>>>>
->>>>
->>>>
->>
->>
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191119
+
+for you to fetch changes up to a910e4666d61712840c78de33cc7f89de8affa78:
+
+  perf parse: Report initial event parsing error (2019-11-18 19:14:29 -0300)
+
+----------------------------------------------------------------
+perf/core improvements and fixes:
+
+x86/insn:
+
+  Adrian Hunter:
+
+  - Add some more Intel instructions to the opcode map:
+
+        cldemote, encls, enclu, enclv, enqcmd, enqcmds, movdir64b,
+        movdiri, pconfig, tpause, umonitor, umwait, wbnoinvd.
+
+  - The instruction decoding can be tested using the perf tools'
+    "x86 instruction decoder - new instructions" test as folllows:
+
+    $ perf test -v "new " 2>&1 | grep -i cldemote
+    Decoded ok: 0f 1c 00                    cldemote (%eax)
+    Decoded ok: 0f 1c 05 78 56 34 12        cldemote 0x12345678
+    Decoded ok: 0f 1c 84 c8 78 56 34 12     cldemote 0x12345678(%eax,%ecx,8)
+    Decoded ok: 0f 1c 00                    cldemote (%rax)
+    Decoded ok: 41 0f 1c 00                 cldemote (%r8)
+    Decoded ok: 0f 1c 04 25 78 56 34 12     cldemote 0x12345678
+    Decoded ok: 0f 1c 84 c8 78 56 34 12     cldemote 0x12345678(%rax,%rcx,8)
+    Decoded ok: 41 0f 1c 84 c8 78 56 34 12  cldemote 0x12345678(%r8,%rcx,8)
+    $ perf test -v "new " 2>&1 | grep -i tpause
+    Decoded ok: 66 0f ae f3                 tpause %ebx
+    Decoded ok: 66 0f ae f3                 tpause %ebx
+    Decoded ok: 66 41 0f ae f0              tpause %r8d
+
+callchains:
+
+  Adrian Hunter:
+
+  - Fix segfault in thread__resolve_callchain_sample().
+
+perf probe:
+
+  - Line fixes to show only lines where probes can be used with 'perf probe -L',
+    and when reporting them via 'perf probe -l'.
+
+  - Support multiprobe events.
+
+perf scripts python:
+
+  Adrian Hunter:
+
+  - Fix use of TRUE with SQLite < 3.23 in exported-sql-viewer.py.
+
+perf maps:
+
+  - Trim 'struct map' by removing the rb_node member for sorting
+    by map name, as that is only needed for processing kernel maps,
+    and only when classifying symbols by section at load time.
+    Sort them by name using qsort() and do lookups using bsearch()
+    when map_groups__find_by_name() is used.
+
+perf parse:
+
+  Ian Rogers:
+
+  - Report initial event parsing error, providing a less cryptic message
+    to state that a PMU wasn't found in the system.
+
+perf vendor events:
+
+  James Clark:
+
+  - Fix commas so that PMU event files for arm64, power8 and power nine
+    become valid JSON.
+
+libtraceevent:
+
+  Konstantin Khlebnikov:
+
+  - Fix parsing of event %o and %X argument types.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Adrian Hunter (4):
+      perf scripts python: exported-sql-viewer.py: Fix use of TRUE with SQLite
+      perf callchain: Fix segfault in thread__resolve_callchain_sample()
+      x86/insn: perf tools: Add some instructions to the new instructions test
+      x86/insn: Add some Intel instructions to the opcode map
+
+Arnaldo Carvalho de Melo (9):
+      perf maps: Purge the entries from maps->names in __maps__purge()
+      perf maps: Do not use an rbtree to sort by map name
+      perf map_groups: Add a front end cache for map lookups by name
+      perf map: No need to adjust the long name of modules
+      perf record: No need to process the synthesized MMAP events twice
+      perf machine: No need to check if kernel module maps pre-exist
+      perf map_groups: Auto sort maps by name, if needed
+      perf map: Use bitmap for booleans
+      perf map: Move seldom used ->flags field to second cacheline
+
+Ian Rogers (1):
+      perf parse: Report initial event parsing error
+
+James Clark (3):
+      perf vendor events arm64: Fix commas so PMU event files are valid JSON
+      perf vendor events power8: Fix commas so PMU event files are valid JSON
+      perf vendor events power9: Fix commas so PMU event files are valid JSON
+
+Konstantin Khlebnikov (1):
+      libtraceevent: Fix parsing of event %o and %X argument types
+
+Masami Hiramatsu (7):
+      perf probe: Show correct statement line number by perf probe -l
+      perf probe: Verify given line is a representive line
+      perf probe: Do not show non representive lines by perf-probe -L
+      perf probe: Generate event name with line number
+      perf probe: Support multiprobe event
+      perf probe: Support DW_AT_const_value constant value
+      perf probe: Trace a magic number if variable is not found
+
+ arch/x86/lib/x86-opcode-map.txt                    |   18 +-
+ tools/arch/x86/lib/x86-opcode-map.txt              |   18 +-
+ tools/lib/traceevent/event-parse.c                 |    7 +-
+ tools/perf/arch/powerpc/util/kvm-stat.c            |    4 +-
+ tools/perf/arch/x86/tests/insn-x86-dat-32.c        |   52 +
+ tools/perf/arch/x86/tests/insn-x86-dat-64.c        |   62 ++
+ tools/perf/arch/x86/tests/insn-x86-dat-src.c       |  109 ++
+ tools/perf/builtin-record.c                        |   29 +-
+ tools/perf/builtin-stat.c                          |    2 +
+ tools/perf/builtin-trace.c                         |   16 +-
+ .../pmu-events/arch/arm64/ampere/emag/branch.json  |    8 +-
+ .../pmu-events/arch/arm64/ampere/emag/bus.json     |   14 +-
+ .../pmu-events/arch/arm64/ampere/emag/cache.json   |   28 +-
+ .../pmu-events/arch/arm64/ampere/emag/clock.json   |    2 +-
+ .../arch/arm64/ampere/emag/exception.json          |   26 +-
+ .../arch/arm64/ampere/emag/instruction.json        |   28 +-
+ .../arch/arm64/ampere/emag/intrinsic.json          |   10 +-
+ .../pmu-events/arch/arm64/ampere/emag/memory.json  |   12 +-
+ .../arch/arm64/ampere/emag/pipeline.json           |    2 +-
+ .../arch/arm64/arm/cortex-a53/branch.json          |    2 +-
+ .../pmu-events/arch/arm64/arm/cortex-a53/bus.json  |    4 +-
+ .../arch/arm64/arm/cortex-a53/other.json           |    4 +-
+ .../arm64/arm/cortex-a57-a72/core-imp-def.json     |  120 +-
+ .../pmu-events/arch/arm64/armv8-recommended.json   |  158 +--
+ .../arch/arm64/cavium/thunderx2/core-imp-def.json  |   74 +-
+ .../arch/arm64/hisilicon/hip08/core-imp-def.json   |   60 +-
+ .../arch/arm64/hisilicon/hip08/uncore-ddrc.json    |   18 +-
+ .../arch/arm64/hisilicon/hip08/uncore-hha.json     |   22 +-
+ .../arch/arm64/hisilicon/hip08/uncore-l3c.json     |   28 +-
+ .../perf/pmu-events/arch/powerpc/power8/cache.json |   60 +-
+ .../arch/powerpc/power8/floating-point.json        |    6 +-
+ .../pmu-events/arch/powerpc/power8/frontend.json   |  158 +--
+ .../pmu-events/arch/powerpc/power8/marked.json     |  266 ++---
+ .../pmu-events/arch/powerpc/power8/memory.json     |   72 +-
+ .../perf/pmu-events/arch/powerpc/power8/other.json | 1150 ++++++++++----------
+ .../pmu-events/arch/powerpc/power8/pipeline.json   |  118 +-
+ tools/perf/pmu-events/arch/powerpc/power8/pmc.json |   48 +-
+ .../arch/powerpc/power8/translation.json           |   60 +-
+ .../perf/pmu-events/arch/powerpc/power9/cache.json |   44 +-
+ .../arch/powerpc/power9/floating-point.json        |   14 +-
+ .../pmu-events/arch/powerpc/power9/frontend.json   |  142 +--
+ .../pmu-events/arch/powerpc/power9/marked.json     |  250 ++---
+ .../pmu-events/arch/powerpc/power9/memory.json     |   52 +-
+ .../perf/pmu-events/arch/powerpc/power9/other.json |  934 ++++++++--------
+ .../pmu-events/arch/powerpc/power9/pipeline.json   |  212 ++--
+ tools/perf/pmu-events/arch/powerpc/power9/pmc.json |   48 +-
+ .../arch/powerpc/power9/translation.json           |   92 +-
+ tools/perf/scripts/python/exported-sql-viewer.py   |   12 +-
+ tools/perf/tests/map_groups.c                      |    2 +-
+ tools/perf/tests/parse-events.c                    |    3 +-
+ tools/perf/util/dwarf-aux.c                        |   62 +-
+ tools/perf/util/machine.c                          |   43 +-
+ tools/perf/util/machine.h                          |    2 -
+ tools/perf/util/map.c                              |  116 +-
+ tools/perf/util/map.h                              |    7 +-
+ tools/perf/util/map_groups.h                       |   21 +-
+ tools/perf/util/metricgroup.c                      |    2 +-
+ tools/perf/util/parse-events.c                     |   78 +-
+ tools/perf/util/parse-events.h                     |    4 +
+ tools/perf/util/probe-event.c                      |   19 +-
+ tools/perf/util/probe-event.h                      |    3 +
+ tools/perf/util/probe-file.c                       |   14 +
+ tools/perf/util/probe-file.h                       |    2 +
+ tools/perf/util/probe-finder.c                     |  116 +-
+ tools/perf/util/probe-finder.h                     |    1 +
+ tools/perf/util/symbol.c                           |   84 +-
+ 66 files changed, 2888 insertions(+), 2366 deletions(-)
