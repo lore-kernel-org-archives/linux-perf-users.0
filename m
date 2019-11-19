@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/25] perf probe: Trace a magic number if variable is not found
-Date: Tue, 19 Nov 2019 08:32:44 -0300
-Message-ID: <20191119113245.19593-25-acme@kernel.org>
+Subject: [PATCH 25/25] perf parse: Report initial event parsing error
+Date: Tue, 19 Nov 2019 08:32:45 -0300
+Message-ID: <20191119113245.19593-26-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,222 +9,319 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Steven Rostedt <rostedt@goodmis.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Allison Randal <allison@lohutok.net>, Andi Kleen <ak@linux.intel.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Davidlohr Bueso <dave@stgolabs.net>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Stephane Eranian <eranian@google>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ian Rogers <irogers@google.com>
 
-Trace a magic number as immediate value if the target variable is not
-found at some probe points which is based on one probe event.
+Record the first event parsing error and report. Implementing feedback
+from Jiri Olsa:
 
-This feature is good for the case if you trace a source code line with
-some local variables, which is compiled into several instructions and
-some of the variables are optimized out on some instructions.
+  https://lkml.org/lkml/2019/10/28/680
 
-Even if so, with this feature, perf probe trace a magic number instead
-of such disappeared variables and fold those probes on one event.
+An example error is:
 
-E.g. without this patch:
+  $ tools/perf/perf stat -e c/c/
+  WARNING: multiple event parsing errors
+  event syntax error: 'c/c/'
+                         \___ unknown term
 
-  # perf probe -D "pud_page_vaddr pud"
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  Failed to find 'pud' in this function.
-  p:probe/pud_page_vaddr _text+23480787 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+23808453 pud=%bp:x64
-  p:probe/pud_page_vaddr _text+23558082 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+328373 pud=%r8:x64
-  p:probe/pud_page_vaddr _text+348448 pud=%bx:x64
-  p:probe/pud_page_vaddr _text+23816818 pud=%bx:x64
+  valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,filter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
 
-With this patch:
+Initial error:
 
-  # perf probe -D "pud_page_vaddr pud" | head
-  spurious_kernel_fault is blacklisted function, skip it.
-  vmalloc_fault is blacklisted function, skip it.
-  p:probe/pud_page_vaddr _text+23480787 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+149051 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+23808453 pud=%bp:x64
-  p:probe/pud_page_vaddr _text+315926 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+23807209 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+23557365 pud=%ax:x64
-  p:probe/pud_page_vaddr _text+314097 pud=%di:x64
-  p:probe/pud_page_vaddr _text+314015 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+313893 pud=\deade12d:x64
-  p:probe/pud_page_vaddr _text+324083 pud=\deade12d:x64
+  event syntax error: 'c/c/'
+                      \___ Cannot find PMU `c'. Missing kernel support?
+  Run 'perf list' for a list of valid events
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+   Usage: perf stat [<options>] [<command>]
+
+      -e, --event <event>   event selector. use 'perf list' to list available events
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>
-Link: http://lore.kernel.org/lkml/157406476931.24476.6261475888681844285.stgit@devnote2
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Richter <tmricht@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20191116074652.9960-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/probe-event.c  |  2 +-
- tools/perf/util/probe-event.h  |  3 ++
- tools/perf/util/probe-finder.c | 62 +++++++++++++++++++++++++++++++---
- tools/perf/util/probe-finder.h |  1 +
- 4 files changed, 63 insertions(+), 5 deletions(-)
+ tools/perf/arch/powerpc/util/kvm-stat.c |  4 +-
+ tools/perf/builtin-stat.c               |  2 +
+ tools/perf/builtin-trace.c              | 16 +++--
+ tools/perf/tests/parse-events.c         |  3 +-
+ tools/perf/util/metricgroup.c           |  2 +-
+ tools/perf/util/parse-events.c          | 78 ++++++++++++++++++-------
+ tools/perf/util/parse-events.h          |  4 ++
+ 7 files changed, 80 insertions(+), 29 deletions(-)
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 8f963a193a5d..52b2d165453a 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -46,7 +46,7 @@
- #define PERFPROBE_GROUP "probe"
+diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+index 9cc1c4a9dec4..16807269317c 100644
+--- a/tools/perf/arch/powerpc/util/kvm-stat.c
++++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+@@ -113,10 +113,10 @@ static int is_tracepoint_available(const char *str, struct evlist *evlist)
+ 	struct parse_events_error err;
+ 	int ret;
  
- bool probe_event_dry_run;	/* Dry run flag */
--struct probe_conf probe_conf;
-+struct probe_conf probe_conf = { .magic_num = DEFAULT_PROBE_MAGIC_NUM };
- 
- #define semantic_error(msg ...) pr_err("Semantic error :" msg)
- 
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 96a319cd2378..4f0eb3a20c36 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -16,10 +16,13 @@ struct probe_conf {
- 	bool	no_inlines;
- 	bool	cache;
- 	int	max_probes;
-+	unsigned long	magic_num;
- };
- extern struct probe_conf probe_conf;
- extern bool probe_event_dry_run;
- 
-+#define DEFAULT_PROBE_MAGIC_NUM	0xdeade12d	/* u32: 3735937325 */
-+
- struct symbol;
- 
- /* kprobe-tracer and uprobe-tracer tracing point */
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 33e90054ad84..38d6cd22779f 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -536,6 +536,14 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		return 0;
- }
- 
-+static void print_var_not_found(const char *varname)
-+{
-+	pr_err("Failed to find the location of the '%s' variable at this address.\n"
-+	       " Perhaps it has been optimized out.\n"
-+	       " Use -V with the --range option to show '%s' location range.\n",
-+		varname, varname);
-+}
-+
- /* Show a variables in kprobe event format */
- static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- {
-@@ -547,11 +555,11 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- 
- 	ret = convert_variable_location(vr_die, pf->addr, pf->fb_ops,
- 					&pf->sp_die, pf->machine, pf->tvar);
-+	if (ret == -ENOENT && pf->skip_empty_arg)
-+		/* This can be found in other place. skip it */
-+		return 0;
- 	if (ret == -ENOENT || ret == -EINVAL) {
--		pr_err("Failed to find the location of the '%s' variable at this address.\n"
--		       " Perhaps it has been optimized out.\n"
--		       " Use -V with the --range option to show '%s' location range.\n",
--		       pf->pvar->var, pf->pvar->var);
-+		print_var_not_found(pf->pvar->var);
- 	} else if (ret == -ENOTSUP)
- 		pr_err("Sorry, we don't support this variable location yet.\n");
- 	else if (ret == 0 && pf->pvar->field) {
-@@ -598,6 +606,8 @@ static int find_variable(Dwarf_Die *sc_die, struct probe_finder *pf)
- 		/* Search again in global variables */
- 		if (!die_find_variable_at(&pf->cu_die, pf->pvar->var,
- 						0, &vr_die)) {
-+			if (pf->skip_empty_arg)
-+				return 0;
- 			pr_warning("Failed to find '%s' in this function.\n",
- 				   pf->pvar->var);
- 			ret = -ENOENT;
-@@ -1384,6 +1394,44 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
+-	err.str = NULL;
++	bzero(&err, sizeof(err));
+ 	ret = parse_events(evlist, str, &err);
+ 	if (err.str)
+-		pr_err("%s : %s\n", str, err.str);
++		parse_events_print_error(&err, "tracepoint");
  	return ret;
  }
  
-+static int fill_empty_trace_arg(struct perf_probe_event *pev,
-+				struct probe_trace_event *tevs, int ntevs)
-+{
-+	char **valp;
-+	char *type;
-+	int i, j, ret;
-+
-+	for (i = 0; i < pev->nargs; i++) {
-+		type = NULL;
-+		for (j = 0; j < ntevs; j++) {
-+			if (tevs[j].args[i].value) {
-+				type = tevs[j].args[i].type;
-+				break;
-+			}
-+		}
-+		if (j == ntevs) {
-+			print_var_not_found(pev->args[i].var);
-+			return -ENOENT;
-+		}
-+		for (j = 0; j < ntevs; j++) {
-+			valp = &tevs[j].args[i].value;
-+			if (*valp)
-+				continue;
-+
-+			ret = asprintf(valp, "\\%lx", probe_conf.magic_num);
-+			if (ret < 0)
-+				return -ENOMEM;
-+			/* Note that type can be NULL */
-+			if (type) {
-+				tevs[j].args[i].type = strdup(type);
-+				if (!tevs[j].args[i].type)
-+					return -ENOMEM;
-+			}
-+		}
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 5964e808d73d..0a15253b438c 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1307,6 +1307,7 @@ static int add_default_attributes(void)
+ 	if (stat_config.null_run)
+ 		return 0;
+ 
++	bzero(&errinfo, sizeof(errinfo));
+ 	if (transaction_run) {
+ 		/* Handle -T as -M transaction. Once platform specific metrics
+ 		 * support has been added to the json files, all archictures
+@@ -1364,6 +1365,7 @@ static int add_default_attributes(void)
+ 			return -1;
+ 		}
+ 		if (err) {
++			parse_events_print_error(&errinfo, smi_cost_attrs);
+ 			fprintf(stderr, "Cannot set up SMI cost events\n");
+ 			return -1;
+ 		}
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 43c05eae1768..46a72ecac427 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -3016,11 +3016,18 @@ static bool evlist__add_vfs_getname(struct evlist *evlist)
+ {
+ 	bool found = false;
+ 	struct evsel *evsel, *tmp;
+-	struct parse_events_error err = { .idx = 0, };
+-	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
++	struct parse_events_error err;
++	int ret;
+ 
+-	if (ret)
++	bzero(&err, sizeof(err));
++	ret = parse_events(evlist, "probe:vfs_getname*", &err);
++	if (ret) {
++		free(err.str);
++		free(err.help);
++		free(err.first_str);
++		free(err.first_help);
+ 		return false;
 +	}
-+	return 0;
+ 
+ 	evlist__for_each_entry_safe(evlist, evsel, tmp) {
+ 		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
+@@ -4832,8 +4839,9 @@ int cmd_trace(int argc, const char **argv)
+ 	 * wrong in more detail.
+ 	 */
+ 	if (trace.perfconfig_events != NULL) {
+-		struct parse_events_error parse_err = { .idx = 0, };
++		struct parse_events_error parse_err;
+ 
++		bzero(&parse_err, sizeof(parse_err));
+ 		err = parse_events(trace.evlist, trace.perfconfig_events, &parse_err);
+ 		if (err) {
+ 			parse_events_print_error(&parse_err, trace.perfconfig_events);
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 25e0ed2eedfc..091c3aeccc27 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1768,10 +1768,11 @@ static struct terms_test test__terms[] = {
+ 
+ static int test_event(struct evlist_test *e)
+ {
+-	struct parse_events_error err = { .idx = 0, };
++	struct parse_events_error err;
+ 	struct evlist *evlist;
+ 	int ret;
+ 
++	bzero(&err, sizeof(err));
+ 	if (e->valid && !e->valid()) {
+ 		pr_debug("... SKIP");
+ 		return 0;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index a7c0424dbda3..6a4d350d5cdb 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -523,7 +523,7 @@ int metricgroup__parse_groups(const struct option *opt,
+ 	if (ret)
+ 		return ret;
+ 	pr_debug("adding %s\n", extra_events.buf);
+-	memset(&parse_error, 0, sizeof(struct parse_events_error));
++	bzero(&parse_error, sizeof(parse_error));
+ 	ret = parse_events(perf_evlist, extra_events.buf, &parse_error);
+ 	if (ret) {
+ 		parse_events_print_error(&parse_error, extra_events.buf);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 6d18ff9bce49..6bae9d6edc12 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -189,12 +189,29 @@ void parse_events__handle_error(struct parse_events_error *err, int idx,
+ 		free(help);
+ 		return;
+ 	}
+-	WARN_ONCE(err->str, "WARNING: multiple event parsing errors\n");
+-	err->idx = idx;
+-	free(err->str);
+-	err->str = str;
+-	free(err->help);
+-	err->help = help;
++	switch (err->num_errors) {
++	case 0:
++		err->idx = idx;
++		err->str = str;
++		err->help = help;
++		break;
++	case 1:
++		err->first_idx = err->idx;
++		err->idx = idx;
++		err->first_str = err->str;
++		err->str = str;
++		err->first_help = err->help;
++		err->help = help;
++		break;
++	default:
++		WARN_ONCE(1, "WARNING: multiple event parsing errors\n");
++		free(err->str);
++		err->str = str;
++		free(err->help);
++		err->help = help;
++		break;
++	}
++	err->num_errors++;
+ }
+ 
+ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+@@ -1349,7 +1366,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 		if (asprintf(&err_str,
+ 				"Cannot find PMU `%s'. Missing kernel support?",
+ 				name) >= 0)
+-			parse_events__handle_error(err, -1, err_str, NULL);
++			parse_events__handle_error(err, 0, err_str, NULL);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2007,15 +2024,14 @@ static int get_term_width(void)
+ 	return ws.ws_col > MAX_WIDTH ? MAX_WIDTH : ws.ws_col;
+ }
+ 
+-void parse_events_print_error(struct parse_events_error *err,
+-			      const char *event)
++static void __parse_events_print_error(int err_idx, const char *err_str,
++				const char *err_help, const char *event)
+ {
+ 	const char *str = "invalid or unsupported event: ";
+ 	char _buf[MAX_WIDTH];
+ 	char *buf = (char *) event;
+ 	int idx = 0;
+-
+-	if (err->str) {
++	if (err_str) {
+ 		/* -2 for extra '' in the final fprintf */
+ 		int width       = get_term_width() - 2;
+ 		int len_event   = strlen(event);
+@@ -2038,8 +2054,8 @@ void parse_events_print_error(struct parse_events_error *err,
+ 		buf = _buf;
+ 
+ 		/* We're cutting from the beginning. */
+-		if (err->idx > max_err_idx)
+-			cut = err->idx - max_err_idx;
++		if (err_idx > max_err_idx)
++			cut = err_idx - max_err_idx;
+ 
+ 		strncpy(buf, event + cut, max_len);
+ 
+@@ -2052,16 +2068,33 @@ void parse_events_print_error(struct parse_events_error *err,
+ 			buf[max_len] = 0;
+ 		}
+ 
+-		idx = len_str + err->idx - cut;
++		idx = len_str + err_idx - cut;
+ 	}
+ 
+ 	fprintf(stderr, "%s'%s'\n", str, buf);
+ 	if (idx) {
+-		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err->str);
+-		if (err->help)
+-			fprintf(stderr, "\n%s\n", err->help);
+-		zfree(&err->str);
+-		zfree(&err->help);
++		fprintf(stderr, "%*s\\___ %s\n", idx + 1, "", err_str);
++		if (err_help)
++			fprintf(stderr, "\n%s\n", err_help);
++	}
 +}
 +
- /* Find probe_trace_events specified by perf_probe_event from debuginfo */
- int debuginfo__find_trace_events(struct debuginfo *dbg,
- 				 struct perf_probe_event *pev,
-@@ -1402,7 +1450,13 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
- 	tf.tevs = *tevs;
- 	tf.ntevs = 0;
++void parse_events_print_error(struct parse_events_error *err,
++			      const char *event)
++{
++	if (!err->num_errors)
++		return;
++
++	__parse_events_print_error(err->idx, err->str, err->help, event);
++	zfree(&err->str);
++	zfree(&err->help);
++
++	if (err->num_errors > 1) {
++		fputs("\nInitial error:\n", stderr);
++		__parse_events_print_error(err->first_idx, err->first_str,
++					err->first_help, event);
++		zfree(&err->first_str);
++		zfree(&err->first_help);
+ 	}
+ }
  
-+	if (pev->nargs != 0 && immediate_value_is_supported())
-+		tf.pf.skip_empty_arg = true;
+@@ -2071,8 +2104,11 @@ int parse_events_option(const struct option *opt, const char *str,
+ 			int unset __maybe_unused)
+ {
+ 	struct evlist *evlist = *(struct evlist **)opt->value;
+-	struct parse_events_error err = { .idx = 0, };
+-	int ret = parse_events(evlist, str, &err);
++	struct parse_events_error err;
++	int ret;
 +
- 	ret = debuginfo__find_probes(dbg, &tf.pf);
-+	if (ret >= 0 && tf.pf.skip_empty_arg)
-+		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
-+
- 	if (ret < 0) {
- 		for (i = 0; i < tf.ntevs; i++)
- 			clear_probe_trace_event(&tf.tevs[i]);
-diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-index 670c477bf8cf..11be10080613 100644
---- a/tools/perf/util/probe-finder.h
-+++ b/tools/perf/util/probe-finder.h
-@@ -87,6 +87,7 @@ struct probe_finder {
- 	unsigned int		machine;	/* Target machine arch */
- 	struct perf_probe_arg	*pvar;		/* Current target variable */
- 	struct probe_trace_arg	*tvar;		/* Current result variable */
-+	bool			skip_empty_arg;	/* Skip non-exist args */
++	bzero(&err, sizeof(err));
++	ret = parse_events(evlist, str, &err);
+ 
+ 	if (ret) {
+ 		parse_events_print_error(&err, str);
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 5ee8ac93840c..ff367f248fe8 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -110,9 +110,13 @@ struct parse_events_term {
  };
  
- struct trace_event_finder {
+ struct parse_events_error {
++	int   num_errors;       /* number of errors encountered */
+ 	int   idx;	/* index in the parsed string */
+ 	char *str;      /* string to display at the index */
+ 	char *help;	/* optional help string */
++	int   first_idx;/* as above, but for the first encountered error */
++	char *first_str;
++	char *first_help;
+ };
+ 
+ struct parse_events_state {
 -- 
 2.21.0
