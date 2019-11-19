@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/25] perf machine: No need to check if kernel module maps pre-exist
-Date: Tue, 19 Nov 2019 08:32:30 -0300
-Message-ID: <20191119113245.19593-11-acme@kernel.org>
+Subject: [PATCH 09/25] perf record: No need to process the synthesized MMAP events twice
+Date: Tue, 19 Nov 2019 08:32:29 -0300
+Message-ID: <20191119113245.19593-10-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,98 +14,73 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We'only populating maps for kernel modules either from perf.data file
-PERF_RECORD_MMAP records or when parsing /proc/modules, so there is no
-need to first look if we already have those module maps in the list,
-that would mean the kernel has duplicate entries.
+At the end of a 'perf record' session, by default, we'll process all
+samples and populate the threads, maps, etc so as to find out which of
+the DSOs got samples, to reduce the size of the build-id table we'll
+add to the perf.data headers.
 
-So ditch one use of looking up maps by name.
+But we don't need to process the PERF_RECORD_MMAP events synthesized
+for the kernel modules, as we have those already via
+perf_session__create_kernel_maps(), so add mmap/mmap2 handlers that
+first look at event->header.misc to see if the event is for a user map,
+bailing out if not.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-gnzjg2hhuz6jnrw91m35059y@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-mofoxvcx2dryppcw3o689jdd@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 16 ++++++----------
- tools/perf/util/machine.h |  2 --
- tools/perf/util/symbol.c  |  2 +-
- 3 files changed, 7 insertions(+), 13 deletions(-)
+ tools/perf/builtin-record.c | 29 +++++++++++++++++++++++++++--
+ 1 file changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 6804c8247782..7d2e211e376c 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -772,20 +772,16 @@ int machine__process_ksymbol(struct machine *machine __maybe_unused,
- 	return machine__process_ksymbol_register(machine, event, sample);
- }
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index b95c000c1ed9..7ab3110b4035 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2148,6 +2148,31 @@ static const char * const __record_usage[] = {
+ };
+ const char * const *record_usage = __record_usage;
  
--struct map *machine__findnew_module_map(struct machine *machine, u64 start,
--					const char *filename)
-+static struct map *machine__addnew_module_map(struct machine *machine, u64 start,
-+					      const char *filename)
- {
- 	struct map *map = NULL;
--	struct dso *dso = NULL;
- 	struct kmod_path m;
-+	struct dso *dso;
- 
- 	if (kmod_path__parse_name(&m, filename))
- 		return NULL;
- 
--	map = map_groups__find_by_name(&machine->kmaps, m.name);
--	if (map)
--		goto out;
--
- 	dso = machine__findnew_module_dso(machine, &m, filename);
- 	if (dso == NULL)
- 		goto out;
-@@ -1384,7 +1380,7 @@ static int machine__create_module(void *arg, const char *name, u64 start,
- 	if (arch__fix_module_text_start(&start, &size, name) < 0)
- 		return -1;
- 
--	map = machine__findnew_module_map(machine, start, name);
-+	map = machine__addnew_module_map(machine, start, name);
- 	if (map == NULL)
- 		return -1;
- 	map->end = start + size;
-@@ -1559,8 +1555,8 @@ static int machine__process_kernel_mmap_event(struct machine *machine,
- 				strlen(machine->mmap_name) - 1) == 0;
- 	if (event->mmap.filename[0] == '/' ||
- 	    (!is_kernel_mmap && event->mmap.filename[0] == '[')) {
--		map = machine__findnew_module_map(machine, event->mmap.start,
--						  event->mmap.filename);
-+		map = machine__addnew_module_map(machine, event->mmap.start,
-+						 event->mmap.filename);
- 		if (map == NULL)
- 			goto out_problem;
- 
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index 18e13c0ccd6a..1016978f575a 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -221,8 +221,6 @@ struct symbol *machine__find_kernel_symbol_by_name(struct machine *machine,
- 	return map_groups__find_symbol_by_name(&machine->kmaps, name, mapp);
- }
- 
--struct map *machine__findnew_module_map(struct machine *machine, u64 start,
--					const char *filename);
- int arch__fix_module_text_start(u64 *start, u64 *size, const char *name);
- 
- int machine__load_kallsyms(struct machine *machine, const char *filename);
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index b146d87176e7..b5ae82a11d4b 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1530,7 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
- 	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
- 		/*
- 		 * kernel modules know their symtab type - it's set when
--		 * creating a module dso in machine__findnew_module_map().
-+		 * creating a module dso in machine__addnew_module_map().
- 		 */
- 		return kmod && dso->symtab_type == type;
- 
++static int build_id__process_mmap(struct perf_tool *tool, union perf_event *event,
++				  struct perf_sample *sample, struct machine *machine)
++{
++	/*
++	 * We already have the kernel maps, put in place via perf_session__create_kernel_maps()
++	 * no need to add them twice.
++	 */
++	if (!(event->header.misc & PERF_RECORD_MISC_USER))
++		return 0;
++	return perf_event__process_mmap(tool, event, sample, machine);
++}
++
++static int build_id__process_mmap2(struct perf_tool *tool, union perf_event *event,
++				   struct perf_sample *sample, struct machine *machine)
++{
++	/*
++	 * We already have the kernel maps, put in place via perf_session__create_kernel_maps()
++	 * no need to add them twice.
++	 */
++	if (!(event->header.misc & PERF_RECORD_MISC_USER))
++		return 0;
++
++	return perf_event__process_mmap2(tool, event, sample, machine);
++}
++
+ /*
+  * XXX Ideally would be local to cmd_record() and passed to a record__new
+  * because we need to have access to it in record__exit, that is called
+@@ -2177,8 +2202,8 @@ static struct record record = {
+ 		.exit		= perf_event__process_exit,
+ 		.comm		= perf_event__process_comm,
+ 		.namespaces	= perf_event__process_namespaces,
+-		.mmap		= perf_event__process_mmap,
+-		.mmap2		= perf_event__process_mmap2,
++		.mmap		= build_id__process_mmap,
++		.mmap2		= build_id__process_mmap2,
+ 		.ordered_events	= true,
+ 	},
+ };
 -- 
 2.21.0
