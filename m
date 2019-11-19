@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/25] libtraceevent: Fix parsing of event %o and %X argument types
-Date: Tue, 19 Nov 2019 08:32:33 -0300
-Message-ID: <20191119113245.19593-14-acme@kernel.org>
+Subject: [PATCH 14/25] perf map: Use bitmap for booleans
+Date: Tue, 19 Nov 2019 08:32:34 -0300
+Message-ID: <20191119113245.19593-15-acme@kernel.org>
 References: <20191119113245.19593-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,50 +9,81 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add missing "%o" and "%X". Ext4 events use "%o" for printing i_mode.
+The map->priv and map->erange_warned are seldom used, the first only in
+tests/vmlinux-kallsyms.c, the later only when hist_entry__inc_addr_samples()
+returns -ERANGE in 'perf top', which are really rare occasions, so make
+them a bool bitfield.
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-Link: http://lore.kernel.org/lkml/157338066113.6548.11461421296091086041.stgit@buzz
+This will open up space for other members on the first cacheline.
+
+  $ pahole -C map ~/bin/perf
+  struct map {
+  	union {
+  		struct rb_node rb_node __attribute__((__aligned__(8))); /*     0    24 */
+  		struct list_head node;                   /*     0    16 */
+  	} __attribute__((__aligned__(8)));                                               /*     0    24 */
+  	u64                        start;                /*    24     8 */
+  	u64                        end;                  /*    32     8 */
+  	_Bool                      erange_warned:1;      /*    40: 0  1 */
+  	_Bool                      priv:1;               /*    40: 1  1 */
+
+  	/* XXX 6 bits hole, try to pack */
+  	/* XXX 3 bytes hole, try to pack */
+
+  	u32                        prot;                 /*    44     4 */
+  	u32                        flags;                /*    48     4 */
+
+  	/* XXX 4 bytes hole, try to pack */
+
+  	u64                        pgoff;                /*    56     8 */
+  	/* --- cacheline 1 boundary (64 bytes) --- */
+  	u64                        reloc;                /*    64     8 */
+  	u32                        maj;                  /*    72     4 */
+  	u32                        min;                  /*    76     4 */
+  	u64                        ino;                  /*    80     8 */
+  	u64                        ino_generation;       /*    88     8 */
+  	u64                        (*map_ip)(struct map *, u64); /*    96     8 */
+  	u64                        (*unmap_ip)(struct map *, u64); /*   104     8 */
+  	struct dso *               dso;                  /*   112     8 */
+  	refcount_t                 refcnt;               /*   120     4 */
+
+  	/* size: 128, cachelines: 2, members: 17 */
+  	/* sum members: 116, holes: 2, sum holes: 7 */
+  	/* sum bitfield members: 2 bits, bit holes: 1, sum bit holes: 6 bits */
+  	/* padding: 4 */
+  	/* forced alignments: 1 */
+  } __attribute__((__aligned__(8)));
+  $
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-g5545pcq4ff0wr17tfb1piqt@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/map.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index d948475585ce..beaa8b8c08ff 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -4395,8 +4395,10 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
- 				/* fall through */
- 			case 'd':
- 			case 'u':
--			case 'x':
- 			case 'i':
-+			case 'x':
-+			case 'X':
-+			case 'o':
- 				switch (ls) {
- 				case 0:
- 					vsize = 4;
-@@ -5078,10 +5080,11 @@ static void pretty_print(struct trace_seq *s, void *data, int size, struct tep_e
- 
- 				/* fall through */
- 			case 'd':
-+			case 'u':
- 			case 'i':
- 			case 'x':
- 			case 'X':
--			case 'u':
-+			case 'o':
- 				if (!arg) {
- 					do_warning_event(event, "no argument match");
- 					event->flags |= TEP_EVENT_FL_FAILED;
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index a31e80991189..e2466aa5bb41 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -25,8 +25,8 @@ struct map {
+ 	};
+ 	u64			start;
+ 	u64			end;
+-	bool			erange_warned;
+-	u32			priv;
++	bool			erange_warned:1;
++	bool			priv:1;
+ 	u32			prot;
+ 	u32			flags;
+ 	u64			pgoff;
 -- 
 2.21.0
