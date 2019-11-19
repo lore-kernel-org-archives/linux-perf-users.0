@@ -1,124 +1,154 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Tue, 19 Nov 2019 13:00:34 +0100
-Message-ID: <20191119120034.GA124098@gmail.com>
-References: <20191119113245.19593-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH] Perf stat: Fix the ratio comments of miss-events
+Date: Tue, 19 Nov 2019 12:59:36 -0300
+Message-ID: <20191119155936.GC24290@kernel.org>
+References: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191119113245.19593-1-acme@kernel.org>
+In-Reply-To: <1573890521-56450-1-git-send-email-liuqi115@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: lqqq341 <liuqi115@hisilicon.com>
+Cc: peterz@infradead.org, mingo@redhat.com, ak@linux.intel.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linuxarm@huawei.com, john.garry@huawei.com, zhangshaokun@hisilicon.com, huangdaode@hisilicon.com, linyunsheng@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Sat, Nov 16, 2019 at 03:48:41PM +0800, lqqq341 escreveu:
+> From: Qi Liu <liuqi115@hisilicon.com>
+> 
+> Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
+> iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
+> is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
+> L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
+> accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
+> cache and LL-cache are fixed in the same way.
+> 
+> Signed-off-by: Qi Liu <liuqi115@hisilicon.com>
+> ---
+>  tools/perf/util/stat-shadow.c | 30 ++++++++++++++++++++----------
+>  1 file changed, 20 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 2c41d47..a3bdf2b 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -506,7 +506,8 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+>  
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all L1-dcache accesses", ratio);
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> 
-> The following changes since commit e1e9b78d3957a267346a86c8f2c433f6a332af65:
-> 
->   perf parse: Use YYABORT to clear stack after failure, plugging leaks (2019-11-12 08:34:16 -0300)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191119
-> 
-> for you to fetch changes up to a910e4666d61712840c78de33cc7f89de8affa78:
-> 
->   perf parse: Report initial event parsing error (2019-11-18 19:14:29 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> x86/insn:
-> 
->   Adrian Hunter:
-> 
->   - Add some more Intel instructions to the opcode map:
-> 
->         cldemote, encls, enclu, enclv, enqcmd, enqcmds, movdir64b,
->         movdiri, pconfig, tpause, umonitor, umwait, wbnoinvd.
-> 
->   - The instruction decoding can be tested using the perf tools'
->     "x86 instruction decoder - new instructions" test as folllows:
-> 
->     $ perf test -v "new " 2>&1 | grep -i cldemote
->     Decoded ok: 0f 1c 00                    cldemote (%eax)
->     Decoded ok: 0f 1c 05 78 56 34 12        cldemote 0x12345678
->     Decoded ok: 0f 1c 84 c8 78 56 34 12     cldemote 0x12345678(%eax,%ecx,8)
->     Decoded ok: 0f 1c 00                    cldemote (%rax)
->     Decoded ok: 41 0f 1c 00                 cldemote (%r8)
->     Decoded ok: 0f 1c 04 25 78 56 34 12     cldemote 0x12345678
->     Decoded ok: 0f 1c 84 c8 78 56 34 12     cldemote 0x12345678(%rax,%rcx,8)
->     Decoded ok: 41 0f 1c 84 c8 78 56 34 12  cldemote 0x12345678(%r8,%rcx,8)
->     $ perf test -v "new " 2>&1 | grep -i tpause
->     Decoded ok: 66 0f ae f3                 tpause %ebx
->     Decoded ok: 66 0f ae f3                 tpause %ebx
->     Decoded ok: 66 41 0f ae f0              tpause %r8d
-> 
-> callchains:
-> 
->   Adrian Hunter:
-> 
->   - Fix segfault in thread__resolve_callchain_sample().
-> 
-> perf probe:
-> 
->   - Line fixes to show only lines where probes can be used with 'perf probe -L',
->     and when reporting them via 'perf probe -l'.
-> 
->   - Support multiprobe events.
-> 
-> perf scripts python:
-> 
->   Adrian Hunter:
-> 
->   - Fix use of TRUE with SQLite < 3.23 in exported-sql-viewer.py.
-> 
-> perf maps:
-> 
->   - Trim 'struct map' by removing the rb_node member for sorting
->     by map name, as that is only needed for processing kernel maps,
->     and only when classifying symbols by section at load time.
->     Sort them by name using qsort() and do lookups using bsearch()
->     when map_groups__find_by_name() is used.
-> 
-> perf parse:
-> 
->   Ian Rogers:
-> 
->   - Report initial event parsing error, providing a less cryptic message
->     to state that a PMU wasn't found in the system.
-> 
-> perf vendor events:
-> 
->   James Clark:
-> 
->   - Fix commas so that PMU event files for arm64, power8 and power nine
->     become valid JSON.
-> 
-> libtraceevent:
-> 
->   Konstantin Khlebnikov:
-> 
->   - Fix parsing of event %o and %X argument types.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
+Why have you reflowed all those lines? This patch should have been like:
 
->  66 files changed, 2888 insertions(+), 2366 deletions(-)
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
 
-Pulled, thanks a lot Arnaldo!
+Notice how it is easier to compare the changes, and also to keep the
+flowing like it was before your change,
 
-	Ingo
+Thanks,
+
+- Arnaldo
+
+>  }
+>  
+>  static void print_l1_icache_misses(struct perf_stat_config *config,
+> @@ -527,7 +528,8 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all L1-icache accesses", ratio);
+>  }
+>  
+>  static void print_dtlb_cache_misses(struct perf_stat_config *config,
+> @@ -547,7 +549,8 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all dTLB cache accesses", ratio);
+>  }
+>  
+>  static void print_itlb_cache_misses(struct perf_stat_config *config,
+> @@ -567,7 +570,8 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all iTLB cache accesses", ratio);
+>  }
+>  
+>  static void print_ll_cache_misses(struct perf_stat_config *config,
+> @@ -587,7 +591,8 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+>  		ratio = avg / total * 100.0;
+>  
+>  	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+> -	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
+> +	out->print_metric(config, out->ctx, color, "%7.2f%%",
+> +			  "of all LL-cache accesses", ratio);
+>  }
+>  
+>  /*
+> @@ -872,7 +877,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
+>  			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all L1-dcache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
+> @@ -882,7 +888,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
+>  			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all L1-icache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
+> @@ -892,7 +899,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
+>  			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all dTLB cache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
+> @@ -902,7 +910,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
+>  			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all iTLB cache accesses", 0);
+>  	} else if (
+>  		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+>  		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
+> @@ -912,7 +921,8 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>  		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
+>  			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
+>  		else
+> -			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
+> +			print_metric(config, ctxp, NULL, NULL,
+> +				     "of all LL-cache accesses", 0);
+>  	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
+>  		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
+>  
+> -- 
+> 2.8.1
+
+-- 
+
+- Arnaldo
