@@ -1,117 +1,86 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH] tools/perf/metricgroup: Fix printing event names of metric group with multiple events
-Date: Wed, 20 Nov 2019 14:10:59 +0530
-Message-ID: <20191120084059.24458-1-kjain@linux.ibm.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: linux-next: Tree for Nov 20
+Date: Wed, 20 Nov 2019 16:52:28 +0530
+Message-ID: <CA+G9fYufQjPVsDATdyDn+xtxD1FrwnVGKJ+bpVAxvoropJ=7hg@mail.gmail.com>
+References: <20191120203434.2a0727b3@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191120203434.2a0727b3@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kjain@linux.ibm.com, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@linaro.org>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: linux-perf-users.vger.kernel.org
 
-Commit f01642e4912b ("perf metricgroup: Support multiple
-events for metricgroup") introduced support for multiple events
-in a metric group. But with the current upstream, metric events
-names are not printed properly
+Perf build failed on linux next for i386 and armv7.
 
-In power9 platform:
-command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
-     1.000208486
-     2.000368863
-     2.001400558
+On Wed, 20 Nov 2019 at 15:04, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Changes since 20191119:
+>
+> The net tree gained a conflict against Linus' tree.
+>
+> Non-merge commits (relative to Linus' tree): 11697
+>  10361 files changed, 506041 insertions(+), 224327 deletions(-)
 
-Similarly in skylake platform:
-command:./perf stat --metric-only -M Power -I 1000
-     1.000579994
-     2.002189493
+i386 build failed log,
+---------------------------
+ In file included from libbpf.c:52:0:
+ libbpf.c: In function 'bpf_program__collect_reloc':
+ libbpf_internal.h:59:22: error: format '%lu' expects argument of type
+ 'long unsigned int', but argument 3 has type 'Elf64_Addr {aka long
+long unsigned int}' [-Werror=format=]
+   libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+                       ^
+ libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+  #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+                            ^~~~
+ libbpf.c:1874:5: note: in expansion of macro 'pr_warn'
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+      ^~~~~~~
+ libbpf.c:1874:38: note: format string is defined here
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+                                     ~~^
+                                     %llu
+ Makefile:652: arch/x86/Makefile: No such file or directory
+ cc1: all warnings being treated as errors
 
-With current upstream version, issue is with event name comparison
-logic in find_evsel_group(). Current logic is to compare events
-belonging to a metric group to the events in perf_evlist.
-Since the break statement is missing in the loop used for comparison
-between metric group and perf_evlist events, the loop continues to
-execute even after getting a pattern match, and end up in discarding
-the matches.
-Incase of single metric event belongs to metric group, its working fine,
-because in case of single event once it compare all events it reaches to
-end of perf_evlist.
+ find: unknown predicate `-m32/arch'
 
-Example for single metric event in power9 platform
-command:# ./perf stat --metric-only  -M branches_per_inst -I 1000 sleep 1
-     1.000094653                  0.2
-     1.001337059                  0.0
+ Try 'find --help' for more information.
+   CC       perf/1.0-r9/perf-1.0/staticobjs/libbpf_probes.o
+ i686-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+   CC       perf/1.0-r9/perf-1.0/staticobjs/xsk.o
+ i686-linaro-linux-gcc: error: unrecognized command line option
+'-m32/include/uapi/asm-generic/errno.h'
+ i686-linaro-linux-gcc: fatal error: no input files
+ compilation terminated.
 
-Patch fixes the issue by making sure once we found all events
-belongs to that metric event matched in find_evsel_group(), we
-successfully break from that loop by adding corresponding condition.
+arm build log:
+------------------
+ Makefile:652: arch/arm/Makefile: No such file or directory
+ In file included from libbpf.c:52:0:
+ libbpf.c: In function 'bpf_program__collect_reloc':
+ libbpf_internal.h:59:22: error: format '%lu' expects argument of type
+ 'long unsigned int', but argument 3 has type 'Elf64_Addr {aka long
+long unsigned int}' [-Werror=format=]
+   libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+                       ^
+ libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+  #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+                            ^~~~
+ libbpf.c:1874:5: note: in expansion of macro 'pr_warn'
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+      ^~~~~~~
+ libbpf.c:1874:38: note: format string is defined here
+      pr_warn("bad call relo offset: %lu\n", sym.st_value);
+                                     ~~^
+                                     %llu
 
-With this patch:
-In power9 platform:
+ref:
+https://ci.linaro.org/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/650/consoleText
+https://ci.linaro.org/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/650/consoleText
 
-command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
-result:#           time derat_4k_miss_rate_percent  derat_4k_miss_ratio
-     derat_miss_ratio derat_64k_miss_rate_percent derat_64k_miss_ratio
-         dslb_miss_rate_percent islb_miss_rate_percent
-     1.000135672                         0.0                  0.3
-                  1.0                          0.0                  0.2
-                 0.0                     0.0
-     2.000380617                         0.0                  0.0
-                                              0.0                  0.0
-                0.0                     0.0
-
-command:# ./perf stat --metric-only -M Power -I 1000
-
-Similarly in skylake platform:
-result:#           time    Turbo_Utilization    C3_Core_Residency
-            C6_Core_Residency    C7_Core_Residency     C2_Pkg_Residency
-             C3_Pkg_Residency     C6_Pkg_Residency     C7_Pkg_Residency
-     1.000563580                  0.3                  0.0
-                  2.6                44.2                 21.9
-                  0.0                  0.0                  0.0
-     2.002235027                  0.4                  0.0
-                  2.7           43.0                 20.7
-                  0.0                  0.0               0.0
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- tools/perf/util/metricgroup.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index a7c0424dbda3..940a6e7a6854 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -103,8 +103,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 		if (!strcmp(ev->name, ids[i])) {
- 			if (!metric_events[i])
- 				metric_events[i] = ev;
-+			i++;
-+			if (i == idnum)
-+				break;
- 		} else {
--			if (++i == idnum) {
-+			if (i + 1 == idnum) {
- 				/* Discard the whole match and start again */
- 				i = 0;
- 				memset(metric_events, 0,
-@@ -124,7 +127,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 		}
- 	}
- 
--	if (i != idnum - 1) {
-+	if (i != idnum) {
- 		/* Not whole match */
- 		return NULL;
- 	}
--- 
-2.21.0
+- Naresh
