@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/26] perf record: Add aux-sample-size config term
-Date: Fri, 22 Nov 2019 11:56:59 -0300
-Message-ID: <20191122145711.3171-15-acme@kernel.org>
+Subject: [PATCH 18/26] perf auxtrace: Add support for queuing AUX area samples
+Date: Fri, 22 Nov 2019 11:57:03 -0300
+Message-ID: <20191122145711.3171-19-acme@kernel.org>
 References: <20191122145711.3171-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,287 +14,184 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-To allow individual events to be selected for AUX area sampling, add
-aux-sample-size config term. attr.aux_sample_size is updated by
-auxtrace_parse_sample_options() so that the existing validation will see
-the value. Any event that has a non-zero aux_sample_size will cause AUX
-area sampling to be configured, irrespective of the --aux-sample option.
+Add functions to queue AUX area samples in advance
+(auxtrace_queue_data()) or individually (auxtrace_queues__add_sample())
+or find out what queue a sample belongs on
+(auxtrace_queues__sample_queue()).
+
+auxtrace_queue_data() can also queue snapshot data which keeps snapshots
+and samples ordered with respect to each other in case support for that
+is desired.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-8-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-12-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-record.txt |  3 +
- tools/perf/util/auxtrace.c               | 76 +++++++++++++++++++++++-
- tools/perf/util/evsel.c                  | 16 +++++
- tools/perf/util/evsel_config.h           | 11 ++++
- tools/perf/util/parse-events.c           | 14 +++++
- tools/perf/util/parse-events.h           |  1 +
- tools/perf/util/parse-events.l           |  1 +
- 7 files changed, 121 insertions(+), 1 deletion(-)
+ tools/perf/util/auxtrace.c | 107 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/auxtrace.h |  15 ++++++
+ 2 files changed, 122 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index e216d7b529c9..b23a4012a606 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -62,6 +62,9 @@ OPTIONS
- 		    like this: name=\'CPU_CLK_UNHALTED.THREAD:cmask=0x1\'.
- 	  - 'aux-output': Generate AUX records instead of events. This requires
- 			  that an AUX area event is also provided.
-+	  - 'aux-sample-size': Set sample size for AUX area sampling. If the
-+	  '--aux-sample' option has been used, set aux-sample-size=0 to disable
-+	  AUX area sampling for the event.
- 
-           See the linkperf:perf-list[1] man page for more parameters.
- 
 diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 51fbe01f8a11..026585b67a3c 100644
+index 4f5c5fe3516b..eb087e7df6f4 100644
 --- a/tools/perf/util/auxtrace.c
 +++ b/tools/perf/util/auxtrace.c
-@@ -31,6 +31,7 @@
- #include "map.h"
- #include "pmu.h"
- #include "evsel.h"
-+#include "evsel_config.h"
- #include "symbol.h"
- #include "util/synthetic-events.h"
- #include "thread_map.h"
-@@ -76,6 +77,53 @@ static bool perf_evsel__is_aux_event(struct evsel *evsel)
- 	return pmu && pmu->auxtrace;
+@@ -1004,6 +1004,113 @@ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
+ 	}
  }
  
-+/*
-+ * Make a group from 'leader' to 'last', requiring that the events were not
-+ * already grouped to a different leader.
-+ */
-+static int perf_evlist__regroup(struct evlist *evlist,
-+				struct evsel *leader,
-+				struct evsel *last)
++struct auxtrace_queue *auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
++						     struct perf_sample *sample,
++						     struct perf_session *session)
 +{
-+	struct evsel *evsel;
-+	bool grp;
++	struct perf_sample_id *sid;
++	unsigned int idx;
++	u64 id;
 +
-+	if (!perf_evsel__is_group_leader(leader))
-+		return -EINVAL;
++	id = sample->id;
++	if (!id)
++		return NULL;
 +
-+	grp = false;
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (grp) {
-+			if (!(evsel->leader == leader ||
-+			     (evsel->leader == evsel &&
-+			      evsel->core.nr_members <= 1)))
-+				return -EINVAL;
-+		} else if (evsel == leader) {
-+			grp = true;
-+		}
-+		if (evsel == last)
-+			break;
-+	}
++	sid = perf_evlist__id2sid(session->evlist, id);
++	if (!sid)
++		return NULL;
 +
-+	grp = false;
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (grp) {
-+			if (evsel->leader != leader) {
-+				evsel->leader = leader;
-+				if (leader->core.nr_members < 1)
-+					leader->core.nr_members = 1;
-+				leader->core.nr_members += 1;
-+			}
-+		} else if (evsel == leader) {
-+			grp = true;
-+		}
-+		if (evsel == last)
-+			break;
-+	}
++	idx = sid->idx;
 +
-+	return 0;
++	if (idx >= queues->nr_queues)
++		return NULL;
++
++	return &queues->queue_array[idx];
 +}
 +
- static bool auxtrace__dont_decode(struct perf_session *session)
- {
- 	return !session->itrace_synth_opts ||
-@@ -679,13 +727,16 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 				  struct evlist *evlist,
- 				  struct record_opts *opts, const char *str)
- {
-+	struct perf_evsel_config_term *term;
-+	struct evsel *aux_evsel;
-+	bool has_aux_sample_size = false;
- 	bool has_aux_leader = false;
- 	struct evsel *evsel;
- 	char *endptr;
- 	unsigned long sz;
- 
- 	if (!str)
--		return 0;
-+		goto no_opt;
- 
- 	if (!itr) {
- 		pr_err("No AUX area event to sample\n");
-@@ -712,6 +763,29 @@ int auxtrace_parse_sample_options(struct auxtrace_record *itr,
- 			evsel->core.attr.aux_sample_size = sz;
- 		}
- 	}
-+no_opt:
-+	aux_evsel = NULL;
-+	/* Override with aux_sample_size from config term */
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (perf_evsel__is_aux_event(evsel))
-+			aux_evsel = evsel;
-+		term = perf_evsel__get_config_term(evsel, AUX_SAMPLE_SIZE);
-+		if (term) {
-+			has_aux_sample_size = true;
-+			evsel->core.attr.aux_sample_size = term->val.aux_sample_size;
-+			/* If possible, group with the AUX event */
-+			if (aux_evsel && evsel->core.attr.aux_sample_size)
-+				perf_evlist__regroup(evlist, aux_evsel, evsel);
-+		}
++int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
++				struct perf_session *session,
++				struct perf_sample *sample, u64 data_offset,
++				u64 reference)
++{
++	struct auxtrace_buffer buffer = {
++		.pid = -1,
++		.data_offset = data_offset,
++		.reference = reference,
++		.size = sample->aux_sample.size,
++	};
++	struct perf_sample_id *sid;
++	u64 id = sample->id;
++	unsigned int idx;
++
++	if (!id)
++		return -EINVAL;
++
++	sid = perf_evlist__id2sid(session->evlist, id);
++	if (!sid)
++		return -ENOENT;
++
++	idx = sid->idx;
++	buffer.tid = sid->tid;
++	buffer.cpu = sid->cpu;
++
++	return auxtrace_queues__add_buffer(queues, session, idx, &buffer, NULL);
++}
++
++struct queue_data {
++	bool samples;
++	bool events;
++};
++
++static int auxtrace_queue_data_cb(struct perf_session *session,
++				  union perf_event *event, u64 offset,
++				  void *data)
++{
++	struct queue_data *qd = data;
++	struct perf_sample sample;
++	int err;
++
++	if (qd->events && event->header.type == PERF_RECORD_AUXTRACE) {
++		if (event->header.size < sizeof(struct perf_record_auxtrace))
++			return -EINVAL;
++		offset += event->header.size;
++		return session->auxtrace->queue_data(session, NULL, event,
++						     offset);
 +	}
 +
-+	if (!str && !has_aux_sample_size)
++	if (!qd->samples || event->header.type != PERF_RECORD_SAMPLE)
 +		return 0;
 +
-+	if (!itr) {
-+		pr_err("No AUX area event to sample\n");
-+		return -EINVAL;
-+	}
- 
- 	return auxtrace_validate_aux_sample_size(evlist, opts);
- }
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 772f4879c492..ad7665a546cf 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -846,6 +846,9 @@ static void apply_config_terms(struct evsel *evsel,
- 		case PERF_EVSEL__CONFIG_TERM_AUX_OUTPUT:
- 			attr->aux_output = term->val.aux_output ? 1 : 0;
- 			break;
-+		case PERF_EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE:
-+			/* Already applied by auxtrace */
-+			break;
- 		default:
- 			break;
- 		}
-@@ -905,6 +908,19 @@ static bool is_dummy_event(struct evsel *evsel)
- 	       (evsel->core.attr.config == PERF_COUNT_SW_DUMMY);
- }
- 
-+struct perf_evsel_config_term *__perf_evsel__get_config_term(struct evsel *evsel,
-+							     enum evsel_term_type type)
-+{
-+	struct perf_evsel_config_term *term, *found_term = NULL;
++	err = perf_evlist__parse_sample(session->evlist, event, &sample);
++	if (err)
++		return err;
 +
-+	list_for_each_entry(term, &evsel->config_terms, list) {
-+		if (term->type == type)
-+			found_term = term;
-+	}
++	if (!sample.aux_sample.size)
++		return 0;
 +
-+	return found_term;
++	offset += sample.aux_sample.data - (void *)event;
++
++	return session->auxtrace->queue_data(session, &sample, NULL, offset);
 +}
 +
- /*
-  * The enable_on_exec/disabled value strategy:
-  *
-diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
-index 8a7648037c18..6e654ede8fbe 100644
---- a/tools/perf/util/evsel_config.h
-+++ b/tools/perf/util/evsel_config.h
-@@ -25,6 +25,7 @@ enum evsel_term_type {
- 	PERF_EVSEL__CONFIG_TERM_BRANCH,
- 	PERF_EVSEL__CONFIG_TERM_PERCORE,
- 	PERF_EVSEL__CONFIG_TERM_AUX_OUTPUT,
-+	PERF_EVSEL__CONFIG_TERM_AUX_SAMPLE_SIZE,
- };
- 
- struct perf_evsel_config_term {
-@@ -44,7 +45,17 @@ struct perf_evsel_config_term {
- 		unsigned long max_events;
- 		bool	      percore;
- 		bool	      aux_output;
-+		u32	      aux_sample_size;
- 	} val;
- 	bool weak;
- };
++int auxtrace_queue_data(struct perf_session *session, bool samples, bool events)
++{
++	struct queue_data qd = {
++		.samples = samples,
++		.events = events,
++	};
 +
-+struct evsel;
++	if (auxtrace__dont_decode(session))
++		return 0;
 +
-+struct perf_evsel_config_term *__perf_evsel__get_config_term(struct evsel *evsel,
-+							     enum evsel_term_type type);
++	if (!session->auxtrace || !session->auxtrace->queue_data)
++		return -EINVAL;
 +
-+#define perf_evsel__get_config_term(evsel, type) \
-+	__perf_evsel__get_config_term(evsel, PERF_EVSEL__CONFIG_TERM_ ## type)
++	return perf_session__peek_events(session, session->header.data_offset,
++					 session->header.data_size,
++					 auxtrace_queue_data_cb, &qd);
++}
 +
- #endif // __PERF_EVSEL_CONFIG_H
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6bae9d6edc12..fc5e27bc8315 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -996,6 +996,7 @@ static const char *config_term_names[__PARSE_EVENTS__TERM_TYPE_NR] = {
- 	[PARSE_EVENTS__TERM_TYPE_DRV_CFG]		= "driver-config",
- 	[PARSE_EVENTS__TERM_TYPE_PERCORE]		= "percore",
- 	[PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT]		= "aux-output",
-+	[PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE]	= "aux-sample-size",
- };
- 
- static bool config_term_shrinked;
-@@ -1126,6 +1127,15 @@ do {									   \
- 	case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
- 		CHECK_TYPE_VAL(NUM);
- 		break;
-+	case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
-+		CHECK_TYPE_VAL(NUM);
-+		if (term->val.num > UINT_MAX) {
-+			parse_events__handle_error(err, term->err_val,
-+						strdup("too big"),
-+						NULL);
-+			return -EINVAL;
-+		}
-+		break;
- 	default:
- 		parse_events__handle_error(err, term->err_term,
- 				strdup("unknown term"),
-@@ -1177,6 +1187,7 @@ static int config_term_tracepoint(struct perf_event_attr *attr,
- 	case PARSE_EVENTS__TERM_TYPE_OVERWRITE:
- 	case PARSE_EVENTS__TERM_TYPE_NOOVERWRITE:
- 	case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
-+	case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
- 		return config_term_common(attr, term, err);
- 	default:
- 		if (err) {
-@@ -1272,6 +1283,9 @@ do {								\
- 		case PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT:
- 			ADD_CONFIG_TERM(AUX_OUTPUT, aux_output, term->val.num ? 1 : 0);
- 			break;
-+		case PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE:
-+			ADD_CONFIG_TERM(AUX_SAMPLE_SIZE, aux_sample_size, term->val.num);
-+			break;
- 		default:
- 			break;
- 		}
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index ff367f248fe8..27596cbd0ba0 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -77,6 +77,7 @@ enum {
- 	PARSE_EVENTS__TERM_TYPE_DRV_CFG,
- 	PARSE_EVENTS__TERM_TYPE_PERCORE,
- 	PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT,
-+	PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE,
- 	__PARSE_EVENTS__TERM_TYPE_NR,
- };
- 
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 7469497cd28e..7b1c8ee537cf 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -285,6 +285,7 @@ overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_OVERWRITE); }
- no-overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOOVERWRITE); }
- percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
- aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
-+aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
- ,			{ return ','; }
- "/"			{ BEGIN(INITIAL); return '/'; }
- {name_minus}		{ return str(yyscanner, PE_NAME); }
+ void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd)
+ {
+ 	size_t adj = buffer->data_offset & (page_size - 1);
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 4a8ac7de6e22..749d72cd9c7b 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -141,6 +141,8 @@ struct auxtrace_index {
+  * struct auxtrace - session callbacks to allow AUX area data decoding.
+  * @process_event: lets the decoder see all session events
+  * @process_auxtrace_event: process a PERF_RECORD_AUXTRACE event
++ * @queue_data: queue an AUX sample or PERF_RECORD_AUXTRACE event for later
++ *              processing
+  * @dump_auxtrace_sample: dump AUX area sample data
+  * @flush_events: process any remaining data
+  * @free_events: free resources associated with event processing
+@@ -154,6 +156,9 @@ struct auxtrace {
+ 	int (*process_auxtrace_event)(struct perf_session *session,
+ 				      union perf_event *event,
+ 				      struct perf_tool *tool);
++	int (*queue_data)(struct perf_session *session,
++			  struct perf_sample *sample, union perf_event *event,
++			  u64 data_offset);
+ 	void (*dump_auxtrace_sample)(struct perf_session *session,
+ 				     struct perf_sample *sample);
+ 	int (*flush_events)(struct perf_session *session,
+@@ -467,9 +472,19 @@ int auxtrace_queues__add_event(struct auxtrace_queues *queues,
+ 			       struct perf_session *session,
+ 			       union perf_event *event, off_t data_offset,
+ 			       struct auxtrace_buffer **buffer_ptr);
++struct auxtrace_queue *
++auxtrace_queues__sample_queue(struct auxtrace_queues *queues,
++			      struct perf_sample *sample,
++			      struct perf_session *session);
++int auxtrace_queues__add_sample(struct auxtrace_queues *queues,
++				struct perf_session *session,
++				struct perf_sample *sample, u64 data_offset,
++				u64 reference);
+ void auxtrace_queues__free(struct auxtrace_queues *queues);
+ int auxtrace_queues__process_index(struct auxtrace_queues *queues,
+ 				   struct perf_session *session);
++int auxtrace_queue_data(struct perf_session *session, bool samples,
++			bool events);
+ struct auxtrace_buffer *auxtrace_buffer__next(struct auxtrace_queue *queue,
+ 					      struct auxtrace_buffer *buffer);
+ void *auxtrace_buffer__get_data(struct auxtrace_buffer *buffer, int fd);
 -- 
 2.21.0
