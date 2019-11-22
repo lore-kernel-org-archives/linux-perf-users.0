@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/26] perf record: Add a function to test for kernel support for AUX area sampling
-Date: Fri, 22 Nov 2019 11:56:55 -0300
-Message-ID: <20191122145711.3171-11-acme@kernel.org>
+Subject: [PATCH 11/26] perf auxtrace: Move perf_evsel__find_pmu()
+Date: Fri, 22 Nov 2019 11:56:56 -0300
+Message-ID: <20191122145711.3171-12-acme@kernel.org>
 References: <20191122145711.3171-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,96 +14,58 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Architectures are expected to know if AUX area sampling is supported by
-the hardware. Add a function perf_can_aux_sample() which will determine
-whether the kernel supports it.
-
-Committer notes:
-
-I reported that this message was taking place on a kernel without the
-required bits:
-
-  # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
-  Error:
-  The sys_perf_event_open() syscall returned with 7 (Argument list too long) for event (branch-misses:u).
-  /bin/dmesg | grep -i perf may provide additional information.
-
-Adrian sent a patch addressing it, with this explanation:
-
- ----
-  perf_can_aux_sample_size() always returned true because it did not pass
-  the attribute size to sys_perf_event_open, nor correctly check the
-  return value and errno.
- ----
-
-After applying it I get, later in the series, when --aux-sample is
-added:
-
-  # perf record --aux-sample -e '{intel_pt//u,branch-misses:u}'
-  AUX area sampling is not supported by kernel
+Move perf_evsel__find_pmu() so it can be used without forward
+declaration.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-4-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191115124225.5247-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.h |  1 +
- tools/perf/util/record.c | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ tools/perf/util/auxtrace.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 13051409fd22..3655b9ebb147 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -176,6 +176,7 @@ void perf_evlist__set_id_pos(struct evlist *evlist);
- bool perf_can_sample_identifier(void);
- bool perf_can_record_switch_events(void);
- bool perf_can_record_cpu_wide(void);
-+bool perf_can_aux_sample(void);
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain);
- int record_opts__config(struct record_opts *opts);
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 8579505c29a4..7def66168503 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -136,6 +136,37 @@ bool perf_can_record_cpu_wide(void)
- 	return true;
- }
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index c555c3ccd79d..263d1d9d8987 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -57,6 +57,18 @@
+ #include "symbol/kallsyms.h"
+ #include <internal/lib.h>
  
-+/*
-+ * Architectures are expected to know if AUX area sampling is supported by the
-+ * hardware. Here we check for kernel support.
-+ */
-+bool perf_can_aux_sample(void)
++static struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel)
 +{
-+	struct perf_event_attr attr = {
-+		.size = sizeof(struct perf_event_attr),
-+		.exclude_kernel = 1,
-+		/*
-+		 * Non-zero value causes the kernel to calculate the effective
-+		 * attribute size up to that byte.
-+		 */
-+		.aux_sample_size = 1,
-+	};
-+	int fd;
++	struct perf_pmu *pmu = NULL;
 +
-+	fd = sys_perf_event_open(&attr, -1, 0, -1, 0);
-+	/*
-+	 * If the kernel attribute is big enough to contain aux_sample_size
-+	 * then we assume that it is supported. We are relying on the kernel to
-+	 * validate the attribute size before anything else that could be wrong.
-+	 */
-+	if (fd < 0 && errno == E2BIG)
-+		return false;
-+	if (fd >= 0)
-+		close(fd);
++	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
++		if (pmu->type == evsel->core.attr.type)
++			break;
++	}
 +
-+	return true;
++	return pmu;
 +}
 +
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain)
+ static bool auxtrace__dont_decode(struct perf_session *session)
  {
+ 	return !session->itrace_synth_opts ||
+@@ -2180,18 +2192,6 @@ static int parse_addr_filter(struct evsel *evsel, const char *filter,
+ 	return err;
+ }
+ 
+-static struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel)
+-{
+-	struct perf_pmu *pmu = NULL;
+-
+-	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+-		if (pmu->type == evsel->core.attr.type)
+-			break;
+-	}
+-
+-	return pmu;
+-}
+-
+ static int perf_evsel__nr_addr_filter(struct evsel *evsel)
+ {
+ 	struct perf_pmu *pmu = perf_evsel__find_pmu(evsel);
 -- 
 2.21.0
