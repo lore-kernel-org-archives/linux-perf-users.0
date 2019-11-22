@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 24/26] libtraceevent: Fix memory leakage in copy_filter_type
-Date: Fri, 22 Nov 2019 11:57:09 -0300
-Message-ID: <20191122145711.3171-25-acme@kernel.org>
+Subject: [PATCH 25/26] perf probe: Fix spelling mistake "addrees" -> "address"
+Date: Fri, 22 Nov 2019 11:57:10 -0300
+Message-ID: <20191122145711.3171-26-acme@kernel.org>
 References: <20191122145711.3171-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,52 +9,39 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191122145711.3171-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Colin Ian King <colin.king@canonical.com>, Masami Hiramatsu <mhiramat@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, kernel-janitors@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Hewenliang <hewenliang4@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-It is necessary to free the memory that we have allocated when error occurs.
+There is a spelling mistake in a pr_warning message. Fix it.
 
-Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Colin King <colin.king@canonical.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel-janitors@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191121092623.374896-1-colin.king@canonical.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/parse-filter.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
-index 552592d153fb..f3cbf86e51ac 100644
---- a/tools/lib/traceevent/parse-filter.c
-+++ b/tools/lib/traceevent/parse-filter.c
-@@ -1473,8 +1473,10 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
- 		/* Add trivial event */
- 		arg = allocate_arg();
--		if (arg == NULL)
-+		if (arg == NULL) {
-+			free(str);
- 			return -1;
-+		}
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 38d6cd22779f..c470c49a804f 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -812,7 +812,7 @@ static int verify_representive_line(struct probe_finder *pf, const char *fname,
+ 	if (strcmp(fname, __fname) || lineno == __lineno)
+ 		return 0;
  
- 		arg->type = TEP_FILTER_ARG_BOOLEAN;
- 		if (strcmp(str, "TRUE") == 0)
-@@ -1483,8 +1485,11 @@ static int copy_filter_type(struct tep_event_filter *filter,
- 			arg->boolean.value = 0;
+-	pr_warning("This line is sharing the addrees with other lines.\n");
++	pr_warning("This line is sharing the address with other lines.\n");
  
- 		filter_type = add_filter_type(filter, event->id);
--		if (filter_type == NULL)
-+		if (filter_type == NULL) {
-+			free(str);
-+			free_arg(arg);
- 			return -1;
-+		}
- 
- 		filter_type->filter = arg;
- 
+ 	if (pf->pev->point.function) {
+ 		/* Find best match function name and lines */
 -- 
 2.21.0
