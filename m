@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 22/26] perf intel-bts: Does not support AUX area sampling
-Date: Fri, 22 Nov 2019 11:57:07 -0300
-Message-ID: <20191122145711.3171-23-acme@kernel.org>
+Subject: [PATCH 24/26] libtraceevent: Fix memory leakage in copy_filter_type
+Date: Fri, 22 Nov 2019 11:57:09 -0300
+Message-ID: <20191122145711.3171-25-acme@kernel.org>
 References: <20191122145711.3171-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,51 +9,52 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191122145711.3171-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Hewenliang <hewenliang4@huawei.com>
 
-Add an error message because Intel BTS does not support AUX area
-sampling.
+It is necessary to free the memory that we have allocated when error occurs.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-16-adrian.hunter@intel.com
+Fixes: ef3072cd1d5c ("tools lib traceevent: Get rid of die in add_filter_type()")
+Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Link: http://lore.kernel.org/lkml/20191119014415.57210-1-hewenliang4@huawei.com
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/x86/util/auxtrace.c  | 2 ++
- tools/perf/arch/x86/util/intel-bts.c | 5 +++++
- 2 files changed, 7 insertions(+)
+ tools/lib/traceevent/parse-filter.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/auxtrace.c b/tools/perf/arch/x86/util/auxtrace.c
-index 092543cad324..7abc9fd4cbec 100644
---- a/tools/perf/arch/x86/util/auxtrace.c
-+++ b/tools/perf/arch/x86/util/auxtrace.c
-@@ -29,6 +29,8 @@ struct auxtrace_record *auxtrace_record__init_intel(struct evlist *evlist,
- 	if (intel_pt_pmu)
- 		intel_pt_pmu->auxtrace = true;
- 	intel_bts_pmu = perf_pmu__find(INTEL_BTS_PMU_NAME);
-+	if (intel_bts_pmu)
-+		intel_bts_pmu->auxtrace = true;
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 552592d153fb..f3cbf86e51ac 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1473,8 +1473,10 @@ static int copy_filter_type(struct tep_event_filter *filter,
+ 	if (strcmp(str, "TRUE") == 0 || strcmp(str, "FALSE") == 0) {
+ 		/* Add trivial event */
+ 		arg = allocate_arg();
+-		if (arg == NULL)
++		if (arg == NULL) {
++			free(str);
+ 			return -1;
++		}
  
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (intel_pt_pmu && evsel->core.attr.type == intel_pt_pmu->type)
-diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-index f7f68a50a5cd..27d9e214d068 100644
---- a/tools/perf/arch/x86/util/intel-bts.c
-+++ b/tools/perf/arch/x86/util/intel-bts.c
-@@ -113,6 +113,11 @@ static int intel_bts_recording_options(struct auxtrace_record *itr,
- 	const struct perf_cpu_map *cpus = evlist->core.cpus;
- 	bool privileged = perf_event_paranoid_check(-1);
+ 		arg->type = TEP_FILTER_ARG_BOOLEAN;
+ 		if (strcmp(str, "TRUE") == 0)
+@@ -1483,8 +1485,11 @@ static int copy_filter_type(struct tep_event_filter *filter,
+ 			arg->boolean.value = 0;
  
-+	if (opts->auxtrace_sample_mode) {
-+		pr_err("Intel BTS does not support AUX area sampling\n");
-+		return -EINVAL;
-+	}
-+
- 	btsr->evlist = evlist;
- 	btsr->snapshot_mode = opts->auxtrace_snapshot_mode;
+ 		filter_type = add_filter_type(filter, event->id);
+-		if (filter_type == NULL)
++		if (filter_type == NULL) {
++			free(str);
++			free_arg(arg);
+ 			return -1;
++		}
+ 
+ 		filter_type->filter = arg;
  
 -- 
 2.21.0
