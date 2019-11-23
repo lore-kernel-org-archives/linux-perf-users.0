@@ -1,72 +1,61 @@
 From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: [RFC v3 1/5] perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
-Date: Sat, 23 Nov 2019 18:11:14 +0800
-Message-ID: <20191123101118.12635-2-tanxiaojun@huawei.com>
-References: <20191123101118.12635-1-tanxiaojun@huawei.com>
+Subject: [RFC v3 0/5] perf tools: Add support for some spe events and precise ip
+Date: Sat, 23 Nov 2019 18:11:13 +0800
+Message-ID: <20191123101118.12635-1-tanxiaojun@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191123101118.12635-1-tanxiaojun@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, adrian.hunter@intel.com, yao.jin@linux.intel.com, tmricht@linux.ibm.com, brueckner@linux.ibm.com, songliubraving@fb.com, gregkh@linuxfoundation.org, kim.phillips@arm.com, James.Clark@arm.com, jeremy.linton@arm.com
 Cc: gengdongjiu@huawei.com, wxf.wang@hisilicon.com, liwei391@huawei.com, tanxiaojun@huawei.com, huawei.libin@huawei.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Create a new arm-spe-decoder directory for subsequent extensions and
-move arm-spe-pkt-decoder.h/c to this directory. No code changes.
+After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+Profiling Extensions (SPE) support") is merged, "perf record" and
+"perf report --dump-raw-trace" have been supported. However, the
+raw data that is dumped cannot be used without parsing.
 
-Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
----
- tools/perf/util/Build                                       | 2 +-
- tools/perf/util/arm-spe-decoder/Build                       | 1 +
- tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c | 0
- tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h | 0
- tools/perf/util/arm-spe.c                                   | 2 +-
- 5 files changed, 3 insertions(+), 2 deletions(-)
+This patchset is to improve the "perf report" support for spe, and
+further process the data. Currently, support for the three events
+of llc-miss, tlb-miss, branch-miss and remote-access is added.
+
+v1->v2:
+Some cleanup and bugfix fixes were made, and support for the precise
+ip of branch-misses was added. Thanks for the suggestions of Jeremy
+and James.
+
+v2->v3:
+Mainly add four spe precise ip events, you can see through perf list.
+More details in [5/5].
+
+Tan Xiaojun (5):
+  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+  perf tools: Add support for "report" for some spe events
+  perf report: Add --spe options for arm-spe
+  drivers: perf: add some arm spe events
+  perf tools: Add support to process multi spe events
+
+ drivers/perf/arm_spe_pmu.c                    |  44 +
+ tools/perf/Documentation/perf-report.txt      |  10 +
+ tools/perf/arch/arm64/util/arm-spe.c          |  47 +-
+ tools/perf/builtin-report.c                   |   5 +
+ tools/perf/util/Build                         |   2 +-
+ tools/perf/util/arm-spe-decoder/Build         |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 +++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
+ .../arm-spe-pkt-decoder.c                     |   0
+ .../arm-spe-pkt-decoder.h                     |   2 +
+ tools/perf/util/arm-spe.c                     | 771 +++++++++++++++++-
+ tools/perf/util/arm-spe.h                     |  20 +
+ tools/perf/util/auxtrace.c                    |  49 ++
+ tools/perf/util/auxtrace.h                    |  29 +
+ tools/perf/util/session.h                     |   2 +
+ 15 files changed, 1231 insertions(+), 42 deletions(-)
  create mode 100644 tools/perf/util/arm-spe-decoder/Build
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
  rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (100%)
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 8dcfca1a882f..f2e5a217e0aa 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -100,7 +100,7 @@ perf-$(CONFIG_AUXTRACE) += intel-pt-decoder/
- perf-$(CONFIG_AUXTRACE) += intel-pt.o
- perf-$(CONFIG_AUXTRACE) += intel-bts.o
- perf-$(CONFIG_AUXTRACE) += arm-spe.o
--perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
-+perf-$(CONFIG_AUXTRACE) += arm-spe-decoder/
- perf-$(CONFIG_AUXTRACE) += s390-cpumsf.o
- 
- ifdef CONFIG_LIBOPENCSD
-diff --git a/tools/perf/util/arm-spe-decoder/Build b/tools/perf/util/arm-spe-decoder/Build
-new file mode 100644
-index 000000000000..16efbc245028
---- /dev/null
-+++ b/tools/perf/util/arm-spe-decoder/Build
-@@ -0,0 +1 @@
-+perf-$(CONFIG_AUXTRACE) += arm-spe-pkt-decoder.o
-diff --git a/tools/perf/util/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-similarity index 100%
-rename from tools/perf/util/arm-spe-pkt-decoder.c
-rename to tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
-diff --git a/tools/perf/util/arm-spe-pkt-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-similarity index 100%
-rename from tools/perf/util/arm-spe-pkt-decoder.h
-rename to tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.h
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 53be12b23ff4..f3382a38d48e 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -23,7 +23,7 @@
- #include "debug.h"
- #include "auxtrace.h"
- #include "arm-spe.h"
--#include "arm-spe-pkt-decoder.h"
-+#include "arm-spe-decoder/arm-spe-pkt-decoder.h"
- 
- struct arm_spe {
- 	struct auxtrace			auxtrace;
 -- 
 2.17.1
