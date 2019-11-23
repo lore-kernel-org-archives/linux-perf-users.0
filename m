@@ -1,61 +1,112 @@
 From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: [RFC v3 0/5] perf tools: Add support for some spe events and precise ip
-Date: Sat, 23 Nov 2019 18:11:13 +0800
-Message-ID: <20191123101118.12635-1-tanxiaojun@huawei.com>
+Subject: [RFC v3 4/5] drivers: perf: add some arm spe events
+Date: Sat, 23 Nov 2019 18:11:17 +0800
+Message-ID: <20191123101118.12635-5-tanxiaojun@huawei.com>
+References: <20191123101118.12635-1-tanxiaojun@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191123101118.12635-1-tanxiaojun@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, adrian.hunter@intel.com, yao.jin@linux.intel.com, tmricht@linux.ibm.com, brueckner@linux.ibm.com, songliubraving@fb.com, gregkh@linuxfoundation.org, kim.phillips@arm.com, James.Clark@arm.com, jeremy.linton@arm.com
 Cc: gengdongjiu@huawei.com, wxf.wang@hisilicon.com, liwei391@huawei.com, tanxiaojun@huawei.com, huawei.libin@huawei.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
-Profiling Extensions (SPE) support") is merged, "perf record" and
-"perf report --dump-raw-trace" have been supported. However, the
-raw data that is dumped cannot be used without parsing.
+Add some definitions of arm spe events, these are precise ip events.
+Displayed in the perf list as follows:
 
-This patchset is to improve the "perf report" support for spe, and
-further process the data. Currently, support for the three events
-of llc-miss, tlb-miss, branch-miss and remote-access is added.
+---------------------------------------------------------------------
+...
+arm_spe_0//                                        [Kernel PMU event]
+arm_spe_0/branch_miss/                             [Kernel PMU event]
+arm_spe_0/llc_miss/                                [Kernel PMU event]
+arm_spe_0/remote_access/                           [Kernel PMU event]
+arm_spe_0/tlb_miss/                                [Kernel PMU event]
+...
+---------------------------------------------------------------------
 
-v1->v2:
-Some cleanup and bugfix fixes were made, and support for the precise
-ip of branch-misses was added. Thanks for the suggestions of Jeremy
-and James.
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+---
+ drivers/perf/arm_spe_pmu.c | 44 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-v2->v3:
-Mainly add four spe precise ip events, you can see through perf list.
-More details in [5/5].
-
-Tan Xiaojun (5):
-  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
-  perf tools: Add support for "report" for some spe events
-  perf report: Add --spe options for arm-spe
-  drivers: perf: add some arm spe events
-  perf tools: Add support to process multi spe events
-
- drivers/perf/arm_spe_pmu.c                    |  44 +
- tools/perf/Documentation/perf-report.txt      |  10 +
- tools/perf/arch/arm64/util/arm-spe.c          |  47 +-
- tools/perf/builtin-report.c                   |   5 +
- tools/perf/util/Build                         |   2 +-
- tools/perf/util/arm-spe-decoder/Build         |   1 +
- .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 +++++
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
- .../arm-spe-pkt-decoder.c                     |   0
- .../arm-spe-pkt-decoder.h                     |   2 +
- tools/perf/util/arm-spe.c                     | 771 +++++++++++++++++-
- tools/perf/util/arm-spe.h                     |  20 +
- tools/perf/util/auxtrace.c                    |  49 ++
- tools/perf/util/auxtrace.h                    |  29 +
- tools/perf/util/session.h                     |   2 +
- 15 files changed, 1231 insertions(+), 42 deletions(-)
- create mode 100644 tools/perf/util/arm-spe-decoder/Build
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
-
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 4e4984a55cd1..4df9abdb2255 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -161,6 +161,9 @@ static struct attribute_group arm_spe_pmu_cap_group = {
+ #define ATTR_CFG_FLD_pct_enable_CFG		config	/* PMSCR_EL1.PCT */
+ #define ATTR_CFG_FLD_pct_enable_LO		2
+ #define ATTR_CFG_FLD_pct_enable_HI		2
++#define ATTR_CFG_FLD_event_CFG			config	/* ARM SPE EVENTS */
++#define ATTR_CFG_FLD_event_LO			3
++#define ATTR_CFG_FLD_event_HI			6
+ #define ATTR_CFG_FLD_jitter_CFG			config	/* PMSIRR_EL1.RND */
+ #define ATTR_CFG_FLD_jitter_LO			16
+ #define ATTR_CFG_FLD_jitter_HI			16
+@@ -174,6 +177,11 @@ static struct attribute_group arm_spe_pmu_cap_group = {
+ #define ATTR_CFG_FLD_store_filter_LO		34
+ #define ATTR_CFG_FLD_store_filter_HI		34
+ 
++#define ARM_SPE_EVENT_LLC_MISS			BIT(0)
++#define ARM_SPE_EVENT_BRANCH_MISS		BIT(1)
++#define ARM_SPE_EVENT_TLB_MISS			BIT(2)
++#define ARM_SPE_EVENT_REMOTE_ACCESS		BIT(3)
++
+ #define ATTR_CFG_FLD_event_filter_CFG		config1	/* PMSEVFR_EL1 */
+ #define ATTR_CFG_FLD_event_filter_LO		0
+ #define ATTR_CFG_FLD_event_filter_HI		63
+@@ -213,8 +221,43 @@ GEN_PMU_FORMAT_ATTR(load_filter);
+ GEN_PMU_FORMAT_ATTR(store_filter);
+ GEN_PMU_FORMAT_ATTR(event_filter);
+ GEN_PMU_FORMAT_ATTR(min_latency);
++GEN_PMU_FORMAT_ATTR(event);
++
++static ssize_t
++arm_spe_events_sysfs_show(struct device *dev,
++		struct device_attribute *attr, char *page)
++{
++	struct perf_pmu_events_attr *pmu_attr;
++
++	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
++
++	return sprintf(page, "event=0x%03llx\n", pmu_attr->id);
++}
++
++#define ARM_SPE_EVENT_ATTR(name, config) \
++	PMU_EVENT_ATTR(name, arm_spe_event_attr_##name, \
++		       config, arm_spe_events_sysfs_show)
++
++ARM_SPE_EVENT_ATTR(llc_miss, ARM_SPE_EVENT_LLC_MISS);
++ARM_SPE_EVENT_ATTR(branch_miss, ARM_SPE_EVENT_BRANCH_MISS);
++ARM_SPE_EVENT_ATTR(tlb_miss, ARM_SPE_EVENT_TLB_MISS);
++ARM_SPE_EVENT_ATTR(remote_access, ARM_SPE_EVENT_REMOTE_ACCESS);
++
++static struct attribute *arm_spe_pmu_event_attrs[] = {
++	&arm_spe_event_attr_llc_miss.attr.attr,
++	&arm_spe_event_attr_branch_miss.attr.attr,
++	&arm_spe_event_attr_tlb_miss.attr.attr,
++	&arm_spe_event_attr_remote_access.attr.attr,
++	NULL,
++};
++
++static struct attribute_group arm_spe_pmu_event_group = {
++	.name = "events",
++	.attrs	= arm_spe_pmu_event_attrs,
++};
+ 
+ static struct attribute *arm_spe_pmu_formats_attr[] = {
++	&format_attr_event.attr,
+ 	&format_attr_ts_enable.attr,
+ 	&format_attr_pa_enable.attr,
+ 	&format_attr_pct_enable.attr,
+@@ -252,6 +295,7 @@ static struct attribute_group arm_spe_pmu_group = {
+ };
+ 
+ static const struct attribute_group *arm_spe_pmu_attr_groups[] = {
++	&arm_spe_pmu_event_group,
+ 	&arm_spe_pmu_group,
+ 	&arm_spe_pmu_cap_group,
+ 	&arm_spe_pmu_format_group,
 -- 
 2.17.1
