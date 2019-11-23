@@ -1,244 +1,187 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/26] perf auxtrace: Add support for AUX area sample recording
-Date: Fri, 22 Nov 2019 11:56:57 -0300
-Message-ID: <20191122145711.3171-13-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Sat, 23 Nov 2019 09:07:44 +0100
+Message-ID: <20191123080744.GB110331@gmail.com>
 References: <20191122145711.3171-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20191122145711.3171-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Colin King <colin.king@canonical.com>, Hewenliang <hewenliang4@huawei.com>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, Steven Rostedt <rostedt@goodmis.org>, Sudipm Mukherjee <sudipm.mukherjee@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
 
-Add support for parsing and validating AUX area sample options. At
-present, the only option is the sample size, but it is also necessary to
-ensure that events are in a group with an AUX area event as the leader.
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Committer note:
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 8f6ee51d772d0dab407d868449d2c5d9c8d2b6fc:
+> 
+>   Merge tag 'perf-core-for-mingo-5.5-20191119' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/core (2019-11-19 12:59:03 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191122
+> 
+> for you to fetch changes up to 4584f084aa9d8033d5911935837dbee7b082d0e9:
+> 
+>   perf parse: Fix potential memory leak when handling tracepoint errors (2019-11-22 10:48:14 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf report:
+> 
+>   Jin Yao:
+> 
+>   - Allow entering the annotation view (symbol source/assembly +
+>     overhead/cycles/etc column) from the 'perf report --total-cycles'
+>     interface.
+> 
+>     E.g.:
+> 
+>       # perf record --all-cpus --branch-any --all-kernel
+>       ^C[ perf record: Woken up 5 times to write data ]
+>       #
+>       # perf evlist -v
+>       cycles: size: 120, { sample_period, sample_freq }: 4000,
+>       sample_type: IP|TID|TIME|CPU|PERIOD|BRANCH_STACK,
+>       read_format: ID, disabled: 1, inherit: 1, exclude_user: 1, mmap: 1, comm: 1, freq: 1, task: 1,
+>       precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1,
+>       bpf_event: 1, branch_sample_type: ANY
+>       #
+>       # perf report --total-cycles
+>       #
+>       # Samples: 78762 of event 'cycles'
+>       Sampled  Sampled Avg      Avg
+>       Cycles%  Cycles  Cycles%  Cycles                           [Program Block Range]     Shared Object
+>         1.72%    95.8K   0.00%     254                        [msr.h:105 -> msr.h:166]  [kernel.vmlinux]
+>         1.56%   107.6K   0.00%     618                [compiler.h:199 -> common.c:301]  [kernel.vmlinux]
+>         0.83%    46.3K   0.00%     409              [entry_64.S:153 -> entry_64.S:175]  [kernel.vmlinux]
+>         0.83%    46.1K   0.00%      83                  [jump_label.h:41 -> tsc.c:230]  [kernel.vmlinux]
+>         0.64%    36.9K   0.01%    1.4K            [hda_intel.c:904 -> hda_intel.c:916]   [snd_hda_intel]
+>         0.57%    30.2K   0.00%     282                      [file.c:710 -> file.c:730]  [kernel.vmlinux]
+>         0.48%    25.8K   0.00%      82              [spinlock.c:158 -> spinlock.c:160]  [kernel.vmlinux]
+>         0.45%    23.7K   0.00%     369  [tick-broadcast.c:585 -> tick-broadcast.c:586]  [kernel.vmlinux]
+>         0.44%    24.4K   0.00%      73                       [msr.h:236 -> tsc.c:1088]  [kernel.vmlinux]
+>         0.43%    22.7K   0.00%     144                [cpuidle.c:229 -> cpuidle.c:232]  [kernel.vmlinux]
+> 
+>     Then press 'A' or Enter on one of those lines, just like with 'perf top', say
+>     the top one: [msr.h:105 -> msr.h:166], then this shows up:
+> 
+>       Samples: 78K of event 'cycles', 4000 Hz, Event count (approx.): 78762
+>       native_write_msr  /lib/modules/5.4.0-rc8/build/vmlinux [Percent: local period]
+>       Percent│ IPC Cycle (Average IPC: 0.02, IPC Coverage: 50.0%)
+>              │
+>              │             Disassembly of section .text:
+>              │
+>              │             ffffffff8106c480 <native_write_msr>:
+>              │             __wrmsr():
+>              │             return EAX_EDX_VAL(val, low, high);
+>              │             }
+>              │
+>              │             static inline void notrace __wrmsr(unsigned int msr, u32 low, u32 high)
+>              │             {
+>              │             asm volatile("1: wrmsr\n"
+>        49.16 │0.02           mov   %edi,%ecx
+>              │0.02           mov   %esi,%eax
+>              │0.02           wrmsr
+>              │             arch_static_branch():
+>              │             #include <linux/stringify.h>
+>              │             #include <linux/types.h>
+>              │
+>              │             static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
+>              │             {
+>              │             asm_volatile_goto("1:"
+>         0.79 │0.02           nop
+>              │             native_write_msr():
+>              │             {
+>              │             __wrmsr(msr, low, high);
+>              │
+>              │             if (msr_tracepoint_active(__tracepoint_write_msr))
+>              │             do_trace_write_msr(msr, ((u64)high << 32 | low), 0);
+>              │             }
+>        50.05 │0.02  254    ← retq
+>              │             do_trace_write_msr(msr, ((u64)high << 32 | low), 0);
+>              │               shl   $0x20,%rdx
+>              │               mov   %esi,%esi
+>              │               or    %rdx,%rsi
+>              │               xor   %edx,%edx
+>              │             → jmpq  do_trace_write_msr
+> 
+>     We need to improve this to show the source code line numbers in the
+>     annotation view, so one can go from that program block to the annotation view
+>     and see those source code line numbers straight away.
+> 
+> auxtrace/Intel PT:
+> 
+>   Adrian Hunter:
+> 
+>   - Add support for AUX area sampling, requires new functionality that
+>     will land in 5.5, its already in tip.
+> 
+>     This includes kernel capability querying so that it fails gracefully
+>     with older kernels, duimping aux area samples in 'perf report -D' and
+>     'perf script'.
+> 
+> perf.data:
+> 
+>   Alexey Budankov:
+> 
+>   - Fix decompression of PERF_RECORD_COMPRESSED records.
+> 
+> core:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Use the 'dcacheline' cmp routine to find the right DSOs taking into
+>     account the 'maj', 'min', 'ino' and 'ino_generation', that got moved
+>     from 'struct map' to 'struct dso', where it belongs.
+> 
+>     This further reduces the size of 'struct map', there is still more
+>     work to do to maybe get it to max one cacheline.
+> 
+> libtraceevent:
+> 
+>   Hewenliang:
+> 
+>   - Fix memory leakage in copy_filter_type().
+> 
+>   Sudip Mukherjee:
+> 
+>   - Fix header installation.
+> 
+> perf parse:
+> 
+>   Ian Rogers :
+> 
+>   - Fix potential memory leak when handling tracepoint errors, found using
+>     LLVM's libFuzzer.
+> 
+> perf probe:
+> 
+>   Colin Ian King:
+> 
+>   - Fix spelling mistake "addrees" -> "address".
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
 
-Add missing 'static inline' in front of auxtrace_parse_sample_options()
-for when we don't HAVE_AUXTRACE_SUPPORT.
+>  46 files changed, 1190 insertions(+), 200 deletions(-)
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20191115124225.5247-6-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/auxtrace.c | 107 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/auxtrace.h |  17 ++++++
- tools/perf/util/pmu.h      |   1 +
- tools/perf/util/record.h   |   2 +
- 4 files changed, 127 insertions(+)
+Pulled, thanks a lot Arnaldo!
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 263d1d9d8987..51fbe01f8a11 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -69,6 +69,13 @@ static struct perf_pmu *perf_evsel__find_pmu(struct evsel *evsel)
- 	return pmu;
- }
- 
-+static bool perf_evsel__is_aux_event(struct evsel *evsel)
-+{
-+	struct perf_pmu *pmu = perf_evsel__find_pmu(evsel);
-+
-+	return pmu && pmu->auxtrace;
-+}
-+
- static bool auxtrace__dont_decode(struct perf_session *session)
- {
- 	return !session->itrace_synth_opts ||
-@@ -609,6 +616,106 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- 	return -EINVAL;
- }
- 
-+/*
-+ * Event record size is 16-bit which results in a maximum size of about 64KiB.
-+ * Allow about 4KiB for the rest of the sample record, to give a maximum
-+ * AUX area sample size of 60KiB.
-+ */
-+#define MAX_AUX_SAMPLE_SIZE (60 * 1024)
-+
-+/* Arbitrary default size if no other default provided */
-+#define DEFAULT_AUX_SAMPLE_SIZE (4 * 1024)
-+
-+static int auxtrace_validate_aux_sample_size(struct evlist *evlist,
-+					     struct record_opts *opts)
-+{
-+	struct evsel *evsel;
-+	bool has_aux_leader = false;
-+	u32 sz;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		sz = evsel->core.attr.aux_sample_size;
-+		if (perf_evsel__is_group_leader(evsel)) {
-+			has_aux_leader = perf_evsel__is_aux_event(evsel);
-+			if (sz) {
-+				if (has_aux_leader)
-+					pr_err("Cannot add AUX area sampling to an AUX area event\n");
-+				else
-+					pr_err("Cannot add AUX area sampling to a group leader\n");
-+				return -EINVAL;
-+			}
-+		}
-+		if (sz > MAX_AUX_SAMPLE_SIZE) {
-+			pr_err("AUX area sample size %u too big, max. %d\n",
-+			       sz, MAX_AUX_SAMPLE_SIZE);
-+			return -EINVAL;
-+		}
-+		if (sz) {
-+			if (!has_aux_leader) {
-+				pr_err("Cannot add AUX area sampling because group leader is not an AUX area event\n");
-+				return -EINVAL;
-+			}
-+			perf_evsel__set_sample_bit(evsel, AUX);
-+			opts->auxtrace_sample_mode = true;
-+		} else {
-+			perf_evsel__reset_sample_bit(evsel, AUX);
-+		}
-+	}
-+
-+	if (!opts->auxtrace_sample_mode) {
-+		pr_err("AUX area sampling requires an AUX area event group leader plus other events to which to add samples\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!perf_can_aux_sample()) {
-+		pr_err("AUX area sampling is not supported by kernel\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+int auxtrace_parse_sample_options(struct auxtrace_record *itr,
-+				  struct evlist *evlist,
-+				  struct record_opts *opts, const char *str)
-+{
-+	bool has_aux_leader = false;
-+	struct evsel *evsel;
-+	char *endptr;
-+	unsigned long sz;
-+
-+	if (!str)
-+		return 0;
-+
-+	if (!itr) {
-+		pr_err("No AUX area event to sample\n");
-+		return -EINVAL;
-+	}
-+
-+	sz = strtoul(str, &endptr, 0);
-+	if (*endptr || sz > UINT_MAX) {
-+		pr_err("Bad AUX area sampling option: '%s'\n", str);
-+		return -EINVAL;
-+	}
-+
-+	if (!sz)
-+		sz = itr->default_aux_sample_size;
-+
-+	if (!sz)
-+		sz = DEFAULT_AUX_SAMPLE_SIZE;
-+
-+	/* Set aux_sample_size based on --aux-sample option */
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (perf_evsel__is_group_leader(evsel)) {
-+			has_aux_leader = perf_evsel__is_aux_event(evsel);
-+		} else if (has_aux_leader) {
-+			evsel->core.attr.aux_sample_size = sz;
-+		}
-+	}
-+
-+	return auxtrace_validate_aux_sample_size(evlist, opts);
-+}
-+
- struct auxtrace_record *__weak
- auxtrace_record__init(struct evlist *evlist __maybe_unused, int *err)
- {
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 3f4aa5427d76..ab48de13c353 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -313,6 +313,7 @@ struct auxtrace_mmap_params {
-  * @reference: provide a 64-bit reference number for auxtrace_event
-  * @read_finish: called after reading from an auxtrace mmap
-  * @alignment: alignment (if any) for AUX area data
-+ * @default_aux_sample_size: default sample size for --aux sample option
-  */
- struct auxtrace_record {
- 	int (*recording_options)(struct auxtrace_record *itr,
-@@ -336,6 +337,7 @@ struct auxtrace_record {
- 	u64 (*reference)(struct auxtrace_record *itr);
- 	int (*read_finish)(struct auxtrace_record *itr, int idx);
- 	unsigned int alignment;
-+	unsigned int default_aux_sample_size;
- };
- 
- /**
-@@ -498,6 +500,9 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
- int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
- 				    struct record_opts *opts,
- 				    const char *str);
-+int auxtrace_parse_sample_options(struct auxtrace_record *itr,
-+				  struct evlist *evlist,
-+				  struct record_opts *opts, const char *str);
- int auxtrace_record__options(struct auxtrace_record *itr,
- 			     struct evlist *evlist,
- 			     struct record_opts *opts);
-@@ -648,6 +653,18 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr __maybe_unused,
- 	return -EINVAL;
- }
- 
-+static inline
-+int auxtrace_parse_sample_options(struct auxtrace_record *itr __maybe_unused,
-+				  struct evlist *evlist __maybe_unused,
-+				  struct record_opts *opts __maybe_unused,
-+				  const char *str)
-+{
-+	if (!str)
-+		return 0;
-+	pr_err("AUX area tracing not supported\n");
-+	return -EINVAL;
-+}
-+
- static inline
- int auxtrace__process_event(struct perf_session *session __maybe_unused,
- 			    union perf_event *event __maybe_unused,
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 3e8cd31a89cc..2eb7a7001307 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -26,6 +26,7 @@ struct perf_pmu {
- 	__u32 type;
- 	bool selectable;
- 	bool is_uncore;
-+	bool auxtrace;
- 	int max_precise;
- 	struct perf_event_attr *default_config;
- 	struct perf_cpu_map *cpus;
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 948bbcf9aef3..5421fd2ad383 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -32,6 +32,7 @@ struct record_opts {
- 	bool	      full_auxtrace;
- 	bool	      auxtrace_snapshot_mode;
- 	bool	      auxtrace_snapshot_on_exit;
-+	bool	      auxtrace_sample_mode;
- 	bool	      record_namespaces;
- 	bool	      record_switch_events;
- 	bool	      all_kernel;
-@@ -56,6 +57,7 @@ struct record_opts {
- 	u64	      user_interval;
- 	size_t	      auxtrace_snapshot_size;
- 	const char    *auxtrace_snapshot_opts;
-+	const char    *auxtrace_sample_opts;
- 	bool	      sample_transaction;
- 	unsigned      initial_delay;
- 	bool	      use_clockid;
--- 
-2.21.0
+	Ingo
