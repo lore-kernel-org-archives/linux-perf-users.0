@@ -1,9 +1,9 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH] libbpf: Fix up generation of bpf_helper_defs.h
-Date: Tue, 26 Nov 2019 22:39:01 -0300
-Message-ID: <20191127013901.GE29071@kernel.org>
-References: <87imn6y4n9.fsf@toke.dk>
- <20191126183451.GC29071@kernel.org>
+Subject: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit
+ arches
+Date: Wed, 27 Nov 2019 10:45:53 -0300
+Message-ID: <20191127134553.GC22719@kernel.org>
+References: <20191126183451.GC29071@kernel.org>
  <87d0dexyij.fsf@toke.dk>
  <20191126190450.GD29071@kernel.org>
  <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
@@ -12,37 +12,64 @@ References: <87imn6y4n9.fsf@toke.dk>
  <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
  <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
  <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191126155228.0e6ed54c@cakuba.netronome.com>
+In-Reply-To: <20191127013901.GE29071@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc: Stanislav Fomichev <sdf@fomichev.me>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>, Andrii Nakryiko <andriin@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Quentin Monnet <quentin.monnet@netronome.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jakub Kicinski <jakub.kicinski@netronome.com>, Stanislav Fomichev <sdf@fomichev.me>, Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>, Andrii Nakryiko <andriin@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Quentin Monnet <quentin.monnet@netronome.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Nov 26, 2019 at 03:52:28PM -0800, Jakub Kicinski escreveu:
-> On Tue, 26 Nov 2019 15:10:30 -0800, Stanislav Fomichev wrote:
-> > We are using this script with python2.7, works just fine :-)
-> > So maybe doing s/python3/python/ is the way to go, whatever
-> > default python is installed, it should work with that.
+Another fix I'm carrying in my perf/core branch,
 
-> That increases the risk someone will make a python2-only change 
-> and break Python 3.
- 
-> Python 2 is dead, I'm honestly surprised this needs to be said :)
-
-It shouldn't have to be said, and probably it is old school to try and
-keep things portable when there is no need to use new stuff for simple
-tasks like this.
-
-Anyway, it seems its just a matter of adding the python3 package to the
-old container images and then most of them will work with what is in
-that script, what doesn't work is really old and then NO_LIBBPF=1 is the
-way to go.
-
-In the end, kinda nothing to see here, go back to adding cool new stuff,
-lets not hold eBPF from progressing ;-P
+Regards,
 
 - Arnaldo
+
+commit 98bb09f90a0ae33125fabc8f41529345382f1498
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Wed Nov 27 09:26:54 2019 -0300
+
+    libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+    
+    The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+    32-bit arches:
+    
+      In file included from libbpf.c:52:
+      libbpf.c: In function 'bpf_program__record_reloc':
+      libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+        libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+                            ^~~~~~~~~~
+      libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+       #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+                                 ^~~~
+      libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+          pr_warn("bad call relo offset: %lu\n", sym->st_value);
+          ^~~~~~~
+      libbpf.c:1822:37: note: format string is defined here
+          pr_warn("bad call relo offset: %lu\n", sym->st_value);
+                                         ~~^
+                                         %llu
+    
+    Fixes: 1f8e2bcb2cd5 ("libbpf: Refactor relocation handling")
+    Cc: Alexei Starovoitov <ast@kernel.org>
+    Cc: Andrii Nakryiko <andriin@fb.com>
+    Link: https://lkml.kernel.org/n/tip-iabs1wq19c357bkk84p7blif@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index b20f82e58989..6b0eae5c8a94 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1819,7 +1819,7 @@ static int bpf_program__record_reloc(struct bpf_program *prog,
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		if (sym->st_value % 8) {
+-			pr_warn("bad call relo offset: %lu\n", sym->st_value);
++			pr_warn("bad call relo offset: %" PRIu64 "\n", sym->st_value);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		reloc_desc->type = RELO_CALL;
