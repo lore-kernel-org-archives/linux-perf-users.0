@@ -1,67 +1,80 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
- 32-bit arches
-Date: Wed, 27 Nov 2019 16:39:25 -0300
-Message-ID: <20191127193925.GC4063@kernel.org>
-References: <20191126221018.GA22719@kernel.org>
- <20191126221733.GB22719@kernel.org>
- <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
- <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
- <20191126155228.0e6ed54c@cakuba.netronome.com>
- <20191127013901.GE29071@kernel.org>
- <20191127134553.GC22719@kernel.org>
- <CAADnVQKkEqhdTOxytVbcm1QnBcf4MQ+q4KYaHzsuqkq3r=X-VA@mail.gmail.com>
- <20191127184526.GB4063@kernel.org>
- <CAADnVQLs-=f8E8ahiW7F+_Qb1JiR4-7tXwVNbdyH1FF04RrOHA@mail.gmail.com>
+From: Ivan Babrou <ivan@cloudflare.com>
+Subject: Re: perf is unable to read dward from go programs
+Date: Wed, 27 Nov 2019 13:15:20 -0800
+Message-ID: <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
+References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAADnVQLs-=f8E8ahiW7F+_Qb1JiR4-7tXwVNbdyH1FF04RrOHA@mail.gmail.com>
+In-Reply-To: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jakub Kicinski <jakub.kicinski@netronome.com>, Stanislav Fomichev <sdf@fomichev.me>, Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>, Andrii Nakryiko <andriin@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Quentin Monnet <quentin.monnet@netronome.com>
+To: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, kernel-team <kernel-team@cloudflare.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Nov 27, 2019 at 10:55:31AM -0800, Alexei Starovoitov escreveu:
-> On Wed, Nov 27, 2019 at 10:45 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Wed, Nov 27, 2019 at 08:39:28AM -0800, Alexei Starovoitov escreveu:
-> > > On Wed, Nov 27, 2019 at 5:45 AM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > Another fix I'm carrying in my perf/core branch,
-> >
-> > > Why in perf/core?
-> > > I very much prefer all libbpf patches to go via normal route via bpf/net trees.
-> > > We had enough conflicts in this merge window. Let's avoid them.
-> >
-> > Humm, if we both carry the same patch the merge process can do its magic
-> > and nobody gets hurt? Besides these are really minor things, no?
-> 
-> I thought so too, but learned the hard lesson recently.
-> We should try to avoid that as much as possible.
-> Andrii's is fixing stuff in the same lines:
-> https://patchwork.ozlabs.org/patch/1201344/
-> these two patches will likely conflict. I'd rather have them both in bpf tree.
-> What is the value for this patch in perf tree?
-> To fix the build on 32-bit arches, right?
-> But how urgent is it? Can you wait few days until this one and other
-> libbpf fixes
-> land via bpf/net trees?
+There were no response in linux-perf-users@, so I think it's fair to
+ask maintainers.
 
-Ok, I'll add a note to the pull request report about where the perf
-build is clean in all containers because I added these two patches, but
-that they'll go via the bpf tree, as soon as that gets merged, the
-problem will go away.
-
-And I wasn't strictly defending that I should carry this in perf/core,
-just said I was, to fix something minor that I found while doing my
-usual testing, patch was posted, you got notified and got the patch,
-I'll remove it from perf/core now since you stated that it'll eventually
-land upstream.
-
-Thanks,
-
-- Arnaldo
+On Fri, Nov 8, 2019 at 3:53 PM Ivan Babrou <ivan@cloudflare.com> wrote:
+>
+> I have a simple piece of code that burns CPU for 1s:
+>
+> * https://gist.github.com/bobrik/cf022ff6950d09032fa13a984e2272ed
+>
+> I can build it just fine: go build -o /tmp/burn burn.go
+>
+> And I can see correct stacks if I record with fp:
+>
+> perf record -e cpu-clock -g -F 99 /tmp/burn
+>
+> But if I record with gwarf:
+>
+> perf record -e cpu-clock -g -F 99 --call-graph dwarf /tmp/burn
+>
+> Then stacks are lost with the following complaints during "perf script":
+>
+> BFD: Dwarf Error: found dwarf version '376', this reader only handles
+> version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '31863', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '65271', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '289', this reader only handles
+> version 2, 3 and 4 information.
+> ...
+>
+> That's on Linux 5.4-rc5 with binutils 2.28. On Linux 4.19.80 with
+> binutils 2.31.1 I don't see the error, but the stacks are not any
+> better:
+>
+> burn   788  3994.230871:   10101010 cpu-clock:
+>           479955 crypto/sha512.blockAVX2+0x965 (/tmp/burn)
+>
+> burn   786  3994.241393:   10101010 cpu-clock:
+>           40b2a7 runtime.mallocgc+0x697 (/tmp/burn)
+>
+> burn   782  3994.248061:   10101010 cpu-clock:
+>           4746f1 crypto/sha512.(*digest).Write+0x21 (/tmp/burn)
+>
+> Compare to an fp version:
+>
+> burn   762  3892.587246:   10101010 cpu-clock:
+>           479b19 crypto/sha512.blockAVX2+0xb29 (/tmp/burn)
+> d186b8c721c0c207 [unknown] ([unknown])
+>
+> burn   760  3892.597158:   10101010 cpu-clock:
+>           474783 crypto/sha512.(*digest).Write+0xb3 (/tmp/burn)
+>           474e52 crypto/sha512.(*digest).checkSum+0xd2 (/tmp/burn)
+>           4749e3 crypto/sha512.(*digest).Sum+0xa3 (/tmp/burn)
+>           4840d3 main.burn+0xe3 (/tmp/burn)
+>           483fda main.main+0x2a (/tmp/burn)
+>           4298ee runtime.main+0x21e (/tmp/burn)
+>       c000016060 [unknown] ([unknown])
+> 89481eebc0313474 [unknown] ([unknown])
+>
+> I can understand AVX being off, but other stacks should be in order.
+>
+> Interestingly, in production I can see that some binaries are not
+> affected by this issue.
+>
+> Is this an expected outcome?
