@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/22] perf maps: Rename map_groups.h to maps.h
-Date: Thu, 28 Nov 2019 10:40:17 -0300
-Message-ID: <20191128134027.23726-13-acme@kernel.org>
+Subject: [PATCH 13/22] perf tests: Rename thread-mg-share to thread-maps-share
+Date: Thu, 28 Nov 2019 10:40:18 -0300
+Message-ID: <20191128134027.23726-14-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,180 +14,130 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-One more step in the merge of 'struct maps' with 'struct map_groups'.
+One more step in merging 'struct maps' with 'struct map_groups'.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-9ibtn3vua76f934t7woyf26w@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-naxsl3g4ou3fyxb8l8e0pn5e@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/tests/dwarf-unwind.c     | 2 +-
- tools/perf/arch/arm64/tests/dwarf-unwind.c   | 2 +-
- tools/perf/arch/powerpc/tests/dwarf-unwind.c | 2 +-
- tools/perf/arch/x86/tests/dwarf-unwind.c     | 2 +-
- tools/perf/tests/map_groups.c                | 2 +-
- tools/perf/ui/stdio/hist.c                   | 2 +-
- tools/perf/util/annotate.c                   | 2 +-
- tools/perf/util/machine.h                    | 2 +-
- tools/perf/util/{map_groups.h => maps.h}     | 6 +++---
- tools/perf/util/probe-event.c                | 2 +-
- tools/perf/util/symbol-elf.c                 | 2 +-
- 11 files changed, 13 insertions(+), 13 deletions(-)
- rename tools/perf/util/{map_groups.h => maps.h} (96%)
+ tools/perf/tests/Build                        |  2 +-
+ tools/perf/tests/builtin-test.c               |  4 ++--
+ tools/perf/tests/tests.h                      |  2 +-
+ ...{thread-mg-share.c => thread-maps-share.c} | 22 +++++++++----------
+ 4 files changed, 15 insertions(+), 15 deletions(-)
+ rename tools/perf/tests/{thread-mg-share.c => thread-maps-share.c} (77%)
 
-diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
-index ff0bea660cf9..ccfa87055c4a 100644
---- a/tools/perf/arch/arm/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-index 85108437b3af..46147a483049 100644
---- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-index 30658e3b32b2..8efd9ed9e9db 100644
---- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
-index 418969cd64e9..ef43be9b6ec2 100644
---- a/tools/perf/arch/x86/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
-@@ -3,7 +3,7 @@
- #include "perf_regs.h"
- #include "thread.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "event.h"
- #include "debug.h"
- #include "tests/tests.h"
-diff --git a/tools/perf/tests/map_groups.c b/tools/perf/tests/map_groups.c
-index 9df1d14db40e..7febd02069ae 100644
---- a/tools/perf/tests/map_groups.c
-+++ b/tools/perf/tests/map_groups.c
-@@ -3,7 +3,7 @@
- #include <linux/kernel.h>
- #include "tests.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "dso.h"
- #include "debug.h"
- 
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 161d8342ce05..2ab2af4d4849 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -8,7 +8,7 @@
- #include "../../util/event.h"
- #include "../../util/hist.h"
- #include "../../util/map.h"
--#include "../../util/map_groups.h"
-+#include "../../util/maps.h"
- #include "../../util/symbol.h"
- #include "../../util/sort.h"
- #include "../../util/evsel.h"
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 14f3edc3c261..f5e77ed237e8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -23,7 +23,7 @@
- #include "dso.h"
- #include "env.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "symbol.h"
- #include "srcline.h"
- #include "units.h"
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index fe602cfc2163..be0a930eca89 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index e72accefd669..5b9b0a813916 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -27,7 +27,7 @@ perf-y += wp.o
+ perf-y += task-exit.o
+ perf-y += sw-clock.o
+ perf-y += mmap-thread-lookup.o
+-perf-y += thread-mg-share.o
++perf-y += thread-maps-share.o
+ perf-y += switch-tracking.o
+ perf-y += keep-tracking.o
+ perf-y += code-reading.o
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index 8b286e9b7549..3a4b9837b54d 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -166,8 +166,8 @@ static struct test generic_tests[] = {
+ 		.func = test__mmap_thread_lookup,
+ 	},
+ 	{
+-		.desc = "Share thread mg",
+-		.func = test__thread_mg_share,
++		.desc = "Share thread maps",
++		.func = test__thread_maps_share,
+ 	},
+ 	{
+ 		.desc = "Sort output of hist entries",
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 9837b6e93023..f2b9bb024746 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -73,7 +73,7 @@ int test__dwarf_unwind(struct test *test, int subtest);
+ int test__expr(struct test *test, int subtest);
+ int test__hists_filter(struct test *test, int subtest);
+ int test__mmap_thread_lookup(struct test *test, int subtest);
+-int test__thread_mg_share(struct test *test, int subtest);
++int test__thread_maps_share(struct test *test, int subtest);
+ int test__hists_output(struct test *test, int subtest);
+ int test__hists_cumulate(struct test *test, int subtest);
+ int test__switch_tracking(struct test *test, int subtest);
+diff --git a/tools/perf/tests/thread-mg-share.c b/tools/perf/tests/thread-maps-share.c
+similarity index 77%
+rename from tools/perf/tests/thread-mg-share.c
+rename to tools/perf/tests/thread-maps-share.c
+index e3b0d692d565..9371484973f2 100644
+--- a/tools/perf/tests/thread-mg-share.c
++++ b/tools/perf/tests/thread-maps-share.c
 @@ -4,7 +4,7 @@
+ #include "thread.h"
+ #include "debug.h"
  
- #include <sys/types.h>
- #include <linux/rbtree.h>
--#include "map_groups.h"
-+#include "maps.h"
- #include "dsos.h"
- #include "rwsem.h"
+-int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_unused)
++int test__thread_maps_share(struct test *test __maybe_unused, int subtest __maybe_unused)
+ {
+ 	struct machines machines;
+ 	struct machine *machine;
+@@ -16,7 +16,7 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
  
-diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/maps.h
-similarity index 96%
-rename from tools/perf/util/map_groups.h
-rename to tools/perf/util/maps.h
-index ada2f401ebab..3dd000ddf925 100644
---- a/tools/perf/util/map_groups.h
-+++ b/tools/perf/util/maps.h
-@@ -1,6 +1,6 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __PERF_MAP_GROUPS_H
--#define __PERF_MAP_GROUPS_H
-+#ifndef __PERF_MAPS_H
-+#define __PERF_MAPS_H
+ 	/* other process */
+ 	struct thread *other, *other_leader;
+-	struct maps *other_mg;
++	struct maps *other_maps;
  
- #include <linux/refcount.h>
- #include <linux/rbtree.h>
-@@ -84,4 +84,4 @@ int maps__merge_in(struct maps *kmaps, struct map *new_map);
+ 	/*
+ 	 * This test create 2 processes abstractions (struct thread)
+@@ -45,14 +45,14 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
+ 	maps = leader->maps;
+ 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&maps->refcnt), 4);
  
- void __maps__sort_by_name(struct maps *maps);
+-	/* test the map groups pointer is shared */
+-	TEST_ASSERT_VAL("map groups don't match", maps == t1->maps);
+-	TEST_ASSERT_VAL("map groups don't match", maps == t2->maps);
+-	TEST_ASSERT_VAL("map groups don't match", maps == t3->maps);
++	/* test the maps pointer is shared */
++	TEST_ASSERT_VAL("maps don't match", maps == t1->maps);
++	TEST_ASSERT_VAL("maps don't match", maps == t2->maps);
++	TEST_ASSERT_VAL("maps don't match", maps == t3->maps);
  
--#endif // __PERF_MAP_GROUPS_H
-+#endif // __PERF_MAPS_H
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index c06cc9764c3b..eea132f512b0 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -28,7 +28,7 @@
- #include "dso.h"
- #include "color.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "symbol.h"
- #include <api/fs/fs.h>
- #include "trace-event.h"	/* For __maybe_unused */
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index fac3f585e9b4..6658fbf196e6 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -9,7 +9,7 @@
+ 	/*
+ 	 * Verify the other leader was created by previous call.
+-	 * It should have shared map groups with no change in
++	 * It should have shared maps with no change in
+ 	 * refcnt.
+ 	 */
+ 	other_leader = machine__find_thread(machine, 4, 4);
+@@ -70,10 +70,10 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
+ 	machine__remove_thread(machine, other);
+ 	machine__remove_thread(machine, other_leader);
  
- #include "dso.h"
- #include "map.h"
--#include "map_groups.h"
-+#include "maps.h"
- #include "symbol.h"
- #include "symsrc.h"
- #include "demangle-java.h"
+-	other_mg = other->maps;
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_mg->refcnt), 2);
++	other_maps = other->maps;
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_maps->refcnt), 2);
+ 
+-	TEST_ASSERT_VAL("map groups don't match", other_mg == other_leader->maps);
++	TEST_ASSERT_VAL("maps don't match", other_maps == other_leader->maps);
+ 
+ 	/* release thread group */
+ 	thread__put(leader);
+@@ -89,7 +89,7 @@ int test__thread_mg_share(struct test *test __maybe_unused, int subtest __maybe_
+ 
+ 	/* release other group  */
+ 	thread__put(other_leader);
+-	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_mg->refcnt), 1);
++	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(&other_maps->refcnt), 1);
+ 
+ 	thread__put(other);
+ 
 -- 
 2.21.0
