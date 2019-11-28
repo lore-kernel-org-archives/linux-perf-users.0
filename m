@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/22] perf script: Move map__fprintf_srccode() to near its only user
-Date: Thu, 28 Nov 2019 10:40:06 -0300
-Message-ID: <20191128134027.23726-2-acme@kernel.org>
+Subject: [PATCH 04/22] perf map: Remove unused functions
+Date: Thu, 28 Nov 2019 10:40:09 -0300
+Message-ID: <20191128134027.23726-5-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,143 +14,95 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-No need to have it elsewhere.
+At some point those stopped being used, prune them.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-8cw846pudpxo0xdkvi9qnvrh@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-p2k98mj3ff2uk1z95sbl5r6e@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 42 ++++++++++++++++++++++++++++++++++
- tools/perf/util/map.c       | 45 -------------------------------------
- tools/perf/util/map.h       |  5 -----
- 3 files changed, 42 insertions(+), 50 deletions(-)
+ tools/perf/util/map.c        | 30 ++++++++----------------------
+ tools/perf/util/map_groups.h |  5 -----
+ 2 files changed, 8 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index f86c5cce5b2c..7b2f0922050c 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -932,6 +932,48 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
- 	return len;
- }
- 
-+static int map__fprintf_srccode(struct map *map, u64 addr, FILE *fp, struct srccode_state *state)
-+{
-+	char *srcfile;
-+	int ret = 0;
-+	unsigned line;
-+	int len;
-+	char *srccode;
-+
-+	if (!map || !map->dso)
-+		return 0;
-+	srcfile = get_srcline_split(map->dso,
-+				    map__rip_2objdump(map, addr),
-+				    &line);
-+	if (!srcfile)
-+		return 0;
-+
-+	/* Avoid redundant printing */
-+	if (state &&
-+	    state->srcfile &&
-+	    !strcmp(state->srcfile, srcfile) &&
-+	    state->line == line) {
-+		free(srcfile);
-+		return 0;
-+	}
-+
-+	srccode = find_sourceline(srcfile, line, &len);
-+	if (!srccode)
-+		goto out_free_line;
-+
-+	ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
-+
-+	if (state) {
-+		state->srcfile = srcfile;
-+		state->line = line;
-+	}
-+	return ret;
-+
-+out_free_line:
-+	free(srcfile);
-+	return ret;
-+}
-+
- static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- {
- 	struct addr_location al;
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 744bfbaf35cf..b59944eb469e 100644
+index b59944eb469e..267d951b5dfd 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -433,51 +433,6 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
- 	return ret;
+@@ -568,6 +568,12 @@ void map_groups__insert(struct map_groups *mg, struct map *map)
+ 	up_write(&maps->lock);
  }
  
--int map__fprintf_srccode(struct map *map, u64 addr,
--			 FILE *fp,
--			 struct srccode_state *state)
++static void __maps__remove(struct maps *maps, struct map *map)
++{
++	rb_erase_init(&map->rb_node, &maps->entries);
++	map__put(map);
++}
++
+ void map_groups__remove(struct map_groups *mg, struct map *map)
+ {
+ 	struct maps *maps = &mg->maps;
+@@ -654,8 +660,8 @@ static bool map__contains_symbol(struct map *map, struct symbol *sym)
+ 	return ip >= map->start && ip < map->end;
+ }
+ 
+-struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name,
+-					 struct map **mapp)
++static struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name,
++						struct map **mapp)
+ {
+ 	struct symbol *sym;
+ 	struct map *pos;
+@@ -890,26 +896,6 @@ static void __maps__insert(struct maps *maps, struct map *map)
+ 	map__get(map);
+ }
+ 
+-void maps__insert(struct maps *maps, struct map *map)
 -{
--	char *srcfile;
--	int ret = 0;
--	unsigned line;
--	int len;
--	char *srccode;
--
--	if (!map || !map->dso)
--		return 0;
--	srcfile = get_srcline_split(map->dso,
--				    map__rip_2objdump(map, addr),
--				    &line);
--	if (!srcfile)
--		return 0;
--
--	/* Avoid redundant printing */
--	if (state &&
--	    state->srcfile &&
--	    !strcmp(state->srcfile, srcfile) &&
--	    state->line == line) {
--		free(srcfile);
--		return 0;
--	}
--
--	srccode = find_sourceline(srcfile, line, &len);
--	if (!srccode)
--		goto out_free_line;
--
--	ret = fprintf(fp, "|%-8d %.*s", line, len, srccode);
--
--	if (state) {
--		state->srcfile = srcfile;
--		state->line = line;
--	}
--	return ret;
--
--out_free_line:
--	free(srcfile);
--	return ret;
+-	down_write(&maps->lock);
+-	__maps__insert(maps, map);
+-	up_write(&maps->lock);
 -}
 -
+-void __maps__remove(struct maps *maps, struct map *map)
+-{
+-	rb_erase_init(&map->rb_node, &maps->entries);
+-	map__put(map);
+-}
 -
- void srccode_state_free(struct srccode_state *state)
+-void maps__remove(struct maps *maps, struct map *map)
+-{
+-	down_write(&maps->lock);
+-	__maps__remove(maps, map);
+-	up_write(&maps->lock);
+-}
+-
+ struct map *maps__find(struct maps *maps, u64 ip)
  {
- 	zfree(&state->srcfile);
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 5e8899883231..1f110b53b5f3 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -138,11 +138,6 @@ char *map__srcline(struct map *map, u64 addr, struct symbol *sym);
- int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
- 			 FILE *fp);
+ 	struct rb_node *p;
+diff --git a/tools/perf/util/map_groups.h b/tools/perf/util/map_groups.h
+index 63ed211fe241..f6270243ac4b 100644
+--- a/tools/perf/util/map_groups.h
++++ b/tools/perf/util/map_groups.h
+@@ -19,9 +19,6 @@ struct maps {
+ 	struct rw_semaphore lock;
+ };
  
--struct srccode_state;
+-void maps__insert(struct maps *maps, struct map *map);
+-void maps__remove(struct maps *maps, struct map *map);
+-void __maps__remove(struct maps *maps, struct map *map);
+ struct map *maps__find(struct maps *maps, u64 addr);
+ struct map *maps__first(struct maps *maps);
+ struct map *map__next(struct map *map);
+@@ -32,8 +29,6 @@ struct map *map__next(struct map *map);
+ #define maps__for_each_entry_safe(maps, map, next) \
+ 	for (map = maps__first(maps), next = map__next(map); map; map = next, next = map__next(map))
+ 
+-struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, struct map **mapp);
 -
--int map__fprintf_srccode(struct map *map, u64 addr,
--			 FILE *fp, struct srccode_state *state);
--
- int map__load(struct map *map);
- struct symbol *map__find_symbol(struct map *map, u64 addr);
- struct symbol *map__find_symbol_by_name(struct map *map, const char *name);
+ struct map_groups {
+ 	struct maps	 maps;
+ 	struct machine	 *machine;
 -- 
 2.21.0
