@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/22] perf regs: Make perf_reg_name() return "unknown" instead of NULL
-Date: Thu, 28 Nov 2019 10:40:23 -0300
-Message-ID: <20191128134027.23726-19-acme@kernel.org>
+Subject: [PATCH 16/22] perf diff: Use llabs() with 64-bit values
+Date: Thu, 28 Nov 2019 10:40:21 -0300
+Message-ID: <20191128134027.23726-17-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,83 +9,46 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Jin Yao <yao.jin@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To avoid breaking the build on arches where this is not wired up, at
-least all the other features should be made available and when using
-this specific routine, the "unknown" should point the user/developer to
-the need to wire this up on this particular hardware architecture.
+To fix these build errors on a debian mipsel cross build environment:
 
-Detected in a container mipsel debian cross build environment, where it
-shows up as:
+  builtin-diff.c: In function 'block_cycles_diff_cmp':
+  builtin-diff.c:550:6: error: absolute value function 'labs' given an argument of type 's64' {aka 'long long int'} but has parameter of type 'long int' which may cause truncation of value [-Werror=absolute-value]
+    550 |  l = labs(left->diff.cycles);
+        |      ^~~~
+  builtin-diff.c:551:6: error: absolute value function 'labs' given an argument of type 's64' {aka 'long long int'} but has parameter of type 'long int' which may cause truncation of value [-Werror=absolute-value]
+    551 |  r = labs(right->diff.cycles);
+        |      ^~~~
 
-  In file included from /usr/mipsel-linux-gnu/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2:
-  /usr/mipsel-linux-gnu/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mipsel-linux-gnu-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Also on mips64:
-
-  In file included from /usr/mips64-linux-gnuabi64/include/stdio.h:867,
-                   from /git/linux/tools/perf/lib/include/perf/cpumap.h:6,
-                   from util/session.c:13:
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_user__printf' at util/session.c:1139:3,
-      inlined from 'dump_sample' at util/session.c:1246:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  In function 'printf',
-      inlined from 'regs_dump__printf' at util/session.c:1103:3,
-      inlined from 'regs__printf' at util/session.c:1131:2,
-      inlined from 'regs_intr__printf' at util/session.c:1147:3,
-      inlined from 'dump_sample' at util/session.c:1249:3,
-      inlined from 'machines__deliver_event' at util/session.c:1421:3:
-  /usr/mips64-linux-gnuabi64/include/bits/stdio2.h:107:10: error: '%-5s' directive argument is null [-Werror=format-overflow=]
-    107 |   return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-cross compiler details:
-
-  mips64-linux-gnuabi64-gcc (Debian 9.2.1-8) 9.2.1 20190909
-
-Fixes: 2bcd355b71da ("perf tools: Add interface to arch registers sets")
+Fixes: 99150a1faab2 ("perf diff: Use hists to manage basic blocks per symbol")
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-95wjyv4o65nuaeweq31t7l1s@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-pn7szy5uw384ntjgk6zckh6a@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/perf_regs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/builtin-diff.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index e014c2c038f4..a45499126184 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -41,7 +41,7 @@ int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 376dbf10ad64..eae879376283 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -547,8 +547,8 @@ static int64_t block_cycles_diff_cmp(struct hist_entry *left,
+ 	if (!pairs_left && !pairs_right)
+ 		return 0;
  
- static inline const char *perf_reg_name(int id __maybe_unused)
- {
--	return NULL;
-+	return "unknown";
+-	l = labs(left->diff.cycles);
+-	r = labs(right->diff.cycles);
++	l = llabs(left->diff.cycles);
++	r = llabs(right->diff.cycles);
+ 	return r - l;
  }
  
- static inline int perf_reg_value(u64 *valp __maybe_unused,
 -- 
 2.21.0
