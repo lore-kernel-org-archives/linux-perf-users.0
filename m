@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/22] perf map: Remove needless struct forward declarations
-Date: Thu, 28 Nov 2019 10:40:08 -0300
-Message-ID: <20191128134027.23726-4-acme@kernel.org>
+Subject: [PATCH 02/22] perf map: Ditch leftover map__reloc_vmlinux() prototype
+Date: Thu, 28 Nov 2019 10:40:07 -0300
+Message-ID: <20191128134027.23726-3-acme@kernel.org>
 References: <20191128134027.23726-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,32 +14,31 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-At some point we may have needed that, not anymore.
+In 39b12f781271 ("perf tools: Make it possible to read object code from vmlinux")
+the actual function was removed, but we forgot to remove the prototype,
+fix it.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-hnao13231bsl7xml5wn8h4iu@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-35yy50cgpcx8cjorluwd5j53@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.h | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/perf/util/map.h | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index c0dffa9ecfe3..aafaea22737c 100644
+index 1f110b53b5f3..c0dffa9ecfe3 100644
 --- a/tools/perf/util/map.h
 +++ b/tools/perf/util/map.h
-@@ -12,11 +12,8 @@
- #include <linux/types.h>
+@@ -144,8 +144,6 @@ struct symbol *map__find_symbol_by_name(struct map *map, const char *name);
+ void map__fixup_start(struct map *map);
+ void map__fixup_end(struct map *map);
  
- struct dso;
--struct ip_callchain;
--struct ref_reloc_sym;
- struct map_groups;
- struct machine;
--struct evsel;
+-void map__reloc_vmlinux(struct map *map);
+-
+ int map__set_kallsyms_ref_reloc_sym(struct map *map, const char *symbol_name,
+ 				    u64 addr);
  
- struct map {
- 	union {
 -- 
 2.21.0
