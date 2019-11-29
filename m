@@ -1,111 +1,71 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Fri, 29 Nov 2019 06:58:58 +0100
-Message-ID: <20191129055858.GA14825@gmail.com>
-References: <20191128134027.23726-1-acme@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 04/15] perf tools: Add map_groups to 'struct
+ addr_location'
+Date: Fri, 29 Nov 2019 14:40:56 +0100
+Message-ID: <20191129134056.GE14169@krava>
+References: <20191112183757.28660-1-acme@kernel.org>
+ <20191112183757.28660-5-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191112183757.28660-5-acme@kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191128134027.23726-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Andrii Nakryiko <andriin@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling, this has a merge with mainline to pick
-> bpf stuff, and the build-test and container build tests were performed
-> with two extra patches I cooked to fix libbpf issuers in some odd 32-bit
-> arches and on generation of some bpf helpers headers that will hit
-> mainline via the bpf/net trees.
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 2ea352d5960ad469f5712cf3e293db97beac4e01:
-> 
->   Merge remote-tracking branch 'torvalds/master' into perf/core (2019-11-26 11:06:19 -0300)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191128
-> 
-> for you to fetch changes up to 5172672da02e483d9b3c4d814c3482d0c8ffb1a6:
-> 
->   perf script: Fix invalid LBR/binary mismatch error (2019-11-28 08:08:38 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/core improvements and fixes:
-> 
-> perf script:
-> 
->   Adrian Hunter:
-> 
->   - Fix brstackinsn for AUXTRACE.
-> 
->   - Fix invalid LBR/binary mismatch error.
-> 
-> perf diff:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Use llabs() with 64-bit values, fixing the build in some 32-bit
->     architectures.
-> 
-> perf pmu:
-> 
->   Andi Kleen:
-> 
->   - Use file system cache to optimize sysfs access.
-> 
-> x86:
-> 
->   Adrian Hunter:
-> 
->   - Add some more Intel instructions to the opcode map and to the perf
->     test entry:
-> 
->       gf2p8affineinvqb, gf2p8affineqb, gf2p8mulb, v4fmaddps,
->       v4fmaddss, v4fnmaddps, v4fnmaddss, vaesdec, vaesdeclast, vaesenc,
->       vaesenclast, vcvtne2ps2bf16, vcvtneps2bf16, vdpbf16ps,
->       vgf2p8affineinvqb, vgf2p8affineqb, vgf2p8mulb, vp2intersectd,
->       vp2intersectq, vp4dpwssd, vp4dpwssds, vpclmulqdq, vpcompressb,
->       vpcompressw, vpdpbusd, vpdpbusds, vpdpwssd, vpdpwssds, vpexpandb,
->       vpexpandw, vpopcntb, vpopcntd, vpopcntq, vpopcntw, vpshldd, vpshldq,
->       vpshldvd, vpshldvq, vpshldvw, vpshldw, vpshrdd, vpshrdq, vpshrdvd,
->       vpshrdvq, vpshrdvw, vpshrdw, vpshufbitqmb.
-> 
-> perf affinity:
-> 
->   Andi Kleen:
-> 
->   - Add infrastructure to save/restore affinity
-> 
-> perf maps:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Merge 'struct maps' with 'struct map_groups', as there is a
->     1x1 relationship, simplifying code overal.
-> 
-> perf build:
-> 
->   Jiri Olsa:
-> 
->   - Allow to link with libbpf dynamicaly.
-> 
+On Tue, Nov 12, 2019 at 03:37:46PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> From there we can get al->mg->machine, so replace that field with the
+> more useful 'struct map_groups' that for now we're obtaining from
+> al->map->groups, and that is one thing getting into the way of maps
+> being fully shareable.
+>=20
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lkml.kernel.org/n/tip-4qdducrm32tgrjupcp0kjh1e@git.kernel.o=
+rg
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/callchain.c                          |  6 +++---
+>  tools/perf/util/db-export.c                          | 12 ++++++------
+>  tools/perf/util/event.c                              |  6 +++---
+>  .../perf/util/scripting-engines/trace-event-python.c |  2 +-
+>  tools/perf/util/symbol.h                             |  2 +-
+>  5 files changed, 14 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 9a9b56ed3f0a..89faa644b0bc 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1119,8 +1119,8 @@ int fill_callchain_info(struct addr_location *al, s=
+truct callchain_cursor_node *
+>  =09=09=09goto out;
+>  =09}
+> =20
+> -=09if (al->map->groups =3D=3D &al->machine->kmaps) {
+> -=09=09if (machine__is_host(al->machine)) {
+> +=09if (al->mg =3D=3D &al->mg->machine->kmaps) {
 
->  66 files changed, 2230 insertions(+), 618 deletions(-)
+heya, I'm getting segfault because of this change
 
-Pulled, thanks a lot Arnaldo!
+perf record --call-graph dwarf ./ex
 
-	Ingo
+=09(gdb) r report --stdio
+=09Program received signal SIGSEGV, Segmentation fault.
+=09fill_callchain_info (al=3D0x7fffffffa1b0, node=3D0xcd2bd0, hide_unresolv=
+ed=3Dfalse) at util/callchain.c:1122
+=091122            if (al->maps =3D=3D &al->maps->machine->kmaps) {
+=09(gdb) p al->maps
+=09$1 =3D (struct maps *) 0x0
+
+I wish all those map changes would go through some review,
+I have no idea how the code works now ;-)
+
+thanks,
+jirka
