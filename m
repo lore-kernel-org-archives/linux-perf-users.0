@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 23/23] libtraceevent: Copy pkg-config file to output folder when using O=
-Date: Tue,  3 Dec 2019 10:56:06 -0300
-Message-ID: <20191203135606.24902-24-acme@kernel.org>
+Subject: [PATCH 16/23] tools headers uapi: Sync linux/stat.h with the kernel sources
+Date: Tue,  3 Dec 2019 10:55:59 -0300
+Message-ID: <20191203135606.24902-17-acme@kernel.org>
 References: <20191203135606.24902-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,42 +9,50 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, linux-trace-devel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Eric Biggers <ebiggers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-When we use 'O=' with make to build libtraceevent in a separate folder
-it still copies 'libtraceevent.pc' to its source folder. Modify the
-Makefile so that it uses the output folder to copy the pkg-config file
-and install from there.
+To pick the changes from:
 
-Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191115113610.21493-2-sudipm.mukherjee@gmail.com
+  3ad2522c64cf ("statx: define STATX_ATTR_VERITY")
+
+That don't trigger any changes in tooling.
+
+This silences this perf build warning:
+
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/stat.h' differs from latest version at 'include/uapi/linux/stat.h'
+  diff -u tools/include/uapi/linux/stat.h include/uapi/linux/stat.h
+
+At some point we wi'll beautify structs passed in pointers to syscalls
+and then we'll need to have tables for these defines, for now update the
+file to silence the warning as this file is used for doing this type of
+number -> string translations for other defines found in these file.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Eric Biggers <ebiggers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-thcy60dpry5qrpn7nmc58bwg@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/include/uapi/linux/stat.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 83446fe2cf01..c5a03356a999 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -208,10 +208,11 @@ define do_install
- 	$(INSTALL) $(if $3,-m $3,) $1 '$(DESTDIR_SQ)$2'
- endef
+diff --git a/tools/include/uapi/linux/stat.h b/tools/include/uapi/linux/stat.h
+index 7b35e98d3c58..ad80a5c885d5 100644
+--- a/tools/include/uapi/linux/stat.h
++++ b/tools/include/uapi/linux/stat.h
+@@ -167,8 +167,8 @@ struct statx {
+ #define STATX_ATTR_APPEND		0x00000020 /* [I] File is append-only */
+ #define STATX_ATTR_NODUMP		0x00000040 /* [I] File is not to be dumped */
+ #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+-
+ #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
++#define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
  
--PKG_CONFIG_FILE = libtraceevent.pc
-+PKG_CONFIG_SOURCE_FILE = libtraceevent.pc
-+PKG_CONFIG_FILE := $(addprefix $(OUTPUT),$(PKG_CONFIG_SOURCE_FILE))
- define do_install_pkgconfig_file
- 	if [ -n "${pkgconfig_dir}" ]; then 					\
--		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
-+		cp -f ${PKG_CONFIG_SOURCE_FILE}.template ${PKG_CONFIG_FILE};	\
- 		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
- 		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
- 		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
+ 
+ #endif /* _UAPI_LINUX_STAT_H */
 -- 
 2.21.0
