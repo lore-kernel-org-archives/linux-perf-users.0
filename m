@@ -1,150 +1,84 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/23] perf stat: Factor out open error handling
-Date: Tue,  3 Dec 2019 10:55:49 -0300
-Message-ID: <20191203135606.24902-7-acme@kernel.org>
-References: <20191203135606.24902-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
+ 32-bit arches
+Date: Tue, 3 Dec 2019 11:41:07 -0300
+Message-ID: <20191203144107.GC3247@kernel.org>
+References: <20191126190450.GD29071@kernel.org>
+ <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org>
+ <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net>
+ <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org>
+ <20191127134553.GC22719@kernel.org>
+ <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jakub Kicinski <jakub.kicinski@netronome.com>, Stanislav Fomichev <sdf@fomichev.me>, Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>, Andrii Nakryiko <andriin@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Quentin Monnet <quentin.monnet@netronome.com>, Leo Yan <leo.yan@linaro.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+Em Tue, Dec 03, 2019 at 07:20:08PM +0530, Naresh Kamboju escreveu:
+> Hi Arnaldo,
+> 
+> FYI,
+> 
+> On Wed, 27 Nov 2019 at 19:15, Arnaldo Carvalho de Melo
+> <arnaldo.melo@gmail.com> wrote:
+> >
+> > Another fix I'm carrying in my perf/core branch,
+> >
+> > Regards,
+> >
+> > - Arnaldo
+> >
+> > commit 98bb09f90a0ae33125fabc8f41529345382f1498
+> > Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date:   Wed Nov 27 09:26:54 2019 -0300
+> >
+> >     libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+> >
+> >     The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+> >     32-bit arches:
+> >
+> >       In file included from libbpf.c:52:
+> >       libbpf.c: In function 'bpf_program__record_reloc':
+> >       libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+> >         libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+> >                             ^~~~~~~~~~
+> >       libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+> >        #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+> >                                  ^~~~
+> >       libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+> >           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+> >           ^~~~~~~
+> >       libbpf.c:1822:37: note: format string is defined here
+> >           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+> >                                          ~~^
+> >                                          %llu
+> 
+> This build error is been noticed on Linux mainline kernel for 32-bit
+> architectures from Nov 26.
 
-Factor out the open error handling into a separate function.  This is
-useful for followon patches who need to duplicate this.
+Right, the fix is in the bpf tree:
 
-No behavior change intended.
+https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git/commit/?id=7c3977d1e804
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191121001522.180827-9-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-stat.c | 100 +++++++++++++++++++++++---------------
- 1 file changed, 60 insertions(+), 40 deletions(-)
+Should go upstream soon.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 0a15253b438c..1d9d7161815e 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -420,6 +420,57 @@ static bool is_target_alive(struct target *_target,
- 	return false;
- }
+- Arnaldo
  
-+enum counter_recovery {
-+	COUNTER_SKIP,
-+	COUNTER_RETRY,
-+	COUNTER_FATAL,
-+};
-+
-+static enum counter_recovery stat_handle_error(struct evsel *counter)
-+{
-+	char msg[BUFSIZ];
-+	/*
-+	 * PPC returns ENXIO for HW counters until 2.6.37
-+	 * (behavior changed with commit b0a873e).
-+	 */
-+	if (errno == EINVAL || errno == ENOSYS ||
-+	    errno == ENOENT || errno == EOPNOTSUPP ||
-+	    errno == ENXIO) {
-+		if (verbose > 0)
-+			ui__warning("%s event is not supported by the kernel.\n",
-+				    perf_evsel__name(counter));
-+		counter->supported = false;
-+
-+		if ((counter->leader != counter) ||
-+		    !(counter->leader->core.nr_members > 1))
-+			return COUNTER_SKIP;
-+	} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
-+		if (verbose > 0)
-+			ui__warning("%s\n", msg);
-+		return COUNTER_RETRY;
-+	} else if (target__has_per_thread(&target) &&
-+		   evsel_list->core.threads &&
-+		   evsel_list->core.threads->err_thread != -1) {
-+		/*
-+		 * For global --per-thread case, skip current
-+		 * error thread.
-+		 */
-+		if (!thread_map__remove(evsel_list->core.threads,
-+					evsel_list->core.threads->err_thread)) {
-+			evsel_list->core.threads->err_thread = -1;
-+			return COUNTER_RETRY;
-+		}
-+	}
-+
-+	perf_evsel__open_strerror(counter, &target,
-+				  errno, msg, sizeof(msg));
-+	ui__error("%s\n", msg);
-+
-+	if (child_pid != -1)
-+		kill(child_pid, SIGTERM);
-+	return COUNTER_FATAL;
-+}
-+
- static int __run_perf_stat(int argc, const char **argv, int run_idx)
- {
- 	int interval = stat_config.interval;
-@@ -469,47 +520,16 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 				goto try_again;
- 			}
- 
--			/*
--			 * PPC returns ENXIO for HW counters until 2.6.37
--			 * (behavior changed with commit b0a873e).
--			 */
--			if (errno == EINVAL || errno == ENOSYS ||
--			    errno == ENOENT || errno == EOPNOTSUPP ||
--			    errno == ENXIO) {
--				if (verbose > 0)
--					ui__warning("%s event is not supported by the kernel.\n",
--						    perf_evsel__name(counter));
--				counter->supported = false;
--
--				if ((counter->leader != counter) ||
--				    !(counter->leader->core.nr_members > 1))
--					continue;
--			} else if (perf_evsel__fallback(counter, errno, msg, sizeof(msg))) {
--                                if (verbose > 0)
--                                        ui__warning("%s\n", msg);
--                                goto try_again;
--			} else if (target__has_per_thread(&target) &&
--				   evsel_list->core.threads &&
--				   evsel_list->core.threads->err_thread != -1) {
--				/*
--				 * For global --per-thread case, skip current
--				 * error thread.
--				 */
--				if (!thread_map__remove(evsel_list->core.threads,
--							evsel_list->core.threads->err_thread)) {
--					evsel_list->core.threads->err_thread = -1;
--					goto try_again;
--				}
-+			switch (stat_handle_error(counter)) {
-+			case COUNTER_FATAL:
-+				return -1;
-+			case COUNTER_RETRY:
-+				goto try_again;
-+			case COUNTER_SKIP:
-+				continue;
-+			default:
-+				break;
- 			}
--
--			perf_evsel__open_strerror(counter, &target,
--						  errno, msg, sizeof(msg));
--			ui__error("%s\n", msg);
--
--			if (child_pid != -1)
--				kill(child_pid, SIGTERM);
--
--			return -1;
- 		}
- 		counter->supported = true;
- 
+> Full build log,
+> https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/2297/consoleText
+> https://ci.linaro.org/job/openembedded-lkft-linux-mainline/
+> 
+> - Naresh
+
 -- 
-2.21.0
+
+- Arnaldo
