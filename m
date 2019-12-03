@@ -1,92 +1,66 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: perf is unable to read dward from go programs
-Date: Tue, 3 Dec 2019 11:22:34 +0100
-Message-ID: <20191203102234.GE17468@krava>
-References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
- <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
- <20191129134929.GA26903@krava>
- <20191129151436.GB26963@kernel.org>
- <CABWYdi19LmOHC0Ect-8vNXz0uF2tNC1XmDQfMn0fmYOt2yJH9w@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: [PATCH] libbpf: Use PRIu64 for sym->st_value to fix build on
+ 32-bit arches
+Date: Tue, 3 Dec 2019 19:20:08 +0530
+Message-ID: <CA+G9fYsK8zn3jqF=Wz6=8BBx4i1JTkv2h-LCbjE11UJkcz_NEA@mail.gmail.com>
+References: <20191126183451.GC29071@kernel.org> <87d0dexyij.fsf@toke.dk>
+ <20191126190450.GD29071@kernel.org> <CAEf4Bzbq3J9g7cP=KMqR=bMFcs=qPiNZwnkvCKz3-SAp_m0GzA@mail.gmail.com>
+ <20191126221018.GA22719@kernel.org> <20191126221733.GB22719@kernel.org>
+ <CAEf4BzbZLiJnUb+BdUMEwcgcKCjJBWx1895p8qS8rK2r5TYu3w@mail.gmail.com>
+ <20191126231030.GE3145429@mini-arch.hsd1.ca.comcast.net> <20191126155228.0e6ed54c@cakuba.netronome.com>
+ <20191127013901.GE29071@kernel.org> <20191127134553.GC22719@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABWYdi19LmOHC0Ect-8vNXz0uF2tNC1XmDQfMn0fmYOt2yJH9w@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Babrou <ivan@cloudflare.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20191127134553.GC22719@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jakub Kicinski <jakub.kicinski@netronome.com>, Stanislav Fomichev <sdf@fomichev.me>, =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>, Andrii Nakryiko <andriin@fb.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jiri Olsa <jolsa@kernel.org>, Martin KaFai Lau <kafai@fb.com>, Namhyung Kim <namhyung@kernel.org>, bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Quentin Monnet <quentin.monnet@netronome.com>, Leo Yan <leo.yan@linaro.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Dec 02, 2019 at 11:49:55AM -0800, Ivan Babrou wrote:
-> I've tried building with libdw with mixed results:
->=20
-> 1. I can see stacks from some Go programs that were invisible before (yay=
-!)
->=20
-> 2. Warnings like below still appear in great numbers for a system-wide
-> flamegraph:
->=20
-> BFD: Dwarf Error: found dwarf version '18345', this reader only
-> handles version 2, 3 and 4 information.
->=20
-> I'm not sure how to pinpoint this to a particular binary and would
-> appreciate some help with this.
+Hi Arnaldo,
 
-I'd need some way of reproducing this, could you please
-paste me command lines you used?
+FYI,
 
->=20
-> 3. It takes minutes to produce a flamegraph of a running system
-> whereas before it only took seconds. See this flamegraph of "perf
-> script" itself:
->=20
-> * https://gist.github.com/bobrik/a9c46cffe9daa5840abd137443d8bab0#file-fl=
-amegraph-perf-svg
->=20
-> Seems like there is no caching and debug info is getting reparsed
-> continuously for every stack. It's possible that it was not an issue
-> before, because we spent no time decompressing dwarf.
+On Wed, 27 Nov 2019 at 19:15, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Another fix I'm carrying in my perf/core branch,
+>
+> Regards,
+>
+> - Arnaldo
+>
+> commit 98bb09f90a0ae33125fabc8f41529345382f1498
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Wed Nov 27 09:26:54 2019 -0300
+>
+>     libbpf: Use PRIu64 for sym->st_value to fix build on 32-bit arches
+>
+>     The st_value field is a 64-bit value, so use PRIu64 to fix this error on
+>     32-bit arches:
+>
+>       In file included from libbpf.c:52:
+>       libbpf.c: In function 'bpf_program__record_reloc':
+>       libbpf_internal.h:59:22: error: format '%lu' expects argument of type 'long unsigned int', but argument 3 has type 'Elf64_Addr' {aka 'const long long unsigned int'} [-Werror=format=]
+>         libbpf_print(level, "libbpf: " fmt, ##__VA_ARGS__); \
+>                             ^~~~~~~~~~
+>       libbpf_internal.h:62:27: note: in expansion of macro '__pr'
+>        #define pr_warn(fmt, ...) __pr(LIBBPF_WARN, fmt, ##__VA_ARGS__)
+>                                  ^~~~
+>       libbpf.c:1822:4: note: in expansion of macro 'pr_warn'
+>           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+>           ^~~~~~~
+>       libbpf.c:1822:37: note: format string is defined here
+>           pr_warn("bad call relo offset: %lu\n", sym->st_value);
+>                                          ~~^
+>                                          %llu
 
-possibly, if we have some clear reproducer we can hand it
-to the libdw guy that helped us develop this
+This build error is been noticed on Linux mainline kernel for 32-bit
+architectures from Nov 26.
 
->=20
-> 4. Pretty much all luajit frames stacks that were marked as unknown
-> before are now gone.
->=20
-> See before and after here: https://imgur.com/a/1LNfqAk
->=20
-> Before:
->=20
-> nginx-cache 94572 446642.722028:   10101010 cpu-clock:
->             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
->             5607d8d5a09d ngx_http_lua_ffi_shdict_incr+0xcd
-> (/usr/local/nginx-cache/sbin/nginx-cache)
->             560802fe58e4 [unknown] (/tmp/perf-94572.map)
->=20
-> After:
->=20
-> nginx-cache 94572 446543.008703:   10101010 cpu-clock:
->             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
->             5607d8d59da7 ngx_http_lua_ffi_shdict_get+0x197
-> (/usr/local/nginx-cache/sbin/nginx-cache)
->=20
-> The key is /tmp/perf-*.map frame at the bottom. I don't know if it's
-> expected, but we grew dependent on knowing this.
->=20
-> 5. Special [[stack]], [[heap]] and [anon] frames are also gone, and
-> you can see the following during "perf script" run:
->=20
-> open("[stack]", O_RDONLY)               =3D -1 ENOENT (No such file or di=
-rectory)
-> open("[heap]", O_RDONLY)                =3D -1 ENOENT (No such file or di=
-rectory)
-> open("//anon", O_RDONLY)                =3D -1 ENOENT (No such file or di=
-rectory)
+Full build log,
+https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/2297/consoleText
+https://ci.linaro.org/job/openembedded-lkft-linux-mainline/
 
-strange, let's start with the reproducer and I'll check
-on this if I see it
-
-thanks,
-jirka
+- Naresh
