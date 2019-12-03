@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/23] perf jit: Move test functionality in to a test
-Date: Tue,  3 Dec 2019 10:55:54 -0300
-Message-ID: <20191203135606.24902-12-acme@kernel.org>
+Subject: [PATCH 14/23] tools arch x86: Sync the msr-index.h copy with the kernel sources
+Date: Tue,  3 Dec 2019 10:55:57 -0300
+Message-ID: <20191203135606.24902-15-acme@kernel.org>
 References: <20191203135606.24902-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,231 +9,163 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexios Zavras <alexios.zavras@intel.com>, Allison Randal <allison@lohutok.net>, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Olsa <jolsa@redhat.com>, Kate Stewart <kstewart@linuxfoundation.org>, Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Vineela Tummalapalli <vineela.tummalapalli@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Adds a test for minimal jit_write_elf functionality.
+To pick up the changes from these csets:
 
-Committer testing:
+  3f3c8be973af Merge tag 'for-linus-5.5a-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip
+  4e3f77d8419b ("xen/mcelog: add PPIN to record when available")
+  db4d30fbb71b ("x86/bugs: Add ITLB_MULTIHIT bug infrastructure")
+  1b42f017415b ("x86/speculation/taa: Add mitigation for TSX Async Abort")
+  c2955f270a84 ("x86/msr: Add the IA32_TSX_CTRL MSR")
 
-  # perf test jit
-  61: Test jit_write_elf                                    : Ok
+These are the changes in tooling that this udpate ensues:
+
+  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > /tmp/before
+  $
+  $ cp arch/x86/include/asm/msr-index.h tools/arch/x86/include/asm/msr-index.h
+  $
+  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > /tmp/after
+  $ diff -u /tmp/before /tmp/after
+  --- /tmp/before	2019-12-02 11:54:44.371035723 -0300
+  +++ /tmp/after	2019-12-02 11:55:31.847859784 -0300
+  @@ -48,6 +48,7 @@
+   	[0x00000119] = "IA32_BBL_CR_CTL",
+   	[0x0000011e] = "IA32_BBL_CR_CTL3",
+   	[0x00000120] = "IDT_MCR_CTRL",
+  +	[0x00000122] = "IA32_TSX_CTRL",
+   	[0x00000140] = "MISC_FEATURES_ENABLES",
+   	[0x00000174] = "IA32_SYSENTER_CS",
+   	[0x00000175] = "IA32_SYSENTER_ESP",
+  @@ -283,4 +284,6 @@
+   	[0xc0010240 - x86_AMD_V_KVM_MSRs_offset] = "F15H_NB_PERF_CTL",
+   	[0xc0010241 - x86_AMD_V_KVM_MSRs_offset] = "F15H_NB_PERF_CTR",
+   	[0xc0010280 - x86_AMD_V_KVM_MSRs_offset] = "F15H_PTSC",
+  +	[0xc00102f0 - x86_AMD_V_KVM_MSRs_offset] = "AMD_PPIN_CTL",
+  +	[0xc00102f1 - x86_AMD_V_KVM_MSRs_offset] = "AMD_PPIN",
+   };
+  $
+
+  CC       /tmp/build/perf/trace/beauty/tracepoints/x86_msr.o
+  LD       /tmp/build/perf/trace/beauty/tracepoints/perf-in.o
+  LD       /tmp/build/perf/trace/beauty/perf-in.o
+  LD       /tmp/build/perf/perf-in.o
+
+Now it is possible to use these strings when setting up filters for the msr:*
+tracepoints, like:
+
+  # perf trace -e msr:* --filter=msr==IA32_TSX_CTRL
+  ^C[root@quaco ~]#
+
+If we use an invalid operator we can check what is the filter that is put in
+place:
+
+  # perf trace -e msr:* --filter=msr=IA32_TSX_CTRL
+  Failed to set filter "(msr=0x122) && (common_pid != 25976 && common_pid != 25860)" on event msr:read_msr with 22 (Invalid argument)
+
+One can as well use -v to see the tracepoints and its filters:
+
+  # perf trace -v -e msr:* --filter=msr==IA32_TSX_CTRL
+  Using CPUID GenuineIntel-6-8E-A
+  New filter for msr:read_msr: (msr==0x122) && (common_pid != 26110 && common_pid != 25860)
+  New filter for msr:write_msr: (msr==0x122) && (common_pid != 26110 && common_pid != 25860)
+  New filter for msr:rdpmc: (msr==0x122) && (common_pid != 26110 && common_pid != 25860)
+  mmap size 528384B
+  ^C#
+
+Better than keep looking up those numbers, works with callchains as
+well, e.g. for something more common:
+
+  # perf trace -e msr:*/max-stack=16/ --filter="msr==IA32_SPEC_CTRL" --max-events=2
+       0.000 SCTP timer/6158 msr:write_msr(msr: IA32_SPEC_CTRL, val: 6)
+                                         do_trace_write_msr ([kernel.kallsyms])
+                                         do_trace_write_msr ([kernel.kallsyms])
+                                         __switch_to_xtra ([kernel.kallsyms])
+                                         __switch_to ([kernel.kallsyms])
+                                         __sched_text_start ([kernel.kallsyms])
+                                         schedule ([kernel.kallsyms])
+                                         schedule_hrtimeout_range_clock ([kernel.kallsyms])
+                                         poll_schedule_timeout.constprop.0 ([kernel.kallsyms])
+                                         do_select ([kernel.kallsyms])
+                                         core_sys_select ([kernel.kallsyms])
+                                         kern_select ([kernel.kallsyms])
+                                         __x64_sys_select ([kernel.kallsyms])
+                                         do_syscall_64 ([kernel.kallsyms])
+                                         entry_SYSCALL_64 ([kernel.kallsyms])
+                                         __select (/usr/lib64/libc-2.29.so)
+                                         [0] ([unknown])
+       0.024 :0/0 msr:write_msr(msr: IA32_SPEC_CTRL)
+                                         do_trace_write_msr ([kernel.kallsyms])
+                                         do_trace_write_msr ([kernel.kallsyms])
+                                         __switch_to_xtra ([kernel.kallsyms])
+                                         __switch_to ([kernel.kallsyms])
+                                         __sched_text_start ([kernel.kallsyms])
+                                         schedule_idle ([kernel.kallsyms])
+                                         do_idle ([kernel.kallsyms])
+                                         cpu_startup_entry ([kernel.kallsyms])
+                                         start_secondary ([kernel.kallsyms])
+                                         [0x2000d4] ([kernel.kallsyms])
   #
 
-  # perf test -v jit
-  61: Test jit_write_elf                                    :
-  --- start ---
-  test child forked, pid 10460
-  Writing jit code to: /tmp/perf-test-KqxURR
-  test child finished with 0
-  ---- end ----
-  Test jit_write_elf: Ok
-  #
-
-Committer notes:
-
-Fix up the case where HAVE_JITDUMP is no defined.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Kate Stewart <kstewart@linuxfoundation.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Jan Beulich <jbeulich@suse.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Juergen Gross <jgross@suse.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20191126235913.41855-1-irogers@google.com
+Cc: Vineela Tummalapalli <vineela.tummalapalli@intel.com>
+Link: https://lkml.kernel.org/n/tip-n1xd78fpd5lxn4q1brqi2jl6@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/Build          |  1 +
- tools/perf/tests/builtin-test.c |  4 +++
- tools/perf/tests/genelf.c       | 51 +++++++++++++++++++++++++++++++++
- tools/perf/tests/tests.h        |  1 +
- tools/perf/util/genelf.c        | 46 -----------------------------
- 5 files changed, 57 insertions(+), 46 deletions(-)
- create mode 100644 tools/perf/tests/genelf.c
+ tools/arch/x86/include/asm/msr-index.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index a3c595fba943..1692529639b0 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -54,6 +54,7 @@ perf-y += unit_number__scnprintf.o
- perf-y += mem2node.o
- perf-y += maps.o
- perf-y += time-utils-test.o
-+perf-y += genelf.o
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index 20ce682a2540..084e98da04a7 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -93,6 +93,18 @@
+ 						  * Microarchitectural Data
+ 						  * Sampling (MDS) vulnerabilities.
+ 						  */
++#define ARCH_CAP_PSCHANGE_MC_NO		BIT(6)	 /*
++						  * The processor is not susceptible to a
++						  * machine check error due to modifying the
++						  * code page size along with either the
++						  * physical address or cache type
++						  * without TLB invalidation.
++						  */
++#define ARCH_CAP_TSX_CTRL_MSR		BIT(7)	/* MSR for TSX control is available. */
++#define ARCH_CAP_TAA_NO			BIT(8)	/*
++						 * Not susceptible to
++						 * TSX Async Abort (TAA) vulnerabilities.
++						 */
  
- $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
- 	$(call rule_mkdir)
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 82d19a8fcac7..5f05db75cdd8 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -301,6 +301,10 @@ static struct test generic_tests[] = {
- 		.desc = "time utils",
- 		.func = test__time_utils,
- 	},
-+	{
-+		.desc = "Test jit_write_elf",
-+		.func = test__jit_write_elf,
-+	},
- 	{
- 		.desc = "maps__merge_in",
- 		.func = test__maps__merge_in,
-diff --git a/tools/perf/tests/genelf.c b/tools/perf/tests/genelf.c
-new file mode 100644
-index 000000000000..f797f9823e89
---- /dev/null
-+++ b/tools/perf/tests/genelf.c
-@@ -0,0 +1,51 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <linux/compiler.h>
-+
-+#include "debug.h"
-+#include "tests.h"
-+
-+#ifdef HAVE_JITDUMP
-+#include <libelf.h>
-+#include "../util/genelf.h"
-+#endif
-+
-+#define TEMPL "/tmp/perf-test-XXXXXX"
-+
-+int test__jit_write_elf(struct test *test __maybe_unused,
-+			int subtest __maybe_unused)
-+{
-+#ifdef HAVE_JITDUMP
-+	static unsigned char x86_code[] = {
-+		0xBB, 0x2A, 0x00, 0x00, 0x00, /* movl $42, %ebx */
-+		0xB8, 0x01, 0x00, 0x00, 0x00, /* movl $1, %eax */
-+		0xCD, 0x80            /* int $0x80 */
-+	};
-+	char path[PATH_MAX];
-+	int fd, ret;
-+
-+	strcpy(path, TEMPL);
-+
-+	fd = mkstemp(path);
-+	if (fd < 0) {
-+		perror("mkstemp failed");
-+		return TEST_FAIL;
-+	}
-+
-+	pr_info("Writing jit code to: %s\n", path);
-+
-+	ret = jit_write_elf(fd, 0, "main", x86_code, sizeof(x86_code),
-+			NULL, 0, NULL, 0, 0);
-+	close(fd);
-+
-+	unlink(path);
-+
-+	return ret ? TEST_FAIL : 0;
-+#else
-+	return TEST_SKIP;
-+#endif
-+}
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 4f9ae6af78ec..9a160fef47c9 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -110,6 +110,7 @@ int test__unit_number__scnprint(struct test *test, int subtest);
- int test__mem2node(struct test *t, int subtest);
- int test__maps__merge_in(struct test *t, int subtest);
- int test__time_utils(struct test *t, int subtest);
-+int test__jit_write_elf(struct test *test, int subtest);
+ #define MSR_IA32_FLUSH_CMD		0x0000010b
+ #define L1D_FLUSH			BIT(0)	/*
+@@ -103,6 +115,10 @@
+ #define MSR_IA32_BBL_CR_CTL		0x00000119
+ #define MSR_IA32_BBL_CR_CTL3		0x0000011e
  
- bool test__bp_signal_is_supported(void);
- bool test__bp_account_is_supported(void);
-diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
-index f9f18b8b1df9..aed49806a09b 100644
---- a/tools/perf/util/genelf.c
-+++ b/tools/perf/util/genelf.c
-@@ -8,15 +8,12 @@
-  */
- 
- #include <sys/types.h>
--#include <stdio.h>
--#include <getopt.h>
- #include <stddef.h>
- #include <libelf.h>
- #include <string.h>
- #include <stdlib.h>
- #include <unistd.h>
- #include <inttypes.h>
--#include <limits.h>
- #include <fcntl.h>
- #include <err.h>
- #ifdef HAVE_DWARF_SUPPORT
-@@ -31,8 +28,6 @@
- #define NT_GNU_BUILD_ID 3
- #endif
- 
--#define JVMTI
--
- #define BUILD_ID_URANDOM /* different uuid for each run */
- 
- #ifdef HAVE_LIBCRYPTO
-@@ -511,44 +506,3 @@ jit_write_elf(int fd, uint64_t load_addr, const char *sym,
- 
- 	return retval;
- }
--
--#ifndef JVMTI
--
--static unsigned char x86_code[] = {
--    0xBB, 0x2A, 0x00, 0x00, 0x00, /* movl $42, %ebx */
--    0xB8, 0x01, 0x00, 0x00, 0x00, /* movl $1, %eax */
--    0xCD, 0x80            /* int $0x80 */
--};
--
--static struct options options;
--
--int main(int argc, char **argv)
--{
--	int c, fd, ret;
--
--	while ((c = getopt(argc, argv, "o:h")) != -1) {
--		switch (c) {
--		case 'o':
--			options.output = optarg;
--			break;
--		case 'h':
--			printf("Usage: genelf -o output_file [-h]\n");
--			return 0;
--		default:
--			errx(1, "unknown option");
--		}
--	}
--
--	fd = open(options.output, O_CREAT|O_TRUNC|O_RDWR, 0666);
--	if (fd == -1)
--		err(1, "cannot create file %s", options.output);
--
--	ret = jit_write_elf(fd, "main", x86_code, sizeof(x86_code));
--	close(fd);
--
--	if (ret != 0)
--		unlink(options.output);
--
--	return ret;
--}
--#endif
++#define MSR_IA32_TSX_CTRL		0x00000122
++#define TSX_CTRL_RTM_DISABLE		BIT(0)	/* Disable RTM feature */
++#define TSX_CTRL_CPUID_CLEAR		BIT(1)	/* Disable TSX enumeration */
++
+ #define MSR_IA32_SYSENTER_CS		0x00000174
+ #define MSR_IA32_SYSENTER_ESP		0x00000175
+ #define MSR_IA32_SYSENTER_EIP		0x00000176
+@@ -393,6 +409,8 @@
+ #define MSR_AMD_PSTATE_DEF_BASE		0xc0010064
+ #define MSR_AMD64_OSVW_ID_LENGTH	0xc0010140
+ #define MSR_AMD64_OSVW_STATUS		0xc0010141
++#define MSR_AMD_PPIN_CTL		0xc00102f0
++#define MSR_AMD_PPIN			0xc00102f1
+ #define MSR_AMD64_LS_CFG		0xc0011020
+ #define MSR_AMD64_DC_CFG		0xc0011022
+ #define MSR_AMD64_BU_CFG2		0xc001102a
 -- 
 2.21.0
