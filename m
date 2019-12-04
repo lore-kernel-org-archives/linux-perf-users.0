@@ -1,112 +1,184 @@
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events
-Date: Wed, 4 Dec 2019 12:25:22 +0530
-Message-ID: <ed80bcc2-a507-bcf8-9084-181b18b6a95f@linux.ibm.com>
-References: <20191120084059.24458-1-kjain@linux.ibm.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Wed, 4 Dec 2019 08:51:34 +0100
+Message-ID: <20191204075134.GA29770@gmail.com>
+References: <20191203135606.24902-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191120084059.24458-1-kjain@linux.ibm.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20191203135606.24902-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Ian Rogers <irogers@google.com>, Sudipm Mukherjee <sudipm.mukherjee@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-On 11/20/19 2:10 PM, Kajol Jain wrote:
-> Commit f01642e4912b ("perf metricgroup: Support multiple
-> events for metricgroup") introduced support for multiple events
-> in a metric group. But with the current upstream, metric events
-> names are not printed properly
+> Hi Ingo/Thomas,
 > 
-> In power9 platform:
-> command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
->       1.000208486
->       2.000368863
->       2.001400558
+> 	Please consider pulling,
 > 
-> Similarly in skylake platform:
-> command:./perf stat --metric-only -M Power -I 1000
->       1.000579994
->       2.002189493
+> Best regards,
 > 
-> With current upstream version, issue is with event name comparison
-> logic in find_evsel_group(). Current logic is to compare events
-> belonging to a metric group to the events in perf_evlist.
-> Since the break statement is missing in the loop used for comparison
-> between metric group and perf_evlist events, the loop continues to
-> execute even after getting a pattern match, and end up in discarding
-> the matches.
-> Incase of single metric event belongs to metric group, its working fine,
-> because in case of single event once it compare all events it reaches to
-> end of perf_evlist.
+> - Arnaldo
 > 
-> Example for single metric event in power9 platform
-> command:# ./perf stat --metric-only  -M branches_per_inst -I 1000 sleep 1
->       1.000094653                  0.2
->       1.001337059                  0.0
+> Test results at the end of this message, as usual.
 > 
-> Patch fixes the issue by making sure once we found all events
-> belongs to that metric event matched in find_evsel_group(), we
-> successfully break from that loop by adding corresponding condition.
+> The following changes since commit e680a41fcaf07ccac8817c589fc4824988b48eac:
 > 
-> With this patch:
-> In power9 platform:
+>   Merge tag 'perf-core-for-mingo-5.5-20191128' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-11-29 06:56:05 +0100)
 > 
-> command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
-> result:#           time derat_4k_miss_rate_percent  derat_4k_miss_ratio
->       derat_miss_ratio derat_64k_miss_rate_percent derat_64k_miss_ratio
->           dslb_miss_rate_percent islb_miss_rate_percent
->       1.000135672                         0.0                  0.3
->                    1.0                          0.0                  0.2
->                   0.0                     0.0
->       2.000380617                         0.0                  0.0
->                                                0.0                  0.0
->                  0.0                     0.0
+> are available in the Git repository at:
 > 
-> command:# ./perf stat --metric-only -M Power -I 1000
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.5-20191203
 > 
-> Similarly in skylake platform:
-> result:#           time    Turbo_Utilization    C3_Core_Residency
->              C6_Core_Residency    C7_Core_Residency     C2_Pkg_Residency
->               C3_Pkg_Residency     C6_Pkg_Residency     C7_Pkg_Residency
->       1.000563580                  0.3                  0.0
->                    2.6                44.2                 21.9
->                    0.0                  0.0                  0.0
->       2.002235027                  0.4                  0.0
->                    2.7           43.0                 20.7
->                    0.0                  0.0               0.0
+> for you to fetch changes up to 15b3904f8e884e0d34d5f09906cf6526d0b889a2:
 > 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Jin Yao <yao.jin@linux.intel.com>
-> Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-> Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>   libtraceevent: Copy pkg-config file to output folder when using O= (2019-12-02 21:58:20 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes:
+> 
+> perf report/top:
+> 
+>   - Fix segfault due to missing initialization of recently introduced
+>     struct map_symbol 'maps' field in append_inlines(), when running
+>     with DWARF callchains.
+> 
+> perf stat:
+> 
+>   Andi Kleen:
+> 
+>   - Affinity based optimizations for sessions with many events in
+>     machines with large core counts, avoiding excessive number of IPIs.
+> 
+> libtraceevent:
+> 
+>   - Sudip Mukherjee:
+> 
+>   - Fix installation with O=.
+> 
+>   - Copy pkg-config file to output folder when using O=.
+> 
+> perf bench:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Update the copies of x86's mem{cpy,set}_64.S, and because that
+>     now uses new stuff in linux/linkage.h, update that header too, which
+>     made the minimal clang version to build perf to be 3.5, as
+>     3.4 as found in some of the container images used to test build perf
+>     can't grok STT_FUNC as a token in .type lines.
+> 
+> ABI headers:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Sync x86's msr-index.h copy with the kernel sources, resulting
+>     in new MSRs to be usable in filter expressions in 'perf trace',
+>     such as IA32_TSX_CTRL.
+> 
+>   - Sync linux/fscrypt.h, linux/stat.h, sched.h and the kvm headers.
+> 
+> perf trace:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Add CLEAR_SIGHAND support for clone's flags arg
+> 
+> perf kvm:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Clarify the 'perf kvm' -i and -o command line options
+> 
+> perf test:
+> 
+>   Ian Rogers:
+> 
+>   - Move test functionality in to a 'perf test' entry.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Andi Kleen (10):
+>       perf cpumap: Maintain cpumaps ordered and without dups
+>       perf evlist: Maintain evlist->all_cpus
+>       perf evsel: Add iterator to iterate over events ordered by CPU
+>       perf evsel: Add functions to close evsel on a CPU
+>       perf stat: Use affinity for closing file descriptors
+>       perf stat: Factor out open error handling
+>       perf stat: Use affinity for opening events
+>       perf stat: Use affinity for reading
+>       perf evsel: Add functions to enable/disable for a specific CPU
+>       perf stat: Use affinity for enabling/disabling events
+> 
+> Arnaldo Carvalho de Melo (10):
+>       perf machine: Fill map_symbol->maps in append_inlines() to fix segfault
+>       perf bench: Update the copies of x86's mem{cpy,set}_64.S
+>       tools arch x86: Sync the msr-index.h copy with the kernel sources
+>       tools headers uapi: Sync linux/fscrypt.h with the kernel sources
+>       tools headers uapi: Sync linux/stat.h with the kernel sources
+>       tools headers kvm: Sync kvm headers with the kernel sources
+>       tools headers UAPI: Sync sched.h with the kernel
+>       perf beauty: Add CLEAR_SIGHAND support for clone's flags arg
+>       tools arch x86: Sync asm/cpufeatures.h with the kernel sources
+>       perf kvm: Clarify the 'perf kvm' -i and -o command line options
+> 
+> Ian Rogers (1):
+>       perf jit: Move test functionality in to a test
+> 
+> Sudip Mukherjee (2):
+>       libtraceevent: Fix lib installation with O=
+>       libtraceevent: Copy pkg-config file to output folder when using O=
+> 
+>  tools/arch/arm/include/uapi/asm/kvm.h     |   3 +-
+>  tools/arch/arm64/include/uapi/asm/kvm.h   |   5 +-
+>  tools/arch/powerpc/include/uapi/asm/kvm.h |   3 +
+>  tools/arch/x86/include/asm/cpufeatures.h  |   3 +
+>  tools/arch/x86/include/asm/msr-index.h    |  18 ++
+>  tools/arch/x86/lib/memcpy_64.S            |  20 +--
+>  tools/arch/x86/lib/memset_64.S            |  16 +-
+>  tools/include/uapi/linux/fscrypt.h        |   3 +-
+>  tools/include/uapi/linux/kvm.h            |  11 ++
+>  tools/include/uapi/linux/sched.h          |  60 +++++--
+>  tools/include/uapi/linux/stat.h           |   2 +-
+>  tools/lib/traceevent/Makefile             |   6 +-
+>  tools/perf/Documentation/perf-kvm.txt     |   5 +-
+>  tools/perf/arch/arm/tests/regs_load.S     |   4 +-
+>  tools/perf/arch/arm64/tests/regs_load.S   |   4 +-
+>  tools/perf/arch/x86/tests/regs_load.S     |   8 +-
+>  tools/perf/builtin-record.c               |   2 +-
+>  tools/perf/builtin-stat.c                 | 288 +++++++++++++++++++++---------
+>  tools/perf/check-headers.sh               |   4 +-
+>  tools/perf/lib/cpumap.c                   |  73 +++++++-
+>  tools/perf/lib/evlist.c                   |   1 +
+>  tools/perf/lib/evsel.c                    |  76 ++++++--
+>  tools/perf/lib/include/internal/evlist.h  |   1 +
+>  tools/perf/lib/include/perf/cpumap.h      |   2 +
+>  tools/perf/lib/include/perf/evsel.h       |   3 +
+>  tools/perf/tests/Build                    |   1 +
+>  tools/perf/tests/builtin-test.c           |   9 +
+>  tools/perf/tests/cpumap.c                 |  16 ++
+>  tools/perf/tests/event-times.c            |   4 +-
+>  tools/perf/tests/genelf.c                 |  51 ++++++
+>  tools/perf/tests/tests.h                  |   2 +
+>  tools/perf/trace/beauty/clone.c           |   1 +
+>  tools/perf/util/cpumap.h                  |   1 +
+>  tools/perf/util/evlist.c                  | 113 +++++++++++-
+>  tools/perf/util/evlist.h                  |  11 +-
+>  tools/perf/util/evsel.c                   |  35 +++-
+>  tools/perf/util/evsel.h                   |   9 +-
+>  tools/perf/util/genelf.c                  |  46 -----
+>  tools/perf/util/include/linux/linkage.h   |  89 ++++++++-
+>  tools/perf/util/machine.c                 |   1 +
+>  tools/perf/util/stat.c                    |   5 +-
+>  tools/perf/util/stat.h                    |   3 +-
+>  42 files changed, 789 insertions(+), 229 deletions(-)
+>  create mode 100644 tools/perf/tests/genelf.c
 
-Fixes: f01642e4912b ("perf metricgroup: Support multiple events for metricgroup")
-Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Pulled, thanks a lot Arnaldo!
 
-But while looking at the patch, I found that, commit f01642e4912b
-has (again) screwed up logic for metric with overlapping events.
-
-   $ sudo ./perf stat -M UPI,IPC sleep 1
-
-    Performance counter stats for 'sleep 1':
-
-            948,650      uops_retired.retire_slots
-            866,182      inst_retired.any          #      0.7 IPC
-            866,182      inst_retired.any
-          1,175,671      cpu_clk_unhalted.thread
-
-This also needs to be fixed.
-
-Ravi
+	Ingo
