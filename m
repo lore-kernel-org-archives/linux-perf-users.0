@@ -1,91 +1,59 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/6] perf report/top TUI: Replace pr_err() with ui__error()
-Date: Thu,  5 Dec 2019 16:32:19 -0300
-Message-ID: <20191205193224.24629-2-acme@kernel.org>
+Subject: [PATCH 2/6] perf report: Make -F more strict like -s
+Date: Thu,  5 Dec 2019 16:32:20 -0300
+Message-ID: <20191205193224.24629-3-acme@kernel.org>
 References: <20191205193224.24629-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191205193224.24629-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-pr_err() in TUI mode does not print anyting on the screen and just
-quits.
+Currently -F allows branch-mode / mem-mode fields with -F even
+when perf report is not running in that mode. Don't allow that.
 
-Replace such pr_err() with ui__error().
-
-Before:
-
-  $ perf report -s +
-  $
-
-After:
-
-  $ perf report -s +
-
-    ┌─Error:────────────────┐
-    │Invalid --sort key: `+'│
-    │                       │
-    │Press any key...       │
-    └───────────────────────┘
-
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191114132213.5419-2-ravi.bangoria@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20191114132213.5419-3-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/sort.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 345b5ccc90f6..106d795574ba 100644
+index 106d795574ba..9fcba2872130 100644
 --- a/tools/perf/util/sort.c
 +++ b/tools/perf/util/sort.c
-@@ -2681,12 +2681,12 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
- 			ret = sort_dimension__add(list, tok, evlist, level);
- 			if (ret == -EINVAL) {
- 				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
--					pr_err("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
-+					ui__error("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
- 				else
--					pr_err("Invalid --sort key: `%s'", tok);
-+					ui__error("Invalid --sort key: `%s'", tok);
- 				break;
- 			} else if (ret == -ESRCH) {
--				pr_err("Unknown --sort key: `%s'", tok);
-+				ui__error("Unknown --sort key: `%s'", tok);
- 				break;
- 			}
- 		}
-@@ -2743,7 +2743,7 @@ static int setup_sort_order(struct evlist *evlist)
- 		return 0;
+@@ -2959,6 +2959,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
+ 		if (strncasecmp(tok, sd->name, strlen(tok)))
+ 			continue;
  
- 	if (sort_order[1] == '\0') {
--		pr_err("Invalid --sort key: `+'");
-+		ui__error("Invalid --sort key: `+'");
- 		return -EINVAL;
++		if (sort__mode != SORT_MODE__MEMORY)
++			return -EINVAL;
++
+ 		return __sort_dimension__add_output(list, sd);
  	}
  
-@@ -3034,7 +3034,7 @@ static int __setup_output_field(void)
- 		strp++;
+@@ -2968,6 +2971,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
+ 		if (strncasecmp(tok, sd->name, strlen(tok)))
+ 			continue;
  
- 	if (!strlen(strp)) {
--		pr_err("Invalid --fields key: `+'");
-+		ui__error("Invalid --fields key: `+'");
- 		goto out;
++		if (sort__mode != SORT_MODE__BRANCH)
++			return -EINVAL;
++
+ 		return __sort_dimension__add_output(list, sd);
  	}
  
 -- 
