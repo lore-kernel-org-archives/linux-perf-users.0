@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/6] perf report: Make -F more strict like -s
-Date: Thu,  5 Dec 2019 16:32:20 -0300
-Message-ID: <20191205193224.24629-3-acme@kernel.org>
+Subject: [PATCH 3/6] perf report: Bail out --mem-mode if mem info is not available
+Date: Thu,  5 Dec 2019 16:32:21 -0300
+Message-ID: <20191205193224.24629-4-acme@kernel.org>
 References: <20191205193224.24629-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,52 +9,63 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191205193224.24629-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-Currently -F allows branch-mode / mem-mode fields with -F even
-when perf report is not running in that mode. Don't allow that.
+If perf.data is recorded without -d, don't allow user to use --mem-mode
+with 'perf report'. symbol_daddr and phys_daddr can be recorded
+separately and may be present in the perf.data but at the report time
+they are associated with mem-mode fields and thus this restriction
+applies to them as well.
+
+Before:
+  $ perf record ls
+  $ perf report --mem-mode --stdio
+  # Overhead  Local Weight  Memory access  Symbol
+  # ........  ............  .............  .......................
+      55.56%  0             N/A            [k] 0xffffffff81a00ae7
+
+After:
+  $ perf report --mem-mode --stdio
+  Error:
+  Selected --mem-mode but no mem data. Did you call perf record without -d?
 
 Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20191114132213.5419-3-ravi.bangoria@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20191114132213.5419-4-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/builtin-report.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 106d795574ba..9fcba2872130 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -2959,6 +2959,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
- 		if (strncasecmp(tok, sd->name, strlen(tok)))
- 			continue;
- 
-+		if (sort__mode != SORT_MODE__MEMORY)
-+			return -EINVAL;
-+
- 		return __sort_dimension__add_output(list, sd);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 830d563de889..387311c67264 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -388,6 +388,14 @@ static int report__setup_sample_type(struct report *rep)
+ 		}
  	}
  
-@@ -2968,6 +2971,9 @@ int output_field_add(struct perf_hpp_list *list, char *tok)
- 		if (strncasecmp(tok, sd->name, strlen(tok)))
- 			continue;
- 
-+		if (sort__mode != SORT_MODE__BRANCH)
-+			return -EINVAL;
++	if (sort__mode == SORT_MODE__MEMORY) {
++		if (!is_pipe && !(sample_type & PERF_SAMPLE_DATA_SRC)) {
++			ui__error("Selected --mem-mode but no mem data. "
++				  "Did you call perf record without -d?\n");
++			return -1;
++		}
++	}
 +
- 		return __sort_dimension__add_output(list, sd);
- 	}
- 
+ 	if (symbol_conf.use_callchain || symbol_conf.cumulate_callchain) {
+ 		if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+ 		    (sample_type & PERF_SAMPLE_STACK_USER)) {
 -- 
 2.21.0
