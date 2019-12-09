@@ -1,295 +1,346 @@
-From: James Clark <James.Clark@arm.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
 Subject: Re: [RFC v3 5/5] perf tools: Add support to process multi spe events
-Date: Fri, 6 Dec 2019 15:48:31 +0000
-Message-ID: <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
+Date: Mon, 9 Dec 2019 08:46:40 +0800
+Message-ID: <896ba5d6-5a40-5882-5c2b-999974dd5baf@huawei.com>
 References: <20191123101118.12635-1-tanxiaojun@huawei.com>
  <20191123101118.12635-6-tanxiaojun@huawei.com>
  <2f2db9d2-e468-b327-34e6-1412a40cb5c9@arm.com>
  <1a29399e-4c24-1a55-fa44-9f8b7b46308c@huawei.com>
+ <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1a29399e-4c24-1a55-fa44-9f8b7b46308c@huawei.com>
+In-Reply-To: <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
 Content-Language: en-US
-Content-ID: <054A9FBEB93CB24EB57F2E074A683DA7@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tan Xiaojun <tanxiaojun@huawei.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
+To: James Clark <James.Clark@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
 Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGkgWGlhb2p1biwNCg0KPiANCj4gV2hhdCBkbyB5b3UgdGhpbmsgb2YgdGhpcyBjdXJyZW50IGlt
-cGxlbWVudGF0aW9uPyBPciB5b3UgcHJlZmVyIHRoZSBwcmV2aW91cyB3YXkobGlrZSBicmFuY2gt
-bWlzc2VzOnBwIGRUTEItbG9hZC1taXNzZXM6cHAgY2FjaGUtbWlzc2VzOnBwKSwgdGhlbiBJIHdp
-bGwgbW9kaWZ5IGl0IGFnYWluLg0KPiANCg0KWWVzIEkgdGhpbmsgSSBwcmVmZXIgdGhlIHByZXZp
-b3VzIHdheS4gVGhlIHJlYXNvbiB0byBhZGQgc3VwcG9ydCBmb3IgOnAgb24gdGhlIHN0YW5kYXJk
-IGV2ZW50IG5hbWVzIHdhcyB0byBtYWtlIHRoZSB1c2VyIGV4cGVyaWVuY2UgbW9yZSBzaW1pbGFy
-IHRvIHg4Ni4gV2hhdCB3YXMgdGhlIHJlYXNvbiBmb3IgbW92aW5nIHRvIGFybV9zcGVfeC9icmFu
-Y2hfbWlzcy8/IElmIHdlIGFyZSBnb2luZyB0byB1c2UgdGhpcyBmb3JtYXQgdGhlbiBJIGRvbid0
-IHNlZSB0aGUgbmVlZCBmb3IgcmVxdWlyaW5nIHVzZXJzIHRvIGFkZCA6cCB0byB0aGUgZW5kIG9m
-IGFybV9zcGVfeC9icmFuY2hfbWlzcy8uDQoNCkkndmUgdGVzdGVkIHRoZXNlIHBhdGNoZXMsIGJ1
-dCB1bmZvcnR1bmF0ZWx5IEkgZG9uJ3Qgc2VlIHRoZSBuZXcgZXZlbnRzIHdoZW4gSSBkbyBwZXJm
-IGxpc3Q6DQogICAgLi4uDQogICAgICBhcm1fc3BlXzAvLyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBbS2VybmVsIFBNVSBldmVudF0NCiAgICAgIGFybXY4X3BtdXYzL2wz
-ZF9jYWNoZV93Yi8gICAgICAgICAgICAgICAgICAgICAgICAgIFtLZXJuZWwgUE1VIGV2ZW50XQ0K
-ICAgICAgYXJtdjhfcG11djMvc2FtcGxlX2NvbGxpc2lvbi8gICAgICAgICAgICAgICAgICAgICAg
-W0tlcm5lbCBQTVUgZXZlbnRdDQogICAgICBhcm12OF9wbXV2My9zYW1wbGVfZmVlZC8gICAgICAg
-ICAgICAgICAgICAgICAgICAgICBbS2VybmVsIFBNVSBldmVudF0NCiAgICAgIGFybXY4X3BtdXYz
-L3NhbXBsZV9maWx0cmF0ZS8gICAgICAgICAgICAgICAgICAgICAgIFtLZXJuZWwgUE1VIGV2ZW50
-XQ0KICAgICAgYXJtdjhfcG11djMvc2FtcGxlX3BvcC8gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgW0tlcm5lbCBQTVUgZXZlbnRdDQogICAgDQogICAgYnJhbmNoOg0KICAgICAgYnJfbWlzX3By
-ZWQNCiAgICAuLi4NCg0KU2hvdWxkIEkgc2VlIGV2ZW50cyBsaWtlIC9hcm1fc3BlXzAvYnJhbmNo
-X21pc3MvIGluIHRoYXQgbGlzdD8NCg0KQW5kIHRoZW4gaWYgSSBhdHRlbXB0IHRvIHJlY29yZCB0
-aGVtIEkgZ2V0IHRoaXMgZXJyb3I6DQoNCiAgICAuL3BlcmYgcmVjb3JkIC1lIGFybV9zcGVfMC9i
-cmFuY2hfbWlzcy8gbHMNCiAgICBldmVudCBzeW50YXggZXJyb3I6ICdhcm1fc3BlXzAvYnJhbmNo
-X21pc3MvJw0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcX19fIHVua25vd24g
-dGVybQ0KDQpCdXQgdXNpbmcgdGhlIHBsYWluIGV2ZW50IG5hbWUgc3RpbGwgd29ya3M6DQoNCiAg
-ICAuL3BlcmYgcmVjb3JkIC1lIGFybV9zcGUvdHNfZW5hYmxlPTEvIGxzDQogICAgLi4uDQogICAg
-WyBwZXJmIHJlY29yZDogV29rZW4gdXAgMSB0aW1lcyB0byB3cml0ZSBkYXRhIF0NCiAgICBbIHBl
-cmYgcmVjb3JkOiBDYXB0dXJlZCBhbmQgd3JvdGUgMC41NzEgTUIgcGVyZi5kYXRhIF0NCg0KDQpU
-aGFua3MNCkphbWVzDQoNCk9uIDMwLzExLzIwMTkgMDA6NDIsIFRhbiBYaWFvanVuIHdyb3RlOg0K
-PiBPbiAyMDE5LzExLzMwIDA6MzIsIEphbWVzIENsYXJrIHdyb3RlOg0KPj4gSGkgWGlhb2p1biwN
-Cj4+DQo+PiBTb3JyeSBmb3Igbm90IHJlcGx5aW5nIGVhcmxpZXIsIEkgd2FzIGF0IGEgY29uZmVy
-ZW5jZS4gVW5mb3J0dW5hdGVseSBJIGhhdmUgdGVtcG9yYXJpbHkgbG9zdCBhY2Nlc3MgdG8gU1BF
-IGVuYWJsZWQgaGFyZHdhcmUgYnV0IEkgd2lsbCB0ZXN0IHRoaXMgb3V0IGFuZCBnZXQgYmFjayB0
-byB5b3UgYXMgc29vbiBhcyBwb3NzaWJsZS4NCj4+DQo+Pg0KPj4gVGhhbmtzDQo+PiBKYW1lcw0K
-Pj4NCj4gDQo+IE9LLg0KPiANCj4gVGhhbmtzLg0KPiBYaWFvanVuLg0KPiANCj4+IE9uIDIzLzEx
-LzIwMTkgMTA6MTEsIFRhbiBYaWFvanVuIHdyb3RlOg0KPj4+IFVuZGVyIHRoZSBvcmlnaW5hbCBs
-b2dpYywgaWYgdGhlIHVzZXIgc3BlY2lmaWVzIG11bHRpcGxlIHNwZQ0KPj4+IGV2ZW50cyBkdXJp
-bmcgdGhlIHJlY29yZCwgcGVyZiB3aWxsIHJlcG9ydCBhbiBlcnJvciBhbmQgZXhpdA0KPj4+IHdp
-dGhvdXQgYWN0dWFsbHkgcnVubmluZy4gVGhpcyBpcyBub3QgdmVyeSBmcmllbmRseS4NCj4+Pg0K
-Pj4+IFRoaXMgcGF0Y2ggc2xpZ2h0bHkgbW9kaWZpZXMgdGhpcyBsb2dpYywgaW4gd2hpY2ggY2Fz
-ZSBhDQo+Pj4gd2FybmluZyBpcyByZXBvcnRlZCBhbmQgdGhlIGZpcnN0IHNwZSBldmVudCBpcyB0
-YWtlbiBhcyBhDQo+Pj4gcmVjb3JkLg0KPj4+DQo+Pj4gQXQgdGhlIHNhbWUgdGltZSwgdGhpcyBw
-YXRjaCBhbHNvIHN1cHBvcnRzIHRoZSByZWNvcmRpbmcgb2YNCj4+PiBtdWx0aSBuZXcgc3ludGhl
-dGljIGV2ZW50cy4gSG93ZXZlciwgaWYgdGhlIHVzZXIgc3BlY2lmaWVzIHRoZQ0KPj4+IHNwZSBl
-dmVudCBhbmQgdGhlbiBzcGVjaWZpZXMgdGhlIHN5bnRoZXRpYyBzcGUgZXZlbnRzLCBhIHdhcm5p
-bmcNCj4+PiB3aWxsIGJlIHJlcG9ydGVkIGFuZCB0aGUgYWJvdmUgcHJpbmNpcGxlcyB3aWxsIHN0
-aWxsIGJlIGZvbGxvd2VkLA0KPj4+IG9ubHkgdGhlIGZpcnN0IHNwZSBldmVudCB3aWxsIGJlIHJl
-Y29yZGVkLg0KPj4+DQo+Pj4gRXhhbXBsZToNCj4+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+PiAxKSBGb3IgbXVs
-dGlwbGUgc3BlIGV2ZW50cw0KPj4+ICQgcGVyZiByZWNvcmQgLWUgYXJtX3NwZV8wL3RzX2VuYWJs
-ZT0wLGxvYWRfZmlsdGVyPTEsaml0dGVyPTEsbWluX2xhdGVuY3k9MC8gLWUgYXJtX3NwZV8wL3Rz
-X2VuYWJsZT0wLHN0b3JlX2ZpbHRlcj0xLGppdHRlcj0xLG1pbl9sYXRlbmN5PTAvIGxzDQo+Pj4g
-V2FybmluZzoNCj4+PiBUaGVyZSBtYXkgYmUgb25seSBvbmUgYXJtX3NwZV94IGV2ZW50LiBNb3Jl
-IHRoYW4gb25lIHNwZSBldmVudCB3aWxsIGJlIGlnbm9yZWQsIHVubGVzcyB0aGV5IGFyZSBzeW50
-aGV0aWMgZXZlbnRzIG9mIHNwZSwgbGlrZToNCj4+PiBhcm1fc3BlX3gvbGxjX21pc3MvDQo+Pj4g
-YXJtX3NwZV94L2JyYW5jaF9taXNzLw0KPj4+IGFybV9zcGVfeC90bGJfbWlzcy8NCj4+PiBhcm1f
-c3BlX3gvcmVtb3RlX2FjY2Vzcy8NCj4+PiAoc2VlICdwZXJmIGxpc3QnKQ0KPj4+IC4uLg0KPj4+
-IFsgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDEgdGltZXMgdG8gd3JpdGUgZGF0YSBdDQo+Pj4gWyBw
-ZXJmIHJlY29yZDogQ2FwdHVyZWQgYW5kIHdyb3RlIDAuMDc4IE1CIHBlcmYuZGF0YSBdDQo+Pj4N
-Cj4+PiAkIHBlcmYgcmVwb3J0IC0tc3RkaW8NCj4+PiAuLi4NCj4+PiAgIyBTYW1wbGVzOiAwICBv
-ZiBldmVudCAnYXJtX3NwZV8wL3RzX2VuYWJsZT0wLGxvYWRfZmlsdGVyPTEsaml0dGVyPTEsbWlu
-X2xhdGVuY3k9MC8nDQo+Pj4gLi4uDQo+Pj4NCj4+PiAyKSBGb3IgbXVsdGlwbGUgc3BlIHByZWNp
-c2UgaXAgZXZlbnRzIChzeW50aGV0aWMgZXZlbnQpDQo+Pj4gJCBwZXJmIHJlY29yZCAtZSBhcm1f
-c3BlXzAvbGxjX21pc3MvIC1lIGFybV9zcGVfMC9sbGNfbWlzcy8gLWUgYXJtX3NwZV8wL3RsYl9t
-aXNzLyBscw0KPj4+IFdhcm5pbmc6DQo+Pj4gVGhlc2UgZXZlbnRzIGFyZSBwcmVjaXNlIGlwIGV2
-ZW50cywgcGxlYXNlIGFkZCA6cC9wcC9wcHAgYWZ0ZXIgdGhlIGV2ZW50Lg0KPj4+IC4uLg0KPj4+
-IFsgcGVyZiByZWNvcmQ6IFdva2VuIHVwIDEgdGltZXMgdG8gd3JpdGUgZGF0YSBdDQo+Pj4gWyBw
-ZXJmIHJlY29yZDogQ2FwdHVyZWQgYW5kIHdyb3RlIDAuMzQzIE1CIHBlcmYuZGF0YSBdDQo+Pj4N
-Cj4+PiAkIHBlcmYgcmVwb3J0IC0tc3RkaW8NCj4+PiAgIyBUbyBkaXNwbGF5IHRoZSBwZXJmLmRh
-dGEgaGVhZGVyIGluZm8sIHBsZWFzZSB1c2UgLS1oZWFkZXIvLS1oZWFkZXItb25seSBvcHRpb25z
-Lg0KPj4+ICAjDQo+Pj4gICMNCj4+PiAgIyBUb3RhbCBMb3N0IFNhbXBsZXM6IDANCj4+PiAgIw0K
-Pj4+ICAjIFNhbXBsZXM6IDAgIG9mIGV2ZW50ICdhcm1fc3BlXzAvbGxjX21pc3MvLCBhcm1fc3Bl
-XzAvdGxiX21pc3MvJw0KPj4+ICAjIEV2ZW50IGNvdW50IChhcHByb3guKTogMA0KPj4+ICAjDQo+
-Pj4gICMgQ2hpbGRyZW4gICAgICBTZWxmICBDb21tYW5kICBTaGFyZWQgT2JqZWN0ICBTeW1ib2wN
-Cj4+PiAgIyAuLi4uLi4uLiAgLi4uLi4uLi4gIC4uLi4uLi4gIC4uLi4uLi4uLi4uLi4gIC4uLi4u
-Lg0KPj4+ICAjDQo+Pj4NCj4+PiAgIyBTYW1wbGVzOiAwICBvZiBldmVudCAnZHVtbXk6dScNCj4+
-PiAgIyBFdmVudCBjb3VudCAoYXBwcm94Lik6IDANCj4+PiAgIw0KPj4+ICAjIENoaWxkcmVuICAg
-ICAgU2VsZiAgQ29tbWFuZCAgU2hhcmVkIE9iamVjdCAgU3ltYm9sDQo+Pj4gICMgLi4uLi4uLi4g
-IC4uLi4uLi4uICAuLi4uLi4uICAuLi4uLi4uLi4uLi4uICAuLi4uLi4NCj4+PiAgIw0KPj4+DQo+
-Pj4gICMgU2FtcGxlczogODMgIG9mIGV2ZW50ICdsbGMtbWlzcycNCj4+PiAgIyBFdmVudCBjb3Vu
-dCAoYXBwcm94Lik6IDgzDQo+Pj4gICMNCj4+PiAgIyBDaGlsZHJlbiAgICAgIFNlbGYgIENvbW1h
-bmQgIFNoYXJlZCBPYmplY3QgICAgICBTeW1ib2wNCj4+PiAgIyAuLi4uLi4uLiAgLi4uLi4uLi4g
-IC4uLi4uLi4gIC4uLi4uLi4uLi4uLi4uLi4uICAuLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
-Li4uLi4uLi4NCj4+PiAgIw0KPj4+ICAgICAgNDIuMTclICAgIDQyLjE3JSAgbHMgICAgICAgW2tl
-cm5lbC5rYWxsc3ltc10gIFtrXSBwZXJmX2l0ZXJhdGVfY3R4LmNvbnN0cHJvcC42NA0KPj4+ICAg
-ICAgMTQuNDYlICAgIDE0LjQ2JSAgbHMgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSBtZW1j
-aHJfaW52DQo+Pj4gICAgICAxMy4yNSUgICAgMTMuMjUlICBscyAgICAgICBba2VybmVsLmthbGxz
-eW1zXSAgW2tdIHBlcmZfZXZlbnRfbW1hcA0KPj4+ICAgICAgIDIuNDElICAgICAyLjQxJSAgbHMg
-ICAgICAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSBhdmFpbGFibGVfaWRsZV9jcHUNCj4+PiAgICAg
-ICAyLjQxJSAgICAgMi40MSUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gY29weV9w
-YWdlDQo+Pj4gICAgICAgMi40MSUgICAgIDIuNDElICBscyAgICAgICBba2VybmVsLmthbGxzeW1z
-XSAgW2tdIHRyeV90b193YWtlX3VwDQo+Pj4gICAgICAgMi40MSUgICAgIDIuNDElICBscyAgICAg
-ICBba2VybmVsLmthbGxzeW1zXSAgW2tdIHZtYV9pbnRlcnZhbF90cmVlX2luc2VydA0KPj4+ICAg
-ICAgIDIuNDElICAgICAyLjQxJSAgbHMgICAgICAgbGQtMi4yOC5zbyAgICAgICAgIFsuXSBfZGxf
-bG9va3VwX3N5bWJvbF94DQo+Pj4gICAgICAgMi40MSUgICAgIDIuNDElICBscyAgICAgICBsZC0y
-LjI4LnNvICAgICAgICAgWy5dIF9kbF9yZWxvY2F0ZV9vYmplY3QNCj4+PiAgICAgICAxLjIwJSAg
-ICAgMS4yMCUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gZXh0NF9nZXRhdHRyDQo+
-Pj4gICAgICAgMS4yMCUgICAgIDEuMjAlICBscyAgICAgICBba2VybmVsLmthbGxzeW1zXSAgW2td
-IGdldF9wYWdlX2Zyb21fZnJlZWxpc3QNCj4+PiAgICAgICAxLjIwJSAgICAgMS4yMCUgIGxzICAg
-ICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gZ2V0X3BhcnRpYWxfbm9kZS5pc3JhLjI1DQo+Pj4g
-ICAgICAgMS4yMCUgICAgIDEuMjAlICBscyAgICAgICBba2VybmVsLmthbGxzeW1zXSAgW2tdIGxv
-Y2tfcGFnZV9tZW1jZw0KPj4+ICAgICAgIDEuMjAlICAgICAxLjIwJSAgbHMgICAgICAgW2tlcm5l
-bC5rYWxsc3ltc10gIFtrXSBtYXlfb3Blbg0KPj4+ICAgICAgIDEuMjAlICAgICAxLjIwJSAgbHMg
-ICAgICAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSByYWRpeF90cmVlX25leHRfY2h1bmsNCj4+PiAg
-ICAgICAxLjIwJSAgICAgMS4yMCUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10gcmJf
-cHJldg0KPj4+ICAgICAgIDEuMjAlICAgICAxLjIwJSAgbHMgICAgICAgbGQtMi4yOC5zbyAgICAg
-ICAgIFsuXSBfZGxfbWFwX29iamVjdF9mcm9tX2ZkDQo+Pj4gICAgICAgMS4yMCUgICAgIDEuMjAl
-ICBscyAgICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5dIF9kbF9zdGFydA0KPj4+ICAgICAgIDEu
-MjAlICAgICAxLjIwJSAgbHMgICAgICAgbGQtMi4yOC5zbyAgICAgICAgIFsuXSBkb19sb29rdXBf
-eA0KPj4+ICAgICAgIDEuMjAlICAgICAxLjIwJSAgbHMgICAgICAgbGQtMi4yOC5zbyAgICAgICAg
-IFsuXSBydGxkX2xvY2tfZGVmYXVsdF9sb2NrX3JlY3Vyc2l2ZQ0KPj4+ICAgICAgIDEuMjAlICAg
-ICAxLjIwJSAgbHMgICAgICAgbGliYy0yLjI4LnNvICAgICAgIFsuXSBnZXRlbnYNCj4+PiAgICAg
-ICAxLjIwJSAgICAgMS4yMCUgIGxzICAgICAgIFt1bmtub3duXSAgICAgICAgICBbLl0gMHhmZmZm
-MjlmMTE5MDAyOWI4DQo+Pj4NCj4+PiAgIyBTYW1wbGVzOiAxMyAgb2YgZXZlbnQgJ3RsYi1taXNz
-Jw0KPj4+ICAjIEV2ZW50IGNvdW50IChhcHByb3guKTogMTMNCj4+PiAgIw0KPj4+ICAjIENoaWxk
-cmVuICAgICAgU2VsZiAgQ29tbWFuZCAgU2hhcmVkIE9iamVjdCAgICAgIFN5bWJvbA0KPj4+ICAj
-IC4uLi4uLi4uICAuLi4uLi4uLiAgLi4uLi4uLiAgLi4uLi4uLi4uLi4uLi4uLi4gIC4uLi4uLi4u
-Li4uLi4uLi4uLi4uLi4uLi4uLi4NCj4+PiAgIw0KPj4+ICAgICAgMTUuMzglICAgIDE1LjM4JSAg
-bHMgICAgICAgW2tlcm5lbC5rYWxsc3ltc10gIFtrXSBfX2F1ZGl0X3N5c2NhbGxfZW50cnkNCj4+
-PiAgICAgIDE1LjM4JSAgICAxNS4zOCUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5bXNdICBba10g
-Z2V0X3BhcnRpYWxfbm9kZS5pc3JhLjI1DQo+Pj4gICAgICAxNS4zOCUgICAgMTUuMzglICBscyAg
-ICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5dIF9kbF9yZWxvY2F0ZV9vYmplY3QNCj4+PiAgICAg
-IDE1LjM4JSAgICAxNS4zOCUgIGxzICAgICAgIGxkLTIuMjguc28gICAgICAgICBbLl0gZG9fbG9v
-a3VwX3gNCj4+PiAgICAgICA3LjY5JSAgICAgNy42OSUgIGxzICAgICAgIFtrZXJuZWwua2FsbHN5
-bXNdICBba10gbWVtY2hyX2ludg0KPj4+ICAgICAgIDcuNjklICAgICA3LjY5JSAgbHMgICAgICAg
-bGQtMi4yOC5zbyAgICAgICAgIFsuXSBfZGxfbWFwX29iamVjdF9mcm9tX2ZkDQo+Pj4gICAgICAg
-Ny42OSUgICAgIDcuNjklICBscyAgICAgICBsZC0yLjI4LnNvICAgICAgICAgWy5dIF9kbF9zZXR1
-cF9oYXNoDQo+Pj4gICAgICAgNy42OSUgICAgIDcuNjklICBscyAgICAgICBsZC0yLjI4LnNvICAg
-ICAgICAgWy5dIF9kbF9zdGFydA0KPj4+ICAgICAgIDcuNjklICAgICA3LjY5JSAgbHMgICAgICAg
-bHMgICAgICAgICAgICAgICAgIFsuXSAweDAwMDAwMDAwMDAwMDk3YTANCj4+Pg0KPj4+IC0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQ0KPj4+DQo+Pj4gU2lnbmVkLW9mZi1ieTogVGFuIFhpYW9qdW4gPHRhbnhpYW9qdW5AaHVh
-d2VpLmNvbT4NCj4+PiAtLS0NCj4+PiAgdG9vbHMvcGVyZi9hcmNoL2FybTY0L3V0aWwvYXJtLXNw
-ZS5jIHwgNDcgKysrKysrKysrKysrKysrKysrKysrKysrKy0tLQ0KPj4+ICB0b29scy9wZXJmL3V0
-aWwvYXJtLXNwZS5jICAgICAgICAgICAgfCAyNSArKysrKysrKysrKysrKysNCj4+PiAgdG9vbHMv
-cGVyZi91dGlsL2FybS1zcGUuaCAgICAgICAgICAgIHwgMjAgKysrKysrKysrKysrDQo+Pj4gIDMg
-ZmlsZXMgY2hhbmdlZCwgODggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4+Pg0KPj4+
-IGRpZmYgLS1naXQgYS90b29scy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMgYi90b29s
-cy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMNCj4+PiBpbmRleCBlYmE2NTQxZWMwZjEu
-LjY4ZTkxZjNjOTYxNCAxMDA2NDQNCj4+PiAtLS0gYS90b29scy9wZXJmL2FyY2gvYXJtNjQvdXRp
-bC9hcm0tc3BlLmMNCj4+PiArKysgYi90b29scy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0tc3Bl
-LmMNCj4+PiBAQCAtNjcsMjEgKzY3LDYwIEBAIHN0YXRpYyBpbnQgYXJtX3NwZV9yZWNvcmRpbmdf
-b3B0aW9ucyhzdHJ1Y3QgYXV4dHJhY2VfcmVjb3JkICppdHIsDQo+Pj4gICAgICAgc3RydWN0IGFy
-bV9zcGVfcmVjb3JkaW5nICpzcGVyID0NCj4+PiAgICAgICAgICAgICAgICAgICAgICAgY29udGFp
-bmVyX29mKGl0ciwgc3RydWN0IGFybV9zcGVfcmVjb3JkaW5nLCBpdHIpOw0KPj4+ICAgICAgIHN0
-cnVjdCBwZXJmX3BtdSAqYXJtX3NwZV9wbXUgPSBzcGVyLT5hcm1fc3BlX3BtdTsNCj4+PiAtICAg
-ICBzdHJ1Y3QgZXZzZWwgKmV2c2VsLCAqYXJtX3NwZV9ldnNlbCA9IE5VTEw7DQo+Pj4gKyAgICAg
-c3RydWN0IGV2c2VsICpldnNlbCwgKnRtcCwgKmFybV9zcGVfZXZzZWwgPSBOVUxMOw0KPj4+ICAg
-ICAgIGJvb2wgcHJpdmlsZWdlZCA9IHBlcmZfZXZlbnRfcGFyYW5vaWRfY2hlY2soLTEpOw0KPj4+
-ICAgICAgIHN0cnVjdCBldnNlbCAqdHJhY2tpbmdfZXZzZWw7DQo+Pj4gKyAgICAgY2hhciBldnNl
-bF9uYW1lWzEyOF07DQo+Pj4gICAgICAgaW50IGVycjsNCj4+Pg0KPj4+ICAgICAgIHNwZXItPmV2
-bGlzdCA9IGV2bGlzdDsNCj4+Pg0KPj4+IC0gICAgIGV2bGlzdF9fZm9yX2VhY2hfZW50cnkoZXZs
-aXN0LCBldnNlbCkgew0KPj4+ICsgICAgIGV2bGlzdF9fZm9yX2VhY2hfZW50cnlfc2FmZShldmxp
-c3QsIHRtcCwgZXZzZWwpIHsNCj4+PiAgICAgICAgICAgICAgIGlmIChldnNlbC0+Y29yZS5hdHRy
-LnR5cGUgPT0gYXJtX3NwZV9wbXUtPnR5cGUpIHsNCj4+PiAgICAgICAgICAgICAgICAgICAgICAg
-aWYgKGFybV9zcGVfZXZzZWwpIHsNCj4+PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICBw
-cl9lcnIoIlRoZXJlIG1heSBiZSBvbmx5IG9uZSAiIEFSTV9TUEVfUE1VX05BTUUgInggZXZlbnRc
-biIpOw0KPj4+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAtRUlOVkFMOw0K
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmICgoZXZzZWwtPmNvcmUuYXR0ci5j
-b25maWcNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-JiBHRU5NQVNLX1VMTChBUk1fU1BFX0VWRU5UX0hJLA0KPj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFSTV9TUEVfRVZFTlRfTE8pKQ0KPj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAmJiAoYXJtX3Nw
-ZV9ldnNlbC0+Y29yZS5hdHRyLmNvbmZpZw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAmIEdFTk1BU0tfVUxMKEFSTV9TUEVfRVZFTlRfSEksDQo+Pj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQVJN
-X1NQRV9FVkVOVF9MTykpKSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBhcm1fc3BlX2V2c2VsLT5jb3JlLmF0dHIuY29uZmlnIHw9DQo+Pj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBldnNlbC0+
-Y29yZS5hdHRyLmNvbmZpZzsNCj4+PiArDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBpZiAoIXN0cnN0cihhcm1fc3BlX2V2c2VsLT5uYW1lLCBldnNlbC0+bmFtZSkp
-IHsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2Nu
-cHJpbnRmKGV2c2VsX25hbWUsIHNpemVvZihldnNlbF9uYW1lKSwNCj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIlcywgJXMi
-LCBhcm1fc3BlX2V2c2VsLT5uYW1lLA0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXZzZWwtPm5hbWUpOw0KPj4+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhcm1fc3BlX2V2c2VsLT5u
-YW1lID0gc3RyZHVwKGV2c2VsX25hbWUpOw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfQ0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0gZWxzZQ0K
-Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcHJfd2FybmluZygiV2Fy
-bmluZzpcbiINCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIlRoZXJlIG1heSBiZSBvbmx5IG9uZSAiDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIEFSTV9TUEVfUE1VX05BTUUgInggZXZlbnQuIg0KPj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiIE1vcmUgdGhhbiBv
-bmUgc3BlIGV2ZW50Ig0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAiIHdpbGwgYmUgaWdub3JlZCwgdW5sZXNzIg0KPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiIHRoZXkgYXJlIHN5bnRoZXRpYyBldmVudHMi
-DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICIgb2Yg
-c3BlLCBsaWtlOiINCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIlxuYXJtX3NwZV94L2xsY19taXNzLyINCj4+PiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIlxuYXJtX3NwZV94L2JyYW5jaF9taXNzLyINCj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIlxuYXJtX3NwZV94
-L3RsYl9taXNzLyINCj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIlxuYXJtX3NwZV94L3JlbW90ZV9hY2Nlc3MvIg0KPj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAiXG4oc2VlICdwZXJmIGxpc3QnKVxuIik7DQo+
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXZsaXN0X19yZW1vdmUoZXZsaXN0LCBl
-dnNlbCk7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXZzZWxfX2RlbGV0ZShl
-dnNlbCk7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQo+Pj4g
-ICAgICAgICAgICAgICAgICAgICAgIH0NCj4+PiAgICAgICAgICAgICAgICAgICAgICAgZXZzZWwt
-PmNvcmUuYXR0ci5mcmVxID0gMDsNCj4+PiAgICAgICAgICAgICAgICAgICAgICAgZXZzZWwtPmNv
-cmUuYXR0ci5zYW1wbGVfcGVyaW9kID0gMTsNCj4+PiArICAgICAgICAgICAgICAgICAgICAgaWYg
-KGV2c2VsLT5jb3JlLmF0dHIuY29uZmlnDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAmIEdFTk1BU0tfVUxMKEFSTV9TUEVfRVZFTlRfSEksIEFSTV9TUEVfRVZFTlRf
-TE8pKSB7DQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZXZzZWwtPmNvcmUuYXR0
-ci5jb25maWcgfD0gU1BFX0FUVFJfVFNfRU5BQkxFOw0KPj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGlmICghZXZzZWwtPmNvcmUuYXR0ci5wcmVjaXNlX2lwKQ0KPj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcHJfd2FybmluZygiV2FybmluZzpcbiINCj4+
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIlRoZXNlIGV2
-ZW50cyBhcmUgcHJlY2lzZSBpcCBldmVudHMsIg0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAiIHBsZWFzZSBhZGQgOnAvcHAvcHBwIGFmdGVyIHRoZSBl
-dmVudC5cbiIpOw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICB9DQo+Pj4gKw0KPj4+ICAgICAg
-ICAgICAgICAgICAgICAgICBhcm1fc3BlX2V2c2VsID0gZXZzZWw7DQo+Pj4gICAgICAgICAgICAg
-ICAgICAgICAgIG9wdHMtPmZ1bGxfYXV4dHJhY2UgPSB0cnVlOw0KPj4+ICAgICAgICAgICAgICAg
-fQ0KPj4+IGRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0aWwvYXJtLXNwZS5jIGIvdG9vbHMvcGVy
-Zi91dGlsL2FybS1zcGUuYw0KPj4+IGluZGV4IGU3MjgyYzI2MTZmMy4uMGM5ZDdmYTUxOGE1IDEw
-MDY0NA0KPj4+IC0tLSBhL3Rvb2xzL3BlcmYvdXRpbC9hcm0tc3BlLmMNCj4+PiArKysgYi90b29s
-cy9wZXJmL3V0aWwvYXJtLXNwZS5jDQo+Pj4gQEAgLTc3OSw2ICs3NzksMzEgQEAgYXJtX3NwZV9z
-eW50aF9ldmVudHMoc3RydWN0IGFybV9zcGUgKnNwZSwgc3RydWN0IHBlcmZfc2Vzc2lvbiAqc2Vz
-c2lvbikNCj4+PiAgICAgICBhdHRyLnNhbXBsZV9pZF9hbGwgPSBldnNlbC0+Y29yZS5hdHRyLnNh
-bXBsZV9pZF9hbGw7DQo+Pj4gICAgICAgYXR0ci5yZWFkX2Zvcm1hdCA9IGV2c2VsLT5jb3JlLmF0
-dHIucmVhZF9mb3JtYXQ7DQo+Pj4NCj4+PiArICAgICBpZiAoZXZzZWwtPmNvcmUuYXR0ci5jb25m
-aWcNCj4+PiArICAgICAgICAgICAgICAgICAgICAgJiBHRU5NQVNLX1VMTChBUk1fU1BFX0VWRU5U
-X0hJLA0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFSTV9TUEVfRVZFTlRfTE8p
-KSB7DQo+Pj4gKyAgICAgICAgICAgICBzcGUtPnN5bnRoX29wdHMubGxjX21pc3MgPSBmYWxzZTsN
-Cj4+PiArICAgICAgICAgICAgIHNwZS0+c3ludGhfb3B0cy50bGJfbWlzcyA9IGZhbHNlOw0KPj4+
-ICsgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRzLmJyYW5jaF9taXNzID0gZmFsc2U7DQo+Pj4g
-KyAgICAgICAgICAgICBzcGUtPnN5bnRoX29wdHMucmVtb3RlX2FjY2VzcyA9IGZhbHNlOw0KPj4+
-ICsNCj4+PiArICAgICAgICAgICAgIGlmIChldnNlbC0+Y29yZS5hdHRyLmNvbmZpZw0KPj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICYgKEFSTV9TUEVfRVZFTlRfTExDX01JU1MgPDwg
-QVJNX1NQRV9FVkVOVF9MTykpDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgIHNwZS0+c3ludGhf
-b3B0cy5sbGNfbWlzcyA9IHRydWU7DQo+Pj4gKw0KPj4+ICsgICAgICAgICAgICAgaWYgKGV2c2Vs
-LT5jb3JlLmF0dHIuY29uZmlnDQo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJiAo
-QVJNX1NQRV9FVkVOVF9UTEJfTUlTUyA8PCBBUk1fU1BFX0VWRU5UX0xPKSkNCj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRzLnRsYl9taXNzID0gdHJ1ZTsNCj4+PiArDQo+
-Pj4gKyAgICAgICAgICAgICBpZiAoZXZzZWwtPmNvcmUuYXR0ci5jb25maWcNCj4+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAmIChBUk1fU1BFX0VWRU5UX0JSQU5DSF9NSVNTIDw8IEFS
-TV9TUEVfRVZFTlRfTE8pKQ0KPj4+ICsgICAgICAgICAgICAgICAgICAgICBzcGUtPnN5bnRoX29w
-dHMuYnJhbmNoX21pc3MgPSB0cnVlOw0KPj4+ICsNCj4+PiArICAgICAgICAgICAgIGlmIChldnNl
-bC0+Y29yZS5hdHRyLmNvbmZpZw0KPj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICYg
-KEFSTV9TUEVfRVZFTlRfUkVNT1RFX0FDQ0VTUyA8PCBBUk1fU1BFX0VWRU5UX0xPKSkNCj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgc3BlLT5zeW50aF9vcHRzLnJlbW90ZV9hY2Nlc3MgPSB0cnVl
-Ow0KPj4+ICsgICAgIH0NCj4+PiArDQo+Pj4gICAgICAgLyogY3JlYXRlIG5ldyBpZCB2YWwgdG8g
-YmUgYSBmaXhlZCBvZmZzZXQgZnJvbSBldnNlbCBpZCAqLw0KPj4+ICAgICAgIGlkID0gZXZzZWwt
-PmNvcmUuaWRbMF0gKyAxMDAwMDAwMDAwOw0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3Bl
-cmYvdXRpbC9hcm0tc3BlLmggYi90b29scy9wZXJmL3V0aWwvYXJtLXNwZS5oDQo+Pj4gaW5kZXgg
-OThkMzIzNTc4MWMzLi5kYjc0MjAxMjE5NzkgMTAwNjQ0DQo+Pj4gLS0tIGEvdG9vbHMvcGVyZi91
-dGlsL2FybS1zcGUuaA0KPj4+ICsrKyBiL3Rvb2xzL3BlcmYvdXRpbC9hcm0tc3BlLmgNCj4+PiBA
-QCAtOSw2ICs5LDI2IEBADQo+Pj4NCj4+PiAgI2RlZmluZSBBUk1fU1BFX1BNVV9OQU1FICJhcm1f
-c3BlXyINCj4+Pg0KPj4+ICsjZGVmaW5lIEFSTV9TUEVfRVZFTlRfTE8gICAgICAgICAgICAgICAg
-ICAgICAzDQo+Pj4gKyNkZWZpbmUgQVJNX1NQRV9FVkVOVF9ISSAgICAgICAgICAgICAgICAgICAg
-IDYNCj4+PiArI2RlZmluZSBBUk1fU1BFX0VWRU5UX0xMQ19NSVNTICAgICAgICAgICAgICAgICAg
-ICAgICBCSVQoMCkNCj4+PiArI2RlZmluZSBBUk1fU1BFX0VWRU5UX0JSQU5DSF9NSVNTICAgICAg
-ICAgICAgQklUKDEpDQo+Pj4gKyNkZWZpbmUgQVJNX1NQRV9FVkVOVF9UTEJfTUlTUyAgICAgICAg
-ICAgICAgICAgICAgICAgQklUKDIpDQo+Pj4gKyNkZWZpbmUgQVJNX1NQRV9FVkVOVF9SRU1PVEVf
-QUNDRVNTICAgICAgICAgIEJJVCgzKQ0KPj4+ICsNCj4+PiArI2RlZmluZSBTUEVfQVRUUl9UU19F
-TkFCTEUgICAgICAgICAgICAgICAgICAgQklUKDApDQo+Pj4gKyNkZWZpbmUgU1BFX0FUVFJfUEFf
-RU5BQkxFICAgICAgICAgICAgICAgICAgIEJJVCgxKQ0KPj4+ICsjZGVmaW5lIFNQRV9BVFRSX1BD
-VF9FTkFCTEUgICAgICAgICAgICAgICAgICBCSVQoMikNCj4+PiArI2RlZmluZSBTUEVfQVRUUl9K
-SVRURVIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBCSVQoMTYpDQo+Pj4gKyNkZWZpbmUg
-U1BFX0FUVFJfQlJBTkNIX0ZJTFRFUiAgICAgICAgICAgICAgICAgICAgICAgQklUKDMyKQ0KPj4+
-ICsjZGVmaW5lIFNQRV9BVFRSX0xPQURfRklMVEVSICAgICAgICAgICAgICAgICBCSVQoMzMpDQo+
-Pj4gKyNkZWZpbmUgU1BFX0FUVFJfU1RPUkVfRklMVEVSICAgICAgICAgICAgICAgICAgICAgICAg
-QklUKDM0KQ0KPj4+ICsNCj4+PiArI2RlZmluZSBTUEVfQVRUUl9FVl9SRVRJUkVEICAgICAgICAg
-ICAgICAgICAgQklUKDEpDQo+Pj4gKyNkZWZpbmUgU1BFX0FUVFJfRVZfQ0FDSEUgICAgICAgICAg
-ICAgICAgICAgIEJJVCgzKQ0KPj4+ICsjZGVmaW5lIFNQRV9BVFRSX0VWX1RMQiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIEJJVCg1KQ0KPj4+ICsjZGVmaW5lIFNQRV9BVFRSX0VWX0JSQU5D
-SCAgICAgICAgICAgICAgICAgICBCSVQoNykNCj4+PiArDQo+Pj4gIGVudW0gew0KPj4+ICAgICAg
-IEFSTV9TUEVfUE1VX1RZUEUsDQo+Pj4gICAgICAgQVJNX1NQRV9QRVJfQ1BVX01NQVBTLA0KPj4+
-DQo+PiBJTVBPUlRBTlQgTk9USUNFOiBUaGUgY29udGVudHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55
-IGF0dGFjaG1lbnRzIGFyZSBjb25maWRlbnRpYWwgYW5kIG1heSBhbHNvIGJlIHByaXZpbGVnZWQu
-IElmIHlvdSBhcmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFzZSBub3RpZnkgdGhl
-IHNlbmRlciBpbW1lZGlhdGVseSBhbmQgZG8gbm90IGRpc2Nsb3NlIHRoZSBjb250ZW50cyB0byBh
-bnkgb3RoZXIgcGVyc29uLCB1c2UgaXQgZm9yIGFueSBwdXJwb3NlLCBvciBzdG9yZSBvciBjb3B5
-IHRoZSBpbmZvcm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBUaGFuayB5b3UuDQo+Pg0KPiANCj4gDQo=
+On 2019/12/6 23:48, James Clark wrote:
+> Hi Xiaojun,
+> 
+>>
+>> What do you think of this current implementation? Or you prefer the previous way(like branch-misses:pp dTLB-load-misses:pp cache-misses:pp), then I will modify it again.
+>>
+> 
+> Yes I think I prefer the previous way. The reason to add support for :p on the standard event names was to make the user experience more similar to x86. What was the reason for moving to arm_spe_x/branch_miss/? If we are going to use this format then I don't see the need for requiring users to add :p to the end of arm_spe_x/branch_miss/.
+> 
+
+Hi, James,
+
+OK, I will reconsider how to modify it.
+
+> I've tested these patches, but unfortunately I don't see the new events when I do perf list:
+>     ...
+>       arm_spe_0//                                        [Kernel PMU event]
+>       armv8_pmuv3/l3d_cache_wb/                          [Kernel PMU event]
+>       armv8_pmuv3/sample_collision/                      [Kernel PMU event]
+>       armv8_pmuv3/sample_feed/                           [Kernel PMU event]
+>       armv8_pmuv3/sample_filtrate/                       [Kernel PMU event]
+>       armv8_pmuv3/sample_pop/                            [Kernel PMU event]
+>     
+>     branch:
+>       br_mis_pred
+>     ...
+> 
+> Should I see events like /arm_spe_0/branch_miss/ in that list?
+> 
+> And then if I attempt to record them I get this error:
+> 
+>     ./perf record -e arm_spe_0/branch_miss/ ls
+>     event syntax error: 'arm_spe_0/branch_miss/'
+>                                    \___ unknown term
+> 
+> But using the plain event name still works:
+> 
+>     ./perf record -e arm_spe/ts_enable=1/ ls
+>     ...
+>     [ perf record: Woken up 1 times to write data ]
+>     [ perf record: Captured and wrote 0.571 MB perf.data ]
+> 
+
+It may be that you did not recompile the kernel. In order to support this method, I modified the spe driver, which requires recompiling the kernel to support it.
+
+Thanks.
+Xiaojun.
+
+> 
+> Thanks
+> James
+> 
+> On 30/11/2019 00:42, Tan Xiaojun wrote:
+>> On 2019/11/30 0:32, James Clark wrote:
+>>> Hi Xiaojun,
+>>>
+>>> Sorry for not replying earlier, I was at a conference. Unfortunately I have temporarily lost access to SPE enabled hardware but I will test this out and get back to you as soon as possible.
+>>>
+>>>
+>>> Thanks
+>>> James
+>>>
+>>
+>> OK.
+>>
+>> Thanks.
+>> Xiaojun.
+>>
+>>> On 23/11/2019 10:11, Tan Xiaojun wrote:
+>>>> Under the original logic, if the user specifies multiple spe
+>>>> events during the record, perf will report an error and exit
+>>>> without actually running. This is not very friendly.
+>>>>
+>>>> This patch slightly modifies this logic, in which case a
+>>>> warning is reported and the first spe event is taken as a
+>>>> record.
+>>>>
+>>>> At the same time, this patch also supports the recording of
+>>>> multi new synthetic events. However, if the user specifies the
+>>>> spe event and then specifies the synthetic spe events, a warning
+>>>> will be reported and the above principles will still be followed,
+>>>> only the first spe event will be recorded.
+>>>>
+>>>> Example:
+>>>> ------------------------------------------------------------------
+>>>> 1) For multiple spe events
+>>>> $ perf record -e arm_spe_0/ts_enable=0,load_filter=1,jitter=1,min_latency=0/ -e arm_spe_0/ts_enable=0,store_filter=1,jitter=1,min_latency=0/ ls
+>>>> Warning:
+>>>> There may be only one arm_spe_x event. More than one spe event will be ignored, unless they are synthetic events of spe, like:
+>>>> arm_spe_x/llc_miss/
+>>>> arm_spe_x/branch_miss/
+>>>> arm_spe_x/tlb_miss/
+>>>> arm_spe_x/remote_access/
+>>>> (see 'perf list')
+>>>> ...
+>>>> [ perf record: Woken up 1 times to write data ]
+>>>> [ perf record: Captured and wrote 0.078 MB perf.data ]
+>>>>
+>>>> $ perf report --stdio
+>>>> ...
+>>>>  # Samples: 0  of event 'arm_spe_0/ts_enable=0,load_filter=1,jitter=1,min_latency=0/'
+>>>> ...
+>>>>
+>>>> 2) For multiple spe precise ip events (synthetic event)
+>>>> $ perf record -e arm_spe_0/llc_miss/ -e arm_spe_0/llc_miss/ -e arm_spe_0/tlb_miss/ ls
+>>>> Warning:
+>>>> These events are precise ip events, please add :p/pp/ppp after the event.
+>>>> ...
+>>>> [ perf record: Woken up 1 times to write data ]
+>>>> [ perf record: Captured and wrote 0.343 MB perf.data ]
+>>>>
+>>>> $ perf report --stdio
+>>>>  # To display the perf.data header info, please use --header/--header-only options.
+>>>>  #
+>>>>  #
+>>>>  # Total Lost Samples: 0
+>>>>  #
+>>>>  # Samples: 0  of event 'arm_spe_0/llc_miss/, arm_spe_0/tlb_miss/'
+>>>>  # Event count (approx.): 0
+>>>>  #
+>>>>  # Children      Self  Command  Shared Object  Symbol
+>>>>  # ........  ........  .......  .............  ......
+>>>>  #
+>>>>
+>>>>  # Samples: 0  of event 'dummy:u'
+>>>>  # Event count (approx.): 0
+>>>>  #
+>>>>  # Children      Self  Command  Shared Object  Symbol
+>>>>  # ........  ........  .......  .............  ......
+>>>>  #
+>>>>
+>>>>  # Samples: 83  of event 'llc-miss'
+>>>>  # Event count (approx.): 83
+>>>>  #
+>>>>  # Children      Self  Command  Shared Object      Symbol
+>>>>  # ........  ........  .......  .................  ....................................
+>>>>  #
+>>>>      42.17%    42.17%  ls       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>>>>      14.46%    14.46%  ls       [kernel.kallsyms]  [k] memchr_inv
+>>>>      13.25%    13.25%  ls       [kernel.kallsyms]  [k] perf_event_mmap
+>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] available_idle_cpu
+>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] copy_page
+>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] try_to_wake_up
+>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] vma_interval_tree_insert
+>>>>       2.41%     2.41%  ls       ld-2.28.so         [.] _dl_lookup_symbol_x
+>>>>       2.41%     2.41%  ls       ld-2.28.so         [.] _dl_relocate_object
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] ext4_getattr
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] get_page_from_freelist
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] get_partial_node.isra.25
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] lock_page_memcg
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] may_open
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] radix_tree_next_chunk
+>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] rb_prev
+>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] _dl_map_object_from_fd
+>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] _dl_start
+>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] do_lookup_x
+>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] rtld_lock_default_lock_recursive
+>>>>       1.20%     1.20%  ls       libc-2.28.so       [.] getenv
+>>>>       1.20%     1.20%  ls       [unknown]          [.] 0xffff29f1190029b8
+>>>>
+>>>>  # Samples: 13  of event 'tlb-miss'
+>>>>  # Event count (approx.): 13
+>>>>  #
+>>>>  # Children      Self  Command  Shared Object      Symbol
+>>>>  # ........  ........  .......  .................  ............................
+>>>>  #
+>>>>      15.38%    15.38%  ls       [kernel.kallsyms]  [k] __audit_syscall_entry
+>>>>      15.38%    15.38%  ls       [kernel.kallsyms]  [k] get_partial_node.isra.25
+>>>>      15.38%    15.38%  ls       ld-2.28.so         [.] _dl_relocate_object
+>>>>      15.38%    15.38%  ls       ld-2.28.so         [.] do_lookup_x
+>>>>       7.69%     7.69%  ls       [kernel.kallsyms]  [k] memchr_inv
+>>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_map_object_from_fd
+>>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_setup_hash
+>>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_start
+>>>>       7.69%     7.69%  ls       ls                 [.] 0x00000000000097a0
+>>>>
+>>>> ------------------------------------------------------------------
+>>>>
+>>>> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+>>>> ---
+>>>>  tools/perf/arch/arm64/util/arm-spe.c | 47 +++++++++++++++++++++++++---
+>>>>  tools/perf/util/arm-spe.c            | 25 +++++++++++++++
+>>>>  tools/perf/util/arm-spe.h            | 20 ++++++++++++
+>>>>  3 files changed, 88 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+>>>> index eba6541ec0f1..68e91f3c9614 100644
+>>>> --- a/tools/perf/arch/arm64/util/arm-spe.c
+>>>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+>>>> @@ -67,21 +67,60 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>>>       struct arm_spe_recording *sper =
+>>>>                       container_of(itr, struct arm_spe_recording, itr);
+>>>>       struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
+>>>> -     struct evsel *evsel, *arm_spe_evsel = NULL;
+>>>> +     struct evsel *evsel, *tmp, *arm_spe_evsel = NULL;
+>>>>       bool privileged = perf_event_paranoid_check(-1);
+>>>>       struct evsel *tracking_evsel;
+>>>> +     char evsel_name[128];
+>>>>       int err;
+>>>>
+>>>>       sper->evlist = evlist;
+>>>>
+>>>> -     evlist__for_each_entry(evlist, evsel) {
+>>>> +     evlist__for_each_entry_safe(evlist, tmp, evsel) {
+>>>>               if (evsel->core.attr.type == arm_spe_pmu->type) {
+>>>>                       if (arm_spe_evsel) {
+>>>> -                             pr_err("There may be only one " ARM_SPE_PMU_NAME "x event\n");
+>>>> -                             return -EINVAL;
+>>>> +                             if ((evsel->core.attr.config
+>>>> +                                             & GENMASK_ULL(ARM_SPE_EVENT_HI,
+>>>> +                                                     ARM_SPE_EVENT_LO))
+>>>> +                                             && (arm_spe_evsel->core.attr.config
+>>>> +                                             & GENMASK_ULL(ARM_SPE_EVENT_HI,
+>>>> +                                                     ARM_SPE_EVENT_LO))) {
+>>>> +                                     arm_spe_evsel->core.attr.config |=
+>>>> +                                                             evsel->core.attr.config;
+>>>> +
+>>>> +                                     if (!strstr(arm_spe_evsel->name, evsel->name)) {
+>>>> +                                             scnprintf(evsel_name, sizeof(evsel_name),
+>>>> +                                                             "%s, %s", arm_spe_evsel->name,
+>>>> +                                                             evsel->name);
+>>>> +                                             arm_spe_evsel->name = strdup(evsel_name);
+>>>> +                                     }
+>>>> +                             } else
+>>>> +                                     pr_warning("Warning:\n"
+>>>> +                                             "There may be only one "
+>>>> +                                             ARM_SPE_PMU_NAME "x event."
+>>>> +                                             " More than one spe event"
+>>>> +                                             " will be ignored, unless"
+>>>> +                                             " they are synthetic events"
+>>>> +                                             " of spe, like:"
+>>>> +                                             "\narm_spe_x/llc_miss/"
+>>>> +                                             "\narm_spe_x/branch_miss/"
+>>>> +                                             "\narm_spe_x/tlb_miss/"
+>>>> +                                             "\narm_spe_x/remote_access/"
+>>>> +                                             "\n(see 'perf list')\n");
+>>>> +                             evlist__remove(evlist, evsel);
+>>>> +                             evsel__delete(evsel);
+>>>> +                             continue;
+>>>>                       }
+>>>>                       evsel->core.attr.freq = 0;
+>>>>                       evsel->core.attr.sample_period = 1;
+>>>> +                     if (evsel->core.attr.config
+>>>> +                                     & GENMASK_ULL(ARM_SPE_EVENT_HI, ARM_SPE_EVENT_LO)) {
+>>>> +                             evsel->core.attr.config |= SPE_ATTR_TS_ENABLE;
+>>>> +                             if (!evsel->core.attr.precise_ip)
+>>>> +                                     pr_warning("Warning:\n"
+>>>> +                                             "These events are precise ip events,"
+>>>> +                                             " please add :p/pp/ppp after the event.\n");
+>>>> +                     }
+>>>> +
+>>>>                       arm_spe_evsel = evsel;
+>>>>                       opts->full_auxtrace = true;
+>>>>               }
+>>>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>>>> index e7282c2616f3..0c9d7fa518a5 100644
+>>>> --- a/tools/perf/util/arm-spe.c
+>>>> +++ b/tools/perf/util/arm-spe.c
+>>>> @@ -779,6 +779,31 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>>>>       attr.sample_id_all = evsel->core.attr.sample_id_all;
+>>>>       attr.read_format = evsel->core.attr.read_format;
+>>>>
+>>>> +     if (evsel->core.attr.config
+>>>> +                     & GENMASK_ULL(ARM_SPE_EVENT_HI,
+>>>> +                             ARM_SPE_EVENT_LO)) {
+>>>> +             spe->synth_opts.llc_miss = false;
+>>>> +             spe->synth_opts.tlb_miss = false;
+>>>> +             spe->synth_opts.branch_miss = false;
+>>>> +             spe->synth_opts.remote_access = false;
+>>>> +
+>>>> +             if (evsel->core.attr.config
+>>>> +                             & (ARM_SPE_EVENT_LLC_MISS << ARM_SPE_EVENT_LO))
+>>>> +                     spe->synth_opts.llc_miss = true;
+>>>> +
+>>>> +             if (evsel->core.attr.config
+>>>> +                             & (ARM_SPE_EVENT_TLB_MISS << ARM_SPE_EVENT_LO))
+>>>> +                     spe->synth_opts.tlb_miss = true;
+>>>> +
+>>>> +             if (evsel->core.attr.config
+>>>> +                             & (ARM_SPE_EVENT_BRANCH_MISS << ARM_SPE_EVENT_LO))
+>>>> +                     spe->synth_opts.branch_miss = true;
+>>>> +
+>>>> +             if (evsel->core.attr.config
+>>>> +                             & (ARM_SPE_EVENT_REMOTE_ACCESS << ARM_SPE_EVENT_LO))
+>>>> +                     spe->synth_opts.remote_access = true;
+>>>> +     }
+>>>> +
+>>>>       /* create new id val to be a fixed offset from evsel id */
+>>>>       id = evsel->core.id[0] + 1000000000;
+>>>>
+>>>> diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
+>>>> index 98d3235781c3..db7420121979 100644
+>>>> --- a/tools/perf/util/arm-spe.h
+>>>> +++ b/tools/perf/util/arm-spe.h
+>>>> @@ -9,6 +9,26 @@
+>>>>
+>>>>  #define ARM_SPE_PMU_NAME "arm_spe_"
+>>>>
+>>>> +#define ARM_SPE_EVENT_LO                     3
+>>>> +#define ARM_SPE_EVENT_HI                     6
+>>>> +#define ARM_SPE_EVENT_LLC_MISS                       BIT(0)
+>>>> +#define ARM_SPE_EVENT_BRANCH_MISS            BIT(1)
+>>>> +#define ARM_SPE_EVENT_TLB_MISS                       BIT(2)
+>>>> +#define ARM_SPE_EVENT_REMOTE_ACCESS          BIT(3)
+>>>> +
+>>>> +#define SPE_ATTR_TS_ENABLE                   BIT(0)
+>>>> +#define SPE_ATTR_PA_ENABLE                   BIT(1)
+>>>> +#define SPE_ATTR_PCT_ENABLE                  BIT(2)
+>>>> +#define SPE_ATTR_JITTER                              BIT(16)
+>>>> +#define SPE_ATTR_BRANCH_FILTER                       BIT(32)
+>>>> +#define SPE_ATTR_LOAD_FILTER                 BIT(33)
+>>>> +#define SPE_ATTR_STORE_FILTER                        BIT(34)
+>>>> +
+>>>> +#define SPE_ATTR_EV_RETIRED                  BIT(1)
+>>>> +#define SPE_ATTR_EV_CACHE                    BIT(3)
+>>>> +#define SPE_ATTR_EV_TLB                              BIT(5)
+>>>> +#define SPE_ATTR_EV_BRANCH                   BIT(7)
+>>>> +
+>>>>  enum {
+>>>>       ARM_SPE_PMU_TYPE,
+>>>>       ARM_SPE_PER_CPU_MMAPS,
+>>>>
+>>> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+>>>
+>>
+>>
