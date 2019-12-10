@@ -1,346 +1,131 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: Re: [RFC v3 5/5] perf tools: Add support to process multi spe events
-Date: Mon, 9 Dec 2019 08:46:40 +0800
-Message-ID: <896ba5d6-5a40-5882-5c2b-999974dd5baf@huawei.com>
-References: <20191123101118.12635-1-tanxiaojun@huawei.com>
- <20191123101118.12635-6-tanxiaojun@huawei.com>
- <2f2db9d2-e468-b327-34e6-1412a40cb5c9@arm.com>
- <1a29399e-4c24-1a55-fa44-9f8b7b46308c@huawei.com>
- <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
+From: John Garry <john.garry@huawei.com>
+Subject: perf top for arm64?
+Date: Tue, 10 Dec 2019 16:13:49 +0000
+Message-ID: <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
+References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
+ <20191106140036.GA6259@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
+In-Reply-To: <20191106140036.GA6259@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Clark <James.Clark@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
-Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, peterz@infradead.org, mingo@redhat.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, mark.rutland@arm.com, will@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linuxarm <linuxarm@huawei.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2019/12/6 23:48, James Clark wrote:
-> Hi Xiaojun,
-> 
->>
->> What do you think of this current implementation? Or you prefer the previous way(like branch-misses:pp dTLB-load-misses:pp cache-misses:pp), then I will modify it again.
->>
-> 
-> Yes I think I prefer the previous way. The reason to add support for :p on the standard event names was to make the user experience more similar to x86. What was the reason for moving to arm_spe_x/branch_miss/? If we are going to use this format then I don't see the need for requiring users to add :p to the end of arm_spe_x/branch_miss/.
-> 
+Hi all,
 
-Hi, James,
+I find to my surprise that "perf top" does not work for arm64:
 
-OK, I will reconsider how to modify it.
+root@ubuntu:/home/john/linux# tools/perf/perf top
+Couldn't read the cpuid for this machine: No such file or directory
 
-> I've tested these patches, but unfortunately I don't see the new events when I do perf list:
->     ...
->       arm_spe_0//                                        [Kernel PMU event]
->       armv8_pmuv3/l3d_cache_wb/                          [Kernel PMU event]
->       armv8_pmuv3/sample_collision/                      [Kernel PMU event]
->       armv8_pmuv3/sample_feed/                           [Kernel PMU event]
->       armv8_pmuv3/sample_filtrate/                       [Kernel PMU event]
->       armv8_pmuv3/sample_pop/                            [Kernel PMU event]
->     
->     branch:
->       br_mis_pred
->     ...
-> 
-> Should I see events like /arm_spe_0/branch_miss/ in that list?
-> 
-> And then if I attempt to record them I get this error:
-> 
->     ./perf record -e arm_spe_0/branch_miss/ ls
->     event syntax error: 'arm_spe_0/branch_miss/'
->                                    \___ unknown term
-> 
-> But using the plain event name still works:
-> 
->     ./perf record -e arm_spe/ts_enable=1/ ls
->     ...
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.571 MB perf.data ]
-> 
+That's v5.5-rc1 release.
 
-It may be that you did not recompile the kernel. In order to support this method, I modified the spe driver, which requires recompiling the kernel to support it.
+It seems that we are just missing an arm64 version of get_cpuid() - with 
+the patch below, I now get as hoped:
 
-Thanks.
-Xiaojun.
+    PerfTop:   32857 irqs/sec  kernel:85.0%  exact:  0.0% lost: 0/0 
+drop: 0/0 [4000Hz cycles],  (all, 64 CPUs)
+-------------------------------------------------------------------------------
 
-> 
-> Thanks
-> James
-> 
-> On 30/11/2019 00:42, Tan Xiaojun wrote:
->> On 2019/11/30 0:32, James Clark wrote:
->>> Hi Xiaojun,
->>>
->>> Sorry for not replying earlier, I was at a conference. Unfortunately I have temporarily lost access to SPE enabled hardware but I will test this out and get back to you as soon as possible.
->>>
->>>
->>> Thanks
->>> James
->>>
->>
->> OK.
->>
->> Thanks.
->> Xiaojun.
->>
->>> On 23/11/2019 10:11, Tan Xiaojun wrote:
->>>> Under the original logic, if the user specifies multiple spe
->>>> events during the record, perf will report an error and exit
->>>> without actually running. This is not very friendly.
->>>>
->>>> This patch slightly modifies this logic, in which case a
->>>> warning is reported and the first spe event is taken as a
->>>> record.
->>>>
->>>> At the same time, this patch also supports the recording of
->>>> multi new synthetic events. However, if the user specifies the
->>>> spe event and then specifies the synthetic spe events, a warning
->>>> will be reported and the above principles will still be followed,
->>>> only the first spe event will be recorded.
->>>>
->>>> Example:
->>>> ------------------------------------------------------------------
->>>> 1) For multiple spe events
->>>> $ perf record -e arm_spe_0/ts_enable=0,load_filter=1,jitter=1,min_latency=0/ -e arm_spe_0/ts_enable=0,store_filter=1,jitter=1,min_latency=0/ ls
->>>> Warning:
->>>> There may be only one arm_spe_x event. More than one spe event will be ignored, unless they are synthetic events of spe, like:
->>>> arm_spe_x/llc_miss/
->>>> arm_spe_x/branch_miss/
->>>> arm_spe_x/tlb_miss/
->>>> arm_spe_x/remote_access/
->>>> (see 'perf list')
->>>> ...
->>>> [ perf record: Woken up 1 times to write data ]
->>>> [ perf record: Captured and wrote 0.078 MB perf.data ]
->>>>
->>>> $ perf report --stdio
->>>> ...
->>>>  # Samples: 0  of event 'arm_spe_0/ts_enable=0,load_filter=1,jitter=1,min_latency=0/'
->>>> ...
->>>>
->>>> 2) For multiple spe precise ip events (synthetic event)
->>>> $ perf record -e arm_spe_0/llc_miss/ -e arm_spe_0/llc_miss/ -e arm_spe_0/tlb_miss/ ls
->>>> Warning:
->>>> These events are precise ip events, please add :p/pp/ppp after the event.
->>>> ...
->>>> [ perf record: Woken up 1 times to write data ]
->>>> [ perf record: Captured and wrote 0.343 MB perf.data ]
->>>>
->>>> $ perf report --stdio
->>>>  # To display the perf.data header info, please use --header/--header-only options.
->>>>  #
->>>>  #
->>>>  # Total Lost Samples: 0
->>>>  #
->>>>  # Samples: 0  of event 'arm_spe_0/llc_miss/, arm_spe_0/tlb_miss/'
->>>>  # Event count (approx.): 0
->>>>  #
->>>>  # Children      Self  Command  Shared Object  Symbol
->>>>  # ........  ........  .......  .............  ......
->>>>  #
->>>>
->>>>  # Samples: 0  of event 'dummy:u'
->>>>  # Event count (approx.): 0
->>>>  #
->>>>  # Children      Self  Command  Shared Object  Symbol
->>>>  # ........  ........  .......  .............  ......
->>>>  #
->>>>
->>>>  # Samples: 83  of event 'llc-miss'
->>>>  # Event count (approx.): 83
->>>>  #
->>>>  # Children      Self  Command  Shared Object      Symbol
->>>>  # ........  ........  .......  .................  ....................................
->>>>  #
->>>>      42.17%    42.17%  ls       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
->>>>      14.46%    14.46%  ls       [kernel.kallsyms]  [k] memchr_inv
->>>>      13.25%    13.25%  ls       [kernel.kallsyms]  [k] perf_event_mmap
->>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] available_idle_cpu
->>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] copy_page
->>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] try_to_wake_up
->>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] vma_interval_tree_insert
->>>>       2.41%     2.41%  ls       ld-2.28.so         [.] _dl_lookup_symbol_x
->>>>       2.41%     2.41%  ls       ld-2.28.so         [.] _dl_relocate_object
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] ext4_getattr
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] get_page_from_freelist
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] get_partial_node.isra.25
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] lock_page_memcg
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] may_open
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] radix_tree_next_chunk
->>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] rb_prev
->>>>       1.20%     1.20%  ls       ld-2.28.so         [.] _dl_map_object_from_fd
->>>>       1.20%     1.20%  ls       ld-2.28.so         [.] _dl_start
->>>>       1.20%     1.20%  ls       ld-2.28.so         [.] do_lookup_x
->>>>       1.20%     1.20%  ls       ld-2.28.so         [.] rtld_lock_default_lock_recursive
->>>>       1.20%     1.20%  ls       libc-2.28.so       [.] getenv
->>>>       1.20%     1.20%  ls       [unknown]          [.] 0xffff29f1190029b8
->>>>
->>>>  # Samples: 13  of event 'tlb-miss'
->>>>  # Event count (approx.): 13
->>>>  #
->>>>  # Children      Self  Command  Shared Object      Symbol
->>>>  # ........  ........  .......  .................  ............................
->>>>  #
->>>>      15.38%    15.38%  ls       [kernel.kallsyms]  [k] __audit_syscall_entry
->>>>      15.38%    15.38%  ls       [kernel.kallsyms]  [k] get_partial_node.isra.25
->>>>      15.38%    15.38%  ls       ld-2.28.so         [.] _dl_relocate_object
->>>>      15.38%    15.38%  ls       ld-2.28.so         [.] do_lookup_x
->>>>       7.69%     7.69%  ls       [kernel.kallsyms]  [k] memchr_inv
->>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_map_object_from_fd
->>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_setup_hash
->>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_start
->>>>       7.69%     7.69%  ls       ls                 [.] 0x00000000000097a0
->>>>
->>>> ------------------------------------------------------------------
->>>>
->>>> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
->>>> ---
->>>>  tools/perf/arch/arm64/util/arm-spe.c | 47 +++++++++++++++++++++++++---
->>>>  tools/perf/util/arm-spe.c            | 25 +++++++++++++++
->>>>  tools/perf/util/arm-spe.h            | 20 ++++++++++++
->>>>  3 files changed, 88 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
->>>> index eba6541ec0f1..68e91f3c9614 100644
->>>> --- a/tools/perf/arch/arm64/util/arm-spe.c
->>>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
->>>> @@ -67,21 +67,60 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
->>>>       struct arm_spe_recording *sper =
->>>>                       container_of(itr, struct arm_spe_recording, itr);
->>>>       struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
->>>> -     struct evsel *evsel, *arm_spe_evsel = NULL;
->>>> +     struct evsel *evsel, *tmp, *arm_spe_evsel = NULL;
->>>>       bool privileged = perf_event_paranoid_check(-1);
->>>>       struct evsel *tracking_evsel;
->>>> +     char evsel_name[128];
->>>>       int err;
->>>>
->>>>       sper->evlist = evlist;
->>>>
->>>> -     evlist__for_each_entry(evlist, evsel) {
->>>> +     evlist__for_each_entry_safe(evlist, tmp, evsel) {
->>>>               if (evsel->core.attr.type == arm_spe_pmu->type) {
->>>>                       if (arm_spe_evsel) {
->>>> -                             pr_err("There may be only one " ARM_SPE_PMU_NAME "x event\n");
->>>> -                             return -EINVAL;
->>>> +                             if ((evsel->core.attr.config
->>>> +                                             & GENMASK_ULL(ARM_SPE_EVENT_HI,
->>>> +                                                     ARM_SPE_EVENT_LO))
->>>> +                                             && (arm_spe_evsel->core.attr.config
->>>> +                                             & GENMASK_ULL(ARM_SPE_EVENT_HI,
->>>> +                                                     ARM_SPE_EVENT_LO))) {
->>>> +                                     arm_spe_evsel->core.attr.config |=
->>>> +                                                             evsel->core.attr.config;
->>>> +
->>>> +                                     if (!strstr(arm_spe_evsel->name, evsel->name)) {
->>>> +                                             scnprintf(evsel_name, sizeof(evsel_name),
->>>> +                                                             "%s, %s", arm_spe_evsel->name,
->>>> +                                                             evsel->name);
->>>> +                                             arm_spe_evsel->name = strdup(evsel_name);
->>>> +                                     }
->>>> +                             } else
->>>> +                                     pr_warning("Warning:\n"
->>>> +                                             "There may be only one "
->>>> +                                             ARM_SPE_PMU_NAME "x event."
->>>> +                                             " More than one spe event"
->>>> +                                             " will be ignored, unless"
->>>> +                                             " they are synthetic events"
->>>> +                                             " of spe, like:"
->>>> +                                             "\narm_spe_x/llc_miss/"
->>>> +                                             "\narm_spe_x/branch_miss/"
->>>> +                                             "\narm_spe_x/tlb_miss/"
->>>> +                                             "\narm_spe_x/remote_access/"
->>>> +                                             "\n(see 'perf list')\n");
->>>> +                             evlist__remove(evlist, evsel);
->>>> +                             evsel__delete(evsel);
->>>> +                             continue;
->>>>                       }
->>>>                       evsel->core.attr.freq = 0;
->>>>                       evsel->core.attr.sample_period = 1;
->>>> +                     if (evsel->core.attr.config
->>>> +                                     & GENMASK_ULL(ARM_SPE_EVENT_HI, ARM_SPE_EVENT_LO)) {
->>>> +                             evsel->core.attr.config |= SPE_ATTR_TS_ENABLE;
->>>> +                             if (!evsel->core.attr.precise_ip)
->>>> +                                     pr_warning("Warning:\n"
->>>> +                                             "These events are precise ip events,"
->>>> +                                             " please add :p/pp/ppp after the event.\n");
->>>> +                     }
->>>> +
->>>>                       arm_spe_evsel = evsel;
->>>>                       opts->full_auxtrace = true;
->>>>               }
->>>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->>>> index e7282c2616f3..0c9d7fa518a5 100644
->>>> --- a/tools/perf/util/arm-spe.c
->>>> +++ b/tools/perf/util/arm-spe.c
->>>> @@ -779,6 +779,31 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->>>>       attr.sample_id_all = evsel->core.attr.sample_id_all;
->>>>       attr.read_format = evsel->core.attr.read_format;
->>>>
->>>> +     if (evsel->core.attr.config
->>>> +                     & GENMASK_ULL(ARM_SPE_EVENT_HI,
->>>> +                             ARM_SPE_EVENT_LO)) {
->>>> +             spe->synth_opts.llc_miss = false;
->>>> +             spe->synth_opts.tlb_miss = false;
->>>> +             spe->synth_opts.branch_miss = false;
->>>> +             spe->synth_opts.remote_access = false;
->>>> +
->>>> +             if (evsel->core.attr.config
->>>> +                             & (ARM_SPE_EVENT_LLC_MISS << ARM_SPE_EVENT_LO))
->>>> +                     spe->synth_opts.llc_miss = true;
->>>> +
->>>> +             if (evsel->core.attr.config
->>>> +                             & (ARM_SPE_EVENT_TLB_MISS << ARM_SPE_EVENT_LO))
->>>> +                     spe->synth_opts.tlb_miss = true;
->>>> +
->>>> +             if (evsel->core.attr.config
->>>> +                             & (ARM_SPE_EVENT_BRANCH_MISS << ARM_SPE_EVENT_LO))
->>>> +                     spe->synth_opts.branch_miss = true;
->>>> +
->>>> +             if (evsel->core.attr.config
->>>> +                             & (ARM_SPE_EVENT_REMOTE_ACCESS << ARM_SPE_EVENT_LO))
->>>> +                     spe->synth_opts.remote_access = true;
->>>> +     }
->>>> +
->>>>       /* create new id val to be a fixed offset from evsel id */
->>>>       id = evsel->core.id[0] + 1000000000;
->>>>
->>>> diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
->>>> index 98d3235781c3..db7420121979 100644
->>>> --- a/tools/perf/util/arm-spe.h
->>>> +++ b/tools/perf/util/arm-spe.h
->>>> @@ -9,6 +9,26 @@
->>>>
->>>>  #define ARM_SPE_PMU_NAME "arm_spe_"
->>>>
->>>> +#define ARM_SPE_EVENT_LO                     3
->>>> +#define ARM_SPE_EVENT_HI                     6
->>>> +#define ARM_SPE_EVENT_LLC_MISS                       BIT(0)
->>>> +#define ARM_SPE_EVENT_BRANCH_MISS            BIT(1)
->>>> +#define ARM_SPE_EVENT_TLB_MISS                       BIT(2)
->>>> +#define ARM_SPE_EVENT_REMOTE_ACCESS          BIT(3)
->>>> +
->>>> +#define SPE_ATTR_TS_ENABLE                   BIT(0)
->>>> +#define SPE_ATTR_PA_ENABLE                   BIT(1)
->>>> +#define SPE_ATTR_PCT_ENABLE                  BIT(2)
->>>> +#define SPE_ATTR_JITTER                              BIT(16)
->>>> +#define SPE_ATTR_BRANCH_FILTER                       BIT(32)
->>>> +#define SPE_ATTR_LOAD_FILTER                 BIT(33)
->>>> +#define SPE_ATTR_STORE_FILTER                        BIT(34)
->>>> +
->>>> +#define SPE_ATTR_EV_RETIRED                  BIT(1)
->>>> +#define SPE_ATTR_EV_CACHE                    BIT(3)
->>>> +#define SPE_ATTR_EV_TLB                              BIT(5)
->>>> +#define SPE_ATTR_EV_BRANCH                   BIT(7)
->>>> +
->>>>  enum {
->>>>       ARM_SPE_PMU_TYPE,
->>>>       ARM_SPE_PER_CPU_MMAPS,
->>>>
->>> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
->>>
->>
->>
+      8.99%  [kernel]          [k] arm_smmu_cmdq_issue_cmdlist
+      5.80%  [kernel]          [k] __softirqentry_text_start
+      4.49%  [kernel]          [k] _raw_spin_unlock_irqrestore
+      3.48%  [kernel]          [k] el0_svc_common.constprop.2
+      3.37%  [kernel]          [k] _raw_write_lock_irqsave
+      3.28%  [kernel]          [k] __local_bh_enable_ip
+      3.05%  [kernel]          [k] __blk_complete_request
+      2.07%  [kernel]          [k] queued_spin_lock_slowpath
+      1.93%  [vdso]            [.] 0x0000000000000484
+
+
+Was this just missed? Or is there a good reason to omit?
+
+Thanks,
+John
+
+--->8---
+
+Subject: [PATCH] perf: Add perf top support for arm64
+
+Copied from get_cpuid_str() essentially...
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+
+diff --git a/tools/perf/arch/arm64/util/header.c 
+b/tools/perf/arch/arm64/util/header.c
+index a32e4b72a98f..ecd1f86e29cc 100644
+--- a/tools/perf/arch/arm64/util/header.c
++++ b/tools/perf/arch/arm64/util/header.c
+@@ -1,10 +1,12 @@
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <perf/cpumap.h>
++#include <util/cpumap.h>
+  #include <internal/cpumap.h>
+  #include <api/fs/fs.h>
+  #include "debug.h"
+  #include "header.h"
++#include <errno.h>
+
+  #define MIDR "/regs/identification/midr_el1"
+  #define MIDR_SIZE 19
+@@ -12,6 +14,59 @@
+  #define MIDR_VARIANT_SHIFT      20
+  #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
+
++int
++get_cpuid(char *buffer, size_t sz)
++{
++	char *buf = NULL;
++	char path[PATH_MAX];
++	const char *sysfs = sysfs__mountpoint();
++	int cpu;
++	u64 midr = 0;
++	FILE *file;
++
++	if (!sysfs)
++		return EINVAL;
++
++	buf = malloc(MIDR_SIZE);
++	if (!buf)
++		return EINVAL;
++
++	/* read midr from list of cpus mapped to this pmu */
++	for (cpu = 0; cpu < cpu__max_present_cpu(); cpu++) {
++		scnprintf(path, sz, "%s/devices/system/cpu/cpu%d"MIDR,
++				sysfs, cpu);
++
++		file = fopen(path, "r");
++		if (!file) {
++			pr_debug("fopen failed for file %s\n", path);
++			continue;
++		}
++
++		if (!fgets(buf, MIDR_SIZE, file)) {
++			fclose(file);
++			continue;
++		}
++		fclose(file);
++
++		/* Ignore/clear Variant[23:20] and
++		 * Revision[3:0] of MIDR
++		 */
++		midr = strtoul(buf, NULL, 16);
++		midr &= (~(MIDR_VARIANT_MASK | MIDR_REVISION_MASK));
++		scnprintf(buffer, MIDR_SIZE, "0x%016lx", midr);
++		/* got midr break loop */
++		break;
++	}
++
++	if (!midr) {
++		pr_err("failed to get cpuid string\n");
++		free(buf);
++		return EINVAL;
++	}
++	return 0;
++}
++
