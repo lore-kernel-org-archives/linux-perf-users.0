@@ -1,7 +1,7 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: perf top for arm64?
-Date: Wed, 11 Dec 2019 01:48:30 +0000
-Message-ID: <DB7PR04MB4618A2196EA1E57D979B1C3AE65A0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: perf top for arm64?
+Date: Wed, 11 Dec 2019 10:36:39 +0800
+Message-ID: <0870e660-2511-ced0-7402-5ff389c4c281@huawei.com>
 References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
  <20191106140036.GA6259@kernel.org>
  <418023e7-a50d-cb6f-989f-2e6d114ce5d8@huawei.com>
@@ -9,52 +9,58 @@ References: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
  <952dc484-2739-ee65-f41c-f0198850ab10@huawei.com>
  <20191210170841.GA23357@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191210170841.GA23357@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "will@kernel.org" <will@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Cc: mark.rutland@arm.com, peterz@infradead.org, Linuxarm <linuxarm@huawei.com>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, linux-kernel@vger.kernel.org, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, alexander.shishkin@linux.intel.com, mingo@redhat.com, namhyung@kernel.org, will@kernel.org, linux-arm-kernel@lists.infradead.org, wanghaibin.wang@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXBlcmYtdXNlcnMt
-b3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1wZXJmLXVzZXJzLW93bmVyQHZnZXIua2Vy
-bmVsLm9yZz4gT24gQmVoYWxmIE9mIEppcmkgT2xzYQ0KPiBTZW50OiAyMDE5xOoxMtTCMTHI1SAx
-OjA5DQo+IFRvOiBKb2huIEdhcnJ5IDxqb2huLmdhcnJ5QGh1YXdlaS5jb20+DQo+IENjOiBBcm5h
-bGRvIENhcnZhbGhvIGRlIE1lbG8gPGFybmFsZG8ubWVsb0BnbWFpbC5jb20+Ow0KPiBwZXRlcnpA
-aW5mcmFkZWFkLm9yZzsgbWluZ29AcmVkaGF0LmNvbTsNCj4gYWxleGFuZGVyLnNoaXNoa2luQGxp
-bnV4LmludGVsLmNvbTsgbmFtaHl1bmdAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5j
-b207IHdpbGxAa2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4gbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBMaW51eGFybSA8bGludXhhcm1AaHVh
-d2VpLmNvbT47DQo+IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6
-IFJlOiBwZXJmIHRvcCBmb3IgYXJtNjQ/DQo+IA0KPiBPbiBUdWUsIERlYyAxMCwgMjAxOSBhdCAw
-NDo1Mjo1MlBNICswMDAwLCBKb2huIEdhcnJ5IHdyb3RlOg0KPiA+IE9uIDEwLzEyLzIwMTkgMTY6
-MzYsIEppcmkgT2xzYSB3cm90ZToNCj4gPiA+IE9uIFR1ZSwgRGVjIDEwLCAyMDE5IGF0IDA0OjEz
-OjQ5UE0gKzAwMDAsIEpvaG4gR2Fycnkgd3JvdGU6DQo+ID4gPiA+IEhpIGFsbCwNCj4gPiA+ID4N
-Cj4gPiA+ID4gSSBmaW5kIHRvIG15IHN1cnByaXNlIHRoYXQgInBlcmYgdG9wIiBkb2VzIG5vdCB3
-b3JrIGZvciBhcm02NDoNCj4gPiA+ID4NCj4gPiA+ID4gcm9vdEB1YnVudHU6L2hvbWUvam9obi9s
-aW51eCMgdG9vbHMvcGVyZi9wZXJmIHRvcCBDb3VsZG4ndCByZWFkDQo+ID4gPiA+IHRoZSBjcHVp
-ZCBmb3IgdGhpcyBtYWNoaW5lOiBObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5DQo+ID4gPg0KPiA+
-DQo+ID4gSGkgSmlya2EsDQo+ID4NCj4gPiA+IHRoZXJlIHdhcyByZWNlbnQgY2hhbmdlIHRoYXQg
-Y2hlY2sgb24gY3B1aWQgYW5kIHF1aXRzOg0KPiA+ID4gICAgNjA4MTI3ZjczNzc5IHBlcmYgdG9w
-OiBJbml0aWFsaXplIHBlcmZfZW52LT5jcHVpZCwgbmVlZGVkIGJ5IHRoZQ0KPiA+ID4gcGVyIGFy
-Y2ggYW5ub3RhdGlvbiBpbml0IHJvdXRpbmUNCj4gPiA+DQo+ID4NCj4gPiBvaywgdGhpcyBpcyBu
-ZXcgY29kZS4gSSBvYnZpb3VzbHkgZGlkbid0IGNoZWNrIHRoZSBnaXQgaGlzdG9yeS4uLg0KPiA+
-DQo+ID4gQnV0LCBhcGFydCBmcm9tIHRoaXMsIHRoZXJlIGFyZSBtYW55IG90aGVyIHBsYWNlcyB3
-aGVyZSBnZXRfY3B1aWQoKSBpcw0KPiA+IGNhbGxlZC4gSSB3b25kZXIgd2hhdCBlbHNlIHdlJ3Jl
-IG1pc3Npbmcgb3V0IG9uLCBhbmQgd2hldGhlciB3ZSBzaG91bGQNCj4gPiBzdGlsbCBhZGQgaXQu
-DQo+IA0KPiByaWdodCwgSSB3YXMganVzdCB3b25kZXJpbmcgaG93IGNvbWUgdmVuZG9yIGV2ZW50
-cyBhcmUgd29ya2luZyBmb3IgeW91LCBidXQNCj4gcmVhbGl6ZWQgd2UgaGF2ZSBnZXRfY3B1aWRf
-c3RyIGJlaW5nIGNhbGxlZCBpbiB0aGVyZSA7LSkNCj4gDQo+IEkgdGhpbmsgd2Ugc2hvdWxkIGFk
-ZCBpdCBhcyB5b3UgaGF2ZSBpdCBwcmVwYXJlZCBhbHJlYWR5LCBjb3VsZCB5b3UgcG9zdCBpdCB3
-aXRoDQo+IGJpZ2dlciBjaGFuZ2Vsb2cgdGhhdCB3b3VsZCBleHBsYWluIHdoZXJlIGl0J3MgYmVp
-bmcgdXNlZCBmb3IgYXJtPw0KDQpIaSBKaXJrYSwNCg0KSSByZXBvcnRlZCBtZXRyaWNncm91cCBj
-YW5ub3Qgd29yayBvbiBBUk02NCBiZWZvcmUsIGhvd2V2ZXIsIG5vIG9uZSBjYW4gY29tZSB1cCB3
-aXRoIGEgc29sdXRpb24sIGNvdWxkIHlvdSB0YWtlIGEgbG9vayBob3cgdG8gZml4IGl0PyBUaGFu
-a3MgYSBsb3QhDQoNCllvdSBjYW4gcmVmZXIgdG8gYmVsb3cgbGluayBmb3IgbW9yZSBpbmZvOg0K
-CVsxXSBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9saW51eC1wZXJmLXVzZXJzL21zZzA5
-MTkwLmh0bWwgKE5BQ0sgYnkgV2lsbCBEZWFzb24pDQoJWzJdIGh0dHBzOi8vd3d3LnNwaW5pY3Mu
-bmV0L2xpc3RzL2xpbnV4LXBlcmYtdXNlcnMvbXNnMDkzMjQuaHRtbA0KDQpCZXN0IFJlZ2FyZHMs
-DQpKb2FraW0gWmhhbmcNCj4gamlya2ENCg0K
+Hi John,
+
+On 2019/12/11 1:08, Jiri Olsa wrote:
+> On Tue, Dec 10, 2019 at 04:52:52PM +0000, John Garry wrote:
+>> On 10/12/2019 16:36, Jiri Olsa wrote:
+>>> On Tue, Dec 10, 2019 at 04:13:49PM +0000, John Garry wrote:
+>>>> Hi all,
+>>>>
+>>>> I find to my surprise that "perf top" does not work for arm64:
+>>>>
+>>>> root@ubuntu:/home/john/linux# tools/perf/perf top
+>>>> Couldn't read the cpuid for this machine: No such file or directory
+>>>
+>>
+>> Hi Jirka,
+>>
+>>> there was recent change that check on cpuid and quits:
+>>>     608127f73779 perf top: Initialize perf_env->cpuid, needed by the per arch annotation init routine
+>>>
+>>
+>> ok, this is new code. I obviously didn't check the git history...
+>>
+>> But, apart from this, there are many other places where get_cpuid() is
+>> called. I wonder what else we're missing out on, and whether we should still
+>> add it.
+> 
+> right, I was just wondering how come vendor events are working for you,
+> but realized we have get_cpuid_str being called in there ;-)
+> 
+> I think we should add it as you have it prepared already,
+> could you post it with bigger changelog that would explain
+> where it's being used for arm?
+
+I've also seen the similar problem when I was looking to add support
+for 'perf kvm stat' on arm64 [1] (which though got stuck due to some
+other reasons for a very long time :(
+
+It would be great if your patch can address this issue!
+
+
+[1] https://lore.kernel.org/patchwork/patch/1087531/
+
+
+Thanks,
+Zenghui
