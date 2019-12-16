@@ -1,115 +1,327 @@
-From: Konstantin Khlebnikov <koct9i@gmail.com>
-Subject: Re: [PATCH] perf map: fix infinite loop on map_groups__fixup_overlappings
-Date: Sat, 14 Dec 2019 14:16:21 +0300
-Message-ID: <CALYGNiOtYgyCTAZn_Ti4wF+64a-mB=T9JdSb8+pyy7Aavq6Wfw@mail.gmail.com>
-References: <20191211160734.18087-1-mmarchini@netflix.com>
+From: Tan Xiaojun <tanxiaojun@huawei.com>
+Subject: Re: [RFC v3 5/5] perf tools: Add support to process multi spe events
+Date: Mon, 16 Dec 2019 11:20:05 +0800
+Message-ID: <7e89ed35-4300-6693-1210-d5eab409cc79@huawei.com>
+References: <20191123101118.12635-1-tanxiaojun@huawei.com>
+ <20191123101118.12635-6-tanxiaojun@huawei.com>
+ <2f2db9d2-e468-b327-34e6-1412a40cb5c9@arm.com>
+ <1a29399e-4c24-1a55-fa44-9f8b7b46308c@huawei.com>
+ <6d059ea1-5051-5d1c-36f0-ef6444688f2c@arm.com>
+ <896ba5d6-5a40-5882-5c2b-999974dd5baf@huawei.com>
+ <35e583fc-d5ab-fafd-2ce7-b43dd7a3e7fd@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191211160734.18087-1-mmarchini@netflix.com>
+In-Reply-To: <35e583fc-d5ab-fafd-2ce7-b43dd7a3e7fd@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Marchini <mmarchini@netflix.com>
-Cc: linux-perf-users@vger.kernel.org, jkoch@netflix.com, =?UTF-8?B?0JrQvtC90YHRgtCw0L3RgtC40L0g0JPQtdC90L3QsNC00YzQtdCy0LjRhyDQpdC70LXQsdC90LjQutC+?= =?UTF-8?B?0LI=?= <khlebnikov@yandex-team.ru>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Changbin Du <changbin.du@intel.com>, Song Liu <songliubraving@fb.com>, John Keeping <john@metanate.com>, Andi Kleen <ak@linux.intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: James Clark <James.Clark@arm.com>, "peterz@infradead.org" <peterz@infradead.org>, "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>, "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, "jolsa@redhat.com" <jolsa@redhat.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "ak@linux.intel.com" <ak@linux.intel.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "yao.jin@linux.intel.com" <yao.jin@linux.intel.com>, "tmricht@linux.ibm.com" <tmricht@linux.ibm.com>, "brueckner@linux.ibm.com" <brueckner@linux.ibm.com>, "songliubraving@fb.com" <songliubraving@fb.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kim Phillips <Kim.Phillips@arm.com>, Jeremy Linton <Jeremy.Linton@arm.com>
+Cc: "gengdongjiu@huawei.com" <gengdongjiu@huawei.com>, "wxf.wang@hisilicon.com" <wxf.wang@hisilicon.com>, "liwei391@huawei.com" <liwei391@huawei.com>, "huawei.libin@huawei.com" <huawei.libin@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, nd <nd@arm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Dec 11, 2019 at 7:10 PM Matheus Marchini <mmarchini@netflix.com> wrote:
->t
-> In some cases, when using perf inject and there are JIT_CODE_MOVE
-> records in the jitdump file, perf will end up in an infinite loop on
-> map_groups__fixup_overlappings, which will keep allocating memory
-> indefinitely. This issue was observed on Node.js (with changes to
-> generate JIT_CODE_MOVE records) and on Java.
+On 2019/12/12 23:50, James Clark wrote:
+> 
+> Hi Xiaojun,
+> 
+>> It may be that you did not recompile the kernel. In order to support this method, I modified the spe driver, which requires recompiling the kernel to support it.
+> 
+> Ah yes sorry I missed that there were kernel changes. I'm currently trying to understand what additional behavior is. The way I understand it, is that it is that it's already
+> possible to configure the filtering like this: ./perf record -e arm_spe/ts_enable=1,branch_filter=1/ ls. So the new synthetic SPE events aren't strictly necessary.
+> 
+> I think it would be best to avoid kernel changes because the SPE driver has been in the kernel for quite some time now. And relying on a new version in perf will
+> make it more difficult for people to access this feature easily.
+> 
+> Do you think it will be possible to get all the functionality with the existing driver? I think RFC v2 was working quite well, apart from the multiple events issue.
+> But maybe that is not that important of a use case. And it would be better to get a basic version accepted sooner.
+> 
 
-Could you show what it prints with -vv ?
-I suppose map tree could be broken, like there is zero (or negative) size maps.
+OK, I will modify and send a new version as soon as possible.
 
-This should help to catch that
+Thanks.
+Xiaojun.
 
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -848,13 +848,18 @@ static void __maps__insert(struct maps *maps,
-struct map *map)
-        const u64 ip = map->start;
-        struct map *m;
-
-+       assert((map->start < map->end) || !map->end);
-+
-        while (*p != NULL) {
-                parent = *p;
-                m = rb_entry(parent, struct map, rb_node);
--               if (ip < m->start)
-+               if (ip < m->start) {
-+                       assert(map->end <= m->start);
-                        p = &(*p)->rb_left;
--               else
-+               } else {
-+                       assert(m->end <= map->start);
-                        p = &(*p)->rb_right;
-+               }
-        }
-
-        rb_link_node(&map->rb_node, parent, p);
-
-
->
-> This issue started to occur after 6a9405b56c274 (perf map:
-> Optimize maps__fixup_overlappings()). To prevent it from happening,
-> partially revert those changes without losing the optimizations
-> introduced in it.
->
-> Signed-off-by: Matheus Marchini <mmarchini@netflix.com>
-> ---
->  tools/perf/util/map.c | 17 +++++++++++++++++
->  tools/perf/util/map.h |  1 +
->  2 files changed, 18 insertions(+)
->
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 744bfbaf35cf..8918fdb8ddab 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -781,6 +781,21 @@ static void __map_groups__insert(struct map_groups *mg, struct map *map)
->         __maps__insert(&mg->maps, map);
->  }
->
-> +int map__overlap(struct map *l, struct map *r)
-> +{
-> +       if (l->start > r->start) {
-> +               struct map *t = l;
-> +
-> +               l = r;
-> +               r = t;
-> +       }
-> +
-> +       if (l->end > r->start)
-> +               return 1;
-> +
-> +       return 0;
-> +}
-> +
->  int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE *fp)
->  {
->         struct maps *maps = &mg->maps;
-> @@ -821,6 +836,8 @@ int map_groups__fixup_overlappings(struct map_groups *mg, struct map *map, FILE
->                  */
->                 if (pos->start >= map->end)
->                         break;
-> +               if (!map__overlap(map, pos))
-> +                       continue;
->
->                 if (verbose >= 2) {
->
-> diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-> index 5e8899883231..1383571437aa 100644
-> --- a/tools/perf/util/map.h
-> +++ b/tools/perf/util/map.h
-> @@ -132,6 +132,7 @@ static inline void __map__zput(struct map **map)
->
->  #define map__zput(map) __map__zput(&map)
->
-> +int map__overlap(struct map *l, struct map *r);
->  size_t map__fprintf(struct map *map, FILE *fp);
->  size_t map__fprintf_dsoname(struct map *map, FILE *fp);
->  char *map__srcline(struct map *map, u64 addr, struct symbol *sym);
-> --
-> 2.17.1
->
+> 
+> Regards
+> James
+> 
+>>>
+>>> Thanks
+>>> James
+>>>
+>>> On 30/11/2019 00:42, Tan Xiaojun wrote:
+>>>> On 2019/11/30 0:32, James Clark wrote:
+>>>>> Hi Xiaojun,
+>>>>>
+>>>>> Sorry for not replying earlier, I was at a conference. Unfortunately I have temporarily lost access to SPE enabled hardware but I will test this out and get back to you as soon as possible.
+>>>>>
+>>>>>
+>>>>> Thanks
+>>>>> James
+>>>>>
+>>>>
+>>>> OK.
+>>>>
+>>>> Thanks.
+>>>> Xiaojun.
+>>>>
+>>>>> On 23/11/2019 10:11, Tan Xiaojun wrote:
+>>>>>> Under the original logic, if the user specifies multiple spe
+>>>>>> events during the record, perf will report an error and exit
+>>>>>> without actually running. This is not very friendly.
+>>>>>>
+>>>>>> This patch slightly modifies this logic, in which case a
+>>>>>> warning is reported and the first spe event is taken as a
+>>>>>> record.
+>>>>>>
+>>>>>> At the same time, this patch also supports the recording of
+>>>>>> multi new synthetic events. However, if the user specifies the
+>>>>>> spe event and then specifies the synthetic spe events, a warning
+>>>>>> will be reported and the above principles will still be followed,
+>>>>>> only the first spe event will be recorded.
+>>>>>>
+>>>>>> Example:
+>>>>>> ------------------------------------------------------------------
+>>>>>> 1) For multiple spe events
+>>>>>> $ perf record -e arm_spe_0/ts_enable=0,load_filter=1,jitter=1,min_latency=0/ -e arm_spe_0/ts_enable=0,store_filter=1,jitter=1,min_latency=0/ ls
+>>>>>> Warning:
+>>>>>> There may be only one arm_spe_x event. More than one spe event will be ignored, unless they are synthetic events of spe, like:
+>>>>>> arm_spe_x/llc_miss/
+>>>>>> arm_spe_x/branch_miss/
+>>>>>> arm_spe_x/tlb_miss/
+>>>>>> arm_spe_x/remote_access/
+>>>>>> (see 'perf list')
+>>>>>> ...
+>>>>>> [ perf record: Woken up 1 times to write data ]
+>>>>>> [ perf record: Captured and wrote 0.078 MB perf.data ]
+>>>>>>
+>>>>>> $ perf report --stdio
+>>>>>> ...
+>>>>>>  # Samples: 0  of event 'arm_spe_0/ts_enable=0,load_filter=1,jitter=1,min_latency=0/'
+>>>>>> ...
+>>>>>>
+>>>>>> 2) For multiple spe precise ip events (synthetic event)
+>>>>>> $ perf record -e arm_spe_0/llc_miss/ -e arm_spe_0/llc_miss/ -e arm_spe_0/tlb_miss/ ls
+>>>>>> Warning:
+>>>>>> These events are precise ip events, please add :p/pp/ppp after the event.
+>>>>>> ...
+>>>>>> [ perf record: Woken up 1 times to write data ]
+>>>>>> [ perf record: Captured and wrote 0.343 MB perf.data ]
+>>>>>>
+>>>>>> $ perf report --stdio
+>>>>>>  # To display the perf.data header info, please use --header/--header-only options.
+>>>>>>  #
+>>>>>>  #
+>>>>>>  # Total Lost Samples: 0
+>>>>>>  #
+>>>>>>  # Samples: 0  of event 'arm_spe_0/llc_miss/, arm_spe_0/tlb_miss/'
+>>>>>>  # Event count (approx.): 0
+>>>>>>  #
+>>>>>>  # Children      Self  Command  Shared Object  Symbol
+>>>>>>  # ........  ........  .......  .............  ......
+>>>>>>  #
+>>>>>>
+>>>>>>  # Samples: 0  of event 'dummy:u'
+>>>>>>  # Event count (approx.): 0
+>>>>>>  #
+>>>>>>  # Children      Self  Command  Shared Object  Symbol
+>>>>>>  # ........  ........  .......  .............  ......
+>>>>>>  #
+>>>>>>
+>>>>>>  # Samples: 83  of event 'llc-miss'
+>>>>>>  # Event count (approx.): 83
+>>>>>>  #
+>>>>>>  # Children      Self  Command  Shared Object      Symbol
+>>>>>>  # ........  ........  .......  .................  ....................................
+>>>>>>  #
+>>>>>>      42.17%    42.17%  ls       [kernel.kallsyms]  [k] perf_iterate_ctx.constprop.64
+>>>>>>      14.46%    14.46%  ls       [kernel.kallsyms]  [k] memchr_inv
+>>>>>>      13.25%    13.25%  ls       [kernel.kallsyms]  [k] perf_event_mmap
+>>>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] available_idle_cpu
+>>>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] copy_page
+>>>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] try_to_wake_up
+>>>>>>       2.41%     2.41%  ls       [kernel.kallsyms]  [k] vma_interval_tree_insert
+>>>>>>       2.41%     2.41%  ls       ld-2.28.so         [.] _dl_lookup_symbol_x
+>>>>>>       2.41%     2.41%  ls       ld-2.28.so         [.] _dl_relocate_object
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] ext4_getattr
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] get_page_from_freelist
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] get_partial_node.isra.25
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] lock_page_memcg
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] may_open
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] radix_tree_next_chunk
+>>>>>>       1.20%     1.20%  ls       [kernel.kallsyms]  [k] rb_prev
+>>>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] _dl_map_object_from_fd
+>>>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] _dl_start
+>>>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] do_lookup_x
+>>>>>>       1.20%     1.20%  ls       ld-2.28.so         [.] rtld_lock_default_lock_recursive
+>>>>>>       1.20%     1.20%  ls       libc-2.28.so       [.] getenv
+>>>>>>       1.20%     1.20%  ls       [unknown]          [.] 0xffff29f1190029b8
+>>>>>>
+>>>>>>  # Samples: 13  of event 'tlb-miss'
+>>>>>>  # Event count (approx.): 13
+>>>>>>  #
+>>>>>>  # Children      Self  Command  Shared Object      Symbol
+>>>>>>  # ........  ........  .......  .................  ............................
+>>>>>>  #
+>>>>>>      15.38%    15.38%  ls       [kernel.kallsyms]  [k] __audit_syscall_entry
+>>>>>>      15.38%    15.38%  ls       [kernel.kallsyms]  [k] get_partial_node.isra.25
+>>>>>>      15.38%    15.38%  ls       ld-2.28.so         [.] _dl_relocate_object
+>>>>>>      15.38%    15.38%  ls       ld-2.28.so         [.] do_lookup_x
+>>>>>>       7.69%     7.69%  ls       [kernel.kallsyms]  [k] memchr_inv
+>>>>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_map_object_from_fd
+>>>>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_setup_hash
+>>>>>>       7.69%     7.69%  ls       ld-2.28.so         [.] _dl_start
+>>>>>>       7.69%     7.69%  ls       ls                 [.] 0x00000000000097a0
+>>>>>>
+>>>>>> ------------------------------------------------------------------
+>>>>>>
+>>>>>> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+>>>>>> ---
+>>>>>>  tools/perf/arch/arm64/util/arm-spe.c | 47 +++++++++++++++++++++++++---
+>>>>>>  tools/perf/util/arm-spe.c            | 25 +++++++++++++++
+>>>>>>  tools/perf/util/arm-spe.h            | 20 ++++++++++++
+>>>>>>  3 files changed, 88 insertions(+), 4 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+>>>>>> index eba6541ec0f1..68e91f3c9614 100644
+>>>>>> --- a/tools/perf/arch/arm64/util/arm-spe.c
+>>>>>> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+>>>>>> @@ -67,21 +67,60 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+>>>>>>       struct arm_spe_recording *sper =
+>>>>>>                       container_of(itr, struct arm_spe_recording, itr);
+>>>>>>       struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
+>>>>>> -     struct evsel *evsel, *arm_spe_evsel = NULL;
+>>>>>> +     struct evsel *evsel, *tmp, *arm_spe_evsel = NULL;
+>>>>>>       bool privileged = perf_event_paranoid_check(-1);
+>>>>>>       struct evsel *tracking_evsel;
+>>>>>> +     char evsel_name[128];
+>>>>>>       int err;
+>>>>>>
+>>>>>>       sper->evlist = evlist;
+>>>>>>
+>>>>>> -     evlist__for_each_entry(evlist, evsel) {
+>>>>>> +     evlist__for_each_entry_safe(evlist, tmp, evsel) {
+>>>>>>               if (evsel->core.attr.type == arm_spe_pmu->type) {
+>>>>>>                       if (arm_spe_evsel) {
+>>>>>> -                             pr_err("There may be only one " ARM_SPE_PMU_NAME "x event\n");
+>>>>>> -                             return -EINVAL;
+>>>>>> +                             if ((evsel->core.attr.config
+>>>>>> +                                             & GENMASK_ULL(ARM_SPE_EVENT_HI,
+>>>>>> +                                                     ARM_SPE_EVENT_LO))
+>>>>>> +                                             && (arm_spe_evsel->core.attr.config
+>>>>>> +                                             & GENMASK_ULL(ARM_SPE_EVENT_HI,
+>>>>>> +                                                     ARM_SPE_EVENT_LO))) {
+>>>>>> +                                     arm_spe_evsel->core.attr.config |=
+>>>>>> +                                                             evsel->core.attr.config;
+>>>>>> +
+>>>>>> +                                     if (!strstr(arm_spe_evsel->name, evsel->name)) {
+>>>>>> +                                             scnprintf(evsel_name, sizeof(evsel_name),
+>>>>>> +                                                             "%s, %s", arm_spe_evsel->name,
+>>>>>> +                                                             evsel->name);
+>>>>>> +                                             arm_spe_evsel->name = strdup(evsel_name);
+>>>>>> +                                     }
+>>>>>> +                             } else
+>>>>>> +                                     pr_warning("Warning:\n"
+>>>>>> +                                             "There may be only one "
+>>>>>> +                                             ARM_SPE_PMU_NAME "x event."
+>>>>>> +                                             " More than one spe event"
+>>>>>> +                                             " will be ignored, unless"
+>>>>>> +                                             " they are synthetic events"
+>>>>>> +                                             " of spe, like:"
+>>>>>> +                                             "\narm_spe_x/llc_miss/"
+>>>>>> +                                             "\narm_spe_x/branch_miss/"
+>>>>>> +                                             "\narm_spe_x/tlb_miss/"
+>>>>>> +                                             "\narm_spe_x/remote_access/"
+>>>>>> +                                             "\n(see 'perf list')\n");
+>>>>>> +                             evlist__remove(evlist, evsel);
+>>>>>> +                             evsel__delete(evsel);
+>>>>>> +                             continue;
+>>>>>>                       }
+>>>>>>                       evsel->core.attr.freq = 0;
+>>>>>>                       evsel->core.attr.sample_period = 1;
+>>>>>> +                     if (evsel->core.attr.config
+>>>>>> +                                     & GENMASK_ULL(ARM_SPE_EVENT_HI, ARM_SPE_EVENT_LO)) {
+>>>>>> +                             evsel->core.attr.config |= SPE_ATTR_TS_ENABLE;
+>>>>>> +                             if (!evsel->core.attr.precise_ip)
+>>>>>> +                                     pr_warning("Warning:\n"
+>>>>>> +                                             "These events are precise ip events,"
+>>>>>> +                                             " please add :p/pp/ppp after the event.\n");
+>>>>>> +                     }
+>>>>>> +
+>>>>>>                       arm_spe_evsel = evsel;
+>>>>>>                       opts->full_auxtrace = true;
+>>>>>>               }
+>>>>>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+>>>>>> index e7282c2616f3..0c9d7fa518a5 100644
+>>>>>> --- a/tools/perf/util/arm-spe.c
+>>>>>> +++ b/tools/perf/util/arm-spe.c
+>>>>>> @@ -779,6 +779,31 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>>>>>>       attr.sample_id_all = evsel->core.attr.sample_id_all;
+>>>>>>       attr.read_format = evsel->core.attr.read_format;
+>>>>>>
+>>>>>> +     if (evsel->core.attr.config
+>>>>>> +                     & GENMASK_ULL(ARM_SPE_EVENT_HI,
+>>>>>> +                             ARM_SPE_EVENT_LO)) {
+>>>>>> +             spe->synth_opts.llc_miss = false;
+>>>>>> +             spe->synth_opts.tlb_miss = false;
+>>>>>> +             spe->synth_opts.branch_miss = false;
+>>>>>> +             spe->synth_opts.remote_access = false;
+>>>>>> +
+>>>>>> +             if (evsel->core.attr.config
+>>>>>> +                             & (ARM_SPE_EVENT_LLC_MISS << ARM_SPE_EVENT_LO))
+>>>>>> +                     spe->synth_opts.llc_miss = true;
+>>>>>> +
+>>>>>> +             if (evsel->core.attr.config
+>>>>>> +                             & (ARM_SPE_EVENT_TLB_MISS << ARM_SPE_EVENT_LO))
+>>>>>> +                     spe->synth_opts.tlb_miss = true;
+>>>>>> +
+>>>>>> +             if (evsel->core.attr.config
+>>>>>> +                             & (ARM_SPE_EVENT_BRANCH_MISS << ARM_SPE_EVENT_LO))
+>>>>>> +                     spe->synth_opts.branch_miss = true;
+>>>>>> +
+>>>>>> +             if (evsel->core.attr.config
+>>>>>> +                             & (ARM_SPE_EVENT_REMOTE_ACCESS << ARM_SPE_EVENT_LO))
+>>>>>> +                     spe->synth_opts.remote_access = true;
+>>>>>> +     }
+>>>>>> +
+>>>>>>       /* create new id val to be a fixed offset from evsel id */
+>>>>>>       id = evsel->core.id[0] + 1000000000;
+>>>>>>
+>>>>>> diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
+>>>>>> index 98d3235781c3..db7420121979 100644
+>>>>>> --- a/tools/perf/util/arm-spe.h
+>>>>>> +++ b/tools/perf/util/arm-spe.h
+>>>>>> @@ -9,6 +9,26 @@
+>>>>>>
+>>>>>>  #define ARM_SPE_PMU_NAME "arm_spe_"
+>>>>>>
+>>>>>> +#define ARM_SPE_EVENT_LO                     3
+>>>>>> +#define ARM_SPE_EVENT_HI                     6
+>>>>>> +#define ARM_SPE_EVENT_LLC_MISS                       BIT(0)
+>>>>>> +#define ARM_SPE_EVENT_BRANCH_MISS            BIT(1)
+>>>>>> +#define ARM_SPE_EVENT_TLB_MISS                       BIT(2)
+>>>>>> +#define ARM_SPE_EVENT_REMOTE_ACCESS          BIT(3)
+>>>>>> +
+>>>>>> +#define SPE_ATTR_TS_ENABLE                   BIT(0)
+>>>>>> +#define SPE_ATTR_PA_ENABLE                   BIT(1)
+>>>>>> +#define SPE_ATTR_PCT_ENABLE                  BIT(2)
+>>>>>> +#define SPE_ATTR_JITTER                              BIT(16)
+>>>>>> +#define SPE_ATTR_BRANCH_FILTER                       BIT(32)
+>>>>>> +#define SPE_ATTR_LOAD_FILTER                 BIT(33)
+>>>>>> +#define SPE_ATTR_STORE_FILTER                        BIT(34)
+>>>>>> +
+>>>>>> +#define SPE_ATTR_EV_RETIRED                  BIT(1)
+>>>>>> +#define SPE_ATTR_EV_CACHE                    BIT(3)
+>>>>>> +#define SPE_ATTR_EV_TLB                              BIT(5)
+>>>>>> +#define SPE_ATTR_EV_BRANCH                   BIT(7)
+>>>>>> +
+>>>>>>  enum {
+>>>>>>       ARM_SPE_PMU_TYPE,
+>>>>>>       ARM_SPE_PER_CPU_MMAPS,
+>>>>>>
+>>>>> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+>>>>>
+>>>>
+>>>>
+>>
+>>
