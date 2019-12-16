@@ -1,8 +1,8 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v2 5/7] trace/bpf_trace: open access for CAP_SYS_PERFMON
+Subject: [PATCH v2 6/7] powerpc/perf: open access for CAP_SYS_PERFMON
  privileged process
-Date: Mon, 16 Dec 2019 10:17:54 +0300
-Message-ID: <e48f05eb-cca9-8dfa-9701-bcf5a96f035f@linux.intel.com>
+Date: Mon, 16 Dec 2019 10:18:46 +0300
+Message-ID: <9a72b78f-888c-122f-1705-47b0fb8b2153@linux.intel.com>
 References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -16,28 +16,37 @@ Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eran
 List-Id: linux-perf-users.vger.kernel.org
 
 
-Open access to bpf_trace monitoring for CAP_SYS_PERFMON privileged processes.
-For backward compatibility reasons access to bpf_trace monitoring remains open
+Open access to monitoring for CAP_SYS_PERFMON privileged processes.
+For backward compatibility reasons access to the monitoring remains open
 for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-bpf_trace monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- kernel/trace/bpf_trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/perf/imc-pmu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 44bd08f2443b..0231bb363ef9 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1272,7 +1272,7 @@ int perf_event_query_prog_array(struct perf_event *event, void __user *info)
- 	u32 *ids, prog_cnt, ids_len;
- 	int ret;
+diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
+index cb50a9e1fd2d..d8f936d1d6cc 100644
+--- a/arch/powerpc/perf/imc-pmu.c
++++ b/arch/powerpc/perf/imc-pmu.c
+@@ -898,7 +898,7 @@ static int thread_imc_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
  
 -	if (!capable(CAP_SYS_ADMIN))
 +	if (!(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
- 		return -EPERM;
- 	if (event->attr.type != PERF_TYPE_TRACEPOINT)
- 		return -EINVAL;
+ 		return -EACCES;
+ 
+ 	/* Sampling not supported */
+@@ -1307,7 +1307,7 @@ static int trace_imc_event_init(struct perf_event *event)
+ 	if (event->attr.type != event->pmu->type)
+ 		return -ENOENT;
+ 
+-	if (!capable(CAP_SYS_ADMIN))
++	if (!(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+ 		return -EACCES;
+ 
+ 	/* Return if this is a couting event */
 -- 
 2.20.1
