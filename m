@@ -1,43 +1,81 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v2 7/7] parisc/perf: open access for CAP_SYS_PERFMON
- privileged process
-Date: Mon, 16 Dec 2019 10:19:42 +0300
-Message-ID: <22abd684-706c-1b3c-3858-e756217c9243@linux.intel.com>
-References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf probe: Add ustring support for perf probe command
+Date: Mon, 16 Dec 2019 14:45:55 +0100
+Message-ID: <20191216134556.45064-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com, Alexei Starovoitov <ast@kernel.org>, james.bottomley@hansenpartnership.com, benh@kernel.crashing.org, Casey Schaufler <casey@schaufler-ca.com>, serge@hallyn.com, James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, linux-security-module@vger.kernel.org, selinux@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, intel-gfx@lists.freedesktop.org, bgregg@netflix.com, Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: gor@linux.ibm.com, sumanthk@llinux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Kernel commit 88903c464321 ("tracing/probe: Add ustring type for user-space string")
+adds support for user-space strings when type ustring is specified.
 
-Open access to monitoring for CAP_SYS_PERFMON privileged processes.
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+Here is an example using command line setup of the kprobe.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Function to probe:
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
+
+Setup:
+  # cd /sys/kernel/debug/tracing/
+  # echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
+  # cat events/kprobes/tmr1/format | fgrep print
+  print fmt: "(%lx) arg1=\"%s\"", REC->__probe_ip, REC->arg1
+  # echo 1 > events/kprobes/tmr1/enable
+  # touch /tmp/111
+  # echo 0 > events/kprobes/tmr1/enable
+  # cat trace|fgrep /tmp/111
+  touch-5846  [005] d..2 255520.717960: tmr1:\
+	  (getname_flags+0x0/0x400) arg1="/tmp/111"
+
+Doing the same with the perf tool fails. First using string succeeds:
+ # perf probe "vfs_getname=getname_flags:72 pathname=filename:string"
+ Added new event:
+   probe:vfs_getname (on getname_flags:72 with pathname=filename:string)
+   ....
+ # perf probe -d probe:vfs_getname
+ Removed event: probe:vfs_getname
+
+Using ustring fails (output before):
+ # perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+ Failed to write event: Invalid argument
+   Error: Failed to add events.
+ #
+
+Fix this by added type 'ustring' in function convert_variable_type().
+
+Using ustring succeeds (output after):
+ # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+ Added new event:
+   probe:vfs_getname (on getname_flags:72 with pathname=filename:ustring)
+
+ You can now use it in all perf tools, such as:
+
+	perf record -e probe:vfs_getname -aR sleep 1
+
+ #
+
+Note: This issue also exists on x86, it is not s390 specific.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- arch/parisc/kernel/perf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/probe-finder.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/parisc/kernel/perf.c b/arch/parisc/kernel/perf.c
-index 676683641d00..58e7d1444e4f 100644
---- a/arch/parisc/kernel/perf.c
-+++ b/arch/parisc/kernel/perf.c
-@@ -300,7 +300,7 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
- 	else
- 		return -EFAULT;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index c470c49a804f..1c817add6ca4 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -303,7 +303,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
+ 	char prefix;
  
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
- 		return -EACCES;
- 
- 	if (count != sizeof(uint32_t))
+ 	/* TODO: check all types */
+-	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "x") != 0 &&
++	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "ustring") &&
++	    strcmp(cast, "x") != 0 &&
+ 	    strcmp(cast, "s") != 0 && strcmp(cast, "u") != 0) {
+ 		/* Non string type is OK */
+ 		/* and respect signedness/hexadecimal cast */
 -- 
-2.20.1
+2.21.0
