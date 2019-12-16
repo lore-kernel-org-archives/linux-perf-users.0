@@ -1,8 +1,8 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v2 1/7] capabilities: introduce CAP_SYS_PERFMON
- to kernel and user space
-Date: Mon, 16 Dec 2019 10:14:32 +0300
-Message-ID: <9066ae10-63d6-67a1-d472-1f22826c9ae8@linux.intel.com>
+Subject: [PATCH v2 2/7] perf/core: open access for
+ CAP_SYS_PERFMON privileged process
+Date: Mon, 16 Dec 2019 10:15:26 +0300
+Message-ID: <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
 References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,64 +24,49 @@ Cc: Song Liu <songliubraving@fb.com>, Andi Kleen <ak@linux.intel.com>, Kees Cook
 List-Id: linux-perf-users.vger.kernel.org
 
 
-Introduce CAP_SYS_PERFMON capability devoted to secure system performance
-monitoring and observability operations so that CAP_SYS_PERFMON would assist 
-CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
-and other performance monitoring and observability subsystems of the kernel.
-
-CAP_SYS_PERFMON intends to harden system security and integrity during
-system performance monitoring and observability operations by decreasing
-attack surface that is available to CAP_SYS_ADMIN privileged processes.
-
-CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
-system performance monitoring and observability operations and balance amount
-of CAP_SYS_ADMIN credentials following with the recommendations provided
-in the capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability
-is overloaded; see Notes to kernel developers, below."
-
-[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+Open access to perf_events monitoring for CAP_SYS_PERFMON privileged processes.
+For backward compatibility reasons access to perf_events subsystem remains open
+for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
+perf_events monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- include/uapi/linux/capability.h     | 8 +++++++-
- security/selinux/include/classmap.h | 4 ++--
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ include/linux/perf_event.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-index 240fdb9a60f6..7d1f8606c3e6 100644
---- a/include/uapi/linux/capability.h
-+++ b/include/uapi/linux/capability.h
-@@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 34c7c6910026..52313d2cc343 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1285,7 +1285,8 @@ static inline int perf_is_paranoid(void)
  
- #define CAP_AUDIT_READ		37
+ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+ {
+-	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
++	if (sysctl_perf_event_paranoid > 1 &&
++	   !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+ 		return -EACCES;
  
-+/*
-+ * Allow system performance and observability privileged operations
-+ * using perf_events, i915_perf and other kernel subsystems
-+ */
-+
-+#define CAP_SYS_PERFMON		38
+ 	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+@@ -1293,7 +1294,8 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
  
--#define CAP_LAST_CAP         CAP_AUDIT_READ
-+#define CAP_LAST_CAP         CAP_SYS_PERFMON
+ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+ {
+-	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
++	if (sysctl_perf_event_paranoid > 0 &&
++	    !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+ 		return -EACCES;
  
- #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+@@ -1301,7 +1303,8 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
  
-diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-index 7db24855e12d..bae602c623b0 100644
---- a/security/selinux/include/classmap.h
-+++ b/security/selinux/include/classmap.h
-@@ -27,9 +27,9 @@
- 	    "audit_control", "setfcap"
+ static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+ {
+-	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
++	if (sysctl_perf_event_paranoid > -1 &&
++	    !(capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN)))
+ 		return -EPERM;
  
- #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
--		"wake_alarm", "block_suspend", "audit_read"
-+		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
- 
--#if CAP_LAST_CAP > CAP_AUDIT_READ
-+#if CAP_LAST_CAP > CAP_SYS_PERFMON
- #error New capability defined, please update COMMON_CAP2_PERMS.
- #endif
- 
+ 	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
 -- 
 2.20.1
