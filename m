@@ -1,81 +1,48 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf probe: Add ustring support for perf probe command
-Date: Mon, 16 Dec 2019 14:45:55 +0100
-Message-ID: <20191216134556.45064-1-tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Fix test trace+probe_vfs_getname.sh
+Date: Mon, 16 Dec 2019 14:45:56 +0100
+Message-ID: <20191216134556.45064-2-tmricht@linux.ibm.com>
+References: <20191216134556.45064-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191216134556.45064-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: gor@linux.ibm.com, sumanthk@llinux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Kernel commit 88903c464321 ("tracing/probe: Add ustring type for user-space string")
-adds support for user-space strings when type ustring is specified.
+This test places a kprobe to function getname_flags() in the kernel
+which has the following prototype:
 
-Here is an example using command line setup of the kprobe.
-
-Function to probe:
   struct filename *
   getname_flags(const char __user *filename, int flags, int *empty)
 
-Setup:
-  # cd /sys/kernel/debug/tracing/
-  # echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
-  # cat events/kprobes/tmr1/format | fgrep print
-  print fmt: "(%lx) arg1=\"%s\"", REC->__probe_ip, REC->arg1
-  # echo 1 > events/kprobes/tmr1/enable
-  # touch /tmp/111
-  # echo 0 > events/kprobes/tmr1/enable
-  # cat trace|fgrep /tmp/111
-  touch-5846  [005] d..2 255520.717960: tmr1:\
-	  (getname_flags+0x0/0x400) arg1="/tmp/111"
+Variable filename points to a filename located in user space memory.
+Looking at
+commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+the kprobe should indicate that user space memory is accessed.
 
-Doing the same with the perf tool fails. First using string succeeds:
- # perf probe "vfs_getname=getname_flags:72 pathname=filename:string"
- Added new event:
-   probe:vfs_getname (on getname_flags:72 with pathname=filename:string)
-   ....
- # perf probe -d probe:vfs_getname
- Removed event: probe:vfs_getname
-
-Using ustring fails (output before):
- # perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
- Failed to write event: Invalid argument
-   Error: Failed to add events.
- #
-
-Fix this by added type 'ustring' in function convert_variable_type().
-
-Using ustring succeeds (output after):
- # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
- Added new event:
-   probe:vfs_getname (on getname_flags:72 with pathname=filename:ustring)
-
- You can now use it in all perf tools, such as:
-
-	perf record -e probe:vfs_getname -aR sleep 1
-
- #
-
-Note: This issue also exists on x86, it is not s390 specific.
+So I suggest the following patch to specify user space memory access
+where 'string' is replaced by 'ustring'.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
 ---
- tools/perf/util/probe-finder.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index c470c49a804f..1c817add6ca4 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -303,7 +303,8 @@ static int convert_variable_type(Dwarf_Die *vr_die,
- 	char prefix;
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 7cb99b433888..7ecf117651dd 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -13,8 +13,8 @@ add_probe_vfs_getname() {
+ 	local verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+-		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
++		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
++		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
+ 	fi
+ }
  
- 	/* TODO: check all types */
--	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "x") != 0 &&
-+	if (cast && strcmp(cast, "string") != 0 && strcmp(cast, "ustring") &&
-+	    strcmp(cast, "x") != 0 &&
- 	    strcmp(cast, "s") != 0 && strcmp(cast, "u") != 0) {
- 		/* Non string type is OK */
- 		/* and respect signedness/hexadecimal cast */
 -- 
 2.21.0
