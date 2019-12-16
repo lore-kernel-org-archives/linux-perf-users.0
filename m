@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/9] perf top: Do not bail out when perf_env__read_cpuid() returns ENOSYS
-Date: Mon, 16 Dec 2019 17:47:32 -0300
-Message-ID: <20191216204738.12107-4-acme@kernel.org>
+Subject: [PATCH 4/9] perf/x86/pmu-events: Fix Kernel_Utilization metric
+Date: Mon, 16 Dec 2019 17:47:33 -0300
+Message-ID: <20191216204738.12107-5-acme@kernel.org>
 References: <20191216204738.12107-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,76 +9,193 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191216204738.12107-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, John Garry <john.garry@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Will Deacon <will@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-'perf top' stopped working on hw architectures that do not provide a
-get_cpuid() implementation and thus fallback to the weak get_cpuid()
-default function.
+Kernel Utilization should divide ref cycles spent in kernel with total
+ref cycles.
 
-This is done because at annotation time we may need it in the arch
-specific annotation init routine, but that is only being used by arches
-that do provide a get_cpuid() implementation:
-
-  $ find tools/  -name "*.[ch]" | xargs grep 'evlist->env'
-  tools/perf/builtin-top.c:	top.evlist->env = &perf_env;
-  tools/perf/util/evsel.c:		return evsel->evlist->env;
-  tools/perf/util/s390-cpumsf.c:	sf->machine_type = s390_cpumsf_get_type(session->evlist->env->cpuid);
-  tools/perf/util/header.c:	session->evlist->env = &header->env;
-  tools/perf/util/sample-raw.c:	const char *arch_pf = perf_env__arch(evlist->env);
-  $
-
-  $ find tools/perf/arch  -name "*.[ch]" | xargs grep -w get_cpuid
-  tools/perf/arch/x86/util/auxtrace.c:	ret = get_cpuid(buffer, sizeof(buffer));
-  tools/perf/arch/x86/util/header.c:get_cpuid(char *buffer, size_t sz)
-  tools/perf/arch/powerpc/util/header.c:get_cpuid(char *buffer, size_t sz)
-  tools/perf/arch/s390/util/header.c: * Implementation of get_cpuid().
-  tools/perf/arch/s390/util/header.c:int get_cpuid(char *buffer, size_t sz)
-  tools/perf/arch/s390/util/header.c:	if (buf && get_cpuid(buf, 128))
-  $
-
-For 'report' or 'script', i.e. tools working on perf.data files, that is
-setup while reading the header, its just top that needs to explicitely
-read it at tool start.
-
-Fixes: 608127f73779 ("perf top: Initialize perf_env->cpuid, needed by the per arch annotation init routine")
-Reported-by: John Garry <john.garry@huawei.com>
-Analysed-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: John Garry <john.garry@huawei.com> # arm64
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Haiyan Song <haiyanx.song@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-lxwjr0cd2eggzx04a780ffrv@git.kernel.org
+Link: http://lore.kernel.org/lkml/20191204162121.29998-1-ravi.bangoria@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-top.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json     | 2 +-
+ tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json | 2 +-
+ tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json    | 2 +-
+ tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 2 +-
+ tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json      | 2 +-
+ tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json     | 2 +-
+ tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json      | 2 +-
+ tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json   | 2 +-
+ tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json      | 2 +-
+ 12 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index dc80044bc46f..795e353de095 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1568,9 +1568,13 @@ int cmd_top(int argc, const char **argv)
- 	 */
- 	status = perf_env__read_cpuid(&perf_env);
- 	if (status) {
--		pr_err("Couldn't read the cpuid for this machine: %s\n",
--		       str_error_r(errno, errbuf, sizeof(errbuf)));
--		goto out_delete_evlist;
-+		/*
-+		 * Some arches do not provide a get_cpuid(), so just use pr_debug, otherwise
-+		 * warn the user explicitely.
-+		 */
-+		eprintf(status == ENOSYS ? 1 : 0, verbose,
-+			"Couldn't read the cpuid for this machine: %s\n",
-+			str_error_r(errno, errbuf, sizeof(errbuf)));
- 	}
- 	top.evlist->env = &perf_env;
- 
+diff --git a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
+index bc7151d639d7..45a34ce4fe89 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwell/bdw-metrics.json
+@@ -297,7 +297,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+index 49c5f123d811..961fe4395758 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellde/bdwde-metrics.json
+@@ -115,7 +115,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+index 113d19e92678..746734ce09be 100644
+--- a/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/broadwellx/bdx-metrics.json
+@@ -297,7 +297,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+index 2ba32af9bc36..f94653229dd4 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+@@ -315,7 +315,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
+index c80f16fde6d0..5402cd3120f9 100644
+--- a/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/haswell/hsw-metrics.json
+@@ -267,7 +267,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+index e501729c3dd1..832f3cb40b34 100644
+--- a/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/haswellx/hsx-metrics.json
+@@ -267,7 +267,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
+index e2446966b651..d69b2a8fc0bc 100644
+--- a/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/ivybridge/ivb-metrics.json
+@@ -285,7 +285,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
+index 9294769dec64..5f465fd81315 100644
+--- a/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/ivytown/ivt-metrics.json
+@@ -285,7 +285,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
+index 603ff9c2e9a1..3e909b306003 100644
+--- a/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/jaketown/jkt-metrics.json
+@@ -171,7 +171,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+index c6b485b3a2cb..50c053235752 100644
+--- a/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/sandybridge/snb-metrics.json
+@@ -171,7 +171,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+index 0ca539bb60f6..e7feb60f9fa9 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+@@ -303,7 +303,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+index 047d7e11aa6f..21d7a0c2c2e8 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -315,7 +315,7 @@
+     },
+     {
+         "BriefDescription": "Fraction of cycles spent in Kernel mode",
+-        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:u / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC:k / CPU_CLK_UNHALTED.REF_TSC",
+         "MetricGroup": "Summary",
+         "MetricName": "Kernel_Utilization"
+     },
 -- 
 2.21.0
