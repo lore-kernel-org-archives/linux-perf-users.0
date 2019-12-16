@@ -1,48 +1,83 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Fix test trace+probe_vfs_getname.sh
-Date: Mon, 16 Dec 2019 14:45:56 +0100
-Message-ID: <20191216134556.45064-2-tmricht@linux.ibm.com>
-References: <20191216134556.45064-1-tmricht@linux.ibm.com>
+From: Stephen Smalley <sds@tycho.nsa.gov>
+Subject: Re: [PATCH v2 1/7] capabilities: introduce CAP_SYS_PERFMON to kernel
+ and user space
+Date: Mon, 16 Dec 2019 09:04:04 -0500
+Message-ID: <81603537-023c-9b6b-06ac-384de60dbb1d@tycho.nsa.gov>
+References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
+ <9066ae10-63d6-67a1-d472-1f22826c9ae8@linux.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191216134556.45064-1-tmricht@linux.ibm.com>
+In-Reply-To: <9066ae10-63d6-67a1-d472-1f22826c9ae8@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: gor@linux.ibm.com, sumanthk@llinux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com, Alexei Starovoitov <ast@kernel.org>, james.bottomley@hansenpartnership.com, benh@kernel.crashing.org, Casey Schaufler <casey@schaufler-ca.com>, serge@hallyn.com, James Morris <jmorris@namei.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, linux-security-module@vger.kernel.org, selinux@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, intel-gfx@lists.freedesktop.org, bgregg@netflix.com, Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: linux-perf-users.vger.kernel.org
 
-This test places a kprobe to function getname_flags() in the kernel
-which has the following prototype:
+On 12/16/19 2:14 AM, Alexey Budankov wrote:
+> 
+> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
+> monitoring and observability operations so that CAP_SYS_PERFMON would assist
+> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+> and other performance monitoring and observability subsystems of the kernel.
+> 
+> CAP_SYS_PERFMON intends to harden system security and integrity during
+> system performance monitoring and observability operations by decreasing
+> attack surface that is available to CAP_SYS_ADMIN privileged processes.
+> 
+> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
+> system performance monitoring and observability operations and balance amount
+> of CAP_SYS_ADMIN credentials following with the recommendations provided
+> in the capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability
+> is overloaded; see Notes to kernel developers, below."
+> 
+> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-  struct filename *
-  getname_flags(const char __user *filename, int flags, int *empty)
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
 
-Variable filename points to a filename located in user space memory.
-Looking at
-commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
-the kprobe should indicate that user space memory is accessed.
-
-So I suggest the following patch to specify user space memory access
-where 'string' is replaced by 'ustring'.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/shell/lib/probe_vfs_getname.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 7cb99b433888..7ecf117651dd 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -13,8 +13,8 @@ add_probe_vfs_getname() {
- 	local verbose=$1
- 	if [ $had_vfs_getname -eq 1 ] ; then
- 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
--		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
-+		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
-+		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
- 	fi
- }
- 
--- 
-2.21.0
+> ---
+>   include/uapi/linux/capability.h     | 8 +++++++-
+>   security/selinux/include/classmap.h | 4 ++--
+>   2 files changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 240fdb9a60f6..7d1f8606c3e6 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+>   
+>   #define CAP_AUDIT_READ		37
+>   
+> +/*
+> + * Allow system performance and observability privileged operations
+> + * using perf_events, i915_perf and other kernel subsystems
+> + */
+> +
+> +#define CAP_SYS_PERFMON		38
+>   
+> -#define CAP_LAST_CAP         CAP_AUDIT_READ
+> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
+>   
+>   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+>   
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 7db24855e12d..bae602c623b0 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -27,9 +27,9 @@
+>   	    "audit_control", "setfcap"
+>   
+>   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+> -		"wake_alarm", "block_suspend", "audit_read"
+> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
+>   
+> -#if CAP_LAST_CAP > CAP_AUDIT_READ
+> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
+>   #error New capability defined, please update COMMON_CAP2_PERMS.
+>   #endif
+>   
+> 
