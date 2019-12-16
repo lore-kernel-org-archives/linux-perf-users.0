@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/9] perf header: Fix false warning when there are no duplicate cache entries
-Date: Mon, 16 Dec 2019 17:47:35 -0300
-Message-ID: <20191216204738.12107-7-acme@kernel.org>
+Subject: [PATCH 7/9] libtraceevent: Allow custom libdir path
+Date: Mon, 16 Dec 2019 17:47:36 -0300
+Message-ID: <20191216204738.12107-8-acme@kernel.org>
 References: <20191216204738.12107-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,106 +9,73 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191216204738.12107-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, linux-trace-devel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
 
-Before this patch, perf expected that there might be NPROC*4 unique
-cache entries at max, however, it also expected that some of them would
-be shared and/or of the same size, thus the final number of entries
-would be reduced to be lower than NPROC*4. In case the number of entries
-hadn't been reduced (was NPROC*4), the warning was printed.
+When I use prefix=/usr and try to install libtraceevent in my laptop it
+tries to install in /usr/lib64. I am not having any folder as /usr/lib64
+and also the debian policy doesnot allow installing in /usr/lib64. It
+should be in /usr/lib/x86_64-linux-gnu/.
 
-However, some systems might have unusual cache topology, such as the
-following two-processor KVM guest:
+Quote: No package for a 64 bit architecture may install files in
+	/usr/lib64/ or in a subdirectory of it.
 
-	cpu  level  shared_cpu_list  size
-	  0     1         0           32K
-	  0     1         0           64K
-	  0     2         0           512K
-	  0     3         0           8192K
-	  1     1         1           32K
-	  1     1         1           64K
-	  1     2         1           512K
-	  1     3         1           8192K
+ref: https://www.debian.org/doc/debian-policy/ch-opersys.html
 
-This KVM guest has 8 (NPROC*4) unique cache entries, which used to make
-perf printing the message, although there actually aren't "way too many
-cpu caches".
+Make it more flexible by allowing to mention libdir_relative while
+installing so that distros can mention the path according to their
+policy or use the default one.
 
-v2: Removing unused argument.
-
-v3: Unifying the way we obtain number of cpus.
-
-v4: Removed '& UINT_MAX' construct which is redundant.
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-LPU-Reference: 20191208162056.20772-1-mpetlan@redhat.com
+Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
+Cc: linux-trace-devel@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191207111440.6574-1-sudipm.mukherjee@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/header.c | 21 ++++++---------------
- 1 file changed, 6 insertions(+), 15 deletions(-)
+ tools/lib/traceevent/Makefile         | 5 +++--
+ tools/lib/traceevent/plugins/Makefile | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 4d39a75551a0..93ad27830e2b 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1089,21 +1089,18 @@ static void cpu_cache_level__fprintf(FILE *out, struct cpu_cache_level *c)
- 	fprintf(out, "L%d %-15s %8s [%s]\n", c->level, c->type, c->size, c->map);
- }
+diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
+index c5a03356a999..c874c017c636 100644
+--- a/tools/lib/traceevent/Makefile
++++ b/tools/lib/traceevent/Makefile
+@@ -39,11 +39,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
  
--static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
-+#define MAX_CACHE_LVL 4
-+
-+static int build_caches(struct cpu_cache_level caches[], u32 *cntp)
- {
- 	u32 i, cnt = 0;
--	long ncpus;
- 	u32 nr, cpu;
- 	u16 level;
+ LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+ ifeq ($(LP64), 1)
+-  libdir_relative = lib64
++  libdir_relative_temp = lib64
+ else
+-  libdir_relative = lib
++  libdir_relative_temp = lib
+ endif
  
--	ncpus = sysconf(_SC_NPROCESSORS_CONF);
--	if (ncpus < 0)
--		return -1;
--
--	nr = (u32)(ncpus & UINT_MAX);
-+	nr = cpu__max_cpu();
++libdir_relative ?= $(libdir_relative_temp)
+ prefix ?= /usr/local
+ libdir = $(prefix)/$(libdir_relative)
+ man_dir = $(prefix)/share/man
+diff --git a/tools/lib/traceevent/plugins/Makefile b/tools/lib/traceevent/plugins/Makefile
+index f440989fa55e..349bb81482ab 100644
+--- a/tools/lib/traceevent/plugins/Makefile
++++ b/tools/lib/traceevent/plugins/Makefile
+@@ -32,11 +32,12 @@ DESTDIR_SQ = '$(subst ','\'',$(DESTDIR))'
  
- 	for (cpu = 0; cpu < nr; cpu++) {
--		for (level = 0; level < 10; level++) {
-+		for (level = 0; level < MAX_CACHE_LVL; level++) {
- 			struct cpu_cache_level c;
- 			int err;
+ LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
+ ifeq ($(LP64), 1)
+-  libdir_relative = lib64
++  libdir_relative_tmp = lib64
+ else
+-  libdir_relative = lib
++  libdir_relative_tmp = lib
+ endif
  
-@@ -1123,18 +1120,12 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
- 				caches[cnt++] = c;
- 			else
- 				cpu_cache_level__free(&c);
--
--			if (WARN_ONCE(cnt == size, "way too many cpu caches.."))
--				goto out;
- 		}
- 	}
-- out:
- 	*cntp = cnt;
- 	return 0;
- }
- 
--#define MAX_CACHE_LVL 4
--
- static int write_cache(struct feat_fd *ff,
- 		       struct evlist *evlist __maybe_unused)
- {
-@@ -1143,7 +1134,7 @@ static int write_cache(struct feat_fd *ff,
- 	u32 cnt = 0, i, version = 1;
- 	int ret;
- 
--	ret = build_caches(caches, max_caches, &cnt);
-+	ret = build_caches(caches, &cnt);
- 	if (ret)
- 		goto out;
++libdir_relative ?= $(libdir_relative_tmp)
+ prefix ?= /usr/local
+ libdir = $(prefix)/$(libdir_relative)
  
 -- 
 2.21.0
