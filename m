@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/9] perf metricgroup: Fix printing event names of metric group with multiple events
-Date: Mon, 16 Dec 2019 17:47:34 -0300
-Message-ID: <20191216204738.12107-6-acme@kernel.org>
+Subject: [PATCH 6/9] perf header: Fix false warning when there are no duplicate cache entries
+Date: Mon, 16 Dec 2019 17:47:35 -0300
+Message-ID: <20191216204738.12107-7-acme@kernel.org>
 References: <20191216204738.12107-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,141 +9,106 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191216204738.12107-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kajol Jain <kjain@linux.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Michael Petlan <mpetlan@redhat.com>
 
-Commit f01642e4912b ("perf metricgroup: Support multiple events for
-metricgroup") introduced support for multiple events in a metric group.
-But with the current upstream, metric events names are not printed
-properly
+Before this patch, perf expected that there might be NPROC*4 unique
+cache entries at max, however, it also expected that some of them would
+be shared and/or of the same size, thus the final number of entries
+would be reduced to be lower than NPROC*4. In case the number of entries
+hadn't been reduced (was NPROC*4), the warning was printed.
 
-In power9 platform:
+However, some systems might have unusual cache topology, such as the
+following two-processor KVM guest:
 
-command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
-     1.000208486
-     2.000368863
-     2.001400558
+	cpu  level  shared_cpu_list  size
+	  0     1         0           32K
+	  0     1         0           64K
+	  0     2         0           512K
+	  0     3         0           8192K
+	  1     1         1           32K
+	  1     1         1           64K
+	  1     2         1           512K
+	  1     3         1           8192K
 
-Similarly in skylake platform:
+This KVM guest has 8 (NPROC*4) unique cache entries, which used to make
+perf printing the message, although there actually aren't "way too many
+cpu caches".
 
-command:./perf stat --metric-only -M Power -I 1000
-     1.000579994
-     2.002189493
+v2: Removing unused argument.
 
-With current upstream version, issue is with event name comparison logic
-in find_evsel_group(). Current logic is to compare events belonging to a
-metric group to the events in perf_evlist.  Since the break statement is
-missing in the loop used for comparison between metric group and
-perf_evlist events, the loop continues to execute even after getting a
-pattern match, and end up in discarding the matches.
+v3: Unifying the way we obtain number of cpus.
 
-Incase of single metric event belongs to metric group, its working fine,
-because in case of single event once it compare all events it reaches to
-end of perf_evlist.
+v4: Removed '& UINT_MAX' construct which is redundant.
 
-Example for single metric event in power9 platform:
-
-command:# ./perf stat --metric-only  -M branches_per_inst -I 1000 sleep 1
-     1.000094653                  0.2
-     1.001337059                  0.0
-
-This patch fixes the issue by making sure once we found all events
-belongs to that metric event matched in find_evsel_group(), we
-successfully break from that loop by adding corresponding condition.
-
-With this patch:
-In power9 platform:
-
-command:# ./perf stat --metric-only -M translation -C 0 -I 1000 sleep 2
-result:#
-            time  derat_4k_miss_rate_percent  derat_4k_miss_ratio derat_miss_ratio derat_64k_miss_rate_percent  derat_64k_miss_ratio dslb_miss_rate_percent islb_miss_rate_percent
-     1.000135672                         0.0                  0.3              1.0                         0.0                   0.2                    0.0                    0.0
-     2.000380617                         0.0                  0.0              0.0                         0.0                   0.0                    0.0                    0.0
-
-command:# ./perf stat --metric-only -M Power -I 1000
-
-Similarly in skylake platform:
-result:#
-            time    Turbo_Utilization    C3_Core_Residency  C6_Core_Residency  C7_Core_Residency    C2_Pkg_Residency  C3_Pkg_Residency     C6_Pkg_Residency   C7_Pkg_Residency
-     1.000563580                  0.3                  0.0                2.6               44.2                21.9               0.0                  0.0               0.0
-     2.002235027                  0.4                  0.0                2.7               43.0                20.7               0.0                  0.0               0.0
-
-Committer testing:
-
-  Before:
-
-  [root@seventh ~]# perf stat --metric-only -M Power -I 1000
-  #           time
-       1.000383223
-       2.001168182
-       3.001968545
-       4.002741200
-       5.003442022
-  ^C     5.777687244
-
-  [root@seventh ~]#
-
-  After the patch:
-
-  [root@seventh ~]# perf stat --metric-only -M Power -I 1000
-  #           time    Turbo_Utilization    C3_Core_Residency    C6_Core_Residency    C7_Core_Residency     C2_Pkg_Residency     C3_Pkg_Residency     C6_Pkg_Residency     C7_Pkg_Residency
-       1.000406577                  0.4                  0.1                  1.4                 97.0                  0.0                  0.0                  0.0                  0.0
-       2.001481572                  0.3                  0.0                  0.6                 97.9                  0.0                  0.0                  0.0                  0.0
-       3.002332585                  0.2                  0.0                  1.0                 97.5                  0.0                  0.0                  0.0                  0.0
-       4.003196624                  0.2                  0.0                  0.3                 98.6                  0.0                  0.0                  0.0                  0.0
-       5.004063851                  0.3                  0.0                  0.7                 97.7                  0.0                  0.0                  0.0                  0.0
-  ^C     5.471260276                  0.2                  0.0                  0.5                 49.3                  0.0                  0.0                  0.0                  0.0
-
-  [root@seventh ~]#
-  [root@seventh ~]# dmesg | grep -i skylake
-  [    0.187807] Performance Events: PEBS fmt3+, Skylake events, 32-deep LBR, full-width counters, Intel PMU driver.
-  [root@seventh ~]#
-
-Fixes: f01642e4912b ("perf metricgroup: Support multiple events for metricgroup")
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191120084059.24458-1-kjain@linux.ibm.com
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+LPU-Reference: 20191208162056.20772-1-mpetlan@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/metricgroup.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/header.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 6a4d350d5cdb..02aee946b6c1 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -103,8 +103,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 		if (!strcmp(ev->name, ids[i])) {
- 			if (!metric_events[i])
- 				metric_events[i] = ev;
-+			i++;
-+			if (i == idnum)
-+				break;
- 		} else {
--			if (++i == idnum) {
-+			if (i + 1 == idnum) {
- 				/* Discard the whole match and start again */
- 				i = 0;
- 				memset(metric_events, 0,
-@@ -124,7 +127,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 4d39a75551a0..93ad27830e2b 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1089,21 +1089,18 @@ static void cpu_cache_level__fprintf(FILE *out, struct cpu_cache_level *c)
+ 	fprintf(out, "L%d %-15s %8s [%s]\n", c->level, c->type, c->size, c->map);
+ }
+ 
+-static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
++#define MAX_CACHE_LVL 4
++
++static int build_caches(struct cpu_cache_level caches[], u32 *cntp)
+ {
+ 	u32 i, cnt = 0;
+-	long ncpus;
+ 	u32 nr, cpu;
+ 	u16 level;
+ 
+-	ncpus = sysconf(_SC_NPROCESSORS_CONF);
+-	if (ncpus < 0)
+-		return -1;
+-
+-	nr = (u32)(ncpus & UINT_MAX);
++	nr = cpu__max_cpu();
+ 
+ 	for (cpu = 0; cpu < nr; cpu++) {
+-		for (level = 0; level < 10; level++) {
++		for (level = 0; level < MAX_CACHE_LVL; level++) {
+ 			struct cpu_cache_level c;
+ 			int err;
+ 
+@@ -1123,18 +1120,12 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 				caches[cnt++] = c;
+ 			else
+ 				cpu_cache_level__free(&c);
+-
+-			if (WARN_ONCE(cnt == size, "way too many cpu caches.."))
+-				goto out;
  		}
  	}
+- out:
+ 	*cntp = cnt;
+ 	return 0;
+ }
  
--	if (i != idnum - 1) {
-+	if (i != idnum) {
- 		/* Not whole match */
- 		return NULL;
- 	}
+-#define MAX_CACHE_LVL 4
+-
+ static int write_cache(struct feat_fd *ff,
+ 		       struct evlist *evlist __maybe_unused)
+ {
+@@ -1143,7 +1134,7 @@ static int write_cache(struct feat_fd *ff,
+ 	u32 cnt = 0, i, version = 1;
+ 	int ret;
+ 
+-	ret = build_caches(caches, max_caches, &cnt);
++	ret = build_caches(caches, &cnt);
+ 	if (ret)
+ 		goto out;
+ 
 -- 
 2.21.0
