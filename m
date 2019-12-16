@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 8/9] perf vendor events s390: Fix counter long description for DTLB1_GPAGE_WRITES
-Date: Mon, 16 Dec 2019 17:47:37 -0300
-Message-ID: <20191216204738.12107-9-acme@kernel.org>
+Subject: [PATCH 9/9] perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
+Date: Mon, 16 Dec 2019 17:47:38 -0300
+Message-ID: <20191216204738.12107-10-acme@kernel.org>
 References: <20191216204738.12107-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,11 +14,11 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Ed Maste <emaste@freebsd.org>
 
-The cf_z13 counter DTLB1_GPAGE_WRITES included a prefix
-'Counter:132\tName:'.
+In 7fcfa9a2d9 an unintended prefix "Counter:18 Name:" was removed from
+the description for L1D_RO_EXCL_WRITES, but the extra name remained in
+the description.  Remove it too.
 
-This is incorrect; remove the prefix as with 7fcfa9a2d9 for cf_z14.
-
+Fixes: 7fcfa9a2d9a7 ("perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES")
 Signed-off-by: Ed Maste <emaste@freebsd.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Greentime Hu <green.hu@gmail.com>
@@ -29,22 +29,22 @@ Cc: Nick Hu <nickhu@andestech.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: Vincent Chen <deanbo422@gmail.com>
-Link: http://lore.kernel.org/lkml/20191212143446.88582-1-emaste@freefall.freebsd.org
+Link: http://lore.kernel.org/lkml/20191212145346.5026-1-emaste@freefall.freebsd.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/arch/s390/cf_z13/extended.json | 2 +-
+ tools/perf/pmu-events/arch/s390/cf_z14/extended.json | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z13/extended.json b/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
-index 436ce33f1182..5da8296b667e 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z13/extended.json
-@@ -32,7 +32,7 @@
- 		"EventCode": "132",
- 		"EventName": "DTLB1_GPAGE_WRITES",
- 		"BriefDescription": "DTLB1 Two-Gigabyte Page Writes",
--		"PublicDescription": "Counter:132	Name:DTLB1_GPAGE_WRITES A translation entry has been written to the Level-1 Data Translation Lookaside Buffer for a two-gigabyte page."
-+		"PublicDescription": "A translation entry has been written to the Level-1 Data Translation Lookaside Buffer for a two-gigabyte page."
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+index 68618152ea2c..89e070727e1b 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
+@@ -4,7 +4,7 @@
+ 		"EventCode": "128",
+ 		"EventName": "L1D_RO_EXCL_WRITES",
+ 		"BriefDescription": "L1D Read-only Exclusive Writes",
+-		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
++		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
  	},
  	{
  		"Unit": "CPU-M-CF",
