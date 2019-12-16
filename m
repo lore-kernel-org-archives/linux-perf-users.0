@@ -1,43 +1,126 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v3 7/7] parisc/perf: open access for CAP_SYS_PERFMON
- privileged process
-Date: Mon, 16 Dec 2019 23:05:15 +0300
-Message-ID: <5d87f946-3588-7531-933b-fd1104ca0842@linux.intel.com>
-References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL 0/9] perf/urgent fixes
+Date: Mon, 16 Dec 2019 17:47:29 -0300
+Message-ID: <20191216204738.12107-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Casey Schaufler <casey@schaufler-ca.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, linux-kernel@vger.kernel.org, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, intel-gfx@lists.freedesktop.org, Brendan Gregg <bgregg@netflix.com>, songliubraving@fb.com, "bpf@vger.kernel.org" <bpf@vger.kernel.org>li
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Ed Maste <emaste@freebsd.org>, John Garry <john.garry@huawei.com>, Kajol Jain <kjain@linux.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Petlan <mpetlan@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Sudipm Mukherjee <sudipm.mukherjee@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi Ingo/Thomas,
 
-Open access to monitoring for CAP_SYS_PERFMON privileged processes.
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+	Please consider pulling,
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- arch/parisc/kernel/perf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
 
-diff --git a/arch/parisc/kernel/perf.c b/arch/parisc/kernel/perf.c
-index 676683641d00..c4208d027794 100644
---- a/arch/parisc/kernel/perf.c
-+++ b/arch/parisc/kernel/perf.c
-@@ -300,7 +300,7 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
- 	else
- 		return -EFAULT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	if (count != sizeof(uint32_t))
--- 
-2.20.1
+- Arnaldo
+
+
+The following changes since commit 761bfc33dd7504de951aa7b9db27a3cc5df1fde6:
+
+  Merge remote-tracking branch 'torvalds/master' into perf/urgent (2019-12-11 09:58:16 -0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.5-20191216
+
+for you to fetch changes up to 58b3bafff8257c6946df5d6aeb215b8ac839ed2a:
+
+  perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description (2019-12-16 13:40:26 -0300)
+
+----------------------------------------------------------------
+perf/urgent fixes:
+
+perf top:
+
+ Arnaldo Carvalho de Melo:
+
+ - Do not bail out when perf_env__read_cpuid() returns ENOSYS, which
+   has been reported happening on aarch64.
+
+perf metricgroup:
+
+  Kajol Jain:
+
+  - Fix printing event names of metric group with multiple events
+
+vendor events:
+
+x86:
+
+  Ravi Bangoria:
+
+  - Fix Kernel_Utilization metric.
+
+s390:
+
+  Ed Maste:
+
+  - Fix counter long description for DTLB1_GPAGE_WRITES and L1D_RO_EXCL_WRITES.
+
+perf header:
+
+  Michael Petlan:
+
+  - Fix false warning when there are no duplicate cache entries
+
+libtraceevent:
+
+  Sudip Mukherjee:
+
+  - Allow custom libdir path
+
+API headers:
+
+  Arnaldo Carvalho de Melo:
+
+  - Sync linux/kvm.h with the kernel sources.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (3):
+      tools headers kvm: Sync linux/kvm.h with the kernel sources
+      perf arch: Make the default get_cpuid() return compatible error
+      perf top: Do not bail out when perf_env__read_cpuid() returns ENOSYS
+
+Ed Maste (2):
+      perf vendor events s390: Fix counter long description for DTLB1_GPAGE_WRITES
+      perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
+
+Kajol Jain (1):
+      perf metricgroup: Fix printing event names of metric group with multiple events
+
+Michael Petlan (1):
+      perf header: Fix false warning when there are no duplicate cache entries
+
+Ravi Bangoria (1):
+      perf/x86/pmu-events: Fix Kernel_Utilization metric
+
+Sudip Mukherjee (1):
+      libtraceevent: Allow custom libdir path
+
+ tools/include/uapi/linux/kvm.h                     |  1 +
+ tools/lib/traceevent/Makefile                      |  5 +++--
+ tools/lib/traceevent/plugins/Makefile              |  5 +++--
+ tools/perf/builtin-top.c                           | 10 +++++++---
+ .../perf/pmu-events/arch/s390/cf_z13/extended.json |  2 +-
+ .../perf/pmu-events/arch/s390/cf_z14/extended.json |  2 +-
+ .../pmu-events/arch/x86/broadwell/bdw-metrics.json |  2 +-
+ .../arch/x86/broadwellde/bdwde-metrics.json        |  2 +-
+ .../arch/x86/broadwellx/bdx-metrics.json           |  2 +-
+ .../arch/x86/cascadelakex/clx-metrics.json         |  2 +-
+ .../pmu-events/arch/x86/haswell/hsw-metrics.json   |  2 +-
+ .../pmu-events/arch/x86/haswellx/hsx-metrics.json  |  2 +-
+ .../pmu-events/arch/x86/ivybridge/ivb-metrics.json |  2 +-
+ .../pmu-events/arch/x86/ivytown/ivt-metrics.json   |  2 +-
+ .../pmu-events/arch/x86/jaketown/jkt-metrics.json  |  2 +-
+ .../arch/x86/sandybridge/snb-metrics.json          |  2 +-
+ .../pmu-events/arch/x86/skylake/skl-metrics.json   |  2 +-
+ .../pmu-events/arch/x86/skylakex/skx-metrics.json  |  2 +-
+ tools/perf/util/header.c                           | 23 +++++++---------------
+ tools/perf/util/metricgroup.c                      |  7 +++++--
+ 20 files changed, 40 insertions(+), 39 deletions(-)
