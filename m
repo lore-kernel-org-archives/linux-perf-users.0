@@ -1,148 +1,62 @@
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH 56/63] perf tests: Fix out of bounds memory access
-Date: Mon, 16 Dec 2019 21:37:02 +0530
-Message-ID: <CA+G9fYu-sGYutfX5K5LyAZ8cUfNpWomtyA_0SQsHyej0jD8qTw@mail.gmail.com>
-References: <20191107190011.23924-1-acme@kernel.org> <20191107190011.23924-57-acme@kernel.org>
+From: "Lubashev, Igor" <ilubashe@akamai.com>
+Subject: RE: [PATCH v2 2/7] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+Date: Mon, 16 Dec 2019 16:12:50 +0000
+Message-ID: <9316a1ab21f6441eb2b421acb818a2a1@ustx2ex-dag1mb6.msg.corp.akamai.com>
+References: <26101427-c0a3-db9f-39e9-9e5f4ddd009c@linux.intel.com>
+ <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20191107190011.23924-57-acme@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Wang Nan <wangnan0@huawei.com>, linux- stable <stable@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fd6ffb43-ed43-14cd-b286-6ab4b199155b@linux.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Casey Schaufler <casey@schaufler-ca.com>, "serge@hallyn.com" <serge@hallyn.com>, James Morris <jmorris@namei.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "bgregg@netflix.com" <bgregg@netflix.com>, Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch merged into stable-rc tree and perf build failed on OE for
-Linaro builds for 5.3, 4.19, 4.14 and 4.9.
-Please find build error logs here,
-
-tests/backward-ring-buffer.c: In function 'test__backward_ring_buffer':
-tests/backward-ring-buffer.c:147:2: warning: implicit declaration of
-function 'evlist__close'; did you mean 'perf_evlist__close'?
-[-Wimplicit-function-declaration]
-  evlist__close(evlist);
-  ^~~~~~~~~~~~~
-  perf_evlist__close
-tests/backward-ring-buffer.c:147:2: warning: nested extern declaration
-of 'evlist__close' [-Wnested-externs]
-tests/backward-ring-buffer.c:149:8: warning: implicit declaration of
-function 'evlist__open'; did you mean 'perf_evlist__open'?
-[-Wimplicit-function-declaration]
-  err = evlist__open(evlist);
-        ^~~~~~~~~~~~
-        perf_evlist__open
-tests/backward-ring-buffer.c:149:8: warning: nested extern declaration
-of 'evlist__open' [-Wnested-externs]
-perf/1.0-r9/recipe-sysroot/usr/lib/python2.7/config/libpython2.7.a(posixmodule.o):
-In function `posix_tmpnam':
-/usr/src/debug/python/2.7.15-r1/Python-2.7.15/Modules/posixmodule.c:7648:
-warning: the use of `tmpnam_r' is dangerous, better use `mkstemp'
-perf/1.0-r9/recipe-sysroot/usr/lib/python2.7/config/libpython2.7.a(posixmodule.o):
-In function `posix_tempnam':
-/usr/src/debug/python/2.7.15-r1/Python-2.7.15/Modules/posixmodule.c:7595:
-warning: the use of `tempnam' is dangerous, better use `mkstemp'
-perf/1.0-r9/perf-1.0/perf-in.o: In function `test__backward_ring_buffer':
-perf/1.0-r9/perf-1.0/tools/perf/tests/backward-ring-buffer.c:147:
-undefined reference to `evlist__close'
-perf/1.0-r9/perf-1.0/tools/perf/tests/backward-ring-buffer.c:149:
-undefined reference to `evlist__open'
-
-Full log can be found at,
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-5.3/DISTRO=lkft,MACHINE=hikey,label=docker-lkft/72/consoleText
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/378/consoleText
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/675/consoleText
-https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/753/consoleText
-
-
-On Fri, 8 Nov 2019 at 00:38, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> From: Leo Yan <leo.yan@linaro.org>
->
-> The test case 'Read backward ring buffer' failed on 32-bit architectures
-> which were found by LKFT perf testing.  The test failed on arm32 x15
-> device, qemu_arm32, qemu_i386, and found intermittent failure on i386;
-> the failure log is as below:
->
->   50: Read backward ring buffer                  :
->   --- start ---
->   test child forked, pid 510
->   Using CPUID GenuineIntel-6-9E-9
->   mmap size 1052672B
->   mmap size 8192B
->   Finished reading overwrite ring buffer: rewind
->   free(): invalid next size (fast)
->   test child interrupted
->   ---- end ----
->   Read backward ring buffer: FAILED!
->
-> The log hints there have issue for memory usage, thus free() reports
-> error 'invalid next size' and directly exit for the case.  Finally, this
-> issue is root caused as out of bounds memory access for the data array
-> 'evsel->id'.
->
-> The backward ring buffer test invokes do_test() twice.  'evsel->id' is
-> allocated at the first call with the flow:
->
->   test__backward_ring_buffer()
->     `-> do_test()
->           `-> evlist__mmap()
->                 `-> evlist__mmap_ex()
->                       `-> perf_evsel__alloc_id()
->
-> So 'evsel->id' is allocated with one item, and it will be used in
-> function perf_evlist__id_add():
->
->    evsel->id[0] = id
->    evsel->ids   = 1
->
-> At the second call for do_test(), it skips to initialize 'evsel->id'
-> and reuses the array which is allocated in the first call.  But
-> 'evsel->ids' contains the stale value.  Thus:
->
->    evsel->id[1] = id    -> out of bound access
->    evsel->ids   = 2
->
-> To fix this issue, we will use evlist__open() and evlist__close() pair
-> functions to prepare and cleanup context for evlist; so 'evsel->id' and
-> 'evsel->ids' can be initialized properly when invoke do_test() and avoid
-> the out of bounds memory access.
->
-> Fixes: ee74701ed8ad ("perf tests: Add test to check backward ring buffer")
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Wang Nan <wangnan0@huawei.com>
-> Cc: stable@vger.kernel.org # v4.10+
-> Link: http://lore.kernel.org/lkml/20191107020244.2427-1-leo.yan@linaro.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/tests/backward-ring-buffer.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-> index a4cd30c0beb3..15cea518f5ad 100644
-> --- a/tools/perf/tests/backward-ring-buffer.c
-> +++ b/tools/perf/tests/backward-ring-buffer.c
-> @@ -148,6 +148,15 @@ int test__backward_ring_buffer(struct test *test __maybe_unused, int subtest __m
->                 goto out_delete_evlist;
->         }
->
-> +       evlist__close(evlist);
-> +
-> +       err = evlist__open(evlist);
-> +       if (err < 0) {
-> +               pr_debug("perf_evlist__open: %s\n",
-> +                        str_error_r(errno, sbuf, sizeof(sbuf)));
-> +               goto out_delete_evlist;
-> +       }
-> +
->         err = do_test(evlist, 1, &sample_count, &comm_count);
->         if (err != TEST_OK)
->                 goto out_delete_evlist;
-> --
-> 2.21.0
->
+T24gTW9uLCBEZWMgMTYsIDIwMTkgYXQgMjoxNSBBTSwgQWxleGV5IEJ1ZGFua292IDxhbGV4ZXku
+YnVkYW5rb3ZAbGludXguaW50ZWwuY29tPiB3cm90ZToNCj4gDQo+IE9wZW4gYWNjZXNzIHRvIHBl
+cmZfZXZlbnRzIG1vbml0b3JpbmcgZm9yIENBUF9TWVNfUEVSRk1PTiBwcml2aWxlZ2VkDQo+IHBy
+b2Nlc3Nlcy4NCj4gRm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgcmVhc29ucyBhY2Nlc3MgdG8g
+cGVyZl9ldmVudHMgc3Vic3lzdGVtIHJlbWFpbnMNCj4gb3BlbiBmb3IgQ0FQX1NZU19BRE1JTiBw
+cml2aWxlZ2VkIHByb2Nlc3NlcyBidXQgQ0FQX1NZU19BRE1JTiB1c2FnZQ0KPiBmb3Igc2VjdXJl
+IHBlcmZfZXZlbnRzIG1vbml0b3JpbmcgaXMgZGlzY291cmFnZWQgd2l0aCByZXNwZWN0IHRvDQo+
+IENBUF9TWVNfUEVSRk1PTiBjYXBhYmlsaXR5Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogQWxleGV5
+IEJ1ZGFua292IDxhbGV4ZXkuYnVkYW5rb3ZAbGludXguaW50ZWwuY29tPg0KPiAtLS0NCj4gIGlu
+Y2x1ZGUvbGludXgvcGVyZl9ldmVudC5oIHwgOSArKysrKystLS0NCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCA2IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9saW51eC9wZXJmX2V2ZW50LmggYi9pbmNsdWRlL2xpbnV4L3BlcmZfZXZlbnQuaCBpbmRl
+eA0KPiAzNGM3YzY5MTAwMjYuLjUyMzEzZDJjYzM0MyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9s
+aW51eC9wZXJmX2V2ZW50LmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9wZXJmX2V2ZW50LmgNCj4g
+QEAgLTEyODUsNyArMTI4NSw4IEBAIHN0YXRpYyBpbmxpbmUgaW50IHBlcmZfaXNfcGFyYW5vaWQo
+dm9pZCkNCj4gDQo+ICBzdGF0aWMgaW5saW5lIGludCBwZXJmX2FsbG93X2tlcm5lbChzdHJ1Y3Qg
+cGVyZl9ldmVudF9hdHRyICphdHRyKSAgew0KPiAtCWlmIChzeXNjdGxfcGVyZl9ldmVudF9wYXJh
+bm9pZCA+IDEgJiYgIWNhcGFibGUoQ0FQX1NZU19BRE1JTikpDQo+ICsJaWYgKHN5c2N0bF9wZXJm
+X2V2ZW50X3BhcmFub2lkID4gMSAmJg0KPiArCSAgICEoY2FwYWJsZShDQVBfU1lTX1BFUkZNT04p
+IHx8IGNhcGFibGUoQ0FQX1NZU19BRE1JTikpKQ0KPiAgCQlyZXR1cm4gLUVBQ0NFUzsNCj4gDQo+
+ICAJcmV0dXJuIHNlY3VyaXR5X3BlcmZfZXZlbnRfb3BlbihhdHRyLCBQRVJGX1NFQ1VSSVRZX0tF
+Uk5FTCk7IEBADQo+IC0xMjkzLDcgKzEyOTQsOCBAQCBzdGF0aWMgaW5saW5lIGludCBwZXJmX2Fs
+bG93X2tlcm5lbChzdHJ1Y3QNCj4gcGVyZl9ldmVudF9hdHRyICphdHRyKQ0KPiANCj4gIHN0YXRp
+YyBpbmxpbmUgaW50IHBlcmZfYWxsb3dfY3B1KHN0cnVjdCBwZXJmX2V2ZW50X2F0dHIgKmF0dHIp
+ICB7DQo+IC0JaWYgKHN5c2N0bF9wZXJmX2V2ZW50X3BhcmFub2lkID4gMCAmJiAhY2FwYWJsZShD
+QVBfU1lTX0FETUlOKSkNCj4gKwlpZiAoc3lzY3RsX3BlcmZfZXZlbnRfcGFyYW5vaWQgPiAwICYm
+DQo+ICsJICAgICEoY2FwYWJsZShDQVBfU1lTX1BFUkZNT04pIHx8IGNhcGFibGUoQ0FQX1NZU19B
+RE1JTikpKQ0KPiAgCQlyZXR1cm4gLUVBQ0NFUzsNCj4gDQo+ICAJcmV0dXJuIHNlY3VyaXR5X3Bl
+cmZfZXZlbnRfb3BlbihhdHRyLCBQRVJGX1NFQ1VSSVRZX0NQVSk7IEBAIC0NCj4gMTMwMSw3ICsx
+MzAzLDggQEAgc3RhdGljIGlubGluZSBpbnQgcGVyZl9hbGxvd19jcHUoc3RydWN0IHBlcmZfZXZl
+bnRfYXR0cg0KPiAqYXR0cikNCj4gDQo+ICBzdGF0aWMgaW5saW5lIGludCBwZXJmX2FsbG93X3Ry
+YWNlcG9pbnQoc3RydWN0IHBlcmZfZXZlbnRfYXR0ciAqYXR0cikgIHsNCj4gLQlpZiAoc3lzY3Rs
+X3BlcmZfZXZlbnRfcGFyYW5vaWQgPiAtMSAmJiAhY2FwYWJsZShDQVBfU1lTX0FETUlOKSkNCj4g
+KwlpZiAoc3lzY3RsX3BlcmZfZXZlbnRfcGFyYW5vaWQgPiAtMSAmJg0KPiArCSAgICAhKGNhcGFi
+bGUoQ0FQX1NZU19QRVJGTU9OKSB8fCBjYXBhYmxlKENBUF9TWVNfQURNSU4pKSkNCj4gIAkJcmV0
+dXJuIC1FUEVSTTsNCj4gDQo+ICAJcmV0dXJuIHNlY3VyaXR5X3BlcmZfZXZlbnRfb3BlbihhdHRy
+LCBQRVJGX1NFQ1VSSVRZX1RSQUNFUE9JTlQpOw0KPiAtLQ0KPiAyLjIwLjENCg0KVGhhbmtzLiAg
+SSBsaWtlIHRoZSBpZGVhIG9mIENBUF9TWVNfUEVSRk1PTiB0aGF0IGRvZXMgbm90IHJlcXVpcmUg
+Q0FQX1NZU19BRE1JTi4gIEl0IG1ha2VzIGdyYW50aW5nIHVzZXJzIGFiaWxpdHkgdG8gcnVuIHBl
+cmYgYSBiaXQgc2FmZXIuDQoNCkkgc2VlIGEgbG90IG9mICIoY2FwYWJsZShDQVBfU1lTX1BFUkZN
+T04pIHx8IGNhcGFibGUoQ0FQX1NZU19BRE1JTikiIGNvbnN0cnVjdHMgbm93LiAgTWF5YmUgd3Jh
+cHBpbmcgaXQgaW4gYW4gIiBpbmxpbmUgYm9vbCBwZXJmbW9uX2NhcGFibGUoKSIgZGVmaW5lZCBz
+b21ld2hlcmUgKGxpa2UgaW4gL2luY2x1ZGUvbGludXgvY2FwYWJpbGl0eS5oKT8NCg0KLSBJZ29y
+DQo=
