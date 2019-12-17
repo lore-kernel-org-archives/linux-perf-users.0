@@ -1,52 +1,32 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 9/9] perf vendor events s390: Remove name from L1D_RO_EXCL_WRITES description
-Date: Mon, 16 Dec 2019 17:47:38 -0300
-Message-ID: <20191216204738.12107-10-acme@kernel.org>
-References: <20191216204738.12107-1-acme@kernel.org>
+From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Subject: Re: [Intel-gfx] [PATCH v3 4/7] drm/i915/perf: open access for
+ CAP_SYS_PERFMON privileged process
+Date: Tue, 17 Dec 2019 11:45:20 +0200
+Message-ID: <503ad40c-d94e-df1d-1541-730c002ad3b7@intel.com>
+References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+ <bc5b2a0d-a185-91b6-5deb-a4b6e1dc3d3e@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191216204738.12107-1-acme@kernel.org>
+In-Reply-To: <bc5b2a0d-a185-91b6-5deb-a4b6e1dc3d3e@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ed Maste <emaste@freebsd.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greentime Hu <green.hu@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Nick Hu <nickhu@andestech.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Richter <tmricht@linux.ibm.com>, Vincent Chen <deanbo422@gmail.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Casey Schaufler <casey@schaufler-ca.com>
+Cc: songliubraving@fb.com, Andi Kleen <ak@linux.intel.com>, Kees Cook <keescook@chromium.org>, "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>, Jann Horn <jannh@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, intel-gfx@lists.freedesktop.org, Igor Lubashev <ilubashe@akamai.com>, linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Brendan Gregg <bgregg@netflix.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ed Maste <emaste@freebsd.org>
+On 16/12/2019 22:03, Alexey Budankov wrote:
+> Open access to i915_perf monitoring for CAP_SYS_PERFMON privileged processes.
+> For backward compatibility reasons access to i915_perf subsystem remains open
+> for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
+> i915_perf monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-In 7fcfa9a2d9 an unintended prefix "Counter:18 Name:" was removed from
-the description for L1D_RO_EXCL_WRITES, but the extra name remained in
-the description.  Remove it too.
 
-Fixes: 7fcfa9a2d9a7 ("perf list: Fix s390 counter long description for L1D_RO_EXCL_WRITES")
-Signed-off-by: Ed Maste <emaste@freebsd.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Hu <nickhu@andestech.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Vincent Chen <deanbo422@gmail.com>
-Link: http://lore.kernel.org/lkml/20191212145346.5026-1-emaste@freefall.freebsd.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/pmu-events/arch/s390/cf_z14/extended.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Assuming people are fine with this new cap, I like this idea of a 
+lighter privilege for i915-perf.
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-index 68618152ea2c..89e070727e1b 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z14/extended.json
-@@ -4,7 +4,7 @@
- 		"EventCode": "128",
- 		"EventName": "L1D_RO_EXCL_WRITES",
- 		"BriefDescription": "L1D Read-only Exclusive Writes",
--		"PublicDescription": "L1D_RO_EXCL_WRITES A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
-+		"PublicDescription": "A directory write to the Level-1 Data cache where the line was originally in a Read-Only state in the cache but has been updated to be in the Exclusive state that allows stores to the cache line"
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
--- 
-2.21.0
+
+-Lionel
