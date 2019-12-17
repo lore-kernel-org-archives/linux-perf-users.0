@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly into the kernel map
-Date: Tue, 17 Dec 2019 11:48:22 -0300
-Message-ID: <20191217144828.2460-7-acme@kernel.org>
+Subject: [PATCH 09/12] perf report/top: Allow pressing hotkeys in the options popup menu
+Date: Tue, 17 Dec 2019 11:48:25 -0300
+Message-ID: <20191217144828.2460-10-acme@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,16 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As a convenience, equivalent to pressing Enter in a line with a kernel
-symbol and then selecting "Zoom" into the kernel DSO.
+When the users presses ENTER in the main 'perf report/top' screen a
+popup menu is presented, in it some hotkeys are suggested as
+alternatives to using the menu, or for additional features.
+
+At that point the user may try those hotkeys, so allow for that by
+recording the key used and exiting, the caller then can check for that
+possibility and process the hotkey.
+
+I.e. try pressing ENTER, and then 'k' to exit and zoom into the kernel
+map, using ESC then zooms out, etc.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -24,53 +32,49 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-vbnlnrpyfvz9deqoobtc3dz7@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ujfq3fw44kf6qrtfajl5dcsp@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/hists.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 8aba1aeea0eb..6dfdd8d5a743 100644
+index da7de49b3553..7f653b9f5cd8 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -18,7 +18,9 @@
- #include "../../util/evlist.h"
- #include "../../util/header.h"
- #include "../../util/hist.h"
-+#include "../../util/machine.h"
- #include "../../util/map.h"
-+#include "../../util/maps.h"
- #include "../../util/symbol.h"
- #include "../../util/map_symbol.h"
- #include "../../util/branch.h"
-@@ -2566,7 +2568,7 @@ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
- 	if (!hists__has(browser->hists, dso) || map == NULL)
- 		return 0;
+@@ -2991,12 +2991,13 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 	while (1) {
+ 		struct thread *thread = NULL;
+ 		struct map *map = NULL;
+-		int choice = 0;
++		int choice;
+ 		int socked_id = -1;
  
--	if (asprintf(optstr, "Zoom %s %s DSO",
-+	if (asprintf(optstr, "Zoom %s %s DSO (use the 'k' hotkey to zoom directly into the kernel)",
- 		     browser->hists->dso_filter ? "out of" : "into",
- 		     __map__is_kernel(map) ? "the Kernel" : map->dso->short_name) < 0)
- 		return 0;
-@@ -2936,6 +2938,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	"E             Expand all callchains\n"				\
- 	"F             Toggle percentage of filtered entries\n"		\
- 	"H             Display column headers\n"			\
-+	"k             Zoom into the kernel map\n"			\
- 	"L             Change percent limit\n"				\
- 	"m             Display context menu\n"				\
- 	"S             Zoom into current Processor Socket\n"		\
-@@ -3033,6 +3036,10 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			actions->ms.map = map;
- 			do_zoom_dso(browser, actions);
- 			continue;
-+		case 'k':
-+			if (browser->selection != NULL)
-+				hists_browser__zoom_map(browser, browser->selection->maps->machine->vmlinux_map);
-+			continue;
- 		case 'V':
- 			verbose = (verbose + 1) % 4;
- 			browser->show_dso = verbose > 0;
+-		nr_options = 0;
+-
+-		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
++		key = 0; // reset key
++do_hotkey:		 // key came straight from options ui__popup_menu()
++		choice = nr_options = 0;
++		key = hist_browser__run(browser, helpline, warn_lost_event, key);
+ 
+ 		if (browser->he_selection != NULL) {
+ 			thread = hist_browser__selected_thread(browser);
+@@ -3275,10 +3276,13 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 		do {
+ 			struct popup_action *act;
+ 
+-			choice = ui__popup_menu(nr_options, options, NULL);
+-			if (choice == -1 || choice >= nr_options)
++			choice = ui__popup_menu(nr_options, options, &key);
++			if (choice == -1)
+ 				break;
+ 
++			if (choice == nr_options)
++				goto do_hotkey;
++
+ 			act = &actions[choice];
+ 			key = act->fn(browser, act);
+ 		} while (key == 1);
 -- 
 2.21.0
