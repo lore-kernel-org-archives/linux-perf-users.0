@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/12] perf report/top: Do not offer annotation for symbols without samples
-Date: Tue, 17 Dec 2019 11:48:26 -0300
-Message-ID: <20191217144828.2460-11-acme@kernel.org>
+Subject: [PATCH 11/12] perf report/top: Make 'e' visible in the help and make it toggle showing callchains
+Date: Tue, 17 Dec 2019 11:48:27 -0300
+Message-ID: <20191217144828.2460-12-acme@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,16 +14,13 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This can happen in the --children mode, i.e. the default mode when
-callchains are present, where one of the main entries may be a callchain
-entry with no samples.
+The 'e' and 'c' hotkeys were present for a long time, but not documented
+in the help window, change 'e' to be a toggle so that it gets consistent
+with other toggles like '+' and document it in the help window.
 
-So far we were not providing any information about why an annotation
-couldn't be provided even offering the Annotation option in the popup
-menu.
-
-Work is needed to allow for no-samples "annotation', i.e. to show the
-disassembly anyway and allow for navigation, etc.
+Keep 'c' as is for people used to it but don't document, as it is easier
+to just use 'e' to show/hide all the callchains for a top level
+histogram entry.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -32,40 +29,44 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0hhzj2de15o88cguy7h66zre@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-84s2zp381n4vquc1byexania@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/hists.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 7f653b9f5cd8..3f10e1a070c5 100644
+index 3f10e1a070c5..fa3a16c49398 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2461,7 +2461,8 @@ add_annotate_opt(struct hist_browser *browser __maybe_unused,
- 		 struct popup_action *act, char **optstr,
- 		 struct map_symbol *ms)
- {
--	if (ms->sym == NULL || ms->map->dso->annotate_warned)
-+	if (ms->sym == NULL || ms->map->dso->annotate_warned ||
-+	    symbol__annotation(ms->sym)->src == NULL)
- 		return 0;
+@@ -407,6 +407,11 @@ static bool hist_browser__selection_has_children(struct hist_browser *browser)
+ 	return container_of(ms, struct callchain_list, ms)->has_children;
+ }
  
- 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
-@@ -3027,6 +3028,14 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			    browser->selection->map->dso->annotate_warned)
- 				continue;
- 
-+			if (symbol__annotation(browser->selection->sym)->src == NULL) {
-+				ui_browser__warning(&browser->b, delay_secs * 2,
-+						    "No samples for the \"%s\" symbol.\n\n"
-+						    "Probably appeared just in a callchain",
-+						    browser->selection->sym->name);
-+				continue;
-+			}
++static bool hist_browser__he_selection_unfolded(struct hist_browser *browser)
++{
++	return browser->he_selection ? browser->he_selection->unfolded : false;
++}
 +
- 			actions->ms.map = browser->selection->map;
- 			actions->ms.sym = browser->selection->sym;
- 			do_annotate(browser, actions);
+ static bool hist_browser__selection_unfolded(struct hist_browser *browser)
+ {
+ 	struct hist_entry *he = browser->he_selection;
+@@ -750,7 +755,7 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
+ 			break;
+ 		case 'e':
+ 			/* Expand the selected entry. */
+-			hist_browser__set_folding_selected(browser, true);
++			hist_browser__set_folding_selected(browser, !hist_browser__he_selection_unfolded(browser));
+ 			break;
+ 		case 'H':
+ 			browser->show_headers = !browser->show_headers;
+@@ -2938,6 +2943,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 	"a             Annotate current symbol\n"			\
+ 	"C             Collapse all callchains\n"			\
+ 	"d             Zoom into current DSO\n"				\
++	"e             Expand/Collapse main entry callchains\n"	\
+ 	"E             Expand all callchains\n"				\
+ 	"F             Toggle percentage of filtered entries\n"		\
+ 	"H             Display column headers\n"			\
 -- 
 2.21.0
