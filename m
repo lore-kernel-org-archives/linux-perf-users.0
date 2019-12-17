@@ -1,122 +1,100 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
-Date: Tue, 17 Dec 2019 11:48:23 -0300
-Message-ID: <20191217144828.2460-8-acme@kernel.org>
-References: <20191217144828.2460-1-acme@kernel.org>
+From: Stephen Smalley <sds@tycho.nsa.gov>
+Subject: Re: [PATCH v3 1/7] capabilities: introduce CAP_SYS_PERFMON to kernel
+ and user space
+Date: Tue, 17 Dec 2019 10:02:25 -0500
+Message-ID: <a9542dcd-6f02-92eb-bd97-8aa839e9036f@tycho.nsa.gov>
+References: <b175f283-d256-e37e-f447-6ba4ab4f3d3a@linux.intel.com>
+ <bd8adfde-f562-0e56-75aa-371c5354f350@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191217144828.2460-1-acme@kernel.org>
+In-Reply-To: <bd8adfde-f562-0e56-75aa-371c5354f350@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Casey Schaufler <casey@schaufler-ca.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, linux-kernel@vger.kernel.org, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, intel-gfx@lists.freedesktop.org, Brendan Gregg <bgregg@netflix.com>, songliubraving@fb.com, "bpf@vger.kernel.org" <bpf@vger.kernel.org>li
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 12/16/19 2:58 PM, Alexey Budankov wrote:
+> 
+> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
+> monitoring and observability so that CAP_SYS_PERFMON would assist
+> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+> and other subsystems of the kernel.
+> 
+> CAP_SYS_PERFMON intends to harden system security and integrity during
+> system performance monitoring and observability by decreasing attack surface
+> that is available to CAP_SYS_ADMIN privileged processes.
+> 
+> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
+> system performance monitoring and observability and balance amount of
+> CAP_SYS_ADMIN credentials in accordance with the recommendations provided
+> in the man page for CAP_SYS_ADMIN [1]: "Note: this capability is overloaded;
+> see Notes to kernel developers, below."
+> 
+> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>   include/linux/capability.h          | 1 +
+>   include/uapi/linux/capability.h     | 8 +++++++-
+>   security/selinux/include/classmap.h | 4 ++--
+>   3 files changed, 10 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/capability.h b/include/linux/capability.h
+> index ecce0f43c73a..6342502c4c2a 100644
+> --- a/include/linux/capability.h
+> +++ b/include/linux/capability.h
+> @@ -251,6 +251,7 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+>   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+>   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+>   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
+> +#define perfmon_capable() (capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN))
 
-Sometimes we're in an outer code, like the main hists browser popup menu
-and the user follows a suggestion about using some hotkey, and that
-hotkey is really handled by hists_browser__run(), so allow for calling
-it with that hotkey, making it handle it instead of waiting for the user
-to press one.
+I think making it a static inline bool function instead of a macro would 
+be preferred?
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-i0kwpuicoy4p1tyrw5k054zq@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-c2c.c       |  4 ++--
- tools/perf/ui/browsers/hists.c | 13 +++++++------
- tools/perf/ui/browsers/hists.h |  2 +-
- 3 files changed, 10 insertions(+), 9 deletions(-)
+Otherwise,
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index e69f44941aad..346351260c0b 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2384,7 +2384,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 	c2c_browser__update_nr_entries(browser);
- 
- 	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
-+		key = hist_browser__run(browser, "? - help", true, 0);
- 
- 		switch (key) {
- 		case 's':
-@@ -2453,7 +2453,7 @@ static int perf_c2c__hists_browse(struct hists *hists)
- 	c2c_browser__update_nr_entries(browser);
- 
- 	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
-+		key = hist_browser__run(browser, "? - help", true, 0);
- 
- 		switch (key) {
- 		case 'q':
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 6dfdd8d5a743..3b7af5a8d101 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
- }
- 
- int hist_browser__run(struct hist_browser *browser, const char *help,
--		      bool warn_lost_event)
-+		      bool warn_lost_event, int key)
- {
--	int key;
- 	char title[160];
- 	struct hist_browser_timer *hbt = browser->hbt;
- 	int delay_secs = hbt ? hbt->refresh : 0;
-@@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
- 	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
- 		return -1;
- 
-+	if (key)
-+		goto do_hotkey;
-+
- 	while (1) {
- 		key = ui_browser__run(&browser->b, delay_secs);
--
-+do_hotkey:
- 		switch (key) {
- 		case K_TIMER: {
- 			u64 nr_entries;
-@@ -2994,8 +2996,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 
- 		nr_options = 0;
- 
--		key = hist_browser__run(browser, helpline,
--					warn_lost_event);
-+		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
- 
- 		if (browser->he_selection != NULL) {
- 			thread = hist_browser__selected_thread(browser);
-@@ -3573,7 +3574,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
- 	memset(&action, 0, sizeof(action));
- 
- 	while (1) {
--		key = hist_browser__run(browser, "? - help", true);
-+		key = hist_browser__run(browser, "? - help", true, 0);
- 
- 		switch (key) {
- 		case 'q':
-diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-index 078f2f2c7abd..1e938d9ffa5e 100644
---- a/tools/perf/ui/browsers/hists.h
-+++ b/tools/perf/ui/browsers/hists.h
-@@ -34,7 +34,7 @@ struct hist_browser {
- struct hist_browser *hist_browser__new(struct hists *hists);
- void hist_browser__delete(struct hist_browser *browser);
- int hist_browser__run(struct hist_browser *browser, const char *help,
--		      bool warn_lost_event);
-+		      bool warn_lost_event, int key);
- void hist_browser__init(struct hist_browser *browser,
- 			struct hists *hists);
- #endif /* _PERF_UI_BROWSER_HISTS_H_ */
--- 
-2.21.0
+>   
+>   /* audit system wants to get cap info from files as well */
+>   extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 240fdb9a60f6..98e03cc76c7c 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+>   
+>   #define CAP_AUDIT_READ		37
+>   
+> +/*
+> + * Allow system performance and observability privileged operations
+> + * using perf_events, i915_perf and other kernel subsystems
+> + */
+> +
+> +#define CAP_SYS_PERFMON		38
+>   
+> -#define CAP_LAST_CAP         CAP_AUDIT_READ
+> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
+>   
+>   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+>   
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 7db24855e12d..bae602c623b0 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -27,9 +27,9 @@
+>   	    "audit_control", "setfcap"
+>   
+>   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+> -		"wake_alarm", "block_suspend", "audit_read"
+> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
+>   
+> -#if CAP_LAST_CAP > CAP_AUDIT_READ
+> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
+>   #error New capability defined, please update COMMON_CAP2_PERMS.
+>   #endif
+>   
+> 
