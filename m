@@ -1,97 +1,58 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
-Date: Wed, 18 Dec 2019 09:08:18 +0100
-Message-ID: <20191218080818.GD19062@krava>
+Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
+ kernel maps
+Date: Wed, 18 Dec 2019 10:05:04 +0100
+Message-ID: <20191218090504.GE19062@krava>
 References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-8-acme@kernel.org>
+ <20191217144828.2460-13-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191217144828.2460-8-acme@kernel.org>
+In-Reply-To: <20191217144828.2460-13-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
+On Tue, Dec 17, 2019 at 11:48:28AM -0300, Arnaldo Carvalho de Melo wrote:
 
 SNIP
 
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index 6dfdd8d5a743..3b7af5a8d101 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
->  }
->  
->  int hist_browser__run(struct hist_browser *browser, const char *help,
-> -		      bool warn_lost_event)
-> +		      bool warn_lost_event, int key)
->  {
-> -	int key;
->  	char title[160];
->  	struct hist_browser_timer *hbt = browser->hbt;
->  	int delay_secs = hbt ? hbt->refresh : 0;
-> @@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
->  	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
+> +	machine->vmlinux_map = map__new2(0, kernel, &machine->kmaps);
+>  	if (machine->vmlinux_map == NULL)
 >  		return -1;
 >  
-> +	if (key)
-> +		goto do_hotkey;
-> +
->  	while (1) {
->  		key = ui_browser__run(&browser->b, delay_secs);
-> -
-> +do_hotkey:
+> @@ -1098,7 +1097,6 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
+>  	if (!kmap)
+>  		return -1;
+>  
+> -	kmap->kmaps = &machine->kmaps;
+>  	maps__insert(&machine->kmaps, map);
+>  
+>  	return 0;
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index fdd5bddb3075..a2cdfe62df94 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -223,7 +223,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+>   * they are loaded) and for vmlinux, where only after we load all the
+>   * symbols we'll know where it starts and ends.
+>   */
+> -struct map *map__new2(u64 start, struct dso *dso)
+> +struct map *map__new2(u64 start, struct dso *dso, struct maps *kmaps)
+>  {
+>  	struct map *map = calloc(1, (sizeof(*map) +
+>  				     (dso->kernel ? sizeof(struct kmap) : 0)));
+> @@ -232,6 +232,19 @@ struct map *map__new2(u64 start, struct dso *dso)
+>  		 * ->end will be filled after we load all the symbols
+>  		 */
+>  		map__init(map, start, 0, 0, dso);
 
-or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
+we are passing NULL for kmaps in some cases,
+should we check it in here and warn?
 
-	while (1) {
-  		switch (key) {
-		...
-		}
-
-		key = ui_browser__run(&browser->b, delay_secs);
-	}
+		if (!WARN_ON_ONCE(!kmaps, "too bad..") && dso->kernel)
+			
 
 jirka
-
->  		switch (key) {
->  		case K_TIMER: {
->  			u64 nr_entries;
-> @@ -2994,8 +2996,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
->  
->  		nr_options = 0;
->  
-> -		key = hist_browser__run(browser, helpline,
-> -					warn_lost_event);
-> +		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
->  
->  		if (browser->he_selection != NULL) {
->  			thread = hist_browser__selected_thread(browser);
-> @@ -3573,7 +3574,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
->  	memset(&action, 0, sizeof(action));
->  
->  	while (1) {
-> -		key = hist_browser__run(browser, "? - help", true);
-> +		key = hist_browser__run(browser, "? - help", true, 0);
->  
->  		switch (key) {
->  		case 'q':
-> diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-> index 078f2f2c7abd..1e938d9ffa5e 100644
-> --- a/tools/perf/ui/browsers/hists.h
-> +++ b/tools/perf/ui/browsers/hists.h
-> @@ -34,7 +34,7 @@ struct hist_browser {
->  struct hist_browser *hist_browser__new(struct hists *hists);
->  void hist_browser__delete(struct hist_browser *browser);
->  int hist_browser__run(struct hist_browser *browser, const char *help,
-> -		      bool warn_lost_event);
-> +		      bool warn_lost_event, int key);
->  void hist_browser__init(struct hist_browser *browser,
->  			struct hists *hists);
->  #endif /* _PERF_UI_BROWSER_HISTS_H_ */
-> -- 
-> 2.21.0
-> 
