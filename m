@@ -1,82 +1,102 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
- kernel maps
-Date: Wed, 18 Dec 2019 16:01:20 -0300
-Message-ID: <20191218190120.GB13282@kernel.org>
-References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-13-acme@kernel.org>
- <20191218090504.GE19062@krava>
- <20191218182254.GA13282@kernel.org>
+From: Stephen Smalley <sds@tycho.nsa.gov>
+Subject: Re: [PATCH v4 1/9] capabilities: introduce CAP_SYS_PERFMON to kernel
+ and user space
+Date: Wed, 18 Dec 2019 14:56:33 -0500
+Message-ID: <c10d7785-1e75-4503-3560-99ab9f845a11@tycho.nsa.gov>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191218182254.GA13282@kernel.org>
+In-Reply-To: <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufl>
+Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Song Liu <songliubraving@fb.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Dec 18, 2019 at 03:22:54PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
-> After looking at this some more, I retract this patch and instead the
-> two-liner at the end of this message seems enough.
+On 12/18/19 4:24 AM, Alexey Budankov wrote:
+> 
+> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
+> monitoring and observability operations so that CAP_SYS_PERFMON would
+> assist CAP_SYS_ADMIN capability in its governing role for perf_events,
+> i915_perf and other subsystems of the kernel.
+> 
+> CAP_SYS_PERFMON intends to harden system security and integrity during
+> system performance monitoring and observability operations by decreasing
+> attack surface that is available to CAP_SYS_ADMIN privileged processes.
+> 
+> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related
+> to system performance monitoring and observability operations and balance
+> amount of CAP_SYS_ADMIN credentials in accordance with the recommendations
+> provided in the man page for CAP_SYS_ADMIN [1]: "Note: this capability
+> is overloaded; see Notes to kernel developers, below."
+> 
+> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-So here is the full cset, I have not made changes to the other patches,
+Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
 
-- Arnaldo
+Note for selinux developers: we will need to update the 
+selinux-testsuite tests for perf_event when/if this change lands upstream.
 
-commit 178427a192bcbe3ad93dd0637c3dceaa3ccef31e
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Wed Dec 18 15:23:14 2019 -0300
-
-    perf map: Set kmap->kmaps backpointer for main kernel map chunks
-    
-    When a map is create to represent the main kernel area (vmlinux) with
-    map__new2() we allocate an extra area to store a pointer to the 'struct
-    maps' for the kernel maps, so that we can access that struct when
-    loading ELF files or kallsyms, as we will need to split it in multiple
-    maps, one per kernel module or ELF section (such as ".init.text").
-    
-    So when map->dso->kernel is non-zero, it is expected that
-    map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
-    chunks of the main kernel, bpf progs put in place via
-    PERF_RECORD_KSYMBOL, the main kernel).
-    
-    This was not the case when we were splitting the main kernel into chunks
-    for its ELF sections, which ended up making 'perf report --children'
-    processing a perf.data file with callchains to trip on
-    __map__is_kernel(), when we press ENTER to see the popup menu for main
-    histogram entries that starts at a symbol in the ".init.text" ELF
-    section, e.g.:
-    
-    -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
-         start_kernel
-         cpu_startup_entry
-         do_idle
-         cpuidle_enter
-         cpuidle_enter_state
-         intel_idle
-    
-    Fix it.
-    
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Jiri Olsa <jolsa@kernel.org>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Link: https://lkml.kernel.org/n/tip-vcokue57w4goyzweg2rr5i80@git.kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 6658fbf196e6..1965aefccb02 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -920,6 +920,9 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 		if (curr_map == NULL)
- 			return -1;
- 
-+		if (curr_dso->kernel)
-+			map__kmap(curr_map)->kmaps = kmaps;
-+
- 		if (adjust_kernel_syms) {
- 			curr_map->start  = shdr->sh_addr + ref_reloc(kmap);
- 			curr_map->end	 = curr_map->start + shdr->sh_size;
+> ---
+>   include/linux/capability.h          | 4 ++++
+>   include/uapi/linux/capability.h     | 8 +++++++-
+>   security/selinux/include/classmap.h | 4 ++--
+>   3 files changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/capability.h b/include/linux/capability.h
+> index ecce0f43c73a..883c879baa4b 100644
+> --- a/include/linux/capability.h
+> +++ b/include/linux/capability.h
+> @@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+>   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+>   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+>   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
+> +static inline bool perfmon_capable(void)
+> +{
+> +	return capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN);
+> +}
+>   
+>   /* audit system wants to get cap info from files as well */
+>   extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+> index 240fdb9a60f6..98e03cc76c7c 100644
+> --- a/include/uapi/linux/capability.h
+> +++ b/include/uapi/linux/capability.h
+> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
+>   
+>   #define CAP_AUDIT_READ		37
+>   
+> +/*
+> + * Allow system performance and observability privileged operations
+> + * using perf_events, i915_perf and other kernel subsystems
+> + */
+> +
+> +#define CAP_SYS_PERFMON		38
+>   
+> -#define CAP_LAST_CAP         CAP_AUDIT_READ
+> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
+>   
+>   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+>   
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 7db24855e12d..bae602c623b0 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -27,9 +27,9 @@
+>   	    "audit_control", "setfcap"
+>   
+>   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+> -		"wake_alarm", "block_suspend", "audit_read"
+> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
+>   
+> -#if CAP_LAST_CAP > CAP_AUDIT_READ
+> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
+>   #error New capability defined, please update COMMON_CAP2_PERMS.
+>   #endif
+>   
+> 
