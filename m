@@ -1,8 +1,8 @@
 From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v4 6/9] powerpc/perf: open access for CAP_SYS_PERFMON
+Subject: [PATCH v4 7/9] parisc/perf: open access for CAP_SYS_PERFMON
  privileged process
-Date: Wed, 18 Dec 2019 12:28:58 +0300
-Message-ID: <b6b4cfb7-82c5-85f6-0588-43046ace8419@linux.intel.com>
+Date: Wed, 18 Dec 2019 12:29:42 +0300
+Message-ID: <806e4881-5c22-5914-a656-5eeb65130dbe@linux.intel.com>
 References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -23,30 +23,21 @@ monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
 
 Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- arch/powerpc/perf/imc-pmu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/parisc/kernel/perf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index cb50a9e1fd2d..e837717492e4 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -898,7 +898,7 @@ static int thread_imc_event_init(struct perf_event *event)
- 	if (event->attr.type != event->pmu->type)
- 		return -ENOENT;
+diff --git a/arch/parisc/kernel/perf.c b/arch/parisc/kernel/perf.c
+index 676683641d00..c4208d027794 100644
+--- a/arch/parisc/kernel/perf.c
++++ b/arch/parisc/kernel/perf.c
+@@ -300,7 +300,7 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
+ 	else
+ 		return -EFAULT;
  
 -	if (!capable(CAP_SYS_ADMIN))
 +	if (!perfmon_capable())
  		return -EACCES;
  
- 	/* Sampling not supported */
-@@ -1307,7 +1307,7 @@ static int trace_imc_event_init(struct perf_event *event)
- 	if (event->attr.type != event->pmu->type)
- 		return -ENOENT;
- 
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EACCES;
- 
- 	/* Return if this is a couting event */
+ 	if (count != sizeof(uint32_t))
 -- 
 2.20.1
