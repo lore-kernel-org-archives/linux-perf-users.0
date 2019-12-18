@@ -1,97 +1,97 @@
-From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: [PATCH 5/6] perf tools: add perf_evlist__terminate() for terminate
-Date: Wed, 18 Dec 2019 15:54:54 +0800
-Message-ID: <20191218075455.5106-6-tanxiaojun@huawei.com>
-References: <20191218075455.5106-1-tanxiaojun@huawei.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
+Date: Wed, 18 Dec 2019 09:08:18 +0100
+Message-ID: <20191218080818.GD19062@krava>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-8-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191218075455.5106-1-tanxiaojun@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <20191217144828.2460-8-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, adrian.hunter@intel.com, yao.jin@linux.intel.com, tmricht@linux.ibm.com, brueckner@linux.ibm.com, songliubraving@fb.com, gregkh@linuxfoundation.org, kim.phillips@arm.com, James.Clark@arm.com, jeremy.linton@arm.com
-Cc: gengdongjiu@huawei.com, wxf.wang@hisilicon.com, liwei391@huawei.com, tanxiaojun@huawei.com, liuqi115@hisilicon.com, huawei.libin@huawei.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
 
-In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
-be set and the event list will be disabled by perf_evlist__disable()
-once.
+SNIP
 
-While in auxtrace_record.read_finish(), the related events will be
-enabled again, if they are continuous, the recording seems to be endless.
+> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> index 6dfdd8d5a743..3b7af5a8d101 100644
+> --- a/tools/perf/ui/browsers/hists.c
+> +++ b/tools/perf/ui/browsers/hists.c
+> @@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
+>  }
+>  
+>  int hist_browser__run(struct hist_browser *browser, const char *help,
+> -		      bool warn_lost_event)
+> +		      bool warn_lost_event, int key)
+>  {
+> -	int key;
+>  	char title[160];
+>  	struct hist_browser_timer *hbt = browser->hbt;
+>  	int delay_secs = hbt ? hbt->refresh : 0;
+> @@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
+>  	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
+>  		return -1;
+>  
+> +	if (key)
+> +		goto do_hotkey;
+> +
+>  	while (1) {
+>  		key = ui_browser__run(&browser->b, delay_secs);
+> -
+> +do_hotkey:
 
-Mark the evlist's state as terminated, preparing for the following fix.
+or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
-Tested-by: Qi Liu <liuqi115@hisilicon.com>
----
- tools/perf/builtin-record.c |  1 +
- tools/perf/util/evlist.c    | 14 ++++++++++++++
- tools/perf/util/evlist.h    |  1 +
- tools/perf/util/evsel.h     |  1 +
- 4 files changed, 17 insertions(+)
+	while (1) {
+  		switch (key) {
+		...
+		}
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index fb19ef63cc35..5646949f8cc7 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1716,6 +1716,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		if (done && !disabled && !target__none(&opts->target)) {
- 			trigger_off(&auxtrace_snapshot_trigger);
- 			evlist__disable(rec->evlist);
-+			evlist__terminate(rec->evlist);
- 			disabled = true;
- 		}
- 	}
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index b9c7e5271611..b04794cd8586 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -377,6 +377,20 @@ bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
- 	return true;
- }
- 
-+void evlist__terminate(struct evlist *evlist)
-+{
-+	struct evsel *pos;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		if (pos->disabled || !perf_evsel__is_group_leader(pos) || !pos->core.fd)
-+			continue;
-+		evsel__disable(pos);
-+		pos->terminated = true;
-+	}
-+
-+	evlist->enabled = false;
-+}
-+
- void evlist__disable(struct evlist *evlist)
- {
- 	struct evsel *pos;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index f5bd5c386df1..9fbd0ce2a1c4 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -206,6 +206,7 @@ void evlist__munmap(struct evlist *evlist);
- 
- size_t evlist__mmap_size(unsigned long pages);
- 
-+void evlist__terminate(struct evlist *evlist);
- void evlist__disable(struct evlist *evlist);
- void evlist__enable(struct evlist *evlist);
- void perf_evlist__toggle_enable(struct evlist *evlist);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index dc14f4a823cd..8e8a2cb41de8 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -104,6 +104,7 @@ struct evsel {
- 		perf_evsel__sb_cb_t	*cb;
- 		void			*data;
- 	} side_band;
-+	bool			terminated;
- };
- 
- struct perf_missing_features {
--- 
-2.17.1
+		key = ui_browser__run(&browser->b, delay_secs);
+	}
+
+jirka
+
+>  		switch (key) {
+>  		case K_TIMER: {
+>  			u64 nr_entries;
+> @@ -2994,8 +2996,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+>  
+>  		nr_options = 0;
+>  
+> -		key = hist_browser__run(browser, helpline,
+> -					warn_lost_event);
+> +		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
+>  
+>  		if (browser->he_selection != NULL) {
+>  			thread = hist_browser__selected_thread(browser);
+> @@ -3573,7 +3574,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+>  	memset(&action, 0, sizeof(action));
+>  
+>  	while (1) {
+> -		key = hist_browser__run(browser, "? - help", true);
+> +		key = hist_browser__run(browser, "? - help", true, 0);
+>  
+>  		switch (key) {
+>  		case 'q':
+> diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
+> index 078f2f2c7abd..1e938d9ffa5e 100644
+> --- a/tools/perf/ui/browsers/hists.h
+> +++ b/tools/perf/ui/browsers/hists.h
+> @@ -34,7 +34,7 @@ struct hist_browser {
+>  struct hist_browser *hist_browser__new(struct hists *hists);
+>  void hist_browser__delete(struct hist_browser *browser);
+>  int hist_browser__run(struct hist_browser *browser, const char *help,
+> -		      bool warn_lost_event);
+> +		      bool warn_lost_event, int key);
+>  void hist_browser__init(struct hist_browser *browser,
+>  			struct hists *hists);
+>  #endif /* _PERF_UI_BROWSER_HISTS_H_ */
+> -- 
+> 2.21.0
+> 
