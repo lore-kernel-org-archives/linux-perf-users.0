@@ -1,43 +1,110 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v4 9/9] drivers/oprofile: open access for CAP_SYS_PERFMON
- privileged process
-Date: Wed, 18 Dec 2019 12:31:08 +0300
-Message-ID: <70eb48f8-34ae-8aa3-ca64-d433b75ea2ae@linux.intel.com>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
+Date: Wed, 18 Dec 2019 11:08:31 -0300
+Message-ID: <20191218140831.GC13395@kernel.org>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-8-acme@kernel.org>
+ <20191218080818.GD19062@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20191218080818.GD19062@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufler-ca.com>, Robert Richter <rric@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Song Liu <songliubraving@fb.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Wed, Dec 18, 2019 at 09:08:18AM +0100, Jiri Olsa escreveu:
+> On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
+> 
+> SNIP
+> 
+> > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+> > index 6dfdd8d5a743..3b7af5a8d101 100644
+> > --- a/tools/perf/ui/browsers/hists.c
+> > +++ b/tools/perf/ui/browsers/hists.c
+> > @@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
+> >  }
+> >  
+> >  int hist_browser__run(struct hist_browser *browser, const char *help,
+> > -		      bool warn_lost_event)
+> > +		      bool warn_lost_event, int key)
+> >  {
+> > -	int key;
+> >  	char title[160];
+> >  	struct hist_browser_timer *hbt = browser->hbt;
+> >  	int delay_secs = hbt ? hbt->refresh : 0;
+> > @@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
+> >  	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
+> >  		return -1;
+> >  
+> > +	if (key)
+> > +		goto do_hotkey;
+> > +
+> >  	while (1) {
+> >  		key = ui_browser__run(&browser->b, delay_secs);
+> > -
+> > +do_hotkey:
+> 
+> or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
+> 
+> 	while (1) {
+>   		switch (key) {
+> 		...
+> 		}
+> 
+> 		key = ui_browser__run(&browser->b, delay_secs);
+> 	}
 
-Open access to monitoring for CAP_SYS_PERFMON privileged processes.
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+I think those are equivalent and having the test like I did is more
+clear, i.e. "has this key been provided" instead of going to the switch
+just to hit the default case for the zero in key and call
+ui_browser__run().
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- drivers/oprofile/event_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
-index 12ea4a4ad607..6c9edc8bbc95 100644
---- a/drivers/oprofile/event_buffer.c
-+++ b/drivers/oprofile/event_buffer.c
-@@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
- {
- 	int err = -EPERM;
+- Arnaldo
  
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EPERM;
- 
- 	if (test_and_set_bit_lock(0, &buffer_opened))
+> jirka
+> 
+> >  		switch (key) {
+> >  		case K_TIMER: {
+> >  			u64 nr_entries;
+> > @@ -2994,8 +2996,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+> >  
+> >  		nr_options = 0;
+> >  
+> > -		key = hist_browser__run(browser, helpline,
+> > -					warn_lost_event);
+> > +		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
+> >  
+> >  		if (browser->he_selection != NULL) {
+> >  			thread = hist_browser__selected_thread(browser);
+> > @@ -3573,7 +3574,7 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+> >  	memset(&action, 0, sizeof(action));
+> >  
+> >  	while (1) {
+> > -		key = hist_browser__run(browser, "? - help", true);
+> > +		key = hist_browser__run(browser, "? - help", true, 0);
+> >  
+> >  		switch (key) {
+> >  		case 'q':
+> > diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
+> > index 078f2f2c7abd..1e938d9ffa5e 100644
+> > --- a/tools/perf/ui/browsers/hists.h
+> > +++ b/tools/perf/ui/browsers/hists.h
+> > @@ -34,7 +34,7 @@ struct hist_browser {
+> >  struct hist_browser *hist_browser__new(struct hists *hists);
+> >  void hist_browser__delete(struct hist_browser *browser);
+> >  int hist_browser__run(struct hist_browser *browser, const char *help,
+> > -		      bool warn_lost_event);
+> > +		      bool warn_lost_event, int key);
+> >  void hist_browser__init(struct hist_browser *browser,
+> >  			struct hists *hists);
+> >  #endif /* _PERF_UI_BROWSER_HISTS_H_ */
+> > -- 
+> > 2.21.0
+> > 
+
 -- 
-2.20.1
+
+- Arnaldo
