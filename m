@@ -1,67 +1,162 @@
 From: Tan Xiaojun <tanxiaojun@huawei.com>
-Subject: [PATCH 0/6] perf tools: Add support for some spe events and precise ip
-Date: Wed, 18 Dec 2019 15:54:49 +0800
-Message-ID: <20191218075455.5106-1-tanxiaojun@huawei.com>
+Subject: [PATCH 4/6] perf tools: Support "branch-misses:pp" on arm64
+Date: Wed, 18 Dec 2019 15:54:53 +0800
+Message-ID: <20191218075455.5106-5-tanxiaojun@huawei.com>
+References: <20191218075455.5106-1-tanxiaojun@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191218075455.5106-1-tanxiaojun@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, adrian.hunter@intel.com, yao.jin@linux.intel.com, tmricht@linux.ibm.com, brueckner@linux.ibm.com, songliubraving@fb.com, gregkh@linuxfoundation.org, kim.phillips@arm.com, James.Clark@arm.com, jeremy.linton@arm.com
 Cc: gengdongjiu@huawei.com, wxf.wang@hisilicon.com, liwei391@huawei.com, tanxiaojun@huawei.com, liuqi115@hisilicon.com, huawei.libin@huawei.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
-Profiling Extensions (SPE) support") is merged, "perf record" and
-"perf report --dump-raw-trace" have been supported. However, the
-raw data that is dumped cannot be used without parsing.
+At the suggestion of James Clark, use spe to support the precise
+ip of some events. Currently its support event is:
+branch-misses.
 
-This patchset is to improve the "perf report" support for spe, and
-further process the data. Currently, support for the three events
-of llc-miss, tlb-miss, branch-miss and remote-access is added.
+Example usage:
 
-The macro definition was modified under Jeremy's suggestion, and
-the "event:pp" approach was used under James' suggestion to achieve
-the precise ip of some events on arm64. Currently, only branch-misses
-are implemented, and other event support will be added later.
+$ ./perf record -e branch-misses:pp dd if=/dev/zero of=/dev/null count=10000
+(:p/pp/ppp is same for this case.)
 
-In addition, we also found that when recording large multi-threaded
-programs, ctrl + c could not end recording, so it was fixed and two
-patches were added.
+$ ./perf report --stdio
+("--stdio is not necessary")
 
-Tan Xiaojun (4):
-  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
-  perf tools: Add support for "report" for some spe events
-  perf report: Add --spe options for arm-spe
-  perf tools: Support "branch-misses:pp" on arm64
+--------------------------------------------------------------------
+...
+ # Samples: 14  of event 'branch-misses:pp'
+ # Event count (approx.): 14
+ #
+ # Children      Self  Command  Shared Object      Symbol
+ # ........  ........  .......  .................  ..........................
+ #
+    14.29%    14.29%  dd       [kernel.kallsyms]  [k] __arch_copy_from_user
+    14.29%    14.29%  dd       libc-2.28.so       [.] _dl_addr
+     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __free_pages
+     7.14%     7.14%  dd       [kernel.kallsyms]  [k] __pi_memcpy
+     7.14%     7.14%  dd       [kernel.kallsyms]  [k] pagecache_get_page
+     7.14%     7.14%  dd       [kernel.kallsyms]  [k] unmap_single_vma
+     7.14%     7.14%  dd       dd                 [.] 0x00000000000025ec
+     7.14%     7.14%  dd       ld-2.28.so         [.] _dl_lookup_symbol_x
+     7.14%     7.14%  dd       ld-2.28.so         [.] check_match
+     7.14%     7.14%  dd       libc-2.28.so       [.] __mpn_rshift
+     7.14%     7.14%  dd       libc-2.28.so       [.] _nl_intern_locale_data
+     7.14%     7.14%  dd       libc-2.28.so       [.] read_alias_file
+...
+--------------------------------------------------------------------
 
-Wei Li (2):
-  perf tools: add perf_evlist__terminate() for terminate
-  perf tools: arm-spe: fix record hang after being terminated
+Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Suggested-by: James Clark <James.Clark@arm.com>
+Tested-by: Qi Liu <liuqi115@hisilicon.com>
+---
+ tools/perf/util/arm-spe.c | 41 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/arm-spe.h |  3 +++
+ tools/perf/util/evlist.c  |  2 ++
+ 3 files changed, 46 insertions(+)
 
- tools/perf/Documentation/perf-report.txt      |  10 +
- tools/perf/arch/arm64/util/arm-spe.c          |  10 +-
- tools/perf/builtin-record.c                   |   1 +
- tools/perf/builtin-report.c                   |   5 +
- tools/perf/util/Build                         |   2 +-
- tools/perf/util/arm-spe-decoder/Build         |   1 +
- .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 +++++
- .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
- .../arm-spe-pkt-decoder.c                     |   0
- .../arm-spe-pkt-decoder.h                     |   2 +
- tools/perf/util/arm-spe.c                     | 788 +++++++++++++++++-
- tools/perf/util/arm-spe.h                     |   3 +
- tools/perf/util/auxtrace.c                    |  49 ++
- tools/perf/util/auxtrace.h                    |  29 +
- tools/perf/util/evlist.c                      |  16 +
- tools/perf/util/evlist.h                      |   1 +
- tools/perf/util/evsel.h                       |   1 +
- tools/perf/util/session.h                     |   2 +
- 18 files changed, 1169 insertions(+), 42 deletions(-)
- create mode 100644 tools/perf/util/arm-spe-decoder/Build
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
- create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
- rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
-
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index c99814c58745..0fcaefd386a6 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -35,6 +35,19 @@
+ 
+ #define MAX_TIMESTAMP (~0ULL)
+ 
++#define SPE_ATTR_TS_ENABLE		BIT(0)
++#define SPE_ATTR_PA_ENABLE		BIT(1)
++#define SPE_ATTR_PCT_ENABLE		BIT(2)
++#define SPE_ATTR_JITTER			BIT(16)
++#define SPE_ATTR_BRANCH_FILTER		BIT(32)
++#define SPE_ATTR_LOAD_FILTER		BIT(33)
++#define SPE_ATTR_STORE_FILTER		BIT(34)
++
++#define SPE_ATTR_EV_RETIRED		BIT(1)
++#define SPE_ATTR_EV_CACHE		BIT(3)
++#define SPE_ATTR_EV_TLB			BIT(5)
++#define SPE_ATTR_EV_BRANCH		BIT(7)
++
+ struct arm_spe {
+ 	struct auxtrace			auxtrace;
+ 	struct auxtrace_queues		queues;
+@@ -778,6 +791,15 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 	attr.sample_id_all = evsel->core.attr.sample_id_all;
+ 	attr.read_format = evsel->core.attr.read_format;
+ 
++	/* If it is in the precise ip mode, there is no need to
++	 * synthesize new events. */
++	if (!strncmp(evsel->name, "branch-misses", 13)) {
++		spe->sample_branch_miss = true;
++		spe->branch_miss_id = evsel->core.id[0];
++
++		return 0;
++	}
++
+ 	/* create new id val to be a fixed offset from evsel id */
+ 	id = evsel->core.id[0] + 1000000000;
+ 
+@@ -899,3 +921,22 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	free(spe);
+ 	return err;
+ }
++
++void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel)
++{
++	struct perf_pmu *pmu;
++
++	/* Currently only supports precise_ip for branch-misses on arm64 */
++	if (!strcmp(perf_env__arch(evlist->env), "arm64")
++			&& evsel->core.attr.config == PERF_COUNT_HW_BRANCH_MISSES
++			&& evsel->core.attr.precise_ip) {
++		pmu = perf_pmu__find("arm_spe_0");
++		if (pmu) {
++			evsel->pmu_name = pmu->name;
++			evsel->core.attr.type = pmu->type;
++			evsel->core.attr.config = SPE_ATTR_TS_ENABLE
++						| SPE_ATTR_BRANCH_FILTER;
++			evsel->core.attr.config1 = SPE_ATTR_EV_BRANCH;
++		}
++	}
++}
+diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
+index 98d3235781c3..8b1fb191d03a 100644
+--- a/tools/perf/util/arm-spe.h
++++ b/tools/perf/util/arm-spe.h
+@@ -20,6 +20,8 @@ enum {
+ union perf_event;
+ struct perf_session;
+ struct perf_pmu;
++struct evlist;
++struct evsel;
+ 
+ struct auxtrace_record *arm_spe_recording_init(int *err,
+ 					       struct perf_pmu *arm_spe_pmu);
+@@ -28,4 +30,5 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 				  struct perf_session *session);
+ 
+ struct perf_event_attr *arm_spe_pmu_default_config(struct perf_pmu *arm_spe_pmu);
++void arm_spe_precise_ip_support(struct evlist *evlist, struct evsel *evsel);
+ #endif
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 1548237b6558..b9c7e5271611 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -9,6 +9,7 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <poll.h>
++#include "arm-spe.h"
+ #include "cpumap.h"
+ #include "util/mmap.h"
+ #include "thread_map.h"
+@@ -179,6 +180,7 @@ void perf_evlist__splice_list_tail(struct evlist *evlist,
+ 	struct evsel *evsel, *temp;
+ 
+ 	__evlist__for_each_entry_safe(list, temp, evsel) {
++		arm_spe_precise_ip_support(evlist, evsel);
+ 		list_del_init(&evsel->core.node);
+ 		evlist__add(evlist, evsel);
+ 	}
 -- 
 2.17.1
