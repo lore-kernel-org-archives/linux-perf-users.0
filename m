@@ -1,70 +1,61 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
-Date: Wed, 18 Dec 2019 15:23:21 +0100
-Message-ID: <20191218142321.GB15571@krava>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
+ kernel maps
+Date: Wed, 18 Dec 2019 11:24:22 -0300
+Message-ID: <20191218142422.GE7095@redhat.com>
 References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-8-acme@kernel.org>
- <20191218080818.GD19062@krava>
- <20191218140831.GC13395@kernel.org>
+ <20191217144828.2460-13-acme@kernel.org>
+ <20191218090504.GE19062@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191218140831.GC13395@kernel.org>
+In-Reply-To: <20191218090504.GE19062@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Dec 18, 2019 at 11:08:31AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Dec 18, 2019 at 09:08:18AM +0100, Jiri Olsa escreveu:
-> > On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> > 
-> > SNIP
-> > 
-> > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > > index 6dfdd8d5a743..3b7af5a8d101 100644
-> > > --- a/tools/perf/ui/browsers/hists.c
-> > > +++ b/tools/perf/ui/browsers/hists.c
-> > > @@ -673,9 +673,8 @@ static int hist_browser__title(struct hist_browser *browser, char *bf, size_t si
-> > >  }
-> > >  
-> > >  int hist_browser__run(struct hist_browser *browser, const char *help,
-> > > -		      bool warn_lost_event)
-> > > +		      bool warn_lost_event, int key)
-> > >  {
-> > > -	int key;
-> > >  	char title[160];
-> > >  	struct hist_browser_timer *hbt = browser->hbt;
-> > >  	int delay_secs = hbt ? hbt->refresh : 0;
-> > > @@ -688,9 +687,12 @@ int hist_browser__run(struct hist_browser *browser, const char *help,
-> > >  	if (ui_browser__show(&browser->b, title, "%s", help) < 0)
-> > >  		return -1;
-> > >  
-> > > +	if (key)
-> > > +		goto do_hotkey;
-> > > +
-> > >  	while (1) {
-> > >  		key = ui_browser__run(&browser->b, delay_secs);
-> > > -
-> > > +do_hotkey:
-> > 
-> > or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
-> > 
-> > 	while (1) {
-> >   		switch (key) {
-> > 		...
-> > 		}
-> > 
-> > 		key = ui_browser__run(&browser->b, delay_secs);
-> > 	}
+Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
+> On Tue, Dec 17, 2019 at 11:48:28AM -0300, Arnaldo Carvalho de Melo wrote:
 > 
-> I think those are equivalent and having the test like I did is more
-> clear, i.e. "has this key been provided" instead of going to the switch
-> just to hit the default case for the zero in key and call
-> ui_browser__run().
+> SNIP
+> 
+> > +	machine->vmlinux_map = map__new2(0, kernel, &machine->kmaps);
+> >  	if (machine->vmlinux_map == NULL)
+> >  		return -1;
+> >  
+> > @@ -1098,7 +1097,6 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
+> >  	if (!kmap)
+> >  		return -1;
+> >  
+> > -	kmap->kmaps = &machine->kmaps;
+> >  	maps__insert(&machine->kmaps, map);
+> >  
+> >  	return 0;
+> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> > index fdd5bddb3075..a2cdfe62df94 100644
+> > --- a/tools/perf/util/map.c
+> > +++ b/tools/perf/util/map.c
+> > @@ -223,7 +223,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
+> >   * they are loaded) and for vmlinux, where only after we load all the
+> >   * symbols we'll know where it starts and ends.
+> >   */
+> > -struct map *map__new2(u64 start, struct dso *dso)
+> > +struct map *map__new2(u64 start, struct dso *dso, struct maps *kmaps)
+> >  {
+> >  	struct map *map = calloc(1, (sizeof(*map) +
+> >  				     (dso->kernel ? sizeof(struct kmap) : 0)));
+> > @@ -232,6 +232,19 @@ struct map *map__new2(u64 start, struct dso *dso)
+> >  		 * ->end will be filled after we load all the symbols
+> >  		 */
+> >  		map__init(map, start, 0, 0, dso);
+> 
+> we are passing NULL for kmaps in some cases,
+> should we check it in here and warn?
+> 
+> 		if (!WARN_ON_ONCE(!kmaps, "too bad..") && dso->kernel)
 
-sure, I just don't like goto other than for error handling,
-looks too hacky to me ;-) but of course it's your call
+I'll add that, yeah
 
-jirka
+- Arnaldo
