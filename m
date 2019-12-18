@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
  kernel maps
-Date: Wed, 18 Dec 2019 10:05:04 +0100
-Message-ID: <20191218090504.GE19062@krava>
+Date: Wed, 18 Dec 2019 10:07:07 +0100
+Message-ID: <20191218090707.GF19062@krava>
 References: <20191217144828.2460-1-acme@kernel.org>
  <20191217144828.2460-13-acme@kernel.org>
 Mime-Version: 1.0
@@ -19,9 +19,6 @@ On Tue, Dec 17, 2019 at 11:48:28AM -0300, Arnaldo Carvalho de Melo wrote:
 
 SNIP
 
-> +	machine->vmlinux_map = map__new2(0, kernel, &machine->kmaps);
->  	if (machine->vmlinux_map == NULL)
->  		return -1;
 >  
 > @@ -1098,7 +1097,6 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
 >  	if (!kmap)
@@ -41,18 +38,7 @@ SNIP
 >   */
 > -struct map *map__new2(u64 start, struct dso *dso)
 > +struct map *map__new2(u64 start, struct dso *dso, struct maps *kmaps)
->  {
->  	struct map *map = calloc(1, (sizeof(*map) +
->  				     (dso->kernel ? sizeof(struct kmap) : 0)));
-> @@ -232,6 +232,19 @@ struct map *map__new2(u64 start, struct dso *dso)
->  		 * ->end will be filled after we load all the symbols
->  		 */
->  		map__init(map, start, 0, 0, dso);
 
-we are passing NULL for kmaps in some cases,
-should we check it in here and warn?
-
-		if (!WARN_ON_ONCE(!kmaps, "too bad..") && dso->kernel)
-			
+hum, how about map__new? kernel maps could go throught that as well, right?
 
 jirka
