@@ -1,75 +1,70 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
  kernel maps
-Date: Wed, 18 Dec 2019 15:22:54 -0300
-Message-ID: <20191218182254.GA13282@kernel.org>
+Date: Wed, 18 Dec 2019 16:01:20 -0300
+Message-ID: <20191218190120.GB13282@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
  <20191217144828.2460-13-acme@kernel.org>
  <20191218090504.GE19062@krava>
+ <20191218182254.GA13282@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191218090504.GE19062@krava>
+In-Reply-To: <20191218182254.GA13282@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
-> On Tue, Dec 17, 2019 at 11:48:28AM -0300, Arnaldo Carvalho de Melo wrote:
-> 
-> SNIP
-> 
-> > +	machine->vmlinux_map = map__new2(0, kernel, &machine->kmaps);
-> >  	if (machine->vmlinux_map == NULL)
-> >  		return -1;
-> >  
-> > @@ -1098,7 +1097,6 @@ __machine__create_kernel_maps(struct machine *machine, struct dso *kernel)
-> >  	if (!kmap)
-> >  		return -1;
-> >  
-> > -	kmap->kmaps = &machine->kmaps;
-> >  	maps__insert(&machine->kmaps, map);
-> >  
-> >  	return 0;
-> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > index fdd5bddb3075..a2cdfe62df94 100644
-> > --- a/tools/perf/util/map.c
-> > +++ b/tools/perf/util/map.c
-> > @@ -223,7 +223,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
-> >   * they are loaded) and for vmlinux, where only after we load all the
-> >   * symbols we'll know where it starts and ends.
-> >   */
-> > -struct map *map__new2(u64 start, struct dso *dso)
-> > +struct map *map__new2(u64 start, struct dso *dso, struct maps *kmaps)
-> >  {
-> >  	struct map *map = calloc(1, (sizeof(*map) +
-> >  				     (dso->kernel ? sizeof(struct kmap) : 0)));
-> > @@ -232,6 +232,19 @@ struct map *map__new2(u64 start, struct dso *dso)
-> >  		 * ->end will be filled after we load all the symbols
-> >  		 */
-> >  		map__init(map, start, 0, 0, dso);
-> 
-> we are passing NULL for kmaps in some cases,
-> should we check it in here and warn?
-> 
-> 		if (!WARN_ON_ONCE(!kmaps, "too bad..") && dso->kernel)
+Em Wed, Dec 18, 2019 at 03:22:54PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
+> After looking at this some more, I retract this patch and instead the
+> two-liner at the end of this message seems enough.
 
-After looking at this some more, I retract this patch and instead the
-two-liner at the end of this message seems enough.
-
-I forgot the dso->kernel is just set for the main kernel map, and what
-dso__process_kernel_symbol is doing is to split that map into chunks for
-the ELF sections for the main kernel map, as an extra tidbit of
-information, i.e. that symbol is in a specific main kernel section, so
-its dso->kernel continues being set and thus it expects the kmap area to
-be in place.
-
-There is space for simplification in this old code, but for now the
-safest is just the patch below, agreed?
+So here is the full cset, I have not made changes to the other patches,
 
 - Arnaldo
+
+commit 178427a192bcbe3ad93dd0637c3dceaa3ccef31e
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Wed Dec 18 15:23:14 2019 -0300
+
+    perf map: Set kmap->kmaps backpointer for main kernel map chunks
+    
+    When a map is create to represent the main kernel area (vmlinux) with
+    map__new2() we allocate an extra area to store a pointer to the 'struct
+    maps' for the kernel maps, so that we can access that struct when
+    loading ELF files or kallsyms, as we will need to split it in multiple
+    maps, one per kernel module or ELF section (such as ".init.text").
+    
+    So when map->dso->kernel is non-zero, it is expected that
+    map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
+    chunks of the main kernel, bpf progs put in place via
+    PERF_RECORD_KSYMBOL, the main kernel).
+    
+    This was not the case when we were splitting the main kernel into chunks
+    for its ELF sections, which ended up making 'perf report --children'
+    processing a perf.data file with callchains to trip on
+    __map__is_kernel(), when we press ENTER to see the popup menu for main
+    histogram entries that starts at a symbol in the ".init.text" ELF
+    section, e.g.:
+    
+    -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
+         start_kernel
+         cpu_startup_entry
+         do_idle
+         cpuidle_enter
+         cpuidle_enter_state
+         intel_idle
+    
+    Fix it.
+    
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Link: https://lkml.kernel.org/n/tip-vcokue57w4goyzweg2rr5i80@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
 index 6658fbf196e6..1965aefccb02 100644
