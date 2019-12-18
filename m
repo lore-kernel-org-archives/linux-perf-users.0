@@ -1,8 +1,8 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
  kernel maps
-Date: Wed, 18 Dec 2019 11:24:22 -0300
-Message-ID: <20191218142422.GE7095@redhat.com>
+Date: Wed, 18 Dec 2019 15:22:54 -0300
+Message-ID: <20191218182254.GA13282@kernel.org>
 References: <20191217144828.2460-1-acme@kernel.org>
  <20191217144828.2460-13-acme@kernel.org>
  <20191218090504.GE19062@krava>
@@ -13,7 +13,7 @@ Content-Disposition: inline
 In-Reply-To: <20191218090504.GE19062@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
@@ -56,6 +56,32 @@ Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
 > 
 > 		if (!WARN_ON_ONCE(!kmaps, "too bad..") && dso->kernel)
 
-I'll add that, yeah
+After looking at this some more, I retract this patch and instead the
+two-liner at the end of this message seems enough.
+
+I forgot the dso->kernel is just set for the main kernel map, and what
+dso__process_kernel_symbol is doing is to split that map into chunks for
+the ELF sections for the main kernel map, as an extra tidbit of
+information, i.e. that symbol is in a specific main kernel section, so
+its dso->kernel continues being set and thus it expects the kmap area to
+be in place.
+
+There is space for simplification in this old code, but for now the
+safest is just the patch below, agreed?
 
 - Arnaldo
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 6658fbf196e6..1965aefccb02 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -920,6 +920,9 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		if (curr_map == NULL)
+ 			return -1;
+ 
++		if (curr_dso->kernel)
++			map__kmap(curr_map)->kmaps = kmaps;
++
+ 		if (adjust_kernel_syms) {
+ 			curr_map->start  = shdr->sh_addr + ref_reloc(kmap);
+ 			curr_map->end	 = curr_map->start + shdr->sh_size;
