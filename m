@@ -1,80 +1,89 @@
-From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
-Subject: Re: [PATCH v4 4/9] drm/i915/perf: open access for CAP_SYS_PERFMON
- privileged process
-Date: Thu, 19 Dec 2019 11:10:29 +0200
-Message-ID: <d5f908f3-b545-7953-8c72-ceb7177609d3@intel.com>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <ea050255-a125-8831-ce91-ee23bd6ad08b@linux.intel.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 12/12] perf maps: Set maps pointer in the kmap area for
+ kernel maps
+Date: Thu, 19 Dec 2019 10:24:14 +0100
+Message-ID: <20191219092414.GC8141@krava>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-13-acme@kernel.org>
+ <20191218090504.GE19062@krava>
+ <20191218182254.GA13282@kernel.org>
+ <20191218190120.GB13282@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ea050255-a125-8831-ce91-ee23bd6ad08b@linux.intel.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20191218190120.GB13282@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufl>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, Song Liu <songliubraving@fb.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 18/12/2019 11:27, Alexey Budankov wrote:
-> Open access to i915_perf monitoring for CAP_SYS_PERFMON privileged
-> processes. For backward compatibility reasons access to i915_perf
-> subsystem remains open for CAP_SYS_ADMIN privileged processes but
-> CAP_SYS_ADMIN usage for secure i915_perf monitoring is discouraged
-> with respect to CAP_SYS_PERFMON capability.
->
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+On Wed, Dec 18, 2019 at 04:01:20PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Dec 18, 2019 at 03:22:54PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Wed, Dec 18, 2019 at 10:05:04AM +0100, Jiri Olsa escreveu:
+> > After looking at this some more, I retract this patch and instead the
+> > two-liner at the end of this message seems enough.
+> 
+> So here is the full cset, I have not made changes to the other patches,
+> 
+> - Arnaldo
+> 
+> commit 178427a192bcbe3ad93dd0637c3dceaa3ccef31e
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date:   Wed Dec 18 15:23:14 2019 -0300
+> 
+>     perf map: Set kmap->kmaps backpointer for main kernel map chunks
+>     
+>     When a map is create to represent the main kernel area (vmlinux) with
+>     map__new2() we allocate an extra area to store a pointer to the 'struct
+>     maps' for the kernel maps, so that we can access that struct when
+>     loading ELF files or kallsyms, as we will need to split it in multiple
+>     maps, one per kernel module or ELF section (such as ".init.text").
+>     
+>     So when map->dso->kernel is non-zero, it is expected that
+>     map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
+>     chunks of the main kernel, bpf progs put in place via
+>     PERF_RECORD_KSYMBOL, the main kernel).
+>     
+>     This was not the case when we were splitting the main kernel into chunks
+>     for its ELF sections, which ended up making 'perf report --children'
+>     processing a perf.data file with callchains to trip on
+>     __map__is_kernel(), when we press ENTER to see the popup menu for main
+>     histogram entries that starts at a symbol in the ".init.text" ELF
+>     section, e.g.:
+>     
+>     -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
+>          start_kernel
+>          cpu_startup_entry
+>          do_idle
+>          cpuidle_enter
+>          cpuidle_enter_state
+>          intel_idle
+>     
+>     Fix it.
+>     
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Jiri Olsa <jolsa@kernel.org>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Link: https://lkml.kernel.org/n/tip-vcokue57w4goyzweg2rr5i80@git.kernel.org
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 6658fbf196e6..1965aefccb02 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -920,6 +920,9 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+>  		if (curr_map == NULL)
+>  			return -1;
+>  
+> +		if (curr_dso->kernel)
+> +			map__kmap(curr_map)->kmaps = kmaps;
+> +
+>  		if (adjust_kernel_syms) {
+>  			curr_map->start  = shdr->sh_addr + ref_reloc(kmap);
+>  			curr_map->end	 = curr_map->start + shdr->sh_size;
+> 
 
-Acked-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+looks good ;-)
 
-> ---
->   drivers/gpu/drm/i915/i915_perf.c | 13 ++++++-------
->   1 file changed, 6 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
-> index e42b86827d6b..e2697f8d04de 100644
-> --- a/drivers/gpu/drm/i915/i915_perf.c
-> +++ b/drivers/gpu/drm/i915/i915_perf.c
-> @@ -2748,10 +2748,10 @@ i915_perf_open_ioctl_locked(struct drm_i915_private *dev_priv,
->   	/* Similar to perf's kernel.perf_paranoid_cpu sysctl option
->   	 * we check a dev.i915.perf_stream_paranoid sysctl option
->   	 * to determine if it's ok to access system wide OA counters
-> -	 * without CAP_SYS_ADMIN privileges.
-> +	 * without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges.
->   	 */
->   	if (privileged_op &&
-> -	    i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
-> +	    i915_perf_stream_paranoid && !perfmon_capable()) {
->   		DRM_DEBUG("Insufficient privileges to open system-wide i915 perf stream\n");
->   		ret = -EACCES;
->   		goto err_ctx;
-> @@ -2939,9 +2939,8 @@ static int read_properties_unlocked(struct drm_i915_private *dev_priv,
->   			} else
->   				oa_freq_hz = 0;
->   
-> -			if (oa_freq_hz > i915_oa_max_sample_rate &&
-> -			    !capable(CAP_SYS_ADMIN)) {
-> -				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without root privileges\n",
-> +			if (oa_freq_hz > i915_oa_max_sample_rate && !perfmon_capable()) {
-> +				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges\n",
->   					  i915_oa_max_sample_rate);
->   				return -EACCES;
->   			}
-> @@ -3328,7 +3327,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
->   		return -EINVAL;
->   	}
->   
-> -	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
-> +	if (i915_perf_stream_paranoid && !perfmon_capable()) {
->   		DRM_DEBUG("Insufficient privileges to add i915 OA config\n");
->   		return -EACCES;
->   	}
-> @@ -3474,7 +3473,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
->   		return -ENOTSUPP;
->   	}
->   
-> -	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
-> +	if (i915_perf_stream_paranoid && !perfmon_capable()) {
->   		DRM_DEBUG("Insufficient privileges to remove i915 OA config\n");
->   		return -EACCES;
->   	}
+jirka
