@@ -1,102 +1,124 @@
-From: Stephen Smalley <sds@tycho.nsa.gov>
-Subject: Re: [PATCH v4 1/9] capabilities: introduce CAP_SYS_PERFMON to kernel
- and user space
-Date: Wed, 18 Dec 2019 14:56:33 -0500
-Message-ID: <c10d7785-1e75-4503-3560-99ab9f845a11@tycho.nsa.gov>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
+From: Qi Liu <liuqi115@huawei.com>
+Subject: [PATCH v2] Perf stat: Fix the ratio comments of miss-events
+Date: Thu, 19 Dec 2019 11:00:01 +0800
+Message-ID: <1576724401-30984-1-git-send-email-liuqi115@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufl>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Song Liu <songliubraving@fb.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, ak@linux.intel.com
+Cc: arnaldo.melo@gmail.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linuxarm@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On 12/18/19 4:24 AM, Alexey Budankov wrote:
-> 
-> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
-> monitoring and observability operations so that CAP_SYS_PERFMON would
-> assist CAP_SYS_ADMIN capability in its governing role for perf_events,
-> i915_perf and other subsystems of the kernel.
-> 
-> CAP_SYS_PERFMON intends to harden system security and integrity during
-> system performance monitoring and observability operations by decreasing
-> attack surface that is available to CAP_SYS_ADMIN privileged processes.
-> 
-> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related
-> to system performance monitoring and observability operations and balance
-> amount of CAP_SYS_ADMIN credentials in accordance with the recommendations
-> provided in the man page for CAP_SYS_ADMIN [1]: "Note: this capability
-> is overloaded; see Notes to kernel developers, below."
-> 
-> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
+iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
+is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
+L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
+accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
+cache and LL-cache are fixed in the same way.
 
-Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+Signed-off-by: Qi Liu <liuqi115@huawei.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+---
+Changelog
+v2: Fix the format issue
 
-Note for selinux developers: we will need to update the 
-selinux-testsuite tests for perf_event when/if this change lands upstream.
+ tools/perf/util/stat-shadow.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-> ---
->   include/linux/capability.h          | 4 ++++
->   include/uapi/linux/capability.h     | 8 +++++++-
->   security/selinux/include/classmap.h | 4 ++--
->   3 files changed, 13 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/capability.h b/include/linux/capability.h
-> index ecce0f43c73a..883c879baa4b 100644
-> --- a/include/linux/capability.h
-> +++ b/include/linux/capability.h
-> @@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
->   extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
->   extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
->   extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
-> +static inline bool perfmon_capable(void)
-> +{
-> +	return capable(CAP_SYS_PERFMON) || capable(CAP_SYS_ADMIN);
-> +}
->   
->   /* audit system wants to get cap info from files as well */
->   extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
-> diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
-> index 240fdb9a60f6..98e03cc76c7c 100644
-> --- a/include/uapi/linux/capability.h
-> +++ b/include/uapi/linux/capability.h
-> @@ -366,8 +366,14 @@ struct vfs_ns_cap_data {
->   
->   #define CAP_AUDIT_READ		37
->   
-> +/*
-> + * Allow system performance and observability privileged operations
-> + * using perf_events, i915_perf and other kernel subsystems
-> + */
-> +
-> +#define CAP_SYS_PERFMON		38
->   
-> -#define CAP_LAST_CAP         CAP_AUDIT_READ
-> +#define CAP_LAST_CAP         CAP_SYS_PERFMON
->   
->   #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
->   
-> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
-> index 7db24855e12d..bae602c623b0 100644
-> --- a/security/selinux/include/classmap.h
-> +++ b/security/selinux/include/classmap.h
-> @@ -27,9 +27,9 @@
->   	    "audit_control", "setfcap"
->   
->   #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
-> -		"wake_alarm", "block_suspend", "audit_read"
-> +		"wake_alarm", "block_suspend", "audit_read", "sys_perfmon"
->   
-> -#if CAP_LAST_CAP > CAP_AUDIT_READ
-> +#if CAP_LAST_CAP > CAP_SYS_PERFMON
->   #error New capability defined, please update COMMON_CAP2_PERMS.
->   #endif
->   
-> 
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 2c41d47..28f4470 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -506,7 +506,7 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
+
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
+ }
+
+ static void print_l1_icache_misses(struct perf_stat_config *config,
+@@ -527,7 +527,7 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache accesses", ratio);
+ }
+
+ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+@@ -547,7 +547,7 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache accesses", ratio);
+ }
+
+ static void print_itlb_cache_misses(struct perf_stat_config *config,
+@@ -567,7 +567,7 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache accesses", ratio);
+ }
+
+ static void print_ll_cache_misses(struct perf_stat_config *config,
+@@ -587,7 +587,7 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
+ 		ratio = avg / total * 100.0;
+
+ 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
+-	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
++	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache accesses", ratio);
+ }
+
+ /*
+@@ -872,7 +872,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
+ 			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
++			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
+@@ -882,7 +882,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
+ 			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
++			print_metric(config, ctxp, NULL, NULL, "of all L1-icache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
+@@ -892,7 +892,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
+ 			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
++			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
+@@ -902,7 +902,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
+ 			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
++			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache accesses", 0);
+ 	} else if (
+ 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
+ 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
+@@ -912,7 +912,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
+ 			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
+ 		else
+-			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
++			print_metric(config, ctxp, NULL, NULL, "of all LL-cache accesses", 0);
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
+ 		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
+
+--
+2.8.1
