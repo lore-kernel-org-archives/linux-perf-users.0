@@ -1,171 +1,237 @@
 From: Ivan Babrou <ivan@cloudflare.com>
 Subject: Re: perf is unable to read dward from go programs
-Date: Thu, 19 Dec 2019 15:38:41 -0800
-Message-ID: <CABWYdi2VugwNhJ6TBr4j7FUJi_uSk6__qu0PKAmW-H9MdoEkpw@mail.gmail.com>
+Date: Thu, 19 Dec 2019 15:57:54 -0800
+Message-ID: <CABWYdi016dTvk-6cBTDEc+Bo5TVGiO9n5eK6LQ5q2WL9jz6PDQ@mail.gmail.com>
 References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
  <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
  <20191129134929.GA26903@krava> <20191129151436.GB26963@kernel.org>
- <CABWYdi19LmOHC0Ect-8vNXz0uF2tNC1XmDQfMn0fmYOt2yJH9w@mail.gmail.com> <20191203102234.GE17468@krava>
+ <CABWYdi19LmOHC0Ect-8vNXz0uF2tNC1XmDQfMn0fmYOt2yJH9w@mail.gmail.com>
+ <20191203102234.GE17468@krava> <CABWYdi2VugwNhJ6TBr4j7FUJi_uSk6__qu0PKAmW-H9MdoEkpw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191203102234.GE17468@krava>
+In-Reply-To: <CABWYdi2VugwNhJ6TBr4j7FUJi_uSk6__qu0PKAmW-H9MdoEkpw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
 Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, kernel-team <kernel-team@cloudflare.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-At first I thought it was related to C/Go interaction, but it looks
-even easier to trigger.
+Found a reproducer for missing /tmp/perf-XXX frames:
 
-Ok, I have a reproduction for both random dwarf versions and for
-uncached binary symbol resolution:
-
-$ cat /tmp/main.go
-package main
-
-func main() {
-  for {
-    src := make([]byte, 100*1024*1024)
-    dst := make([]byte, len(src))
-    copy(dst, src)
-  }
+$ cat hello.java
+class HelloWorld {
+    public static void main(String args[]) {
+        for (long i = 0; ; i++) {}
+    }
 }
 
-Compile and run it:
+Compile it:
 
-$ go build -o /tmp/memmove /tmp/main.go && /tmp/memmove
+$ javac hello.java
 
-Then record a trace:
+Run it:
 
-$ sudo perf record -p $(pidof memmove) --call-graph dwarf -- sleep 1
+$ java HelloWorld
 
-Getting stack traces generates warnings:
+Trace it with libdw:
 
-$ sudo perf script > /dev/null
-BFD: Dwarf Error: found dwarf version '376', this reader only handles
-version 2, 3 and 4 information.
-BFD: Dwarf Error: found dwarf version '31863', this reader only
-handles version 2, 3 and 4 information.
-BFD: Dwarf Error: found dwarf version '65267', this reader only
-handles version 2, 3 and 4 information.
-BFD: Dwarf Error: found dwarf version '33833', this reader only
-handles version 2, 3 and 4 information.
-BFD: Dwarf Error: found dwarf version '41392', this reader only
-handles version 2, 3 and 4 information.
+$ sudo perf record -p $(pidof java) --call-graph dwarf -- sleep 1
 
-Here's an example of raw perf script output where it generates the warning:
+Observe traces in perf script not having any frames:
 
-memmove 254821 125950.754906:     174236 cycles: BFD: Dwarf Error:
-found dwarf version '33833', this reader only handles version 2, 3 and
-4 information.
+java 61467 127535.601549:     149893 cycles:
 
-                  44d549 runtime.memmove+0x4d9 (/tmp/memmove)
-                  452644 main.main+0x94 (/tmp/memmove)
-                  42668d runtime.main+0x21d (/tmp/memmove)
-                  44bef0 runtime.goexit+0x0 (/tmp/memmove)
+java 61467 127535.601602:     606223 cycles:
 
-Timed execution shows quite a bit of time spent:
+java 61467 127535.601802:     890579 cycles:
 
-$ time sudo perf script > /dev/null
-... whole bunch of warnings about dwarf version here ..
+java 61467 127535.602158:     840878 cycles:
 
-real 0m24.356s
-user 0m23.617s
-sys 0m0.723s
+java 61467 127535.602453:     809547 cycles:
 
-And you can see object files being open over and over again:
+java 61467 127535.602718:     794099 cycles:
 
-$ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_open,
-tracepoint:syscalls:sys_enter_openat {
-@filename[str(args->filename)]++ }'
-... some unrelated files here ...
-@filename[/lib/x86_64-linux-gnu/libpcre.so.3]: 595
-@filename[/usr/lib/locale/locale-archive]: 625
-@filename[/lib/x86_64-linux-gnu/libpthread.so.0]: 789
-@filename[/lib/x86_64-linux-gnu/libdl.so.2]: 838
-@filename[/var/log/journal/0bc45a9309f7404586bcddee0d45bf9d/system.journa]: 1044
-@filename[/lib/x86_64-linux-gnu/libc.so.6]: 1273
-@filename[/etc/ld.so.cache]: 1501
-@filename[/usr/lib/x86_64-linux-gnu/../lib/x86_64-linux-gnu/elfutils/libe]: 5784
-@filename[/usr/lib/x86_64-linux-gnu/elfutils/libebl_x86_64.so]: 5784
-@filename[/tmp/memmove]: 5789
+java 61467 127535.602981:     777283 cycles:
 
-I'm going to guess that anything open for 5000+ times is related to
-perf script run, as I can also see those in strace.
+Now trace it with libunwind:
 
-This is on Debian Stretch and Linux 5.4.5 (perf is from 5.4.5 as well).
+$ sudo perf record -p $(pidof java) --call-graph dwarf -- sleep 1
 
-This should cover points 2 and 3, I'll have to get back to you on
-points 4 and 5, but those are separate.
+And observe traces with /tmp/perf-XXX:
 
-On Tue, Dec 3, 2019 at 2:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
+java 61467 127583.896584:     118386 cycles:
+            7fcd55342ce8 [unknown] (/tmp/perf-61466.map)
+
+java 61467 127583.896626:     537046 cycles:
+            7fcd55342d17 [unknown] (/tmp/perf-61466.map)
+
+java 61467 127583.896804:     866323 cycles:
+            7fcd55342ce8 [unknown] (/tmp/perf-61466.map)
+
+java 61467 127583.897091:     825548 cycles:
+            7fcd55342d17 [unknown] (/tmp/perf-61466.map)
+
+java 61467 127583.897361:     812276 cycles:
+            7fcd55342d17 [unknown] (/tmp/perf-61466.map)
+
+java 61467 127583.897627:     804520 cycles:
+            7fcd55342ce5 [unknown] (/tmp/perf-61466.map)
+
+This should cover all issues I mentioned.
+
+On Thu, Dec 19, 2019 at 3:38 PM Ivan Babrou <ivan@cloudflare.com> wrote:
 >
-> On Mon, Dec 02, 2019 at 11:49:55AM -0800, Ivan Babrou wrote:
-> > I've tried building with libdw with mixed results:
-> >
-> > 1. I can see stacks from some Go programs that were invisible before (yay!)
-> >
-> > 2. Warnings like below still appear in great numbers for a system-wide
-> > flamegraph:
-> >
-> > BFD: Dwarf Error: found dwarf version '18345', this reader only
-> > handles version 2, 3 and 4 information.
-> >
-> > I'm not sure how to pinpoint this to a particular binary and would
-> > appreciate some help with this.
+> At first I thought it was related to C/Go interaction, but it looks
+> even easier to trigger.
 >
-> I'd need some way of reproducing this, could you please
-> paste me command lines you used?
+> Ok, I have a reproduction for both random dwarf versions and for
+> uncached binary symbol resolution:
 >
-> >
-> > 3. It takes minutes to produce a flamegraph of a running system
-> > whereas before it only took seconds. See this flamegraph of "perf
-> > script" itself:
-> >
-> > * https://gist.github.com/bobrik/a9c46cffe9daa5840abd137443d8bab0#file-flamegraph-perf-svg
-> >
-> > Seems like there is no caching and debug info is getting reparsed
-> > continuously for every stack. It's possible that it was not an issue
-> > before, because we spent no time decompressing dwarf.
+> $ cat /tmp/main.go
+> package main
 >
-> possibly, if we have some clear reproducer we can hand it
-> to the libdw guy that helped us develop this
+> func main() {
+>   for {
+>     src := make([]byte, 100*1024*1024)
+>     dst := make([]byte, len(src))
+>     copy(dst, src)
+>   }
+> }
 >
-> >
-> > 4. Pretty much all luajit frames stacks that were marked as unknown
-> > before are now gone.
-> >
-> > See before and after here: https://imgur.com/a/1LNfqAk
-> >
-> > Before:
-> >
-> > nginx-cache 94572 446642.722028:   10101010 cpu-clock:
-> >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
-> >             5607d8d5a09d ngx_http_lua_ffi_shdict_incr+0xcd
-> > (/usr/local/nginx-cache/sbin/nginx-cache)
-> >             560802fe58e4 [unknown] (/tmp/perf-94572.map)
-> >
-> > After:
-> >
-> > nginx-cache 94572 446543.008703:   10101010 cpu-clock:
-> >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
-> >             5607d8d59da7 ngx_http_lua_ffi_shdict_get+0x197
-> > (/usr/local/nginx-cache/sbin/nginx-cache)
-> >
-> > The key is /tmp/perf-*.map frame at the bottom. I don't know if it's
-> > expected, but we grew dependent on knowing this.
-> >
-> > 5. Special [[stack]], [[heap]] and [anon] frames are also gone, and
-> > you can see the following during "perf script" run:
-> >
-> > open("[stack]", O_RDONLY)               = -1 ENOENT (No such file or directory)
-> > open("[heap]", O_RDONLY)                = -1 ENOENT (No such file or directory)
-> > open("//anon", O_RDONLY)                = -1 ENOENT (No such file or directory)
+> Compile and run it:
 >
-> strange, let's start with the reproducer and I'll check
-> on this if I see it
+> $ go build -o /tmp/memmove /tmp/main.go && /tmp/memmove
 >
-> thanks,
-> jirka
+> Then record a trace:
 >
+> $ sudo perf record -p $(pidof memmove) --call-graph dwarf -- sleep 1
+>
+> Getting stack traces generates warnings:
+>
+> $ sudo perf script > /dev/null
+> BFD: Dwarf Error: found dwarf version '376', this reader only handles
+> version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '31863', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '65267', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '33833', this reader only
+> handles version 2, 3 and 4 information.
+> BFD: Dwarf Error: found dwarf version '41392', this reader only
+> handles version 2, 3 and 4 information.
+>
+> Here's an example of raw perf script output where it generates the warning:
+>
+> memmove 254821 125950.754906:     174236 cycles: BFD: Dwarf Error:
+> found dwarf version '33833', this reader only handles version 2, 3 and
+> 4 information.
+>
+>                   44d549 runtime.memmove+0x4d9 (/tmp/memmove)
+>                   452644 main.main+0x94 (/tmp/memmove)
+>                   42668d runtime.main+0x21d (/tmp/memmove)
+>                   44bef0 runtime.goexit+0x0 (/tmp/memmove)
+>
+> Timed execution shows quite a bit of time spent:
+>
+> $ time sudo perf script > /dev/null
+> ... whole bunch of warnings about dwarf version here ..
+>
+> real 0m24.356s
+> user 0m23.617s
+> sys 0m0.723s
+>
+> And you can see object files being open over and over again:
+>
+> $ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_open,
+> tracepoint:syscalls:sys_enter_openat {
+> @filename[str(args->filename)]++ }'
+> ... some unrelated files here ...
+> @filename[/lib/x86_64-linux-gnu/libpcre.so.3]: 595
+> @filename[/usr/lib/locale/locale-archive]: 625
+> @filename[/lib/x86_64-linux-gnu/libpthread.so.0]: 789
+> @filename[/lib/x86_64-linux-gnu/libdl.so.2]: 838
+> @filename[/var/log/journal/0bc45a9309f7404586bcddee0d45bf9d/system.journa]: 1044
+> @filename[/lib/x86_64-linux-gnu/libc.so.6]: 1273
+> @filename[/etc/ld.so.cache]: 1501
+> @filename[/usr/lib/x86_64-linux-gnu/../lib/x86_64-linux-gnu/elfutils/libe]: 5784
+> @filename[/usr/lib/x86_64-linux-gnu/elfutils/libebl_x86_64.so]: 5784
+> @filename[/tmp/memmove]: 5789
+>
+> I'm going to guess that anything open for 5000+ times is related to
+> perf script run, as I can also see those in strace.
+>
+> This is on Debian Stretch and Linux 5.4.5 (perf is from 5.4.5 as well).
+>
+> This should cover points 2 and 3, I'll have to get back to you on
+> points 4 and 5, but those are separate.
+>
+> On Tue, Dec 3, 2019 at 2:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Mon, Dec 02, 2019 at 11:49:55AM -0800, Ivan Babrou wrote:
+> > > I've tried building with libdw with mixed results:
+> > >
+> > > 1. I can see stacks from some Go programs that were invisible before (yay!)
+> > >
+> > > 2. Warnings like below still appear in great numbers for a system-wide
+> > > flamegraph:
+> > >
+> > > BFD: Dwarf Error: found dwarf version '18345', this reader only
+> > > handles version 2, 3 and 4 information.
+> > >
+> > > I'm not sure how to pinpoint this to a particular binary and would
+> > > appreciate some help with this.
+> >
+> > I'd need some way of reproducing this, could you please
+> > paste me command lines you used?
+> >
+> > >
+> > > 3. It takes minutes to produce a flamegraph of a running system
+> > > whereas before it only took seconds. See this flamegraph of "perf
+> > > script" itself:
+> > >
+> > > * https://gist.github.com/bobrik/a9c46cffe9daa5840abd137443d8bab0#file-flamegraph-perf-svg
+> > >
+> > > Seems like there is no caching and debug info is getting reparsed
+> > > continuously for every stack. It's possible that it was not an issue
+> > > before, because we spent no time decompressing dwarf.
+> >
+> > possibly, if we have some clear reproducer we can hand it
+> > to the libdw guy that helped us develop this
+> >
+> > >
+> > > 4. Pretty much all luajit frames stacks that were marked as unknown
+> > > before are now gone.
+> > >
+> > > See before and after here: https://imgur.com/a/1LNfqAk
+> > >
+> > > Before:
+> > >
+> > > nginx-cache 94572 446642.722028:   10101010 cpu-clock:
+> > >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
+> > >             5607d8d5a09d ngx_http_lua_ffi_shdict_incr+0xcd
+> > > (/usr/local/nginx-cache/sbin/nginx-cache)
+> > >             560802fe58e4 [unknown] (/tmp/perf-94572.map)
+> > >
+> > > After:
+> > >
+> > > nginx-cache 94572 446543.008703:   10101010 cpu-clock:
+> > >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
+> > >             5607d8d59da7 ngx_http_lua_ffi_shdict_get+0x197
+> > > (/usr/local/nginx-cache/sbin/nginx-cache)
+> > >
+> > > The key is /tmp/perf-*.map frame at the bottom. I don't know if it's
+> > > expected, but we grew dependent on knowing this.
+> > >
+> > > 5. Special [[stack]], [[heap]] and [anon] frames are also gone, and
+> > > you can see the following during "perf script" run:
+> > >
+> > > open("[stack]", O_RDONLY)               = -1 ENOENT (No such file or directory)
+> > > open("[heap]", O_RDONLY)                = -1 ENOENT (No such file or directory)
+> > > open("//anon", O_RDONLY)                = -1 ENOENT (No such file or directory)
+> >
+> > strange, let's start with the reproducer and I'll check
+> > on this if I see it
+> >
+> > thanks,
+> > jirka
+> >
