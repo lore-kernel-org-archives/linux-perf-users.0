@@ -1,124 +1,80 @@
-From: Qi Liu <liuqi115@huawei.com>
-Subject: [PATCH v2] Perf stat: Fix the ratio comments of miss-events
-Date: Thu, 19 Dec 2019 11:00:01 +0800
-Message-ID: <1576724401-30984-1-git-send-email-liuqi115@huawei.com>
+From: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Subject: Re: [PATCH v4 4/9] drm/i915/perf: open access for CAP_SYS_PERFMON
+ privileged process
+Date: Thu, 19 Dec 2019 11:10:29 +0200
+Message-ID: <d5f908f3-b545-7953-8c72-ceb7177609d3@intel.com>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <ea050255-a125-8831-ce91-ee23bd6ad08b@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ea050255-a125-8831-ce91-ee23bd6ad08b@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, ak@linux.intel.com
-Cc: arnaldo.melo@gmail.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linuxarm@huawei.com
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufl>
+Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, Song Liu <songliubraving@fb.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>, "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel>
 List-Id: linux-perf-users.vger.kernel.org
 
-Perf stat displays miss ratio of L1-dcache, L1-icache, dTLB cache,
-iTLB cache and LL-cache. Take L1-dcache for example, its miss ratio
-is caculated as "L1-dcache-load-misses/L1-dcache-loads". So "of all
-L1-dcache hits" is unsuitable to describe it, and "of all L1-dcache
-accesses" seems better. The comments of L1-icache, dTLB cache, iTLB
-cache and LL-cache are fixed in the same way.
+On 18/12/2019 11:27, Alexey Budankov wrote:
+> Open access to i915_perf monitoring for CAP_SYS_PERFMON privileged
+> processes. For backward compatibility reasons access to i915_perf
+> subsystem remains open for CAP_SYS_ADMIN privileged processes but
+> CAP_SYS_ADMIN usage for secure i915_perf monitoring is discouraged
+> with respect to CAP_SYS_PERFMON capability.
+>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Signed-off-by: Qi Liu <liuqi115@huawei.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
----
-Changelog
-v2: Fix the format issue
+Acked-by: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
 
- tools/perf/util/stat-shadow.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 2c41d47..28f4470 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -506,7 +506,7 @@ static void print_l1_dcache_misses(struct perf_stat_config *config,
-
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
-
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-dcache accesses", ratio);
- }
-
- static void print_l1_icache_misses(struct perf_stat_config *config,
-@@ -527,7 +527,7 @@ static void print_l1_icache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
-
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all L1-icache accesses", ratio);
- }
-
- static void print_dtlb_cache_misses(struct perf_stat_config *config,
-@@ -547,7 +547,7 @@ static void print_dtlb_cache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
-
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all dTLB cache accesses", ratio);
- }
-
- static void print_itlb_cache_misses(struct perf_stat_config *config,
-@@ -567,7 +567,7 @@ static void print_itlb_cache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
-
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all iTLB cache accesses", ratio);
- }
-
- static void print_ll_cache_misses(struct perf_stat_config *config,
-@@ -587,7 +587,7 @@ static void print_ll_cache_misses(struct perf_stat_config *config,
- 		ratio = avg / total * 100.0;
-
- 	color = get_ratio_color(GRC_CACHE_MISSES, ratio);
--	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache hits", ratio);
-+	out->print_metric(config, out->ctx, color, "%7.2f%%", "of all LL-cache accesses", ratio);
- }
-
- /*
-@@ -872,7 +872,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_L1_DCACHE, ctx, cpu) != 0)
- 			print_l1_dcache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL, "of all L1-dcache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_L1I |
-@@ -882,7 +882,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_L1_ICACHE, ctx, cpu) != 0)
- 			print_l1_icache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all L1-icache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL, "of all L1-icache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_DTLB |
-@@ -892,7 +892,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_DTLB_CACHE, ctx, cpu) != 0)
- 			print_dtlb_cache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL, "of all dTLB cache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_ITLB |
-@@ -902,7 +902,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_ITLB_CACHE, ctx, cpu) != 0)
- 			print_itlb_cache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL, "of all iTLB cache accesses", 0);
- 	} else if (
- 		evsel->core.attr.type == PERF_TYPE_HW_CACHE &&
- 		evsel->core.attr.config ==  ( PERF_COUNT_HW_CACHE_LL |
-@@ -912,7 +912,7 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 		if (runtime_stat_n(st, STAT_LL_CACHE, ctx, cpu) != 0)
- 			print_ll_cache_misses(config, cpu, evsel, avg, out, st);
- 		else
--			print_metric(config, ctxp, NULL, NULL, "of all LL-cache hits", 0);
-+			print_metric(config, ctxp, NULL, NULL, "of all LL-cache accesses", 0);
- 	} else if (perf_evsel__match(evsel, HARDWARE, HW_CACHE_MISSES)) {
- 		total = runtime_stat_avg(st, STAT_CACHEREFS, ctx, cpu);
-
---
-2.8.1
+> ---
+>   drivers/gpu/drm/i915/i915_perf.c | 13 ++++++-------
+>   1 file changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/i915_perf.c b/drivers/gpu/drm/i915/i915_perf.c
+> index e42b86827d6b..e2697f8d04de 100644
+> --- a/drivers/gpu/drm/i915/i915_perf.c
+> +++ b/drivers/gpu/drm/i915/i915_perf.c
+> @@ -2748,10 +2748,10 @@ i915_perf_open_ioctl_locked(struct drm_i915_private *dev_priv,
+>   	/* Similar to perf's kernel.perf_paranoid_cpu sysctl option
+>   	 * we check a dev.i915.perf_stream_paranoid sysctl option
+>   	 * to determine if it's ok to access system wide OA counters
+> -	 * without CAP_SYS_ADMIN privileges.
+> +	 * without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges.
+>   	 */
+>   	if (privileged_op &&
+> -	    i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
+> +	    i915_perf_stream_paranoid && !perfmon_capable()) {
+>   		DRM_DEBUG("Insufficient privileges to open system-wide i915 perf stream\n");
+>   		ret = -EACCES;
+>   		goto err_ctx;
+> @@ -2939,9 +2939,8 @@ static int read_properties_unlocked(struct drm_i915_private *dev_priv,
+>   			} else
+>   				oa_freq_hz = 0;
+>   
+> -			if (oa_freq_hz > i915_oa_max_sample_rate &&
+> -			    !capable(CAP_SYS_ADMIN)) {
+> -				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without root privileges\n",
+> +			if (oa_freq_hz > i915_oa_max_sample_rate && !perfmon_capable()) {
+> +				DRM_DEBUG("OA exponent would exceed the max sampling frequency (sysctl dev.i915.oa_max_sample_rate) %uHz without CAP_SYS_PERFMON or CAP_SYS_ADMIN privileges\n",
+>   					  i915_oa_max_sample_rate);
+>   				return -EACCES;
+>   			}
+> @@ -3328,7 +3327,7 @@ int i915_perf_add_config_ioctl(struct drm_device *dev, void *data,
+>   		return -EINVAL;
+>   	}
+>   
+> -	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
+> +	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+>   		DRM_DEBUG("Insufficient privileges to add i915 OA config\n");
+>   		return -EACCES;
+>   	}
+> @@ -3474,7 +3473,7 @@ int i915_perf_remove_config_ioctl(struct drm_device *dev, void *data,
+>   		return -ENOTSUPP;
+>   	}
+>   
+> -	if (i915_perf_stream_paranoid && !capable(CAP_SYS_ADMIN)) {
+> +	if (i915_perf_stream_paranoid && !perfmon_capable()) {
+>   		DRM_DEBUG("Insufficient privileges to remove i915 OA config\n");
+>   		return -EACCES;
+>   	}
