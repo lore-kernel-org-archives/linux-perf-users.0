@@ -1,56 +1,171 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 07/12] perf hists browser: Allow passing an initial hotkey
-Date: Thu, 19 Dec 2019 22:44:24 +0100
-Message-ID: <20191219214424.GB27481@krava>
-References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-8-acme@kernel.org>
- <20191218080818.GD19062@krava>
- <20191218140831.GC13395@kernel.org>
- <20191218142321.GB15571@krava>
- <20191219172642.GB13699@kernel.org>
+From: Ivan Babrou <ivan@cloudflare.com>
+Subject: Re: perf is unable to read dward from go programs
+Date: Thu, 19 Dec 2019 15:38:41 -0800
+Message-ID: <CABWYdi2VugwNhJ6TBr4j7FUJi_uSk6__qu0PKAmW-H9MdoEkpw@mail.gmail.com>
+References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
+ <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
+ <20191129134929.GA26903@krava> <20191129151436.GB26963@kernel.org>
+ <CABWYdi19LmOHC0Ect-8vNXz0uF2tNC1XmDQfMn0fmYOt2yJH9w@mail.gmail.com> <20191203102234.GE17468@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191219172642.GB13699@kernel.org>
+In-Reply-To: <20191203102234.GE17468@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, kernel-team <kernel-team@cloudflare.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Dec 19, 2019 at 02:26:42PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Dec 18, 2019 at 03:23:21PM +0100, Jiri Olsa escreveu:
-> > On Wed, Dec 18, 2019 at 11:08:31AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > Em Wed, Dec 18, 2019 at 09:08:18AM +0100, Jiri Olsa escreveu:
-> > > > On Tue, Dec 17, 2019 at 11:48:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > > +	if (key)
-> > > > > +		goto do_hotkey;
-> > > > > +
-> > > > >  	while (1) {
-> > > > >  		key = ui_browser__run(&browser->b, delay_secs);
-> > > > > -
-> > > > > +do_hotkey:
-> 
-> > > > or we could switch the 'swtich' and ui_browser__run, and get rid of the goto, like:
-> 
-> > > > 	while (1) {
-> > > >   		switch (key) {
-> > > > 		...
-> > > > 		}
-> > > > 
-> > > > 		key = ui_browser__run(&browser->b, delay_secs);
-> > > > 	}
-> 
-> > > I think those are equivalent and having the test like I did is more
-> > > clear, i.e. "has this key been provided" instead of going to the switch
-> > > just to hit the default case for the zero in key and call
-> > > ui_browser__run().
-> 
-> > sure, I just don't like goto other than for error handling,
-> > looks too hacky to me ;-) but of course it's your call
-> 
-> How about the one below?
+At first I thought it was related to C/Go interaction, but it looks
+even easier to trigger.
 
-looks good, thanks
+Ok, I have a reproduction for both random dwarf versions and for
+uncached binary symbol resolution:
 
-jirka
+$ cat /tmp/main.go
+package main
+
+func main() {
+  for {
+    src := make([]byte, 100*1024*1024)
+    dst := make([]byte, len(src))
+    copy(dst, src)
+  }
+}
+
+Compile and run it:
+
+$ go build -o /tmp/memmove /tmp/main.go && /tmp/memmove
+
+Then record a trace:
+
+$ sudo perf record -p $(pidof memmove) --call-graph dwarf -- sleep 1
+
+Getting stack traces generates warnings:
+
+$ sudo perf script > /dev/null
+BFD: Dwarf Error: found dwarf version '376', this reader only handles
+version 2, 3 and 4 information.
+BFD: Dwarf Error: found dwarf version '31863', this reader only
+handles version 2, 3 and 4 information.
+BFD: Dwarf Error: found dwarf version '65267', this reader only
+handles version 2, 3 and 4 information.
+BFD: Dwarf Error: found dwarf version '33833', this reader only
+handles version 2, 3 and 4 information.
+BFD: Dwarf Error: found dwarf version '41392', this reader only
+handles version 2, 3 and 4 information.
+
+Here's an example of raw perf script output where it generates the warning:
+
+memmove 254821 125950.754906:     174236 cycles: BFD: Dwarf Error:
+found dwarf version '33833', this reader only handles version 2, 3 and
+4 information.
+
+                  44d549 runtime.memmove+0x4d9 (/tmp/memmove)
+                  452644 main.main+0x94 (/tmp/memmove)
+                  42668d runtime.main+0x21d (/tmp/memmove)
+                  44bef0 runtime.goexit+0x0 (/tmp/memmove)
+
+Timed execution shows quite a bit of time spent:
+
+$ time sudo perf script > /dev/null
+... whole bunch of warnings about dwarf version here ..
+
+real 0m24.356s
+user 0m23.617s
+sys 0m0.723s
+
+And you can see object files being open over and over again:
+
+$ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_open,
+tracepoint:syscalls:sys_enter_openat {
+@filename[str(args->filename)]++ }'
+... some unrelated files here ...
+@filename[/lib/x86_64-linux-gnu/libpcre.so.3]: 595
+@filename[/usr/lib/locale/locale-archive]: 625
+@filename[/lib/x86_64-linux-gnu/libpthread.so.0]: 789
+@filename[/lib/x86_64-linux-gnu/libdl.so.2]: 838
+@filename[/var/log/journal/0bc45a9309f7404586bcddee0d45bf9d/system.journa]: 1044
+@filename[/lib/x86_64-linux-gnu/libc.so.6]: 1273
+@filename[/etc/ld.so.cache]: 1501
+@filename[/usr/lib/x86_64-linux-gnu/../lib/x86_64-linux-gnu/elfutils/libe]: 5784
+@filename[/usr/lib/x86_64-linux-gnu/elfutils/libebl_x86_64.so]: 5784
+@filename[/tmp/memmove]: 5789
+
+I'm going to guess that anything open for 5000+ times is related to
+perf script run, as I can also see those in strace.
+
+This is on Debian Stretch and Linux 5.4.5 (perf is from 5.4.5 as well).
+
+This should cover points 2 and 3, I'll have to get back to you on
+points 4 and 5, but those are separate.
+
+On Tue, Dec 3, 2019 at 2:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Mon, Dec 02, 2019 at 11:49:55AM -0800, Ivan Babrou wrote:
+> > I've tried building with libdw with mixed results:
+> >
+> > 1. I can see stacks from some Go programs that were invisible before (yay!)
+> >
+> > 2. Warnings like below still appear in great numbers for a system-wide
+> > flamegraph:
+> >
+> > BFD: Dwarf Error: found dwarf version '18345', this reader only
+> > handles version 2, 3 and 4 information.
+> >
+> > I'm not sure how to pinpoint this to a particular binary and would
+> > appreciate some help with this.
+>
+> I'd need some way of reproducing this, could you please
+> paste me command lines you used?
+>
+> >
+> > 3. It takes minutes to produce a flamegraph of a running system
+> > whereas before it only took seconds. See this flamegraph of "perf
+> > script" itself:
+> >
+> > * https://gist.github.com/bobrik/a9c46cffe9daa5840abd137443d8bab0#file-flamegraph-perf-svg
+> >
+> > Seems like there is no caching and debug info is getting reparsed
+> > continuously for every stack. It's possible that it was not an issue
+> > before, because we spent no time decompressing dwarf.
+>
+> possibly, if we have some clear reproducer we can hand it
+> to the libdw guy that helped us develop this
+>
+> >
+> > 4. Pretty much all luajit frames stacks that were marked as unknown
+> > before are now gone.
+> >
+> > See before and after here: https://imgur.com/a/1LNfqAk
+> >
+> > Before:
+> >
+> > nginx-cache 94572 446642.722028:   10101010 cpu-clock:
+> >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
+> >             5607d8d5a09d ngx_http_lua_ffi_shdict_incr+0xcd
+> > (/usr/local/nginx-cache/sbin/nginx-cache)
+> >             560802fe58e4 [unknown] (/tmp/perf-94572.map)
+> >
+> > After:
+> >
+> > nginx-cache 94572 446543.008703:   10101010 cpu-clock:
+> >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
+> >             5607d8d59da7 ngx_http_lua_ffi_shdict_get+0x197
+> > (/usr/local/nginx-cache/sbin/nginx-cache)
+> >
+> > The key is /tmp/perf-*.map frame at the bottom. I don't know if it's
+> > expected, but we grew dependent on knowing this.
+> >
+> > 5. Special [[stack]], [[heap]] and [anon] frames are also gone, and
+> > you can see the following during "perf script" run:
+> >
+> > open("[stack]", O_RDONLY)               = -1 ENOENT (No such file or directory)
+> > open("[heap]", O_RDONLY)                = -1 ENOENT (No such file or directory)
+> > open("//anon", O_RDONLY)                = -1 ENOENT (No such file or directory)
+>
+> strange, let's start with the reproducer and I'll check
+> on this if I see it
+>
+> thanks,
+> jirka
+>
