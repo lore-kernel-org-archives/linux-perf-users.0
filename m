@@ -1,7 +1,7 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 9/9] perf script: Add --show-cgroup-events option
-Date: Fri, 20 Dec 2019 13:32:53 +0900
-Message-ID: <20191220043253.3278951-10-namhyung@kernel.org>
+Subject: [PATCH 7/9] perf record: Add --all-cgroups option
+Date: Fri, 20 Dec 2019 13:32:51 +0900
+Message-ID: <20191220043253.3278951-8-namhyung@kernel.org>
 References: <20191220043253.3278951-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,108 +12,119 @@ To: Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@kernel.org>, Arn
 Cc: Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-The --show-cgroup-events option is to print CGROUP events in the
-output like others.
+The --all-cgroups option is to enable cgroup profiling support.  It
+tells kernel to record CGROUP events in the ring buffer so that perf
+report can identify task/cgroup association later.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-script.txt |  3 ++
- tools/perf/builtin-script.c              | 41 ++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ tools/perf/Documentation/perf-record.txt |  5 ++++-
+ tools/perf/builtin-record.c              |  5 +++++
+ tools/perf/util/evsel.c                  | 13 ++++++++++++-
+ tools/perf/util/evsel.h                  |  1 +
+ tools/perf/util/record.h                 |  1 +
+ 5 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 2599b057e47b..3dd297600427 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -319,6 +319,9 @@ OPTIONS
- --show-bpf-events
- 	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b23a4012a606..6dd9d69d7dee 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -385,7 +385,10 @@ displayed with the weight and local_weight sort keys.  This currently works for
+ abort events and some memory events in precise mode on modern Intel CPUs.
  
-+--show-cgroup-events
-+	Display cgroup events i.e. events of type PERF_RECORD_CGROUP.
+ --namespaces::
+-Record events of type PERF_RECORD_NAMESPACES.
++Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
 +
- --demangle::
- 	Demangle symbol names to human readable form. It's enabled by default,
- 	disable with --no-demangle.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index e2406b291c1c..3db4afc29430 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1681,6 +1681,7 @@ struct perf_script {
- 	bool			show_lost_events;
- 	bool			show_round_events;
- 	bool			show_bpf_events;
-+	bool			show_cgroup_events;
- 	bool			allocated;
- 	bool			per_event_dump;
- 	struct evswitch		evswitch;
-@@ -2199,6 +2200,41 @@ static int process_namespaces_event(struct perf_tool *tool,
- 	return ret;
- }
++--all-cgroups::
++Record events of type PERF_RECORD_CGROUP.  This enables 'cgroup' sort key.
  
-+static int process_cgroup_event(struct perf_tool *tool,
-+				union perf_event *event,
-+				struct perf_sample *sample,
-+				struct machine *machine)
-+{
-+	struct thread *thread;
-+	struct perf_script *script = container_of(tool, struct perf_script, tool);
-+	struct perf_session *session = script->session;
-+	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-+	int ret = -1;
+ --transaction::
+ Record transaction flags for transaction related events.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 2802de9538ff..7d7912e121d6 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1433,6 +1433,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	if (rec->opts.record_namespaces)
+ 		tool->namespace_events = true;
+ 
++	if (rec->opts.record_cgroup)
++		tool->cgroup_events = true;
 +
-+	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-+	if (thread == NULL) {
-+		pr_debug("problem processing CGROUP event, skipping it.\n");
-+		return -1;
+ 	if (rec->opts.auxtrace_snapshot_mode || rec->switch_output.enabled) {
+ 		signal(SIGUSR2, snapshot_sig_handler);
+ 		if (rec->opts.auxtrace_snapshot_mode)
+@@ -2363,6 +2366,8 @@ static struct option __record_options[] = {
+ 			"per thread proc mmap processing timeout in ms"),
+ 	OPT_BOOLEAN(0, "namespaces", &record.opts.record_namespaces,
+ 		    "Record namespaces events"),
++	OPT_BOOLEAN(0, "all-cgroups", &record.opts.record_cgroup,
++		    "Record cgroup events"),
+ 	OPT_BOOLEAN(0, "switch-events", &record.opts.record_switch_events,
+ 		    "Record context switch events"),
+ 	OPT_BOOLEAN_FLAG(0, "all-kernel", &record.opts.all_kernel,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 0f5a67603139..d649b5606178 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1102,6 +1102,11 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	if (opts->record_namespaces)
+ 		attr->namespaces  = track;
+ 
++	if (opts->record_cgroup) {
++		attr->cgroup = track && !perf_missing_features.cgroup;
++		perf_evsel__set_sample_bit(evsel, CGROUP);
 +	}
 +
-+	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
-+		goto out;
-+
-+	if (!evsel->core.attr.sample_id_all) {
-+		sample->cpu = 0;
-+		sample->time = 0;
-+	}
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_CGROUP, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
-+	ret = 0;
-+out:
-+	thread__put(thread);
-+	return ret;
-+}
-+
- static int process_fork_event(struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
-@@ -2538,6 +2574,8 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.context_switch = process_switch_event;
- 	if (script->show_namespace_events)
- 		script->tool.namespaces = process_namespaces_event;
-+	if (script->show_cgroup_events)
-+		script->tool.cgroup = process_cgroup_event;
- 	if (script->show_lost_events)
- 		script->tool.lost = process_lost_event;
- 	if (script->show_round_events) {
-@@ -3463,6 +3501,7 @@ int cmd_script(int argc, const char **argv)
- 			.mmap2		 = perf_event__process_mmap2,
- 			.comm		 = perf_event__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
-+			.cgroup		 = perf_event__process_cgroup,
- 			.exit		 = perf_event__process_exit,
- 			.fork		 = perf_event__process_fork,
- 			.attr		 = process_attr,
-@@ -3563,6 +3602,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Show context switch events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
- 		    "Show namespace events (if recorded)"),
-+	OPT_BOOLEAN('\0', "show-cgroup-events", &script.show_cgroup_events,
-+		    "Show cgroup events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-lost-events", &script.show_lost_events,
- 		    "Show lost events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
+ 	if (opts->record_switch_events)
+ 		attr->context_switch = track;
+ 
+@@ -1671,6 +1676,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		evsel->core.attr.ksymbol = 0;
+ 	if (perf_missing_features.bpf)
+ 		evsel->core.attr.bpf_event = 0;
++	if (perf_missing_features.cgroup)
++		evsel->core.attr.cgroup = 0;
+ retry_sample_id:
+ 	if (perf_missing_features.sample_id_all)
+ 		evsel->core.attr.sample_id_all = 0;
+@@ -1782,7 +1789,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	 * Must probe features in the order they were added to the
+ 	 * perf_event_attr interface.
+ 	 */
+-	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
++	if (!perf_missing_features.cgroup && evsel->core.attr.cgroup) {
++		perf_missing_features.cgroup = true;
++		pr_debug2_peo("switching off cgroup\n");
++		goto fallback_missing_features;
++	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
+ 		perf_missing_features.aux_output = true;
+ 		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
+ 		goto out_close;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index dc14f4a823cd..df71b530740b 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -119,6 +119,7 @@ struct perf_missing_features {
+ 	bool ksymbol;
+ 	bool bpf;
+ 	bool aux_output;
++	bool cgroup;
+ };
+ 
+ extern struct perf_missing_features perf_missing_features;
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 5421fd2ad383..24316458be20 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -34,6 +34,7 @@ struct record_opts {
+ 	bool	      auxtrace_snapshot_on_exit;
+ 	bool	      auxtrace_sample_mode;
+ 	bool	      record_namespaces;
++	bool	      record_cgroup;
+ 	bool	      record_switch_events;
+ 	bool	      all_kernel;
+ 	bool	      all_user;
 -- 
 2.24.1.735.g03f4e72817-goog
