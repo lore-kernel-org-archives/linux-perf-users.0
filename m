@@ -1,100 +1,43 @@
-From: James Clark <james.clark@arm.com>
-Subject: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
-Date: Fri, 20 Dec 2019 11:05:25 +0000
-Message-ID: <20191220110525.30131-1-james.clark@arm.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+Date: Fri, 20 Dec 2019 20:28:01 +0900
+Message-ID: <CAM9d7ch5vc--pXFp4c1K-GyXf0KkS0Y0VpeNzJ==ej3Qvno_4A@mail.gmail.com>
+References: <20191220043253.3278951-1-namhyung@kernel.org> <20191220043253.3278951-2-namhyung@kernel.org>
+ <20191220093335.GC2844@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: nd@arm.com, James Clark <james.clark@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Igor Lubashev <ilubashe@akamai.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch fixes an issue when non Arm SPE events are specified after an
-Arm SPE event. In that case, perf will exit with an error code and not
-produce a record file. This is because a loop index is used to store the
-location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
-index will be overwritten. Fix this issue by saving the PMU into a
-variable instead of using the index, and also add an error message.
+Hi Peter,
 
-Before the fix:
-    ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
-    237
+On Fri, Dec 20, 2019 at 6:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
+> > To support cgroup tracking, add CGROUP event to save a link between
+> > cgroup path and inode number.  The attr.cgroup bit was also added to
+> > enable cgroup tracking from userspace.
+> >
+> > This event will be generated when a new cgroup becomes active.
+> > Userspace might need to synthesize those events for existing cgroups.
+> >
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: Li Zefan <lizefan@huawei.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>
+> TJ, is this the right thing to do? ISTR you had concerns on this topic
+> on the past.
 
-After the fix:
-    ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
-    ...
-    0
+Oh, I should've updated the changelog.  Now it uses 64bit cgroup id which
+was converted by Tejun.
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Igor Lubashev <ilubashe@akamai.com>
----
- tools/perf/arch/arm/util/auxtrace.c  | 10 +++++-----
- tools/perf/arch/arm64/util/arm-spe.c |  1 +
- 2 files changed, 6 insertions(+), 5 deletions(-)
+https://lkml.org/lkml/2019/11/4/1551
 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 0a6e75b8777a..230f03b622e1 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -54,9 +54,9 @@ struct auxtrace_record
- *auxtrace_record__init(struct evlist *evlist, int *err)
- {
- 	struct perf_pmu	*cs_etm_pmu;
-+	struct perf_pmu *arm_spe_pmu = NULL;
- 	struct evsel *evsel;
- 	bool found_etm = false;
--	bool found_spe = false;
- 	static struct perf_pmu **arm_spe_pmus = NULL;
- 	static int nr_spes = 0;
- 	int i = 0;
-@@ -79,13 +79,13 @@ struct auxtrace_record
- 
- 		for (i = 0; i < nr_spes; i++) {
- 			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
--				found_spe = true;
-+				arm_spe_pmu = arm_spe_pmus[i];
- 				break;
- 			}
- 		}
- 	}
- 
--	if (found_etm && found_spe) {
-+	if (found_etm && arm_spe_pmu) {
- 		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
- 		*err = -EOPNOTSUPP;
- 		return NULL;
-@@ -95,8 +95,8 @@ struct auxtrace_record
- 		return cs_etm_record_init(err);
- 
- #if defined(__aarch64__)
--	if (found_spe)
--		return arm_spe_recording_init(err, arm_spe_pmus[i]);
-+	if (arm_spe_pmu)
-+		return arm_spe_recording_init(err, arm_spe_pmu);
- #endif
- 
- 	/*
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index eba6541ec0f1..b7d17d8724df 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -178,6 +178,7 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
- 	struct arm_spe_recording *sper;
- 
- 	if (!arm_spe_pmu) {
-+		pr_err("Attempted to initialise null SPE PMU\n");
- 		*err = -ENODEV;
- 		return NULL;
- 	}
--- 
-2.24.0
+Thanks
+Namhyung
