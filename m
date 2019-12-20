@@ -1,237 +1,289 @@
-From: Ivan Babrou <ivan@cloudflare.com>
-Subject: Re: perf is unable to read dward from go programs
-Date: Thu, 19 Dec 2019 15:57:54 -0800
-Message-ID: <CABWYdi016dTvk-6cBTDEc+Bo5TVGiO9n5eK6LQ5q2WL9jz6PDQ@mail.gmail.com>
-References: <CABWYdi2jvPUq128XDv_VbY=vFknFyJHbUR=0_K9WuA0mFTkPvg@mail.gmail.com>
- <CABWYdi3k9QvFOEd_hFG16LVE=BiokO4hWp50nZcxYwbWfxeE3g@mail.gmail.com>
- <20191129134929.GA26903@krava> <20191129151436.GB26963@kernel.org>
- <CABWYdi19LmOHC0Ect-8vNXz0uF2tNC1XmDQfMn0fmYOt2yJH9w@mail.gmail.com>
- <20191203102234.GE17468@krava> <CABWYdi2VugwNhJ6TBr4j7FUJi_uSk6__qu0PKAmW-H9MdoEkpw@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCHSET 0/9] perf: Improve cgroup profiling (v2)
+Date: Fri, 20 Dec 2019 13:32:44 +0900
+Message-ID: <20191220043253.3278951-1-namhyung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABWYdi2VugwNhJ6TBr4j7FUJi_uSk6__qu0PKAmW-H9MdoEkpw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, kernel-team <kernel-team@cloudflare.com>
+To: Peter Zijlstra <a.p.zijlstra@chello.nl>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Found a reproducer for missing /tmp/perf-XXX frames:
+Hello,
 
-$ cat hello.java
-class HelloWorld {
-    public static void main(String args[]) {
-        for (long i = 0; ; i++) {}
-    }
+This work is to improve cgroup profiling in perf.  Currently it only
+supports profiling tasks in a specific cgroup and there's no way to
+identify which cgroup the current sample belongs to.  So I added
+PERF_SAMPLE_CGROUP to add cgroup info into each sample.  It's a 64-bit
+integer having inode number of the cgroup.  And kernel also generates
+PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+cgroup name (path in the cgroup filesystem).  The cgroup id can be
+read from userspace by name_to_handle_at() system call so it can
+synthesize the CGROUP event for existing groups.
+
+So why we want this?  Systems running a large number of jobs in
+different cgroups want to profiling such jobs precisely. This includes
+container hosting systems widely used today. Currently perf supports
+namespace tracking but the systems may not use (cgroup) namespace for
+their jobs. Also it'd be more intuitive to see cgroup names (as
+they're given by user or sysadmin) rather than numeric
+cgroup/namespace id even if they use the namespaces.
+
+From Stephane Eranian:
+> In data centers you care about attributing samples to a job not such
+> much to a process.  A job may have multiple processes which may come
+> and go. The cgroup on the other hand stays around for the entire
+> lifetime of the job. It is much easier to map a cgroup name to a
+> particular job than it is to map a pid back to a job name,
+> especially for offline post-processing.
+
+Note that this only works for "perf_event" cgroups (obviously) so if
+users are still using cgroup-v1 interface, they need to have same
+hierarchy for subsystem(s) want to profile with it.
+
+The testing result looks something like this:
+
+  [root@qemu build]# ./perf record --all-cgroups ./cgtest
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.009 MB perf.data (150 samples) ]
+  
+  [root@qemu build]# ./perf report -s cgroup,comm --stdio
+  # To display the perf.data header info, please use --header/--header-only options.
+  #
+  #
+  # Total Lost Samples: 0
+  #
+  # Samples: 150  of event 'cpu-clock:pppH'
+  # Event count (approx.): 37500000
+  #
+  # Overhead  cgroup      Command
+  # ........  ..........  .......
+  #
+      32.00%  /sub/cgrp2  looper2
+      28.00%  /sub/cgrp1  looper1
+      25.33%  /sub        looper0
+       4.00%  /           cgtest 
+       4.00%  /sub        cgtest 
+       3.33%  /sub/cgrp2  cgtest 
+       2.67%  /sub/cgrp1  cgtest 
+       0.67%  /           looper0
+
+
+The test program (cgtest) follows.
+
+Thanks,
+Namhyung
+
+
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+
+
+-------8<-----------------------------------------8<----------------
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sched.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/prctl.h>
+#include <sys/mount.h>
+
+char cgbase[] = "/sys/fs/cgroup/perf_event";
+
+void mkcgrp(char *name) {
+  char buf[256];
+
+  snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+  if (mkdir(buf, 0755) < 0)
+    perror("mkdir");
 }
 
-Compile it:
+void rmcgrp(char *name) {
+  char buf[256];
 
-$ javac hello.java
+  snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+  if (rmdir(buf) < 0)
+    perror("rmdir");
+}
 
-Run it:
+void setcgrp(char *name) {
+  char buf[256];
+  int fd;
 
-$ java HelloWorld
+  snprintf(buf, sizeof(buf), "%s%s/tasks", cgbase, name);
 
-Trace it with libdw:
+  fd = open(buf, O_WRONLY);
+  if (fd > 0) {
+    if (write(fd, "0\n", 2) != 2)
+      perror("write");
+    close(fd);
+  }
+}
 
-$ sudo perf record -p $(pidof java) --call-graph dwarf -- sleep 1
+void create_sub_cgroup(int idx) {
+  char buf[128];
 
-Observe traces in perf script not having any frames:
+  snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+  mkcgrp(buf);
+}
 
-java 61467 127535.601549:     149893 cycles:
+void remove_sub_cgroup(int idx) {
+  char buf[128];
 
-java 61467 127535.601602:     606223 cycles:
+  snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+  rmcgrp(buf);
+}
 
-java 61467 127535.601802:     890579 cycles:
+void set_sub_cgroup(int idx) {
+  char buf[128];
 
-java 61467 127535.602158:     840878 cycles:
+  snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+  setcgrp(buf);
+}
 
-java 61467 127535.602453:     809547 cycles:
+void set_task_name(int idx) {
+  char buf[16];
 
-java 61467 127535.602718:     794099 cycles:
+  snprintf(buf, sizeof(buf), "looper%d", idx);
+  prctl(PR_SET_NAME, buf, 0, 0, 0);
+}
 
-java 61467 127535.602981:     777283 cycles:
+void loop(unsigned max) {
+  volatile unsigned int count = 1;
 
-Now trace it with libunwind:
+  while (count++ != max) {
+    asm volatile ("pause");
+  }
+}
 
-$ sudo perf record -p $(pidof java) --call-graph dwarf -- sleep 1
+void worker(int idx, unsigned cnt, int new_ns) {
+  int oldns;
 
-And observe traces with /tmp/perf-XXX:
+  create_sub_cgroup(idx);
+  set_sub_cgroup(idx);
 
-java 61467 127583.896584:     118386 cycles:
-            7fcd55342ce8 [unknown] (/tmp/perf-61466.map)
+  if (new_ns) {
+    if (unshare(CLONE_NEWCGROUP) < 0)
+      perror("unshare");
 
-java 61467 127583.896626:     537046 cycles:
-            7fcd55342d17 [unknown] (/tmp/perf-61466.map)
+#if 0  /* FIXME */
+    if (unshare(CLONE_NEWNS) < 0)
+      perror("unshare");
 
-java 61467 127583.896804:     866323 cycles:
-            7fcd55342ce8 [unknown] (/tmp/perf-61466.map)
+    if (mount("none", "/sys", NULL, MS_REMOUNT | MS_REC | MS_SLAVE, NULL) < 0)
+      perror("mount --make-rslave");
 
-java 61467 127583.897091:     825548 cycles:
-            7fcd55342d17 [unknown] (/tmp/perf-61466.map)
+    sleep(1);
+    if (umount("/sys/fs/cgroup/perf_event") < 0)
+      perror("umount");
 
-java 61467 127583.897361:     812276 cycles:
-            7fcd55342d17 [unknown] (/tmp/perf-61466.map)
+    if (mount("cgroup", "/sys/fs/cgroup/perf_event", "cgroup",
+              MS_NODEV | MS_NOEXEC | MS_NOSUID, "perf_event") < 0)
+      perror("mount again");
+#endif
+  }
 
-java 61467 127583.897627:     804520 cycles:
-            7fcd55342ce5 [unknown] (/tmp/perf-61466.map)
+  if (fork() == 0) {
+    set_task_name(idx);
+    loop(cnt);
+    exit(0);
+  }
+  wait(NULL);
+}
 
-This should cover all issues I mentioned.
+int main(int argc, char *argv[])
+{
+  int i, nr = 2;
+  int new_ns = 1;
+  unsigned cnt = 1000000;
+  int fd;
 
-On Thu, Dec 19, 2019 at 3:38 PM Ivan Babrou <ivan@cloudflare.com> wrote:
->
-> At first I thought it was related to C/Go interaction, but it looks
-> even easier to trigger.
->
-> Ok, I have a reproduction for both random dwarf versions and for
-> uncached binary symbol resolution:
->
-> $ cat /tmp/main.go
-> package main
->
-> func main() {
->   for {
->     src := make([]byte, 100*1024*1024)
->     dst := make([]byte, len(src))
->     copy(dst, src)
->   }
-> }
->
-> Compile and run it:
->
-> $ go build -o /tmp/memmove /tmp/main.go && /tmp/memmove
->
-> Then record a trace:
->
-> $ sudo perf record -p $(pidof memmove) --call-graph dwarf -- sleep 1
->
-> Getting stack traces generates warnings:
->
-> $ sudo perf script > /dev/null
-> BFD: Dwarf Error: found dwarf version '376', this reader only handles
-> version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '31863', this reader only
-> handles version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '65267', this reader only
-> handles version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '33833', this reader only
-> handles version 2, 3 and 4 information.
-> BFD: Dwarf Error: found dwarf version '41392', this reader only
-> handles version 2, 3 and 4 information.
->
-> Here's an example of raw perf script output where it generates the warning:
->
-> memmove 254821 125950.754906:     174236 cycles: BFD: Dwarf Error:
-> found dwarf version '33833', this reader only handles version 2, 3 and
-> 4 information.
->
->                   44d549 runtime.memmove+0x4d9 (/tmp/memmove)
->                   452644 main.main+0x94 (/tmp/memmove)
->                   42668d runtime.main+0x21d (/tmp/memmove)
->                   44bef0 runtime.goexit+0x0 (/tmp/memmove)
->
-> Timed execution shows quite a bit of time spent:
->
-> $ time sudo perf script > /dev/null
-> ... whole bunch of warnings about dwarf version here ..
->
-> real 0m24.356s
-> user 0m23.617s
-> sys 0m0.723s
->
-> And you can see object files being open over and over again:
->
-> $ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_open,
-> tracepoint:syscalls:sys_enter_openat {
-> @filename[str(args->filename)]++ }'
-> ... some unrelated files here ...
-> @filename[/lib/x86_64-linux-gnu/libpcre.so.3]: 595
-> @filename[/usr/lib/locale/locale-archive]: 625
-> @filename[/lib/x86_64-linux-gnu/libpthread.so.0]: 789
-> @filename[/lib/x86_64-linux-gnu/libdl.so.2]: 838
-> @filename[/var/log/journal/0bc45a9309f7404586bcddee0d45bf9d/system.journa]: 1044
-> @filename[/lib/x86_64-linux-gnu/libc.so.6]: 1273
-> @filename[/etc/ld.so.cache]: 1501
-> @filename[/usr/lib/x86_64-linux-gnu/../lib/x86_64-linux-gnu/elfutils/libe]: 5784
-> @filename[/usr/lib/x86_64-linux-gnu/elfutils/libebl_x86_64.so]: 5784
-> @filename[/tmp/memmove]: 5789
->
-> I'm going to guess that anything open for 5000+ times is related to
-> perf script run, as I can also see those in strace.
->
-> This is on Debian Stretch and Linux 5.4.5 (perf is from 5.4.5 as well).
->
-> This should cover points 2 and 3, I'll have to get back to you on
-> points 4 and 5, but those are separate.
->
-> On Tue, Dec 3, 2019 at 2:22 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Mon, Dec 02, 2019 at 11:49:55AM -0800, Ivan Babrou wrote:
-> > > I've tried building with libdw with mixed results:
-> > >
-> > > 1. I can see stacks from some Go programs that were invisible before (yay!)
-> > >
-> > > 2. Warnings like below still appear in great numbers for a system-wide
-> > > flamegraph:
-> > >
-> > > BFD: Dwarf Error: found dwarf version '18345', this reader only
-> > > handles version 2, 3 and 4 information.
-> > >
-> > > I'm not sure how to pinpoint this to a particular binary and would
-> > > appreciate some help with this.
-> >
-> > I'd need some way of reproducing this, could you please
-> > paste me command lines you used?
-> >
-> > >
-> > > 3. It takes minutes to produce a flamegraph of a running system
-> > > whereas before it only took seconds. See this flamegraph of "perf
-> > > script" itself:
-> > >
-> > > * https://gist.github.com/bobrik/a9c46cffe9daa5840abd137443d8bab0#file-flamegraph-perf-svg
-> > >
-> > > Seems like there is no caching and debug info is getting reparsed
-> > > continuously for every stack. It's possible that it was not an issue
-> > > before, because we spent no time decompressing dwarf.
-> >
-> > possibly, if we have some clear reproducer we can hand it
-> > to the libdw guy that helped us develop this
-> >
-> > >
-> > > 4. Pretty much all luajit frames stacks that were marked as unknown
-> > > before are now gone.
-> > >
-> > > See before and after here: https://imgur.com/a/1LNfqAk
-> > >
-> > > Before:
-> > >
-> > > nginx-cache 94572 446642.722028:   10101010 cpu-clock:
-> > >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
-> > >             5607d8d5a09d ngx_http_lua_ffi_shdict_incr+0xcd
-> > > (/usr/local/nginx-cache/sbin/nginx-cache)
-> > >             560802fe58e4 [unknown] (/tmp/perf-94572.map)
-> > >
-> > > After:
-> > >
-> > > nginx-cache 94572 446543.008703:   10101010 cpu-clock:
-> > >             5607d8d56718 ngx_http_lua_shdict_lookup+0x48 (inlined)
-> > >             5607d8d59da7 ngx_http_lua_ffi_shdict_get+0x197
-> > > (/usr/local/nginx-cache/sbin/nginx-cache)
-> > >
-> > > The key is /tmp/perf-*.map frame at the bottom. I don't know if it's
-> > > expected, but we grew dependent on knowing this.
-> > >
-> > > 5. Special [[stack]], [[heap]] and [anon] frames are also gone, and
-> > > you can see the following during "perf script" run:
-> > >
-> > > open("[stack]", O_RDONLY)               = -1 ENOENT (No such file or directory)
-> > > open("[heap]", O_RDONLY)                = -1 ENOENT (No such file or directory)
-> > > open("//anon", O_RDONLY)                = -1 ENOENT (No such file or directory)
-> >
-> > strange, let's start with the reproducer and I'll check
-> > on this if I see it
-> >
-> > thanks,
-> > jirka
-> >
+  if (argc > 1)
+    nr = atoi(argv[1]);
+  if (argc > 2)
+    cnt = atoi(argv[2]);
+  if (argc > 3)
+    new_ns = atoi(argv[3]);
+
+  mkcgrp("/sub");
+  setcgrp("/sub");
+
+  for (i = 0; i < nr; i++) {
+    if (fork() == 0) {
+      worker(i+1, cnt, new_ns);
+      exit(0);
+    }
+  }
+
+  set_task_name(0);
+  loop(cnt);
+
+  for (i = 0; i < nr; i++)
+    wait(NULL);
+
+  for (i = 0; i < nr; i++)
+    remove_sub_cgroup(i+1);
+
+  setcgrp("/");
+  rmcgrp("/sub");
+
+  return 0;
+}
+-------8<-----------------------------------------8<----------------
+
+
+Namhyung Kim (9):
+  perf/core: Add PERF_RECORD_CGROUP event
+  perf/core: Add PERF_SAMPLE_CGROUP feature
+  perf tools: Basic support for CGROUP event
+  perf tools: Maintain cgroup hierarchy
+  perf report: Add 'cgroup' sort key
+  perf record: Support synthesizing cgroup events
+  perf record: Add --all-cgroups option
+  perf top: Add --all-cgroups option
+  perf script: Add --show-cgroup-events option
+
+ include/linux/perf_event.h                |   1 +
+ include/uapi/linux/perf_event.h           |  17 ++-
+ kernel/events/core.c                      | 130 ++++++++++++++++++++++
+ tools/include/uapi/linux/perf_event.h     |  17 ++-
+ tools/perf/Documentation/perf-record.txt  |   5 +-
+ tools/perf/Documentation/perf-report.txt  |   1 +
+ tools/perf/Documentation/perf-script.txt  |   3 +
+ tools/perf/Documentation/perf-top.txt     |   4 +
+ tools/perf/builtin-diff.c                 |   1 +
+ tools/perf/builtin-record.c               |  10 ++
+ tools/perf/builtin-report.c               |   1 +
+ tools/perf/builtin-script.c               |  41 +++++++
+ tools/perf/builtin-top.c                  |   9 ++
+ tools/perf/lib/include/perf/event.h       |   8 ++
+ tools/perf/util/cgroup.c                  |  75 ++++++++++++-
+ tools/perf/util/cgroup.h                  |  16 ++-
+ tools/perf/util/event.c                   |  19 ++++
+ tools/perf/util/event.h                   |   6 +
+ tools/perf/util/evsel.c                   |  19 +++-
+ tools/perf/util/evsel.h                   |   1 +
+ tools/perf/util/hist.c                    |   7 ++
+ tools/perf/util/hist.h                    |   1 +
+ tools/perf/util/machine.c                 |  19 ++++
+ tools/perf/util/machine.h                 |   3 +
+ tools/perf/util/perf_event_attr_fprintf.c |   2 +
+ tools/perf/util/record.h                  |   1 +
+ tools/perf/util/session.c                 |   8 ++
+ tools/perf/util/sort.c                    |  31 ++++++
+ tools/perf/util/sort.h                    |   2 +
+ tools/perf/util/synthetic-events.c        | 120 ++++++++++++++++++++
+ tools/perf/util/synthetic-events.h        |   1 +
+ tools/perf/util/tool.h                    |   2 +
+ 32 files changed, 569 insertions(+), 12 deletions(-)
+
+-- 
+2.24.1.735.g03f4e72817-goog
