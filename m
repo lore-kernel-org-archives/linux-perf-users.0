@@ -1,94 +1,69 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly
- into the kernel map
-Date: Fri, 20 Dec 2019 15:48:23 +0900
-Message-ID: <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
-References: <20191217144828.2460-1-acme@kernel.org> <20191217144828.2460-7-acme@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+Date: Fri, 20 Dec 2019 10:33:35 +0100
+Message-ID: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
+References: <20191220043253.3278951-1-namhyung@kernel.org>
+ <20191220043253.3278951-2-namhyung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191217144828.2460-7-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191220043253.3278951-2-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Arnaldo,
-
-On Tue, Dec 17, 2019 at 11:49 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> As a convenience, equivalent to pressing Enter in a line with a kernel
-> symbol and then selecting "Zoom" into the kernel DSO.
-
-We already have 'd' key for 'zoom into current dso'.
-Do you really want 'k' for kernel specially?
-
->
+On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
+> To support cgroup tracking, add CGROUP event to save a link between
+> cgroup path and inode number.  The attr.cgroup bit was also added to
+> enable cgroup tracking from userspace.
+> 
+> This event will be generated when a new cgroup becomes active.
+> Userspace might need to synthesize those events for existing cgroups.
+> 
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Li Zefan <lizefan@huawei.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
 > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Jin Yao <yao.jin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@intel.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lkml.kernel.org/n/tip-vbnlnrpyfvz9deqoobtc3dz7@git.kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+TJ, is this the right thing to do? ISTR you had concerns on this topic
+on the past.
+
 > ---
->  tools/perf/ui/browsers/hists.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> index 8aba1aeea0eb..6dfdd8d5a743 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -18,7 +18,9 @@
->  #include "../../util/evlist.h"
->  #include "../../util/header.h"
->  #include "../../util/hist.h"
-> +#include "../../util/machine.h"
->  #include "../../util/map.h"
-> +#include "../../util/maps.h"
->  #include "../../util/symbol.h"
->  #include "../../util/map_symbol.h"
->  #include "../../util/branch.h"
-> @@ -2566,7 +2568,7 @@ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
->         if (!hists__has(browser->hists, dso) || map == NULL)
->                 return 0;
->
-> -       if (asprintf(optstr, "Zoom %s %s DSO",
-> +       if (asprintf(optstr, "Zoom %s %s DSO (use the 'k' hotkey to zoom directly into the kernel)",
+>  include/uapi/linux/perf_event.h |  14 +++-
+>  kernel/events/core.c            | 112 ++++++++++++++++++++++++++++++++
+>  2 files changed, 125 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 377d794d3105..7bae2d3380a6 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -377,7 +377,8 @@ struct perf_event_attr {
+>  				ksymbol        :  1, /* include ksymbol events */
+>  				bpf_event      :  1, /* include bpf events */
+>  				aux_output     :  1, /* generate AUX records instead of events */
+> -				__reserved_1   : 32;
+> +				cgroup         :  1, /* include cgroup events */
+> +				__reserved_1   : 31;
+>  
+>  	union {
+>  		__u32		wakeup_events;	  /* wakeup every n events */
+> @@ -1006,6 +1007,17 @@ enum perf_event_type {
+>  	 */
+>  	PERF_RECORD_BPF_EVENT			= 18,
+>  
+> +	/*
+> +	 * struct {
+> +	 *	struct perf_event_header	header;
+> +	 *	u64				id;
+> +	 *	u64				path_len;
 
-Wouldn't it be better suggesting 'd' key instead?
+You can leave out path_len (also u64 for a length field is silly).
 
-Thanks
-Namhyung
-
-
->                      browser->hists->dso_filter ? "out of" : "into",
->                      __map__is_kernel(map) ? "the Kernel" : map->dso->short_name) < 0)
->                 return 0;
-> @@ -2936,6 +2938,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
->         "E             Expand all callchains\n"                         \
->         "F             Toggle percentage of filtered entries\n"         \
->         "H             Display column headers\n"                        \
-> +       "k             Zoom into the kernel map\n"                      \
->         "L             Change percent limit\n"                          \
->         "m             Display context menu\n"                          \
->         "S             Zoom into current Processor Socket\n"            \
-> @@ -3033,6 +3036,10 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
->                         actions->ms.map = map;
->                         do_zoom_dso(browser, actions);
->                         continue;
-> +               case 'k':
-> +                       if (browser->selection != NULL)
-> +                               hists_browser__zoom_map(browser, browser->selection->maps->machine->vmlinux_map);
-> +                       continue;
->                 case 'V':
->                         verbose = (verbose + 1) % 4;
->                         browser->show_dso = verbose > 0;
-> --
-> 2.21.0
->
+> +	 *	char				path[];
+> +	 *	struct sample_id		sample_id;
+> +	 * };
+> +	 */
+> +	PERF_RECORD_CGROUP			= 19,
