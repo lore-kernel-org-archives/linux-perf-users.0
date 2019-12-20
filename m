@@ -1,54 +1,55 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-Date: Fri, 20 Dec 2019 20:50:12 +0900
-Message-ID: <CAM9d7cgdHSTf9fLJeHVoinLdkii+-hXXmy7+kbzaj1zVFa53Uw@mail.gmail.com>
-References: <20191220043253.3278951-1-namhyung@kernel.org> <20191220043253.3278951-2-namhyung@kernel.org>
- <20191220093335.GC2844@hirez.programming.kicks-ass.net>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly
+ into the kernel map
+Date: Fri, 20 Dec 2019 09:17:23 -0300
+Message-ID: <20191220121723.GC2032@kernel.org>
+References: <20191217144828.2460-1-acme@kernel.org>
+ <20191217144828.2460-7-acme@kernel.org>
+ <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
+Content-Disposition: inline
+In-Reply-To: <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Dec 20, 2019 at 6:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-> > index 377d794d3105..7bae2d3380a6 100644
-> > --- a/include/uapi/linux/perf_event.h
-> > +++ b/include/uapi/linux/perf_event.h
-> > @@ -377,7 +377,8 @@ struct perf_event_attr {
-> >                               ksymbol        :  1, /* include ksymbol events */
-> >                               bpf_event      :  1, /* include bpf events */
-> >                               aux_output     :  1, /* generate AUX records instead of events */
-> > -                             __reserved_1   : 32;
-> > +                             cgroup         :  1, /* include cgroup events */
-> > +                             __reserved_1   : 31;
-> >
-> >       union {
-> >               __u32           wakeup_events;    /* wakeup every n events */
-> > @@ -1006,6 +1007,17 @@ enum perf_event_type {
-> >        */
-> >       PERF_RECORD_BPF_EVENT                   = 18,
-> >
-> > +     /*
-> > +      * struct {
-> > +      *      struct perf_event_header        header;
-> > +      *      u64                             id;
-> > +      *      u64                             path_len;
->
-> You can leave out path_len (also u64 for a length field is silly).
+Em Fri, Dec 20, 2019 at 03:48:23PM +0900, Namhyung Kim escreveu:
+> On Tue, Dec 17, 2019 at 11:49 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > As a convenience, equivalent to pressing Enter in a line with a kernel
+> > symbol and then selecting "Zoom" into the kernel DSO.
+ 
+> We already have 'd' key for 'zoom into current dso'.
 
-Right, will remove.
+Right, current DSO, 'k' is equivalent to:
 
-Thanks
-Namhyung
+1. Navigate to a kernel map entry
+2. Press 'd'
 
+And also to:
 
->
-> > +      *      char                            path[];
-> > +      *      struct sample_id                sample_id;
-> > +      * };
-> > +      */
-> > +     PERF_RECORD_CGROUP                      = 19,
+1. Navigate to a kernel map entry
+2. Press ENTER
+3. Navigate to "Zoom into Kernel DSO"
+4. Press ENTER
+
+One key versus 2 or four.
+
+> Do you really want 'k' for kernel specially?
+
+I thought kernel hackers would like the convenience, doing:
+
+  perf top + k
+
+To get the main kernel samples looks faster than:
+
+  perf top -e cycles:k
+
+And those are not even equivalent, as cycles:k will show everything in
+ring 0, while 'perf top + k' will show just what is in the kernel _and_
+in the main kernel map.
+
+- Arnaldo
