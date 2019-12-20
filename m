@@ -1,55 +1,46 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 06/12] perf report/top: Add 'k' hotkey to zoom directly
- into the kernel map
-Date: Fri, 20 Dec 2019 09:17:23 -0300
-Message-ID: <20191220121723.GC2032@kernel.org>
-References: <20191217144828.2460-1-acme@kernel.org>
- <20191217144828.2460-7-acme@kernel.org>
- <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+Date: Fri, 20 Dec 2019 07:16:22 -0800
+Message-ID: <20191220151622.GF2914998@devbig004.ftw2.facebook.com>
+References: <20191220043253.3278951-1-namhyung@kernel.org>
+ <20191220043253.3278951-2-namhyung@kernel.org>
+ <20191220093335.GC2844@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAM9d7ciL-Qnm5v3Tn1rsrNzW3mTWx5HY6W5XBU1MKnLQ7YBdkw@mail.gmail.com>
+In-Reply-To: <20191220093335.GC2844@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Dec 20, 2019 at 03:48:23PM +0900, Namhyung Kim escreveu:
-> On Tue, Dec 17, 2019 at 11:49 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > As a convenience, equivalent to pressing Enter in a line with a kernel
-> > symbol and then selecting "Zoom" into the kernel DSO.
- 
-> We already have 'd' key for 'zoom into current dso'.
+On Fri, Dec 20, 2019 at 10:33:35AM +0100, Peter Zijlstra wrote:
+> On Fri, Dec 20, 2019 at 01:32:45PM +0900, Namhyung Kim wrote:
+> > To support cgroup tracking, add CGROUP event to save a link between
+> > cgroup path and inode number.  The attr.cgroup bit was also added to
+> > enable cgroup tracking from userspace.
+> > 
+> > This event will be generated when a new cgroup becomes active.
+> > Userspace might need to synthesize those events for existing cgroups.
+> > 
+> > Cc: Tejun Heo <tj@kernel.org>
+> > Cc: Li Zefan <lizefan@huawei.com>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> TJ, is this the right thing to do? ISTR you had concerns on this topic
+> on the past.
 
-Right, current DSO, 'k' is equivalent to:
+Yeah, cgroup->id is now the same as ino (on 64bit ino matchines) and
+fhandle and uniquely identifies a cgroup instance in that boot
+instance.  That said, id -> path mapping can be done from userspace by
+passing the cgroup id to open_by_handle_at(2) and then reading the
+symlink in /proc/self/fd, so this event isn't necessary per-se if the
+goal is mapping back ids to paths.
 
-1. Navigate to a kernel map entry
-2. Press 'd'
+Thanks.
 
-And also to:
-
-1. Navigate to a kernel map entry
-2. Press ENTER
-3. Navigate to "Zoom into Kernel DSO"
-4. Press ENTER
-
-One key versus 2 or four.
-
-> Do you really want 'k' for kernel specially?
-
-I thought kernel hackers would like the convenience, doing:
-
-  perf top + k
-
-To get the main kernel samples looks faster than:
-
-  perf top -e cycles:k
-
-And those are not even equivalent, as cycles:k will show everything in
-ring 0, while 'perf top + k' will show just what is in the kernel _and_
-in the main kernel map.
-
-- Arnaldo
+-- 
+tejun
