@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/4] perf report: Fix incorrectly added dimensions as switch perf data file
-Date: Mon, 23 Dec 2019 10:32:39 -0300
-Message-ID: <20191223133241.8578-3-acme@kernel.org>
+Subject: [PATCH 3/4] perf map: Set kmap->kmaps backpointer for main kernel map chunks
+Date: Mon, 23 Dec 2019 10:32:40 -0300
+Message-ID: <20191223133241.8578-4-acme@kernel.org>
 References: <20191223133241.8578-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,70 +9,61 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20191223133241.8578-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Feng Tang <feng.tang@intel.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We observed an issue that was some extra columns displayed after switching
-perf data file in browser. The steps to reproduce:
+When a map is create to represent the main kernel area (vmlinux) with
+map__new2() we allocate an extra area to store a pointer to the 'struct
+maps' for the kernel maps, so that we can access that struct when
+loading ELF files or kallsyms, as we will need to split it in multiple
+maps, one per kernel module or ELF section (such as ".init.text").
 
-1. perf record -a -e cycles,instructions -- sleep 3
-2. perf report --group
-3. In browser, we use hotkey 's' to switch to another perf.data
-4. Now in browser, the extra columns 'Self' and 'Children' are displayed.
+So when map->dso->kernel is non-zero, it is expected that
+map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
+chunks of the main kernel, bpf progs put in place via
+PERF_RECORD_KSYMBOL, the main kernel).
 
-The issue is setup_sorting() executed again after repeat path, so dimensions
-are added again.
+This was not the case when we were splitting the main kernel into chunks
+for its ELF sections, which ended up making 'perf report --children'
+processing a perf.data file with callchains to trip on
+__map__is_kernel(), when we press ENTER to see the popup menu for main
+histogram entries that starts at a symbol in the ".init.text" ELF
+section, e.g.:
 
-This patch checks the last key returned from __cmd_report(). If it's
-K_SWITCH_INPUT_DATA, skips the setup_sorting().
+-    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
+     start_kernel
+     cpu_startup_entry
+     do_idle
+     cpuidle_enter
+     cpuidle_enter_state
+     intel_idle
 
-Fixes: ad0de0971b7f ("perf report: Enable the runtime switching of perf data file")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Feng Tang <feng.tang@intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20191220013722.20592-1-yao.jin@linux.intel.com
+Fix it.
+
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/lkml/20191218190120.GB13282@kernel.org/
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-report.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/symbol-elf.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 387311c67264..de988589d99b 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1076,6 +1076,7 @@ int cmd_report(int argc, const char **argv)
- 	struct stat st;
- 	bool has_br_stack = false;
- 	int branch_mode = -1;
-+	int last_key = 0;
- 	bool branch_call_mode = false;
- #define CALLCHAIN_DEFAULT_OPT  "graph,0.5,caller,function,percent"
- 	static const char report_callchain_help[] = "Display call graph (stack chain/backtrace):\n\n"
-@@ -1450,7 +1451,8 @@ int cmd_report(int argc, const char **argv)
- 		sort_order = sort_tmp;
- 	}
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 6658fbf196e6..1965aefccb02 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -920,6 +920,9 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 		if (curr_map == NULL)
+ 			return -1;
  
--	if (setup_sorting(session->evlist) < 0) {
-+	if ((last_key != K_SWITCH_INPUT_DATA) &&
-+	    (setup_sorting(session->evlist) < 0)) {
- 		if (sort_order)
- 			parse_options_usage(report_usage, options, "s", 1);
- 		if (field_order)
-@@ -1530,6 +1532,7 @@ int cmd_report(int argc, const char **argv)
- 	ret = __cmd_report(&report);
- 	if (ret == K_SWITCH_INPUT_DATA) {
- 		perf_session__delete(session);
-+		last_key = K_SWITCH_INPUT_DATA;
- 		goto repeat;
- 	} else
- 		ret = 0;
++		if (curr_dso->kernel)
++			map__kmap(curr_map)->kmaps = kmaps;
++
+ 		if (adjust_kernel_syms) {
+ 			curr_map->start  = shdr->sh_addr + ref_reloc(kmap);
+ 			curr_map->end	 = curr_map->start + shdr->sh_size;
 -- 
 2.21.1
