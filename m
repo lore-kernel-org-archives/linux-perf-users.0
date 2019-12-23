@@ -1,123 +1,129 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH bpf] libbpf: Fix build on read-only filesystems
-Date: Mon, 23 Dec 2019 12:05:30 +0900
-Message-ID: <20191223030530.725937-1-namhyung@kernel.org>
-References: <20191221162158.rw6xqqktubozg6fg@ast-mbp.dhcp.thefacebook.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
+Date: Mon, 23 Dec 2019 11:48:52 +0800
+Message-ID: <20191223034852.GB3981@leoy-ThinkPad-X240s>
+References: <20191220110525.30131-1-james.clark@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191221162158.rw6xqqktubozg6fg@ast-mbp.dhcp.thefacebook.com>
+Content-Disposition: inline
+In-Reply-To: <20191220110525.30131-1-james.clark@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, bpf@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, nd@arm.com, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Igor Lubashev <ilubashe@akamai.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-I got the following error when I tried to build perf on a read-only
-filesystem with O=dir option.
+Hi James,
 
-  $ cd /some/where/ro/linux/tools/perf
-  $ make O=$HOME/build/perf
-  ...
-    CC       /home/namhyung/build/perf/lib.o
-  /bin/sh: bpf_helper_defs.h: Read-only file system
-  make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
-  make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
-  make[2]: *** Waiting for unfinished jobs....
-    LD       /home/namhyung/build/perf/libperf-in.o
-    AR       /home/namhyung/build/perf/libperf.a
-    PERF_VERSION = 5.4.0
-  make[1]: *** [Makefile.perf:225: sub-make] Error 2
-  make: *** [Makefile:70: all] Error 2
+On Fri, Dec 20, 2019 at 11:05:25AM +0000, James Clark wrote:
+> This patch fixes an issue when non Arm SPE events are specified after an
+> Arm SPE event. In that case, perf will exit with an error code and not
+> produce a record file. This is because a loop index is used to store the
+> location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
+> index will be overwritten. Fix this issue by saving the PMU into a
+> variable instead of using the index, and also add an error message.
+> 
+> Before the fix:
+>     ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+>     237
+> 
+> After the fix:
+>     ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+>     ...
+>     0
 
-It was becaused bpf_helper_defs.h was generated in current directory.
-Move it to OUTPUT directory.
+Just bring up a question related with PMU event registration.  Let's
+see the DT binding in arch/arm64/boot/dts/arm/fvp-base-revc.dts:
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/lib/bpf/Makefile               | 15 ++++++++-------
- tools/testing/selftests/bpf/Makefile |  6 +++---
- 2 files changed, 11 insertions(+), 10 deletions(-)
+         spe-pmu {
+                 compatible = "arm,statistical-profiling-extension-v1";
+                 interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+         };
 
-diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-index defae23a0169..97830e46d1a0 100644
---- a/tools/lib/bpf/Makefile
-+++ b/tools/lib/bpf/Makefile
-@@ -138,6 +138,7 @@ STATIC_OBJDIR	:= $(OUTPUT)staticobjs/
- BPF_IN_SHARED	:= $(SHARED_OBJDIR)libbpf-in.o
- BPF_IN_STATIC	:= $(STATIC_OBJDIR)libbpf-in.o
- VERSION_SCRIPT	:= libbpf.map
-+BPF_HELPER_DEFS	:= $(OUTPUT)bpf_helper_defs.h
- 
- LIB_TARGET	:= $(addprefix $(OUTPUT),$(LIB_TARGET))
- LIB_FILE	:= $(addprefix $(OUTPUT),$(LIB_FILE))
-@@ -159,7 +160,7 @@ all: fixdep
- 
- all_cmd: $(CMD_TARGETS) check
- 
--$(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
-+$(BPF_IN_SHARED): force elfdep bpfdep $(BPF_HELPER_DEFS)
- 	@(test -f ../../include/uapi/linux/bpf.h -a -f ../../../include/uapi/linux/bpf.h && ( \
- 	(diff -B ../../include/uapi/linux/bpf.h ../../../include/uapi/linux/bpf.h >/dev/null) || \
- 	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/bpf.h' differs from latest version at 'include/uapi/linux/bpf.h'" >&2 )) || true
-@@ -177,12 +178,12 @@ $(BPF_IN_SHARED): force elfdep bpfdep bpf_helper_defs.h
- 	echo "Warning: Kernel ABI header at 'tools/include/uapi/linux/if_xdp.h' differs from latest version at 'include/uapi/linux/if_xdp.h'" >&2 )) || true
- 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(SHARED_OBJDIR) CFLAGS="$(CFLAGS) $(SHLIB_FLAGS)"
- 
--$(BPF_IN_STATIC): force elfdep bpfdep bpf_helper_defs.h
-+$(BPF_IN_STATIC): force elfdep bpfdep $(BPF_HELPER_DEFS)
- 	$(Q)$(MAKE) $(build)=libbpf OUTPUT=$(STATIC_OBJDIR)
- 
--bpf_helper_defs.h: $(srctree)/tools/include/uapi/linux/bpf.h
-+$(BPF_HELPER_DEFS): $(srctree)/tools/include/uapi/linux/bpf.h
- 	$(Q)$(srctree)/scripts/bpf_helpers_doc.py --header 		\
--		--file $(srctree)/tools/include/uapi/linux/bpf.h > bpf_helper_defs.h
-+		--file $(srctree)/tools/include/uapi/linux/bpf.h > $(BPF_HELPER_DEFS)
- 
- $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
- 
-@@ -243,7 +244,7 @@ install_lib: all_cmd
- 		$(call do_install_mkdir,$(libdir_SQ)); \
- 		cp -fpR $(LIB_FILE) $(DESTDIR)$(libdir_SQ)
- 
--install_headers: bpf_helper_defs.h
-+install_headers: $(BPF_HELPER_DEFS)
- 	$(call QUIET_INSTALL, headers) \
- 		$(call do_install,bpf.h,$(prefix)/include/bpf,644); \
- 		$(call do_install,libbpf.h,$(prefix)/include/bpf,644); \
-@@ -251,7 +252,7 @@ install_headers: bpf_helper_defs.h
- 		$(call do_install,libbpf_util.h,$(prefix)/include/bpf,644); \
- 		$(call do_install,xsk.h,$(prefix)/include/bpf,644); \
- 		$(call do_install,bpf_helpers.h,$(prefix)/include/bpf,644); \
--		$(call do_install,bpf_helper_defs.h,$(prefix)/include/bpf,644); \
-+		$(call do_install,$(BPF_HELPER_DEFS),$(prefix)/include/bpf,644); \
- 		$(call do_install,bpf_tracing.h,$(prefix)/include/bpf,644); \
- 		$(call do_install,bpf_endian.h,$(prefix)/include/bpf,644); \
- 		$(call do_install,bpf_core_read.h,$(prefix)/include/bpf,644);
-@@ -271,7 +272,7 @@ install: install_lib install_pkgconfig
- clean:
- 	$(call QUIET_CLEAN, libbpf) $(RM) -rf $(CMD_TARGETS) \
- 		*.o *~ *.a *.so *.so.$(LIBBPF_MAJOR_VERSION) .*.d .*.cmd \
--		*.pc LIBBPF-CFLAGS bpf_helper_defs.h \
-+		*.pc LIBBPF-CFLAGS $(BPF_HELPER_DEFS) \
- 		$(SHARED_OBJDIR) $(STATIC_OBJDIR)
- 	$(call QUIET_CLEAN, core-gen) $(RM) $(OUTPUT)FEATURE-DUMP.libbpf
- 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index e0fe01d9ec33..e2fd6f8d579c 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -120,9 +120,9 @@ $(OUTPUT)/test_cgroup_attach: cgroup_helpers.c
- $(BPFOBJ): force
- 	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/
- 
--BPF_HELPERS := $(BPFDIR)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
--$(BPFDIR)/bpf_helper_defs.h:
--	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ bpf_helper_defs.h
-+BPF_HELPERS := $(OUTPUT)/bpf_helper_defs.h $(wildcard $(BPFDIR)/bpf_*.h)
-+$(OUTPUT)/bpf_helper_defs.h:
-+	$(MAKE) -C $(BPFDIR) OUTPUT=$(OUTPUT)/ $(OUTPUT)/bpf_helper_defs.h
- 
- # Get Clang's default includes on this system, as opposed to those seen by
- # '-target bpf'. This fixes "missing" files on some architectures/distros,
--- 
-2.24.1.735.g03f4e72817-goog
+
+Now SPE registers PMU event for every CPU; seem to me, though SPE is an
+IP binding per CPU, it should register into perf framework with single
+pmu event, ARM's PMU/ETM/IntelPT all use this way to regsiter PMU event;
+this can allow perf tool logic to be more neat.
+
+After the driver changes to use single PMU registration, the perf tool
+code can be changed to use simple way to find perf_pmu and this data
+structure can be not bound to a specific CPU.  Finally, this bug can
+be smoothly dismissed.
+
+Thanks,
+Leo
+
+> Signed-off-by: James Clark <james.clark@arm.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Igor Lubashev <ilubashe@akamai.com>
+> ---
+>  tools/perf/arch/arm/util/auxtrace.c  | 10 +++++-----
+>  tools/perf/arch/arm64/util/arm-spe.c |  1 +
+>  2 files changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> index 0a6e75b8777a..230f03b622e1 100644
+> --- a/tools/perf/arch/arm/util/auxtrace.c
+> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> @@ -54,9 +54,9 @@ struct auxtrace_record
+>  *auxtrace_record__init(struct evlist *evlist, int *err)
+>  {
+>  	struct perf_pmu	*cs_etm_pmu;
+> +	struct perf_pmu *arm_spe_pmu = NULL;
+>  	struct evsel *evsel;
+>  	bool found_etm = false;
+> -	bool found_spe = false;
+>  	static struct perf_pmu **arm_spe_pmus = NULL;
+>  	static int nr_spes = 0;
+>  	int i = 0;
+> @@ -79,13 +79,13 @@ struct auxtrace_record
+>  
+>  		for (i = 0; i < nr_spes; i++) {
+>  			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+> -				found_spe = true;
+> +				arm_spe_pmu = arm_spe_pmus[i];
+>  				break;
+>  			}
+>  		}
+>  	}
+>  
+> -	if (found_etm && found_spe) {
+> +	if (found_etm && arm_spe_pmu) {
+>  		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+>  		*err = -EOPNOTSUPP;
+>  		return NULL;
+> @@ -95,8 +95,8 @@ struct auxtrace_record
+>  		return cs_etm_record_init(err);
+>  
+>  #if defined(__aarch64__)
+> -	if (found_spe)
+> -		return arm_spe_recording_init(err, arm_spe_pmus[i]);
+> +	if (arm_spe_pmu)
+> +		return arm_spe_recording_init(err, arm_spe_pmu);
+>  #endif
+>  
+>  	/*
+> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> index eba6541ec0f1..b7d17d8724df 100644
+> --- a/tools/perf/arch/arm64/util/arm-spe.c
+> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> @@ -178,6 +178,7 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
+>  	struct arm_spe_recording *sper;
+>  
+>  	if (!arm_spe_pmu) {
+> +		pr_err("Attempted to initialise null SPE PMU\n");
+>  		*err = -ENODEV;
+>  		return NULL;
+>  	}
+> -- 
+> 2.24.0
+> 
