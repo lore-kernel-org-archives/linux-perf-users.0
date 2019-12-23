@@ -1,54 +1,66 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/4] perf hists: Fix variable name's inconsistency in hists__for_each() macro
-Date: Mon, 23 Dec 2019 10:32:41 -0300
-Message-ID: <20191223133241.8578-5-acme@kernel.org>
-References: <20191223133241.8578-1-acme@kernel.org>
+From: Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH bpf v3] libbpf: Fix build on read-only filesystems
+Date: Mon, 23 Dec 2019 15:39:41 +0100
+Message-ID: <2d6767c6-ff4c-8f88-f186-23cddbb4969a@iogearbox.net>
+References: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
+ <20191223061326.843366-1-namhyung@kernel.org>
+ <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191223133241.8578-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Yuya Fujita <fujita.yuya@fujitsu.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, bpf <bpf@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Yuya Fujita <fujita.yuya@fujitsu.com>
+On 12/23/19 7:29 AM, Andrii Nakryiko wrote:
+> On Sun, Dec 22, 2019 at 10:14 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>>
+>> I got the following error when I tried to build perf on a read-only
+>> filesystem with O=dir option.
+>>
+>>    $ cd /some/where/ro/linux/tools/perf
+>>    $ make O=$HOME/build/perf
+>>    ...
+>>      CC       /home/namhyung/build/perf/lib.o
+>>    /bin/sh: bpf_helper_defs.h: Read-only file system
+>>    make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
+>>    make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
+>>    make[2]: *** Waiting for unfinished jobs....
+>>      LD       /home/namhyung/build/perf/libperf-in.o
+>>      AR       /home/namhyung/build/perf/libperf.a
+>>      PERF_VERSION = 5.4.0
+>>    make[1]: *** [Makefile.perf:225: sub-make] Error 2
+>>    make: *** [Makefile:70: all] Error 2
+>>
+>> It was becaused bpf_helper_defs.h was generated in current directory.
+>> Move it to OUTPUT directory.
+>>
+>> Tested-by: Andrii Nakryiko <andriin@fb.com>
+>> Acked-by: Andrii Nakryiko <andriin@fb.com>
+>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>> ---
+>>   tools/lib/bpf/Makefile                 | 15 ++++++++-------
+>>   tools/testing/selftests/bpf/.gitignore |  1 +
+>>   tools/testing/selftests/bpf/Makefile   |  6 +++---
+>>   3 files changed, 12 insertions(+), 10 deletions(-)
+>>
+> 
+> [...]
+> 
+>> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
+>> index 419652458da4..1ff0a9f49c01 100644
+>> --- a/tools/testing/selftests/bpf/.gitignore
+>> +++ b/tools/testing/selftests/bpf/.gitignore
+>> @@ -40,3 +40,4 @@ xdping
+>>   test_cpp
+>>   /no_alu32
+>>   /bpf_gcc
+>> +bpf_helper_defs.h
+> 
+> looks good, thanks!
 
-Variable names are inconsistent in hists__for_each macro().
-
-Due to this inconsistency, the macro replaces its second argument with
-"fmt" regardless of its original name.
-
-So far it works because only "fmt" is passed to the second argument.
-However, this behavior is not expected and should be fixed.
-
-Fixes: f0786af536bb ("perf hists: Introduce hists__for_each_format macro")
-Fixes: aa6f50af822a ("perf hists: Introduce hists__for_each_sort_list macro")
-Signed-off-by: Yuya Fujita <fujita.yuya@fujitsu.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/OSAPR01MB1588E1C47AC22043175DE1B2E8520@OSAPR01MB1588.jpnprd01.prod.outlook.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/hist.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 45286900aacb..0aa63aeb58ec 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -339,10 +339,10 @@ static inline void perf_hpp__prepend_sort_field(struct perf_hpp_fmt *format)
- 	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
- 
- #define hists__for_each_format(hists, format) \
--	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
-+	perf_hpp_list__for_each_format((hists)->hpp_list, format)
- 
- #define hists__for_each_sort_list(hists, format) \
--	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
-+	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
- 
- extern struct perf_hpp_fmt perf_hpp__format[];
- 
--- 
-2.21.1
+Applied, thanks!
