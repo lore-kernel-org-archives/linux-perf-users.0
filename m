@@ -1,66 +1,30 @@
-From: Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH bpf v3] libbpf: Fix build on read-only filesystems
-Date: Mon, 23 Dec 2019 15:39:41 +0100
-Message-ID: <2d6767c6-ff4c-8f88-f186-23cddbb4969a@iogearbox.net>
-References: <CAM9d7ch1=pmgkFbgGr2YignQwdNjke2QeOAFLCFYu8L8J-Z8vw@mail.gmail.com>
- <20191223061326.843366-1-namhyung@kernel.org>
- <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: [PATCHSET 0/9] perf: Improve cgroup profiling (v3)
+Date: Mon, 23 Dec 2019 12:35:47 -0500 (EST)
+Message-ID: <alpine.DEB.2.21.1912231235090.775@macbook-air>
+References: <20191223060759.841176-1-namhyung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAEf4BzY1HvhkPzR1HE7-reGhfZnfySe-LxQ-5MS7Nx-Uv4oVug@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, bpf <bpf@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Networking <netdev@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191223060759.841176-1-namhyung@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 12/23/19 7:29 AM, Andrii Nakryiko wrote:
-> On Sun, Dec 22, 2019 at 10:14 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->> I got the following error when I tried to build perf on a read-only
->> filesystem with O=dir option.
->>
->>    $ cd /some/where/ro/linux/tools/perf
->>    $ make O=$HOME/build/perf
->>    ...
->>      CC       /home/namhyung/build/perf/lib.o
->>    /bin/sh: bpf_helper_defs.h: Read-only file system
->>    make[3]: *** [Makefile:184: bpf_helper_defs.h] Error 1
->>    make[2]: *** [Makefile.perf:778: /home/namhyung/build/perf/libbpf.a] Error 2
->>    make[2]: *** Waiting for unfinished jobs....
->>      LD       /home/namhyung/build/perf/libperf-in.o
->>      AR       /home/namhyung/build/perf/libperf.a
->>      PERF_VERSION = 5.4.0
->>    make[1]: *** [Makefile.perf:225: sub-make] Error 2
->>    make: *** [Makefile:70: all] Error 2
->>
->> It was becaused bpf_helper_defs.h was generated in current directory.
->> Move it to OUTPUT directory.
->>
->> Tested-by: Andrii Nakryiko <andriin@fb.com>
->> Acked-by: Andrii Nakryiko <andriin@fb.com>
->> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->> ---
->>   tools/lib/bpf/Makefile                 | 15 ++++++++-------
->>   tools/testing/selftests/bpf/.gitignore |  1 +
->>   tools/testing/selftests/bpf/Makefile   |  6 +++---
->>   3 files changed, 12 insertions(+), 10 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/tools/testing/selftests/bpf/.gitignore b/tools/testing/selftests/bpf/.gitignore
->> index 419652458da4..1ff0a9f49c01 100644
->> --- a/tools/testing/selftests/bpf/.gitignore
->> +++ b/tools/testing/selftests/bpf/.gitignore
->> @@ -40,3 +40,4 @@ xdping
->>   test_cpp
->>   /no_alu32
->>   /bpf_gcc
->> +bpf_helper_defs.h
-> 
-> looks good, thanks!
+On Mon, 23 Dec 2019, Namhyung Kim wrote:
 
-Applied, thanks!
+> This work is to improve cgroup profiling in perf.  Currently it only
+> supports profiling tasks in a specific cgroup and there's no way to
+> identify which cgroup the current sample belongs to.  So I added
+> PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> integer having file handle of the cgroup.  And kernel also generates
+> PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> read from userspace by name_to_handle_at() system call so it can
+> synthesize the CGROUP event for existing groups.
+
+so is there a patch to the manpage that describes this new behavior in 
+perf_event_open()?
+
+Vince
