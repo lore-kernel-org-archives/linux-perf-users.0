@@ -1,91 +1,37 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent improvements and fixes
-Date: Mon, 23 Dec 2019 22:28:36 +0100
-Message-ID: <20191223212836.GA24434@gmail.com>
-References: <20191223133241.8578-1-acme@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCHSET 0/9] perf: Improve cgroup profiling (v3)
+Date: Tue, 24 Dec 2019 09:40:04 +0900
+Message-ID: <CAM9d7cj06Hj3hOSdcyTpRWaoBY0wLjPpt7_+CbUqtsF-_08Czg@mail.gmail.com>
+References: <20191223060759.841176-1-namhyung@kernel.org> <alpine.DEB.2.21.1912231235090.775@macbook-air>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20191223133241.8578-1-acme@kernel.org>
+In-Reply-To: <alpine.DEB.2.21.1912231235090.775@macbook-air>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hewenliang <hewenliang4@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Yuya Fujita <fujita.yuya@fujitsu.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Vince Weaver <vincent.weaver@maine.edu>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi Vince,
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On Tue, Dec 24, 2019 at 2:35 AM Vince Weaver <vincent.weaver@maine.edu> wrote:
+>
+> On Mon, 23 Dec 2019, Namhyung Kim wrote:
+>
+> > This work is to improve cgroup profiling in perf.  Currently it only
+> > supports profiling tasks in a specific cgroup and there's no way to
+> > identify which cgroup the current sample belongs to.  So I added
+> > PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> > integer having file handle of the cgroup.  And kernel also generates
+> > PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> > cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> > read from userspace by name_to_handle_at() system call so it can
+> > synthesize the CGROUP event for existing groups.
+>
+> so is there a patch to the manpage that describes this new behavior in
+> perf_event_open()?
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 9f0bff1180efc9ea988fed3fd93da7647151ac8b:
-> 
->   perf/core: Add SRCU annotation for pmus list walk (2019-12-17 13:32:46 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.5-20191223
-> 
-> for you to fetch changes up to 55347ec340af401437680fd0e88df6739a967f9f:
-> 
->   perf hists: Fix variable name's inconsistency in hists__for_each() macro (2019-12-20 18:58:13 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf report/top:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Fix popup menu for entries in main kernel maps other than the main one,
->     e.g. ".init.text", where a non-initialized pointer was causing segfaults.
-> 
->   Jin Yao:
-> 
->   - Fix incorrectly added dimensions when switching perf.data file to another
->     via the popup menu.
-> 
-> libtraceevent:
-> 
->   Hewenliang:
-> 
->   - Fix memory leakage in filter_event().
-> 
-> perf hists:
-> 
->   Yuya Fujita:
-> 
->   - Fix variable name's inconsistency in hists__for_each() macro.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (1):
->       perf map: Set kmap->kmaps backpointer for main kernel map chunks
-> 
-> Hewenliang (1):
->       tools lib traceevent: Fix memory leakage in filter_event
-> 
-> Jin Yao (1):
->       perf report: Fix incorrectly added dimensions as switch perf data file
-> 
-> Yuya Fujita (1):
->       perf hists: Fix variable name's inconsistency in hists__for_each() macro
-> 
->  tools/lib/traceevent/parse-filter.c | 4 +++-
->  tools/perf/builtin-report.c         | 5 ++++-
->  tools/perf/util/hist.h              | 4 ++--
->  tools/perf/util/symbol-elf.c        | 3 +++
->  4 files changed, 12 insertions(+), 4 deletions(-)
+Not yet.  I'll cook a patch once it's merged to the Linus' tree.
 
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+Thanks
+Namhyung
