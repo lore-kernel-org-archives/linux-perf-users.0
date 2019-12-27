@@ -1,61 +1,49 @@
-From: Vijay Thakkar <vijaythakkar@me.com>
-Subject: [PATCH 0/3] perf vendor events amd: latest PMU events for zen1/zen2
-Date: Fri, 27 Dec 2019 07:55:33 -0500
-Message-ID: <20191227125536.1091387-1-vijaythakkar@me.com>
+From: Vince Weaver <vincent.weaver@maine.edu>
+Subject: Re: [PATCHSET 0/9] perf: Improve cgroup profiling (v3)
+Date: Fri, 27 Dec 2019 13:31:29 -0500 (EST)
+Message-ID: <alpine.DEB.2.21.1912271327320.4876@macbook-air>
+References: <20191223060759.841176-1-namhyung@kernel.org> <alpine.DEB.2.21.1912231235090.775@macbook-air> <CAM9d7cj06Hj3hOSdcyTpRWaoBY0wLjPpt7_+CbUqtsF-_08Czg@mail.gmail.com> <20191226124659.GA20204@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191226124659.GA20204@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Vijay Thakkar <vijaythakkar@me.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>, mtk.manpages@gmail.com
 List-Id: linux-perf-users.vger.kernel.org
 
-This series of patches brings the PMU events for AMD family 17h series
-of processors up to date with the latest versions of the AMD processor
-programming reference manuals.
+On Thu, 26 Dec 2019, Arnaldo Carvalho de Melo wrote:
 
-The first patch changes the pmu events mapfile to be more selective for
-the model number rather than blanket detecting all f17h processors to
-have the same events directory. This is required for the later patch
-where we add events for zen2 based processors.
+> Em Tue, Dec 24, 2019 at 09:40:04AM +0900, Namhyung Kim escreveu:
+> > On Tue, Dec 24, 2019 at 2:35 AM Vince Weaver <vincent.weaver@maine.edu> wrote:
+> > > On Mon, 23 Dec 2019, Namhyung Kim wrote:
+> > > > This work is to improve cgroup profiling in perf.  Currently it only
+> > > > supports profiling tasks in a specific cgroup and there's no way to
+> > > > identify which cgroup the current sample belongs to.  So I added
+> > > > PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> > > > integer having file handle of the cgroup.  And kernel also generates
+> > > > PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> > > > cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> > > > read from userspace by name_to_handle_at() system call so it can
+> > > > synthesize the CGROUP event for existing groups.
+> 
+> > > so is there a patch to the manpage that describes this new behavior in
+> > > perf_event_open()?
+> 
+> > Not yet.  I'll cook a patch once it's merged to the Linus' tree.
+> 
+> Vince, was it ever considered to carry the man page in the kernel
+> sources and then make it so that new features need to come with the
+> respective changes to the man page? I think that would be a good move,
+> you would be the maintainer for that file, what do you think?
 
-The second patch adds the PMU events for zen2.
+While I do a lot of work on the perf_event_open() manpage,  it's part of 
+the linux man-pages project so I don't really control where it is 
+maintained.
 
-Finally the third patch updates the zen1 PMU events to be in accordance
-with the latest PPR version and bumps up the events version to v2.
+I personally do not think it would help much merging into the kernel tree.
+I still think the idea of moving everything into linux-git (such as the  
+"perf" tool) isn't always the best idea and can make it harder for people
+who aren't kernel developers to work on things.
 
-Vijay Thakkar (3):
-  perf vendor events amd: restrict model detection for zen1 based
-    processors
-  perf vendor events amd: add Zen2 events
-  perf vendor events amd: update Zen1 events to V2
-
- .../x86/{amdfam17h => amdzen1}/branch.json    |   0
- .../x86/{amdfam17h => amdzen1}/cache.json     |   0
- .../pmu-events/arch/x86/amdzen1/core.json     | 129 ++++++
- .../floating-point.json                       |  56 +++
- .../x86/{amdfam17h => amdzen1}/memory.json    |  18 +
- .../x86/{amdfam17h => amdzen1}/other.json     |   0
- .../pmu-events/arch/x86/amdzen2/branch.json   |  56 +++
- .../pmu-events/arch/x86/amdzen2/cache.json    | 375 ++++++++++++++++++
- .../arch/x86/{amdfam17h => amdzen2}/core.json |   0
- .../arch/x86/amdzen2/floating-point.json      | 128 ++++++
- .../pmu-events/arch/x86/amdzen2/memory.json   | 349 ++++++++++++++++
- .../pmu-events/arch/x86/amdzen2/other.json    | 137 +++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   4 +-
- 13 files changed, 1251 insertions(+), 1 deletion(-)
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/branch.json (100%)
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json (100%)
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/core.json
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (63%)
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (93%)
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json (100%)
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
- rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen2}/core.json (100%)
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
-
--- 
-2.24.1
+Vince
