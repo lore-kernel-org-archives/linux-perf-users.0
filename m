@@ -1,98 +1,166 @@
-From: James Clark <James.Clark@arm.com>
+From: Leo Yan <leo.yan@linaro.org>
 Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
-Date: Thu, 2 Jan 2020 11:05:53 +0000
-Message-ID: <591d2827-55f7-130d-ab43-2a6bd715fe5e@arm.com>
+Date: Thu, 2 Jan 2020 19:44:33 +0800
+Message-ID: <20200102114433.GA18709@leoy-ThinkPad-X240s>
 References: <20191220110525.30131-1-james.clark@arm.com>
  <20191223034852.GB3981@leoy-ThinkPad-X240s>
+ <591d2827-55f7-130d-ab43-2a6bd715fe5e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191223034852.GB3981@leoy-ThinkPad-X240s>
-Content-Language: en-US
-Content-ID: <C7C1764980986E4CBFE67B411C435244@eurprd08.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <591d2827-55f7-130d-ab43-2a6bd715fe5e@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "leo.yan@linaro.org" <leo.yan@linaro.org>
+To: James Clark <James.Clark@arm.com>
 Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd <nd@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki Poulose <Suzuki.Poulose@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Igor Lubashev <ilubashe@akamai.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-SGkgTGVvLA0KDQpEbyB5b3UgbWVhbiB0aGF0IHlvdSB3b3VsZCBuZXZlciBleHBlY3QgdGhlcmUg
-dG8gYmUgbW9yZSB0aGFuIG9uZSBTUEUgZmlsZSBsaWtlIC9zeXMvYnVzL2V2ZW50X3NvdXJjZS9k
-ZXZpY2VzL2FybV9zcGVfMD8NCg0KSWYgdGhhdCBpcyB0aGUgY2FzZSB0aGVuIGRvIHlvdSBrbm93
-IHdoeSB0aGVyZSBpcyBzdGlsbCBhIG51bWJlciBhcHBlbmRlZCB0byB0aGUgZmlsZT8NCg0KDQpU
-aGFua3MNCkphbWVzDQoNCk9uIDIzLzEyLzIwMTkgMDM6NDgsIExlbyBZYW4gd3JvdGU6DQo+IEhp
-IEphbWVzLA0KPiANCj4gT24gRnJpLCBEZWMgMjAsIDIwMTkgYXQgMTE6MDU6MjVBTSArMDAwMCwg
-SmFtZXMgQ2xhcmsgd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGZpeGVzIGFuIGlzc3VlIHdoZW4gbm9u
-IEFybSBTUEUgZXZlbnRzIGFyZSBzcGVjaWZpZWQgYWZ0ZXIgYW4NCj4+IEFybSBTUEUgZXZlbnQu
-IEluIHRoYXQgY2FzZSwgcGVyZiB3aWxsIGV4aXQgd2l0aCBhbiBlcnJvciBjb2RlIGFuZCBub3QN
-Cj4+IHByb2R1Y2UgYSByZWNvcmQgZmlsZS4gVGhpcyBpcyBiZWNhdXNlIGEgbG9vcCBpbmRleCBp
-cyB1c2VkIHRvIHN0b3JlIHRoZQ0KPj4gbG9jYXRpb24gb2YgdGhlIHJlbGV2YW50IEFybSBTUEUg
-UE1VLCBidXQgaWYgbm9uIFNQRSBQTVVzIGZvbGxvdywgdGhhdA0KPj4gaW5kZXggd2lsbCBiZSBv
-dmVyd3JpdHRlbi4gRml4IHRoaXMgaXNzdWUgYnkgc2F2aW5nIHRoZSBQTVUgaW50byBhDQo+PiB2
-YXJpYWJsZSBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBpbmRleCwgYW5kIGFsc28gYWRkIGFuIGVycm9y
-IG1lc3NhZ2UuDQo+Pg0KPj4gQmVmb3JlIHRoZSBmaXg6DQo+PiAgICAgLi9wZXJmIHJlY29yZCAt
-ZSBhcm1fc3BlL3RzX2VuYWJsZT0xLyAtZSBicmFuY2gtbWlzc2VzIGxzOyBlY2hvICQ/DQo+PiAg
-ICAgMjM3DQo+Pg0KPj4gQWZ0ZXIgdGhlIGZpeDoNCj4+ICAgICAuL3BlcmYgcmVjb3JkIC1lIGFy
-bV9zcGUvdHNfZW5hYmxlPTEvIC1lIGJyYW5jaC1taXNzZXMgbHM7IGVjaG8gJD8NCj4+ICAgICAu
-Li4NCj4+ICAgICAwDQo+IA0KPiBKdXN0IGJyaW5nIHVwIGEgcXVlc3Rpb24gcmVsYXRlZCB3aXRo
-IFBNVSBldmVudCByZWdpc3RyYXRpb24uICBMZXQncw0KPiBzZWUgdGhlIERUIGJpbmRpbmcgaW4g
-YXJjaC9hcm02NC9ib290L2R0cy9hcm0vZnZwLWJhc2UtcmV2Yy5kdHM6DQo+IA0KPiAgICAgICAg
-ICBzcGUtcG11IHsNCj4gICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxzdGF0aXN0
-aWNhbC1wcm9maWxpbmctZXh0ZW5zaW9uLXYxIjsNCj4gICAgICAgICAgICAgICAgICBpbnRlcnJ1
-cHRzID0gPEdJQ19QUEkgNSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gICAgICAgICAgfTsNCj4g
-DQo+IA0KPiBOb3cgU1BFIHJlZ2lzdGVycyBQTVUgZXZlbnQgZm9yIGV2ZXJ5IENQVTsgc2VlbSB0
-byBtZSwgdGhvdWdoIFNQRSBpcyBhbg0KPiBJUCBiaW5kaW5nIHBlciBDUFUsIGl0IHNob3VsZCBy
-ZWdpc3RlciBpbnRvIHBlcmYgZnJhbWV3b3JrIHdpdGggc2luZ2xlDQo+IHBtdSBldmVudCwgQVJN
-J3MgUE1VL0VUTS9JbnRlbFBUIGFsbCB1c2UgdGhpcyB3YXkgdG8gcmVnc2l0ZXIgUE1VIGV2ZW50
-Ow0KPiB0aGlzIGNhbiBhbGxvdyBwZXJmIHRvb2wgbG9naWMgdG8gYmUgbW9yZSBuZWF0Lg0KPiAN
-Cj4gQWZ0ZXIgdGhlIGRyaXZlciBjaGFuZ2VzIHRvIHVzZSBzaW5nbGUgUE1VIHJlZ2lzdHJhdGlv
-biwgdGhlIHBlcmYgdG9vbA0KPiBjb2RlIGNhbiBiZSBjaGFuZ2VkIHRvIHVzZSBzaW1wbGUgd2F5
-IHRvIGZpbmQgcGVyZl9wbXUgYW5kIHRoaXMgZGF0YQ0KPiBzdHJ1Y3R1cmUgY2FuIGJlIG5vdCBi
-b3VuZCB0byBhIHNwZWNpZmljIENQVS4gIEZpbmFsbHksIHRoaXMgYnVnIGNhbg0KPiBiZSBzbW9v
-dGhseSBkaXNtaXNzZWQuDQo+IA0KPiBUaGFua3MsDQo+IExlbw0KPiANCj4+IFNpZ25lZC1vZmYt
-Ynk6IEphbWVzIENsYXJrIDxqYW1lcy5jbGFya0Bhcm0uY29tPg0KPj4gQ2M6IE1hdGhpZXUgUG9p
-cmllciA8bWF0aGlldS5wb2lyaWVyQGxpbmFyby5vcmc+DQo+PiBDYzogU3V6dWtpIEsgUG91bG9z
-ZSA8c3V6dWtpLnBvdWxvc2VAYXJtLmNvbT4NCj4+IENjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6
-QGluZnJhZGVhZC5vcmc+DQo+PiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+DQo+
-PiBDYzogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQGtlcm5lbC5vcmc+DQo+PiBDYzog
-TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4+IENjOiBBbGV4YW5kZXIgU2hp
-c2hraW4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+DQo+PiBDYzogSmlyaSBP
-bHNhIDxqb2xzYUByZWRoYXQuY29tPg0KPj4gQ2M6IE5hbWh5dW5nIEtpbSA8bmFtaHl1bmdAa2Vy
-bmVsLm9yZz4NCj4+IENjOiBJZ29yIEx1YmFzaGV2IDxpbHViYXNoZUBha2FtYWkuY29tPg0KPj4g
-LS0tDQo+PiAgdG9vbHMvcGVyZi9hcmNoL2FybS91dGlsL2F1eHRyYWNlLmMgIHwgMTAgKysrKyst
-LS0tLQ0KPj4gIHRvb2xzL3BlcmYvYXJjaC9hcm02NC91dGlsL2FybS1zcGUuYyB8ICAxICsNCj4+
-ICAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4+DQo+
-PiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9hcmNoL2FybS91dGlsL2F1eHRyYWNlLmMgYi90b29s
-cy9wZXJmL2FyY2gvYXJtL3V0aWwvYXV4dHJhY2UuYw0KPj4gaW5kZXggMGE2ZTc1Yjg3NzdhLi4y
-MzBmMDNiNjIyZTEgMTAwNjQ0DQo+PiAtLS0gYS90b29scy9wZXJmL2FyY2gvYXJtL3V0aWwvYXV4
-dHJhY2UuYw0KPj4gKysrIGIvdG9vbHMvcGVyZi9hcmNoL2FybS91dGlsL2F1eHRyYWNlLmMNCj4+
-IEBAIC01NCw5ICs1NCw5IEBAIHN0cnVjdCBhdXh0cmFjZV9yZWNvcmQNCj4+ICAqYXV4dHJhY2Vf
-cmVjb3JkX19pbml0KHN0cnVjdCBldmxpc3QgKmV2bGlzdCwgaW50ICplcnIpDQo+PiAgew0KPj4g
-IAlzdHJ1Y3QgcGVyZl9wbXUJKmNzX2V0bV9wbXU7DQo+PiArCXN0cnVjdCBwZXJmX3BtdSAqYXJt
-X3NwZV9wbXUgPSBOVUxMOw0KPj4gIAlzdHJ1Y3QgZXZzZWwgKmV2c2VsOw0KPj4gIAlib29sIGZv
-dW5kX2V0bSA9IGZhbHNlOw0KPj4gLQlib29sIGZvdW5kX3NwZSA9IGZhbHNlOw0KPj4gIAlzdGF0
-aWMgc3RydWN0IHBlcmZfcG11ICoqYXJtX3NwZV9wbXVzID0gTlVMTDsNCj4+ICAJc3RhdGljIGlu
-dCBucl9zcGVzID0gMDsNCj4+ICAJaW50IGkgPSAwOw0KPj4gQEAgLTc5LDEzICs3OSwxMyBAQCBz
-dHJ1Y3QgYXV4dHJhY2VfcmVjb3JkDQo+PiAgDQo+PiAgCQlmb3IgKGkgPSAwOyBpIDwgbnJfc3Bl
-czsgaSsrKSB7DQo+PiAgCQkJaWYgKGV2c2VsLT5jb3JlLmF0dHIudHlwZSA9PSBhcm1fc3BlX3Bt
-dXNbaV0tPnR5cGUpIHsNCj4+IC0JCQkJZm91bmRfc3BlID0gdHJ1ZTsNCj4+ICsJCQkJYXJtX3Nw
-ZV9wbXUgPSBhcm1fc3BlX3BtdXNbaV07DQo+PiAgCQkJCWJyZWFrOw0KPj4gIAkJCX0NCj4+ICAJ
-CX0NCj4+ICAJfQ0KPj4gIA0KPj4gLQlpZiAoZm91bmRfZXRtICYmIGZvdW5kX3NwZSkgew0KPj4g
-KwlpZiAoZm91bmRfZXRtICYmIGFybV9zcGVfcG11KSB7DQo+PiAgCQlwcl9lcnIoIkNvbmN1cnJl
-bnQgQVJNIENvcmVzaWdodCBFVE0gYW5kIFNQRSBvcGVyYXRpb24gbm90IGN1cnJlbnRseSBzdXBw
-b3J0ZWRcbiIpOw0KPj4gIAkJKmVyciA9IC1FT1BOT1RTVVBQOw0KPj4gIAkJcmV0dXJuIE5VTEw7
-DQo+PiBAQCAtOTUsOCArOTUsOCBAQCBzdHJ1Y3QgYXV4dHJhY2VfcmVjb3JkDQo+PiAgCQlyZXR1
-cm4gY3NfZXRtX3JlY29yZF9pbml0KGVycik7DQo+PiAgDQo+PiAgI2lmIGRlZmluZWQoX19hYXJj
-aDY0X18pDQo+PiAtCWlmIChmb3VuZF9zcGUpDQo+PiAtCQlyZXR1cm4gYXJtX3NwZV9yZWNvcmRp
-bmdfaW5pdChlcnIsIGFybV9zcGVfcG11c1tpXSk7DQo+PiArCWlmIChhcm1fc3BlX3BtdSkNCj4+
-ICsJCXJldHVybiBhcm1fc3BlX3JlY29yZGluZ19pbml0KGVyciwgYXJtX3NwZV9wbXUpOw0KPj4g
-ICNlbmRpZg0KPj4gIA0KPj4gIAkvKg0KPj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvYXJjaC9h
-cm02NC91dGlsL2FybS1zcGUuYyBiL3Rvb2xzL3BlcmYvYXJjaC9hcm02NC91dGlsL2FybS1zcGUu
-Yw0KPj4gaW5kZXggZWJhNjU0MWVjMGYxLi5iN2QxN2Q4NzI0ZGYgMTAwNjQ0DQo+PiAtLS0gYS90
-b29scy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMNCj4+ICsrKyBiL3Rvb2xzL3BlcmYv
-YXJjaC9hcm02NC91dGlsL2FybS1zcGUuYw0KPj4gQEAgLTE3OCw2ICsxNzgsNyBAQCBzdHJ1Y3Qg
-YXV4dHJhY2VfcmVjb3JkICphcm1fc3BlX3JlY29yZGluZ19pbml0KGludCAqZXJyLA0KPj4gIAlz
-dHJ1Y3QgYXJtX3NwZV9yZWNvcmRpbmcgKnNwZXI7DQo+PiAgDQo+PiAgCWlmICghYXJtX3NwZV9w
-bXUpIHsNCj4+ICsJCXByX2VycigiQXR0ZW1wdGVkIHRvIGluaXRpYWxpc2UgbnVsbCBTUEUgUE1V
-XG4iKTsNCj4+ICAJCSplcnIgPSAtRU5PREVWOw0KPj4gIAkJcmV0dXJuIE5VTEw7DQo+PiAgCX0N
-Cj4+IC0tIA0KPj4gMi4yNC4wDQo+Pg0K
+Hi James,
+
+On Thu, Jan 02, 2020 at 11:05:53AM +0000, James Clark wrote:
+> Hi Leo,
+> 
+> Do you mean that you would never expect there to be more than one SPE file like /sys/bus/event_source/devices/arm_spe_0?
+
+Yeah.
+
+To be more accurate, I'd suggest to be only one SPE file if CPUs have
+the same SPE version.  If there have multiple SPE files under
+'/sys/bus/event_source/devices/', this means the CPUs have different
+SPE versions
+
+Let's see an example for SMP platform with 4xCA53 CPUs:
+/sys/bus/event_source/devices/armv8_cortex_a53
+
+For big.LITTLE system, we can see below nodes:
+/sys/bus/event_source/devices/armv8_cortex_a53
+/sys/bus/event_source/devices/armv8_cortex_a72
+
+If SPE has the same IP for all CPUs, this would be simple to only
+create on file under /sys/bus/event_source/devices/.
+
+> If that is the case then do you know why there is still a number appended to the file?
+
+This is caused by the code [1].  But I don't know what's the reason
+for adding index to PMU event name.
+
+Thanks,
+Leo Yan
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/perf/arm_spe_pmu.c?h=v5.5-rc4#n911
+
+> On 23/12/2019 03:48, Leo Yan wrote:
+> > Hi James,
+> > 
+> > On Fri, Dec 20, 2019 at 11:05:25AM +0000, James Clark wrote:
+> >> This patch fixes an issue when non Arm SPE events are specified after an
+> >> Arm SPE event. In that case, perf will exit with an error code and not
+> >> produce a record file. This is because a loop index is used to store the
+> >> location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
+> >> index will be overwritten. Fix this issue by saving the PMU into a
+> >> variable instead of using the index, and also add an error message.
+> >>
+> >> Before the fix:
+> >>     ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+> >>     237
+> >>
+> >> After the fix:
+> >>     ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+> >>     ...
+> >>     0
+> > 
+> > Just bring up a question related with PMU event registration.  Let's
+> > see the DT binding in arch/arm64/boot/dts/arm/fvp-base-revc.dts:
+> > 
+> >          spe-pmu {
+> >                  compatible = "arm,statistical-profiling-extension-v1";
+> >                  interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> >          };
+> > 
+> > 
+> > Now SPE registers PMU event for every CPU; seem to me, though SPE is an
+> > IP binding per CPU, it should register into perf framework with single
+> > pmu event, ARM's PMU/ETM/IntelPT all use this way to regsiter PMU event;
+> > this can allow perf tool logic to be more neat.
+> > 
+> > After the driver changes to use single PMU registration, the perf tool
+> > code can be changed to use simple way to find perf_pmu and this data
+> > structure can be not bound to a specific CPU.  Finally, this bug can
+> > be smoothly dismissed.
+> > 
+> > Thanks,
+> > Leo
+> > 
+> >> Signed-off-by: James Clark <james.clark@arm.com>
+> >> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> >> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >> Cc: Peter Zijlstra <peterz@infradead.org>
+> >> Cc: Ingo Molnar <mingo@redhat.com>
+> >> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> >> Cc: Jiri Olsa <jolsa@redhat.com>
+> >> Cc: Namhyung Kim <namhyung@kernel.org>
+> >> Cc: Igor Lubashev <ilubashe@akamai.com>
+> >> ---
+> >>  tools/perf/arch/arm/util/auxtrace.c  | 10 +++++-----
+> >>  tools/perf/arch/arm64/util/arm-spe.c |  1 +
+> >>  2 files changed, 6 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
+> >> index 0a6e75b8777a..230f03b622e1 100644
+> >> --- a/tools/perf/arch/arm/util/auxtrace.c
+> >> +++ b/tools/perf/arch/arm/util/auxtrace.c
+> >> @@ -54,9 +54,9 @@ struct auxtrace_record
+> >>  *auxtrace_record__init(struct evlist *evlist, int *err)
+> >>  {
+> >>  	struct perf_pmu	*cs_etm_pmu;
+> >> +	struct perf_pmu *arm_spe_pmu = NULL;
+> >>  	struct evsel *evsel;
+> >>  	bool found_etm = false;
+> >> -	bool found_spe = false;
+> >>  	static struct perf_pmu **arm_spe_pmus = NULL;
+> >>  	static int nr_spes = 0;
+> >>  	int i = 0;
+> >> @@ -79,13 +79,13 @@ struct auxtrace_record
+> >>  
+> >>  		for (i = 0; i < nr_spes; i++) {
+> >>  			if (evsel->core.attr.type == arm_spe_pmus[i]->type) {
+> >> -				found_spe = true;
+> >> +				arm_spe_pmu = arm_spe_pmus[i];
+> >>  				break;
+> >>  			}
+> >>  		}
+> >>  	}
+> >>  
+> >> -	if (found_etm && found_spe) {
+> >> +	if (found_etm && arm_spe_pmu) {
+> >>  		pr_err("Concurrent ARM Coresight ETM and SPE operation not currently supported\n");
+> >>  		*err = -EOPNOTSUPP;
+> >>  		return NULL;
+> >> @@ -95,8 +95,8 @@ struct auxtrace_record
+> >>  		return cs_etm_record_init(err);
+> >>  
+> >>  #if defined(__aarch64__)
+> >> -	if (found_spe)
+> >> -		return arm_spe_recording_init(err, arm_spe_pmus[i]);
+> >> +	if (arm_spe_pmu)
+> >> +		return arm_spe_recording_init(err, arm_spe_pmu);
+> >>  #endif
+> >>  
+> >>  	/*
+> >> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> >> index eba6541ec0f1..b7d17d8724df 100644
+> >> --- a/tools/perf/arch/arm64/util/arm-spe.c
+> >> +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> >> @@ -178,6 +178,7 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
+> >>  	struct arm_spe_recording *sper;
+> >>  
+> >>  	if (!arm_spe_pmu) {
+> >> +		pr_err("Attempted to initialise null SPE PMU\n");
+> >>  		*err = -ENODEV;
+> >>  		return NULL;
+> >>  	}
+> >> -- 
+> >> 2.24.0
+> >>
