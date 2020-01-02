@@ -1,48 +1,98 @@
-From: "Serge E. Hallyn" <serge@hallyn.com>
-Subject: Re: [PATCH v4 1/9] capabilities: introduce CAP_SYS_PERFMON to kernel
- and user space
-Date: Fri, 27 Dec 2019 21:53:31 -0600
-Message-ID: <20191228035331.GA16088@mail.hallyn.com>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
+From: James Clark <James.Clark@arm.com>
+Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
+Date: Thu, 2 Jan 2020 11:05:53 +0000
+Message-ID: <591d2827-55f7-130d-ab43-2a6bd715fe5e@arm.com>
+References: <20191220110525.30131-1-james.clark@arm.com>
+ <20191223034852.GB3981@leoy-ThinkPad-X240s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Peter Zijlstra <peterz@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>s
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20191223034852.GB3981@leoy-ThinkPad-X240s>
+Content-Language: en-US
+Content-ID: <C7C1764980986E4CBFE67B411C435244@eurprd08.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "leo.yan@linaro.org" <leo.yan@linaro.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd <nd@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki Poulose <Suzuki.Poulose@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Igor Lubashev <ilubashe@akamai.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Dec 18, 2019 at 12:24:28PM +0300, Alexey Budankov wrote:
-> 
-> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
-> monitoring and observability operations so that CAP_SYS_PERFMON would
-> assist CAP_SYS_ADMIN capability in its governing role for perf_events,
-> i915_perf and other subsystems of the kernel.
-> 
-> CAP_SYS_PERFMON intends to harden system security and integrity during
-> system performance monitoring and observability operations by decreasing
-> attack surface that is available to CAP_SYS_ADMIN privileged processes.
-> 
-> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related
-> to system performance monitoring and observability operations and balance
-> amount of CAP_SYS_ADMIN credentials in accordance with the recommendations
-> provided in the man page for CAP_SYS_ADMIN [1]: "Note: this capability
-> is overloaded; see Notes to kernel developers, below."
-> 
-> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-
-Acked-by: Serge Hallyn <serge@hallyn.com>
+SGkgTGVvLA0KDQpEbyB5b3UgbWVhbiB0aGF0IHlvdSB3b3VsZCBuZXZlciBleHBlY3QgdGhlcmUg
+dG8gYmUgbW9yZSB0aGFuIG9uZSBTUEUgZmlsZSBsaWtlIC9zeXMvYnVzL2V2ZW50X3NvdXJjZS9k
+ZXZpY2VzL2FybV9zcGVfMD8NCg0KSWYgdGhhdCBpcyB0aGUgY2FzZSB0aGVuIGRvIHlvdSBrbm93
+IHdoeSB0aGVyZSBpcyBzdGlsbCBhIG51bWJlciBhcHBlbmRlZCB0byB0aGUgZmlsZT8NCg0KDQpU
+aGFua3MNCkphbWVzDQoNCk9uIDIzLzEyLzIwMTkgMDM6NDgsIExlbyBZYW4gd3JvdGU6DQo+IEhp
+IEphbWVzLA0KPiANCj4gT24gRnJpLCBEZWMgMjAsIDIwMTkgYXQgMTE6MDU6MjVBTSArMDAwMCwg
+SmFtZXMgQ2xhcmsgd3JvdGU6DQo+PiBUaGlzIHBhdGNoIGZpeGVzIGFuIGlzc3VlIHdoZW4gbm9u
+IEFybSBTUEUgZXZlbnRzIGFyZSBzcGVjaWZpZWQgYWZ0ZXIgYW4NCj4+IEFybSBTUEUgZXZlbnQu
+IEluIHRoYXQgY2FzZSwgcGVyZiB3aWxsIGV4aXQgd2l0aCBhbiBlcnJvciBjb2RlIGFuZCBub3QN
+Cj4+IHByb2R1Y2UgYSByZWNvcmQgZmlsZS4gVGhpcyBpcyBiZWNhdXNlIGEgbG9vcCBpbmRleCBp
+cyB1c2VkIHRvIHN0b3JlIHRoZQ0KPj4gbG9jYXRpb24gb2YgdGhlIHJlbGV2YW50IEFybSBTUEUg
+UE1VLCBidXQgaWYgbm9uIFNQRSBQTVVzIGZvbGxvdywgdGhhdA0KPj4gaW5kZXggd2lsbCBiZSBv
+dmVyd3JpdHRlbi4gRml4IHRoaXMgaXNzdWUgYnkgc2F2aW5nIHRoZSBQTVUgaW50byBhDQo+PiB2
+YXJpYWJsZSBpbnN0ZWFkIG9mIHVzaW5nIHRoZSBpbmRleCwgYW5kIGFsc28gYWRkIGFuIGVycm9y
+IG1lc3NhZ2UuDQo+Pg0KPj4gQmVmb3JlIHRoZSBmaXg6DQo+PiAgICAgLi9wZXJmIHJlY29yZCAt
+ZSBhcm1fc3BlL3RzX2VuYWJsZT0xLyAtZSBicmFuY2gtbWlzc2VzIGxzOyBlY2hvICQ/DQo+PiAg
+ICAgMjM3DQo+Pg0KPj4gQWZ0ZXIgdGhlIGZpeDoNCj4+ICAgICAuL3BlcmYgcmVjb3JkIC1lIGFy
+bV9zcGUvdHNfZW5hYmxlPTEvIC1lIGJyYW5jaC1taXNzZXMgbHM7IGVjaG8gJD8NCj4+ICAgICAu
+Li4NCj4+ICAgICAwDQo+IA0KPiBKdXN0IGJyaW5nIHVwIGEgcXVlc3Rpb24gcmVsYXRlZCB3aXRo
+IFBNVSBldmVudCByZWdpc3RyYXRpb24uICBMZXQncw0KPiBzZWUgdGhlIERUIGJpbmRpbmcgaW4g
+YXJjaC9hcm02NC9ib290L2R0cy9hcm0vZnZwLWJhc2UtcmV2Yy5kdHM6DQo+IA0KPiAgICAgICAg
+ICBzcGUtcG11IHsNCj4gICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxzdGF0aXN0
+aWNhbC1wcm9maWxpbmctZXh0ZW5zaW9uLXYxIjsNCj4gICAgICAgICAgICAgICAgICBpbnRlcnJ1
+cHRzID0gPEdJQ19QUEkgNSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gICAgICAgICAgfTsNCj4g
+DQo+IA0KPiBOb3cgU1BFIHJlZ2lzdGVycyBQTVUgZXZlbnQgZm9yIGV2ZXJ5IENQVTsgc2VlbSB0
+byBtZSwgdGhvdWdoIFNQRSBpcyBhbg0KPiBJUCBiaW5kaW5nIHBlciBDUFUsIGl0IHNob3VsZCBy
+ZWdpc3RlciBpbnRvIHBlcmYgZnJhbWV3b3JrIHdpdGggc2luZ2xlDQo+IHBtdSBldmVudCwgQVJN
+J3MgUE1VL0VUTS9JbnRlbFBUIGFsbCB1c2UgdGhpcyB3YXkgdG8gcmVnc2l0ZXIgUE1VIGV2ZW50
+Ow0KPiB0aGlzIGNhbiBhbGxvdyBwZXJmIHRvb2wgbG9naWMgdG8gYmUgbW9yZSBuZWF0Lg0KPiAN
+Cj4gQWZ0ZXIgdGhlIGRyaXZlciBjaGFuZ2VzIHRvIHVzZSBzaW5nbGUgUE1VIHJlZ2lzdHJhdGlv
+biwgdGhlIHBlcmYgdG9vbA0KPiBjb2RlIGNhbiBiZSBjaGFuZ2VkIHRvIHVzZSBzaW1wbGUgd2F5
+IHRvIGZpbmQgcGVyZl9wbXUgYW5kIHRoaXMgZGF0YQ0KPiBzdHJ1Y3R1cmUgY2FuIGJlIG5vdCBi
+b3VuZCB0byBhIHNwZWNpZmljIENQVS4gIEZpbmFsbHksIHRoaXMgYnVnIGNhbg0KPiBiZSBzbW9v
+dGhseSBkaXNtaXNzZWQuDQo+IA0KPiBUaGFua3MsDQo+IExlbw0KPiANCj4+IFNpZ25lZC1vZmYt
+Ynk6IEphbWVzIENsYXJrIDxqYW1lcy5jbGFya0Bhcm0uY29tPg0KPj4gQ2M6IE1hdGhpZXUgUG9p
+cmllciA8bWF0aGlldS5wb2lyaWVyQGxpbmFyby5vcmc+DQo+PiBDYzogU3V6dWtpIEsgUG91bG9z
+ZSA8c3V6dWtpLnBvdWxvc2VAYXJtLmNvbT4NCj4+IENjOiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6
+QGluZnJhZGVhZC5vcmc+DQo+PiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+DQo+
+PiBDYzogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQGtlcm5lbC5vcmc+DQo+PiBDYzog
+TWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT4NCj4+IENjOiBBbGV4YW5kZXIgU2hp
+c2hraW4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+DQo+PiBDYzogSmlyaSBP
+bHNhIDxqb2xzYUByZWRoYXQuY29tPg0KPj4gQ2M6IE5hbWh5dW5nIEtpbSA8bmFtaHl1bmdAa2Vy
+bmVsLm9yZz4NCj4+IENjOiBJZ29yIEx1YmFzaGV2IDxpbHViYXNoZUBha2FtYWkuY29tPg0KPj4g
+LS0tDQo+PiAgdG9vbHMvcGVyZi9hcmNoL2FybS91dGlsL2F1eHRyYWNlLmMgIHwgMTAgKysrKyst
+LS0tLQ0KPj4gIHRvb2xzL3BlcmYvYXJjaC9hcm02NC91dGlsL2FybS1zcGUuYyB8ICAxICsNCj4+
+ICAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4+DQo+
+PiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVyZi9hcmNoL2FybS91dGlsL2F1eHRyYWNlLmMgYi90b29s
+cy9wZXJmL2FyY2gvYXJtL3V0aWwvYXV4dHJhY2UuYw0KPj4gaW5kZXggMGE2ZTc1Yjg3NzdhLi4y
+MzBmMDNiNjIyZTEgMTAwNjQ0DQo+PiAtLS0gYS90b29scy9wZXJmL2FyY2gvYXJtL3V0aWwvYXV4
+dHJhY2UuYw0KPj4gKysrIGIvdG9vbHMvcGVyZi9hcmNoL2FybS91dGlsL2F1eHRyYWNlLmMNCj4+
+IEBAIC01NCw5ICs1NCw5IEBAIHN0cnVjdCBhdXh0cmFjZV9yZWNvcmQNCj4+ICAqYXV4dHJhY2Vf
+cmVjb3JkX19pbml0KHN0cnVjdCBldmxpc3QgKmV2bGlzdCwgaW50ICplcnIpDQo+PiAgew0KPj4g
+IAlzdHJ1Y3QgcGVyZl9wbXUJKmNzX2V0bV9wbXU7DQo+PiArCXN0cnVjdCBwZXJmX3BtdSAqYXJt
+X3NwZV9wbXUgPSBOVUxMOw0KPj4gIAlzdHJ1Y3QgZXZzZWwgKmV2c2VsOw0KPj4gIAlib29sIGZv
+dW5kX2V0bSA9IGZhbHNlOw0KPj4gLQlib29sIGZvdW5kX3NwZSA9IGZhbHNlOw0KPj4gIAlzdGF0
+aWMgc3RydWN0IHBlcmZfcG11ICoqYXJtX3NwZV9wbXVzID0gTlVMTDsNCj4+ICAJc3RhdGljIGlu
+dCBucl9zcGVzID0gMDsNCj4+ICAJaW50IGkgPSAwOw0KPj4gQEAgLTc5LDEzICs3OSwxMyBAQCBz
+dHJ1Y3QgYXV4dHJhY2VfcmVjb3JkDQo+PiAgDQo+PiAgCQlmb3IgKGkgPSAwOyBpIDwgbnJfc3Bl
+czsgaSsrKSB7DQo+PiAgCQkJaWYgKGV2c2VsLT5jb3JlLmF0dHIudHlwZSA9PSBhcm1fc3BlX3Bt
+dXNbaV0tPnR5cGUpIHsNCj4+IC0JCQkJZm91bmRfc3BlID0gdHJ1ZTsNCj4+ICsJCQkJYXJtX3Nw
+ZV9wbXUgPSBhcm1fc3BlX3BtdXNbaV07DQo+PiAgCQkJCWJyZWFrOw0KPj4gIAkJCX0NCj4+ICAJ
+CX0NCj4+ICAJfQ0KPj4gIA0KPj4gLQlpZiAoZm91bmRfZXRtICYmIGZvdW5kX3NwZSkgew0KPj4g
+KwlpZiAoZm91bmRfZXRtICYmIGFybV9zcGVfcG11KSB7DQo+PiAgCQlwcl9lcnIoIkNvbmN1cnJl
+bnQgQVJNIENvcmVzaWdodCBFVE0gYW5kIFNQRSBvcGVyYXRpb24gbm90IGN1cnJlbnRseSBzdXBw
+b3J0ZWRcbiIpOw0KPj4gIAkJKmVyciA9IC1FT1BOT1RTVVBQOw0KPj4gIAkJcmV0dXJuIE5VTEw7
+DQo+PiBAQCAtOTUsOCArOTUsOCBAQCBzdHJ1Y3QgYXV4dHJhY2VfcmVjb3JkDQo+PiAgCQlyZXR1
+cm4gY3NfZXRtX3JlY29yZF9pbml0KGVycik7DQo+PiAgDQo+PiAgI2lmIGRlZmluZWQoX19hYXJj
+aDY0X18pDQo+PiAtCWlmIChmb3VuZF9zcGUpDQo+PiAtCQlyZXR1cm4gYXJtX3NwZV9yZWNvcmRp
+bmdfaW5pdChlcnIsIGFybV9zcGVfcG11c1tpXSk7DQo+PiArCWlmIChhcm1fc3BlX3BtdSkNCj4+
+ICsJCXJldHVybiBhcm1fc3BlX3JlY29yZGluZ19pbml0KGVyciwgYXJtX3NwZV9wbXUpOw0KPj4g
+ICNlbmRpZg0KPj4gIA0KPj4gIAkvKg0KPj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3BlcmYvYXJjaC9h
+cm02NC91dGlsL2FybS1zcGUuYyBiL3Rvb2xzL3BlcmYvYXJjaC9hcm02NC91dGlsL2FybS1zcGUu
+Yw0KPj4gaW5kZXggZWJhNjU0MWVjMGYxLi5iN2QxN2Q4NzI0ZGYgMTAwNjQ0DQo+PiAtLS0gYS90
+b29scy9wZXJmL2FyY2gvYXJtNjQvdXRpbC9hcm0tc3BlLmMNCj4+ICsrKyBiL3Rvb2xzL3BlcmYv
+YXJjaC9hcm02NC91dGlsL2FybS1zcGUuYw0KPj4gQEAgLTE3OCw2ICsxNzgsNyBAQCBzdHJ1Y3Qg
+YXV4dHJhY2VfcmVjb3JkICphcm1fc3BlX3JlY29yZGluZ19pbml0KGludCAqZXJyLA0KPj4gIAlz
+dHJ1Y3QgYXJtX3NwZV9yZWNvcmRpbmcgKnNwZXI7DQo+PiAgDQo+PiAgCWlmICghYXJtX3NwZV9w
+bXUpIHsNCj4+ICsJCXByX2VycigiQXR0ZW1wdGVkIHRvIGluaXRpYWxpc2UgbnVsbCBTUEUgUE1V
+XG4iKTsNCj4+ICAJCSplcnIgPSAtRU5PREVWOw0KPj4gIAkJcmV0dXJuIE5VTEw7DQo+PiAgCX0N
+Cj4+IC0tIA0KPj4gMi4yNC4wDQo+Pg0K
