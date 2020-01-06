@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 02/20] perf mmap: Declare type for cpu mask of arbitrary length
-Date: Mon,  6 Jan 2020 13:06:47 -0300
-Message-ID: <20200106160705.10899-3-acme@kernel.org>
+Subject: [PATCH 05/20] perf tests bp_signal: Show expected versus obtained values
+Date: Mon,  6 Jan 2020 13:06:50 -0300
+Message-ID: <20200106160705.10899-6-acme@kernel.org>
 References: <20200106160705.10899-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,88 +9,51 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200106160705.10899-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Declare a dedicated struct map_cpu_mask type for cpu masks of arbitrary
-length.
+To help understand failures.
 
-The mask is available thru bits pointer and the mask length is kept in
-nbits field. MMAP_CPU_MASK_BYTES() macro returns mask storage size in
-bytes.
-
-The mmap_cpu_mask__scnprintf() function can be used to log text
-representation of the mask.
-
-Committer notes:
-
-To print the 'nbits' struct member we must use %zd, since it is a
-size_t, this fixes the build in some toolchains/arches.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/0fd2454f-477f-d15a-f4ee-79bcbd2585ff@linux.intel.com
+Link: https://lkml.kernel.org/n/tip-c951j3gvrgnrsyg7ki7pwkiz@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/mmap.c | 12 ++++++++++++
- tools/perf/util/mmap.h | 11 +++++++++++
- 2 files changed, 23 insertions(+)
+ tools/perf/tests/bp_signal.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 063d1b93c53d..2ee4faacca21 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -23,6 +23,18 @@
- #include "mmap.h"
- #include "../perf.h"
- #include <internal/lib.h> /* page_size */
-+#include <linux/bitmap.h>
-+
-+#define MASK_SIZE 1023
-+void mmap_cpu_mask__scnprintf(struct mmap_cpu_mask *mask, const char *tag)
-+{
-+	char buf[MASK_SIZE + 1];
-+	size_t len;
-+
-+	len = bitmap_scnprintf(mask->bits, mask->nbits, buf, MASK_SIZE);
-+	buf[len] = '\0';
-+	pr_debug("%p: %s mask[%zd]: %s\n", mask, tag, mask->nbits, buf);
-+}
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index 415903b48578..da8ec1e8e064 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -263,20 +263,20 @@ int test__bp_signal(struct test *test __maybe_unused, int subtest __maybe_unused
+ 		if (count1 == 11)
+ 			pr_debug("failed: RF EFLAG recursion issue detected\n");
+ 		else
+-			pr_debug("failed: wrong count for bp1%lld\n", count1);
++			pr_debug("failed: wrong count for bp1: %lld, expected 1\n", count1);
+ 	}
  
- size_t mmap__mmap_len(struct mmap *map)
- {
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index bee4e83f7109..ef51667fabcb 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -15,6 +15,15 @@
- #include "event.h"
+ 	if (overflows != 3)
+-		pr_debug("failed: wrong overflow hit\n");
++		pr_debug("failed: wrong overflow (%d) hit, expected 3\n", overflows);
  
- struct aiocb;
-+
-+struct mmap_cpu_mask {
-+	unsigned long *bits;
-+	size_t nbits;
-+};
-+
-+#define MMAP_CPU_MASK_BYTES(m) \
-+	(BITS_TO_LONGS(((struct mmap_cpu_mask *)m)->nbits) * sizeof(unsigned long))
-+
- /**
-  * struct mmap - perf's ring buffer mmap details
-  *
-@@ -52,4 +61,6 @@ int perf_mmap__push(struct mmap *md, void *to,
+ 	if (overflows_2 != 3)
+-		pr_debug("failed: wrong overflow_2 hit\n");
++		pr_debug("failed: wrong overflow_2 (%d) hit, expected 3\n", overflows_2);
  
- size_t mmap__mmap_len(struct mmap *map);
+ 	if (count2 != 3)
+-		pr_debug("failed: wrong count for bp2\n");
++		pr_debug("failed: wrong count for bp2 (%lld), expected 3\n", count2);
  
-+void mmap_cpu_mask__scnprintf(struct mmap_cpu_mask *mask, const char *tag);
-+
- #endif /*__PERF_MMAP_H */
+ 	if (count3 != 2)
+-		pr_debug("failed: wrong count for bp3\n");
++		pr_debug("failed: wrong count for bp3 (%lld), expected 2\n", count3);
+ 
+ 	return count1 == 1 && overflows == 3 && count2 == 3 && overflows_2 == 3 && count3 == 2 ?
+ 		TEST_OK : TEST_FAIL;
 -- 
 2.21.1
