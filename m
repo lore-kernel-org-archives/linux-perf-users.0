@@ -1,72 +1,112 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/20] perf report/top: Make 'e' visible in the help and make it toggle showing callchains
-Date: Mon,  6 Jan 2020 13:07:04 -0300
-Message-ID: <20200106160705.10899-20-acme@kernel.org>
+Subject: [PATCH 20/20] tools lib: Fix builds when glibc contains strlcpy()
+Date: Mon,  6 Jan 2020 13:07:05 -0300
+Message-ID: <20200106160705.10899-21-acme@kernel.org>
 References: <20200106160705.10899-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200106160705.10899-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vitaly Chikunov <vt@altlinux.org>, Dmitry Levin <ldv@altlinux.org>, Josh Poimboeuf <jpoimboe@redhat.com>, kbuild test robot <lkp@intel.com>, Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org, Vineet Gupta <vineet.gupta1@synopsys.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Vitaly Chikunov <vt@altlinux.org>
 
-The 'e' and 'c' hotkeys were present for a long time, but not documented
-in the help window, change 'e' to be a toggle so that it gets consistent
-with other toggles like '+' and document it in the help window.
+Disable a couple of compilation warnings (which are treated as errors)
+on strlcpy() definition and declaration, allowing users to compile perf
+and kernel (objtool) when:
 
-Keep 'c' as is for people used to it but don't document, as it is easier
-to just use 'e' to show/hide all the callchains for a top level
-histogram entry.
+1. glibc have strlcpy() (such as in ALT Linux since 2004) objtool and
+   perf build fails with this (in gcc):
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-pmyi5x34stlqmyu81rci94x9@git.kernel.org
+  In file included from exec-cmd.c:3:
+  tools/include/linux/string.h:20:15: error: redundant redeclaration of ‘strlcpy’ [-Werror=redundant-decls]
+     20 | extern size_t strlcpy(char *dest, const char *src, size_t size);
+
+2. clang ignores `-Wredundant-decls', but produces another warning when
+   building perf:
+
+    CC       util/string.o
+  ../lib/string.c:99:8: error: attribute declaration must precede definition [-Werror,-Wignored-attributes]
+  size_t __weak strlcpy(char *dest, const char *src, size_t size)
+  ../../tools/include/linux/compiler.h:66:34: note: expanded from macro '__weak'
+  # define __weak                 __attribute__((weak))
+  /usr/include/bits/string_fortified.h:151:8: note: previous definition is here
+  __NTH (strlcpy (char *__restrict __dest, const char *__restrict __src,
+
+Committer notes:
+
+The
+
+ #pragma GCC diagnostic
+
+directive was introduced in gcc 4.6, so check for that as well.
+
+Fixes: ce99091 ("perf tools: Move strlcpy() from perf to tools/lib/string.c")
+Fixes: 0215d59 ("tools lib: Reinstate strlcpy() header guard with __UCLIBC__")
+Resolves: https://bugzilla.kernel.org/show_bug.cgi?id=118481
+Signed-off-by: Vitaly Chikunov <vt@altlinux.org>
+Reviewed-by: Dmitry Levin <ldv@altlinux.org>
+Cc: Dmitry Levin <ldv@altlinux.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: kbuild test robot <lkp@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Cc: Vineet Gupta <vineet.gupta1@synopsys.com>
+Link: http://lore.kernel.org/lkml/20191224172029.19690-1-vt@altlinux.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/include/linux/string.h | 8 ++++++++
+ tools/lib/string.c           | 7 +++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 3bec8de89880..f36dee499320 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -407,6 +407,11 @@ static bool hist_browser__selection_has_children(struct hist_browser *browser)
- 	return container_of(ms, struct callchain_list, ms)->has_children;
- }
+diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+index 980cb9266718..5e9e781905ed 100644
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -17,7 +17,15 @@ int strtobool(const char *s, bool *res);
+  * However uClibc headers also define __GLIBC__ hence the hack below
+  */
+ #if defined(__GLIBC__) && !defined(__UCLIBC__)
++// pragma diagnostic was introduced in gcc 4.6
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Wredundant-decls"
++#endif
+ extern size_t strlcpy(char *dest, const char *src, size_t size);
++#if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
++#pragma GCC diagnostic pop
++#endif
+ #endif
  
-+static bool hist_browser__he_selection_unfolded(struct hist_browser *browser)
-+{
-+	return browser->he_selection ? browser->he_selection->unfolded : false;
-+}
-+
- static bool hist_browser__selection_unfolded(struct hist_browser *browser)
+ char *str_error_r(int errnum, char *buf, size_t buflen);
+diff --git a/tools/lib/string.c b/tools/lib/string.c
+index f2ae1b87c719..f645343815de 100644
+--- a/tools/lib/string.c
++++ b/tools/lib/string.c
+@@ -96,6 +96,10 @@ int strtobool(const char *s, bool *res)
+  * If libc has strlcpy() then that version will override this
+  * implementation:
+  */
++#ifdef __clang__
++#pragma clang diagnostic push
++#pragma clang diagnostic ignored "-Wignored-attributes"
++#endif
+ size_t __weak strlcpy(char *dest, const char *src, size_t size)
  {
- 	struct hist_entry *he = browser->he_selection;
-@@ -727,7 +732,7 @@ static int hist_browser__handle_hotkey(struct hist_browser *browser, bool warn_l
- 		break;
- 	case 'e':
- 		/* Expand the selected entry. */
--		hist_browser__set_folding_selected(browser, true);
-+		hist_browser__set_folding_selected(browser, !hist_browser__he_selection_unfolded(browser));
- 		break;
- 	case 'H':
- 		browser->show_headers = !browser->show_headers;
-@@ -2942,6 +2947,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	"a             Annotate current symbol\n"			\
- 	"C             Collapse all callchains\n"			\
- 	"d             Zoom into current DSO\n"				\
-+	"e             Expand/Collapse main entry callchains\n"	\
- 	"E             Expand all callchains\n"				\
- 	"F             Toggle percentage of filtered entries\n"		\
- 	"H             Display column headers\n"			\
+ 	size_t ret = strlen(src);
+@@ -107,6 +111,9 @@ size_t __weak strlcpy(char *dest, const char *src, size_t size)
+ 	}
+ 	return ret;
+ }
++#ifdef __clang__
++#pragma clang diagnostic pop
++#endif
+ 
+ /**
+  * skip_spaces - Removes leading whitespace from @str.
 -- 
 2.21.1
