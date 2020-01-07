@@ -1,7 +1,7 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
-Date: Tue,  7 Jan 2020 22:34:56 +0900
-Message-ID: <20200107133501.327117-5-namhyung@kernel.org>
+Subject: [PATCH 7/9] perf record: Add --all-cgroups option
+Date: Tue,  7 Jan 2020 22:34:59 +0900
+Message-ID: <20200107133501.327117-8-namhyung@kernel.org>
 References: <20200107133501.327117-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,191 +12,110 @@ To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arn
 Cc: Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Each cgroup is kept in the global cgroup_tree sorted by the cgroup id.
-Hist entries have cgroup id can compare it directly and later it can
-be used to find a group name using this tree.
+The --all-cgroups option is to enable cgroup profiling support.  It
+tells kernel to record CGROUP events in the ring buffer so that perf
+report can identify task/cgroup association later.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/cgroup.c  | 72 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/cgroup.h  | 15 +++++---
- tools/perf/util/machine.c |  7 ++++
- tools/perf/util/session.c |  4 +++
- 4 files changed, 94 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  5 ++++-
+ tools/perf/builtin-record.c              |  5 +++++
+ tools/perf/util/evsel.c                  | 11 ++++++++++-
+ tools/perf/util/evsel.h                  |  1 +
+ tools/perf/util/record.h                 |  1 +
+ 5 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-index 4881d4af3381..4e8ef1db0c94 100644
---- a/tools/perf/util/cgroup.c
-+++ b/tools/perf/util/cgroup.c
-@@ -13,6 +13,8 @@
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b23a4012a606..6dd9d69d7dee 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -385,7 +385,10 @@ displayed with the weight and local_weight sort keys.  This currently works for
+ abort events and some memory events in precise mode on modern Intel CPUs.
  
- int nr_cgroups;
+ --namespaces::
+-Record events of type PERF_RECORD_NAMESPACES.
++Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
++
++--all-cgroups::
++Record events of type PERF_RECORD_CGROUP.  This enables 'cgroup' sort key.
  
-+static struct rb_root cgroup_tree = RB_ROOT;
+ --transaction::
+ Record transaction flags for transaction related events.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 2802de9538ff..7d7912e121d6 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1433,6 +1433,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	if (rec->opts.record_namespaces)
+ 		tool->namespace_events = true;
+ 
++	if (rec->opts.record_cgroup)
++		tool->cgroup_events = true;
 +
- static int
- cgroupfs_find_mountpoint(char *buf, size_t maxlen)
- {
-@@ -250,3 +252,73 @@ int parse_cgroups(const struct option *opt, const char *str,
- 	}
- 	return 0;
- }
-+
-+struct cgroup *cgroup__findnew(uint64_t id, const char *path)
-+{
-+	struct rb_node **p = &cgroup_tree.rb_node;
-+	struct rb_node *parent = NULL;
-+	struct cgroup *cgrp;
-+
-+	while (*p != NULL) {
-+		parent = *p;
-+		cgrp = rb_entry(parent, struct cgroup, node);
-+
-+		if (cgrp->id == id)
-+			return cgrp;
-+
-+		if (cgrp->id < id)
-+			p = &(*p)->rb_left;
-+		else
-+			p = &(*p)->rb_right;
+ 	if (rec->opts.auxtrace_snapshot_mode || rec->switch_output.enabled) {
+ 		signal(SIGUSR2, snapshot_sig_handler);
+ 		if (rec->opts.auxtrace_snapshot_mode)
+@@ -2363,6 +2366,8 @@ static struct option __record_options[] = {
+ 			"per thread proc mmap processing timeout in ms"),
+ 	OPT_BOOLEAN(0, "namespaces", &record.opts.record_namespaces,
+ 		    "Record namespaces events"),
++	OPT_BOOLEAN(0, "all-cgroups", &record.opts.record_cgroup,
++		    "Record cgroup events"),
+ 	OPT_BOOLEAN(0, "switch-events", &record.opts.record_switch_events,
+ 		    "Record context switch events"),
+ 	OPT_BOOLEAN_FLAG(0, "all-kernel", &record.opts.all_kernel,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 0f5a67603139..ff6c6683a32b 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1102,6 +1102,11 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	if (opts->record_namespaces)
+ 		attr->namespaces  = track;
+ 
++	if (opts->record_cgroup) {
++		attr->cgroup = track && !perf_missing_features.cgroup;
++		perf_evsel__set_sample_bit(evsel, CGROUP);
 +	}
 +
-+	cgrp = malloc(sizeof(*cgrp));
-+	if (cgrp == NULL)
-+		return NULL;
-+
-+	cgrp->name = strdup(path);
-+	if (cgrp->name == NULL) {
-+		free(cgrp);
-+		return NULL;
-+	}
-+
-+	cgrp->fd = -1;
-+	cgrp->id = id;
-+	refcount_set(&cgrp->refcnt, 1);
-+
-+	rb_link_node(&cgrp->node, parent, p);
-+	rb_insert_color(&cgrp->node, &cgroup_tree);
-+
-+	return cgrp;
-+}
-+
-+struct cgroup *cgroup__find_by_path(const char *path)
-+{
-+	struct rb_node *node;
-+
-+	node = rb_first(&cgroup_tree);
-+	while (node) {
-+		struct cgroup *cgrp = rb_entry(node, struct cgroup, node);
-+
-+		if (!strcmp(cgrp->name, path))
-+			return cgrp;
-+
-+		node = rb_next(&cgrp->node);
-+	}
-+
-+	return NULL;
-+}
-+
-+void destroy_cgroups(void)
-+{
-+	struct rb_node *node;
-+	struct cgroup *cgrp;
-+
-+	while (!RB_EMPTY_ROOT(&cgroup_tree)) {
-+		node = rb_first(&cgroup_tree);
-+		cgrp = rb_entry(node, struct cgroup, node);
-+
-+		rb_erase(node, &cgroup_tree);
-+		cgroup__put(cgrp);
-+	}
-+}
-diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
-index 2ec11f01090d..381583df27c7 100644
---- a/tools/perf/util/cgroup.h
-+++ b/tools/perf/util/cgroup.h
-@@ -3,16 +3,18 @@
- #define __CGROUP_H__
+ 	if (opts->record_switch_events)
+ 		attr->context_switch = track;
  
- #include <linux/refcount.h>
-+#include <linux/rbtree.h>
- 
- struct option;
- 
- struct cgroup {
--	char *name;
--	int fd;
--	refcount_t refcnt;
-+	struct rb_node		node;
-+	u64			id;
-+	char			*name;
-+	int			fd;
-+	refcount_t		refcnt;
+@@ -1782,7 +1787,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	 * Must probe features in the order they were added to the
+ 	 * perf_event_attr interface.
+ 	 */
+-	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
++	if (!perf_missing_features.cgroup && evsel->core.attr.cgroup) {
++		perf_missing_features.cgroup = true;
++		pr_debug2_peo("Kernel has no cgroup sampling support, bailing out\n");
++		goto out_close;
++	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
+ 		perf_missing_features.aux_output = true;
+ 		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
+ 		goto out_close;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index dc14f4a823cd..df71b530740b 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -119,6 +119,7 @@ struct perf_missing_features {
+ 	bool ksymbol;
+ 	bool bpf;
+ 	bool aux_output;
++	bool cgroup;
  };
  
--
- extern int nr_cgroups; /* number of explicit cgroups defined */
- 
- struct cgroup *cgroup__get(struct cgroup *cgroup);
-@@ -26,4 +28,9 @@ void evlist__set_default_cgroup(struct evlist *evlist, struct cgroup *cgroup);
- 
- int parse_cgroups(const struct option *opt, const char *str, int unset);
- 
-+struct cgroup *cgroup__findnew(uint64_t id, const char *path);
-+struct cgroup *cgroup__find_by_path(const char *path);
-+
-+void destroy_cgroups(void);
-+
- #endif /* __CGROUP_H__ */
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 2c3223bec561..19d40a2016d7 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -33,6 +33,7 @@
- #include "asm/bug.h"
- #include "bpf-event.h"
- #include <internal/lib.h> // page_size
-+#include "cgroup.h"
- 
- #include <linux/ctype.h>
- #include <symbol/kallsyms.h>
-@@ -658,9 +659,15 @@ int machine__process_cgroup_event(struct machine *machine __maybe_unused,
- 				  union perf_event *event,
- 				  struct perf_sample *sample __maybe_unused)
- {
-+	struct cgroup *cgrp;
-+
- 	if (dump_trace)
- 		perf_event__fprintf_cgroup(event, stdout);
- 
-+	cgrp = cgroup__findnew(event->cgroup.id, event->cgroup.path);
-+	if (cgrp == NULL)
-+		return -ENOMEM;
-+
- 	return 0;
- }
- 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 6b4c12d48c3f..5e2c9f504184 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -289,6 +289,8 @@ static void perf_session__release_decomp_events(struct perf_session *session)
- 	} while (1);
- }
- 
-+extern void destroy_cgroups(void);
-+
- void perf_session__delete(struct perf_session *session)
- {
- 	if (session == NULL)
-@@ -303,6 +305,8 @@ void perf_session__delete(struct perf_session *session)
- 	if (session->data)
- 		perf_data__close(session->data);
- 	free(session);
-+
-+	destroy_cgroups();
- }
- 
- static int process_event_synth_tracing_data_stub(struct perf_session *session
+ extern struct perf_missing_features perf_missing_features;
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 5421fd2ad383..24316458be20 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -34,6 +34,7 @@ struct record_opts {
+ 	bool	      auxtrace_snapshot_on_exit;
+ 	bool	      auxtrace_sample_mode;
+ 	bool	      record_namespaces;
++	bool	      record_cgroup;
+ 	bool	      record_switch_events;
+ 	bool	      all_kernel;
+ 	bool	      all_user;
 -- 
 2.24.1.735.g03f4e72817-goog
