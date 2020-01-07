@@ -1,7 +1,7 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 3/9] perf tools: Basic support for CGROUP event
-Date: Tue,  7 Jan 2020 22:34:55 +0900
-Message-ID: <20200107133501.327117-4-namhyung@kernel.org>
+Subject: [PATCH 5/9] perf report: Add 'cgroup' sort key
+Date: Tue,  7 Jan 2020 22:34:57 +0900
+Message-ID: <20200107133501.327117-6-namhyung@kernel.org>
 References: <20200107133501.327117-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,377 +9,179 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200107133501.327117-1-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, kernel test robot <rong.a.chen@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Implement basic functionality to support cgroup tracking.  Each cgroup
-can be identified by inode number which can be read from userspace
-too.  The actual cgroup processing will come in the later patch.
+The cgroup sort key is to show cgroup membership of each task.
+Currently it shows full path in the cgroupfs (not relative to the root
+of cgroup namespace) since it'd be more intuitive IMHO.  Otherwise
+root cgroup in different namespaces will all show same name - "/".
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-[fix perf test failure on sampling parsing]
-Reported-by: kernel test robot <rong.a.chen@intel.com>
+The cgroup sort key should come before cgroup_id otherwise
+sort_dimension__add() will match it to cgroup_id as it only matches
+with the given substring.
+
+For example it will look like following.  Note that record patch
+adding --all-cgroups patch will come later.
+
+  $ perf record -a --namespace --all-cgroups  cgtest
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.208 MB perf.data (4090 samples) ]
+
+  $ perf report -s cgroup_id,cgroup,pid
+  ...
+  # Overhead  cgroup id (dev/inode)  cgroup          Pid:Command
+  # ........  .....................  ..........  ...............
+  #
+      93.96%  0/0x0                  /                 0:swapper
+       1.25%  3/0xeffffffb           /               278:looper0
+       0.86%  3/0xf000015f           /sub/cgrp1      280:cgtest
+       0.37%  3/0xf0000160           /sub/cgrp2      281:cgtest
+       0.34%  3/0xf0000163           /sub/cgrp3      282:cgtest
+       0.22%  3/0xeffffffb           /sub            278:looper0
+       0.20%  3/0xeffffffb           /               280:cgtest
+       0.15%  3/0xf0000163           /sub/cgrp3      285:looper3
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/linux/perf_event.h     | 16 ++++++++++++++--
- tools/lib/perf/include/perf/event.h       |  7 +++++++
- tools/perf/builtin-diff.c                 |  1 +
- tools/perf/builtin-report.c               |  1 +
- tools/perf/tests/sample-parsing.c         |  6 +++++-
- tools/perf/util/event.c                   | 18 ++++++++++++++++++
- tools/perf/util/event.h                   |  6 ++++++
- tools/perf/util/evsel.c                   |  6 ++++++
- tools/perf/util/machine.c                 | 12 ++++++++++++
- tools/perf/util/machine.h                 |  3 +++
- tools/perf/util/perf_event_attr_fprintf.c |  2 ++
- tools/perf/util/session.c                 |  4 ++++
- tools/perf/util/synthetic-events.c        |  8 ++++++++
- tools/perf/util/tool.h                    |  1 +
- 14 files changed, 88 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-report.txt |  1 +
+ tools/perf/util/hist.c                   |  7 ++++++
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 31 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  2 ++
+ 5 files changed, 42 insertions(+)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 377d794d3105..3a81e9806cb1 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -142,8 +142,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
- 	PERF_SAMPLE_AUX				= 1U << 20,
-+	PERF_SAMPLE_CGROUP			= 1U << 21,
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 8dbe2119686a..5af43f3faf9f 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -95,6 +95,7 @@ OPTIONS
+ 	abort cost. This is the global weight.
+ 	- local_weight: Local weight version of the weight above.
+ 	- cgroup_id: ID derived from cgroup namespace device and inode numbers.
++	- cgroup: cgroup pathname in the cgroupfs.
+ 	- transaction: Transaction abort flags.
+ 	- overhead: Overhead percentage of sample
+ 	- overhead_sys: Overhead percentage of sample running in system mode
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index ca5a8f4d007e..9f28d2f487c1 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -10,6 +10,7 @@
+ #include "mem-events.h"
+ #include "session.h"
+ #include "namespaces.h"
++#include "cgroup.h"
+ #include "sort.h"
+ #include "units.h"
+ #include "evlist.h"
+@@ -222,6 +223,11 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
  
--	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
- 
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
- };
-@@ -377,7 +378,8 @@ struct perf_event_attr {
- 				ksymbol        :  1, /* include ksymbol events */
- 				bpf_event      :  1, /* include bpf events */
- 				aux_output     :  1, /* generate AUX records instead of events */
--				__reserved_1   : 32;
-+				cgroup         :  1, /* include cgroup events */
-+				__reserved_1   : 31;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -1006,6 +1008,16 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_BPF_EVENT			= 18,
- 
-+	/*
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				id;
-+	 *	char				path[];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CGROUP			= 19,
+ 	if (h->trace_output)
+ 		hists__new_col_len(hists, HISTC_TRACE, strlen(h->trace_output));
 +
- 	PERF_RECORD_MAX,			/* non-ABI */
++	if (h->cgroup) {
++		struct cgroup *cgrp = cgroup__findnew(h->cgroup, "<unknown>");
++		hists__new_col_len(hists, HISTC_CGROUP, strlen(cgrp->name));
++	}
+ }
+ 
+ void hists__output_recalc_col_len(struct hists *hists, int max_rows)
+@@ -691,6 +697,7 @@ __hists__add_entry(struct hists *hists,
+ 			.dev = ns ? ns->link_info[CGROUP_NS_INDEX].dev : 0,
+ 			.ino = ns ? ns->link_info[CGROUP_NS_INDEX].ino : 0,
+ 		},
++		.cgroup = sample->cgroup,
+ 		.ms = {
+ 			.maps	= al->maps,
+ 			.map	= al->map,
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 0aa63aeb58ec..f7fb9c32dda5 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -38,6 +38,7 @@ enum hist_column {
+ 	HISTC_THREAD,
+ 	HISTC_COMM,
+ 	HISTC_CGROUP_ID,
++	HISTC_CGROUP,
+ 	HISTC_PARENT,
+ 	HISTC_CPU,
+ 	HISTC_SOCKET,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index ab0cfd790ad0..52073029e592 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -25,6 +25,7 @@
+ #include "mem-events.h"
+ #include "annotate.h"
+ #include "time-utils.h"
++#include "cgroup.h"
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ 
+@@ -634,6 +635,35 @@ struct sort_entry sort_cgroup_id = {
+ 	.se_width_idx	= HISTC_CGROUP_ID,
  };
  
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 18106899cb4e..69b44d2cc0f5 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -105,6 +105,12 @@ struct perf_record_bpf_event {
- 	__u8			 tag[BPF_TAG_SIZE];  // prog tag
- };
- 
-+struct perf_record_cgroup {
-+	struct perf_event_header header;
-+	__u64			 id;
-+	char			 path[PATH_MAX];
++/* --sort cgroup */
++
++static int64_t
++sort__cgroup_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	return right->cgroup - left->cgroup;
++}
++
++static int hist_entry__cgroup_snprintf(struct hist_entry *he,
++				       char *bf, size_t size,
++				       unsigned int width __maybe_unused)
++{
++	const char *cgrp_name = "N/A";
++
++	if (he->cgroup) {
++		struct cgroup *cgrp = cgroup__findnew(he->cgroup, cgrp_name);
++		cgrp_name = cgrp->name;
++	}
++
++	return repsep_snprintf(bf, size, "%s", cgrp_name);
++}
++
++struct sort_entry sort_cgroup = {
++	.se_header      = "cgroup",
++	.se_cmp	        = sort__cgroup_cmp,
++	.se_snprintf    = hist_entry__cgroup_snprintf,
++	.se_width_idx	= HISTC_CGROUP,
 +};
 +
- struct perf_record_sample {
- 	struct perf_event_header header;
- 	__u64			 array[];
-@@ -352,6 +358,7 @@ union perf_event {
- 	struct perf_record_mmap2		mmap2;
- 	struct perf_record_comm			comm;
- 	struct perf_record_namespaces		namespaces;
-+	struct perf_record_cgroup		cgroup;
- 	struct perf_record_fork			fork;
- 	struct perf_record_lost			lost;
- 	struct perf_record_lost_samples		lost_samples;
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index f8b6ae557d8b..83d4094bf152 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -455,6 +455,7 @@ static struct perf_diff pdiff = {
- 		.fork	= perf_event__process_fork,
- 		.lost	= perf_event__process_lost,
- 		.namespaces = perf_event__process_namespaces,
-+		.cgroup = perf_event__process_cgroup,
- 		.ordered_events = true,
- 		.ordering_requires_timestamps = true,
- 	},
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index de988589d99b..4924b042ab00 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1094,6 +1094,7 @@ int cmd_report(int argc, const char **argv)
- 			.mmap2		 = perf_event__process_mmap2,
- 			.comm		 = perf_event__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
-+			.cgroup		 = perf_event__process_cgroup,
- 			.exit		 = perf_event__process_exit,
- 			.fork		 = perf_event__process_fork,
- 			.lost		 = perf_event__process_lost,
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 2762e1155238..a8ff7d2df118 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -150,6 +150,9 @@ static bool samples_same(const struct perf_sample *s1,
- 	if (type & PERF_SAMPLE_PHYS_ADDR)
- 		COMP(phys_addr);
+ /* --sort socket */
  
-+	if (type & PERF_SAMPLE_CGROUP)
-+		COMP(cgroup);
-+
- 	if (type & PERF_SAMPLE_AUX) {
- 		COMP(aux_sample.size);
- 		if (memcmp(s1->aux_sample.data, s2->aux_sample.data,
-@@ -228,6 +231,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 			.regs	= regs,
- 		},
- 		.phys_addr	= 113,
-+		.cgroup		= 114,
- 		.aux_sample	= {
- 			.size	= sizeof(aux_data),
- 			.data	= (void *)aux_data,
-@@ -331,7 +335,7 @@ int test__sample_parsing(struct test *test __maybe_unused, int subtest __maybe_u
- 	 * were added.  Please actually update the test rather than just change
- 	 * the condition below.
- 	 */
--	if (PERF_SAMPLE_MAX > PERF_SAMPLE_AUX << 1) {
-+	if (PERF_SAMPLE_MAX > PERF_SAMPLE_CGROUP << 1) {
- 		pr_debug("sample format has changed, some new PERF_SAMPLE_ bit was introduced - test needs updating\n");
- 		return -1;
- 	}
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index c5447ff516a2..824c038e5c33 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -54,6 +54,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_NAMESPACES]		= "NAMESPACES",
- 	[PERF_RECORD_KSYMBOL]			= "KSYMBOL",
- 	[PERF_RECORD_BPF_EVENT]			= "BPF_EVENT",
-+	[PERF_RECORD_CGROUP]			= "CGROUP",
- 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
- 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
- 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
-@@ -180,6 +181,12 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp)
- 	return ret;
- }
- 
-+size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp)
-+{
-+	return fprintf(fp, " cgroup: %" PRI_lu64 " %s\n",
-+		       event->cgroup.id, event->cgroup.path);
-+}
-+
- int perf_event__process_comm(struct perf_tool *tool __maybe_unused,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
-@@ -196,6 +203,14 @@ int perf_event__process_namespaces(struct perf_tool *tool __maybe_unused,
- 	return machine__process_namespaces_event(machine, event, sample);
- }
- 
-+int perf_event__process_cgroup(struct perf_tool *tool __maybe_unused,
-+			       union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct machine *machine)
-+{
-+	return machine__process_cgroup_event(machine, event, sample);
-+}
-+
- int perf_event__process_lost(struct perf_tool *tool __maybe_unused,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
-@@ -417,6 +432,9 @@ size_t perf_event__fprintf(union perf_event *event, FILE *fp)
- 	case PERF_RECORD_NAMESPACES:
- 		ret += perf_event__fprintf_namespaces(event, fp);
- 		break;
-+	case PERF_RECORD_CGROUP:
-+		ret += perf_event__fprintf_cgroup(event, fp);
-+		break;
- 	case PERF_RECORD_MMAP2:
- 		ret += perf_event__fprintf_mmap2(event, fp);
- 		break;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 85223159737c..0ad3ba22817d 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -135,6 +135,7 @@ struct perf_sample {
- 	u32 raw_size;
- 	u64 data_src;
- 	u64 phys_addr;
-+	u64 cgroup;
- 	u32 flags;
- 	u16 insn_len;
- 	u8  cpumode;
-@@ -321,6 +322,10 @@ int perf_event__process_namespaces(struct perf_tool *tool,
- 				   union perf_event *event,
- 				   struct perf_sample *sample,
- 				   struct machine *machine);
-+int perf_event__process_cgroup(struct perf_tool *tool,
-+			       union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct machine *machine);
- int perf_event__process_mmap(struct perf_tool *tool,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
-@@ -376,6 +381,7 @@ size_t perf_event__fprintf_switch(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_thread_map(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_cpu_map(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
-+size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf(union perf_event *event, FILE *fp);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a69e64236120..0f5a67603139 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2250,6 +2250,12 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		array++;
- 	}
- 
-+	data->cgroup = 0;
-+	if (type & PERF_SAMPLE_CGROUP) {
-+		data->cgroup = *array;
-+		array++;
-+	}
-+
- 	if (type & PERF_SAMPLE_AUX) {
- 		OVERFLOW_CHECK_u64(array);
- 		sz = *array++;
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index c8c5410315e8..2c3223bec561 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -654,6 +654,16 @@ int machine__process_namespaces_event(struct machine *machine __maybe_unused,
- 	return err;
- }
- 
-+int machine__process_cgroup_event(struct machine *machine __maybe_unused,
-+				  union perf_event *event,
-+				  struct perf_sample *sample __maybe_unused)
-+{
-+	if (dump_trace)
-+		perf_event__fprintf_cgroup(event, stdout);
-+
-+	return 0;
-+}
-+
- int machine__process_lost_event(struct machine *machine __maybe_unused,
- 				union perf_event *event, struct perf_sample *sample __maybe_unused)
- {
-@@ -1880,6 +1890,8 @@ int machine__process_event(struct machine *machine, union perf_event *event,
- 		ret = machine__process_mmap_event(machine, event, sample); break;
- 	case PERF_RECORD_NAMESPACES:
- 		ret = machine__process_namespaces_event(machine, event, sample); break;
-+	case PERF_RECORD_CGROUP:
-+		ret = machine__process_cgroup_event(machine, event, sample); break;
- 	case PERF_RECORD_MMAP2:
- 		ret = machine__process_mmap2_event(machine, event, sample); break;
- 	case PERF_RECORD_FORK:
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index be0a930eca89..fa1be9ea00fa 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -128,6 +128,9 @@ int machine__process_switch_event(struct machine *machine,
- int machine__process_namespaces_event(struct machine *machine,
- 				      union perf_event *event,
- 				      struct perf_sample *sample);
-+int machine__process_cgroup_event(struct machine *machine,
-+				  union perf_event *event,
-+				  struct perf_sample *sample);
- int machine__process_mmap_event(struct machine *machine, union perf_event *event,
- 				struct perf_sample *sample);
- int machine__process_mmap2_event(struct machine *machine, union perf_event *event,
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index 651203126c71..a37a89c747d8 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -35,6 +35,7 @@ static void __p_sample_type(char *buf, size_t size, u64 value)
- 		bit_name(BRANCH_STACK), bit_name(REGS_USER), bit_name(STACK_USER),
- 		bit_name(IDENTIFIER), bit_name(REGS_INTR), bit_name(DATA_SRC),
- 		bit_name(WEIGHT), bit_name(PHYS_ADDR), bit_name(AUX),
-+		bit_name(CGROUP),
- 		{ .name = NULL, }
- 	};
- #undef bit_name
-@@ -131,6 +132,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 	PRINT_ATTRf(ksymbol, p_unsigned);
- 	PRINT_ATTRf(bpf_event, p_unsigned);
- 	PRINT_ATTRf(aux_output, p_unsigned);
-+	PRINT_ATTRf(cgroup, p_unsigned);
- 
- 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned);
- 	PRINT_ATTRf(bp_type, p_unsigned);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index d0d7d25b23e3..6b4c12d48c3f 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -471,6 +471,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
- 		tool->comm = process_event_stub;
- 	if (tool->namespaces == NULL)
- 		tool->namespaces = process_event_stub;
-+	if (tool->cgroup == NULL)
-+		tool->cgroup = process_event_stub;
- 	if (tool->fork == NULL)
- 		tool->fork = process_event_stub;
- 	if (tool->exit == NULL)
-@@ -1434,6 +1436,8 @@ static int machines__deliver_event(struct machines *machines,
- 		return tool->comm(tool, event, sample, machine);
- 	case PERF_RECORD_NAMESPACES:
- 		return tool->namespaces(tool, event, sample, machine);
-+	case PERF_RECORD_CGROUP:
-+		return tool->cgroup(tool, event, sample, machine);
- 	case PERF_RECORD_FORK:
- 		return tool->fork(tool, event, sample, machine);
- 	case PERF_RECORD_EXIT:
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index c423298fe62d..cd336eb8886b 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1228,6 +1228,9 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_PHYS_ADDR)
- 		result += sizeof(u64);
- 
-+	if (type & PERF_SAMPLE_CGROUP)
-+		result += sizeof(u64);
-+
- 	if (type & PERF_SAMPLE_AUX) {
- 		result += sizeof(u64);
- 		result += sample->aux_sample.size;
-@@ -1401,6 +1404,11 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 		array++;
- 	}
- 
-+	if (type & PERF_SAMPLE_CGROUP) {
-+		*array = sample->cgroup;
-+		array++;
-+	}
-+
- 	if (type & PERF_SAMPLE_AUX) {
- 		sz = sample->aux_sample.size;
- 		*array++ = sz;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 2abbf668b8de..472ef5eb4068 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -46,6 +46,7 @@ struct perf_tool {
- 			mmap2,
- 			comm,
- 			namespaces,
-+			cgroup,
- 			fork,
- 			exit,
- 			lost,
+ static int64_t
+@@ -1658,6 +1688,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_TRACE, "trace", sort_trace),
+ 	DIM(SORT_SYM_SIZE, "symbol_size", sort_sym_size),
+ 	DIM(SORT_DSO_SIZE, "dso_size", sort_dso_size),
++	DIM(SORT_CGROUP, "cgroup", sort_cgroup),
+ 	DIM(SORT_CGROUP_ID, "cgroup_id", sort_cgroup_id),
+ 	DIM(SORT_SYM_IPC_NULL, "ipc_null", sort_sym_ipc_null),
+ 	DIM(SORT_TIME, "time", sort_time),
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 6c862d62d052..cfa6ac6f7d06 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -101,6 +101,7 @@ struct hist_entry {
+ 	struct thread		*thread;
+ 	struct comm		*comm;
+ 	struct namespace_id	cgroup_id;
++	u64			cgroup;
+ 	u64			ip;
+ 	u64			transaction;
+ 	s32			socket;
+@@ -224,6 +225,7 @@ enum sort_type {
+ 	SORT_TRACE,
+ 	SORT_SYM_SIZE,
+ 	SORT_DSO_SIZE,
++	SORT_CGROUP,
+ 	SORT_CGROUP_ID,
+ 	SORT_SYM_IPC_NULL,
+ 	SORT_TIME,
 -- 
 2.24.1.735.g03f4e72817-goog
