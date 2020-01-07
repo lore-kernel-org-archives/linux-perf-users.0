@@ -1,77 +1,53 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 0/3] perf vendor events amd: latest PMU events for
- zen1/zen2
-Date: Mon, 6 Jan 2020 19:17:54 -0300
-Message-ID: <20200106221754.GB16851@kernel.org>
-References: <20191227125536.1091387-1-vijaythakkar@me.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH 08/20] tools lib api fs: Fix gcc9 stringop-truncation
+ compilation error
+Date: Tue, 7 Jan 2020 10:16:50 +0100
+Message-ID: <20200107091650.dydvcjnve7hz2345@pathway.suse.cz>
+References: <20200106160705.10899-1-acme@kernel.org>
+ <20200106160705.10899-9-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20191227125536.1091387-1-vijaythakkar@me.com>
+In-Reply-To: <20200106160705.10899-9-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Thakkar <vijaythakkar@me.com>, Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andrey Zhizhikin <andrey.z@gmail.com>, Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, Daniel Borkmann <daniel@iogearbox.net>, Kefeng Wang <wangkefeng.wang@huawei.com>, Martin KaFai Lau <kafai@fb.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org, netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Dec 27, 2019 at 07:55:33AM -0500, Vijay Thakkar escreveu:
-> This series of patches brings the PMU events for AMD family 17h series
-> of processors up to date with the latest versions of the AMD processor
-> programming reference manuals.
+On Mon 2020-01-06 13:06:53, Arnaldo Carvalho de Melo wrote:
+> From: Andrey Zhizhikin <andrey.z@gmail.com>
 > 
-> The first patch changes the pmu events mapfile to be more selective for
-> the model number rather than blanket detecting all f17h processors to
-> have the same events directory. This is required for the later patch
-> where we add events for zen2 based processors.
+> GCC9 introduced string hardening mechanisms, which exhibits the error
+> during fs api compilation:
 > 
-> The second patch adds the PMU events for zen2.
-
-Borislav, can you ack these, or point to someone who can double check
-this and the other 2 patches?
-
-Thanks,
-
-- Arnaldo
- 
-> Finally the third patch updates the zen1 PMU events to be in accordance
-> with the latest PPR version and bumps up the events version to v2.
+> error: '__builtin_strncpy' specified bound 4096 equals destination size
+> [-Werror=stringop-truncation]
 > 
-> Vijay Thakkar (3):
->   perf vendor events amd: restrict model detection for zen1 based
->     processors
->   perf vendor events amd: add Zen2 events
->   perf vendor events amd: update Zen1 events to V2
+> This comes when the length of copy passed to strncpy is is equal to
+> destination size, which could potentially lead to buffer overflow.
 > 
->  .../x86/{amdfam17h => amdzen1}/branch.json    |   0
->  .../x86/{amdfam17h => amdzen1}/cache.json     |   0
->  .../pmu-events/arch/x86/amdzen1/core.json     | 129 ++++++
->  .../floating-point.json                       |  56 +++
->  .../x86/{amdfam17h => amdzen1}/memory.json    |  18 +
->  .../x86/{amdfam17h => amdzen1}/other.json     |   0
->  .../pmu-events/arch/x86/amdzen2/branch.json   |  56 +++
->  .../pmu-events/arch/x86/amdzen2/cache.json    | 375 ++++++++++++++++++
->  .../arch/x86/{amdfam17h => amdzen2}/core.json |   0
->  .../arch/x86/amdzen2/floating-point.json      | 128 ++++++
->  .../pmu-events/arch/x86/amdzen2/memory.json   | 349 ++++++++++++++++
->  .../pmu-events/arch/x86/amdzen2/other.json    | 137 +++++++
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |   4 +-
->  13 files changed, 1251 insertions(+), 1 deletion(-)
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/branch.json (100%)
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json (100%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/core.json
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (63%)
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (93%)
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json (100%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
->  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen2}/core.json (100%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
+> There is a need to mitigate this potential issue by limiting the size of
+> destination by 1 and explicitly terminate the destination with NULL.
 > 
-> -- 
-> 2.24.1
+> Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Andrii Nakryiko <andriin@fb.com>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+> Cc: Martin KaFai Lau <kafai@fb.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Cc: Song Liu <songliubraving@fb.com>
+> Cc: Yonghong Song <yhs@fb.com>
+> Cc: bpf@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
--- 
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-- Arnaldo
+Best Regards,
+Petr
