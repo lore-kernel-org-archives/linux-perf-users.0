@@ -1,53 +1,99 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH 08/20] tools lib api fs: Fix gcc9 stringop-truncation
- compilation error
-Date: Tue, 7 Jan 2020 10:16:50 +0100
-Message-ID: <20200107091650.dydvcjnve7hz2345@pathway.suse.cz>
-References: <20200106160705.10899-1-acme@kernel.org>
- <20200106160705.10899-9-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Fix test case Merge cpu map
+Date: Tue,  7 Jan 2020 13:21:50 +0100
+Message-ID: <20200107122150.9093-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200106160705.10899-9-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Andrey Zhizhikin <andrey.z@gmail.com>, Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, Daniel Borkmann <daniel@iogearbox.net>, Kefeng Wang <wangkefeng.wang@huawei.com>, Martin KaFai Lau <kafai@fb.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org, netdev@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, ak@linux.intel.com
+Cc: gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon 2020-01-06 13:06:53, Arnaldo Carvalho de Melo wrote:
-> From: Andrey Zhizhikin <andrey.z@gmail.com>
-> 
-> GCC9 introduced string hardening mechanisms, which exhibits the error
-> during fs api compilation:
-> 
-> error: '__builtin_strncpy' specified bound 4096 equals destination size
-> [-Werror=stringop-truncation]
-> 
-> This comes when the length of copy passed to strncpy is is equal to
-> destination size, which could potentially lead to buffer overflow.
-> 
-> There is a need to mitigate this potential issue by limiting the size of
-> destination by 1 and explicitly terminate the destination with NULL.
-> 
-> Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Andrii Nakryiko <andriin@fb.com>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-> Cc: Martin KaFai Lau <kafai@fb.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: bpf@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
+introduces a test case for cpumap merge operation, see functions
+perf_cpu_map__merge() and test__cpu_map_merge().
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+The test case fails on s390 with this error message:
+ [root@m35lp76 perf]# ./perf test -Fvvvvv 52
+ 52: Merge cpu map                                         :
+ --- start ---
+ cpumask list: 1-2,4-5,7
+ perf: /root/linux/tools/include/linux/refcount.h:131:\
+          refcount_sub_and_test: Assertion `!(new > val)' failed.
+ Aborted (core dumped)
+ [root@m35lp76 perf]#
 
-Best Regards,
-Petr
+The root cause is in the function test__cpu_map_merge():
+It creates two cpu_maps named 'a' and 'b':
+
+  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
+  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+
+and creates a third map named 'c' which is the result of
+the merge of maps a and b:
+
+  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+
+After some verifaction of the merged cpu_map all three
+of them are have their reference count reduced and are
+freed:
+
+   perf_cpu_map__put(a); (1)
+   perf_cpu_map__put(b);
+   perf_cpu_map__put(c);
+
+The release of perf_cpu_map__put(a) is wrong. The map
+is already released and free'ed as part of the function
+
+  perf_cpu_map__merge(struct perf_cpu_map *orig,
+  |	              struct perf_cpu_map *other)
+  +--> perf_cpu_map__put(orig);
+       |
+       +--> cpu_map__delete(orig)
+
+At the end perf_cpu_map_put() is called for map 'orig'
+alias 'a' and since the reference count is 1, the map
+is deleted, as can be seen by the following gdb trace:
+
+ (gdb) where
+ #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
+ #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
+		     have_lock=<optimized out>) at malloc.c:4222
+ #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
+ #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
+ #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
+     other=0x156cc60) at cpumap.c:343
+ #5  0x000000000110cdd0 in test__cpu_map_merge (
+     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
+
+Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
+a second time and causes the failure. Fix this be removing that
+function call.
+
+Output after:
+  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
+  52: Merge cpu map                                         :
+  --- start ---
+  cpumask list: 1-2,4-5,7
+  ---- end ----
+  Merge cpu map: Ok
+  [root@m35lp76 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/cpumap.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 4ac56741ac5f..29c793ac7d10 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
+ 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
+ 	cpu_map__snprint(c, buf, sizeof(buf));
+ 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
+-	perf_cpu_map__put(a);
+ 	perf_cpu_map__put(b);
+ 	perf_cpu_map__put(c);
+ 	return 0;
+-- 
+2.21.0
