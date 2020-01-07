@@ -1,74 +1,42 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
-Date: Tue, 7 Jan 2020 22:46:58 +0900
-Message-ID: <CAM9d7ch78fdk+-uqsdRDN6mVZ0Q-gP+0bQHYygFhBNJyuPDfGA@mail.gmail.com>
-References: <20191223060759.841176-1-namhyung@kernel.org> <20191223060759.841176-2-namhyung@kernel.org>
- <20200107125131.GZ2844@hirez.programming.kicks-ass.net>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 0/3] perf vendor events amd: latest PMU events for
+ zen1/zen2
+Date: Tue, 7 Jan 2020 18:46:25 +0100
+Message-ID: <20200107174625.GI29542@zn.tnic>
+References: <20191227125536.1091387-1-vijaythakkar@me.com>
+ <20200106221754.GB16851@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200107125131.GZ2844@hirez.programming.kicks-ass.net>
+Content-Disposition: inline
+In-Reply-To: <20200106221754.GB16851@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Vijay Thakkar <vijaythakkar@me.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Peter,
+On Mon, Jan 06, 2020 at 07:17:54PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Dec 27, 2019 at 07:55:33AM -0500, Vijay Thakkar escreveu:
+> > This series of patches brings the PMU events for AMD family 17h series
+> > of processors up to date with the latest versions of the AMD processor
+> > programming reference manuals.
+> > 
+> > The first patch changes the pmu events mapfile to be more selective for
+> > the model number rather than blanket detecting all f17h processors to
+> > have the same events directory. This is required for the later patch
+> > where we add events for zen2 based processors.
+> > 
+> > The second patch adds the PMU events for zen2.
+> 
+> Borislav, can you ack these, or point to someone who can double check
+> this and the other 2 patches?
 
-Happy new year!
+Hey acme, HNY! :-)
 
-On Tue, Jan 7, 2020 at 9:51 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Mon, Dec 23, 2019 at 03:07:51PM +0900, Namhyung Kim wrote:
->
-> > @@ -7564,6 +7567,105 @@ void perf_event_namespaces(struct task_struct *task)
-> >                       NULL);
-> >  }
-> >
-> > +/*
-> > + * cgroup tracking
-> > + */
-> > +#ifdef CONFIG_CGROUPS
-> > +
->
-> <snip>
->
-> > +
-> > +#endif
-> > +
-> >  /*
-> >   * mmap tracking
-> >   */
->
-> > @@ -12581,6 +12685,12 @@ static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
-> >       kfree(jc);
-> >  }
-> >
-> > +static int perf_cgroup_css_online(struct cgroup_subsys_state *css)
-> > +{
-> > +     perf_event_cgroup(css->cgroup);
-> > +     return 0;
-> > +}
-> > +
-> >  static int __perf_cgroup_move(void *info)
-> >  {
-> >       struct task_struct *task = info;
-> > @@ -12602,6 +12712,7 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
-> >  struct cgroup_subsys perf_event_cgrp_subsys = {
-> >       .css_alloc      = perf_cgroup_css_alloc,
-> >       .css_free       = perf_cgroup_css_free,
-> > +     .css_online     = perf_cgroup_css_online,
-> >       .attach         = perf_cgroup_attach,
-> >       /*
-> >        * Implicitly enable on dfl hierarchy so that perf events can
->
-> CONFIG_CGROUPS vs CONFIG_CGROUP_PERF ?
+That should be Kim who's already on the Cc list.
 
-Oh, I just saw this after sending v4 right before..
-I think it should use CONFIG_CGROUP_PERF, will change.
+-- 
+Regards/Gruss,
+    Boris.
 
->
-> Other than that, I see nothing wrong here.
-
-Thanks for the review!
-Namhyung
+https://people.kernel.org/tglx/notes-about-netiquette
