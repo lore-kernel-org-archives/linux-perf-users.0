@@ -1,99 +1,62 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Fix test case Merge cpu map
-Date: Tue,  7 Jan 2020 13:21:50 +0100
-Message-ID: <20200107122150.9093-1-tmricht@linux.ibm.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 1/9] perf/core: Add PERF_RECORD_CGROUP event
+Date: Tue, 7 Jan 2020 13:51:31 +0100
+Message-ID: <20200107125131.GZ2844@hirez.programming.kicks-ass.net>
+References: <20191223060759.841176-1-namhyung@kernel.org>
+ <20191223060759.841176-2-namhyung@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20191223060759.841176-2-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, ak@linux.intel.com
-Cc: gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
-introduces a test case for cpumap merge operation, see functions
-perf_cpu_map__merge() and test__cpu_map_merge().
+On Mon, Dec 23, 2019 at 03:07:51PM +0900, Namhyung Kim wrote:
 
-The test case fails on s390 with this error message:
- [root@m35lp76 perf]# ./perf test -Fvvvvv 52
- 52: Merge cpu map                                         :
- --- start ---
- cpumask list: 1-2,4-5,7
- perf: /root/linux/tools/include/linux/refcount.h:131:\
-          refcount_sub_and_test: Assertion `!(new > val)' failed.
- Aborted (core dumped)
- [root@m35lp76 perf]#
+> @@ -7564,6 +7567,105 @@ void perf_event_namespaces(struct task_struct *task)
+>  			NULL);
+>  }
+>  
+> +/*
+> + * cgroup tracking
+> + */
+> +#ifdef CONFIG_CGROUPS
+> +
 
-The root cause is in the function test__cpu_map_merge():
-It creates two cpu_maps named 'a' and 'b':
+<snip>
 
-  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+> +
+> +#endif
+> +
+>  /*
+>   * mmap tracking
+>   */
 
-and creates a third map named 'c' which is the result of
-the merge of maps a and b:
+> @@ -12581,6 +12685,12 @@ static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
+>  	kfree(jc);
+>  }
+>  
+> +static int perf_cgroup_css_online(struct cgroup_subsys_state *css)
+> +{
+> +	perf_event_cgroup(css->cgroup);
+> +	return 0;
+> +}
+> +
+>  static int __perf_cgroup_move(void *info)
+>  {
+>  	struct task_struct *task = info;
+> @@ -12602,6 +12712,7 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
+>  struct cgroup_subsys perf_event_cgrp_subsys = {
+>  	.css_alloc	= perf_cgroup_css_alloc,
+>  	.css_free	= perf_cgroup_css_free,
+> +	.css_online	= perf_cgroup_css_online,
+>  	.attach		= perf_cgroup_attach,
+>  	/*
+>  	 * Implicitly enable on dfl hierarchy so that perf events can
 
-  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+CONFIG_CGROUPS vs CONFIG_CGROUP_PERF ?
 
-After some verifaction of the merged cpu_map all three
-of them are have their reference count reduced and are
-freed:
-
-   perf_cpu_map__put(a); (1)
-   perf_cpu_map__put(b);
-   perf_cpu_map__put(c);
-
-The release of perf_cpu_map__put(a) is wrong. The map
-is already released and free'ed as part of the function
-
-  perf_cpu_map__merge(struct perf_cpu_map *orig,
-  |	              struct perf_cpu_map *other)
-  +--> perf_cpu_map__put(orig);
-       |
-       +--> cpu_map__delete(orig)
-
-At the end perf_cpu_map_put() is called for map 'orig'
-alias 'a' and since the reference count is 1, the map
-is deleted, as can be seen by the following gdb trace:
-
- (gdb) where
- #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
- #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
-		     have_lock=<optimized out>) at malloc.c:4222
- #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
- #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
- #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
-     other=0x156cc60) at cpumap.c:343
- #5  0x000000000110cdd0 in test__cpu_map_merge (
-     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
-
-Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
-a second time and causes the failure. Fix this be removing that
-function call.
-
-Output after:
-  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
-  52: Merge cpu map                                         :
-  --- start ---
-  cpumask list: 1-2,4-5,7
-  ---- end ----
-  Merge cpu map: Ok
-  [root@m35lp76 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/cpumap.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 4ac56741ac5f..29c793ac7d10 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
- 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
- 	cpu_map__snprint(c, buf, sizeof(buf));
- 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
--	perf_cpu_map__put(a);
- 	perf_cpu_map__put(b);
- 	perf_cpu_map__put(c);
- 	return 0;
--- 
-2.21.0
+Other than that, I see nothing wrong here.
