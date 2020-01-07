@@ -1,7 +1,7 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 7/9] perf record: Add --all-cgroups option
-Date: Tue,  7 Jan 2020 22:34:59 +0900
-Message-ID: <20200107133501.327117-8-namhyung@kernel.org>
+Subject: [PATCH 6/9] perf record: Support synthesizing cgroup events
+Date: Tue,  7 Jan 2020 22:34:58 +0900
+Message-ID: <20200107133501.327117-7-namhyung@kernel.org>
 References: <20200107133501.327117-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,110 +12,235 @@ To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arn
 Cc: Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-The --all-cgroups option is to enable cgroup profiling support.  It
-tells kernel to record CGROUP events in the ring buffer so that perf
-report can identify task/cgroup association later.
+Synthesize cgroup events by iterating cgroup filesystem directories.
+The cgroup event only saves the portion of cgroup path after the mount
+point and the cgroup id (which actually is a file handle).
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/Documentation/perf-record.txt |  5 ++++-
- tools/perf/builtin-record.c              |  5 +++++
- tools/perf/util/evsel.c                  | 11 ++++++++++-
- tools/perf/util/evsel.h                  |  1 +
- tools/perf/util/record.h                 |  1 +
- 5 files changed, 21 insertions(+), 2 deletions(-)
+ tools/perf/builtin-record.c        |   5 ++
+ tools/perf/util/cgroup.c           |   3 +-
+ tools/perf/util/cgroup.h           |   1 +
+ tools/perf/util/event.c            |   1 +
+ tools/perf/util/synthetic-events.c | 119 +++++++++++++++++++++++++++++
+ tools/perf/util/synthetic-events.h |   1 +
+ tools/perf/util/tool.h             |   1 +
+ 7 files changed, 129 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index b23a4012a606..6dd9d69d7dee 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -385,7 +385,10 @@ displayed with the weight and local_weight sort keys.  This currently works for
- abort events and some memory events in precise mode on modern Intel CPUs.
- 
- --namespaces::
--Record events of type PERF_RECORD_NAMESPACES.
-+Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
-+
-+--all-cgroups::
-+Record events of type PERF_RECORD_CGROUP.  This enables 'cgroup' sort key.
- 
- --transaction::
- Record transaction flags for transaction related events.
 diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2802de9538ff..7d7912e121d6 100644
+index 4c301466101b..2802de9538ff 100644
 --- a/tools/perf/builtin-record.c
 +++ b/tools/perf/builtin-record.c
-@@ -1433,6 +1433,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	if (rec->opts.record_namespaces)
- 		tool->namespace_events = true;
+@@ -1397,6 +1397,11 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err < 0)
+ 		pr_warning("Couldn't synthesize bpf events.\n");
  
-+	if (rec->opts.record_cgroup)
-+		tool->cgroup_events = true;
++	err = perf_event__synthesize_cgroups(tool, process_synthesized_event,
++					     machine);
++	if (err < 0)
++		pr_warning("Couldn't synthesize cgroup events.\n");
 +
- 	if (rec->opts.auxtrace_snapshot_mode || rec->switch_output.enabled) {
- 		signal(SIGUSR2, snapshot_sig_handler);
- 		if (rec->opts.auxtrace_snapshot_mode)
-@@ -2363,6 +2366,8 @@ static struct option __record_options[] = {
- 			"per thread proc mmap processing timeout in ms"),
- 	OPT_BOOLEAN(0, "namespaces", &record.opts.record_namespaces,
- 		    "Record namespaces events"),
-+	OPT_BOOLEAN(0, "all-cgroups", &record.opts.record_cgroup,
-+		    "Record cgroup events"),
- 	OPT_BOOLEAN(0, "switch-events", &record.opts.record_switch_events,
- 		    "Record context switch events"),
- 	OPT_BOOLEAN_FLAG(0, "all-kernel", &record.opts.all_kernel,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 0f5a67603139..ff6c6683a32b 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1102,6 +1102,11 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	if (opts->record_namespaces)
- 		attr->namespaces  = track;
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
+ 					    process_synthesized_event, opts->sample_address,
+ 					    1);
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 4e8ef1db0c94..5147d22b3bda 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -15,8 +15,7 @@ int nr_cgroups;
  
-+	if (opts->record_cgroup) {
-+		attr->cgroup = track && !perf_missing_features.cgroup;
-+		perf_evsel__set_sample_bit(evsel, CGROUP);
+ static struct rb_root cgroup_tree = RB_ROOT;
+ 
+-static int
+-cgroupfs_find_mountpoint(char *buf, size_t maxlen)
++int cgroupfs_find_mountpoint(char *buf, size_t maxlen)
+ {
+ 	FILE *fp;
+ 	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index 381583df27c7..9a67060723fa 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -17,6 +17,7 @@ struct cgroup {
+ 
+ extern int nr_cgroups; /* number of explicit cgroups defined */
+ 
++int cgroupfs_find_mountpoint(char *buf, size_t maxlen);
+ struct cgroup *cgroup__get(struct cgroup *cgroup);
+ void cgroup__put(struct cgroup *cgroup);
+ 
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 824c038e5c33..28801c867f39 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -33,6 +33,7 @@
+ #include "bpf-event.h"
+ #include "tool.h"
+ #include "../perf.h"
++#include "cgroup.h"
+ 
+ static const char *perf_event__names[] = {
+ 	[0]					= "TOTAL",
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index cd336eb8886b..36f122cac44f 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -16,6 +16,7 @@
+ #include "util/synthetic-events.h"
+ #include "util/target.h"
+ #include "util/time-utils.h"
++#include "util/cgroup.h"
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+@@ -413,6 +414,124 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	return rc;
+ }
+ 
++static int perf_event__synthesize_cgroup(struct perf_tool *tool,
++					 union perf_event *event,
++					 char *path, size_t mount_len,
++					 perf_event__handler_t process,
++					 struct machine *machine)
++{
++	size_t event_size = sizeof(event->cgroup) - sizeof(event->cgroup.path);
++	size_t path_len = strlen(path) - mount_len + 1;
++	struct {
++		struct file_handle fh;
++		uint64_t cgroup_id;
++	} handle;
++	int mount_id;
++
++	while (path_len % sizeof(u64))
++		path[mount_len + path_len++] = '\0';
++
++	memset(&event->cgroup, 0, event_size);
++
++	event->cgroup.header.type = PERF_RECORD_CGROUP;
++	event->cgroup.header.size = event_size + path_len + machine->id_hdr_size;
++
++	handle.fh.handle_bytes = sizeof(handle.cgroup_id);
++	if (name_to_handle_at(AT_FDCWD, path, &handle.fh, &mount_id, 0) < 0) {
++		pr_debug("stat failed: %s\n", path);
++		return -1;
 +	}
 +
- 	if (opts->record_switch_events)
- 		attr->context_switch = track;
- 
-@@ -1782,7 +1787,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	 * Must probe features in the order they were added to the
- 	 * perf_event_attr interface.
- 	 */
--	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
-+	if (!perf_missing_features.cgroup && evsel->core.attr.cgroup) {
-+		perf_missing_features.cgroup = true;
-+		pr_debug2_peo("Kernel has no cgroup sampling support, bailing out\n");
-+		goto out_close;
-+	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
- 		perf_missing_features.aux_output = true;
- 		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
- 		goto out_close;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index dc14f4a823cd..df71b530740b 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -119,6 +119,7 @@ struct perf_missing_features {
- 	bool ksymbol;
- 	bool bpf;
- 	bool aux_output;
-+	bool cgroup;
++	event->cgroup.id = handle.cgroup_id;
++	strncpy(event->cgroup.path, path + mount_len, path_len);
++	memset(event->cgroup.path + path_len, 0, machine->id_hdr_size);
++
++	if (perf_tool__process_synth_event(tool, event, machine, process) < 0) {
++		pr_debug("process synth event failed\n");
++		return -1;
++	}
++
++	return 0;
++}
++
++static int perf_event__walk_cgroup_tree(struct perf_tool *tool,
++					union perf_event *event,
++					char *path, size_t mount_len,
++					perf_event__handler_t process,
++					struct machine *machine)
++{
++	size_t pos = strlen(path);
++	DIR *d;
++	struct dirent *dent;
++	int ret = 0;
++
++	if (perf_event__synthesize_cgroup(tool, event, path, mount_len,
++					  process, machine) < 0)
++		return -1;
++
++	d = opendir(path);
++	if (d == NULL) {
++		pr_debug("failed to open directory: %s\n", path);
++		return -1;
++	}
++
++	while ((dent = readdir(d)) != NULL) {
++		if (dent->d_type != DT_DIR)
++			continue;
++		if (!strcmp(dent->d_name, ".") ||
++		    !strcmp(dent->d_name, ".."))
++			continue;
++
++		if (path[pos - 1] != '/')
++			strcat(path, "/");
++		strcat(path, dent->d_name);
++
++		ret = perf_event__walk_cgroup_tree(tool, event, path,
++						   mount_len, process, machine);
++		if (ret < 0)
++			break;
++
++		path[pos] = '\0';
++	}
++
++	closedir(d);
++	return ret;
++}
++
++int perf_event__synthesize_cgroups(struct perf_tool *tool,
++				   perf_event__handler_t process,
++				   struct machine *machine)
++{
++	union perf_event event;
++	char *cgrp_root;
++	size_t mount_len;  /* length of mount point in the path */
++	int ret = -1;
++
++	cgrp_root = malloc(PATH_MAX);
++	if (cgrp_root == NULL)
++		return -1;
++
++	if (cgroupfs_find_mountpoint(cgrp_root, PATH_MAX) < 0) {
++		pr_debug("cannot find cgroup mount point\n");
++		goto out;
++	}
++
++	mount_len = strlen(cgrp_root);
++	/* make sure the path starts with a slash (after mount point) */
++	strcat(cgrp_root, "/");
++
++	if (perf_event__walk_cgroup_tree(tool, &event, cgrp_root, mount_len,
++					 process, machine) < 0)
++		goto out;
++
++	ret = 0;
++
++out:
++	free(cgrp_root);
++
++	return ret;
++}
++
+ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process,
+ 				   struct machine *machine)
+ {
+diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
+index baead0cdc381..e7a3e9589738 100644
+--- a/tools/perf/util/synthetic-events.h
++++ b/tools/perf/util/synthetic-events.h
+@@ -45,6 +45,7 @@ int perf_event__synthesize_kernel_mmap(struct perf_tool *tool, perf_event__handl
+ int perf_event__synthesize_mmap_events(struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine, bool mmap_data);
+ int perf_event__synthesize_modules(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
+ int perf_event__synthesize_namespaces(struct perf_tool *tool, union perf_event *event, pid_t pid, pid_t tgid, perf_event__handler_t process, struct machine *machine);
++int perf_event__synthesize_cgroups(struct perf_tool *tool, perf_event__handler_t process, struct machine *machine);
+ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format, const struct perf_sample *sample);
+ int perf_event__synthesize_stat_config(struct perf_tool *tool, struct perf_stat_config *config, perf_event__handler_t process, struct machine *machine);
+ int perf_event__synthesize_stat_events(struct perf_stat_config *config, struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process, bool attrs);
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index 472ef5eb4068..3fb67bd31e4a 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -79,6 +79,7 @@ struct perf_tool {
+ 	bool		ordered_events;
+ 	bool		ordering_requires_timestamps;
+ 	bool		namespace_events;
++	bool		cgroup_events;
+ 	bool		no_warn;
+ 	enum show_feature_header show_feat_hdr;
  };
- 
- extern struct perf_missing_features perf_missing_features;
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 5421fd2ad383..24316458be20 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -34,6 +34,7 @@ struct record_opts {
- 	bool	      auxtrace_snapshot_on_exit;
- 	bool	      auxtrace_sample_mode;
- 	bool	      record_namespaces;
-+	bool	      record_cgroup;
- 	bool	      record_switch_events;
- 	bool	      all_kernel;
- 	bool	      all_user;
 -- 
 2.24.1.735.g03f4e72817-goog
