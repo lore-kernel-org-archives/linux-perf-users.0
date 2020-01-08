@@ -1,7 +1,7 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
-Date: Wed, 8 Jan 2020 22:52:35 +0100
-Message-ID: <20200108215235.GA12995@krava>
+Date: Wed, 8 Jan 2020 23:01:03 +0100
+Message-ID: <20200108220103.GB12995@krava>
 References: <20200107133501.327117-1-namhyung@kernel.org>
  <20200107133501.327117-5-namhyung@kernel.org>
 Mime-Version: 1.0
@@ -15,28 +15,54 @@ Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arn
 List-Id: linux-perf-users.vger.kernel.org
 
 On Tue, Jan 07, 2020 at 10:34:56PM +0900, Namhyung Kim wrote:
-> Each cgroup is kept in the global cgroup_tree sorted by the cgroup id.
-> Hist entries have cgroup id can compare it directly and later it can
-> be used to find a group name using this tree.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/cgroup.c  | 72 +++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/cgroup.h  | 15 +++++---
->  tools/perf/util/machine.c |  7 ++++
->  tools/perf/util/session.c |  4 +++
->  4 files changed, 94 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> index 4881d4af3381..4e8ef1db0c94 100644
-> --- a/tools/perf/util/cgroup.c
-> +++ b/tools/perf/util/cgroup.c
-> @@ -13,6 +13,8 @@
->  
->  int nr_cgroups;
->  
-> +static struct rb_root cgroup_tree = RB_ROOT;
 
-I think we shoud carry that in 'struct perf_env' 
+SNIP
+
+> +	while (*p != NULL) {
+> +		parent = *p;
+> +		cgrp = rb_entry(parent, struct cgroup, node);
+> +
+> +		if (cgrp->id == id)
+> +			return cgrp;
+> +
+> +		if (cgrp->id < id)
+> +			p = &(*p)->rb_left;
+> +		else
+> +			p = &(*p)->rb_right;
+> +	}
+> +
+> +	cgrp = malloc(sizeof(*cgrp));
+> +	if (cgrp == NULL)
+> +		return NULL;
+> +
+> +	cgrp->name = strdup(path);
+> +	if (cgrp->name == NULL) {
+> +		free(cgrp);
+> +		return NULL;
+> +	}
+> +
+> +	cgrp->fd = -1;
+> +	cgrp->id = id;
+> +	refcount_set(&cgrp->refcnt, 1);
+> +
+> +	rb_link_node(&cgrp->node, parent, p);
+> +	rb_insert_color(&cgrp->node, &cgroup_tree);
+> +
+> +	return cgrp;
+> +}
+> +
+> +struct cgroup *cgroup__find_by_path(const char *path)
+> +{
+> +	struct rb_node *node;
+> +
+> +	node = rb_first(&cgroup_tree);
+> +	while (node) {
+> +		struct cgroup *cgrp = rb_entry(node, struct cgroup, node);
+> +
+> +		if (!strcmp(cgrp->name, path))
+> +			return cgrp;
+
+you have it sorted on ids, but only search by path,
+why don't we sort it on path right away?
 
 jirka
