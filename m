@@ -1,70 +1,116 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Date: Wed, 8 Jan 2020 17:02:49 +0100
-Message-ID: <20200108160249.GD402774@krava>
-References: <20200108065844.4030-1-kjain@linux.ibm.com>
- <e866c12a-7328-8524-fd0e-668301da6875@linux.intel.com>
- <822bcb9d-4c08-39c5-e6e7-9c3e20d77852@linux.ibm.com>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+Date: Wed, 8 Jan 2020 17:07:13 +0100
+Message-ID: <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <822bcb9d-4c08-39c5-e6e7-9c3e20d77852@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kajoljain <kjain@linux.ibm.com>
-Cc: "Jin, Yao" <yao.jin@linux.intel.com>, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+In-Reply-To: <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, "selinux@vger.kernel.org" <selinux@vger.ke>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:41:35PM +0530, kajoljain wrote:
+On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
+> 
+> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
+> processes. For backward compatibility reasons access to perf_events
+> subsystem remains open for CAP_SYS_ADMIN privileged processes but
+> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
+> with respect to CAP_SYS_PERFMON capability.
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  include/linux/perf_event.h | 6 +++---
+>  kernel/events/core.c       | 6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 34c7c6910026..f46acd69425f 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
+>  
+>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+>  		return -EACCES;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>  
+>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+>  		return -EACCES;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>  
+>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+>  {
+> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
+>  		return -EPERM;
+>  
+>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
 
-SNIP
+These are OK I suppose.
 
-> > > -=A0=A0=A0 int i =3D 0;
-> > > +=A0=A0=A0 int i =3D 0, j =3D 0;
-> > > =A0=A0=A0=A0=A0 bool leader_found;
-> > > =A0 =A0=A0=A0=A0=A0 evlist__for_each_entry (perf_evlist, ev) {
-> > > +=A0=A0=A0=A0=A0=A0=A0 j++;
-> > > +=A0=A0=A0=A0=A0=A0=A0 if (j <=3D iterator_perf_evlist)
-> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 continue;
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!strcmp(ev->name, ids[i])) {
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 if (!metric_events[i])
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 metric_events[i=
-] =3D ev;
-> > > @@ -146,6 +151,7 @@ static struct evsel *find_evsel_group(struct
-> > > evlist *perf_evlist,
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-> > > =A0=A0=A0=A0=A0 }
-> > > +=A0=A0=A0 iterator_perf_evlist =3D j;
-> > > =A0 =A0=A0=A0=A0=A0 return metric_events[0];
-> > > =A0 }
-> > >=20
-> >=20
-> > Thanks for reporting and fixing this issue.
-> >=20
-> > I just have one question, do we really need a *static variable* to tr=
-ack
-> > the matched events? Perhaps using an input parameter?
->=20
-> Hi Jin,
->=20
-> The other way I come up with to solve this issue is, making change in
-> perf_evlist itself by adding some flag in event name, to keep track of
-> matched events.
->=20
-> As if we change event name itself, next time when we compare it won't
-> matched. But in that case we need to remove those flag later. Which wil=
-l
-> increase the
->=20
-> complexity. If you have any suggestions, please let me know.
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 059ee7116008..d9db414f2197 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
+>  	if (event->attr.type != perf_kprobe.type)
+>  		return -ENOENT;
+>  
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!perfmon_capable())
+>  		return -EACCES;
+>  
+>  	/*
 
-we already keep evsel::cpu_iter for similar concept
+This one only allows attaching to already extant kprobes, right? It does
+not allow creation of kprobes.
 
-so I guess we could have some iterator_perf_evlist variable in evlist..
-that is if we don't find other solution (other than static varable)
+> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+>  	if (event->attr.type != perf_uprobe.type)
+>  		return -ENOENT;
+>  
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!perfmon_capable())
+>  		return -EACCES;
+>  
+>  	/*
 
-thanks,
-jirka
+Idem, I presume.
+
+> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
+>  	}
+>  
+>  	if (attr.namespaces) {
+> -		if (!capable(CAP_SYS_ADMIN))
+> +		if (!perfmon_capable())
+>  			return -EACCES;
+>  	}
+
+And given we basically make the entire kernel observable with this CAP,
+busting namespaces shoulnd't be a problem either.
+
+So yeah, I suppose that works.
