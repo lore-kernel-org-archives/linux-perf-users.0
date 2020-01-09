@@ -1,57 +1,116 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 8/9] perf top: Add --all-cgroups option
-Date: Thu, 9 Jan 2020 09:18:52 +0100
-Message-ID: <20200109081852.GB52936@krava>
-References: <20200107133501.327117-1-namhyung@kernel.org>
- <20200107133501.327117-9-namhyung@kernel.org>
- <20200108222458.GF12995@krava>
- <CAM9d7ch7t9GDu=emb9MYdTSB8hPb0adAy1iOdjyXSXVXTpGBFg@mail.gmail.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+Date: Thu, 9 Jan 2020 14:36:50 +0300
+Message-ID: <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+ <20200108160713.GI2844@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAM9d7ch7t9GDu=emb9MYdTSB8hPb0adAy1iOdjyXSXVXTpGBFg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-security-module-owner@vger.kernel.org>
+In-Reply-To: <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+Content-Language: en-US
+Sender: owner-linux-security-module@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufler-ca.com>, Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Jan 09, 2020 at 04:55:21PM +0900, Namhyung Kim wrote:
-> On Thu, Jan 9, 2020 at 7:25 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Tue, Jan 07, 2020 at 10:35:00PM +0900, Namhyung Kim wrote:
-> > > The --all-cgroups option is to enable cgroup profiling support.  It
-> > > tells kernel to record CGROUP events in the ring buffer so that perf
-> > > report can identify task/cgroup association later.
-> > >
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/Documentation/perf-top.txt | 4 ++++
-> > >  tools/perf/builtin-top.c              | 9 +++++++++
-> > >  2 files changed, 13 insertions(+)
-> > >
-> > > diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-> > > index 5596129a71cf..c75507f50071 100644
-> > > --- a/tools/perf/Documentation/perf-top.txt
-> > > +++ b/tools/perf/Documentation/perf-top.txt
-> > > @@ -266,6 +266,10 @@ Default is to monitor all CPUS.
-> > >       Record events of type PERF_RECORD_NAMESPACES and display it with the
-> > >       'cgroup_id' sort key.
-> > >
-> > > +--cgroup::
-> > > +     Record events of type PERF_RECORD_CGROUP and display it with the
-> > > +     'cgroup' sort key.
-> >
-> > should be '--all-cgroups' ?
-> 
-> Oops, you're right.
-> 
-> >
-> > anyway, we dont have '--cgroups', why not use just this?
-> 
-> I chose it for consistency since perf record has '--cgroup' option.
 
-I see.. and we have that substring recognition so I suppose --cgroups
-would screw the existing --cgroup option, ok
+On 08.01.2020 19:07, Peter Zijlstra wrote:
+> On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
+>>
+>> Open access to perf_events monitoring for CAP_SYS_PERFMON privileged
+>> processes. For backward compatibility reasons access to perf_events
+>> subsystem remains open for CAP_SYS_ADMIN privileged processes but
+>> CAP_SYS_ADMIN usage for secure perf_events monitoring is discouraged
+>> with respect to CAP_SYS_PERFMON capability.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  include/linux/perf_event.h | 6 +++---
+>>  kernel/events/core.c       | 6 +++---
+>>  2 files changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 34c7c6910026..f46acd69425f 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -1285,7 +1285,7 @@ static inline int perf_is_paranoid(void)
+>>  
+>>  static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>>  {
+>> -	if (sysctl_perf_event_paranoid > 1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 1 && !perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	return security_perf_event_open(attr, PERF_SECURITY_KERNEL);
+>> @@ -1293,7 +1293,7 @@ static inline int perf_allow_kernel(struct perf_event_attr *attr)
+>>  
+>>  static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>>  {
+>> -	if (sysctl_perf_event_paranoid > 0 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > 0 && !perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	return security_perf_event_open(attr, PERF_SECURITY_CPU);
+>> @@ -1301,7 +1301,7 @@ static inline int perf_allow_cpu(struct perf_event_attr *attr)
+>>  
+>>  static inline int perf_allow_tracepoint(struct perf_event_attr *attr)
+>>  {
+>> -	if (sysctl_perf_event_paranoid > -1 && !capable(CAP_SYS_ADMIN))
+>> +	if (sysctl_perf_event_paranoid > -1 && !perfmon_capable())
+>>  		return -EPERM;
+>>  
+>>  	return security_perf_event_open(attr, PERF_SECURITY_TRACEPOINT);
+> 
+> These are OK I suppose.
+> 
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 059ee7116008..d9db414f2197 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
+>>  	if (event->attr.type != perf_kprobe.type)
+>>  		return -ENOENT;
+>>  
+>> -	if (!capable(CAP_SYS_ADMIN))
+>> +	if (!perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	/*
+> 
+> This one only allows attaching to already extant kprobes, right? It does
+> not allow creation of kprobes.
 
-jirka
+This unblocks creation of local trace kprobes and uprobes by CAP_SYS_PERFMON 
+privileged process, exactly the same as for CAP_SYS_ADMIN privileged process.
+
+> 
+>> @@ -9116,7 +9116,7 @@ static int perf_uprobe_event_init(struct perf_event *event)
+>>  	if (event->attr.type != perf_uprobe.type)
+>>  		return -ENOENT;
+>>  
+>> -	if (!capable(CAP_SYS_ADMIN))
+>> +	if (!perfmon_capable())
+>>  		return -EACCES;
+>>  
+>>  	/*
+> 
+> Idem, I presume.
+> 
+>> @@ -11157,7 +11157,7 @@ SYSCALL_DEFINE5(perf_event_open,
+>>  	}
+>>  
+>>  	if (attr.namespaces) {
+>> -		if (!capable(CAP_SYS_ADMIN))
+>> +		if (!perfmon_capable())
+>>  			return -EACCES;
+>>  	}
+> 
+> And given we basically make the entire kernel observable with this CAP,
+> busting namespaces shoulnd't be a problem either.
+> 
+> So yeah, I suppose that works.
+> 
