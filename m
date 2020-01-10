@@ -1,19 +1,20 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
  privileged process
-Date: Fri, 10 Jan 2020 19:41:41 +0300
-Message-ID: <dc943577-d3b0-5c76-e8dc-009b74aa5ced@linux.intel.com>
+Date: Fri, 10 Jan 2020 13:45:31 -0300
+Message-ID: <20200110164531.GA2598@kernel.org>
 References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
  <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
  <20200108160713.GI2844@hirez.programming.kicks-ass.net>
  <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
  <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+ <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <20200110140234.GO2844@hirez.programming.kicks-ass.net>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,56 +24,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, "selinux@vger.kernel.org" <selinux@vger.ke>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Peter Zijlstra <peterz@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Alexey Budankov <alexey.budankov@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keesc>
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Sat, Jan 11, 2020 at 12:52:13AM +0900, Masami Hiramatsu escreveu:
+> On Fri, 10 Jan 2020 15:02:34 +0100 Peter Zijlstra <peterz@infradead.org> wrote:
+> > Again, this only allows attaching to previously created kprobes, it does
+> > not allow creating kprobes, right?
 
-On 10.01.2020 17:02, Peter Zijlstra wrote:
-> On Thu, Jan 09, 2020 at 02:36:50PM +0300, Alexey Budankov wrote:
->> On 08.01.2020 19:07, Peter Zijlstra wrote:
->>> On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
-> 
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index 059ee7116008..d9db414f2197 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
->>>>  	if (event->attr.type != perf_kprobe.type)
->>>>  		return -ENOENT;
->>>>  
->>>> -	if (!capable(CAP_SYS_ADMIN))
->>>> +	if (!perfmon_capable())
->>>>  		return -EACCES;
->>>>  
->>>>  	/*
->>>
->>> This one only allows attaching to already extant kprobes, right? It does
->>> not allow creation of kprobes.
->>
->> This unblocks creation of local trace kprobes and uprobes by CAP_SYS_PERFMON 
->> privileged process, exactly the same as for CAP_SYS_ADMIN privileged process.
-> 
-> I've no idea what you just said; it's just words.
-> 
-> Again, this only allows attaching to previously created kprobes, it does
-> not allow creating kprobes, right?
+> > That is; I don't think CAP_SYS_PERFMON should be allowed to create
+> > kprobes.
 
-Not really, this allows creating a kprobe using perf_event_open syscall that
-associates file descriptor with the kprobe [1].
+> > As might be clear; I don't actually know what the user-ABI is for
+> > creating kprobes.
 
-Lifetime of that kprobe is equal to the lifetime of the file descriptor and 
-the kprobe is not visible in tracefs: /sys/kernel/debug/tracing/kprobe_events
+> There are 2 ABIs nowadays, ftrace and ebpf. perf-probe uses ftrace interface to
+> define new kprobe events, and those events are treated as completely same as
+> tracepoint events. On the other hand, ebpf tries to define new probe event
+> via perf_event interface. Above one is that interface. IOW, it creates new kprobe.
 
-> 
-> That is; I don't think CAP_SYS_PERFMON should be allowed to create
-> kprobes.
-> 
-> As might be clear; I don't actually know what the user-ABI is for
-> creating kprobes.
+Masami, any plans to make 'perf probe' use the perf_event_open()
+interface for creating kprobes/uprobes?
 
-~Alexey
-
----
-
-[1] https://lore.kernel.org/lkml/20171206224518.3598254-1-songliubraving@fb.com/
+- Arnaldo
