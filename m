@@ -1,78 +1,135 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v4 2/9] perf/core: open access for
- CAP_SYS_PERFMON privileged process
-Date: Fri, 10 Jan 2020 20:34:33 +0300
-Message-ID: <603c4d4f-9021-a8bc-1be6-3654d5c557d4@linux.intel.com>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
- <20200108160713.GI2844@hirez.programming.kicks-ass.net>
- <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
- <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Fri, 10 Jan 2020 18:50:51 +0100
+Message-ID: <20200110175051.GA83292@gmail.com>
+References: <20200106160705.10899-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <20200110140234.GO2844@hirez.programming.kicks-ass.net>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedes>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200106160705.10899-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>, David Ahern <dsahern@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Vitaly Chikunov <vt@altlinux.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-On 10.01.2020 17:02, Peter Zijlstra wrote:
-> On Thu, Jan 09, 2020 at 02:36:50PM +0300, Alexey Budankov wrote:
->> On 08.01.2020 19:07, Peter Zijlstra wrote:
->>> On Wed, Dec 18, 2019 at 12:25:35PM +0300, Alexey Budankov wrote:
+> Hi Ingo/Thomas,
 > 
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index 059ee7116008..d9db414f2197 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -9056,7 +9056,7 @@ static int perf_kprobe_event_init(struct perf_event *event)
->>>>  	if (event->attr.type != perf_kprobe.type)
->>>>  		return -ENOENT;
->>>>  
->>>> -	if (!capable(CAP_SYS_ADMIN))
->>>> +	if (!perfmon_capable())
->>>>  		return -EACCES;
->>>>  
->>>>  	/*
->>>
->>> This one only allows attaching to already extant kprobes, right? It does
->>> not allow creation of kprobes.
->>
->> This unblocks creation of local trace kprobes and uprobes by CAP_SYS_PERFMON 
->> privileged process, exactly the same as for CAP_SYS_ADMIN privileged process.
+> 	Please consider pulling,
 > 
-> I've no idea what you just said; it's just words.
+> Best regards,
 > 
-> Again, this only allows attaching to previously created kprobes, it does
-> not allow creating kprobes, right?
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit b9fb2de0115bbacab36da31fd10483ea66d9cfab:
+> 
+>   Merge tag 'perf-urgent-for-mingo-5.5-20191223' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2019-12-23 22:27:44 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.6-20200106
+> 
+> for you to fetch changes up to 6c4798d3f08b81c2c52936b10e0fa872590c96ae:
+> 
+>   tools lib: Fix builds when glibc contains strlcpy() (2020-01-06 11:46:10 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/core improvements and fixes.
+> 
+> perf record:
+> 
+>   Alexey Budankov:
+> 
+>   - Adapt affinity for machines with #CPUs > 1K to overcome current 1024 CPUs
+>     mask size limitation of cpu_set_t type.
+> 
+> perf report/top TUI:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Make ENTER consistently present the pop up menu with and without call
+>     chains, to eliminate confusion. The menu continues available at all times
+>     use 'm' and '+' can be used to toggle just one call chain level, 'e' for all
+>     the call chains for a top level histogram entry and 'E' to expand all call
+>     chains in all top level entries. Extra info about these options was added to
+>     the pop up menu entries. Pressing 'k' serves as special hotkey to go straight
+>     to the main vmlinux entries, to avoid having to press enter and then select
+>     "Zoom into the kernel DSO".
+> 
+> perf sched timehist:
+> 
+>   David Ahern:
+> 
+>   - Add support for filtering on CPU.
+> 
+> perf tests:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Show expected versus obtained values in bp_signal test.
+> 
+> libperf:
+> 
+>   Jiri Olsa:
+> 
+>   - Move to tools/lib/perf.
+> 
+>   - Add man pages.
+> 
+> libapi:
+> 
+>   Andrey Zhizhikin:
+> 
+>   - Fix gcc9 stringop-truncation compilation error.
+> 
+> tools lib:
+> 
+>   Vitaly Chikunov:
+> 
+>   - Fix builds when glibc contains strlcpy(), which is the case for ALT Linux.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Alexey Budankov (3):
+>       tools bitmap: Implement bitmap_equal() operation at bitmap API
+>       perf mmap: Declare type for cpu mask of arbitrary length
+>       perf record: Adapt affinity to machines with #CPUs > 1K
+> 
+> Andrey Zhizhikin (1):
+>       tools lib api fs: Fix gcc9 stringop-truncation compilation error
+> 
+> Arnaldo Carvalho de Melo (12):
+>       perf tests bp_signal: Show expected versus obtained values
+>       perf hists browser: Restore ESC as "Zoom out" of DSO/thread/etc
+>       perf report/top: Make ENTER consistently bring up menu
+>       perf report/top: Add menu entry for toggling callchain expansion
+>       perf report/top: Improve toggle callchain menu option
+>       perf hists browser: Generalize the do_zoom_dso() function
+>       perf report/top: Add 'k' hotkey to zoom directly into the kernel map
+>       perf hists browser: Allow passing an initial hotkey
+>       tools ui popup: Allow returning hotkeys
+>       perf report/top: Allow pressing hotkeys in the options popup menu
+>       perf report/top: Do not offer annotation for symbols without samples
+>       perf report/top: Make 'e' visible in the help and make it toggle showing callchains
+> 
+> David Ahern (1):
+>       perf sched timehist: Add support for filtering on CPU
+> 
+> Jiri Olsa (2):
+>       libperf: Move to tools/lib/perf
+>       libperf: Add man pages
+> 
+> Vitaly Chikunov (1):
+>       tools lib: Fix builds when glibc contains strlcpy()
 
-Not really, this allows creating a kprobe using perf_event_open syscall that
-associates file descriptor with the kprobe [1].
+>  70 files changed, 1565 insertions(+), 352 deletions(-)
 
-Lifetime of that kprobe is equal to the lifetime of the file descriptor and 
-the kprobe is not visible in tracefs: /sys/kernel/debug/tracing/kprobe_events
+Pulled, thanks a lot Arnaldo!
 
-> 
-> That is; I don't think CAP_SYS_PERFMON should be allowed to create
-> kprobes.
-> 
-> As might be clear; I don't actually know what the user-ABI is for
-> creating kprobes.
-> 
-
-~Alexey
-
-[1] https://lore.kernel.org/lkml/20171206224518.3598254-1-songliubraving@fb.com/
+	Ingo
