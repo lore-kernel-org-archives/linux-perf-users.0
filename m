@@ -1,73 +1,57 @@
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [GIT PULL 0/6] perf/urgent fixes
-Date: Mon, 13 Jan 2020 15:14:40 +0530
-Message-ID: <d3e490aa-994f-3bec-cddf-cd5659e5859d@linux.ibm.com>
-References: <20191205193224.24629-1-acme@kernel.org>
- <6489b96f-5117-f133-1c2d-63c0c1691f4b@linux.ibm.com>
- <20200113092539.GD35080@krava>
+From: Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
+Date: Mon, 13 Jan 2020 12:27:38 +0000
+Message-ID: <fd4f4278-fa43-86dc-1f2f-3439f19fea9e@arm.com>
+References: <20191220110525.30131-1-james.clark@arm.com>
+ <20191223034852.GB3981@leoy-ThinkPad-X240s>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200113092539.GD35080@krava>
+In-Reply-To: <20191223034852.GB3981@leoy-ThinkPad-X240s>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, nd@arm.com, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Igor Lubashev <ilubashe@akamai.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi Leo,
 
-
-On 1/13/20 2:55 PM, Jiri Olsa wrote:
-> On Mon, Jan 13, 2020 at 01:58:59PM +0530, Ravi Bangoria wrote:
+On 23/12/2019 03:48, Leo Yan wrote:
+> Hi James,
 > 
-> SNIP
-> 
->>          | ^~~~
->>    In file included from /usr/include/glib-2.0/gobject/gobject.h:24,
->>                     from /usr/include/glib-2.0/gobject/gbinding.h:29,
->>                     from /usr/include/glib-2.0/glib-object.h:23,
->>                     from /usr/include/glib-2.0/gio/gioenums.h:28,
->>                     from /usr/include/glib-2.0/gio/giotypes.h:28,
->>                     from /usr/include/glib-2.0/gio/gio.h:26,
->>                     from /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h:30,
->>                     from /usr/include/gtk-2.0/gdk/gdk.h:32,
->>                     from /usr/include/gtk-2.0/gtk/gtk.h:32,
->>                     from test-gtk2.c:3:
->>    /usr/include/glib-2.0/gobject/gtype.h:679:1: note: declared here
->>      679 | {
->>          | ^
->>    In file included from /usr/include/gtk-2.0/gtk/gtktoolitem.h:31,
->>                     from /usr/include/gtk-2.0/gtk/gtktoolbutton.h:30,
->>                     from /usr/include/gtk-2.0/gtk/gtkmenutoolbutton.h:30,
->>                     from /usr/include/gtk-2.0/gtk/gtk.h:126,
->>                     from test-gtk2.c:3:
->>    /usr/include/gtk-2.0/gtk/gtktooltips.h:73:3: error: ‘GTimeVal’ is deprecated: Use 'GDateTime' instead [-Werror=deprecated-declarations]
->>       73 |   GTimeVal last_popdown;
->>          |   ^~~~~~~~
->>    In file included from /usr/include/glib-2.0/glib/galloca.h:32,
->>                     from /usr/include/glib-2.0/glib.h:30,
->>                     from /usr/include/glib-2.0/gobject/gbinding.h:28,
->>                     from /usr/include/glib-2.0/glib-object.h:23,
->>                     from /usr/include/glib-2.0/gio/gioenums.h:28,
->>                     from /usr/include/glib-2.0/gio/giotypes.h:28,
->>                     from /usr/include/glib-2.0/gio/gio.h:26,
->>                     from /usr/include/gtk-2.0/gdk/gdkapplaunchcontext.h:30,
->>                     from /usr/include/gtk-2.0/gdk/gdk.h:32,
->>                     from /usr/include/gtk-2.0/gtk/gtk.h:32,
->>                     from test-gtk2.c:3:
->>    /usr/include/glib-2.0/glib/gtypes.h:551:8: note: declared here
->>      551 | struct _GTimeVal
->>          |        ^~~~~~~~~
->>    cc1: all warnings being treated as errors
+> On Fri, Dec 20, 2019 at 11:05:25AM +0000, James Clark wrote:
+>> This patch fixes an issue when non Arm SPE events are specified after an
+>> Arm SPE event. In that case, perf will exit with an error code and not
+>> produce a record file. This is because a loop index is used to store the
+>> location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
+>> index will be overwritten. Fix this issue by saving the PMU into a
+>> variable instead of using the index, and also add an error message.
 >>
+>> Before the fix:
+>>      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+>>      237
+>>
+>> After the fix:
+>>      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+>>      ...
+>>      0
 > 
-> patch below fixes that for me.. please let me know
-> if it works for you and I'll post full patch
+> Just bring up a question related with PMU event registration.  Let's
+> see the DT binding in arch/arm64/boot/dts/arm/fvp-base-revc.dts:
 > 
-> jirka
+>           spe-pmu {
+>                   compatible = "arm,statistical-profiling-extension-v1";
+>                   interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>           };
 > 
+> 
+> Now SPE registers PMU event for every CPU; seem to me, though SPE is an
 
-LGTM. You can add:
+Do you mean "SPE PMU" here ? SPE is different from ETM, where the trace
+data is micro-architecture dependent. And thus you cannot mix the trace
+on different CPUs with different micro-archs.
 
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+As such I don't see any issue with this patch.
+
+Suzuki
