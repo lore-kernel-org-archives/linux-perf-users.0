@@ -1,64 +1,52 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
-Date: Mon, 13 Jan 2020 22:58:03 +0800
-Message-ID: <20200113145803.GB10620@leoy-ThinkPad-X240s>
-References: <20191220110525.30131-1-james.clark@arm.com>
- <20191223034852.GB3981@leoy-ThinkPad-X240s>
- <fd4f4278-fa43-86dc-1f2f-3439f19fea9e@arm.com>
- <20200113141751.GA10620@leoy-ThinkPad-X240s>
+From: Song Liu <songliubraving@fb.com>
+Subject: Re: [PATCH v4 1/9] capabilities: introduce CAP_SYS_PERFMON to kernel
+ and user space
+Date: Mon, 13 Jan 2020 20:25:37 +0000
+Message-ID: <7EBC6A81-1DA7-4D5C-972F-4D5987B12E2A@fb.com>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200113141751.GA10620@leoy-ThinkPad-X240s>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Cc: James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, nd@arm.com, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Igor Lubashev <ilubashe@akamai.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <e0cb2b8d-e964-bc23-bf80-58d7ac4ed6f1@linux.intel.com>
+Content-Language: en-US
+Content-ID: <05A2858D29365040812017508B06EED0@namprd15.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, "oprofile-list@lists.sf.net" <oprofile-list@lists.sf.net>, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, seli
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:17:51PM +0800, Leo Yan wrote:
 
-[...]
 
-> > > On Fri, Dec 20, 2019 at 11:05:25AM +0000, James Clark wrote:
-> > > > This patch fixes an issue when non Arm SPE events are specified after an
-> > > > Arm SPE event. In that case, perf will exit with an error code and not
-> > > > produce a record file. This is because a loop index is used to store the
-> > > > location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
-> > > > index will be overwritten. Fix this issue by saving the PMU into a
-> > > > variable instead of using the index, and also add an error message.
-> > > > 
-> > > > Before the fix:
-> > > >      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
-> > > >      237
-> > > > 
-> > > > After the fix:
-> > > >      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
-> > > >      ...
-> > > >      0
-> > > 
-> > > Just bring up a question related with PMU event registration.  Let's
-> > > see the DT binding in arch/arm64/boot/dts/arm/fvp-base-revc.dts:
-> > > 
-> > >           spe-pmu {
-> > >                   compatible = "arm,statistical-profiling-extension-v1";
-> > >                   interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> > >           };
-> > > 
-> > > 
-> > > Now SPE registers PMU event for every CPU; seem to me, though SPE is an
-> > 
-> > Do you mean "SPE PMU" here ? SPE is different from ETM, where the trace
-> > data is micro-architecture dependent. And thus you cannot mix the trace
-> > on different CPUs with different micro-archs.
+> On Dec 18, 2019, at 1:24 AM, Alexey Budankov <alexey.budankov@linux.intel.com> wrote:
 > 
-> Understood that SPE is micro-architecture dependent.
+> 
+> Introduce CAP_SYS_PERFMON capability devoted to secure system performance
+> monitoring and observability operations so that CAP_SYS_PERFMON would
+> assist CAP_SYS_ADMIN capability in its governing role for perf_events,
+> i915_perf and other subsystems of the kernel.
+> 
+> CAP_SYS_PERFMON intends to harden system security and integrity during
+> system performance monitoring and observability operations by decreasing
+> attack surface that is available to CAP_SYS_ADMIN privileged processes.
+> 
+> CAP_SYS_PERFMON intends to take over CAP_SYS_ADMIN credentials related
+> to system performance monitoring and observability operations and balance
+> amount of CAP_SYS_ADMIN credentials in accordance with the recommendations
+> provided in the man page for CAP_SYS_ADMIN [1]: "Note: this capability
+> is overloaded; see Notes to kernel developers, below."
+> 
+> [1] https://urldefense.proofpoint.com/v2/url?u=http-3A__man7.org_linux_man-2Dpages_man7_capabilities.7.html&d=DwICaQ&c=5VD0RTtNlTh3ycd41b3MUw&r=dR8692q0_uaizy0jkrBJQM5k2hfm4CiFxYT8KaysFrg&m=L5qCuMRrTvYhyjR1rpgE9vEv4HppVlOXDIzKzoGL30c&s=FNJpET4buKFRuqktVHQphaY1qE7IsdFpU4iYwpCn4tY&e= 
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Maybe SPE is more general than we think :)
-
-Since SPE is defined in ARMv8 architecture reference manual (ARM DDI
-0487D.a); should SPE trace data format is unified and defined in Chapter
-D9 "Statistical Profiling Extension Sample Record Specification"?
-
-Thanks,
-Leo
+Acked-by: Song Liu <songliubraving@fb.com>
