@@ -1,76 +1,59 @@
 From: Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH 3/3] perf vendor events amd: update Zen1 events to V2
-Date: Wed, 15 Jan 2020 12:19:15 -0600
-Message-ID: <4411225b-1bb3-a273-bd74-7923f91006ff@amd.com>
-References: <20191227125536.1091387-1-vijaythakkar@me.com>
- <20191227125536.1091387-4-vijaythakkar@me.com>
+Subject: [PATCH 1/2] perf symbols: Update the list of kernel idle symbols
+Date: Wed, 15 Jan 2020 16:29:48 -0600
+Message-ID: <20200115222949.7247-1-kim.phillips@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191227125536.1091387-4-vijaythakkar@me.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Thakkar <vijaythakkar@me.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Cong Wang <xiyou.wangcong@gmail.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Song Liu <songliubraving@fb.com>, Davidlohr Bueso <dave@stgolabs.net>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 12/27/19 6:55 AM, Vijay Thakkar wrote:
+"acpi_idle_do_entry", "acpi_processor_ffh_cstate_enter", and "idle_cpu"
+appear in 'perf top' output, at least on AMD systems.
 
-> [1]: Processor Programming Reference (PPR) for AMD Family 17h Models
-> 01h,08h, Revision B2 Processors, 54945 Rev 3.03 - Jun 14, 2019.
-> [2]: Processor Programming Reference (PPR) for AMD Family 17h Model 18h,
-> Revision B1 Processors, 55570-B1 Rev 3.14 - Sep 26, 2019.
+Add them to perf's idle_symbols list, so they don't dominate 'perf top'
+output.
 
-I'm a fan of providing links to the documents; saves reviewers some time searching for them.
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kim Phillips <kim.phillips@amd.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+---
+ tools/perf/util/symbol.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> -  {
-> -    "EventName": "ex_ret_cond_misp",
-> -    "EventCode": "0xd2",
-> -    "BriefDescription": "Retired Conditional Branch Instructions Mispredicted."
-> -  },
-
-Ack, this is in the 54945_PPR_Family_17h_Models_00h-0Fh document, which describes zen1, yet I get zeroes out of the hardware, which technically could mean that Zen has a 100% prediction rate, but I doubt it, given the workload I gave it was very unpredictable :)
-
-> +    "EventName": "fpu_pipe_assignment.dual3",
-> +    "EventCode": "0x00",
-> +    "BriefDescription": "Total number multi-pipe uOps to pipe 3.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-> +    "UMask": "0x8"
-> +  },
-> +  {
-> +    "EventName": "fpu_pipe_assignment.dual2",
-> +    "EventCode": "0x00",
-> +    "BriefDescription": "Total number multi-pipe uOps to pipe 2.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-> +    "UMask": "0x4"
-> +  },
-> +  {
-> +    "EventName": "fpu_pipe_assignment.dual1",
-> +    "EventCode": "0x00",
-> +    "BriefDescription": "Total number multi-pipe uOps to pipe 1.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-> +    "UMask": "0x2"
-> +  },
-> +  {
-> +    "EventName": "fpu_pipe_assignment.dual0",
-> +    "EventCode": "0x00",
-> +    "BriefDescription": "Total number multi-pipe uOps to pipe 0.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-> +    "UMask": "0x1"
-> +  },
-
-The UMasks for these .dualN event masks are wrong: they need to be left-shifted by 4 bits.
-
-> +    "EventName": "ls_mab_alloc.loads",
-> +    "EventCode": "0x41",
-> +    "BriefDescription": "Data cache load miss.",
-> +    "UMask": "0x40"
-
-and this UMask should be 1.
-
-This concludes my review of this version of this patchseries, sorry it took so long, and I didn't do a fully exhaustive review of #2 of 3.  If you post a v2 of the series, I'll be quicker to review that.
-
-Thanks,
-
-Kim
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 3b379b1296f1..f3120c4f47ad 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -635,9 +635,12 @@ int modules__parse(const char *filename, void *arg,
+ static bool symbol__is_idle(const char *name)
+ {
+ 	const char * const idle_symbols[] = {
++		"acpi_idle_do_entry",
++		"acpi_processor_ffh_cstate_enter",
+ 		"arch_cpu_idle",
+ 		"cpu_idle",
+ 		"cpu_startup_entry",
++		"idle_cpu",
+ 		"intel_idle",
+ 		"default_idle",
+ 		"native_safe_halt",
+-- 
+2.24.1
