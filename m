@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/12] perf beauty sockaddr: Fix augmented syscall format warning
-Date: Thu, 16 Jan 2020 10:48:12 -0300
-Message-ID: <20200116134814.8811-11-acme@kernel.org>
+Subject: [PATCH 12/12] perf header: Use last modification time for timestamp
+Date: Thu, 16 Jan 2020 10:48:14 -0300
+Message-ID: <20200116134814.8811-13-acme@kernel.org>
 References: <20200116134814.8811-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,44 +9,66 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200116134814.8811-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Cengiz Can <cengiz@kernel.wtf>
+From: Michael Petlan <mpetlan@redhat.com>
 
-The sockaddr related examples given in
-`tools/perf/examples/bpf/augmented_syscalls.c` almost always use `long`s
-to represent most of their fields.
+Using .st_ctime clobbers the timestamp information in perf report header
+whenever any operation is done with the file. Even tar-ing and untar-ing
+the perf.data file (which preserves the file last modification timestamp)
+doesn't prevent that:
 
-However, `size_t syscall_arg__scnprintf_sockaddr(..)` has a `scnprintf`
-call that uses `"%#x"` as format string.
+    [Michael@Diego tmp]$ ls -l perf.data
+->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
 
-This throws a warning (whenever the syscall argument is `unsigned
-long`).
+	[Michael@Diego tmp]$ perf report --header-only
+	# ========
+->	# captured on    : Mon Dec  2 15:23:42 2019
+	 [...]
 
-Added `l` identifier to indicate that the `arg->value` is an unsigned
-long.
+	[Michael@Diego tmp]$ tar c perf.data | xz > perf.data.tar.xz
+	[Michael@Diego tmp]$ mkdir aaa
+	[Michael@Diego tmp]$ cd aaa
+	[Michael@Diego aaa]$ xzcat ../perf.data.tar.xz | tar x
+	[Michael@Diego aaa]$ ls -l -a
+	total 172
+	drwxrwxr-x. 2 Michael Michael     23 Jan 14 11:26 .
+	drwxrwxr-x. 6 Michael Michael   4096 Jan 14 11:26 ..
+->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
 
-Not sure about the complications of this with x86 though.
+	[Michael@Diego aaa]$ perf report --header-only
+	# ========
+->	# captured on    : Tue Jan 14 11:26:16 2020
+	 [...]
 
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200113174438.102975-1-cengiz@kernel.wtf
+When using .st_mtime instead, correct information is printed:
+
+	[Michael@Diego aaa]$ ~/acme/tools/perf/perf report --header-only
+	# ========
+->	# captured on    : Mon Dec  2 15:23:42 2019
+	 [...]
+
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+LPU-Reference: 20200114104236.31555-1-mpetlan@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/sockaddr.c | 2 +-
+ tools/perf/util/header.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/sockaddr.c b/tools/perf/trace/beauty/sockaddr.c
-index 173c8f760763..e0c13e6a5788 100644
---- a/tools/perf/trace/beauty/sockaddr.c
-+++ b/tools/perf/trace/beauty/sockaddr.c
-@@ -72,5 +72,5 @@ size_t syscall_arg__scnprintf_sockaddr(char *bf, size_t size, struct syscall_arg
- 	if (arg->augmented.args)
- 		return syscall_arg__scnprintf_augmented_sockaddr(arg, bf, size);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 93ad27830e2b..4246e7447e54 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2922,7 +2922,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
+ 	if (ret == -1)
+ 		return -1;
  
--	return scnprintf(bf, size, "%#x", arg->val);
-+	return scnprintf(bf, size, "%#lx", arg->val);
- }
+-	stctime = st.st_ctime;
++	stctime = st.st_mtime;
+ 	fprintf(fp, "# captured on    : %s", ctime(&stctime));
+ 
+ 	fprintf(fp, "# header version : %u\n", header->version);
 -- 
 2.21.1
