@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/12] perf tools: Use %define api.pure full instead of %pure-parser
-Date: Thu, 16 Jan 2020 10:48:09 -0300
-Message-ID: <20200116134814.8811-8-acme@kernel.org>
+Subject: [PATCH 08/12] perf ui gtk: Add missing zalloc object
+Date: Thu, 16 Jan 2020 10:48:10 -0300
+Message-ID: <20200116134814.8811-9-acme@kernel.org>
 References: <20200116134814.8811-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,54 +9,42 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200116134814.8811-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jelle van der Waa <jelle@vdwaa.nl>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-bison deprecated the "%pure-parser" directive in favor of "%define
-api.pure full".
+When we moved zalloc.o to the library we missed gtk library which needs
+it compiled in, otherwise the missing __zfree symbol will cause the
+library to fail to load.
 
-The api.pure got introduced in bison 2.3 (Oct 2007), so it seems safe to
-use it without any version check.
+Adding the zalloc object to the gtk library build.
 
+Fixes: 7f7c536f23e6 ("tools lib: Adopt zalloc()/zfree() from tools/perf")
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Clark Williams <williams@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jelle van der Waa <jelle@vdwaa.nl>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200112192259.GA35080@krava
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200113104358.123511-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/expr.y         | 3 ++-
- tools/perf/util/parse-events.y | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/ui/gtk/Build | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index f9a20a39b64a..7d226241f1d7 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -12,7 +12,8 @@
- #define MAXIDLEN 256
- %}
- 
--%pure-parser
-+%define api.pure full
+diff --git a/tools/perf/ui/gtk/Build b/tools/perf/ui/gtk/Build
+index ec22e899a224..9b5d5cbb7af7 100644
+--- a/tools/perf/ui/gtk/Build
++++ b/tools/perf/ui/gtk/Build
+@@ -7,3 +7,8 @@ gtk-y += util.o
+ gtk-y += helpline.o
+ gtk-y += progress.o
+ gtk-y += annotate.o
++gtk-y += zalloc.o
 +
- %parse-param { double *final_val }
- %parse-param { struct parse_ctx *ctx }
- %parse-param { const char **pp }
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index e2eea4e601b4..94f8bcd83582 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -1,4 +1,4 @@
--%pure-parser
-+%define api.pure full
- %parse-param {void *_parse_state}
- %parse-param {void *scanner}
- %lex-param {void* scanner}
++$(OUTPUT)ui/gtk/zalloc.o: ../lib/zalloc.c FORCE
++	$(call rule_mkdir)
++	$(call if_changed_dep,cc_o_c)
 -- 
 2.21.1
