@@ -1,74 +1,68 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 12/12] perf header: Use last modification time for timestamp
-Date: Thu, 16 Jan 2020 10:48:14 -0300
-Message-ID: <20200116134814.8811-13-acme@kernel.org>
-References: <20200116134814.8811-1-acme@kernel.org>
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 8/9] drivers/perf: open access for CAP_SYS_PERFMON
+ privileged process
+Date: Fri, 17 Jan 2020 10:51:54 +0000
+Message-ID: <20200117105153.GB6144@willie-the-truck>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <ce3086d8-9fce-84d6-8b4e-948996c2e0fc@linux.intel.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200116134814.8811-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <ce3086d8-9fce-84d6-8b4e-948996c2e0fc@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Peter Zijlstra <peterz@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>s
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+On Wed, Dec 18, 2019 at 12:30:29PM +0300, Alexey Budankov wrote:
+> 
+> Open access to monitoring for CAP_SYS_PERFMON privileged processes.
+> For backward compatibility reasons access to the monitoring remains open
+> for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
+> monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+> 
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  drivers/perf/arm_spe_pmu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index 4e4984a55cd1..5dff81bc3324 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -274,7 +274,7 @@ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
+>  	if (!attr->exclude_kernel)
+>  		reg |= BIT(SYS_PMSCR_EL1_E1SPE_SHIFT);
+>  
+> -	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && capable(CAP_SYS_ADMIN))
+> +	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
+>  		reg |= BIT(SYS_PMSCR_EL1_CX_SHIFT);
+>  
+>  	return reg;
+> @@ -700,7 +700,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+>  		return -EOPNOTSUPP;
+>  
+>  	reg = arm_spe_event_to_pmscr(event);
+> -	if (!capable(CAP_SYS_ADMIN) &&
+> +	if (!perfmon_capable() &&
+>  	    (reg & (BIT(SYS_PMSCR_EL1_PA_SHIFT) |
+>  		    BIT(SYS_PMSCR_EL1_CX_SHIFT) |
+>  		    BIT(SYS_PMSCR_EL1_PCT_SHIFT))))
 
-Using .st_ctime clobbers the timestamp information in perf report header
-whenever any operation is done with the file. Even tar-ing and untar-ing
-the perf.data file (which preserves the file last modification timestamp)
-doesn't prevent that:
+Acked-by: Will Deacon <will@kernel.org>
 
-    [Michael@Diego tmp]$ ls -l perf.data
-->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
+Worth noting that this allows profiling of *physical* addresses used by
+memory access instructions and so probably has some security implications
+beyond the usual "but perf is buggy" line of reasoning.
 
-	[Michael@Diego tmp]$ perf report --header-only
-	# ========
-->	# captured on    : Mon Dec  2 15:23:42 2019
-	 [...]
-
-	[Michael@Diego tmp]$ tar c perf.data | xz > perf.data.tar.xz
-	[Michael@Diego tmp]$ mkdir aaa
-	[Michael@Diego tmp]$ cd aaa
-	[Michael@Diego aaa]$ xzcat ../perf.data.tar.xz | tar x
-	[Michael@Diego aaa]$ ls -l -a
-	total 172
-	drwxrwxr-x. 2 Michael Michael     23 Jan 14 11:26 .
-	drwxrwxr-x. 6 Michael Michael   4096 Jan 14 11:26 ..
-->	-rw-------. 1 Michael Michael 169888 Dec  2 15:23 perf.data
-
-	[Michael@Diego aaa]$ perf report --header-only
-	# ========
-->	# captured on    : Tue Jan 14 11:26:16 2020
-	 [...]
-
-When using .st_mtime instead, correct information is printed:
-
-	[Michael@Diego aaa]$ ~/acme/tools/perf/perf report --header-only
-	# ========
-->	# captured on    : Mon Dec  2 15:23:42 2019
-	 [...]
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-LPU-Reference: 20200114104236.31555-1-mpetlan@redhat.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 93ad27830e2b..4246e7447e54 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -2922,7 +2922,7 @@ int perf_header__fprintf_info(struct perf_session *session, FILE *fp, bool full)
- 	if (ret == -1)
- 		return -1;
- 
--	stctime = st.st_ctime;
-+	stctime = st.st_mtime;
- 	fprintf(fp, "# captured on    : %s", ctime(&stctime));
- 
- 	fprintf(fp, "# header version : %u\n", header->version);
--- 
-2.21.1
+Will
