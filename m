@@ -1,102 +1,48 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v2] perf test: Fix test case Merge cpu map
-Date: Mon, 20 Jan 2020 14:20:09 +0100
-Message-ID: <20200120132011.64698-1-tmricht@linux.ibm.com>
+Subject: [PATCH v2] perf test: Fix test trace+probe_vfs_getname.sh
+Date: Mon, 20 Jan 2020 14:20:11 +0100
+Message-ID: <20200120132011.64698-3-tmricht@linux.ibm.com>
+References: <20200120132011.64698-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200120132011.64698-1-tmricht@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
 Cc: gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-V2: Added Reviewed-by statement
+This test places a kprobe to function getname_flags() in the kernel
+which has the following prototype:
 
-Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
-introduces a test case for cpumap merge operation, see functions
-perf_cpu_map__merge() and test__cpu_map_merge().
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
 
-The test case fails on s390 with this error message:
- [root@m35lp76 perf]# ./perf test -Fvvvvv 52
- 52: Merge cpu map                                         :
- --- start ---
- cpumask list: 1-2,4-5,7
- perf: /root/linux/tools/include/linux/refcount.h:131:\
-          refcount_sub_and_test: Assertion `!(new > val)' failed.
- Aborted (core dumped)
- [root@m35lp76 perf]#
+Variable filename points to a filename located in user space memory.
+Looking at
+commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+the kprobe should indicate that user space memory is accessed.
 
-The root cause is in the function test__cpu_map_merge():
-It creates two cpu_maps named 'a' and 'b':
-
-  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
-
-and creates a third map named 'c' which is the result of
-the merge of maps a and b:
-
-  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
-
-After some verifaction of the merged cpu_map all three
-of them are have their reference count reduced and are
-freed:
-
-   perf_cpu_map__put(a); (1)
-   perf_cpu_map__put(b);
-   perf_cpu_map__put(c);
-
-The release of perf_cpu_map__put(a) is wrong. The map
-is already released and free'ed as part of the function
-
-  perf_cpu_map__merge(struct perf_cpu_map *orig,
-  |	              struct perf_cpu_map *other)
-  +--> perf_cpu_map__put(orig);
-       |
-       +--> cpu_map__delete(orig)
-
-At the end perf_cpu_map_put() is called for map 'orig'
-alias 'a' and since the reference count is 1, the map
-is deleted, as can be seen by the following gdb trace:
-
- (gdb) where
- #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
- #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
-		     have_lock=<optimized out>) at malloc.c:4222
- #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
- #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
- #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
-     other=0x156cc60) at cpumap.c:343
- #5  0x000000000110cdd0 in test__cpu_map_merge (
-     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
-
-Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
-a second time and causes the failure. Fix this be removing that
-function call.
-
-Output after:
-  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
-  52: Merge cpu map                                         :
-  --- start ---
-  cpumask list: 1-2,4-5,7
-  ---- end ----
-  Merge cpu map: Ok
-  [root@m35lp76 perf]#
+Fix this with a patch to specify user space memory access to
+parameter 'filename' and 'string' is replaced by 'ustring'.
 
 Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/tests/cpumap.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 4ac56741ac5f..29c793ac7d10 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
- 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
- 	cpu_map__snprint(c, buf, sizeof(buf));
- 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
--	perf_cpu_map__put(a);
- 	perf_cpu_map__put(b);
- 	perf_cpu_map__put(c);
- 	return 0;
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 7cb99b433888..7ecf117651dd 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -13,8 +13,8 @@ add_probe_vfs_getname() {
+ 	local verbose=$1
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+-		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
++		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
++		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
+ 	fi
+ }
+ 
 -- 
 2.21.0
