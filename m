@@ -1,78 +1,68 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
-Date: Tue, 21 Jan 2020 10:42:46 +0100
-Message-ID: <20200121094246.GA707582@krava>
-References: <20200107133501.327117-1-namhyung@kernel.org>
- <20200107133501.327117-5-namhyung@kernel.org>
- <20200108215235.GA12995@krava>
- <CAM9d7cifgLKbu5KM+QF6ZK9DGbN=8g1oj+vzU3HcTfrUQHP5jg@mail.gmail.com>
- <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [RFC 5/6] perf/tools: Enhance JSON/metric infrastructure to
+ handle "?"
+Date: Tue, 21 Jan 2020 15:47:53 +0530
+Message-ID: <b6e3ae17-ce41-2709-1a87-dcd9bd1f365a@linux.ibm.com>
+References: <20200117124620.26094-1-kjain@linux.ibm.com>
+ <20200117124620.26094-6-kjain@linux.ibm.com>
+ <20200117162807.GL302770@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
+In-Reply-To: <20200117162807.GL302770@tassilo.jf.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: acme@kernel.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:57:47PM +0900, Namhyung Kim wrote:
-> Hi Jiri,
-> 
-> On Thu, Jan 9, 2020 at 9:51 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Jiri,
-> >
-> > On Thu, Jan 9, 2020 at 6:52 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > >
-> > > On Tue, Jan 07, 2020 at 10:34:56PM +0900, Namhyung Kim wrote:
-> > > > Each cgroup is kept in the global cgroup_tree sorted by the cgroup id.
-> > > > Hist entries have cgroup id can compare it directly and later it can
-> > > > be used to find a group name using this tree.
-> > > >
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/cgroup.c  | 72 +++++++++++++++++++++++++++++++++++++++
-> > > >  tools/perf/util/cgroup.h  | 15 +++++---
-> > > >  tools/perf/util/machine.c |  7 ++++
-> > > >  tools/perf/util/session.c |  4 +++
-> > > >  4 files changed, 94 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> > > > index 4881d4af3381..4e8ef1db0c94 100644
-> > > > --- a/tools/perf/util/cgroup.c
-> > > > +++ b/tools/perf/util/cgroup.c
-> > > > @@ -13,6 +13,8 @@
-> > > >
-> > > >  int nr_cgroups;
-> > > >
-> > > > +static struct rb_root cgroup_tree = RB_ROOT;
-> > >
-> > > I think we shoud carry that in 'struct perf_env'
-> >
-> > OK, will move.
-> 
-> So I tried this but then realized that it's hard to get the perf_env later
-> when it needs to convert a cgroup id to name (ie. in sort_entry.se_snprintf).
-> I also checked maybe I can resolve it when a hist entry is added,
-> but it doesn't have the pointer there too.
 
-looks like there might be a path for standard report where hists
-are part of evsel object:
+On 1/17/20 9:58 PM, Andi Kleen wrote:
+> On Fri, Jan 17, 2020 at 06:16:19PM +0530, Kajol Jain wrote:
+>> Patch enhances current metric infrastructure to handle "?" in the metric
+>> expression. The "?" can be use for parameters whose value not known while
+>> creating metric events and which can be replace later at runtime to
+>> the proper value. It also add flexibility to create multiple events out
+>> of single metric event added in json file.
+> Please add a proper specification how this ? thing is supposed to work,
+> what the exact semantics are, how it is different from the existing
+> # mechanism etc.
+>
+> The standard way to do similar things before was to define an explicit
+> # name and let the expr code take care of it.
 
-  'struct hist_entry' via ->hists to  'struct hists'
-  hists_to_evsel(hists) to 'struct evsel'
-  'struct evsel' via ->evlist to 'struct evlist'
-  and there you have evlist->env ;-)
+Hi Andi,
 
-however I was wondering if we could add 'machine' pointer
-to the hist object, that would make that simpler ;-)
+     Thanks for reviewing my patchset.
 
-not sure about the way.. would be nice if that'd work for
-both evsel hists and standalone ones like in c2c
+I did review the existing '#' mechanism. It is quiet useful for runtime
+dependency (like ex. event selection based on a return value). But I want
+to handle couple of more things. Meaning, filling in parameter of event code
+based on runtime value and replicating events at runtime.
 
-but maybe just some init helper that sets the pointer early on
-might do the job
+So the '?' can handle, 1) replacement of a value in the event code based 
+on runtime
 
-jirka
+and 2) replicate the event (metric expr) at runtime (handled in new 
+metricgroup__add_metric()).
+
+This patchset add an arch specific function called 
+'arch_get_runtimeparam'. Ideally,
+arch_get_runtimeparm() returns the number of metric exps one want to 
+create (it defaults to 1).
+The loop added in 'metricgroup__add_metric' will handle the event addition.
+
+Example ppc64 hv_24x7 pmu metric event using '?':
+
+(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + 
+hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@)
+
+Here, '?' will be replaced with a runtime value and metric expression 
+will be replicated.
+
+Thanks,
+
+Kajol
+
+> -Andi
