@@ -1,123 +1,81 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-Date: Wed, 22 Jan 2020 17:25:09 +0300
-Message-ID: <ac0dbab7-de47-ee34-bb88-4c43d3538b7d@linux.intel.com>
-References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
- <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
- <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
- <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
- <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
- <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
- <63d9700f-231d-7973-5307-3e56a48c54cb@linux.intel.com>
- <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
+From: James Clark <james.clark@arm.com>
+Subject: [PATCH v2 0/7] perf tools: Add support for some spe events and precise ip
+Date: Thu, 23 Jan 2020 16:07:27 +0000
+Message-ID: <20200123160734.3775-1-james.clark@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Stephen Smalley <sds@tycho.nsa.gov>, Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Song Liu <songliubraving@fb.com>, Peter Zijlstra <peterz@infradead.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, Will Deacon <will.deacon@arm.com>, Alexei Starovoitov <ast@kernel.org>, Stephane Eranian <eranian@google.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, intel-gfx
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: suzuki.poulose@arm.com, gengdongjiu@huawei.com, wxf.wang@hisilicon.com, liwei391@huawei.com, liuqi115@hisilicon.com, huawei.libin@huawei.com, nd@arm.com, linux-perf-users@vger.kernel.org, James Clark <james.clark@arm.com>, Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Tan Xiaojun <tanxiaojun@huawei.com>, Al Grant <al.grant@arm.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Ck9uIDIyLjAxLjIwMjAgMTc6MDcsIFN0ZXBoZW4gU21hbGxleSB3cm90ZToKPiBPbiAxLzIyLzIw
-IDU6NDUgQU0sIEFsZXhleSBCdWRhbmtvdiB3cm90ZToKPj4KPj4gT24gMjEuMDEuMjAyMCAyMToy
-NywgQWxleGV5IEJ1ZGFua292IHdyb3RlOgo+Pj4KPj4+IE9uIDIxLjAxLjIwMjAgMjA6NTUsIEFs
-ZXhlaSBTdGFyb3ZvaXRvdiB3cm90ZToKPj4+PiBPbiBUdWUsIEphbiAyMSwgMjAyMCBhdCA5OjMx
-IEFNIEFsZXhleSBCdWRhbmtvdgo+Pj4+IDxhbGV4ZXkuYnVkYW5rb3ZAbGludXguaW50ZWwuY29t
-PiB3cm90ZToKPj4+Pj4KPj4+Pj4KPj4+Pj4gT24gMjEuMDEuMjAyMCAxNzo0MywgU3RlcGhlbiBT
-bWFsbGV5IHdyb3RlOgo+Pj4+Pj4gT24gMS8yMC8yMCA2OjIzIEFNLCBBbGV4ZXkgQnVkYW5rb3Yg
-d3JvdGU6Cj4+Pj4+Pj4KPj4+Pj4+PiBJbnRyb2R1Y2UgQ0FQX1BFUkZNT04gY2FwYWJpbGl0eSBk
-ZXNpZ25lZCB0byBzZWN1cmUgc3lzdGVtIHBlcmZvcm1hbmNlCj4+Pj4+Pj4gbW9uaXRvcmluZyBh
-bmQgb2JzZXJ2YWJpbGl0eSBvcGVyYXRpb25zIHNvIHRoYXQgQ0FQX1BFUkZNT04gd291bGQgYXNz
-aXN0Cj4+Pj4+Pj4gQ0FQX1NZU19BRE1JTiBjYXBhYmlsaXR5IGluIGl0cyBnb3Zlcm5pbmcgcm9s
-ZSBmb3IgcGVyZl9ldmVudHMsIGk5MTVfcGVyZgo+Pj4+Pj4+IGFuZCBvdGhlciBwZXJmb3JtYW5j
-ZSBtb25pdG9yaW5nIGFuZCBvYnNlcnZhYmlsaXR5IHN1YnN5c3RlbXMuCj4+Pj4+Pj4KPj4+Pj4+
-PiBDQVBfUEVSRk1PTiBpbnRlbmRzIHRvIGhhcmRlbiBzeXN0ZW0gc2VjdXJpdHkgYW5kIGludGVn
-cml0eSBkdXJpbmcgc3lzdGVtCj4+Pj4+Pj4gcGVyZm9ybWFuY2UgbW9uaXRvcmluZyBhbmQgb2Jz
-ZXJ2YWJpbGl0eSBvcGVyYXRpb25zIGJ5IGRlY3JlYXNpbmcgYXR0YWNrCj4+Pj4+Pj4gc3VyZmFj
-ZSB0aGF0IGlzIGF2YWlsYWJsZSB0byBhIENBUF9TWVNfQURNSU4gcHJpdmlsZWdlZCBwcm9jZXNz
-IFsxXS4KPj4+Pj4+PiBQcm92aWRpbmcgYWNjZXNzIHRvIHN5c3RlbSBwZXJmb3JtYW5jZSBtb25p
-dG9yaW5nIGFuZCBvYnNlcnZhYmlsaXR5Cj4+Pj4+Pj4gb3BlcmF0aW9ucyB1bmRlciBDQVBfUEVS
-Rk1PTiBjYXBhYmlsaXR5IHNpbmdseSwgd2l0aG91dCB0aGUgcmVzdCBvZgo+Pj4+Pj4+IENBUF9T
-WVNfQURNSU4gY3JlZGVudGlhbHMsIGV4Y2x1ZGVzIGNoYW5jZXMgdG8gbWlzdXNlIHRoZSBjcmVk
-ZW50aWFscyBhbmQKPj4+Pj4+PiBtYWtlcyBvcGVyYXRpb24gbW9yZSBzZWN1cmUuCj4+Pj4+Pj4K
-Pj4+Pj4+PiBDQVBfUEVSRk1PTiBpbnRlbmRzIHRvIHRha2Ugb3ZlciBDQVBfU1lTX0FETUlOIGNy
-ZWRlbnRpYWxzIHJlbGF0ZWQgdG8KPj4+Pj4+PiBzeXN0ZW0gcGVyZm9ybWFuY2UgbW9uaXRvcmlu
-ZyBhbmQgb2JzZXJ2YWJpbGl0eSBvcGVyYXRpb25zIGFuZCBiYWxhbmNlCj4+Pj4+Pj4gYW1vdW50
-IG9mIENBUF9TWVNfQURNSU4gY3JlZGVudGlhbHMgZm9sbG93aW5nIHRoZSByZWNvbW1lbmRhdGlv
-bnMgaW4gdGhlCj4+Pj4+Pj4gY2FwYWJpbGl0aWVzIG1hbiBwYWdlIFsxXSBmb3IgQ0FQX1NZU19B
-RE1JTjogIk5vdGU6IHRoaXMgY2FwYWJpbGl0eSBpcwo+Pj4+Pj4+IG92ZXJsb2FkZWQ7IHNlZSBO
-b3RlcyB0byBrZXJuZWwgZGV2ZWxvcGVycywgYmVsb3cuIgo+Pj4+Pj4+Cj4+Pj4+Pj4gQWx0aG91
-Z2ggdGhlIHNvZnR3YXJlIHJ1bm5pbmcgdW5kZXIgQ0FQX1BFUkZNT04gY2FuIG5vdCBlbnN1cmUg
-YXZvaWRhbmNlCj4+Pj4+Pj4gb2YgcmVsYXRlZCBoYXJkd2FyZSBpc3N1ZXMsIHRoZSBzb2Z0d2Fy
-ZSBjYW4gc3RpbGwgbWl0aWdhdGUgdGhlc2UgaXNzdWVzCj4+Pj4+Pj4gZm9sbG93aW5nIHRoZSBv
-ZmZpY2lhbCBlbWJhcmdvZWQgaGFyZHdhcmUgaXNzdWVzIG1pdGlnYXRpb24gcHJvY2VkdXJlIFsy
-XS4KPj4+Pj4+PiBUaGUgYnVncyBpbiB0aGUgc29mdHdhcmUgaXRzZWxmIGNvdWxkIGJlIGZpeGVk
-IGZvbGxvd2luZyB0aGUgc3RhbmRhcmQKPj4+Pj4+PiBrZXJuZWwgZGV2ZWxvcG1lbnQgcHJvY2Vz
-cyBbM10gdG8gbWFpbnRhaW4gYW5kIGhhcmRlbiBzZWN1cml0eSBvZiBzeXN0ZW0KPj4+Pj4+PiBw
-ZXJmb3JtYW5jZSBtb25pdG9yaW5nIGFuZCBvYnNlcnZhYmlsaXR5IG9wZXJhdGlvbnMuCj4+Pj4+
-Pj4KPj4+Pj4+PiBbMV0gaHR0cDovL21hbjcub3JnL2xpbnV4L21hbi1wYWdlcy9tYW43L2NhcGFi
-aWxpdGllcy43Lmh0bWwKPj4+Pj4+PiBbMl0gaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRt
-bC9sYXRlc3QvcHJvY2Vzcy9lbWJhcmdvZWQtaGFyZHdhcmUtaXNzdWVzLmh0bWwKPj4+Pj4+PiBb
-M10gaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC9sYXRlc3QvYWRtaW4tZ3VpZGUvc2Vj
-dXJpdHktYnVncy5odG1sCj4+Pj4+Pj4KPj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBBbGV4ZXkgQnVk
-YW5rb3YgPGFsZXhleS5idWRhbmtvdkBsaW51eC5pbnRlbC5jb20+Cj4+Pj4+Pj4gLS0tCj4+Pj4+
-Pj4gwqDCoCBpbmNsdWRlL2xpbnV4L2NhcGFiaWxpdHkuaMKgwqDCoMKgwqDCoMKgwqDCoCB8IDEy
-ICsrKysrKysrKysrKwo+Pj4+Pj4+IMKgwqAgaW5jbHVkZS91YXBpL2xpbnV4L2NhcGFiaWxpdHku
-aMKgwqDCoMKgIHzCoCA4ICsrKysrKystCj4+Pj4+Pj4gwqDCoCBzZWN1cml0eS9zZWxpbnV4L2lu
-Y2x1ZGUvY2xhc3NtYXAuaCB8wqAgNCArKy0tCj4+Pj4+Pj4gwqDCoCAzIGZpbGVzIGNoYW5nZWQs
-IDIxIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCj4+Pj4+Pj4KPj4+Pj4+PiBkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9saW51eC9jYXBhYmlsaXR5LmggYi9pbmNsdWRlL2xpbnV4L2NhcGFiaWxp
-dHkuaAo+Pj4+Pj4+IGluZGV4IGVjY2UwZjQzYzczYS4uODc4NDk2OWQ5MWUxIDEwMDY0NAo+Pj4+
-Pj4+IC0tLSBhL2luY2x1ZGUvbGludXgvY2FwYWJpbGl0eS5oCj4+Pj4+Pj4gKysrIGIvaW5jbHVk
-ZS9saW51eC9jYXBhYmlsaXR5LmgKPj4+Pj4+PiBAQCAtMjUxLDYgKzI1MSwxOCBAQCBleHRlcm4g
-Ym9vbCBwcml2aWxlZ2VkX3dydF9pbm9kZV91aWRnaWQoc3RydWN0IHVzZXJfbmFtZXNwYWNlICpu
-cywgY29uc3Qgc3RydWN0Cj4+Pj4+Pj4gwqDCoCBleHRlcm4gYm9vbCBjYXBhYmxlX3dydF9pbm9k
-ZV91aWRnaWQoY29uc3Qgc3RydWN0IGlub2RlICppbm9kZSwgaW50IGNhcCk7Cj4+Pj4+Pj4gwqDC
-oCBleHRlcm4gYm9vbCBmaWxlX25zX2NhcGFibGUoY29uc3Qgc3RydWN0IGZpbGUgKmZpbGUsIHN0
-cnVjdCB1c2VyX25hbWVzcGFjZSAqbnMsIGludCBjYXApOwo+Pj4+Pj4+IMKgwqAgZXh0ZXJuIGJv
-b2wgcHRyYWNlcl9jYXBhYmxlKHN0cnVjdCB0YXNrX3N0cnVjdCAqdHNrLCBzdHJ1Y3QgdXNlcl9u
-YW1lc3BhY2UgKm5zKTsKPj4+Pj4+PiArc3RhdGljIGlubGluZSBib29sIHBlcmZtb25fY2FwYWJs
-ZSh2b2lkKQo+Pj4+Pj4+ICt7Cj4+Pj4+Pj4gK8KgwqDCoCBzdHJ1Y3QgdXNlcl9uYW1lc3BhY2Ug
-Km5zID0gJmluaXRfdXNlcl9uczsKPj4+Pj4+PiArCj4+Pj4+Pj4gK8KgwqDCoCBpZiAobnNfY2Fw
-YWJsZV9ub2F1ZGl0KG5zLCBDQVBfUEVSRk1PTikpCj4+Pj4+Pj4gK8KgwqDCoMKgwqDCoMKgIHJl
-dHVybiBuc19jYXBhYmxlKG5zLCBDQVBfUEVSRk1PTik7Cj4+Pj4+Pj4gKwo+Pj4+Pj4+ICvCoMKg
-wqAgaWYgKG5zX2NhcGFibGVfbm9hdWRpdChucywgQ0FQX1NZU19BRE1JTikpCj4+Pj4+Pj4gK8Kg
-wqDCoMKgwqDCoMKgIHJldHVybiBuc19jYXBhYmxlKG5zLCBDQVBfU1lTX0FETUlOKTsKPj4+Pj4+
-PiArCj4+Pj4+Pj4gK8KgwqDCoCByZXR1cm4gZmFsc2U7Cj4+Pj4+Pj4gK30KPj4+Pj4+Cj4+Pj4+
-PiBXaHkgX25vYXVkaXQoKT/CoCBOb3JtYWxseSBvbmx5IHVzZWQgd2hlbiBhIHBlcm1pc3Npb24g
-ZmFpbHVyZSBpcyBub24tZmF0YWwgdG8gdGhlIG9wZXJhdGlvbi7CoCBPdGhlcndpc2UsIHdlIHdh
-bnQgdGhlIGF1ZGl0IG1lc3NhZ2UuCj4+Cj4+IFNvIGZhciBzbyBnb29kLCBJIHN1Z2dlc3QgdXNp
-bmcgdGhlIHNpbXBsZXN0IHZlcnNpb24gZm9yIHY2Ogo+Pgo+PiBzdGF0aWMgaW5saW5lIGJvb2wg
-cGVyZm1vbl9jYXBhYmxlKHZvaWQpCj4+IHsKPj4gwqDCoMKgwqByZXR1cm4gY2FwYWJsZShDQVBf
-UEVSRk1PTikgfHwgY2FwYWJsZShDQVBfU1lTX0FETUlOKTsKPj4gfQo+Pgo+PiBJdCBrZWVwcyB0
-aGUgaW1wbGVtZW50YXRpb24gc2ltcGxlIGFuZCByZWFkYWJsZS4gVGhlIGltcGxlbWVudGF0aW9u
-IGlzIG1vcmUKPj4gcGVyZm9ybWFudCBpbiB0aGUgc2Vuc2Ugb2YgY2FsbGluZyB0aGUgQVBJIC0g
-b25lIGNhcGFibGUoKSBjYWxsIGZvciBDQVBfUEVSRk1PTgo+PiBwcml2aWxlZ2VkIHByb2Nlc3Mu
-Cj4+Cj4+IFllcywgaXQgYmxvYXRzIGF1ZGl0IGxvZyBmb3IgQ0FQX1NZU19BRE1JTiBwcml2aWxl
-Z2VkIGFuZCB1bnByaXZpbGVnZWQgcHJvY2Vzc2VzLAo+PiBidXQgdGhpcyBibG9hdGluZyBhbHNv
-IGFkdmVydGlzZXMgYW5kIGxldmVyYWdlcyB1c2luZyBtb3JlIHNlY3VyZSBDQVBfUEVSRk1PTgo+
-PiBiYXNlZCBhcHByb2FjaCB0byB1c2UgcGVyZl9ldmVudF9vcGVuIHN5c3RlbSBjYWxsLgo+IAo+
-IEkgY2FuIGxpdmUgd2l0aCB0aGF0LsKgIFdlIGp1c3QgbmVlZCB0byBkb2N1bWVudCB0aGF0IHdo
-ZW4geW91IHNlZSBib3RoIGEgQ0FQX1BFUkZNT04gYW5kIGEgQ0FQX1NZU19BRE1JTiBhdWRpdCBt
-ZXNzYWdlIGZvciBhIHByb2Nlc3MsIHRyeSBvbmx5IGFsbG93aW5nIENBUF9QRVJGTU9OIGZpcnN0
-IGFuZCBzZWUgaWYgdGhhdCByZXNvbHZlcyB0aGUgaXNzdWUuwqAgV2UgaGF2ZSBhIHNpbWlsYXIg
-aXNzdWUgd2l0aCBDQVBfREFDX1JFQURfU0VBUkNIIHZlcnN1cyBDQVBfREFDX09WRVJSSURFLgoK
-cGVyZiBzZWN1cml0eSBbMV0gZG9jdW1lbnQgY2FuIGJlIHVwZGF0ZWQsIGF0IGxlYXN0LCB0byBh
-bGlnbiBhbmQgZG9jdW1lbnQgCnRoaXMgYXVkaXQgbG9nZ2luZyBzcGVjaWZpY3MuCgp+QWxleGV5
-CgpbMV0gaHR0cHM6Ly93d3cua2VybmVsLm9yZy9kb2MvaHRtbC9sYXRlc3QvYWRtaW4tZ3VpZGUv
-cGVyZi1zZWN1cml0eS5odG1sCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+After the commit ffd3d18c20b8 ("perf tools: Add ARM Statistical
+Profiling Extensions (SPE) support") was merged, "perf record" and
+"perf report --dump-raw-trace" are supported. However, the
+raw data that is dumped cannot be used without parsing.
+
+This patchset is to improve the "perf report" support for SPE, and
+further process the data. Currently, support for the three events
+of llc-miss, tlb-miss, branch-miss and remote-access is added.
+
+The macro definition was modified under Jeremy's suggestion, and
+the "event:pp" approach was used under James' suggestion to achieve
+the precise ip of some events on arm64. Currently, only branch-misses
+are implemented, and other event support will be added later.
+
+In addition, we also found that when recording large multi-threaded
+programs, ctrl + c could not end recording, so it was fixed and two
+patches were added.
+
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: Al Grant <al.grant@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+
+James Clark (1):
+  perf tools: Unset precise_ip when using SPE
+
+Tan Xiaojun (4):
+  perf tools: Move arm-spe-pkt-decoder.h/c to the new dir
+  perf tools: Add support for "report" for some spe events
+  perf report: Add --spe options for arm-spe
+  perf tools: Support "branch-misses:pp" on arm64
+
+Wei Li (2):
+  perf tools: add perf_evlist__terminate() for terminate
+  perf tools: arm-spe: fix record hang after being terminated
+
+ tools/perf/Documentation/perf-report.txt      |  10 +
+ tools/perf/arch/arm64/util/arm-spe.c          |  10 +-
+ tools/perf/builtin-record.c                   |   1 +
+ tools/perf/builtin-report.c                   |   5 +
+ tools/perf/util/Build                         |   2 +-
+ tools/perf/util/arm-spe-decoder/Build         |   1 +
+ .../util/arm-spe-decoder/arm-spe-decoder.c    | 225 +++++
+ .../util/arm-spe-decoder/arm-spe-decoder.h    |  66 ++
+ .../arm-spe-pkt-decoder.c                     |   0
+ .../arm-spe-pkt-decoder.h                     |   2 +
+ tools/perf/util/arm-spe.c                     | 789 +++++++++++++++++-
+ tools/perf/util/arm-spe.h                     |   3 +
+ tools/perf/util/auxtrace.c                    |  49 ++
+ tools/perf/util/auxtrace.h                    |  29 +
+ tools/perf/util/evlist.c                      |  16 +
+ tools/perf/util/evlist.h                      |   1 +
+ tools/perf/util/evsel.h                       |   1 +
+ tools/perf/util/session.h                     |   2 +
+ 18 files changed, 1170 insertions(+), 42 deletions(-)
+ create mode 100644 tools/perf/util/arm-spe-decoder/Build
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+ create mode 100644 tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.c (100%)
+ rename tools/perf/util/{ => arm-spe-decoder}/arm-spe-pkt-decoder.h (96%)
+
+-- 
+2.25.0
