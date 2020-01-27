@@ -1,55 +1,215 @@
-From: Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v4 7/9] parisc/perf: open access for CAP_SYS_PERFMON
- privileged process
-Date: Mon, 27 Jan 2020 09:52:10 +0100
-Message-ID: <00d0213a-dce8-45b1-1905-11ea4af2d207@gmx.de>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <806e4881-5c22-5914-a656-5eeb65130dbe@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH] tools lib api fs: Move cgroupsfs_find_mountpoint()
+Date: Mon, 27 Jan 2020 19:00:31 +0900
+Message-ID: <20200127100031.1368732-1-namhyung@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <806e4881-5c22-5914-a656-5eeb65130dbe@linux.intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufler-ca.com>, Robert Richter <rric@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, oprofile-list@lists.sf.net, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>"linux-security-module@vger.kernel.org" <lin>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 18.12.19 10:29, Alexey Budankov wrote:
->
-> Open access to monitoring for CAP_SYS_PERFMON privileged processes.
-> For backward compatibility reasons access to the monitoring remains open
-> for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-> monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
->
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Move it from tools/perf/util/cgroup.c as it can be used by other places.
+Note that cgroup filesystem is different from others since it's usually
+mounted separately (in v1) for each subsystem.
 
-Acked-by: Helge Deller <deller@gmx.de>
+I just copied the code with a little modification to pass a name of
+subsystem.
 
-> ---
->  arch/parisc/kernel/perf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/parisc/kernel/perf.c b/arch/parisc/kernel/perf.c
-> index 676683641d00..c4208d027794 100644
-> --- a/arch/parisc/kernel/perf.c
-> +++ b/arch/parisc/kernel/perf.c
-> @@ -300,7 +300,7 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
->  	else
->  		return -EFAULT;
->
-> -	if (!capable(CAP_SYS_ADMIN))
-> +	if (!perfmon_capable())
->  		return -EACCES;
->
->  	if (count != sizeof(uint32_t))
->
+Suggested-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/lib/api/fs/Build    |  1 +
+ tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
+ tools/lib/api/fs/fs.h     |  2 ++
+ tools/perf/util/cgroup.c  | 63 ++----------------------------------
+ 4 files changed, 72 insertions(+), 61 deletions(-)
+ create mode 100644 tools/lib/api/fs/cgroup.c
+
+diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
+index f4ed9629ae85..0f75b28654de 100644
+--- a/tools/lib/api/fs/Build
++++ b/tools/lib/api/fs/Build
+@@ -1,2 +1,3 @@
+ libapi-y += fs.o
+ libapi-y += tracing_path.o
++libapi-y += cgroup.o
+diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
+new file mode 100644
+index 000000000000..889a6eb4aaca
+--- /dev/null
++++ b/tools/lib/api/fs/cgroup.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/stringify.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include "fs.h"
++
++int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys)
++{
++	FILE *fp;
++	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
++	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
++	char *token, *saved_ptr = NULL;
++
++	fp = fopen("/proc/mounts", "r");
++	if (!fp)
++		return -1;
++
++	/*
++	 * in order to handle split hierarchy, we need to scan /proc/mounts
++	 * and inspect every cgroupfs mount point to find one that has
++	 * perf_event subsystem
++	 */
++	path_v1[0] = '\0';
++	path_v2[0] = '\0';
++
++	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
++				__stringify(PATH_MAX)"s %*d %*d\n",
++				mountpoint, type, tokens) == 3) {
++
++		if (!path_v1[0] && !strcmp(type, "cgroup")) {
++
++			token = strtok_r(tokens, ",", &saved_ptr);
++
++			while (token != NULL) {
++				if (subsys && !strcmp(token, subsys)) {
++					strcpy(path_v1, mountpoint);
++					break;
++				}
++				token = strtok_r(NULL, ",", &saved_ptr);
++			}
++		}
++
++		if (!path_v2[0] && !strcmp(type, "cgroup2"))
++			strcpy(path_v2, mountpoint);
++
++		if (path_v1[0] && path_v2[0])
++			break;
++	}
++	fclose(fp);
++
++	if (path_v1[0])
++		path = path_v1;
++	else if (path_v2[0])
++		path = path_v2;
++	else
++		return -1;
++
++	if (strlen(path) < maxlen) {
++		strcpy(buf, path);
++		return 0;
++	}
++	return -1;
++}
+diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+index 92d03b8396b1..936edb95e1f3 100644
+--- a/tools/lib/api/fs/fs.h
++++ b/tools/lib/api/fs/fs.h
+@@ -28,6 +28,8 @@ FS(bpf_fs)
+ #undef FS
+ 
+ 
++int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys);
++
+ int filename__read_int(const char *filename, int *value);
+ int filename__read_ull(const char *filename, unsigned long long *value);
+ int filename__read_xll(const char *filename, unsigned long long *value);
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 4881d4af3381..5bc9d3b01bd9 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -3,75 +3,16 @@
+ #include "evsel.h"
+ #include "cgroup.h"
+ #include "evlist.h"
+-#include <linux/stringify.h>
+ #include <linux/zalloc.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <api/fs/fs.h>
+ 
+ int nr_cgroups;
+ 
+-static int
+-cgroupfs_find_mountpoint(char *buf, size_t maxlen)
+-{
+-	FILE *fp;
+-	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
+-	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
+-	char *token, *saved_ptr = NULL;
+-
+-	fp = fopen("/proc/mounts", "r");
+-	if (!fp)
+-		return -1;
+-
+-	/*
+-	 * in order to handle split hierarchy, we need to scan /proc/mounts
+-	 * and inspect every cgroupfs mount point to find one that has
+-	 * perf_event subsystem
+-	 */
+-	path_v1[0] = '\0';
+-	path_v2[0] = '\0';
+-
+-	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
+-				__stringify(PATH_MAX)"s %*d %*d\n",
+-				mountpoint, type, tokens) == 3) {
+-
+-		if (!path_v1[0] && !strcmp(type, "cgroup")) {
+-
+-			token = strtok_r(tokens, ",", &saved_ptr);
+-
+-			while (token != NULL) {
+-				if (!strcmp(token, "perf_event")) {
+-					strcpy(path_v1, mountpoint);
+-					break;
+-				}
+-				token = strtok_r(NULL, ",", &saved_ptr);
+-			}
+-		}
+-
+-		if (!path_v2[0] && !strcmp(type, "cgroup2"))
+-			strcpy(path_v2, mountpoint);
+-
+-		if (path_v1[0] && path_v2[0])
+-			break;
+-	}
+-	fclose(fp);
+-
+-	if (path_v1[0])
+-		path = path_v1;
+-	else if (path_v2[0])
+-		path = path_v2;
+-	else
+-		return -1;
+-
+-	if (strlen(path) < maxlen) {
+-		strcpy(buf, path);
+-		return 0;
+-	}
+-	return -1;
+-}
+-
+ static int open_cgroup(const char *name)
+ {
+ 	char path[PATH_MAX + 1];
+@@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
+ 	int fd;
+ 
+ 
+-	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
++	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+ 		return -1;
+ 
+ 	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
+-- 
+2.25.0.341.g760bfbb309-goog
