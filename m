@@ -1,62 +1,55 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
- issue)
-Date: Mon, 27 Jan 2020 08:34:23 +0100
-Message-ID: <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
-References: <20200124073941.39119-1-tmricht@linux.ibm.com>
- <20200124100742.4050c15e@gandalf.local.home>
- <20200125013153.46f05fc1f617fcd341e7060b@kernel.org>
- <20200124113610.662f4afb@gandalf.local.home>
+From: Helge Deller <deller@gmx.de>
+Subject: Re: [PATCH v4 7/9] parisc/perf: open access for CAP_SYS_PERFMON
+ privileged process
+Date: Mon, 27 Jan 2020 09:52:10 +0100
+Message-ID: <00d0213a-dce8-45b1-1905-11ea4af2d207@gmx.de>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <806e4881-5c22-5914-a656-5eeb65130dbe@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200124113610.662f4afb@gandalf.local.home>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <806e4881-5c22-5914-a656-5eeb65130dbe@linux.intel.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, borntraeger@de.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: Alexey Budankov <alexey.budankov@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, Alexei Starovoitov <ast@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Casey Schaufler <casey@schaufler-ca.com>, Robert Richter <rric@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, oprofile-list@lists.sf.net, Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>"linux-security-module@vger.kernel.org" <lin>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 1/24/20 5:36 PM, Steven Rostedt wrote:
-> On Sat, 25 Jan 2020 01:31:53 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
->> Hi Steven and Thomas,
->>
->> On Fri, 24 Jan 2020 10:07:42 -0500
->> Steven Rostedt <rostedt@goodmis.org> wrote:
->>
->>> This looks like a kernel bug, not a libtraceevent parsing bug.  
->>
->> Totally agreed. It was my fault to update the print format.
->> Even if still there is a problem on s390, this patch must be
->> applied.
-> 
-> Thanks Masami for looking into it.
-> 
-> Thomas,
-> 
-> Please still test this patch. If it works, I'd like to add a
-> Reported-by and Tested-by tag from you.
-> 
-> -- Steve
-> 
->>
->> Fixes: 88903c464321 ("tracing/probe: Add ustring type for user-space string")
->> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
->>
+On 18.12.19 10:29, Alexey Budankov wrote:
+>
+> Open access to monitoring for CAP_SYS_PERFMON privileged processes.
+> For backward compatibility reasons access to the monitoring remains open
+> for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
+> monitoring is discouraged with respect to CAP_SYS_PERFMON capability.
+>
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Steven and Masami,
+Acked-by: Helge Deller <deller@gmx.de>
 
-thanks for the patch, it fixes this issue!
-
-PS: I should have sent this description earlier, would have saved a week of debugging
-on my side....
-
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> ---
+>  arch/parisc/kernel/perf.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/parisc/kernel/perf.c b/arch/parisc/kernel/perf.c
+> index 676683641d00..c4208d027794 100644
+> --- a/arch/parisc/kernel/perf.c
+> +++ b/arch/parisc/kernel/perf.c
+> @@ -300,7 +300,7 @@ static ssize_t perf_write(struct file *file, const char __user *buf,
+>  	else
+>  		return -EFAULT;
+>
+> -	if (!capable(CAP_SYS_ADMIN))
+> +	if (!perfmon_capable())
+>  		return -EACCES;
+>
+>  	if (count != sizeof(uint32_t))
+>
