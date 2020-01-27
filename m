@@ -1,58 +1,157 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] tools lib api fs: Move cgroupsfs_find_mountpoint()
-Date: Mon, 27 Jan 2020 23:58:27 +0900
-Message-ID: <CAM9d7cimJi8V0PtWy=jLSdPrX0na5rLE2NfXTZtW56PdX=fj3Q@mail.gmail.com>
-References: <20200127100031.1368732-1-namhyung@kernel.org> <20200127111234.GA1114818@krava>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v2] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Date: Mon, 27 Jan 2020 16:41:10 +0100
+Message-ID: <20200127154110.GF1114818@krava>
+References: <20200122064721.24276-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200127111234.GA1114818@krava>
+Content-Disposition: inline
+In-Reply-To: <20200122064721.24276-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Jiri,
+On Wed, Jan 22, 2020 at 12:17:21PM +0530, Kajol Jain wrote:
 
-On Mon, Jan 27, 2020 at 8:12 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Jan 27, 2020 at 07:00:31PM +0900, Namhyung Kim wrote:
->
-> SNIP
->
-> > -
-> > -     if (strlen(path) < maxlen) {
-> > -             strcpy(buf, path);
-> > -             return 0;
-> > -     }
-> > -     return -1;
-> > -}
-> > -
-> >  static int open_cgroup(const char *name)
-> >  {
-> >       char path[PATH_MAX + 1];
-> > @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
-> >       int fd;
-> >
-> >
-> > -     if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
-> > +     if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
->
-> nice, but could you please follow fs API names and change the
-> name to cgroupfs__mountpoint
->
-> I think we don't need to define the rest of the functions now,
-> if they are not used
->
->         #define FS(name)                                \
->                 const char *name##__mountpoint(void);   \
->                 const char *name##__mount(void);        \
->                 bool name##__configured(void);          \
->
-> just follow the function name
+SNIP
 
-I thought about it too, but still it has different arguments.
-So I left it as is... Do you really want to rename?
+> Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+> Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>  tools/perf/util/evlist.h      |  1 +
+>  tools/perf/util/metricgroup.c | 14 +++++++++++++-
+>  2 files changed, 14 insertions(+), 1 deletion(-)
+> 
+> ---
+> Changelog:
+> v1 -> v2
+> - Rather then adding static variable in metricgroup.c,
+>   add a new variable in evlist itself with name 'evlist_iter'
+> ---
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index f5bd5c386df1..255f872aee92 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -54,6 +54,7 @@ struct evlist {
+>  	bool		 enabled;
+>  	int		 id_pos;
+>  	int		 is_pos;
+> +	int		 evlist_iter;
+>  	u64		 combined_sample_type;
+>  	enum bkw_mmap_state bkw_mmap_state;
+>  	struct {
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 02aee946b6c1..911fab4ac04b 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -96,10 +96,13 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>  				      struct evsel **metric_events)
+>  {
+>  	struct evsel *ev;
+> -	int i = 0;
+> +	int i = 0, j = 0;
+>  	bool leader_found;
+>  
+>  	evlist__for_each_entry (perf_evlist, ev) {
+> +		j++;
+> +		if (j <= perf_evlist->evlist_iter)
+> +			continue;
 
-Thanks
-Namhyung
+hm, but that won't work when event does not match and all
+is rolled over in th next condition, no?
+
+how about something like below.. I only checked I got same
+results as you did in the changelog, but haven't tested
+otherwise.. especially I think that the check I removed
+is redundant
+
+could you please also add test for this testcase?
+
+thanks,
+jirka
+
+
+---
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 02aee946b6c1..c12f3efccec8 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -93,13 +93,16 @@ struct egroup {
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 				      const char **ids,
+ 				      int idnum,
+-				      struct evsel **metric_events)
++				      struct evsel **metric_events,
++				      bool used[])
+ {
+ 	struct evsel *ev;
+-	int i = 0;
++	int i = 0, j = 0;
+ 	bool leader_found;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (used[j++])
++			continue;
+ 		if (!strcmp(ev->name, ids[i])) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
+@@ -107,22 +110,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			if (i == idnum)
+ 				break;
+ 		} else {
+-			if (i + 1 == idnum) {
++			if (i) {
+ 				/* Discard the whole match and start again */
+ 				i = 0;
+ 				memset(metric_events, 0,
+ 				       sizeof(struct evsel *) * idnum);
+-				continue;
+-			}
+-
+-			if (!strcmp(ev->name, ids[i]))
+-				metric_events[i] = ev;
+-			else {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
+ 			}
+ 		}
+ 	}
+@@ -144,9 +136,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			    !strcmp(ev->name, metric_events[i]->name)) {
+ 				ev->metric_leader = metric_events[i];
+ 			}
++			j++;
+ 		}
++		ev = metric_events[i];
++		used[ev->idx] = true;
+ 	}
+-
+ 	return metric_events[0];
+ }
+ 
+@@ -160,6 +154,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	int ret = 0;
+ 	struct egroup *eg;
+ 	struct evsel *evsel;
++	bool used[perf_evlist->core.nr_entries];
++
++	memset(used, 0, perf_evlist->core.nr_entries);
+ 
+ 	list_for_each_entry (eg, groups, nd) {
+ 		struct evsel **metric_events;
+@@ -170,7 +167,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			break;
+ 		}
+ 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+-					 metric_events);
++					 metric_events, used);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
