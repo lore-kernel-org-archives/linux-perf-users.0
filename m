@@ -1,43 +1,68 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
- issue)
-Date: Mon, 27 Jan 2020 10:55:53 -0500
-Message-ID: <20200127105553.3cd92ef8@gandalf.local.home>
-References: <20200124073941.39119-1-tmricht@linux.ibm.com>
-        <20200124100742.4050c15e@gandalf.local.home>
-        <20200125013153.46f05fc1f617fcd341e7060b@kernel.org>
-        <20200124113610.662f4afb@gandalf.local.home>
-        <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] tools lib api fs: Move cgroupsfs_find_mountpoint()
+Date: Mon, 27 Jan 2020 17:22:22 +0100
+Message-ID: <20200127162222.GG1114818@krava>
+References: <20200127100031.1368732-1-namhyung@kernel.org>
+ <20200127111234.GA1114818@krava>
+ <CAM9d7cimJi8V0PtWy=jLSdPrX0na5rLE2NfXTZtW56PdX=fj3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <CAM9d7cimJi8V0PtWy=jLSdPrX0na5rLE2NfXTZtW56PdX=fj3Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, borntraeger@de.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, 27 Jan 2020 08:34:23 +0100
-Thomas Richter <tmricht@linux.ibm.com> wrote:
-
-> Steven and Masami,
+On Mon, Jan 27, 2020 at 11:58:27PM +0900, Namhyung Kim wrote:
+> Hi Jiri,
 > 
-> thanks for the patch, it fixes this issue!
+> On Mon, Jan 27, 2020 at 8:12 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Mon, Jan 27, 2020 at 07:00:31PM +0900, Namhyung Kim wrote:
+> >
+> > SNIP
+> >
+> > > -
+> > > -     if (strlen(path) < maxlen) {
+> > > -             strcpy(buf, path);
+> > > -             return 0;
+> > > -     }
+> > > -     return -1;
+> > > -}
+> > > -
+> > >  static int open_cgroup(const char *name)
+> > >  {
+> > >       char path[PATH_MAX + 1];
+> > > @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
+> > >       int fd;
+> > >
+> > >
+> > > -     if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
+> > > +     if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+> >
+> > nice, but could you please follow fs API names and change the
+> > name to cgroupfs__mountpoint
+> >
+> > I think we don't need to define the rest of the functions now,
+> > if they are not used
+> >
+> >         #define FS(name)                                \
+> >                 const char *name##__mountpoint(void);   \
+> >                 const char *name##__mount(void);        \
+> >                 bool name##__configured(void);          \
+> >
+> > just follow the function name
+> 
+> I thought about it too, but still it has different arguments.
+> So I left it as is... Do you really want to rename?
 
-Thanks for letting me know. I'll add a:
+yea I think we should keep the same name, Arnaldo?
 
-  Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-
-to the commit.
+jirka
 
 > 
-> PS: I should have sent this description earlier, would have saved a week of debugging
-> on my side....
-
-Heh, I do things like this ofter after triggering bugs in others
-code, and will spend a few days debugging it, then finding out that
-there's already a fix to the bug I find (or presenting the problem
-gives a proper fix). I just calk it up as a learning experience ;-)
-
--- Steve
+> Thanks
+> Namhyung
+> 
