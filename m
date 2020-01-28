@@ -1,63 +1,23 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2] perf tools: Add machine pointer to struct hists
-Date: Tue, 28 Jan 2020 11:02:54 +0100
-Message-ID: <20200128100254.GD1209308@krava>
-References: <20200127143443.89060-1-namhyung@kernel.org>
- <20200128004213.106098-1-namhyung@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: pr-tracker-bot@kernel.org
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Tue, 28 Jan 2020 19:10:02 +0000
+Message-ID: <158023860252.9583.8458853393585082822.pr-tracker-bot@kernel.org>
+References: <20200106160705.10899-1-acme@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200128004213.106098-1-namhyung@kernel.org>
+In-Reply-To: <20200106160705.10899-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>, David Ahern <dsahern@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, Vitaly Chikunov <vt@altlinux.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Jan 28, 2020 at 09:42:13AM +0900, Namhyung Kim wrote:
+The pull request you sent on Mon,  6 Jan 2020 13:06:45 -0300:
 
-SNIP
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.6-20200106
 
-> +struct perf_session;
->  
->  static inline struct perf_cpu_map *evsel__cpus(struct evsel *evsel)
->  {
-> @@ -145,32 +146,43 @@ void perf_evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
->  				struct perf_counts_values *count);
->  
->  int perf_evsel__object_config(size_t object_size,
-> -			      int (*init)(struct evsel *evsel),
-> -			      void (*fini)(struct evsel *evsel));
-> +			      int (*init)(struct evsel *evsel,
-> +					  struct perf_session *session),
-> +			      void (*fini)(struct evsel *evsel,
-> +					   struct perf_session *session));
->  
-> -struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
-> +struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx,
-> +				  struct perf_session *session);
->  
->  static inline struct evsel *evsel__new(struct perf_event_attr *attr)
->  {
-> -	return perf_evsel__new_idx(attr, 0);
-> +	return perf_evsel__new_idx(attr, 0, NULL);
->  }
->  
-> -struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx);
-> +static inline struct evsel *evsel__new2(struct perf_event_attr *attr,
-> +					struct perf_session *session)
-> +{
-> +	return perf_evsel__new_idx(attr, 0, session);
-> +}
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/53f3feeb7bd2d78039b3dc9ab158bad2a5dbe012
 
-I'm not sure about perf_session as an argument to get machine,
-it seems ok but not for the case in perf_event__process_attr
-where you call evsel__new and have no way to get perf_sesion
-I think... and I think you need to set it up in there for
-the pipe workflow to work with your new sort fields
+Thank you!
 
-maybe we could be find with just perf_env pointer there?
-but perf_session makes more sense to me.. maybe we could
-change event_attr_op to pass it as an argument..
-
-jirka
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
