@@ -1,229 +1,63 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2] tools lib api fs: Move cgroupsfs__mountpoint()
-Date: Tue, 28 Jan 2020 10:40:57 +0100
-Message-ID: <20200128094057.GC1209308@krava>
-References: <20200127162222.GG1114818@krava>
- <20200128004940.1590044-1-namhyung@kernel.org>
+Subject: Re: [PATCH v2] perf tools: Add machine pointer to struct hists
+Date: Tue, 28 Jan 2020 11:02:54 +0100
+Message-ID: <20200128100254.GD1209308@krava>
+References: <20200127143443.89060-1-namhyung@kernel.org>
+ <20200128004213.106098-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200128004940.1590044-1-namhyung@kernel.org>
+In-Reply-To: <20200128004213.106098-1-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Jan 28, 2020 at 09:49:40AM +0900, Namhyung Kim wrote:
-> Move it from tools/perf/util/cgroup.c as it can be used by other places.
-> Note that cgroup filesystem is different from others since it's usually
-> mounted separately (in v1) for each subsystem.
-> 
-> I just copied the code with a little modification to pass a name of
-> subsystem and renamed it to follow other APIs.
-> 
-> Suggested-by: Jiri Olsa <jolsa@redhat.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+On Tue, Jan 28, 2020 at 09:42:13AM +0900, Namhyung Kim wrote:
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+SNIP
 
-thanks,
-jirka
-
-> ---
-> * rename to cgroupfs__mountpoint()
-> 
->  tools/lib/api/fs/Build    |  1 +
->  tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
->  tools/lib/api/fs/fs.h     |  2 ++
->  tools/perf/util/cgroup.c  | 63 ++----------------------------------
->  4 files changed, 72 insertions(+), 61 deletions(-)
->  create mode 100644 tools/lib/api/fs/cgroup.c
-> 
-> diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
-> index f4ed9629ae85..0f75b28654de 100644
-> --- a/tools/lib/api/fs/Build
-> +++ b/tools/lib/api/fs/Build
-> @@ -1,2 +1,3 @@
->  libapi-y += fs.o
->  libapi-y += tracing_path.o
-> +libapi-y += cgroup.o
-> diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
-> new file mode 100644
-> index 000000000000..c7e1cdaa36e1
-> --- /dev/null
-> +++ b/tools/lib/api/fs/cgroup.c
-> @@ -0,0 +1,67 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <linux/stringify.h>
-> +#include <sys/types.h>
-> +#include <sys/stat.h>
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include "fs.h"
-> +
-> +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys)
-> +{
-> +	FILE *fp;
-> +	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-> +	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-> +	char *token, *saved_ptr = NULL;
-> +
-> +	fp = fopen("/proc/mounts", "r");
-> +	if (!fp)
-> +		return -1;
-> +
-> +	/*
-> +	 * in order to handle split hierarchy, we need to scan /proc/mounts
-> +	 * and inspect every cgroupfs mount point to find one that has
-> +	 * perf_event subsystem
-> +	 */
-> +	path_v1[0] = '\0';
-> +	path_v2[0] = '\0';
-> +
-> +	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-> +				__stringify(PATH_MAX)"s %*d %*d\n",
-> +				mountpoint, type, tokens) == 3) {
-> +
-> +		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-> +
-> +			token = strtok_r(tokens, ",", &saved_ptr);
-> +
-> +			while (token != NULL) {
-> +				if (subsys && !strcmp(token, subsys)) {
-> +					strcpy(path_v1, mountpoint);
-> +					break;
-> +				}
-> +				token = strtok_r(NULL, ",", &saved_ptr);
-> +			}
-> +		}
-> +
-> +		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-> +			strcpy(path_v2, mountpoint);
-> +
-> +		if (path_v1[0] && path_v2[0])
-> +			break;
-> +	}
-> +	fclose(fp);
-> +
-> +	if (path_v1[0])
-> +		path = path_v1;
-> +	else if (path_v2[0])
-> +		path = path_v2;
-> +	else
-> +		return -1;
-> +
-> +	if (strlen(path) < maxlen) {
-> +		strcpy(buf, path);
-> +		return 0;
-> +	}
-> +	return -1;
-> +}
-> diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-> index 92d03b8396b1..07591ecbe39f 100644
-> --- a/tools/lib/api/fs/fs.h
-> +++ b/tools/lib/api/fs/fs.h
-> @@ -28,6 +28,8 @@ FS(bpf_fs)
->  #undef FS
+> +struct perf_session;
 >  
->  
-> +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys);
-> +
->  int filename__read_int(const char *filename, int *value);
->  int filename__read_ull(const char *filename, unsigned long long *value);
->  int filename__read_xll(const char *filename, unsigned long long *value);
-> diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> index 4881d4af3381..12e466d1ec3b 100644
-> --- a/tools/perf/util/cgroup.c
-> +++ b/tools/perf/util/cgroup.c
-> @@ -3,75 +3,16 @@
->  #include "evsel.h"
->  #include "cgroup.h"
->  #include "evlist.h"
-> -#include <linux/stringify.h>
->  #include <linux/zalloc.h>
->  #include <sys/types.h>
->  #include <sys/stat.h>
->  #include <fcntl.h>
->  #include <stdlib.h>
->  #include <string.h>
-> +#include <api/fs/fs.h>
->  
->  int nr_cgroups;
->  
-> -static int
-> -cgroupfs_find_mountpoint(char *buf, size_t maxlen)
-> -{
-> -	FILE *fp;
-> -	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-> -	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-> -	char *token, *saved_ptr = NULL;
-> -
-> -	fp = fopen("/proc/mounts", "r");
-> -	if (!fp)
-> -		return -1;
-> -
-> -	/*
-> -	 * in order to handle split hierarchy, we need to scan /proc/mounts
-> -	 * and inspect every cgroupfs mount point to find one that has
-> -	 * perf_event subsystem
-> -	 */
-> -	path_v1[0] = '\0';
-> -	path_v2[0] = '\0';
-> -
-> -	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-> -				__stringify(PATH_MAX)"s %*d %*d\n",
-> -				mountpoint, type, tokens) == 3) {
-> -
-> -		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-> -
-> -			token = strtok_r(tokens, ",", &saved_ptr);
-> -
-> -			while (token != NULL) {
-> -				if (!strcmp(token, "perf_event")) {
-> -					strcpy(path_v1, mountpoint);
-> -					break;
-> -				}
-> -				token = strtok_r(NULL, ",", &saved_ptr);
-> -			}
-> -		}
-> -
-> -		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-> -			strcpy(path_v2, mountpoint);
-> -
-> -		if (path_v1[0] && path_v2[0])
-> -			break;
-> -	}
-> -	fclose(fp);
-> -
-> -	if (path_v1[0])
-> -		path = path_v1;
-> -	else if (path_v2[0])
-> -		path = path_v2;
-> -	else
-> -		return -1;
-> -
-> -	if (strlen(path) < maxlen) {
-> -		strcpy(buf, path);
-> -		return 0;
-> -	}
-> -	return -1;
-> -}
-> -
->  static int open_cgroup(const char *name)
+>  static inline struct perf_cpu_map *evsel__cpus(struct evsel *evsel)
 >  {
->  	char path[PATH_MAX + 1];
-> @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
->  	int fd;
+> @@ -145,32 +146,43 @@ void perf_evsel__compute_deltas(struct evsel *evsel, int cpu, int thread,
+>  				struct perf_counts_values *count);
 >  
+>  int perf_evsel__object_config(size_t object_size,
+> -			      int (*init)(struct evsel *evsel),
+> -			      void (*fini)(struct evsel *evsel));
+> +			      int (*init)(struct evsel *evsel,
+> +					  struct perf_session *session),
+> +			      void (*fini)(struct evsel *evsel,
+> +					   struct perf_session *session));
 >  
-> -	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
-> +	if (cgroupfs__mountpoint(mnt, PATH_MAX + 1, "perf_event"))
->  		return -1;
+> -struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx);
+> +struct evsel *perf_evsel__new_idx(struct perf_event_attr *attr, int idx,
+> +				  struct perf_session *session);
 >  
->  	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
-> -- 
-> 2.25.0.341.g760bfbb309-goog
-> 
+>  static inline struct evsel *evsel__new(struct perf_event_attr *attr)
+>  {
+> -	return perf_evsel__new_idx(attr, 0);
+> +	return perf_evsel__new_idx(attr, 0, NULL);
+>  }
+>  
+> -struct evsel *perf_evsel__newtp_idx(const char *sys, const char *name, int idx);
+> +static inline struct evsel *evsel__new2(struct perf_event_attr *attr,
+> +					struct perf_session *session)
+> +{
+> +	return perf_evsel__new_idx(attr, 0, session);
+> +}
+
+I'm not sure about perf_session as an argument to get machine,
+it seems ok but not for the case in perf_event__process_attr
+where you call evsel__new and have no way to get perf_sesion
+I think... and I think you need to set it up in there for
+the pipe workflow to work with your new sort fields
+
+maybe we could be find with just perf_env pointer there?
+but perf_session makes more sense to me.. maybe we could
+change event_attr_op to pass it as an argument..
+
+jirka
