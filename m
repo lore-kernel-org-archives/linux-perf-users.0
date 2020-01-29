@@ -1,71 +1,213 @@
-From: James Morris <jmorris@namei.org>
-Subject: Re: [PATCH v6 10/10] drivers/oprofile: open access for CAP_PERFMON
- privileged process
-Date: Wed, 29 Jan 2020 08:18:16 +1100 (AEDT)
-Message-ID: <alpine.LRH.2.21.2001290818090.2204@namei.org>
-References: <74d524ab-ac11-a7b8-1052-eba10f117e09@linux.intel.com>
- <eff5e211-7114-f854-f53f-08491f9dcc26@linux.intel.com>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v2] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Date: Wed, 29 Jan 2020 12:10:22 +0530
+Message-ID: <238f6f80-dc3e-3245-2fc0-a10e37e49a74@linux.ibm.com>
+References: <20200122064721.24276-1-kjain@linux.ibm.com>
+ <20200127154110.GF1114818@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <eff5e211-7114-f854-f53f-08491f9dcc26@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Song Liu <songliubraving@fb.com>, Peter Zijlstra <peterz@infradead.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Alexei Starovoitov <ast@kernel.org>, Lionel Landwerlin <lionel.g.landwerlin@intel.com>, "james.bottomley@hansenpartnership.com" <james.bottomley@hansenpartnership.com>, Paul Mackerras <paulus@samba.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Igor Lubashev <ilubashe@akamai.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, oprofile-list@lists.sf.net, Serge Hallyn <serge@hallyn.com>, Robert Richter <rric@kernel.org>, Will Deacon <will@kernel.org>, "selinux@vger.kernel.org" <selinux@vger.kernel.org>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Stephane Eranian <eranian@goo>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200127154110.GF1114818@krava>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, 28 Jan 2020, Alexey Budankov wrote:
 
-> 
-> Open access to monitoring for CAP_PERFMON privileged process. Providing
-> the access under CAP_PERFMON capability singly, without the rest of
-> CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials and
-> makes operation more secure.
-> 
-> CAP_PERFMON implements the principal of least privilege for performance
-> monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39 principle
-> of least privilege: A security design principle that states that a process
-> or program be granted only those privileges (e.g., capabilities) necessary
-> to accomplish its legitimate function, and only for the time that such
-> privileges are actually required)
-> 
-> For backward compatibility reasons access to the monitoring remains open
-> for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for secure
-> monitoring is discouraged with respect to CAP_PERFMON capability.
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+On 1/27/20 9:11 PM, Jiri Olsa wrote:
+> On Wed, Jan 22, 2020 at 12:17:21PM +0530, Kajol Jain wrote:
+>
+> SNIP
+>
+>> Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+>> Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+>> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>> ---
+>>   tools/perf/util/evlist.h      |  1 +
+>>   tools/perf/util/metricgroup.c | 14 +++++++++++++-
+>>   2 files changed, 14 insertions(+), 1 deletion(-)
+>>
+>> ---
+>> Changelog:
+>> v1 -> v2
+>> - Rather then adding static variable in metricgroup.c,
+>>    add a new variable in evlist itself with name 'evlist_iter'
+>> ---
+>> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+>> index f5bd5c386df1..255f872aee92 100644
+>> --- a/tools/perf/util/evlist.h
+>> +++ b/tools/perf/util/evlist.h
+>> @@ -54,6 +54,7 @@ struct evlist {
+>>   	bool		 enabled;
+>>   	int		 id_pos;
+>>   	int		 is_pos;
+>> +	int		 evlist_iter;
+>>   	u64		 combined_sample_type;
+>>   	enum bkw_mmap_state bkw_mmap_state;
+>>   	struct {
+>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+>> index 02aee946b6c1..911fab4ac04b 100644
+>> --- a/tools/perf/util/metricgroup.c
+>> +++ b/tools/perf/util/metricgroup.c
+>> @@ -96,10 +96,13 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>>   				      struct evsel **metric_events)
+>>   {
+>>   	struct evsel *ev;
+>> -	int i = 0;
+>> +	int i = 0, j = 0;
+>>   	bool leader_found;
+>>   
+>>   	evlist__for_each_entry (perf_evlist, ev) {
+>> +		j++;
+>> +		if (j <= perf_evlist->evlist_iter)
+>> +			continue;
+> hm, but that won't work when event does not match and all
+> is rolled over in th next condition, no?
+
+Hi jiri,
+
+     Thanks for the review. Yes you are right. Need to take care of that 
+case.
+
+>
+> how about something like below.. I only checked I got same
+> results as you did in the changelog, but haven't tested
+> otherwise.. especially I think that the check I removed
+> is redundant
+>
+> could you please also add test for this testcase?
+>
+> thanks,
+> jirka
+>
+>
 > ---
->  drivers/oprofile/event_buffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 02aee946b6c1..c12f3efccec8 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -93,13 +93,16 @@ struct egroup {
+>   static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>   				      const char **ids,
+>   				      int idnum,
+> -				      struct evsel **metric_events)
+> +				      struct evsel **metric_events,
+> +				      bool used[])
+>   {
+>   	struct evsel *ev;
+> -	int i = 0;
+> +	int i = 0, j = 0;
+>   	bool leader_found;
+>   
+>   	evlist__for_each_entry (perf_evlist, ev) {
+> +		if (used[j++])
+> +			continue;
+>   		if (!strcmp(ev->name, ids[i])) {
+>   			if (!metric_events[i])
+>   				metric_events[i] = ev;
+> @@ -107,22 +110,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>   			if (i == idnum)
+>   				break;
+>   		} else {
+> -			if (i + 1 == idnum) {
+> +			if (i) {
+>   				/* Discard the whole match and start again */
+>   				i = 0;
+>   				memset(metric_events, 0,
+>   				       sizeof(struct evsel *) * idnum);
+> -				continue;
+> -			}
+> -
+> -			if (!strcmp(ev->name, ids[i]))
+> -				metric_events[i] = ev;
+> -			else {
+> -				/* Discard the whole match and start again */
+> -				i = 0;
+> -				memset(metric_events, 0,
+> -				       sizeof(struct evsel *) * idnum);
+> -				continue;
+>   			}
 
+Incase we have match miss, we need to restart the match comparison again.
 
-Acked-by: James Morris <jamorris@linux.microsoft.com>
+But I think we can't totally remove this check as, we also need to make 
+sure we take current event in match logic. Maybe something like this:
 
-> 
-> diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
-> index 12ea4a4ad607..6c9edc8bbc95 100644
-> --- a/drivers/oprofile/event_buffer.c
-> +++ b/drivers/oprofile/event_buffer.c
-> @@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
->  {
->  	int err = -EPERM;
->  
-> -	if (!capable(CAP_SYS_ADMIN))
-> +	if (!perfmon_capable())
->  		return -EPERM;
->  
->  	if (test_and_set_bit_lock(0, &buffer_opened))
-> 
+                 } else {
 
--- 
-James Morris
-<jmorris@namei.org>
+-                       if (i + 1 == idnum) {
+-                               /* Discard the whole match and start 
+again */
+-                               i = 0;
+-                               memset(metric_events, 0,
+-                                      sizeof(struct evsel *) * idnum);
+-                               continue;
+-                       }
+-
+-                       if (!strcmp(ev->name, ids[i]))
+-                               metric_events[i] = ev;
+-                       else {
+-                               /* Discard the whole match and start 
+again */
+-                               i = 0;
+-                               memset(metric_events, 0,
+-                                      sizeof(struct evsel *) * idnum);
+-                               continue;
+
++                       /* Discard the whole match and start again */
++                       i = 0;
++                       memset(metric_events, 0,
++                               sizeof(struct evsel *) * idnum);
++
++                       if (!strcmp(ev->name, ids[i])) {
++                               if (!metric_events[i])
++                                       metric_events[i] = ev;
++                               i++;
++                               if (i == idnum)
++                                       break;
+                         }
+
+Please let me know if it sounds fine.
+
+Thanks,
+
+Kajol
+
+>   		}
+>   	}
+> @@ -144,9 +136,11 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>   			    !strcmp(ev->name, metric_events[i]->name)) {
+>   				ev->metric_leader = metric_events[i];
+>   			}
+> +			j++;
+>   		}
+> +		ev = metric_events[i];
+> +		used[ev->idx] = true;
+>   	}
+> -
+>   	return metric_events[0];
+>   }
+>   
+> @@ -160,6 +154,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+>   	int ret = 0;
+>   	struct egroup *eg;
+>   	struct evsel *evsel;
+> +	bool used[perf_evlist->core.nr_entries];
+> +
+> +	memset(used, 0, perf_evlist->core.nr_entries);
+>   
+>   	list_for_each_entry (eg, groups, nd) {
+>   		struct evsel **metric_events;
+> @@ -170,7 +167,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>   			break;
+>   		}
+>   		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+> -					 metric_events);
+> +					 metric_events, used);
+>   		if (!evsel) {
+>   			pr_debug("Cannot resolve %s: %s\n",
+>   					eg->metric_name, eg->metric_expr);
+>
