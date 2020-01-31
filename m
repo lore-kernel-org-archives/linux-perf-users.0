@@ -1,45 +1,202 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] perf test: Test case 66 broken on s390 (lib/traceevent
- issue)
-Date: Thu, 30 Jan 2020 07:54:27 -0500
-Message-ID: <20200130075427.303478a0@gandalf.local.home>
-References: <20200124073941.39119-1-tmricht@linux.ibm.com>
-        <20200124100742.4050c15e@gandalf.local.home>
-        <20200125013153.46f05fc1f617fcd341e7060b@kernel.org>
-        <20200124113610.662f4afb@gandalf.local.home>
-        <659928a1-95b3-ed0d-7988-745d92b495d6@linux.ibm.com>
-        <20200127105553.3cd92ef8@gandalf.local.home>
-        <20200130105804.GD3841@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v3] tools/perf/metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
+Date: Fri, 31 Jan 2020 10:55:22 +0530
+Message-ID: <20200131052522.7267-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200130105804.GD3841@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, borntraeger@de.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+To: acme@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kjain@linux.ibm.com, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, 30 Jan 2020 11:58:04 +0100
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+Commit f01642e4912b ("perf metricgroup: Support multiple
+events for metricgroup") introduced support for multiple events
+in a metric group. But with the current upstream, metric events
+names are not printed properly incase we try to run multiple
+metric groups with overlapping event.
 
-> Em Mon, Jan 27, 2020 at 10:55:53AM -0500, Steven Rostedt escreveu:
-> > On Mon, 27 Jan 2020 08:34:23 +0100
-> > Thomas Richter <tmricht@linux.ibm.com> wrote:
-> >   
-> > > Steven and Masami,
-> > > 
-> > > thanks for the patch, it fixes this issue!  
-> > 
-> > Thanks for letting me know. I'll add a:
-> > 
-> >   Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> > 
-> > to the commit.  
-> 
-> So you're taking it, right?
+With current upstream version, incase of overlapping metric events
+issue is, we always start our comparision logic from start.
+So, the events which already matched with some metric group also
+take part in comparision logic. Because of that when we have overlapping
+events, we end up matching current metric group event with already matched
+one.
 
-Yes (Linus already has it in his tree), because it was a kernel fix. The
-tools lib traceevent does not need to be changed for this.
+For example, in skylake machine we have metric event CoreIPC and
+Instructions. Both of them need 'inst_retired.any' event value.
+As events in Instructions is subset of events in CoreIPC, they
+endup in pointing to same 'inst_retired.any' value.
 
--- Steve
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+     1,254,992,790      inst_retired.any          # 1254992790.0
+                                                    Instructions
+                                                  #      1.3 CoreIPC
+       977,172,805      cycles
+     1,254,992,756      inst_retired.any
+
+       1.000802596 seconds time elapsed
+
+command:# sudo ./perf stat -M UPI,IPC sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+           948,650      uops_retired.retire_slots
+           866,182      inst_retired.any          #      0.7 IPC
+           866,182      inst_retired.any
+         1,175,671      cpu_clk_unhalted.thread
+
+Patch fixes the issue by adding a new array 'evlist_used' to keep track of
+events which already matched with some group by setting it true.
+So, we skip all used events in list when we start comparision logic.
+Patch also make some changes in comparision logic, incase we get a match
+miss, we discard the whole match and start again with first event id in
+metric event.
+
+With this patch:
+In skylake platform:
+
+command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+
+ Performance counter stats for 'CPU(s) 0':
+
+         3,348,415      inst_retired.any          #      0.3 CoreIPC
+        11,779,026      cycles
+         3,348,381      inst_retired.any          # 3348381.0
+                                                    Instructions
+
+       1.001649056 seconds time elapsed
+
+command:# ./perf stat -M UPI,IPC sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+         1,023,148      uops_retired.retire_slots #      1.1 UPI
+           924,976      inst_retired.any
+           924,976      inst_retired.any          #      0.6 IPC
+         1,489,414      cpu_clk_unhalted.thread
+
+       1.003064672 seconds time elapsed
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Suggested-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+---
+ tools/perf/util/metricgroup.c | 42 +++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+
+---
+Changelog:
+
+v2 -> v3
+- Add array in place of variable to keep track of matched events.
+  Because incase we miss match in previous approach, all events will
+  be rolled over in next condition. So, rather we add array and set  
+  it incase that variable already match with some group.
+  - Suggested by Jiri Olsa
+
+v1 -> v2
+- Rather then adding static variable in metricgroup.c,
+  add a new variable in evlist itself with name 'evlist_iter'
+---
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 02aee946b6c1..e9d9fbaa2160 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -93,13 +93,16 @@ struct egroup {
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 				      const char **ids,
+ 				      int idnum,
+-				      struct evsel **metric_events)
++				      struct evsel **metric_events,
++				      bool evlist_used[])
+ {
+ 	struct evsel *ev;
+-	int i = 0;
++	int i = 0, j = 0;
+ 	bool leader_found;
+ 
+ 	evlist__for_each_entry (perf_evlist, ev) {
++		if (evlist_used[j++])
++			continue;
+ 		if (!strcmp(ev->name, ids[i])) {
+ 			if (!metric_events[i])
+ 				metric_events[i] = ev;
+@@ -107,22 +110,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			if (i == idnum)
+ 				break;
+ 		} else {
+-			if (i + 1 == idnum) {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
+-			}
+-
+-			if (!strcmp(ev->name, ids[i]))
+-				metric_events[i] = ev;
+-			else {
+-				/* Discard the whole match and start again */
+-				i = 0;
+-				memset(metric_events, 0,
+-				       sizeof(struct evsel *) * idnum);
+-				continue;
++			/* Discard the whole match and start again */
++			i = 0;
++			memset(metric_events, 0,
++				sizeof(struct evsel *) * idnum);
++
++			if (!strcmp(ev->name, ids[i])) {
++				if (!metric_events[i])
++					metric_events[i] = ev;
++				i++;
++				if (i == idnum)
++					break;
+ 			}
+ 		}
+ 	}
+@@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			    !strcmp(ev->name, metric_events[i]->name)) {
+ 				ev->metric_leader = metric_events[i];
+ 			}
++			j++;
+ 		}
++		ev = metric_events[i];
++		evlist_used[ev->idx] = true;
+ 	}
+ 
+ 	return metric_events[0];
+@@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	int ret = 0;
+ 	struct egroup *eg;
+ 	struct evsel *evsel;
++	bool evlist_used[perf_evlist->core.nr_entries];
++
++	memset(evlist_used, 0, perf_evlist->core.nr_entries);
+ 
+ 	list_for_each_entry (eg, groups, nd) {
+ 		struct evsel **metric_events;
+@@ -170,7 +174,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 			break;
+ 		}
+ 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+-					 metric_events);
++					 metric_events, evlist_used);
+ 		if (!evsel) {
+ 			pr_debug("Cannot resolve %s: %s\n",
+ 					eg->metric_name, eg->metric_expr);
+-- 
+2.21.0
