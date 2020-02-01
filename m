@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 3/6] perf test: Fix test case Merge cpu map
-Date: Sat,  1 Feb 2020 09:03:27 +0100
-Message-ID: <20200201080330.13211-4-acme@kernel.org>
+Subject: [PATCH 2/6] perf parse: Copy string to perf_evsel_config_term
+Date: Sat,  1 Feb 2020 09:03:26 +0100
+Message-ID: <20200201080330.13211-3-acme@kernel.org>
 References: <20200201080330.13211-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,104 +9,117 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200201080330.13211-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, sumanthk@linux.ibm.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Ian Rogers <irogers@google.com>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Suzuki Poulouse <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
-introduces a test case for cpumap merge operation, see functions
-perf_cpu_map__merge() and test__cpu_map_merge().
+perf with CoreSight fails to record trace data with command:
 
-The test case fails on s390 with this error message:
+  perf record -e cs_etm/@tmc_etr0/u --per-thread ls
+  failed to set sink "" on event cs_etm/@tmc_etr0/u with 21 (Is a
+  directory)/perf/
 
- [root@m35lp76 perf]# ./perf test -Fvvvvv 52
- 52: Merge cpu map                                         :
- --- start ---
- cpumask list: 1-2,4-5,7
- perf: /root/linux/tools/include/linux/refcount.h:131:\
-          refcount_sub_and_test: Assertion `!(new > val)' failed.
- Aborted (core dumped)
- [root@m35lp76 perf]#
+This failure is root caused with the commit 1dc925568f01 ("perf
+parse: Add a deep delete for parse event terms").
 
-The root cause is in the function test__cpu_map_merge():
-It creates two cpu_maps named 'a' and 'b':
+The log shows, cs_etm fails to parse the sink attribution; cs_etm event
+relies on the event configuration to pass sink name, but the event
+specific configuration data cannot be passed properly with flow:
 
-  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
-  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
+  get_config_terms()
+    ADD_CONFIG_TERM(DRV_CFG, term->val.str);
+      __t->val.str = term->val.str;
+        `> __t->val.str is assigned to term->val.str;
 
-and creates a third map named 'c' which is the result of
-the merge of maps a and b:
+  parse_events_terms__purge()
+    parse_events_term__delete()
+      zfree(&term->val.str);
+        `> term->val.str is freed and assigned to NULL pointer;
 
-  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
+  cs_etm_set_sink_attr()
+    sink = __t->val.str;
+      `> sink string has been freed.
 
-After some verifaction of the merged cpu_map all three
-of them are have their reference count reduced and are
-freed:
+To fix this issue, in the function get_config_terms(), this patch
+changes to use strdup() for allocation a new duplicate string rather
+than directly assignment string pointer.
 
-   perf_cpu_map__put(a); (1)
-   perf_cpu_map__put(b);
-   perf_cpu_map__put(c);
+This patch addes a new field 'free_str' in the data structure
+perf_evsel_config_term; 'free_str' is set to true when the union is used
+as a string pointer; thus it can tell perf_evsel__free_config_terms() to
+free the string.
 
-The release of perf_cpu_map__put(a) is wrong. The map
-is already released and free'ed as part of the function
+Fixes: 1dc925568f01 ("perf parse: Add a deep delete for parse event terms")
+Suggested-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200117055251.24058-2-leo.yan@linaro.org
+[ Use zfree() in perf_evsel__free_config_terms ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-  perf_cpu_map__merge(struct perf_cpu_map *orig,
-  |	              struct perf_cpu_map *other)
-  +--> perf_cpu_map__put(orig);
-       |
-       +--> cpu_map__delete(orig)
+:#	modified:   tools/perf/util/evsel_config.h
 
-At the end perf_cpu_map_put() is called for map 'orig'
-alias 'a' and since the reference count is 1, the map
-is deleted, as can be seen by the following gdb trace:
-
- (gdb) where
- #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
- #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
-		     have_lock=<optimized out>) at malloc.c:4222
- #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
- #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
- #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
-     other=0x156cc60) at cpumap.c:343
- #5  0x000000000110cdd0 in test__cpu_map_merge (
-     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
-
-Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
-a second time and causes the failure. Fix this be removing that
-function call.
-
-Output after:
-  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
-  52: Merge cpu map                                         :
-  --- start ---
-  cpumask list: 1-2,4-5,7
-  ---- end ----
-  Merge cpu map: Ok
-  [root@m35lp76 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: sumanthk@linux.ibm.com
-Link: http://lore.kernel.org/lkml/20200120132011.64698-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/cpumap.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/util/evsel.c        | 2 ++
+ tools/perf/util/evsel_config.h | 1 +
+ tools/perf/util/parse-events.c | 7 ++++++-
+ 3 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 4ac56741ac5f..29c793ac7d10 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
- 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
- 	cpu_map__snprint(c, buf, sizeof(buf));
- 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
--	perf_cpu_map__put(a);
- 	perf_cpu_map__put(b);
- 	perf_cpu_map__put(c);
- 	return 0;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 549abd43816f..c8dc4450884c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1265,6 +1265,8 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+ 
+ 	list_for_each_entry_safe(term, h, &evsel->config_terms, list) {
+ 		list_del_init(&term->list);
++		if (term->free_str)
++			zfree(&term->val.str);
+ 		free(term);
+ 	}
+ }
+diff --git a/tools/perf/util/evsel_config.h b/tools/perf/util/evsel_config.h
+index b4a65201e4f7..e026ab67b008 100644
+--- a/tools/perf/util/evsel_config.h
++++ b/tools/perf/util/evsel_config.h
+@@ -32,6 +32,7 @@ enum evsel_term_type {
+ struct perf_evsel_config_term {
+ 	struct list_head      list;
+ 	enum evsel_term_type  type;
++	bool		      free_str;
+ 	union {
+ 		u64	      period;
+ 		u64	      freq;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index f59f3c8da473..c01ba6f8fdad 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1240,7 +1240,12 @@ do {								\
+ #define ADD_CONFIG_TERM_STR(__type, __val)			\
+ do {								\
+ 	ADD_CONFIG_TERM(__type);				\
+-	__t->val.str = __val;					\
++	__t->val.str = strdup(__val);				\
++	if (!__t->val.str) {					\
++		zfree(&__t);					\
++		return -ENOMEM;					\
++	}							\
++	__t->free_str = true;					\
+ } while (0)
+ 
+ 	struct parse_events_term *term;
 -- 
 2.21.1
