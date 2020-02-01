@@ -1,93 +1,112 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [GIT PULL] perf/core improvements and fixes from Budapest
-Date: Sat,  1 Feb 2020 09:03:24 +0100
-Message-ID: <20200201080330.13211-1-acme@kernel.org>
+Subject: [PATCH 3/6] perf test: Fix test case Merge cpu map
+Date: Sat,  1 Feb 2020 09:03:27 +0100
+Message-ID: <20200201080330.13211-4-acme@kernel.org>
+References: <20200201080330.13211-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200201080330.13211-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Cengiz Can <cengiz@kernel.wtf>, Changbin Du <changbin.du@gmail.com>, Leo Yan <leo.yan@linaro.org>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, sumanthk@linux.ibm.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Ingo/Thomas,
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-	Please consider pulling,
+Commit a2408a70368a ("perf evlist: Maintain evlist->all_cpus")
+introduces a test case for cpumap merge operation, see functions
+perf_cpu_map__merge() and test__cpu_map_merge().
 
-Best regards,
+The test case fails on s390 with this error message:
 
-- Arnaldo
+ [root@m35lp76 perf]# ./perf test -Fvvvvv 52
+ 52: Merge cpu map                                         :
+ --- start ---
+ cpumask list: 1-2,4-5,7
+ perf: /root/linux/tools/include/linux/refcount.h:131:\
+          refcount_sub_and_test: Assertion `!(new > val)' failed.
+ Aborted (core dumped)
+ [root@m35lp76 perf]#
 
-The following changes since commit 0cc4bd8f70d1ea2940295f1050508c663fe9eff9:
+The root cause is in the function test__cpu_map_merge():
+It creates two cpu_maps named 'a' and 'b':
 
-  Merge branch 'core/kprobes' into perf/core, to pick up fixes (2020-01-28 07:59:05 +0100)
+  struct perf_cpu_map *a = perf_cpu_map__new("4,2,1");
+  struct perf_cpu_map *b = perf_cpu_map__new("4,5,7");
 
-are available in the Git repository at:
+and creates a third map named 'c' which is the result of
+the merge of maps a and b:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.6-20200201
+  struct perf_cpu_map *c = perf_cpu_map__merge(a, b);
 
-for you to fetch changes up to 85fc95d75970ee7dd8e01904e7fb1197c275ba6b:
+After some verifaction of the merged cpu_map all three
+of them are have their reference count reduced and are
+freed:
 
-  perf maps: Add missing unlock to maps__insert() error case (2020-01-31 09:40:50 +0100)
+   perf_cpu_map__put(a); (1)
+   perf_cpu_map__put(b);
+   perf_cpu_map__put(c);
 
-----------------------------------------------------------------
-perf/core improvements and fixes:
+The release of perf_cpu_map__put(a) is wrong. The map
+is already released and free'ed as part of the function
 
-perf maps:
+  perf_cpu_map__merge(struct perf_cpu_map *orig,
+  |	              struct perf_cpu_map *other)
+  +--> perf_cpu_map__put(orig);
+       |
+       +--> cpu_map__delete(orig)
 
-  Cengiz Can:
+At the end perf_cpu_map_put() is called for map 'orig'
+alias 'a' and since the reference count is 1, the map
+is deleted, as can be seen by the following gdb trace:
 
-  - Add missing unlock to maps__insert() error case.
+ (gdb) where
+ #0  tcache_put (tc_idx=0, chunk=0x156cc30) at malloc.c:2940
+ #1  _int_free (av=0x3fffd49ee80 <main_arena>, p=0x156cc30,
+		     have_lock=<optimized out>) at malloc.c:4222
+ #2  0x00000000012d5e78 in cpu_map__delete (map=0x156cc40) at cpumap.c:31
+ #3  0x00000000012d5f7a in perf_cpu_map__put (map=0x156cc40) at cpumap.c:45
+ #4  0x00000000012d723a in perf_cpu_map__merge (orig=0x156cc40,
+     other=0x156cc60) at cpumap.c:343
+ #5  0x000000000110cdd0 in test__cpu_map_merge (
+     test=0x14ea6c8 <generic_tests+2856>, subtest=-1) at tests/cpumap.c:128
 
-srcline:
+Thus the perf_cpu_map__put(a) (see (1) above) frees map 'a'
+a second time and causes the failure. Fix this be removing that
+function call.
 
-  Changbin Du:
+Output after:
+  [root@m35lp76 perf]# ./perf test -Fvvvvv 52
+  52: Merge cpu map                                         :
+  --- start ---
+  cpumask list: 1-2,4-5,7
+  ---- end ----
+  Merge cpu map: Ok
+  [root@m35lp76 perf]#
 
-  - Make perf able to build with latest libbfd.
-
-perf parse:
-
-  Leo Yan:
-
-  - Keep copy of string in perf_evsel_config_term() to fix sink terms
-    processing in ARM CoreSight.
-
-perf test:
-
-  Thomas Richter:
-
-  - Fix test case Merge cpu map, removing extra reference count drop that
-    causes a segfault on s/390.
-
-perf probe:
-
-  Thomas Richter:
-
-  - Add ustring support for perf probe command
-
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: sumanthk@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20200120132011.64698-1-tmricht@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/cpumap.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-----------------------------------------------------------------
-Cengiz Can (1):
-      perf maps: Add missing unlock to maps__insert() error case
-
-Changbin Du (1):
-      perf: Make perf able to build with latest libbfd
-
-Leo Yan (2):
-      perf parse: Refactor 'struct perf_evsel_config_term'
-      perf parse: Copy string to perf_evsel_config_term
-
-Thomas Richter (2):
-      perf test: Fix test case Merge cpu map
-      perf probe: Add ustring support for perf probe command
-
- tools/perf/arch/arm/util/cs-etm.c |  2 +-
- tools/perf/tests/cpumap.c         |  1 -
- tools/perf/util/evsel.c           |  8 +++--
- tools/perf/util/evsel_config.h    |  5 ++-
- tools/perf/util/map.c             |  1 +
- tools/perf/util/parse-events.c    | 67 ++++++++++++++++++++++++++-------------
- tools/perf/util/probe-finder.c    |  3 +-
- tools/perf/util/srcline.c         | 16 +++++++++-
- 8 files changed, 71 insertions(+), 32 deletions(-)
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 4ac56741ac5f..29c793ac7d10 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -131,7 +131,6 @@ int test__cpu_map_merge(struct test *test __maybe_unused, int subtest __maybe_un
+ 	TEST_ASSERT_VAL("failed to merge map: bad nr", c->nr == 5);
+ 	cpu_map__snprint(c, buf, sizeof(buf));
+ 	TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-2,4-5,7"));
+-	perf_cpu_map__put(a);
+ 	perf_cpu_map__put(b);
+ 	perf_cpu_map__put(c);
+ 	return 0;
+-- 
+2.21.1
