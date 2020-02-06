@@ -1,107 +1,62 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-Date: Thu, 6 Feb 2020 21:03:31 +0300
-Message-ID: <2b608e26-354b-3df9-aea9-58e56dc0c5e5@linux.intel.com>
-References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
- <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
- <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
- <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
- <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
- <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
- <63d9700f-231d-7973-5307-3e56a48c54cb@linux.intel.com>
- <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
- <ac0dbab7-de47-ee34-bb88-4c43d3538b7d@linux.intel.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Date: Thu, 6 Feb 2020 19:45:10 +0100
+Message-ID: <20200206184510.GA1669706@krava>
+References: <20200131052522.7267-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-parisc-owner@vger.kernel.org>
-In-Reply-To: <ac0dbab7-de47-ee34-bb88-4c43d3538b7d@linux.intel.com>
-Content-Language: en-US
-Sender: linux-parisc-owner@vger.kernel.org
-To: Stephen Smalley <sds@tycho.nsa.gov>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Robert Richter <rric@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>Al
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200131052522.7267-1-kjain@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
 
-On 22.01.2020 17:25, Alexey Budankov wrote:
-> 
-> On 22.01.2020 17:07, Stephen Smalley wrote:
->> On 1/22/20 5:45 AM, Alexey Budankov wrote:
->>>
->>> On 21.01.2020 21:27, Alexey Budankov wrote:
->>>>
->>>> On 21.01.2020 20:55, Alexei Starovoitov wrote:
->>>>> On Tue, Jan 21, 2020 at 9:31 AM Alexey Budankov
->>>>> <alexey.budankov@linux.intel.com> wrote:
->>>>>>
->>>>>>
->>>>>> On 21.01.2020 17:43, Stephen Smalley wrote:
->>>>>>> On 1/20/20 6:23 AM, Alexey Budankov wrote:
->>>>>>>>
->>>>>>>> Introduce CAP_PERFMON capability designed to secure system performance
->>>>>>>> monitoring and observability operations so that CAP_PERFMON would assist
->>>>>>>> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
->>>>>>>> and other performance monitoring and observability subsystems.
->>>>>>>>
->>>>>>>> CAP_PERFMON intends to harden system security and integrity during system
->>>>>>>> performance monitoring and observability operations by decreasing attack
->>>>>>>> surface that is available to a CAP_SYS_ADMIN privileged process [1].
->>>>>>>> Providing access to system performance monitoring and observability
->>>>>>>> operations under CAP_PERFMON capability singly, without the rest of
->>>>>>>> CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials and
->>>>>>>> makes operation more secure.
->>>>>>>>
->>>>>>>> CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
->>>>>>>> system performance monitoring and observability operations and balance
->>>>>>>> amount of CAP_SYS_ADMIN credentials following the recommendations in the
->>>>>>>> capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability is
->>>>>>>> overloaded; see Notes to kernel developers, below."
->>>>>>>>
->>>>>>>> Although the software running under CAP_PERFMON can not ensure avoidance
->>>>>>>> of related hardware issues, the software can still mitigate these issues
->>>>>>>> following the official embargoed hardware issues mitigation procedure [2].
->>>>>>>> The bugs in the software itself could be fixed following the standard
->>>>>>>> kernel development process [3] to maintain and harden security of system
->>>>>>>> performance monitoring and observability operations.
->>>>>>>>
->>>>>>>> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
->>>>>>>> [2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
->>>>>>>> [3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
-<SNIP>
->>>>>>>>
->>>>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
->>>>>>>
->>>>>>> Why _noaudit()?  Normally only used when a permission failure is non-fatal to the operation.  Otherwise, we want the audit message.
->>>
->>> So far so good, I suggest using the simplest version for v6:
->>>
->>> static inline bool perfmon_capable(void)
->>> {
->>>     return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
->>> }
->>>
->>> It keeps the implementation simple and readable. The implementation is more
->>> performant in the sense of calling the API - one capable() call for CAP_PERFMON
->>> privileged process.
->>>
->>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
->>> but this bloating also advertises and leverages using more secure CAP_PERFMON
->>> based approach to use perf_event_open system call.
->>
->> I can live with that.  We just need to document that when you see both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process, try only allowing CAP_PERFMON first and see if that resolves the issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus CAP_DAC_OVERRIDE.
-> 
-> perf security [1] document can be updated, at least, to align and document 
-> this audit logging specifics.
+SNIP
 
-And I plan to update the document right after this patch set is accepted.
-Feel free to let me know of the places in the kernel docs that also
-require update w.r.t CAP_PERFMON extension.
+>  				ev->metric_leader = metric_events[i];
+>  			}
+> +			j++;
+>  		}
+> +		ev = metric_events[i];
+> +		evlist_used[ev->idx] = true;
+>  	}
+>  
+>  	return metric_events[0];
+> @@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  	int ret = 0;
+>  	struct egroup *eg;
+>  	struct evsel *evsel;
+> +	bool evlist_used[perf_evlist->core.nr_entries];
+> +
+> +	memset(evlist_used, 0, perf_evlist->core.nr_entries);
 
-~Alexey
+I know I posted this in the previous email, but are we sure bool
+is always 1 byte?  would sizeod(evlist_used) be safer?
 
-> 
-> ~Alexey
-> 
-> [1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+other than that it looks ok
+
+Andi, you're ok with this?
+
+thanks,
+jirka
+
+>  
+>  	list_for_each_entry (eg, groups, nd) {
+>  		struct evsel **metric_events;
+> @@ -170,7 +174,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+>  			break;
+>  		}
+>  		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
+> -					 metric_events);
+> +					 metric_events, evlist_used);
+>  		if (!evsel) {
+>  			pr_debug("Cannot resolve %s: %s\n",
+>  					eg->metric_name, eg->metric_expr);
+> -- 
+> 2.21.0
 > 
