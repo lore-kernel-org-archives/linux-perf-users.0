@@ -1,79 +1,107 @@
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH 3/4] perf map: Set kmap->kmaps backpointer for main kernel
- map chunks
-Date: Thu, 6 Feb 2020 15:10:38 +0530
-Message-ID: <2617ead1-60e2-3da6-cde6-9efd68412139@linux.ibm.com>
-References: <20191223133241.8578-1-acme@kernel.org>
- <20191223133241.8578-4-acme@kernel.org>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
+ and user space
+Date: Thu, 6 Feb 2020 21:03:31 +0300
+Message-ID: <2b608e26-354b-3df9-aea9-58e56dc0c5e5@linux.intel.com>
+References: <0548c832-7f4b-dc4c-8883-3f2b6d351a08@linux.intel.com>
+ <9b77124b-675d-5ac7-3741-edec575bd425@linux.intel.com>
+ <64cab472-806e-38c4-fb26-0ffbee485367@tycho.nsa.gov>
+ <05297eff-8e14-ccdf-55a4-870c64516de8@linux.intel.com>
+ <CAADnVQK-JzK-GUk4KOozn4c1xr=7TiCpB9Fi0QDC9nE6iVn8iQ@mail.gmail.com>
+ <537bdb28-c9e4-f44f-d665-25250065a6bb@linux.intel.com>
+ <63d9700f-231d-7973-5307-3e56a48c54cb@linux.intel.com>
+ <d7213569-9578-7201-6106-f5ebc95bd6be@tycho.nsa.gov>
+ <ac0dbab7-de47-ee34-bb88-4c43d3538b7d@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191223133241.8578-4-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-parisc-owner@vger.kernel.org>
+In-Reply-To: <ac0dbab7-de47-ee34-bb88-4c43d3538b7d@linux.intel.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Sender: linux-parisc-owner@vger.kernel.org
+To: Stephen Smalley <sds@tycho.nsa.gov>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Robert Richter <rric@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>Al
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Arnaldo,
 
-On 12/23/19 7:02 PM, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 22.01.2020 17:25, Alexey Budankov wrote:
 > 
-> When a map is create to represent the main kernel area (vmlinux) with
-> map__new2() we allocate an extra area to store a pointer to the 'struct
-> maps' for the kernel maps, so that we can access that struct when
-> loading ELF files or kallsyms, as we will need to split it in multiple
-> maps, one per kernel module or ELF section (such as ".init.text").
+> On 22.01.2020 17:07, Stephen Smalley wrote:
+>> On 1/22/20 5:45 AM, Alexey Budankov wrote:
+>>>
+>>> On 21.01.2020 21:27, Alexey Budankov wrote:
+>>>>
+>>>> On 21.01.2020 20:55, Alexei Starovoitov wrote:
+>>>>> On Tue, Jan 21, 2020 at 9:31 AM Alexey Budankov
+>>>>> <alexey.budankov@linux.intel.com> wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 21.01.2020 17:43, Stephen Smalley wrote:
+>>>>>>> On 1/20/20 6:23 AM, Alexey Budankov wrote:
+>>>>>>>>
+>>>>>>>> Introduce CAP_PERFMON capability designed to secure system performance
+>>>>>>>> monitoring and observability operations so that CAP_PERFMON would assist
+>>>>>>>> CAP_SYS_ADMIN capability in its governing role for perf_events, i915_perf
+>>>>>>>> and other performance monitoring and observability subsystems.
+>>>>>>>>
+>>>>>>>> CAP_PERFMON intends to harden system security and integrity during system
+>>>>>>>> performance monitoring and observability operations by decreasing attack
+>>>>>>>> surface that is available to a CAP_SYS_ADMIN privileged process [1].
+>>>>>>>> Providing access to system performance monitoring and observability
+>>>>>>>> operations under CAP_PERFMON capability singly, without the rest of
+>>>>>>>> CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials and
+>>>>>>>> makes operation more secure.
+>>>>>>>>
+>>>>>>>> CAP_PERFMON intends to take over CAP_SYS_ADMIN credentials related to
+>>>>>>>> system performance monitoring and observability operations and balance
+>>>>>>>> amount of CAP_SYS_ADMIN credentials following the recommendations in the
+>>>>>>>> capabilities man page [1] for CAP_SYS_ADMIN: "Note: this capability is
+>>>>>>>> overloaded; see Notes to kernel developers, below."
+>>>>>>>>
+>>>>>>>> Although the software running under CAP_PERFMON can not ensure avoidance
+>>>>>>>> of related hardware issues, the software can still mitigate these issues
+>>>>>>>> following the official embargoed hardware issues mitigation procedure [2].
+>>>>>>>> The bugs in the software itself could be fixed following the standard
+>>>>>>>> kernel development process [3] to maintain and harden security of system
+>>>>>>>> performance monitoring and observability operations.
+>>>>>>>>
+>>>>>>>> [1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+>>>>>>>> [2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+>>>>>>>> [3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
+<SNIP>
+>>>>>>>>
+>>>>>>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>>>>>>
+>>>>>>> Why _noaudit()?  Normally only used when a permission failure is non-fatal to the operation.  Otherwise, we want the audit message.
+>>>
+>>> So far so good, I suggest using the simplest version for v6:
+>>>
+>>> static inline bool perfmon_capable(void)
+>>> {
+>>>     return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
+>>> }
+>>>
+>>> It keeps the implementation simple and readable. The implementation is more
+>>> performant in the sense of calling the API - one capable() call for CAP_PERFMON
+>>> privileged process.
+>>>
+>>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
+>>> but this bloating also advertises and leverages using more secure CAP_PERFMON
+>>> based approach to use perf_event_open system call.
+>>
+>> I can live with that.  We just need to document that when you see both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process, try only allowing CAP_PERFMON first and see if that resolves the issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus CAP_DAC_OVERRIDE.
 > 
-> So when map->dso->kernel is non-zero, it is expected that
-> map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
-> chunks of the main kernel, bpf progs put in place via
-> PERF_RECORD_KSYMBOL, the main kernel).
+> perf security [1] document can be updated, at least, to align and document 
+> this audit logging specifics.
+
+And I plan to update the document right after this patch set is accepted.
+Feel free to let me know of the places in the kernel docs that also
+require update w.r.t CAP_PERFMON extension.
+
+~Alexey
+
 > 
-> This was not the case when we were splitting the main kernel into chunks
-> for its ELF sections, which ended up making 'perf report --children'
-> processing a perf.data file with callchains to trip on
-> __map__is_kernel(), when we press ENTER to see the popup menu for main
-> histogram entries that starts at a symbol in the ".init.text" ELF
-> section, e.g.:
+> ~Alexey
 > 
-> -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
->       start_kernel
->       cpu_startup_entry
->       do_idle
->       cpuidle_enter
->       cpuidle_enter_state
->       intel_idle
+> [1] https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
 > 
-> Fix it.
-
-perf top from perf/core has started crashing at __map__is_kernel():
-
-   (gdb) bt
-   #0  __map__is_kernel (map=<optimized out>) at util/map.c:935
-   #1  0x000000000045551d in perf_event__process_sample (machine=0xbab8f8,
-       sample=0x7fffe5ffa6d0, evsel=0xba7570, event=0xbcac50, tool=0x7fffffff84e0)
-       at builtin-top.c:833
-   #2  deliver_event (qe=<optimized out>, qevent=<optimized out>) at builtin-top.c:1192
-   #3  0x000000000050b9fb in do_flush (show_progress=false, oe=0x7fffffff87e0)
-       at util/ordered-events.c:244
-   #4  __ordered_events__flush (oe=oe@entry=0x7fffffff87e0, how=how@entry=OE_FLUSH__TOP,
-       timestamp=timestamp@entry=0) at util/ordered-events.c:323
-   #5  0x000000000050c1b5 in __ordered_events__flush (timestamp=<optimized out>,
-       how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:339
-   #6  ordered_events__flush (how=OE_FLUSH__TOP, oe=0x7fffffff87e0) at util/ordered-events.c:341
-   #7  ordered_events__flush (oe=oe@entry=0x7fffffff87e0, how=how@entry=OE_FLUSH__TOP)
-       at util/ordered-events.c:339
-   #8  0x0000000000454e21 in process_thread (arg=0x7fffffff84e0) at builtin-top.c:1104
-   #9  0x00007ffff7f2c4e2 in start_thread () from /lib64/libpthread.so.0
-   #10 0x00007ffff76086d3 in clone () from /lib64/libc.so.6
-
-I haven't debugged it much but seems like the actual patch that's causing the
-crash is de90d513b246 ("perf map: Use map->dso->kernel + map__kmaps() in
-map__kmaps()").
-
-Did you face this / aware of it?
-
-Ravi
