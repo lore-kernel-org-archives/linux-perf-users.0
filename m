@@ -1,21 +1,21 @@
-From: Joe Perches <joe@perches.com>
+From: Andi Kleen <ak@linux.intel.com>
 Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
  metric group with multiple events incase of overlapping events
-Date: Thu, 06 Feb 2020 10:58:12 -0800
-Message-ID: <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
+Date: Thu, 6 Feb 2020 12:10:22 -0800
+Message-ID: <20200206201022.GN302770@tassilo.jf.intel.com>
 References: <20200131052522.7267-1-kjain@linux.ibm.com>
-         <20200206184510.GA1669706@krava>
+ <20200206184510.GA1669706@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20200206184510.GA1669706@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>, Kajol Jain <kjain@linux.ibm.com>
-Cc: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, 2020-02-06 at 19:45 +0100, Jiri Olsa wrote:
+On Thu, Feb 06, 2020 at 07:45:10PM +0100, Jiri Olsa wrote:
 > On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
 > 
 > SNIP
@@ -44,13 +44,6 @@ On Thu, 2020-02-06 at 19:45 +0100, Jiri Olsa wrote:
 > 
 > Andi, you're ok with this?
 
-stack declarations of variable length arrays are not
-a good thing.
+Yes.
 
-https://lwn.net/Articles/749089/
-
-and
-
-	bool evlist_used[perf_evlist->core.nr_entries] = {};
-
-would be better.
+-Andi
