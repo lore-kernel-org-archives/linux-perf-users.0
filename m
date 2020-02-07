@@ -1,56 +1,141 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-Date: Fri, 7 Feb 2020 16:39:12 +0300
-Message-ID: <7d6f4210-423f-e454-3910-9f8e17dff1aa@linux.intel.com>
-References: <875zgizkyk.fsf@nanos.tec.linutronix.de>
+From: Kim Phillips <kim.phillips@amd.com>
+Subject: [PATCH 1/3 v2] perf stat: don't report a null stalled cycles per insn metric
+Date: Fri,  7 Feb 2020 17:06:11 -0600
+Message-ID: <20200207230613.26709-1-kim.phillips@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <875zgizkyk.fsf@nanos.tec.linutronix.de>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Stephen Smalley <sds@tycho.nsa.gov>, Serge Hallyn <serge@hallyn.com>, James Morris <jmorris@namei.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Robert Richter <rric@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Stephane Eranian <eranian@google.com>, Igor Lubashev <ilubashe@akamai.com>Al
+To: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Kim Phillips <kim.phillips@amd.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Cong Wang <xiyou.wangcong@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Song Liu <songliubraving@fb.com>, Davidlohr Bueso <dave@stgolabs.net>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+For data collected on machines with front end stalled cycles supported,
+such as found on modern AMD CPU families, commit 146540fb545b ("perf
+stat: Always separate stalled cycles per insn") introduces a new line
+in CSV output with a leading comma that upsets some automated scripts.
+Scripts have to use "-e ex_ret_instr" to work around this issue, after
+upgrading to a version of perf with that commit.
 
-On 07.02.2020 14:38, Thomas Gleixner wrote:
-> Alexey Budankov <alexey.budankov@linux.intel.com> writes:
->> On 22.01.2020 17:25, Alexey Budankov wrote:
->>> On 22.01.2020 17:07, Stephen Smalley wrote:
->>>>> It keeps the implementation simple and readable. The implementation is more
->>>>> performant in the sense of calling the API - one capable() call for CAP_PERFMON
->>>>> privileged process.
->>>>>
->>>>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
->>>>> but this bloating also advertises and leverages using more secure CAP_PERFMON
->>>>> based approach to use perf_event_open system call.
->>>>
->>>> I can live with that.  We just need to document that when you see
->>>> both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process,
->>>> try only allowing CAP_PERFMON first and see if that resolves the
->>>> issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus
->>>> CAP_DAC_OVERRIDE.
->>>
->>> perf security [1] document can be updated, at least, to align and document 
->>> this audit logging specifics.
->>
->> And I plan to update the document right after this patch set is accepted.
->> Feel free to let me know of the places in the kernel docs that also
->> require update w.r.t CAP_PERFMON extension.
-> 
-> The documentation update wants be part of the patch set and not planned
-> to be done _after_ the patch set is merged.
+We could add "if (have_frontend_stalled && !config->csv_sep)"
+to the not (total && avg) else clause, to emphasize that CSV users
+are usually scripts, and are written to do only what is needed, i.e.,
+they wouldn't typically invoke "perf stat" without specifying an
+explicit event list.
 
-Well, accepted. It is going to make patches #11 and beyond.
+But - let alone CSV output - why should users now tolerate a constant
+0-reporting extra line in regular terminal output?:
 
-Thanks,
-Alexey
+BEFORE:
 
-> 
-> Thanks,
-> 
->         tglx
-> 
+$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+       181,110,981      instructions              #    0.58  insn per cycle
+                                                  #    0.00  stalled cycles per insn
+       309,876,469      cycles
+
+       1.002202582 seconds time elapsed
+
+The user would not like to see the now permanent
+"0.00  stalled cycles per insn" line fixture, as it gives
+no useful information.
+
+So this patch removes the printing of the zeroed stalled cycles
+line altogether, almost reverting the very original commit fb4605ba47e7
+("perf stat: Check for frontend stalled for metrics"), which seems
+like it was written to normalize --metric-only column output
+of common Intel machines at the time: modern Intel machines
+have ceased to support the genericised frontend stalled metrics AFAICT.
+
+AFTER:
+
+$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+       244,071,432      instructions              #    0.69  insn per cycle
+       355,353,490      cycles
+
+       1.001862516 seconds time elapsed
+
+Output behaviour when stalled cycles is indeed measured is not affected
+(BEFORE == AFTER):
+
+$ sudo perf stat --all-cpus -einstructions,cycles,stalled-cycles-frontend -- sleep 1
+
+ Performance counter stats for 'system wide':
+
+       247,227,799      instructions              #    0.63  insn per cycle
+                                                  #    0.26  stalled cycles per insn
+       394,745,636      cycles
+        63,194,485      stalled-cycles-frontend   #   16.01% frontend cycles idle
+
+       1.002079770 seconds time elapsed
+
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kim Phillips <kim.phillips@amd.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Andi Kleen <ak@linux.intel.com>
+Fixes: 146540fb545b ("perf stat: Always separate stalled cycles per insn")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+---
+v2: Added Acked-bys from Jiri Olsa:
+
+https://lore.kernel.org/lkml/20200120092928.GD608405@krava/
+
+and Andi Kleen:
+
+https://lore.kernel.org/lkml/20200120115720.GQ302770@tassilo.jf.intel.com/
+
+ tools/perf/util/stat-shadow.c | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 2c41d47f6f83..90d23cc3c8d4 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -18,7 +18,6 @@
+  * AGGR_NONE: Use matching CPU
+  * AGGR_THREAD: Not supported?
+  */
+-static bool have_frontend_stalled;
+ 
+ struct runtime_stat rt_stat;
+ struct stats walltime_nsecs_stats;
+@@ -144,7 +143,6 @@ void runtime_stat__exit(struct runtime_stat *st)
+ 
+ void perf_stat__init_shadow_stats(void)
+ {
+-	have_frontend_stalled = pmu_have_event("cpu", "stalled-cycles-frontend");
+ 	runtime_stat__init(&rt_stat);
+ }
+ 
+@@ -853,10 +851,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+ 			print_metric(config, ctxp, NULL, "%7.2f ",
+ 					"stalled cycles per insn",
+ 					ratio);
+-		} else if (have_frontend_stalled) {
+-			out->new_line(config, ctxp);
+-			print_metric(config, ctxp, NULL, "%7.2f ",
+-				     "stalled cycles per insn", 0);
+ 		}
+ 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
+ 		if (runtime_stat_n(st, STAT_BRANCHES, ctx, cpu) != 0)
+-- 
+2.25.0
