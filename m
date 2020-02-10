@@ -1,100 +1,237 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 3/3 v2] perf symbols: convert symbol__is_idle to use
- strlist
-Date: Mon, 10 Feb 2020 16:32:51 -0300
-Message-ID: <20200210193251.GD3416@kernel.org>
-References: <20200207230613.26709-1-kim.phillips@amd.com>
- <20200210163147.25358-1-kim.phillips@amd.com>
- <4F6B8692-B1FE-4108-A6B3-44EEE5F92C97@fb.com>
+Subject: Re: [PATCH v2] tools lib api fs: Move cgroupsfs__mountpoint()
+Date: Mon, 10 Feb 2020 16:37:43 -0300
+Message-ID: <20200210193743.GE3416@kernel.org>
+References: <20200127162222.GG1114818@krava>
+ <20200128004940.1590044-1-namhyung@kernel.org>
+ <20200128094057.GC1209308@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4F6B8692-B1FE-4108-A6B3-44EEE5F92C97@fb.com>
+In-Reply-To: <20200128094057.GC1209308@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Song Liu <songliubraving@fb.com>
-Cc: Kim Phillips <kim.phillips@amd.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Andi Kleen <ak@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Cong Wang <xiyou.wangcong@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Davidlohr Bueso <dave@stgolabs.net>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Feb 10, 2020 at 06:51:53PM +0000, Song Liu escreveu:
-> 
-> 
-> > On Feb 10, 2020, at 8:31 AM, Kim Phillips <kim.phillips@amd.com> wrote:
+Em Tue, Jan 28, 2020 at 10:40:57AM +0100, Jiri Olsa escreveu:
+> On Tue, Jan 28, 2020 at 09:49:40AM +0900, Namhyung Kim wrote:
+> > Move it from tools/perf/util/cgroup.c as it can be used by other places.
+> > Note that cgroup filesystem is different from others since it's usually
+> > mounted separately (in v1) for each subsystem.
 > > 
-> > Use the more optimized strlist implementation to do the idle function
-> > lookup.
+> > I just copied the code with a little modification to pass a name of
+> > subsystem and renamed it to follow other APIs.
 > > 
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Cong Wang <xiyou.wangcong@gmail.com>
-> > Cc: Jin Yao <yao.jin@linux.intel.com>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Kim Phillips <kim.phillips@amd.com>
-> > Cc: Song Liu <songliubraving@fb.com>
-> > Cc: Davidlohr Bueso <dave@stgolabs.net>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> > ---
-> > v2: new this series, based on Jiri's comment:
-> > 
-> > https://lore.kernel.org/lkml/20200120092844.GC608405@krava/
-> > 
-> > ...and this time with the Cc list intact.
-> > 
-> > tools/perf/util/symbol.c | 14 +++++++++-----
-> > 1 file changed, 9 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index f3120c4f47ad..1077013d8ce2 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -654,13 +654,17 @@ static bool symbol__is_idle(const char *name)
-> > 		NULL
-> > 	};
-> > 	int i;
-> > +	static struct strlist *idle_symbols_list;
+> > Suggested-by: Jiri Olsa <jolsa@redhat.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> nit, probably just personal preference:
-> 
-> Maybe move idle_symbols_list out of the function and add the logic 
-> to symbol__init()?
-> 
-> Other than this:
-> 
-> Acked-by: Song Liu <songliubraving@fb.com>
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-I applied it as is, improvements can be made on top of it.
+Thanks, applied to perf/core.
 
 - Arnaldo
  
+> thanks,
+> jirka
+> 
+> > ---
+> > * rename to cgroupfs__mountpoint()
 > > 
-> > -	for (i = 0; idle_symbols[i]; i++) {
-> > -		if (!strcmp(idle_symbols[i], name))
-> > -			return true;
+> >  tools/lib/api/fs/Build    |  1 +
+> >  tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
+> >  tools/lib/api/fs/fs.h     |  2 ++
+> >  tools/perf/util/cgroup.c  | 63 ++----------------------------------
+> >  4 files changed, 72 insertions(+), 61 deletions(-)
+> >  create mode 100644 tools/lib/api/fs/cgroup.c
+> > 
+> > diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
+> > index f4ed9629ae85..0f75b28654de 100644
+> > --- a/tools/lib/api/fs/Build
+> > +++ b/tools/lib/api/fs/Build
+> > @@ -1,2 +1,3 @@
+> >  libapi-y += fs.o
+> >  libapi-y += tracing_path.o
+> > +libapi-y += cgroup.o
+> > diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
+> > new file mode 100644
+> > index 000000000000..c7e1cdaa36e1
+> > --- /dev/null
+> > +++ b/tools/lib/api/fs/cgroup.c
+> > @@ -0,0 +1,67 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +#include <linux/stringify.h>
+> > +#include <sys/types.h>
+> > +#include <sys/stat.h>
+> > +#include <fcntl.h>
+> > +#include <stdio.h>
+> > +#include <stdlib.h>
+> > +#include <string.h>
+> > +#include "fs.h"
+> > +
+> > +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys)
+> > +{
+> > +	FILE *fp;
+> > +	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
+> > +	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
+> > +	char *token, *saved_ptr = NULL;
+> > +
+> > +	fp = fopen("/proc/mounts", "r");
+> > +	if (!fp)
+> > +		return -1;
+> > +
+> > +	/*
+> > +	 * in order to handle split hierarchy, we need to scan /proc/mounts
+> > +	 * and inspect every cgroupfs mount point to find one that has
+> > +	 * perf_event subsystem
+> > +	 */
+> > +	path_v1[0] = '\0';
+> > +	path_v2[0] = '\0';
+> > +
+> > +	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
+> > +				__stringify(PATH_MAX)"s %*d %*d\n",
+> > +				mountpoint, type, tokens) == 3) {
+> > +
+> > +		if (!path_v1[0] && !strcmp(type, "cgroup")) {
+> > +
+> > +			token = strtok_r(tokens, ",", &saved_ptr);
+> > +
+> > +			while (token != NULL) {
+> > +				if (subsys && !strcmp(token, subsys)) {
+> > +					strcpy(path_v1, mountpoint);
+> > +					break;
+> > +				}
+> > +				token = strtok_r(NULL, ",", &saved_ptr);
+> > +			}
+> > +		}
+> > +
+> > +		if (!path_v2[0] && !strcmp(type, "cgroup2"))
+> > +			strcpy(path_v2, mountpoint);
+> > +
+> > +		if (path_v1[0] && path_v2[0])
+> > +			break;
+> > +	}
+> > +	fclose(fp);
+> > +
+> > +	if (path_v1[0])
+> > +		path = path_v1;
+> > +	else if (path_v2[0])
+> > +		path = path_v2;
+> > +	else
+> > +		return -1;
+> > +
+> > +	if (strlen(path) < maxlen) {
+> > +		strcpy(buf, path);
+> > +		return 0;
+> > +	}
+> > +	return -1;
+> > +}
+> > diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+> > index 92d03b8396b1..07591ecbe39f 100644
+> > --- a/tools/lib/api/fs/fs.h
+> > +++ b/tools/lib/api/fs/fs.h
+> > @@ -28,6 +28,8 @@ FS(bpf_fs)
+> >  #undef FS
+> >  
+> >  
+> > +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys);
+> > +
+> >  int filename__read_int(const char *filename, int *value);
+> >  int filename__read_ull(const char *filename, unsigned long long *value);
+> >  int filename__read_xll(const char *filename, unsigned long long *value);
+> > diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+> > index 4881d4af3381..12e466d1ec3b 100644
+> > --- a/tools/perf/util/cgroup.c
+> > +++ b/tools/perf/util/cgroup.c
+> > @@ -3,75 +3,16 @@
+> >  #include "evsel.h"
+> >  #include "cgroup.h"
+> >  #include "evlist.h"
+> > -#include <linux/stringify.h>
+> >  #include <linux/zalloc.h>
+> >  #include <sys/types.h>
+> >  #include <sys/stat.h>
+> >  #include <fcntl.h>
+> >  #include <stdlib.h>
+> >  #include <string.h>
+> > +#include <api/fs/fs.h>
+> >  
+> >  int nr_cgroups;
+> >  
+> > -static int
+> > -cgroupfs_find_mountpoint(char *buf, size_t maxlen)
+> > -{
+> > -	FILE *fp;
+> > -	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
+> > -	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
+> > -	char *token, *saved_ptr = NULL;
+> > -
+> > -	fp = fopen("/proc/mounts", "r");
+> > -	if (!fp)
+> > -		return -1;
+> > -
+> > -	/*
+> > -	 * in order to handle split hierarchy, we need to scan /proc/mounts
+> > -	 * and inspect every cgroupfs mount point to find one that has
+> > -	 * perf_event subsystem
+> > -	 */
+> > -	path_v1[0] = '\0';
+> > -	path_v2[0] = '\0';
+> > -
+> > -	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
+> > -				__stringify(PATH_MAX)"s %*d %*d\n",
+> > -				mountpoint, type, tokens) == 3) {
+> > -
+> > -		if (!path_v1[0] && !strcmp(type, "cgroup")) {
+> > -
+> > -			token = strtok_r(tokens, ",", &saved_ptr);
+> > -
+> > -			while (token != NULL) {
+> > -				if (!strcmp(token, "perf_event")) {
+> > -					strcpy(path_v1, mountpoint);
+> > -					break;
+> > -				}
+> > -				token = strtok_r(NULL, ",", &saved_ptr);
+> > -			}
+> > -		}
+> > -
+> > -		if (!path_v2[0] && !strcmp(type, "cgroup2"))
+> > -			strcpy(path_v2, mountpoint);
+> > -
+> > -		if (path_v1[0] && path_v2[0])
+> > -			break;
 > > -	}
-> > +	if (idle_symbols_list)
-> > +		return strlist__has_entry(idle_symbols_list, name);
-> > 
-> > -	return false;
-> > +	idle_symbols_list = strlist__new(NULL, NULL);
-> > +
-> > +	for (i = 0; idle_symbols[i]; i++)
-> > +		strlist__add(idle_symbols_list, idle_symbols[i]);
-> > +
-> > +	return strlist__has_entry(idle_symbols_list, name);
-> > }
-> > 
-> > static int map__process_kallsym_symbol(void *arg, const char *name,
+> > -	fclose(fp);
+> > -
+> > -	if (path_v1[0])
+> > -		path = path_v1;
+> > -	else if (path_v2[0])
+> > -		path = path_v2;
+> > -	else
+> > -		return -1;
+> > -
+> > -	if (strlen(path) < maxlen) {
+> > -		strcpy(buf, path);
+> > -		return 0;
+> > -	}
+> > -	return -1;
+> > -}
+> > -
+> >  static int open_cgroup(const char *name)
+> >  {
+> >  	char path[PATH_MAX + 1];
+> > @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
+> >  	int fd;
+> >  
+> >  
+> > -	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
+> > +	if (cgroupfs__mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+> >  		return -1;
+> >  
+> >  	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
 > > -- 
-> > 2.25.0
+> > 2.25.0.341.g760bfbb309-goog
 > > 
 > 
 
