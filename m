@@ -1,240 +1,94 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2] tools lib api fs: Move cgroupsfs__mountpoint()
-Date: Mon, 10 Feb 2020 16:37:43 -0300
-Message-ID: <20200210193743.GE3416@kernel.org>
-References: <20200127162222.GG1114818@krava>
- <20200128004940.1590044-1-namhyung@kernel.org>
- <20200128094057.GC1209308@krava>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Date: Tue, 11 Feb 2020 16:50:41 +0530
+Message-ID: <c168e38f-ee24-f02c-9510-912ef4d3d6b4@linux.ibm.com>
+References: <20200131052522.7267-1-kjain@linux.ibm.com>
+ <20200206184510.GA1669706@krava>
+ <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
+ <20200210121135.GI1907700@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200128094057.GC1209308@krava>
+In-Reply-To: <20200210121135.GI1907700@krava>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>, Joe Perches <joe@perches.com>
+Cc: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jan 28, 2020 at 10:40:57AM +0100, Jiri Olsa escreveu:
-> On Tue, Jan 28, 2020 at 09:49:40AM +0900, Namhyung Kim wrote:
-> > Move it from tools/perf/util/cgroup.c as it can be used by other places.
-> > Note that cgroup filesystem is different from others since it's usually
-> > mounted separately (in v1) for each subsystem.
-> > 
-> > I just copied the code with a little modification to pass a name of
-> > subsystem and renamed it to follow other APIs.
-> > 
-> > Suggested-by: Jiri Olsa <jolsa@redhat.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+
+On 2/10/20 5:41 PM, Jiri Olsa wrote:
+> On Thu, Feb 06, 2020 at 10:58:12AM -0800, Joe Perches wrote:
+>> On Thu, 2020-02-06 at 19:45 +0100, Jiri Olsa wrote:
+>>> On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
+>>>
+>>> SNIP
+>>>
+>>>>  				ev->metric_leader = metric_events[i];
+>>>>  			}
+>>>> +			j++;
+>>>>  		}
+>>>> +		ev = metric_events[i];
+>>>> +		evlist_used[ev->idx] = true;
+>>>>  	}
+>>>>  
+>>>>  	return metric_events[0];
+>>>> @@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+>>>>  	int ret = 0;
+>>>>  	struct egroup *eg;
+>>>>  	struct evsel *evsel;
+>>>> +	bool evlist_used[perf_evlist->core.nr_entries];
+>>>> +
+>>>> +	memset(evlist_used, 0, perf_evlist->core.nr_entries);
+>>>
+>>> I know I posted this in the previous email, but are we sure bool
+>>> is always 1 byte?  would sizeod(evlist_used) be safer?
+
+
+Hi jiri,
+     Yes you are right. We should use 'evlist_used' size itself.
+
+>>>
+>>> other than that it looks ok
+>>>
+>>> Andi, you're ok with this?
+>>
+>> stack declarations of variable length arrays are not
+>> a good thing.
+>>
+>> https://lwn.net/Articles/749089/
+>>
+>> and
+>>
+>> 	bool evlist_used[perf_evlist->core.nr_entries] = {};
+
+
+I am planning to use calloc and free that memory later in function 'metricgroup__setup_events'.
+Something like this. 
+
+
++       bool *evlist_used;
++
++       evlist_used = (bool *)calloc(perf_evlist->core.nr_entries,
++                                    sizeof(bool));
++       if (!evlist_used) {
++               ret = -ENOMEM;
++               break;
++       }
+
+Please let me know if its looking fine.
+
+Thanks,
+Kajol
+
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-Thanks, applied to perf/core.
-
-- Arnaldo
- 
-> thanks,
+> hum, I think we already have few of them in perf ;-)
+> thanks for the link
+> 
+> right, that initialization is of course much better, thanks
+> 
 > jirka
 > 
-> > ---
-> > * rename to cgroupfs__mountpoint()
-> > 
-> >  tools/lib/api/fs/Build    |  1 +
-> >  tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
-> >  tools/lib/api/fs/fs.h     |  2 ++
-> >  tools/perf/util/cgroup.c  | 63 ++----------------------------------
-> >  4 files changed, 72 insertions(+), 61 deletions(-)
-> >  create mode 100644 tools/lib/api/fs/cgroup.c
-> > 
-> > diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
-> > index f4ed9629ae85..0f75b28654de 100644
-> > --- a/tools/lib/api/fs/Build
-> > +++ b/tools/lib/api/fs/Build
-> > @@ -1,2 +1,3 @@
-> >  libapi-y += fs.o
-> >  libapi-y += tracing_path.o
-> > +libapi-y += cgroup.o
-> > diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
-> > new file mode 100644
-> > index 000000000000..c7e1cdaa36e1
-> > --- /dev/null
-> > +++ b/tools/lib/api/fs/cgroup.c
-> > @@ -0,0 +1,67 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include <linux/stringify.h>
-> > +#include <sys/types.h>
-> > +#include <sys/stat.h>
-> > +#include <fcntl.h>
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include "fs.h"
-> > +
-> > +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys)
-> > +{
-> > +	FILE *fp;
-> > +	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-> > +	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-> > +	char *token, *saved_ptr = NULL;
-> > +
-> > +	fp = fopen("/proc/mounts", "r");
-> > +	if (!fp)
-> > +		return -1;
-> > +
-> > +	/*
-> > +	 * in order to handle split hierarchy, we need to scan /proc/mounts
-> > +	 * and inspect every cgroupfs mount point to find one that has
-> > +	 * perf_event subsystem
-> > +	 */
-> > +	path_v1[0] = '\0';
-> > +	path_v2[0] = '\0';
-> > +
-> > +	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-> > +				__stringify(PATH_MAX)"s %*d %*d\n",
-> > +				mountpoint, type, tokens) == 3) {
-> > +
-> > +		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-> > +
-> > +			token = strtok_r(tokens, ",", &saved_ptr);
-> > +
-> > +			while (token != NULL) {
-> > +				if (subsys && !strcmp(token, subsys)) {
-> > +					strcpy(path_v1, mountpoint);
-> > +					break;
-> > +				}
-> > +				token = strtok_r(NULL, ",", &saved_ptr);
-> > +			}
-> > +		}
-> > +
-> > +		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-> > +			strcpy(path_v2, mountpoint);
-> > +
-> > +		if (path_v1[0] && path_v2[0])
-> > +			break;
-> > +	}
-> > +	fclose(fp);
-> > +
-> > +	if (path_v1[0])
-> > +		path = path_v1;
-> > +	else if (path_v2[0])
-> > +		path = path_v2;
-> > +	else
-> > +		return -1;
-> > +
-> > +	if (strlen(path) < maxlen) {
-> > +		strcpy(buf, path);
-> > +		return 0;
-> > +	}
-> > +	return -1;
-> > +}
-> > diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-> > index 92d03b8396b1..07591ecbe39f 100644
-> > --- a/tools/lib/api/fs/fs.h
-> > +++ b/tools/lib/api/fs/fs.h
-> > @@ -28,6 +28,8 @@ FS(bpf_fs)
-> >  #undef FS
-> >  
-> >  
-> > +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys);
-> > +
-> >  int filename__read_int(const char *filename, int *value);
-> >  int filename__read_ull(const char *filename, unsigned long long *value);
-> >  int filename__read_xll(const char *filename, unsigned long long *value);
-> > diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> > index 4881d4af3381..12e466d1ec3b 100644
-> > --- a/tools/perf/util/cgroup.c
-> > +++ b/tools/perf/util/cgroup.c
-> > @@ -3,75 +3,16 @@
-> >  #include "evsel.h"
-> >  #include "cgroup.h"
-> >  #include "evlist.h"
-> > -#include <linux/stringify.h>
-> >  #include <linux/zalloc.h>
-> >  #include <sys/types.h>
-> >  #include <sys/stat.h>
-> >  #include <fcntl.h>
-> >  #include <stdlib.h>
-> >  #include <string.h>
-> > +#include <api/fs/fs.h>
-> >  
-> >  int nr_cgroups;
-> >  
-> > -static int
-> > -cgroupfs_find_mountpoint(char *buf, size_t maxlen)
-> > -{
-> > -	FILE *fp;
-> > -	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-> > -	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-> > -	char *token, *saved_ptr = NULL;
-> > -
-> > -	fp = fopen("/proc/mounts", "r");
-> > -	if (!fp)
-> > -		return -1;
-> > -
-> > -	/*
-> > -	 * in order to handle split hierarchy, we need to scan /proc/mounts
-> > -	 * and inspect every cgroupfs mount point to find one that has
-> > -	 * perf_event subsystem
-> > -	 */
-> > -	path_v1[0] = '\0';
-> > -	path_v2[0] = '\0';
-> > -
-> > -	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-> > -				__stringify(PATH_MAX)"s %*d %*d\n",
-> > -				mountpoint, type, tokens) == 3) {
-> > -
-> > -		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-> > -
-> > -			token = strtok_r(tokens, ",", &saved_ptr);
-> > -
-> > -			while (token != NULL) {
-> > -				if (!strcmp(token, "perf_event")) {
-> > -					strcpy(path_v1, mountpoint);
-> > -					break;
-> > -				}
-> > -				token = strtok_r(NULL, ",", &saved_ptr);
-> > -			}
-> > -		}
-> > -
-> > -		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-> > -			strcpy(path_v2, mountpoint);
-> > -
-> > -		if (path_v1[0] && path_v2[0])
-> > -			break;
-> > -	}
-> > -	fclose(fp);
-> > -
-> > -	if (path_v1[0])
-> > -		path = path_v1;
-> > -	else if (path_v2[0])
-> > -		path = path_v2;
-> > -	else
-> > -		return -1;
-> > -
-> > -	if (strlen(path) < maxlen) {
-> > -		strcpy(buf, path);
-> > -		return 0;
-> > -	}
-> > -	return -1;
-> > -}
-> > -
-> >  static int open_cgroup(const char *name)
-> >  {
-> >  	char path[PATH_MAX + 1];
-> > @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
-> >  	int fd;
-> >  
-> >  
-> > -	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
-> > +	if (cgroupfs__mountpoint(mnt, PATH_MAX + 1, "perf_event"))
-> >  		return -1;
-> >  
-> >  	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
-> > -- 
-> > 2.25.0.341.g760bfbb309-goog
-> > 
-> 
-
--- 
-
-- Arnaldo
