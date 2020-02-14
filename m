@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/23] tools headers kvm: Sync kvm headers with the kernel sources
-Date: Fri, 14 Feb 2020 16:10:55 -0300
-Message-ID: <20200214191057.26266-22-acme@kernel.org>
+Subject: [PATCH 22/23] tools headers kvm: Sync linux/kvm.h with the kernel sources
+Date: Fri, 14 Feb 2020 16:10:56 -0300
+Message-ID: <20200214191057.26266-23-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,53 +9,59 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andrew Jones <drjones@redhat.com>, Marc Zyngier <maz@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Janosch Frank <frankja@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To pick up the changes from:
 
-  290a6bb06de9 ("arm64: KVM: Add UAPI notes for swapped registers")
+  7de3f1423ff9 ("KVM: s390: Add new reset vcpu API")
 
-No tools changes are caused by this.
+So far we're ignoring those arch specific ioctls, we need to revisit
+this at some time to have arch specific tables, etc:
+
+  $ grep S390 tools/perf/trace/beauty/kvm_ioctl.sh
+  	egrep -v " ((ARM|PPC|S390)_|[GS]ET_(DEBUGREGS|PIT2|XSAVE|TSC_KHZ)|CREATE_SPAPR_TCE_64)" | \
+  $
 
 This addresses these tools/perf build warnings:
 
+  Warning: Kernel ABI header at 'tools/arch/arm/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm/include/uapi/asm/kvm.h'
+  diff -u tools/arch/arm/include/uapi/asm/kvm.h arch/arm/include/uapi/asm/kvm.h
+
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andrew Jones <drjones@redhat.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Janosch Frank <frankja@linux.ibm.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/arm64/include/uapi/asm/kvm.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ tools/include/uapi/linux/kvm.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index 820e5751ada7..ba85bb23f060 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -220,10 +220,18 @@ struct kvm_vcpu_events {
- #define KVM_REG_ARM_PTIMER_CVAL		ARM64_SYS_REG(3, 3, 14, 2, 2)
- #define KVM_REG_ARM_PTIMER_CNT		ARM64_SYS_REG(3, 3, 14, 0, 1)
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index f0a16b4adbbd..4b95f9a31a2f 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -1009,6 +1009,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_PPC_GUEST_DEBUG_SSTEP 176
+ #define KVM_CAP_ARM_NISV_TO_USER 177
+ #define KVM_CAP_ARM_INJECT_EXT_DABT 178
++#define KVM_CAP_S390_VCPU_RESETS 179
  
--/* EL0 Virtual Timer Registers */
-+/*
-+ * EL0 Virtual Timer Registers
-+ *
-+ * WARNING:
-+ *      KVM_REG_ARM_TIMER_CVAL and KVM_REG_ARM_TIMER_CNT are not defined
-+ *      with the appropriate register encodings.  Their values have been
-+ *      accidentally swapped.  As this is set API, the definitions here
-+ *      must be used, rather than ones derived from the encodings.
-+ */
- #define KVM_REG_ARM_TIMER_CTL		ARM64_SYS_REG(3, 3, 14, 3, 1)
--#define KVM_REG_ARM_TIMER_CNT		ARM64_SYS_REG(3, 3, 14, 3, 2)
- #define KVM_REG_ARM_TIMER_CVAL		ARM64_SYS_REG(3, 3, 14, 0, 2)
-+#define KVM_REG_ARM_TIMER_CNT		ARM64_SYS_REG(3, 3, 14, 3, 2)
+ #ifdef KVM_CAP_IRQ_ROUTING
  
- /* KVM-as-firmware specific pseudo-registers */
- #define KVM_REG_ARM_FW			(0x0014 << KVM_REG_ARM_COPROC_SHIFT)
+@@ -1473,6 +1474,10 @@ struct kvm_enc_region {
+ /* Available with KVM_CAP_ARM_SVE */
+ #define KVM_ARM_VCPU_FINALIZE	  _IOW(KVMIO,  0xc2, int)
+ 
++/* Available with  KVM_CAP_S390_VCPU_RESETS */
++#define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
++#define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
++
+ /* Secure Encrypted Virtualization command */
+ enum sev_cmd_id {
+ 	/* Guest initialization commands */
 -- 
 2.21.1
