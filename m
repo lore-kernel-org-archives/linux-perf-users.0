@@ -1,7 +1,7 @@
 From: Thomas Richter <tmricht@linux.ibm.com>
 Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
-Date: Fri, 14 Feb 2020 10:44:06 +0100
-Message-ID: <c249efd1-f705-4739-baad-c94257706489@linux.ibm.com>
+Date: Fri, 14 Feb 2020 11:02:41 +0100
+Message-ID: <c355217e-e834-99bf-f24c-b2cef71f515c@linux.ibm.com>
 References: <20200213122009.31810-1-tmricht@linux.ibm.com>
  <20200213143048.GA22170@kernel.org>
  <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
@@ -116,7 +116,8 @@ On 2/14/20 1:45 AM, Masami Hiramatsu wrote:
 > Thank you,
 > 
 
-Thank you very much for your help!!!
+
+Masami, thanks very much for your help!
 
 I started from scratch and just installed linux 5.6.0rc1 without
 any changes and got this failure:
@@ -131,10 +132,13 @@ Now I applied Masami's patch and this is the result
 [root@m35lp76 perf]# ./perf test  66 67
 66: Use vfs_getname probe to get syscall args filenames   : Ok
 67: Check open filename arg using perf trace + vfs_getname: Ok
-[root@m35lp76 perf        
+[root@m35lp76 perf  
 
-Can we commit this patch?
-Thanks a lot
+This is what I wanted to achieve.
+And I think I know what went wrong. I supplied an initial patch and when
+I rewrote it for V3 I kprobed the wrong line.
+
+Again thanks a lot and sorry for the noise...
 -- 
 Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
 --
