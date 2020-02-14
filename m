@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/23] perf beauty prctl: Export the 'options' strarray
-Date: Fri, 14 Feb 2020 16:10:45 -0300
-Message-ID: <20200214191057.26266-12-acme@kernel.org>
+Subject: [PATCH 12/23] perf trace: Resolve prctl's 'option' arg strings to numbers
+Date: Fri, 14 Feb 2020 16:10:46 -0300
+Message-ID: <20200214191057.26266-13-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,26 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-So that we can use it with strtoul, allowing string to number
-conversions in filter expressions.
+  # perf trace -e syscalls:sys_enter_prctl --filter="option==SET_NAME"
+     0.000 Socket Thread/3860 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7fc50b9733e8)
+     0.053 SSL Cert #78/3860 syscalls:sys_enter_prctl(option: SET_NAME, arg2: 0x7fc50b9733e8)
+^C  #
+
+If one uses '-v' with 'perf trace', we can see the filter it puts in
+place:
+
+  New filter for syscalls:sys_enter_prctl: (option==0xf) && (common_pid != 3859 && common_pid != 2757)
+
+We still need to allow using plain '-e prctl' and have this turn into
+creating a 'syscalls:sys_enter_prctl' event so that the filter can be
+applied only to it as right now '-e prctl' ends up using the
+'raw_syscalls:sys_enter/sys_exit'.
+
+The end goal is to have something like:
+
+  # perf trace -e prctl/option==SET_NAME/
+
+And have that use tracepoint filters or eBPF ones.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Christian Brauner <christian.brauner@ubuntu.com>
@@ -24,38 +42,23 @@ Cc: Mike Christie <mchristi@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/trace/beauty/beauty.h | 2 ++
- tools/perf/trace/beauty/prctl.c  | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 5a61043c2ff7..d6dfe68a7612 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -213,6 +213,8 @@ size_t syscall_arg__scnprintf_x86_arch_prctl_code(char *bf, size_t size, struct
- size_t syscall_arg__scnprintf_prctl_option(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_PRCTL_OPTION syscall_arg__scnprintf_prctl_option
- 
-+extern struct strarray strarray__prctl_options;
-+
- size_t syscall_arg__scnprintf_prctl_arg2(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_PRCTL_ARG2 syscall_arg__scnprintf_prctl_arg2
- 
-diff --git a/tools/perf/trace/beauty/prctl.c b/tools/perf/trace/beauty/prctl.c
-index ba2179abed00..6fe5ad5f5d3a 100644
---- a/tools/perf/trace/beauty/prctl.c
-+++ b/tools/perf/trace/beauty/prctl.c
-@@ -11,9 +11,10 @@
- 
- #include "trace/beauty/generated/prctl_option_array.c"
- 
-+DEFINE_STRARRAY(prctl_options, "PR_");
-+
- static size_t prctl__scnprintf_option(int option, char *bf, size_t size, bool show_prefix)
- {
--	static DEFINE_STRARRAY(prctl_options, "PR_");
- 	return strarray__scnprintf(&strarray__prctl_options, bf, size, "%d", show_prefix, option);
- }
- 
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 46a72ecac427..01d542007c8b 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -1065,7 +1065,9 @@ static struct syscall_fmt syscall_fmts[] = {
+ 	{ .name	    = "poll", .timeout = true, },
+ 	{ .name	    = "ppoll", .timeout = true, },
+ 	{ .name	    = "prctl",
+-	  .arg = { [0] = { .scnprintf = SCA_PRCTL_OPTION, /* option */ },
++	  .arg = { [0] = { .scnprintf = SCA_PRCTL_OPTION, /* option */
++			   .strtoul   = STUL_STRARRAY,
++			   .parm      = &strarray__prctl_options, },
+ 		   [1] = { .scnprintf = SCA_PRCTL_ARG2, /* arg2 */ },
+ 		   [2] = { .scnprintf = SCA_PRCTL_ARG3, /* arg3 */ }, }, },
+ 	{ .name	    = "pread", .alias = "pread64", },
 -- 
 2.21.1
