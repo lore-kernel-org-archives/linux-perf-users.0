@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 16/23] perf tools: Add arm64 version of get_cpuid()
-Date: Fri, 14 Feb 2020 16:10:50 -0300
-Message-ID: <20200214191057.26266-17-acme@kernel.org>
+Subject: [PATCH 17/23] tools headers UAPI: Sync asm-generic/mman-common.h with the kernel
+Date: Fri, 14 Feb 2020 16:10:51 -0300
+Message-ID: <20200214191057.26266-18-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,150 +9,44 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Shaokun Zhang <zhangshaokun@hisilicon.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Dave Martin <Dave.Martin@arm.com>, Will Deacon <will@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Add an arm64 version of get_cpuid(), which is used for various annotation
-and headers - for example, I now get the CPUID in "perf report --header",
-as shown in this snippet:
+To pick the changes from:
 
-  # hostname : ubuntu
-  # os release : 5.5.0-rc1-dirty
-  # perf version : 5.5.rc1.gbf8a13dc9851
-  # arch : aarch64
-  # nrcpus online : 96
-  # nrcpus avail : 96
-  # cpuid : 0x00000000480fd010
+  d41938d2cbee ("mm: Reserve asm-generic prot flags 0x10 and 0x20 for arch use")
 
-Since much of the code to read the MIDR is already in get_cpuid_str(),
-factor out this code.
+No changes in tooling, just a rebuild as files needed got touched.
 
-Tester notes:
+This addresses the following perf build warning:
 
-I tested this patch on my new ARM64 Kunpeng 920 server.
-[root@node1 zsk]# ./perf --version
-perf version 5.6.rc1.g2cdb955b7252
+  Warning: Kernel ABI header at 'tools/include/uapi/asm-generic/mman-common.h' differs from latest version at 'include/uapi/asm-generic/mman-common.h'
+  diff -u tools/include/uapi/asm-generic/mman-common.h include/uapi/asm-generic/mman-common.h
 
-Both perf list and perf stat can work.
-
-Signed-off-by: John Garry <john.garry@huawei.com>
-Tested-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Dave Martin <Dave.Martin@arm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linuxarm@huawei.com
-Link: http://lore.kernel.org/lkml/1576245255-210926-1-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm64/util/header.c | 63 ++++++++++++++++++++++-------
- 1 file changed, 48 insertions(+), 15 deletions(-)
+ tools/include/uapi/asm-generic/mman-common.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
-index a32e4b72a98f..d730666ab95d 100644
---- a/tools/perf/arch/arm64/util/header.c
-+++ b/tools/perf/arch/arm64/util/header.c
-@@ -1,8 +1,10 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <perf/cpumap.h>
-+#include <util/cpumap.h>
- #include <internal/cpumap.h>
- #include <api/fs/fs.h>
-+#include <errno.h>
- #include "debug.h"
- #include "header.h"
- 
-@@ -12,26 +14,21 @@
- #define MIDR_VARIANT_SHIFT      20
- #define MIDR_VARIANT_MASK       (0xf << MIDR_VARIANT_SHIFT)
- 
--char *get_cpuid_str(struct perf_pmu *pmu)
-+static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
- {
--	char *buf = NULL;
--	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
--	int cpu;
- 	u64 midr = 0;
--	struct perf_cpu_map *cpus;
--	FILE *file;
-+	int cpu;
- 
--	if (!sysfs || !pmu || !pmu->cpus)
--		return NULL;
-+	if (!sysfs || sz < MIDR_SIZE)
-+		return EINVAL;
- 
--	buf = malloc(MIDR_SIZE);
--	if (!buf)
--		return NULL;
-+	cpus = perf_cpu_map__get(cpus);
- 
--	/* read midr from list of cpus mapped to this pmu */
--	cpus = perf_cpu_map__get(pmu->cpus);
- 	for (cpu = 0; cpu < perf_cpu_map__nr(cpus); cpu++) {
-+		char path[PATH_MAX];
-+		FILE *file;
-+
- 		scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
- 				sysfs, cpus->map[cpu]);
- 
-@@ -57,12 +54,48 @@ char *get_cpuid_str(struct perf_pmu *pmu)
- 		break;
- 	}
- 
--	if (!midr) {
-+	perf_cpu_map__put(cpus);
-+
-+	if (!midr)
-+		return EINVAL;
-+
-+	return 0;
-+}
-+
-+int get_cpuid(char *buf, size_t sz)
-+{
-+	struct perf_cpu_map *cpus = perf_cpu_map__new(NULL);
-+	int ret;
-+
-+	if (!cpus)
-+		return EINVAL;
-+
-+	ret = _get_cpuid(buf, sz, cpus);
-+
-+	perf_cpu_map__put(cpus);
-+
-+	return ret;
-+}
-+
-+char *get_cpuid_str(struct perf_pmu *pmu)
-+{
-+	char *buf = NULL;
-+	int res;
-+
-+	if (!pmu || !pmu->cpus)
-+		return NULL;
-+
-+	buf = malloc(MIDR_SIZE);
-+	if (!buf)
-+		return NULL;
-+
-+	/* read midr from list of cpus mapped to this pmu */
-+	res = _get_cpuid(buf, MIDR_SIZE, pmu->cpus);
-+	if (res) {
- 		pr_err("failed to get cpuid string for PMU %s\n", pmu->name);
- 		free(buf);
- 		buf = NULL;
- 	}
- 
--	perf_cpu_map__put(cpus);
- 	return buf;
- }
+diff --git a/tools/include/uapi/asm-generic/mman-common.h b/tools/include/uapi/asm-generic/mman-common.h
+index c160a5354eb6..f94f65d429be 100644
+--- a/tools/include/uapi/asm-generic/mman-common.h
++++ b/tools/include/uapi/asm-generic/mman-common.h
+@@ -11,6 +11,8 @@
+ #define PROT_WRITE	0x2		/* page can be written */
+ #define PROT_EXEC	0x4		/* page can be executed */
+ #define PROT_SEM	0x8		/* page may be used for atomic ops */
++/*			0x10		   reserved for arch-specific use */
++/*			0x20		   reserved for arch-specific use */
+ #define PROT_NONE	0x0		/* page can not be accessed */
+ #define PROT_GROWSDOWN	0x01000000	/* mprotect flag: extend change to start of growsdown vma */
+ #define PROT_GROWSUP	0x02000000	/* mprotect flag: extend change to end of growsup vma */
 -- 
 2.21.1
