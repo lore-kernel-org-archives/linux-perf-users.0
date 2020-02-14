@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/23] tools headers UAPI: Sync prctl.h with the kernel sources
-Date: Fri, 14 Feb 2020 16:10:44 -0300
-Message-ID: <20200214191057.26266-11-acme@kernel.org>
+Subject: [PATCH 11/23] perf beauty prctl: Export the 'options' strarray
+Date: Fri, 14 Feb 2020 16:10:45 -0300
+Message-ID: <20200214191057.26266-12-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,43 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
-
-  8d19f1c8e193 ("prctl: PR_{G,S}ET_IO_FLUSHER to support controlling memory reclaim")
-
-Which ends up having this effect in tooling, i.e. the addition of the
-support to those prctl's options:
-
-  $ tools/perf/trace/beauty/prctl_option.sh > before
-  $ cp include/uapi/linux/prctl.h tools/include/uapi/linux/prctl.h
-  $ git diff
-  diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
-  index 7da1b37b27aa..07b4f8131e36 100644
-  --- a/tools/include/uapi/linux/prctl.h
-  +++ b/tools/include/uapi/linux/prctl.h
-  @@ -234,4 +234,8 @@ struct prctl_mm_map {
-   #define PR_GET_TAGGED_ADDR_CTRL                56
-   # define PR_TAGGED_ADDR_ENABLE         (1UL << 0)
-
-  +/* Control reclaim behavior when allocating memory */
-  +#define PR_SET_IO_FLUSHER              57
-  +#define PR_GET_IO_FLUSHER              58
-  +
-   #endif /* _LINUX_PRCTL_H */
-  $ tools/perf/trace/beauty/prctl_option.sh > after
-  $ diff -u before after
-  --- before	2020-02-11 15:24:35.339289912 -0300
-  +++ after	2020-02-11 15:24:56.319711315 -0300
-  @@ -51,6 +51,8 @@
-   	[54] = "PAC_RESET_KEYS",
-   	[55] = "SET_TAGGED_ADDR_CTRL",
-   	[56] = "GET_TAGGED_ADDR_CTRL",
-  +	[57] = "SET_IO_FLUSHER",
-  +	[58] = "GET_IO_FLUSHER",
-   };
-   static const char *prctl_set_mm_options[] = {
-   	[1] = "START_CODE",
-  $
+So that we can use it with strtoul, allowing string to number
+conversions in filter expressions.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Christian Brauner <christian.brauner@ubuntu.com>
@@ -59,21 +24,38 @@ Cc: Mike Christie <mchristi@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/prctl.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/trace/beauty/beauty.h | 2 ++
+ tools/perf/trace/beauty/prctl.c  | 3 ++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
-index 7da1b37b27aa..07b4f8131e36 100644
---- a/tools/include/uapi/linux/prctl.h
-+++ b/tools/include/uapi/linux/prctl.h
-@@ -234,4 +234,8 @@ struct prctl_mm_map {
- #define PR_GET_TAGGED_ADDR_CTRL		56
- # define PR_TAGGED_ADDR_ENABLE		(1UL << 0)
+diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
+index 5a61043c2ff7..d6dfe68a7612 100644
+--- a/tools/perf/trace/beauty/beauty.h
++++ b/tools/perf/trace/beauty/beauty.h
+@@ -213,6 +213,8 @@ size_t syscall_arg__scnprintf_x86_arch_prctl_code(char *bf, size_t size, struct
+ size_t syscall_arg__scnprintf_prctl_option(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_PRCTL_OPTION syscall_arg__scnprintf_prctl_option
  
-+/* Control reclaim behavior when allocating memory */
-+#define PR_SET_IO_FLUSHER		57
-+#define PR_GET_IO_FLUSHER		58
++extern struct strarray strarray__prctl_options;
 +
- #endif /* _LINUX_PRCTL_H */
+ size_t syscall_arg__scnprintf_prctl_arg2(char *bf, size_t size, struct syscall_arg *arg);
+ #define SCA_PRCTL_ARG2 syscall_arg__scnprintf_prctl_arg2
+ 
+diff --git a/tools/perf/trace/beauty/prctl.c b/tools/perf/trace/beauty/prctl.c
+index ba2179abed00..6fe5ad5f5d3a 100644
+--- a/tools/perf/trace/beauty/prctl.c
++++ b/tools/perf/trace/beauty/prctl.c
+@@ -11,9 +11,10 @@
+ 
+ #include "trace/beauty/generated/prctl_option_array.c"
+ 
++DEFINE_STRARRAY(prctl_options, "PR_");
++
+ static size_t prctl__scnprintf_option(int option, char *bf, size_t size, bool show_prefix)
+ {
+-	static DEFINE_STRARRAY(prctl_options, "PR_");
+ 	return strarray__scnprintf(&strarray__prctl_options, bf, size, "%d", show_prefix, option);
+ }
+ 
 -- 
 2.21.1
