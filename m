@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/23] perf stat: Don't report a null stalled cycles per insn metric
-Date: Fri, 14 Feb 2020 16:10:35 -0300
-Message-ID: <20200214191057.26266-2-acme@kernel.org>
+Subject: [PATCH 02/23] perf symbols: Update the list of kernel idle symbols
+Date: Fri, 14 Feb 2020 16:10:36 -0300
+Message-ID: <20200214191057.26266-3-acme@kernel.org>
 References: <20200214191057.26266-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,82 +9,22 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200214191057.26266-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Davidlohr Bueso <dave@stgolabs.net>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>, Jiri Olsa <jolsa@redhat.com>, Song Liu <songliubraving@fb.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Davidlohr Bueso <dave@stgolabs.net>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Kim Phillips <kim.phillips@amd.com>
 
-For data collected on machines with front end stalled cycles supported,
-such as found on modern AMD CPU families, commit 146540fb545b ("perf
-stat: Always separate stalled cycles per insn") introduces a new line in
-CSV output with a leading comma that upsets some automated scripts.
-Scripts have to use "-e ex_ret_instr" to work around this issue, after
-upgrading to a version of perf with that commit.
+The "acpi_idle_do_entry", "acpi_processor_ffh_cstate_enter", and
+"idle_cpu" symbols appear in 'perf top' output, at least on AMD systems.
 
-We could add "if (have_frontend_stalled && !config->csv_sep)" to the not
-(total && avg) else clause, to emphasize that CSV users are usually
-scripts, and are written to do only what is needed, i.e., they wouldn't
-typically invoke "perf stat" without specifying an explicit event list.
+Add them to perf's idle_symbols list, so they don't dominate 'perf top'
+output.
 
-But - let alone CSV output - why should users now tolerate a constant
-0-reporting extra line in regular terminal output?:
-
-BEFORE:
-
-$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       181,110,981      instructions              #    0.58  insn per cycle
-                                                  #    0.00  stalled cycles per insn
-       309,876,469      cycles
-
-       1.002202582 seconds time elapsed
-
-The user would not like to see the now permanent:
-
-  "0.00  stalled cycles per insn"
-
-line fixture, as it gives no useful information.
-
-So this patch removes the printing of the zeroed stalled cycles line
-altogether, almost reverting the very original commit fb4605ba47e7
-("perf stat: Check for frontend stalled for metrics"), which seems like
-it was written to normalize --metric-only column output of common Intel
-machines at the time: modern Intel machines have ceased to support the
-genericised frontend stalled metrics AFAICT.
-
-AFTER:
-
-$ sudo perf stat --all-cpus -einstructions,cycles -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       244,071,432      instructions              #    0.69  insn per cycle
-       355,353,490      cycles
-
-       1.001862516 seconds time elapsed
-
-Output behaviour when stalled cycles is indeed measured is not affected
-(BEFORE == AFTER):
-
-$ sudo perf stat --all-cpus -einstructions,cycles,stalled-cycles-frontend -- sleep 1
-
- Performance counter stats for 'system wide':
-
-       247,227,799      instructions              #    0.63  insn per cycle
-                                                  #    0.26  stalled cycles per insn
-       394,745,636      cycles
-        63,194,485      stalled-cycles-frontend   #   16.01% frontend cycles idle
-
-       1.002079770 seconds time elapsed
-
-Fixes: 146540fb545b ("perf stat: Always separate stalled cycles per insn")
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Acked-by: Andi Kleen <ak@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
 Acked-by: Song Liu <songliubraving@fb.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Cong Wang <xiyou.wangcong@gmail.com>
 Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: Jin Yao <yao.jin@linux.intel.com>
@@ -92,42 +32,28 @@ Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200207230613.26709-1-kim.phillips@amd.com
+Link: http://lore.kernel.org/lkml/20200207230613.26709-2-kim.phillips@amd.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-shadow.c | 6 ------
- 1 file changed, 6 deletions(-)
+ tools/perf/util/symbol.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 2c41d47f6f83..90d23cc3c8d4 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -18,7 +18,6 @@
-  * AGGR_NONE: Use matching CPU
-  * AGGR_THREAD: Not supported?
-  */
--static bool have_frontend_stalled;
- 
- struct runtime_stat rt_stat;
- struct stats walltime_nsecs_stats;
-@@ -144,7 +143,6 @@ void runtime_stat__exit(struct runtime_stat *st)
- 
- void perf_stat__init_shadow_stats(void)
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 3b379b1296f1..f3120c4f47ad 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -635,9 +635,12 @@ int modules__parse(const char *filename, void *arg,
+ static bool symbol__is_idle(const char *name)
  {
--	have_frontend_stalled = pmu_have_event("cpu", "stalled-cycles-frontend");
- 	runtime_stat__init(&rt_stat);
- }
- 
-@@ -853,10 +851,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_config *config,
- 			print_metric(config, ctxp, NULL, "%7.2f ",
- 					"stalled cycles per insn",
- 					ratio);
--		} else if (have_frontend_stalled) {
--			out->new_line(config, ctxp);
--			print_metric(config, ctxp, NULL, "%7.2f ",
--				     "stalled cycles per insn", 0);
- 		}
- 	} else if (perf_evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES)) {
- 		if (runtime_stat_n(st, STAT_BRANCHES, ctx, cpu) != 0)
+ 	const char * const idle_symbols[] = {
++		"acpi_idle_do_entry",
++		"acpi_processor_ffh_cstate_enter",
+ 		"arch_cpu_idle",
+ 		"cpu_idle",
+ 		"cpu_startup_entry",
++		"idle_cpu",
+ 		"intel_idle",
+ 		"default_idle",
+ 		"native_safe_halt",
 -- 
 2.21.1
