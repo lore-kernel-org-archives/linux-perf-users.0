@@ -1,147 +1,73 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH v3] perf test: Fix test trace+probe_vfs_getname.sh
-Date: Fri, 14 Feb 2020 11:02:41 +0100
-Message-ID: <c355217e-e834-99bf-f24c-b2cef71f515c@linux.ibm.com>
-References: <20200213122009.31810-1-tmricht@linux.ibm.com>
- <20200213143048.GA22170@kernel.org>
- <20200214020151.c93187535a8ccd0fb146a301@kernel.org>
- <20200213181140.GA28626@kernel.org>
- <20200214094550.228422235c7785519c7f24cc@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH 0/8] powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date: Fri, 14 Feb 2020 16:33:27 +0530
+Message-ID: <20200214110335.31483-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200214094550.228422235c7785519c7f24cc@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On 2/14/20 1:45 AM, Masami Hiramatsu wrote:
-> On Thu, 13 Feb 2020 15:11:40 -0300
-> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> 
->> Em Fri, Feb 14, 2020 at 02:01:51AM +0900, Masami Hiramatsu escreveu:
->>> On Thu, 13 Feb 2020 11:30:48 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>  
->>>> Em Thu, Feb 13, 2020 at 01:20:09PM +0100, Thomas Richter escreveu:
->>>>> This test places a kprobe to function getname_flags() in the kernel
->>>>> which has the following prototype:
->>  
->>>>>   struct filename *
->>>>>   getname_flags(const char __user *filename, int flags, int *empty)
->>  
->>>>> Variable filename points to a filename located in user space memory.
->>>>> Looking at
->>>>> commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
->>>>> the kprobe should indicate that user space memory is accessed.
->>  
->>>>> The following patch specifies user space memory access first and if this
->>>>> fails use type 'string' in case 'ustring' is not supported.
->>  
->>>> What are you fixing?
->>  
->>>> I haven't seen any example of this test failing, and right now testing
->>>> it with:
->>  
->>>> [root@quaco ~]# uname -a
->>>> Linux quaco 5.6.0-rc1+ #1 SMP Wed Feb 12 15:42:16 -03 2020 x86_64 x86_64 x86_64 GNU/Linux
->>>> [root@quaco ~]#
->>  
->>> This bug doesn't happen on x86 or other archs on which user-address space and
->>> kernel address space is same. On some arch (ppc64 in this case?) user-address
->>> space is partially or completely same as kernel address space. (Yes, they switch
->>> the world when running into the kernel) In this case, we need to use different
->>> data access functions for each spaces. That is why I introduced "ustring" type
->>> for kprobe event.
->>> As far as I can see, Thomas's patch is sane.
->>
->> Well, without his patch, on x86, the test he is claiming to be fixing
->> works well, with his patch it stops working, see the rest of my reply.
-> 
-> OK, let me see.
-> 
-> 
->> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->> index 7cb99b433888..30c1eadbc5be 100644
->> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
->> @@ -13,7 +13,9 @@ add_probe_vfs_getname() {
->>  	local verbose=$1
->>  	if [ $had_vfs_getname -eq 1 ] ; then
->>  		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
->> -		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
->> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:ustring" || \
->> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
->> +		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->uptr:string" || \
->>  		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
->>  	fi
->>  }
-> 
-> This looks no good (depends on architecture or debuginfo). In fs/namei.c,
-> 
-> struct filename *
-> getname_flags(const char __user *filename, int flags, int *empty)
-> ...
->         kname = (char *)result->iname;
->         result->name = kname;
-> ...
->         result->uptr = filename;
->         result->aname = NULL;
->         audit_getname(result);
->         return result;
-> }
-> 
-> And the line number script, egreps below line.
-> 
->         result->uptr = filename;
-> 
-> However, the probe on this line will hit *before* execute this line.
-> Note that kprobes is a breakpoint, which breaks into this line execution,
-> not after executed.
-> 
-> So, I thik at this point, result->uptr should be NULL, but filename and
-> result->name already have assigned value.
-> 
-> Thus, the fix should be something like below.
-> 
->> 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
->> - 		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
->> +		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || \
-> 
-> Thomas, is this OK for you too, or would you have any reason to trace
-> result->uptr?
-> 
-> Thank you,
-> 
+The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
+facility to continuously collect large numbers of hardware performance
+metrics efficiently and accurately.
 
+First patch of the patchset fix inconsistent results we are getting when
+we run multiple 24x7 events.
 
-Masami, thanks very much for your help!
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-I started from scratch and just installed linux 5.6.0rc1 without
-any changes and got this failure:
+So to enable JSON file support to "hv_24x7" interface, patchset expose
+total number of sockets and chips per-socket details in sysfs
+files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
 
-[root@m35lp76 perf]# ./perf test  66 67
-66: Use vfs_getname probe to get syscall args filenames   : FAILED!
-67: Check open filename arg using perf trace + vfs_getname: FAILED!
-[root@m35lp76 perf]#
+To get sockets and number of chips per sockets, patchset adds a rtas call
+with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
+handles partition migration case to re-init these system depended
+parameters by adding proper calls in post_mobility_fixup() (mobility.c).
 
-Now I applied Masami's patch and this is the result
+Patch 6 & 8 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
 
-[root@m35lp76 perf]# ./perf test  66 67
-66: Use vfs_getname probe to get syscall args filenames   : Ok
-67: Check open filename arg using perf trace + vfs_getname: Ok
-[root@m35lp76 perf  
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
 
-This is what I wanted to achieve.
-And I think I know what went wrong. I supplied an initial patch and when
-I rewrote it for V3 I kprobed the wrong line.
+Kajol Jain (8):
+  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
+    hv-24x7 events run
+  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
+    details
+  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
+    processor details
+  Documentation/ABI: Add ABI documentation for chips and sockets
+  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
 
-Again thanks a lot and sorry for the noise...
+ .../sysfs-bus-event_source-devices-hv_24x7    |  14 +++
+ arch/powerpc/perf/hv-24x7.c                   |  96 ++++++++++++++-
+ arch/powerpc/platforms/pseries/mobility.c     |  12 ++
+ arch/powerpc/platforms/pseries/pseries.h      |   3 +
+ tools/perf/arch/powerpc/util/header.c         |  40 +++++++
+ .../arch/powerpc/power9/hv_24x7_metrics.json  |  19 +++
+ tools/perf/util/expr.h                        |   1 +
+ tools/perf/util/expr.y                        |  17 ++-
+ tools/perf/util/metricgroup.c                 | 112 +++++++++++-------
+ tools/perf/util/metricgroup.h                 |   1 +
+ tools/perf/util/stat-display.c                |   2 -
+ tools/perf/util/stat-shadow.c                 |   5 +
+ 12 files changed, 277 insertions(+), 45 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/hv_24x7_metrics.json
+
 -- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.18.1
