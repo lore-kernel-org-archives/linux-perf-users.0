@@ -1,66 +1,59 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v4] perf test: Fix test trace+probe_vfs_getname.sh on s390
-Date: Mon, 17 Feb 2020 11:29:35 -0300
-Message-ID: <20200217142935.GA19953@kernel.org>
-References: <20200217102111.61137-1-tmricht@linux.ibm.com>
- <20200217211010.fa9c643c517c110abaa5b554@kernel.org>
+Subject: Re: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
+Date: Mon, 17 Feb 2020 12:46:04 -0300
+Message-ID: <20200217154604.GE19953@kernel.org>
+References: <20200107133501.327117-1-namhyung@kernel.org>
+ <20200107133501.327117-5-namhyung@kernel.org>
+ <20200108215235.GA12995@krava>
+ <CAM9d7cifgLKbu5KM+QF6ZK9DGbN=8g1oj+vzU3HcTfrUQHP5jg@mail.gmail.com>
+ <CAM9d7chWNyFx6vBNZZea7exiwKhU+cwTY-Yaf2_cSXoJ1jSgcQ@mail.gmail.com>
+ <20200121094246.GA707582@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200217211010.fa9c643c517c110abaa5b554@kernel.org>
+In-Reply-To: <20200121094246.GA707582@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Feb 17, 2020 at 09:10:10PM +0900, Masami Hiramatsu escreveu:
-> On Mon, 17 Feb 2020 11:21:11 +0100
-> Thomas Richter <tmricht@linux.ibm.com> wrote:
+Em Tue, Jan 21, 2020 at 10:42:46AM +0100, Jiri Olsa escreveu:
+> On Mon, Jan 20, 2020 at 10:57:47PM +0900, Namhyung Kim wrote:
+> > So I tried this but then realized that it's hard to get the perf_env later
+> > when it needs to convert a cgroup id to name (ie. in sort_entry.se_snprintf).
+> > I also checked maybe I can resolve it when a hist entry is added,
+> > but it doesn't have the pointer there too.
+ 
+> looks like there might be a path for standard report where hists
+> are part of evsel object:
 > 
-> > This test places a kprobe to function getname_flags() in the kernel
-> > which has the following prototype:
-> > 
-> >   struct filename *
-> >   getname_flags(const char __user *filename, int flags, int *empty)
-> > 
-> > Variable filename points to a filename located in user space memory.
-> > Looking at
-> > commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
-> > the kprobe should indicate that user space memory is accessed.
-> > 
-> > Output before:
-> >    [root@m35lp76 perf]# ./perf test  66 67
-> >    66: Use vfs_getname probe to get syscall args filenames   : FAILED!
-> >    67: Check open filename arg using perf trace + vfs_getname: FAILED!
-> >    [root@m35lp76 perf]#
-> > 
-> > Output after:
-> >    [root@m35lp76 perf]# ./perf test  66 67
-> >    66: Use vfs_getname probe to get syscall args filenames   : Ok
-> >    67: Check open filename arg using perf trace + vfs_getname: Ok
-> >    [root@m35lp76 perf]#
-> > 
-> > Comments from Masami Hiramatsu:
-> > This bug doesn't happen on x86 or other archs on which user-address
-> > space and kernel address space is same. On some arch (ppc64 in this case?)
-> > user-address space is partially or completely same as kernel address space.
-> > (Yes, they switch the world when running into the kernel) In this case,
-> > we need to use different data access functions for each spaces.
-> > That is why I introduced "ustring" type for kprobe event.
-> > As far as I can see, Thomas's patch is sane. Thomas, could you show us
-> > your result on your test environment?
-> > Thank you
-> > 
-> > Comments from Thomas Richter:
-> > Test results included above.
-> > 
-> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+>   'struct hist_entry' via ->hists to  'struct hists'
+>   hists_to_evsel(hists) to 'struct evsel'
+>   'struct evsel' via ->evlist to 'struct evlist'
+>   and there you have evlist->env ;-)
 
-Thanks, I tested it successfully on x86-64, applying.
+Hey, recently I did work that ended up adding a 'struct maps' to 'struct
+map_symbol' and then hist_entry::ms has it, enough?
+
+i.e.:
+
+hist_entry::ms->maps->machine
+
+  he->ms->maps->machine
+ 
+> however I was wondering if we could add 'machine' pointer
+> to the hist object, that would make that simpler ;-)
+
+Directly from one of its hist_entries? As above?
+ 
+> not sure about the way.. would be nice if that'd work for
+> both evsel hists and standalone ones like in c2c
+ 
+> but maybe just some init helper that sets the pointer early on
+> might do the job
+
+Sorry for the delay in answering, was travelling/vacations, now taming a
+huge mailbox :-\
 
 - Arnaldo
