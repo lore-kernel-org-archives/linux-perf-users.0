@@ -1,130 +1,67 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Date: Mon, 17 Feb 2020 03:11:12 +0000
-Message-ID: <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20200212054102.9259-1-kjain@linux.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH v4] perf test: Fix test trace+probe_vfs_getname.sh on s390
+Date: Mon, 17 Feb 2020 11:21:11 +0100
+Message-ID: <20200217102111.61137-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200212054102.9259-1-kjain@linux.ibm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>, "acme@kernel.org" <acme@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org, mhiramat@kernel.org
+Cc: gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGxpbnV4LXBlcmYtdXNlcnMt
-b3duZXJAdmdlci5rZXJuZWwub3JnDQo+IDxsaW51eC1wZXJmLXVzZXJzLW93bmVyQHZnZXIua2Vy
-bmVsLm9yZz4gT24gQmVoYWxmIE9mIEtham9sIEphaW4NCj4gU2VudDogMjAyMMTqMtTCMTLI1SAx
-Mzo0MQ0KPiBUbzogYWNtZUBrZXJuZWwub3JnDQo+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsNCj4ga2phaW5AbGludXgu
-aWJtLmNvbTsgSmlyaSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgQWxleGFuZGVyIFNoaXNoa2lu
-DQo+IDxhbGV4YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tPjsgQW5kaSBLbGVlbiA8YWtA
-bGludXguaW50ZWwuY29tPjsgS2FuDQo+IExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29t
-PjsgUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPjsgSmluDQo+IFlhbyA8eWFv
-LmppbkBsaW51eC5pbnRlbC5jb20+OyBNYWRoYXZhbiBTcmluaXZhc2FuDQo+IDxtYWRkeUBsaW51
-eC52bmV0LmlibS5jb20+OyBBbmp1IFQgU3VkaGFrYXIgPGFuanVAbGludXgudm5ldC5pYm0uY29t
-PjsNCj4gUmF2aSBCYW5nb3JpYSA8cmF2aS5iYW5nb3JpYUBsaW51eC5pYm0uY29tPg0KPiBTdWJq
-ZWN0OiBbUEFUQ0ggdjRdIHRvb2xzL3BlcmYvbWV0cmljZ3JvdXA6IEZpeCBwcmludGluZyBldmVu
-dCBuYW1lcyBvZiBtZXRyaWMNCj4gZ3JvdXAgd2l0aCBtdWx0aXBsZSBldmVudHMgaW5jYXNlIG9m
-IG92ZXJsYXBwaW5nIGV2ZW50cw0KPiANCj4gQ29tbWl0IGYwMTY0MmU0OTEyYiAoInBlcmYgbWV0
-cmljZ3JvdXA6IFN1cHBvcnQgbXVsdGlwbGUgZXZlbnRzIGZvcg0KPiBtZXRyaWNncm91cCIpIGlu
-dHJvZHVjZWQgc3VwcG9ydCBmb3IgbXVsdGlwbGUgZXZlbnRzIGluIGEgbWV0cmljIGdyb3VwLiBC
-dXQNCj4gd2l0aCB0aGUgY3VycmVudCB1cHN0cmVhbSwgbWV0cmljIGV2ZW50cyBuYW1lcyBhcmUg
-bm90IHByaW50ZWQgcHJvcGVybHkNCj4gaW5jYXNlIHdlIHRyeSB0byBydW4gbXVsdGlwbGUgbWV0
-cmljIGdyb3VwcyB3aXRoIG92ZXJsYXBwaW5nIGV2ZW50Lg0KPiANCj4gV2l0aCBjdXJyZW50IHVw
-c3RyZWFtIHZlcnNpb24sIGluY2FzZSBvZiBvdmVybGFwcGluZyBtZXRyaWMgZXZlbnRzIGlzc3Vl
-IGlzLCB3ZQ0KPiBhbHdheXMgc3RhcnQgb3VyIGNvbXBhcmlzaW9uIGxvZ2ljIGZyb20gc3RhcnQu
-DQo+IFNvLCB0aGUgZXZlbnRzIHdoaWNoIGFscmVhZHkgbWF0Y2hlZCB3aXRoIHNvbWUgbWV0cmlj
-IGdyb3VwIGFsc28gdGFrZSBwYXJ0IGluDQo+IGNvbXBhcmlzaW9uIGxvZ2ljLiBCZWNhdXNlIG9m
-IHRoYXQgd2hlbiB3ZSBoYXZlIG92ZXJsYXBwaW5nIGV2ZW50cywgd2UgZW5kDQo+IHVwIG1hdGNo
-aW5nIGN1cnJlbnQgbWV0cmljIGdyb3VwIGV2ZW50IHdpdGggYWxyZWFkeSBtYXRjaGVkIG9uZS4N
-Cj4gDQo+IEZvciBleGFtcGxlLCBpbiBza3lsYWtlIG1hY2hpbmUgd2UgaGF2ZSBtZXRyaWMgZXZl
-bnQgQ29yZUlQQyBhbmQNCj4gSW5zdHJ1Y3Rpb25zLiBCb3RoIG9mIHRoZW0gbmVlZCAnaW5zdF9y
-ZXRpcmVkLmFueScgZXZlbnQgdmFsdWUuDQo+IEFzIGV2ZW50cyBpbiBJbnN0cnVjdGlvbnMgaXMg
-c3Vic2V0IG9mIGV2ZW50cyBpbiBDb3JlSVBDLCB0aGV5IGVuZHVwIGluIHBvaW50aW5nDQo+IHRv
-IHNhbWUgJ2luc3RfcmV0aXJlZC5hbnknIHZhbHVlLg0KPiANCj4gSW4gc2t5bGFrZSBwbGF0Zm9y
-bToNCj4gDQo+IGNvbW1hbmQ6IyAuL3BlcmYgc3RhdCAtTSBDb3JlSVBDLEluc3RydWN0aW9ucyAg
-LUMgMCBzbGVlcCAxDQo+IA0KPiAgUGVyZm9ybWFuY2UgY291bnRlciBzdGF0cyBmb3IgJ0NQVShz
-KSAwJzoNCj4gDQo+ICAgICAgMSwyNTQsOTkyLDc5MCAgICAgIGluc3RfcmV0aXJlZC5hbnkgICAg
-ICAgICAgIyAxMjU0OTkyNzkwLjANCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIEluc3RydWN0aW9ucw0KPiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICMgICAgICAxLjMNCj4gQ29yZUlQQw0KPiAgICAg
-ICAgOTc3LDE3Miw4MDUgICAgICBjeWNsZXMNCj4gICAgICAxLDI1NCw5OTIsNzU2ICAgICAgaW5z
-dF9yZXRpcmVkLmFueQ0KPiANCj4gICAgICAgIDEuMDAwODAyNTk2IHNlY29uZHMgdGltZSBlbGFw
-c2VkDQo+IA0KPiBjb21tYW5kOiMgc3VkbyAuL3BlcmYgc3RhdCAtTSBVUEksSVBDIHNsZWVwIDEN
-Cj4gDQo+ICAgIFBlcmZvcm1hbmNlIGNvdW50ZXIgc3RhdHMgZm9yICdzbGVlcCAxJzoNCj4gDQo+
-ICAgICAgICAgICAgOTQ4LDY1MCAgICAgIHVvcHNfcmV0aXJlZC5yZXRpcmVfc2xvdHMNCj4gICAg
-ICAgICAgICA4NjYsMTgyICAgICAgaW5zdF9yZXRpcmVkLmFueSAgICAgICAgICAjICAgICAgMC43
-IElQQw0KPiAgICAgICAgICAgIDg2NiwxODIgICAgICBpbnN0X3JldGlyZWQuYW55DQo+ICAgICAg
-ICAgIDEsMTc1LDY3MSAgICAgIGNwdV9jbGtfdW5oYWx0ZWQudGhyZWFkDQo+IA0KPiBQYXRjaCBm
-aXhlcyB0aGUgaXNzdWUgYnkgYWRkaW5nIGEgbmV3IGJvb2wgcG9pbnRlciAnZXZsaXN0X3VzZWQn
-IHRvIGtlZXAgdHJhY2sgb2YNCj4gZXZlbnRzIHdoaWNoIGFscmVhZHkgbWF0Y2hlZCB3aXRoIHNv
-bWUgZ3JvdXAgYnkgc2V0dGluZyBpdCB0cnVlLg0KPiBTbywgd2Ugc2tpcCBhbGwgdXNlZCBldmVu
-dHMgaW4gbGlzdCB3aGVuIHdlIHN0YXJ0IGNvbXBhcmlzaW9uIGxvZ2ljLg0KPiBQYXRjaCBhbHNv
-IG1ha2Ugc29tZSBjaGFuZ2VzIGluIGNvbXBhcmlzaW9uIGxvZ2ljLCBpbmNhc2Ugd2UgZ2V0IGEg
-bWF0Y2gNCj4gbWlzcywgd2UgZGlzY2FyZCB0aGUgd2hvbGUgbWF0Y2ggYW5kIHN0YXJ0IGFnYWlu
-IHdpdGggZmlyc3QgZXZlbnQgaWQgaW4gbWV0cmljDQo+IGV2ZW50Lg0KPiANCj4gV2l0aCB0aGlz
-IHBhdGNoOg0KPiBJbiBza3lsYWtlIHBsYXRmb3JtOg0KPiANCj4gY29tbWFuZDojIC4vcGVyZiBz
-dGF0IC1NIENvcmVJUEMsSW5zdHJ1Y3Rpb25zICAtQyAwIHNsZWVwIDENCj4gDQo+ICBQZXJmb3Jt
-YW5jZSBjb3VudGVyIHN0YXRzIGZvciAnQ1BVKHMpIDAnOg0KPiANCj4gICAgICAgICAgMywzNDgs
-NDE1ICAgICAgaW5zdF9yZXRpcmVkLmFueSAgICAgICAgICAjICAgICAgMC4zIENvcmVJUEMNCj4g
-ICAgICAgICAxMSw3NzksMDI2ICAgICAgY3ljbGVzDQo+ICAgICAgICAgIDMsMzQ4LDM4MSAgICAg
-IGluc3RfcmV0aXJlZC5hbnkgICAgICAgICAgIyAzMzQ4MzgxLjANCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEluc3RydWN0aW9ucw0KPiANCj4g
-ICAgICAgIDEuMDAxNjQ5MDU2IHNlY29uZHMgdGltZSBlbGFwc2VkDQo+IA0KPiBjb21tYW5kOiMg
-Li9wZXJmIHN0YXQgLU0gVVBJLElQQyBzbGVlcCAxDQo+IA0KPiAgUGVyZm9ybWFuY2UgY291bnRl
-ciBzdGF0cyBmb3IgJ3NsZWVwIDEnOg0KPiANCj4gICAgICAgICAgMSwwMjMsMTQ4ICAgICAgdW9w
-c19yZXRpcmVkLnJldGlyZV9zbG90cyAjICAgICAgMS4xIFVQSQ0KPiAgICAgICAgICAgIDkyNCw5
-NzYgICAgICBpbnN0X3JldGlyZWQuYW55DQo+ICAgICAgICAgICAgOTI0LDk3NiAgICAgIGluc3Rf
-cmV0aXJlZC5hbnkgICAgICAgICAgIyAgICAgIDAuNiBJUEMNCj4gICAgICAgICAgMSw0ODksNDE0
-ICAgICAgY3B1X2Nsa191bmhhbHRlZC50aHJlYWQNCj4gDQo+ICAgICAgICAxLjAwMzA2NDY3MiBz
-ZWNvbmRzIHRpbWUgZWxhcHNlZA0KPiANCj4gU2lnbmVkLW9mZi1ieTogS2Fqb2wgSmFpbiA8a2ph
-aW5AbGludXguaWJtLmNvbT4NCj4gQ2M6IEppcmkgT2xzYSA8am9sc2FAa2VybmVsLm9yZz4NCj4g
-Q2M6IEFsZXhhbmRlciBTaGlzaGtpbiA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNv
-bT4NCj4gQ2M6IEFuZGkgS2xlZW4gPGFrQGxpbnV4LmludGVsLmNvbT4NCj4gQ2M6IEthbiBMaWFu
-ZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT4NCj4gQ2M6IFBldGVyIFppamxzdHJhIDxwZXRl
-cnpAaW5mcmFkZWFkLm9yZz4NCj4gQ2M6IEppbiBZYW8gPHlhby5qaW5AbGludXguaW50ZWwuY29t
-Pg0KPiBDYzogTWFkaGF2YW4gU3Jpbml2YXNhbiA8bWFkZHlAbGludXgudm5ldC5pYm0uY29tPg0K
-PiBDYzogQW5qdSBUIFN1ZGhha2FyIDxhbmp1QGxpbnV4LnZuZXQuaWJtLmNvbT4NCj4gQ2M6IFJh
-dmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFAbGludXguaWJtLmNvbT4NCj4gLS0tDQo+ICB0b29s
-cy9wZXJmL3V0aWwvbWV0cmljZ3JvdXAuYyB8IDUwICsrKysrKysrKysrKysrKysrKysrKystLS0t
-LS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRp
-b25zKC0pDQoNCkhpIEtham9sLA0KDQpJIGFtIG5vdCBzdXJlIGlmIGl0IGlzIGdvb2QgdG8gYXNr
-IGEgcXVlc3Rpb24gaGVyZSA6LSkNCg0KSSBlbmNvdW50ZXJlZCBhIHBlcmYgbWV0cmljZ3JvdXAg
-aXNzdWUsIHRoZSByZXN1bHQgaXMgaW5jb3JyZWN0IHdoZW4gdGhlIG1ldHJpYyBpbmNsdWRlcyBt
-b3JlIHRoYW4gMiBldmVudHMuDQoNCmdpdCBsb2cgLS1vbmVsaW5lIHRvb2xzL3BlcmYvdXRpbC9t
-ZXRyaWNncm91cC5jDQozNjM1YjI3Y2MwNTggcGVyZiBtZXRyaWNncm91cDogRml4IHByaW50aW5n
-IGV2ZW50IG5hbWVzIG9mIG1ldHJpYyBncm91cCB3aXRoIG11bHRpcGxlIGV2ZW50cw0KZjAxNjQy
-ZTQ5MTJiIHBlcmYgbWV0cmljZ3JvdXA6IFN1cHBvcnQgbXVsdGlwbGUgZXZlbnRzIGZvciBtZXRy
-aWNncm91cA0KMjg3ZjI2NDlmNzkxIHBlcmYgbWV0cmljZ3JvdXA6IFNjYWxlIHRoZSBtZXRyaWMg
-cmVzdWx0DQoNCkkgZGlkIGEgc2ltcGxlIHRlc3QsIGJlbG93IGlzIHRoZSBKU09OIGZpbGUgYW5k
-IHJlc3VsdC4NClsNCiAgICAgICAgew0KICAgICAgICAgICAgICJQdWJsaWNEZXNjcmlwdGlvbiI6
-ICJDYWxjdWxhdGUgRERSMCBidXMgYWN0dWFsIHV0aWxpemF0aW9uIHdoaWNoIHZhcnkgZnJvbSBE
-RFIwIGNvbnRyb2xsZXIgY2xvY2sgZnJlcXVlbmN5IiwNCiAgICAgICAgICAgICAiQnJpZWZEZXNj
-cmlwdGlvbiI6ICJpbXg4cW06IGRkcjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbiIsDQogICAgICAg
-ICAgICAgIk1ldHJpY05hbWUiOiAiaW14OHFtLWRkcjAtYnVzLXV0aWwiLA0KICAgICAgICAgICAg
-ICJNZXRyaWNFeHByIjogIiggaW14OF9kZHIwXFwvcmVhZFxcLWN5Y2xlc1xcLyArIGlteDhfZGRy
-MFxcL3dyaXRlXFwtY3ljbGVzXFwvICkiLA0KICAgICAgICAgICAgICJNZXRyaWNHcm91cCI6ICJp
-Lk1YOFFNX0REUjBfQlVTX1VUSUwiDQogICAgICAgIH0NCl0NCi4vcGVyZiBzdGF0IC1JIDEwMDAg
-LU0gaW14OHFtLWRkcjAtYnVzLXV0aWwNCiMgICAgICAgICAgIHRpbWUgICAgICAgICAgICAgY291
-bnRzIHVuaXQgZXZlbnRzDQogICAgIDEuMDAwMTA0MjUwICAgICAgICAgICAgICAxNjcyMCAgICAg
-IGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8gICAgIyAgMjI5MjEuMCBpbXg4cW0tZGRyMC1idXMtdXRp
-bA0KICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAgIDYyMDEgICAgICBpbXg4X2RkcjAvd3Jp
-dGUtY3ljbGVzLw0KICAgICAyLjAwMDUyNTYyNSAgICAgICAgICAgICAgIDgzMTYgICAgICBpbXg4
-X2RkcjAvcmVhZC1jeWNsZXMvICAgICMgIDEyNzg1LjUgaW14OHFtLWRkcjAtYnVzLXV0aWwNCiAg
-ICAgMi4wMDA1MjU2MjUgICAgICAgICAgICAgICAyNzM4ICAgICAgaW14OF9kZHIwL3dyaXRlLWN5
-Y2xlcy8NCiAgICAgMy4wMDA4MTkxMjUgICAgICAgICAgICAgICAxMDU2ICAgICAgaW14OF9kZHIw
-L3JlYWQtY3ljbGVzLyAgICAjICAgNDEzNi43IGlteDhxbS1kZHIwLWJ1cy11dGlsDQogICAgIDMu
-MDAwODE5MTI1ICAgICAgICAgICAgICAgIDMwMyAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMv
-DQogICAgIDQuMDAxMTAzNzUwICAgICAgICAgICAgICAgNjI2MCAgICAgIGlteDhfZGRyMC9yZWFk
-LWN5Y2xlcy8gICAgIyAgIDkxNDkuOCBpbXg4cW0tZGRyMC1idXMtdXRpbA0KICAgICA0LjAwMTEw
-Mzc1MCAgICAgICAgICAgICAgIDIzMTcgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KICAg
-ICA1LjAwMTM5Mjc1MCAgICAgICAgICAgICAgIDIwODQgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNs
-ZXMvICAgICMgICA0NTE2LjAgaW14OHFtLWRkcjAtYnVzLXV0aWwNCiAgICAgNS4wMDEzOTI3NTAg
-ICAgICAgICAgICAgICAgNjAxICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCg0KWW91IGNh
-biBzZWUgdGhhdCBvbmx5IHRoZSBmaXJzdCByZXN1bHQgaXMgY29ycmVjdCwgY291bGQgdGhpcyBi
-ZSByZXByb2R1Y2VkIGF0IHlvdSBzaWRlPw0KDQpUaGFua3MgYSBsb3QhDQoNCkJlc3QgUmVnYXJk
-cywNCkpvYWtpbSBaaGFuZw0K
+This test places a kprobe to function getname_flags() in the kernel
+which has the following prototype:
+
+  struct filename *
+  getname_flags(const char __user *filename, int flags, int *empty)
+
+Variable filename points to a filename located in user space memory.
+Looking at
+commit 88903c464321c ("tracing/probe: Add ustring type for user-space string")
+the kprobe should indicate that user space memory is accessed.
+
+Output before:
+   [root@m35lp76 perf]# ./perf test  66 67
+   66: Use vfs_getname probe to get syscall args filenames   : FAILED!
+   67: Check open filename arg using perf trace + vfs_getname: FAILED!
+   [root@m35lp76 perf]#
+
+Output after:
+   [root@m35lp76 perf]# ./perf test  66 67
+   66: Use vfs_getname probe to get syscall args filenames   : Ok
+   67: Check open filename arg using perf trace + vfs_getname: Ok
+   [root@m35lp76 perf]#
+
+Comments from Masami Hiramatsu:
+This bug doesn't happen on x86 or other archs on which user-address
+space and kernel address space is same. On some arch (ppc64 in this case?)
+user-address space is partially or completely same as kernel address space.
+(Yes, they switch the world when running into the kernel) In this case,
+we need to use different data access functions for each spaces.
+That is why I introduced "ustring" type for kprobe event.
+As far as I can see, Thomas's patch is sane. Thomas, could you show us
+your result on your test environment?
+Thank you
+
+Comments from Thomas Richter:
+Test results included above.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 7cb99b433888..c2cc42daf924 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -14,7 +14,7 @@ add_probe_vfs_getname() {
+ 	if [ $had_vfs_getname -eq 1 ] ; then
+ 		line=$(perf probe -L getname_flags 2>&1 | egrep 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
+ 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:string"
++		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
+ 	fi
+ }
+ 
+-- 
+2.21.0
