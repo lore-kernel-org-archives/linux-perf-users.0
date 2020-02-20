@@ -1,169 +1,160 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
  metric group with multiple events incase of overlapping events
-Date: Thu, 20 Feb 2020 15:23:37 +0530
-Message-ID: <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
+Date: Thu, 20 Feb 2020 10:36:24 +0000
+Message-ID: <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
 References: <20200212054102.9259-1-kjain@linux.ibm.com>
  <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+In-Reply-To: <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joakim Zhang <qiangqing.zhang@nxp.com>, "acme@kernel.org" <acme@kernel.org>
+To: kajoljain <kjain@linux.ibm.com>, "acme@kernel.org" <acme@kernel.org>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-
-On 2/17/20 8:41 AM, Joakim Zhang wrote:
-> 
->> -----Original Message-----
->> From: linux-perf-users-owner@vger.kernel.org
->> <linux-perf-users-owner@vger.kernel.org> On Behalf Of Kajol Jain
->> Sent: 2020Äê2ÔÂ12ÈÕ 13:41
->> To: acme@kernel.org
->> Cc: linux-kernel@vger.kernel.org; linux-perf-users@vger.kernel.org;
->> kjain@linux.ibm.com; Jiri Olsa <jolsa@kernel.org>; Alexander Shishkin
->> <alexander.shishkin@linux.intel.com>; Andi Kleen <ak@linux.intel.com>; Kan
->> Liang <kan.liang@linux.intel.com>; Peter Zijlstra <peterz@infradead.org>; Jin
->> Yao <yao.jin@linux.intel.com>; Madhavan Srinivasan
->> <maddy@linux.vnet.ibm.com>; Anju T Sudhakar <anju@linux.vnet.ibm.com>;
->> Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->> Subject: [PATCH v4] tools/perf/metricgroup: Fix printing event names of metric
->> group with multiple events incase of overlapping events
->>
->> Commit f01642e4912b ("perf metricgroup: Support multiple events for
->> metricgroup") introduced support for multiple events in a metric group. But
->> with the current upstream, metric events names are not printed properly
->> incase we try to run multiple metric groups with overlapping event.
->>
->> With current upstream version, incase of overlapping metric events issue is, we
->> always start our comparision logic from start.
->> So, the events which already matched with some metric group also take part in
->> comparision logic. Because of that when we have overlapping events, we end
->> up matching current metric group event with already matched one.
->>
->> For example, in skylake machine we have metric event CoreIPC and
->> Instructions. Both of them need 'inst_retired.any' event value.
->> As events in Instructions is subset of events in CoreIPC, they endup in pointing
->> to same 'inst_retired.any' value.
->>
->> In skylake platform:
->>
->> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
->>
->>  Performance counter stats for 'CPU(s) 0':
->>
->>      1,254,992,790      inst_retired.any          # 1254992790.0
->>                                                     Instructions
->>                                                   #      1.3
->> CoreIPC
->>        977,172,805      cycles
->>      1,254,992,756      inst_retired.any
->>
->>        1.000802596 seconds time elapsed
->>
->> command:# sudo ./perf stat -M UPI,IPC sleep 1
->>
->>    Performance counter stats for 'sleep 1':
->>
->>            948,650      uops_retired.retire_slots
->>            866,182      inst_retired.any          #      0.7 IPC
->>            866,182      inst_retired.any
->>          1,175,671      cpu_clk_unhalted.thread
->>
->> Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep track of
->> events which already matched with some group by setting it true.
->> So, we skip all used events in list when we start comparision logic.
->> Patch also make some changes in comparision logic, incase we get a match
->> miss, we discard the whole match and start again with first event id in metric
->> event.
->>
->> With this patch:
->> In skylake platform:
->>
->> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
->>
->>  Performance counter stats for 'CPU(s) 0':
->>
->>          3,348,415      inst_retired.any          #      0.3 CoreIPC
->>         11,779,026      cycles
->>          3,348,381      inst_retired.any          # 3348381.0
->>                                                     Instructions
->>
->>        1.001649056 seconds time elapsed
->>
->> command:# ./perf stat -M UPI,IPC sleep 1
->>
->>  Performance counter stats for 'sleep 1':
->>
->>          1,023,148      uops_retired.retire_slots #      1.1 UPI
->>            924,976      inst_retired.any
->>            924,976      inst_retired.any          #      0.6 IPC
->>          1,489,414      cpu_clk_unhalted.thread
->>
->>        1.003064672 seconds time elapsed
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> Cc: Jiri Olsa <jolsa@kernel.org>
->> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> Cc: Andi Kleen <ak@linux.intel.com>
->> Cc: Kan Liang <kan.liang@linux.intel.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Jin Yao <yao.jin@linux.intel.com>
->> Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
->> Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
->> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->> ---
->>  tools/perf/util/metricgroup.c | 50 ++++++++++++++++++++++-------------
->>  1 file changed, 31 insertions(+), 19 deletions(-)
-> 
-> Hi Kajol,
-> 
-> I am not sure if it is good to ask a question here :-)
-> 
-> I encountered a perf metricgroup issue, the result is incorrect when the metric includes more than 2 events.
-> 
-> git log --oneline tools/perf/util/metricgroup.c
-> 3635b27cc058 perf metricgroup: Fix printing event names of metric group with multiple events
-> f01642e4912b perf metricgroup: Support multiple events for metricgroup
-> 287f2649f791 perf metricgroup: Scale the metric result
-> 
-> I did a simple test, below is the JSON file and result.
-> [
->         {
->              "PublicDescription": "Calculate DDR0 bus actual utilization which vary from DDR0 controller clock frequency",
->              "BriefDescription": "imx8qm: ddr0 bus actual utilization",
->              "MetricName": "imx8qm-ddr0-bus-util",
->              "MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles\\/ )",
->              "MetricGroup": "i.MX8QM_DDR0_BUS_UTIL"
->         }
-> ]
-> ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
-> #           time             counts unit events
->      1.000104250              16720      imx8_ddr0/read-cycles/    #  22921.0 imx8qm-ddr0-bus-util
->      1.000104250               6201      imx8_ddr0/write-cycles/
->      2.000525625               8316      imx8_ddr0/read-cycles/    #  12785.5 imx8qm-ddr0-bus-util
->      2.000525625               2738      imx8_ddr0/write-cycles/
->      3.000819125               1056      imx8_ddr0/read-cycles/    #   4136.7 imx8qm-ddr0-bus-util
->      3.000819125                303      imx8_ddr0/write-cycles/
->      4.001103750               6260      imx8_ddr0/read-cycles/    #   9149.8 imx8qm-ddr0-bus-util
->      4.001103750               2317      imx8_ddr0/write-cycles/
->      5.001392750               2084      imx8_ddr0/read-cycles/    #   4516.0 imx8qm-ddr0-bus-util
->      5.001392750                601      imx8_ddr0/write-cycles/
-> 
-> You can see that only the first result is correct, could this be reproduced at you side?
-
-Hi Joakim,
-        Will try to look into it from my side.
-Thanks,
-Kajol
-> 
-> Thanks a lot!
-> 
-> Best Regards,
-> Joakim Zhang
-> 
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGtham9samFpbiA8a2phaW5A
+bGludXguaWJtLmNvbT4NCj4gU2VudDogMjAyMMTqMtTCMjDI1SAxNzo1NA0KPiBUbzogSm9ha2lt
+IFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IGFjbWVAa2VybmVsLm9yZw0KPiBDYzog
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5l
+bC5vcmc7IEppcmkgT2xzYQ0KPiA8am9sc2FAa2VybmVsLm9yZz47IEFsZXhhbmRlciBTaGlzaGtp
+biA8YWxleGFuZGVyLnNoaXNoa2luQGxpbnV4LmludGVsLmNvbT47DQo+IEFuZGkgS2xlZW4gPGFr
+QGxpbnV4LmludGVsLmNvbT47IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT47
+IFBldGVyDQo+IFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz47IEppbiBZYW8gPHlhby5q
+aW5AbGludXguaW50ZWwuY29tPjsgTWFkaGF2YW4NCj4gU3Jpbml2YXNhbiA8bWFkZHlAbGludXgu
+dm5ldC5pYm0uY29tPjsgQW5qdSBUIFN1ZGhha2FyDQo+IDxhbmp1QGxpbnV4LnZuZXQuaWJtLmNv
+bT47IFJhdmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFAbGludXguaWJtLmNvbT4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2NF0gdG9vbHMvcGVyZi9tZXRyaWNncm91cDogRml4IHByaW50aW5nIGV2
+ZW50IG5hbWVzIG9mDQo+IG1ldHJpYyBncm91cCB3aXRoIG11bHRpcGxlIGV2ZW50cyBpbmNhc2Ug
+b2Ygb3ZlcmxhcHBpbmcgZXZlbnRzDQo+IA0KPiANCj4gDQo+IE9uIDIvMTcvMjAgODo0MSBBTSwg
+Sm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+DQo+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4+IEZyb206IGxpbnV4LXBlcmYtdXNlcnMtb3duZXJAdmdlci5rZXJuZWwub3JnDQo+ID4+
+IDxsaW51eC1wZXJmLXVzZXJzLW93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIEth
+am9sIEphaW4NCj4gPj4gU2VudDogMjAyMMTqMtTCMTLI1SAxMzo0MQ0KPiA+PiBUbzogYWNtZUBr
+ZXJuZWwub3JnDQo+ID4+IENjOiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1w
+ZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsNCj4gPj4ga2phaW5AbGludXguaWJtLmNvbTsgSmly
+aSBPbHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgQWxleGFuZGVyIFNoaXNoa2luDQo+ID4+IDxhbGV4
+YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tPjsgQW5kaSBLbGVlbg0KPiA+PiA8YWtAbGlu
+dXguaW50ZWwuY29tPjsgS2FuIExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPjsgUGV0
+ZXINCj4gPj4gWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3JnPjsgSmluIFlhbyA8eWFvLmpp
+bkBsaW51eC5pbnRlbC5jb20+Ow0KPiA+PiBNYWRoYXZhbiBTcmluaXZhc2FuIDxtYWRkeUBsaW51
+eC52bmV0LmlibS5jb20+OyBBbmp1IFQgU3VkaGFrYXINCj4gPj4gPGFuanVAbGludXgudm5ldC5p
+Ym0uY29tPjsgUmF2aSBCYW5nb3JpYQ0KPiA+PiA8cmF2aS5iYW5nb3JpYUBsaW51eC5pYm0uY29t
+Pg0KPiA+PiBTdWJqZWN0OiBbUEFUQ0ggdjRdIHRvb2xzL3BlcmYvbWV0cmljZ3JvdXA6IEZpeCBw
+cmludGluZyBldmVudCBuYW1lcw0KPiA+PiBvZiBtZXRyaWMgZ3JvdXAgd2l0aCBtdWx0aXBsZSBl
+dmVudHMgaW5jYXNlIG9mIG92ZXJsYXBwaW5nIGV2ZW50cw0KPiA+Pg0KPiA+PiBDb21taXQgZjAx
+NjQyZTQ5MTJiICgicGVyZiBtZXRyaWNncm91cDogU3VwcG9ydCBtdWx0aXBsZSBldmVudHMgZm9y
+DQo+ID4+IG1ldHJpY2dyb3VwIikgaW50cm9kdWNlZCBzdXBwb3J0IGZvciBtdWx0aXBsZSBldmVu
+dHMgaW4gYSBtZXRyaWMNCj4gPj4gZ3JvdXAuIEJ1dCB3aXRoIHRoZSBjdXJyZW50IHVwc3RyZWFt
+LCBtZXRyaWMgZXZlbnRzIG5hbWVzIGFyZSBub3QNCj4gPj4gcHJpbnRlZCBwcm9wZXJseSBpbmNh
+c2Ugd2UgdHJ5IHRvIHJ1biBtdWx0aXBsZSBtZXRyaWMgZ3JvdXBzIHdpdGgNCj4gb3ZlcmxhcHBp
+bmcgZXZlbnQuDQo+ID4+DQo+ID4+IFdpdGggY3VycmVudCB1cHN0cmVhbSB2ZXJzaW9uLCBpbmNh
+c2Ugb2Ygb3ZlcmxhcHBpbmcgbWV0cmljIGV2ZW50cw0KPiA+PiBpc3N1ZSBpcywgd2UgYWx3YXlz
+IHN0YXJ0IG91ciBjb21wYXJpc2lvbiBsb2dpYyBmcm9tIHN0YXJ0Lg0KPiA+PiBTbywgdGhlIGV2
+ZW50cyB3aGljaCBhbHJlYWR5IG1hdGNoZWQgd2l0aCBzb21lIG1ldHJpYyBncm91cCBhbHNvIHRh
+a2UNCj4gPj4gcGFydCBpbiBjb21wYXJpc2lvbiBsb2dpYy4gQmVjYXVzZSBvZiB0aGF0IHdoZW4g
+d2UgaGF2ZSBvdmVybGFwcGluZw0KPiA+PiBldmVudHMsIHdlIGVuZCB1cCBtYXRjaGluZyBjdXJy
+ZW50IG1ldHJpYyBncm91cCBldmVudCB3aXRoIGFscmVhZHkNCj4gbWF0Y2hlZCBvbmUuDQo+ID4+
+DQo+ID4+IEZvciBleGFtcGxlLCBpbiBza3lsYWtlIG1hY2hpbmUgd2UgaGF2ZSBtZXRyaWMgZXZl
+bnQgQ29yZUlQQyBhbmQNCj4gPj4gSW5zdHJ1Y3Rpb25zLiBCb3RoIG9mIHRoZW0gbmVlZCAnaW5z
+dF9yZXRpcmVkLmFueScgZXZlbnQgdmFsdWUuDQo+ID4+IEFzIGV2ZW50cyBpbiBJbnN0cnVjdGlv
+bnMgaXMgc3Vic2V0IG9mIGV2ZW50cyBpbiBDb3JlSVBDLCB0aGV5IGVuZHVwDQo+ID4+IGluIHBv
+aW50aW5nIHRvIHNhbWUgJ2luc3RfcmV0aXJlZC5hbnknIHZhbHVlLg0KPiA+Pg0KPiA+PiBJbiBz
+a3lsYWtlIHBsYXRmb3JtOg0KPiA+Pg0KPiA+PiBjb21tYW5kOiMgLi9wZXJmIHN0YXQgLU0gQ29y
+ZUlQQyxJbnN0cnVjdGlvbnMgIC1DIDAgc2xlZXAgMQ0KPiA+Pg0KPiA+PiAgUGVyZm9ybWFuY2Ug
+Y291bnRlciBzdGF0cyBmb3IgJ0NQVShzKSAwJzoNCj4gPj4NCj4gPj4gICAgICAxLDI1NCw5OTIs
+NzkwICAgICAgaW5zdF9yZXRpcmVkLmFueSAgICAgICAgICAjIDEyNTQ5OTI3OTAuMA0KPiA+Pg0K
+PiBJbnN0cnVjdGlvbnMNCj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAjICAgICAgMS4zDQo+ID4+IENvcmVJUEMNCj4gPj4gICAgICAgIDk3Nywx
+NzIsODA1ICAgICAgY3ljbGVzDQo+ID4+ICAgICAgMSwyNTQsOTkyLDc1NiAgICAgIGluc3RfcmV0
+aXJlZC5hbnkNCj4gPj4NCj4gPj4gICAgICAgIDEuMDAwODAyNTk2IHNlY29uZHMgdGltZSBlbGFw
+c2VkDQo+ID4+DQo+ID4+IGNvbW1hbmQ6IyBzdWRvIC4vcGVyZiBzdGF0IC1NIFVQSSxJUEMgc2xl
+ZXAgMQ0KPiA+Pg0KPiA+PiAgICBQZXJmb3JtYW5jZSBjb3VudGVyIHN0YXRzIGZvciAnc2xlZXAg
+MSc6DQo+ID4+DQo+ID4+ICAgICAgICAgICAgOTQ4LDY1MCAgICAgIHVvcHNfcmV0aXJlZC5yZXRp
+cmVfc2xvdHMNCj4gPj4gICAgICAgICAgICA4NjYsMTgyICAgICAgaW5zdF9yZXRpcmVkLmFueSAg
+ICAgICAgICAjICAgICAgMC43IElQQw0KPiA+PiAgICAgICAgICAgIDg2NiwxODIgICAgICBpbnN0
+X3JldGlyZWQuYW55DQo+ID4+ICAgICAgICAgIDEsMTc1LDY3MSAgICAgIGNwdV9jbGtfdW5oYWx0
+ZWQudGhyZWFkDQo+ID4+DQo+ID4+IFBhdGNoIGZpeGVzIHRoZSBpc3N1ZSBieSBhZGRpbmcgYSBu
+ZXcgYm9vbCBwb2ludGVyICdldmxpc3RfdXNlZCcgdG8NCj4gPj4ga2VlcCB0cmFjayBvZiBldmVu
+dHMgd2hpY2ggYWxyZWFkeSBtYXRjaGVkIHdpdGggc29tZSBncm91cCBieSBzZXR0aW5nIGl0DQo+
+IHRydWUuDQo+ID4+IFNvLCB3ZSBza2lwIGFsbCB1c2VkIGV2ZW50cyBpbiBsaXN0IHdoZW4gd2Ug
+c3RhcnQgY29tcGFyaXNpb24gbG9naWMuDQo+ID4+IFBhdGNoIGFsc28gbWFrZSBzb21lIGNoYW5n
+ZXMgaW4gY29tcGFyaXNpb24gbG9naWMsIGluY2FzZSB3ZSBnZXQgYQ0KPiA+PiBtYXRjaCBtaXNz
+LCB3ZSBkaXNjYXJkIHRoZSB3aG9sZSBtYXRjaCBhbmQgc3RhcnQgYWdhaW4gd2l0aCBmaXJzdA0K
+PiA+PiBldmVudCBpZCBpbiBtZXRyaWMgZXZlbnQuDQo+ID4+DQo+ID4+IFdpdGggdGhpcyBwYXRj
+aDoNCj4gPj4gSW4gc2t5bGFrZSBwbGF0Zm9ybToNCj4gPj4NCj4gPj4gY29tbWFuZDojIC4vcGVy
+ZiBzdGF0IC1NIENvcmVJUEMsSW5zdHJ1Y3Rpb25zICAtQyAwIHNsZWVwIDENCj4gPj4NCj4gPj4g
+IFBlcmZvcm1hbmNlIGNvdW50ZXIgc3RhdHMgZm9yICdDUFUocykgMCc6DQo+ID4+DQo+ID4+ICAg
+ICAgICAgIDMsMzQ4LDQxNSAgICAgIGluc3RfcmV0aXJlZC5hbnkgICAgICAgICAgIyAgICAgIDAu
+Mw0KPiBDb3JlSVBDDQo+ID4+ICAgICAgICAgMTEsNzc5LDAyNiAgICAgIGN5Y2xlcw0KPiA+PiAg
+ICAgICAgICAzLDM0OCwzODEgICAgICBpbnN0X3JldGlyZWQuYW55ICAgICAgICAgICMgMzM0ODM4
+MS4wDQo+ID4+DQo+IEluc3RydWN0aW9ucw0KPiA+Pg0KPiA+PiAgICAgICAgMS4wMDE2NDkwNTYg
+c2Vjb25kcyB0aW1lIGVsYXBzZWQNCj4gPj4NCj4gPj4gY29tbWFuZDojIC4vcGVyZiBzdGF0IC1N
+IFVQSSxJUEMgc2xlZXAgMQ0KPiA+Pg0KPiA+PiAgUGVyZm9ybWFuY2UgY291bnRlciBzdGF0cyBm
+b3IgJ3NsZWVwIDEnOg0KPiA+Pg0KPiA+PiAgICAgICAgICAxLDAyMywxNDggICAgICB1b3BzX3Jl
+dGlyZWQucmV0aXJlX3Nsb3RzICMgICAgICAxLjEgVVBJDQo+ID4+ICAgICAgICAgICAgOTI0LDk3
+NiAgICAgIGluc3RfcmV0aXJlZC5hbnkNCj4gPj4gICAgICAgICAgICA5MjQsOTc2ICAgICAgaW5z
+dF9yZXRpcmVkLmFueSAgICAgICAgICAjICAgICAgMC42IElQQw0KPiA+PiAgICAgICAgICAxLDQ4
+OSw0MTQgICAgICBjcHVfY2xrX3VuaGFsdGVkLnRocmVhZA0KPiA+Pg0KPiA+PiAgICAgICAgMS4w
+MDMwNjQ2NzIgc2Vjb25kcyB0aW1lIGVsYXBzZWQNCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTog
+S2Fqb2wgSmFpbiA8a2phaW5AbGludXguaWJtLmNvbT4NCj4gPj4gQ2M6IEppcmkgT2xzYSA8am9s
+c2FAa2VybmVsLm9yZz4NCj4gPj4gQ2M6IEFsZXhhbmRlciBTaGlzaGtpbiA8YWxleGFuZGVyLnNo
+aXNoa2luQGxpbnV4LmludGVsLmNvbT4NCj4gPj4gQ2M6IEFuZGkgS2xlZW4gPGFrQGxpbnV4Lmlu
+dGVsLmNvbT4NCj4gPj4gQ2M6IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT4N
+Cj4gPj4gQ2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4NCj4gPj4gQ2M6
+IEppbiBZYW8gPHlhby5qaW5AbGludXguaW50ZWwuY29tPg0KPiA+PiBDYzogTWFkaGF2YW4gU3Jp
+bml2YXNhbiA8bWFkZHlAbGludXgudm5ldC5pYm0uY29tPg0KPiA+PiBDYzogQW5qdSBUIFN1ZGhh
+a2FyIDxhbmp1QGxpbnV4LnZuZXQuaWJtLmNvbT4NCj4gPj4gQ2M6IFJhdmkgQmFuZ29yaWEgPHJh
+dmkuYmFuZ29yaWFAbGludXguaWJtLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICB0b29scy9wZXJmL3V0
+aWwvbWV0cmljZ3JvdXAuYyB8IDUwDQo+ID4+ICsrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
+LS0tLS0tDQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRp
+b25zKC0pDQo+ID4NCj4gPiBIaSBLYWpvbCwNCj4gPg0KPiA+IEkgYW0gbm90IHN1cmUgaWYgaXQg
+aXMgZ29vZCB0byBhc2sgYSBxdWVzdGlvbiBoZXJlIDotKQ0KPiA+DQo+ID4gSSBlbmNvdW50ZXJl
+ZCBhIHBlcmYgbWV0cmljZ3JvdXAgaXNzdWUsIHRoZSByZXN1bHQgaXMgaW5jb3JyZWN0IHdoZW4g
+dGhlDQo+IG1ldHJpYyBpbmNsdWRlcyBtb3JlIHRoYW4gMiBldmVudHMuDQo+ID4NCj4gPiBnaXQg
+bG9nIC0tb25lbGluZSB0b29scy9wZXJmL3V0aWwvbWV0cmljZ3JvdXAuYw0KPiA+IDM2MzViMjdj
+YzA1OCBwZXJmIG1ldHJpY2dyb3VwOiBGaXggcHJpbnRpbmcgZXZlbnQgbmFtZXMgb2YgbWV0cmlj
+DQo+ID4gZ3JvdXAgd2l0aCBtdWx0aXBsZSBldmVudHMgZjAxNjQyZTQ5MTJiIHBlcmYgbWV0cmlj
+Z3JvdXA6IFN1cHBvcnQNCj4gPiBtdWx0aXBsZSBldmVudHMgZm9yIG1ldHJpY2dyb3VwDQo+ID4g
+Mjg3ZjI2NDlmNzkxIHBlcmYgbWV0cmljZ3JvdXA6IFNjYWxlIHRoZSBtZXRyaWMgcmVzdWx0DQo+
+ID4NCj4gPiBJIGRpZCBhIHNpbXBsZSB0ZXN0LCBiZWxvdyBpcyB0aGUgSlNPTiBmaWxlIGFuZCBy
+ZXN1bHQuDQo+ID4gWw0KPiA+ICAgICAgICAgew0KPiA+ICAgICAgICAgICAgICAiUHVibGljRGVz
+Y3JpcHRpb24iOiAiQ2FsY3VsYXRlIEREUjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbg0KPiB3aGlj
+aCB2YXJ5IGZyb20gRERSMCBjb250cm9sbGVyIGNsb2NrIGZyZXF1ZW5jeSIsDQo+ID4gICAgICAg
+ICAgICAgICJCcmllZkRlc2NyaXB0aW9uIjogImlteDhxbTogZGRyMCBidXMgYWN0dWFsIHV0aWxp
+emF0aW9uIiwNCj4gPiAgICAgICAgICAgICAgIk1ldHJpY05hbWUiOiAiaW14OHFtLWRkcjAtYnVz
+LXV0aWwiLA0KPiA+ICAgICAgICAgICAgICAiTWV0cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3Jl
+YWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBcXC93cml0ZVxcLWN5Y2xlc1xcLyApIiwNCj4g
+PiAgICAgICAgICAgICAgIk1ldHJpY0dyb3VwIjogImkuTVg4UU1fRERSMF9CVVNfVVRJTCINCj4g
+PiAgICAgICAgIH0NCj4gPiBdDQo+ID4gLi9wZXJmIHN0YXQgLUkgMTAwMCAtTSBpbXg4cW0tZGRy
+MC1idXMtdXRpbA0KPiA+ICMgICAgICAgICAgIHRpbWUgICAgICAgICAgICAgY291bnRzIHVuaXQg
+ZXZlbnRzDQo+ID4gICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAgMTY3MjAgICAgICBpbXg4
+X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDIyOTIxLjAgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4g
+PiAgICAgIDEuMDAwMTA0MjUwICAgICAgICAgICAgICAgNjIwMSAgICAgIGlteDhfZGRyMC93cml0
+ZS1jeWNsZXMvDQo+ID4gICAgICAyLjAwMDUyNTYyNSAgICAgICAgICAgICAgIDgzMTYgICAgICBp
+bXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDEyNzg1LjUgaW14OHFtLWRkcjAtYnVzLXV0aWwN
+Cj4gPiAgICAgIDIuMDAwNTI1NjI1ICAgICAgICAgICAgICAgMjczOCAgICAgIGlteDhfZGRyMC93
+cml0ZS1jeWNsZXMvDQo+ID4gICAgICAzLjAwMDgxOTEyNSAgICAgICAgICAgICAgIDEwNTYgICAg
+ICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA0MTM2LjcgaW14OHFtLWRkcjAtYnVzLXV0
+aWwNCj4gPiAgICAgIDMuMDAwODE5MTI1ICAgICAgICAgICAgICAgIDMwMyAgICAgIGlteDhfZGRy
+MC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICA0LjAwMTEwMzc1MCAgICAgICAgICAgICAgIDYyNjAg
+ICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA5MTQ5LjggaW14OHFtLWRkcjAtYnVz
+LXV0aWwNCj4gPiAgICAgIDQuMDAxMTAzNzUwICAgICAgICAgICAgICAgMjMxNyAgICAgIGlteDhf
+ZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICA1LjAwMTM5Mjc1MCAgICAgICAgICAgICAgIDIw
+ODQgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA0NTE2LjAgaW14OHFtLWRkcjAt
+YnVzLXV0aWwNCj4gPiAgICAgIDUuMDAxMzkyNzUwICAgICAgICAgICAgICAgIDYwMSAgICAgIGlt
+eDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4NCj4gPiBZb3UgY2FuIHNlZSB0aGF0IG9ubHkgdGhl
+IGZpcnN0IHJlc3VsdCBpcyBjb3JyZWN0LCBjb3VsZCB0aGlzIGJlIHJlcHJvZHVjZWQgYXQNCj4g
+eW91IHNpZGU/DQo+IA0KPiBIaSBKb2FraW0sDQo+ICAgICAgICAgV2lsbCB0cnkgdG8gbG9vayBp
+bnRvIGl0IGZyb20gbXkgc2lkZS4NCg0KDQpUaGFua3MgS2Fqb2wgZm9yIHlvdXIgaGVscCwgSSBs
+b29rIGludG8gdGhpcyBpc3N1ZSwgYnV0IGRvbid0IGtub3cgaG93IHRvIGZpeCBpdC4NCg0KVGhl
+IHJlc3VsdHMgYXJlIGFsd2F5cyBjb3JyZWN0IGlmIHNpZ25hbCBldmVudCB1c2VkIGluICJNZXRy
+aWNFeHByIiB3aXRoICItSSIgcGFyYW1ldGVycywgYnV0IHRoZSByZXN1bHRzIGFyZSBpbmNvcnJl
+Y3Qgd2hlbiBtb3JlIHRoYW4gb25lIGV2ZW50cyB1c2VkIGluICJNZXRyaWNFeHByIi4NCg0KSG9w
+ZSB5b3UgY2FuIGZpbmQgdGhlIHJvb3QgY2F1c2UgOi0pDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtp
+bSBaaGFuZw0KPiBUaGFua3MsDQo+IEtham9sDQo+ID4NCj4gPiBUaGFua3MgYSBsb3QhDQo+ID4N
+Cj4gPiBCZXN0IFJlZ2FyZHMsDQo+ID4gSm9ha2ltIFpoYW5nDQo+ID4NCg==
