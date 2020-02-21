@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 8/8] perf arch powerpc: Sync powerpc syscall.tbl with the kernel sources
-Date: Thu, 20 Feb 2020 22:53:10 -0300
-Message-ID: <20200221015310.16914-9-acme@kernel.org>
+Subject: [PATCH 6/8] perf arm-spe: Fix endless record after being terminated
+Date: Thu, 20 Feb 2020 22:53:08 -0300
+Message-ID: <20200221015310.16914-7-acme@kernel.org>
 References: <20200221015310.16914-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,52 +9,48 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200221015310.16914-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Stephen Rothwell <sfr@canb.auug.org.au>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Adrian Hunter <adrian.hunter@intel.com>, Aleksa Sarai <cyphar@cyphar.com>, Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <christian.brauner@ubuntu.com>, "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, Sargun Dhillon <sargun@sargun.me>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Wei Li <liwei391@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Tan Xiaojun <tanxiaojun@huawei.com>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-Copy over powerpc syscall.tbl to grab changes from the below commits
+In __cmd_record(), when receiving SIGINT(ctrl + c), a 'done' flag will
+be set and the event list will be disabled by evlist__disable() once.
 
-  fddb5d430ad9 ("open: introduce openat2(2) syscall")
-  9a2cef09c801 ("arch: wire up pidfd_getfd syscall")
+While in auxtrace_record.read_finish(), the related events will be
+enabled again, if they are continuous, the recording seems to be
+endless.
 
-Now 'perf trace' on powerpc will be able to map from those syscall
-strings to the right syscall numbers, i.e.
+If the event is disabled, don't enable it again here.
 
-  perf trace -e pidfd*
-
-Will include 'pidfd_getfd' as well as:
-
-  perf trace open*
-
-Will cover all 'open' variants.
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Sargun Dhillon <sargun@sargun.me>
+Based-on-patch-by: Wei Li <liwei391@huawei.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Tan Xiaojun <tanxiaojun@huawei.com>
+Cc: stable@vger.kernel.org # 5.4+
+Link: http://lore.kernel.org/lkml/20200214132654.20395-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/powerpc/entry/syscalls/syscall.tbl | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/arch/arm64/util/arm-spe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-index 43f736ed47f2..35b61bfc1b1a 100644
---- a/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-+++ b/tools/perf/arch/powerpc/entry/syscalls/syscall.tbl
-@@ -517,3 +517,5 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	nospu	clone3				ppc_clone3
-+437	common	openat2				sys_openat2
-+438	common	pidfd_getfd			sys_pidfd_getfd
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index eba6541ec0f1..1d993c27242b 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -165,9 +165,12 @@ static int arm_spe_read_finish(struct auxtrace_record *itr, int idx)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(sper->evlist, evsel) {
+-		if (evsel->core.attr.type == sper->arm_spe_pmu->type)
++		if (evsel->core.attr.type == sper->arm_spe_pmu->type) {
++			if (evsel->disabled)
++				return 0;
+ 			return perf_evlist__enable_event_idx(sper->evlist,
+ 							     evsel, idx);
++		}
+ 	}
+ 	return -EINVAL;
+ }
 -- 
 2.21.1
