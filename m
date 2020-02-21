@@ -1,7 +1,7 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCh v6] tools/perf/metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
-Date: Fri, 21 Feb 2020 15:40:37 +0530
-Message-ID: <20200221101037.28820-1-kjain@linux.ibm.com>
+Subject: [PATCH v6] tools/perf/metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
+Date: Fri, 21 Feb 2020 15:41:21 +0530
+Message-ID: <20200221101121.28920-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
