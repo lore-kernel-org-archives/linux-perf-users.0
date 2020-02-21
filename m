@@ -1,225 +1,210 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v6] tools/perf/metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
-Date: Fri, 21 Feb 2020 15:41:21 +0530
-Message-ID: <20200221101121.28920-1-kjain@linux.ibm.com>
+From: Andreas Gerstmayr <agerstmayr@redhat.com>
+Subject: [RFC] perf script: add flamegraph.py script
+Date: Fri, 21 Feb 2020 18:55:01 +0100
+Message-ID: <20200221175500.83774-1-agerstmayr@redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kjain@linux.ibm.com, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kabbott@redhat.com, skozina@redhat.com, mpetlan@redhat.com, nathans@redhat.com, mgoodwin@redhat.com, linux-perf-users@vger.kernel.org, bgregg@netflix.com, mspier@netflix.com, Andreas Gerstmayr <agerstmayr@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Commit f01642e4912b ("perf metricgroup: Support multiple
-events for metricgroup") introduced support for multiple events
-in a metric group. But with the current upstream, metric events
-names are not printed properly incase we try to run multiple
-metric groups with overlapping event.
+This script works in tandem with d3-flame-graph to generate flame graphs
+from perf. It supports two output formats: JSON and HTML (the default).
+The HTML format will look for a standalone d3-flame-graph template file i=
+n
+/usr/share/d3-flame-graph/template.html and fill in the collected stacks.
 
-With current upstream version, incase of overlapping metric events
-issue is, we always start our comparision logic from start.
-So, the events which already matched with some metric group also
-take part in comparision logic. Because of that when we have overlapping
-events, we end up matching current metric group event with already matched
-one.
+Usage:
 
-For example, in skylake machine we have metric event CoreIPC and
-Instructions. Both of them need 'inst_retired.any' event value.
-As events in Instructions is subset of events in CoreIPC, they
-endup in pointing to same 'inst_retired.any' value.
+    perf script flamegraph -a -F 99 sleep 60
 
-In skylake platform:
+Alternative usage:
 
-command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+    perf record -a -g -F 99 sleep 60
+    perf script report flamegraph
 
- Performance counter stats for 'CPU(s) 0':
-
-     1,254,992,790      inst_retired.any          # 1254992790.0
-                                                    Instructions
-                                                  #      1.3 CoreIPC
-       977,172,805      cycles
-     1,254,992,756      inst_retired.any
-
-       1.000802596 seconds time elapsed
-
-command:# sudo ./perf stat -M UPI,IPC sleep 1
-
-   Performance counter stats for 'sleep 1':
-           948,650      uops_retired.retire_slots
-           866,182      inst_retired.any          #      0.7 IPC
-           866,182      inst_retired.any
-         1,175,671      cpu_clk_unhalted.thread
-
-Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
-track of events which already matched with some group by setting it true.
-So, we skip all used events in list when we start comparision logic.
-Patch also make some changes in comparision logic, incase we get a match
-miss, we discard the whole match and start again with first event id in
-metric event.
-
-With this patch:
-In skylake platform:
-
-command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
-
- Performance counter stats for 'CPU(s) 0':
-
-         3,348,415      inst_retired.any          #      0.3 CoreIPC
-        11,779,026      cycles
-         3,348,381      inst_retired.any          # 3348381.0
-                                                    Instructions
-
-       1.001649056 seconds time elapsed
-
-command:# ./perf stat -M UPI,IPC sleep 1
-
- Performance counter stats for 'sleep 1':
-
-         1,023,148      uops_retired.retire_slots #      1.1 UPI
-           924,976      inst_retired.any
-           924,976      inst_retired.any          #      0.6 IPC
-         1,489,414      cpu_clk_unhalted.thread
-
-       1.003064672 seconds time elapsed
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/metricgroup.c | 49 +++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 19 deletions(-)
 
-Changelog:
-v5 -> v6
-- Remove bool cast
-- Add Acked-by tag
+I'm currently preparing packages for d3-flame-graph. For Fedora, the copr
+at
+https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-=
+flame-graph/
+can be installed, or alternatively the prebuilt standalone d3-flame-graph
+template can be downloaded from
+https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/j=
+s-d3-flame-graph/template.html
+and moved into /usr/share/d3-flame-graph/template.html
 
-v4 -> v5
-- Made small fix to return from function 'metricgroup__setup_events'
-  in case calloc fail
+ .../perf/scripts/python/bin/flamegraph-record |   2 +
+ .../perf/scripts/python/bin/flamegraph-report |   3 +
+ tools/perf/scripts/python/flamegraph.py       | 117 ++++++++++++++++++
+ 3 files changed, 122 insertions(+)
+ create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
+ create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
+ create mode 100755 tools/perf/scripts/python/flamegraph.py
 
-v3 -> v4
-- Make 'evlist_used' a bool pointer.
-
-v2 -> v3
-- Add array in place of variable to keep track of matched events.
-  Because incase we miss match in previous approach, all events will
-  be rolled over in next condition. So, rather we add array and set  
-  it incase that variable already match with some group.
-  - Suggested by Jiri Olsa
-
-v1 -> v2
-- Rather then adding static variable in metricgroup.c,
-  add a new variable in evlist itself with name 'evlist_iter'
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 02aee946b6c1..33bb138f7902 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -93,13 +93,16 @@ struct egroup {
- static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				      const char **ids,
- 				      int idnum,
--				      struct evsel **metric_events)
-+				      struct evsel **metric_events,
-+				      bool *evlist_used)
- {
- 	struct evsel *ev;
--	int i = 0;
-+	int i = 0, j = 0;
- 	bool leader_found;
- 
- 	evlist__for_each_entry (perf_evlist, ev) {
-+		if (evlist_used[j++])
-+			continue;
- 		if (!strcmp(ev->name, ids[i])) {
- 			if (!metric_events[i])
- 				metric_events[i] = ev;
-@@ -107,22 +110,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			if (i == idnum)
- 				break;
- 		} else {
--			if (i + 1 == idnum) {
--				/* Discard the whole match and start again */
--				i = 0;
--				memset(metric_events, 0,
--				       sizeof(struct evsel *) * idnum);
--				continue;
--			}
--
--			if (!strcmp(ev->name, ids[i]))
--				metric_events[i] = ev;
--			else {
--				/* Discard the whole match and start again */
--				i = 0;
--				memset(metric_events, 0,
--				       sizeof(struct evsel *) * idnum);
--				continue;
-+			/* Discard the whole match and start again */
-+			i = 0;
-+			memset(metric_events, 0,
-+				sizeof(struct evsel *) * idnum);
+diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf=
+/scripts/python/bin/flamegraph-record
+new file mode 100755
+index 000000000000..725d66e71570
+--- /dev/null
++++ b/tools/perf/scripts/python/bin/flamegraph-record
+@@ -0,0 +1,2 @@
++#!/usr/bin/sh
++perf record -g "$@"
+diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf=
+/scripts/python/bin/flamegraph-report
+new file mode 100755
+index 000000000000..b1a79afd903b
+--- /dev/null
++++ b/tools/perf/scripts/python/bin/flamegraph-report
+@@ -0,0 +1,3 @@
++#!/usr/bin/sh
++# description: create flame graphs
++perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts=
+/python/flamegraph.py
+new file mode 100755
+index 000000000000..2e9139ef2c4a
+--- /dev/null
++++ b/tools/perf/scripts/python/flamegraph.py
+@@ -0,0 +1,117 @@
++# flamegraph.py - create flame graphs from perf samples
++# SPDX-License-Identifier: GPL-2.0
++#
++# Usage:
++#
++#  perf record -a -g -F 99 sleep 60
++#  perf script report flamegraph
++#
++# Combined data collection and flamegraph generation:
++#
++#  perf script flamegraph -a -F 99 sleep 60
++#
++# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
++# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
++# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.co=
+m>
 +
-+			if (!strcmp(ev->name, ids[i])) {
-+				if (!metric_events[i])
-+					metric_events[i] = ev;
-+				i++;
-+				if (i == idnum)
-+					break;
- 			}
- 		}
- 	}
-@@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			    !strcmp(ev->name, metric_events[i]->name)) {
- 				ev->metric_leader = metric_events[i];
- 			}
-+			j++;
- 		}
-+		ev = metric_events[i];
-+		evlist_used[ev->idx] = true;
- 	}
- 
- 	return metric_events[0];
-@@ -160,6 +161,13 @@ static int metricgroup__setup_events(struct list_head *groups,
- 	int ret = 0;
- 	struct egroup *eg;
- 	struct evsel *evsel;
-+	bool *evlist_used;
++import sys
++import os
++import argparse
++import json
 +
-+	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
-+	if (!evlist_used) {
-+		ret = -ENOMEM;
-+		return ret;
-+	}
- 
- 	list_for_each_entry (eg, groups, nd) {
- 		struct evsel **metric_events;
-@@ -170,7 +178,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 			break;
- 		}
- 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
--					 metric_events);
-+					 metric_events, evlist_used);
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
- 					eg->metric_name, eg->metric_expr);
-@@ -194,6 +202,9 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		expr->metric_events = metric_events;
- 		list_add(&expr->nd, &me->head);
- 	}
 +
-+	free(evlist_used);
++class Node:
++    def __init__(self, name, libtype=3D""):
++        self.name =3D name
++        self.libtype =3D libtype
++        self.value =3D 0
++        self.children =3D []
 +
- 	return ret;
- }
- 
--- 
-2.21.0
++
++class FlameGraphCLI:
++    def __init__(self, args):
++        self.args =3D args
++        self.stack =3D Node("root")
++
++        if self.args.format =3D=3D "html" and \
++                not os.path.isfile(self.args.template):
++            print(f"Flame Graph template '{self.args.template}' does not=
+ " +
++                  f"exist. Please install the d3-flame-graph package, " =
++
++                  f"specify an existing flame graph template " +
++                  f"(--template PATH) or another output format " +
++                  f"(--format FORMAT).", file=3Dsys.stderr)
++            sys.exit(1)
++
++    def find_or_create_node(self, node, name, dso):
++        libtype =3D "kernel" if dso =3D=3D "[kernel.kallsyms]" else ""
++        if name is None:
++            name =3D "[unknown]"
++
++        for child in node.children:
++            if child.name =3D=3D name and child.libtype =3D=3D libtype:
++                return child
++
++        child =3D Node(name, libtype)
++        node.children.append(child)
++        return child
++
++    def process_event(self, event):
++        node =3D self.find_or_create_node(self.stack, event["comm"], Non=
+e)
++        if "callchain" in event:
++            for entry in reversed(event['callchain']):
++                node =3D self.find_or_create_node(
++                    node, entry.get("sym", {}).get("name"), event.get("d=
+so"))
++        else:
++            node =3D self.find_or_create_node(
++                node, entry.get("symbol"), event.get("dso"))
++        node.value +=3D 1
++
++    def trace_end(self):
++        def encoder(x): return x.__dict__
++        json_str =3D json.dumps(self.stack, default=3Dencoder,
++                              indent=3Dself.args.indent)
++
++        if self.args.format =3D=3D "html":
++            try:
++                with open(self.args.template) as f:
++                    output_str =3D f.read().replace("/** @flamegraph_par=
+ams **/",
++                                                  json_str)
++            except IOError as e:
++                print(f"Error reading template file: {e}", file=3Dsys.st=
+derr)
++                sys.exit(1)
++            output_fn =3D self.args.output or "flamegraph.html"
++        else:
++            output_str =3D json_str
++            output_fn =3D self.args.output or "stacks.json"
++
++        if output_fn =3D=3D "-":
++            sys.stdout.write(output_str)
++        else:
++            try:
++                with open(output_fn, "w") as out:
++                    out.write(output_str)
++            except IOError as e:
++                print(f"Error writing output file: {e}", file=3Dsys.stde=
+rr)
++                sys.exit(1)
++
++
++if __name__ =3D=3D "__main__":
++    parser =3D argparse.ArgumentParser(description=3D"Create flame graph=
+s.")
++    parser.add_argument("-F", "--format",
++                        default=3D"html", choices=3D["json", "html"],
++                        help=3D"output file format")
++    parser.add_argument("-o", "--output",
++                        help=3D"output file name")
++    parser.add_argument("--indent",
++                        type=3Dint, help=3D"JSON indentation")
++    parser.add_argument("--template",
++                        default=3D"/usr/share/d3-flame-graph/template.ht=
+ml",
++                        help=3D"path to flamegraph HTML template")
++    parser.add_argument("-i", "--input",
++                        help=3Dargparse.SUPPRESS)
++
++    args =3D parser.parse_args()
++    cli =3D FlameGraphCLI(args)
++
++    process_event =3D cli.process_event
++    trace_end =3D cli.trace_end
+--=20
+2.24.1
