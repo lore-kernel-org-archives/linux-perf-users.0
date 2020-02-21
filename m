@@ -1,75 +1,65 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v2 8/8] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip
- level metric events
-Date: Fri, 21 Feb 2020 11:40:22 +0530
-Message-ID: <20200221061022.3047-9-kjain@linux.ibm.com>
-References: <20200221061022.3047-1-kjain@linux.ibm.com>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v5] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Date: Fri, 21 Feb 2020 15:12:15 +0530
+Message-ID: <1346f859-601f-4d79-c0b9-2dda41e71354@linux.ibm.com>
+References: <20200220050104.14094-1-kjain@linux.ibm.com>
+ <20200220105645.GB553812@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org>
-In-Reply-To: <20200221061022.3047-1-kjain@linux.ibm.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org>
-To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, suka@us.ibm.com
-Cc: mark.rutland@arm.com, ravi.bangoria@linux.ibm.com, maddy@linux.vnet.ibm.com, tglx@linutronix.de, jmario@redhat.com, peterz@infradead.org, gregkh@linuxfoundation.org, mpetlan@redhat.com, alexander.shishkin@linux.intel.com, linux-perf-users@vger.kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, anju@linux.vnet.ibm.com, mamatha4@linux.vnet.ibm.com, kjain@linux.ibm.com, jolsa@kernel.org, namhyung@kernel.org, mingo@kernel.org, kan.liang@linux.intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200220105645.GB553812@krava>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
 
-Result:
 
-power9 platform:
+On 2/20/20 4:26 PM, Jiri Olsa wrote:
+> On Thu, Feb 20, 2020 at 10:31:04AM +0530, Kajol Jain wrote:
+> 
+> SNIP
+> 
+>> +				i++;
+>> +				if (i == idnum)
+>> +					break;
+>>  			}
+>>  		}
+>>  	}
+>> @@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+>>  			    !strcmp(ev->name, metric_events[i]->name)) {
+>>  				ev->metric_leader = metric_events[i];
+>>  			}
+>> +			j++;
+>>  		}
+>> +		ev = metric_events[i];
+>> +		evlist_used[ev->idx] = true;
+>>  	}
+>>  
+>>  	return metric_events[0];
+>> @@ -160,6 +161,14 @@ static int metricgroup__setup_events(struct list_head *groups,
+>>  	int ret = 0;
+>>  	struct egroup *eg;
+>>  	struct evsel *evsel;
+>> +	bool *evlist_used;
+>> +
+>> +	evlist_used = (bool *)calloc(perf_evlist->core.nr_entries,
+>> +				     sizeof(bool));
+> 
+> no need for the (bool *) cast
 
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0
-           -I 1000 sleep 1
-
-time MB       Memory_RD_BW_Chip_0 MB   Memory_RD_BW_Chip_1 MB
-1.000192635                      0.4                      0.0
-1.001695883                      0.0                      0.0
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..ac38f5540ac6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
--- 
-2.18.1
+Hi Jiri,
+     Should I resend patch with this change?
+Thanks,
+Kajol
+> 
+> other than that
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> thanks,
+> jirka
+> 
