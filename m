@@ -1,7 +1,7 @@
 From: Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 02/10] perf/core: Add PERF_SAMPLE_CGROUP feature
-Date: Mon, 24 Feb 2020 13:37:41 +0900
-Message-ID: <20200224043749.69466-3-namhyung@kernel.org>
+Subject: [PATCH 03/10] tools lib api fs: Move cgroupsfs__mountpoint()
+Date: Mon, 24 Feb 2020 13:37:42 +0900
+Message-ID: <20200224043749.69466-4-namhyung@kernel.org>
 References: <20200224043749.69466-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,124 +9,210 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200224043749.69466-1-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information
-in the sample.  It will add a 64-bit id to identify current cgroup and
-it's the file handle in the cgroup file system.  Userspace should use
-this information with PERF_RECORD_CGROUP event to match which cgroup
-it belongs.
+Move it from tools/perf/util/cgroup.c as it can be used by other places.
+Note that cgroup filesystem is different from others since it's usually
+mounted separately (in v1) for each subsystem.
 
-I put it before PERF_SAMPLE_AUX for simplicity since it just needs a
-64-bit word.  But if we want bigger samples, I can work on that
-direction too.
+I just copied the code with a little modification to pass a name of
+subsystem and renamed it to follow other APIs.
 
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Li Zefan <lizefan@huawei.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
+Suggested-by: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- include/linux/perf_event.h      |  1 +
- include/uapi/linux/perf_event.h |  3 ++-
- init/Kconfig                    |  3 ++-
- kernel/events/core.c            | 22 ++++++++++++++++++++++
- 4 files changed, 27 insertions(+), 2 deletions(-)
+ tools/lib/api/fs/Build    |  1 +
+ tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
+ tools/lib/api/fs/fs.h     |  2 ++
+ tools/perf/util/cgroup.c  | 63 ++----------------------------------
+ 4 files changed, 72 insertions(+), 61 deletions(-)
+ create mode 100644 tools/lib/api/fs/cgroup.c
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 6d4c22aee384..17b5bff045a6 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1001,6 +1001,7 @@ struct perf_sample_data {
- 	u64				stack_user_size;
- 
- 	u64				phys_addr;
-+	u64				cgroup;
- } ____cacheline_aligned;
- 
- /* default value for data source */
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index de2ab87ca92c..3a81e9806cb1 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -142,8 +142,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
- 	PERF_SAMPLE_AUX				= 1U << 20,
-+	PERF_SAMPLE_CGROUP			= 1U << 21,
- 
--	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
- 
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
- };
-diff --git a/init/Kconfig b/init/Kconfig
-index a34064a031a5..403ed2448b22 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1026,7 +1026,8 @@ config CGROUP_PERF
- 	help
- 	  This option extends the perf per-cpu mode to restrict monitoring
- 	  to threads which belong to the cgroup specified and run on the
--	  designated cpu.
-+	  designated cpu.  Or this can be used to have cgroup ID in samples
-+	  so that it can monitor performance events among cgroups.
- 
- 	  Say N if unsure.
- 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index b4ddfb26b5e9..68c5177e4492 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1754,6 +1754,9 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		size += sizeof(data->phys_addr);
- 
-+	if (sample_type & PERF_SAMPLE_CGROUP)
-+		size += sizeof(data->cgroup);
+diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
+index f4ed9629ae85..0f75b28654de 100644
+--- a/tools/lib/api/fs/Build
++++ b/tools/lib/api/fs/Build
+@@ -1,2 +1,3 @@
+ libapi-y += fs.o
+ libapi-y += tracing_path.o
++libapi-y += cgroup.o
+diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
+new file mode 100644
+index 000000000000..79676cada94a
+--- /dev/null
++++ b/tools/lib/api/fs/cgroup.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/stringify.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <fcntl.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include "fs.h"
 +
- 	event->header_size = size;
- }
- 
-@@ -6699,6 +6702,9 @@ void perf_output_sample(struct perf_output_handle *handle,
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		perf_output_put(handle, data->phys_addr);
- 
-+	if (sample_type & PERF_SAMPLE_CGROUP)
-+		perf_output_put(handle, data->cgroup);
++int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys)
++{
++	FILE *fp;
++	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
++	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
++	char *token, *saved_ptr = NULL;
 +
- 	if (sample_type & PERF_SAMPLE_AUX) {
- 		perf_output_put(handle, data->aux_size);
- 
-@@ -6895,6 +6901,16 @@ void perf_prepare_sample(struct perf_event_header *header,
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		data->phys_addr = perf_virt_to_phys(data->addr);
- 
-+#ifdef CONFIG_CGROUP_PERF
-+	if (sample_type & PERF_SAMPLE_CGROUP) {
-+		struct cgroup *cgrp;
++	fp = fopen("/proc/mounts", "r");
++	if (!fp)
++		return -1;
 +
-+		/* protected by RCU */
-+		cgrp = task_css_check(current, perf_event_cgrp_id, 1)->cgroup;
-+		data->cgroup = cgroup_id(cgrp);
++	/*
++	 * in order to handle split hierarchy, we need to scan /proc/mounts
++	 * and inspect every cgroupfs mount point to find one that has the
++	 * given subsystem
++	 */
++	path_v1[0] = '\0';
++	path_v2[0] = '\0';
++
++	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
++				__stringify(PATH_MAX)"s %*d %*d\n",
++				mountpoint, type, tokens) == 3) {
++
++		if (!path_v1[0] && !strcmp(type, "cgroup")) {
++
++			token = strtok_r(tokens, ",", &saved_ptr);
++
++			while (token != NULL) {
++				if (!subsys || !strcmp(token, subsys)) {
++					strcpy(path_v1, mountpoint);
++					break;
++				}
++				token = strtok_r(NULL, ",", &saved_ptr);
++			}
++		}
++
++		if (!path_v2[0] && !strcmp(type, "cgroup2"))
++			strcpy(path_v2, mountpoint);
++
++		if (path_v1[0] && path_v2[0])
++			break;
 +	}
-+#endif
++	fclose(fp);
 +
- 	if (sample_type & PERF_SAMPLE_AUX) {
- 		u64 size;
- 
-@@ -11090,6 +11106,12 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 
- 	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
- 		ret = perf_reg_validate(attr->sample_regs_intr);
++	if (path_v1[0])
++		path = path_v1;
++	else if (path_v2[0])
++		path = path_v2;
++	else
++		return -1;
 +
-+#ifndef CONFIG_CGROUP_PERF
-+	if (attr->sample_type & PERF_SAMPLE_CGROUP)
-+		return -EINVAL;
-+#endif
-+
- out:
- 	return ret;
++	if (strlen(path) < maxlen) {
++		strcpy(buf, path);
++		return 0;
++	}
++	return -1;
++}
+diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+index 92d03b8396b1..07591ecbe39f 100644
+--- a/tools/lib/api/fs/fs.h
++++ b/tools/lib/api/fs/fs.h
+@@ -28,6 +28,8 @@ FS(bpf_fs)
+ #undef FS
  
+ 
++int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys);
++
+ int filename__read_int(const char *filename, int *value);
+ int filename__read_ull(const char *filename, unsigned long long *value);
+ int filename__read_xll(const char *filename, unsigned long long *value);
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 4881d4af3381..12e466d1ec3b 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -3,75 +3,16 @@
+ #include "evsel.h"
+ #include "cgroup.h"
+ #include "evlist.h"
+-#include <linux/stringify.h>
+ #include <linux/zalloc.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <api/fs/fs.h>
+ 
+ int nr_cgroups;
+ 
+-static int
+-cgroupfs_find_mountpoint(char *buf, size_t maxlen)
+-{
+-	FILE *fp;
+-	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
+-	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
+-	char *token, *saved_ptr = NULL;
+-
+-	fp = fopen("/proc/mounts", "r");
+-	if (!fp)
+-		return -1;
+-
+-	/*
+-	 * in order to handle split hierarchy, we need to scan /proc/mounts
+-	 * and inspect every cgroupfs mount point to find one that has
+-	 * perf_event subsystem
+-	 */
+-	path_v1[0] = '\0';
+-	path_v2[0] = '\0';
+-
+-	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
+-				__stringify(PATH_MAX)"s %*d %*d\n",
+-				mountpoint, type, tokens) == 3) {
+-
+-		if (!path_v1[0] && !strcmp(type, "cgroup")) {
+-
+-			token = strtok_r(tokens, ",", &saved_ptr);
+-
+-			while (token != NULL) {
+-				if (!strcmp(token, "perf_event")) {
+-					strcpy(path_v1, mountpoint);
+-					break;
+-				}
+-				token = strtok_r(NULL, ",", &saved_ptr);
+-			}
+-		}
+-
+-		if (!path_v2[0] && !strcmp(type, "cgroup2"))
+-			strcpy(path_v2, mountpoint);
+-
+-		if (path_v1[0] && path_v2[0])
+-			break;
+-	}
+-	fclose(fp);
+-
+-	if (path_v1[0])
+-		path = path_v1;
+-	else if (path_v2[0])
+-		path = path_v2;
+-	else
+-		return -1;
+-
+-	if (strlen(path) < maxlen) {
+-		strcpy(buf, path);
+-		return 0;
+-	}
+-	return -1;
+-}
+-
+ static int open_cgroup(const char *name)
+ {
+ 	char path[PATH_MAX + 1];
+@@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
+ 	int fd;
+ 
+ 
+-	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
++	if (cgroupfs__mountpoint(mnt, PATH_MAX + 1, "perf_event"))
+ 		return -1;
+ 
+ 	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
 -- 
 2.25.0.265.gbab2e86ba0-goog
