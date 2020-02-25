@@ -1,91 +1,69 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v2 1/8] powerpc/perf/hv-24x7: Fix inconsistent output
- values incase multiple hv-24x7 events run
-Date: Mon, 24 Feb 2020 10:47:38 +0530
-Message-ID: <699d0e3f-47a9-3ee6-7055-08509c635294@linux.ibm.com>
-References: <20200221061022.3047-1-kjain@linux.ibm.com>
- <20200221061022.3047-2-kjain@linux.ibm.com>
- <20200223025119.GA17174@us.ibm.com>
+From: Vijay Thakkar <vijaythakkar@me.com>
+Subject: [PATCH v2 0/3] latest PMU events for zen1/zen2
+Date: Tue, 25 Feb 2020 14:28:12 -0500
+Message-ID: <20200225192815.50388-1-vijaythakkar@me.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org>
-In-Reply-To: <20200223025119.GA17174@us.ibm.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org>
-To: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Cc: mark.rutland@arm.com, maddy@linux.vnet.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, mingo@kernel.org, kan.liang@linux.intel.com, ak@linux.intel.com, alexander.shishkin@linux.intel.com, anju@linux.vnet.ibm.com, mamatha4@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, acme@kernel.org, jmario@redhat.com, namhyung@kernel.org, tglx@linutronix.de, mpetlan@redhat.com, gregkh@linuxfoundation.org, linux-perf-users@vger.kernel.org, jolsa@kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Vijay Thakkar <vijaythakkar@me.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+This series of patches brings the PMU events for AMD family 17h series
+of processors up to date with the latest versions of the AMD processor
+programming reference manuals.
 
+The first patch changes the pmu events mapfile to be more selective for
+the model number rather than blanket detecting all f17h processors to
+have the same events directory. This is required for the later patch
+where we add events for zen2 based processors. In v2 of the patch, the
+incorrect regex for model string was correct to include the range 0
+through 2f.
 
-On 2/23/20 8:21 AM, Sukadev Bhattiprolu wrote:
-> Kajol Jain [kjain@linux.ibm.com] wrote:
->> Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
->> values")' added to print _change_ in the counter value rather then raw
->> value for 24x7 counters. Incase of transactions, the event count
->> is set to 0 at the beginning of the transaction. It also sets
->> the event's prev_count to the raw value at the time of initialization.
->> Because of setting event count to 0, we are seeing some weird behaviour,
->> whenever we run multiple 24x7 events at a time.
-> 
-> Interesting. Are we taking delta of a delta and ending up with large
-> negative values in the -I case?  However...
-> 
+The second patch adds the PMU events for zen2. In v2 ls_mab_alloc.loads
+umask is corrected. No events from Zen1 have been removed.
 
-Hi Sukadev,
-       That's right, we are ending up in calculating delta of delta which may give us negative values
-because of which we are getting these large values in -I case.
+Finally the third patch updates the zen1 PMU events to be in accordance
+with the latest PPR version and bumps up the events version to v2. In v2
+of the patch series, missing events (bp_dyn_ind_pred and bp_de_redirect)
+were added and umasks were corrected for fpu_pipe_assignment.dual* and
+ls_mab_alloc.loads.
 
-> <snip>
-> 
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>  arch/powerpc/perf/hv-24x7.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
->> index 573e0b309c0c..6dbbf70232aa 100644
->> --- a/arch/powerpc/perf/hv-24x7.c
->> +++ b/arch/powerpc/perf/hv-24x7.c
->> @@ -1409,7 +1409,7 @@ static void h_24x7_event_read(struct perf_event *event)
->>  			 * that would require issuing a hcall, which would then
->>  			 * defeat the purpose of using the txn interface.
->>  			 */
->> -			local64_set(&event->count, 0);
->> +			local64_add(0, &event->count);
-> 
-> ... not sure, how adding zero to the count helps. Should we just remove the
-> line (and the comment block above it)?  Or does it help to clear the event
-> count in ->start_txn() rather than on read()?
+Vijay Thakkar (3):
+  perf vendor events amd: restrict model detection for zen1 based
+    processors
+  perf vendor events amd: add Zen2 events
+  perf vendor events amd: update Zen1 events to V2
 
-Its not impacting much as we are just adding and not setting event count.I think we can remove that line
-with the comment added. Will it be ok if I remove that whole part?
+ .../pmu-events/arch/x86/amdfam17h/branch.json |  12 -
+ .../pmu-events/arch/x86/amdzen1/branch.json   |  23 ++
+ .../x86/{amdfam17h => amdzen1}/cache.json     |   0
+ .../pmu-events/arch/x86/amdzen1/core.json     | 129 ++++++
+ .../floating-point.json                       |  56 +++
+ .../x86/{amdfam17h => amdzen1}/memory.json    |  18 +
+ .../x86/{amdfam17h => amdzen1}/other.json     |   0
+ .../pmu-events/arch/x86/amdzen2/branch.json   |  56 +++
+ .../pmu-events/arch/x86/amdzen2/cache.json    | 375 ++++++++++++++++++
+ .../arch/x86/{amdfam17h => amdzen2}/core.json |   0
+ .../arch/x86/amdzen2/floating-point.json      | 128 ++++++
+ .../pmu-events/arch/x86/amdzen2/memory.json   | 349 ++++++++++++++++
+ .../pmu-events/arch/x86/amdzen2/other.json    | 137 +++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
+ 14 files changed, 1273 insertions(+), 13 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/core.json
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (63%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (93%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen2}/core.json (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
 
-> 
-> How does the change impact the counts when run without the -I?
-
-There won't be much impact because from my understanding you did add 
-`(void)local64_xchg(&event->hw.prev_count, ct);`, to print change value in your
-Commit 2b206ee6b0df in function 'h_24x7_event_init()'.
-And we will go through this path in case of 'without -I'. Please let me know if my
-understanding is correct.
-
-Thanks,
-Kajol
-
-> 
-> Thanks for chasing this down.
-> 
-> Sukadev
-> 
+-- 
+2.25.1
