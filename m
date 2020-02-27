@@ -1,287 +1,58 @@
-From: Andreas Gerstmayr <agerstmayr@redhat.com>
-Subject: Re: [RFC] perf script: add flamegraph.py script
-Date: Thu, 27 Feb 2020 21:16:44 +0100
-Message-ID: <47ffe459-0920-60d0-b6b0-d7cebb77448b@redhat.com>
-References: <20200221175500.83774-1-agerstmayr@redhat.com>
- <20200225195418.GA160300@krava>
- <0582d729-0e07-b95d-7cad-8912514b8871@redhat.com>
- <20200225202056.GA160294@krava>
- <cd44bf7a-6766-d42b-50d1-482d389fe488@redhat.com>
+From: Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH v2 3/3] perf vendor events amd: update Zen1 events to V2
+Date: Thu, 27 Feb 2020 15:20:29 -0600
+Message-ID: <164d3a93-c607-2bd4-c9a3-dc4d8b275d42@amd.com>
+References: <20200225192815.50388-1-vijaythakkar@me.com>
+ <20200225192815.50388-4-vijaythakkar@me.com>
+ <73b5b731-9597-1243-485a-788437500c7a@amd.com>
+ <20200227200026.GA8493@shwetrath.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cd44bf7a-6766-d42b-50d1-482d389fe488@redhat.com>
+In-Reply-To: <20200227200026.GA8493@shwetrath.localdomain>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kabbott@redhat.com, skozina@redhat.com, mpetlan@redhat.com, nathans@redhat.com, mgoodwin@redhat.com, linux-perf-users@vger.kernel.org, bgregg@netflix.com, mspier@netflix.com, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>
+To: Vijay Thakkar <vijaythakkar@me.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 25.02.20 21:36, Andreas Gerstmayr wrote:
-> On 25.02.20 21:20, Jiri Olsa wrote:
->> On Tue, Feb 25, 2020 at 09:03:19PM +0100, Andreas Gerstmayr wrote:
->>> On 25.02.20 20:54, Jiri Olsa wrote:
->>>> On Fri, Feb 21, 2020 at 06:55:01PM +0100, Andreas Gerstmayr wrote:
->>>>> Usage:
->>>>>
->>>>>       perf script flamegraph -a -F 99 sleep 60
->>>>>
->>>>> Alternative usage:
->>>>>
->>>>>       perf record -a -g -F 99 sleep 60
->>>>>       perf script report flamegraph
->>>>
->>>> nice, could this output the output file, like:
->>>>
->>>>        # perf script report flamegraph --output krava.html
->>>>        dumping data to krava.html
+On 2/27/20 2:00 PM, Vijay Thakkar wrote:
+>> OSRR for AMD Family 17h processors, Models 00h-2Fh, 56255 Rev 3.03 - July, 2018
+> I have included this for v3 that I will submit later, including all the
+> changes for the FPU counters. Sorry, I messed up copy-pasting the text
+> and forgot to change the trailing pipe number.
+
+Please also look at addressing the review comments for patch 2 of 3.
+
+>> and their counts don't seem to match up very well when running
+>> various workloads.  The microarchitecture is likely to have changed
+>> in this area from families prior to 17h, so a MAB alloc can likely
+>> count different events than what is presumed here: a Data cache
+>> load/store/prefetch miss.
 >>
->> I meant the actual line ^^^^, saying that it's writing to the file
+>> I think it's safer to just leave the PPR text "LS MAB Allocates
+>> by Type" as-is, instead of assuming they are L1 load/store misses.
+>> What do you think?
 > 
-> Ah! Sorry, I misunderstood.
-> Yep, sure, I can add that.
+> I did some checking accross PPRs, and this counter seems to have changed
+> names multiple times throughout the PPR revisions. 
 > 
-> I also have one other change lined up to reduce the JSON output, and I'm 
-> testing it with huge flamegraphs right now. Will send an update this week.
+> Zen1 PPR (54945 Rev 1.14 - April 15, 2017) lists counter called "LsMabAllocPipe"
+> with 5 subcounters that have different names compared to ones we see in
+> the mainline right now. PPRs for stepping B2
+> onwards change this to the 3 sub-counter and primary counter name
+> we see right now. This public description still changes accross various
+> PPR revisions, which is why I had this set to what it was. The lastest
+> PPR I can find is indeed lists it as "LS MAB Allocates by Type";
+> I will change it to that with the fuffix of tehe sub-counter name. Since
+> the same counter is in Zen2 as well, I will make the same changes there
+> too.
 
-Ok, I'll need some more time to properly test this with huge flame 
-graphs and different browsers. I'll get back to this in ~2 weeks after 
-my PTO.
+Thanks, yes, and if you look at the Software Optimization Guide that I
+just added to the bugzilla [1], Figure 7 "Load-Store Unit" on page 40
+shows a MAB block separate from the Data Cache block.
 
+Kim
 
-Cheers,
-Andreas
-
-
-> 
-> 
-> Cheers,
-> Andreas
-> 
-> 
->>
->> thanks,
->> jirka
->>
->>>>
->>>> or something in that sense
->>>>
->>>> other than that it looks good to me
->>>
->>> Yes, it's already implemented.
->>>
->>> $ perf script report flamegraph --output krava.html
->>>
->>> writes the output to krava.html
->>>
->>> $ perf script report flamegraph --help
->>>
->>> shows the supported arguments.
->>>
->>> The only gotcha is that you need to have a perf.data in the same 
->>> directory
->>> when calling this command, otherwise perf complains about a missing
->>> perf.data and doesn't call the flamegraph.py script.
->>>
->>>
->>> Cheers,
->>> Andreas
->>>
->>>
->>>>
->>>> thanks,
->>>> jirka
->>>>
->>>>
->>>>>
->>>>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
->>>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>>> Cc: Ingo Molnar <mingo@redhat.com>
->>>>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
->>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->>>>> Cc: Jiri Olsa <jolsa@redhat.com>
->>>>> Cc: Namhyung Kim <namhyung@kernel.org>
->>>>> ---
->>>>>
->>>>> I'm currently preparing packages for d3-flame-graph. For Fedora, 
->>>>> the copr
->>>>> at
->>>>> https://copr.fedorainfracloud.org/coprs/agerstmayr/reviews/package/js-d3-flame-graph/ 
->>>>>
->>>>> can be installed, or alternatively the prebuilt standalone 
->>>>> d3-flame-graph
->>>>> template can be downloaded from
->>>>> https://raw.githubusercontent.com/andreasgerstmayr/specs/master/reviews/js-d3-flame-graph/template.html 
->>>>>
->>>>> and moved into /usr/share/d3-flame-graph/template.html
->>>>>
->>>>>    .../perf/scripts/python/bin/flamegraph-record |   2 +
->>>>>    .../perf/scripts/python/bin/flamegraph-report |   3 +
->>>>>    tools/perf/scripts/python/flamegraph.py       | 117 
->>>>> ++++++++++++++++++
->>>>>    3 files changed, 122 insertions(+)
->>>>>    create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
->>>>>    create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
->>>>>    create mode 100755 tools/perf/scripts/python/flamegraph.py
->>>>>
->>>>> diff --git a/tools/perf/scripts/python/bin/flamegraph-record 
->>>>> b/tools/perf/scripts/python/bin/flamegraph-record
->>>>> new file mode 100755
->>>>> index 000000000000..725d66e71570
->>>>> --- /dev/null
->>>>> +++ b/tools/perf/scripts/python/bin/flamegraph-record
->>>>> @@ -0,0 +1,2 @@
->>>>> +#!/usr/bin/sh
->>>>> +perf record -g "$@"
->>>>> diff --git a/tools/perf/scripts/python/bin/flamegraph-report 
->>>>> b/tools/perf/scripts/python/bin/flamegraph-report
->>>>> new file mode 100755
->>>>> index 000000000000..b1a79afd903b
->>>>> --- /dev/null
->>>>> +++ b/tools/perf/scripts/python/bin/flamegraph-report
->>>>> @@ -0,0 +1,3 @@
->>>>> +#!/usr/bin/sh
->>>>> +# description: create flame graphs
->>>>> +perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
->>>>> diff --git a/tools/perf/scripts/python/flamegraph.py 
->>>>> b/tools/perf/scripts/python/flamegraph.py
->>>>> new file mode 100755
->>>>> index 000000000000..2e9139ef2c4a
->>>>> --- /dev/null
->>>>> +++ b/tools/perf/scripts/python/flamegraph.py
->>>>> @@ -0,0 +1,117 @@
->>>>> +# flamegraph.py - create flame graphs from perf samples
->>>>> +# SPDX-License-Identifier: GPL-2.0
->>>>> +#
->>>>> +# Usage:
->>>>> +#
->>>>> +#  perf record -a -g -F 99 sleep 60
->>>>> +#  perf script report flamegraph
->>>>> +#
->>>>> +# Combined data collection and flamegraph generation:
->>>>> +#
->>>>> +#  perf script flamegraph -a -F 99 sleep 60
->>>>> +#
->>>>> +# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
->>>>> +# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
->>>>> +# Works in tandem with d3-flame-graph by Martin Spier 
->>>>> <mspier@netflix.com>
->>>>> +
->>>>> +import sys
->>>>> +import os
->>>>> +import argparse
->>>>> +import json
->>>>> +
->>>>> +
->>>>> +class Node:
->>>>> +    def __init__(self, name, libtype=""):
->>>>> +        self.name = name
->>>>> +        self.libtype = libtype
->>>>> +        self.value = 0
->>>>> +        self.children = []
->>>>> +
->>>>> +
->>>>> +class FlameGraphCLI:
->>>>> +    def __init__(self, args):
->>>>> +        self.args = args
->>>>> +        self.stack = Node("root")
->>>>> +
->>>>> +        if self.args.format == "html" and \
->>>>> +                not os.path.isfile(self.args.template):
->>>>> +            print(f"Flame Graph template '{self.args.template}' 
->>>>> does not " +
->>>>> +                  f"exist. Please install the d3-flame-graph 
->>>>> package, " +
->>>>> +                  f"specify an existing flame graph template " +
->>>>> +                  f"(--template PATH) or another output format " +
->>>>> +                  f"(--format FORMAT).", file=sys.stderr)
->>>>> +            sys.exit(1)
->>>>> +
->>>>> +    def find_or_create_node(self, node, name, dso):
->>>>> +        libtype = "kernel" if dso == "[kernel.kallsyms]" else ""
->>>>> +        if name is None:
->>>>> +            name = "[unknown]"
->>>>> +
->>>>> +        for child in node.children:
->>>>> +            if child.name == name and child.libtype == libtype:
->>>>> +                return child
->>>>> +
->>>>> +        child = Node(name, libtype)
->>>>> +        node.children.append(child)
->>>>> +        return child
->>>>> +
->>>>> +    def process_event(self, event):
->>>>> +        node = self.find_or_create_node(self.stack, event["comm"], 
->>>>> None)
->>>>> +        if "callchain" in event:
->>>>> +            for entry in reversed(event['callchain']):
->>>>> +                node = self.find_or_create_node(
->>>>> +                    node, entry.get("sym", {}).get("name"), 
->>>>> event.get("dso"))
->>>>> +        else:
->>>>> +            node = self.find_or_create_node(
->>>>> +                node, entry.get("symbol"), event.get("dso"))
->>>>> +        node.value += 1
->>>>> +
->>>>> +    def trace_end(self):
->>>>> +        def encoder(x): return x.__dict__
->>>>> +        json_str = json.dumps(self.stack, default=encoder,
->>>>> +                              indent=self.args.indent)
->>>>> +
->>>>> +        if self.args.format == "html":
->>>>> +            try:
->>>>> +                with open(self.args.template) as f:
->>>>> +                    output_str = f.read().replace("/** 
->>>>> @flamegraph_params **/",
->>>>> +                                                  json_str)
->>>>> +            except IOError as e:
->>>>> +                print(f"Error reading template file: {e}", 
->>>>> file=sys.stderr)
->>>>> +                sys.exit(1)
->>>>> +            output_fn = self.args.output or "flamegraph.html"
->>>>> +        else:
->>>>> +            output_str = json_str
->>>>> +            output_fn = self.args.output or "stacks.json"
->>>>> +
->>>>> +        if output_fn == "-":
->>>>> +            sys.stdout.write(output_str)
->>>>> +        else:
->>>>> +            try:
->>>>> +                with open(output_fn, "w") as out:
->>>>> +                    out.write(output_str)
->>>>> +            except IOError as e:
->>>>> +                print(f"Error writing output file: {e}", 
->>>>> file=sys.stderr)
->>>>> +                sys.exit(1)
->>>>> +
->>>>> +
->>>>> +if __name__ == "__main__":
->>>>> +    parser = argparse.ArgumentParser(description="Create flame 
->>>>> graphs.")
->>>>> +    parser.add_argument("-F", "--format",
->>>>> +                        default="html", choices=["json", "html"],
->>>>> +                        help="output file format")
->>>>> +    parser.add_argument("-o", "--output",
->>>>> +                        help="output file name")
->>>>> +    parser.add_argument("--indent",
->>>>> +                        type=int, help="JSON indentation")
->>>>> +    parser.add_argument("--template",
->>>>> +                        
->>>>> default="/usr/share/d3-flame-graph/template.html",
->>>>> +                        help="path to flamegraph HTML template")
->>>>> +    parser.add_argument("-i", "--input",
->>>>> +                        help=argparse.SUPPRESS)
->>>>> +
->>>>> +    args = parser.parse_args()
->>>>> +    cli = FlameGraphCLI(args)
->>>>> +
->>>>> +    process_event = cli.process_event
->>>>> +    trace_end = cli.trace_end
->>>>> -- 
->>>>> 2.24.1
->>>>>
->>>>
->>>
->>
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=206537
