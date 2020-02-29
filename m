@@ -1,86 +1,146 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v3 0/8] powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
-Date: Sat, 29 Feb 2020 15:11:51 +0530
-Message-ID: <20200229094159.25573-1-kjain@linux.ibm.com>
+Subject: [PATCH v3 2/8] powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor details
+Date: Sat, 29 Feb 2020 15:11:53 +0530
+Message-ID: <20200229094159.25573-3-kjain@linux.ibm.com>
+References: <20200229094159.25573-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200229094159.25573-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-First patch of the patchset fix inconsistent results we are getting when
-we run multiple 24x7 events.
+For hv_24x7 socket/chip level events, specific chip-id to which
+the data requested should be added as part of pmu events.
+But number of chips/socket in the system details are not exposed.
 
-Patchset adds json file metric support for the hv_24x7 socket/chip level
-events. "hv_24x7" pmu interface events needs system dependent parameter
-like socket/chip/core. For example, hv_24x7 chip level events needs
-specific chip-id to which the data is requested should be added as part
-of pmu events.
+Patch implements read_sys_info_pseries() to get system
+parameter values like number of sockets and chips per socket.
+Rtas_call with token "PROCESSOR_MODULE_INFO"
+is used to get these values.
 
-So to enable JSON file support to "hv_24x7" interface, patchset expose
-total number of sockets and chips per-socket details in sysfs
-files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
+Sub-sequent patch exports these values via sysfs.
 
-To get sockets and number of chips per sockets, patchset adds a rtas call
-with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
-handles partition migration case to re-init these system depended
-parameters by adding proper calls in post_mobility_fixup() (mobility.c).
+Patch also make these parameters default to 1.
 
-Patch 6 & 8 of the patchset handles perf tool plumbing needed to replace
-the "?" character in the metric expression to proper value and hv_24x7
-json metric file for different Socket/chip resources.
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ arch/powerpc/perf/hv-24x7.c              | 72 ++++++++++++++++++++++++
+ arch/powerpc/platforms/pseries/pseries.h |  3 +
+ 2 files changed, 75 insertions(+)
 
-Patch set also enable Hz/hz prinitg for --metric-only option to print
-metric data for bus frequency.
-
-Applied and tested all these patches cleanly on top of jiri's flex changes
-patchset and made required changes.
-
-Changelog:
-v2 -> v3
-- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
-  with comment rather then adding 0 to event_count value.
-  Suggested by: Sukadev Bhattiprolu
-
-- Apply tool side changes require to replace "?" on Jiri's flex patch
-  series and made all require changes to make it compatible with added
-  flex change.
-
-v1 -> v2
-- Rename hv-24x7 metric json file as nest_metrics.json
-
-Kajol Jain (8):
-  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
-    hv-24x7 events run
-  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
-    details
-  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
-    processor details
-  Documentation/ABI: Add ABI documentation for chips and sockets
-  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
-  perf/tools: Enhance JSON/metric infrastructure to handle "?"
-  tools/perf: Enable Hz/hz prinitg for --metric-only option
-  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
-    events
-
- .../sysfs-bus-event_source-devices-hv_24x7    |  14 +++
- arch/powerpc/perf/hv-24x7.c                   | 104 ++++++++++++++--
- arch/powerpc/platforms/pseries/mobility.c     |  12 ++
- arch/powerpc/platforms/pseries/pseries.h      |   3 +
- tools/perf/arch/powerpc/util/header.c         |  47 ++++++++
- .../arch/powerpc/power9/nest_metrics.json     |  19 +++
- tools/perf/util/expr.h                        |   1 +
- tools/perf/util/expr.l                        |  18 ++-
- tools/perf/util/expr.y                        |   2 +
- tools/perf/util/metricgroup.c                 | 112 +++++++++++-------
- tools/perf/util/metricgroup.h                 |   1 +
- tools/perf/util/stat-display.c                |   2 -
- tools/perf/util/stat-shadow.c                 |   6 +
- 13 files changed, 286 insertions(+), 55 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-
+diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+index 48e8f4b17b91..9ae00f29bd21 100644
+--- a/arch/powerpc/perf/hv-24x7.c
++++ b/arch/powerpc/perf/hv-24x7.c
+@@ -20,6 +20,11 @@
+ #include <asm/io.h>
+ #include <linux/byteorder/generic.h>
+ 
++#ifdef CONFIG_PPC_RTAS
++#include <asm/rtas.h>
++#include <../../platforms/pseries/pseries.h>
++#endif
++
+ #include "hv-24x7.h"
+ #include "hv-24x7-catalog.h"
+ #include "hv-common.h"
+@@ -57,6 +62,69 @@ static bool is_physical_domain(unsigned domain)
+ 	}
+ }
+ 
++#ifdef CONFIG_PPC_RTAS
++#define PROCESSOR_MODULE_INFO   43
++#define PROCESSOR_MAX_LENGTH	(8 * 1024)
++
++static int strbe16toh(const char *buf, int offset)
++{
++	return (buf[offset] << 8) + buf[offset + 1];
++}
++
++static u32		physsockets;	/* Physical sockets */
++static u32		physchips;	/* Physical chips */
++
++/*
++ * Function read_sys_info_pseries() make a rtas_call which require
++ * data buffer of size 8K. As standard 'rtas_data_buf' is of size
++ * 4K, we are adding new local buffer 'rtas_local_data_buf'.
++ */
++char rtas_local_data_buf[PROCESSOR_MAX_LENGTH] __cacheline_aligned;
++
++/*
++ * read_sys_info_pseries()
++ * Retrieve the number of sockets and chips per socket details
++ * through the get-system-parameter rtas call.
++ */
++void read_sys_info_pseries(void)
++{
++	int call_status, len, ntypes;
++
++	/*
++	 * Making system parameter: chips and sockets default to 1.
++	 */
++	physsockets = 1;
++	physchips = 1;
++	memset(rtas_local_data_buf, 0, PROCESSOR_MAX_LENGTH);
++	spin_lock(&rtas_data_buf_lock);
++
++	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
++				NULL,
++				PROCESSOR_MODULE_INFO,
++				__pa(rtas_local_data_buf),
++				PROCESSOR_MAX_LENGTH);
++
++	spin_unlock(&rtas_data_buf_lock);
++
++	if (call_status != 0) {
++		pr_info("%s %s Error calling get-system-parameter (0x%x)\n",
++			__FILE__, __func__, call_status);
++	} else {
++		rtas_local_data_buf[PROCESSOR_MAX_LENGTH - 1] = '\0';
++		len = strbe16toh(rtas_local_data_buf, 0);
++		if (len < 6)
++			return;
++
++		ntypes = strbe16toh(rtas_local_data_buf, 2);
++
++		if (!ntypes)
++			return;
++		physsockets = strbe16toh(rtas_local_data_buf, 4);
++		physchips = strbe16toh(rtas_local_data_buf, 6);
++	}
++}
++#endif /* CONFIG_PPC_RTAS */
++
+ /* Domains for which more than one result element are returned for each event. */
+ static bool domain_needs_aggregation(unsigned int domain)
+ {
+@@ -1605,6 +1673,10 @@ static int hv_24x7_init(void)
+ 	if (r)
+ 		return r;
+ 
++#ifdef CONFIG_PPC_RTAS
++	read_sys_info_pseries();
++#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
+index 13fa370a87e4..1727559ce304 100644
+--- a/arch/powerpc/platforms/pseries/pseries.h
++++ b/arch/powerpc/platforms/pseries/pseries.h
+@@ -19,6 +19,9 @@ extern void request_event_sources_irqs(struct device_node *np,
+ struct pt_regs;
+ 
+ extern int pSeries_system_reset_exception(struct pt_regs *regs);
++#ifdef CONFIG_PPC_RTAS
++extern void read_sys_info_pseries(void);
++#endif
+ extern int pSeries_machine_check_exception(struct pt_regs *regs);
+ extern long pseries_machine_check_realmode(struct pt_regs *regs);
+ 
 -- 
 2.21.0
