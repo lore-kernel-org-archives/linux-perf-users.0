@@ -1,227 +1,115 @@
-From: Vijay Thakkar <vijaythakkar@me.com>
-Subject: [PATCH v3 3/3] perf vendor events amd: update Zen1 events to V2
-Date: Fri, 28 Feb 2020 12:56:39 -0500
-Message-ID: <20200228175639.39171-4-vijaythakkar@me.com>
-References: <20200228175639.39171-1-vijaythakkar@me.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Date: Sat, 29 Feb 2020 10:11:59 +0100
+Message-ID: <20200229091159.GA92847@gmail.com>
+References: <20200228140014.1236-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200228175639.39171-1-vijaythakkar@me.com>
+Content-Disposition: inline
+In-Reply-To: <20200228140014.1236-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Vijay Thakkar <vijaythakkar@me.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, He Zhe <zhe.he@windriver.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch updates the PMCs for AMD Zen1 core based processors (Family
-17h; Models 0 through 2F) to be in accordance with PMCs as
-documented in the latest versions of the AMD Processor Programming
-Reference [1], [2] and [3]. Note that some events, such as FPU pipe
-assignment are missing in [1], and therefore [3] is included for full
-coverage of events.
 
-PMCs added:
-fpu_pipe_assignment.dual{0|1|2|3}
-fpu_pipe_assignment.total{0|1|2|3}
-ls_mab_alloc.dc_prefetcher
-ls_mab_alloc.stores
-ls_mab_alloc.loads
-bp_dyn_ind_pred
-bp_de_redirect
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-PMC removed:
-ex_ret_cond_misp
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 4c45945aa418f5e2f31cdaf0b1484e146e29f72f:
+> 
+>   Merge tag 'perf-urgent-for-mingo-5.6-20200220' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2020-02-26 15:18:05 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.6-20200228
+> 
+> for you to fetch changes up to e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc:
+> 
+>   perf annotate: Fix segfault with source toggle (2020-02-27 11:47:23 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> perf annotate:
+> 
+>   Ravi Bangoria:
+> 
+>   - Fix segfault with source toggle.
+> 
+>   - Fix --show-total-period and --show-nr-samples for tui/stdio2.
+> 
+>   - Fix handling of settings in ~/.perfconfig versus the ones passed
+>     in the command line
+> 
+>   - Re-render title bar after switching back from script browser.
+> 
+>   - Fix options man page, document some missing ones.
+> 
+> perf probe:
+> 
+>   He Zhe:
+> 
+>   - Check return value of strlist__add() for -ENOMEM.
+> 
+> tools UAPI:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Sync x86's msr-index.h copy with the kernel sources.
+> 
+>   - Update tools's copy of x86's kvm.h headers.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (2):
+>       tools arch x86: Sync the msr-index.h copy with the kernel sources
+>       tools headers UAPI: Update tools's copy of kvm.h headers
+> 
+> He Zhe (1):
+>       perf probe: Check return value of strlist__add() for -ENOMEM
+> 
+> Ravi Bangoria (12):
+>       perf annotate/tui: Re-render title bar after switching back from script browser
+>       perf annotate: Fix --show-total-period for tui/stdio2
+>       perf annotate: Fix --show-nr-samples for tui/stdio2
+>       perf config: Introduce perf_config_u8()
+>       perf annotate: Make perf config effective
+>       perf annotate: Prefer cmdline option over default config
+>       perf annotate: Fix perf config option description
+>       perf config: Document missing config options
+>       perf annotate: Remove privsize from symbol__annotate() args
+>       perf annotate: Simplify disasm_line allocation and freeing code
+>       perf annotate: Align struct annotate_args
+>       perf annotate: Fix segfault with source toggle
+> 
+>  tools/arch/x86/include/asm/msr-index.h   |   2 +
+>  tools/arch/x86/include/uapi/asm/kvm.h    |   1 +
+>  tools/perf/Documentation/perf-config.txt |  74 +++++++++++-
+>  tools/perf/builtin-annotate.c            |   4 +-
+>  tools/perf/builtin-probe.c               |   6 +-
+>  tools/perf/builtin-report.c              |   2 +-
+>  tools/perf/builtin-top.c                 |   4 +-
+>  tools/perf/ui/browsers/annotate.c        |  19 ++-
+>  tools/perf/ui/gtk/annotate.c             |   2 +-
+>  tools/perf/util/annotate.c               | 194 ++++++++++++-------------------
+>  tools/perf/util/annotate.h               |   9 +-
+>  tools/perf/util/config.c                 |  12 ++
+>  tools/perf/util/config.h                 |   1 +
+>  tools/perf/util/probe-file.c             |  28 ++++-
+>  14 files changed, 210 insertions(+), 148 deletions(-)
 
-Cumulative counts, fpu_pipe_assignment.total and
-fpu_pipe_assignment.dual, existed in v1, but did expose port-level
-counters.
+Pulled, thanks a lot Arnaldo!
 
-ex_ret_cond_misp has been removed as it has been removed from the latest
-versions of the PPR, and when tested, always seems to sample zero as
-tested on a Ryzen 3400G system.
-
-[1]: Processor Programming Reference (PPR) for AMD Family 17h Models
-01h,08h, Revision B2 Processors, 54945 Rev 3.03 - Jun 14, 2019.
-[2]: Processor Programming Reference (PPR) for AMD Family 17h Model 18h,
-Revision B1 Processors, 55570-B1 Rev 3.14 - Sep 26, 2019.
-[3]: OSRR for AMD Family 17h processors, Models 00h-2Fh, 56255 Rev 3.03 - July, 2018
-All of the PPRs can be found at:
-https://bugzilla.kernel.org/show_bug.cgi?id=206537
-
-Signed-off-by: Vijay Thakkar <vijaythakkar@me.com>
-
----
-Changes in v2:
-    - Correct the UMasks for fpu_pipe_assignment.dual* by left shifting
-    all by 4 bits.
-    - Correct UMask for ls_mab_alloc.loads
-    - add bp_dyn_ind_pred (PMC0x08E)
-    - add bp_de_redirect  (PMC0x091)
-Changes in v3:
-    - Correct the pipe numbers for fpu_pipe_assignment counters
-    - Correct ls_mab_alloc.* public descriptions
-
- .../pmu-events/arch/x86/amdzen1/branch.json   | 11 ++++
- .../pmu-events/arch/x86/amdzen1/core.json     |  5 --
- .../arch/x86/amdzen1/floating-point.json      | 60 ++++++++++++++++++-
- .../pmu-events/arch/x86/amdzen1/memory.json   | 18 ++++++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |  2 +-
- 5 files changed, 88 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/branch.json b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
-index 93ddfd8053ca..a9943eeb8d6b 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
-@@ -8,5 +8,16 @@
-     "EventName": "bp_l2_btb_correct",
-     "EventCode": "0x8b",
-     "BriefDescription": "L2 BTB Correction."
-+  },
-+  {
-+    "EventName": "bp_dyn_ind_pred",
-+    "EventCode": "0x8e",
-+    "BriefDescription": "Dynamic Indirect Predictions.",
-+    "PublicDescription": "Indirect Branch Prediction for potential multi-target branch (speculative)."
-+  },
-+  {
-+    "EventName": "bp_de_redirect",
-+    "EventCode": "0x91",
-+    "BriefDescription": "Decoder Overrides Existing Branch Prediction (speculative)."
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/core.json b/tools/perf/pmu-events/arch/x86/amdzen1/core.json
-index 1079544eeed5..38994fb4b625 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/core.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/core.json
-@@ -90,11 +90,6 @@
-     "EventCode": "0xd1",
-     "BriefDescription": "Retired Conditional Branch Instructions."
-   },
--  {
--    "EventName": "ex_ret_cond_misp",
--    "EventCode": "0xd2",
--    "BriefDescription": "Retired Conditional Branch Instructions Mispredicted."
--  },
-   {
-     "EventName": "ex_div_busy",
-     "EventCode": "0xd3",
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json b/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
-index ea4711983d1d..e026f8ebab8f 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
-@@ -3,16 +3,72 @@
-     "EventName": "fpu_pipe_assignment.dual",
-     "EventCode": "0x00",
-     "BriefDescription": "Total number multi-pipe uOps.",
--    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-+    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to all pipes.",
-     "UMask": "0xf0"
-   },
-+  {
-+    "EventName": "fpu_pipe_assignment.dual3",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number multi-pipe uOps to pipe 3.",
-+    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to pipe 3.",
-+    "UMask": "0x80"
-+  },
-+  {
-+    "EventName": "fpu_pipe_assignment.dual2",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number multi-pipe uOps to pipe 2.",
-+    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to pipe 2.",
-+    "UMask": "0x40"
-+  },
-+  {
-+    "EventName": "fpu_pipe_assignment.dual1",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number multi-pipe uOps to pipe 1.",
-+    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to pipe 1.",
-+    "UMask": "0x20"
-+  },
-+  {
-+    "EventName": "fpu_pipe_assignment.dual0",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number multi-pipe uOps to pipe 0.",
-+    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to pipe 0.",
-+    "UMask": "0x10"
-+  },
-   {
-     "EventName": "fpu_pipe_assignment.total",
-     "EventCode": "0x00",
-     "BriefDescription": "Total number uOps.",
--    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 3.",
-+    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to all pipes.",
-     "UMask": "0xf"
-   },
-+  {
-+    "EventName": "fpu_pipe_assignment.total3",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number of fp uOps on pipe 3.",
-+    "PublicDescription": "The number of operations (uOps) dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one-cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to pipe 3.",
-+    "UMask": "0x8"
-+  },
-+  {
-+    "EventName": "fpu_pipe_assignment.total2",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number of fp uOps on pipe 2.",
-+    "PublicDescription": "The number of operations (uOps) dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to pipe 2.",
-+    "UMask": "0x4"
-+  },
-+  {
-+    "EventName": "fpu_pipe_assignment.total1",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number of fp uOps on pipe 1.",
-+    "PublicDescription": "The number of operations (uOps) dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to pipe 1.",
-+    "UMask": "0x2"
-+  },
-+  {
-+    "EventName": "fpu_pipe_assignment.total0",
-+    "EventCode": "0x00",
-+    "BriefDescription": "Total number of fp uOps  on pipe 0.",
-+    "PublicDescription": "The number of operations (uOps) dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to pipe 0.",
-+    "UMask": "0x1"
-+  },
-   {
-     "EventName": "fp_sched_empty",
-     "EventCode": "0x01",
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/memory.json b/tools/perf/pmu-events/arch/x86/amdzen1/memory.json
-index fa2d60d4def0..9f9c087007d2 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/memory.json
-@@ -37,6 +37,24 @@
-     "EventCode": "0x40",
-     "BriefDescription": "The number of accesses to the data cache for load and store references. This may include certain microcode scratchpad accesses, although these are generally rare. Each increment represents an eight-byte access, although the instruction may only be accessing a portion of that. This event is a speculative event."
-   },
-+  {
-+    "EventName": "ls_mab_alloc.dc_prefetcher",
-+    "EventCode": "0x41",
-+    "BriefDescription": "LS MAB allocates by type - DC prefetcher.",
-+    "UMask": "0x8"
-+  },
-+  {
-+    "EventName": "ls_mab_alloc.stores",
-+    "EventCode": "0x41",
-+    "BriefDescription": "LS MAB allocates by type - stores.",
-+    "UMask": "0x2"
-+  },
-+  {
-+    "EventName": "ls_mab_alloc.loads",
-+    "EventCode": "0x41",
-+    "BriefDescription": "LS MAB allocates by type - loads.",
-+    "UMask": "0x01"
-+  },
-   {
-     "EventName": "ls_l1_d_tlb_miss.all",
-     "EventCode": "0x45",
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 244a36e37a3a..25b06cf98747 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -36,5 +36,5 @@ GenuineIntel-6-55-[56789ABCDEF],v1,cascadelakex,core
- GenuineIntel-6-7D,v1,icelake,core
- GenuineIntel-6-7E,v1,icelake,core
- GenuineIntel-6-86,v1,tremontx,core
--AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v1,amdzen1,core
-+AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
- AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
--- 
-2.25.1
+	Ingo
