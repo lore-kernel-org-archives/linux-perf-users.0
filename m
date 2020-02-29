@@ -1,115 +1,96 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Date: Sat, 29 Feb 2020 10:11:59 +0100
-Message-ID: <20200229091159.GA92847@gmail.com>
-References: <20200228140014.1236-1-acme@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v3 0/8] powerpc/perf: Add json file metric support for the
+ hv_24x7 socket/chip level events
+Date: Sat, 29 Feb 2020 14:43:48 +0530
+Message-ID: <20200229091356.22157-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200228140014.1236-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, He Zhe <zhe.he@windriver.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane-mx.org@lists.ozlabs.org>
+To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, suka@linux.vnet.ibm.com
+Cc: mark.rutland@arm.com, ravi.bangoria@linux.ibm.com, maddy@linux.vnet.ibm.com, tglx@linutronix.de, jmario@redhat.com, peterz@infradead.org, gregkh@linuxfoundation.org, mpetlan@redhat.com, alexander.shishkin@linux.intel.com, linux-perf-users@vger.kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, anju@linux.vnet.ibm.com, mamatha4@linux.vnet.ibm.com, kjain@linux.ibm.com, jolsa@kernel.org, namhyung@kernel.org, mingo@kernel.org, kan.liang@linux.intel.com
 List-Id: linux-perf-users.vger.kernel.org
 
+First patch of the patchset fix inconsistent results we are getting when
+we run multiple 24x7 events.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 4c45945aa418f5e2f31cdaf0b1484e146e29f72f:
-> 
->   Merge tag 'perf-urgent-for-mingo-5.6-20200220' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2020-02-26 15:18:05 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.6-20200228
-> 
-> for you to fetch changes up to e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc:
-> 
->   perf annotate: Fix segfault with source toggle (2020-02-27 11:47:23 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf annotate:
-> 
->   Ravi Bangoria:
-> 
->   - Fix segfault with source toggle.
-> 
->   - Fix --show-total-period and --show-nr-samples for tui/stdio2.
-> 
->   - Fix handling of settings in ~/.perfconfig versus the ones passed
->     in the command line
-> 
->   - Re-render title bar after switching back from script browser.
-> 
->   - Fix options man page, document some missing ones.
-> 
-> perf probe:
-> 
->   He Zhe:
-> 
->   - Check return value of strlist__add() for -ENOMEM.
-> 
-> tools UAPI:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Sync x86's msr-index.h copy with the kernel sources.
-> 
->   - Update tools's copy of x86's kvm.h headers.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (2):
->       tools arch x86: Sync the msr-index.h copy with the kernel sources
->       tools headers UAPI: Update tools's copy of kvm.h headers
-> 
-> He Zhe (1):
->       perf probe: Check return value of strlist__add() for -ENOMEM
-> 
-> Ravi Bangoria (12):
->       perf annotate/tui: Re-render title bar after switching back from script browser
->       perf annotate: Fix --show-total-period for tui/stdio2
->       perf annotate: Fix --show-nr-samples for tui/stdio2
->       perf config: Introduce perf_config_u8()
->       perf annotate: Make perf config effective
->       perf annotate: Prefer cmdline option over default config
->       perf annotate: Fix perf config option description
->       perf config: Document missing config options
->       perf annotate: Remove privsize from symbol__annotate() args
->       perf annotate: Simplify disasm_line allocation and freeing code
->       perf annotate: Align struct annotate_args
->       perf annotate: Fix segfault with source toggle
-> 
->  tools/arch/x86/include/asm/msr-index.h   |   2 +
->  tools/arch/x86/include/uapi/asm/kvm.h    |   1 +
->  tools/perf/Documentation/perf-config.txt |  74 +++++++++++-
->  tools/perf/builtin-annotate.c            |   4 +-
->  tools/perf/builtin-probe.c               |   6 +-
->  tools/perf/builtin-report.c              |   2 +-
->  tools/perf/builtin-top.c                 |   4 +-
->  tools/perf/ui/browsers/annotate.c        |  19 ++-
->  tools/perf/ui/gtk/annotate.c             |   2 +-
->  tools/perf/util/annotate.c               | 194 ++++++++++++-------------------
->  tools/perf/util/annotate.h               |   9 +-
->  tools/perf/util/config.c                 |  12 ++
->  tools/perf/util/config.h                 |   1 +
->  tools/perf/util/probe-file.c             |  28 ++++-
->  14 files changed, 210 insertions(+), 148 deletions(-)
+So to enable JSON file support to "hv_24x7" interface, patchset expose
+total number of sockets and chips per-socket details in sysfs
+files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
 
-Pulled, thanks a lot Arnaldo!
+To get sockets and number of chips per sockets, patchset adds a rtas call
+with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
+handles partition migration case to re-init these system depended
+parameters by adding proper calls in post_mobility_fixup() (mobility.c).
 
-	Ingo
+Patch 6 & 8 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
+
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
+
+Applied and tested all these patches cleanly on top of jiri's flex changes
+patchset and made required changes.
+
+Changelog:
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
+
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
+
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
+
+Kajol Jain (8):
+  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
+    hv-24x7 events run
+  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
+    details
+  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
+    processor details
+  Documentation/ABI: Add ABI documentation for chips and sockets
+  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
+
+ .../sysfs-bus-event_source-devices-hv_24x7    |  14 +++
+ arch/powerpc/perf/hv-24x7.c                   | 104 ++++++++++++++--
+ arch/powerpc/platforms/pseries/mobility.c     |  12 ++
+ arch/powerpc/platforms/pseries/pseries.h      |   3 +
+ tools/perf/arch/powerpc/util/header.c         |  47 ++++++++
+ .../arch/powerpc/power9/nest_metrics.json     |  19 +++
+ tools/perf/util/expr.h                        |   1 +
+ tools/perf/util/expr.l                        |  18 ++-
+ tools/perf/util/expr.y                        |   2 +
+ tools/perf/util/metricgroup.c                 | 112 +++++++++++-------
+ tools/perf/util/metricgroup.h                 |   1 +
+ tools/perf/util/stat-display.c                |   2 -
+ tools/perf/util/stat-shadow.c                 |   6 +
+ 13 files changed, 286 insertions(+), 55 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+
+-- 
+2.21.0
