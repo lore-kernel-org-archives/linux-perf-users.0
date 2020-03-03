@@ -1,50 +1,50 @@
-From: Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH v3 3/3] perf vendor events amd: update Zen1 events to V2
-Date: Tue, 3 Mar 2020 11:04:23 -0600
-Message-ID: <77552e9e-7fca-7186-24cc-6a8a87d4b7b6@amd.com>
-References: <20200228175639.39171-1-vijaythakkar@me.com>
- <20200228175639.39171-4-vijaythakkar@me.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 1/5] perf tests bp_account: Make global variable static
+Date: Tue,  3 Mar 2020 16:48:23 -0300
+Message-ID: <20200303194827.6461-2-acme@kernel.org>
+References: <20200303194827.6461-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200228175639.39171-4-vijaythakkar@me.com>
-Content-Language: en-US
+In-Reply-To: <20200303194827.6461-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Thakkar <vijaythakkar@me.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Vijay,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On 2/28/20 11:56 AM, Vijay Thakkar wrote:
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
-> @@ -3,16 +3,72 @@
->      "EventName": "fpu_pipe_assignment.dual",
->      "EventCode": "0x00",
->      "BriefDescription": "Total number multi-pipe uOps.",
+To fix the build with newer gccs, that without this patch exit with:
 
-Please concatenate .."assigned to all pipes", like you did in the publicDescription:
+    LD       /tmp/build/perf/tests/perf-in.o
+  ld: /tmp/build/perf/tests/bp_account.o:/git/perf/tools/perf/tests/bp_account.c:22: multiple definition of `the_var'; /tmp/build/perf/tests/bp_signal.o:/git/perf/tools/perf/tests/bp_signal.c:38: first defined here
+  make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/tests/perf-in.o] Error 1
 
-> -    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to all pipes.",
->      "UMask": "0xf0"
->    },
-<snip>
->    {
->      "EventName": "fpu_pipe_assignment.total",
->      "EventCode": "0x00",
->      "BriefDescription": "Total number uOps.",
+First noticed in fedora:rawhide/32 with:
 
-Same here.
+  [perfbuilder@a5ff49d6e6e4 ~]$ gcc --version
+  gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8)
 
-> -    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 3.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to all pipes.",
->      "UMask": "0xf"
->    },
+Reported-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/bp_account.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The rest looks good to me, and so does patch 1/3 still.
-
-Thanks,
-
-Kim
+diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
+index d0b935356274..489b50604cf2 100644
+--- a/tools/perf/tests/bp_account.c
++++ b/tools/perf/tests/bp_account.c
+@@ -19,7 +19,7 @@
+ #include "../perf-sys.h"
+ #include "cloexec.h"
+ 
+-volatile long the_var;
++static volatile long the_var;
+ 
+ static noinline int test_function(void)
+ {
+-- 
+2.21.1
