@@ -1,103 +1,102 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/5] perf symbols: Don't try to find a vmlinux file when looking for kernel modules
-Date: Tue,  3 Mar 2020 16:48:27 -0300
-Message-ID: <20200303194827.6461-6-acme@kernel.org>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Date: Wed, 4 Mar 2020 11:54:46 +0100
+Message-ID: <20200304105446.GA105264@gmail.com>
 References: <20200303194827.6461-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20200303194827.6461-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kim Phillips <kim.phillips@amd.com>, Michael Petlan <mpetlan@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The dso->kernel value is now set to everything that is in
-machine->kmaps, but that was being used to decide if vmlinux lookup is
-needed, which ended up making that lookup be made for kernel modules,
-that now have dso->kernel set, leading to these kinds of warnings when
-running on a machine with compressed kernel modules, like fedora:31:
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-  [root@five ~]# perf record -F 10000 -a sleep 2
-  [ perf record: Woken up 1 times to write data ]
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  [ perf record: Captured and wrote 1.024 MB perf.data (1366 samples) ]
-  [root@five ~]#
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling, mostly from mostly valid complaints by
+> the most recent gcc version in my container farm,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc:
+> 
+>   perf annotate: Fix segfault with source toggle (2020-02-27 11:47:23 -0300)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.6-20200303
+> 
+> for you to fetch changes up to b5c0951860ba98cfe1936b5c0739450875d51451:
+> 
+>   perf symbols: Don't try to find a vmlinux file when looking for kernel modules (2020-03-03 16:20:01 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> perf symbols:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Don't try to find a vmlinux file when looking for kernel modules,
+>     fixing symbol resolution in systems with compressed kernel modules.
+> 
+> perf env:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Do not return pointers to local variables, fixing valid warning from
+>     gcc 10 for corner case that stops the build due to -Werror.
+> 
+> perf tests:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Make global variable static in the bp_account entry to fix build
+>     with gcc 10.
+> 
+> perf parse-events:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Use asprintf() instead of strncpy() to read tracepoint files, addressing
+>     compiler warning that stops the build as we use -Werror.
+> 
+> perf bench:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Share some global variables to fix build with gcc 10.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (5):
+>       perf tests bp_account: Make global variable static
+>       perf env: Do not return pointers to local variables
+>       perf parse-events: Use asprintf() instead of strncpy() to read tracepoint files
+>       perf bench: Share some global variables to fix build with gcc 10
+>       perf symbols: Don't try to find a vmlinux file when looking for kernel modules
+> 
+>  tools/perf/bench/bench.h         |  4 ++++
+>  tools/perf/bench/epoll-ctl.c     |  7 +++----
+>  tools/perf/bench/epoll-wait.c    | 11 +++++------
+>  tools/perf/bench/futex-hash.c    | 12 ++++++------
+>  tools/perf/bench/futex-lock-pi.c | 11 +++++------
+>  tools/perf/tests/bp_account.c    |  2 +-
+>  tools/perf/util/env.c            |  4 ++--
+>  tools/perf/util/parse-events.c   | 10 ++--------
+>  tools/perf/util/symbol.c         | 13 ++++++-------
+>  9 files changed, 34 insertions(+), 40 deletions(-)
 
-This happens when collecting the buildid, when we find samples for
-kernel modules, fix it by checking if the looked up DSO is a kernel
-module by other means.
+Pulled, thanks a lot Arnaldo!
 
-Fixes: 02213cec64bb ("perf maps: Mark module DSOs with kernel type")
-Tested-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@amd.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200302191007.GD10335@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/symbol.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 1077013d8ce2..26bc6a0096ce 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1622,7 +1622,12 @@ int dso__load(struct dso *dso, struct map *map)
- 		goto out;
- 	}
- 
--	if (dso->kernel) {
-+	kmod = dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
-+		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
-+		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
-+		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
-+
-+	if (dso->kernel && !kmod) {
- 		if (dso->kernel == DSO_TYPE_KERNEL)
- 			ret = dso__load_kernel_sym(dso, map);
- 		else if (dso->kernel == DSO_TYPE_GUEST_KERNEL)
-@@ -1650,12 +1655,6 @@ int dso__load(struct dso *dso, struct map *map)
- 	if (!name)
- 		goto out;
- 
--	kmod = dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
--		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
--		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
--		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
--
--
- 	/*
- 	 * Read the build id if possible. This is required for
- 	 * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work
--- 
-2.21.1
+	Ingo
