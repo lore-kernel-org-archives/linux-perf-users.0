@@ -1,102 +1,56 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent fixes
-Date: Wed, 4 Mar 2020 11:54:46 +0100
-Message-ID: <20200304105446.GA105264@gmail.com>
+From: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Subject: Re: [PATCH 4/5] perf bench: Share some global variables to fix build
+ with gcc 10
+Date: Thu, 5 Mar 2020 08:43:32 +0000
+Message-ID: <bb1a3048a0f75d1fdf497c67d16a022cdd15c437.camel@nokia.com>
 References: <20200303194827.6461-1-acme@kernel.org>
+         <20200303194827.6461-5-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200303194827.6461-1-acme@kernel.org>
+In-Reply-To: <20200303194827.6461-5-acme@kernel.org>
+Content-Language: en-US
+Content-ID: <DBCBB3ABE3FB454DA4566DFD0905E922@eurprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: "mingo@kernel.org" <mingo@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "acme@kernel.org" <acme@kernel.org>
+Cc: "williams@redhat.com" <williams@redhat.com>, "acme@redhat.com" <acme@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling, mostly from mostly valid complaints by
-> the most recent gcc version in my container farm,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc:
-> 
->   perf annotate: Fix segfault with source toggle (2020-02-27 11:47:23 -0300)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.6-20200303
-> 
-> for you to fetch changes up to b5c0951860ba98cfe1936b5c0739450875d51451:
-> 
->   perf symbols: Don't try to find a vmlinux file when looking for kernel modules (2020-03-03 16:20:01 -0300)
-> 
-> ----------------------------------------------------------------
-> perf/urgent fixes:
-> 
-> perf symbols:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Don't try to find a vmlinux file when looking for kernel modules,
->     fixing symbol resolution in systems with compressed kernel modules.
-> 
-> perf env:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Do not return pointers to local variables, fixing valid warning from
->     gcc 10 for corner case that stops the build due to -Werror.
-> 
-> perf tests:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Make global variable static in the bp_account entry to fix build
->     with gcc 10.
-> 
-> perf parse-events:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Use asprintf() instead of strncpy() to read tracepoint files, addressing
->     compiler warning that stops the build as we use -Werror.
-> 
-> perf bench:
-> 
->   Arnaldo Carvalho de Melo:
-> 
->   - Share some global variables to fix build with gcc 10.
-> 
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ----------------------------------------------------------------
-> Arnaldo Carvalho de Melo (5):
->       perf tests bp_account: Make global variable static
->       perf env: Do not return pointers to local variables
->       perf parse-events: Use asprintf() instead of strncpy() to read tracepoint files
->       perf bench: Share some global variables to fix build with gcc 10
->       perf symbols: Don't try to find a vmlinux file when looking for kernel modules
-> 
->  tools/perf/bench/bench.h         |  4 ++++
->  tools/perf/bench/epoll-ctl.c     |  7 +++----
->  tools/perf/bench/epoll-wait.c    | 11 +++++------
->  tools/perf/bench/futex-hash.c    | 12 ++++++------
->  tools/perf/bench/futex-lock-pi.c | 11 +++++------
->  tools/perf/tests/bp_account.c    |  2 +-
->  tools/perf/util/env.c            |  4 ++--
->  tools/perf/util/parse-events.c   | 10 ++--------
->  tools/perf/util/symbol.c         | 13 ++++++-------
->  9 files changed, 34 insertions(+), 40 deletions(-)
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+T24gVHVlLCAyMDIwLTAzLTAzIGF0IDE2OjQ4IC0wMzAwLCBBcm5hbGRvIENhcnZhbGhvIGRlIE1l
+bG8gd3JvdGU6DQo+IEZyb206IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyA8YWNtZUByZWRoYXQu
+Y29tPg0KDQpCVFcgdGhlcmUncyBhbHNvIHNvbWUgZGl2LWJ5LXplcm8gYnVncyBoZXJlIGlmIHJ1
+bnRpbWUgaXMgemVybzoNCg0KJCBwZXJmIGJlbmNoIGVwb2xsIHdhaXQgLS1ydW50aW1lPTANCiMg
+UnVubmluZyAnZXBvbGwvd2FpdCcgYmVuY2htYXJrOg0KUnVuIHN1bW1hcnkgW1BJRCAzMDg1OV06
+IDcgdGhyZWFkcyBtb25pdG9yaW5nIG9uIDY0IGZpbGUtZGVzY3JpcHRvcnMgZm9yIDANCnNlY3Mu
+DQoNCkZsb2F0aW5nIHBvaW50IGV4Y2VwdGlvbiAoY29yZSBkdW1wZWQpDQoNCj4gZGlmZiAtLWdp
+dCBhL3Rvb2xzL3BlcmYvYmVuY2gvZXBvbGwtd2FpdC5jIGIvdG9vbHMvcGVyZi9iZW5jaC9lcG9s
+bC0NCj4gd2FpdC5jDQo+IGluZGV4IDdhZjY5NDQzN2Y0ZS4uZDFjNWNiNTI2YjlmIDEwMDY0NA0K
+PiAtLS0gYS90b29scy9wZXJmL2JlbmNoL2Vwb2xsLXdhaXQuYw0KPiArKysgYi90b29scy9wZXJm
+L2JlbmNoL2Vwb2xsLXdhaXQuYw0KPiANCj4gQEAgLTUxOSw3ICs1MTgsNyBAQCBpbnQgYmVuY2hf
+ZXBvbGxfd2FpdChpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ICAJCXFzb3J0KHdvcmtl
+ciwgbnRocmVhZHMsIHNpemVvZihzdHJ1Y3Qgd29ya2VyKSwgY21wd29ya2VyKTsNCj4gIA0KPiAg
+CWZvciAoaSA9IDA7IGkgPCBudGhyZWFkczsgaSsrKSB7DQo+IC0JCXVuc2lnbmVkIGxvbmcgdCA9
+IHdvcmtlcltpXS5vcHMvcnVudGltZS50dl9zZWM7DQo+ICsJCXVuc2lnbmVkIGxvbmcgdCA9IHdv
+cmtlcltpXS5vcHMgLyBiZW5jaF9fcnVudGltZS50dl9zZWM7DQo+ICANCj4gIAkJdXBkYXRlX3N0
+YXRzKCZ0aHJvdWdocHV0X3N0YXRzLCB0KTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVy
+Zi9iZW5jaC9mdXRleC1oYXNoLmMgYi90b29scy9wZXJmL2JlbmNoL2Z1dGV4LQ0KPiBoYXNoLmMN
+Cj4gaW5kZXggOGJhMGMzMzMwYTlhLi4yMTc3Njg2MmU5NDAgMTAwNjQ0DQo+IC0tLSBhL3Rvb2xz
+L3BlcmYvYmVuY2gvZnV0ZXgtaGFzaC5jDQo+ICsrKyBiL3Rvb2xzL3BlcmYvYmVuY2gvZnV0ZXgt
+aGFzaC5jDQo+IA0KPiBAQCAtMjA0LDcgKzIwNCw3IEBAIGludCBiZW5jaF9mdXRleF9oYXNoKGlu
+dCBhcmdjLCBjb25zdCBjaGFyICoqYXJndikNCj4gIAlwdGhyZWFkX211dGV4X2Rlc3Ryb3koJnRo
+cmVhZF9sb2NrKTsNCj4gIA0KPiAgCWZvciAoaSA9IDA7IGkgPCBudGhyZWFkczsgaSsrKSB7DQo+
+IC0JCXVuc2lnbmVkIGxvbmcgdCA9IHdvcmtlcltpXS5vcHMvcnVudGltZS50dl9zZWM7DQo+ICsJ
+CXVuc2lnbmVkIGxvbmcgdCA9IHdvcmtlcltpXS5vcHMgLyBiZW5jaF9fcnVudGltZS50dl9zZWM7
+DQo+ICAJCXVwZGF0ZV9zdGF0cygmdGhyb3VnaHB1dF9zdGF0cywgdCk7DQo+ICAJCWlmICghc2ls
+ZW50KSB7DQo+ICAJCQlpZiAobmZ1dGV4ZXMgPT0gMSkNCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3Bl
+cmYvYmVuY2gvZnV0ZXgtbG9jay1waS5jIGIvdG9vbHMvcGVyZi9iZW5jaC9mdXRleC0NCj4gbG9j
+ay1waS5jDQo+IGluZGV4IGQwY2FlODEyNTQyMy4uMzBkOTcxMjFkYzRmIDEwMDY0NA0KPiAtLS0g
+YS90b29scy9wZXJmL2JlbmNoL2Z1dGV4LWxvY2stcGkuYw0KPiArKysgYi90b29scy9wZXJmL2Jl
+bmNoL2Z1dGV4LWxvY2stcGkuYw0KPiANCj4gQEAgLTIxMSw3ICsyMTAsNyBAQCBpbnQgYmVuY2hf
+ZnV0ZXhfbG9ja19waShpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ICAJcHRocmVhZF9t
+dXRleF9kZXN0cm95KCZ0aHJlYWRfbG9jayk7DQo+ICANCj4gIAlmb3IgKGkgPSAwOyBpIDwgbnRo
+cmVhZHM7IGkrKykgew0KPiAtCQl1bnNpZ25lZCBsb25nIHQgPSB3b3JrZXJbaV0ub3BzL3J1bnRp
+bWUudHZfc2VjOw0KPiArCQl1bnNpZ25lZCBsb25nIHQgPSB3b3JrZXJbaV0ub3BzIC8gYmVuY2hf
+X3J1bnRpbWUudHZfc2VjOw0KPiAgDQo+ICAJCXVwZGF0ZV9zdGF0cygmdGhyb3VnaHB1dF9zdGF0
+cywgdCk7DQo+ICAJCWlmICghc2lsZW50KQ0KDQo=
