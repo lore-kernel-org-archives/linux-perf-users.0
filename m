@@ -1,56 +1,112 @@
-From: "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Subject: Re: [PATCH 4/5] perf bench: Share some global variables to fix build
- with gcc 10
-Date: Thu, 5 Mar 2020 08:43:32 +0000
-Message-ID: <bb1a3048a0f75d1fdf497c67d16a022cdd15c437.camel@nokia.com>
-References: <20200303194827.6461-1-acme@kernel.org>
-         <20200303194827.6461-5-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/s390/json: Add new deflate counters for IBM z15
+Date: Thu,  5 Mar 2020 14:11:17 +0100
+Message-ID: <20200305131117.29175-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200303194827.6461-5-acme@kernel.org>
-Content-Language: en-US
-Content-ID: <DBCBB3ABE3FB454DA4566DFD0905E922@eurprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "mingo@kernel.org" <mingo@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "acme@kernel.org" <acme@kernel.org>
-Cc: "williams@redhat.com" <williams@redhat.com>, "acme@redhat.com" <acme@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "namhyung@kernel.org" <namhyung@kernel.org>, "jolsa@kernel.org" <jolsa@kernel.org>, "dave@stgolabs.net" <dave@stgolabs.net>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAzLTAzIGF0IDE2OjQ4IC0wMzAwLCBBcm5hbGRvIENhcnZhbGhvIGRlIE1l
-bG8gd3JvdGU6DQo+IEZyb206IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyA8YWNtZUByZWRoYXQu
-Y29tPg0KDQpCVFcgdGhlcmUncyBhbHNvIHNvbWUgZGl2LWJ5LXplcm8gYnVncyBoZXJlIGlmIHJ1
-bnRpbWUgaXMgemVybzoNCg0KJCBwZXJmIGJlbmNoIGVwb2xsIHdhaXQgLS1ydW50aW1lPTANCiMg
-UnVubmluZyAnZXBvbGwvd2FpdCcgYmVuY2htYXJrOg0KUnVuIHN1bW1hcnkgW1BJRCAzMDg1OV06
-IDcgdGhyZWFkcyBtb25pdG9yaW5nIG9uIDY0IGZpbGUtZGVzY3JpcHRvcnMgZm9yIDANCnNlY3Mu
-DQoNCkZsb2F0aW5nIHBvaW50IGV4Y2VwdGlvbiAoY29yZSBkdW1wZWQpDQoNCj4gZGlmZiAtLWdp
-dCBhL3Rvb2xzL3BlcmYvYmVuY2gvZXBvbGwtd2FpdC5jIGIvdG9vbHMvcGVyZi9iZW5jaC9lcG9s
-bC0NCj4gd2FpdC5jDQo+IGluZGV4IDdhZjY5NDQzN2Y0ZS4uZDFjNWNiNTI2YjlmIDEwMDY0NA0K
-PiAtLS0gYS90b29scy9wZXJmL2JlbmNoL2Vwb2xsLXdhaXQuYw0KPiArKysgYi90b29scy9wZXJm
-L2JlbmNoL2Vwb2xsLXdhaXQuYw0KPiANCj4gQEAgLTUxOSw3ICs1MTgsNyBAQCBpbnQgYmVuY2hf
-ZXBvbGxfd2FpdChpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ICAJCXFzb3J0KHdvcmtl
-ciwgbnRocmVhZHMsIHNpemVvZihzdHJ1Y3Qgd29ya2VyKSwgY21wd29ya2VyKTsNCj4gIA0KPiAg
-CWZvciAoaSA9IDA7IGkgPCBudGhyZWFkczsgaSsrKSB7DQo+IC0JCXVuc2lnbmVkIGxvbmcgdCA9
-IHdvcmtlcltpXS5vcHMvcnVudGltZS50dl9zZWM7DQo+ICsJCXVuc2lnbmVkIGxvbmcgdCA9IHdv
-cmtlcltpXS5vcHMgLyBiZW5jaF9fcnVudGltZS50dl9zZWM7DQo+ICANCj4gIAkJdXBkYXRlX3N0
-YXRzKCZ0aHJvdWdocHV0X3N0YXRzLCB0KTsNCj4gIA0KPiBkaWZmIC0tZ2l0IGEvdG9vbHMvcGVy
-Zi9iZW5jaC9mdXRleC1oYXNoLmMgYi90b29scy9wZXJmL2JlbmNoL2Z1dGV4LQ0KPiBoYXNoLmMN
-Cj4gaW5kZXggOGJhMGMzMzMwYTlhLi4yMTc3Njg2MmU5NDAgMTAwNjQ0DQo+IC0tLSBhL3Rvb2xz
-L3BlcmYvYmVuY2gvZnV0ZXgtaGFzaC5jDQo+ICsrKyBiL3Rvb2xzL3BlcmYvYmVuY2gvZnV0ZXgt
-aGFzaC5jDQo+IA0KPiBAQCAtMjA0LDcgKzIwNCw3IEBAIGludCBiZW5jaF9mdXRleF9oYXNoKGlu
-dCBhcmdjLCBjb25zdCBjaGFyICoqYXJndikNCj4gIAlwdGhyZWFkX211dGV4X2Rlc3Ryb3koJnRo
-cmVhZF9sb2NrKTsNCj4gIA0KPiAgCWZvciAoaSA9IDA7IGkgPCBudGhyZWFkczsgaSsrKSB7DQo+
-IC0JCXVuc2lnbmVkIGxvbmcgdCA9IHdvcmtlcltpXS5vcHMvcnVudGltZS50dl9zZWM7DQo+ICsJ
-CXVuc2lnbmVkIGxvbmcgdCA9IHdvcmtlcltpXS5vcHMgLyBiZW5jaF9fcnVudGltZS50dl9zZWM7
-DQo+ICAJCXVwZGF0ZV9zdGF0cygmdGhyb3VnaHB1dF9zdGF0cywgdCk7DQo+ICAJCWlmICghc2ls
-ZW50KSB7DQo+ICAJCQlpZiAobmZ1dGV4ZXMgPT0gMSkNCj4gZGlmZiAtLWdpdCBhL3Rvb2xzL3Bl
-cmYvYmVuY2gvZnV0ZXgtbG9jay1waS5jIGIvdG9vbHMvcGVyZi9iZW5jaC9mdXRleC0NCj4gbG9j
-ay1waS5jDQo+IGluZGV4IGQwY2FlODEyNTQyMy4uMzBkOTcxMjFkYzRmIDEwMDY0NA0KPiAtLS0g
-YS90b29scy9wZXJmL2JlbmNoL2Z1dGV4LWxvY2stcGkuYw0KPiArKysgYi90b29scy9wZXJmL2Jl
-bmNoL2Z1dGV4LWxvY2stcGkuYw0KPiANCj4gQEAgLTIxMSw3ICsyMTAsNyBAQCBpbnQgYmVuY2hf
-ZnV0ZXhfbG9ja19waShpbnQgYXJnYywgY29uc3QgY2hhciAqKmFyZ3YpDQo+ICAJcHRocmVhZF9t
-dXRleF9kZXN0cm95KCZ0aHJlYWRfbG9jayk7DQo+ICANCj4gIAlmb3IgKGkgPSAwOyBpIDwgbnRo
-cmVhZHM7IGkrKykgew0KPiAtCQl1bnNpZ25lZCBsb25nIHQgPSB3b3JrZXJbaV0ub3BzL3J1bnRp
-bWUudHZfc2VjOw0KPiArCQl1bnNpZ25lZCBsb25nIHQgPSB3b3JrZXJbaV0ub3BzIC8gYmVuY2hf
-X3J1bnRpbWUudHZfc2VjOw0KPiAgDQo+ICAJCXVwZGF0ZV9zdGF0cygmdGhyb3VnaHB1dF9zdGF0
-cywgdCk7DQo+ICAJCWlmICghc2lsZW50KQ0KDQo=
+Add support for new deflate counters:
+- Counter 247: cycles CPU spent obtaining access to Deflate unit
+- Counter 252: cycles CPU is using Deflate unit
+- Counter 264: Increments by one for every DEFLATE CONVERSION CALL
+	    instruction executed.
+- Counter 265: Increments by one for every DEFLATE CONVERSION CALL
+	    instruction executed that ended in Condition Codes
+	    0, 1 or 2.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+---
+ .../pmu-events/arch/s390/cf_z15/crypto6.json  |  8 ++---
+ .../pmu-events/arch/s390/cf_z15/extended.json | 30 ++++++++++++++++++-
+ 2 files changed, 33 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json b/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
+index 5e36bc2468d0..c998e4f1d1d2 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
+@@ -4,27 +4,27 @@
+ 		"EventCode": "80",
+ 		"EventName": "ECC_FUNCTION_COUNT",
+ 		"BriefDescription": "ECC Function Count",
+-		"PublicDescription": "Long ECC function Count"
++		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions issued by the CPU."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "81",
+ 		"EventName": "ECC_CYCLES_COUNT",
+ 		"BriefDescription": "ECC Cycles Count",
+-		"PublicDescription": "Long ECC Function cycles count"
++		"PublicDescription": "This counter counts the total number of CPU cycles when the ECC coprocessor is busy performing the elliptic-curve cryptography (ECC) functions issued by the CPU."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "82",
+ 		"EventName": "ECC_BLOCKED_FUNCTION_COUNT",
+ 		"BriefDescription": "Ecc Blocked Function Count",
+-		"PublicDescription": "Long ECC blocked function count"
++		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions that are issued by the CPU and are blocked because the ECC coprocessor is busy performing a function issued by another CPU."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "83",
+ 		"EventName": "ECC_BLOCKED_CYCLES_COUNT",
+ 		"BriefDescription": "ECC Blocked Cycles Count",
+-		"PublicDescription": "Long ECC blocked cycles count"
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the elliptic-curve cryptography (ECC) functions issued by the CPU because the ECC coprocessor is busy performing a function issued by another CPU."
+ 	},
+ ]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
+index 89e070727e1b..2df2e231e9ee 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
+@@ -25,7 +25,7 @@
+ 		"EventCode": "131",
+ 		"EventName": "DTLB2_HPAGE_WRITES",
+ 		"BriefDescription": "DTLB2 One-Megabyte Page Writes",
+-		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page or a Last Host Translation was done"
++		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page"
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+@@ -356,6 +356,34 @@
+ 		"BriefDescription": "Aborted transactions in constrained TX mode using special completion logic",
+ 		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete"
+ 	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "247",
++		"EventName": "DFLT_ACCESS",
++		"BriefDescription": "Cycles CPU spent obtaining access to Deflate unit",
++		"PublicDescription": "Cycles CPU spent obtaining access to Deflate unit"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "252",
++		"EventName": "DFLT_CYCLES",
++		"BriefDescription": "Cycles CPU is using Deflate unit",
++		"PublicDescription": "Cycles CPU is using Deflate unit"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "264",
++		"EventName": "DFLT_CC",
++		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed",
++		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "265",
++		"EventName": "DFLT_CCERROR",
++		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2",
++		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2"
++	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "448",
+-- 
+2.23.0
