@@ -1,78 +1,70 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 07/10] perf record: Support synthesizing cgroup events
-Date: Fri, 6 Mar 2020 15:15:28 +0100
-Message-ID: <20200306141528.GD290743@krava>
+Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
+Date: Fri, 6 Mar 2020 16:05:14 +0100
+Message-ID: <20200306150514.GE290743@krava>
 References: <20200224043749.69466-1-namhyung@kernel.org>
- <20200224043749.69466-8-namhyung@kernel.org>
- <20200306141404.GC290743@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200306141404.GC290743@krava>
+In-Reply-To: <20200224043749.69466-1-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Mar 06, 2020 at 03:14:09PM +0100, Jiri Olsa wrote:
-> On Mon, Feb 24, 2020 at 01:37:46PM +0900, Namhyung Kim wrote:
+On Mon, Feb 24, 2020 at 01:37:39PM +0900, Namhyung Kim wrote:
+> Hello,
 > 
-> SNIP
+> This work is to improve cgroup profiling in perf.  Currently it only
+> supports profiling tasks in a specific cgroup and there's no way to
+> identify which cgroup the current sample belongs to.  So I added
+> PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> integer having file handle of the cgroup.  And kernel also generates
+> PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> read from userspace by name_to_handle_at() system call so it can
+> synthesize the CGROUP event for existing groups.
 > 
-> > +	d = opendir(path);
-> > +	if (d == NULL) {
-> > +		pr_debug("failed to open directory: %s\n", path);
-> > +		return -1;
-> > +	}
-> > +
-> > +	while ((dent = readdir(d)) != NULL) {
-> > +		if (dent->d_type != DT_DIR)
-> > +			continue;
-> > +		if (!strcmp(dent->d_name, ".") ||
-> > +		    !strcmp(dent->d_name, ".."))
-> > +			continue;
-> > +
-> > +		/* any sane path should be less than PATH_MAX */
-> > +		if (strlen(path) + strlen(dent->d_name) + 1 >= PATH_MAX)
-> > +			continue;
-> > +
-> > +		if (path[pos - 1] != '/')
-> > +			strcat(path, "/");
-> > +		strcat(path, dent->d_name);
-> > +
-> > +		ret = perf_event__walk_cgroup_tree(tool, event, path,
-> > +						   mount_len, process, machine);
-> > +		if (ret < 0)
-> > +			break;
-> > +
-> > +		path[pos] = '\0';
-> > +	}
-> > +
-> > +	closedir(d);
-> > +	return ret;
-> > +}
-> > +
-> > +int perf_event__synthesize_cgroups(struct perf_tool *tool,
-> > +				   perf_event__handler_t process,
-> > +				   struct machine *machine)
-> > +{
-> > +	union perf_event event;
-> > +	char cgrp_root[PATH_MAX];
-> > +	size_t mount_len;  /* length of mount point in the path */
-> > +
-> > +	if (cgroupfs__mountpoint(cgrp_root, PATH_MAX, "perf_event") < 0) {
-> > +		pr_debug("cannot find cgroup mount point\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	mount_len = strlen(cgrp_root);
-> > +	/* make sure the path starts with a slash (after mount point) */
-> > +	strcat(cgrp_root, "/");
+> So why do we want this?  Systems running a large number of jobs in
+> different cgroups want to profiling such jobs precisely. This includes
+> container hosting systems widely used today. Currently perf supports
+> namespace tracking but the systems may not use (cgroup) namespace for
+> their jobs. Also it'd be more intuitive to see cgroup names (as
+> they're given by user or sysadmin) rather than numeric
+> cgroup/namespace id even if they use the namespaces.
 > 
-> the code above checks on this and seems to add '/' if needed,
-> is this strcat necessary?
+> From Stephane Eranian:
+> > In data centers you care about attributing samples to a job not such
+> > much to a process.  A job may have multiple processes which may come
+> > and go. The cgroup on the other hand stays around for the entire
+> > lifetime of the job. It is much easier to map a cgroup name to a
+> > particular job than it is to map a pid back to a job name,
+> > especially for offline post-processing.
+> 
+> Note that this only works for "perf_event" cgroups (obviously) so if
+> users are still using cgroup-v1 interface, they need to have same
+> hierarchy for subsystem(s) want to profile with it.
+> 
+>  * Changes from v4:
+>   - use CONFIG_CGROUP_PERF
+>   - move cgroup tree to perf_env
+>   - move cgroup fs utility function to tools/lib/api/fs
+>   - use a local buffer and check its size for cgroup systhesis
 
-nah nevermind.. it's the recursive call check above, ok
+the perf top tui should all cgroup id as 0 and the headers are
+misaligned
+
+	Samples
+	Overhead  cgroup id (dev/inode        Pid:Command
+	  83.78%  0/0x0                 N/A     6508:perf
+	   8.82%  0/0x0                 N/A        0:swapper
+	   2.59%  0/0x0                 N/A     6466:perf
+	   1.69%  0/0x0                 N/A     6509:perf-top-UI
+	   0.56%  0/0x0                 N/A       12:rcu_sched
+	   0.29%  0/0x0                 N/A      429:kworker/0:2-mm_
+	   0.15%  0/0x0                 N/A     1416:sshd
+	   0.12%  0/0x0                 N/A      187:migration/35
+
 
 jirka
