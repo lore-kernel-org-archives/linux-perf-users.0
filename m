@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/5] perf bench: Share some global variables to fix build with gcc 10
-Date: Fri,  6 Mar 2020 16:11:41 -0300
-Message-ID: <20200306191144.12762-9-acme@kernel.org>
+Subject: [PATCH 5/6] perf jevents: Fix leak of mapfile memory
+Date: Fri,  6 Mar 2020 16:11:42 -0300
+Message-ID: <20200306191144.12762-10-acme@kernel.org>
 References: <20200306191144.12762-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,238 +9,80 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200306191144.12762-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Davidlohr Bueso <dave@stgolabs.net>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@arm.com>, Joakim Zhang <qiangqing.zhang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: John Garry <john.garry@huawei.com>
 
-Noticed with gcc 10 (fedora rawhide) that those variables were not being
-declared as static, so end up with:
+The memory for global pointer is never freed during normal program
+execution, so let's do that in the main function exit as a good
+programming practice.
 
-  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-  make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/bench/perf-in.o] Error 1
+A stray blank line is also removed.
 
-Prefix those with bench__ and add them to bench/bench.h, so that we can
-share those on the tools needing to access those variables from signal
-handlers.
-
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Reported-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/20200303155811.GD13702@kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1583406486-154841-2-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/bench.h         |  4 ++++
- tools/perf/bench/epoll-ctl.c     |  7 +++----
- tools/perf/bench/epoll-wait.c    | 11 +++++------
- tools/perf/bench/futex-hash.c    | 12 ++++++------
- tools/perf/bench/futex-lock-pi.c | 11 +++++------
- 5 files changed, 23 insertions(+), 22 deletions(-)
+ tools/perf/pmu-events/jevents.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index fddb3ced9db6..4aa6de1aa67d 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -2,6 +2,10 @@
- #ifndef BENCH_H
- #define BENCH_H
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 079c77b6a2fd..27b4da80f751 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -1082,10 +1082,9 @@ static int process_one_file(const char *fpath, const struct stat *sb,
+  */
+ int main(int argc, char *argv[])
+ {
+-	int rc;
++	int rc, ret = 0;
+ 	int maxfds;
+ 	char ldirname[PATH_MAX];
+-
+ 	const char *arch;
+ 	const char *output_file;
+ 	const char *start_dirname;
+@@ -1156,7 +1155,8 @@ int main(int argc, char *argv[])
+ 		/* Make build fail */
+ 		fclose(eventsfp);
+ 		free_arch_std_events();
+-		return 1;
++		ret = 1;
++		goto out_free_mapfile;
+ 	} else if (rc) {
+ 		goto empty_map;
+ 	}
+@@ -1174,14 +1174,17 @@ int main(int argc, char *argv[])
+ 		/* Make build fail */
+ 		fclose(eventsfp);
+ 		free_arch_std_events();
+-		return 1;
++		ret = 1;
+ 	}
  
-+#include <sys/time.h>
+-	return 0;
 +
-+extern struct timeval bench__start, bench__end, bench__runtime;
-+
- /*
-  * The madvise transparent hugepage constants were added in glibc
-  * 2.13. For compatibility with older versions of glibc, define these
-diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
-index bb617e568841..a7526c05df38 100644
---- a/tools/perf/bench/epoll-ctl.c
-+++ b/tools/perf/bench/epoll-ctl.c
-@@ -35,7 +35,6 @@
++	goto out_free_mapfile;
  
- static unsigned int nthreads = 0;
- static unsigned int nsecs    = 8;
--struct timeval start, end, runtime;
- static bool done, __verbose, randomize;
- 
- /*
-@@ -94,8 +93,8 @@ static void toggle_done(int sig __maybe_unused,
- {
- 	/* inform all threads that we're done for the day */
- 	done = true;
--	gettimeofday(&end, NULL);
--	timersub(&end, &start, &runtime);
-+	gettimeofday(&bench__end, NULL);
-+	timersub(&bench__end, &bench__start, &bench__runtime);
+ empty_map:
+ 	fclose(eventsfp);
+ 	create_empty_mapping(output_file);
+ 	free_arch_std_events();
+-	return 0;
++out_free_mapfile:
++	free(mapfile);
++	return ret;
  }
- 
- static void nest_epollfd(void)
-@@ -361,7 +360,7 @@ int bench_epoll_ctl(int argc, const char **argv)
- 
- 	threads_starting = nthreads;
- 
--	gettimeofday(&start, NULL);
-+	gettimeofday(&bench__start, NULL);
- 
- 	do_threads(worker, cpu);
- 
-diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-index 7af694437f4e..d1c5cb526b9f 100644
---- a/tools/perf/bench/epoll-wait.c
-+++ b/tools/perf/bench/epoll-wait.c
-@@ -90,7 +90,6 @@
- 
- static unsigned int nthreads = 0;
- static unsigned int nsecs    = 8;
--struct timeval start, end, runtime;
- static bool wdone, done, __verbose, randomize, nonblocking;
- 
- /*
-@@ -276,8 +275,8 @@ static void toggle_done(int sig __maybe_unused,
- {
- 	/* inform all threads that we're done for the day */
- 	done = true;
--	gettimeofday(&end, NULL);
--	timersub(&end, &start, &runtime);
-+	gettimeofday(&bench__end, NULL);
-+	timersub(&bench__end, &bench__start, &bench__runtime);
- }
- 
- static void print_summary(void)
-@@ -287,7 +286,7 @@ static void print_summary(void)
- 
- 	printf("\nAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
- 	       avg, rel_stddev_stats(stddev, avg),
--	       (int) runtime.tv_sec);
-+	       (int)bench__runtime.tv_sec);
- }
- 
- static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
-@@ -479,7 +478,7 @@ int bench_epoll_wait(int argc, const char **argv)
- 
- 	threads_starting = nthreads;
- 
--	gettimeofday(&start, NULL);
-+	gettimeofday(&bench__start, NULL);
- 
- 	do_threads(worker, cpu);
- 
-@@ -519,7 +518,7 @@ int bench_epoll_wait(int argc, const char **argv)
- 		qsort(worker, nthreads, sizeof(struct worker), cmpworker);
- 
- 	for (i = 0; i < nthreads; i++) {
--		unsigned long t = worker[i].ops/runtime.tv_sec;
-+		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
- 
- 		update_stats(&throughput_stats, t);
- 
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index 8ba0c3330a9a..21776862e940 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -37,7 +37,7 @@ static unsigned int nfutexes = 1024;
- static bool fshared = false, done = false, silent = false;
- static int futex_flag = 0;
- 
--struct timeval start, end, runtime;
-+struct timeval bench__start, bench__end, bench__runtime;
- static pthread_mutex_t thread_lock;
- static unsigned int threads_starting;
- static struct stats throughput_stats;
-@@ -103,8 +103,8 @@ static void toggle_done(int sig __maybe_unused,
- {
- 	/* inform all threads that we're done for the day */
- 	done = true;
--	gettimeofday(&end, NULL);
--	timersub(&end, &start, &runtime);
-+	gettimeofday(&bench__end, NULL);
-+	timersub(&bench__end, &bench__start, &bench__runtime);
- }
- 
- static void print_summary(void)
-@@ -114,7 +114,7 @@ static void print_summary(void)
- 
- 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
- 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
--	       (int) runtime.tv_sec);
-+	       (int)bench__runtime.tv_sec);
- }
- 
- int bench_futex_hash(int argc, const char **argv)
-@@ -161,7 +161,7 @@ int bench_futex_hash(int argc, const char **argv)
- 
- 	threads_starting = nthreads;
- 	pthread_attr_init(&thread_attr);
--	gettimeofday(&start, NULL);
-+	gettimeofday(&bench__start, NULL);
- 	for (i = 0; i < nthreads; i++) {
- 		worker[i].tid = i;
- 		worker[i].futex = calloc(nfutexes, sizeof(*worker[i].futex));
-@@ -204,7 +204,7 @@ int bench_futex_hash(int argc, const char **argv)
- 	pthread_mutex_destroy(&thread_lock);
- 
- 	for (i = 0; i < nthreads; i++) {
--		unsigned long t = worker[i].ops/runtime.tv_sec;
-+		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
- 		update_stats(&throughput_stats, t);
- 		if (!silent) {
- 			if (nfutexes == 1)
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-index d0cae8125423..30d97121dc4f 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -37,7 +37,6 @@ static bool silent = false, multi = false;
- static bool done = false, fshared = false;
- static unsigned int nthreads = 0;
- static int futex_flag = 0;
--struct timeval start, end, runtime;
- static pthread_mutex_t thread_lock;
- static unsigned int threads_starting;
- static struct stats throughput_stats;
-@@ -64,7 +63,7 @@ static void print_summary(void)
- 
- 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
- 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
--	       (int) runtime.tv_sec);
-+	       (int)bench__runtime.tv_sec);
- }
- 
- static void toggle_done(int sig __maybe_unused,
-@@ -73,8 +72,8 @@ static void toggle_done(int sig __maybe_unused,
- {
- 	/* inform all threads that we're done for the day */
- 	done = true;
--	gettimeofday(&end, NULL);
--	timersub(&end, &start, &runtime);
-+	gettimeofday(&bench__end, NULL);
-+	timersub(&bench__end, &bench__start, &bench__runtime);
- }
- 
- static void *workerfn(void *arg)
-@@ -185,7 +184,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 
- 	threads_starting = nthreads;
- 	pthread_attr_init(&thread_attr);
--	gettimeofday(&start, NULL);
-+	gettimeofday(&bench__start, NULL);
- 
- 	create_threads(worker, thread_attr, cpu);
- 	pthread_attr_destroy(&thread_attr);
-@@ -211,7 +210,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	pthread_mutex_destroy(&thread_lock);
- 
- 	for (i = 0; i < nthreads; i++) {
--		unsigned long t = worker[i].ops/runtime.tv_sec;
-+		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
- 
- 		update_stats(&throughput_stats, t);
- 		if (!silent)
 -- 
 2.21.1
