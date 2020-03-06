@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/6] perf bench: Clear struct sigaction before sigaction() syscall
-Date: Fri,  6 Mar 2020 16:11:40 -0300
-Message-ID: <20200306191144.12762-8-acme@kernel.org>
+Subject: [PATCH 5/5] perf symbols: Don't try to find a vmlinux file when looking for kernel modules
+Date: Fri,  6 Mar 2020 16:11:43 -0300
+Message-ID: <20200306191144.12762-11-acme@kernel.org>
 References: <20200306191144.12762-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,118 +9,95 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200306191144.12762-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Changbin Du <changbin.du@intel.com>, Darren Hart <dvhart@infradead.org>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kim Phillips <kim.phillips@amd.com>, Michael Petlan <mpetlan@redhat.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Tommi Rantala <tommi.t.rantala@nokia.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Avoid garbage in sigaction structs used in sigaction() syscalls.
-Valgrind is complaining about it.
+The dso->kernel value is now set to everything that is in
+machine->kmaps, but that was being used to decide if vmlinux lookup is
+needed, which ended up making that lookup be made for kernel modules,
+that now have dso->kernel set, leading to these kinds of warnings when
+running on a machine with compressed kernel modules, like fedora:31:
 
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+  [root@five ~]# perf record -F 10000 -a sleep 2
+  [ perf record: Woken up 1 times to write data ]
+  lzma: fopen failed on vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+  lzma: fopen failed on vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+  lzma: fopen failed on vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+  lzma: fopen failed on vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+  lzma: fopen failed on vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
+  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
+  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
+  [ perf record: Captured and wrote 1.024 MB perf.data (1366 samples) ]
+  [root@five ~]#
+
+This happens when collecting the buildid, when we find samples for
+kernel modules, fix it by checking if the looked up DSO is a kernel
+module by other means.
+
+Fixes: 02213cec64bb ("perf maps: Mark module DSOs with kernel type")
+Tested-by: Jiri Olsa <jolsa@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Changbin Du <changbin.du@intel.com>
-Cc: Darren Hart <dvhart@infradead.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Kim Phillips <kim.phillips@amd.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200305083714.9381-4-tommi.t.rantala@nokia.com
+Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20200302191007.GD10335@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/bench/epoll-ctl.c           | 1 +
- tools/perf/bench/epoll-wait.c          | 1 +
- tools/perf/bench/futex-hash.c          | 1 +
- tools/perf/bench/futex-lock-pi.c       | 1 +
- tools/perf/bench/futex-requeue.c       | 1 +
- tools/perf/bench/futex-wake-parallel.c | 1 +
- tools/perf/bench/futex-wake.c          | 1 +
- 7 files changed, 7 insertions(+)
+ tools/perf/util/symbol.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
-index a7526c05df38..cadc18d42aa4 100644
---- a/tools/perf/bench/epoll-ctl.c
-+++ b/tools/perf/bench/epoll-ctl.c
-@@ -312,6 +312,7 @@ int bench_epoll_ctl(int argc, const char **argv)
- 		exit(EXIT_FAILURE);
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 1077013d8ce2..26bc6a0096ce 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1622,7 +1622,12 @@ int dso__load(struct dso *dso, struct map *map)
+ 		goto out;
  	}
  
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
-diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
-index d1c5cb526b9f..f938c585d512 100644
---- a/tools/perf/bench/epoll-wait.c
-+++ b/tools/perf/bench/epoll-wait.c
-@@ -426,6 +426,7 @@ int bench_epoll_wait(int argc, const char **argv)
- 		exit(EXIT_FAILURE);
- 	}
+-	if (dso->kernel) {
++	kmod = dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
++		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
++		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
++		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
++
++	if (dso->kernel && !kmod) {
+ 		if (dso->kernel == DSO_TYPE_KERNEL)
+ 			ret = dso__load_kernel_sym(dso, map);
+ 		else if (dso->kernel == DSO_TYPE_GUEST_KERNEL)
+@@ -1650,12 +1655,6 @@ int dso__load(struct dso *dso, struct map *map)
+ 	if (!name)
+ 		goto out;
  
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
-diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
-index 21776862e940..65eebe06c04d 100644
---- a/tools/perf/bench/futex-hash.c
-+++ b/tools/perf/bench/futex-hash.c
-@@ -137,6 +137,7 @@ int bench_futex_hash(int argc, const char **argv)
- 	if (!cpu)
- 		goto errmem;
- 
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-index 30d97121dc4f..89fd8f325f38 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -160,6 +160,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	if (!cpu)
- 		err(EXIT_FAILURE, "calloc");
- 
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
-diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-index a00a6891447a..7a15c2e61022 100644
---- a/tools/perf/bench/futex-requeue.c
-+++ b/tools/perf/bench/futex-requeue.c
-@@ -128,6 +128,7 @@ int bench_futex_requeue(int argc, const char **argv)
- 	if (!cpu)
- 		err(EXIT_FAILURE, "cpu_map__new");
- 
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
-diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
-index a053cf2b7039..cd2b81a845ac 100644
---- a/tools/perf/bench/futex-wake-parallel.c
-+++ b/tools/perf/bench/futex-wake-parallel.c
-@@ -234,6 +234,7 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 		exit(EXIT_FAILURE);
- 	}
- 
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 58906e9499bb..2dfcef3e371e 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -136,6 +136,7 @@ int bench_futex_wake(int argc, const char **argv)
- 	if (!cpu)
- 		err(EXIT_FAILURE, "calloc");
- 
-+	memset(&act, 0, sizeof(act));
- 	sigfillset(&act.sa_mask);
- 	act.sa_sigaction = toggle_done;
- 	sigaction(SIGINT, &act, NULL);
+-	kmod = dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
+-		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
+-		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
+-		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
+-
+-
+ 	/*
+ 	 * Read the build id if possible. This is required for
+ 	 * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work
 -- 
 2.21.1
