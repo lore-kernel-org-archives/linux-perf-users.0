@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 2/5] perf env: Do not return pointers to local variables
-Date: Fri,  6 Mar 2020 16:11:36 -0300
-Message-ID: <20200306191144.12762-4-acme@kernel.org>
+Subject: [PATCH 2/6] perf top: Fix stdio interface input handling with glibc 2.28+
+Date: Fri,  6 Mar 2020 16:11:37 -0300
+Message-ID: <20200306191144.12762-5-acme@kernel.org>
 References: <20200306191144.12762-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,50 +9,54 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200306191144.12762-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Tommi Rantala <tommi.t.rantala@nokia.com>
 
-It is possible to return a pointer to a local variable when looking up
-the architecture name for the running system and no normalization is
-done on that value, i.e. we may end up returning the uts.machine local
-variable.
+Since glibc 2.28 when running 'perf top --stdio', input handling no
+longer works, but hitting any key always just prints the "Mapped keys"
+help text.
 
-While this doesn't happen on most arches, as normalization takes place,
-lets fix this by making that a static variable and optimize it a bit by
-not always running uname(), only the first time.
+To fix it, call clearerr() in the display_thread() loop to clear any EOF
+sticky errors, as instructed in the glibc NEWS file
+(https://sourceware.org/git/?p=glibc.git;a=blob;f=NEWS):
 
-Noticed in fedora rawhide running with:
+ * All stdio functions now treat end-of-file as a sticky condition.  If you
+   read from a file until EOF, and then the file is enlarged by another
+   process, you must call clearerr or another function with the same effect
+   (e.g. fseek, rewind) before you can read the additional data.  This
+   corrects a longstanding C99 conformance bug.  It is most likely to affect
+   programs that use stdio to read interactive input from a terminal.
+   (Bug #1190.)
 
-  [perfbuilder@a5ff49d6e6e4 ~]$ gcc --version
-  gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8)
-
-Reported-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200305083714.9381-2-tommi.t.rantala@nokia.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/env.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-top.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 6242a9215df7..4154f944f474 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -343,11 +343,11 @@ static const char *normalize_arch(char *arch)
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index f6dd1a63f159..d2539b793f9d 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -684,7 +684,9 @@ static void *display_thread(void *arg)
+ 	delay_msecs = top->delay_secs * MSEC_PER_SEC;
+ 	set_term_quiet_input(&save);
+ 	/* trash return*/
+-	getc(stdin);
++	clearerr(stdin);
++	if (poll(&stdin_poll, 1, 0) > 0)
++		getc(stdin);
  
- const char *perf_env__arch(struct perf_env *env)
- {
--	struct utsname uts;
- 	char *arch_name;
- 
- 	if (!env || !env->arch) { /* Assume local operation */
--		if (uname(&uts) < 0)
-+		static struct utsname uts = { .machine[0] = '\0', };
-+		if (uts.machine[0] == '\0' && uname(&uts) < 0)
- 			return NULL;
- 		arch_name = uts.machine;
- 	} else
+ 	while (!done) {
+ 		perf_top__print_sym_table(top);
 -- 
 2.21.1
