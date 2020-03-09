@@ -1,83 +1,64 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/6] tools: Let O= makes handle a relative path with -C option
-Date: Mon,  9 Mar 2020 15:53:18 -0300
-Message-ID: <20200309185323.22583-2-acme@kernel.org>
+Subject: [PATCH 2/6] perf map: Fix off by one in strncpy() size argument
+Date: Mon,  9 Mar 2020 15:53:19 -0300
+Message-ID: <20200309185323.22583-3-acme@kernel.org>
 References: <20200309185323.22583-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200309185323.22583-1-acme@kernel.org>
-Sender: stable-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Jiri Olsa <jolsa@redhat.com>, Masahiro Yamada <masahiroy@kernel.org>, Michal Marek <michal.lkml@markovi.net>, Peter Zijlstra <peterz@infradead.org>, Sasha Levin <sashal@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, stable@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, disconnect3d <dominik.b.czarnota@gmail.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Changbin Du <changbin.du@intel.com>, Jiri Olsa <jolsa@redhat.com>, John Keeping <john@metanate.com>, Mark Rutland <mark.rutland@arm.com>, Michael Lentine <mlentine@google.com>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: disconnect3d <dominik.b.czarnota@gmail.com>
 
-When I tried to compile tools/perf from the top directory with the -C
-option, the O= option didn't work correctly if I passed a relative path:
+This patch fixes an off-by-one error in strncpy size argument in
+tools/perf/util/map.c. The issue is that in:
 
-  $ make O=BUILD -C tools/perf/
-  make: Entering directory '/home/mhiramat/ksrc/linux/tools/perf'
-    BUILD:   Doing 'make -j8' parallel build
-  ../scripts/Makefile.include:4: *** O=/home/mhiramat/ksrc/linux/tools/perf/BUILD does not exist.  Stop.
-  make: *** [Makefile:70: all] Error 2
-  make: Leaving directory '/home/mhiramat/ksrc/linux/tools/perf'
+        strncmp(filename, "/system/lib/", 11)
 
-The O= directory existence check failed because the check script ran in
-the build target directory instead of the directory where I ran the make
-command.
+the passed string literal: "/system/lib/" has 12 bytes (without the NULL
+byte) and the passed size argument is 11. As a result, the logic won't
+match the ending "/" byte and will pass filepaths that are stored in
+other directories e.g. "/system/libmalicious/bin" or just
+"/system/libmalicious".
 
-To fix that, once change directory to $(PWD) and check O= directory,
-since the PWD is set to where the make command runs.
+This functionality seems to be present only on Android. I assume the
+/system/ directory is only writable by the root user, so I don't think
+this bug has much (or any) security impact.
 
-Fixes: c883122acc0d ("perf tools: Let O= makes handle relative paths")
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: eca818369996 ("perf tools: Add automatic remapping of Android libraries")
+Signed-off-by: disconnect3d <dominik.b.czarnota@gmail.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Changbin Du <changbin.du@intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: John Keeping <john@metanate.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Lentine <mlentine@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sasha Levin <sashal@kernel.org>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/158351957799.3363.15269768530697526765.stgit@devnote2
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Link: http://lore.kernel.org/lkml/20200309104855.3775-1-dominik.b.czarnota@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile            | 2 +-
- tools/scripts/Makefile.include | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index 7902a5681fc8..b8fc7d972be9 100644
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -35,7 +35,7 @@ endif
- # Only pass canonical directory names as the output directory:
- #
- ifneq ($(O),)
--  FULL_O := $(shell readlink -f $(O) || echo $(O))
-+  FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
- endif
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 95428511300d..b342f744b1fc 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -89,7 +89,7 @@ static inline bool replace_android_lib(const char *filename, char *newfilename)
+ 		return true;
+ 	}
  
- #
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index ded7a950dc40..6d2f3a1b2249 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -1,8 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- ifneq ($(O),)
- ifeq ($(origin O), command line)
--	dummy := $(if $(shell test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
--	ABSOLUTE_O := $(shell cd $(O) ; pwd)
-+	dummy := $(if $(shell cd $(PWD); test -d $(O) || echo $(O)),$(error O=$(O) does not exist),)
-+	ABSOLUTE_O := $(shell cd $(PWD); cd $(O) ; pwd)
- 	OUTPUT := $(ABSOLUTE_O)/$(if $(subdir),$(subdir)/)
- 	COMMAND_O := O=$(ABSOLUTE_O)
- ifeq ($(objtree),)
+-	if (!strncmp(filename, "/system/lib/", 11)) {
++	if (!strncmp(filename, "/system/lib/", 12)) {
+ 		char *ndk, *app;
+ 		const char *arch;
+ 		size_t ndk_length;
 -- 
 2.21.1
