@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/19] tools lib traceevent: Remove extra '\n' in print_event_time()
-Date: Tue, 10 Mar 2020 08:15:38 -0300
-Message-ID: <20200310111551.25160-7-acme@kernel.org>
+Subject: [PATCH 05/19] libperf: Add counting example
+Date: Tue, 10 Mar 2020 08:15:37 -0300
+Message-ID: <20200310111551.25160-6-acme@kernel.org>
 References: <20200310111551.25160-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,48 +9,115 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200310111551.25160-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Michael Petlan <mpetlan@redhat.com>
 
-If the precision of print_event_time() is zero or greater than the
-timestamp, it uses a different format. But that format had an extra new
-line at the end, and caused the output to not look right:
+Current libperf man pages mention file counting.c "coming with libperf package",
+however, the file is missing. Add the file then.
 
-cpus=2
-           sleep-3946  [001]111264306005
-: function:             inotify_inode_queue_event
-           sleep-3946  [001]111264307158
-: function:             __fsnotify_parent
-           sleep-3946  [001]111264307637
-: function:             inotify_dentry_parent_queue_event
-           sleep-3946  [001]111264307989
-: function:             fsnotify
-           sleep-3946  [001]111264308401
-: function:             audit_syscall_exit
-
-Fixes: 38847db9740a ("libtraceevent, perf tools: Changes in tep_print_event_* APIs")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200303231852.6ab6882f@oasis.local.home
+Fixes: 81de3bf37a8b ("libperf: Add man pages")
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+LPU-Reference: 20200227194424.28210-1-mpetlan@redhat.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../perf/Documentation/examples/counting.c    | 83 +++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 tools/lib/perf/Documentation/examples/counting.c
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index beaa8b8c08ff..e1bd2a93c6db 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -5541,7 +5541,7 @@ static void print_event_time(struct tep_handle *tep, struct trace_seq *s,
- 	if (p10 > 1 && p10 < time)
- 		trace_seq_printf(s, "%5llu.%0*llu", time / p10, prec, time % p10);
- 	else
--		trace_seq_printf(s, "%12llu\n", time);
-+		trace_seq_printf(s, "%12llu", time);
- }
- 
- struct print_event_type {
+diff --git a/tools/lib/perf/Documentation/examples/counting.c b/tools/lib/perf/Documentation/examples/counting.c
+new file mode 100644
+index 000000000000..6085693571ef
+--- /dev/null
++++ b/tools/lib/perf/Documentation/examples/counting.c
+@@ -0,0 +1,83 @@
++#include <linux/perf_event.h>
++#include <perf/evlist.h>
++#include <perf/evsel.h>
++#include <perf/cpumap.h>
++#include <perf/threadmap.h>
++#include <perf/mmap.h>
++#include <perf/core.h>
++#include <perf/event.h>
++#include <stdio.h>
++#include <unistd.h>
++
++static int libperf_print(enum libperf_print_level level,
++                         const char *fmt, va_list ap)
++{
++	return vfprintf(stderr, fmt, ap);
++}
++
++int main(int argc, char **argv)
++{
++	int count = 100000, err = 0;
++	struct perf_evlist *evlist;
++	struct perf_evsel *evsel;
++	struct perf_thread_map *threads;
++	struct perf_counts_values counts;
++
++	struct perf_event_attr attr1 = {
++		.type        = PERF_TYPE_SOFTWARE,
++		.config      = PERF_COUNT_SW_CPU_CLOCK,
++		.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING,
++		.disabled    = 1,
++	};
++	struct perf_event_attr attr2 = {
++		.type        = PERF_TYPE_SOFTWARE,
++		.config      = PERF_COUNT_SW_TASK_CLOCK,
++		.read_format = PERF_FORMAT_TOTAL_TIME_ENABLED|PERF_FORMAT_TOTAL_TIME_RUNNING,
++		.disabled    = 1,
++	};
++
++	libperf_init(libperf_print);
++	threads = perf_thread_map__new_dummy();
++	if (!threads) {
++		fprintf(stderr, "failed to create threads\n");
++		return -1;
++	}
++	perf_thread_map__set_pid(threads, 0, 0);
++	evlist = perf_evlist__new();
++	if (!evlist) {
++		fprintf(stderr, "failed to create evlist\n");
++		goto out_threads;
++	}
++	evsel = perf_evsel__new(&attr1);
++	if (!evsel) {
++		fprintf(stderr, "failed to create evsel1\n");
++		goto out_evlist;
++	}
++	perf_evlist__add(evlist, evsel);
++	evsel = perf_evsel__new(&attr2);
++	if (!evsel) {
++		fprintf(stderr, "failed to create evsel2\n");
++		goto out_evlist;
++	}
++	perf_evlist__add(evlist, evsel);
++	perf_evlist__set_maps(evlist, NULL, threads);
++	err = perf_evlist__open(evlist);
++	if (err) {
++		fprintf(stderr, "failed to open evsel\n");
++		goto out_evlist;
++	}
++	perf_evlist__enable(evlist);
++	while (count--);
++	perf_evlist__disable(evlist);
++	perf_evlist__for_each_evsel(evlist, evsel) {
++		perf_evsel__read(evsel, 0, 0, &counts);
++		fprintf(stdout, "count %llu, enabled %llu, run %llu\n",
++				counts.val, counts.ena, counts.run);
++	}
++	perf_evlist__close(evlist);
++out_evlist:
++	perf_evlist__delete(evlist);
++out_threads:
++	perf_thread_map__put(threads);
++	return err;
++}
 -- 
 2.21.1
