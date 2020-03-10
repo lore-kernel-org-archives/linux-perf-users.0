@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/19] perf annotate: Get rid of annotation->nr_jumps
-Date: Tue, 10 Mar 2020 08:15:36 -0300
-Message-ID: <20200310111551.25160-5-acme@kernel.org>
+Subject: [PATCH 06/19] tools lib traceevent: Remove extra '\n' in print_event_time()
+Date: Tue, 10 Mar 2020 08:15:38 -0300
+Message-ID: <20200310111551.25160-7-acme@kernel.org>
 References: <20200310111551.25160-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,52 +9,48 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200310111551.25160-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-The 'nr_jumps' field in 'struct annotation' is not used since it's
-inception in commit 2402e4a936a0 ("perf annotate browser: Show 'jumpy'
-functions").  Get rid of it.
+If the precision of print_event_time() is zero or greater than the
+timestamp, it uses a different format. But that format had an extra new
+line at the end, and caused the output to not look right:
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200204045233.474937-7-ravi.bangoria@linux.ibm.com
+cpus=2
+           sleep-3946  [001]111264306005
+: function:             inotify_inode_queue_event
+           sleep-3946  [001]111264307158
+: function:             __fsnotify_parent
+           sleep-3946  [001]111264307637
+: function:             inotify_dentry_parent_queue_event
+           sleep-3946  [001]111264307989
+: function:             fsnotify
+           sleep-3946  [001]111264308401
+: function:             audit_syscall_exit
+
+Fixes: 38847db9740a ("libtraceevent, perf tools: Changes in tep_print_event_* APIs")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lore.kernel.org/lkml/20200303231852.6ab6882f@oasis.local.home
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/annotate.c | 2 --
- tools/perf/util/annotate.h | 1 -
- 2 files changed, 3 deletions(-)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 0ea95be84b3b..f1ea0d61eb5b 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2611,8 +2611,6 @@ void annotation__mark_jump_targets(struct annotation *notes, struct symbol *sym)
- 
- 		if (++al->jump_sources > notes->max_jump_sources)
- 			notes->max_jump_sources = al->jump_sources;
--
--		++notes->nr_jumps;
- 	}
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index beaa8b8c08ff..e1bd2a93c6db 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -5541,7 +5541,7 @@ static void print_event_time(struct tep_handle *tep, struct trace_seq *s,
+ 	if (p10 > 1 && p10 < time)
+ 		trace_seq_printf(s, "%5llu.%0*llu", time / p10, prec, time % p10);
+ 	else
+-		trace_seq_printf(s, "%12llu\n", time);
++		trace_seq_printf(s, "%12llu", time);
  }
  
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 001258601a37..07c775938d46 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -279,7 +279,6 @@ struct annotation {
- 	struct annotation_options *options;
- 	struct annotation_line	**offsets;
- 	int			nr_events;
--	int			nr_jumps;
- 	int			max_jump_sources;
- 	int			nr_entries;
- 	int			nr_asm_entries;
+ struct print_event_type {
 -- 
 2.21.1
