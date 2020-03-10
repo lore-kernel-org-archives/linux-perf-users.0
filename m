@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/19] perf diff: Use __block_info__cmp() to replace block_pair_cmp()
-Date: Tue, 10 Mar 2020 08:15:49 -0300
-Message-ID: <20200310111551.25160-18-acme@kernel.org>
+Subject: [PATCH 19/19] perf block-info: Support color ops to print block percents in color
+Date: Tue, 10 Mar 2020 08:15:51 -0300
+Message-ID: <20200310111551.25160-20-acme@kernel.org>
 References: <20200310111551.25160-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,117 +9,112 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200310111551.25160-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-'perf diff' uses block_pair_cmp() to compare two blocks. But
-block_info__cmp() has the similar functionality and it's a bit more
-complete.
+It would be nice to print the block percents with colors.
 
-This patch removes block_pair_cmp() and uses __block_info__cmp()
-instead. __block_info__cmp() is wrapped by block_info__cmp() and it
-doesn't receives a perf_hpp_fmt parameter.
+This patch supports the 'Sampled Cycles%' and 'Avg Cycles%' printed in
+colors.
+
+For example,
+
+perf record -b ...
+perf report --total-cycles or perf report --total-cycles --stdio
+
+percent > 5%, colored in red
+percent > 0.5%, colored in green
+percent < 0.5%, default color
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200202141655.32053-3-yao.jin@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200202141655.32053-5-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-diff.c    | 21 ++-------------------
- tools/perf/util/block-info.c |  9 +++++++--
- tools/perf/util/block-info.h |  2 ++
- 3 files changed, 11 insertions(+), 21 deletions(-)
+ tools/perf/util/block-info.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index c03c36fde7e2..5e697cd2224a 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -572,29 +572,12 @@ static void init_block_hist(struct block_hist *bh)
- 	bh->valid = true;
- }
- 
--static int block_pair_cmp(struct hist_entry *a, struct hist_entry *b)
--{
--	struct block_info *bi_a = a->block_info;
--	struct block_info *bi_b = b->block_info;
--	int cmp;
--
--	if (!bi_a->sym || !bi_b->sym)
--		return -1;
--
--	cmp = strcmp(bi_a->sym->name, bi_b->sym->name);
--
--	if ((!cmp) && (bi_a->start == bi_b->start) && (bi_a->end == bi_b->end))
--		return 0;
--
--	return -1;
--}
--
- static struct hist_entry *get_block_pair(struct hist_entry *he,
- 					 struct hists *hists_pair)
- {
- 	struct rb_root_cached *root = hists_pair->entries_in;
- 	struct rb_node *next = rb_first_cached(root);
--	int cmp;
-+	int64_t cmp;
- 
- 	while (next != NULL) {
- 		struct hist_entry *he_pair = rb_entry(next, struct hist_entry,
-@@ -602,7 +585,7 @@ static struct hist_entry *get_block_pair(struct hist_entry *he,
- 
- 		next = rb_next(&he_pair->rb_node_in);
- 
--		cmp = block_pair_cmp(he_pair, he);
-+		cmp = __block_info__cmp(he_pair, he);
- 		if (!cmp)
- 			return he_pair;
- 	}
 diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index 5b4214656e29..25f6422c548b 100644
+index debb8b12cf51..423ec69bda6c 100644
 --- a/tools/perf/util/block-info.c
 +++ b/tools/perf/util/block-info.c
-@@ -65,8 +65,7 @@ struct block_info *block_info__new(void)
- 	return bi;
+@@ -181,6 +181,17 @@ static int block_column_width(struct perf_hpp_fmt *fmt,
+ 	return block_fmt->width;
  }
  
--int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
--			struct hist_entry *left, struct hist_entry *right)
-+int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right)
- {
- 	struct block_info *bi_l = left->block_info;
- 	struct block_info *bi_r = right->block_info;
-@@ -91,6 +90,12 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	return (int64_t)(bi_r->end - bi_l->end);
- }
- 
-+int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-+			struct hist_entry *left, struct hist_entry *right)
++static int color_pct(struct perf_hpp *hpp, int width, double pct)
 +{
-+	return __block_info__cmp(left, right);
++#ifdef HAVE_SLANG_SUPPORT
++	if (use_browser) {
++		return __hpp__slsmg_color_printf(hpp, "%*.2f%%",
++						 width - 1, pct);
++	}
++#endif
++	return hpp_color_scnprintf(hpp, "%*.2f%%", width - 1, pct);
 +}
 +
- static void init_block_info(struct block_info *bi, struct symbol *sym,
- 			    struct cyc_hist *ch, int offset,
- 			    u64 total_cycles)
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index bef0d75e9819..a0fa9fefeaf0 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -61,6 +61,8 @@ static inline void __block_info__zput(struct block_info **bi)
+ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+ 					struct perf_hpp *hpp,
+ 					struct hist_entry *he)
+@@ -188,14 +199,11 @@ static int block_total_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+ 	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
+ 	struct block_info *bi = he->block_info;
+ 	double ratio = 0.0;
+-	char buf[16];
  
- #define block_info__zput(bi) __block_info__zput(&bi)
+ 	if (block_fmt->total_cycles)
+ 		ratio = (double)bi->cycles / (double)block_fmt->total_cycles;
  
-+int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right);
-+
- int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 			struct hist_entry *left, struct hist_entry *right);
+-	sprintf(buf, "%.2f%%", 100.0 * ratio);
+-
+-	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
++	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+ }
  
+ static int64_t block_total_cycles_pct_sort(struct perf_hpp_fmt *fmt,
+@@ -248,16 +256,13 @@ static int block_cycles_pct_entry(struct perf_hpp_fmt *fmt,
+ 	struct block_info *bi = he->block_info;
+ 	double ratio = 0.0;
+ 	u64 avg;
+-	char buf[16];
+ 
+ 	if (block_fmt->block_cycles && bi->num_aggr) {
+ 		avg = bi->cycles_aggr / bi->num_aggr;
+ 		ratio = (double)avg / (double)block_fmt->block_cycles;
+ 	}
+ 
+-	sprintf(buf, "%.2f%%", 100.0 * ratio);
+-
+-	return scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
++	return color_pct(hpp, block_fmt->width, 100.0 * ratio);
+ }
+ 
+ static int block_avg_cycles_entry(struct perf_hpp_fmt *fmt,
+@@ -345,7 +350,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
+ 
+ 	switch (idx) {
+ 	case PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT:
+-		fmt->entry = block_total_cycles_pct_entry;
++		fmt->color = block_total_cycles_pct_entry;
+ 		fmt->cmp = block_info__cmp;
+ 		fmt->sort = block_total_cycles_pct_sort;
+ 		break;
+@@ -353,7 +358,7 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
+ 		fmt->entry = block_cycles_lbr_entry;
+ 		break;
+ 	case PERF_HPP_REPORT__BLOCK_CYCLES_PCT:
+-		fmt->entry = block_cycles_pct_entry;
++		fmt->color = block_cycles_pct_entry;
+ 		break;
+ 	case PERF_HPP_REPORT__BLOCK_AVG_CYCLES:
+ 		fmt->entry = block_avg_cycles_entry;
 -- 
 2.21.1
