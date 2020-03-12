@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v4 6/8] perf/tools: Enhance JSON/metric infrastructure to
  handle "?"
-Date: Thu, 12 Mar 2020 11:52:14 +0100
-Message-ID: <20200312105214.GD311223@krava>
+Date: Thu, 12 Mar 2020 11:52:31 +0100
+Message-ID: <20200312105231.GE311223@krava>
 References: <20200309062552.29911-1-kjain@linux.ibm.com>
  <20200309062552.29911-7-kjain@linux.ibm.com>
 Mime-Version: 1.0
@@ -19,100 +19,48 @@ On Mon, Mar 09, 2020 at 11:55:50AM +0530, Kajol Jain wrote:
 
 SNIP
 
-> +static int metricgroup__add_metric_runtime_param(struct strbuf *events,
-> +			struct list_head *group_list, struct pmu_event *pe)
-> +{
-> +	int i, count;
-> +	int ret = -EINVAL;
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 9377538f4097..d17664e628db 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -15,6 +15,7 @@ struct parse_ctx {
+>  	struct parse_id ids[MAX_PARSE_ID];
+>  };
+>  
+> +int expr__runtimeparam;
+>  void expr__ctx_init(struct parse_ctx *ctx);
+>  void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+>  int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
+> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> index 1928f2a3dddc..ec4b00671f67 100644
+> --- a/tools/perf/util/expr.l
+> +++ b/tools/perf/util/expr.l
+> @@ -45,6 +45,21 @@ static char *normalize(char *str)
+>  			*dst++ = '/';
+>  		else if (*str == '\\')
+>  			*dst++ = *++str;
+> +        else if (*str == '?') {
 > +
-> +	count = arch_get_runtimeparam();
-> +
-> +	/* This loop is added to create multiple
-> +	 * events depend on count value and add
-> +	 * those events to group_list.
-> +	 */
-> +
-> +	for (i = 0; i < count; i++) {
-> +		const char **ids;
-> +		int idnum;
-> +		struct egroup *eg;
-> +		char value[PATH_MAX];
-> +
-> +		expr__runtimeparam = i;
-> +
-> +		if (expr__find_other(pe->metric_expr,
-> +					NULL, &ids, &idnum) < 0)
-> +			return ret;
-> +
-> +		if (events->len > 0)
-> +			strbuf_addf(events, ",");
-> +
-> +		if (metricgroup__has_constraint(pe))
-> +			metricgroup__add_metric_non_group(events, ids, idnum);
-> +		else
-> +			metricgroup__add_metric_weak_group(events, ids, idnum);
-> +
-> +		eg = malloc(sizeof(struct egroup));
-> +		if (!eg) {
-> +			ret = -ENOMEM;
-> +			return ret;
-> +		}
-> +		sprintf(value, "%s%c%d", pe->metric_name, '_', i);
-> +		eg->ids = ids;
-> +		eg->idnum = idnum;
-> +		eg->metric_name = strdup(value);
-> +		eg->metric_expr = pe->metric_expr;
-> +		eg->metric_unit = pe->unit;
-> +		list_add_tail(&eg->nd, group_list);
-> +		ret = 0;
-> +
-> +		if (ret != 0)
-> +			break;
+> +			int size = snprintf(NULL, 0, "%d", expr__runtimeparam);
+> +			char * paramval = (char *)malloc(size);
 
-the inside loop is essentialy what you factor out to
-metricgroup__add_metric_param right? please nove
-addition of metricgroup__add_metric_param function
-into separate patch
+can't we agree that any reasonable number in here
+wouldn't cross 20 bytes in string or so and use
+buffer for that instead of that malloc exercise?
 
+thanks,
 jirka
 
-
-> +	}
-> +	return ret;
-> +}
-> +static int metricgroup__add_metric_param(struct strbuf *events,
-> +			struct list_head *group_list, struct pmu_event *pe)
-> +{
+> +			int i = 0;
 > +
-> +	const char **ids;
-> +	int idnum;
-> +	struct egroup *eg;
-> +	int ret = -EINVAL;
-> +
-> +	if (expr__find_other(pe->metric_expr,
-> +					     NULL, &ids, &idnum) < 0)
-> +		return ret;
-> +	if (events->len > 0)
-> +		strbuf_addf(events, ",");
-> +
-> +	if (metricgroup__has_constraint(pe))
-> +		metricgroup__add_metric_non_group(events, ids, idnum);
-> +	else
-> +		metricgroup__add_metric_weak_group(events, ids, idnum);
-> +
-> +	eg = malloc(sizeof(struct egroup));
-> +	if (!eg)
-> +		ret = -ENOMEM;
-> +
-> +	eg->ids = ids;
-> +	eg->idnum = idnum;
-> +	eg->metric_name = pe->metric_name;
-> +	eg->metric_expr = pe->metric_expr;
-> +	eg->metric_unit = pe->unit;
-> +	list_add_tail(&eg->nd, group_list);
-> +	ret = 0;
-> +
-> +	return ret;
-> +}
+> +			if(!paramval)
+> +				*dst++ = '0';
+> +			else {
+> +				sprintf(paramval, "%d", expr__runtimeparam);
+> +				while(i < size)
+> +					*dst++ = paramval[i++];
+> +				free(paramval);
+> +			}
+> +		}
 
 SNIP
