@@ -1,73 +1,68 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf tools: add support for lipfm4
-Date: Thu, 12 Mar 2020 11:03:49 +0100
-Message-ID: <20200312100349.GB254105@krava>
-References: <20200310185003.57344-1-irogers@google.com>
- <20200310195915.GA1676879@tassilo.jf.intel.com>
- <CABPqkBRQo=bEOiCFGFjwcM8TZaXMFyaL7o1hcFd6Bc3w+LhJQA@mail.gmail.com>
- <20200311161320.GA254105@krava>
- <CAP-5=fXYMTT7-iiaacO1VF0rRSO6t9W0a5edkiEwdZMYBcrtpQ@mail.gmail.com>
+Subject: Re: [PATCH v4 6/8] perf/tools: Enhance JSON/metric infrastructure to
+ handle "?"
+Date: Thu, 12 Mar 2020 11:50:44 +0100
+Message-ID: <20200312105044.GA311223@krava>
+References: <20200309062552.29911-1-kjain@linux.ibm.com>
+ <20200309062552.29911-7-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXYMTT7-iiaacO1VF0rRSO6t9W0a5edkiEwdZMYBcrtpQ@mail.gmail.com>
+In-Reply-To: <20200309062552.29911-7-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Stephane Eranian <eranian@google.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Jiwei
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Mar 11, 2020 at 12:32:26PM -0700, Ian Rogers wrote:
-> On Wed, Mar 11, 2020 at 9:13 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 02:39:23PM -0700, Stephane Eranian wrote:
-> > > On Tue, Mar 10, 2020 at 12:59 PM Andi Kleen <ak@linux.intel.com> wrote:
-> > > >
-> > > > On Tue, Mar 10, 2020 at 11:50:03AM -0700, Ian Rogers wrote:
-> > > > > This patch links perf with the libpfm4 library.
-> > > > > This library contains all the hardware event tables for all
-> > > > > processors supported by perf_events. This is a helper library
-> > > > > that help convert from a symbolic event name to the event
-> > > > > encoding required by the underlying kernel interface. This
-> > > > > library is open-source and available from: http://perfmon2.sf.net.
-> > > >
-> > > > For most CPUs the builtin perf JSON event support should make
-> > > > this redundant.
-> > > >
-> > > We decided to post this patch to propose an alternative to the JSON
-> > > file approach. It could be an option during the build.
-> > > The libpfm4 library has been around for 15 years now. Therefore, it
-> > > supports a lot of processors core and uncore and it  is very portable.
-> > > The key value add I see is that this is a library that can be, and has
-> > > been, used by tool developers directly in their apps. It can
-> > > work with more than Linux perf_events interface. It is not tied to the
-> > > interface. It has well defined and documented entry points.
-> > > We do use libpfm4 extensively at Google in both the perf tool and
-> > > applications. The PAPI toolkit also relies on this library.
-> > >
-> > > I don't see this as competing with the JSON approach. It is just an
-> > > option I'd like to offer to users especially those familiar
-> > > with it in their apps.
-> >
-> > I dont mind having it, in fact I found really old email where I'm
-> > asking Peter about that ;-) and he wasn't very keen about that:
-> >   https://lore.kernel.org/lkml/1312806326.10488.30.camel@twins/
-> >
-> > not sure what was the actual reason at that time and if anything
-> > changed since.. Peter?
-> >
-> > btw I can't apply even that v2 on latest Arnaldo's branch
-> >
-> > jirka
-> 
-> Thanks Jiri,
-> 
-> the patches were done on tip.git/master, perhaps there is a conflict
-> with the Documents Makefile due to adding better man page dates? I'll
-> try to repro building on
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/ on the
-> perf/core branch unless you  have a different suggestion? I also
+On Mon, Mar 09, 2020 at 11:55:50AM +0530, Kajol Jain wrote:
 
-yes, it's perf/core
+SNIP
 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index c3a8c701609a..11eeeb929b91 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -474,6 +474,98 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
+>  	return false;
+>  }
+>  
+> +int __weak arch_get_runtimeparam(void)
+> +{
+> +	return 1;
+> +}
+> +
+> +static int metricgroup__add_metric_runtime_param(struct strbuf *events,
+> +			struct list_head *group_list, struct pmu_event *pe)
+> +{
+> +	int i, count;
+> +	int ret = -EINVAL;
+> +
+> +	count = arch_get_runtimeparam();
+> +
+> +	/* This loop is added to create multiple
+> +	 * events depend on count value and add
+> +	 * those events to group_list.
+> +	 */
+> +
+> +	for (i = 0; i < count; i++) {
+> +		const char **ids;
+> +		int idnum;
+> +		struct egroup *eg;
+> +		char value[PATH_MAX];
+> +
+> +		expr__runtimeparam = i;
+
+so the expr__runtimeparam is always set before we call the
+expr parsing function - wither expr__find_other or expr__parse,
+
+and it's used inside the normalize flexer function, which has
+access to the passed context.. so I don't see a reason why
+expr__runtimeparam couldn't be added in struct parse_ctx
+and used from there..
+
+while in this, perhaps we should rename parse_ctx to expr_ctx,
+to keep the namespace straight (in separate patch)
+
+thanks,
 jirka
