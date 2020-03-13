@@ -1,72 +1,128 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf documentation: Add desription forHEADER_TRACING_DATA
-Date: Thu, 12 Mar 2020 12:48:31 +0100
-Message-ID: <747c8b92-a342-3e0c-4232-19df02250496@linux.ibm.com>
-References: <20200303070846.18335-1-tmricht@linux.ibm.com>
- <20200311135815.GD19277@kernel.org>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v4 6/8] perf/tools: Enhance JSON/metric infrastructure to
+ handle "?"
+Date: Fri, 13 Mar 2020 17:56:24 +0530
+Message-ID: <55e17c86-5adf-bf3c-ec38-ffe77a45f7f3@linux.ibm.com>
+References: <20200309062552.29911-1-kjain@linux.ibm.com>
+ <20200309062552.29911-7-kjain@linux.ibm.com> <20200312105214.GD311223@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200311135815.GD19277@kernel.org>
+In-Reply-To: <20200312105214.GD311223@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-On 3/11/20 2:58 PM, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Mar 03, 2020 at 08:08:46AM +0100, Thomas Richter escreveu:
->> Add description and layout in the perf.data file for
->> the header part describing trace data used in commands
->> perf record -e XXX
->> where XXX is a probe or tracepoint.
+
+
+On 3/12/20 4:22 PM, Jiri Olsa wrote:
+> On Mon, Mar 09, 2020 at 11:55:50AM +0530, Kajol Jain wrote:
 > 
-> Did you write this from scratch?  I was going thru it and couldn't find
-> what that "Note member 'ftrace_count' can be zero." refers to, couldn't
-> find this ftrace_counter, is this outdated?
+> SNIP
 > 
-> [root@five ~]# find /sys/kernel/debug/tracing/events/ -type f | xargs grep ftrace_count
-> [root@five ~]# find /sys/kernel/debug/tracing/events/ -name ftrace_count
-> [root@five ~]# uname -a
-> Linux five 5.5.5-200.fc31.x86_64 #1 SMP Wed Feb 19 23:28:07 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-> [root@five ~]#
+>> +static int metricgroup__add_metric_runtime_param(struct strbuf *events,
+>> +			struct list_head *group_list, struct pmu_event *pe)
+>> +{
+>> +	int i, count;
+>> +	int ret = -EINVAL;
+>> +
+>> +	count = arch_get_runtimeparam();
+>> +
+>> +	/* This loop is added to create multiple
+>> +	 * events depend on count value and add
+>> +	 * those events to group_list.
+>> +	 */
+>> +
+>> +	for (i = 0; i < count; i++) {
+>> +		const char **ids;
+>> +		int idnum;
+>> +		struct egroup *eg;
+>> +		char value[PATH_MAX];
+>> +
+>> +		expr__runtimeparam = i;
+>> +
+>> +		if (expr__find_other(pe->metric_expr,
+>> +					NULL, &ids, &idnum) < 0)
+>> +			return ret;
+>> +
+>> +		if (events->len > 0)
+>> +			strbuf_addf(events, ",");
+>> +
+>> +		if (metricgroup__has_constraint(pe))
+>> +			metricgroup__add_metric_non_group(events, ids, idnum);
+>> +		else
+>> +			metricgroup__add_metric_weak_group(events, ids, idnum);
+>> +
+>> +		eg = malloc(sizeof(struct egroup));
+>> +		if (!eg) {
+>> +			ret = -ENOMEM;
+>> +			return ret;
+>> +		}
+>> +		sprintf(value, "%s%c%d", pe->metric_name, '_', i);
+>> +		eg->ids = ids;
+>> +		eg->idnum = idnum;
+>> +		eg->metric_name = strdup(value);
+>> +		eg->metric_expr = pe->metric_expr;
+>> +		eg->metric_unit = pe->unit;
+>> +		list_add_tail(&eg->nd, group_list);
+>> +		ret = 0;
+>> +
+>> +		if (ret != 0)
+>> +			break;
 > 
-> The part about using a probe and then go on dissecting it is really
-> nice, I'll try reproducing it soon,
+> the inside loop is essentialy what you factor out to
+> metricgroup__add_metric_param right? please nove
+> addition of metricgroup__add_metric_param function
+> into separate patch
 > 
-> Thanks,
+> jirka
 > 
 
-Arnaldo,
-        
-yes, I wrote this from scratch. I decided to invest some time into the
-documentation after I have spent nearly 3 week in debugging why commands
+Ok will put it in seperate patch.
 
-  perf record -e probe:vfs_getname
-
-followed by
-
-  perf report 
-  
-did not print the file name on s390. Remember we talked about failing
-test case 65: Check open filename arg using perf trace + vfs_getname.
-(Steven Rostedt and Masami Hiramatsu helped me on this).
-
-On ftrace_count: This is not a file available in /sys/kernel/debug/tracing.
-It is a value saved in function
-
-tracing_data_get
-  record_ftrace_files
-     copy_event_system --> Check for some format file in directories
-                           /sys/kernel/debug/tracing/events/ftrace/*/
-Depending on what probe was defined, there is no hit and zero is written
-to the output.
-
-Hope this helps.
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks,
+kajol
+> 
+>> +	}
+>> +	return ret;
+>> +}
+>> +static int metricgroup__add_metric_param(struct strbuf *events,
+>> +			struct list_head *group_list, struct pmu_event *pe)
+>> +{
+>> +
+>> +	const char **ids;
+>> +	int idnum;
+>> +	struct egroup *eg;
+>> +	int ret = -EINVAL;
+>> +
+>> +	if (expr__find_other(pe->metric_expr,
+>> +					     NULL, &ids, &idnum) < 0)
+>> +		return ret;
+>> +	if (events->len > 0)
+>> +		strbuf_addf(events, ",");
+>> +
+>> +	if (metricgroup__has_constraint(pe))
+>> +		metricgroup__add_metric_non_group(events, ids, idnum);
+>> +	else
+>> +		metricgroup__add_metric_weak_group(events, ids, idnum);
+>> +
+>> +	eg = malloc(sizeof(struct egroup));
+>> +	if (!eg)
+>> +		ret = -ENOMEM;
+>> +
+>> +	eg->ids = ids;
+>> +	eg->idnum = idnum;
+>> +	eg->metric_name = pe->metric_name;
+>> +	eg->metric_expr = pe->metric_expr;
+>> +	eg->metric_unit = pe->unit;
+>> +	list_add_tail(&eg->nd, group_list);
+>> +	ret = 0;
+>> +
+>> +	return ret;
+>> +}
+> 
+> SNIP
+> 
