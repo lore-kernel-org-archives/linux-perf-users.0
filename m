@@ -1,128 +1,101 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v4 6/8] perf/tools: Enhance JSON/metric infrastructure to
- handle "?"
-Date: Fri, 13 Mar 2020 17:56:24 +0530
-Message-ID: <55e17c86-5adf-bf3c-ec38-ffe77a45f7f3@linux.ibm.com>
-References: <20200309062552.29911-1-kjain@linux.ibm.com>
- <20200309062552.29911-7-kjain@linux.ibm.com> <20200312105214.GD311223@krava>
+From: Vijay Thakkar <vijaythakkar@me.com>
+Subject: Re: [PATCH v3 3/3] perf vendor events amd: update Zen1 events to V2
+Date: Fri, 13 Mar 2020 23:13:10 -0400
+Message-ID: <20200314031310.GA66224@shwetrath.localdomain>
+References: <20200228175639.39171-1-vijaythakkar@me.com>
+ <20200228175639.39171-4-vijaythakkar@me.com>
+ <77552e9e-7fca-7186-24cc-6a8a87d4b7b6@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200312105214.GD311223@krava>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <77552e9e-7fca-7186-24cc-6a8a87d4b7b6@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
+To: Kim Phillips <kim.phillips@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+I think I may have accidentally deleted your review of Patch 2 so I am
+replying to that here. Still quite new to mutt, sorry :p
 
+> > +  {                                                                                                  
+> > +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_iside",                                    
+> > +    "EventCode": "0x46",                                                                             
+> > +    "BriefDescription": "Tablewalker allocation.",                                                   
+> > +    "PublicDescription": "Tablewalker allocation.",                                                  
+> > +    "UMask": "0xc"                                                                                   
+> > +  },                                                                                                 
+> > +  {                                                                                                  
+> > +    "EventName": "ls_tablewalker.perf_mon_tablewalk_alloc_dside",                                    
+> > +    "EventCode": "0x46",                                                                             
+> > +    "BriefDescription": "Tablewalker allocation.",                                                   
+> > +    "PublicDescription": "Tablewalker allocation.",                                                  
+> > +    "UMask": "0x3"                                                                                   
+> > +  },                                                                                                 
+>                                                                                                         
+> I see each of the two tablewalkers got consolidated into their own                                      
+> unit mask groups?  Any reason we couldn't leave the original
+> instances there, and add these in addition?  In any case we'd need
+> clarification of which 'side' are the both counting - I or D - in
+> a single BriefDescription here.
 
-On 3/12/20 4:22 PM, Jiri Olsa wrote:
-> On Mon, Mar 09, 2020 at 11:55:50AM +0530, Kajol Jain wrote:
-> 
-> SNIP
-> 
->> +static int metricgroup__add_metric_runtime_param(struct strbuf *events,
->> +			struct list_head *group_list, struct pmu_event *pe)
->> +{
->> +	int i, count;
->> +	int ret = -EINVAL;
->> +
->> +	count = arch_get_runtimeparam();
->> +
->> +	/* This loop is added to create multiple
->> +	 * events depend on count value and add
->> +	 * those events to group_list.
->> +	 */
->> +
->> +	for (i = 0; i < count; i++) {
->> +		const char **ids;
->> +		int idnum;
->> +		struct egroup *eg;
->> +		char value[PATH_MAX];
->> +
->> +		expr__runtimeparam = i;
->> +
->> +		if (expr__find_other(pe->metric_expr,
->> +					NULL, &ids, &idnum) < 0)
->> +			return ret;
->> +
->> +		if (events->len > 0)
->> +			strbuf_addf(events, ",");
->> +
->> +		if (metricgroup__has_constraint(pe))
->> +			metricgroup__add_metric_non_group(events, ids, idnum);
->> +		else
->> +			metricgroup__add_metric_weak_group(events, ids, idnum);
->> +
->> +		eg = malloc(sizeof(struct egroup));
->> +		if (!eg) {
->> +			ret = -ENOMEM;
->> +			return ret;
->> +		}
->> +		sprintf(value, "%s%c%d", pe->metric_name, '_', i);
->> +		eg->ids = ids;
->> +		eg->idnum = idnum;
->> +		eg->metric_name = strdup(value);
->> +		eg->metric_expr = pe->metric_expr;
->> +		eg->metric_unit = pe->unit;
->> +		list_add_tail(&eg->nd, group_list);
->> +		ret = 0;
->> +
->> +		if (ret != 0)
->> +			break;
-> 
-> the inside loop is essentialy what you factor out to
-> metricgroup__add_metric_param right? please nove
-> addition of metricgroup__add_metric_param function
-> into separate patch
-> 
-> jirka
-> 
+So these have not been changed since zen1, and are still present as is
+in the mainline. Zen2 PPR version 55803 Rev 0.54 does not include them.
+But I see that these have been updated even for zen1 in the latest PPR
+version 54945 Rev 3.03 so I will add them for both.
 
-Ok will put it in seperate patch.
+> I thought we agreed to call these LS MAB Allocates by Type", like the text in the
+> later PPR for AMD Family 17h Model 31h B0 - 55803 Rev 0.54 - Sep 12, 2019?
+> 
+> DC Miss By Type is probably less correct given the MAB != DC, and the name of
+> the event is "LsMabAlloc".
+> 
+> FWIW, a MAB is a Miss address buffer (seen in the Model 71h PPR's MCA_CTL_LS
+> register definition).
 
-Thanks,
-kajol
-> 
->> +	}
->> +	return ret;
->> +}
->> +static int metricgroup__add_metric_param(struct strbuf *events,
->> +			struct list_head *group_list, struct pmu_event *pe)
->> +{
->> +
->> +	const char **ids;
->> +	int idnum;
->> +	struct egroup *eg;
->> +	int ret = -EINVAL;
->> +
->> +	if (expr__find_other(pe->metric_expr,
->> +					     NULL, &ids, &idnum) < 0)
->> +		return ret;
->> +	if (events->len > 0)
->> +		strbuf_addf(events, ",");
->> +
->> +	if (metricgroup__has_constraint(pe))
->> +		metricgroup__add_metric_non_group(events, ids, idnum);
->> +	else
->> +		metricgroup__add_metric_weak_group(events, ids, idnum);
->> +
->> +	eg = malloc(sizeof(struct egroup));
->> +	if (!eg)
->> +		ret = -ENOMEM;
->> +
->> +	eg->ids = ids;
->> +	eg->idnum = idnum;
->> +	eg->metric_name = pe->metric_name;
->> +	eg->metric_expr = pe->metric_expr;
->> +	eg->metric_unit = pe->unit;
->> +	list_add_tail(&eg->nd, group_list);
->> +	ret = 0;
->> +
->> +	return ret;
->> +}
-> 
-> SNIP
-> 
+Ah I am really sorry, I must have missed these. Should be fixed now.
+
+> Another case where it's hard to make out what the event is counting
+> in general: Make its PublicDescription a single Breifdescription?
+Yeah, I agree. Will merge the descriptions.
+
+> +  {
+> +    "EventName": "ls_refills_from_sys.ls_mabresp_rmt_dram",
+> +    "EventCode": "0x43",
+> +    "BriefDescription": "DRAM or IO from different die.",
+> +    "PublicDescription": "Demand Data Cache Fills by Data Source. DRAM or IO from different die.",
+> +    "UMask": "0x40"
+> +  },
+> +  {
+> +    "EventName": "ls_refills_from_sys.ls_mabresp_rmt_cache",
+> +    "EventCode": "0x43",
+> +    "BriefDescription": "Hit in cache; Remote CCX and the address's Home Node is on a different die.",
+> +    "PublicDescription": "Demand Data Cache Fills by Data Source. Hit in cache; Remote CCX and the address's Home Node is on a different die.",
+> +    "UMask": "0x10"
+> +  },
+> +  {
+> +    "EventName": "ls_refills_from_sys.ls_mabresp_lcl_dram",
+> +    "EventCode": "0x43",
+> +    "BriefDescription": "DRAM or IO from this thread's die.",
+> +    "PublicDescription": "Demand Data Cache Fills by Data Source. DRAM or IO from this thread's die.",
+> +    "UMask": "0x8"
+> +  },
+> +  {
+> +    "EventName": "ls_refills_from_sys.ls_mabresp_lcl_cache",
+> +    "EventCode": "0x43",
+> +    "BriefDescription": "Hit in cache; local CCX (not Local L2), or Remote CCX and the address's Home Node is on this thread's die.",
+> +    "PublicDescription": "Demand Data Cache Fills by Data Source. Hit in cache; local CCX (not Local L2), or Remote CCX and the address's Home Node is on this thread's die.",
+> +    "UMask": "0x2"
+> +  },
+> +  {
+> +    "EventName": "ls_refills_from_sys.ls_mabresp_lcl_l2",
+> +    "EventCode": "0x43",
+> +    "BriefDescription": "Local L2 hit.",
+> +    "PublicDescription": "Demand Data Cache Fills by Data Source. Local L2 hit.",
+> +    "UMask": "0x1"
+> +  },
+
+These events are ripe for fusing the public description with the brief
+one too, so I will do so as well.
+
+-Vijay
