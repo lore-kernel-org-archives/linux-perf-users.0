@@ -1,43 +1,74 @@
-From: Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH v4 2/3] perf vendor events amd: add Zen2 events
-Date: Mon, 16 Mar 2020 16:51:52 -0500
-Message-ID: <34be3999-34ef-871f-0950-089a00e5b1dd@amd.com>
-References: <20200314044453.82554-1-vijaythakkar@me.com>
- <20200314044453.82554-3-vijaythakkar@me.com>
+From: Vijay Thakkar <vijaythakkar@me.com>
+Subject: [PATCH v5 0/3]
+Date: Mon, 16 Mar 2020 18:52:35 -0400
+Message-ID: <20200316225238.150154-1-vijaythakkar@me.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200314044453.82554-3-vijaythakkar@me.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Thakkar <vijaythakkar@me.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Vijay Thakkar <vijaythakkar@me.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 3/13/20 11:44 PM, Vijay Thakkar wrote:
-> Signed-off-by: Vijay Thakkar <vijaythakkar@me.com>
+This series of patches brings the PMU events for AMD family 17h series
+of processors up to date with the latest versions of the AMD processor
+programming reference manuals, all of which can be found at:
+https://bugzilla.kernel.org/show_bug.cgi?id=206537
 
-This email address differs from patch 1/3's S-o-b:
+Change summary:
+Patch 1: changes the pmu events mapfile to be more selective for
+the model number rather than blanket detecting all f17h processors to
+have the same events directory. This is required for the later patch
+where we add events for zen2 based processors.
 
-Signed-off-by: thakkarv <thakkarv@gatech.edu>
+Patch 2: adds the PMU events for zen2.
 
-Choose one, and please spell your whole name out - Vijay Thakkar.
+Patch 3: updates the zen1 PMU events to be in accordance
+with the latest PPR version and bumps up the events version to v2,
+mainly adding some events that were previously missing, and
+cleaning up some fpu counters.
 
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen2/branch.json
-> @@ -0,0 +1,52 @@
-> +[
-> +  {
-> +    "EventName": "bp_l1_btb_correct",
-> +    "EventCode": "0x8a",
-> +    "BriefDescription": "[L1 Branch Prediction Overrides Existing Prediction (speculative)."
+Details of what changed between patch revisions is included within the
+commits.
 
-Remove the leading '[' in the BriefDescription string.
+Vijay Thakkar (3):
+  perf vendor events amd: restrict model detection for zen1 based
+    processors
+  perf vendor events amd: add Zen2 events
+  perf vendor events amd: update Zen1 events to V2
 
-Other than the above two nit picks:
+ .../pmu-events/arch/x86/amdfam17h/branch.json |  12 -
+ .../pmu-events/arch/x86/amdfam17h/cache.json  | 329 -----------------
+ .../pmu-events/arch/x86/amdfam17h/other.json  |  65 ----
+ .../pmu-events/arch/x86/amdzen1/branch.json   |  23 ++
+ .../pmu-events/arch/x86/amdzen1/cache.json    | 294 +++++++++++++++
+ .../arch/x86/{amdfam17h => amdzen1}/core.json |  15 +-
+ .../floating-point.json                       |  64 +++-
+ .../x86/{amdfam17h => amdzen1}/memory.json    |  82 +++--
+ .../pmu-events/arch/x86/amdzen1/other.json    |  56 +++
+ .../pmu-events/arch/x86/amdzen2/branch.json   |  52 +++
+ .../pmu-events/arch/x86/amdzen2/cache.json    | 338 +++++++++++++++++
+ .../pmu-events/arch/x86/amdzen2/core.json     | 130 +++++++
+ .../arch/x86/amdzen2/floating-point.json      | 112 ++++++
+ .../pmu-events/arch/x86/amdzen2/memory.json   | 341 ++++++++++++++++++
+ .../pmu-events/arch/x86/amdzen2/other.json    | 115 ++++++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
+ 16 files changed, 1578 insertions(+), 453 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (87%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (61%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (63%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/core.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
 
-Acked-by: Kim Phillips <kim.phillips@amd.com>
-
-Thanks,
-
-Kim
+-- 
+2.25.1
