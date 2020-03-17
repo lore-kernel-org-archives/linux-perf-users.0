@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v5 08/11] perf/tools: Refactoring metricgroup__add_metric
  function
-Date: Tue, 17 Mar 2020 16:09:58 +0100
-Message-ID: <20200317150958.GD757893@krava>
+Date: Tue, 17 Mar 2020 16:10:30 +0100
+Message-ID: <20200317151030.GE757893@krava>
 References: <20200317062333.14555-1-kjain@linux.ibm.com>
  <20200317062333.14555-9-kjain@linux.ibm.com>
 Mime-Version: 1.0
@@ -56,6 +56,9 @@ On Tue, Mar 17, 2020 at 11:53:30AM +0530, Kajol Jain wrote:
 > +	eg = malloc(sizeof(*eg));
 > +	if (!eg)
 > +		ret = -ENOMEM;
+
+??? you need to return in here, eg is NULL
+
 > +
 > +	eg->ids = ids;
 > +	eg->idnum = idnum;
@@ -66,7 +69,28 @@ On Tue, Mar 17, 2020 at 11:53:30AM +0530, Kajol Jain wrote:
 > +	ret = 0;
 > +
 > +	return ret;
+> +}
+> +
+>  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  				   struct list_head *group_list)
+>  {
+> @@ -493,35 +528,13 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  			continue;
+>  		if (match_metric(pe->metric_group, metric) ||
+>  		    match_metric(pe->metric_name, metric)) {
+> -			const char **ids;
+> -			int idnum;
+> -			struct egroup *eg;
+>  
+>  			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+>  
+> -			if (expr__find_other(pe->metric_expr,
+> -					     NULL, &ids, &idnum) < 0)
+> +			ret = metricgroup__add_metric_param(events,
+> +							group_list, pe);
+> +			if (ret == -EINVAL)
+>  				continue;
 
-	return 0;
+previous code did 'continue' on ret < 0, why just -EINVAL now?
 
 jirka
