@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 13/23] perf cs-etm: Fix unsigned variable comparison to zero
-Date: Tue, 17 Mar 2020 18:32:49 -0300
-Message-ID: <20200317213259.15494-14-acme@kernel.org>
+Subject: [PATCH 14/23] perf doc: Set man page date to last git commit
+Date: Tue, 17 Mar 2020 18:32:50 -0300
+Message-ID: <20200317213259.15494-15-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,45 +9,76 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Robert Walker <robert.walker@arm.com>, Suzuki Poulouse <suzuki.poulose@arm.com>, coresight ml <coresight@lists.linaro.org>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Masanari Iida <standby24x7@gmail.com>, Mukesh Ojha <mojha@codeaurora.org>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Ian Rogers <irogers@google.com>
 
-The variable 'offset' in function cs_etm__sample() is u64 type, it's not
-appropriate to check it with 'while (offset > 0)'; this patch changes to
-'while (offset)'.
+Currently the man page dates reflect the date the man pages were built.
+This patch adjusts the date so that the date is when then man page
+last had a commit against it. The date is generated using 'git log'.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Committer testing:
+
+  $ git log -1 --pretty="format:%cd" --date=short tools/perf/Documentation/perf-top.txt
+  2020-01-14
+
+Before:
+
+  rm -rf /tmp/build/perf
+  mkdir -p /tmp/build/perf
+  make -C tools/perf O=/tmp/build/perf/ install
+  $ date
+  Wed 11 Mar 2020 10:21:19 AM -03
+  $ man perf-top | tail -1
+  perf                    03/11/2020           PERF-TOP(1)
+  $
+
+After:
+
+  rm -rf /tmp/build/perf
+  mkdir -p /tmp/build/perf
+  make -C tools/perf O=/tmp/build/perf/ install
+  $ date
+  $ date
+  Wed 11 Mar 2020 10:24:06 AM -03
+  $ man perf-top | tail -1
+  perf                    2020-01-14           PERF-TOP(1)
+  $
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Masanari Iida <standby24x7@gmail.com>
+Cc: Mukesh Ojha <mojha@codeaurora.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Robert Walker <robert.walker@arm.com>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight ml <coresight@lists.linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20200219021811.20067-6-leo.yan@linaro.org
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200311052110.23132-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 87d9943177bc..62d2f9b9ce1b 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -962,7 +962,7 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
- 	if (packet->isa == CS_ETM_ISA_T32) {
- 		u64 addr = packet->start_addr;
+diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
+index adc5a7e44b98..31824d5269cc 100644
+--- a/tools/perf/Documentation/Makefile
++++ b/tools/perf/Documentation/Makefile
+@@ -295,7 +295,10 @@ $(OUTPUT)%.1 $(OUTPUT)%.5 $(OUTPUT)%.7 : $(OUTPUT)%.xml
+ $(OUTPUT)%.xml : %.txt
+ 	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
+ 	$(ASCIIDOC) -b docbook -d manpage \
+-		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) -o $@+ $< && \
++		$(ASCIIDOC_EXTRA) -aperf_version=$(PERF_VERSION) \
++		-aperf_date=$(shell git log -1 --pretty="format:%cd" \
++				--date=short $<) \
++		-o $@+ $< && \
+ 	mv $@+ $@
  
--		while (offset > 0) {
-+		while (offset) {
- 			addr += cs_etm__t32_instr_size(etmq,
- 						       trace_chan_id, addr);
- 			offset--;
+ XSLT = docbook.xsl
 -- 
 2.21.1
