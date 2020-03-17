@@ -1,71 +1,70 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v5 11/11] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric events
-Date: Tue, 17 Mar 2020 11:53:33 +0530
-Message-ID: <20200317062333.14555-12-kjain@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v5 09/11] perf/tools: Enhance JSON/metric infrastructure
+ to handle "?"
+Date: Tue, 17 Mar 2020 16:06:47 +0100
+Message-ID: <20200317150647.GA757893@krava>
 References: <20200317062333.14555-1-kjain@linux.ibm.com>
+ <20200317062333.14555-10-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200317062333.14555-1-kjain@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <20200317062333.14555-10-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
+On Tue, Mar 17, 2020 at 11:53:31AM +0530, Kajol Jain wrote:
 
-Result:
+SNIP
 
-power9 platform:
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 0938ad166ece..7786829b048b 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -17,12 +17,13 @@ struct expr_parse_ctx {
+>  
+>  struct expr_scanner_ctx {
+>  	int start_token;
+> +	int expr__runtimeparam;
 
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
+no need for expr__ prefix in here.. jsut runtime_param
 
-     1.000096188                      0.9                      0.3
-     2.000285720                      0.5                      0.1
-     3.000424990                      0.4                      0.1
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 402af3e8d287..85ac6d913782 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -336,7 +336,7 @@ void perf_stat__collect_metric_expr(struct evlist *evsel_list)
+>  		metric_events = counter->metric_events;
+>  		if (!metric_events) {
+>  			if (expr__find_other(counter->metric_expr, counter->name,
+> -						&metric_names, &num_metric_names) < 0)
+> +						&metric_names, &num_metric_names, 1) < 0)
+>  				continue;
+>  
+>  			metric_events = calloc(sizeof(struct evsel *),
+> @@ -777,7 +777,15 @@ static void generic_metric(struct perf_stat_config *config,
+>  	}
+>  
+>  	if (!metric_events[i]) {
+> -		if (expr__parse(&ratio, &pctx, metric_expr) == 0) {
+> +		int param = 1;
+> +		if (strstr(metric_expr, "?")) {
+> +			char *tmp = strrchr(metric_name, '_');
+> +
+> +			tmp++;
+> +			param = strtol(tmp, &tmp, 10);
+> +		}
 
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
+so, if metric_expr contains '?' you go and search metric_name for '_'
+and use the number after '_' ... ugh.. what's the logic? 
 
-     1.000097981                        2.3                        2.3
-     2.000291713                        2.3                        2.3
-     3.000421719                        2.3                        2.3
-     4.000550912                        2.3                        2.3
+I understand you create as many metrics as the magic runtime param
+tells you.. but what's the connection to this?
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+could you please outline in the changelog or comment the whole scheme
+of how this all should work? like step by step on some simple example?
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..ac38f5540ac6
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+    "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
--- 
-2.18.1
+thanks,
+jirka
