@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 09/23] perf cs-etm: Swap packets for instruction samples
-Date: Tue, 17 Mar 2020 18:32:45 -0300
-Message-ID: <20200317213259.15494-10-acme@kernel.org>
+Subject: [PATCH 10/23] perf cs-etm: Continuously record last branch
+Date: Tue, 17 Mar 2020 18:32:46 -0300
+Message-ID: <20200317213259.15494-11-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,15 +14,24 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-If use option '--itrace=iNNN' with Arm CoreSight trace data, perf tool
-fails inject instruction samples; the root cause is the packets are only
-swapped for branch samples and last branches but not for instruction
-samples, so the new coming packets cannot be properly handled for only
-synthesizing instruction samples.
+Every time synthesize instruction sample, the last branch recording will
+be reset.  This is fine if the instruction period is big enough, for
+example if use the option '--itrace=i100000', the last branch array is
+reset for every sample with 100000 instructions per period; before
+generate the next instruction sample, there has the sufficient packets
+coming to fill the last branch array.
 
-To fix this issue, this patch refactors the code with a new function
-cs_etm__packet_swap() which is used to swap packets and adds the
-condition for instruction samples.
+On the other hand, if set a very small period, the packets will be
+significantly reduced between two continuous instruction samples, thus
+the last branch array is almost empty for new instruction sample by
+frequently resetting.
+
+To allow the last branches to work properly for any instruction periods,
+this patch avoids to reset the last branch for every instruction sample
+and only reset it when flush the trace data.  The last branches will be
+reset only for two cases, one is for trace starting, another case is for
+discontinuous trace; other cases can keep recording last branches for
+continuous instruction samples.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -36,89 +45,36 @@ Cc: Robert Walker <robert.walker@arm.com>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: coresight ml <coresight@lists.linaro.org>
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lore.kernel.org/lkml/20200219021811.20067-2-leo.yan@linaro.org
+Link: http://lore.kernel.org/lkml/20200219021811.20067-3-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.c | 39 +++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 20 deletions(-)
+ tools/perf/util/cs-etm.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index b3b3fe3ea345..294b09cfb034 100644
+index 294b09cfb034..2c4156c5ed09 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -363,6 +363,23 @@ struct cs_etm_packet_queue
- 	return NULL;
+@@ -1170,9 +1170,6 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+ 			"CS ETM Trace: failed to deliver instruction event, error %d\n",
+ 			ret);
+ 
+-	if (etm->synth_opts.last_branch)
+-		cs_etm__reset_last_branch_rb(tidq);
+-
+ 	return ret;
  }
  
-+static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
-+				struct cs_etm_traceid_queue *tidq)
-+{
-+	struct cs_etm_packet *tmp;
-+
-+	if (etm->sample_branches || etm->synth_opts.last_branch ||
-+	    etm->sample_instructions) {
-+		/*
-+		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
-+		 * the next incoming packet.
-+		 */
-+		tmp = tidq->packet;
-+		tidq->packet = tidq->prev_packet;
-+		tidq->prev_packet = tmp;
-+	}
-+}
-+
- static void cs_etm__packet_dump(const char *pkt_string)
- {
- 	const char *color = PERF_COLOR_BLUE;
-@@ -1342,7 +1359,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 			  struct cs_etm_traceid_queue *tidq)
- {
- 	struct cs_etm_auxtrace *etm = etmq->etm;
--	struct cs_etm_packet *tmp;
- 	int ret;
- 	u8 trace_chan_id = tidq->trace_chan_id;
- 	u64 instrs_executed = tidq->packet->instr_count;
-@@ -1406,15 +1422,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
- 		}
- 	}
- 
--	if (etm->sample_branches || etm->synth_opts.last_branch) {
--		/*
--		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
--		 * the next incoming packet.
--		 */
--		tmp = tidq->packet;
--		tidq->packet = tidq->prev_packet;
--		tidq->prev_packet = tmp;
--	}
-+	cs_etm__packet_swap(etm, tidq);
- 
- 	return 0;
- }
-@@ -1443,7 +1451,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- {
- 	int err = 0;
- 	struct cs_etm_auxtrace *etm = etmq->etm;
--	struct cs_etm_packet *tmp;
- 
- 	/* Handle start tracing packet */
- 	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
-@@ -1478,15 +1485,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
- 	}
- 
+@@ -1487,6 +1484,10 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
  swap_packet:
--	if (etm->sample_branches || etm->synth_opts.last_branch) {
--		/*
--		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
--		 * the next incoming packet.
--		 */
--		tmp = tidq->packet;
--		tidq->packet = tidq->prev_packet;
--		tidq->prev_packet = tmp;
--	}
-+	cs_etm__packet_swap(etm, tidq);
+ 	cs_etm__packet_swap(etm, tidq);
  
++	/* Reset last branches after flush the trace */
++	if (etm->synth_opts.last_branch)
++		cs_etm__reset_last_branch_rb(tidq);
++
  	return err;
  }
+ 
 -- 
 2.21.1
