@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/23] perf scripting perl: Add common_callchain to fix argument order
-Date: Tue, 17 Mar 2020 18:32:54 -0300
-Message-ID: <20200317213259.15494-19-acme@kernel.org>
+Subject: [PATCH 21/23] perf tools: Give synthetic mmap events an inode generation
+Date: Tue, 17 Mar 2020 18:32:57 -0300
+Message-ID: <20200317213259.15494-22-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,262 +9,132 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Benjamin Salon <bsalon@redhat.com>, Jiri Olsa <jolsa@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, clang-built-linux@googlegroups.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Michael Petlan <mpetlan@redhat.com>
+From: Ian Rogers <irogers@google.com>
 
-Since common_callchain has been added to the argument array, we need to
-reflect it in perl-based scripts, because otherwise the following args
-would be shifted and thus incorrect. E.g. rw-by-pid and calculation of
-read and written bytes:
+When mmap2 events are synthesized the ino_generation field isn't being
+set leading to uninitialized memory being compared.
 
-Before:
+Caught with clang's -fsanitize=memory:
 
-  read counts by pid:
-     pid                  comm     # reads  bytes_requested  bytes_read
-  ------  --------------------  -----------  ----------  ----------
-   19301  dd                             4  424510450039736           0
+==124733==WARNING: MemorySanitizer: use-of-uninitialized-value
+    #0 0x55a96a6a65cc in __dso_id__cmp tools/perf/util/dsos.c:23:6
+    #1 0x55a96a6a81d5 in dso_id__cmp tools/perf/util/dsos.c:38:9
+    #2 0x55a96a6a717f in __dso__cmp_long_name tools/perf/util/dsos.c:74:15
+    #3 0x55a96a6a6c4c in __dsos__findnew_link_by_longname_id tools/perf/util/dsos.c:106:12
+    #4 0x55a96a6a851e in __dsos__findnew_by_longname_id tools/perf/util/dsos.c:178:9
+    #5 0x55a96a6a7798 in __dsos__find_id tools/perf/util/dsos.c:191:9
+    #6 0x55a96a6a7b57 in __dsos__findnew_id tools/perf/util/dsos.c:251:20
+    #7 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
+    #8 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
+    #9 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
+    #10 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
+    #11 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #12 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #13 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #14 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #15 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #16 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #17 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #18 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #19 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #20 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #21 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #22 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #23 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #24 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #25 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #26 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #27 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #28 0x55a96a282223 in main tools/perf/perf.c:538:3
 
-After:
+  Uninitialized value was stored to memory at
+    #1 0x55a96a6a18f7 in dso__new_id tools/perf/util/dso.c:1230:14
+    #2 0x55a96a6a78ee in __dsos__addnew_id tools/perf/util/dsos.c:233:20
+    #3 0x55a96a6a7bcc in __dsos__findnew_id tools/perf/util/dsos.c:252:21
+    #4 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
+    #5 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
+    #6 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
+    #7 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
+    #8 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #9 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #10 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #11 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #12 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #13 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #14 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #15 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #16 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #17 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #18 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #19 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
 
-  read counts by pid:
-     pid                  comm     # reads  bytes_requested  bytes_read
-  ------  --------------------  -----------  ----------  ----------
-   19301  dd                             4        9536             4341
+  Uninitialized value was stored to memory at
+    #0 0x55a96a7725af in machine__process_mmap2_event tools/perf/util/machine.c:1646:25
+    #1 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
+    #2 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
+    #3 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
+    #4 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
+    #5 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
+    #6 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
+    #7 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #8 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #9 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #10 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #11 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #12 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #13 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #14 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #15 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #16 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #17 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #18 0x55a96a282223 in main tools/perf/perf.c:538:3
 
-Committer testing:
+  Uninitialized value was created by a heap allocation
+    #0 0x55a96a22f60d in malloc llvm/llvm-project/compiler-rt/lib/msan/msan_interceptors.cpp:925:3
+    #1 0x55a96a882948 in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:655:15
+    #2 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
+    #3 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
+    #4 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
+    #5 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
+    #6 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
+    #7 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+    #8 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
+    #9 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
+    #10 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
+    #11 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
+    #12 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
+    #13 0x55a96a282223 in main tools/perf/perf.c:538:3
 
-To see before after first do:
+SUMMARY: MemorySanitizer: use-of-uninitialized-value tools/perf/util/dsos.c:23:6 in __dso_id__cmp
 
-  # perf script record rw-by-pid
-  ^C
-
-Now you'll have a perf.data file to report on, then do before and after
-using:
-
-  # perf script report rw-by-pid
-
-Anbd notice the bytes_request/bytes_read, as above.
-
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Benjamin Salon <bsalon@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-LPU-Reference: 20200311132836.12693-1-mpetlan@redhat.com
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200313053129.131264-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/perl/check-perf-trace.pl |  6 +++---
- tools/perf/scripts/perl/failed-syscalls.pl  |  2 +-
- tools/perf/scripts/perl/rw-by-file.pl       |  6 +++---
- tools/perf/scripts/perl/rw-by-pid.pl        | 10 +++++-----
- tools/perf/scripts/perl/rwtop.pl            | 10 +++++-----
- tools/perf/scripts/perl/wakeup-latency.pl   |  6 +++---
- 6 files changed, 20 insertions(+), 20 deletions(-)
+ tools/perf/util/synthetic-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/scripts/perl/check-perf-trace.pl b/tools/perf/scripts/perl/check-perf-trace.pl
-index 4e7076c20616..d307ce8fd6ed 100644
---- a/tools/perf/scripts/perl/check-perf-trace.pl
-+++ b/tools/perf/scripts/perl/check-perf-trace.pl
-@@ -28,7 +28,7 @@ sub trace_end
- sub irq::softirq_entry
- {
- 	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	    $common_pid, $common_comm,
-+	    $common_pid, $common_comm, $common_callchain,
- 	    $vec) = @_;
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index dd3e6f43fb86..3f28af39f9c6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -345,6 +345,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			continue;
  
- 	print_header($event_name, $common_cpu, $common_secs, $common_nsecs,
-@@ -43,7 +43,7 @@ sub irq::softirq_entry
- sub kmem::kmalloc
- {
- 	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	    $common_pid, $common_comm,
-+	    $common_pid, $common_comm, $common_callchain,
- 	    $call_site, $ptr, $bytes_req, $bytes_alloc,
- 	    $gfp_flags) = @_;
+ 		event->mmap2.ino = (u64)ino;
++		event->mmap2.ino_generation = 0;
  
-@@ -92,7 +92,7 @@ sub print_unhandled
- sub trace_unhandled
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm) = @_;
-+	$common_pid, $common_comm, $common_callchain) = @_;
- 
-     $unhandled{$event_name}++;
- }
-diff --git a/tools/perf/scripts/perl/failed-syscalls.pl b/tools/perf/scripts/perl/failed-syscalls.pl
-index 55e7ae4c5c88..05954a8f363a 100644
---- a/tools/perf/scripts/perl/failed-syscalls.pl
-+++ b/tools/perf/scripts/perl/failed-syscalls.pl
-@@ -18,7 +18,7 @@ my %failed_syscalls;
- sub raw_syscalls::sys_exit
- {
- 	my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	    $common_pid, $common_comm,
-+	    $common_pid, $common_comm, $common_callchain,
- 	    $id, $ret) = @_;
- 
- 	if ($ret < 0) {
-diff --git a/tools/perf/scripts/perl/rw-by-file.pl b/tools/perf/scripts/perl/rw-by-file.pl
-index 168fa5e94b44..92a750b8552b 100644
---- a/tools/perf/scripts/perl/rw-by-file.pl
-+++ b/tools/perf/scripts/perl/rw-by-file.pl
-@@ -28,7 +28,7 @@ my %writes;
- sub syscalls::sys_enter_read
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $nr, $fd, $buf, $count) = @_;
-+	$common_pid, $common_comm, $common_callchain, $nr, $fd, $buf, $count) = @_;
- 
-     if ($common_comm eq $for_comm) {
- 	$reads{$fd}{bytes_requested} += $count;
-@@ -39,7 +39,7 @@ sub syscalls::sys_enter_read
- sub syscalls::sys_enter_write
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm, $nr, $fd, $buf, $count) = @_;
-+	$common_pid, $common_comm, $common_callchain, $nr, $fd, $buf, $count) = @_;
- 
-     if ($common_comm eq $for_comm) {
- 	$writes{$fd}{bytes_written} += $count;
-@@ -98,7 +98,7 @@ sub print_unhandled
- sub trace_unhandled
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm) = @_;
-+	$common_pid, $common_comm, $common_callchain) = @_;
- 
-     $unhandled{$event_name}++;
- }
-diff --git a/tools/perf/scripts/perl/rw-by-pid.pl b/tools/perf/scripts/perl/rw-by-pid.pl
-index 495698250b2f..d789fe39caab 100644
---- a/tools/perf/scripts/perl/rw-by-pid.pl
-+++ b/tools/perf/scripts/perl/rw-by-pid.pl
-@@ -24,7 +24,7 @@ my %writes;
- sub syscalls::sys_exit_read
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $ret) = @_;
- 
-     if ($ret > 0) {
-@@ -40,7 +40,7 @@ sub syscalls::sys_exit_read
- sub syscalls::sys_enter_read
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $fd, $buf, $count) = @_;
- 
-     $reads{$common_pid}{bytes_requested} += $count;
-@@ -51,7 +51,7 @@ sub syscalls::sys_enter_read
- sub syscalls::sys_exit_write
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $ret) = @_;
- 
-     if ($ret <= 0) {
-@@ -62,7 +62,7 @@ sub syscalls::sys_exit_write
- sub syscalls::sys_enter_write
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $fd, $buf, $count) = @_;
- 
-     $writes{$common_pid}{bytes_written} += $count;
-@@ -178,7 +178,7 @@ sub print_unhandled
- sub trace_unhandled
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm) = @_;
-+	$common_pid, $common_comm, $common_callchain) = @_;
- 
-     $unhandled{$event_name}++;
- }
-diff --git a/tools/perf/scripts/perl/rwtop.pl b/tools/perf/scripts/perl/rwtop.pl
-index 6473442568a2..eba4df67af6b 100644
---- a/tools/perf/scripts/perl/rwtop.pl
-+++ b/tools/perf/scripts/perl/rwtop.pl
-@@ -35,7 +35,7 @@ if (!$interval) {
- sub syscalls::sys_exit_read
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $ret) = @_;
- 
-     print_check();
-@@ -53,7 +53,7 @@ sub syscalls::sys_exit_read
- sub syscalls::sys_enter_read
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $fd, $buf, $count) = @_;
- 
-     print_check();
-@@ -66,7 +66,7 @@ sub syscalls::sys_enter_read
- sub syscalls::sys_exit_write
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $ret) = @_;
- 
-     print_check();
-@@ -79,7 +79,7 @@ sub syscalls::sys_exit_write
- sub syscalls::sys_enter_write
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$nr, $fd, $buf, $count) = @_;
- 
-     print_check();
-@@ -197,7 +197,7 @@ sub print_unhandled
- sub trace_unhandled
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm) = @_;
-+	$common_pid, $common_comm, $common_callchain) = @_;
- 
-     $unhandled{$event_name}++;
- }
-diff --git a/tools/perf/scripts/perl/wakeup-latency.pl b/tools/perf/scripts/perl/wakeup-latency.pl
-index efcfec5e347a..53444ff4ec7f 100644
---- a/tools/perf/scripts/perl/wakeup-latency.pl
-+++ b/tools/perf/scripts/perl/wakeup-latency.pl
-@@ -28,7 +28,7 @@ my $total_wakeups = 0;
- sub sched::sched_switch
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$prev_comm, $prev_pid, $prev_prio, $prev_state, $next_comm, $next_pid,
- 	$next_prio) = @_;
- 
-@@ -51,7 +51,7 @@ sub sched::sched_switch
- sub sched::sched_wakeup
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm,
-+	$common_pid, $common_comm, $common_callchain,
- 	$comm, $pid, $prio, $success, $target_cpu) = @_;
- 
-     $last_wakeup{$target_cpu}{ts} = nsecs($common_secs, $common_nsecs);
-@@ -101,7 +101,7 @@ sub print_unhandled
- sub trace_unhandled
- {
-     my ($event_name, $context, $common_cpu, $common_secs, $common_nsecs,
--	$common_pid, $common_comm) = @_;
-+	$common_pid, $common_comm, $common_callchain) = @_;
- 
-     $unhandled{$event_name}++;
- }
+ 		/*
+ 		 * Just like the kernel, see __perf_event_mmap in kernel/perf_event.c
 -- 
 2.21.1
