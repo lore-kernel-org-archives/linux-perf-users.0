@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/23] perf tools: Give synthetic mmap events an inode generation
-Date: Tue, 17 Mar 2020 18:32:57 -0300
-Message-ID: <20200317213259.15494-22-acme@kernel.org>
+Subject: [PATCH 22/23] perf report: Fix no branch type statistics report issue
+Date: Tue, 17 Mar 2020 18:32:58 -0300
+Message-ID: <20200317213259.15494-23-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,132 +9,85 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, clang-built-linux@googlegroups.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-When mmap2 events are synthesized the ino_generation field isn't being
-set leading to uninitialized memory being compared.
+Previously we could get the report of branch type statistics.
 
-Caught with clang's -fsanitize=memory:
+For example:
 
-==124733==WARNING: MemorySanitizer: use-of-uninitialized-value
-    #0 0x55a96a6a65cc in __dso_id__cmp tools/perf/util/dsos.c:23:6
-    #1 0x55a96a6a81d5 in dso_id__cmp tools/perf/util/dsos.c:38:9
-    #2 0x55a96a6a717f in __dso__cmp_long_name tools/perf/util/dsos.c:74:15
-    #3 0x55a96a6a6c4c in __dsos__findnew_link_by_longname_id tools/perf/util/dsos.c:106:12
-    #4 0x55a96a6a851e in __dsos__findnew_by_longname_id tools/perf/util/dsos.c:178:9
-    #5 0x55a96a6a7798 in __dsos__find_id tools/perf/util/dsos.c:191:9
-    #6 0x55a96a6a7b57 in __dsos__findnew_id tools/perf/util/dsos.c:251:20
-    #7 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
-    #8 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
-    #9 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
-    #10 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
-    #11 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
-    #12 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
-    #13 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
-    #14 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
-    #15 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
-    #16 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
-    #17 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
-    #18 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
-    #19 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
-    #20 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
-    #21 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
-    #22 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
-    #23 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
-    #24 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
-    #25 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
-    #26 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
-    #27 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
-    #28 0x55a96a282223 in main tools/perf/perf.c:538:3
+  # perf record -j any,save_type ...
+  # t perf report --stdio
 
-  Uninitialized value was stored to memory at
-    #1 0x55a96a6a18f7 in dso__new_id tools/perf/util/dso.c:1230:14
-    #2 0x55a96a6a78ee in __dsos__addnew_id tools/perf/util/dsos.c:233:20
-    #3 0x55a96a6a7bcc in __dsos__findnew_id tools/perf/util/dsos.c:252:21
-    #4 0x55a96a6a7a57 in dsos__findnew_id tools/perf/util/dsos.c:259:17
-    #5 0x55a96a7776ae in machine__findnew_dso_id tools/perf/util/machine.c:2709:9
-    #6 0x55a96a77dfcf in map__new tools/perf/util/map.c:193:10
-    #7 0x55a96a77240a in machine__process_mmap2_event tools/perf/util/machine.c:1670:8
-    #8 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
-    #9 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
-    #10 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
-    #11 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
-    #12 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
-    #13 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
-    #14 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
-    #15 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
-    #16 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
-    #17 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
-    #18 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
-    #19 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
+  #
+  # Branch Statistics:
+  #
+  COND_FWD:  40.6%
+  COND_BWD:   4.1%
+  CROSS_4K:  24.7%
+  CROSS_2M:  12.3%
+      COND:  44.7%
+    UNCOND:   0.0%
+       IND:   6.1%
+      CALL:  24.5%
+       RET:  24.7%
 
-  Uninitialized value was stored to memory at
-    #0 0x55a96a7725af in machine__process_mmap2_event tools/perf/util/machine.c:1646:25
-    #1 0x55a96a7741a3 in machine__process_event tools/perf/util/machine.c:1882:9
-    #2 0x55a96a6aee39 in perf_event__process tools/perf/util/event.c:454:9
-    #3 0x55a96a87d633 in perf_tool__process_synth_event tools/perf/util/synthetic-events.c:63:9
-    #4 0x55a96a87f131 in perf_event__synthesize_mmap_events tools/perf/util/synthetic-events.c:403:7
-    #5 0x55a96a8815d6 in __event__synthesize_thread tools/perf/util/synthetic-events.c:548:9
-    #6 0x55a96a882bff in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:681:3
-    #7 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
-    #8 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
-    #9 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
-    #10 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
-    #11 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
-    #12 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
-    #13 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
-    #14 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
-    #15 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
-    #16 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
-    #17 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
-    #18 0x55a96a282223 in main tools/perf/perf.c:538:3
+But now for the recent perf, it can't report the branch type statistics.
 
-  Uninitialized value was created by a heap allocation
-    #0 0x55a96a22f60d in malloc llvm/llvm-project/compiler-rt/lib/msan/msan_interceptors.cpp:925:3
-    #1 0x55a96a882948 in __perf_event__synthesize_threads tools/perf/util/synthetic-events.c:655:15
-    #2 0x55a96a881ec2 in perf_event__synthesize_threads tools/perf/util/synthetic-events.c:750:9
-    #3 0x55a96a562b26 in synth_all tools/perf/tests/mmap-thread-lookup.c:136:9
-    #4 0x55a96a5623b1 in mmap_events tools/perf/tests/mmap-thread-lookup.c:174:8
-    #5 0x55a96a561fa0 in test__mmap_thread_lookup tools/perf/tests/mmap-thread-lookup.c:230:2
-    #6 0x55a96a52c182 in run_test tools/perf/tests/builtin-test.c:378:9
-    #7 0x55a96a52afc1 in test_and_print tools/perf/tests/builtin-test.c:408:9
-    #8 0x55a96a52966e in __cmd_test tools/perf/tests/builtin-test.c:603:4
-    #9 0x55a96a52855d in cmd_test tools/perf/tests/builtin-test.c:747:9
-    #10 0x55a96a2844d4 in run_builtin tools/perf/perf.c:312:11
-    #11 0x55a96a282bd0 in handle_internal_command tools/perf/perf.c:364:8
-    #12 0x55a96a284097 in run_argv tools/perf/perf.c:408:2
-    #13 0x55a96a282223 in main tools/perf/perf.c:538:3
+It's a regression issue caused by commit 40c39e304641 ("perf report: Fix
+a no annotate browser displayed issue"), which only counts the branch
+type statistics for browser mode.
 
-SUMMARY: MemorySanitizer: use-of-uninitialized-value tools/perf/util/dsos.c:23:6 in __dso_id__cmp
+This patch moves the branch_type_count() outside of ui__has_annotation()
+checking, then branch type statistics can work for stdio mode.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Fixes: 40c39e304641 ("perf report: Fix a no annotate browser displayed issue")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20200313053129.131264-1-irogers@google.com
+Link: http://lore.kernel.org/lkml/20200313134607.12873-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/synthetic-events.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-report.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index dd3e6f43fb86..3f28af39f9c6 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -345,6 +345,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			continue;
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index d7c905f7520f..5f4045df76f4 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -186,24 +186,23 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
+ {
+ 	struct hist_entry *he = iter->he;
+ 	struct report *rep = arg;
+-	struct branch_info *bi;
++	struct branch_info *bi = he->branch_info;
+ 	struct perf_sample *sample = iter->sample;
+ 	struct evsel *evsel = iter->evsel;
+ 	int err;
  
- 		event->mmap2.ino = (u64)ino;
-+		event->mmap2.ino_generation = 0;
++	branch_type_count(&rep->brtype_stat, &bi->flags,
++			  bi->from.addr, bi->to.addr);
++
+ 	if (!ui__has_annotation() && !rep->symbol_ipc)
+ 		return 0;
  
- 		/*
- 		 * Just like the kernel, see __perf_event_mmap in kernel/perf_event.c
+-	bi = he->branch_info;
+ 	err = addr_map_symbol__inc_samples(&bi->from, sample, evsel);
+ 	if (err)
+ 		goto out;
+ 
+ 	err = addr_map_symbol__inc_samples(&bi->to, sample, evsel);
+ 
+-	branch_type_count(&rep->brtype_stat, &bi->flags,
+-			  bi->from.addr, bi->to.addr);
+-
+ out:
+ 	return err;
+ }
 -- 
 2.21.1
