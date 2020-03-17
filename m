@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/23] perf util: Factor out sysctl__nmi_watchdog_enabled()
-Date: Tue, 17 Mar 2020 18:32:40 -0300
-Message-ID: <20200317213259.15494-5-acme@kernel.org>
+Subject: [PATCH 06/23] perf vendor events intel: Add NO_NMI_WATCHDOG metric constraint
+Date: Tue, 17 Mar 2020 18:32:42 -0300
+Message-ID: <20200317213259.15494-7-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,111 +9,177 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Jin Yao <yao.jin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The NMI watchdog status is required for metric group constraint
-examination.  Factor out sysctl__nmi_watchdog_enabled() to retrieve the
-NMI watchdog status.
+Add NO_NMI_WATCHDOG metric constraint to Page_Walks_Utilization for Sky Lake
+and Cascade Lake.
 
-Users may count more than one metric group each time. If so, the NMI
-watchdog status may be retrieved several times. To reduce the overhead,
-cache the NMI watchdog status.
+Committer testing:
 
-Replace the NMI watchdog status checking in print_footer() by
-sysctl__nmi_watchdog_enabled().
+On a Lenovo T480S, Intel(R) Core(TM) i7-8650U Kaby Lake, that looking at x86's
+mapfile.csv file is a:
 
-Suggested-by: Andi Kleen <ak@linux.intel.com>
+  $ grep -w skylake tools/perf/pmu-events/arch/x86/mapfile.csv
+  GenuineIntel-6-[4589]E,v24,skylake,core
+  $
+
+So uses the constraint added in this patch in this file:
+
+  tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+
+Before:
+
+  # perf stat -a -M Page_Walks_Utilization sleep 2
+
+   Performance counter stats for 'system wide':
+
+       <not counted>      itlb_misses.walk_pending                                      (0.00%)
+       <not counted>      dtlb_load_misses.walk_pending                                     (0.00%)
+       <not counted>      dtlb_store_misses.walk_pending                                     (0.00%)
+       <not counted>      ept.walk_pending                                              (0.00%)
+       <not counted>      cycles                                                        (0.00%)
+
+         2.001750514 seconds time elapsed
+
+  Some events weren't counted. Try disabling the NMI watchdog:
+  	echo 0 > /proc/sys/kernel/nmi_watchdog
+  	perf stat ...
+  	echo 1 > /proc/sys/kernel/nmi_watchdog
+  The events in group usually have to be from the same PMU. Try reorganizing the group.
+  #
+
+After:
+
+  # perf stat -a -M Page_Walks_Utilization sleep 2
+  Splitting metric group Page_Walks_Utilization into standalone metrics.
+  Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:
+      echo 0 > /proc/sys/kernel/nmi_watchdog
+      perf stat ...
+      echo 1 > /proc/sys/kernel/nmi_watchdog
+  ,
+   Performance counter stats for 'system wide':
+
+          36,883,102      itlb_misses.walk_pending  #      0.1 Page_Walks_Utilization   (79.99%)
+         123,104,146      dtlb_load_misses.walk_pending                                     (80.02%)
+          13,720,795      dtlb_store_misses.walk_pending                                     (79.99%)
+                   0      ept.walk_pending                                              (79.99%)
+       1,519,948,400      cycles                                                        (80.01%)
+
+         2.002170780 seconds time elapsed
+
+  #
+
+Before and after, if we disable the nmi_watchdog we get:
+
+  # echo 0 > /proc/sys/kernel/nmi_watchdog
+  # perf stat -a -M Page_Walks_Utilization sleep 2
+
+   Performance counter stats for 'system wide':
+
+          33,721,658      itlb_misses.walk_pending  #      0.1 Page_Walks_Utilization
+          84,070,996      dtlb_load_misses.walk_pending
+           9,816,071      dtlb_store_misses.walk_pending
+                   0      ept.walk_pending
+         704,920,899      cycles
+
+         2.002331670 seconds time elapsed
+
+  #
+
+  More information about the metric expressions:
+
+  # perf stat -v -a -M Page_Walks_Utilization sleep 2
+  Using CPUID GenuineIntel-6-8E-A
+  metric expr ( itlb_misses.walk_pending + dtlb_load_misses.walk_pending + dtlb_store_misses.walk_pending + ept.walk_pending ) / ( 2 * cycles ) for Page_Walks_Utilization
+  found event itlb_misses.walk_pending
+  found event dtlb_load_misses.walk_pending
+  found event dtlb_store_misses.walk_pending
+  found event ept.walk_pending
+  found event cycles
+  adding {itlb_misses.walk_pending,dtlb_load_misses.walk_pending,dtlb_store_misses.walk_pending,ept.walk_pending,cycles}:W
+   -> cpu/umask=0x10,(null)=0x186a3,event=0x85/
+   -> cpu/umask=0x10,(null)=0x1e8483,event=0x8/
+   -> cpu/umask=0x10,(null)=0x1e8483,event=0x49/
+   -> cpu/umask=0x10,(null)=0x1e8483,event=0x4f/
+  itlb_misses.walk_pending: 8085772 16010162799 16010162799
+  dtlb_load_misses.walk_pending: 28134579 16010162799 16010162799
+  dtlb_store_misses.walk_pending: 7276535 16010162799 16010162799
+  ept.walk_pending: 2 16010162799 16010162799
+  cycles: 315140605 16010162799 16010162799
+
+   Performance counter stats for 'system wide':
+
+           8,085,772      itlb_misses.walk_pending  #      0.1 Page_Walks_Utilization
+          28,134,579      dtlb_load_misses.walk_pending
+           7,276,535      dtlb_store_misses.walk_pending
+                   2      ept.walk_pending
+         315,140,605      cycles
+
+         2.002333181 seconds time elapsed
+
+  #
+
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/1582581564-184429-4-git-send-email-kan.liang@linux.intel.com
+Link: http://lore.kernel.org/lkml/1582581564-184429-6-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/stat-display.c |  6 ++----
- tools/perf/util/util.c         | 18 ++++++++++++++++++
- tools/perf/util/util.h         |  2 ++
- 3 files changed, 22 insertions(+), 4 deletions(-)
+ tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json | 3 ++-
+ tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json      | 3 ++-
+ tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json     | 3 ++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index d89cb0da90f8..76c6052b12e2 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -16,6 +16,7 @@
- #include <linux/ctype.h>
- #include "cgroup.h"
- #include <api/fs/fs.h>
-+#include "util.h"
- 
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -1097,7 +1098,6 @@ static void print_footer(struct perf_stat_config *config)
- {
- 	double avg = avg_stats(config->walltime_nsecs_stats) / NSEC_PER_SEC;
- 	FILE *output = config->output;
--	int n;
- 
- 	if (!config->null_run)
- 		fprintf(output, "\n");
-@@ -1131,9 +1131,7 @@ static void print_footer(struct perf_stat_config *config)
- 	}
- 	fprintf(output, "\n\n");
- 
--	if (config->print_free_counters_hint &&
--	    sysctl__read_int("kernel/nmi_watchdog", &n) >= 0 &&
--	    n > 0)
-+	if (config->print_free_counters_hint && sysctl__nmi_watchdog_enabled())
- 		fprintf(output,
- "Some events weren't counted. Try disabling the NMI watchdog:\n"
- "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 969ae560dad9..d707c9624dd9 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -55,6 +55,24 @@ int sysctl__max_stack(void)
- 	return sysctl_perf_event_max_stack;
- }
- 
-+bool sysctl__nmi_watchdog_enabled(void)
-+{
-+	static bool cached;
-+	static bool nmi_watchdog;
-+	int value;
-+
-+	if (cached)
-+		return nmi_watchdog;
-+
-+	if (sysctl__read_int("kernel/nmi_watchdog", &value) < 0)
-+		return false;
-+
-+	nmi_watchdog = (value > 0) ? true : false;
-+	cached = true;
-+
-+	return nmi_watchdog;
-+}
-+
- bool test_attr__enabled;
- 
- bool perf_host  = true;
-diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
-index 9969b8b46f7c..f486fdd3a538 100644
---- a/tools/perf/util/util.h
-+++ b/tools/perf/util/util.h
-@@ -29,6 +29,8 @@ size_t hex_width(u64 v);
- 
- int sysctl__max_stack(void);
- 
-+bool sysctl__nmi_watchdog_enabled(void);
-+
- int fetch_kernel_version(unsigned int *puint,
- 			 char *str, size_t str_sz);
- #define KVER_VERSION(x)		(((x) >> 16) & 0xff)
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+index f94653229dd4..a728c6e5119b 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
+@@ -215,7 +215,8 @@
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+         "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+-        "MetricName": "Page_Walks_Utilization"
++        "MetricName": "Page_Walks_Utilization",
++        "MetricConstraint": "NO_NMI_WATCHDOG"
+     },
+     {
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+index e7feb60f9fa9..f97e8316ad2f 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+@@ -215,7 +215,8 @@
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+         "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+-        "MetricName": "Page_Walks_Utilization"
++        "MetricName": "Page_Walks_Utilization",
++        "MetricConstraint": "NO_NMI_WATCHDOG"
+     },
+     {
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+index 21d7a0c2c2e8..35f5db1786f7 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -215,7 +215,8 @@
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
+         "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING + EPT.WALK_PENDING ) / ( 2 * cycles )",
+         "MetricGroup": "TLB",
+-        "MetricName": "Page_Walks_Utilization"
++        "MetricName": "Page_Walks_Utilization",
++        "MetricConstraint": "NO_NMI_WATCHDOG"
+     },
+     {
+         "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
 -- 
 2.21.1
