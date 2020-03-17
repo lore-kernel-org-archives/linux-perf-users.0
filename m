@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 05/23] perf metricgroup: Support metric constraint
-Date: Tue, 17 Mar 2020 18:32:41 -0300
-Message-ID: <20200317213259.15494-6-acme@kernel.org>
+Subject: [PATCH 04/23] perf util: Factor out sysctl__nmi_watchdog_enabled()
+Date: Tue, 17 Mar 2020 18:32:40 -0300
+Message-ID: <20200317213259.15494-5-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,27 +9,23 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Jin Yao <yao.jin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Some metric groups have metric constraints. A metric group can be
-scheduled as a group only when some constraints are applied.  For
-example, Page_Walks_Utilization has a metric constraint,
-"NO_NMI_WATCHDOG".
+The NMI watchdog status is required for metric group constraint
+examination.  Factor out sysctl__nmi_watchdog_enabled() to retrieve the
+NMI watchdog status.
 
-When NMI watchdog is disabled, the metric group can be scheduled as a
-group. Otherwise, splitting the metric group into standalone metrics.
+Users may count more than one metric group each time. If so, the NMI
+watchdog status may be retrieved several times. To reduce the overhead,
+cache the NMI watchdog status.
 
-Add a new function, metricgroup__has_constraint(), to check whether all
-constraints are applied. If not, splitting the metric group into
-standalone metrics.
+Replace the NMI watchdog status checking in print_footer() by
+sysctl__nmi_watchdog_enabled().
 
-Currently, only one constraint, "NO_NMI_WATCHDOG", is checked. Print a
-warning for the metric group with the constraint, when NMI WATCHDOG is
-enabled.
-
+Suggested-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Andi Kleen <ak@linux.intel.com>
@@ -38,97 +34,86 @@ Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/1582581564-184429-5-git-send-email-kan.liang@linux.intel.com
+Link: http://lore.kernel.org/lkml/1582581564-184429-4-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/metricgroup.c | 54 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 53 insertions(+), 1 deletion(-)
+ tools/perf/util/stat-display.c |  6 ++----
+ tools/perf/util/util.c         | 18 ++++++++++++++++++
+ tools/perf/util/util.h         |  2 ++
+ 3 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 1cd042cb262e..c3a8c701609a 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -22,6 +22,8 @@
- #include <linux/string.h>
- #include <linux/zalloc.h>
- #include <subcmd/parse-options.h>
-+#include <api/fs/fs.h>
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index d89cb0da90f8..76c6052b12e2 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -16,6 +16,7 @@
+ #include <linux/ctype.h>
+ #include "cgroup.h"
+ #include <api/fs/fs.h>
 +#include "util.h"
  
- struct metric_event *metricgroup__lookup(struct rblist *metric_events,
- 					 struct evsel *evsel,
-@@ -429,6 +431,49 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
- 		strbuf_addf(events, "}:W");
+ #define CNTR_NOT_SUPPORTED	"<not supported>"
+ #define CNTR_NOT_COUNTED	"<not counted>"
+@@ -1097,7 +1098,6 @@ static void print_footer(struct perf_stat_config *config)
+ {
+ 	double avg = avg_stats(config->walltime_nsecs_stats) / NSEC_PER_SEC;
+ 	FILE *output = config->output;
+-	int n;
+ 
+ 	if (!config->null_run)
+ 		fprintf(output, "\n");
+@@ -1131,9 +1131,7 @@ static void print_footer(struct perf_stat_config *config)
+ 	}
+ 	fprintf(output, "\n\n");
+ 
+-	if (config->print_free_counters_hint &&
+-	    sysctl__read_int("kernel/nmi_watchdog", &n) >= 0 &&
+-	    n > 0)
++	if (config->print_free_counters_hint && sysctl__nmi_watchdog_enabled())
+ 		fprintf(output,
+ "Some events weren't counted. Try disabling the NMI watchdog:\n"
+ "	echo 0 > /proc/sys/kernel/nmi_watchdog\n"
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 969ae560dad9..d707c9624dd9 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -55,6 +55,24 @@ int sysctl__max_stack(void)
+ 	return sysctl_perf_event_max_stack;
  }
  
-+static void metricgroup__add_metric_non_group(struct strbuf *events,
-+					      const char **ids,
-+					      int idnum)
++bool sysctl__nmi_watchdog_enabled(void)
 +{
-+	int i;
++	static bool cached;
++	static bool nmi_watchdog;
++	int value;
 +
-+	for (i = 0; i < idnum; i++)
-+		strbuf_addf(events, ",%s", ids[i]);
-+}
++	if (cached)
++		return nmi_watchdog;
 +
-+static void metricgroup___watchdog_constraint_hint(const char *name, bool foot)
-+{
-+	static bool violate_nmi_constraint;
-+
-+	if (!foot) {
-+		pr_warning("Splitting metric group %s into standalone metrics.\n", name);
-+		violate_nmi_constraint = true;
-+		return;
-+	}
-+
-+	if (!violate_nmi_constraint)
-+		return;
-+
-+	pr_warning("Try disabling the NMI watchdog to comply NO_NMI_WATCHDOG metric constraint:\n"
-+		   "    echo 0 > /proc/sys/kernel/nmi_watchdog\n"
-+		   "    perf stat ...\n"
-+		   "    echo 1 > /proc/sys/kernel/nmi_watchdog\n");
-+}
-+
-+static bool metricgroup__has_constraint(struct pmu_event *pe)
-+{
-+	if (!pe->metric_constraint)
++	if (sysctl__read_int("kernel/nmi_watchdog", &value) < 0)
 +		return false;
 +
-+	if (!strcmp(pe->metric_constraint, "NO_NMI_WATCHDOG") &&
-+	    sysctl__nmi_watchdog_enabled()) {
-+		metricgroup___watchdog_constraint_hint(pe->metric_name, false);
-+		return true;
-+	}
++	nmi_watchdog = (value > 0) ? true : false;
++	cached = true;
 +
-+	return false;
++	return nmi_watchdog;
 +}
 +
- static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				   struct list_head *group_list)
- {
-@@ -460,7 +505,10 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			if (events->len > 0)
- 				strbuf_addf(events, ",");
+ bool test_attr__enabled;
  
--			metricgroup__add_metric_weak_group(events, ids, idnum);
-+			if (metricgroup__has_constraint(pe))
-+				metricgroup__add_metric_non_group(events, ids, idnum);
-+			else
-+				metricgroup__add_metric_weak_group(events, ids, idnum);
+ bool perf_host  = true;
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 9969b8b46f7c..f486fdd3a538 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -29,6 +29,8 @@ size_t hex_width(u64 v);
  
- 			eg = malloc(sizeof(struct egroup));
- 			if (!eg) {
-@@ -502,6 +550,10 @@ static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
- 		}
- 	}
- 	free(nlist);
+ int sysctl__max_stack(void);
+ 
++bool sysctl__nmi_watchdog_enabled(void);
 +
-+	if (!ret)
-+		metricgroup___watchdog_constraint_hint(NULL, true);
-+
- 	return ret;
- }
- 
+ int fetch_kernel_version(unsigned int *puint,
+ 			 char *str, size_t str_sz);
+ #define KVER_VERSION(x)		(((x) >> 16) & 0xff)
 -- 
 2.21.1
