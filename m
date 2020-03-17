@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/23] perf map: Use strstarts() to look for Android libraries
-Date: Tue, 17 Mar 2020 18:32:44 -0300
-Message-ID: <20200317213259.15494-9-acme@kernel.org>
+Subject: [PATCH 09/23] perf cs-etm: Swap packets for instruction samples
+Date: Tue, 17 Mar 2020 18:32:45 -0300
+Message-ID: <20200317213259.15494-10-acme@kernel.org>
 References: <20200317213259.15494-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,65 +9,116 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Dominik Czarnota <dominik.b.czarnota@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Mike Leach <mike.leach@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Robert Walker <robert.walker@arm.com>, Suzuki Poulouse <suzuki.poulose@arm.com>, coresight ml <coresight@lists.linaro.org>, linux-arm-kernel@lists.infradead.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-And add the '/' to avoid looking at things like "/system/libsomething",
-when all we want to know if it is like "/system/lib/something", i.e. if
-it is in that system library dir.
+If use option '--itrace=iNNN' with Arm CoreSight trace data, perf tool
+fails inject instruction samples; the root cause is the packets are only
+swapped for branch samples and last branches but not for instruction
+samples, so the new coming packets cannot be properly handled for only
+synthesizing instruction samples.
 
-Using strstarts() avoids off-by-one errors like recently fixed in this
-file.
+To fix this issue, this patch refactors the code with a new function
+cs_etm__packet_swap() which is used to swap packets and adds the
+condition for instruction samples.
 
-Since this adds the '/' I separated this patch, another patch will make
-this consistent by removing other strncmp(str, prefix, manually
-calculated prefix length) usage.
-
-Reported-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
-Acked-by: Dominik Czarnota <dominik.b.czarnota@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: Link: http://lore.kernel.org/lkml/CABEVAa0_q-uC0vrrqpkqRHy_9RLOSXOJxizMLm1n5faHRy2AeA@mail.gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Robert Walker <robert.walker@arm.com>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: coresight ml <coresight@lists.linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lore.kernel.org/lkml/20200219021811.20067-2-leo.yan@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/util/cs-etm.c | 39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
 
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index b342f744b1fc..53d96611e6a6 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -44,8 +44,8 @@ static inline int is_no_dso_memory(const char *filename)
- 
- static inline int is_android_lib(const char *filename)
- {
--	return !strncmp(filename, "/data/app-lib", 13) ||
--	       !strncmp(filename, "/system/lib", 11);
-+	return strstarts(filename, "/data/app-lib/") ||
-+	       strstarts(filename, "/system/lib/");
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index b3b3fe3ea345..294b09cfb034 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -363,6 +363,23 @@ struct cs_etm_packet_queue
+ 	return NULL;
  }
  
- static inline bool replace_android_lib(const char *filename, char *newfilename)
-@@ -65,7 +65,7 @@ static inline bool replace_android_lib(const char *filename, char *newfilename)
- 
- 	app_abi_length = strlen(app_abi);
- 
--	if (!strncmp(filename, "/data/app-lib", 13)) {
-+	if (strstarts(filename, "/data/app-lib/")) {
- 		char *apk_path;
- 
- 		if (!app_abi_length)
-@@ -89,7 +89,7 @@ static inline bool replace_android_lib(const char *filename, char *newfilename)
- 		return true;
++static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
++				struct cs_etm_traceid_queue *tidq)
++{
++	struct cs_etm_packet *tmp;
++
++	if (etm->sample_branches || etm->synth_opts.last_branch ||
++	    etm->sample_instructions) {
++		/*
++		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
++		 * the next incoming packet.
++		 */
++		tmp = tidq->packet;
++		tidq->packet = tidq->prev_packet;
++		tidq->prev_packet = tmp;
++	}
++}
++
+ static void cs_etm__packet_dump(const char *pkt_string)
+ {
+ 	const char *color = PERF_COLOR_BLUE;
+@@ -1342,7 +1359,6 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 			  struct cs_etm_traceid_queue *tidq)
+ {
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+-	struct cs_etm_packet *tmp;
+ 	int ret;
+ 	u8 trace_chan_id = tidq->trace_chan_id;
+ 	u64 instrs_executed = tidq->packet->instr_count;
+@@ -1406,15 +1422,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 		}
  	}
  
--	if (!strncmp(filename, "/system/lib/", 12)) {
-+	if (strstarts(filename, "/system/lib/")) {
- 		char *ndk, *app;
- 		const char *arch;
- 		size_t ndk_length;
+-	if (etm->sample_branches || etm->synth_opts.last_branch) {
+-		/*
+-		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
+-		 * the next incoming packet.
+-		 */
+-		tmp = tidq->packet;
+-		tidq->packet = tidq->prev_packet;
+-		tidq->prev_packet = tmp;
+-	}
++	cs_etm__packet_swap(etm, tidq);
+ 
+ 	return 0;
+ }
+@@ -1443,7 +1451,6 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+ {
+ 	int err = 0;
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+-	struct cs_etm_packet *tmp;
+ 
+ 	/* Handle start tracing packet */
+ 	if (tidq->prev_packet->sample_type == CS_ETM_EMPTY)
+@@ -1478,15 +1485,7 @@ static int cs_etm__flush(struct cs_etm_queue *etmq,
+ 	}
+ 
+ swap_packet:
+-	if (etm->sample_branches || etm->synth_opts.last_branch) {
+-		/*
+-		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
+-		 * the next incoming packet.
+-		 */
+-		tmp = tidq->packet;
+-		tidq->packet = tidq->prev_packet;
+-		tidq->prev_packet = tmp;
+-	}
++	cs_etm__packet_swap(etm, tidq);
+ 
+ 	return err;
+ }
 -- 
 2.21.1
