@@ -1,237 +1,119 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v6] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Date: Tue, 17 Mar 2020 11:51:09 +0530
-Message-ID: <db7121ca-d188-1516-6516-8b25209078f5@linux.ibm.com>
-References: <20200221101121.28920-1-kjain@linux.ibm.com>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v5 00/11] powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date: Tue, 17 Mar 2020 11:53:22 +0530
+Message-ID: <20200317062333.14555-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200221101121.28920-1-kjain@linux.ibm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi Arnaldo,
-	Can you pull this patch if it looks fine to you. Please let
-me know if any changes require.
+Patchset fixes the inconsistent results we are getting when
+we run multiple 24x7 events.
 
-Thanks,
-Kajol
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-On 2/21/20 3:41 PM, Kajol Jain wrote:
-> Commit f01642e4912b ("perf metricgroup: Support multiple
-> events for metricgroup") introduced support for multiple events
-> in a metric group. But with the current upstream, metric events
-> names are not printed properly incase we try to run multiple
-> metric groups with overlapping event.
-> 
-> With current upstream version, incase of overlapping metric events
-> issue is, we always start our comparision logic from start.
-> So, the events which already matched with some metric group also
-> take part in comparision logic. Because of that when we have overlapping
-> events, we end up matching current metric group event with already matched
-> one.
-> 
-> For example, in skylake machine we have metric event CoreIPC and
-> Instructions. Both of them need 'inst_retired.any' event value.
-> As events in Instructions is subset of events in CoreIPC, they
-> endup in pointing to same 'inst_retired.any' value.
-> 
-> In skylake platform:
-> 
-> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->      1,254,992,790      inst_retired.any          # 1254992790.0
->                                                     Instructions
->                                                   #      1.3 CoreIPC
->        977,172,805      cycles
->      1,254,992,756      inst_retired.any
-> 
->        1.000802596 seconds time elapsed
-> 
-> command:# sudo ./perf stat -M UPI,IPC sleep 1
-> 
->    Performance counter stats for 'sleep 1':
->            948,650      uops_retired.retire_slots
->            866,182      inst_retired.any          #      0.7 IPC
->            866,182      inst_retired.any
->          1,175,671      cpu_clk_unhalted.thread
-> 
-> Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
-> track of events which already matched with some group by setting it true.
-> So, we skip all used events in list when we start comparision logic.
-> Patch also make some changes in comparision logic, incase we get a match
-> miss, we discard the whole match and start again with first event id in
-> metric event.
-> 
-> With this patch:
-> In skylake platform:
-> 
-> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->          3,348,415      inst_retired.any          #      0.3 CoreIPC
->         11,779,026      cycles
->          3,348,381      inst_retired.any          # 3348381.0
->                                                     Instructions
-> 
->        1.001649056 seconds time elapsed
-> 
-> command:# ./perf stat -M UPI,IPC sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->          1,023,148      uops_retired.retire_slots #      1.1 UPI
->            924,976      inst_retired.any
->            924,976      inst_retired.any          #      0.6 IPC
->          1,489,414      cpu_clk_unhalted.thread
-> 
->        1.003064672 seconds time elapsed
-> 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
-> 
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Jin Yao <yao.jin@linux.intel.com>
-> Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-> Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-> Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->  tools/perf/util/metricgroup.c | 49 +++++++++++++++++++++--------------
->  1 file changed, 30 insertions(+), 19 deletions(-)
-> 
-> Changelog:
-> v5 -> v6
-> - Remove bool cast
-> - Add Acked-by tag
-> 
-> v4 -> v5
-> - Made small fix to return from function 'metricgroup__setup_events'
->   in case calloc fail
-> 
-> v3 -> v4
-> - Make 'evlist_used' a bool pointer.
-> 
-> v2 -> v3
-> - Add array in place of variable to keep track of matched events.
->   Because incase we miss match in previous approach, all events will
->   be rolled over in next condition. So, rather we add array and set  
->   it incase that variable already match with some group.
->   - Suggested by Jiri Olsa
-> 
-> v1 -> v2
-> - Rather then adding static variable in metricgroup.c,
->   add a new variable in evlist itself with name 'evlist_iter'
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 02aee946b6c1..33bb138f7902 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -93,13 +93,16 @@ struct egroup {
->  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->  				      const char **ids,
->  				      int idnum,
-> -				      struct evsel **metric_events)
-> +				      struct evsel **metric_events,
-> +				      bool *evlist_used)
->  {
->  	struct evsel *ev;
-> -	int i = 0;
-> +	int i = 0, j = 0;
->  	bool leader_found;
->  
->  	evlist__for_each_entry (perf_evlist, ev) {
-> +		if (evlist_used[j++])
-> +			continue;
->  		if (!strcmp(ev->name, ids[i])) {
->  			if (!metric_events[i])
->  				metric_events[i] = ev;
-> @@ -107,22 +110,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->  			if (i == idnum)
->  				break;
->  		} else {
-> -			if (i + 1 == idnum) {
-> -				/* Discard the whole match and start again */
-> -				i = 0;
-> -				memset(metric_events, 0,
-> -				       sizeof(struct evsel *) * idnum);
-> -				continue;
-> -			}
-> -
-> -			if (!strcmp(ev->name, ids[i]))
-> -				metric_events[i] = ev;
-> -			else {
-> -				/* Discard the whole match and start again */
-> -				i = 0;
-> -				memset(metric_events, 0,
-> -				       sizeof(struct evsel *) * idnum);
-> -				continue;
-> +			/* Discard the whole match and start again */
-> +			i = 0;
-> +			memset(metric_events, 0,
-> +				sizeof(struct evsel *) * idnum);
-> +
-> +			if (!strcmp(ev->name, ids[i])) {
-> +				if (!metric_events[i])
-> +					metric_events[i] = ev;
-> +				i++;
-> +				if (i == idnum)
-> +					break;
->  			}
->  		}
->  	}
-> @@ -144,7 +142,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
->  			    !strcmp(ev->name, metric_events[i]->name)) {
->  				ev->metric_leader = metric_events[i];
->  			}
-> +			j++;
->  		}
-> +		ev = metric_events[i];
-> +		evlist_used[ev->idx] = true;
->  	}
->  
->  	return metric_events[0];
-> @@ -160,6 +161,13 @@ static int metricgroup__setup_events(struct list_head *groups,
->  	int ret = 0;
->  	struct egroup *eg;
->  	struct evsel *evsel;
-> +	bool *evlist_used;
-> +
-> +	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
-> +	if (!evlist_used) {
-> +		ret = -ENOMEM;
-> +		return ret;
-> +	}
->  
->  	list_for_each_entry (eg, groups, nd) {
->  		struct evsel **metric_events;
-> @@ -170,7 +178,7 @@ static int metricgroup__setup_events(struct list_head *groups,
->  			break;
->  		}
->  		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
-> -					 metric_events);
-> +					 metric_events, evlist_used);
->  		if (!evsel) {
->  			pr_debug("Cannot resolve %s: %s\n",
->  					eg->metric_name, eg->metric_expr);
-> @@ -194,6 +202,9 @@ static int metricgroup__setup_events(struct list_head *groups,
->  		expr->metric_events = metric_events;
->  		list_add(&expr->nd, &me->head);
->  	}
-> +
-> +	free(evlist_used);
-> +
->  	return ret;
->  }
->  
-> 
+So to enable JSON file support to "hv_24x7" interface, patchset expose
+total number of sockets and chips per-socket details in sysfs
+files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
+
+To get sockets and number of chips per sockets, patchset adds a rtas call
+with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
+handles partition migration case to re-init these system depended
+parameters by adding proper calls in post_mobility_fixup() (mobility.c).
+
+Second patch of the patchset adds expr_scanner_ctx object to hold user
+data for the expr scanner, which can be used to hold runtime parameter.
+
+Patch 9 & 11 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
+
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
+
+Applied and tested all these patches cleanly on top of jiri's flex changes
+with the changes done by Kan Liang for "Support metric group constraint"
+patchset and made required changes.
+
+Changelog:
+v4 -> v5
+- Using sysfs__read_int instead of sysfs__read_ull while reading
+  parameter value in powerpc/util/header.c file.
+
+- Using asprintf rather then malloc and sprintf 
+  Suggested by Arnaldo Carvalho de Melo
+
+- Break patch 6 from previous version to two patch,
+  - One to add refactor current "metricgroup__add_metric" function
+    and another where actually "?" handling infra added.
+
+- Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+  rather then making it global variable. Thanks Jiri for
+  adding this structure to hold user data for the expr scanner.
+
+- Add runtime param as agrugement to function 'expr__find_other'
+  and 'expr__parse' and made changes on references accordingly.
+
+v3 -> v4
+- Apply these patch on top of Kan liang changes.
+  As suggested by Jiri.
+
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
+
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
+
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
+
+Jiri Olsa (2):
+  perf expr: Add expr_ prefix for parse_ctx and parse_id
+  perf expr: Add expr_scanner_ctx object
+
+Kajol Jain (9):
+  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
+    hv-24x7 events run
+  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
+    details
+  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
+    processor details
+  Documentation/ABI: Add ABI documentation for chips and sockets
+  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
+  perf/tools: Refactoring metricgroup__add_metric function
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
+
+ .../sysfs-bus-event_source-devices-hv_24x7    |  14 ++
+ arch/powerpc/perf/hv-24x7.c                   | 104 ++++++++++++--
+ arch/powerpc/platforms/pseries/mobility.c     |  12 ++
+ arch/powerpc/platforms/pseries/pseries.h      |   3 +
+ tools/perf/arch/powerpc/util/header.c         |  10 ++
+ .../arch/powerpc/power9/nest_metrics.json     |  19 +++
+ tools/perf/tests/expr.c                       |  12 +-
+ tools/perf/util/expr.c                        |  25 ++--
+ tools/perf/util/expr.h                        |  19 ++-
+ tools/perf/util/expr.l                        |  37 +++--
+ tools/perf/util/expr.y                        |   6 +-
+ tools/perf/util/metricgroup.c                 | 127 ++++++++++++++----
+ tools/perf/util/metricgroup.h                 |   1 +
+ tools/perf/util/stat-display.c                |   2 -
+ tools/perf/util/stat-shadow.c                 |  14 +-
+ 15 files changed, 326 insertions(+), 79 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+
+-- 
+2.18.1
