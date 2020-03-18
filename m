@@ -1,206 +1,81 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v6] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Date: Wed, 18 Mar 2020 16:28:56 -0300
-Message-ID: <20200318192856.GQ11531@kernel.org>
-References: <20200221101121.28920-1-kjain@linux.ibm.com>
+Subject: Re: [PATCH v6 0/3] perf vendor events amd: latest PMU events for
+ zen1/zen2
+Date: Wed, 18 Mar 2020 17:04:43 -0300
+Message-ID: <20200318200443.GA29668@kernel.org>
+References: <20200318190002.307290-1-vijaythakkar@me.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200221101121.28920-1-kjain@linux.ibm.com>
+In-Reply-To: <20200318190002.307290-1-vijaythakkar@me.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: Vijay Thakkar <vijaythakkar@me.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, Feb 21, 2020 at 03:41:21PM +0530, Kajol Jain escreveu:
-> Commit f01642e4912b ("perf metricgroup: Support multiple
-> events for metricgroup") introduced support for multiple events
-> in a metric group. But with the current upstream, metric events
-> names are not printed properly incase we try to run multiple
-> metric groups with overlapping event.
+Em Wed, Mar 18, 2020 at 02:59:59PM -0400, Vijay Thakkar escreveu:
+> This series of patches brings the PMU events for AMD family 17h series
+> of processors up to date with the latest versions of the AMD processor
+> programming reference manuals.
 > 
-> With current upstream version, incase of overlapping metric events
-> issue is, we always start our comparision logic from start.
-> So, the events which already matched with some metric group also
-> take part in comparision logic. Because of that when we have overlapping
-> events, we end up matching current metric group event with already matched
-> one.
+> The first patch changes the pmu events mapfile to be more selective for
+> the model number rather than blanket detecting all f17h processors to
+> have the same events directory. This is required for the later patch
+> where we add events for zen2 based processors.
 > 
-> For example, in skylake machine we have metric event CoreIPC and
-> Instructions. Both of them need 'inst_retired.any' event value.
-> As events in Instructions is subset of events in CoreIPC, they
-> endup in pointing to same 'inst_retired.any' value.
+> The second patch adds the PMU events for zen2.
+
+Thanks, re-tested and applied.
+
+- Arnaldo
+ 
+> Finally the third patch updates the zen1 PMU events to be in accordance
+> with the latest PPR version and bumps up the events version to v2.
 > 
-> In skylake platform:
+> Vijay Thakkar (3):
+>   perf vendor events amd: restrict model detection for zen1 based
+>     processors
+>   perf vendor events amd: add Zen2 events
+>   perf vendor events amd: update Zen1 events to V2
 > 
-> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
+>  .../pmu-events/arch/x86/amdfam17h/branch.json |  12 -
+>  .../pmu-events/arch/x86/amdfam17h/cache.json  | 329 -----------------
+>  .../pmu-events/arch/x86/amdfam17h/other.json  |  65 ----
+>  .../pmu-events/arch/x86/amdzen1/branch.json   |  23 ++
+>  .../pmu-events/arch/x86/amdzen1/cache.json    | 294 +++++++++++++++
+>  .../arch/x86/{amdfam17h => amdzen1}/core.json |  15 +-
+>  .../floating-point.json                       |  64 +++-
+>  .../x86/{amdfam17h => amdzen1}/memory.json    |  82 +++--
+>  .../pmu-events/arch/x86/amdzen1/other.json    |  56 +++
+>  .../pmu-events/arch/x86/amdzen2/branch.json   |  52 +++
+>  .../pmu-events/arch/x86/amdzen2/cache.json    | 338 +++++++++++++++++
+>  .../pmu-events/arch/x86/amdzen2/core.json     | 130 +++++++
+>  .../arch/x86/amdzen2/floating-point.json      | 140 +++++++
+>  .../pmu-events/arch/x86/amdzen2/memory.json   | 341 ++++++++++++++++++
+>  .../pmu-events/arch/x86/amdzen2/other.json    | 115 ++++++
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +-
+>  16 files changed, 1606 insertions(+), 453 deletions(-)
+>  delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
+>  delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+>  delete mode 100644 tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+>  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (87%)
+>  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (61%)
+>  rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (63%)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/other.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/branch.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/core.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/floating-point.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/other.json
 > 
->  Performance counter stats for 'CPU(s) 0':
+> -- 
+> 2.25.2
 > 
->      1,254,992,790      inst_retired.any          # 1254992790.0
->                                                     Instructions
->                                                   #      1.3 CoreIPC
->        977,172,805      cycles
->      1,254,992,756      inst_retired.any
-> 
->        1.000802596 seconds time elapsed
-> 
-> command:# sudo ./perf stat -M UPI,IPC sleep 1
-> 
->    Performance counter stats for 'sleep 1':
->            948,650      uops_retired.retire_slots
->            866,182      inst_retired.any          #      0.7 IPC
->            866,182      inst_retired.any
->          1,175,671      cpu_clk_unhalted.thread
-> 
-> Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
-> track of events which already matched with some group by setting it true.
-> So, we skip all used events in list when we start comparision logic.
-> Patch also make some changes in comparision logic, incase we get a match
-> miss, we discard the whole match and start again with first event id in
-> metric event.
-> 
-> With this patch:
-> In skylake platform:
-> 
-> command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
-> 
->  Performance counter stats for 'CPU(s) 0':
-> 
->          3,348,415      inst_retired.any          #      0.3 CoreIPC
->         11,779,026      cycles
->          3,348,381      inst_retired.any          # 3348381.0
->                                                     Instructions
-> 
->        1.001649056 seconds time elapsed
-> 
-> command:# ./perf stat -M UPI,IPC sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->          1,023,148      uops_retired.retire_slots #      1.1 UPI
->            924,976      inst_retired.any
->            924,976      inst_retired.any          #      0.6 IPC
->          1,489,414      cpu_clk_unhalted.thread
-> 
->        1.003064672 seconds time elapsed
-> 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-This is an area I think needs some improvement, look how it ends up
-setting up the inst_retired.any multiple times:
-
-[root@seventh ~]# perf stat -vv -M CoreIPC,Instructions  -C 0 sleep 1
-Using CPUID GenuineIntel-6-9E-9
-metric expr inst_retired.any / cycles for CoreIPC
-found event inst_retired.any
-found event cycles
-metric expr inst_retired.any for Instructions
-found event inst_retired.any
-adding {inst_retired.any,cycles}:W,{inst_retired.any}:W
-intel_pt default config: tsc,mtc,mtc_period=3,psb_period=3,pt,branch
-inst_retired.any -> cpu/event=0xc0,(null)=0x1e8483/
-inst_retired.any -> cpu/event=0xc0,(null)=0x1e8483/
-------------------------------------------------------------
-perf_event_attr:
-  type                             4
-  size                             120
-  config                           0xc0
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
-  disabled                         1
-  inherit                          1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 3
-------------------------------------------------------------
-perf_event_attr:
-  size                             120
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING|ID|GROUP
-  inherit                          1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd 3  flags 0x8 = 4
-------------------------------------------------------------
-perf_event_attr:
-  type                             4
-  size                             120
-  config                           0xc0
-  sample_type                      IDENTIFIER
-  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
-  disabled                         1
-  inherit                          1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-inst_retired.any: 0: 507070 1000948076 1000948076
-cycles: 0: 1250258 1000948076 1000948076
-inst_retired.any: 0: 507038 1000953052 1000953052
-inst_retired.any: 507070 1000948076 1000948076
-cycles: 1250258 1000948076 1000948076
-inst_retired.any: 507038 1000953052 1000953052
-
- Performance counter stats for 'CPU(s) 0':
-
-           507,070      inst_retired.any          #      0.4 CoreIPC
-         1,250,258      cycles
-           507,038      inst_retired.any          # 507038.0 Instructions
-
-       1.000964961 seconds time elapsed
-
-[root@seventh ~]#
-
-And it ends up printing the "inst_retired.any" multiple times, with
-different values, as after all two events were allocated, can't we
-notice this and set just one inst_retired.any and then when calculating
-the metrics just do something like:
-
-  # perf stat -M CoreIPC,Instructions -C 0 sleep 1
-
- Performance counter stats for 'CPU(s) 0':
-
-           507,070      inst_retired.any          #      0.4 CoreIPC,
-						  #  507,070 Instructions
-         1,250,258      cycles
-
-       1.000964961 seconds time elapsed
-#
-
-?
-
-Ditto for:
-
-    command:# perf stat -M UPI,IPC sleep 1
-
-     Performance counter stats for 'sleep 1':
-
-             1,023,148      uops_retired.retire_slots #      1.1 UPI
-               924,976      inst_retired.any
-               924,976      inst_retired.any          #      0.6 IPC
-             1,489,414      cpu_clk_unhalted.thread
-
-           1.003064672 seconds time elapsed
-
-Wouldn't this be better as:
-
-    command:# perf stat -M UPI,IPC sleep 1
-
-     Performance counter stats for 'sleep 1':
-
-             1,023,148      uops_retired.retire_slots #      1.1 UPI
-               924,976      inst_retired.any
-             1,489,414      cpu_clk_unhalted.thread   #      0.6 IPC
-
-           1.003064672 seconds time elapsed
-
-This should help to look at many metrics at the same time by requiring
-less counters to be allocated, etc, or am I missing something here?
-
-Since this went thru multiple versions and Jiri is satisfied with it,
-I'm applying the patch, but please consider this suggestion.
+-- 
 
 - Arnaldo
