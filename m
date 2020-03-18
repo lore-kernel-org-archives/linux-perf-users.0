@@ -1,54 +1,42 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/23] perf test: Print if shell directory isn't present
-Date: Tue, 17 Mar 2020 18:32:56 -0300
-Message-ID: <20200317213259.15494-21-acme@kernel.org>
-References: <20200317213259.15494-1-acme@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v3] perf tools: add support for libpfm4
+Date: Wed, 18 Mar 2020 11:22:54 +0100
+Message-ID: <20200318102254.GC821557@krava>
+References: <20200311213613.210749-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200317213259.15494-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200311213613.210749-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+On Wed, Mar 11, 2020 at 02:36:13PM -0700, Ian Rogers wrote:
+> This patch links perf with the libpfm4 library if it is available and
+> NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> event tables for all processors supported by perf_events. It is a helper
+> library that helps convert from a symbolic event name to the event
+> encoding required by the underlying kernel interface. This
+> library is open-source and available from: http://perfmon2.sf.net.
+> 
+> With this patch, it is possible to specify full hardware events
+> by name. Hardware filters are also supported. Events must be
+> specified via the --pfm-events and not -e option. Both options
+> are active at the same time and it is possible to mix and match:
+> 
+> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> 
+> v3 is against acme/perf/core removes a diagnostic warning
+> v2 of this patch makes the --pfm-events man page documentation
+> conditional on libpfm4 behing configured. It tidies some of the
+> documentation and adds the feature test missed in the v1 patch.
+> 
+> Author: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-If the shell test directory isn't present the exit code will be 255 but
-with no error messages printed. Add an error message.
+hi,
+is this the latest version? I can't apply it on Arnaldo's perf/core
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200313005602.45236-1-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/tests/builtin-test.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 5f05db75cdd8..54d9516c9839 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -543,8 +543,11 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
- 		return -1;
- 
- 	dir = opendir(st.dir);
--	if (!dir)
-+	if (!dir) {
-+		pr_err("failed to open shell test directory: %s\n",
-+			st.dir);
- 		return -1;
-+	}
- 
- 	for_each_shell_test(dir, st.dir, ent) {
- 		int curr = i++;
--- 
-2.21.1
+jirka
