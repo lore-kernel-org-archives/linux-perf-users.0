@@ -1,7 +1,7 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v6 02/11] perf expr: Add expr_scanner_ctx object
-Date: Fri, 20 Mar 2020 18:23:57 +0530
-Message-ID: <20200320125406.30995-3-kjain@linux.ibm.com>
+Subject: [PATCH v6 03/11] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
+Date: Fri, 20 Mar 2020 18:23:58 +0530
+Message-ID: <20200320125406.30995-4-kjain@linux.ibm.com>
 References: <20200320125406.30995-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,85 +12,84 @@ To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
+values")' added to print _change_ in the counter value rather then raw
+value for 24x7 counters. Incase of transactions, the event count
+is set to 0 at the beginning of the transaction. It also sets
+the event's prev_count to the raw value at the time of initialization.
+Because of setting event count to 0, we are seeing some weird behaviour,
+whenever we run multiple 24x7 events at a time.
 
-Adding expr_scanner_ctx object to hold user data
-for the expr scanner. Currently it holds only
-start_token, Kajol Jain will use it to hold 24x7
-runtime param.
+For example:
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+	  		   -C 0 -I 1000 sleep 100
+
+     1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Getting these large values in case we do -I.
+
+As we are setting event_count to 0, for interval case, overall event_count is not
+coming in incremental order. As we may can get new delta lesser then previous count.
+Because of which when we print intervals, we are getting negative value which create
+these large values.
+
+This patch removes part where we set event_count to 0 in function
+'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
+to the raw value at the time of initialization to print change value.
+
+With this patch
+In power9 platform
+
+command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+			   -C 0 -I 1000 sleep 100
+
+     1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+     4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+     4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
 ---
- tools/perf/util/expr.c |  6 ++++--
- tools/perf/util/expr.h |  4 ++++
- tools/perf/util/expr.l | 10 +++++-----
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ arch/powerpc/perf/hv-24x7.c | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c8ccc548a585..c3382d58cf40 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -3,7 +3,6 @@
- #include <assert.h>
- #include "expr.h"
- #include "expr-bison.h"
--#define YY_EXTRA_TYPE int
- #include "expr-flex.h"
- 
- #ifdef PARSER_DEBUG
-@@ -30,11 +29,14 @@ static int
- __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	      int start)
- {
-+	struct expr_scanner_ctx scanner_ctx = {
-+		.start_token = start,
-+	};
- 	YY_BUFFER_STATE buffer;
- 	void *scanner;
- 	int ret;
- 
--	ret = expr_lex_init_extra(start, &scanner);
-+	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
- 	if (ret)
- 		return ret;
- 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index b9e53f2b5844..0938ad166ece 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -15,6 +15,10 @@ struct expr_parse_ctx {
- 	struct expr_parse_id ids[MAX_PARSE_ID];
- };
- 
-+struct expr_scanner_ctx {
-+	int start_token;
-+};
-+
- void expr__ctx_init(struct expr_parse_ctx *ctx);
- void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
- int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index eaad29243c23..2582c2464938 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -76,13 +76,13 @@ sym		[0-9a-zA-Z_\.:@]+
- symbol		{spec}*{sym}*{spec}*{sym}*
- 
- %%
--	{
--		int start_token;
-+	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
- 
--		start_token = expr_get_extra(yyscanner);
-+	{
-+		int start_token = sctx->start_token;
- 
--		if (start_token) {
--			expr_set_extra(NULL, yyscanner);
-+		if (sctx->start_token) {
-+			sctx->start_token = 0;
- 			return start_token;
+diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+index 573e0b309c0c..48e8f4b17b91 100644
+--- a/arch/powerpc/perf/hv-24x7.c
++++ b/arch/powerpc/perf/hv-24x7.c
+@@ -1400,16 +1400,6 @@ static void h_24x7_event_read(struct perf_event *event)
+ 			h24x7hw = &get_cpu_var(hv_24x7_hw);
+ 			h24x7hw->events[i] = event;
+ 			put_cpu_var(h24x7hw);
+-			/*
+-			 * Clear the event count so we can compute the _change_
+-			 * in the 24x7 raw counter value at the end of the txn.
+-			 *
+-			 * Note that we could alternatively read the 24x7 value
+-			 * now and save its value in event->hw.prev_count. But
+-			 * that would require issuing a hcall, which would then
+-			 * defeat the purpose of using the txn interface.
+-			 */
+-			local64_set(&event->count, 0);
  		}
- 	}
+ 
+ 		put_cpu_var(hv_24x7_reqb);
 -- 
 2.18.1
