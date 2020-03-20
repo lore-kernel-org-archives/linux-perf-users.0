@@ -1,185 +1,129 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Date: Fri, 20 Mar 2020 06:47:58 +0000
-Message-ID: <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
-References: <20200212054102.9259-1-kjain@linux.ibm.com>
- <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
- <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v6 00/11] powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date: Fri, 20 Mar 2020 18:23:55 +0530
+Message-ID: <20200320125406.30995-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: kajoljain <kjain@linux.ibm.com>, "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jin Yao <yao.jin@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Patchset fixes the inconsistent results we are getting when
+we run multiple 24x7 events.
 
-[...]
-> >>> Hi Kajol,
-> >>>
-> >>> I am not sure if it is good to ask a question here :-)
-> >>>
-> >>> I encountered a perf metricgroup issue, the result is incorrect when
-> >>> the
-> >> metric includes more than 2 events.
-> >>>
-> >>> git log --oneline tools/perf/util/metricgroup.c
-> >>> 3635b27cc058 perf metricgroup: Fix printing event names of metric
-> >>> group with multiple events f01642e4912b perf metricgroup: Support
-> >>> multiple events for metricgroup
-> >>> 287f2649f791 perf metricgroup: Scale the metric result
-> >>>
-> >>> I did a simple test, below is the JSON file and result.
-> >>> [
-> >>>         {
-> >>>              "PublicDescription": "Calculate DDR0 bus actual
-> >>> utilization
-> >> which vary from DDR0 controller clock frequency",
-> >>>              "BriefDescription": "imx8qm: ddr0 bus actual utilization=
-",
-> >>>              "MetricName": "imx8qm-ddr0-bus-util",
-> >>>              "MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ +
-> >> imx8_ddr0\\/write\\-cycles\\/ )",
-> >>>              "MetricGroup": "i.MX8QM_DDR0_BUS_UTIL"
-> >>>         }
-> >>> ]
-> >>> ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
-> >>> #           time             counts unit events
-> >>>      1.000104250              16720      imx8_ddr0/read-cycles/
-> >> #  22921.0 imx8qm-ddr0-bus-util
-> >>>      1.000104250               6201
-> imx8_ddr0/write-cycles/
-> >>>      2.000525625               8316      imx8_ddr0/read-cycles/
-> >> #  12785.5 imx8qm-ddr0-bus-util
-> >>>      2.000525625               2738
-> imx8_ddr0/write-cycles/
-> >>>      3.000819125               1056      imx8_ddr0/read-cycles/
-> >> #   4136.7 imx8qm-ddr0-bus-util
-> >>>      3.000819125                303
-> imx8_ddr0/write-cycles/
-> >>>      4.001103750               6260      imx8_ddr0/read-cycles/
-> >> #   9149.8 imx8qm-ddr0-bus-util
-> >>>      4.001103750               2317
-> imx8_ddr0/write-cycles/
-> >>>      5.001392750               2084      imx8_ddr0/read-cycles/
-> >> #   4516.0 imx8qm-ddr0-bus-util
-> >>>      5.001392750                601
-> imx8_ddr0/write-cycles/
-> >>>
-> >>> You can see that only the first result is correct, could this be
-> >>> reproduced at
-> >> you side?
-> >>
-> >> Hi Joakim,
-> >>         Will try to look into it from my side.
-> >
->=20
-> > Thanks Kajol for your help, I look into this issue, but don't know how =
-to fix it.
-> >
-> > The results are always correct if signal event used in "MetricExpr" wit=
-h "-I"
-> parameters, but the results are incorrect when more than one events used =
-in
-> "MetricExpr".
-> >
->=20
-> Hi Joakim,
->     So, I try to look into this issue and understand the flow. From my
-> understanding, whenever we do
->     calculation of metric expression we don't use exact count we are gett=
-ing.
->     Basically we use mean value of each event in the calculation of metri=
-c
-> expression.
->=20
-> So, I am taking same example you refer.
->=20
-> Metric Event: imx8qm-ddr0-bus-util
-> MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles=
-\\/ )"
->=20
-> command#: ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
->=20
-> #           time             counts unit events
->      1.000104250              16720      imx8_ddr0/read-cycles/
-> #  22921.0 imx8qm-ddr0-bus-util
->      1.000104250               6201      imx8_ddr0/write-cycles/
->      2.000525625               8316      imx8_ddr0/read-cycles/
-> #  12785.5 imx8qm-ddr0-bus-util
->      2.000525625               2738      imx8_ddr0/write-cycles/
->      3.000819125               1056      imx8_ddr0/read-cycles/
-> #   4136.7 imx8qm-ddr0-bus-util
->      3.000819125                303      imx8_ddr0/write-cycles/
->      4.001103750               6260      imx8_ddr0/read-cycles/
-> #   9149.8 imx8qm-ddr0-bus-util
->      4.001103750               2317      imx8_ddr0/write-cycles/
->      5.001392750               2084      imx8_ddr0/read-cycles/
-> #   4516.0 imx8qm-ddr0-bus-util
->      5.001392750                601      imx8_ddr0/write-cycles/
->=20
-> If you see we have a function called 'update_stats' in file util/stat.c w=
-here we
-> do this calculation and updating stats->mean value. And this mean value i=
-s
-> what we are using actually in our metric expression calculation.
->=20
-> We call this function in each iteration where we update stats->mean and
-> stats->n for each event.
-> But one weird issue is, for very first event, stat->n is always 1 that is=
- why we
-> are getting mean same as count.
-> So this is the reason for single event you get exact aggregate of metric
-> expression.
-> So doesn't matter how many events you have in your metric expression, eve=
-ry
-> time you take exact count for first one and normalized value for rest whi=
-ch is
-> weird.
->=20
-> According to update_stats function:  We are updating mean as:
->=20
-> stats->mean +=3D delta / stats->n where,  delta =3D val - stats->mean.
->=20
-> If we take write-cycles here. Initially mean =3D 0 and n =3D 1.
->=20
-> 1st iteration: n=3D1, write cycle : 6201 and mean =3D 6201  (Final agg va=
-lue: 16720
-> + 6201 =3D 22921) 2nd iteration: n=3D2, write cycles:  6201 + (2738 - 620=
-1)/2 =3D
-> 4469.5  (Final aggr value: 8316 + 4469.5 =3D 12785.5) 3rd iteration: n=3D=
-3, write
-> cycles: 4469.5 + (303 - 4469.5)/3 =3D 3080.6667 (Final aggr value: 1056 +
-> 3080.6667 =3D 4136.7)
->=20
-> Andi and Jiri, I am not sure if its expected behavior. I mean shouldn't w=
-e either
-> take mean value of each event or take n as 1 for each event. And one more
-> question, Should we add an option to say whether user want exact aggregat=
-e
-> or this normalize aggregate to remove the confusion? I try to find it out=
- if we
-> already have one but didn't get.
-> Please let me know if my understanding is fine.
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-Hi Kajol,
+So to enable JSON file support to "hv_24x7" interface, patchset expose
+total number of sockets and chips per-socket details in sysfs
+files (sockets, chips) under "/sys/devices/hv_24x7/interface/".
 
-Sorry, your reply was buried in a sea of emails, it comes into my eyes when=
- I searched any feedback from you. Much thanks for your great details!!!!!
+To get sockets and number of chips per sockets, patchset adds a rtas call
+with token "PROCESSOR_MODULE_INFO" to get these details. Patchset also
+handles partition migration case to re-init these system depended
+parameters by adding proper calls in post_mobility_fixup() (mobility.c).
 
-I can quite understand what you explained. As a user, I think we always wan=
-t to get the exact result according to the metric expression.
+Second patch of the patchset adds expr_scanner_ctx object to hold user
+data for the expr scanner, which can be used to hold runtime parameter.
 
-Can you take this case as an example then send out a formal email into mail=
-ing list to reflect this weird issue, more people can participate and discu=
-ss about it. Or you need me clear up and sent out the email?
-This could attract maintainers' attention.
+Patch 9 & 11 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
 
-Best Regards,
-Joakim Zhang
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
+
+Applied and tested all these patches cleanly on top of jiri's flex changes
+with the changes done by Kan Liang for "Support metric group constraint"
+patchset and made required changes.
+
+Changelog:
+v5 -> v6
+- resolve compilation issue due to rearranging patch series.
+- Rather then adding new function to take careof case for runtime param
+  in metricgroup__add_metric, using metricgroup__add_metric_param itself
+  for that work.
+- Address some optimization suggested like using directly file path
+  rather then adding new macro in header.c
+- Change commit message on patch where we are adding "?" support
+  by adding simple example.
+
+v4 -> v5
+- Using sysfs__read_int instead of sysfs__read_ull while reading
+  parameter value in powerpc/util/header.c file.
+
+- Using asprintf rather then malloc and sprintf 
+  Suggested by Arnaldo Carvalho de Melo
+
+- Break patch 6 from previous version to two patch,
+  - One to add refactor current "metricgroup__add_metric" function
+    and another where actually "?" handling infra added.
+
+- Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+  rather then making it global variable. Thanks Jiri for
+  adding this structure to hold user data for the expr scanner.
+
+- Add runtime param as agrugement to function 'expr__find_other'
+  and 'expr__parse' and made changes on references accordingly.
+
+v3 -> v4
+- Apply these patch on top of Kan liang changes.
+  As suggested by Jiri.
+
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
+
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
+
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
+
+Jiri Olsa (2):
+  perf expr: Add expr_ prefix for parse_ctx and parse_id
+  perf expr: Add expr_scanner_ctx object
+
+Kajol Jain (9):
+  powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple
+    hv-24x7 events run
+  powerpc/hv-24x7: Add rtas call in hv-24x7 driver to get processor
+    details
+  powerpc/hv-24x7: Add sysfs files inside hv-24x7 device to show
+    processor details
+  Documentation/ABI: Add ABI documentation for chips and sockets
+  powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
+  perf/tools: Refactoring metricgroup__add_metric function
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
+
+ .../sysfs-bus-event_source-devices-hv_24x7    |  14 +++
+ arch/powerpc/perf/hv-24x7.c                   | 104 ++++++++++++++++--
+ arch/powerpc/platforms/pseries/mobility.c     |  12 ++
+ arch/powerpc/platforms/pseries/pseries.h      |   3 +
+ tools/perf/arch/powerpc/util/header.c         |   8 ++
+ .../arch/powerpc/power9/nest_metrics.json     |  19 ++++
+ tools/perf/tests/expr.c                       |  12 +-
+ tools/perf/util/expr.c                        |  25 +++--
+ tools/perf/util/expr.h                        |  19 ++--
+ tools/perf/util/expr.l                        |  37 +++++--
+ tools/perf/util/expr.y                        |   6 +-
+ tools/perf/util/metricgroup.c                 |  88 +++++++++++----
+ tools/perf/util/metricgroup.h                 |   1 +
+ tools/perf/util/stat-display.c                |   2 -
+ tools/perf/util/stat-shadow.c                 |  14 ++-
+ 15 files changed, 287 insertions(+), 77 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+
+-- 
+2.18.1
