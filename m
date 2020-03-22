@@ -1,212 +1,335 @@
-From: Andreas Gerstmayr <agerstmayr@redhat.com>
-Subject: [PATCH] perf script: add flamegraph.py script
-Date: Fri, 20 Mar 2020 16:13:48 +0100
-Message-ID: <20200320151355.66302-1-agerstmayr@redhat.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
+Date: Mon, 23 Mar 2020 08:58:04 +0900
+Message-ID: <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
+References: <20200224043749.69466-1-namhyung@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200224043749.69466-1-namhyung@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org
-Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Andreas Gerstmayr <agerstmayr@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Tejun Heo <tj@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This script works in tandem with d3-flame-graph to generate flame graphs
-from perf. It supports two output formats: JSON and HTML (the default).
-The HTML format will look for a standalone d3-flame-graph template file i=
-n
-/usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the collect=
-ed
-stacks.
+Hello Peter, Tejun and folks.
 
-Usage:
+Do you have any other comments on the kernel side?
+If not, can I get your Ack?
 
-    perf record -a -g -F 99 sleep 60
-    perf script report flamegraph
+Thanks
+Namhyung
 
-Combined:
 
-    perf script flamegraph -a -F 99 sleep 60
-
-Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
----
-Package for d3-flame-graph is currently under review, in the meantime you=
- can=20
-download the template from:
-https://cdn.jsdelivr.net/npm/d3-flame-graph@3.0.2/dist/templates/d3-flame=
-graph-base.html
-and move it to /usr/share/d3-flame-graph/d3-flamegraph-base.html
-
- .../perf/scripts/python/bin/flamegraph-record |   2 +
- .../perf/scripts/python/bin/flamegraph-report |   3 +
- tools/perf/scripts/python/flamegraph.py       | 126 ++++++++++++++++++
- 3 files changed, 131 insertions(+)
- create mode 100755 tools/perf/scripts/python/bin/flamegraph-record
- create mode 100755 tools/perf/scripts/python/bin/flamegraph-report
- create mode 100755 tools/perf/scripts/python/flamegraph.py
-
-diff --git a/tools/perf/scripts/python/bin/flamegraph-record b/tools/perf=
-/scripts/python/bin/flamegraph-record
-new file mode 100755
-index 000000000000..725d66e71570
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/flamegraph-record
-@@ -0,0 +1,2 @@
-+#!/usr/bin/sh
-+perf record -g "$@"
-diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf=
-/scripts/python/bin/flamegraph-report
-new file mode 100755
-index 000000000000..b1a79afd903b
---- /dev/null
-+++ b/tools/perf/scripts/python/bin/flamegraph-report
-@@ -0,0 +1,3 @@
-+#!/usr/bin/sh
-+# description: create flame graphs
-+perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
-diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts=
-/python/flamegraph.py
-new file mode 100755
-index 000000000000..5835d190ca42
---- /dev/null
-+++ b/tools/perf/scripts/python/flamegraph.py
-@@ -0,0 +1,126 @@
-+# flamegraph.py - create flame graphs from perf samples
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Usage:
-+#
-+#     perf record -a -g -F 99 sleep 60
-+#     perf script report flamegraph
-+#
-+# Combined:
-+#
-+#     perf script flamegraph -a -F 99 sleep 60
-+#
-+# Written by Andreas Gerstmayr <agerstmayr@redhat.com>
-+# Flame Graphs invented by Brendan Gregg <bgregg@netflix.com>
-+# Works in tandem with d3-flame-graph by Martin Spier <mspier@netflix.co=
-m>
-+
-+import sys
-+import os
-+import argparse
-+import json
-+
-+
-+class Node:
-+    def __init__(self, name, libtype=3D""):
-+        self.name =3D name
-+        self.libtype =3D libtype
-+        self.value =3D 0
-+        self.children =3D []
-+
-+    def toJSON(self):
-+        return {
-+            "n": self.name,
-+            "l": self.libtype,
-+            "v": self.value,
-+            "c": self.children
-+        }
-+
-+
-+class FlameGraphCLI:
-+    def __init__(self, args):
-+        self.args =3D args
-+        self.stack =3D Node("root")
-+
-+        if self.args.format =3D=3D "html" and \
-+                not os.path.isfile(self.args.template):
-+            print(f"Flame Graph template {self.args.template} does not "=
- +
-+                  f"exist. Please install the js-d3-flame-graph (RPM) or=
- " +
-+                  f"libjs-d3-flame-graph (deb) package, specify an " +
-+                  f"existing flame graph template (--template PATH) or "=
- +
-+                  f"another output format (--format FORMAT).",
-+                  file=3Dsys.stderr)
-+            sys.exit(1)
-+
-+    def find_or_create_node(self, node, name, dso):
-+        libtype =3D "kernel" if dso =3D=3D "[kernel.kallsyms]" else ""
-+        if name is None:
-+            name =3D "[unknown]"
-+
-+        for child in node.children:
-+            if child.name =3D=3D name and child.libtype =3D=3D libtype:
-+                return child
-+
-+        child =3D Node(name, libtype)
-+        node.children.append(child)
-+        return child
-+
-+    def process_event(self, event):
-+        node =3D self.find_or_create_node(self.stack, event["comm"], Non=
-e)
-+        if "callchain" in event:
-+            for entry in reversed(event['callchain']):
-+                node =3D self.find_or_create_node(
-+                    node, entry.get("sym", {}).get("name"), event.get("d=
-so"))
-+        else:
-+            node =3D self.find_or_create_node(
-+                node, entry.get("symbol"), event.get("dso"))
-+        node.value +=3D 1
-+
-+    def trace_end(self):
-+        json_str =3D json.dumps(self.stack, default=3Dlambda x: x.toJSON=
-(),
-+                              indent=3Dself.args.indent)
-+
-+        if self.args.format =3D=3D "html":
-+            try:
-+                with open(self.args.template) as f:
-+                    output_str =3D f.read().replace("/** @flamegraph_jso=
-n **/",
-+                                                  json_str)
-+            except IOError as e:
-+                print(f"Error reading template file: {e}", file=3Dsys.st=
-derr)
-+                sys.exit(1)
-+            output_fn =3D self.args.output or "flamegraph.html"
-+        else:
-+            output_str =3D json_str
-+            output_fn =3D self.args.output or "stacks.json"
-+
-+        if output_fn =3D=3D "-":
-+            sys.stdout.write(output_str)
-+        else:
-+            print(f"dumping data to {output_fn}")
-+            try:
-+                with open(output_fn, "w") as out:
-+                    out.write(output_str)
-+            except IOError as e:
-+                print(f"Error writing output file: {e}", file=3Dsys.stde=
-rr)
-+                sys.exit(1)
-+
-+
-+if __name__ =3D=3D "__main__":
-+    parser =3D argparse.ArgumentParser(description=3D"Create flame graph=
-s.")
-+    parser.add_argument("-F", "--format",
-+                        default=3D"html", choices=3D["json", "html"],
-+                        help=3D"output file format")
-+    parser.add_argument("-o", "--output",
-+                        help=3D"output file name")
-+    parser.add_argument("--indent",
-+                        type=3Dint, help=3D"JSON indentation")
-+    parser.add_argument("--template",
-+                        default=3D"/usr/share/d3-flame-graph/d3-flamegra=
-ph-base.html",
-+                        help=3D"path to flamegraph HTML template")
-+    parser.add_argument("-i", "--input",
-+                        help=3Dargparse.SUPPRESS)
-+
-+    args =3D parser.parse_args()
-+    cli =3D FlameGraphCLI(args)
-+
-+    process_event =3D cli.process_event
-+    trace_end =3D cli.trace_end
---=20
-2.25.1
+On Mon, Feb 24, 2020 at 1:37 PM Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> Hello,
+>
+> This work is to improve cgroup profiling in perf.  Currently it only
+> supports profiling tasks in a specific cgroup and there's no way to
+> identify which cgroup the current sample belongs to.  So I added
+> PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> integer having file handle of the cgroup.  And kernel also generates
+> PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> read from userspace by name_to_handle_at() system call so it can
+> synthesize the CGROUP event for existing groups.
+>
+> So why do we want this?  Systems running a large number of jobs in
+> different cgroups want to profiling such jobs precisely. This includes
+> container hosting systems widely used today. Currently perf supports
+> namespace tracking but the systems may not use (cgroup) namespace for
+> their jobs. Also it'd be more intuitive to see cgroup names (as
+> they're given by user or sysadmin) rather than numeric
+> cgroup/namespace id even if they use the namespaces.
+>
+> From Stephane Eranian:
+> > In data centers you care about attributing samples to a job not such
+> > much to a process.  A job may have multiple processes which may come
+> > and go. The cgroup on the other hand stays around for the entire
+> > lifetime of the job. It is much easier to map a cgroup name to a
+> > particular job than it is to map a pid back to a job name,
+> > especially for offline post-processing.
+>
+> Note that this only works for "perf_event" cgroups (obviously) so if
+> users are still using cgroup-v1 interface, they need to have same
+> hierarchy for subsystem(s) want to profile with it.
+>
+>  * Changes from v4:
+>   - use CONFIG_CGROUP_PERF
+>   - move cgroup tree to perf_env
+>   - move cgroup fs utility function to tools/lib/api/fs
+>   - use a local buffer and check its size for cgroup systhesis
+>
+>  * Changes from v3:
+>   - staticize perf_event_cgroup()
+>   - fix sample parsing test
+>
+>  * Changes from v2:
+>   - remove path_len from cgroup_event
+>   - bail out if kernel doesn't support cgroup sampling
+>   - add some description in the Kconfig
+>
+>  * Changes from v1:
+>   - use new cgroup id (= file handle)
+>
+> The code is available at perf/cgroup-v5 branch in
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+>
+> The testing result looks something like this:
+>
+>   [root@qemu build]# ./perf record --all-cgroups ./cgtest
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.009 MB perf.data (150 samples) ]
+>
+>   [root@qemu build]# ./perf report -s cgroup,comm --stdio
+>   # To display the perf.data header info, please use --header/--header-only options.
+>   #
+>   #
+>   # Total Lost Samples: 0
+>   #
+>   # Samples: 150  of event 'cpu-clock:pppH'
+>   # Event count (approx.): 37500000
+>   #
+>   # Overhead  cgroup      Command
+>   # ........  ..........  .......
+>   #
+>       32.00%  /sub/cgrp2  looper2
+>       28.00%  /sub/cgrp1  looper1
+>       25.33%  /sub        looper0
+>        4.00%  /           cgtest
+>        4.00%  /sub        cgtest
+>        3.33%  /sub/cgrp2  cgtest
+>        2.67%  /sub/cgrp1  cgtest
+>        0.67%  /           looper0
+>
+>
+> The test program (cgtest) follows.
+>
+> Thanks,
+> Namhyung
+>
+>
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Li Zefan <lizefan@huawei.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+>
+>
+> -------8<-----------------------------------------8<----------------
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <unistd.h>
+> #include <fcntl.h>
+> #include <sched.h>
+> #include <errno.h>
+> #include <sys/stat.h>
+> #include <sys/wait.h>
+> #include <sys/prctl.h>
+> #include <sys/mount.h>
+>
+> char cgbase[] = "/sys/fs/cgroup/perf_event";
+>
+> void mkcgrp(char *name) {
+>   char buf[256];
+>
+>   snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+>   if (mkdir(buf, 0755) < 0)
+>     perror("mkdir");
+> }
+>
+> void rmcgrp(char *name) {
+>   char buf[256];
+>
+>   snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+>   if (rmdir(buf) < 0)
+>     perror("rmdir");
+> }
+>
+> void setcgrp(char *name) {
+>   char buf[256];
+>   int fd;
+>
+>   snprintf(buf, sizeof(buf), "%s%s/tasks", cgbase, name);
+>
+>   fd = open(buf, O_WRONLY);
+>   if (fd > 0) {
+>     if (write(fd, "0\n", 2) != 2)
+>       perror("write");
+>     close(fd);
+>   }
+> }
+>
+> void create_sub_cgroup(int idx) {
+>   char buf[128];
+>
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   mkcgrp(buf);
+> }
+>
+> void remove_sub_cgroup(int idx) {
+>   char buf[128];
+>
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   rmcgrp(buf);
+> }
+>
+> void set_sub_cgroup(int idx) {
+>   char buf[128];
+>
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   setcgrp(buf);
+> }
+>
+> void set_task_name(int idx) {
+>   char buf[16];
+>
+>   snprintf(buf, sizeof(buf), "looper%d", idx);
+>   prctl(PR_SET_NAME, buf, 0, 0, 0);
+> }
+>
+> void loop(unsigned max) {
+>   volatile unsigned int count = 1;
+>
+>   while (count++ != max) {
+>     asm volatile ("pause");
+>   }
+> }
+>
+> void worker(int idx, unsigned cnt, int new_ns) {
+>   int oldns;
+>
+>   create_sub_cgroup(idx);
+>   set_sub_cgroup(idx);
+>
+>   if (new_ns) {
+>     if (unshare(CLONE_NEWCGROUP) < 0)
+>       perror("unshare");
+>
+> #if 0  /* FIXME */
+>     if (unshare(CLONE_NEWNS) < 0)
+>       perror("unshare");
+>
+>     if (mount("none", "/sys", NULL, MS_REMOUNT | MS_REC | MS_SLAVE, NULL) < 0)
+>       perror("mount --make-rslave");
+>
+>     sleep(1);
+>     if (umount("/sys/fs/cgroup/perf_event") < 0)
+>       perror("umount");
+>
+>     if (mount("cgroup", "/sys/fs/cgroup/perf_event", "cgroup",
+>               MS_NODEV | MS_NOEXEC | MS_NOSUID, "perf_event") < 0)
+>       perror("mount again");
+> #endif
+>   }
+>
+>   if (fork() == 0) {
+>     set_task_name(idx);
+>     loop(cnt);
+>     exit(0);
+>   }
+>   wait(NULL);
+> }
+>
+> int main(int argc, char *argv[])
+> {
+>   int i, nr = 2;
+>   int new_ns = 1;
+>   unsigned cnt = 1000000;
+>   int fd;
+>
+>   if (argc > 1)
+>     nr = atoi(argv[1]);
+>   if (argc > 2)
+>     cnt = atoi(argv[2]);
+>   if (argc > 3)
+>     new_ns = atoi(argv[3]);
+>
+>   mkcgrp("/sub");
+>   setcgrp("/sub");
+>
+>   for (i = 0; i < nr; i++) {
+>     if (fork() == 0) {
+>       worker(i+1, cnt, new_ns);
+>       exit(0);
+>     }
+>   }
+>
+>   set_task_name(0);
+>   loop(cnt);
+>
+>   for (i = 0; i < nr; i++)
+>     wait(NULL);
+>
+>   for (i = 0; i < nr; i++)
+>     remove_sub_cgroup(i+1);
+>
+>   setcgrp("/");
+>   rmcgrp("/sub");
+>
+>   return 0;
+> }
+> -------8<-----------------------------------------8<----------------
+>
+>
+> Namhyung Kim (10):
+>   perf/core: Add PERF_RECORD_CGROUP event
+>   perf/core: Add PERF_SAMPLE_CGROUP feature
+>   tools lib api fs: Move cgroupsfs__mountpoint()
+>   perf tools: Basic support for CGROUP event
+>   perf tools: Maintain cgroup hierarchy
+>   perf report: Add 'cgroup' sort key
+>   perf record: Support synthesizing cgroup events
+>   perf record: Add --all-cgroups option
+>   perf top: Add --all-cgroups option
+>   perf script: Add --show-cgroup-events option
+>
+>  include/linux/perf_event.h                |   1 +
+>  include/uapi/linux/perf_event.h           |  16 ++-
+>  init/Kconfig                              |   3 +-
+>  kernel/events/core.c                      | 133 ++++++++++++++++++++
+>  tools/include/uapi/linux/perf_event.h     |  16 ++-
+>  tools/lib/api/fs/Build                    |   1 +
+>  tools/lib/api/fs/cgroup.c                 |  67 ++++++++++
+>  tools/lib/api/fs/fs.h                     |   2 +
+>  tools/lib/perf/include/perf/event.h       |   7 ++
+>  tools/perf/Documentation/perf-record.txt  |   5 +-
+>  tools/perf/Documentation/perf-report.txt  |   1 +
+>  tools/perf/Documentation/perf-script.txt  |   3 +
+>  tools/perf/Documentation/perf-top.txt     |   4 +
+>  tools/perf/builtin-diff.c                 |   1 +
+>  tools/perf/builtin-record.c               |  10 ++
+>  tools/perf/builtin-report.c               |   1 +
+>  tools/perf/builtin-script.c               |  41 +++++++
+>  tools/perf/builtin-top.c                  |   9 ++
+>  tools/perf/tests/sample-parsing.c         |   6 +-
+>  tools/perf/util/cgroup.c                  | 143 +++++++++++++---------
+>  tools/perf/util/cgroup.h                  |  18 ++-
+>  tools/perf/util/env.c                     |   2 +
+>  tools/perf/util/env.h                     |   6 +
+>  tools/perf/util/event.c                   |  19 +++
+>  tools/perf/util/event.h                   |   6 +
+>  tools/perf/util/evsel.c                   |  17 ++-
+>  tools/perf/util/evsel.h                   |   1 +
+>  tools/perf/util/hist.c                    |  12 ++
+>  tools/perf/util/hist.h                    |   1 +
+>  tools/perf/util/machine.c                 |  19 +++
+>  tools/perf/util/machine.h                 |   3 +
+>  tools/perf/util/perf_event_attr_fprintf.c |   2 +
+>  tools/perf/util/record.h                  |   1 +
+>  tools/perf/util/session.c                 |   4 +
+>  tools/perf/util/sort.c                    |  37 ++++++
+>  tools/perf/util/sort.h                    |   2 +
+>  tools/perf/util/synthetic-events.c        | 121 ++++++++++++++++++
+>  tools/perf/util/synthetic-events.h        |   1 +
+>  tools/perf/util/tool.h                    |   2 +
+>  39 files changed, 671 insertions(+), 73 deletions(-)
+>  create mode 100644 tools/lib/api/fs/cgroup.c
+>
+> --
+> 2.25.0.265.gbab2e86ba0-goog
+>
