@@ -1,53 +1,31 @@
-From: Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH] perf script: add flamegraph.py script
-Date: Tue, 24 Mar 2020 11:16:41 -0500
-Message-ID: <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
-References: <20200320151355.66302-1-agerstmayr@redhat.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
+Date: Tue, 24 Mar 2020 12:34:44 -0400
+Message-ID: <20200324163444.GA162390@mtj.duckdns.org>
+References: <20200224043749.69466-1-namhyung@kernel.org>
+ <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200320151355.66302-1-agerstmayr@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Gerstmayr <agerstmayr@redhat.com>, linux-perf-users@vger.kernel.org
-Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 3/20/20 10:13 AM, Andreas Gerstmayr wrote:
-> This script works in tandem with d3-flame-graph to generate flame graphs
-> from perf. It supports two output formats: JSON and HTML (the default).
-> The HTML format will look for a standalone d3-flame-graph template file in
-> /usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the collected
-> stacks.
+On Mon, Mar 23, 2020 at 08:58:04AM +0900, Namhyung Kim wrote:
+> Hello Peter, Tejun and folks.
 > 
-> Usage:
-> 
->     perf record -a -g -F 99 sleep 60
->     perf script report flamegraph
+> Do you have any other comments on the kernel side?
+> If not, can I get your Ack?
 
-On Ubuntu 19.10, where python 2.7 is still the default, I get:
+Everything looks good from cgroup side. I think I acked all cgroup parts already
+but if not please feel free to add
 
-$ perf script report flamegraph
-  File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 46
-    print(f"Flame Graph template {self.args.template} does not " +
-                                                               ^
-SyntaxError: invalid syntax
-Error running python script /usr/libexec/perf-core/scripts/python/flamegraph.py
+ Acked-by: Tejun Heo <tj@kernel.org>
 
-Installing libpython3-dev doesn't help.
+Thanks.
 
-$ perf script -s lang
-
-Scripting language extensions (used in perf script -s [spec:]script.[spec]):
-
-  Perl                                       [Perl]
-  pl                                         [Perl]
-  Python                                     [Python]
-  py                                         [Python]
-
-Should there be a python3 in that list?
-
-Thanks,
-
-Kim
+-- 
+tejun
