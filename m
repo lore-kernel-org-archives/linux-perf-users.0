@@ -1,7 +1,7 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-Date: Tue, 24 Mar 2020 11:25:57 +0100
-Message-ID: <20200324102557.GN1534489@krava>
+Date: Tue, 24 Mar 2020 11:26:20 +0100
+Message-ID: <20200324102620.GO1534489@krava>
 References: <20200323235846.104937-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -17,36 +17,26 @@ On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
 
 SNIP
 
-> +		/* no event */
-> +		if (*q == '\0')
-> +			continue;
-> +
-> +		memset(&attr, 0, sizeof(attr));
-> +		event_attr_init(&attr);
-> +
-> +		ret = parse_libpfm_event(q, &attr);
-> +		if (ret != PFM_SUCCESS) {
-> +			fprintf(stderr, "failed to parse event %s : %s\n", str, pfm_strerror(ret));
-> +			goto error;
-> +		}
-> +
-> +		evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries);
-> +		if (evsel == NULL)
-> +			goto error;
-> +
-> +		evsel->name = strdup(q);
-> +		if (!evsel->name) {
-> +			evsel__delete(evsel);
-> +			goto error;
-> +		}
-> +		evsel->is_libpfm_event = true;
-> +
-> +		pmu = perf_pmu__find_by_type((unsigned)attr.type);
-> +		if (pmu)
-> +			evsel->core.own_cpus = perf_cpu_map__get(pmu->cpus);
+>  INTERACTIVE PROMPTING KEYS
+>  --------------------------
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 80e55e796be9..571aa6b1af40 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -999,6 +999,18 @@ ifdef LIBCLANGLLVM
+>    endif
+>  endif
+>  
+> +ifndef NO_LIBPFM4
+> +  ifeq ($(feature-libpfm4), 1)
+> +    CFLAGS += -DHAVE_LIBPFM
+> +    EXTLIBS += -lpfm
+> +    ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
+> +    $(call detected,CONFIG_LIBPFM4)
 
-I think you need to do more setup in here, like in __add_event function
-would be great to factor those bits from __add_event function and call
-it from here, so it's all in one place
+you don't use CONFIG_LIBPFM4
+
+but I was wondering if we should put it all in separate
+object like util/pfm.c to get rid of some of those ifdefs
 
 jirka
