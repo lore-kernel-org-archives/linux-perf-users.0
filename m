@@ -1,31 +1,54 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
-Date: Tue, 24 Mar 2020 12:34:44 -0400
-Message-ID: <20200324163444.GA162390@mtj.duckdns.org>
-References: <20200224043749.69466-1-namhyung@kernel.org>
- <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
+From: Andreas Gerstmayr <agerstmayr@redhat.com>
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+Date: Tue, 24 Mar 2020 20:05:15 +0100
+Message-ID: <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
+References: <20200320151355.66302-1-agerstmayr@redhat.com>
+ <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
+In-Reply-To: <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <a.p.zijlstra@chello.nl>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
+To: Kim Phillips <kim.phillips@amd.com>, linux-perf-users@vger.kernel.org
+Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Mar 23, 2020 at 08:58:04AM +0900, Namhyung Kim wrote:
-> Hello Peter, Tejun and folks.
+On 24.03.20 17:16, Kim Phillips wrote:
+> On Ubuntu 19.10, where python 2.7 is still the default, I get:
 > 
-> Do you have any other comments on the kernel side?
-> If not, can I get your Ack?
+> $ perf script report flamegraph
+>    File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 46
+>      print(f"Flame Graph template {self.args.template} does not " +
+>                                                                 ^
+> SyntaxError: invalid syntax
+> Error running python script /usr/libexec/perf-core/scripts/python/flamegraph.py
+> 
+> Installing libpython3-dev doesn't help.
 
-Everything looks good from cgroup side. I think I acked all cgroup parts already
-but if not please feel free to add
+Hmm, I was hoping that I can drop support for Python 2 in 2020 ;) (it's 
+officially EOL since Jan 1, 2020)
 
- Acked-by: Tejun Heo <tj@kernel.org>
+The Ubuntu 18.04 release notes mention that "Python 2 is no longer 
+installed by default. Python 3 has been updated to 3.6. This is the last 
+LTS release to include Python 2 in main." 
+(https://wiki.ubuntu.com/BionicBeaver/ReleaseNotes) - so imho it should 
+be fine to drop Python 2 support.
 
-Thanks.
+I tested it with a Ubuntu VM, and by default the Python bindings aren't 
+enabled in perf (see 
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1707875).
 
--- 
-tejun
+But you can compile perf and select Python 3:
+
+$ make -j2 PYTHON=python3
+
+in the perf source directory (libpython3-dev must be installed).
+
+
+Does this work for you?
+
+
+Cheers,
+Andreas
