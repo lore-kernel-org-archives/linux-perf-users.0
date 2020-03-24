@@ -1,80 +1,53 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-Date: Tue, 24 Mar 2020 08:29:53 -0700
-Message-ID: <CAP-5=fVi3dNzXE9R3HniSfD3w97dPebbuO1zUKoPXv4Wag-JDA@mail.gmail.com>
-References: <20200323235846.104937-1-irogers@google.com> <20200324102732.GR1534489@krava>
+From: Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+Date: Tue, 24 Mar 2020 11:16:41 -0500
+Message-ID: <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
+References: <20200320151355.66302-1-agerstmayr@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200324102732.GR1534489@krava>
+In-Reply-To: <20200320151355.66302-1-agerstmayr@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
+To: Andreas Gerstmayr <agerstmayr@redhat.com>, linux-perf-users@vger.kernel.org
+Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Mar 24, 2020 at 3:28 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
-> > This patch links perf with the libpfm4 library if it is available and
-> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-> > event tables for all processors supported by perf_events. It is a helper
-> > library that helps convert from a symbolic event name to the event
-> > encoding required by the underlying kernel interface. This
-> > library is open-source and available from: http://perfmon2.sf.net.
-> >
-> > With this patch, it is possible to specify full hardware events
-> > by name. Hardware filters are also supported. Events must be
-> > specified via the --pfm-events and not -e option. Both options
-> > are active at the same time and it is possible to mix and match:
-> >
-> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> >
-> > v5 is a rebase.
-> > v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-> >    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
-> >    missed in v3.
-> > v3 is against acme/perf/core and removes a diagnostic warning.
-> > v2 of this patch makes the --pfm-events man page documentation
-> > conditional on libpfm4 behing configured. It tidies some of the
-> > documentation and adds the feature test missed in the v1 patch.
-> >
-> > Author: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> I still have some conflicts, but I merged it by hand
->
->
->         patching file tools/build/Makefile.feature
->         patching file tools/build/feature/Makefile
->         patching file tools/build/feature/test-libpfm4.c
->         patching file tools/perf/Documentation/Makefile
->         patching file tools/perf/Documentation/perf-record.txt
->         patching file tools/perf/Documentation/perf-stat.txt
->         patching file tools/perf/Documentation/perf-top.txt
->         patching file tools/perf/Makefile.config
->         patching file tools/perf/Makefile.perf
->         Hunk #3 FAILED at 834.
->         1 out of 3 hunks FAILED -- saving rejects to file tools/perf/Makefile.perf.rej
->         patching file tools/perf/builtin-list.c
->         patching file tools/perf/builtin-record.c
->         patching file tools/perf/builtin-stat.c
->         patching file tools/perf/builtin-top.c
->         Hunk #2 succeeded at 1549 (offset 2 lines).
->         Hunk #3 succeeded at 1567 (offset 2 lines).
->         patching file tools/perf/util/evsel.c
->         patching file tools/perf/util/evsel.h
->         patching file tools/perf/util/parse-events.c
->         patching file tools/perf/util/parse-events.h
->         patching file tools/perf/util/pmu.c
->         Hunk #1 succeeded at 869 (offset 5 lines).
->         patching file tools/perf/util/pmu.h
->         Hunk #1 succeeded at 65 (offset 1 line).
->
-> jirka
+On 3/20/20 10:13 AM, Andreas Gerstmayr wrote:
+> This script works in tandem with d3-flame-graph to generate flame graphs
+> from perf. It supports two output formats: JSON and HTML (the default).
+> The HTML format will look for a standalone d3-flame-graph template file in
+> /usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the collected
+> stacks.
+> 
+> Usage:
+> 
+>     perf record -a -g -F 99 sleep 60
+>     perf script report flamegraph
 
-Thanks! I did a clone of acme's linux.git branch perf/core and applied
-the change with git am, then built and tested. Perhaps you are using a
-different tree or branch? Anyway, hopefully this is resolved now :-)
+On Ubuntu 19.10, where python 2.7 is still the default, I get:
 
-Thanks again,
-Ian
+$ perf script report flamegraph
+  File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 46
+    print(f"Flame Graph template {self.args.template} does not " +
+                                                               ^
+SyntaxError: invalid syntax
+Error running python script /usr/libexec/perf-core/scripts/python/flamegraph.py
+
+Installing libpython3-dev doesn't help.
+
+$ perf script -s lang
+
+Scripting language extensions (used in perf script -s [spec:]script.[spec]):
+
+  Perl                                       [Perl]
+  pl                                         [Perl]
+  Python                                     [Python]
+  py                                         [Python]
+
+Should there be a python3 in that list?
+
+Thanks,
+
+Kim
