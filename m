@@ -1,42 +1,71 @@
 From: Arnaldo Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
-Date: Tue, 24 Mar 2020 18:24:09 -0300
-Message-ID: <D53AD1F8-4B2B-4B30-BC72-59CCA7F0D268@gmail.com>
-References: <20200224043749.69466-1-namhyung@kernel.org> <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com> <20200324163444.GA162390@mtj.duckdns.org> <20200324201522.GP2452@worktop.programming.kicks-ass.net>
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+Date: Tue, 24 Mar 2020 18:26:29 -0300
+Message-ID: <BCB65A54-D7A4-40DC-8862-B98422ED107B@gmail.com>
+References: <20200320151355.66302-1-agerstmayr@redhat.com> <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com> <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200324201522.GP2452@worktop.programming.kicks-ass.net>
+In-Reply-To: <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Stephane Eranian <eranian@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Li Zefan <lizefan@huawei.com>, Johannes Weiner <hannes@cmpxchg.org>, Adrian Hunter <adrian.hunter@intel.com>
+To: Andreas Gerstmayr <agerstmayr@redhat.com>, Kim Phillips <kim.phillips@amd.com>, linux-perf-users@vger.kernel.org
+Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
 
 
-On March 24, 2020 5:15:22 PM GMT-03:00, Peter Zijlstra <peterz@infradead=
-=2Eorg> wrote:
->On Tue, Mar 24, 2020 at 12:34:44PM -0400, Tejun Heo wrote:
->> On Mon, Mar 23, 2020 at 08:58:04AM +0900, Namhyung Kim wrote:
->> > Hello Peter, Tejun and folks=2E
->> >=20
->> > Do you have any other comments on the kernel side?
->> > If not, can I get your Ack?
+On March 24, 2020 4:05:15 PM GMT-03:00, Andreas Gerstmayr <agerstmayr@redh=
+at=2Ecom> wrote:
+>On 24=2E03=2E20 17:16, Kim Phillips wrote:
+>> On Ubuntu 19=2E10, where python 2=2E7 is still the default, I get:
 >>=20
->> Everything looks good from cgroup side=2E I think I acked all cgroup
->parts already
->> but if not please feel free to add
+>> $ perf script report flamegraph
+>>    File "/usr/libexec/perf-core/scripts/python/flamegraph=2Epy", line
+>46
+>>      print(f"Flame Graph template {self=2Eargs=2Etemplate} does not " +
+>>                                                                 ^
+>> SyntaxError: invalid syntax
+>> Error running python script
+>/usr/libexec/perf-core/scripts/python/flamegraph=2Epy
 >>=20
->>  Acked-by: Tejun Heo <tj@kernel=2Eorg>
+>> Installing libpython3-dev doesn't help=2E
 >
->Yeah, looks good to me too=2E Since it's mostly userspace patches, will
->you route it Arnaldo?
+>Hmm, I was hoping that I can drop support for Python 2 in 2020 ;) (it's
 >
->Acked-by: Peter Zijlstra (Intel) <peterz@infradead=2Eorg>
+>officially EOL since Jan 1, 2020)
+>
+>The Ubuntu 18=2E04 release notes mention that "Python 2 is no longer=20
+>installed by default=2E Python 3 has been updated to 3=2E6=2E This is the
+>last=20
+>LTS release to include Python 2 in main=2E"=20
+>(https://wiki=2Eubuntu=2Ecom/BionicBeaver/ReleaseNotes) - so imho it shou=
+ld
+>
+>be fine to drop Python 2 support=2E
+>
+>I tested it with a Ubuntu VM, and by default the Python bindings aren't
+>
+>enabled in perf (see=20
+>https://bugs=2Elaunchpad=2Enet/ubuntu/+source/linux/+bug/1707875)=2E
+>
+>But you can compile perf and select Python 3:
+>
+>$ make -j2 PYTHON=3Dpython3
+>
 
-Thanks for the acks, I'll process it tomorrow, so tests passing it'll go I=
-ngo's way for 5=2E7 tomorrow=2E
+I plan to make this the default soon=2E
+
+- Arnaldo
+>in the perf source directory (libpython3-dev must be installed)=2E
+>
+>
+>Does this work for you?
+>
+>
+>Cheers,
+>Andreas
+
 --=20
 Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
