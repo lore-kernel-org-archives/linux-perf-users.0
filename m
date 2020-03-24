@@ -1,83 +1,80 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v6 09/11] perf/tools: Enhance JSON/metric infrastructure
- to handle "?"
-Date: Tue, 24 Mar 2020 14:11:41 +0100
-Message-ID: <20200324131141.GV1534489@krava>
-References: <20200320125406.30995-1-kjain@linux.ibm.com>
- <20200320125406.30995-10-kjain@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v5] perf tools: add support for libpfm4
+Date: Tue, 24 Mar 2020 08:29:53 -0700
+Message-ID: <CAP-5=fVi3dNzXE9R3HniSfD3w97dPebbuO1zUKoPXv4Wag-JDA@mail.gmail.com>
+References: <20200323235846.104937-1-irogers@google.com> <20200324102732.GR1534489@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200320125406.30995-10-kjain@linux.ibm.com>
+In-Reply-To: <20200324102732.GR1534489@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:24:04PM +0530, Kajol Jain wrote:
-> Patch enhances current metric infrastructure to handle "?" in the metric
-> expression. The "?" can be use for parameters whose value not known while
-> creating metric events and which can be replace later at runtime to
-> the proper value. It also add flexibility to create multiple events out
-> of single metric event added in json file.
-> 
-> Patch adds function 'arch_get_runtimeparam' which is a arch specific
-> function, returns the count of metric events need to be created.
-> By default it return 1.
-> 
-> This infrastructure needed for hv_24x7 socket/chip level events.
-> "hv_24x7" chip level events needs specific chip-id to which the
-> data is requested. Function 'arch_get_runtimeparam' implemented
-> in header.c which extract number of sockets from sysfs file
-> "sockets" under "/sys/devices/hv_24x7/interface/".
-> 
-> 
-> With this patch basically we are trying to create as many metric events
-> as define by runtime_param.
-> 
-> For that one loop is added in function 'metricgroup__add_metric',
-> which create multiple events at run time depend on return value of
-> 'arch_get_runtimeparam' and merge that event in 'group_list'.
-> 
-> To achieve that we are actually passing this parameter value as part of
-> `expr__find_other` function and changing "?" present in metric expression
-> with this value.
-> 
-> As in our json file, there gonna be single metric event, and out of
-> which we are creating multiple events, I am also merging this value
-> to the original metric name to specify parameter value.
-> 
-> For example,
-> command:# ./perf stat  -M PowerBUS_Frequency -C 0 -I 1000
-> #           time             counts unit events
->      1.000101867          9,356,933      hv_24x7/pm_pb_cyc,chip=0/ #      2.3 GHz  PowerBUS_Frequency_0
->      1.000101867          9,366,134      hv_24x7/pm_pb_cyc,chip=1/ #      2.3 GHz  PowerBUS_Frequency_1
->      2.000314878          9,365,868      hv_24x7/pm_pb_cyc,chip=0/ #      2.3 GHz  PowerBUS_Frequency_0
->      2.000314878          9,366,092      hv_24x7/pm_pb_cyc,chip=1/ #      2.3 GHz  PowerBUS_Frequency_1
-> 
-> So, here _0 and _1 after PowerBUS_Frequency specify parameter value.
-> 
-> As after adding this to group_list, again we call expr__parse
-> in 'generic_metric' function present in util/stat-display.c.
-> By this time again we need to pass this parameter value. So, now to get this value
-> actually I am trying to extract it from metric name itself. Because
-> otherwise it gonna point to last updated value present in runtime_param.
-> And gonna match for that value only.
+On Tue, Mar 24, 2020 at 3:28 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
+> > This patch links perf with the libpfm4 library if it is available and
+> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> > event tables for all processors supported by perf_events. It is a helper
+> > library that helps convert from a symbolic event name to the event
+> > encoding required by the underlying kernel interface. This
+> > library is open-source and available from: http://perfmon2.sf.net.
+> >
+> > With this patch, it is possible to specify full hardware events
+> > by name. Hardware filters are also supported. Events must be
+> > specified via the --pfm-events and not -e option. Both options
+> > are active at the same time and it is possible to mix and match:
+> >
+> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> >
+> > v5 is a rebase.
+> > v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+> >    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+> >    missed in v3.
+> > v3 is against acme/perf/core and removes a diagnostic warning.
+> > v2 of this patch makes the --pfm-events man page documentation
+> > conditional on libpfm4 behing configured. It tidies some of the
+> > documentation and adds the feature test missed in the v1 patch.
+> >
+> > Author: Stephane Eranian <eranian@google.com>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> I still have some conflicts, but I merged it by hand
+>
+>
+>         patching file tools/build/Makefile.feature
+>         patching file tools/build/feature/Makefile
+>         patching file tools/build/feature/test-libpfm4.c
+>         patching file tools/perf/Documentation/Makefile
+>         patching file tools/perf/Documentation/perf-record.txt
+>         patching file tools/perf/Documentation/perf-stat.txt
+>         patching file tools/perf/Documentation/perf-top.txt
+>         patching file tools/perf/Makefile.config
+>         patching file tools/perf/Makefile.perf
+>         Hunk #3 FAILED at 834.
+>         1 out of 3 hunks FAILED -- saving rejects to file tools/perf/Makefile.perf.rej
+>         patching file tools/perf/builtin-list.c
+>         patching file tools/perf/builtin-record.c
+>         patching file tools/perf/builtin-stat.c
+>         patching file tools/perf/builtin-top.c
+>         Hunk #2 succeeded at 1549 (offset 2 lines).
+>         Hunk #3 succeeded at 1567 (offset 2 lines).
+>         patching file tools/perf/util/evsel.c
+>         patching file tools/perf/util/evsel.h
+>         patching file tools/perf/util/parse-events.c
+>         patching file tools/perf/util/parse-events.h
+>         patching file tools/perf/util/pmu.c
+>         Hunk #1 succeeded at 869 (offset 5 lines).
+>         patching file tools/perf/util/pmu.h
+>         Hunk #1 succeeded at 65 (offset 1 line).
+>
+> jirka
 
-so why can't we pass that param as integer value through the metric objects?
+Thanks! I did a clone of acme's linux.git branch perf/core and applied
+the change with git am, then built and tested. Perhaps you are using a
+different tree or branch? Anyway, hopefully this is resolved now :-)
 
-it get's created in metricgroup__add_metric_param:
-  - as struct egroup *eg
-  - we can add egroup::param and store the param value there
-
-then in metricgroup__setup_events it moves to:
-  - struct metric_expr *expr
-  - we can add metric_expr::param to keep the param
-
-then in perf_stat__print_shadow_stats there's:
-  - struct metric_expr *mexp loop
-  - calling generic_metric metric - we could call it with mexp::param
-  - and pass the param to expr__parse
-
-jirka
+Thanks again,
+Ian
