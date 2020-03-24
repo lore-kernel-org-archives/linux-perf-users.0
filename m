@@ -1,7 +1,7 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-Date: Tue, 24 Mar 2020 11:26:20 +0100
-Message-ID: <20200324102620.GO1534489@krava>
+Date: Tue, 24 Mar 2020 11:26:48 +0100
+Message-ID: <20200324102648.GP1534489@krava>
 References: <20200323235846.104937-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -17,26 +17,29 @@ On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
 
 SNIP
 
->  INTERACTIVE PROMPTING KEYS
->  --------------------------
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 80e55e796be9..571aa6b1af40 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -999,6 +999,18 @@ ifdef LIBCLANGLLVM
->    endif
->  endif
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 7ac0d8088565..573072d32545 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -67,7 +67,9 @@ FILES=                                          \
+>           test-llvm.bin				\
+>           test-llvm-version.bin			\
+>           test-libaio.bin			\
+> -         test-libzstd.bin
+> +         test-libzstd.bin			\
+> +         test-libpfm4.bin
+> +
 >  
-> +ifndef NO_LIBPFM4
-> +  ifeq ($(feature-libpfm4), 1)
-> +    CFLAGS += -DHAVE_LIBPFM
-> +    EXTLIBS += -lpfm
-> +    ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
-> +    $(call detected,CONFIG_LIBPFM4)
+>  FILES := $(addprefix $(OUTPUT),$(FILES))
+>  
+> @@ -321,6 +323,9 @@ $(OUTPUT)test-libaio.bin:
+>  $(OUTPUT)test-libzstd.bin:
+>  	$(BUILD) -lzstd
+>  
+> +$(OUTPUT)test-libpfm4.bin:
+> +	$(BUILD) -lpfm
 
-you don't use CONFIG_LIBPFM4
+also please move the libpfm4 detection into separated patch
 
-but I was wondering if we should put it all in separate
-object like util/pfm.c to get rid of some of those ifdefs
-
+thanks,
 jirka
