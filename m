@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 20/24] perf pmu: Add is_pmu_core()
-Date: Wed, 25 Mar 2020 09:41:20 -0300
-Message-ID: <20200325124124.32648-21-acme@kernel.org>
+Subject: [PATCH 21/24] perf pmu: Make pmu_uncore_alias_match() public
+Date: Wed, 25 Mar 2020 09:41:21 -0300
+Message-ID: <20200325124124.32648-22-acme@kernel.org>
 References: <20200325124124.32648-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,8 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: John Garry <john.garry@huawei.com>
 
-Add a function to decide whether a PMU is a core PMU.
+The perf pmu-events test will want to use pmu_uncore_alias_match(), so
+make it public.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
@@ -27,40 +28,37 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>
 Cc: linuxarm@huawei.com
-Link: http://lore.kernel.org/lkml/1584442939-8911-6-git-send-email-john.garry@huawei.com
+Link: http://lore.kernel.org/lkml/1584442939-8911-7-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 5 +++++
+ tools/perf/util/pmu.c | 2 +-
  tools/perf/util/pmu.h | 1 +
- 2 files changed, 6 insertions(+)
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index c616a06a34a8..55129d09f19d 100644
+index 55129d09f19d..616fbda7c3fc 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -1400,6 +1400,11 @@ static void wordwrap(char *s, int start, int max, int corr)
- 	}
+@@ -698,7 +698,7 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
+ 	return map;
  }
  
-+bool is_pmu_core(const char *name)
-+{
-+	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
-+}
-+
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
- 			bool long_desc, bool details_flag, bool deprecated)
+-static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
++bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
  {
+ 	char *tmp = NULL, *tok, *str;
+ 	bool res;
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 0b4a0efae38e..b756946ae78d 100644
+index b756946ae78d..5fb3f16828df 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -88,6 +88,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
+@@ -103,6 +103,7 @@ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
+ 			     struct pmu_events_map *map);
  
- struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
+ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
++bool pmu_uncore_alias_match(const char *pmu_name, const char *name);
  
-+bool is_pmu_core(const char *name);
- void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
- 		      bool long_desc, bool details_flag,
- 		      bool deprecated);
+ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+ 
 -- 
 2.21.1
