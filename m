@@ -1,207 +1,95 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/24] perf metricgroup: Fix printing event names of metric group with multiple events incase of overlapping events
-Date: Wed, 25 Mar 2020 09:41:10 -0300
-Message-ID: <20200325124124.32648-11-acme@kernel.org>
+Subject: [PATCH 11/24] perf vendor events amd: Restrict model detection for zen1 based processors
+Date: Wed, 25 Mar 2020 09:41:11 -0300
+Message-ID: <20200325124124.32648-12-acme@kernel.org>
 References: <20200325124124.32648-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200325124124.32648-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Kajol Jain <kjain@linux.ibm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Vijay Thakkar <vijaythakkar@me.com>, Kim Phillips <kim.phillips@amd.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Jon Grimm <jon.grimm@amd.com>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Kajol Jain <kjain@linux.ibm.com>
+From: Vijay Thakkar <vijaythakkar@me.com>
 
-Commit f01642e4912b ("perf metricgroup: Support multiple events for
-metricgroup") introduced support for multiple events in a metric group.
-But with the current upstream, metric events names are not printed
-properly incase we try to run multiple metric groups with overlapping
-event.
+This patch changes the previous blanket detection of AMD Family 17h
+processors to be more specific to Zen1 core based products only by
+replacing model detection regex pattern [[:xdigit:]]+ with
+([12][0-9A-F]|[0-9A-F]), restricting to models 0 though 2f only.
 
-With current upstream version, incase of overlapping metric events issue
-is, we always start our comparision logic from start.  So, the events
-which already matched with some metric group also take part in
-comparision logic. Because of that when we have overlapping events, we
-end up matching current metric group event with already matched one.
+This change is required to allow for the addition of separate PMU events
+for Zen2 core based models in the following patches as those belong to
+family 17h but have different PMCs. Current PMU events directory has
+also been renamed to "amdzen1" from "amdfam17h" to reflect this
+specificity.
 
-For example, in skylake machine we have metric event CoreIPC and
-Instructions. Both of them need 'inst_retired.any' event value.  As
-events in Instructions is subset of events in CoreIPC, they endup in
-pointing to same 'inst_retired.any' value.
+Note that although this change does not break PMU counters for existing
+zen1 based systems, it does disable the current set of counters for zen2
+based systems. Counters for zen2 have been added in the following
+patches in this patchset.
 
-In skylake platform:
-
-command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
-
- Performance counter stats for 'CPU(s) 0':
-
-     1,254,992,790      inst_retired.any          # 1254992790.0
-                                                    Instructions
-                                                  #      1.3 CoreIPC
-       977,172,805      cycles
-     1,254,992,756      inst_retired.any
-
-       1.000802596 seconds time elapsed
-
-command:# sudo ./perf stat -M UPI,IPC sleep 1
-
-   Performance counter stats for 'sleep 1':
-           948,650      uops_retired.retire_slots
-           866,182      inst_retired.any          #      0.7 IPC
-           866,182      inst_retired.any
-         1,175,671      cpu_clk_unhalted.thread
-
-Patch fixes the issue by adding a new bool pointer 'evlist_used' to keep
-track of events which already matched with some group by setting it
-true.  So, we skip all used events in list when we start comparision
-logic.  Patch also make some changes in comparision logic, incase we get
-a match miss, we discard the whole match and start again with first
-event id in metric event.
-
-With this patch:
-
-In skylake platform:
-
-command:# ./perf stat -M CoreIPC,Instructions  -C 0 sleep 1
-
- Performance counter stats for 'CPU(s) 0':
-
-         3,348,415      inst_retired.any          #      0.3 CoreIPC
-        11,779,026      cycles
-         3,348,381      inst_retired.any          # 3348381.0
-                                                    Instructions
-
-       1.001649056 seconds time elapsed
-
-command:# ./perf stat -M UPI,IPC sleep 1
-
- Performance counter stats for 'sleep 1':
-
-         1,023,148      uops_retired.retire_slots #      1.1 UPI
-           924,976      inst_retired.any
-           924,976      inst_retired.any          #      0.6 IPC
-         1,489,414      cpu_clk_unhalted.thread
-
-       1.003064672 seconds time elapsed
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Vijay Thakkar <vijaythakkar@me.com>
+Acked-by: Kim Phillips <kim.phillips@amd.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Jon Grimm <jon.grimm@amd.com>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200221101121.28920-1-kjain@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20200318190002.307290-2-vijaythakkar@me.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/metricgroup.c | 49 +++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 19 deletions(-)
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/branch.json | 0
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json  | 0
+ tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json | 0
+ .../arch/x86/{amdfam17h => amdzen1}/floating-point.json         | 0
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json | 0
+ .../perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json  | 0
+ tools/perf/pmu-events/arch/x86/mapfile.csv                      | 2 +-
+ 7 files changed, 1 insertion(+), 1 deletion(-)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/branch.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/cache.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/core.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/floating-point.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/memory.json (100%)
+ rename tools/perf/pmu-events/arch/x86/{amdfam17h => amdzen1}/other.json (100%)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index c3a8c701609a..926449a7cdbf 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -95,13 +95,16 @@ struct egroup {
- static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				      const char **ids,
- 				      int idnum,
--				      struct evsel **metric_events)
-+				      struct evsel **metric_events,
-+				      bool *evlist_used)
- {
- 	struct evsel *ev;
--	int i = 0;
-+	int i = 0, j = 0;
- 	bool leader_found;
- 
- 	evlist__for_each_entry (perf_evlist, ev) {
-+		if (evlist_used[j++])
-+			continue;
- 		if (!strcmp(ev->name, ids[i])) {
- 			if (!metric_events[i])
- 				metric_events[i] = ev;
-@@ -109,22 +112,17 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			if (i == idnum)
- 				break;
- 		} else {
--			if (i + 1 == idnum) {
--				/* Discard the whole match and start again */
--				i = 0;
--				memset(metric_events, 0,
--				       sizeof(struct evsel *) * idnum);
--				continue;
--			}
--
--			if (!strcmp(ev->name, ids[i]))
--				metric_events[i] = ev;
--			else {
--				/* Discard the whole match and start again */
--				i = 0;
--				memset(metric_events, 0,
--				       sizeof(struct evsel *) * idnum);
--				continue;
-+			/* Discard the whole match and start again */
-+			i = 0;
-+			memset(metric_events, 0,
-+				sizeof(struct evsel *) * idnum);
-+
-+			if (!strcmp(ev->name, ids[i])) {
-+				if (!metric_events[i])
-+					metric_events[i] = ev;
-+				i++;
-+				if (i == idnum)
-+					break;
- 			}
- 		}
- 	}
-@@ -146,7 +144,10 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			    !strcmp(ev->name, metric_events[i]->name)) {
- 				ev->metric_leader = metric_events[i];
- 			}
-+			j++;
- 		}
-+		ev = metric_events[i];
-+		evlist_used[ev->idx] = true;
- 	}
- 
- 	return metric_events[0];
-@@ -162,6 +163,13 @@ static int metricgroup__setup_events(struct list_head *groups,
- 	int ret = 0;
- 	struct egroup *eg;
- 	struct evsel *evsel;
-+	bool *evlist_used;
-+
-+	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
-+	if (!evlist_used) {
-+		ret = -ENOMEM;
-+		return ret;
-+	}
- 
- 	list_for_each_entry (eg, groups, nd) {
- 		struct evsel **metric_events;
-@@ -172,7 +180,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 			break;
- 		}
- 		evsel = find_evsel_group(perf_evlist, eg->ids, eg->idnum,
--					 metric_events);
-+					 metric_events, evlist_used);
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
- 					eg->metric_name, eg->metric_expr);
-@@ -196,6 +204,9 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		expr->metric_events = metric_events;
- 		list_add(&expr->nd, &me->head);
- 	}
-+
-+	free(evlist_used);
-+
- 	return ret;
- }
- 
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/branch.json b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/branch.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/cache.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/core.json b/tools/perf/pmu-events/arch/x86/amdzen1/core.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/core.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/core.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json b/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/floating-point.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/memory.json b/tools/perf/pmu-events/arch/x86/amdzen1/memory.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/memory.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/amdfam17h/other.json b/tools/perf/pmu-events/arch/x86/amdzen1/other.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/amdfam17h/other.json
+rename to tools/perf/pmu-events/arch/x86/amdzen1/other.json
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 745ced083844..82a9db00125e 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -36,4 +36,4 @@ GenuineIntel-6-55-[56789ABCDEF],v1,cascadelakex,core
+ GenuineIntel-6-7D,v1,icelake,core
+ GenuineIntel-6-7E,v1,icelake,core
+ GenuineIntel-6-86,v1,tremontx,core
+-AuthenticAMD-23-[[:xdigit:]]+,v1,amdfam17h,core
++AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v1,amdzen1,core
 -- 
 2.21.1
