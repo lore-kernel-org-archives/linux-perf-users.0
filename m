@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/24] perf jevents: Support test events folder
-Date: Wed, 25 Mar 2020 09:41:17 -0300
-Message-ID: <20200325124124.32648-18-acme@kernel.org>
+Subject: [PATCH 15/24] perf tools: Unify a bit the build directory output
+Date: Wed, 25 Mar 2020 09:41:15 -0300
+Message-ID: <20200325124124.32648-16-acme@kernel.org>
 References: <20200325124124.32648-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,160 +9,101 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200325124124.32648-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, James Clark <james.clark@arm.com>, Joakim Zhang <qiangqing.zhang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, linuxarm@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-With the goal of supporting pmu-events test case, introduce support for
-a test events folder.
+Removing the extra 'SUBDIR' line from clean and doc build output.
+Because it's annoying.. ;-)
 
-These test events can be used for testing generation of pmu-event tables
-and alias creation for any arch.
+Before:
 
-When running the pmu-events test case, these test events will be used as
-the platform-agnostic events, so aliases can be created per-PMU and
-validated against known expected values.
-
-To support the test events, add a "testcpu" entry in pmu_events_map[].
-The pmu-events test will be able to lookup the events map for "testcpu",
-to verify the generated tables against expected values.
-
-The resultant generated pmu-events.c will now look like the following:
-
-  struct pmu_event pme_ampere_emag[] = {
-  {
-  	.name = "ldrex_spec",
-  	.event = "event=0x6c",
-  	.desc = "Exclusive operation spe...",
-  	.topic = "intrinsic",
-  	.long_desc = "Exclusive operation ...",
-  },
+  $ make clean
   ...
-  };
+  SUBDIR   Documentation
+  CLEAN    Documentation
 
-  struct pmu_event pme_test_cpu[] = {
-  {
-  	.name = "uncore_hisi_ddrc.flux_wcmd",
-  	.event = "event=0x2",
-  	.desc = "DDRC write commands. Unit: hisi_sccl,ddrc ",
-  	.topic = "uncore",
-  	.long_desc = "DDRC write commands",
-  	.pmu = "hisi_sccl,ddrc",
-  },
-  {
-  	.name = "unc_cbo_xsnp_response.miss_eviction",
-  	.event = "umask=0x81,event=0x22",
-  	.desc = "Unit: uncore_cbox A cross-core snoop resulted ...",
-  	.topic = "uncore",
-  	.long_desc = "A cross-core snoop resulted from L3 ...",
-  	.pmu = "uncore_cbox",
-  },
-  {
-  	.name = "eist_trans",
-  	.event = "umask=0x0,period=200000,event=0x3a",
-  	.desc = "Number of Enhanced Intel SpeedStep(R) ...",
-  	.topic = "other",
-  },
-  {
-  	.name = 0,
-  },
-  };
+After:
 
-  struct pmu_events_map pmu_events_map[] = {
+  $ make clean
   ...
-  {
-  	.cpuid = "0x00000000500f0000",
-  	.version = "v1",
-  	.type = "core",
-  	.table = pme_ampere_emag
-  },
-  ...
-  {
-  	.cpuid = "testcpu",
-  	.version = "v1",
-  	.type = "core",
-  	.table = pme_test_cpu,
-  },
-  {
-  	.cpuid = 0,
-  	.version = 0,
-  	.type = 0,
-  	.table = 0,
-  },
-  };
+  CLEAN    Documentation
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Before:
+
+  $ make doc
+  BUILD:   Doing 'make -j8' parallel build
+  SUBDIR   Documentation
+  ASCIIDOC perf-stat.html
+  ...
+
+After:
+
+  $ make doc
+  BUILD:   Doing 'make -j8' parallel build
+  ASCIIDOC perf-stat.html
+  ...
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: linuxarm@huawei.com
-Link: http://lore.kernel.org/lkml/1584442939-8911-3-git-send-email-john.garry@huawei.com
+Link: http://lore.kernel.org/lkml/20200318204522.1200981-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/pmu-events/jevents.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/perf/Makefile.perf | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 3c4236a5bad8..fa86c5f997cc 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -771,6 +771,19 @@ static void print_mapping_table_suffix(FILE *outfp)
- 	fprintf(outfp, "};\n");
- }
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 3eda9d4b88e7..a02aca9b21f4 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -231,6 +231,7 @@ TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
+ BPF_DIR         = $(srctree)/tools/lib/bpf/
+ SUBCMD_DIR      = $(srctree)/tools/lib/subcmd/
+ LIBPERF_DIR     = $(srctree)/tools/lib/perf/
++DOC_DIR         = $(srctree)/tools/perf/Documentation/
  
-+static void print_mapping_test_table(FILE *outfp)
-+{
-+	/*
-+	 * Print the terminating, NULL entry.
-+	 */
-+	fprintf(outfp, "{\n");
-+	fprintf(outfp, "\t.cpuid = \"testcpu\",\n");
-+	fprintf(outfp, "\t.version = \"v1\",\n");
-+	fprintf(outfp, "\t.type = \"core\",\n");
-+	fprintf(outfp, "\t.table = pme_test_cpu,\n");
-+	fprintf(outfp, "},\n");
-+}
-+
- static int process_mapfile(FILE *outfp, char *fpath)
- {
- 	int n = 16384;
-@@ -848,6 +861,7 @@ static int process_mapfile(FILE *outfp, char *fpath)
- 	}
+ # Set FEATURE_TESTS to 'all' so all possible feature checkers are executed.
+ # Without this setting the output feature dump file misses some features, for
+@@ -792,7 +793,6 @@ $(LIBSUBCMD): FORCE
+ 	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) $(OUTPUT)libsubcmd.a
  
- out:
-+	print_mapping_test_table(outfp);
- 	print_mapping_table_suffix(outfp);
- 	fclose(mapfp);
- 	free(line);
-@@ -1168,6 +1182,22 @@ int main(int argc, char *argv[])
- 		goto empty_map;
- 	}
+ $(LIBSUBCMD)-clean:
+-	$(call QUIET_CLEAN, libsubcmd)
+ 	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) clean
  
-+	sprintf(ldirname, "%s/test", start_dirname);
-+
-+	rc = nftw(ldirname, process_one_file, maxfds, 0);
-+	if (rc && verbose) {
-+		pr_info("%s: Error walking file tree %s rc=%d for test\n",
-+			prog, ldirname, rc);
-+		goto empty_map;
-+	} else if (rc < 0) {
-+		/* Make build fail */
-+		free_arch_std_events();
-+		ret = 1;
-+		goto out_free_mapfile;
-+	} else if (rc) {
-+		goto empty_map;
-+	}
-+
- 	if (close_table)
- 		print_events_table_suffix(eventsfp);
+ help:
+@@ -832,7 +832,7 @@ INSTALL_DOC_TARGETS += quick-install-doc quick-install-man quick-install-html
  
+ # 'make doc' should call 'make -C Documentation all'
+ $(DOC_TARGETS):
+-	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) $(@:doc=all)
++	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all)
+ 
+ TAG_FOLDERS= . ../lib ../include
+ TAG_FILES= ../../include/uapi/linux/perf_event.h
+@@ -959,7 +959,7 @@ install-python_ext:
+ 
+ # 'make install-doc' should call 'make -C Documentation install'
+ $(INSTALL_DOC_TARGETS):
+-	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) $(@:-doc=)
++	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:-doc=)
+ 
+ ### Cleaning rules
+ 
+@@ -1008,7 +1008,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)$(rename_flags_array) \
+ 		$(OUTPUT)$(arch_errno_name_array) \
+ 		$(OUTPUT)$(sync_file_range_arrays)
+-	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
++	$(call QUIET_CLEAN, Documentation) \
++	$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+ #
+ # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
 -- 
 2.21.1
