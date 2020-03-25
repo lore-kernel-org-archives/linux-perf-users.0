@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/24] perf pmu: Refactor pmu_add_cpu_aliases()
-Date: Wed, 25 Mar 2020 09:41:18 -0300
-Message-ID: <20200325124124.32648-19-acme@kernel.org>
+Subject: [PATCH 20/24] perf pmu: Add is_pmu_core()
+Date: Wed, 25 Mar 2020 09:41:20 -0300
+Message-ID: <20200325124124.32648-21-acme@kernel.org>
 References: <20200325124124.32648-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,9 +14,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: John Garry <john.garry@huawei.com>
 
-Create pmu_add_cpu_aliases_map() from pmu_add_cpu_aliases(), so the caller
-can pass the map; the pmu-events test would use this since there would
-be no CPUID matching to a mapfile there.
+Add a function to decide whether a PMU is a core PMU.
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
@@ -29,82 +27,40 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Will Deacon <will@kernel.org>
 Cc: linuxarm@huawei.com
-Link: http://lore.kernel.org/lkml/1584442939-8911-4-git-send-email-john.garry@huawei.com
+Link: http://lore.kernel.org/lkml/1584442939-8911-6-git-send-email-john.garry@huawei.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/pmu.c | 21 +++++++++++++--------
- tools/perf/util/pmu.h |  3 +++
- 2 files changed, 16 insertions(+), 8 deletions(-)
+ tools/perf/util/pmu.c | 5 +++++
+ tools/perf/util/pmu.h | 1 +
+ 2 files changed, 6 insertions(+)
 
 diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 8b99fd312aae..c616a06a34a8 100644
+index c616a06a34a8..55129d09f19d 100644
 --- a/tools/perf/util/pmu.c
 +++ b/tools/perf/util/pmu.c
-@@ -21,7 +21,6 @@
- #include "pmu.h"
- #include "parse-events.h"
- #include "header.h"
--#include "pmu-events/pmu-events.h"
- #include "string2.h"
- #include "strbuf.h"
- #include "fncache.h"
-@@ -744,16 +743,11 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
-  * to the current running CPU. Then, add all PMU events from that table
-  * as aliases.
-  */
--static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
-+void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
-+			     struct pmu_events_map *map)
- {
- 	int i;
--	struct pmu_events_map *map;
- 	const char *name = pmu->name;
--
--	map = perf_pmu__find_map(pmu);
--	if (!map)
--		return;
--
- 	/*
- 	 * Found a matching PMU events table. Create aliases
- 	 */
-@@ -788,6 +782,17 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+@@ -1400,6 +1400,11 @@ static void wordwrap(char *s, int start, int max, int corr)
  	}
  }
  
-+static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
++bool is_pmu_core(const char *name)
 +{
-+	struct pmu_events_map *map;
-+
-+	map = perf_pmu__find_map(pmu);
-+	if (!map)
-+		return;
-+
-+	pmu_add_cpu_aliases_map(head, pmu, map);
++	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
 +}
 +
- struct perf_event_attr * __weak
- perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet_flag,
+ 			bool long_desc, bool details_flag, bool deprecated)
  {
 diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 6737e3d5d568..0b4a0efae38e 100644
+index 0b4a0efae38e..b756946ae78d 100644
 --- a/tools/perf/util/pmu.h
 +++ b/tools/perf/util/pmu.h
-@@ -7,6 +7,7 @@
- #include <linux/perf_event.h>
- #include <stdbool.h>
- #include "parse-events.h"
-+#include "pmu-events/pmu-events.h"
+@@ -88,6 +88,7 @@ int perf_pmu__format_parse(char *dir, struct list_head *head);
  
- struct perf_evsel_config_term;
+ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
  
-@@ -97,6 +98,8 @@ int perf_pmu__scan_file(struct perf_pmu *pmu, const char *name, const char *fmt,
- int perf_pmu__test(void);
- 
- struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu);
-+void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
-+			     struct pmu_events_map *map);
- 
- struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
- 
++bool is_pmu_core(const char *name);
+ void print_pmu_events(const char *event_glob, bool name_only, bool quiet,
+ 		      bool long_desc, bool details_flag,
+ 		      bool deprecated);
 -- 
 2.21.1
