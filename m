@@ -1,9 +1,10 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 03/24] perf report: Print al_addr when symbol is not found
-Date: Wed, 25 Mar 2020 09:41:03 -0300
-Message-ID: <20200325124124.32648-4-acme@kernel.org>
+Subject: [PATCH 04/24] perf report: Support interactive annotation of code without symbols
+Date: Wed, 25 Mar 2020 09:41:04 -0300
+Message-ID: <20200325124124.32648-5-acme@kernel.org>
 References: <20200325124124.32648-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200325124124.32648-1-acme@kernel.org>
@@ -14,145 +15,104 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Jin Yao <yao.jin@linux.intel.com>
 
-For branch mode, if the symbol is not found, it prints
-the address.
+For perf report on stripped binaries it is currently impossible to do
+annotation. The annotation state is all tied to symbols, but there are
+either no symbols, or symbols are not covering all the code.
 
-For example, 0x0000555eee0365a0 in below output.
+We should support the annotation functionality even without symbols.
 
-  Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
-    17.55%  div      libc-2.27.so          [.] __random                             [.] __random
-     6.11%  div      div                   [.] 0x0000555eee0365a0                   [.] rand
-     6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000555eee036769
-     5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
-     5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
-     5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
-     5.38%  div      libc-2.27.so          [.] __random                             [.] rand
-     4.56%  div      libc-2.27.so          [.] __random                             [.] __random
-     4.49%  div      div                   [.] 0x0000555eee036779                   [.] 0x0000555eee0365ff
-     4.25%  div      div                   [.] 0x0000555eee0365fa                   [.] 0x0000555eee036760
-
-But it's not very easy to understand what the instructions
-are in the binary. So this patch uses the al_addr instead.
-
-With this patch, the output is
-
-  Overhead  Command  Source Shared Object  Source Symbol                            Target Symbol
-    17.55%  div      libc-2.27.so          [.] __random                             [.] __random
-     6.11%  div      div                   [.] 0x00000000000005a0                   [.] rand
-     6.10%  div      libc-2.27.so          [.] rand                                 [.] 0x0000000000000769
-     5.80%  div      libc-2.27.so          [.] __random_r                           [.] __random
-     5.72%  div      libc-2.27.so          [.] __random                             [.] __random_r
-     5.62%  div      libc-2.27.so          [.] __random_r                           [.] __random_r
-     5.38%  div      libc-2.27.so          [.] __random                             [.] rand
-     4.56%  div      libc-2.27.so          [.] __random                             [.] __random
-     4.49%  div      div                   [.] 0x0000000000000779                   [.] 0x00000000000005ff
-     4.25%  div      div                   [.] 0x00000000000005fa                   [.] 0x0000000000000760
-
-Now we can use objdump to dump the object starting from 0x5a0.
+This patch fakes a symbol and the symbol name is the string of address.
+After that, we just follow current annotation working flow.
 
 For example,
-objdump -d --start-address 0x5a0 div
 
-00000000000005a0 <rand@plt>:
- 5a0:   ff 25 2a 0a 20 00       jmpq   *0x200a2a(%rip)        # 200fd0 <__cxa_finalize@plt+0x200a20>
- 5a6:   68 02 00 00 00          pushq  $0x2
- 5ab:   e9 c0 ff ff ff          jmpq   570 <srand@plt-0x10>
- ...
+1. perf report
 
-Committer testing:
+  Overhead  Command  Shared Object     Symbol
+    20.67%  div      libc-2.27.so      [.] __random_r
+    17.29%  div      libc-2.27.so      [.] __random
+    10.59%  div      div               [.] 0x0000000000000628
+     9.25%  div      div               [.] 0x0000000000000612
+     6.11%  div      div               [.] 0x0000000000000645
 
-  [root@seventh ~]# perf record -a -b sleep 1
-  [root@seventh ~]# perf report --header-only | grep cpudesc
-  # cpudesc : Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz
-  [root@seventh ~]# perf evlist -v
-  cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: ANY
-  [root@seventh ~]#
+2. Select the line of "10.59%  div      div               [.] 0x0000000000000628" and ENTER.
 
-Before:
+  Annotate 0x0000000000000628
+  Zoom into div thread
+  Zoom into div DSO (use the 'k' hotkey to zoom directly into the kernel)
+  Browse map details
+  Run scripts for samples of symbol [0x0000000000000628]
+  Run scripts for all samples
+  Switch to another data file in PWD
+  Exit
 
-  [root@seventh ~]# perf report --stdio --dso libsystemd-shared-241.so | head -20
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'cycles'
-  # Event count (approx.): 2240
-  #
-  # Overhead  Command          Source Shared Object      Source Symbol           Target Symbol           Basic Block Cycles
-  # ........  ...............  ........................  ......................  ......................  ..................
-  #
-       0.13%  systemd-journal  libc-2.29.so              [.] cfree@GLIBC_2.2.5   [.] _int_free           1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00007fe406465c82  [.] 0x00007fe406465d80  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00007fe406465ded  [.] 0x00007fe406465c30  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00007fe406465e4e  [.] 0x00007fe406465de0  1
-       0.09%  systemd-journal  systemd-journald          [.] free@plt            [.] cfree@GLIBC_2.2.5   1
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           18
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           2
-       0.04%  systemd          libsystemd-shared-241.so  [.] bus_resolve@plt     [.] bus_resolve         204
-       0.04%  systemd          libsystemd-shared-241.so  [.] getpid_cached@plt   [.] getpid_cached       7
-  [root@seventh ~]#
+3. Select the "Annotate 0x0000000000000628" and ENTER.
 
-After:
+Percent│
+       │
+       │
+       │     Disassembly of section .text:
+       │
+       │     0000000000000628 <.text+0x68>:
+       │       divsd %xmm4,%xmm0
+       │       divsd %xmm3,%xmm1
+       │       movsd (%rsp),%xmm2
+       │       addsd %xmm1,%xmm0
+       │       addsd %xmm2,%xmm0
+       │       movsd %xmm0,(%rsp)
 
-  [root@seventh ~]# perf report --stdio --dso libsystemd-shared-241.so | head -20
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'cycles'
-  # Event count (approx.): 2240
-  #
-  # Overhead  Command          Source Shared Object      Source Symbol           Target Symbol           Basic Block Cycles
-  # ........  ...............  ........................  ......................  ......................  ..................
-  #
-       0.13%  systemd-journal  libc-2.29.so              [.] cfree@GLIBC_2.2.5   [.] _int_free           1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00000000000f7c82  [.] 0x00000000000f7d80  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00000000000f7ded  [.] 0x00000000000f7c30  1
-       0.09%  systemd          libsystemd-shared-241.so  [.] 0x00000000000f7e4e  [.] 0x00000000000f7de0  1
-       0.09%  systemd-journal  systemd-journald          [.] free@plt            [.] cfree@GLIBC_2.2.5   1
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           18
-       0.09%  systemd-journal  libc-2.29.so              [.] _int_free           [.] _int_free           2
-       0.04%  systemd          libsystemd-shared-241.so  [.] bus_resolve@plt     [.] bus_resolve         204
-       0.04%  systemd          libsystemd-shared-241.so  [.] getpid_cached@plt   [.] getpid_cached       7
-  [root@seventh ~]#
+Now we can see the dump of object starting from 0x628.
 
-Lets use -v to get full paths and then try objdump on the unresolved address:
+ v5:
+ ---
+ Remove the hotkey 'a' implementation from this patch. It
+ will be moved to a separate patch.
 
-  [root@seventh ~]# perf report -v --stdio --dso libsystemd-shared-241.so |& grep libsystemd-shared-241.so | tail -1
-     0.04% systemd-journal /usr/lib/systemd/libsystemd-shared-241.so 0x80c1a B [.] 0x0000000000080c1a 0x80a95 B [.] 0x0000000000080a95 61
-  [root@seventh ~]#
+ v4:
+ ---
+ 1. Support the hotkey 'a'. When we press 'a' on address,
+    now it supports the annotation.
 
-  [root@seventh ~]# objdump -d --start-address 0x00000000000f7d80 /usr/lib/systemd/libsystemd-shared-241.so | head -20
+ 2. Change the patch title from
+    "Support interactive annotation of code without symbols" to
+    "perf report: Support interactive annotation of code without symbols"
 
-  /usr/lib/systemd/libsystemd-shared-241.so:     file format elf64-x86-64
+ v3:
+ ---
+ Keep just the ANNOTATION_DUMMY_LEN, and remove the
+ opts->annotate_dummy_len since it's the "maybe in future
+ we will provide" feature.
 
-  Disassembly of section .text:
+ v2:
+ ---
+ Fix a crash issue when annotating an address in "unknown" object.
 
-  00000000000f7d80 <proc_cmdline_parse_given@@SD_SHARED+0x330>:
-     f7d80:	41 39 11             	cmp    %edx,(%r9)
-     f7d83:	0f 84 ff fe ff ff    	je     f7c88 <proc_cmdline_parse_given@@SD_SHARED+0x238>
-     f7d89:	4c 8d 05 97 09 0c 00 	lea    0xc0997(%rip),%r8        # 1b8727 <utf8_skip_data@@SD_SHARED+0x3147>
-     f7d90:	b9 49 00 00 00       	mov    $0x49,%ecx
-     f7d95:	48 8d 15 c9 f5 0b 00 	lea    0xbf5c9(%rip),%rdx        # 1b7365 <utf8_skip_data@@SD_SHARED+0x1d85>
-     f7d9c:	31 ff                	xor    %edi,%edi
-     f7d9e:	48 8d 35 9b ff 0b 00 	lea    0xbff9b(%rip),%rsi        # 1b7d40 <utf8_skip_data@@SD_SHARED+0x2760>
-     f7da5:	e8 a6 d6 f4 ff       	callq  45450 <log_assert_failed_realm@plt>
-     f7daa:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
-     f7db0:	41 56                	push   %r14
-     f7db2:	41 55                	push   %r13
-     f7db4:	41 54                	push   %r12
-     f7db6:	55                   	push   %rbp
-  [root@seventh ~]#
+ The steps to reproduce this issue:
 
-If we tried the the reported address before this patch:
+ perf record -e cycles:u ls
+ perf report
 
-  [root@seventh ~]# objdump -d --start-address 0x00007fe406465d80 /usr/lib/systemd/libsystemd-shared-241.so | head -20
+    75.29%  ls       ld-2.27.so        [.] do_lookup_x
+    23.64%  ls       ld-2.27.so        [.] __GI___tunables_init
+     1.04%  ls       [unknown]         [k] 0xffffffff85c01210
+     0.03%  ls       ld-2.27.so        [.] _start
 
-  /usr/lib/systemd/libsystemd-shared-241.so:     file format elf64-x86-64
+ When annotating 0xffffffff85c01210, the crash happens.
 
-  [root@seventh ~]#
+ v2 adds checking for ms->map in add_annotate_opt(). If the object is
+ "unknown", ms->map is NULL.
+
+Committer notes:
+
+Renamed new_annotate_sym() to symbol__new_unresolved().
+
+Use PRIx64 to fix this issue in some 32-bit arches:
+
+  ui/browsers/hists.c: In function 'symbol__new_unresolved':
+  ui/browsers/hists.c:2474:38: error: format '%lx' expects argument of type 'long unsigned int', but argument 5 has type 'u64' {aka 'long long unsigned int'} [-Werror=format=]
+    snprintf(name, sizeof(name), "%-#.*lx", BITS_PER_LONG / 4, addr);
+                                  ~~~~~~^                      ~~~~
+                                  %-#.*llx
 
 Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -162,35 +122,97 @@ Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200227043939.4403-2-yao.jin@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200227043939.4403-3-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/sort.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/hists.c | 43 +++++++++++++++++++++++++++++-----
+ tools/perf/util/annotate.h     |  1 +
+ 2 files changed, 38 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index ab0cfd790ad0..e860595576c2 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -869,7 +869,8 @@ static int hist_entry__sym_from_snprintf(struct hist_entry *he, char *bf,
- 	if (he->branch_info) {
- 		struct addr_map_symbol *from = &he->branch_info->from;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index f36dee499320..d0f9745856fd 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2465,13 +2465,41 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 	return 0;
+ }
  
--		return _hist_entry__sym_snprintf(&from->ms, from->addr, he->level, bf, size, width);
-+		return _hist_entry__sym_snprintf(&from->ms, from->al_addr,
-+						 he->level, bf, size, width);
- 	}
++static struct symbol *symbol__new_unresolved(u64 addr, struct map *map)
++{
++	struct annotated_source *src;
++	struct symbol *sym;
++	char name[64];
++
++	snprintf(name, sizeof(name), "%.*" PRIx64, BITS_PER_LONG / 4, addr);
++
++	sym = symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
++	if (sym) {
++		src = symbol__hists(sym, 1);
++		if (!src) {
++			symbol__delete(sym);
++			return NULL;
++		}
++
++		dso__insert_symbol(map->dso, sym);
++	}
++
++	return sym;
++}
++
+ static int
+ add_annotate_opt(struct hist_browser *browser __maybe_unused,
+ 		 struct popup_action *act, char **optstr,
+-		 struct map_symbol *ms)
++		 struct map_symbol *ms,
++		 u64 addr)
+ {
+-	if (ms->sym == NULL || ms->map->dso->annotate_warned ||
+-	    symbol__annotation(ms->sym)->src == NULL)
++	if (!ms->map || !ms->map->dso || ms->map->dso->annotate_warned)
++		return 0;
++
++	if (!ms->sym)
++		ms->sym = symbol__new_unresolved(addr, ms->map);
++
++	if (ms->sym == NULL || symbol__annotation(ms->sym)->src == NULL)
+ 		return 0;
  
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
-@@ -881,7 +882,8 @@ static int hist_entry__sym_to_snprintf(struct hist_entry *he, char *bf,
- 	if (he->branch_info) {
- 		struct addr_map_symbol *to = &he->branch_info->to;
+ 	if (asprintf(optstr, "Annotate %s", ms->sym->name) < 0)
+@@ -3219,17 +3247,20 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
+ 			nr_options += add_annotate_opt(browser,
+ 						       &actions[nr_options],
+ 						       &options[nr_options],
+-						       &bi->from.ms);
++						       &bi->from.ms,
++						       bi->from.al_addr);
+ 			if (bi->to.ms.sym != bi->from.ms.sym)
+ 				nr_options += add_annotate_opt(browser,
+ 							&actions[nr_options],
+ 							&options[nr_options],
+-							&bi->to.ms);
++							&bi->to.ms,
++							bi->to.al_addr);
+ 		} else {
+ 			nr_options += add_annotate_opt(browser,
+ 						       &actions[nr_options],
+ 						       &options[nr_options],
+-						       browser->selection);
++						       browser->selection,
++						       browser->he_selection->ip);
+ 		}
+ skip_annotation:
+ 		nr_options += add_thread_opt(browser, &actions[nr_options],
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 07c775938d46..2d88069d6428 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -74,6 +74,7 @@ bool ins__is_fused(struct arch *arch, const char *ins1, const char *ins2);
+ #define ANNOTATION__CYCLES_WIDTH 6
+ #define ANNOTATION__MINMAX_CYCLES_WIDTH 19
+ #define ANNOTATION__AVG_IPC_WIDTH 36
++#define ANNOTATION_DUMMY_LEN	256
  
--		return _hist_entry__sym_snprintf(&to->ms, to->addr, he->level, bf, size, width);
-+		return _hist_entry__sym_snprintf(&to->ms, to->al_addr,
-+						 he->level, bf, size, width);
- 	}
- 
- 	return repsep_snprintf(bf, size, "%-*.*s", width, width, "N/A");
+ struct annotation_options {
+ 	bool hide_src_code,
 -- 
 2.21.1
