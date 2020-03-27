@@ -1,7 +1,7 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v7 2/6] perf expr: Add expr_scanner_ctx object
-Date: Fri, 27 Mar 2020 15:55:24 +0530
-Message-ID: <20200327102528.4267-3-kjain@linux.ibm.com>
+Subject: [PATCH v7 3/6] perf/tools: Refactoring metricgroup__add_metric function
+Date: Fri, 27 Mar 2020 15:55:25 +0530
+Message-ID: <20200327102528.4267-4-kjain@linux.ibm.com>
 References: <20200327102528.4267-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,85 +12,97 @@ To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+This patch refactor metricgroup__add_metric function where
+some part of it move to function metricgroup__add_metric_param.
+No logic change.
 
-Adding expr_scanner_ctx object to hold user data
-for the expr scanner. Currently it holds only
-start_token, Kajol Jain will use it to hold 24x7
-runtime param.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 ---
- tools/perf/util/expr.c |  6 ++++--
- tools/perf/util/expr.h |  4 ++++
- tools/perf/util/expr.l | 10 +++++-----
- 3 files changed, 13 insertions(+), 7 deletions(-)
+ tools/perf/util/metricgroup.c | 61 +++++++++++++++++++++--------------
+ 1 file changed, 36 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c8ccc548a585..c3382d58cf40 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -3,7 +3,6 @@
- #include <assert.h>
- #include "expr.h"
- #include "expr-bison.h"
--#define YY_EXTRA_TYPE int
- #include "expr-flex.h"
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 926449a7cdbf..b905eaa907a7 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -485,6 +485,40 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
+ 	return false;
+ }
  
- #ifdef PARSER_DEBUG
-@@ -30,11 +29,14 @@ static int
- __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 	      int start)
- {
-+	struct expr_scanner_ctx scanner_ctx = {
-+		.start_token = start,
-+	};
- 	YY_BUFFER_STATE buffer;
- 	void *scanner;
- 	int ret;
- 
--	ret = expr_lex_init_extra(start, &scanner);
-+	ret = expr_lex_init_extra(&scanner_ctx, &scanner);
- 	if (ret)
- 		return ret;
- 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index b9e53f2b5844..0938ad166ece 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -15,6 +15,10 @@ struct expr_parse_ctx {
- 	struct expr_parse_id ids[MAX_PARSE_ID];
- };
- 
-+struct expr_scanner_ctx {
-+	int start_token;
-+};
++static int __metricgroup__add_metric(struct strbuf *events,
++			struct list_head *group_list, struct pmu_event *pe)
++{
 +
- void expr__ctx_init(struct expr_parse_ctx *ctx);
- void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
- int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index eaad29243c23..2582c2464938 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -76,13 +76,13 @@ sym		[0-9a-zA-Z_\.:@]+
- symbol		{spec}*{sym}*{spec}*{sym}*
++	const char **ids;
++	int idnum;
++	struct egroup *eg;
++	int ret = -EINVAL;
++
++	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
++		return ret;
++
++	if (events->len > 0)
++		strbuf_addf(events, ",");
++
++	if (metricgroup__has_constraint(pe))
++		metricgroup__add_metric_non_group(events, ids, idnum);
++	else
++		metricgroup__add_metric_weak_group(events, ids, idnum);
++
++	eg = malloc(sizeof(*eg));
++	if (!eg)
++		return -ENOMEM;
++
++	eg->ids = ids;
++	eg->idnum = idnum;
++	eg->metric_name = pe->metric_name;
++	eg->metric_expr = pe->metric_expr;
++	eg->metric_unit = pe->unit;
++	list_add_tail(&eg->nd, group_list);
++
++	return 0;
++}
++
+ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				   struct list_head *group_list)
+ {
+@@ -504,35 +538,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			continue;
+ 		if (match_metric(pe->metric_group, metric) ||
+ 		    match_metric(pe->metric_name, metric)) {
+-			const char **ids;
+-			int idnum;
+-			struct egroup *eg;
  
- %%
--	{
--		int start_token;
-+	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+ 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
  
--		start_token = expr_get_extra(yyscanner);
-+	{
-+		int start_token = sctx->start_token;
- 
--		if (start_token) {
--			expr_set_extra(NULL, yyscanner);
-+		if (sctx->start_token) {
-+			sctx->start_token = 0;
- 			return start_token;
+-			if (expr__find_other(pe->metric_expr,
+-					     NULL, &ids, &idnum) < 0)
++			ret = __metricgroup__add_metric(events,	group_list, pe);
++			if (ret == -EINVAL || !ret)
+ 				continue;
+-			if (events->len > 0)
+-				strbuf_addf(events, ",");
+-
+-			if (metricgroup__has_constraint(pe))
+-				metricgroup__add_metric_non_group(events, ids, idnum);
+-			else
+-				metricgroup__add_metric_weak_group(events, ids, idnum);
+-
+-			eg = malloc(sizeof(struct egroup));
+-			if (!eg) {
+-				ret = -ENOMEM;
+-				break;
+-			}
+-			eg->ids = ids;
+-			eg->idnum = idnum;
+-			eg->metric_name = pe->metric_name;
+-			eg->metric_expr = pe->metric_expr;
+-			eg->metric_unit = pe->unit;
+-			list_add_tail(&eg->nd, group_list);
+-			ret = 0;
  		}
  	}
+ 	return ret;
 -- 
 2.18.1
