@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v7 3/6] perf/tools: Refactoring metricgroup__add_metric
  function
-Date: Mon, 30 Mar 2020 21:36:20 +0200
-Message-ID: <20200330193620.GE2490231@krava>
+Date: Mon, 30 Mar 2020 21:36:44 +0200
+Message-ID: <20200330193644.GF2490231@krava>
 References: <20200327102528.4267-1-kjain@linux.ibm.com>
  <20200327102528.4267-4-kjain@linux.ibm.com>
 Mime-Version: 1.0
@@ -16,35 +16,38 @@ Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@
 List-Id: linux-perf-users.vger.kernel.org
 
 On Fri, Mar 27, 2020 at 03:55:25PM +0530, Kajol Jain wrote:
-> This patch refactor metricgroup__add_metric function where
-> some part of it move to function metricgroup__add_metric_param.
-> No logic change.
-> 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  tools/perf/util/metricgroup.c | 61 +++++++++++++++++++++--------------
->  1 file changed, 36 insertions(+), 25 deletions(-)
-> 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 926449a7cdbf..b905eaa907a7 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -485,6 +485,40 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
->  	return false;
->  }
->  
-> +static int __metricgroup__add_metric(struct strbuf *events,
-> +			struct list_head *group_list, struct pmu_event *pe)
-> +{
-> +
-> +	const char **ids;
-> +	int idnum;
-> +	struct egroup *eg;
-> +	int ret = -EINVAL;
-> +
-> +	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
-> +		return ret;
 
-no need for ret variable, return -EINVAL directly
+SNIP
+
+> +	eg->ids = ids;
+> +	eg->idnum = idnum;
+> +	eg->metric_name = pe->metric_name;
+> +	eg->metric_expr = pe->metric_expr;
+> +	eg->metric_unit = pe->unit;
+> +	list_add_tail(&eg->nd, group_list);
+> +
+> +	return 0;
+> +}
+> +
+>  static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  				   struct list_head *group_list)
+>  {
+> @@ -504,35 +538,12 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+>  			continue;
+>  		if (match_metric(pe->metric_group, metric) ||
+>  		    match_metric(pe->metric_name, metric)) {
+> -			const char **ids;
+> -			int idnum;
+> -			struct egroup *eg;
+>  
+>  			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+>  
+> -			if (expr__find_other(pe->metric_expr,
+> -					     NULL, &ids, &idnum) < 0)
+> +			ret = __metricgroup__add_metric(events,	group_list, pe);
+> +			if (ret == -EINVAL || !ret)
+>  				continue;
+
+what's the point of continue in here? it's end of the loop..
 
 jirka
