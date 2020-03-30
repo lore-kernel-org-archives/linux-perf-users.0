@@ -1,140 +1,134 @@
-From: Kemeng Shi <shikemeng@huawei.com>
-Subject: [PATCH] perf report: Fix arm64 gap between kernel start and module
- end
-Date: Mon, 30 Mar 2020 15:41:11 +0800
-Message-ID: <33fd24c4-0d5a-9d93-9b62-dffa97c992ca@huawei.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
+Date: Mon, 30 Mar 2020 12:03:44 +0100
+Message-ID: <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
+References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
+ <6dbeabcf-c15a-0bbd-cef4-b25d0133854f@huawei.com>
+ <DB7PR04MB4618D2E1892120EB659B8695E6EC0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <2f81eb7a-a6e4-1cc6-cd0a-ca3d749bd552@huawei.com>
+ <DB7PR04MB4618C0A8DD9BAB2A529CDCECE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <a2cc0772-4f5d-aba3-1f5c-7d4eef7a3f72@huawei.com>
+ <DB7PR04MB461803AD15E47AA880F0915DE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <55836919-41b5-0834-f7a7-1a2a34535677@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@redhat.com, namhyung@kernel.org, ndesaulniers@google.com, irogers@google.com, tmricht@linux.ibm.com, hushiyuan@huawei.com, hewenliang4@huawei.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <55836919-41b5-0834-f7a7-1a2a34535677@huawei.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Zhangshaokun <zhangshaokun@hisilicon.com>, Jiri Olsa <jolsa@redhat.com>, Frank Li <frank.li@nxp.com>, Linuxarm <linuxarm@huawei.com>, "acme@kernel.org" <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-During execution of command 'perf report' in my arm64 virtual machine,
-the error message is showed:
-
-failed to process sample
-
-__symbol__inc_addr_samples(860): ENOMEM! sym->name=__this_module,
-    start=0x1477100, addr=0x147dbd8, end=0x80002000, func: 0
-
-The error is caused with path:
-cmd_report
- __cmd_report
-  perf_session__process_events
-   __perf_session__process_events
-    ordered_events__flush
-     __ordered_events__flush
-      oe->deliver (ordered_events__deliver_event)
-       perf_session__deliver_event
-        machines__deliver_event
-         perf_evlist__deliver_sample
-          tool->sample (process_sample_event)
-           hist_entry_iter__add
-            iter->add_entry_cb(hist_iter__report_callback)
-             hist_entry__inc_addr_samples
-              symbol__inc_addr_samples
-               __symbol__inc_addr_samples
-                h = annotated_source__histogram(src, evidx) (NULL)
-
-annotated_source__histogram failed is caused with path:
-...
- hist_entry__inc_addr_samples
-  symbol__inc_addr_samples
-   symbol__hists
-    annotated_source__alloc_histograms
-     src->histograms = calloc(nr_hists, sizeof_sym_hist) (failed)
-
-Calloc failed as the symbol__size(sym) is too huge. As show in error
-message: start=0x1477100, end=0x80002000, size of symbol is about 2G.
-
-This is the same problem as 'perf annotate: Fix s390 gap between kernel
-end and module start (b9c0a64901d5bd)'. Perf gets symbol information from
-/proc/kallsyms in __dso__load_kallsyms. A part of symbol in /proc/kallsyms
-from my virtual machine is as follows:
- #cat /proc/kallsyms | sort
- ...
- ffff000001475080 d rpfilter_mt_reg      [ip6t_rpfilter]
- ffff000001475100 d $d   [ip6t_rpfilter]
- ffff000001475100 d __this_module        [ip6t_rpfilter]
- ffff000080080000 t _head
- ffff000080080000 T _text
- ffff000080080040 t pe_header
- ...
-
-Take line 'ffff000001475100 d __this_module [ip6t_rpfilter]' as example.
-The start and end of symbol are both set to ffff000001475100 in
-dso__load_all_kallsyms. Then symbols__fixup_end will set the end of symbol
-to next big address to ffff000001475100 in /proc/kallsyms, ffff000080080000
-in this example. Then sizeof of symbol will be about 2G and cause the
-problem.
-
-The start of module in my machine is
- ffff000000a62000 t $x   [dm_mod]
-
-The start of kernel in my machine is
- ffff000080080000 t _head
-
-There is a big gap between end of module and begin of kernel if a samll
-amount of memory is used by module. And the last symbol in module will
-have a large address range as caotaining the big gap.
-
-Give that the module and kernel text segment sequence may change in
-the future, fix this by limiting range of last symbol in module and kernel
-to 4K in arch arm64.
-
-Signed-off-by: Kemeng Shi <shikemeng@huawei.com>
----
- tools/perf/arch/arm64/util/Build     |  1 +
- tools/perf/arch/arm64/util/machine.c | 26 ++++++++++++++++++++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 tools/perf/arch/arm64/util/machine.c
-
-diff --git a/tools/perf/arch/arm64/util/Build b/tools/perf/arch/arm64/util/Build
-index 393b9895c..37cbfa5e9 100644
---- a/tools/perf/arch/arm64/util/Build
-+++ b/tools/perf/arch/arm64/util/Build
-@@ -2,6 +2,7 @@ libperf-y += header.o
- libperf-y += tsc.o
- libperf-y += sym-handling.o
- libperf-y += kvm-stat.o
-+libperf-y += machine.o
- libperf-$(CONFIG_DWARF)     += dwarf-regs.o
- libperf-$(CONFIG_LOCAL_LIBUNWIND) += unwind-libunwind.o
- libperf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-new file mode 100644
-index 000000000..a25be2431
---- /dev/null
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <stdio.h>
-+#include "debug.h"
-+#include "symbol.h"
-+
-+/* On arm64, kernel text segment start at high memory address,
-+ * for example 0xffff 0000 8xxx xxxx. Modules start at a low memory
-+ * address, like 0xffff 0000 00ax xxxx. When only samll amount of
-+ * memory is used by modules, gap between end of module's text segment
-+ * and start of kernel text segment may be reach 2G.
-+ * Therefore do not fill this gap and do not assign it to the kernel dso map.
-+ */
-+
-+#define SYMBOL_LIMIT (1 << 12) /* 4K */
-+
-+void arch__symbols__fixup_end(struct symbol *p, struct symbol *c)
-+{
-+	if ((strchr(p->name, '[') && strchr(c->name, '[') == NULL) ||
-+			(strchr(p->name, '[') == NULL && strchr(c->name, '[')))
-+		/* Limit range of last symbol in module and kernel */
-+		p->end += SYMBOL_LIMIT;
-+	else
-+		p->end = c->start;
-+	pr_debug4("%s sym:%s end:%#lx\n", __func__, p->name, p->end);
-+}
--- 
-2.19.1
+T24gMjYvMDIvMjAyMCAxNzo0NiwgSm9obiBHYXJyeSB3cm90ZToKPj4+Pgo+Pj4+IEhvd2V2ZXIs
+IHRoZXJlIGlzIGFuIGlzc3VlIGZyb20gbWV0cmljIHRlc3QuCj4+Pgo+Pj4gR29vZCwgc28gSSBu
+b3cgaG9wZSB0aGF0IHlvdSBjYW4gZml4IHVwIHlvdXIgZXZlbnRzIGFuZCBtZXRyaWNzIEpTT05z
+IAo+Pj4gYXMgeW91Cj4+PiB3YW50IHRoZW0uCj4+IFllcywgSSBoYXZlIHNlbnQgb3V0IHRoZSBw
+dWxsIHJlcXVlc3QgdG8gZml4IHVwIHRoZW0uCj4gCj4gUGxlYXNlIG5vdGUgdGhhdCBqaXJrYSBh
+bHNvIHJlcXVlc3RlZCB0aGF0IEkgYWRkIGEgUE1VIGV2ZW50cyBwZXJmIHRlc3QsIAo+IGFuZCBp
+dCBsb29rcyBsaWtlIHRoYXQgd2lsbCBuZWVkIHRvIGdvIGJlZm9yZSBub24tUkZDIHZlcnNpb24g
+b2YgdGhpcyAKPiBzZXJpZXMuLi4KPiAKPj4KPj4KPj4+Pgo+Pj4+IFRoZSByZXN1bHQgaXMgaW5j
+b3JyZWN0IGlmIHdlIHVzZSptb3JlIHRoYW4gb25lKsKgIGV2ZW50IGluIG1ldHJpYyAKPj4+PiBl
+eHByZXNzaW9uLAo+Pj4gc3VjaCBhczoKPj4+PiAiTWV0cmljRXhwciI6ICJpbXg4X2Rkci53cml0
+ZS9pbXg4X2Rkci5jeWNsZXMiLCBPcgo+Pj4+ICJNZXRyaWNFeHByIjogImlteDhfZGRyLndyaXRl
+ICsgaW14OF9kZHIuY3ljbGVzIiwKPj4+Pgo+Pj4+IElmIHlvdSBvbmx5IHNldCB0aGUgdGltZW91
+dCgtLXRpbWVvdXQgMTAwMCBvciBzbGVlcCAxKSwgdGhlIHJlc3VsdCAKPj4+PiBpcyBjb3JyZWN0
+Lgo+Pj4+IC4vcGVyZiBzdGF0IC1NIGlteDhtbV9kZHIwX3JlYWQuYWxsIHNsZWVwIDEgLi9wZXJm
+IHN0YXQgLS10aW1lb3V0IDEwMDAKPj4+PiAtTSBpbXg4bW1fZGRyMF9yZWFkLmFsbAo+Pj4+Cj4+
+Pj4gQnV0LCBpZiB5b3Ugc2V0IGludGVydmFsKC1JIHBhcmFtZXRlciksIG9ubHkgdGhlIGZpcnN0
+IHJlc3VsdCBpcyAKPj4+PiBjb3JyZWN0LCBmb2xsb3dpbmcKPj4+IHJlc3VsdHMgYXJlIGluY29y
+cmVjdC4KPj4+PiAuL3BlcmYgc3RhdCAtSSAxMDAwIC1NIGlteDhtbV9kZHIwX3JlYWQuYWxsCj4+
+Pj4KPj4+PiBUaGlzIHNob3VsZG4ndCBiZWVuIGludHJvZHVjZWQgYnkgeW91ciBjb2RlIGNoYW5n
+ZSwgdGhpcyBwcm9ibGVtIG1heSAKPj4+PiBhbHdheXMKPj4+IGV4aXN0Lgo+Pj4KPj4+IEknbSBu
+b3Qgc3VyZSBpZiB0aGlzIGlzIGFuIGlzc3VlIG9yIHdoZXRoZXIgeW91J3JlIHVzaW5nIHRoZSB0
+b29sIAo+Pj4gcHJvcGVybHkuCj4+Pgo+Pj4gSXQgbWlnaHQgaGVscCBpZiB5b3UgY2FuIHJlcHJv
+ZHVjZSBvbiBhIHg4NiBtYWNoaW5lIG9yIG90aGVyIGFyY2ggCj4+PiB3aGljaCBoYXMKPj4+IG1l
+dHJpYyBzdXBwb3J0IG9uIG1haW5saW5lIHRvZGF5IC0gbGlrZSBwb3dlciAtIGFuZCBxdWVyeSBh
+Ym91dCB0aGF0Lgo+Pgo+PiBTb3JyeSwgSSBvbmx5IGhhdmUgdGhlIGFybTY0IG1hY2hpbmUuIAo+
+IAo+IEdyZWF0LCBzbyB5b3UgZG8geW91ciBkZXZlbG9wbWVudCBvbiBhbiBhcm02NCBtYWNoaW5l
+IGFzIHdlbGwuCj4gCj4gU28gSSBob3BlIHlvdSBtYXkgcmVwcm9kdWNlIGl0LiBZb3UganVzdCBu
+ZWVkIHRvIGFkZCBhIG1ldHJpYyBmb3IgU01NVSAKPiB0byBjb25zdHJ1Y3Qgc3VjaCBjYXNlLgo+
+PiBJIGFtIG5vdCBmYW1pbGlhciB0byBwZXJmIHRvb2wsIHNvIEkgZmFpbGVkIHRvIGZpbmQgdGhl
+IGNhdXNlLiA6LSgKPiAKPiBJIHdvdWxkbid0IHJlbHkgb24gbWUgdG8gZml4IHRoaXMgZm9yIHlv
+dSBBVE0gKGFzc3VtaW5nIGl0IGlzIGFjdHVhbGx5IAo+IGJyb2tlbikuCj4gCj4gQWJvdXQgdGhp
+czoKCkhpIEpvYWtpbSwKCkkgaGF2ZSB1cGRhdGVkIG15IHBlcmYgc2VyaWVzIGhlcmU6CgpodHRw
+czovL2dpdGh1Yi5jb20vaGlzaWxpY29uL2tlcm5lbC1kZXYvY29tbWl0cy9wcml2YXRlLXRvcGlj
+LXBlcmYtNS42LXN5cy1wbXUtZXZlbnRzLXYyLXVwc3RyZWFtCgpQbGVhc2UgdGVzdCBpdC4gSXQg
+aXMgYmFzZWQgb24gaWRlbnRpZmllciBmaWxlIGluIGZvcm06Cgovc3lzL2J1cy9ldmVudF9idXMv
+ZGV2aWNlcy9QTVUvaWRlbnRpZmllcgoKSXQgaW5jbHVkZXMgeW91ciBpbXg4bT8gc3VwcG9ydCwg
+YnV0IEkgYW0gbm90IHN1cmUgaWYgaXQncyB0aGUgbGF0ZXN0IApKU09OcyB0aGVyZS4KCkpGWUks
+IEkgYWxzbyBoYXZlIGFuIFJGQyBTTU1VIFBNQ0cgcGF0Y2ggaGVyZToKCmh0dHBzOi8vZ2l0aHVi
+LmNvbS9oaXNpbGljb24va2VybmVsLWRldi90cmVlL3ByaXZhdGUtdG9waWMtcGVyZi01LjYtc21t
+dS1wbWNnLWlkZW50aWZpZXIKClNpbmNlIHdlJ3JlIGluIHRoZSBtZXJnZSB3aW5kb3csIEkgd291
+bGQgcmF0aGVyIGF2b2lkIHBvc3RpbmcgaXQgdGhpcyAKdmVyeSBtb21lbnQuCgpIZXJlIHdhcyBt
+eSBjb3ZlciBsZXR0ZXI6CgotLS0tLS0tPjgtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQoKcGVyZiBwbXUtZXZlbnRzOiBTdXBwb3J0IGV2ZW50IGFsaWFzaW5nIGZv
+ciBzeXN0ZW0gUE1VcwoKQ3VycmVudGx5IGV2ZW50IGFsaWFzaW5nIGZvciBvbmx5IENQVSBhbmQg
+dW5jb3JlIFBNVXMgaXMgc3VwcG9ydGVkLiBJbgpmYWN0LCBvbmx5IHVuY29yZSBQTVVzIGFsaWFz
+aW5nIGlzIHN1cHBvcnRlZCBmb3Igd2hlbiB0aGUgdW5jb3JlIFBNVXMgYXJlCmZpeGVkIGZvciBh
+IENQVSBpcyBzdXBwb3J0ZWQsIHdoaWNoIG1heSBub3QgYWx3YXlzIGJlIHRoZSBjYXNlIGZvciBj
+ZXJ0YWluCmFyY2hpdGVjdHVyZXMuCgpUaGlzIHNlcmllcyBhZGRzIHN1cHBvcnQgZm9yIFBNVSBl
+dmVudCBhbGlhc2luZyBmb3Igc3lzdGVtIGFuZCBvdGhlcgp1bmNvcmUgUE1VcyB3aGljaCBhcmUg
+bm90IGZpeGVkIHRvIGEgc3BlY2lmaWMgQ1BVLgoKRm9yIHRoaXMsIHdlIGludHJvZHVjZSBzeXN0
+ZW0gZXZlbnQgdGFibGVzIGluIGdlbmVyYXRlZCBwbXUtZXZlbnRzLmMsCndoaWNoIGNvbnRhaW4g
+YSBwZXItU29DIHRhYmxlIG9mIGV2ZW50cyBvZiBhbGwgaXRzIHN5c3RlbSBQTVVzLiBFYWNoCnBl
+ci1QTVUgZXZlbnQgaXMgbWF0Y2hlZCBieSBhICJDT01QQVQiIHByb3BlcnR5LgoKV2hlbiBjcmVh
+dGVkIGFsaWFzZXMgZm9yIFBNVXMsIHdlIHRyZWF0IGNvcmUvdW5jb3JlKiBhbmQgc3lzdGVtIFBN
+VXMKZGlmZmVyZW50bHk6CgotIEZvciBDUFUgUE1VLCB3ZSBhbHdheXMgbWF0Y2ggZm9yIHRoZSBl
+dmVudCBtYXBmaWxlIGJhc2VkIG9uIHRoZSBDUFVJRC4KICAgVGhpcyBoYXMgbm90IGNoYW5nZWQu
+CgotIEZvciBhbiB1bmNvcmUgb3Igc3lzdGVtIFBNVSwgd2UgaXRlcmF0ZSB0aHJvdWdoIGFsbCB0
+aGUgZXZlbnRzIGluIGFsbAogICB0aGUgc3lzdGVtIFBNVSB0YWJsZXMuCgogICBNYXRjaGVzIGFy
+ZSBiYXNlZCBvbiB0aGUgIkNPTVBBVCIgcHJvcGVydHkgbWF0Y2hpbmcgdGhlIFBNVSBzeXNmcwog
+ICBpZGVudGlmaWVyIGNvbnRlbnRzLgoKKiB1bmNvcmUgUE1VcyBtYXkgYWxzbyBiZSBtYXRjaGVk
+IGJ5IHN5c3RlbSBQTVVzIGV2ZW50IHN1cHBvcnQuCgpJbml0aWFsIHJlZmVyZW5jZSBzdXBwb3J0
+IGlzIGFsc28gYWRkZWQgZm9yIEFSTSBTTU1VdjMgUE1DRyAoUGVyZm9ybWFuY2UKTW9uaXRvciBF
+dmVudCBHcm91cCkgUE1VIGZvciBIaVNpbGljb24gaGlwMDggcGxhdGZvcm0gd2l0aCBvbmx5IGEg
+c2luZ2xlCmV2ZW50IHNvIGZhciAtIHNlZSBkcml2ZXIgaW4gZHJpdmVycy9wZXJmL2FybV9zbW11
+djNfcG11LmMgZm9yIHRoYXQgZHJpdmVyLgoKSGVyZSBpcyBhIHNhbXBsZSBvdXRwdXQgd2l0aCB0
+aGlzIHNlcmllczoKCnJvb3RAdWJ1bnR1Oi8jIC4vcGVyZiBsaXN0CiAgIFsuLi5dCgpzbW11IHYz
+IHBtY2c6CiAgIGNvbmZpZ19jYWNoZV9taXNzCiAgICAgICAgW0NvbmZpZ3VyYXRpb24gY2FjaGUg
+bWlzcyBjYXVzZWQgYnkgdHJhbnNhY3Rpb24gb3IoQVRTIG9yCiAgICAgICAgbm9uLUFUUyl0cmFu
+c2xhdGlvbiByZXF1ZXN0LiBVbml0OiBzbW11djNfcG1jZ10KICAgY29uZmlnX3N0cnVjdF9hY2Nl
+c3MKICAgICAgICBbQ29uZmlndXJhdGlvbiBzdHJ1Y3R1cmUgYWNjZXNzLiBVbml0OiBzbW11djNf
+cG1jZ10KICAgY3ljbGVzCiAgICAgICAgW0Nsb2NrIGN5Y2xlcy4gVW5pdDogc21tdXYzX3BtY2dd
+CiAgIGwxX3RsYgogICAgICAgIFtTTU1VdjMgUE1DRyBMMSBUQUJMRSB0cmFuc2F0aW9uLiBVbml0
+OiBzbW11djNfcG1jZ10KICAgcGNpZV9hdHNfdHJhbnNfcGFzc2VkCiAgICAgICAgW1BDSWUgQVRT
+IFRyYW5zbGF0ZWQgVHJhbnNhY3Rpb24gcGFzc2VkIHRocm91Z2ggU01NVS4gVW5pdDogCnNtbXV2
+M19wbWNnXQogICBwY2llX2F0c190cmFuc19ycQogICAgICAgIFtQQ0llIEFUUyBUcmFuc2xhdGlv
+biBSZXF1ZXN0IHJlY2VpdmVkLiBVbml0OiBzbW11djNfcG1jZ10KICAgdGxiX21pc3MKICAgICAg
+ICBbVExCIG1pc3MgY2F1c2VkIGJ5IGluY29taW5ndHJhbnNhY3Rpb24gb3IgKEFUUyBvciBub24t
+QVRTKSAKdHJhbnNsYXRpb24KICAgICAgICAgcmVxdWVzdC4gVW5pdDogc21tdXYzX3BtY2ddCiAg
+IHRyYW5zX3RhYmxlX3dhbGtfYWNjZXNzCiAgICAgICAgW1RyYW5zbGF0aW9uIHRhYmxlIHdhbGsg
+YWNjZXNzLiBVbml0OiBzbW11djNfcG1jZ10KICAgdHJhbnNhY3Rpb24KICAgICAgICBbVHJhbnNh
+Y3Rpb24uIFVuaXQ6IHNtbXV2M19wbWNnXQoKCnJvb3RAdWJ1bnR1Oi8jIC4vcGVyZiBzdGF0IC12
+IC1lIHNtbXV2M19wbWNnLmwxX3RsYiBzbGVlcCAxClVzaW5nIENQVUlEIDB4MDAwMDAwMDA0ODBm
+ZDAxMApVc2luZyBTWVNJRCBISVAwOAotPiBzbW11djNfcG1jZ18yMDAxMDAwMjAvZXZlbnQ9MHg4
+YS8KLT4gc21tdXYzX3BtY2dfMjAwMTQwMDIwL2V2ZW50PTB4OGEvCi0+IHNtbXV2M19wbWNnXzEw
+MDAyMC9ldmVudD0weDhhLwotPiBzbW11djNfcG1jZ18xNDAwMjAvZXZlbnQ9MHg4YS8KLT4gc21t
+dXYzX3BtY2dfMjAwMTQ4MDIwL2V2ZW50PTB4OGEvCi0+IHNtbXV2M19wbWNnXzE0ODAyMC9ldmVu
+dD0weDhhLwpzbW11djNfcG1jZy5sMV90bGI6IDAgMTAwMTIyMTY5MCAxMDAxMjIxNjkwCnNtbXV2
+M19wbWNnLmwxX3RsYjogMCAxMDAxMjIwMDkwIDEwMDEyMjAwOTAKc21tdXYzX3BtY2cubDFfdGxi
+OiAxMDEgMTAwMTIxOTY2MCAxMDAxMjE5NjYwCnNtbXV2M19wbWNnLmwxX3RsYjogMCAxMDAxMjE5
+MDEwIDEwMDEyMTkwMTAKc21tdXYzX3BtY2cubDFfdGxiOiAwIDEwMDEyMTgzNjAgMTAwMTIxODM2
+MApzbW11djNfcG1jZy5sMV90bGI6IDEzNCAxMDAxMjE3ODUwIDEwMDEyMTc4NTAKClBlcmZvcm1h
+bmNlIGNvdW50ZXIgc3RhdHMgZm9yICdzeXN0ZW0gd2lkZSc6CgogICAgICAgICAgICAgICAgMjM1
+ICAgICAgc21tdXYzX3BtY2cubDFfdGxiIAoKCiAgICAgICAgMS4wMDEyNjMxMjggc2Vjb25kcyB0
+aW1lIGVsYXBzZWQKCnJvb3RAdWJ1bnR1Oi8jCgpTdXBwb3J0IGlzIGFsc28gYWRkZWQgZm9yIGlt
+eDhtbSBERFIgUE1VLgoKU2VyaWVzIGlzIGhlcmU6Cmh0dHBzOi8vZ2l0aHViLmNvbS9oaXNpbGlj
+b24va2VybmVsLWRldi9jb21taXRzL3ByaXZhdGUtdG9waWMtcGVyZi01LjYtc3lzLXBtdS1ldmVu
+dHMtdjItdXBzdHJlYW0KCkRpZmZlcmVuY2VzIHRvIHYxOgotIFN0b3AgdXNpbmcgU29DIGlkIGFu
+ZCB1c2UgYSBwZXItUE1VIGlkZW50aWZpZXIgaW5zdGVhZAotIEFkZCBtZXRyaWMgZ3JvdXAgc3lz
+IGV2ZW50cyBzdXBwb3J0CiAgIC0gVGhpcyBpcyBhIGJpdCBoYWNreQotIEFkZCBpbXg4bW0gRERS
+IFBlcmYgc3VwcG9ydAoKClRoYW5rcywKSm9obgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
