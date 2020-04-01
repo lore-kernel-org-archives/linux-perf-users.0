@@ -1,135 +1,130 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 1/1 FYI] tools arch x86: Sync the msr-index.h copy with the
- kernel sources
-Date: Wed, 1 Apr 2020 12:33:25 -0300
-Message-ID: <20200401153325.GC12534@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v8 0/7]  powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
+Date: Thu,  2 Apr 2020 02:03:33 +0530
+Message-ID: <20200401203340.31402-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@suse.de>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Peter,
+Patchset adds json file metric support for the hv_24x7 socket/chip level
+events. "hv_24x7" pmu interface events needs system dependent parameter
+like socket/chip/core. For example, hv_24x7 chip level events needs
+specific chip-id to which the data is requested should be added as part
+of pmu events.
 
-	Just a FYI about this tooling capability:
+So to enable JSON file support to "hv_24x7" interface, patchset reads
+total number of sockets details in sysfs under 
+"/sys/devices/hv_24x7/interface/".
 
-        perf trace -e msr:* --filter=msr==IA32_CORE_CAPS
+Second patch of the patchset adds expr_scanner_ctx object to hold user
+data for the expr scanner, which can be used to hold runtime parameter.
 
-or:
+Patch 4 & 6 of the patchset handles perf tool plumbing needed to replace
+the "?" character in the metric expression to proper value and hv_24x7
+json metric file for different Socket/chip resources.
 
-        perf trace -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
+Patch set also enable Hz/hz prinitg for --metric-only option to print
+metric data for bus frequency.
 
-And see only those MSRs being accessed via:
+Applied and tested all these patches cleanly on top of jiri's flex changes
+with the changes done by Kan Liang for "Support metric group constraint"
+patchset and made required changes.
 
-  # perf trace -v -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
-  New filter for msr:read_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
-  New filter for msr:write_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
-  New filter for msr:rdpmc: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+Also apply this patch on top of the fix patch send earlier
+for printing metric name incase overlapping events.
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=37cd7f65bf71a48f25eeb6d9be5dacb20d008ea6
 
-Cheers,
+Changelog:
+v7 -> v8
+- Add test case for testing parsing of "?" in metric expression
+- Reaname variables name to runtime
 
-- Arnaldo
+v6 -> v7
+- Spit patchset into two patch series one for kernel changes and other
+  for tool side changes.
+- Made changes Suggested by Jiri, including rather then reading runtime
+  parameter from metric name, actually add it in structure egroup and
+  metric_expr.
+- As we don't need to read runtime parameter from metric name,
+  now I am not appending it and rather just printing it in
+  generic_metric function.
 
----
+Kernel Side changes patch series: https://lkml.org/lkml/2020/3/27/58
 
-To pick up the changes in:
+v5 -> v6
+- resolve compilation issue due to rearranging patch series.
+- Rather then adding new function to take careof case for runtime param
+  in metricgroup__add_metric, using metricgroup__add_metric_param itself
+  for that work.
+- Address some optimization suggested like using directly file path
+  rather then adding new macro in header.c
+- Change commit message on patch where we are adding "?" support
+  by adding simple example.
 
-  6650cdd9a8cc ("x86/split_lock: Enable split lock detection by kernel")
+v4 -> v5
+- Using sysfs__read_int instead of sysfs__read_ull while reading
+  parameter value in powerpc/util/header.c file.
 
-Addressing this warning when build tools/perf:
+- Using asprintf rather then malloc and sprintf 
+  Suggested by Arnaldo Carvalho de Melo
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h' differs from latest version at 'arch/x86/include/asm/msr-index.h'
-  diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm/msr-index.h
+- Break patch 6 from previous version to two patch,
+  - One to add refactor current "metricgroup__add_metric" function
+    and another where actually "?" handling infra added.
 
-Which causes these changes in tooling:
+- Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+  rather then making it global variable. Thanks Jiri for
+  adding this structure to hold user data for the expr scanner.
 
-  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > before
-  $ cp arch/x86/include/asm/msr-index.h tools/arch/x86/include/asm/msr-index.h
-  $ tools/perf/trace/beauty/tracepoints/x86_msr.sh > after
-  $ diff -u before after
-  --- before	2020-04-01 12:11:14.789344795 -0300
-  +++ after	2020-04-01 12:11:56.907798879 -0300
-  @@ -10,6 +10,7 @@
-   	[0x00000029] = "KNC_EVNTSEL1",
-   	[0x0000002a] = "IA32_EBL_CR_POWERON",
-   	[0x0000002c] = "EBC_FREQUENCY_ID",
-  +	[0x00000033] = "TEST_CTRL",
-   	[0x00000034] = "SMI_COUNT",
-   	[0x0000003a] = "IA32_FEAT_CTL",
-   	[0x0000003b] = "IA32_TSC_ADJUST",
-  @@ -27,6 +28,7 @@
-   	[0x000000c2] = "IA32_PERFCTR1",
-   	[0x000000cd] = "FSB_FREQ",
-   	[0x000000ce] = "PLATFORM_INFO",
-  +	[0x000000cf] = "IA32_CORE_CAPS",
-   	[0x000000e2] = "PKG_CST_CONFIG_CONTROL",
-   	[0x000000e7] = "IA32_MPERF",
-   	[0x000000e8] = "IA32_APERF",
-  $
+- Add runtime param as agrugement to function 'expr__find_other'
+  and 'expr__parse' and made changes on references accordingly.
 
-  $ make -C tools/perf O=/tmp/build/perf install-bin
-  <SNIP>
-    CC       /tmp/build/perf/trace/beauty/tracepoints/x86_msr.o
-    LD       /tmp/build/perf/trace/beauty/tracepoints/perf-in.o
-    LD       /tmp/build/perf/trace/beauty/perf-in.o
-    LD       /tmp/build/perf/perf-in.o
-    LINK     /tmp/build/perf/perf
-  <SNIP>
+v3 -> v4
+- Apply these patch on top of Kan liang changes.
+  As suggested by Jiri.
 
-Now one can do:
+v2 -> v3
+- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+  with comment rather then adding 0 to event_count value.
+  Suggested by: Sukadev Bhattiprolu
 
-	perf trace -e msr:* --filter=msr==IA32_CORE_CAPS
+- Apply tool side changes require to replace "?" on Jiri's flex patch
+  series and made all require changes to make it compatible with added
+  flex change.
 
-or:
+v1 -> v2
+- Rename hv-24x7 metric json file as nest_metrics.json
 
-	perf trace -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
+Jiri Olsa (2):
+  perf expr: Add expr_ prefix for parse_ctx and parse_id
+  perf expr: Add expr_scanner_ctx object
 
-And see only those MSRs being accessed via:
+Kajol Jain (5):
+  perf/tools: Refactoring metricgroup__add_metric function
+  perf/tools: Enhance JSON/metric infrastructure to handle "?"
+  perf/tests/expr: Added test for runtime param in metric expression
+  tools/perf: Enable Hz/hz prinitg for --metric-only option
+  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+    events
 
-  # perf trace -v -e msr:* --filter='msr==IA32_CORE_CAPS || msr==TEST_CTRL'
-  New filter for msr:read_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
-  New filter for msr:write_msr: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
-  New filter for msr:rdpmc: (msr==0xcf || msr==0x33) && (common_pid != 8263 && common_pid != 23250)
+ tools/perf/arch/powerpc/util/header.c         |  8 ++
+ .../arch/powerpc/power9/nest_metrics.json     | 19 +++++
+ tools/perf/tests/expr.c                       | 20 +++--
+ tools/perf/util/expr.c                        | 25 +++---
+ tools/perf/util/expr.h                        | 19 +++--
+ tools/perf/util/expr.l                        | 37 ++++++---
+ tools/perf/util/expr.y                        |  6 +-
+ tools/perf/util/metricgroup.c                 | 78 +++++++++++++------
+ tools/perf/util/metricgroup.h                 |  2 +
+ tools/perf/util/stat-display.c                |  2 -
+ tools/perf/util/stat-shadow.c                 | 19 +++--
+ 11 files changed, 164 insertions(+), 71 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/arch/x86/include/asm/msr-index.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index d5e517d1c3dd..12c9684d59ba 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -41,6 +41,10 @@
- 
- /* Intel MSRs. Some also available on other CPUs */
- 
-+#define MSR_TEST_CTRL				0x00000033
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT	29
-+#define MSR_TEST_CTRL_SPLIT_LOCK_DETECT		BIT(MSR_TEST_CTRL_SPLIT_LOCK_DETECT_BIT)
-+
- #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
- #define SPEC_CTRL_IBRS			BIT(0)	   /* Indirect Branch Restricted Speculation */
- #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
-@@ -70,6 +74,11 @@
-  */
- #define MSR_IA32_UMWAIT_CONTROL_TIME_MASK	(~0x03U)
- 
-+/* Abbreviated from Intel SDM name IA32_CORE_CAPABILITIES */
-+#define MSR_IA32_CORE_CAPS			  0x000000cf
-+#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT  5
-+#define MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT	  BIT(MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT_BIT)
-+
- #define MSR_PKG_CST_CONFIG_CONTROL	0x000000e2
- #define NHM_C3_AUTO_DEMOTE		(1UL << 25)
- #define NHM_C1_AUTO_DEMOTE		(1UL << 26)
 -- 
-2.21.1
+2.21.0
