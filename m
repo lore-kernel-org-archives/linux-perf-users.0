@@ -1,130 +1,174 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v8 0/7]  powerpc/perf: Add json file metric support for the hv_24x7 socket/chip level events
-Date: Thu,  2 Apr 2020 02:03:33 +0530
-Message-ID: <20200401203340.31402-1-kjain@linux.ibm.com>
+Subject: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and parse_id
+Date: Thu,  2 Apr 2020 02:03:34 +0530
+Message-ID: <20200401203340.31402-2-kjain@linux.ibm.com>
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200401203340.31402-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Patchset adds json file metric support for the hv_24x7 socket/chip level
-events. "hv_24x7" pmu interface events needs system dependent parameter
-like socket/chip/core. For example, hv_24x7 chip level events needs
-specific chip-id to which the data is requested should be added as part
-of pmu events.
+From: Jiri Olsa <jolsa@kernel.org>
 
-So to enable JSON file support to "hv_24x7" interface, patchset reads
-total number of sockets details in sysfs under 
-"/sys/devices/hv_24x7/interface/".
+Adding expr_ prefix for parse_ctx and parse_id,
+to straighten out the expr* namespace.
 
-Second patch of the patchset adds expr_scanner_ctx object to hold user
-data for the expr scanner, which can be used to hold runtime parameter.
+There's no functional change.
 
-Patch 4 & 6 of the patchset handles perf tool plumbing needed to replace
-the "?" character in the metric expression to proper value and hv_24x7
-json metric file for different Socket/chip resources.
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/tests/expr.c       |  4 ++--
+ tools/perf/util/expr.c        | 10 +++++-----
+ tools/perf/util/expr.h        | 12 ++++++------
+ tools/perf/util/expr.y        |  6 +++---
+ tools/perf/util/stat-shadow.c |  2 +-
+ 5 files changed, 17 insertions(+), 17 deletions(-)
 
-Patch set also enable Hz/hz prinitg for --metric-only option to print
-metric data for bus frequency.
-
-Applied and tested all these patches cleanly on top of jiri's flex changes
-with the changes done by Kan Liang for "Support metric group constraint"
-patchset and made required changes.
-
-Also apply this patch on top of the fix patch send earlier
-for printing metric name incase overlapping events.
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=37cd7f65bf71a48f25eeb6d9be5dacb20d008ea6
-
-Changelog:
-v7 -> v8
-- Add test case for testing parsing of "?" in metric expression
-- Reaname variables name to runtime
-
-v6 -> v7
-- Spit patchset into two patch series one for kernel changes and other
-  for tool side changes.
-- Made changes Suggested by Jiri, including rather then reading runtime
-  parameter from metric name, actually add it in structure egroup and
-  metric_expr.
-- As we don't need to read runtime parameter from metric name,
-  now I am not appending it and rather just printing it in
-  generic_metric function.
-
-Kernel Side changes patch series: https://lkml.org/lkml/2020/3/27/58
-
-v5 -> v6
-- resolve compilation issue due to rearranging patch series.
-- Rather then adding new function to take careof case for runtime param
-  in metricgroup__add_metric, using metricgroup__add_metric_param itself
-  for that work.
-- Address some optimization suggested like using directly file path
-  rather then adding new macro in header.c
-- Change commit message on patch where we are adding "?" support
-  by adding simple example.
-
-v4 -> v5
-- Using sysfs__read_int instead of sysfs__read_ull while reading
-  parameter value in powerpc/util/header.c file.
-
-- Using asprintf rather then malloc and sprintf 
-  Suggested by Arnaldo Carvalho de Melo
-
-- Break patch 6 from previous version to two patch,
-  - One to add refactor current "metricgroup__add_metric" function
-    and another where actually "?" handling infra added.
-
-- Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
-  rather then making it global variable. Thanks Jiri for
-  adding this structure to hold user data for the expr scanner.
-
-- Add runtime param as agrugement to function 'expr__find_other'
-  and 'expr__parse' and made changes on references accordingly.
-
-v3 -> v4
-- Apply these patch on top of Kan liang changes.
-  As suggested by Jiri.
-
-v2 -> v3
-- Remove setting  event_count to 0 part in function 'h_24x7_event_read'
-  with comment rather then adding 0 to event_count value.
-  Suggested by: Sukadev Bhattiprolu
-
-- Apply tool side changes require to replace "?" on Jiri's flex patch
-  series and made all require changes to make it compatible with added
-  flex change.
-
-v1 -> v2
-- Rename hv-24x7 metric json file as nest_metrics.json
-
-Jiri Olsa (2):
-  perf expr: Add expr_ prefix for parse_ctx and parse_id
-  perf expr: Add expr_scanner_ctx object
-
-Kajol Jain (5):
-  perf/tools: Refactoring metricgroup__add_metric function
-  perf/tools: Enhance JSON/metric infrastructure to handle "?"
-  perf/tests/expr: Added test for runtime param in metric expression
-  tools/perf: Enable Hz/hz prinitg for --metric-only option
-  perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
-    events
-
- tools/perf/arch/powerpc/util/header.c         |  8 ++
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++
- tools/perf/tests/expr.c                       | 20 +++--
- tools/perf/util/expr.c                        | 25 +++---
- tools/perf/util/expr.h                        | 19 +++--
- tools/perf/util/expr.l                        | 37 ++++++---
- tools/perf/util/expr.y                        |  6 +-
- tools/perf/util/metricgroup.c                 | 78 +++++++++++++------
- tools/perf/util/metricgroup.h                 |  2 +
- tools/perf/util/stat-display.c                |  2 -
- tools/perf/util/stat-shadow.c                 | 19 +++--
- 11 files changed, 164 insertions(+), 71 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index 28313e59d6f6..ea10fc4412c4 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -6,7 +6,7 @@
+ #include <string.h>
+ #include <linux/zalloc.h>
+ 
+-static int test(struct parse_ctx *ctx, const char *e, double val2)
++static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
+ {
+ 	double val;
+ 
+@@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+ 	const char **other;
+ 	double val;
+ 	int i, ret;
+-	struct parse_ctx ctx;
++	struct expr_parse_ctx ctx;
+ 	int num_other;
+ 
+ 	expr__ctx_init(&ctx);
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index fd192ddf93c1..c8ccc548a585 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -11,7 +11,7 @@ extern int expr_debug;
+ #endif
+ 
+ /* Caller must make sure id is allocated */
+-void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
++void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+ {
+ 	int idx;
+ 
+@@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+ 	ctx->ids[idx].val = val;
+ }
+ 
+-void expr__ctx_init(struct parse_ctx *ctx)
++void expr__ctx_init(struct expr_parse_ctx *ctx)
+ {
+ 	ctx->num_ids = 0;
+ }
+ 
+ static int
+-__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
++__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+ 	      int start)
+ {
+ 	YY_BUFFER_STATE buffer;
+@@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+ 	return ret;
+ }
+ 
+-int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
++int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
+ {
+ 	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
+ }
+@@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
+ 		     int *num_other)
+ {
+ 	int err, i = 0, j = 0;
+-	struct parse_ctx ctx;
++	struct expr_parse_ctx ctx;
+ 
+ 	expr__ctx_init(&ctx);
+ 	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 9377538f4097..b9e53f2b5844 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -5,19 +5,19 @@
+ #define EXPR_MAX_OTHER 20
+ #define MAX_PARSE_ID EXPR_MAX_OTHER
+ 
+-struct parse_id {
++struct expr_parse_id {
+ 	const char *name;
+ 	double val;
+ };
+ 
+-struct parse_ctx {
++struct expr_parse_ctx {
+ 	int num_ids;
+-	struct parse_id ids[MAX_PARSE_ID];
++	struct expr_parse_id ids[MAX_PARSE_ID];
+ };
+ 
+-void expr__ctx_init(struct parse_ctx *ctx);
+-void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+-int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
++void expr__ctx_init(struct expr_parse_ctx *ctx);
++void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
++int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
+ int expr__find_other(const char *expr, const char *one, const char ***other,
+ 		int *num_other);
+ 
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 4720cbe79357..cd17486c1c5d 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -15,7 +15,7 @@
+ %define api.pure full
+ 
+ %parse-param { double *final_val }
+-%parse-param { struct parse_ctx *ctx }
++%parse-param { struct expr_parse_ctx *ctx }
+ %parse-param {void *scanner}
+ %lex-param {void* scanner}
+ 
+@@ -39,14 +39,14 @@
+ 
+ %{
+ static void expr_error(double *final_val __maybe_unused,
+-		       struct parse_ctx *ctx __maybe_unused,
++		       struct expr_parse_ctx *ctx __maybe_unused,
+ 		       void *scanner,
+ 		       const char *s)
+ {
+ 	pr_debug("%s\n", s);
+ }
+ 
+-static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
++static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
+ {
+ 	int i;
+ 
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 0fd713d3674f..402af3e8d287 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
+ 			   struct runtime_stat *st)
+ {
+ 	print_metric_t print_metric = out->print_metric;
+-	struct parse_ctx pctx;
++	struct expr_parse_ctx pctx;
+ 	double ratio, scale;
+ 	int i;
+ 	void *ctxp = out->ctx;
 -- 
 2.21.0
