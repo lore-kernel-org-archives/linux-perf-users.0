@@ -1,71 +1,74 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v8 7/7] perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric events
-Date: Thu,  2 Apr 2020 02:03:40 +0530
-Message-ID: <20200401203340.31402-8-kjain@linux.ibm.com>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Subject: [PATCH 0/5] Benchmark and improve event synthesis performance
+Date: Wed,  1 Apr 2020 16:39:40 -0700
+Message-ID: <20200401233945.133550-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200401203340.31402-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de, kjain@linux.ibm.com
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The hv_24×7 feature in IBM® POWER9™ processor-based servers provide the
-facility to continuously collect large numbers of hardware performance
-metrics efficiently and accurately.
-This patch adds hv_24x7  metric file for different Socket/chip
-resources.
 
-Result:
+Event synthesis is performance critical in common tasks using perf. For
+example, when perf record starts in system wide mode the /proc file
+system is scanned with events synthesized for each process and all
+executable mmaps. With large machines and lots of processes, we have seen
+O(seconds) of wall clock time while synthesis is occurring.
 
-power9 platform:
+This patch set adds a benchmark for synthesis performance in a new
+benchmark collection called 'internals'. The benchmark uses the
+machine__synthesize_threads function, single threaded on the perf process
+with a 'tool' that just drops the events, to measure how long synthesis
+takes.
 
-command:# ./perf stat --metric-only -M Memory_RD_BW_Chip -C 0 -I 1000
+By profiling this benchmark 2 performance bottlenecks were identified,
+hugetlbfs_mountpoint and stdio. The impact of theses changes are:
 
-     1.000096188                      0.9                      0.3
-     2.000285720                      0.5                      0.1
-     3.000424990                      0.4                      0.1
+Before:
+Average synthesis took: 167.616800 usec
+Average data synthesis took: 208.655600 usec
 
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
+After hugetlbfs_mountpoint scalability fix:
+Average synthesis took: 120.195100 usec
+Average data synthesis took: 156.582300 usec
 
-     1.000097981                        2.3                        2.3
-     2.000291713                        2.3                        2.3
-     3.000421719                        2.3                        2.3
-     4.000550912                        2.3                        2.3
+After removal of stdio in /proc/pid/maps code:
+Average synthesis took: 67.189100 usec
+Average data synthesis took: 102.451600 usec
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+Time was measured on an Intel Xeon 6154 compiling with Debian gcc 9.2.1.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-new file mode 100644
-index 000000000000..c121e526442a
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -0,0 +1,19 @@
-+[
-+    {
-+        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+        "MetricName": "Memory_RD_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
-+        "MetricName": "Memory_WR_BW_Chip",
-+        "MetricGroup": "Memory_BW",
-+        "ScaleUnit": "1.6e-2MB"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-+        "MetricName": "PowerBUS_Frequency",
-+        "ScaleUnit": "2.5e-7GHz"
-+    }
-+]
+Two patches in the set were sent to LKML previously but are included
+here for context around the benchmark performance impact:
+https://lore.kernel.org/lkml/20200327172914.28603-1-irogers@google.com/T/#u
+https://lore.kernel.org/lkml/20200328014221.168130-1-irogers@google.com/T/#u
+
+A future area of improvement could be to add the perf top
+num-thread-synthesize option more widely to other perf commands, and
+also to benchmark its effectiveness.
+
+Ian Rogers (4):
+  perf bench: add event synthesis benchmark
+  perf synthetic-events: save 4kb from 2 stack frames
+  tools api: add a lightweight buffered reading api
+  perf synthetic events: Remove use of sscanf from /proc reading
+
+Stephane Eranian (1):
+  tools api fs: make xxx__mountpoint() more scalable
+
+ tools/lib/api/fs/fs.c              |  17 +++
+ tools/lib/api/fs/fs.h              |  12 ++
+ tools/lib/api/io.h                 | 103 +++++++++++++++++
+ tools/perf/bench/Build             |   2 +-
+ tools/perf/bench/bench.h           |   2 +-
+ tools/perf/bench/synthesize.c      | 101 ++++++++++++++++
+ tools/perf/builtin-bench.c         |   6 +
+ tools/perf/util/synthetic-events.c | 177 +++++++++++++++++++----------
+ 8 files changed, 355 insertions(+), 65 deletions(-)
+ create mode 100644 tools/lib/api/io.h
+ create mode 100644 tools/perf/bench/synthesize.c
+
 -- 
-2.21.0
+2.26.0.rc2.310.g2932bb562d-goog
