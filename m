@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH 3/5] perf synthetic-events: save 4kb from 2 stack frames
-Date: Wed,  1 Apr 2020 16:39:43 -0700
-Message-ID: <20200401233945.133550-4-irogers@google.com>
+Subject: [PATCH 4/5] tools api: add a lightweight buffered reading api
+Date: Wed,  1 Apr 2020 16:39:44 -0700
+Message-ID: <20200401233945.133550-5-irogers@google.com>
 References: <20200401233945.133550-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,100 +12,125 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Reuse an existing char buffer to avoid two PATH_MAX sized char buffers.
-Reduces stack frame sizes by 4kb.
-
-perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
-'sub $0x35b8,%rsp'.
-
-perf_event__get_comm_ids before 'sub $0x2028,%rsp' after
-'sub $0x1028,%rsp'.
-
-The performance impact of this change is negligible.
+The synthesize benchmark shows the majority of execution time going to
+fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+reading library that will be used to replace these calls in a follow-up
+CL.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/synthetic-events.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ tools/lib/api/io.h | 103 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 tools/lib/api/io.h
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 3f28af39f9c6..1f3d8d4bb879 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -70,7 +70,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
- static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 				    pid_t *tgid, pid_t *ppid)
- {
--	char filename[PATH_MAX];
- 	char bf[4096];
- 	int fd;
- 	size_t size = 0;
-@@ -80,11 +79,11 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 	*tgid = -1;
- 	*ppid = -1;
- 
--	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
-+	snprintf(bf, sizeof(bf), "/proc/%d/status", pid);
- 
--	fd = open(filename, O_RDONLY);
-+	fd = open(bf, O_RDONLY);
- 	if (fd < 0) {
--		pr_debug("couldn't open %s\n", filename);
-+		pr_debug("couldn't open %s\n", bf);
- 		return -1;
- 	}
- 
-@@ -280,9 +279,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       struct machine *machine,
- 				       bool mmap_data)
- {
--	char filename[PATH_MAX];
- 	FILE *fp;
- 	unsigned long long t;
-+	char bf[BUFSIZ];
- 	bool truncation = false;
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
-@@ -292,15 +291,15 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	if (machine__is_default_guest(machine))
- 		return 0;
- 
--	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
--		 machine->root_dir, pid, pid);
-+	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
-+		machine->root_dir, pid, pid);
- 
--	fp = fopen(filename, "r");
-+	fp = fopen(bf, "r");
- 	if (fp == NULL) {
- 		/*
- 		 * We raced with a task exiting - just return:
- 		 */
--		pr_debug("couldn't open %s\n", filename);
-+		pr_debug("couldn't open %s\n", bf);
- 		return -1;
- 	}
- 
-@@ -308,7 +307,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	t = rdclock();
- 
- 	while (1) {
--		char bf[BUFSIZ];
- 		char prot[5];
- 		char execname[PATH_MAX];
- 		char anonstr[] = "//anon";
-@@ -320,10 +318,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
- 
- 		if ((rdclock() - t) > timeout) {
--			pr_warning("Reading %s time out. "
-+			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
- 				   "You may want to increase "
- 				   "the time limit by --proc-map-timeout\n",
--				   filename);
-+				   machine->root_dir, pid, pid);
- 			truncation = true;
- 			goto out;
- 		}
+diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+new file mode 100644
+index 000000000000..e88d76c59440
+--- /dev/null
++++ b/tools/lib/api/io.h
+@@ -0,0 +1,103 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Lightweight buffered reading library.
++ *
++ * Copyright 2019 Google LLC.
++ */
++
++struct io {
++	/* File descriptor being read/ */
++	int fd;
++	/* Size of the read buffer. */
++	unsigned int buf_len;
++	/* Pointer to storage for buffering read. */
++	char *buf;
++	/* End of the storage. */
++	char *end;
++	/* Currently accessed data pointer. */
++	char *data;
++	/* Set true on when the end of file on read error. */
++	bool eof;
++};
++
++static inline void init_io(struct io *io, int fd,
++			   char *buf, unsigned int buf_len)
++{
++	io->fd = fd;
++	io->buf_len = buf_len;
++	io->buf = buf;
++	io->end = buf;
++	io->data = buf;
++	io->eof = false;
++}
++
++/* Reads one character from the "io" file with similar semantics to fgetc. */
++static inline int get_char(struct io *io)
++{
++	char *ptr = io->data;
++
++	if (ptr == io->end) {
++		ssize_t n = read(io->fd, io->buf, io->buf_len);
++
++		if (n <= 0) {
++			io->eof = true;
++			return -1;
++		}
++		ptr = &io->buf[0];
++		io->end = &io->buf[n];
++	}
++	io->data = ptr + 1;
++	return *ptr;
++}
++
++/* Read a hexadecimal value with no 0x prefix into the out argument hex.
++ * Returns -1 on error or if nothing is read, otherwise returns the character
++ * after the hexadecimal value.
++ */
++static inline int get_hex(struct io *io, __u64 *hex)
++{
++	bool first_read = true;
++
++	*hex = 0;
++	while (true) {
++		char ch = get_char(io);
++
++		if (ch < 0)
++			return ch;
++		if (ch >= '0' && ch <= '9')
++			*hex = (*hex << 4) | (ch - '0');
++		else if (ch >= 'a' && ch <= 'f')
++			*hex = (*hex << 4) | (ch - 'a' + 10);
++		else if (ch >= 'A' && ch <= 'F')
++			*hex = (*hex << 4) | (ch - 'A' + 10);
++		else if (first_read)
++			return -1;
++		else
++			return ch;
++		first_read = false;
++	}
++}
++
++/* Read a decimal value into the out argument dec.
++ * Returns -1 on error or if nothing is read, otherwise returns the character
++ * after the decimal value.
++ */
++static inline int get_dec(struct io *io, __u64 *dec)
++{
++	bool first_read = true;
++
++	*dec = 0;
++	while (true) {
++		char ch = get_char(io);
++
++		if (ch < 0)
++			return ch;
++		if (ch >= '0' && ch <= '9')
++			*dec = (*dec * 10) + ch - '0';
++		else if (first_read)
++			return -1;
++		else
++			return ch;
++		first_read = false;
++	}
++}
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
