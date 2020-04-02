@@ -1,54 +1,43 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v8 6/7] tools/perf: Enable Hz/hz prinitg for
- --metric-only option
-Date: Thu, 2 Apr 2020 14:49:46 +0200
-Message-ID: <20200402124946.GH2518490@krava>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
- <20200401203340.31402-7-kjain@linux.ibm.com>
+From: Andreas Gerstmayr <agerstmayr@redhat.com>
+Subject: [PATCH] perf script report: fix segfault when using DWARF mode
+Date: Thu,  2 Apr 2020 14:54:16 +0200
+Message-ID: <20200402125417.422232-1-agerstmayr@redhat.com>
+References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200401203340.31402-7-kjain@linux.ibm.com>
+In-Reply-To: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
+To: linux-perf-users@vger.kernel.org
+Cc: Andreas Gerstmayr <agerstmayr@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Apr 02, 2020 at 02:03:39AM +0530, Kajol Jain wrote:
-> Commit 54b5091606c18 ("perf stat: Implement --metric-only mode")
-> added function 'valid_only_metric()' which drops "Hz" or "hz",
-> if it is part of "ScaleUnit". This patch enable it since hv_24x7
-> supports couple of frequency events.
-> 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  tools/perf/util/stat-display.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 9e757d18d713..679aaa655824 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -237,8 +237,6 @@ static bool valid_only_metric(const char *unit)
->  	if (!unit)
->  		return false;
->  	if (strstr(unit, "/sec") ||
-> -	    strstr(unit, "hz") ||
-> -	    strstr(unit, "Hz") ||
+When running perf script report with a Python script and a callgraph in
+DWARF mode, intr_regs->regs can be 0 and therefore crashing the regs_map
+function.
 
-will this change output of --metric-only for some setups then?
+Added a check for this condition (same check as in builtin-script.c:595).
 
-Andi, are you ok with this?
+Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+---
+ tools/perf/util/scripting-engines/trace-event-python.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-other than this, the patchset looks ok to me
-
-thanks,
-jirka
-
->  	    strstr(unit, "CPUs utilized"))
->  		return false;
->  	return true;
-> -- 
-> 2.21.0
-> 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/too=
+ls/perf/util/scripting-engines/trace-event-python.c
+index 8c1b27cd8b99..2c372cf5495e 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -694,6 +694,9 @@ static int regs_map(struct regs_dump *regs, uint64_t =
+mask, char *bf, int size)
+=20
+ 	bf[0] =3D 0;
+=20
++	if (!regs || !regs->regs)
++		return 0;
++
+ 	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
+ 		u64 val =3D regs->regs[i++];
+=20
+--=20
+2.25.1
