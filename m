@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 2/5] tools api fs: make xxx__mountpoint() more scalable
-Date: Thu,  2 Apr 2020 08:43:54 -0700
-Message-ID: <20200402154357.107873-3-irogers@google.com>
+Subject: [PATCH v2 5/5] perf synthetic events: Remove use of sscanf from /proc reading
+Date: Thu,  2 Apr 2020 08:43:57 -0700
+Message-ID: <20200402154357.107873-6-irogers@google.com>
 References: <20200402154357.107873-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,164 +12,264 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+The synthesize benchmark, run on a single process and thread, shows
+perf_event__synthesize_mmap_events as the hottest function with fgets
+and sscanf taking the majority of execution time. fscanf performs
+similarly well. Replace the scanf call with manual reading of each field
+of the /proc/pid/maps line, and remove some unnecessary buffering.
+This change also addresses potential, but unlikely, buffer overruns for
+the string values read by scanf.
 
-The xxx_mountpoint() interface provided by fs.c finds
-mount points for common pseudo filesystems. The first
-time xxx_mountpoint() is invoked, it scans the mount
-table (/proc/mounts) looking for a match. If found, it
-is cached. The price to scan /proc/mounts is paid once
-if the mount is found.
+Performance before is:
+Average synthesis took: 120.195100 usec
+Average data synthesis took: 156.582300 usec
 
-When the mount point is not found, subsequent calls to
-xxx_mountpoint() scan /proc/mounts over and over again.
-There is no caching.
+And after is:
+Average synthesis took: 67.189100 usec
+Average data synthesis took: 102.451600 usec
 
-This causes a scaling issue in perf record with hugeltbfs__mountpoint().
-The function is called for each process found in synthesize__mmap_events().
-If the machine has thousands of processes and if the /proc/mounts has many
-entries this could cause major overhead in perf record. We have observed
-multi-second slowdowns on some configurations.
+On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
 
-As an example on a laptop:
-
-Before:
-$ sudo umount /dev/hugepages
-$ strace -e trace=openat -o /tmp/tt perf record -a ls
-$ fgrep mounts /tmp/tt
-285
-
-After:
-$ sudo umount /dev/hugepages
-$ strace -e trace=openat -o /tmp/tt perf record -a ls
-$ fgrep mounts /tmp/tt
-1
-
-One could argue that the non-caching in case the moint point is not found
-is intentional. That way subsequent calls may discover a moint point if
-the sysadmin mounts the filesystem. But the same argument could be made
-against caching the mount point. It could be unmounted causing errors.
-It all depends on the intent of the interface. This patch assumes it
-is expected to scan /proc/mounts once. The patch documents the caching
-behavior in the fs.h header file.
-
-An alternative would be to just fix perf record. But it would solve
-the problem with hugetlbs__mountpoint() but there could be similar
-issues (possibly down the line) with other xxx_mountpoint() calls
-in perf or other tools.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 17 +++++++++++++++++
- tools/lib/api/fs/fs.h | 12 ++++++++++++
- 2 files changed, 29 insertions(+)
+ tools/perf/util/synthetic-events.c | 157 +++++++++++++++++++----------
+ 1 file changed, 105 insertions(+), 52 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 027b18f7ed8c..82f53d81a7a7 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -90,6 +90,7 @@ struct fs {
- 	const char * const	*mounts;
- 	char			 path[PATH_MAX];
- 	bool			 found;
-+	bool			 checked;
- 	long			 magic;
- };
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 1f3d8d4bb879..ebe48e35499d 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -36,6 +36,7 @@
+ #include <string.h>
+ #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
+ #include <api/fs/fs.h>
++#include <api/io.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -272,6 +273,79 @@ static int perf_event__synthesize_fork(struct perf_tool *tool,
+ 	return 0;
+ }
  
-@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
- 		.name	= "sysfs",
- 		.mounts	= sysfs__fs_known_mountpoints,
- 		.magic	= SYSFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__PROCFS] = {
- 		.name	= "proc",
- 		.mounts	= procfs__known_mountpoints,
- 		.magic	= PROC_SUPER_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__DEBUGFS] = {
- 		.name	= "debugfs",
- 		.mounts	= debugfs__known_mountpoints,
- 		.magic	= DEBUGFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__TRACEFS] = {
- 		.name	= "tracefs",
- 		.mounts	= tracefs__known_mountpoints,
- 		.magic	= TRACEFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__HUGETLBFS] = {
- 		.name	= "hugetlbfs",
- 		.mounts = hugetlbfs__known_mountpoints,
- 		.magic	= HUGETLBFS_MAGIC,
-+		.checked = false,
- 	},
- 	[FS__BPF_FS] = {
- 		.name	= "bpf",
- 		.mounts = bpf_fs__known_mountpoints,
- 		.magic	= BPF_FS_MAGIC,
-+		.checked = false,
- 	},
- };
++static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
++				u32 *prot, u32 *flags, __u64 *offset,
++				u32 *maj, u32 *min,
++				__u64 *inode,
++				ssize_t pathname_size, char *pathname)
++{
++	__u64 temp;
++	int ch;
++	char *start_pathname = pathname;
++
++	if (io__get_hex(io, start) != '-')
++		return false;
++	if (io__get_hex(io, end) != ' ')
++		return false;
++
++	/* map protection and flags bits */
++	*prot = 0;
++	ch = io__get_char(io);
++	if (ch == 'r')
++		*prot |= PROT_READ;
++	else if (ch != '-')
++		return false;
++	ch = io__get_char(io);
++	if (ch == 'w')
++		*prot |= PROT_WRITE;
++	else if (ch != '-')
++		return false;
++	ch = io__get_char(io);
++	if (ch == 'x')
++		*prot |= PROT_EXEC;
++	else if (ch != '-')
++		return false;
++	ch = io__get_char(io);
++	if (ch == 's')
++		*flags = MAP_SHARED;
++	else if (ch == 'p')
++		*flags = MAP_PRIVATE;
++	else
++		return false;
++	if (io__get_char(io) != ' ')
++		return false;
++
++	if (io__get_hex(io, offset) != ' ')
++		return false;
++
++	if (io__get_hex(io, &temp) != ':')
++		return false;
++	*maj = temp;
++	if (io__get_hex(io, &temp) != ' ')
++		return false;
++	*min = temp;
++
++	ch = io__get_dec(io, inode);
++	if (ch != ' ') {
++		*pathname = '\0';
++		return ch == '\n';
++	}
++	do {
++		ch = io__get_char(io);
++	} while (ch == ' ');
++	while (true) {
++		if (ch < 0)
++			return false;
++		if (ch == '\0' || ch == '\n' ||
++		    (pathname + 1 - start_pathname) >= pathname_size) {
++			*pathname = '\0';
++			return true;
++		}
++		*pathname++ = ch;
++		ch = io__get_char(io);
++	}
++}
++
+ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       union perf_event *event,
+ 				       pid_t pid, pid_t tgid,
+@@ -279,9 +353,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       struct machine *machine,
+ 				       bool mmap_data)
+ {
+-	FILE *fp;
+ 	unsigned long long t;
+ 	char bf[BUFSIZ];
++	struct io io;
+ 	bool truncation = false;
+ 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
+ 	int rc = 0;
+@@ -294,28 +368,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
+ 		machine->root_dir, pid, pid);
  
-@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
+-	fp = fopen(bf, "r");
+-	if (fp == NULL) {
++	io.fd = open(bf, O_RDONLY, 0);
++	if (io.fd < 0) {
+ 		/*
+ 		 * We raced with a task exiting - just return:
+ 		 */
+ 		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
++	io__init(&io, io.fd, bf, sizeof(bf));
+ 
+ 	event->header.type = PERF_RECORD_MMAP2;
+ 	t = rdclock();
+ 
+-	while (1) {
+-		char prot[5];
+-		char execname[PATH_MAX];
+-		char anonstr[] = "//anon";
+-		unsigned int ino;
++	while (!io.eof) {
++		static const char anonstr[] = "//anon";
+ 		size_t size;
+-		ssize_t n;
+ 
+-		if (fgets(bf, sizeof(bf), fp) == NULL)
+-			break;
++		/* ensure null termination since stack will be reused. */
++		event->mmap2.filename[0] = '\0';
++
++		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
++		if (!read_proc_maps_line(&io,
++					&event->mmap2.start,
++					&event->mmap2.len,
++					&event->mmap2.prot,
++					&event->mmap2.flags,
++					&event->mmap2.pgoff,
++					&event->mmap2.maj,
++					&event->mmap2.min,
++					&event->mmap2.ino,
++					sizeof(event->mmap2.filename),
++					event->mmap2.filename))
++			continue;
+ 
+ 		if ((rdclock() - t) > timeout) {
+ 			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
+@@ -326,23 +411,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			goto out;
+ 		}
+ 
+-		/* ensure null termination since stack will be reused. */
+-		strcpy(execname, "");
+-
+-		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
+-		n = sscanf(bf, "%"PRI_lx64"-%"PRI_lx64" %s %"PRI_lx64" %x:%x %u %[^\n]\n",
+-		       &event->mmap2.start, &event->mmap2.len, prot,
+-		       &event->mmap2.pgoff, &event->mmap2.maj,
+-		       &event->mmap2.min,
+-		       &ino, execname);
+-
+-		/*
+- 		 * Anon maps don't have the execname.
+- 		 */
+-		if (n < 7)
+-			continue;
+-
+-		event->mmap2.ino = (u64)ino;
+ 		event->mmap2.ino_generation = 0;
+ 
+ 		/*
+@@ -353,23 +421,8 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 		else
+ 			event->header.misc = PERF_RECORD_MISC_GUEST_USER;
+ 
+-		/* map protection and flags bits */
+-		event->mmap2.prot = 0;
+-		event->mmap2.flags = 0;
+-		if (prot[0] == 'r')
+-			event->mmap2.prot |= PROT_READ;
+-		if (prot[1] == 'w')
+-			event->mmap2.prot |= PROT_WRITE;
+-		if (prot[2] == 'x')
+-			event->mmap2.prot |= PROT_EXEC;
+-
+-		if (prot[3] == 's')
+-			event->mmap2.flags |= MAP_SHARED;
+-		else
+-			event->mmap2.flags |= MAP_PRIVATE;
+-
+-		if (prot[2] != 'x') {
+-			if (!mmap_data || prot[0] != 'r')
++		if ((event->mmap2.prot & PROT_EXEC) == 0) {
++			if (!mmap_data || (event->mmap2.prot & PROT_READ) == 0)
+ 				continue;
+ 
+ 			event->header.misc |= PERF_RECORD_MISC_MMAP_DATA;
+@@ -379,17 +432,17 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 		if (truncation)
+ 			event->header.misc |= PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT;
+ 
+-		if (!strcmp(execname, ""))
+-			strcpy(execname, anonstr);
++		if (!strcmp(event->mmap2.filename, ""))
++			strcpy(event->mmap2.filename, anonstr);
+ 
+ 		if (hugetlbfs_mnt_len &&
+-		    !strncmp(execname, hugetlbfs_mnt, hugetlbfs_mnt_len)) {
+-			strcpy(execname, anonstr);
++		    !strncmp(event->mmap2.filename, hugetlbfs_mnt,
++			     hugetlbfs_mnt_len)) {
++			strcpy(event->mmap2.filename, anonstr);
+ 			event->mmap2.flags |= MAP_HUGETLB;
+ 		}
+ 
+-		size = strlen(execname) + 1;
+-		memcpy(event->mmap2.filename, execname, size);
++		size = strlen(event->mmap2.filename) + 1;
+ 		size = PERF_ALIGN(size, sizeof(u64));
+ 		event->mmap2.len -= event->mmap.start;
+ 		event->mmap2.header.size = (sizeof(event->mmap2) -
+@@ -408,7 +461,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			break;
  	}
  
- 	fclose(fp);
-+	fs->checked = true;
- 	return fs->found = found;
+-	fclose(fp);
++	close(io.fd);
+ 	return rc;
  }
  
-@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
- 		return false;
- 
- 	fs->found = true;
-+	fs->checked = true;
- 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
- 	fs->path[sizeof(fs->path) - 1] = '\0';
- 	return true;
-@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
- 	if (fs->found)
- 		return (const char *)fs->path;
- 
-+	/* the mount point was already checked for the mount point
-+	 * but and did not exist, so return NULL to avoid scanning again.
-+	 * This makes the found and not found paths cost equivalent
-+	 * in case of multiple calls.
-+	 */
-+	if (fs->checked)
-+		return NULL;
-+
- 	return fs__get_mountpoint(fs);
- }
- 
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index 936edb95e1f3..aa222ca30311 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -18,6 +18,18 @@
- 	const char *name##__mount(void);	\
- 	bool name##__configured(void);		\
- 
-+/*
-+ * The xxxx__mountpoint() entry points find the first match mount point for each
-+ * filesystems listed below, where xxxx is the filesystem type.
-+ *
-+ * The interface is as follows:
-+ *
-+ * - If a mount point is found on first call, it is cached and used for all
-+ *   subsequent calls.
-+ *
-+ * - If a mount point is not found, NULL is returned on first call and all
-+ *   subsequent calls.
-+ */
- FS(sysfs)
- FS(procfs)
- FS(debugfs)
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
