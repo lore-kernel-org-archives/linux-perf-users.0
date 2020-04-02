@@ -1,60 +1,54 @@
-From: Andreas Gerstmayr <agerstmayr@redhat.com>
-Subject: [PATCH] perf script: fix invalid read
-Date: Thu,  2 Apr 2020 14:43:38 +0200
-Message-ID: <20200402124337.419456-1-agerstmayr@redhat.com>
-References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v8 6/7] tools/perf: Enable Hz/hz prinitg for
+ --metric-only option
+Date: Thu, 2 Apr 2020 14:49:46 +0200
+Message-ID: <20200402124946.GH2518490@krava>
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
+ <20200401203340.31402-7-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+Content-Disposition: inline
+In-Reply-To: <20200401203340.31402-7-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org
-Cc: Andreas Gerstmayr <agerstmayr@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-closedir(lang_dir) frees the memory of script_dirent->d_name, which
-gets accessed in the next line in a call to scnprintf().
+On Thu, Apr 02, 2020 at 02:03:39AM +0530, Kajol Jain wrote:
+> Commit 54b5091606c18 ("perf stat: Implement --metric-only mode")
+> added function 'valid_only_metric()' which drops "Hz" or "hz",
+> if it is part of "ScaleUnit". This patch enable it since hv_24x7
+> supports couple of frequency events.
+> 
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  tools/perf/util/stat-display.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 9e757d18d713..679aaa655824 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -237,8 +237,6 @@ static bool valid_only_metric(const char *unit)
+>  	if (!unit)
+>  		return false;
+>  	if (strstr(unit, "/sec") ||
+> -	    strstr(unit, "hz") ||
+> -	    strstr(unit, "Hz") ||
 
-Valgrind report:
+will this change output of --metric-only for some setups then?
 
-Invalid read of size 1
-=3D=3D413557=3D=3D    at 0x483CBE6: strlen (vg_replace_strmem.c:461)
-=3D=3D413557=3D=3D    by 0x4DD45FD: __vfprintf_internal (vfprintf-interna=
-l.c:1688)
-=3D=3D413557=3D=3D    by 0x4DE6679: __vsnprintf_internal (vsnprintf.c:114=
-)
-=3D=3D413557=3D=3D    by 0x53A037: vsnprintf (stdio2.h:80)
-=3D=3D413557=3D=3D    by 0x53A037: scnprintf (vsprintf.c:21)
-=3D=3D413557=3D=3D    by 0x435202: get_script_path (builtin-script.c:3223=
-)
-=3D=3D413557=3D=3D  Address 0x52e7313 is 1,139 bytes inside a block of si=
-ze 32,816 free'd
-=3D=3D413557=3D=3D    at 0x483AA0C: free (vg_replace_malloc.c:540)
-=3D=3D413557=3D=3D    by 0x4E303C0: closedir (closedir.c:50)
-=3D=3D413557=3D=3D    by 0x4351DC: get_script_path (builtin-script.c:3222=
-)
+Andi, are you ok with this?
 
-Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
----
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+other than this, the patchset looks ok to me
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 656b347f6dd8..170af13b4d53 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3218,10 +3218,10 @@ static char *get_script_path(const char *script_r=
-oot, const char *suffix)
- 			__script_root =3D get_script_root(script_dirent, suffix);
- 			if (__script_root && !strcmp(script_root, __script_root)) {
- 				free(__script_root);
--				closedir(lang_dir);
- 				closedir(scripts_dir);
- 				scnprintf(script_path, MAXPATHLEN, "%s/%s",
- 					  lang_path, script_dirent->d_name);
-+				closedir(lang_dir);
- 				return strdup(script_path);
- 			}
- 			free(__script_root);
---=20
-2.25.1
+thanks,
+jirka
+
+>  	    strstr(unit, "CPUs utilized"))
+>  		return false;
+>  	return true;
+> -- 
+> 2.21.0
+> 
