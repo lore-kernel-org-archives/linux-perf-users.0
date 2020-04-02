@@ -1,42 +1,39 @@
-From: Andreas Gerstmayr <agerstmayr@redhat.com>
-Subject: Re: [PATCH] perf script: add flamegraph.py script
-Date: Thu, 2 Apr 2020 15:04:31 +0200
-Message-ID: <833a5e74-645a-130c-ceab-068880e0c69a@redhat.com>
-References: <20200320151355.66302-1-agerstmayr@redhat.com>
- <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
- <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
- <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH 5/5] perf synthetic events: Remove use of sscanf from
+ /proc reading
+Date: Thu, 2 Apr 2020 15:40:52 +0200
+Message-ID: <20200402134052.GI2518490@krava>
+References: <20200401233945.133550-1-irogers@google.com>
+ <20200401233945.133550-6-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200401233945.133550-6-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@amd.com>, linux-perf-users@vger.kernel.org
-Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 26.03.20 20:04, Kim Phillips wrote:
-> I now get a SIGSEGV when executing perf script report flamegraph.
+On Wed, Apr 01, 2020 at 04:39:45PM -0700, Ian Rogers wrote:
+> The synthesize benchmark, run on a single process and thread, shows
+> perf_event__synthesize_mmap_events as the hottest function with fgets
+> and sscanf taking the majority of execution time. fscanf performs
+> similarly well. Replace the scanf call with manual reading of each field
+> of the /proc/pid/maps line, and remove some unnecessary buffering.
+> This change also addresses potential, but unlikely, buffer overruns for
+> the string values read by scanf.
 > 
-> Here's a trace:
+> Performance before is:
+> Average synthesis took: 120.195100 usec
+> Average data synthesis took: 156.582300 usec
 > 
-> #0  0x000055555590a9b2 in regs_map (regs=0x7fffffffbfc8, mask=16715775,
->      bf=0x7fffffffba60 "", size=512) at util/scripting-engines/trace-event-python.c:696
-> #1  0x000055555590ab03 in set_regs_in_dict (dict=0x7ffff61dd500, sample=0x7fffffffbf20,
->      evsel=0x555555d7a700) at util/scripting-engines/trace-event-python.c:718
+> And after is:
+> Average synthesis took: 67.189100 usec
+> Average data synthesis took: 102.451600 usec
+> 
+> On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
 
-This error seems unrelated to flamegraph.py (occurs also with the 
-stackcollapse.py script).
+I can see the speedup as well, thanks!
 
-Looks like the intr_regs->regs can be 0 when running in DWARF mode (this 
-error doesn't occur in the default mode). I've added a check and sent a 
-patch. While at it, valgrind reported an invalid read in a different 
-code path, which is fixed by the other patch I just sent a few minutes ago.
-
-Can you please test again and report if there are any other issues?
-
-
-Cheers,
-Andreas
+jirka
