@@ -1,8 +1,8 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH 5/5] perf synthetic events: Remove use of sscanf from
  /proc reading
-Date: Thu, 2 Apr 2020 15:40:52 +0200
-Message-ID: <20200402134052.GI2518490@krava>
+Date: Thu, 2 Apr 2020 15:41:03 +0200
+Message-ID: <20200402134103.GJ2518490@krava>
 References: <20200401233945.133550-1-irogers@google.com>
  <20200401233945.133550-6-irogers@google.com>
 Mime-Version: 1.0
@@ -16,24 +16,72 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 List-Id: linux-perf-users.vger.kernel.org
 
 On Wed, Apr 01, 2020 at 04:39:45PM -0700, Ian Rogers wrote:
-> The synthesize benchmark, run on a single process and thread, shows
-> perf_event__synthesize_mmap_events as the hottest function with fgets
-> and sscanf taking the majority of execution time. fscanf performs
-> similarly well. Replace the scanf call with manual reading of each field
-> of the /proc/pid/maps line, and remove some unnecessary buffering.
-> This change also addresses potential, but unlikely, buffer overruns for
-> the string values read by scanf.
-> 
-> Performance before is:
-> Average synthesis took: 120.195100 usec
-> Average data synthesis took: 156.582300 usec
-> 
-> And after is:
-> Average synthesis took: 67.189100 usec
-> Average data synthesis took: 102.451600 usec
-> 
-> On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
 
-I can see the speedup as well, thanks!
+SNIP
+
+> @@ -279,9 +353,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>  				       struct machine *machine,
+>  				       bool mmap_data)
+>  {
+> -	FILE *fp;
+>  	unsigned long long t;
+>  	char bf[BUFSIZ];
+> +	struct io io;
+>  	bool truncation = false;
+>  	unsigned long long timeout = proc_map_timeout * 1000000ULL;
+>  	int rc = 0;
+> @@ -294,28 +368,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+>  	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
+>  		machine->root_dir, pid, pid);
+>  
+> -	fp = fopen(bf, "r");
+> -	if (fp == NULL) {
+> +	io.fd = open(bf, O_RDONLY, 0);
+> +	if (io.fd < 0) {
+>  		/*
+>  		 * We raced with a task exiting - just return:
+>  		 */
+>  		pr_debug("couldn't open %s\n", bf);
+>  		return -1;
+>  	}
+> +	init_io(&io, io.fd, bf, sizeof(bf));
+>  
+>  	event->header.type = PERF_RECORD_MMAP2;
+>  	t = rdclock();
+>  
+> -	while (1) {
+> -		char prot[5];
+> -		char execname[PATH_MAX];
+> -		char anonstr[] = "//anon";
+> -		unsigned int ino;
+> +	while (!io.eof) {
+> +		static const char anonstr[] = "//anon";
+>  		size_t size;
+> -		ssize_t n;
+>  
+> -		if (fgets(bf, sizeof(bf), fp) == NULL)
+> -			break;
+> +		/* ensure null termination since stack will be reused. */
+> +		strcpy(event->mmap2.filename, "");
+
+could you just do 'event->mmap2.filename[0] = 0x0' instad ?
 
 jirka
+
+> +
+> +		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
+> +		if (!read_proc_maps_line(&io,
+> +					&event->mmap2.start,
+> +					&event->mmap2.len,
+> +					&event->mmap2.prot,
+> +					&event->mmap2.flags,
+> +					&event->mmap2.pgoff,
+> +					&event->mmap2.maj,
+> +					&event->mmap2.min,
+> +					&event->mmap2.ino,
+> +					sizeof(event->mmap2.filename),
+> +					event->mmap2.filename))
+> +			continue;
+>  
+
+SNIP
