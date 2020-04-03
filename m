@@ -1,91 +1,65 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/31] perf callchain: Update docs regarding kernel/user space unwinding
-Date: Fri,  3 Apr 2020 11:54:13 -0300
-Message-ID: <20200403145443.24774-2-acme@kernel.org>
+Subject: [PATCH 02/31] perf parse-events: Add defensive NULL check
+Date: Fri,  3 Apr 2020 11:54:14 -0300
+Message-ID: <20200403145443.24774-3-acme@kernel.org>
 References: <20200403145443.24774-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tony Jones <tonyj@suse.de>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, clang-built-linux@googlegroups.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: Ian Rogers <irogers@google.com>
 
-The method of unwinding for kernel space is defined by the kernel
-config, not by the value of --call-graph.   Improve the documentation to
-reflect this.
+Terms may have a NULL config in which case a strcmp will SEGV. This can
+be reproduced with:
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Link: http://lore.kernel.org/lkml/20200325164053.10177-1-tonyj@suse.de
+  perf stat -e '*/event=?,nr/' sleep 1
+
+Add a NULL check to avoid this. This was caught by LLVM's libfuzzer.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200325164022.41385-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-config.txt | 14 ++++++++------
- tools/perf/Documentation/perf-record.txt | 18 ++++++++++++------
- 2 files changed, 20 insertions(+), 12 deletions(-)
+ tools/perf/util/pmu.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 8ead55593984..f16d8a71d3f5 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -405,14 +405,16 @@ ui.*::
- 		This option is only applied to TUI.
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 616fbda7c3fc..ef6a63f3d386 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -984,12 +984,11 @@ static int pmu_resolve_param_term(struct parse_events_term *term,
+ 	struct parse_events_term *t;
  
- call-graph.*::
--	When sub-commands 'top' and 'report' work with -g/—-children
--	there're options in control of call-graph.
-+	The following controls the handling of call-graphs (obtained via the
-+	-g/--call-graph options).
+ 	list_for_each_entry(t, head_terms, list) {
+-		if (t->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
+-			if (!strcmp(t->config, term->config)) {
+-				t->used = true;
+-				*value = t->val.num;
+-				return 0;
+-			}
++		if (t->type_val == PARSE_EVENTS__TERM_TYPE_NUM &&
++		    t->config && !strcmp(t->config, term->config)) {
++			t->used = true;
++			*value = t->val.num;
++			return 0;
+ 		}
+ 	}
  
- 	call-graph.record-mode::
--		The record-mode can be 'fp' (frame pointer), 'dwarf' and 'lbr'.
--		The value of 'dwarf' is effective only if perf detect needed library
--		(libunwind or a recent version of libdw).
--		'lbr' only work for cpus that support it.
-+		The mode for user space can be 'fp' (frame pointer), 'dwarf'
-+		and 'lbr'.  The value 'dwarf' is effective only if libunwind
-+		(or a recent version of libdw) is present on the system;
-+		the value 'lbr' only works for certain cpus. The method for
-+		kernel space is controlled not by this option but by the
-+		kernel config (CONFIG_UNWINDER_*).
- 
- 	call-graph.dump-size::
- 		The size of stack to dump in order to do post-unwinding. Default is 8192 (byte).
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 7f4db7592467..b25e028458e2 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -237,16 +237,22 @@ OPTIONS
- 	option and remains only for backward compatibility.  See --event.
- 
- -g::
--	Enables call-graph (stack chain/backtrace) recording.
-+	Enables call-graph (stack chain/backtrace) recording for both
-+	kernel space and user space.
- 
- --call-graph::
- 	Setup and enable call-graph (stack chain/backtrace) recording,
--	implies -g.  Default is "fp".
-+	implies -g.  Default is "fp" (for user space).
- 
--	Allows specifying "fp" (frame pointer) or "dwarf"
--	(DWARF's CFI - Call Frame Information) or "lbr"
--	(Hardware Last Branch Record facility) as the method to collect
--	the information used to show the call graphs.
-+	The unwinding method used for kernel space is dependent on the
-+	unwinder used by the active kernel configuration, i.e
-+	CONFIG_UNWINDER_FRAME_POINTER (fp) or CONFIG_UNWINDER_ORC (orc)
-+
-+	Any option specified here controls the method used for user space.
-+
-+	Valid options are "fp" (frame pointer), "dwarf" (DWARF's CFI -
-+	Call Frame Information) or "lbr" (Hardware Last Branch Record
-+	facility).
- 
- 	In some systems, where binaries are build with gcc
- 	--fomit-frame-pointer, using the "fp" method will produce bogus
 -- 
 2.21.1
