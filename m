@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/31] perf script: Introduce --deltatime option
-Date: Fri,  3 Apr 2020 11:54:18 -0300
-Message-ID: <20200403145443.24774-7-acme@kernel.org>
+Subject: [PATCH 08/31] perf/core: Add PERF_SAMPLE_CGROUP feature
+Date: Fri,  3 Apr 2020 11:54:20 -0300
+Message-ID: <20200403145443.24774-9-acme@kernel.org>
 References: <20200403145443.24774-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,182 +9,148 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Hagen Paul Pfeifer <hagen@jauu.net>, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, Mark Rutland <mark.rutland@arm.com>, Zefan Li <lizefan@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Hagen Paul Pfeifer <hagen@jauu.net>
+From: Namhyung Kim <namhyung@kernel.org>
 
-For some kind of analysis a deltatime output is more human friendly and
-reduce the cognitive load for further analysis.
+The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information in
+the sample.  It will add a 64-bit id to identify current cgroup and it's
+the file handle in the cgroup file system.  Userspace should use this
+information with PERF_RECORD_CGROUP event to match which cgroup it
+belongs.
 
-The following output demonstrate the new option "deltatime": calculate
-the time difference in relation to the previous event.
-
-  $ perf script --deltatime
-  test  2525 [001]     0.000000:            sdt_libev:ev_add: (5635e72a5ebd)
-  test  2525 [001]     0.000091:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     1.000051: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000685:            sdt_libev:ev_add: (5635e72a5ebd)
-  test  2525 [001]     0.000048:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     1.000104: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.003895:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     0.996034: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000058:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     1.000004: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000064:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     0.999934: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
-  test  2525 [001]     0.000056:  sdt_libev:epoll_wait_enter: (5635e72a76a9)
-  test  2525 [001]     0.999930: sdt_libev:epoll_wait_return: (5635e72a772e) arg1=1
+I put it before PERF_SAMPLE_AUX for simplicity since it just needs a
+64-bit word.  But if we want bigger samples, I can work on that
+direction too.
 
 Committer testing:
 
-So go from default output to --reltime and then this new --deltatime, to
-contrast the various timestamp presentation modes for a random perf.data file I
-had laying around:
+  $ pahole perf_sample_data | grep -w cgroup -B5 -A5
+  	/* --- cacheline 4 boundary (256 bytes) was 56 bytes ago --- */
+  	struct perf_regs           regs_intr;            /*   312    16 */
+  	/* --- cacheline 5 boundary (320 bytes) was 8 bytes ago --- */
+  	u64                        stack_user_size;      /*   328     8 */
+  	u64                        phys_addr;            /*   336     8 */
+  	u64                        cgroup;               /*   344     8 */
 
-  [root@five ~]# perf script --reltime | head
-     perf 442394 [000]     0.000000:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000002:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000004:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000006:  128 cycles: ffffffff972415a1 perf_event_update_userpage+0x1 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000009: 2597 cycles: ffffffff97463785 cap_task_setscheduler+0x5 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000036:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000038:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000040:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000041:  224 cycles: ffffffff9700a53a perf_ibs_handle_irq+0x1da (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000044: 4439 cycles: ffffffff97120d85 put_prev_entity+0x45 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-  [root@five ~]# perf script --deltatime | head
-     perf 442394 [000]     0.000000:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000002:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000001:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000001:  128 cycles: ffffffff972415a1 perf_event_update_userpage+0x1 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]     0.000002: 2597 cycles: ffffffff97463785 cap_task_setscheduler+0x5 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000027:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000002:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000001:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000001:  224 cycles: ffffffff9700a53a perf_ibs_handle_irq+0x1da (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]     0.000002: 4439 cycles: ffffffff97120d85 put_prev_entity+0x45 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-  [root@five ~]# perf script | head
-     perf 442394 [000]  7600.157861:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157864:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157866:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157867:  128 cycles: ffffffff972415a1 perf_event_update_userpage+0x1 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [000]  7600.157870: 2597 cycles: ffffffff97463785 cap_task_setscheduler+0x5 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157897:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157900:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157901:   16 cycles: ffffffff9706e544 native_write_msr+0x4 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157903:  224 cycles: ffffffff9700a53a perf_ibs_handle_irq+0x1da (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-     perf 442394 [001]  7600.157906: 4439 cycles: ffffffff97120d85 put_prev_entity+0x45 (/usr/lib/debug/lib/modules/5.5.10-200.fc31.x86_64/vmlinux)
-  [root@five ~]#
+  	/* size: 384, cachelines: 6, members: 22 */
+  	/* padding: 32 */
+  };
+  $
 
-Andi suggested we better implement it as a new field, i.e. -F deltatime, like:
-
-  [root@five ~]# perf script -F deltatime
-  Invalid field requested.
-
-   Usage: perf script [<options>]
-      or: perf script [<options>] record <script> [<record-options>] <command>
-      or: perf script [<options>] report <script> [script-args]
-      or: perf script [<options>] <script> [<record-options>] <command>
-      or: perf script [<options>] <top-script> [script-args]
-
-      -F, --fields <str>    comma separated output fields prepend with 'type:'. +field to add and -field to remove.Valid types: hw,sw,trace,raw,synth. Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,addr,symoff,srcline,period,iregs,uregs,brstack,brstacksym,flags,bpf-output,brstackinsn,brstackoff,callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc
-  [root@five ~]#
-
-I.e. we have -F for maximum flexibility:
-
-  [root@five ~]# perf script -F comm,pid,cpu,time | head
-            perf 442394 [000]  7600.157861:
-            perf 442394 [000]  7600.157864:
-            perf 442394 [000]  7600.157866:
-            perf 442394 [000]  7600.157867:
-            perf 442394 [000]  7600.157870:
-            perf 442394 [001]  7600.157897:
-            perf 442394 [001]  7600.157900:
-            perf 442394 [001]  7600.157901:
-            perf 442394 [001]  7600.157903:
-            perf 442394 [001]  7600.157906:
-  [root@five ~]#
-
-But since we already have --reltime, having --deltatime, documented one after
-the other is sensible.
-
-Signed-off-by: Hagen Paul Pfeifer <hagen@jauu.net>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20200204173709.489161-1-hagen@jauu.net
-[ Added 'perf script' man page entry for --deltatime ]
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Zefan Li <lizefan@huawei.com>
+Link: http://lore.kernel.org/lkml/20200325124536.2800725-3-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-script.txt |  3 +++
- tools/perf/builtin-script.c              | 17 +++++++++++++++++
- 2 files changed, 20 insertions(+)
+ include/linux/perf_event.h      |  1 +
+ include/uapi/linux/perf_event.h |  3 ++-
+ init/Kconfig                    |  3 ++-
+ kernel/events/core.c            | 22 ++++++++++++++++++++++
+ 4 files changed, 27 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index db6a36aac47e..4af255bb0977 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -390,6 +390,9 @@ include::itrace.txt[]
- --reltime::
- 	Print time stamps relative to trace start.
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 8768a39b5258..9c3e7619c929 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -1020,6 +1020,7 @@ struct perf_sample_data {
+ 	u64				stack_user_size;
  
-+--deltatime::
-+	Print time stamps relative to previous event.
+ 	u64				phys_addr;
++	u64				cgroup;
+ } ____cacheline_aligned;
+ 
+ /* default value for data source */
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index de95f6c7b273..7b2d6fc9e6ed 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -142,8 +142,9 @@ enum perf_event_sample_format {
+ 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
+ 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
+ 	PERF_SAMPLE_AUX				= 1U << 20,
++	PERF_SAMPLE_CGROUP			= 1U << 21,
+ 
+-	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
++	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
+ 
+ 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
+ };
+diff --git a/init/Kconfig b/init/Kconfig
+index 20a6ac33761c..7766b06a0038 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1027,7 +1027,8 @@ config CGROUP_PERF
+ 	help
+ 	  This option extends the perf per-cpu mode to restrict monitoring
+ 	  to threads which belong to the cgroup specified and run on the
+-	  designated cpu.
++	  designated cpu.  Or this can be used to have cgroup ID in samples
++	  so that it can monitor performance events among cgroups.
+ 
+ 	  Say N if unsure.
+ 
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 994932d5e474..1569979c8912 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1862,6 +1862,9 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		size += sizeof(data->phys_addr);
+ 
++	if (sample_type & PERF_SAMPLE_CGROUP)
++		size += sizeof(data->cgroup);
 +
- --per-event-dump::
- 	Create per event files with a "perf.data.EVENT.dump" name instead of
-         printing to stdout, useful, for instance, for generating flamegraphs.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 656b347f6dd8..f63869aef914 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -63,7 +63,9 @@
- static char const		*script_name;
- static char const		*generate_script_lang;
- static bool			reltime;
-+static bool			deltatime;
- static u64			initial_time;
-+static u64			previous_time;
- static bool			debug_mode;
- static u64			last_timestamp;
- static u64			nr_unordered;
-@@ -704,6 +706,13 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 			if (!initial_time)
- 				initial_time = sample->time;
- 			t = sample->time - initial_time;
-+		} else if (deltatime) {
-+			if (previous_time)
-+				t = sample->time - previous_time;
-+			else {
-+				t = 0;
-+			}
-+			previous_time = sample->time;
- 		}
- 		nsecs = t;
- 		secs = nsecs / NSEC_PER_SEC;
-@@ -3555,6 +3564,7 @@ int cmd_script(int argc, const char **argv)
- 		     "anything beyond the specified depth will be ignored. "
- 		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
- 	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
-+	OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
- 	OPT_BOOLEAN('I', "show-info", &show_full_info,
- 		    "display extended information from perf.data file"),
- 	OPT_BOOLEAN('\0', "show-kernel-path", &symbol_conf.show_kernel_path,
-@@ -3651,6 +3661,13 @@ int cmd_script(int argc, const char **argv)
- 		}
- 	}
+ 	event->header_size = size;
+ }
  
-+	if (reltime && deltatime) {
-+		fprintf(stderr,
-+			"reltime and deltatime - the two don't get along well. "
-+			"Please limit to --reltime or --deltatime.\n");
-+		return -1;
+@@ -6867,6 +6870,9 @@ void perf_output_sample(struct perf_output_handle *handle,
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		perf_output_put(handle, data->phys_addr);
+ 
++	if (sample_type & PERF_SAMPLE_CGROUP)
++		perf_output_put(handle, data->cgroup);
++
+ 	if (sample_type & PERF_SAMPLE_AUX) {
+ 		perf_output_put(handle, data->aux_size);
+ 
+@@ -7066,6 +7072,16 @@ void perf_prepare_sample(struct perf_event_header *header,
+ 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
+ 		data->phys_addr = perf_virt_to_phys(data->addr);
+ 
++#ifdef CONFIG_CGROUP_PERF
++	if (sample_type & PERF_SAMPLE_CGROUP) {
++		struct cgroup *cgrp;
++
++		/* protected by RCU */
++		cgrp = task_css_check(current, perf_event_cgrp_id, 1)->cgroup;
++		data->cgroup = cgroup_id(cgrp);
 +	}
++#endif
 +
- 	if (itrace_synth_opts.callchain &&
- 	    itrace_synth_opts.callchain_sz > scripting_max_stack)
- 		scripting_max_stack = itrace_synth_opts.callchain_sz;
+ 	if (sample_type & PERF_SAMPLE_AUX) {
+ 		u64 size;
+ 
+@@ -11264,6 +11280,12 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
+ 
+ 	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
+ 		ret = perf_reg_validate(attr->sample_regs_intr);
++
++#ifndef CONFIG_CGROUP_PERF
++	if (attr->sample_type & PERF_SAMPLE_CGROUP)
++		return -EINVAL;
++#endif
++
+ out:
+ 	return ret;
+ 
 -- 
 2.21.1
