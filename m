@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/31] perf/core: Add PERF_SAMPLE_CGROUP feature
-Date: Fri,  3 Apr 2020 11:54:20 -0300
-Message-ID: <20200403145443.24774-9-acme@kernel.org>
+Subject: [PATCH 07/31] perf/core: Add PERF_RECORD_CGROUP event
+Date: Fri,  3 Apr 2020 11:54:19 -0300
+Message-ID: <20200403145443.24774-8-acme@kernel.org>
 References: <20200403145443.24774-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,148 +9,241 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, Mark Rutland <mark.rutland@arm.com>, Zefan Li <lizefan@huawei.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kbuild test robot <lkp@intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, Mark Rutland <mark.rutland@arm.com>, Zefan Li <lizefan@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Namhyung Kim <namhyung@kernel.org>
 
-The PERF_SAMPLE_CGROUP bit is to save (perf_event) cgroup information in
-the sample.  It will add a 64-bit id to identify current cgroup and it's
-the file handle in the cgroup file system.  Userspace should use this
-information with PERF_RECORD_CGROUP event to match which cgroup it
-belongs.
+To support cgroup tracking, add CGROUP event to save a link between
+cgroup path and id number.  This is needed since cgroups can go away
+when userspace tries to read the cgroup info (from the id) later.
 
-I put it before PERF_SAMPLE_AUX for simplicity since it just needs a
-64-bit word.  But if we want bigger samples, I can work on that
-direction too.
+The attr.cgroup bit was also added to enable cgroup tracking from
+userspace.
+
+This event will be generated when a new cgroup becomes active.
+Userspace might need to synthesize those events for existing cgroups.
 
 Committer testing:
 
-  $ pahole perf_sample_data | grep -w cgroup -B5 -A5
-  	/* --- cacheline 4 boundary (256 bytes) was 56 bytes ago --- */
-  	struct perf_regs           regs_intr;            /*   312    16 */
-  	/* --- cacheline 5 boundary (320 bytes) was 8 bytes ago --- */
-  	u64                        stack_user_size;      /*   328     8 */
-  	u64                        phys_addr;            /*   336     8 */
-  	u64                        cgroup;               /*   344     8 */
+From the resulting kernel, using /sys/kernel/btf/vmlinux:
 
-  	/* size: 384, cachelines: 6, members: 22 */
-  	/* padding: 32 */
-  };
+  $ pahole perf_event_attr | grep -w cgroup -B5 -A1
+  	__u64                      write_backward:1;     /*    40:27  8 */
+  	__u64                      namespaces:1;         /*    40:28  8 */
+  	__u64                      ksymbol:1;            /*    40:29  8 */
+  	__u64                      bpf_event:1;          /*    40:30  8 */
+  	__u64                      aux_output:1;         /*    40:31  8 */
+  	__u64                      cgroup:1;             /*    40:32  8 */
+  	__u64                      __reserved_1:31;      /*    40:33  8 */
   $
 
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Tejun Heo <tj@kernel.org>
+[staticize perf_event_cgroup function]
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Johannes Weiner <hannes@cmpxchg.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Zefan Li <lizefan@huawei.com>
-Link: http://lore.kernel.org/lkml/20200325124536.2800725-3-namhyung@kernel.org
+Link: http://lore.kernel.org/lkml/20200325124536.2800725-2-namhyung@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- include/linux/perf_event.h      |  1 +
- include/uapi/linux/perf_event.h |  3 ++-
- init/Kconfig                    |  3 ++-
- kernel/events/core.c            | 22 ++++++++++++++++++++++
- 4 files changed, 27 insertions(+), 2 deletions(-)
+ include/uapi/linux/perf_event.h |  13 +++-
+ kernel/events/core.c            | 111 ++++++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 8768a39b5258..9c3e7619c929 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1020,6 +1020,7 @@ struct perf_sample_data {
- 	u64				stack_user_size;
- 
- 	u64				phys_addr;
-+	u64				cgroup;
- } ____cacheline_aligned;
- 
- /* default value for data source */
 diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index de95f6c7b273..7b2d6fc9e6ed 100644
+index 397cfd65b3fe..de95f6c7b273 100644
 --- a/include/uapi/linux/perf_event.h
 +++ b/include/uapi/linux/perf_event.h
-@@ -142,8 +142,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
- 	PERF_SAMPLE_AUX				= 1U << 20,
-+	PERF_SAMPLE_CGROUP			= 1U << 21,
+@@ -381,7 +381,8 @@ struct perf_event_attr {
+ 				ksymbol        :  1, /* include ksymbol events */
+ 				bpf_event      :  1, /* include bpf events */
+ 				aux_output     :  1, /* generate AUX records instead of events */
+-				__reserved_1   : 32;
++				cgroup         :  1, /* include cgroup events */
++				__reserved_1   : 31;
  
--	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
+ 	union {
+ 		__u32		wakeup_events;	  /* wakeup every n events */
+@@ -1012,6 +1013,16 @@ enum perf_event_type {
+ 	 */
+ 	PERF_RECORD_BPF_EVENT			= 18,
  
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
++	/*
++	 * struct {
++	 *	struct perf_event_header	header;
++	 *	u64				id;
++	 *	char				path[];
++	 *	struct sample_id		sample_id;
++	 * };
++	 */
++	PERF_RECORD_CGROUP			= 19,
++
+ 	PERF_RECORD_MAX,			/* non-ABI */
  };
-diff --git a/init/Kconfig b/init/Kconfig
-index 20a6ac33761c..7766b06a0038 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1027,7 +1027,8 @@ config CGROUP_PERF
- 	help
- 	  This option extends the perf per-cpu mode to restrict monitoring
- 	  to threads which belong to the cgroup specified and run on the
--	  designated cpu.
-+	  designated cpu.  Or this can be used to have cgroup ID in samples
-+	  so that it can monitor performance events among cgroups.
- 
- 	  Say N if unsure.
  
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 994932d5e474..1569979c8912 100644
+index d22e4ba59dfa..994932d5e474 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -1862,6 +1862,9 @@ static void __perf_event_header_size(struct perf_event *event, u64 sample_type)
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		size += sizeof(data->phys_addr);
+@@ -387,6 +387,7 @@ static atomic_t nr_freq_events __read_mostly;
+ static atomic_t nr_switch_events __read_mostly;
+ static atomic_t nr_ksymbol_events __read_mostly;
+ static atomic_t nr_bpf_events __read_mostly;
++static atomic_t nr_cgroup_events __read_mostly;
  
-+	if (sample_type & PERF_SAMPLE_CGROUP)
-+		size += sizeof(data->cgroup);
-+
- 	event->header_size = size;
+ static LIST_HEAD(pmus);
+ static DEFINE_MUTEX(pmus_lock);
+@@ -4608,6 +4609,8 @@ static void unaccount_event(struct perf_event *event)
+ 		atomic_dec(&nr_comm_events);
+ 	if (event->attr.namespaces)
+ 		atomic_dec(&nr_namespaces_events);
++	if (event->attr.cgroup)
++		atomic_dec(&nr_cgroup_events);
+ 	if (event->attr.task)
+ 		atomic_dec(&nr_task_events);
+ 	if (event->attr.freq)
+@@ -7735,6 +7738,105 @@ void perf_event_namespaces(struct task_struct *task)
+ 			NULL);
  }
  
-@@ -6867,6 +6870,9 @@ void perf_output_sample(struct perf_output_handle *handle,
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		perf_output_put(handle, data->phys_addr);
- 
-+	if (sample_type & PERF_SAMPLE_CGROUP)
-+		perf_output_put(handle, data->cgroup);
-+
- 	if (sample_type & PERF_SAMPLE_AUX) {
- 		perf_output_put(handle, data->aux_size);
- 
-@@ -7066,6 +7072,16 @@ void perf_prepare_sample(struct perf_event_header *header,
- 	if (sample_type & PERF_SAMPLE_PHYS_ADDR)
- 		data->phys_addr = perf_virt_to_phys(data->addr);
- 
++/*
++ * cgroup tracking
++ */
 +#ifdef CONFIG_CGROUP_PERF
-+	if (sample_type & PERF_SAMPLE_CGROUP) {
-+		struct cgroup *cgrp;
 +
-+		/* protected by RCU */
-+		cgrp = task_css_check(current, perf_event_cgrp_id, 1)->cgroup;
-+		data->cgroup = cgroup_id(cgrp);
++struct perf_cgroup_event {
++	char				*path;
++	int				path_size;
++	struct {
++		struct perf_event_header	header;
++		u64				id;
++		char				path[];
++	} event_id;
++};
++
++static int perf_event_cgroup_match(struct perf_event *event)
++{
++	return event->attr.cgroup;
++}
++
++static void perf_event_cgroup_output(struct perf_event *event, void *data)
++{
++	struct perf_cgroup_event *cgroup_event = data;
++	struct perf_output_handle handle;
++	struct perf_sample_data sample;
++	u16 header_size = cgroup_event->event_id.header.size;
++	int ret;
++
++	if (!perf_event_cgroup_match(event))
++		return;
++
++	perf_event_header__init_id(&cgroup_event->event_id.header,
++				   &sample, event);
++	ret = perf_output_begin(&handle, event,
++				cgroup_event->event_id.header.size);
++	if (ret)
++		goto out;
++
++	perf_output_put(&handle, cgroup_event->event_id);
++	__output_copy(&handle, cgroup_event->path, cgroup_event->path_size);
++
++	perf_event__output_id_sample(event, &handle, &sample);
++
++	perf_output_end(&handle);
++out:
++	cgroup_event->event_id.header.size = header_size;
++}
++
++static void perf_event_cgroup(struct cgroup *cgrp)
++{
++	struct perf_cgroup_event cgroup_event;
++	char path_enomem[16] = "//enomem";
++	char *pathname;
++	size_t size;
++
++	if (!atomic_read(&nr_cgroup_events))
++		return;
++
++	cgroup_event = (struct perf_cgroup_event){
++		.event_id  = {
++			.header = {
++				.type = PERF_RECORD_CGROUP,
++				.misc = 0,
++				.size = sizeof(cgroup_event.event_id),
++			},
++			.id = cgroup_id(cgrp),
++		},
++	};
++
++	pathname = kmalloc(PATH_MAX, GFP_KERNEL);
++	if (pathname == NULL) {
++		cgroup_event.path = path_enomem;
++	} else {
++		/* just to be sure to have enough space for alignment */
++		cgroup_path(cgrp, pathname, PATH_MAX - sizeof(u64));
++		cgroup_event.path = pathname;
 +	}
++
++	/*
++	 * Since our buffer works in 8 byte units we need to align our string
++	 * size to a multiple of 8. However, we must guarantee the tail end is
++	 * zero'd out to avoid leaking random bits to userspace.
++	 */
++	size = strlen(cgroup_event.path) + 1;
++	while (!IS_ALIGNED(size, sizeof(u64)))
++		cgroup_event.path[size++] = '\0';
++
++	cgroup_event.event_id.header.size += size;
++	cgroup_event.path_size = size;
++
++	perf_iterate_sb(perf_event_cgroup_output,
++			&cgroup_event,
++			NULL);
++
++	kfree(pathname);
++}
++
 +#endif
 +
- 	if (sample_type & PERF_SAMPLE_AUX) {
- 		u64 size;
+ /*
+  * mmap tracking
+  */
+@@ -10781,6 +10883,8 @@ static void account_event(struct perf_event *event)
+ 		atomic_inc(&nr_comm_events);
+ 	if (event->attr.namespaces)
+ 		atomic_inc(&nr_namespaces_events);
++	if (event->attr.cgroup)
++		atomic_inc(&nr_cgroup_events);
+ 	if (event->attr.task)
+ 		atomic_inc(&nr_task_events);
+ 	if (event->attr.freq)
+@@ -12757,6 +12861,12 @@ static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
+ 	kfree(jc);
+ }
  
-@@ -11264,6 +11280,12 @@ static int perf_copy_attr(struct perf_event_attr __user *uattr,
- 
- 	if (attr->sample_type & PERF_SAMPLE_REGS_INTR)
- 		ret = perf_reg_validate(attr->sample_regs_intr);
++static int perf_cgroup_css_online(struct cgroup_subsys_state *css)
++{
++	perf_event_cgroup(css->cgroup);
++	return 0;
++}
 +
-+#ifndef CONFIG_CGROUP_PERF
-+	if (attr->sample_type & PERF_SAMPLE_CGROUP)
-+		return -EINVAL;
-+#endif
-+
- out:
- 	return ret;
- 
+ static int __perf_cgroup_move(void *info)
+ {
+ 	struct task_struct *task = info;
+@@ -12778,6 +12888,7 @@ static void perf_cgroup_attach(struct cgroup_taskset *tset)
+ struct cgroup_subsys perf_event_cgrp_subsys = {
+ 	.css_alloc	= perf_cgroup_css_alloc,
+ 	.css_free	= perf_cgroup_css_free,
++	.css_online	= perf_cgroup_css_online,
+ 	.attach		= perf_cgroup_attach,
+ 	/*
+ 	 * Implicitly enable on dfl hierarchy so that perf events can
 -- 
 2.21.1
