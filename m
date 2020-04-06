@@ -1,47 +1,112 @@
-From: Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
-Date: Mon, 6 Apr 2020 09:28:22 -0500
-Message-ID: <f523cfca-5592-c1ea-ad5a-7603c967c0c5@amd.com>
-References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
- <20200402125417.422232-1-agerstmayr@redhat.com>
- <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
- <20200403124028.GA18559@kernel.org>
- <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
- <0a942366-c8dd-4767-ee84-fdc0024b035f@redhat.com>
- <20200406125915.GQ9917@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: perf probe + uprobes missing events
+Date: Mon, 6 Apr 2020 11:53:56 -0300
+Message-ID: <20200406145356.GA32649@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200406125915.GQ9917@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Andreas Gerstmayr <agerstmayr@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <andi@firstfloor.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/6/20 7:59 AM, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Apr 06, 2020 at 11:30:23AM +0200, Andreas Gerstmayr escreveu:
->> On 03.04.20 15:16, Andreas Gerstmayr wrote:
->>> On 03.04.20 14:40, Arnaldo Carvalho de Melo wrote:
->>>> Em Thu, Apr 02, 2020 at 02:07:51PM -0500, Kim Phillips escreveu:
->>>>> On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
->>>>>> When running perf script report with a Python script and a callgraph in
->>>>>> DWARF mode, intr_regs->regs can be 0 and therefore crashing
->>>>>> the regs_map
->>>>>> function.
->>>>>> Added a check for this condition (same check as in
->>>>>> builtin-script.c:595).
->>>>>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
->>>>> Tested-by: Kim Phillips <kim.phillips@amd.com>
->>>> Thanks, added this to that patch.
->>> Great, thanks!
->> Ah, I thought you were referring to my initial flamegraph.py perf script.
->> Is there anything I can do to get it merged?
-> 
-> I'll test it today, were there any Tested-by: or Reviewed-by: to that
-> flamegraph.py?
+Hi Masami,
 
-I just added mine.
+	I'm trying to use 'perf probe' to debug 'perf test', but I'm not
+getting repeatable results, take a look:
 
-Kim
+I'm trying to figure out which expresssions are _really_ being tested
+byu the 'perf test expr' testcase, so I added a probe to the
+expr__parse() routine, asking for the expr string to be printed:
+
+[root@five ~]# perf probe -x ~/bin/perf -L expr__parse
+<expr__parse@/home/acme/git/perf/tools/perf/util/expr.c:0>
+      0  int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
+      1  {
+      2         return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
+      3  }
+
+         static bool
+         already_seen(const char *val, const char *one, const char **other,
+
+[root@five ~]#
+
+[root@five ~]# perf probe -x ~/bin/perf expr__parse expr:string
+Target program is compiled without optimization. Skipping prologue.
+Probe on address 0x5cb11b to force probing at the function entry.
+
+Added new event:
+  probe_perf:expr__parse (on expr__parse in /home/acme/bin/perf with expr:string)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe_perf:expr__parse -aR sleep 1
+
+[root@five ~]#
+
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+     0.000 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+     0.015 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+     0.018 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+     0.020 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+     0.023 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+     0.026 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+     0.029 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+     0.031 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
+     0.034 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
+     0.036 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
+     0.039 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
+     0.041 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+     0.000 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+     0.021 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+     0.025 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+     0.029 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+     0.033 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+     0.041 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+     0.044 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+     0.000 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+     0.020 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+     0.025 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+     0.029 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+     0.032 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+     0.037 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+     0.040 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+     0.043 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
+     0.046 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
+     0.049 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
+     0.053 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
+     0.056 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+[root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+ 7: Simple expression parser                              : Ok
+     0.000 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+     0.014 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+     0.017 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+     0.021 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+     0.024 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+     0.030 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+     0.032 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+     0.035 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
+     0.038 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
+     0.040 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
+     0.044 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
+     0.046 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
+[root@five ~]#
+
+
+Do you have any idea why that happens?
+
+- Arnaldo
