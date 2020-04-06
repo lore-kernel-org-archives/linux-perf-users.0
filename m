@@ -1,44 +1,47 @@
 From: Kim Phillips <kim.phillips@amd.com>
-Subject: Re: [PATCH] perf script: add flamegraph.py script
-Date: Mon, 6 Apr 2020 09:27:49 -0500
-Message-ID: <c9d85708-4409-0d67-eabd-912b073df49d@amd.com>
-References: <20200320151355.66302-1-agerstmayr@redhat.com>
- <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
- <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
- <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
- <833a5e74-645a-130c-ceab-068880e0c69a@redhat.com>
+Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
+Date: Mon, 6 Apr 2020 09:28:22 -0500
+Message-ID: <f523cfca-5592-c1ea-ad5a-7603c967c0c5@amd.com>
+References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+ <20200402125417.422232-1-agerstmayr@redhat.com>
+ <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
+ <20200403124028.GA18559@kernel.org>
+ <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
+ <0a942366-c8dd-4767-ee84-fdc0024b035f@redhat.com>
+ <20200406125915.GQ9917@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <833a5e74-645a-130c-ceab-068880e0c69a@redhat.com>
+In-Reply-To: <20200406125915.GQ9917@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Gerstmayr <agerstmayr@redhat.com>, linux-perf-users@vger.kernel.org
-Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/2/20 8:04 AM, Andreas Gerstmayr wrote:
-> On 26.03.20 20:04, Kim Phillips wrote:
->> I now get a SIGSEGV when executing perf script report flamegraph.
->>
->> Here's a trace:
->>
->> #0  0x000055555590a9b2 in regs_map (regs=0x7fffffffbfc8, mask=16715775,
->>      bf=0x7fffffffba60 "", size=512) at util/scripting-engines/trace-event-python.c:696
->> #1  0x000055555590ab03 in set_regs_in_dict (dict=0x7ffff61dd500, sample=0x7fffffffbf20,
->>      evsel=0x555555d7a700) at util/scripting-engines/trace-event-python.c:718
+On 4/6/20 7:59 AM, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Apr 06, 2020 at 11:30:23AM +0200, Andreas Gerstmayr escreveu:
+>> On 03.04.20 15:16, Andreas Gerstmayr wrote:
+>>> On 03.04.20 14:40, Arnaldo Carvalho de Melo wrote:
+>>>> Em Thu, Apr 02, 2020 at 02:07:51PM -0500, Kim Phillips escreveu:
+>>>>> On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
+>>>>>> When running perf script report with a Python script and a callgraph in
+>>>>>> DWARF mode, intr_regs->regs can be 0 and therefore crashing
+>>>>>> the regs_map
+>>>>>> function.
+>>>>>> Added a check for this condition (same check as in
+>>>>>> builtin-script.c:595).
+>>>>>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+>>>>> Tested-by: Kim Phillips <kim.phillips@amd.com>
+>>>> Thanks, added this to that patch.
+>>> Great, thanks!
+>> Ah, I thought you were referring to my initial flamegraph.py perf script.
+>> Is there anything I can do to get it merged?
 > 
-> This error seems unrelated to flamegraph.py (occurs also with the stackcollapse.py script).
-> 
-> Looks like the intr_regs->regs can be 0 when running in DWARF mode (this error doesn't occur in the default mode). I've added a check and sent a patch. While at it, valgrind reported an invalid read in a different code path, which is fixed by the other patch I just sent a few minutes ago.
-> 
-> Can you please test again and report if there are any other issues?
+> I'll test it today, were there any Tested-by: or Reviewed-by: to that
+> flamegraph.py?
 
-This flamegraph patch works for me now:
-
-Tested-by: Kim Phillips <kim.phillips@amd.com>
-
-Thanks,
+I just added mine.
 
 Kim
