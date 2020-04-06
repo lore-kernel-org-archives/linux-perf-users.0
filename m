@@ -1,180 +1,189 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
-Date: Mon, 6 Apr 2020 11:09:51 -0300
-Message-ID: <20200406140951.GE29826@kernel.org>
-References: <20200402154357.107873-1-irogers@google.com>
- <20200402154357.107873-5-irogers@google.com>
- <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
+Subject: Re: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and
+ parse_id
+Date: Mon, 6 Apr 2020 11:13:57 -0300
+Message-ID: <20200406141357.GG29826@kernel.org>
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
+ <20200401203340.31402-2-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
+In-Reply-To: <20200401203340.31402-2-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
-> Hello,
+Em Thu, Apr 02, 2020 at 02:03:34AM +0530, Kajol Jain escreveu:
+> From: Jiri Olsa <jolsa@kernel.org>
 > 
-> On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
-> >
-> > The synthesize benchmark shows the majority of execution time going to
-> > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-> > reading library that will be used to replace these calls in a follow-up
-> > CL.
+> Adding expr_ prefix for parse_ctx and parse_id,
+> to straighten out the expr* namespace.
+> 
+> There's no functional change.
 
-waiting for some conclusion to this thread,
+Next time please add your Signed-off-by: as well when pushing 3rd party
+patches.
+
+Applied.
 
 - Arnaldo
-
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 107 insertions(+)
-> >  create mode 100644 tools/lib/api/io.h
-> >
-> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> > new file mode 100644
-> > index 000000000000..5aa5b0e26a7a
-> > --- /dev/null
-> > +++ b/tools/lib/api/io.h
-> > @@ -0,0 +1,107 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Lightweight buffered reading library.
-> > + *
-> > + * Copyright 2019 Google LLC.
-> > + */
-> > +#ifndef __API_IO__
-> > +#define __API_IO__
-> > +
-> > +struct io {
-> > +       /* File descriptor being read/ */
-> > +       int fd;
-> > +       /* Size of the read buffer. */
-> > +       unsigned int buf_len;
-> > +       /* Pointer to storage for buffering read. */
-> > +       char *buf;
-> > +       /* End of the storage. */
-> > +       char *end;
-> > +       /* Currently accessed data pointer. */
-> > +       char *data;
-> > +       /* Set true on when the end of file on read error. */
-> > +       bool eof;
-> > +};
-> > +
-> > +static inline void io__init(struct io *io, int fd,
-> > +                           char *buf, unsigned int buf_len)
-> > +{
-> > +       io->fd = fd;
-> > +       io->buf_len = buf_len;
-> > +       io->buf = buf;
-> > +       io->end = buf;
-> > +       io->data = buf;
-> > +       io->eof = false;
-> > +}
-> > +
-> > +/* Reads one character from the "io" file with similar semantics to fgetc. */
-> > +static inline int io__get_char(struct io *io)
-> > +{
-> > +       char *ptr = io->data;
-> > +
-> > +       if (ptr == io->end) {
-> > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
-> > +
-> > +               if (n <= 0) {
-> > +                       io->eof = true;
-> > +                       return -1;
-> > +               }
-> > +               ptr = &io->buf[0];
-> > +               io->end = &io->buf[n];
-> > +       }
-> > +       io->data = ptr + 1;
-> > +       return *ptr;
-> > +}
-> > +
-> > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
-> > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > + * after the hexadecimal value.
-> > + */
-> > +static inline int io__get_hex(struct io *io, __u64 *hex)
-> > +{
-> > +       bool first_read = true;
-> > +
-> > +       *hex = 0;
-> > +       while (true) {
-> > +               char ch = io__get_char(io);
-> > +
+ 
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/tests/expr.c       |  4 ++--
+>  tools/perf/util/expr.c        | 10 +++++-----
+>  tools/perf/util/expr.h        | 12 ++++++------
+>  tools/perf/util/expr.y        |  6 +++---
+>  tools/perf/util/stat-shadow.c |  2 +-
+>  5 files changed, 17 insertions(+), 17 deletions(-)
 > 
-> Maybe you can add this
+> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> index 28313e59d6f6..ea10fc4412c4 100644
+> --- a/tools/perf/tests/expr.c
+> +++ b/tools/perf/tests/expr.c
+> @@ -6,7 +6,7 @@
+>  #include <string.h>
+>  #include <linux/zalloc.h>
+>  
+> -static int test(struct parse_ctx *ctx, const char *e, double val2)
+> +static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
+>  {
+>  	double val;
+>  
+> @@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>  	const char **other;
+>  	double val;
+>  	int i, ret;
+> -	struct parse_ctx ctx;
+> +	struct expr_parse_ctx ctx;
+>  	int num_other;
+>  
+>  	expr__ctx_init(&ctx);
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index fd192ddf93c1..c8ccc548a585 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -11,7 +11,7 @@ extern int expr_debug;
+>  #endif
+>  
+>  /* Caller must make sure id is allocated */
+> -void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+> +void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+>  {
+>  	int idx;
+>  
+> @@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+>  	ctx->ids[idx].val = val;
+>  }
+>  
+> -void expr__ctx_init(struct parse_ctx *ctx)
+> +void expr__ctx_init(struct expr_parse_ctx *ctx)
+>  {
+>  	ctx->num_ids = 0;
+>  }
+>  
+>  static int
+> -__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+> +__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+>  	      int start)
+>  {
+>  	YY_BUFFER_STATE buffer;
+> @@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+>  	return ret;
+>  }
+>  
+> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
+> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
+>  {
+>  	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
+>  }
+> @@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
+>  		     int *num_other)
+>  {
+>  	int err, i = 0, j = 0;
+> -	struct parse_ctx ctx;
+> +	struct expr_parse_ctx ctx;
+>  
+>  	expr__ctx_init(&ctx);
+>  	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 9377538f4097..b9e53f2b5844 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -5,19 +5,19 @@
+>  #define EXPR_MAX_OTHER 20
+>  #define MAX_PARSE_ID EXPR_MAX_OTHER
+>  
+> -struct parse_id {
+> +struct expr_parse_id {
+>  	const char *name;
+>  	double val;
+>  };
+>  
+> -struct parse_ctx {
+> +struct expr_parse_ctx {
+>  	int num_ids;
+> -	struct parse_id ids[MAX_PARSE_ID];
+> +	struct expr_parse_id ids[MAX_PARSE_ID];
+>  };
+>  
+> -void expr__ctx_init(struct parse_ctx *ctx);
+> -void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
+> +void expr__ctx_init(struct expr_parse_ctx *ctx);
+> +void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
+> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
+>  int expr__find_other(const char *expr, const char *one, const char ***other,
+>  		int *num_other);
+>  
+> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> index 4720cbe79357..cd17486c1c5d 100644
+> --- a/tools/perf/util/expr.y
+> +++ b/tools/perf/util/expr.y
+> @@ -15,7 +15,7 @@
+>  %define api.pure full
+>  
+>  %parse-param { double *final_val }
+> -%parse-param { struct parse_ctx *ctx }
+> +%parse-param { struct expr_parse_ctx *ctx }
+>  %parse-param {void *scanner}
+>  %lex-param {void* scanner}
+>  
+> @@ -39,14 +39,14 @@
+>  
+>  %{
+>  static void expr_error(double *final_val __maybe_unused,
+> -		       struct parse_ctx *ctx __maybe_unused,
+> +		       struct expr_parse_ctx *ctx __maybe_unused,
+>  		       void *scanner,
+>  		       const char *s)
+>  {
+>  	pr_debug("%s\n", s);
+>  }
+>  
+> -static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
+> +static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
+>  {
+>  	int i;
+>  
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+> index 0fd713d3674f..402af3e8d287 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
+>  			   struct runtime_stat *st)
+>  {
+>  	print_metric_t print_metric = out->print_metric;
+> -	struct parse_ctx pctx;
+> +	struct expr_parse_ctx pctx;
+>  	double ratio, scale;
+>  	int i;
+>  	void *ctxp = out->ctx;
+> -- 
+> 2.21.0
 > 
->     if (io->eof)
->         return 0;
-> 
-> Please see below
-> 
-> 
-> > +               if (ch < 0)
-> > +                       return ch;
-> > +               if (ch >= '0' && ch <= '9')
-> > +                       *hex = (*hex << 4) | (ch - '0');
-> > +               else if (ch >= 'a' && ch <= 'f')
-> > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
-> > +               else if (ch >= 'A' && ch <= 'F')
-> > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
-> > +               else if (first_read)
-> > +                       return -1;
-> > +               else
-> > +                       return ch;
-> > +               first_read = false;
-> > +       }
-> > +}
-> 
-> What if a file contains hex digits at the end (without trailing spaces)?
-> I guess it'd see EOF and return -1, right?
-> 
-> And it'd better to be clear when it sees a big hex numbers -
-> it could have a comment that it'd simply discard upper bits
-> or return an error.
-> 
-> > +
-> > +/* Read a decimal value into the out argument dec.
-> > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > + * after the decimal value.
-> > + */
-> > +static inline int io__get_dec(struct io *io, __u64 *dec)
-> > +{
-> > +       bool first_read = true;
-> > +
-> > +       *dec = 0;
-> > +       while (true) {
-> > +               char ch = io__get_char(io);
-> > +
-> > +               if (ch < 0)
-> > +                       return ch;
-> > +               if (ch >= '0' && ch <= '9')
-> > +                       *dec = (*dec * 10) + ch - '0';
-> > +               else if (first_read)
-> > +                       return -1;
-> > +               else
-> > +                       return ch;
-> > +               first_read = false;
-> > +       }
-> > +}
-> 
-> Ditto.
-> 
-> Thanks
-> Namhyung
-> 
-> 
-> > +
-> > +#endif /* __API_IO__ */
-> > --
-> > 2.26.0.rc2.310.g2932bb562d-goog
-> >
 
 -- 
 
