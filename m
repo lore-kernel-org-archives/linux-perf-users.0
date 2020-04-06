@@ -1,190 +1,44 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and
- parse_id
-Date: Mon, 6 Apr 2020 11:13:57 -0300
-Message-ID: <20200406141357.GG29826@kernel.org>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
- <20200401203340.31402-2-kjain@linux.ibm.com>
+From: Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+Date: Mon, 6 Apr 2020 09:27:49 -0500
+Message-ID: <c9d85708-4409-0d67-eabd-912b073df49d@amd.com>
+References: <20200320151355.66302-1-agerstmayr@redhat.com>
+ <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
+ <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
+ <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+ <833a5e74-645a-130c-ceab-068880e0c69a@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200401203340.31402-2-kjain@linux.ibm.com>
+In-Reply-To: <833a5e74-645a-130c-ceab-068880e0c69a@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
+To: Andreas Gerstmayr <agerstmayr@redhat.com>, linux-perf-users@vger.kernel.org
+Cc: Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Apr 02, 2020 at 02:03:34AM +0530, Kajol Jain escreveu:
-> From: Jiri Olsa <jolsa@kernel.org>
+On 4/2/20 8:04 AM, Andreas Gerstmayr wrote:
+> On 26.03.20 20:04, Kim Phillips wrote:
+>> I now get a SIGSEGV when executing perf script report flamegraph.
+>>
+>> Here's a trace:
+>>
+>> #0  0x000055555590a9b2 in regs_map (regs=0x7fffffffbfc8, mask=16715775,
+>>      bf=0x7fffffffba60 "", size=512) at util/scripting-engines/trace-event-python.c:696
+>> #1  0x000055555590ab03 in set_regs_in_dict (dict=0x7ffff61dd500, sample=0x7fffffffbf20,
+>>      evsel=0x555555d7a700) at util/scripting-engines/trace-event-python.c:718
 > 
-> Adding expr_ prefix for parse_ctx and parse_id,
-> to straighten out the expr* namespace.
+> This error seems unrelated to flamegraph.py (occurs also with the stackcollapse.py script).
 > 
-> There's no functional change.
-
-Next time please add your Signed-off-by: as well when pushing 3rd party
-patches.
-
-Applied.
-
-- Arnaldo
- 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/tests/expr.c       |  4 ++--
->  tools/perf/util/expr.c        | 10 +++++-----
->  tools/perf/util/expr.h        | 12 ++++++------
->  tools/perf/util/expr.y        |  6 +++---
->  tools/perf/util/stat-shadow.c |  2 +-
->  5 files changed, 17 insertions(+), 17 deletions(-)
+> Looks like the intr_regs->regs can be 0 when running in DWARF mode (this error doesn't occur in the default mode). I've added a check and sent a patch. While at it, valgrind reported an invalid read in a different code path, which is fixed by the other patch I just sent a few minutes ago.
 > 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index 28313e59d6f6..ea10fc4412c4 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -6,7 +6,7 @@
->  #include <string.h>
->  #include <linux/zalloc.h>
->  
-> -static int test(struct parse_ctx *ctx, const char *e, double val2)
-> +static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
->  {
->  	double val;
->  
-> @@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->  	const char **other;
->  	double val;
->  	int i, ret;
-> -	struct parse_ctx ctx;
-> +	struct expr_parse_ctx ctx;
->  	int num_other;
->  
->  	expr__ctx_init(&ctx);
-> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-> index fd192ddf93c1..c8ccc548a585 100644
-> --- a/tools/perf/util/expr.c
-> +++ b/tools/perf/util/expr.c
-> @@ -11,7 +11,7 @@ extern int expr_debug;
->  #endif
->  
->  /* Caller must make sure id is allocated */
-> -void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
-> +void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
->  {
->  	int idx;
->  
-> @@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
->  	ctx->ids[idx].val = val;
->  }
->  
-> -void expr__ctx_init(struct parse_ctx *ctx)
-> +void expr__ctx_init(struct expr_parse_ctx *ctx)
->  {
->  	ctx->num_ids = 0;
->  }
->  
->  static int
-> -__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
-> +__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
->  	      int start)
->  {
->  	YY_BUFFER_STATE buffer;
-> @@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
->  	return ret;
->  }
->  
-> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
-> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
->  {
->  	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
->  }
-> @@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
->  		     int *num_other)
->  {
->  	int err, i = 0, j = 0;
-> -	struct parse_ctx ctx;
-> +	struct expr_parse_ctx ctx;
->  
->  	expr__ctx_init(&ctx);
->  	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
-> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-> index 9377538f4097..b9e53f2b5844 100644
-> --- a/tools/perf/util/expr.h
-> +++ b/tools/perf/util/expr.h
-> @@ -5,19 +5,19 @@
->  #define EXPR_MAX_OTHER 20
->  #define MAX_PARSE_ID EXPR_MAX_OTHER
->  
-> -struct parse_id {
-> +struct expr_parse_id {
->  	const char *name;
->  	double val;
->  };
->  
-> -struct parse_ctx {
-> +struct expr_parse_ctx {
->  	int num_ids;
-> -	struct parse_id ids[MAX_PARSE_ID];
-> +	struct expr_parse_id ids[MAX_PARSE_ID];
->  };
->  
-> -void expr__ctx_init(struct parse_ctx *ctx);
-> -void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
-> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
-> +void expr__ctx_init(struct expr_parse_ctx *ctx);
-> +void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
-> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
->  int expr__find_other(const char *expr, const char *one, const char ***other,
->  		int *num_other);
->  
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 4720cbe79357..cd17486c1c5d 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -15,7 +15,7 @@
->  %define api.pure full
->  
->  %parse-param { double *final_val }
-> -%parse-param { struct parse_ctx *ctx }
-> +%parse-param { struct expr_parse_ctx *ctx }
->  %parse-param {void *scanner}
->  %lex-param {void* scanner}
->  
-> @@ -39,14 +39,14 @@
->  
->  %{
->  static void expr_error(double *final_val __maybe_unused,
-> -		       struct parse_ctx *ctx __maybe_unused,
-> +		       struct expr_parse_ctx *ctx __maybe_unused,
->  		       void *scanner,
->  		       const char *s)
->  {
->  	pr_debug("%s\n", s);
->  }
->  
-> -static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
-> +static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
->  {
->  	int i;
->  
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 0fd713d3674f..402af3e8d287 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
->  			   struct runtime_stat *st)
->  {
->  	print_metric_t print_metric = out->print_metric;
-> -	struct parse_ctx pctx;
-> +	struct expr_parse_ctx pctx;
->  	double ratio, scale;
->  	int i;
->  	void *ctxp = out->ctx;
-> -- 
-> 2.21.0
-> 
+> Can you please test again and report if there are any other issues?
 
--- 
+This flamegraph patch works for me now:
 
-- Arnaldo
+Tested-by: Kim Phillips <kim.phillips@amd.com>
+
+Thanks,
+
+Kim
