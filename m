@@ -1,186 +1,180 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2 2/5] tools api fs: make xxx__mountpoint() more scalable
-Date: Mon, 6 Apr 2020 11:07:21 -0300
-Message-ID: <20200406140721.GD29826@kernel.org>
+Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
+Date: Mon, 6 Apr 2020 11:09:51 -0300
+Message-ID: <20200406140951.GE29826@kernel.org>
 References: <20200402154357.107873-1-irogers@google.com>
- <20200402154357.107873-3-irogers@google.com>
+ <20200402154357.107873-5-irogers@google.com>
+ <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200402154357.107873-3-irogers@google.com>
+In-Reply-To: <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Apr 02, 2020 at 08:43:54AM -0700, Ian Rogers escreveu:
-> From: Stephane Eranian <eranian@google.com>
+Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
+> Hello,
 > 
-> The xxx_mountpoint() interface provided by fs.c finds
-> mount points for common pseudo filesystems. The first
-> time xxx_mountpoint() is invoked, it scans the mount
-> table (/proc/mounts) looking for a match. If found, it
-> is cached. The price to scan /proc/mounts is paid once
-> if the mount is found.
-> 
-> When the mount point is not found, subsequent calls to
-> xxx_mountpoint() scan /proc/mounts over and over again.
-> There is no caching.
+> On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
+> >
+> > The synthesize benchmark shows the majority of execution time going to
+> > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+> > reading library that will be used to replace these calls in a follow-up
+> > CL.
 
-Thanks, applied, lets see if someone screams...
+waiting for some conclusion to this thread,
 
 - Arnaldo
- 
-> This causes a scaling issue in perf record with hugeltbfs__mountpoint().
-> The function is called for each process found in synthesize__mmap_events().
-> If the machine has thousands of processes and if the /proc/mounts has many
-> entries this could cause major overhead in perf record. We have observed
-> multi-second slowdowns on some configurations.
+
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 107 insertions(+)
+> >  create mode 100644 tools/lib/api/io.h
+> >
+> > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> > new file mode 100644
+> > index 000000000000..5aa5b0e26a7a
+> > --- /dev/null
+> > +++ b/tools/lib/api/io.h
+> > @@ -0,0 +1,107 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Lightweight buffered reading library.
+> > + *
+> > + * Copyright 2019 Google LLC.
+> > + */
+> > +#ifndef __API_IO__
+> > +#define __API_IO__
+> > +
+> > +struct io {
+> > +       /* File descriptor being read/ */
+> > +       int fd;
+> > +       /* Size of the read buffer. */
+> > +       unsigned int buf_len;
+> > +       /* Pointer to storage for buffering read. */
+> > +       char *buf;
+> > +       /* End of the storage. */
+> > +       char *end;
+> > +       /* Currently accessed data pointer. */
+> > +       char *data;
+> > +       /* Set true on when the end of file on read error. */
+> > +       bool eof;
+> > +};
+> > +
+> > +static inline void io__init(struct io *io, int fd,
+> > +                           char *buf, unsigned int buf_len)
+> > +{
+> > +       io->fd = fd;
+> > +       io->buf_len = buf_len;
+> > +       io->buf = buf;
+> > +       io->end = buf;
+> > +       io->data = buf;
+> > +       io->eof = false;
+> > +}
+> > +
+> > +/* Reads one character from the "io" file with similar semantics to fgetc. */
+> > +static inline int io__get_char(struct io *io)
+> > +{
+> > +       char *ptr = io->data;
+> > +
+> > +       if (ptr == io->end) {
+> > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
+> > +
+> > +               if (n <= 0) {
+> > +                       io->eof = true;
+> > +                       return -1;
+> > +               }
+> > +               ptr = &io->buf[0];
+> > +               io->end = &io->buf[n];
+> > +       }
+> > +       io->data = ptr + 1;
+> > +       return *ptr;
+> > +}
+> > +
+> > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
+> > + * Returns -1 on error or if nothing is read, otherwise returns the character
+> > + * after the hexadecimal value.
+> > + */
+> > +static inline int io__get_hex(struct io *io, __u64 *hex)
+> > +{
+> > +       bool first_read = true;
+> > +
+> > +       *hex = 0;
+> > +       while (true) {
+> > +               char ch = io__get_char(io);
+> > +
 > 
-> As an example on a laptop:
+> Maybe you can add this
 > 
-> Before:
-> $ sudo umount /dev/hugepages
-> $ strace -e trace=openat -o /tmp/tt perf record -a ls
-> $ fgrep mounts /tmp/tt
-> 285
+>     if (io->eof)
+>         return 0;
 > 
-> After:
-> $ sudo umount /dev/hugepages
-> $ strace -e trace=openat -o /tmp/tt perf record -a ls
-> $ fgrep mounts /tmp/tt
-> 1
+> Please see below
 > 
-> One could argue that the non-caching in case the moint point is not found
-> is intentional. That way subsequent calls may discover a moint point if
-> the sysadmin mounts the filesystem. But the same argument could be made
-> against caching the mount point. It could be unmounted causing errors.
-> It all depends on the intent of the interface. This patch assumes it
-> is expected to scan /proc/mounts once. The patch documents the caching
-> behavior in the fs.h header file.
 > 
-> An alternative would be to just fix perf record. But it would solve
-> the problem with hugetlbs__mountpoint() but there could be similar
-> issues (possibly down the line) with other xxx_mountpoint() calls
-> in perf or other tools.
+> > +               if (ch < 0)
+> > +                       return ch;
+> > +               if (ch >= '0' && ch <= '9')
+> > +                       *hex = (*hex << 4) | (ch - '0');
+> > +               else if (ch >= 'a' && ch <= 'f')
+> > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
+> > +               else if (ch >= 'A' && ch <= 'F')
+> > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
+> > +               else if (first_read)
+> > +                       return -1;
+> > +               else
+> > +                       return ch;
+> > +               first_read = false;
+> > +       }
+> > +}
 > 
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/api/fs/fs.c | 17 +++++++++++++++++
->  tools/lib/api/fs/fs.h | 12 ++++++++++++
->  2 files changed, 29 insertions(+)
+> What if a file contains hex digits at the end (without trailing spaces)?
+> I guess it'd see EOF and return -1, right?
 > 
-> diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-> index 027b18f7ed8c..82f53d81a7a7 100644
-> --- a/tools/lib/api/fs/fs.c
-> +++ b/tools/lib/api/fs/fs.c
-> @@ -90,6 +90,7 @@ struct fs {
->  	const char * const	*mounts;
->  	char			 path[PATH_MAX];
->  	bool			 found;
-> +	bool			 checked;
->  	long			 magic;
->  };
->  
-> @@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
->  		.name	= "sysfs",
->  		.mounts	= sysfs__fs_known_mountpoints,
->  		.magic	= SYSFS_MAGIC,
-> +		.checked = false,
->  	},
->  	[FS__PROCFS] = {
->  		.name	= "proc",
->  		.mounts	= procfs__known_mountpoints,
->  		.magic	= PROC_SUPER_MAGIC,
-> +		.checked = false,
->  	},
->  	[FS__DEBUGFS] = {
->  		.name	= "debugfs",
->  		.mounts	= debugfs__known_mountpoints,
->  		.magic	= DEBUGFS_MAGIC,
-> +		.checked = false,
->  	},
->  	[FS__TRACEFS] = {
->  		.name	= "tracefs",
->  		.mounts	= tracefs__known_mountpoints,
->  		.magic	= TRACEFS_MAGIC,
-> +		.checked = false,
->  	},
->  	[FS__HUGETLBFS] = {
->  		.name	= "hugetlbfs",
->  		.mounts = hugetlbfs__known_mountpoints,
->  		.magic	= HUGETLBFS_MAGIC,
-> +		.checked = false,
->  	},
->  	[FS__BPF_FS] = {
->  		.name	= "bpf",
->  		.mounts = bpf_fs__known_mountpoints,
->  		.magic	= BPF_FS_MAGIC,
-> +		.checked = false,
->  	},
->  };
->  
-> @@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
->  	}
->  
->  	fclose(fp);
-> +	fs->checked = true;
->  	return fs->found = found;
->  }
->  
-> @@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
->  		return false;
->  
->  	fs->found = true;
-> +	fs->checked = true;
->  	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
->  	fs->path[sizeof(fs->path) - 1] = '\0';
->  	return true;
-> @@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
->  	if (fs->found)
->  		return (const char *)fs->path;
->  
-> +	/* the mount point was already checked for the mount point
-> +	 * but and did not exist, so return NULL to avoid scanning again.
-> +	 * This makes the found and not found paths cost equivalent
-> +	 * in case of multiple calls.
-> +	 */
-> +	if (fs->checked)
-> +		return NULL;
-> +
->  	return fs__get_mountpoint(fs);
->  }
->  
-> diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-> index 936edb95e1f3..aa222ca30311 100644
-> --- a/tools/lib/api/fs/fs.h
-> +++ b/tools/lib/api/fs/fs.h
-> @@ -18,6 +18,18 @@
->  	const char *name##__mount(void);	\
->  	bool name##__configured(void);		\
->  
-> +/*
-> + * The xxxx__mountpoint() entry points find the first match mount point for each
-> + * filesystems listed below, where xxxx is the filesystem type.
-> + *
-> + * The interface is as follows:
-> + *
-> + * - If a mount point is found on first call, it is cached and used for all
-> + *   subsequent calls.
-> + *
-> + * - If a mount point is not found, NULL is returned on first call and all
-> + *   subsequent calls.
-> + */
->  FS(sysfs)
->  FS(procfs)
->  FS(debugfs)
-> -- 
-> 2.26.0.rc2.310.g2932bb562d-goog
+> And it'd better to be clear when it sees a big hex numbers -
+> it could have a comment that it'd simply discard upper bits
+> or return an error.
 > 
+> > +
+> > +/* Read a decimal value into the out argument dec.
+> > + * Returns -1 on error or if nothing is read, otherwise returns the character
+> > + * after the decimal value.
+> > + */
+> > +static inline int io__get_dec(struct io *io, __u64 *dec)
+> > +{
+> > +       bool first_read = true;
+> > +
+> > +       *dec = 0;
+> > +       while (true) {
+> > +               char ch = io__get_char(io);
+> > +
+> > +               if (ch < 0)
+> > +                       return ch;
+> > +               if (ch >= '0' && ch <= '9')
+> > +                       *dec = (*dec * 10) + ch - '0';
+> > +               else if (first_read)
+> > +                       return -1;
+> > +               else
+> > +                       return ch;
+> > +               first_read = false;
+> > +       }
+> > +}
+> 
+> Ditto.
+> 
+> Thanks
+> Namhyung
+> 
+> 
+> > +
+> > +#endif /* __API_IO__ */
+> > --
+> > 2.26.0.rc2.310.g2932bb562d-goog
+> >
 
 -- 
 
