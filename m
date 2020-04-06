@@ -1,46 +1,48 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/urgent fixes and some improvements
-Date: Sat, 4 Apr 2020 10:37:00 +0200
-Message-ID: <20200404083700.GB21353@gmail.com>
-References: <20200403145443.24774-1-acme@kernel.org>
+From: Andreas Gerstmayr <agerstmayr@redhat.com>
+Subject: Re: [PATCH] perf script report: fix segfault when using DWARF mode
+Date: Mon, 6 Apr 2020 11:30:23 +0200
+Message-ID: <0a942366-c8dd-4767-ee84-fdc0024b035f@redhat.com>
+References: <05e0d633-54b4-fb3b-3d08-8963271017ea@amd.com>
+ <20200402125417.422232-1-agerstmayr@redhat.com>
+ <6a098ce1-1981-dcff-ea62-af5fc07ec7fb@amd.com>
+ <20200403124028.GA18559@kernel.org>
+ <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200403145443.24774-1-acme@kernel.org>
+In-Reply-To: <bf95c9f1-1970-fce4-c6f2-dc231730e7ab@redhat.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andreas Gerstmayr <agerstmayr@redhat.com>, Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>, Hagen Paul Pfeifer <hagen@jauu.net>, He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, kbuild test robot <lkp@intel.com>, Kemeng Shi <shikemeng@huawei.com>, kernel test robot <rong.a.chen@intel.com>, Kim Phillips <kim.phillips@amd.com>, Naresh Kamboju <naresh.kamboju@linaro.org>, Sam Lunt <samuel.j.lunt@gmail.com>, Stephane Eranian <eranian@google.com>, Tony
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Kim Phillips <kim.phillips@amd.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+On 03.04.20 15:16, Andreas Gerstmayr wrote:
+> On 03.04.20 14:40, Arnaldo Carvalho de Melo wrote:
+>> Em Thu, Apr 02, 2020 at 02:07:51PM -0500, Kim Phillips escreveu:
+>>> On 4/2/20 7:54 AM, Andreas Gerstmayr wrote:
+>>>> When running perf script report with a Python script and a callgraph in
+>>>> DWARF mode, intr_regs->regs can be 0 and therefore crashing the 
+>>>> regs_map
+>>>> function.
+>>>>
+>>>> Added a check for this condition (same check as in 
+>>>> builtin-script.c:595).
+>>>>
+>>>> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
+>>>> ---
+>>>
+>>> Tested-by: Kim Phillips <kim.phillips@amd.com>
+>>
+>> Thanks, added this to that patch.
+>>
+> 
+> Great, thanks!
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Ah, I thought you were referring to my initial flamegraph.py perf script.
+Is there anything I can do to get it merged?
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling, this is on top of a previous submitted
-> perf-core-for-mingo-5.7-20200325 tag,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit 0d33b34352531ff7029c58eda2321340c0ea3f5f:
-> 
->   perf dso: Fix dso comparison (2020-03-24 10:57:38 -0300)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.7-20200403
-> 
-> for you to fetch changes up to 9ff76cea4e9e6d49a6f764ae114fc0fb8de97816:
-> 
->   perf python: Fix clang detection to strip out options passed in $CC (2020-04-03 10:04:59 -0300)
 
->  68 files changed, 1376 insertions(+), 78 deletions(-)
-
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+Cheers,
+Andreas
