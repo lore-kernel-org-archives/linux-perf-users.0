@@ -1,150 +1,121 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: perf probe + uprobes missing events
-Date: Mon, 6 Apr 2020 11:54:53 -0300
-Message-ID: <20200406145453.GB32649@kernel.org>
-References: <20200406145356.GA32649@kernel.org>
+Subject: Re: [PATCH] perf script: add flamegraph.py script
+Date: Mon, 6 Apr 2020 12:11:18 -0300
+Message-ID: <20200406151118.GC32649@kernel.org>
+References: <20200320151355.66302-1-agerstmayr@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200406145356.GA32649@kernel.org>
+In-Reply-To: <20200320151355.66302-1-agerstmayr@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <andi@firstfloor.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, Martin Spier <mspier@netflix.com>, Brendan Gregg <bgregg@netflix.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Apr 06, 2020 at 11:53:56AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Hi Masami,
+Em Fri, Mar 20, 2020 at 04:13:48PM +0100, Andreas Gerstmayr escreveu:
+> This script works in tandem with d3-flame-graph to generate flame graphs
+> from perf. It supports two output formats: JSON and HTML (the default).
+> The HTML format will look for a standalone d3-flame-graph template file in
+> /usr/share/d3-flame-graph/d3-flamegraph-base.html and fill in the collected
+> stacks.
+> 
+> Usage:
+> 
+>     perf record -a -g -F 99 sleep 60
+>     perf script report flamegraph
+> 
+> Combined:
+> 
+>     perf script flamegraph -a -F 99 sleep 60
+> 
+> Signed-off-by: Andreas Gerstmayr <agerstmayr@redhat.com>
 
-Sorry, details about the system:
+Trying it now with:
 
-[root@five ~]# uname -a
-Linux five 5.5.10-200.fc31.x86_64 #1 SMP Wed Mar 18 14:21:38 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-[root@five ~]# perf -vv
-perf version 5.6.gea05cf482862
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-                 glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
-                  gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-[root@five ~]# rpm -q elfutils
-elfutils-0.178-7.fc31.x86_64
+[root@five ~]# perf record -a -g -F 99 sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.120 MB perf.data (59 samples) ]
+[root@five ~]#  perf script report flamegraph
+  File "/home/acme/libexec/perf-core/scripts/python/flamegraph.py", line 46
+    print(f"Flame Graph template {self.args.template} does not " +
+                                                               ^
+SyntaxError: invalid syntax
+Error running python script /home/acme/libexec/perf-core/scripts/python/flamegraph.py
 [root@five ~]#
- 
-> 	I'm trying to use 'perf probe' to debug 'perf test', but I'm not
-> getting repeatable results, take a look:
-> 
-> I'm trying to figure out which expresssions are _really_ being tested
-> byu the 'perf test expr' testcase, so I added a probe to the
-> expr__parse() routine, asking for the expr string to be printed:
-> 
-> [root@five ~]# perf probe -x ~/bin/perf -L expr__parse
-> <expr__parse@/home/acme/git/perf/tools/perf/util/expr.c:0>
->       0  int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
->       1  {
->       2         return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
->       3  }
-> 
->          static bool
->          already_seen(const char *val, const char *one, const char **other,
-> 
-> [root@five ~]#
-> 
-> [root@five ~]# perf probe -x ~/bin/perf expr__parse expr:string
-> Target program is compiled without optimization. Skipping prologue.
-> Probe on address 0x5cb11b to force probing at the function entry.
-> 
-> Added new event:
->   probe_perf:expr__parse (on expr__parse in /home/acme/bin/perf with expr:string)
-> 
-> You can now use it in all perf tools, such as:
-> 
-> 	perf record -e probe_perf:expr__parse -aR sleep 1
-> 
-> [root@five ~]#
-> 
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.015 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.018 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.020 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.023 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.026 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.029 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.031 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.034 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.036 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.039 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.041 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.021 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.025 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.029 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.033 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.041 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.044 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.020 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.025 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.029 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.032 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.037 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.040 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.043 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.046 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.049 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.053 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.056 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
-> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
->  7: Simple expression parser                              : Ok
->      0.000 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
->      0.014 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
->      0.017 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
->      0.021 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
->      0.024 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
->      0.030 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
->      0.032 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
->      0.035 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
->      0.038 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
->      0.040 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
->      0.044 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
->      0.046 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
-> [root@five ~]#
-> 
-> 
-> Do you have any idea why that happens?
-> 
-> - Arnaldo
 
--- 
+
+
+Ok, gets better when I build with 'make -C tools/perf PYTHON=python3'
+
+[root@five ~]#  perf script report flamegraph
+Flame Graph template /usr/share/d3-flame-graph/d3-flamegraph-base.html does not exist. Please install the js-d3-flame-graph (RPM) or libjs-d3-flame-graph (deb) package, specify an existing flame graph template (--template PATH) or another output format (--format FORMAT).
+[root@five ~]#
+
+It works then, so I'll add a note to that effect. But please consider
+fixing it so that it works with both python2 and python3, if possible,
+or to fail gracefully and state that only python3 is supported and that
+perf should be built with "PYTHON=python3" on the make command line.
+
+Some RFEs for you to consider:
+
+1. make:
+
+   perf flamegraph -a -F 99 sleep 1
+
+be equivalent, should be easy.
+
+2. make the command somehow create a new tab on an existing browser with
+the generated file, and switch the focus to that tab.
+
+3. get whats in:
+
+[root@five ~]# perf report --header-only
+# ========
+# captured on    : Mon Apr  6 12:02:52 2020
+# header version : 1
+# data offset    : 336
+# data size      : 1173584
+# feat offset    : 1173920
+# hostname : five
+# os release : 5.5.10-200.fc31.x86_64
+# perf version : 5.6.gb6b7dc6ec0c8
+# arch : x86_64
+# nrcpus online : 12
+# nrcpus avail : 12
+# cpudesc : AMD Ryzen 5 3600X 6-Core Processor
+# cpuid : AuthenticAMD,23,113,0
+# total memory : 32890748 kB
+# cmdline : /home/acme/bin/perf record -a -g -F 99 sleep 1
+# event : name = cycles, , id = { 2918625, 2918626, 2918627, 2918628, 2918629, 2918630, 2918631, 2918632, 2918633, 2918634, 2918635, 2918636 }, size = 120, { sample_period, sample_freq } = 99, sample_type = IP|TID|TIME|CALLCHAIN|CPU|PERIOD, read_format = ID, disabled = 1,>
+# CPU_TOPOLOGY info available, use -I to display
+# NUMA_TOPOLOGY info available, use -I to display
+# pmu mappings: amd_df = 8, software = 1, ibs_op = 11, ibs_fetch = 10, uprobe = 7, cpu = 4, amd_iommu_0 = 12, breakpoint = 5, amd_l3 = 9, tracepoint = 2, kprobe = 6, msr = 13
+# CACHE info available, use -I to display
+# time of first sample : 87600.831767
+# time of last sample : 87601.096829
+# sample duration :    265.062 ms
+# MEM_TOPOLOGY info available, use -I to display
+# bpf_prog_info 40: bpf_prog_6deef7357e7b4530 addr 0xffffffffc030650c size 66
+# bpf_prog_info 41: bpf_prog_6deef7357e7b4530 addr 0xffffffffc03080e8 size 66
+# bpf_prog_info 42: bpf_prog_6deef7357e7b4530 addr 0xffffffffc030a218 size 66
+# bpf_prog_info 43: bpf_prog_6deef7357e7b4530 addr 0xffffffffc036c698 size 66
+# bpf_prog_info 44: bpf_prog_5a2b06eab81b8f51 addr 0xffffffffc036e2c0 size 1132
+# bpf_prog_info 45: bpf_prog_6deef7357e7b4530 addr 0xffffffffc06e7118 size 66
+# bpf_prog_info 46: bpf_prog_6deef7357e7b4530 addr 0xffffffffc06e9cd8 size 66
+# bpf_prog_info 47: bpf_prog_f3b9e166f6c1aaaa addr 0xffffffffc089732c size 1786
+# bpf_prog_info 48: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0dcb64c size 66
+# bpf_prog_info 49: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0dcd0fc size 66
+# bpf_prog_info 50: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0f4d8dc size 66
+# bpf_prog_info 51: bpf_prog_6deef7357e7b4530 addr 0xffffffffc0f4fc7c size 66
+# bpf_prog_info 52: bpf_prog_84efc2eecc454ca6 addr 0xffffffffc0f6e584 size 373
+# missing features: TRACING_DATA BRANCH_STACK GROUP_DESC AUXTRACE STAT CLOCKID DIR_FORMAT COMPRESSED
+# ========
+#
+[root@five ~]#
+
+And make it available in some UI element.
+
+Thanks,
 
 - Arnaldo
