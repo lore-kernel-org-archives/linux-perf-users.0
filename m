@@ -1,92 +1,204 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
-Date: Tue, 7 Apr 2020 11:46:18 +0000
-Message-ID: <DB8PR04MB6795996085AD2167E2358907E6C30@DB8PR04MB6795.eurprd04.prod.outlook.com>
-References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
- <6dbeabcf-c15a-0bbd-cef4-b25d0133854f@huawei.com>
- <DB7PR04MB4618D2E1892120EB659B8695E6EC0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <2f81eb7a-a6e4-1cc6-cd0a-ca3d749bd552@huawei.com>
- <DB7PR04MB4618C0A8DD9BAB2A529CDCECE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <a2cc0772-4f5d-aba3-1f5c-7d4eef7a3f72@huawei.com>
- <DB7PR04MB461803AD15E47AA880F0915DE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <55836919-41b5-0834-f7a7-1a2a34535677@huawei.com>
- <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
+Date: Tue, 7 Apr 2020 09:32:15 -0300
+Message-ID: <20200407123215.GA8452@kernel.org>
+References: <20200402154357.107873-1-irogers@google.com>
+ <20200402154357.107873-5-irogers@google.com>
+ <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
+ <20200406140951.GE29826@kernel.org>
+ <CAP-5=fVt9ueNm66MrV=CBYQPOXdOxYo2w_jiF-Cm-8i70SD8mQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: John Garry <john.garry@huawei.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Zhangshaokun <zhangshaokun@hisilicon.com>, Jiri Olsa <jolsa@redhat.com>, Frank Li <frank.li@nxp.com>, Linuxarm <linuxarm@huawei.com>, "acme@kernel.org" <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVt9ueNm66MrV=CBYQPOXdOxYo2w_jiF-Cm-8i70SD8mQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
-Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMOW5tDPmnIgzMOaXpSAxOTowNA0KPiBUbzog
-Sm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IHdpbGxAa2VybmVs
-Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGFjbWVAa2VybmVsLm9yZzsNCj4gbGludXgtcGVy
-Zi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+
-OyBGcmFuayBMaQ0KPiA8ZnJhbmsubGlAbnhwLmNvbT47IEppcmkgT2xzYSA8am9sc2FAcmVkaGF0
-LmNvbT47IFpoYW5nc2hhb2t1bg0KPiA8emhhbmdzaGFva3VuQGhpc2lsaWNvbi5jb20+OyBMaW51
-eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT47DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAvNl0gcGVyZi9pbXhfZGRyOiBBZGQg
-bmFtZXNwYWNlIGZvciBpLk1YOCBERFIgUGVyZg0KPiANCj4gT24gMjYvMDIvMjAyMCAxNzo0Niwg
-Sm9obiBHYXJyeSB3cm90ZToNCj4gSGkgSm9ha2ltLA0KSGkgSm9obiwNCg0KSXQgY2FuJ3Qgd29y
-ayBvbiBteSBwbGF0Zm9ybToNCg0Kcm9vdEBpbXg4bW1ldms6fiMgY2F0IC9zeXMvYnVzL2V2ZW50
-X3NvdXJjZS9kZXZpY2VzL2lteDhfZGRyMC9pZGVudGlmaWVyDQppLm14OG1tDQoNCg0Kcm9vdEBp
-bXg4bW1ldms6fiMgLi9wZXJmIGxpc3QgbWV0cmljDQpMaXN0IG9mIHByZS1kZWZpbmVkIGV2ZW50
-cyAodG8gYmUgdXNlZCBpbiAtZSk6DQoNCk1ldHJpY3M6DQoNCiAgaW14OG1tX2RkcjBfcmVhZC5h
-bGwNCiAgICAgICBbQnl0ZXMgb2YgYWxsIG1hc3RlcnMgcmVhZCBmcm9tIGRkcjAuIFVuaXQ6IHVu
-Y29yZV9pLm14OCxkZHJjIF0NCg0KDQpyb290QGlteDhtbWV2azp+IyAuL3BlcmYgc3RhdCAtYSAt
-SSAxMDAwIC1NIGlteDhtbV9kZHIwX3JlYWQuYWxsDQpldmVudCBzeW50YXggZXJyb3I6ICcnDQog
-ICAgICAgICAgICAgICAgICAgICAgXF9fXyBwYXJzZXIgZXJyb3INCg0KIFVzYWdlOiBwZXJmIHN0
-YXQgWzxvcHRpb25zPl0gWzxjb21tYW5kPl0NCg0KICAgIC1NLCAtLW1ldHJpY3MgPG1ldHJpYy9t
-ZXRyaWMgZ3JvdXAgbGlzdD4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgbW9uaXRvciBzcGVj
-aWZpZWQgbWV0cmljcyBvciBtZXRyaWMgZ3JvdXBzIChzZXBhcmF0ZWQgYnkgLCkNCg0KSG93ZXZl
-ciwgaXQgY2FuIHdvcmsgb24gYnJhbmNoOiBwcml2YXRlLXRvcGljLXBlcmYtNS42LXBtdS1ldmVu
-dHMtdXBzdHJlYW0tdjIuIFdoYXQgY2hhbmdlcyBoYXZlIHlvdSBtYWRlIGNvbXBhcmVkIHRvIGxh
-c3Q/DQoNCkNvdWxkIHlvdSBoZWxwIGRvIGJlbG93IGNoYW5nZT8gU2luY2Ugc29tZSBTb2NzIG1h
-eSBoYXZlIHR3byBkZHIgY29udHJvbGxlcihkZHIwL2RkcjEpIHdpdGggdGhlIHNhbWUgZXZlbnQg
-Y29kZS4NCkRlbGV0ZSBmaWxlOiB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9mcmVl
-c2NhbGUvaW14OG1tL3N5cy9kZHJjLmpzb24NClJlcGxhY2UgZmlsZTogdG9vbHMvcGVyZi9wbXUt
-ZXZlbnRzL2FyY2gvYXJtNjQvZnJlZXNjYWxlL2lteDhtbS9zeXMvbWV0cmljcy5qc29uLCBwdXQg
-YWxsIGV2ZW50cyBpbnRvIG1ldHJpYy4NClsNCiAgIHsNCgkiUHVibGljRGVzY3JpcHRpb24iOiAi
-ZGRyMCBjeWNsZXMgZXZlbnQiLA0KCSJNZXRyaWNOYW1lIjogImlteDhtbV9kZHIwLmN5Y2xlcyIs
-DQoJIk1ldHJpY0V4cHIiOiAiaW14OF9kZHIwXFwvY3ljbGVzXFwvIiwNCgkiVW5pdCI6ICJpbXg4
-X2RkciIsDQoJIkNvbXBhdCI6ICJpLm14OG1tIg0KICAgfSwNCiAgIHsNCgkiUHVibGljRGVzY3Jp
-cHRpb24iOiAiZGRyMCByZWFkLWN5Y2xlcyBldmVudCIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1t
-X2RkcjAucmVhZF9jeWNsZXMiLA0KCSJNZXRyaWNFeHByIjogImlteDhfZGRyMFxcL3JlYWRcXC1j
-eWNsZXNcXC8iLA0KCSJVbml0IjogImlteDhfZGRyIiwNCgkiQ29tcGF0IjogImkubXg4bW0iDQog
-ICB9LA0KICAgew0KCSJQdWJsaWNEZXNjcmlwdGlvbiI6ICJkZHIwIHdyaXRlLWN5Y2xlcyBldmVu
-dCIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjAud3JpdGVfY3ljbGVzIiwNCgkiTWV0cmlj
-RXhwciI6ICJpbXg4X2RkcjBcXC93cml0ZVxcLWN5Y2xlc1xcLyIsDQoJIlVuaXQiOiAiaW14OF9k
-ZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgIH0sDQogICB7DQoJIlB1YmxpY0Rlc2NyaXB0
-aW9uIjogImRkcjAgcmVhZCBldmVudCIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjAucmVh
-ZCIsDQoJIk1ldHJpY0V4cHIiOiAiaW14OF9kZHIwXFwvcmVhZFxcLyIsDQoJIlVuaXQiOiAiaW14
-OF9kZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgIH0sDQogICB7DQoJIlB1YmxpY0Rlc2Ny
-aXB0aW9uIjogImRkcjAgd3JpdGUgZXZlbnQiLA0KCSJNZXRyaWNOYW1lIjogImlteDhtbV9kZHIw
-LndyaXRlIiwNCgkiTWV0cmljRXhwciI6ICJpbXg4X2RkcjBcXC93cml0ZVxcLyIsDQoJIlVuaXQi
-OiAiaW14OF9kZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgIH0sDQogICB7DQoJIlB1Ymxp
-Y0Rlc2NyaXB0aW9uIjogImJ5dGVzIGFsbCBtYXN0ZXJzIHJlYWQgZnJvbSBkZHIwIGJhc2VkIG9u
-IHJlYWQtY3ljbGVzIGV2ZW50LiIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjBfcmVhZC5h
-bGwiLA0KCSJNZXRyaWNFeHByIjogIiggaW14OF9kZHIwXFwvcmVhZFxcLWN5Y2xlc1xcLyApICog
-NCAqIDQiLA0KCSJTY2FsZVVuaXQiOiAiOS43NjU2MjVlLTRNQiIsDQoJIlVuaXQiOiAiaW14OF9k
-ZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgICB9LA0KICAgew0KCSJQdWJsaWNEZXNjcmlw
-dGlvbiI6ICJieXRlcyBhbGwgbWFzdGVycyB3cml0ZSB0byBkZHIwIGJhc2VkIG9uIHJlYWQtY3lj
-bGVzIGV2ZW50LiIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjBfd3JpdGUuYWxsIiwNCgki
-TWV0cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3dyaXRlXFwtY3ljbGVzXFwvICkgKiA0ICogNCIs
-DQoJIlNjYWxlVW5pdCI6ICI5Ljc2NTYyNWUtNE1CIiwNCgkiVW5pdCI6ICJpbXg4X2RkciIsDQoJ
-IkNvbXBhdCI6ICJpLm14OG1tIg0KICAgIH0NCl0NCg0KVGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMs
-DQpKb2FraW0gWmhhbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2xpbnV4LWFybS1rZXJuZWwK
+Em Mon, Apr 06, 2020 at 09:15:51AM -0700, Ian Rogers escreveu:
+> On Mon, Apr 6, 2020 at 7:09 AM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
+> > > On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
+> > > >
+> > > > The synthesize benchmark shows the majority of execution time going to
+> > > > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+> > > > reading library that will be used to replace these calls in a follow-up
+> > > > CL.
+
+> > waiting for some conclusion to this thread,
+ 
+> Thanks, sorry I was busy at the weekend. I agree with Namhyung's
+> comments, nice catch! Fwiw, it comes from my refactoring this api out
+> of a specific /proc/pid/maps reader. I'll work to address the issue
+> and ideally stick some tests of the corner cases somewhere - any
+> suggestions? This doesn't feel like a perf test, nor is it a kernel
+
+It may not be uniquely useful for perf, but I'd start by adding an entry
+to 'perf test' anyway, as its used by perf, after all what we want is
+that code gets tested regularly, adding it to 'perf test' achieves that.
+
+Thanks,
+
+- Arnaldo
+
+> side test.
+> 
+> Thanks,
+> Ian
+> 
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > ---
+> > > >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 107 insertions(+)
+> > > >  create mode 100644 tools/lib/api/io.h
+> > > >
+> > > > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
+> > > > new file mode 100644
+> > > > index 000000000000..5aa5b0e26a7a
+> > > > --- /dev/null
+> > > > +++ b/tools/lib/api/io.h
+> > > > @@ -0,0 +1,107 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +/*
+> > > > + * Lightweight buffered reading library.
+> > > > + *
+> > > > + * Copyright 2019 Google LLC.
+> > > > + */
+> > > > +#ifndef __API_IO__
+> > > > +#define __API_IO__
+> > > > +
+> > > > +struct io {
+> > > > +       /* File descriptor being read/ */
+> > > > +       int fd;
+> > > > +       /* Size of the read buffer. */
+> > > > +       unsigned int buf_len;
+> > > > +       /* Pointer to storage for buffering read. */
+> > > > +       char *buf;
+> > > > +       /* End of the storage. */
+> > > > +       char *end;
+> > > > +       /* Currently accessed data pointer. */
+> > > > +       char *data;
+> > > > +       /* Set true on when the end of file on read error. */
+> > > > +       bool eof;
+> > > > +};
+> > > > +
+> > > > +static inline void io__init(struct io *io, int fd,
+> > > > +                           char *buf, unsigned int buf_len)
+> > > > +{
+> > > > +       io->fd = fd;
+> > > > +       io->buf_len = buf_len;
+> > > > +       io->buf = buf;
+> > > > +       io->end = buf;
+> > > > +       io->data = buf;
+> > > > +       io->eof = false;
+> > > > +}
+> > > > +
+> > > > +/* Reads one character from the "io" file with similar semantics to fgetc. */
+> > > > +static inline int io__get_char(struct io *io)
+> > > > +{
+> > > > +       char *ptr = io->data;
+> > > > +
+> > > > +       if (ptr == io->end) {
+> > > > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
+> > > > +
+> > > > +               if (n <= 0) {
+> > > > +                       io->eof = true;
+> > > > +                       return -1;
+> > > > +               }
+> > > > +               ptr = &io->buf[0];
+> > > > +               io->end = &io->buf[n];
+> > > > +       }
+> > > > +       io->data = ptr + 1;
+> > > > +       return *ptr;
+> > > > +}
+> > > > +
+> > > > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
+> > > > + * Returns -1 on error or if nothing is read, otherwise returns the character
+> > > > + * after the hexadecimal value.
+> > > > + */
+> > > > +static inline int io__get_hex(struct io *io, __u64 *hex)
+> > > > +{
+> > > > +       bool first_read = true;
+> > > > +
+> > > > +       *hex = 0;
+> > > > +       while (true) {
+> > > > +               char ch = io__get_char(io);
+> > > > +
+> > >
+> > > Maybe you can add this
+> > >
+> > >     if (io->eof)
+> > >         return 0;
+> > >
+> > > Please see below
+> > >
+> > >
+> > > > +               if (ch < 0)
+> > > > +                       return ch;
+> > > > +               if (ch >= '0' && ch <= '9')
+> > > > +                       *hex = (*hex << 4) | (ch - '0');
+> > > > +               else if (ch >= 'a' && ch <= 'f')
+> > > > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
+> > > > +               else if (ch >= 'A' && ch <= 'F')
+> > > > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
+> > > > +               else if (first_read)
+> > > > +                       return -1;
+> > > > +               else
+> > > > +                       return ch;
+> > > > +               first_read = false;
+> > > > +       }
+> > > > +}
+> > >
+> > > What if a file contains hex digits at the end (without trailing spaces)?
+> > > I guess it'd see EOF and return -1, right?
+> > >
+> > > And it'd better to be clear when it sees a big hex numbers -
+> > > it could have a comment that it'd simply discard upper bits
+> > > or return an error.
+> > >
+> > > > +
+> > > > +/* Read a decimal value into the out argument dec.
+> > > > + * Returns -1 on error or if nothing is read, otherwise returns the character
+> > > > + * after the decimal value.
+> > > > + */
+> > > > +static inline int io__get_dec(struct io *io, __u64 *dec)
+> > > > +{
+> > > > +       bool first_read = true;
+> > > > +
+> > > > +       *dec = 0;
+> > > > +       while (true) {
+> > > > +               char ch = io__get_char(io);
+> > > > +
+> > > > +               if (ch < 0)
+> > > > +                       return ch;
+> > > > +               if (ch >= '0' && ch <= '9')
+> > > > +                       *dec = (*dec * 10) + ch - '0';
+> > > > +               else if (first_read)
+> > > > +                       return -1;
+> > > > +               else
+> > > > +                       return ch;
+> > > > +               first_read = false;
+> > > > +       }
+> > > > +}
+> > >
+> > > Ditto.
+> > >
+> > > Thanks
+> > > Namhyung
+> > >
+> > >
+> > > > +
+> > > > +#endif /* __API_IO__ */
+> > > > --
+> > > > 2.26.0.rc2.310.g2932bb562d-goog
+> > > >
+> >
+> > --
+> >
+> > - Arnaldo
+
+-- 
+
+- Arnaldo
