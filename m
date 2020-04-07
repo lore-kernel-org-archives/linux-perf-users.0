@@ -1,82 +1,198 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-Date: Mon, 6 Apr 2020 23:43:29 -0700
-Message-ID: <CAP-5=fX346zwohXP_xgoZHyq4JSbV8hdLPvBR3ZpS_iOHcX1hA@mail.gmail.com>
-References: <20200323235846.104937-1-irogers@google.com> <20200324102732.GR1534489@krava>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and
+ parse_id
+Date: Tue, 7 Apr 2020 12:41:38 +0530
+Message-ID: <e9a31950-8223-d68b-068a-ba95a6d6d30f@linux.ibm.com>
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
+ <20200401203340.31402-2-kjain@linux.ibm.com>
+ <20200406141357.GG29826@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20200324102732.GR1534489@krava>
-Sender: netdev-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200406141357.GG29826@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Mar 24, 2020 at 3:28 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
-> > This patch links perf with the libpfm4 library if it is available and
-> > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-> > event tables for all processors supported by perf_events. It is a helper
-> > library that helps convert from a symbolic event name to the event
-> > encoding required by the underlying kernel interface. This
-> > library is open-source and available from: http://perfmon2.sf.net.
-> >
-> > With this patch, it is possible to specify full hardware events
-> > by name. Hardware filters are also supported. Events must be
-> > specified via the --pfm-events and not -e option. Both options
-> > are active at the same time and it is possible to mix and match:
-> >
-> > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> >
-> > v5 is a rebase.
-> > v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-> >    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
-> >    missed in v3.
-> > v3 is against acme/perf/core and removes a diagnostic warning.
-> > v2 of this patch makes the --pfm-events man page documentation
-> > conditional on libpfm4 behing configured. It tidies some of the
-> > documentation and adds the feature test missed in the v1 patch.
-> >
-> > Author: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> I still have some conflicts, but I merged it by hand
->
->
->         patching file tools/build/Makefile.feature
->         patching file tools/build/feature/Makefile
->         patching file tools/build/feature/test-libpfm4.c
->         patching file tools/perf/Documentation/Makefile
->         patching file tools/perf/Documentation/perf-record.txt
->         patching file tools/perf/Documentation/perf-stat.txt
->         patching file tools/perf/Documentation/perf-top.txt
->         patching file tools/perf/Makefile.config
->         patching file tools/perf/Makefile.perf
->         Hunk #3 FAILED at 834.
->         1 out of 3 hunks FAILED -- saving rejects to file tools/perf/Makefile.perf.rej
->         patching file tools/perf/builtin-list.c
->         patching file tools/perf/builtin-record.c
->         patching file tools/perf/builtin-stat.c
->         patching file tools/perf/builtin-top.c
->         Hunk #2 succeeded at 1549 (offset 2 lines).
->         Hunk #3 succeeded at 1567 (offset 2 lines).
->         patching file tools/perf/util/evsel.c
->         patching file tools/perf/util/evsel.h
->         patching file tools/perf/util/parse-events.c
->         patching file tools/perf/util/parse-events.h
->         patching file tools/perf/util/pmu.c
->         Hunk #1 succeeded at 869 (offset 5 lines).
->         patching file tools/perf/util/pmu.h
->         Hunk #1 succeeded at 65 (offset 1 line).
->
-> jirka
 
-Thanks for looking at this! I sent a new version (v7):
-https://lore.kernel.org/lkml/20200407064018.158555-1-irogers@google.com/T/#u
-that adds Stephane's improvements for handling fallback when
-perf_event_open fails. Please let us know if there are issues we can
-address with the patch set.
 
-Thanks,
-Ian
+On 4/6/20 7:43 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Apr 02, 2020 at 02:03:34AM +0530, Kajol Jain escreveu:
+>> From: Jiri Olsa <jolsa@kernel.org>
+>>
+>> Adding expr_ prefix for parse_ctx and parse_id,
+>> to straighten out the expr* namespace.
+>>
+>> There's no functional change.
+> 
+> Next time please add your Signed-off-by: as well when pushing 3rd party
+> patches.
+> 
+> Applied.
+> 
+> - Arnaldo
+
+Hi Arnaldo,
+	Thanks, I will take care of it next time.
+
+Regards,
+Kajol
+>  
+>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>> ---
+>>  tools/perf/tests/expr.c       |  4 ++--
+>>  tools/perf/util/expr.c        | 10 +++++-----
+>>  tools/perf/util/expr.h        | 12 ++++++------
+>>  tools/perf/util/expr.y        |  6 +++---
+>>  tools/perf/util/stat-shadow.c |  2 +-
+>>  5 files changed, 17 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+>> index 28313e59d6f6..ea10fc4412c4 100644
+>> --- a/tools/perf/tests/expr.c
+>> +++ b/tools/perf/tests/expr.c
+>> @@ -6,7 +6,7 @@
+>>  #include <string.h>
+>>  #include <linux/zalloc.h>
+>>  
+>> -static int test(struct parse_ctx *ctx, const char *e, double val2)
+>> +static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
+>>  {
+>>  	double val;
+>>  
+>> @@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
+>>  	const char **other;
+>>  	double val;
+>>  	int i, ret;
+>> -	struct parse_ctx ctx;
+>> +	struct expr_parse_ctx ctx;
+>>  	int num_other;
+>>  
+>>  	expr__ctx_init(&ctx);
+>> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+>> index fd192ddf93c1..c8ccc548a585 100644
+>> --- a/tools/perf/util/expr.c
+>> +++ b/tools/perf/util/expr.c
+>> @@ -11,7 +11,7 @@ extern int expr_debug;
+>>  #endif
+>>  
+>>  /* Caller must make sure id is allocated */
+>> -void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+>> +void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
+>>  {
+>>  	int idx;
+>>  
+>> @@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
+>>  	ctx->ids[idx].val = val;
+>>  }
+>>  
+>> -void expr__ctx_init(struct parse_ctx *ctx)
+>> +void expr__ctx_init(struct expr_parse_ctx *ctx)
+>>  {
+>>  	ctx->num_ids = 0;
+>>  }
+>>  
+>>  static int
+>> -__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+>> +__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
+>>  	      int start)
+>>  {
+>>  	YY_BUFFER_STATE buffer;
+>> @@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
+>>  	return ret;
+>>  }
+>>  
+>> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
+>> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
+>>  {
+>>  	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
+>>  }
+>> @@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
+>>  		     int *num_other)
+>>  {
+>>  	int err, i = 0, j = 0;
+>> -	struct parse_ctx ctx;
+>> +	struct expr_parse_ctx ctx;
+>>  
+>>  	expr__ctx_init(&ctx);
+>>  	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
+>> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+>> index 9377538f4097..b9e53f2b5844 100644
+>> --- a/tools/perf/util/expr.h
+>> +++ b/tools/perf/util/expr.h
+>> @@ -5,19 +5,19 @@
+>>  #define EXPR_MAX_OTHER 20
+>>  #define MAX_PARSE_ID EXPR_MAX_OTHER
+>>  
+>> -struct parse_id {
+>> +struct expr_parse_id {
+>>  	const char *name;
+>>  	double val;
+>>  };
+>>  
+>> -struct parse_ctx {
+>> +struct expr_parse_ctx {
+>>  	int num_ids;
+>> -	struct parse_id ids[MAX_PARSE_ID];
+>> +	struct expr_parse_id ids[MAX_PARSE_ID];
+>>  };
+>>  
+>> -void expr__ctx_init(struct parse_ctx *ctx);
+>> -void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
+>> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
+>> +void expr__ctx_init(struct expr_parse_ctx *ctx);
+>> +void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
+>> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
+>>  int expr__find_other(const char *expr, const char *one, const char ***other,
+>>  		int *num_other);
+>>  
+>> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+>> index 4720cbe79357..cd17486c1c5d 100644
+>> --- a/tools/perf/util/expr.y
+>> +++ b/tools/perf/util/expr.y
+>> @@ -15,7 +15,7 @@
+>>  %define api.pure full
+>>  
+>>  %parse-param { double *final_val }
+>> -%parse-param { struct parse_ctx *ctx }
+>> +%parse-param { struct expr_parse_ctx *ctx }
+>>  %parse-param {void *scanner}
+>>  %lex-param {void* scanner}
+>>  
+>> @@ -39,14 +39,14 @@
+>>  
+>>  %{
+>>  static void expr_error(double *final_val __maybe_unused,
+>> -		       struct parse_ctx *ctx __maybe_unused,
+>> +		       struct expr_parse_ctx *ctx __maybe_unused,
+>>  		       void *scanner,
+>>  		       const char *s)
+>>  {
+>>  	pr_debug("%s\n", s);
+>>  }
+>>  
+>> -static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
+>> +static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
+>>  {
+>>  	int i;
+>>  
+>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>> index 0fd713d3674f..402af3e8d287 100644
+>> --- a/tools/perf/util/stat-shadow.c
+>> +++ b/tools/perf/util/stat-shadow.c
+>> @@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
+>>  			   struct runtime_stat *st)
+>>  {
+>>  	print_metric_t print_metric = out->print_metric;
+>> -	struct parse_ctx pctx;
+>> +	struct expr_parse_ctx pctx;
+>>  	double ratio, scale;
+>>  	int i;
+>>  	void *ctxp = out->ctx;
+>> -- 
+>> 2.21.0
+>>
+> 
