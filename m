@@ -1,198 +1,92 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v8 1/7] perf expr: Add expr_ prefix for parse_ctx and
- parse_id
-Date: Tue, 7 Apr 2020 12:41:38 +0530
-Message-ID: <e9a31950-8223-d68b-068a-ba95a6d6d30f@linux.ibm.com>
-References: <20200401203340.31402-1-kjain@linux.ibm.com>
- <20200401203340.31402-2-kjain@linux.ibm.com>
- <20200406141357.GG29826@kernel.org>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
+Date: Tue, 7 Apr 2020 11:46:18 +0000
+Message-ID: <DB8PR04MB6795996085AD2167E2358907E6C30@DB8PR04MB6795.eurprd04.prod.outlook.com>
+References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
+ <6dbeabcf-c15a-0bbd-cef4-b25d0133854f@huawei.com>
+ <DB7PR04MB4618D2E1892120EB659B8695E6EC0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <2f81eb7a-a6e4-1cc6-cd0a-ca3d749bd552@huawei.com>
+ <DB7PR04MB4618C0A8DD9BAB2A529CDCECE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <a2cc0772-4f5d-aba3-1f5c-7d4eef7a3f72@huawei.com>
+ <DB7PR04MB461803AD15E47AA880F0915DE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <55836919-41b5-0834-f7a7-1a2a34535677@huawei.com>
+ <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200406141357.GG29826@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: John Garry <john.garry@huawei.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Zhangshaokun <zhangshaokun@hisilicon.com>, Jiri Olsa <jolsa@redhat.com>, Frank Li <frank.li@nxp.com>, Linuxarm <linuxarm@huawei.com>, "acme@kernel.org" <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "will@kernel.org" <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-
-
-On 4/6/20 7:43 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 02, 2020 at 02:03:34AM +0530, Kajol Jain escreveu:
->> From: Jiri Olsa <jolsa@kernel.org>
->>
->> Adding expr_ prefix for parse_ctx and parse_id,
->> to straighten out the expr* namespace.
->>
->> There's no functional change.
-> 
-> Next time please add your Signed-off-by: as well when pushing 3rd party
-> patches.
-> 
-> Applied.
-> 
-> - Arnaldo
-
-Hi Arnaldo,
-	Thanks, I will take care of it next time.
-
-Regards,
-Kajol
->  
->> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
->> ---
->>  tools/perf/tests/expr.c       |  4 ++--
->>  tools/perf/util/expr.c        | 10 +++++-----
->>  tools/perf/util/expr.h        | 12 ++++++------
->>  tools/perf/util/expr.y        |  6 +++---
->>  tools/perf/util/stat-shadow.c |  2 +-
->>  5 files changed, 17 insertions(+), 17 deletions(-)
->>
->> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
->> index 28313e59d6f6..ea10fc4412c4 100644
->> --- a/tools/perf/tests/expr.c
->> +++ b/tools/perf/tests/expr.c
->> @@ -6,7 +6,7 @@
->>  #include <string.h>
->>  #include <linux/zalloc.h>
->>  
->> -static int test(struct parse_ctx *ctx, const char *e, double val2)
->> +static int test(struct expr_parse_ctx *ctx, const char *e, double val2)
->>  {
->>  	double val;
->>  
->> @@ -22,7 +22,7 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
->>  	const char **other;
->>  	double val;
->>  	int i, ret;
->> -	struct parse_ctx ctx;
->> +	struct expr_parse_ctx ctx;
->>  	int num_other;
->>  
->>  	expr__ctx_init(&ctx);
->> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
->> index fd192ddf93c1..c8ccc548a585 100644
->> --- a/tools/perf/util/expr.c
->> +++ b/tools/perf/util/expr.c
->> @@ -11,7 +11,7 @@ extern int expr_debug;
->>  #endif
->>  
->>  /* Caller must make sure id is allocated */
->> -void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
->> +void expr__add_id(struct expr_parse_ctx *ctx, const char *name, double val)
->>  {
->>  	int idx;
->>  
->> @@ -21,13 +21,13 @@ void expr__add_id(struct parse_ctx *ctx, const char *name, double val)
->>  	ctx->ids[idx].val = val;
->>  }
->>  
->> -void expr__ctx_init(struct parse_ctx *ctx)
->> +void expr__ctx_init(struct expr_parse_ctx *ctx)
->>  {
->>  	ctx->num_ids = 0;
->>  }
->>  
->>  static int
->> -__expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
->> +__expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
->>  	      int start)
->>  {
->>  	YY_BUFFER_STATE buffer;
->> @@ -52,7 +52,7 @@ __expr__parse(double *val, struct parse_ctx *ctx, const char *expr,
->>  	return ret;
->>  }
->>  
->> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr)
->> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr)
->>  {
->>  	return __expr__parse(final_val, ctx, expr, EXPR_PARSE) ? -1 : 0;
->>  }
->> @@ -75,7 +75,7 @@ int expr__find_other(const char *expr, const char *one, const char ***other,
->>  		     int *num_other)
->>  {
->>  	int err, i = 0, j = 0;
->> -	struct parse_ctx ctx;
->> +	struct expr_parse_ctx ctx;
->>  
->>  	expr__ctx_init(&ctx);
->>  	err = __expr__parse(NULL, &ctx, expr, EXPR_OTHER);
->> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
->> index 9377538f4097..b9e53f2b5844 100644
->> --- a/tools/perf/util/expr.h
->> +++ b/tools/perf/util/expr.h
->> @@ -5,19 +5,19 @@
->>  #define EXPR_MAX_OTHER 20
->>  #define MAX_PARSE_ID EXPR_MAX_OTHER
->>  
->> -struct parse_id {
->> +struct expr_parse_id {
->>  	const char *name;
->>  	double val;
->>  };
->>  
->> -struct parse_ctx {
->> +struct expr_parse_ctx {
->>  	int num_ids;
->> -	struct parse_id ids[MAX_PARSE_ID];
->> +	struct expr_parse_id ids[MAX_PARSE_ID];
->>  };
->>  
->> -void expr__ctx_init(struct parse_ctx *ctx);
->> -void expr__add_id(struct parse_ctx *ctx, const char *id, double val);
->> -int expr__parse(double *final_val, struct parse_ctx *ctx, const char *expr);
->> +void expr__ctx_init(struct expr_parse_ctx *ctx);
->> +void expr__add_id(struct expr_parse_ctx *ctx, const char *id, double val);
->> +int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr);
->>  int expr__find_other(const char *expr, const char *one, const char ***other,
->>  		int *num_other);
->>  
->> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
->> index 4720cbe79357..cd17486c1c5d 100644
->> --- a/tools/perf/util/expr.y
->> +++ b/tools/perf/util/expr.y
->> @@ -15,7 +15,7 @@
->>  %define api.pure full
->>  
->>  %parse-param { double *final_val }
->> -%parse-param { struct parse_ctx *ctx }
->> +%parse-param { struct expr_parse_ctx *ctx }
->>  %parse-param {void *scanner}
->>  %lex-param {void* scanner}
->>  
->> @@ -39,14 +39,14 @@
->>  
->>  %{
->>  static void expr_error(double *final_val __maybe_unused,
->> -		       struct parse_ctx *ctx __maybe_unused,
->> +		       struct expr_parse_ctx *ctx __maybe_unused,
->>  		       void *scanner,
->>  		       const char *s)
->>  {
->>  	pr_debug("%s\n", s);
->>  }
->>  
->> -static int lookup_id(struct parse_ctx *ctx, char *id, double *val)
->> +static int lookup_id(struct expr_parse_ctx *ctx, char *id, double *val)
->>  {
->>  	int i;
->>  
->> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
->> index 0fd713d3674f..402af3e8d287 100644
->> --- a/tools/perf/util/stat-shadow.c
->> +++ b/tools/perf/util/stat-shadow.c
->> @@ -729,7 +729,7 @@ static void generic_metric(struct perf_stat_config *config,
->>  			   struct runtime_stat *st)
->>  {
->>  	print_metric_t print_metric = out->print_metric;
->> -	struct parse_ctx pctx;
->> +	struct expr_parse_ctx pctx;
->>  	double ratio, scale;
->>  	int i;
->>  	void *ctxp = out->ctx;
->> -- 
->> 2.21.0
->>
-> 
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
+Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMOW5tDPmnIgzMOaXpSAxOTowNA0KPiBUbzog
+Sm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IHdpbGxAa2VybmVs
+Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGFjbWVAa2VybmVsLm9yZzsNCj4gbGludXgtcGVy
+Zi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+
+OyBGcmFuayBMaQ0KPiA8ZnJhbmsubGlAbnhwLmNvbT47IEppcmkgT2xzYSA8am9sc2FAcmVkaGF0
+LmNvbT47IFpoYW5nc2hhb2t1bg0KPiA8emhhbmdzaGFva3VuQGhpc2lsaWNvbi5jb20+OyBMaW51
+eGFybSA8bGludXhhcm1AaHVhd2VpLmNvbT47DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAvNl0gcGVyZi9pbXhfZGRyOiBBZGQg
+bmFtZXNwYWNlIGZvciBpLk1YOCBERFIgUGVyZg0KPiANCj4gT24gMjYvMDIvMjAyMCAxNzo0Niwg
+Sm9obiBHYXJyeSB3cm90ZToNCj4gSGkgSm9ha2ltLA0KSGkgSm9obiwNCg0KSXQgY2FuJ3Qgd29y
+ayBvbiBteSBwbGF0Zm9ybToNCg0Kcm9vdEBpbXg4bW1ldms6fiMgY2F0IC9zeXMvYnVzL2V2ZW50
+X3NvdXJjZS9kZXZpY2VzL2lteDhfZGRyMC9pZGVudGlmaWVyDQppLm14OG1tDQoNCg0Kcm9vdEBp
+bXg4bW1ldms6fiMgLi9wZXJmIGxpc3QgbWV0cmljDQpMaXN0IG9mIHByZS1kZWZpbmVkIGV2ZW50
+cyAodG8gYmUgdXNlZCBpbiAtZSk6DQoNCk1ldHJpY3M6DQoNCiAgaW14OG1tX2RkcjBfcmVhZC5h
+bGwNCiAgICAgICBbQnl0ZXMgb2YgYWxsIG1hc3RlcnMgcmVhZCBmcm9tIGRkcjAuIFVuaXQ6IHVu
+Y29yZV9pLm14OCxkZHJjIF0NCg0KDQpyb290QGlteDhtbWV2azp+IyAuL3BlcmYgc3RhdCAtYSAt
+SSAxMDAwIC1NIGlteDhtbV9kZHIwX3JlYWQuYWxsDQpldmVudCBzeW50YXggZXJyb3I6ICcnDQog
+ICAgICAgICAgICAgICAgICAgICAgXF9fXyBwYXJzZXIgZXJyb3INCg0KIFVzYWdlOiBwZXJmIHN0
+YXQgWzxvcHRpb25zPl0gWzxjb21tYW5kPl0NCg0KICAgIC1NLCAtLW1ldHJpY3MgPG1ldHJpYy9t
+ZXRyaWMgZ3JvdXAgbGlzdD4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgbW9uaXRvciBzcGVj
+aWZpZWQgbWV0cmljcyBvciBtZXRyaWMgZ3JvdXBzIChzZXBhcmF0ZWQgYnkgLCkNCg0KSG93ZXZl
+ciwgaXQgY2FuIHdvcmsgb24gYnJhbmNoOiBwcml2YXRlLXRvcGljLXBlcmYtNS42LXBtdS1ldmVu
+dHMtdXBzdHJlYW0tdjIuIFdoYXQgY2hhbmdlcyBoYXZlIHlvdSBtYWRlIGNvbXBhcmVkIHRvIGxh
+c3Q/DQoNCkNvdWxkIHlvdSBoZWxwIGRvIGJlbG93IGNoYW5nZT8gU2luY2Ugc29tZSBTb2NzIG1h
+eSBoYXZlIHR3byBkZHIgY29udHJvbGxlcihkZHIwL2RkcjEpIHdpdGggdGhlIHNhbWUgZXZlbnQg
+Y29kZS4NCkRlbGV0ZSBmaWxlOiB0b29scy9wZXJmL3BtdS1ldmVudHMvYXJjaC9hcm02NC9mcmVl
+c2NhbGUvaW14OG1tL3N5cy9kZHJjLmpzb24NClJlcGxhY2UgZmlsZTogdG9vbHMvcGVyZi9wbXUt
+ZXZlbnRzL2FyY2gvYXJtNjQvZnJlZXNjYWxlL2lteDhtbS9zeXMvbWV0cmljcy5qc29uLCBwdXQg
+YWxsIGV2ZW50cyBpbnRvIG1ldHJpYy4NClsNCiAgIHsNCgkiUHVibGljRGVzY3JpcHRpb24iOiAi
+ZGRyMCBjeWNsZXMgZXZlbnQiLA0KCSJNZXRyaWNOYW1lIjogImlteDhtbV9kZHIwLmN5Y2xlcyIs
+DQoJIk1ldHJpY0V4cHIiOiAiaW14OF9kZHIwXFwvY3ljbGVzXFwvIiwNCgkiVW5pdCI6ICJpbXg4
+X2RkciIsDQoJIkNvbXBhdCI6ICJpLm14OG1tIg0KICAgfSwNCiAgIHsNCgkiUHVibGljRGVzY3Jp
+cHRpb24iOiAiZGRyMCByZWFkLWN5Y2xlcyBldmVudCIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1t
+X2RkcjAucmVhZF9jeWNsZXMiLA0KCSJNZXRyaWNFeHByIjogImlteDhfZGRyMFxcL3JlYWRcXC1j
+eWNsZXNcXC8iLA0KCSJVbml0IjogImlteDhfZGRyIiwNCgkiQ29tcGF0IjogImkubXg4bW0iDQog
+ICB9LA0KICAgew0KCSJQdWJsaWNEZXNjcmlwdGlvbiI6ICJkZHIwIHdyaXRlLWN5Y2xlcyBldmVu
+dCIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjAud3JpdGVfY3ljbGVzIiwNCgkiTWV0cmlj
+RXhwciI6ICJpbXg4X2RkcjBcXC93cml0ZVxcLWN5Y2xlc1xcLyIsDQoJIlVuaXQiOiAiaW14OF9k
+ZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgIH0sDQogICB7DQoJIlB1YmxpY0Rlc2NyaXB0
+aW9uIjogImRkcjAgcmVhZCBldmVudCIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjAucmVh
+ZCIsDQoJIk1ldHJpY0V4cHIiOiAiaW14OF9kZHIwXFwvcmVhZFxcLyIsDQoJIlVuaXQiOiAiaW14
+OF9kZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgIH0sDQogICB7DQoJIlB1YmxpY0Rlc2Ny
+aXB0aW9uIjogImRkcjAgd3JpdGUgZXZlbnQiLA0KCSJNZXRyaWNOYW1lIjogImlteDhtbV9kZHIw
+LndyaXRlIiwNCgkiTWV0cmljRXhwciI6ICJpbXg4X2RkcjBcXC93cml0ZVxcLyIsDQoJIlVuaXQi
+OiAiaW14OF9kZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgIH0sDQogICB7DQoJIlB1Ymxp
+Y0Rlc2NyaXB0aW9uIjogImJ5dGVzIGFsbCBtYXN0ZXJzIHJlYWQgZnJvbSBkZHIwIGJhc2VkIG9u
+IHJlYWQtY3ljbGVzIGV2ZW50LiIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjBfcmVhZC5h
+bGwiLA0KCSJNZXRyaWNFeHByIjogIiggaW14OF9kZHIwXFwvcmVhZFxcLWN5Y2xlc1xcLyApICog
+NCAqIDQiLA0KCSJTY2FsZVVuaXQiOiAiOS43NjU2MjVlLTRNQiIsDQoJIlVuaXQiOiAiaW14OF9k
+ZHIiLA0KCSJDb21wYXQiOiAiaS5teDhtbSINCiAgICB9LA0KICAgew0KCSJQdWJsaWNEZXNjcmlw
+dGlvbiI6ICJieXRlcyBhbGwgbWFzdGVycyB3cml0ZSB0byBkZHIwIGJhc2VkIG9uIHJlYWQtY3lj
+bGVzIGV2ZW50LiIsDQoJIk1ldHJpY05hbWUiOiAiaW14OG1tX2RkcjBfd3JpdGUuYWxsIiwNCgki
+TWV0cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3dyaXRlXFwtY3ljbGVzXFwvICkgKiA0ICogNCIs
+DQoJIlNjYWxlVW5pdCI6ICI5Ljc2NTYyNWUtNE1CIiwNCgkiVW5pdCI6ICJpbXg4X2RkciIsDQoJ
+IkNvbXBhdCI6ICJpLm14OG1tIg0KICAgIH0NCl0NCg0KVGhhbmtzLg0KDQpCZXN0IFJlZ2FyZHMs
+DQpKb2FraW0gWmhhbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
