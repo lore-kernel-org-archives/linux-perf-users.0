@@ -1,204 +1,136 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v2 4/5] tools api: add a lightweight buffered reading api
-Date: Tue, 7 Apr 2020 09:32:15 -0300
-Message-ID: <20200407123215.GA8452@kernel.org>
-References: <20200402154357.107873-1-irogers@google.com>
- <20200402154357.107873-5-irogers@google.com>
- <CAM9d7cgCyatYvH98m8DYiAe1CapqW8Sfu8VtwnF24kJQbUvG=Q@mail.gmail.com>
- <20200406140951.GE29826@kernel.org>
- <CAP-5=fVt9ueNm66MrV=CBYQPOXdOxYo2w_jiF-Cm-8i70SD8mQ@mail.gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: perf probe + uprobes missing events
+Date: Tue, 7 Apr 2020 21:39:43 +0900
+Message-ID: <20200407213943.3a92e040d4ce30dc55e9aa1f@kernel.org>
+References: <20200406145356.GA32649@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVt9ueNm66MrV=CBYQPOXdOxYo2w_jiF-Cm-8i70SD8mQ@mail.gmail.com>
+In-Reply-To: <20200406145356.GA32649@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <andi@firstfloor.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Apr 06, 2020 at 09:15:51AM -0700, Ian Rogers escreveu:
-> On Mon, Apr 6, 2020 at 7:09 AM Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
-> > Em Sat, Apr 04, 2020 at 12:06:45PM +0900, Namhyung Kim escreveu:
-> > > On Fri, Apr 3, 2020 at 12:44 AM Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > The synthesize benchmark shows the majority of execution time going to
-> > > > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-> > > > reading library that will be used to replace these calls in a follow-up
-> > > > CL.
+Hi Arnaldo,
 
-> > waiting for some conclusion to this thread,
- 
-> Thanks, sorry I was busy at the weekend. I agree with Namhyung's
-> comments, nice catch! Fwiw, it comes from my refactoring this api out
-> of a specific /proc/pid/maps reader. I'll work to address the issue
-> and ideally stick some tests of the corner cases somewhere - any
-> suggestions? This doesn't feel like a perf test, nor is it a kernel
+On Mon, 6 Apr 2020 11:53:56 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-It may not be uniquely useful for perf, but I'd start by adding an entry
-to 'perf test' anyway, as its used by perf, after all what we want is
-that code gets tested regularly, adding it to 'perf test' achieves that.
-
-Thanks,
-
-- Arnaldo
-
-> side test.
+> Hi Masami,
 > 
-> Thanks,
-> Ian
+> 	I'm trying to use 'perf probe' to debug 'perf test', but I'm not
+> getting repeatable results, take a look:
 > 
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/lib/api/io.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 107 insertions(+)
-> > > >  create mode 100644 tools/lib/api/io.h
-> > > >
-> > > > diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-> > > > new file mode 100644
-> > > > index 000000000000..5aa5b0e26a7a
-> > > > --- /dev/null
-> > > > +++ b/tools/lib/api/io.h
-> > > > @@ -0,0 +1,107 @@
-> > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > +/*
-> > > > + * Lightweight buffered reading library.
-> > > > + *
-> > > > + * Copyright 2019 Google LLC.
-> > > > + */
-> > > > +#ifndef __API_IO__
-> > > > +#define __API_IO__
-> > > > +
-> > > > +struct io {
-> > > > +       /* File descriptor being read/ */
-> > > > +       int fd;
-> > > > +       /* Size of the read buffer. */
-> > > > +       unsigned int buf_len;
-> > > > +       /* Pointer to storage for buffering read. */
-> > > > +       char *buf;
-> > > > +       /* End of the storage. */
-> > > > +       char *end;
-> > > > +       /* Currently accessed data pointer. */
-> > > > +       char *data;
-> > > > +       /* Set true on when the end of file on read error. */
-> > > > +       bool eof;
-> > > > +};
-> > > > +
-> > > > +static inline void io__init(struct io *io, int fd,
-> > > > +                           char *buf, unsigned int buf_len)
-> > > > +{
-> > > > +       io->fd = fd;
-> > > > +       io->buf_len = buf_len;
-> > > > +       io->buf = buf;
-> > > > +       io->end = buf;
-> > > > +       io->data = buf;
-> > > > +       io->eof = false;
-> > > > +}
-> > > > +
-> > > > +/* Reads one character from the "io" file with similar semantics to fgetc. */
-> > > > +static inline int io__get_char(struct io *io)
-> > > > +{
-> > > > +       char *ptr = io->data;
-> > > > +
-> > > > +       if (ptr == io->end) {
-> > > > +               ssize_t n = read(io->fd, io->buf, io->buf_len);
-> > > > +
-> > > > +               if (n <= 0) {
-> > > > +                       io->eof = true;
-> > > > +                       return -1;
-> > > > +               }
-> > > > +               ptr = &io->buf[0];
-> > > > +               io->end = &io->buf[n];
-> > > > +       }
-> > > > +       io->data = ptr + 1;
-> > > > +       return *ptr;
-> > > > +}
-> > > > +
-> > > > +/* Read a hexadecimal value with no 0x prefix into the out argument hex.
-> > > > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > > > + * after the hexadecimal value.
-> > > > + */
-> > > > +static inline int io__get_hex(struct io *io, __u64 *hex)
-> > > > +{
-> > > > +       bool first_read = true;
-> > > > +
-> > > > +       *hex = 0;
-> > > > +       while (true) {
-> > > > +               char ch = io__get_char(io);
-> > > > +
-> > >
-> > > Maybe you can add this
-> > >
-> > >     if (io->eof)
-> > >         return 0;
-> > >
-> > > Please see below
-> > >
-> > >
-> > > > +               if (ch < 0)
-> > > > +                       return ch;
-> > > > +               if (ch >= '0' && ch <= '9')
-> > > > +                       *hex = (*hex << 4) | (ch - '0');
-> > > > +               else if (ch >= 'a' && ch <= 'f')
-> > > > +                       *hex = (*hex << 4) | (ch - 'a' + 10);
-> > > > +               else if (ch >= 'A' && ch <= 'F')
-> > > > +                       *hex = (*hex << 4) | (ch - 'A' + 10);
-> > > > +               else if (first_read)
-> > > > +                       return -1;
-> > > > +               else
-> > > > +                       return ch;
-> > > > +               first_read = false;
-> > > > +       }
-> > > > +}
-> > >
-> > > What if a file contains hex digits at the end (without trailing spaces)?
-> > > I guess it'd see EOF and return -1, right?
-> > >
-> > > And it'd better to be clear when it sees a big hex numbers -
-> > > it could have a comment that it'd simply discard upper bits
-> > > or return an error.
-> > >
-> > > > +
-> > > > +/* Read a decimal value into the out argument dec.
-> > > > + * Returns -1 on error or if nothing is read, otherwise returns the character
-> > > > + * after the decimal value.
-> > > > + */
-> > > > +static inline int io__get_dec(struct io *io, __u64 *dec)
-> > > > +{
-> > > > +       bool first_read = true;
-> > > > +
-> > > > +       *dec = 0;
-> > > > +       while (true) {
-> > > > +               char ch = io__get_char(io);
-> > > > +
-> > > > +               if (ch < 0)
-> > > > +                       return ch;
-> > > > +               if (ch >= '0' && ch <= '9')
-> > > > +                       *dec = (*dec * 10) + ch - '0';
-> > > > +               else if (first_read)
-> > > > +                       return -1;
-> > > > +               else
-> > > > +                       return ch;
-> > > > +               first_read = false;
-> > > > +       }
-> > > > +}
-> > >
-> > > Ditto.
-> > >
-> > > Thanks
-> > > Namhyung
-> > >
-> > >
-> > > > +
-> > > > +#endif /* __API_IO__ */
-> > > > --
-> > > > 2.26.0.rc2.310.g2932bb562d-goog
-> > > >
-> >
-> > --
-> >
-> > - Arnaldo
+> I'm trying to figure out which expresssions are _really_ being tested
+> byu the 'perf test expr' testcase, so I added a probe to the
+> expr__parse() routine, asking for the expr string to be printed:
+> 
+> [root@five ~]# perf probe -x ~/bin/perf -L expr__parse
+> <expr__parse@/home/acme/git/perf/tools/perf/util/expr.c:0>
+>       0  int expr__parse(double *final_val, struct expr_parse_ctx *ctx, const char *expr, int runtime)
+>       1  {
+>       2         return __expr__parse(final_val, ctx, expr, EXPR_PARSE, runtime) ? -1 : 0;
+>       3  }
+> 
+>          static bool
+>          already_seen(const char *val, const char *one, const char **other,
+> 
+> [root@five ~]#
+> 
+> [root@five ~]# perf probe -x ~/bin/perf expr__parse expr:string
+> Target program is compiled without optimization. Skipping prologue.
+> Probe on address 0x5cb11b to force probing at the function entry.
+> 
+> Added new event:
+>   probe_perf:expr__parse (on expr__parse in /home/acme/bin/perf with expr:string)
+> 
+> You can now use it in all perf tools, such as:
+> 
+> 	perf record -e probe_perf:expr__parse -aR sleep 1
+> 
+> [root@five ~]#
+
+Hmm, These operation looks good to me. However,
+
+> 
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+>      0.000 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+>      0.015 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+>      0.018 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+>      0.020 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+>      0.023 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+>      0.026 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+>      0.029 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+>      0.031 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
+>      0.034 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
+>      0.036 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
+>      0.039 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
+>      0.041 :2994175/2994175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+>      0.000 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+>      0.021 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+>      0.025 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+>      0.029 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+>      0.033 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+>      0.041 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+>      0.044 perf/2996042 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+>      0.000 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+>      0.020 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+>      0.025 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+>      0.029 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+>      0.032 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+>      0.037 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+>      0.040 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+>      0.043 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
+>      0.046 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
+>      0.049 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
+>      0.053 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
+>      0.056 perf/2996416 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+> [root@five ~]# perf trace -e probe_perf:expr_* perf test -F expr
+>  7: Simple expression parser                              : Ok
+>      0.000 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1")
+>      0.014 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO+BAR")
+>      0.017 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(BAR/2)%2")
+>      0.021 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1 - -4")
+>      0.024 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "(FOO-1)*2 + (BAR/2)%2 - -4")
+>      0.030 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 | 1")
+>      0.032 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1-1 & 1")
+>      0.035 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "min(1,2) + 1")
+>      0.038 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "max(1,2) + 1")
+>      0.040 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "1+1 if 3*4 else 0")
+>      0.044 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "FOO/0")
+>      0.046 :2998175/2998175 probe_perf:expr__parse(__probe_ip: 6074674, expr_string: "BAR/")
+> [root@five ~]#
+
+Strange. This seems bug in uprobes. Did you try to enable ftrace event
+and dump ftrace trace buffer for each time?
+Also, it may help if you dump the /sys/kernel/debug/tracing/uprobe_profile.
+It may indicate how many times the probe is hit and missed.
+
+OK, I'll also try to reproduce it.
+
+Thank you,
+
+> 
+> 
+> Do you have any idea why that happens?
+> 
+> - Arnaldo
+
 
 -- 
-
-- Arnaldo
+Masami Hiramatsu <mhiramat@kernel.org>
