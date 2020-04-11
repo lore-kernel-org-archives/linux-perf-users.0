@@ -1,275 +1,76 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v4 2/2] perf synthetic events: Remove use of sscanf from /proc reading
-Date: Fri, 10 Apr 2020 23:42:48 -0700
-Message-ID: <20200411064248.247530-2-irogers@google.com>
-References: <20200411064248.247530-1-irogers@google.com>
+Subject: Re: [PATCH v7] perf tools: add support for libpfm4
+Date: Sat, 11 Apr 2020 00:48:30 -0700
+Message-ID: <CAP-5=fUZK1MkKNeJXJY3+ua8U7cfqbMhZtiGB0JyeiNt5=gh2Q@mail.gmail.com>
+References: <20200407064018.158555-1-irogers@google.com> <20200407202508.GA3210726@krava>
+ <CAP-5=fUQBDUKL3AXXzERfFLSRtK=P6waA+bv68Lp526aBLWo4g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200411064248.247530-1-irogers@google.com>
+In-Reply-To: <CAP-5=fUQBDUKL3AXXzERfFLSRtK=P6waA+bv68Lp526aBLWo4g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
 List-Id: linux-perf-users.vger.kernel.org
 
-The synthesize benchmark, run on a single process and thread, shows
-perf_event__synthesize_mmap_events as the hottest function with fgets
-and sscanf taking the majority of execution time. fscanf performs
-similarly well. Replace the scanf call with manual reading of each field
-of the /proc/pid/maps line, and remove some unnecessary buffering.
-This change also addresses potential, but unlikely, buffer overruns for
-the string values read by scanf.
+On Tue, Apr 7, 2020 at 2:07 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Tue, Apr 7, 2020 at 1:25 PM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Mon, Apr 06, 2020 at 11:40:18PM -0700, Ian Rogers wrote:
+> > > From: Stephane Eranian <eranian@google.com>
+> > >
+> > > This patch links perf with the libpfm4 library if it is available and
+> > > NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> > > event tables for all processors supported by perf_events. It is a helper
+> > > library that helps convert from a symbolic event name to the event
+> > > encoding required by the underlying kernel interface. This
+> > > library is open-source and available from: http://perfmon2.sf.net.
+> > >
+> > > With this patch, it is possible to specify full hardware events
+> > > by name. Hardware filters are also supported. Events must be
+> > > specified via the --pfm-events and not -e option. Both options
+> > > are active at the same time and it is possible to mix and match:
+> > >
+> > > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> > >
+> > > v7 rebases and adds fallback code for libpfm4 events.
+> > >    The fallback code is to force user only priv level in case the
+> > >    perf_event_open() syscall failed for permissions reason.
+> > >    the fallback forces a user privilege level restriction on the event string,
+> > >    so depending on the syntax either u or :u is needed.
+> > >
+> > >    But libpfm4 can use a : or . as the separator, so simply searching
+> > >    for ':' vs. '/' is not good enough to determine the syntax needed.
+> > >    Therefore, this patch introduces a new evsel boolean field to mark events
+> > >    coming from  libpfm4. The field is then used to adjust the fallback string.
+> >
+> > heya,
+> > I made bunch of comments for v5, not sure you saw them:
+> >   https://lore.kernel.org/lkml/20200323235846.104937-1-irogers@google.com/
+> >
+> > jirka
+>
+> Sorry for missing this, I will work on fixing these and thanks!
+>
+> Ian
 
-Performance before is:
-Average synthesis took: 120.195100 usec
-Average data synthesis took: 156.582300 usec
+v8 is available now:
+https://lore.kernel.org/lkml/20200411074631.9486-1-irogers@google.com/T/#t
 
-And after is:
-Average synthesis took: 67.189100 usec
-Average data synthesis took: 102.451600 usec
+Thanks,
+Ian
 
-On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/synthetic-events.c | 157 +++++++++++++++++++----------
- 1 file changed, 105 insertions(+), 52 deletions(-)
-
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 9d4aa951eaa6..1ea9adaef9c7 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -37,6 +37,7 @@
- #include <string.h>
- #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
- #include <api/fs/fs.h>
-+#include <api/io.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-@@ -273,6 +274,79 @@ static int perf_event__synthesize_fork(struct perf_tool *tool,
- 	return 0;
- }
- 
-+static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
-+				u32 *prot, u32 *flags, __u64 *offset,
-+				u32 *maj, u32 *min,
-+				__u64 *inode,
-+				ssize_t pathname_size, char *pathname)
-+{
-+	__u64 temp;
-+	int ch;
-+	char *start_pathname = pathname;
-+
-+	if (io__get_hex(io, start) != '-')
-+		return false;
-+	if (io__get_hex(io, end) != ' ')
-+		return false;
-+
-+	/* map protection and flags bits */
-+	*prot = 0;
-+	ch = io__get_char(io);
-+	if (ch == 'r')
-+		*prot |= PROT_READ;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 'w')
-+		*prot |= PROT_WRITE;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 'x')
-+		*prot |= PROT_EXEC;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 's')
-+		*flags = MAP_SHARED;
-+	else if (ch == 'p')
-+		*flags = MAP_PRIVATE;
-+	else
-+		return false;
-+	if (io__get_char(io) != ' ')
-+		return false;
-+
-+	if (io__get_hex(io, offset) != ' ')
-+		return false;
-+
-+	if (io__get_hex(io, &temp) != ':')
-+		return false;
-+	*maj = temp;
-+	if (io__get_hex(io, &temp) != ' ')
-+		return false;
-+	*min = temp;
-+
-+	ch = io__get_dec(io, inode);
-+	if (ch != ' ') {
-+		*pathname = '\0';
-+		return ch == '\n';
-+	}
-+	do {
-+		ch = io__get_char(io);
-+	} while (ch == ' ');
-+	while (true) {
-+		if (ch < 0)
-+			return false;
-+		if (ch == '\0' || ch == '\n' ||
-+		    (pathname + 1 - start_pathname) >= pathname_size) {
-+			*pathname = '\0';
-+			return true;
-+		}
-+		*pathname++ = ch;
-+		ch = io__get_char(io);
-+	}
-+}
-+
- int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       union perf_event *event,
- 				       pid_t pid, pid_t tgid,
-@@ -280,9 +354,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       struct machine *machine,
- 				       bool mmap_data)
- {
--	FILE *fp;
- 	unsigned long long t;
- 	char bf[BUFSIZ];
-+	struct io io;
- 	bool truncation = false;
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
-@@ -295,28 +369,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
- 		machine->root_dir, pid, pid);
- 
--	fp = fopen(bf, "r");
--	if (fp == NULL) {
-+	io.fd = open(bf, O_RDONLY, 0);
-+	if (io.fd < 0) {
- 		/*
- 		 * We raced with a task exiting - just return:
- 		 */
- 		pr_debug("couldn't open %s\n", bf);
- 		return -1;
- 	}
-+	io__init(&io, io.fd, bf, sizeof(bf));
- 
- 	event->header.type = PERF_RECORD_MMAP2;
- 	t = rdclock();
- 
--	while (1) {
--		char prot[5];
--		char execname[PATH_MAX];
--		char anonstr[] = "//anon";
--		unsigned int ino;
-+	while (!io.eof) {
-+		static const char anonstr[] = "//anon";
- 		size_t size;
--		ssize_t n;
- 
--		if (fgets(bf, sizeof(bf), fp) == NULL)
--			break;
-+		/* ensure null termination since stack will be reused. */
-+		event->mmap2.filename[0] = '\0';
-+
-+		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
-+		if (!read_proc_maps_line(&io,
-+					&event->mmap2.start,
-+					&event->mmap2.len,
-+					&event->mmap2.prot,
-+					&event->mmap2.flags,
-+					&event->mmap2.pgoff,
-+					&event->mmap2.maj,
-+					&event->mmap2.min,
-+					&event->mmap2.ino,
-+					sizeof(event->mmap2.filename),
-+					event->mmap2.filename))
-+			continue;
- 
- 		if ((rdclock() - t) > timeout) {
- 			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
-@@ -327,23 +412,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			goto out;
- 		}
- 
--		/* ensure null termination since stack will be reused. */
--		strcpy(execname, "");
--
--		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
--		n = sscanf(bf, "%"PRI_lx64"-%"PRI_lx64" %s %"PRI_lx64" %x:%x %u %[^\n]\n",
--		       &event->mmap2.start, &event->mmap2.len, prot,
--		       &event->mmap2.pgoff, &event->mmap2.maj,
--		       &event->mmap2.min,
--		       &ino, execname);
--
--		/*
-- 		 * Anon maps don't have the execname.
-- 		 */
--		if (n < 7)
--			continue;
--
--		event->mmap2.ino = (u64)ino;
- 		event->mmap2.ino_generation = 0;
- 
- 		/*
-@@ -354,23 +422,8 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		else
- 			event->header.misc = PERF_RECORD_MISC_GUEST_USER;
- 
--		/* map protection and flags bits */
--		event->mmap2.prot = 0;
--		event->mmap2.flags = 0;
--		if (prot[0] == 'r')
--			event->mmap2.prot |= PROT_READ;
--		if (prot[1] == 'w')
--			event->mmap2.prot |= PROT_WRITE;
--		if (prot[2] == 'x')
--			event->mmap2.prot |= PROT_EXEC;
--
--		if (prot[3] == 's')
--			event->mmap2.flags |= MAP_SHARED;
--		else
--			event->mmap2.flags |= MAP_PRIVATE;
--
--		if (prot[2] != 'x') {
--			if (!mmap_data || prot[0] != 'r')
-+		if ((event->mmap2.prot & PROT_EXEC) == 0) {
-+			if (!mmap_data || (event->mmap2.prot & PROT_READ) == 0)
- 				continue;
- 
- 			event->header.misc |= PERF_RECORD_MISC_MMAP_DATA;
-@@ -380,17 +433,17 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		if (truncation)
- 			event->header.misc |= PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT;
- 
--		if (!strcmp(execname, ""))
--			strcpy(execname, anonstr);
-+		if (!strcmp(event->mmap2.filename, ""))
-+			strcpy(event->mmap2.filename, anonstr);
- 
- 		if (hugetlbfs_mnt_len &&
--		    !strncmp(execname, hugetlbfs_mnt, hugetlbfs_mnt_len)) {
--			strcpy(execname, anonstr);
-+		    !strncmp(event->mmap2.filename, hugetlbfs_mnt,
-+			     hugetlbfs_mnt_len)) {
-+			strcpy(event->mmap2.filename, anonstr);
- 			event->mmap2.flags |= MAP_HUGETLB;
- 		}
- 
--		size = strlen(execname) + 1;
--		memcpy(event->mmap2.filename, execname, size);
-+		size = strlen(event->mmap2.filename) + 1;
- 		size = PERF_ALIGN(size, sizeof(u64));
- 		event->mmap2.len -= event->mmap.start;
- 		event->mmap2.header.size = (sizeof(event->mmap2) -
-@@ -409,7 +462,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
- 	}
- 
--	fclose(fp);
-+	close(io.fd);
- 	return rc;
- }
- 
--- 
-2.26.0.110.g2183baf09c-goog
+> > > v6 is a rebase.
+> > > v5 is a rebase.
+> > > v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+> > >    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+> > >    missed in v3.
+> > > v3 is against acme/perf/core and removes a diagnostic warning.
+> > > v2 of this patch makes the --pfm-events man page documentation
+> > > conditional on libpfm4 behing configured. It tidies some of the
+> > > documentation and adds the feature test missed in the v1 patch.
+> > >
+> >
+> > SNIP
+> >
