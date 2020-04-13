@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/26] perf script: Simplify auxiliary event printing functions
-Date: Mon, 13 Apr 2020 13:51:55 -0300
-Message-ID: <20200413165203.1816-19-acme@kernel.org>
+Subject: [PATCH 17/26] perf python: Check if clang supports -fno-semantic-interposition
+Date: Mon, 13 Apr 2020 13:51:54 -0300
+Message-ID: <20200413165203.1816-18-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,459 +9,53 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This simplifies the print functions for the following perf script
-options:
+The set of C compiler options used by distros to build python bindings
+may include options that are unknown to clang, we check for a variety of
+such options, add -fno-semantic-interposition to that mix:
 
-	--show-task-events
-	--show-namespace-events
-	--show-cgroup-events
-	--show-mmap-events
-	--show-switch-events
-	--show-lost-events
-	--show-bpf-events
+This fixes the build on, among others, Manjaro Linux:
 
-Example:
-	# perf record --switch-events -a -e cycles -c 10000 sleep 1
- Before:
-	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events > out-before.txt
- After:
-	# perf script --show-task-events --show-namespace-events --show-cgroup-events --show-mmap-events --show-switch-events --show-lost-events --show-bpf-events > out-after.txt
-	# diff -s out-before.txt out-after.txt
-	Files out-before.txt and out-after.tx are identical
+    GEN      /tmp/build/perf/python/perf.so
+  clang-9: error: unknown argument: '-fno-semantic-interposition'
+  error: command 'clang' failed with exit status 1
+  make: Leaving directory '/git/perf/tools/perf'
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200402141548.21283-1-adrian.hunter@intel.com
+  [perfbuilder@602aed1c266d ~]$ gcc -v
+  Using built-in specs.
+  COLLECT_GCC=gcc
+  COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper
+  Target: x86_64-pc-linux-gnu
+  Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-pkgversion='Arch Linux 9.3.0-1' --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++,d --enable-shared --enable-threads=posix --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --enable-multilib --disable-werror --enable-checking=release --enable-default-pie --enable-default-ssp --enable-cet=auto gdc_include_dir=/usr/include/dlang/
+ gdc
+  Thread model: posix
+  gcc version 9.3.0 (Arch Linux 9.3.0-1)
+  [perfbuilder@602aed1c266d ~]$
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-script.c | 304 ++++++++----------------------------
- 1 file changed, 66 insertions(+), 238 deletions(-)
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1f57a7ecdf3d..8bf3ba280312 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2040,7 +2040,7 @@ static int cleanup_scripting(void)
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 347b2c0789e4..c5e3e9a68162 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -21,6 +21,8 @@ if cc_is_clang:
+             vars[var] = sub("-fstack-clash-protection", "", vars[var])
+         if not clang_has_option("-fstack-protector-strong"):
+             vars[var] = sub("-fstack-protector-strong", "", vars[var])
++        if not clang_has_option("-fno-semantic-interposition"):
++            vars[var] = sub("-fno-semantic-interposition", "", vars[var])
  
- static bool filter_cpu(struct perf_sample *sample)
- {
--	if (cpu_list)
-+	if (cpu_list && sample->cpu != (u32)-1)
- 		return !test_bit(sample->cpu, cpu_bitmap);
- 	return false;
- }
-@@ -2138,41 +2138,59 @@ static int process_attr(struct perf_tool *tool, union perf_event *event,
- 	return err;
- }
+ from distutils.core import setup, Extension
  
--static int process_comm_event(struct perf_tool *tool,
--			      union perf_event *event,
--			      struct perf_sample *sample,
--			      struct machine *machine)
-+static int print_event_with_time(struct perf_tool *tool,
-+				 union perf_event *event,
-+				 struct perf_sample *sample,
-+				 struct machine *machine,
-+				 pid_t pid, pid_t tid, u64 timestamp)
- {
--	struct thread *thread;
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
- 	struct perf_session *session = script->session;
- 	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	int ret = -1;
-+	struct thread *thread = NULL;
- 
--	thread = machine__findnew_thread(machine, event->comm.pid, event->comm.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing COMM event, skipping it.\n");
--		return -1;
-+	if (evsel && !evsel->core.attr.sample_id_all) {
-+		sample->cpu = 0;
-+		sample->time = timestamp;
-+		sample->pid = pid;
-+		sample->tid = tid;
- 	}
- 
--	if (perf_event__process_comm(tool, event, sample, machine) < 0)
--		goto out;
-+	if (filter_cpu(sample))
-+		return 0;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->comm.tid;
--		sample->pid = event->comm.pid;
--	}
--	if (!filter_cpu(sample)) {
-+	if (tid != -1)
-+		thread = machine__findnew_thread(machine, pid, tid);
-+
-+	if (thread && evsel) {
- 		perf_sample__fprintf_start(sample, thread, evsel,
--				   PERF_RECORD_COMM, stdout);
--		perf_event__fprintf(event, stdout);
-+					   event->header.type, stdout);
- 	}
--	ret = 0;
--out:
-+
-+	perf_event__fprintf(event, stdout);
-+
- 	thread__put(thread);
--	return ret;
-+
-+	return 0;
-+}
-+
-+static int print_event(struct perf_tool *tool, union perf_event *event,
-+		       struct perf_sample *sample, struct machine *machine,
-+		       pid_t pid, pid_t tid)
-+{
-+	return print_event_with_time(tool, event, sample, machine, pid, tid, 0);
-+}
-+
-+static int process_comm_event(struct perf_tool *tool,
-+			      union perf_event *event,
-+			      struct perf_sample *sample,
-+			      struct machine *machine)
-+{
-+	if (perf_event__process_comm(tool, event, sample, machine) < 0)
-+		return -1;
-+
-+	return print_event(tool, event, sample, machine, event->comm.pid,
-+			   event->comm.tid);
- }
- 
- static int process_namespaces_event(struct perf_tool *tool,
-@@ -2180,37 +2198,11 @@ static int process_namespaces_event(struct perf_tool *tool,
- 				    struct perf_sample *sample,
- 				    struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	int ret = -1;
--
--	thread = machine__findnew_thread(machine, event->namespaces.pid,
--					 event->namespaces.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing NAMESPACES event, skipping it.\n");
--		return -1;
--	}
--
- 	if (perf_event__process_namespaces(tool, event, sample, machine) < 0)
--		goto out;
-+		return -1;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->namespaces.tid;
--		sample->pid = event->namespaces.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_NAMESPACES, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	ret = 0;
--out:
--	thread__put(thread);
--	return ret;
-+	return print_event(tool, event, sample, machine, event->namespaces.pid,
-+			   event->namespaces.tid);
- }
- 
- static int process_cgroup_event(struct perf_tool *tool,
-@@ -2218,34 +2210,11 @@ static int process_cgroup_event(struct perf_tool *tool,
- 				struct perf_sample *sample,
- 				struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	int ret = -1;
--
--	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
--	if (thread == NULL) {
--		pr_debug("problem processing CGROUP event, skipping it.\n");
--		return -1;
--	}
--
- 	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
--		goto out;
-+		return -1;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_CGROUP, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	ret = 0;
--out:
--	thread__put(thread);
--	return ret;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			    sample->tid);
- }
- 
- static int process_fork_event(struct perf_tool *tool,
-@@ -2253,69 +2222,24 @@ static int process_fork_event(struct perf_tool *tool,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (perf_event__process_fork(tool, event, sample, machine) < 0)
- 		return -1;
- 
--	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing FORK event, skipping it.\n");
--		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = event->fork.time;
--		sample->tid = event->fork.tid;
--		sample->pid = event->fork.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_FORK, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--
--	return 0;
-+	return print_event_with_time(tool, event, sample, machine,
-+				     event->fork.pid, event->fork.tid,
-+				     event->fork.time);
- }
- static int process_exit_event(struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	int err = 0;
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
--	thread = machine__findnew_thread(machine, event->fork.pid, event->fork.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing EXIT event, skipping it.\n");
-+	/* Print before 'exit' deletes anything */
-+	if (print_event_with_time(tool, event, sample, machine, event->fork.pid,
-+				  event->fork.tid, event->fork.time))
- 		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->fork.tid;
--		sample->pid = event->fork.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_EXIT, stdout);
--		perf_event__fprintf(event, stdout);
--	}
- 
--	if (perf_event__process_exit(tool, event, sample, machine) < 0)
--		err = -1;
--
--	thread__put(thread);
--	return err;
-+	return perf_event__process_exit(tool, event, sample, machine);
- }
- 
- static int process_mmap_event(struct perf_tool *tool,
-@@ -2323,33 +2247,11 @@ static int process_mmap_event(struct perf_tool *tool,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (perf_event__process_mmap(tool, event, sample, machine) < 0)
- 		return -1;
- 
--	thread = machine__findnew_thread(machine, event->mmap.pid, event->mmap.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing MMAP event, skipping it.\n");
--		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->mmap.tid;
--		sample->pid = event->mmap.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_MMAP, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, event->mmap.pid,
-+			   event->mmap.tid);
- }
- 
- static int process_mmap2_event(struct perf_tool *tool,
-@@ -2357,33 +2259,11 @@ static int process_mmap2_event(struct perf_tool *tool,
- 			      struct perf_sample *sample,
- 			      struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (perf_event__process_mmap2(tool, event, sample, machine) < 0)
- 		return -1;
- 
--	thread = machine__findnew_thread(machine, event->mmap2.pid, event->mmap2.tid);
--	if (thread == NULL) {
--		pr_debug("problem processing MMAP2 event, skipping it.\n");
--		return -1;
--	}
--
--	if (!evsel->core.attr.sample_id_all) {
--		sample->cpu = 0;
--		sample->time = 0;
--		sample->tid = event->mmap2.tid;
--		sample->pid = event->mmap2.pid;
--	}
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_MMAP2, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, event->mmap2.pid,
-+			   event->mmap2.tid);
- }
- 
- static int process_switch_event(struct perf_tool *tool,
-@@ -2391,10 +2271,7 @@ static int process_switch_event(struct perf_tool *tool,
- 				struct perf_sample *sample,
- 				struct machine *machine)
- {
--	struct thread *thread;
- 	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
- 
- 	if (perf_event__process_switch(tool, event, sample, machine) < 0)
- 		return -1;
-@@ -2405,20 +2282,8 @@ static int process_switch_event(struct perf_tool *tool,
- 	if (!script->show_switch_events)
- 		return 0;
- 
--	thread = machine__findnew_thread(machine, sample->pid,
--					 sample->tid);
--	if (thread == NULL) {
--		pr_debug("problem processing SWITCH event, skipping it.\n");
--		return -1;
--	}
--
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_SWITCH, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			   sample->tid);
- }
- 
- static int
-@@ -2427,23 +2292,8 @@ process_lost_event(struct perf_tool *tool,
- 		   struct perf_sample *sample,
- 		   struct machine *machine)
- {
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--	struct thread *thread;
--
--	thread = machine__findnew_thread(machine, sample->pid,
--					 sample->tid);
--	if (thread == NULL)
--		return -1;
--
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   PERF_RECORD_LOST, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			   sample->tid);
- }
- 
- static int
-@@ -2462,33 +2312,11 @@ process_bpf_events(struct perf_tool *tool __maybe_unused,
- 		   struct perf_sample *sample,
- 		   struct machine *machine)
- {
--	struct thread *thread;
--	struct perf_script *script = container_of(tool, struct perf_script, tool);
--	struct perf_session *session = script->session;
--	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
--
- 	if (machine__process_ksymbol(machine, event, sample) < 0)
- 		return -1;
- 
--	if (!evsel->core.attr.sample_id_all) {
--		perf_event__fprintf(event, stdout);
--		return 0;
--	}
--
--	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
--	if (thread == NULL) {
--		pr_debug("problem processing MMAP event, skipping it.\n");
--		return -1;
--	}
--
--	if (!filter_cpu(sample)) {
--		perf_sample__fprintf_start(sample, thread, evsel,
--					   event->header.type, stdout);
--		perf_event__fprintf(event, stdout);
--	}
--
--	thread__put(thread);
--	return 0;
-+	return print_event(tool, event, sample, machine, sample->pid,
-+			   sample->tid);
- }
- 
- static void sig_handler(int sig __maybe_unused)
 -- 
 2.21.1
