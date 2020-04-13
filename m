@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 17/26] perf python: Check if clang supports -fno-semantic-interposition
-Date: Mon, 13 Apr 2020 13:51:54 -0300
-Message-ID: <20200413165203.1816-18-acme@kernel.org>
+Subject: [PATCH 21/26] perf synthetic-events: save 4kb from 2 stack frames
+Date: Mon, 13 Apr 2020 13:51:58 -0300
+Message-ID: <20200413165203.1816-22-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,53 +9,119 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Ian Rogers <irogers@google.com>
 
-The set of C compiler options used by distros to build python bindings
-may include options that are unknown to clang, we check for a variety of
-such options, add -fno-semantic-interposition to that mix:
+Reuse an existing char buffer to avoid two PATH_MAX sized char buffers.
 
-This fixes the build on, among others, Manjaro Linux:
+Reduces stack frame sizes by 4kb.
 
-    GEN      /tmp/build/perf/python/perf.so
-  clang-9: error: unknown argument: '-fno-semantic-interposition'
-  error: command 'clang' failed with exit status 1
-  make: Leaving directory '/git/perf/tools/perf'
+perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
+'sub $0x35b8,%rsp'.
 
-  [perfbuilder@602aed1c266d ~]$ gcc -v
-  Using built-in specs.
-  COLLECT_GCC=gcc
-  COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0/lto-wrapper
-  Target: x86_64-pc-linux-gnu
-  Configured with: /build/gcc/src/gcc/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-pkgversion='Arch Linux 9.3.0-1' --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++,d --enable-shared --enable-threads=posix --with-system-zlib --with-isl --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --disable-libssp --enable-gnu-unique-object --enable-linker-build-id --enable-lto --enable-plugin --enable-install-libiberty --with-linker-hash-style=gnu --enable-gnu-indirect-function --enable-multilib --disable-werror --enable-checking=release --enable-default-pie --enable-default-ssp --enable-cet=auto gdc_include_dir=/usr/include/dlang/
- gdc
-  Thread model: posix
-  gcc version 9.3.0 (Arch Linux 9.3.0-1)
-  [perfbuilder@602aed1c266d ~]$
+perf_event__get_comm_ids before 'sub $0x2028,%rsp' after
+'sub $0x1028,%rsp'.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+The performance impact of this change is negligible.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrey Zhizhikin <andrey.z@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lore.kernel.org/lkml/20200402154357.107873-4-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/setup.py | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/synthetic-events.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index 347b2c0789e4..c5e3e9a68162 100644
---- a/tools/perf/util/setup.py
-+++ b/tools/perf/util/setup.py
-@@ -21,6 +21,8 @@ if cc_is_clang:
-             vars[var] = sub("-fstack-clash-protection", "", vars[var])
-         if not clang_has_option("-fstack-protector-strong"):
-             vars[var] = sub("-fstack-protector-strong", "", vars[var])
-+        if not clang_has_option("-fno-semantic-interposition"):
-+            vars[var] = sub("-fno-semantic-interposition", "", vars[var])
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index a661b122d9d8..9d4aa951eaa6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -71,7 +71,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
+ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 				    pid_t *tgid, pid_t *ppid)
+ {
+-	char filename[PATH_MAX];
+ 	char bf[4096];
+ 	int fd;
+ 	size_t size = 0;
+@@ -81,11 +80,11 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 	*tgid = -1;
+ 	*ppid = -1;
  
- from distutils.core import setup, Extension
+-	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
++	snprintf(bf, sizeof(bf), "/proc/%d/status", pid);
  
+-	fd = open(filename, O_RDONLY);
++	fd = open(bf, O_RDONLY);
+ 	if (fd < 0) {
+-		pr_debug("couldn't open %s\n", filename);
++		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
+ 
+@@ -281,9 +280,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       struct machine *machine,
+ 				       bool mmap_data)
+ {
+-	char filename[PATH_MAX];
+ 	FILE *fp;
+ 	unsigned long long t;
++	char bf[BUFSIZ];
+ 	bool truncation = false;
+ 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
+ 	int rc = 0;
+@@ -293,15 +292,15 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	if (machine__is_default_guest(machine))
+ 		return 0;
+ 
+-	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
+-		 machine->root_dir, pid, pid);
++	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
++		machine->root_dir, pid, pid);
+ 
+-	fp = fopen(filename, "r");
++	fp = fopen(bf, "r");
+ 	if (fp == NULL) {
+ 		/*
+ 		 * We raced with a task exiting - just return:
+ 		 */
+-		pr_debug("couldn't open %s\n", filename);
++		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
+ 
+@@ -309,7 +308,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	t = rdclock();
+ 
+ 	while (1) {
+-		char bf[BUFSIZ];
+ 		char prot[5];
+ 		char execname[PATH_MAX];
+ 		char anonstr[] = "//anon";
+@@ -321,10 +319,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			break;
+ 
+ 		if ((rdclock() - t) > timeout) {
+-			pr_warning("Reading %s time out. "
++			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
+ 				   "You may want to increase "
+ 				   "the time limit by --proc-map-timeout\n",
+-				   filename);
++				   machine->root_dir, pid, pid);
+ 			truncation = true;
+ 			goto out;
+ 		}
 -- 
 2.21.1
