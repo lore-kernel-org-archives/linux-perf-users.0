@@ -1,202 +1,144 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 01/26] perf tools: Synthesize bpf_trampoline/dispatcher ksymbol event
-Date: Mon, 13 Apr 2020 13:51:38 -0300
-Message-ID: <20200413165203.1816-2-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <acme-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 05/26] capabilities: Introduce CAP_PERFMON to kernel and user space
+Date: Mon, 13 Apr 2020 13:51:42 -0300
+Message-ID: <20200413165203.1816-6-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>, Daniel Borkmann <daniel@iogearbox.net>, "David S . Miller" <davem@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Return-path: <linux-man-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20200413165203.1816-1-acme-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-man-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Jiri Olsa <jolsa-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Namhyung Kim <namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Clark Williams <williams-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-perf-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexey Budankov <alexey.budankov-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, James Morris <jamorris-1pm0nblsJy7Jp67UH1NAhkEOCMrvLtNR@public.gmane.org>, "Serge E . Hallyn" <serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org>, Song Liu <songliubraving-b10kYP2dOMg@public.gmane.org>, Stephen Smalley <sds-+05T5uksL2qpZYMLLGbcSA@public.gmane.org>, Arnaldo Carvalho de Melo <acme-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexei Starovoitov <ast-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andi Kleen <ak-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Igor Lubashev <ilubashe-JqFfY2XvxFXQT0dZR+AlfA@public.gmane.org>, Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, intel-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-man-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-security-module-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgs
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Alexey Budankov <alexey.budankov-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Synthesize bpf images (trampolines/dispatchers) on start, as ksymbol
-events from /proc/kallsyms. Having this perf can recognize samples from
-those images and perf report and top shows them correctly.
+Introduce the CAP_PERFMON capability designed to secure system
+performance monitoring and observability operations so that CAP_PERFMON
+can assist CAP_SYS_ADMIN capability in its governing role for
+performance monitoring and observability subsystems.
 
-The rest of the ksymbol handling is already in place from for the bpf
-programs monitoring, so only the initial state was needed.
+CAP_PERFMON hardens system security and integrity during performance
+monitoring and observability operations by decreasing attack surface that
+is available to a CAP_SYS_ADMIN privileged process [2]. Providing the access
+to system performance monitoring and observability operations under CAP_PERFMON
+capability singly, without the rest of CAP_SYS_ADMIN credentials, excludes
+chances to misuse the credentials and makes the operation more secure.
 
-perf report output:
+Thus, CAP_PERFMON implements the principle of least privilege for
+performance monitoring and observability operations (POSIX IEEE 1003.1e:
+2.2.2.39 principle of least privilege: A security design principle that
+  states that a process or program be granted only those privileges
+(e.g., capabilities) necessary to accomplish its legitimate function,
+and only for the time that such privileges are actually required)
 
-  # Overhead  Command     Shared Object                  Symbol
+CAP_PERFMON meets the demand to secure system performance monitoring and
+observability operations for adoption in security sensitive, restricted,
+multiuser production environments (e.g. HPC clusters, cloud and virtual compute
+environments), where root or CAP_SYS_ADMIN credentials are not available to
+mass users of a system, and securely unblocks applicability and scalability
+of system performance monitoring and observability operations beyond root
+and CAP_SYS_ADMIN use cases.
 
-    12.37%  test_progs  [kernel.vmlinux]                 [k] entry_SYSCALL_64
-    11.80%  test_progs  [kernel.vmlinux]                 [k] syscall_return_via_sysret
-     9.63%  test_progs  bpf_prog_bcf7977d3b93787c_prog2  [k] bpf_prog_bcf7977d3b93787c_prog2
-     6.90%  test_progs  bpf_trampoline_24456             [k] bpf_trampoline_24456
-     6.36%  test_progs  [kernel.vmlinux]                 [k] memcpy_erms
+CAP_PERFMON takes over CAP_SYS_ADMIN credentials related to system performance
+monitoring and observability operations and balances amount of CAP_SYS_ADMIN
+credentials following the recommendations in the capabilities man page [1]
+for CAP_SYS_ADMIN: "Note: this capability is overloaded; see Notes to kernel
+developers, below." For backward compatibility reasons access to system
+performance monitoring and observability subsystems of the kernel remains
+open for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN capability
+usage for secure system performance monitoring and observability operations
+is discouraged with respect to the designed CAP_PERFMON capability.
 
-Committer notes:
+Although the software running under CAP_PERFMON can not ensure avoidance
+of related hardware issues, the software can still mitigate these issues
+following the official hardware issues mitigation procedure [2]. The bugs
+in the software itself can be fixed following the standard kernel development
+process [3] to maintain and harden security of system performance monitoring
+and observability operations.
 
-Use scnprintf() instead of strncpy() to overcome this on fedora:32,
-rawhide and OpenMandriva Cooker:
+[1] http://man7.org/linux/man-pages/man7/capabilities.7.html
+[2] https://www.kernel.org/doc/html/latest/process/embargoed-hardware-issues.html
+[3] https://www.kernel.org/doc/html/latest/admin-guide/security-bugs.html
 
-    CC       /tmp/build/perf/util/bpf-event.o
-  In file included from /usr/include/string.h:495,
-                   from /git/linux/tools/lib/bpf/libbpf_common.h:12,
-                   from /git/linux/tools/lib/bpf/bpf.h:31,
-                   from util/bpf-event.c:4:
-  In function 'strncpy',
-      inlined from 'process_bpf_image' at util/bpf-event.c:323:2,
-      inlined from 'kallsyms_process_symbol' at util/bpf-event.c:358:9:
-  /usr/include/bits/string_fortified.h:106:10: error: '__builtin_strncpy' specified bound 256 equals destination size [-Werror=stringop-truncation]
-    106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
-        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  cc1: all warnings being treated as errors
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Acked-by: Song Liu <songliubraving@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: David S. Miller <davem@redhat.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200312195610.346362-14-jolsa@kernel.org/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Alexey Budankov <alexey.budankov-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: James Morris <jamorris-1pm0nblsJy7Jp67UH1NAhkEOCMrvLtNR@public.gmane.org>
+Acked-by: Serge E. Hallyn <serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org>
+Acked-by: Song Liu <songliubraving-b10kYP2dOMg@public.gmane.org>
+Acked-by: Stephen Smalley <sds-+05T5uksL2qpZYMLLGbcSA@public.gmane.org>
+Tested-by: Arnaldo Carvalho de Melo <acme-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Alexei Starovoitov <ast-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andi Kleen <ak-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Igor Lubashev <ilubashe-JqFfY2XvxFXQT0dZR+AlfA@public.gmane.org>
+Cc: Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Namhyung Kim <namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: intel-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-man-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-security-module-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: selinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Link: http://lore.kernel.org/lkml/5590d543-82c6-490a-6544-08e6a5517db0-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- tools/perf/util/bpf-event.c | 93 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ include/linux/capability.h          | 4 ++++
+ include/uapi/linux/capability.h     | 8 +++++++-
+ security/selinux/include/classmap.h | 4 ++--
+ 3 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index a3207d900339..0cd41a862952 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -6,6 +6,9 @@
- #include <bpf/libbpf.h>
- #include <linux/btf.h>
- #include <linux/err.h>
-+#include <linux/string.h>
-+#include <internal/lib.h>
-+#include <symbol/kallsyms.h>
- #include "bpf-event.h"
- #include "debug.h"
- #include "dso.h"
-@@ -290,11 +293,82 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_session *session,
- 	return err ? -1 : 0;
- }
+diff --git a/include/linux/capability.h b/include/linux/capability.h
+index ecce0f43c73a..027d7e4a853b 100644
+--- a/include/linux/capability.h
++++ b/include/linux/capability.h
+@@ -251,6 +251,10 @@ extern bool privileged_wrt_inode_uidgid(struct user_namespace *ns, const struct
+ extern bool capable_wrt_inode_uidgid(const struct inode *inode, int cap);
+ extern bool file_ns_capable(const struct file *file, struct user_namespace *ns, int cap);
+ extern bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns);
++static inline bool perfmon_capable(void)
++{
++	return capable(CAP_PERFMON) || capable(CAP_SYS_ADMIN);
++}
  
-+struct kallsyms_parse {
-+	union perf_event	*event;
-+	perf_event__handler_t	 process;
-+	struct machine		*machine;
-+	struct perf_tool	*tool;
-+};
+ /* audit system wants to get cap info from files as well */
+ extern int get_vfs_caps_from_disk(const struct dentry *dentry, struct cpu_vfs_cap_data *cpu_caps);
+diff --git a/include/uapi/linux/capability.h b/include/uapi/linux/capability.h
+index 272dc69fa080..e58c9636741b 100644
+--- a/include/uapi/linux/capability.h
++++ b/include/uapi/linux/capability.h
+@@ -367,8 +367,14 @@ struct vfs_ns_cap_data {
+ 
+ #define CAP_AUDIT_READ		37
+ 
++/*
++ * Allow system performance and observability privileged operations
++ * using perf_events, i915_perf and other kernel subsystems
++ */
 +
-+static int
-+process_bpf_image(char *name, u64 addr, struct kallsyms_parse *data)
-+{
-+	struct machine *machine = data->machine;
-+	union perf_event *event = data->event;
-+	struct perf_record_ksymbol *ksymbol;
-+	int len;
-+
-+	ksymbol = &event->ksymbol;
-+
-+	*ksymbol = (struct perf_record_ksymbol) {
-+		.header = {
-+			.type = PERF_RECORD_KSYMBOL,
-+			.size = offsetof(struct perf_record_ksymbol, name),
-+		},
-+		.addr      = addr,
-+		.len       = page_size,
-+		.ksym_type = PERF_RECORD_KSYMBOL_TYPE_BPF,
-+		.flags     = 0,
-+	};
-+
-+	len = scnprintf(ksymbol->name, KSYM_NAME_LEN, "%s", name);
-+	ksymbol->header.size += PERF_ALIGN(len + 1, sizeof(u64));
-+	memset((void *) event + event->header.size, 0, machine->id_hdr_size);
-+	event->header.size += machine->id_hdr_size;
-+
-+	return perf_tool__process_synth_event(data->tool, event, machine,
-+					      data->process);
-+}
-+
-+static int
-+kallsyms_process_symbol(void *data, const char *_name,
-+			char type __maybe_unused, u64 start)
-+{
-+	char disp[KSYM_NAME_LEN];
-+	char *module, *name;
-+	unsigned long id;
-+	int err = 0;
-+
-+	module = strchr(_name, '\t');
-+	if (!module)
-+		return 0;
-+
-+	/* We are going after [bpf] module ... */
-+	if (strcmp(module + 1, "[bpf]"))
-+		return 0;
-+
-+	name = memdup(_name, (module - _name) + 1);
-+	if (!name)
-+		return -ENOMEM;
-+
-+	name[module - _name] = 0;
-+
-+	/* .. and only for trampolines and dispatchers */
-+	if ((sscanf(name, "bpf_trampoline_%lu", &id) == 1) ||
-+	    (sscanf(name, "bpf_dispatcher_%s", disp) == 1))
-+		err = process_bpf_image(name, start, data);
-+
-+	free(name);
-+	return err;
-+}
-+
- int perf_event__synthesize_bpf_events(struct perf_session *session,
- 				      perf_event__handler_t process,
- 				      struct machine *machine,
- 				      struct record_opts *opts)
- {
-+	const char *kallsyms_filename = "/proc/kallsyms";
-+	struct kallsyms_parse arg;
- 	union perf_event *event;
- 	__u32 id = 0;
- 	int err;
-@@ -303,6 +377,8 @@ int perf_event__synthesize_bpf_events(struct perf_session *session,
- 	event = malloc(sizeof(event->bpf) + KSYM_NAME_LEN + machine->id_hdr_size);
- 	if (!event)
- 		return -1;
-+
-+	/* Synthesize all the bpf programs in system. */
- 	while (true) {
- 		err = bpf_prog_get_next_id(id, &id);
- 		if (err) {
-@@ -335,6 +411,23 @@ int perf_event__synthesize_bpf_events(struct perf_session *session,
- 			break;
- 		}
- 	}
-+
-+	/* Synthesize all the bpf images - trampolines/dispatchers. */
-+	if (symbol_conf.kallsyms_name != NULL)
-+		kallsyms_filename = symbol_conf.kallsyms_name;
-+
-+	arg = (struct kallsyms_parse) {
-+		.event   = event,
-+		.process = process,
-+		.machine = machine,
-+		.tool    = session->tool,
-+	};
-+
-+	if (kallsyms__parse(kallsyms_filename, &arg, kallsyms_process_symbol)) {
-+		pr_err("%s: failed to synthesize bpf images: %s\n",
-+		       __func__, strerror(errno));
-+	}
-+
- 	free(event);
- 	return err;
- }
++#define CAP_PERFMON		38
+ 
+-#define CAP_LAST_CAP         CAP_AUDIT_READ
++#define CAP_LAST_CAP         CAP_PERFMON
+ 
+ #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
+ 
+diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+index 986f3ac14282..d233ab3f1533 100644
+--- a/security/selinux/include/classmap.h
++++ b/security/selinux/include/classmap.h
+@@ -27,9 +27,9 @@
+ 	    "audit_control", "setfcap"
+ 
+ #define COMMON_CAP2_PERMS  "mac_override", "mac_admin", "syslog", \
+-		"wake_alarm", "block_suspend", "audit_read"
++		"wake_alarm", "block_suspend", "audit_read", "perfmon"
+ 
+-#if CAP_LAST_CAP > CAP_AUDIT_READ
++#if CAP_LAST_CAP > CAP_PERFMON
+ #error New capability defined, please update COMMON_CAP2_PERMS.
+ #endif
+ 
 -- 
 2.21.1
