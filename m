@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 21/26] perf synthetic-events: save 4kb from 2 stack frames
-Date: Mon, 13 Apr 2020 13:51:58 -0300
-Message-ID: <20200413165203.1816-22-acme@kernel.org>
+Subject: [PATCH 20/26] tools api fs: Make xxx__mountpoint() more scalable
+Date: Mon, 13 Apr 2020 13:51:57 -0300
+Message-ID: <20200413165203.1816-21-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,119 +9,179 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Stephane Eranian <eranian@google.com>
 
-Reuse an existing char buffer to avoid two PATH_MAX sized char buffers.
+The xxx_mountpoint() interface provided by fs.c finds mount points for
+common pseudo filesystems. The first time xxx_mountpoint() is invoked,
+it scans the mount table (/proc/mounts) looking for a match. If found,
+it is cached. The price to scan /proc/mounts is paid once if the mount
+is found.
 
-Reduces stack frame sizes by 4kb.
+When the mount point is not found, subsequent calls to xxx_mountpoint()
+scan /proc/mounts over and over again.  There is no caching.
 
-perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
-'sub $0x35b8,%rsp'.
+This causes a scaling issue in perf record with hugeltbfs__mountpoint().
+The function is called for each process found in
+synthesize__mmap_events().  If the machine has thousands of processes
+and if the /proc/mounts has many entries this could cause major overhead
+in perf record. We have observed multi-second slowdowns on some
+configurations.
 
-perf_event__get_comm_ids before 'sub $0x2028,%rsp' after
-'sub $0x1028,%rsp'.
+As an example on a laptop:
 
-The performance impact of this change is negligible.
+Before:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+  $ sudo umount /dev/hugepages
+  $ strace -e trace=openat -o /tmp/tt perf record -a ls
+  $ fgrep mounts /tmp/tt
+  285
+
+After:
+
+  $ sudo umount /dev/hugepages
+  $ strace -e trace=openat -o /tmp/tt perf record -a ls
+  $ fgrep mounts /tmp/tt
+  1
+
+One could argue that the non-caching in case the moint point is not
+found is intentional. That way subsequent calls may discover a moint
+point if the sysadmin mounts the filesystem. But the same argument could
+be made against caching the mount point. It could be unmounted causing
+errors.  It all depends on the intent of the interface. This patch
+assumes it is expected to scan /proc/mounts once. The patch documents
+the caching behavior in the fs.h header file.
+
+An alternative would be to just fix perf record. But it would solve the
+problem with hugetlbs__mountpoint() but there could be similar issues
+(possibly down the line) with other xxx_mountpoint() calls in perf or
+other tools.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andrey Zhizhikin <andrey.z@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Petr Mladek <pmladek@suse.com>
-Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200402154357.107873-4-irogers@google.com
+Link: http://lore.kernel.org/lkml/20200402154357.107873-3-irogers@google.com
+Signed-off-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/synthetic-events.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ tools/lib/api/fs/fs.c | 17 +++++++++++++++++
+ tools/lib/api/fs/fs.h | 12 ++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index a661b122d9d8..9d4aa951eaa6 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -71,7 +71,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
- static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 				    pid_t *tgid, pid_t *ppid)
- {
--	char filename[PATH_MAX];
- 	char bf[4096];
- 	int fd;
- 	size_t size = 0;
-@@ -81,11 +80,11 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
- 	*tgid = -1;
- 	*ppid = -1;
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index 027b18f7ed8c..82f53d81a7a7 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -90,6 +90,7 @@ struct fs {
+ 	const char * const	*mounts;
+ 	char			 path[PATH_MAX];
+ 	bool			 found;
++	bool			 checked;
+ 	long			 magic;
+ };
  
--	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
-+	snprintf(bf, sizeof(bf), "/proc/%d/status", pid);
+@@ -111,31 +112,37 @@ static struct fs fs__entries[] = {
+ 		.name	= "sysfs",
+ 		.mounts	= sysfs__fs_known_mountpoints,
+ 		.magic	= SYSFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__PROCFS] = {
+ 		.name	= "proc",
+ 		.mounts	= procfs__known_mountpoints,
+ 		.magic	= PROC_SUPER_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__DEBUGFS] = {
+ 		.name	= "debugfs",
+ 		.mounts	= debugfs__known_mountpoints,
+ 		.magic	= DEBUGFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__TRACEFS] = {
+ 		.name	= "tracefs",
+ 		.mounts	= tracefs__known_mountpoints,
+ 		.magic	= TRACEFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__HUGETLBFS] = {
+ 		.name	= "hugetlbfs",
+ 		.mounts = hugetlbfs__known_mountpoints,
+ 		.magic	= HUGETLBFS_MAGIC,
++		.checked = false,
+ 	},
+ 	[FS__BPF_FS] = {
+ 		.name	= "bpf",
+ 		.mounts = bpf_fs__known_mountpoints,
+ 		.magic	= BPF_FS_MAGIC,
++		.checked = false,
+ 	},
+ };
  
--	fd = open(filename, O_RDONLY);
-+	fd = open(bf, O_RDONLY);
- 	if (fd < 0) {
--		pr_debug("couldn't open %s\n", filename);
-+		pr_debug("couldn't open %s\n", bf);
- 		return -1;
+@@ -158,6 +165,7 @@ static bool fs__read_mounts(struct fs *fs)
  	}
  
-@@ -281,9 +280,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       struct machine *machine,
- 				       bool mmap_data)
- {
--	char filename[PATH_MAX];
- 	FILE *fp;
- 	unsigned long long t;
-+	char bf[BUFSIZ];
- 	bool truncation = false;
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
-@@ -293,15 +292,15 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	if (machine__is_default_guest(machine))
- 		return 0;
+ 	fclose(fp);
++	fs->checked = true;
+ 	return fs->found = found;
+ }
  
--	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
--		 machine->root_dir, pid, pid);
-+	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
-+		machine->root_dir, pid, pid);
+@@ -220,6 +228,7 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
  
--	fp = fopen(filename, "r");
-+	fp = fopen(bf, "r");
- 	if (fp == NULL) {
- 		/*
- 		 * We raced with a task exiting - just return:
- 		 */
--		pr_debug("couldn't open %s\n", filename);
-+		pr_debug("couldn't open %s\n", bf);
- 		return -1;
- 	}
+ 	fs->found = true;
++	fs->checked = true;
+ 	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
+ 	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
+@@ -246,6 +255,14 @@ static const char *fs__mountpoint(int idx)
+ 	if (fs->found)
+ 		return (const char *)fs->path;
  
-@@ -309,7 +308,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	t = rdclock();
++	/* the mount point was already checked for the mount point
++	 * but and did not exist, so return NULL to avoid scanning again.
++	 * This makes the found and not found paths cost equivalent
++	 * in case of multiple calls.
++	 */
++	if (fs->checked)
++		return NULL;
++
+ 	return fs__get_mountpoint(fs);
+ }
  
- 	while (1) {
--		char bf[BUFSIZ];
- 		char prot[5];
- 		char execname[PATH_MAX];
- 		char anonstr[] = "//anon";
-@@ -321,10 +319,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
+diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
+index 936edb95e1f3..aa222ca30311 100644
+--- a/tools/lib/api/fs/fs.h
++++ b/tools/lib/api/fs/fs.h
+@@ -18,6 +18,18 @@
+ 	const char *name##__mount(void);	\
+ 	bool name##__configured(void);		\
  
- 		if ((rdclock() - t) > timeout) {
--			pr_warning("Reading %s time out. "
-+			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
- 				   "You may want to increase "
- 				   "the time limit by --proc-map-timeout\n",
--				   filename);
-+				   machine->root_dir, pid, pid);
- 			truncation = true;
- 			goto out;
- 		}
++/*
++ * The xxxx__mountpoint() entry points find the first match mount point for each
++ * filesystems listed below, where xxxx is the filesystem type.
++ *
++ * The interface is as follows:
++ *
++ * - If a mount point is found on first call, it is cached and used for all
++ *   subsequent calls.
++ *
++ * - If a mount point is not found, NULL is returned on first call and all
++ *   subsequent calls.
++ */
+ FS(sysfs)
+ FS(procfs)
+ FS(debugfs)
 -- 
 2.21.1
