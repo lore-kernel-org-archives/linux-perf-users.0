@@ -1,235 +1,158 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/26] doc/admin-guide: Update perf-security.rst with CAP_PERFMON information
-Date: Mon, 13 Apr 2020 13:51:52 -0300
-Message-ID: <20200413165203.1816-16-acme@kernel.org>
+Subject: [PATCH 03/26] perf annotate: Add basic support for bpf_image
+Date: Mon, 13 Apr 2020 13:51:40 -0300
+Message-ID: <20200413165203.1816-4-acme@kernel.org>
 References: <20200413165203.1816-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200413165203.1816-1-acme@kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Serge Hallyn <serge@hallyn.com>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-man@vger.kernel.org, linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Song Liu <songliubraving@fb.com>, Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andriin@fb.com>, =?UTF-8?q?Bj=C3=83=C2=B6rn=20T=C3=83=C2=B6pel?= <bjorn.topel@intel.com>, Daniel Borkmann <daniel@iogearbox.net>, "David S . Miller" <davem@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-Update perf-security.rst documentation file with the information
-related to usage of CAP_PERFMON capability to secure performance
-monitoring and observability operations in system.
+Add the DSO_BINARY_TYPE__BPF_IMAGE dso binary type to recognize BPF
+images that carry trampoline or dispatcher.
 
-Committer notes:
+Upcoming patches will add support to read the image data, store it
+within the BPF feature in perf.data and display it for annotation
+purposes.
 
-While testing 'perf top' under cap_perfmon I noticed that it needs
-some more capability and Alexey pointed out cap_ipc_lock, as needed by
-this kernel chunk:
+Currently we only display following message:
 
-  kernel/events/core.c: 6101
-       if ((locked > lock_limit) && perf_is_paranoid() &&
-               !capable(CAP_IPC_LOCK)) {
-               ret = -EPERM;
-               goto unlock;
-       }
+  # ./perf annotate bpf_trampoline_24456 --stdio
+   Percent |      Source code & Disassembly of . for cycles (504  ...
+  --------------------------------------------------------------- ...
+           :       to be implemented
 
-So I added it to the documentation, and also mentioned that if the
-libcap version doesn't yet supports 'cap_perfmon', its numeric value can
-be used instead, i.e. if:
-
-	# setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-
-Fails, try:
-
-	# setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-
-I also added a paragraph stating that using an unpatched libcap will
-fail the check for CAP_PERFMON, as it checks the cap number against a
-maximum to see if it is valid, which makes it use as the default the
-'cycles:u' event, even tho a cap_perfmon capable perf binary can get
-kernel samples, to workaround that just use, e.g.:
-
-  # perf top -e cycles
-  # perf record -e cycles
-
-And it will sample kernel and user modes.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Acked-by: Song Liu <songliubraving@fb.com>
 Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/17278551-9399-9ebe-d665-8827016a217d@linux.intel.com
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: BjÃ¶rn TÃ¶pel <bjorn.topel@intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: David S. Miller <davem@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200312195610.346362-16-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- Documentation/admin-guide/perf-security.rst | 86 +++++++++++++++------
- 1 file changed, 61 insertions(+), 25 deletions(-)
+ tools/perf/util/annotate.c | 20 ++++++++++++++++++++
+ tools/perf/util/dso.c      |  1 +
+ tools/perf/util/dso.h      |  1 +
+ tools/perf/util/machine.c  | 11 +++++++++++
+ tools/perf/util/symbol.c   |  1 +
+ 5 files changed, 34 insertions(+)
 
-diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
-index 72effa7c23b9..1307b5274a0f 100644
---- a/Documentation/admin-guide/perf-security.rst
-+++ b/Documentation/admin-guide/perf-security.rst
-@@ -1,6 +1,6 @@
- .. _perf_security:
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index f1ea0d61eb5b..9760d58e979a 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1821,6 +1821,24 @@ static int symbol__disassemble_bpf(struct symbol *sym __maybe_unused,
+ }
+ #endif // defined(HAVE_LIBBFD_SUPPORT) && defined(HAVE_LIBBPF_SUPPORT)
  
--Perf Events and tool security
-+Perf events and tool security
- =============================
- 
- Overview
-@@ -42,11 +42,11 @@ categories:
- Data that belong to the fourth category can potentially contain
- sensitive process data. If PMUs in some monitoring modes capture values
- of execution context registers or data from process memory then access
--to such monitoring capabilities requires to be ordered and secured
--properly. So, perf_events/Perf performance monitoring is the subject for
--security access control management [5]_ .
-+to such monitoring modes requires to be ordered and secured properly.
-+So, perf_events performance monitoring and observability operations are
-+the subject for security access control management [5]_ .
- 
--perf_events/Perf access control
-+perf_events access control
- -------------------------------
- 
- To perform security checks, the Linux implementation splits processes
-@@ -66,11 +66,25 @@ into distinct units, known as capabilities [6]_ , which can be
- independently enabled and disabled on per-thread basis for processes and
- files of unprivileged users.
- 
--Unprivileged processes with enabled CAP_SYS_ADMIN capability are treated
-+Unprivileged processes with enabled CAP_PERFMON capability are treated
- as privileged processes with respect to perf_events performance
--monitoring and bypass *scope* permissions checks in the kernel.
--
--Unprivileged processes using perf_events system call API is also subject
-+monitoring and observability operations, thus, bypass *scope* permissions
-+checks in the kernel. CAP_PERFMON implements the principle of least
-+privilege [13]_ (POSIX 1003.1e: 2.2.2.39) for performance monitoring and
-+observability operations in the kernel and provides a secure approach to
-+perfomance monitoring and observability in the system.
++static int
++symbol__disassemble_bpf_image(struct symbol *sym,
++			      struct annotate_args *args)
++{
++	struct annotation *notes = symbol__annotation(sym);
++	struct disasm_line *dl;
 +
-+For backward compatibility reasons the access to perf_events monitoring and
-+observability operations is also open for CAP_SYS_ADMIN privileged
-+processes but CAP_SYS_ADMIN usage for secure monitoring and observability
-+use cases is discouraged with respect to the CAP_PERFMON capability.
-+If system audit records [14]_ for a process using perf_events system call
-+API contain denial records of acquiring both CAP_PERFMON and CAP_SYS_ADMIN
-+capabilities then providing the process with CAP_PERFMON capability singly
-+is recommended as the preferred secure approach to resolve double access
-+denial logging related to usage of performance monitoring and observability.
++	args->offset = -1;
++	args->line = strdup("to be implemented");
++	args->line_nr = 0;
++	dl = disasm_line__new(args);
++	if (dl)
++		annotation_line__add(&dl->al, &notes->src->source);
 +
-+Unprivileged processes using perf_events system call are also subject
- for PTRACE_MODE_READ_REALCREDS ptrace access mode check [7]_ , whose
- outcome determines whether monitoring is permitted. So unprivileged
- processes provided with CAP_SYS_PTRACE capability are effectively
-@@ -82,14 +96,14 @@ performance analysis of monitored processes or a system. For example,
- CAP_SYSLOG capability permits reading kernel space memory addresses from
- /proc/kallsyms file.
- 
--perf_events/Perf privileged users
-+Privileged Perf users groups
- ---------------------------------
- 
- Mechanisms of capabilities, privileged capability-dumb files [6]_ and
--file system ACLs [10]_ can be used to create a dedicated group of
--perf_events/Perf privileged users who are permitted to execute
--performance monitoring without scope limits. The following steps can be
--taken to create such a group of privileged Perf users.
-+file system ACLs [10]_ can be used to create dedicated groups of
-+privileged Perf users who are permitted to execute performance monitoring
-+and observability without scope limits. The following steps can be
-+taken to create such groups of privileged Perf users.
- 
- 1. Create perf_users group of privileged Perf users, assign perf_users
-    group to Perf tool executable and limit access to the executable for
-@@ -108,30 +122,51 @@ taken to create such a group of privileged Perf users.
-    -rwxr-x---  2 root perf_users  11M Oct 19 15:12 perf
- 
- 2. Assign the required capabilities to the Perf tool executable file and
--   enable members of perf_users group with performance monitoring
-+   enable members of perf_users group with monitoring and observability
-    privileges [6]_ :
- 
- ::
- 
--   # setcap "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
--   # setcap -v "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-    perf: OK
-    # getcap perf
--   perf = cap_sys_ptrace,cap_sys_admin,cap_syslog+ep
-+   perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
++	free(args->line);
++	return 0;
++}
 +
-+If the libcap installed doesn't yet support "cap_perfmon", use "38" instead,
-+i.e.:
-+
-+::
-+
-+   # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-+
-+Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
-+'perf top', alternatively use 'perf top -m N', to reduce the memory that
-+it uses for the perf ring buffer, see the memory allocation section below.
-+
-+Using a libcap without support for CAP_PERFMON will make cap_get_flag(caps, 38,
-+CAP_EFFECTIVE, &val) fail, which will lead the default event to be 'cycles:u',
-+so as a workaround explicitly ask for the 'cycles' event, i.e.:
-+
-+::
-+
-+  # perf top -e cycles
-+
-+To get kernel and user samples with a perf binary with just CAP_PERFMON.
+ /*
+  * Possibly create a new version of line with tabs expanded. Returns the
+  * existing or new line, storage is updated if a new line is allocated. If
+@@ -1920,6 +1938,8 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
  
- As a result, members of perf_users group are capable of conducting
--performance monitoring by using functionality of the configured Perf
--tool executable that, when executes, passes perf_events subsystem scope
--checks.
-+performance monitoring and observability by using functionality of the
-+configured Perf tool executable that, when executes, passes perf_events
-+subsystem scope checks.
+ 	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO) {
+ 		return symbol__disassemble_bpf(sym, args);
++	} else if (dso->binary_type == DSO_BINARY_TYPE__BPF_IMAGE) {
++		return symbol__disassemble_bpf_image(sym, args);
+ 	} else if (dso__is_kcore(dso)) {
+ 		kce.kcore_filename = symfs_filename;
+ 		kce.addr = map__rip_2objdump(map, sym->start);
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 91f21239608b..f338990e0fe6 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -191,6 +191,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+ 	case DSO_BINARY_TYPE__JAVA_JIT:
+ 	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
+ 	case DSO_BINARY_TYPE__NOT_FOUND:
+ 		ret = -1;
+ 		break;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 2db64b79617a..9553a1fd9e8a 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -40,6 +40,7 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__GUEST_KCORE,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BPF_PROG_INFO,
++	DSO_BINARY_TYPE__BPF_IMAGE,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
  
- This specific access control management is only available to superuser
- or root running processes with CAP_SETPCAP, CAP_SETFCAP [6]_
- capabilities.
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 06aa4e4db63d..09845eae9c03 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -736,6 +736,12 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
+ 	return 0;
+ }
  
--perf_events/Perf unprivileged users
-+Unprivileged users
- -----------------------------------
++static int is_bpf_image(const char *name)
++{
++	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) ||
++	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1);
++}
++
+ static int machine__process_ksymbol_register(struct machine *machine,
+ 					     union perf_event *event,
+ 					     struct perf_sample *sample __maybe_unused)
+@@ -760,6 +766,11 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 		map->end = map->start + event->ksymbol.len;
+ 		maps__insert(&machine->kmaps, map);
+ 		dso__set_loaded(dso);
++
++		if (is_bpf_image(event->ksymbol.name)) {
++			dso->binary_type = DSO_BINARY_TYPE__BPF_IMAGE;
++			dso__set_long_name(dso, "", false);
++		}
+ 	}
  
--perf_events/Perf *scope* and *access* control for unprivileged processes
-+perf_events *scope* and *access* control for unprivileged processes
- is governed by perf_event_paranoid [2]_ setting:
+ 	sym = symbol__new(map->map_ip(map, map->start),
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 26bc6a0096ce..8f4300492dc7 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1544,6 +1544,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 		return true;
  
- -1:
-@@ -166,7 +201,7 @@ is governed by perf_event_paranoid [2]_ setting:
-      perf_event_mlock_kb locking limit is imposed but ignored for
-      unprivileged processes with CAP_IPC_LOCK capability.
- 
--perf_events/Perf resource control
-+Resource control
- ---------------------------------
- 
- Open file descriptors
-@@ -227,4 +262,5 @@ Bibliography
- .. [10] `<http://man7.org/linux/man-pages/man5/acl.5.html>`_
- .. [11] `<http://man7.org/linux/man-pages/man2/getrlimit.2.html>`_
- .. [12] `<http://man7.org/linux/man-pages/man5/limits.conf.5.html>`_
--
-+.. [13] `<https://sites.google.com/site/fullycapable>`_
-+.. [14] `<http://man7.org/linux/man-pages/man8/auditd.8.html>`_
+ 	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
+ 	case DSO_BINARY_TYPE__NOT_FOUND:
+ 	default:
+ 		return false;
 -- 
 2.21.1
