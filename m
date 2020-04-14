@@ -1,133 +1,395 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 10/15] tools headers kvm: Sync linux/kvm.h with the kernel sources
-Date: Tue, 14 Apr 2020 13:48:49 -0300
-Message-ID: <20200414164854.26026-11-acme@kernel.org>
-References: <20200414164854.26026-1-acme@kernel.org>
+Subject: [GIT PULL] perf/urgent fixes
+Date: Tue, 14 Apr 2020 13:48:39 -0300
+Message-ID: <20200414164854.26026-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, Jay Zhou <jianjay.zhou@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, Paul Mackerras <paulus@ozlabs.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Jin Yao <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Ingo/Thomas,
 
-To pick up the changes from:
+	Please consider pulling,
 
-  9a5788c615f5 ("KVM: PPC: Book3S HV: Add a capability for enabling secure guests")
-  3c9bd4006bfc ("KVM: x86: enable dirty log gradually in small chunks")
-  13da9ae1cdbf ("KVM: s390: protvirt: introduce and enable KVM_CAP_S390_PROTECTED")
-  e0d2773d487c ("KVM: s390: protvirt: UV calls in support of diag308 0, 1")
-  19e122776886 ("KVM: S390: protvirt: Introduce instruction data area bounce buffer")
-  29b40f105ec8 ("KVM: s390: protvirt: Add initial vm and cpu lifecycle handling")
+Best regards,
 
-So far we're ignoring those arch specific ioctls, we need to revisit
-this at some time to have arch specific tables, etc:
+- Arnaldo
 
-  $ grep S390 tools/perf/trace/beauty/kvm_ioctl.sh
-      egrep -v " ((ARM|PPC|S390)_|[GS]ET_(DEBUGREGS|PIT2|XSAVE|TSC_KHZ)|CREATE_SPAPR_TCE_64)" | \
+Test results at the end of this message, as usual.
+
+The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+
+  Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.7-20200414
+
+for you to fetch changes up to e3698b23ecb8c099b4b523e7d5c8c042e93ef15d:
+
+  tools headers: Synchronize linux/bits.h with the kernel sources (2020-04-14 11:40:05 -0300)
+
+----------------------------------------------------------------
+perf/urgent fixes:
+
+perf stat:
+
+  Jin Yao:
+
+  - Fix no metric header if --per-socket and --metric-only set
+
+build system:
+
+  - Fix python building when built with clang, that was failing if the clang
+    version doesn't support -fno-semantic-interposition.
+
+tools UAPI headers:
+
+  Arnaldo Carvalho de Melo:
+
+  - Update various copies of kernel headers, some ended up automatically
+    updating build-time generated tables to enable tools such as 'perf trace'
+    to decode syscalls and tracepoints arguments.
+
+    Now the tools/perf build is free of UAPI drift warnings.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (14):
+      tools arch x86: Sync the msr-index.h copy with the kernel sources
+      perf python: Check if clang supports -fno-semantic-interposition
+      tools headers: Update linux/vdso.h and grab a copy of vdso/const.h
+      tools headers UAPI: Sync sched.h with the kernel
+      tools headers UAPI: Sync linux/mman.h with the kernel
+      tools arch x86: Sync asm/cpufeatures.h with the kernel sources
+      tools include UAPI: Sync linux/vhost.h with the kernel sources
+      tools headers UAPI: Sync linux/fscrypt.h with the kernel sources
+      tools headers kvm: Sync linux/kvm.h with the kernel sources
+      tools headers UAPI: Update tools's copy of drm.h headers
+      tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
+      tools headers: Update x86's syscall_64.tbl with the kernel sources
+      tools headers: Adopt verbatim copy of compiletime_assert() from kernel sources
+      tools headers: Synchronize linux/bits.h with the kernel sources
+
+Jin Yao (1):
+      perf stat: Fix no metric header if --per-socket and --metric-only set
+
+ tools/arch/x86/include/asm/cpufeatures.h          |   5 +-
+ tools/arch/x86/include/asm/msr-index.h            |   9 +
+ tools/include/linux/bits.h                        |  24 +-
+ tools/include/linux/build_bug.h                   |  82 +++
+ tools/include/linux/compiler.h                    |  26 +
+ tools/include/linux/const.h                       |   5 +-
+ tools/include/linux/kernel.h                      |   4 +-
+ tools/include/uapi/drm/drm.h                      |   2 +
+ tools/include/uapi/drm/i915_drm.h                 |  21 +
+ tools/include/uapi/linux/fscrypt.h                |   1 +
+ tools/include/uapi/linux/kvm.h                    |  47 +-
+ tools/include/uapi/linux/mman.h                   |   5 +-
+ tools/include/uapi/linux/sched.h                  |   5 +
+ tools/include/uapi/linux/vhost.h                  |  24 +
+ tools/include/vdso/bits.h                         |   9 +
+ tools/include/vdso/const.h                        |  10 +
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl | 740 +++++++++++-----------
+ tools/perf/check-headers.sh                       |   3 +
+ tools/perf/trace/beauty/clone.c                   |   1 +
+ tools/perf/trace/beauty/mmap.c                    |   1 +
+ tools/perf/util/setup.py                          |   2 +
+ tools/perf/util/stat-shadow.c                     |   7 +-
+ 22 files changed, 646 insertions(+), 387 deletions(-)
+ create mode 100644 tools/include/linux/build_bug.h
+ create mode 100644 tools/include/vdso/bits.h
+ create mode 100644 tools/include/vdso/const.h
+
+Test results:
+
+The first ones are container based builds of tools/perf with and without libelf
+support.  Where clang is available, it is also used to build perf with/without
+libelf, and building with LIBCLANGLLVM=1 (built-in clang) with gcc and clang
+when clang and its devel libraries are installed.
+
+The objtool and samples/bpf/ builds are disabled now that I'm switching from
+using the sources in a local volume to fetching them from a http server to
+build it inside the container, to make it easier to build in a container cluster.
+Those will come back later.
+
+Several are cross builds, the ones with -x-ARCH and the android one, and those
+may not have all the features built, due to lack of multi-arch devel packages,
+available and being used so far on just a few, like
+debian:experimental-x-{arm64,mipsel}.
+
+The 'perf test' one will perform a variety of tests exercising
+tools/perf/util/, tools/lib/{bpf,traceevent,etc}, as well as run perf commands
+with a variety of command line event specifications to then intercept the
+sys_perf_event syscall to check that the perf_event_attr fields are set up as
+expected, among a variety of other unit tests.
+
+Then there is the 'make -C tools/perf build-test' ones, that build tools/perf/
+with a variety of feature sets, exercising the build with an incomplete set of
+features as well as with a complete one. It is planned to have it run on each
+of the containers mentioned above, using some container orchestration
+infrastructure. Get in contact if interested in helping having this in place.
+
+Ubuntu 19.10 is failing when linking against libllvm, which isn't the default,
+needs to be investigated, haven't tested with CC=gcc, but should be the same
+problem:
+
++ make ARCH= CROSS_COMPILE= EXTRA_CFLAGS= LIBCLANGLLVM=1 -C /git/linux/tools/perf O=/tmp/build/perf CC=clang
+
+...
+/usr/bin/ld: /usr/lib/llvm-9/lib/libclangAnalysis.a(ExprMutationAnalyzer.cpp.o): in function `clang::ast_matchers::internal::matcher_ignoringImpCasts0Matcher::matches(clang::Expr const&, clang::ast_matchers::internal::ASTMatchFinder*, clang::ast_matchers::internal::BoundNodesTreeBuilder*) const':
+(.text._ZNK5clang12ast_matchers8internal32matcher_ignoringImpCasts0Matcher7matchesERKNS_4ExprEPNS1_14ASTMatchFinderEPNS1_21BoundNodesTreeBuilderE[_ZNK5clang12ast_matchers8internal32matcher_ignoringImpCasts0Matcher7matchesERKNS_4ExprEPNS1_14ASTMatchFinderEPNS1_21BoundNodesTreeBuilderE]+0x43): undefined reference to `clang::ast_matchers::internal::DynTypedMatcher::matches(clang::ast_type_traits::DynTypedNode const&, clang::ast_matchers::internal::ASTMatchFinder*, clang::ast_matchers::internal::BoundNodesTreeBuilder*) const'
+/usr/bin/ld: /usr/lib/llvm-9/lib/libclangAnalysis.a(ExprMutationAnalyzer.cpp.o): in function `clang::ast_matchers::internal::matcher_hasLoopVariable0Matcher::matches(clang::CXXForRangeStmt const&, clang::ast_matchers::internal::ASTMatchFinder*, clang::ast_matchers::internal::BoundNodesTreeBuilder*) const':
+(.text._ZNK5clang12ast_matchers8internal31matcher_hasLoopVariable0Matcher7matchesERKNS_15CXXForRangeStmtEPNS1_14ASTMatchFinderEPNS1_21BoundNodesTreeBuilderE[_ZNK5clang12ast_matchers8internal31matcher_hasLoopVariable0Matcher7matchesERKNS_15CXXForRangeStmtEPNS1_14ASTMatchFinderEPNS1_21BoundNodesTreeBuilderE]+0x48): undefined reference to `clang::ast_matchers::internal::DynTypedMatcher::matches(clang::ast_type_traits::DynTypedNode const&, clang::ast_matchers::internal::ASTMatchFinder*, clang::ast_matchers::internal::BoundNodesTreeBuilder*) const'
+...
+
+  It builds ok with the default set of options.
+
+  [ perfbuilder@five ~]$ export PERF_TARBALL=http://192.168.122.1/perf/perf-5.7.0-rc1.tar.xz
+  [ perfbuilder@five ~]$ dm
+   1 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0, clang version 3.8.0 (tags/RELEASE_380/final)
+   2 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822, clang version 3.8.1 (tags/RELEASE_381/final)
+   3 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0, clang version 4.0.0 (tags/RELEASE_400/final)
+   4 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0, Alpine clang version 5.0.0 (tags/RELEASE_500/final) (based on LLVM 5.0.0)
+   5 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0, Alpine clang version 5.0.1 (tags/RELEASE_501/final) (based on LLVM 5.0.1)
+   6 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0, Alpine clang version 5.0.1 (tags/RELEASE_502/final) (based on LLVM 5.0.1)
+   7 alpine:3.10                   : Ok   gcc (Alpine 8.3.0) 8.3.0, Alpine clang version 8.0.0 (tags/RELEASE_800/final) (based on LLVM 8.0.0)
+   8 alpine:3.11                   : Ok   gcc (Alpine 9.2.0) 9.2.0, Alpine clang version 9.0.0 (https://git.alpinelinux.org/aports f7f0d2c2b8bcd6a5843401a9a702029556492689) (based on LLVM 9.0.0)
+   9 alpine:edge                   : Ok   gcc (Alpine 9.2.0) 9.2.0, Alpine clang version 9.0.1 (git://git.alpinelinux.org/aports 6c34b9a10bcdcdac04a11569c50b61fb50c4ea6e) (based on LLVM 9.0.1)
+  10 alt:p8                        : Ok   x86_64-alt-linux-gcc (GCC) 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1), clang version 3.8.0 (tags/RELEASE_380/final)
+  11 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.3.1 20190507 (ALT p9 8.3.1-alt5), clang version 7.0.1 
+  12 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 9.2.1 20200123 (ALT Sisyphus 9.2.1-alt3), clang version 9.0.1 
+  13 amazonlinux:1                 : Ok   gcc (GCC) 7.2.1 20170915 (Red Hat 7.2.1-2), clang version 3.6.2 (tags/RELEASE_362/final)
+  14 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6), clang version 7.0.1 (Amazon Linux 2 7.0.1-1.amzn2.0.2)
+  15 android-ndk:r12b-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  16 android-ndk:r15c-arm          : Ok   arm-linux-androideabi-gcc (GCC) 4.9.x 20150123 (prerelease)
+  17 centos:5                      : Ok   gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-55)
+  18 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23)
+  19 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-39)
+  20 centos:8                      : Ok   gcc (GCC) 8.3.1 20190507 (Red Hat 8.3.1-4), clang version 8.0.1 (Red Hat 8.0.1-1.module_el8.1.0+215+a01033fb)
+  21 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 9.3.1 20200325 releases/gcc-9.3.0-55-gdff885cdc0, clang version 9.0.1 
+  22 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u2) 4.9.2, Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  23 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516, clang version 3.8.1-24 (tags/RELEASE_381/final)
+  24 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0, clang version 7.0.1-8 (tags/RELEASE_701/final)
+  25 debian:experimental           : Ok   gcc (Debian 9.3.0-7) 9.3.0
+  26 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 9.2.1-24) 9.2.1 20200117
+  27 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7)
+  28 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6), clang version 3.5.0 (tags/RELEASE_350/final)
+  29 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6), clang version 3.7.0 (tags/RELEASE_370/final)
+  30 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1), clang version 3.8.1 (tags/RELEASE_381/final)
+  31 fedora:24-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+  32 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1), clang version 3.9.1 (tags/RELEASE_391/final)
+  33 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2), clang version 4.0.1 (tags/RELEASE_401/final)
+  34 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6), clang version 5.0.2 (tags/RELEASE_502/final)
+  35 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2), clang version 6.0.1 (tags/RELEASE_601/final)
+  36 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2), clang version 7.0.1 (Fedora 7.0.1-6.fc29)
+  37 fedora:30                     : Ok   gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1), clang version 8.0.0 (Fedora 8.0.0-3.fc30)
+  38 fedora:30-x-ARC-glibc         : Ok   arc-linux-gcc (ARC HS GNU/Linux glibc toolchain 2019.03-rc1) 8.3.1 20190225
+  39 fedora:30-x-ARC-uClibc        : Ok   arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+  40 fedora:31                     : Ok   gcc (GCC) 9.2.1 20190827 (Red Hat 9.2.1-1), clang version 9.0.1 (Fedora 9.0.1-2.fc31)
+  41 fedora:32                     : Ok   gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8), clang version 10.0.0 (Fedora 10.0.0-0.1.rc2.fc32)
+  42 fedora:33                     : Ok   gcc (GCC) 10.0.1 20200311 (Red Hat 10.0.1-0.9), clang version 10.0.0 (Fedora 10.0.0-0.9.rc5.fc33)
+  43 fedora:rawhide                : Ok   gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8), clang version 10.0.0 (Fedora 10.0.0-0.5.rc3.fc33)
+  44 gentoo-stage3-amd64:latest    : Ok   gcc (Gentoo 9.2.0-r2 p3) 9.2.0
+  45 mageia:5                      : Ok   gcc (GCC) 4.9.2, clang version 3.5.2 (tags/RELEASE_352/final)
+  46 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0, clang version 3.9.1 (tags/RELEASE_391/final)
+  47 mageia:7                      : Ok   gcc (Mageia 8.4.0-1.mga7) 8.4.0, clang version 8.0.0 (Mageia 8.0.0-1.mga7)
+  48 manjaro:latest                : Ok   gcc (Arch Linux 9.3.0-1) 9.3.0, clang version 9.0.1 
+  49 openmandriva:cooker           : Ok   gcc (GCC) 10.0.0 20200301 (OpenMandriva), clang version 10.0.0 
+  50 opensuse:15.0                 : Ok   gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407], clang version 5.0.1 (tags/RELEASE_501/final 312548)
+  51 opensuse:15.1                 : Ok   gcc (SUSE Linux) 7.5.0, clang version 7.0.1 (tags/RELEASE_701/final 349238)
+  52 opensuse:42.3                 : Ok   gcc (SUSE Linux) 4.8.5, clang version 3.8.0 (tags/RELEASE_380/final 262553)
+  53 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 9.2.1 20200128 [revision 83f65674e78d97d27537361de1a9d74067ff228d], clang version 9.0.1 
+  54 oraclelinux:6                 : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23.0.1)
+  55 oraclelinux:7                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-39.0.3)
+  56 oraclelinux:8                 : Ok   gcc (GCC) 8.3.1 20190507 (Red Hat 8.3.1-4.5.0.5), clang version 8.0.1 (Red Hat 8.0.1-1.0.1.module+el8.1.0+5428+345cee14)
+  57 ubuntu:12.04                  : Ok   gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3, Ubuntu clang version 3.0-6ubuntu3 (tags/RELEASE_30/final) (based on LLVM 3.0)
+  58 ubuntu:14.04                  : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.4) 4.8.4
+  59 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609, clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
+  60 ubuntu:16.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  61 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  62 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  63 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  64 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  65 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
+  66 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
+  67 ubuntu:18.04-x-arm            : Ok   arm-linux-gnueabihf-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+  68 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0
+  69 ubuntu:18.04-x-m68k           : Ok   m68k-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  70 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  71 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  72 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  73 ubuntu:18.04-x-riscv64        : Ok   riscv64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  74 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  75 ubuntu:18.04-x-sh4            : Ok   sh4-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  76 ubuntu:18.04-x-sparc64        : Ok   sparc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+  77 ubuntu:19.04                  : Ok   gcc (Ubuntu 8.3.0-6ubuntu1) 8.3.0, clang version 8.0.0-3 (tags/RELEASE_800/final)
+  78 ubuntu:19.04-x-alpha          : Ok   alpha-linux-gnu-gcc (Ubuntu 8.3.0-6ubuntu1) 8.3.0
+  79 ubuntu:19.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 8.3.0-6ubuntu1) 8.3.0
+  80 ubuntu:19.04-x-hppa           : Ok   hppa-linux-gnu-gcc (Ubuntu 8.3.0-6ubuntu1) 8.3.0
+  81 ubuntu:19.10                  : FAIL gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008, clang version 9.0.0-2 (tags/RELEASE_900/final)
+  82 ubuntu:20.04                  : Ok   gcc (Ubuntu 9.3.0-8ubuntu1) 9.3.0, clang version 10.0.0-1ubuntu1 
   $
 
-This addresses these tools/perf build warnings:
+  # uname -a
+  Linux seventh 5.5.16-100.fc30.x86_64 #1 SMP Wed Apr 8 17:09:38 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+  # git log --oneline -1
+  e3698b23ecb8 tools headers: Synchronize linux/bits.h with the kernel sources
+  # perf version --build-options
+  perf version 5.7.rc1.ge3698b23ecb8
+                   dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+      dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+                   glibc: [ on  ]  # HAVE_GLIBC_SUPPORT
+                    gtk2: [ on  ]  # HAVE_GTK2_SUPPORT
+           syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                  libbfd: [ on  ]  # HAVE_LIBBFD_SUPPORT
+                  libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+                 libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+  numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+                 libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+               libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+                libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+               libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+               libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+      libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+                    zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                    lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+               get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                     bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                     aio: [ on  ]  # HAVE_AIO_SUPPORT
+                    zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+  # perf test
+   1: vmlinux symtab matches kallsyms                       : Ok
+   2: Detect openat syscall event                           : Ok
+   3: Detect openat syscall event on all cpus               : Ok
+   4: Read samples using the mmap interface                 : Ok
+   5: Test data source output                               : Ok
+   6: Parse event definition strings                        : Ok
+   7: Simple expression parser                              : Ok
+   8: PERF_RECORD_* events & perf_sample fields             : Ok
+   9: Parse perf pmu format                                 : Ok
+  10: PMU events                                            : Ok
+  11: DSO data read                                         : Ok
+  12: DSO data cache                                        : Ok
+  13: DSO data reopen                                       : Ok
+  14: Roundtrip evsel->name                                 : Ok
+  15: Parse sched tracepoints fields                        : Ok
+  16: syscalls:sys_enter_openat event fields                : Ok
+  17: Setup struct perf_event_attr                          : Ok
+  18: Match and link multiple hists                         : Ok
+  19: 'import perf' in python                               : Ok
+  20: Breakpoint overflow signal handler                    : Ok
+  21: Breakpoint overflow sampling                          : Ok
+  22: Breakpoint accounting                                 : Ok
+  23: Watchpoint                                            :
+  23.1: Read Only Watchpoint                                : Skip
+  23.2: Write Only Watchpoint                               : Ok
+  23.3: Read / Write Watchpoint                             : Ok
+  23.4: Modify Watchpoint                                   : Ok
+  24: Number of exit events of a simple workload            : Ok
+  25: Software clock events period values                   : Ok
+  26: Object code reading                                   : Ok
+  27: Sample parsing                                        : Ok
+  28: Use a dummy software event to keep tracking           : Ok
+  29: Parse with no sample_id_all bit set                   : Ok
+  30: Filter hist entries                                   : Ok
+  31: Lookup mmap thread                                    : Ok
+  32: Share thread maps                                     : Ok
+  33: Sort output of hist entries                           : Ok
+  34: Cumulate child hist entries                           : Ok
+  35: Track with sched_switch                               : Ok
+  36: Filter fds with revents mask in a fdarray             : Ok
+  37: Add fd to a fdarray, making it autogrow               : Ok
+  38: kmod_path__parse                                      : Ok
+  39: Thread map                                            : Ok
+  40: LLVM search and compile                               :
+  40.1: Basic BPF llvm compile                              : Ok
+  40.2: kbuild searching                                    : Ok
+  40.3: Compile source for BPF prologue generation          : Ok
+  40.4: Compile source for BPF relocation                   : Ok
+  41: Session topology                                      : Ok
+  42: BPF filter                                            :
+  42.1: Basic BPF filtering                                 : Ok
+  42.2: BPF pinning                                         : Ok
+  42.3: BPF prologue generation                             : Ok
+  42.4: BPF relocation checker                              : Ok
+  43: Synthesize thread map                                 : Ok
+  44: Remove thread map                                     : Ok
+  45: Synthesize cpu map                                    : Ok
+  46: Synthesize stat config                                : Ok
+  47: Synthesize stat                                       : Ok
+  48: Synthesize stat round                                 : Ok
+  49: Synthesize attr update                                : Ok
+  50: Event times                                           : Ok
+  51: Read backward ring buffer                             : Ok
+  52: Print cpu map                                         : Ok
+  53: Merge cpu map                                         : Ok
+  54: Probe SDT events                                      : Ok
+  55: is_printable_array                                    : Ok
+  56: Print bitmap                                          : Ok
+  57: perf hooks                                            : Ok
+  58: builtin clang support                                 : Skip (not compiled in)
+  59: unit_number__scnprintf                                : Ok
+  60: mem2node                                              : Ok
+  61: time utils                                            : Ok
+  62: Test jit_write_elf                                    : Ok
+  63: maps__merge_in                                        : Ok
+  64: x86 rdpmc                                             : Ok
+  65: Convert perf time to TSC                              : Ok
+  66: DWARF unwind                                          : Ok
+  67: x86 instruction decoder - new instructions            : Ok
+  68: Intel PT packet decoder                               : Ok
+  69: x86 bp modify                                         : Ok
+  70: Use vfs_getname probe to get syscall args filenames   : Ok
+  71: Check open filename arg using perf trace + vfs_getname: Ok
+  72: Zstd perf.data compression/decompression              : Ok
+  73: probe libc's inet_pton & backtrace it with ping       : Ok
+  74: Add vfs_getname probe to get syscall args filenames   : Ok
+  #
 
-  Warning: Kernel ABI header at 'tools/arch/arm/include/uapi/asm/kvm.h' differs from latest version at 'arch/arm/include/uapi/asm/kvm.h'
-  diff -u tools/arch/arm/include/uapi/asm/kvm.h arch/arm/include/uapi/asm/kvm.h
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Jay Zhou <jianjay.zhou@huawei.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/include/uapi/linux/kvm.h | 47 ++++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
-
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 4b95f9a31a2f..428c7dde6b4b 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -474,12 +474,17 @@ struct kvm_s390_mem_op {
- 	__u32 size;		/* amount of bytes */
- 	__u32 op;		/* type of operation */
- 	__u64 buf;		/* buffer in userspace */
--	__u8 ar;		/* the access register number */
--	__u8 reserved[31];	/* should be set to 0 */
-+	union {
-+		__u8 ar;	/* the access register number */
-+		__u32 sida_offset; /* offset into the sida */
-+		__u8 reserved[32]; /* should be set to 0 */
-+	};
- };
- /* types for kvm_s390_mem_op->op */
- #define KVM_S390_MEMOP_LOGICAL_READ	0
- #define KVM_S390_MEMOP_LOGICAL_WRITE	1
-+#define KVM_S390_MEMOP_SIDA_READ	2
-+#define KVM_S390_MEMOP_SIDA_WRITE	3
- /* flags for kvm_s390_mem_op->flags */
- #define KVM_S390_MEMOP_F_CHECK_ONLY		(1ULL << 0)
- #define KVM_S390_MEMOP_F_INJECT_EXCEPTION	(1ULL << 1)
-@@ -1010,6 +1015,8 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_NISV_TO_USER 177
- #define KVM_CAP_ARM_INJECT_EXT_DABT 178
- #define KVM_CAP_S390_VCPU_RESETS 179
-+#define KVM_CAP_S390_PROTECTED 180
-+#define KVM_CAP_PPC_SECURE_GUEST 181
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1478,6 +1485,39 @@ struct kvm_enc_region {
- #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
- #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
- 
-+struct kvm_s390_pv_sec_parm {
-+	__u64 origin;
-+	__u64 length;
-+};
-+
-+struct kvm_s390_pv_unp {
-+	__u64 addr;
-+	__u64 size;
-+	__u64 tweak;
-+};
-+
-+enum pv_cmd_id {
-+	KVM_PV_ENABLE,
-+	KVM_PV_DISABLE,
-+	KVM_PV_SET_SEC_PARMS,
-+	KVM_PV_UNPACK,
-+	KVM_PV_VERIFY,
-+	KVM_PV_PREP_RESET,
-+	KVM_PV_UNSHARE_ALL,
-+};
-+
-+struct kvm_pv_cmd {
-+	__u32 cmd;	/* Command to be executed */
-+	__u16 rc;	/* Ultravisor return code */
-+	__u16 rrc;	/* Ultravisor return reason code */
-+	__u64 data;	/* Data or address */
-+	__u32 flags;    /* flags for future extensions. Must be 0 for now */
-+	__u32 reserved[3];
-+};
-+
-+/* Available with KVM_CAP_S390_PROTECTED */
-+#define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
- 	/* Guest initialization commands */
-@@ -1628,4 +1668,7 @@ struct kvm_hyperv_eventfd {
- #define KVM_HYPERV_CONN_ID_MASK		0x00ffffff
- #define KVM_HYPERV_EVENTFD_DEASSIGN	(1 << 0)
- 
-+#define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE    (1 << 0)
-+#define KVM_DIRTY_LOG_INITIALLY_SET            (1 << 1)
-+
- #endif /* __LINUX_KVM_H */
--- 
-2.21.1
+  $ git log --oneline -1 ; make -C tools/perf build-test
+  e3698b23ecb8 (HEAD -> perf/urgent, quaco/perf/urgent, five/perf/urgent) tools headers: Synchronize linux/bits.h with the kernel sources
+  make: Entering directory '/home/acme/git/perf/tools/perf'
+  - tarpkg: ./tests/perf-targz-src-pkg .
+                    make_doc_O: make doc
+        make_with_babeltrace_O: make LIBBABELTRACE=1
+                   make_tags_O: make tags
+              make_no_libelf_O: make NO_LIBELF=1
+         make_install_prefix_O: make install prefix=/tmp/krava
+            make_no_auxtrace_O: make NO_AUXTRACE=1
+           make_no_backtrace_O: make NO_BACKTRACE=1
+               make_no_slang_O: make NO_SLANG=1
+             make_no_scripts_O: make NO_LIBPYTHON=1 NO_LIBPERL=1
+           make_no_libunwind_O: make NO_LIBUNWIND=1
+                 make_static_O: make LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX32=1 NO_JVMTI=1
+  make_no_libdw_dwarf_unwind_O: make NO_LIBDW_DWARF_UNWIND=1
+                  make_debug_O: make DEBUG=1
+                   make_help_O: make help
+              make_no_libbpf_O: make NO_LIBBPF=1
+                make_install_O: make install
+                  make_no_ui_O: make NO_NEWT=1 NO_SLANG=1 NO_GTK2=1
+                make_minimal_O: make NO_LIBPERL=1 NO_LIBPYTHON=1 NO_NEWT=1 NO_GTK2=1 NO_DEMANGLE=1 NO_LIBELF=1 NO_LIBUNWIND=1 NO_BACKTRACE=1 NO_LIBNUMA=1 NO_LIBAUDIT=1 NO_LIBBIONIC=1 NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1 NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1 NO_LIBCAP=1
+             make_no_libnuma_O: make NO_LIBNUMA=1
+            make_no_demangle_O: make NO_DEMANGLE=1
+                 make_cscope_O: make cscope
+                make_no_newt_O: make NO_NEWT=1
+            make_no_libaudit_O: make NO_LIBAUDIT=1
+              make_clean_all_O: make clean all
+                   make_pure_O: make
+       make_util_pmu_bison_o_O: make util/pmu-bison.o
+             make_util_map_o_O: make util/map.o
+   make_install_prefix_slash_O: make install prefix=/tmp/krava/
+                 make_perf_o_O: make perf.o
+           make_no_libbionic_O: make NO_LIBBIONIC=1
+             make_no_libperl_O: make NO_LIBPERL=1
+           make_no_libpython_O: make NO_LIBPYTHON=1
+                make_no_gtk2_O: make NO_GTK2=1
+            make_install_bin_O: make install-bin
+         make_with_clangllvm_O: make LIBCLANGLLVM=1
+  OK
+  make: Leaving directory '/home/acme/git/perf/tools/perf'
+  $ 
