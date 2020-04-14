@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 06/15] tools headers UAPI: Sync linux/mman.h with the kernel
-Date: Tue, 14 Apr 2020 13:48:45 -0300
-Message-ID: <20200414164854.26026-7-acme@kernel.org>
+Subject: [PATCH 03/15] perf stat: Fix no metric header if --per-socket and --metric-only set
+Date: Tue, 14 Apr 2020 13:48:42 -0300
+Message-ID: <20200414164854.26026-4-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,59 +9,83 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Brian Geffon <bgeffon@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-To get the changes in:
+We received a report that was no metric header displayed if --per-socket
+and --metric-only were both set.
 
-  e346b3813067 ("mm/mremap: add MREMAP_DONTUNMAP to mremap()")
+It's hard for script to parse the perf-stat output. This patch fixes this
+issue.
 
-Add that to 'perf trace's mremap 'flags' decoder.
+Before:
 
-This silences this perf build warning:
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
+  ^C
+   Performance counter stats for 'system wide':
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/mman.h' differs from latest version at 'include/uapi/linux/mman.h'
-  diff -u tools/include/uapi/linux/mman.h include/uapi/linux/mman.h
+  S0        8                  2.6
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Brian Geffon <bgeffon@google.com>
+         2.215270071 seconds time elapsed
+
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
+  #           time socket cpus
+       1.000411692 S0        8                  2.2
+       2.001547952 S0        8                  3.4
+       3.002446511 S0        8                  3.4
+       4.003346157 S0        8                  4.0
+       5.004245736 S0        8                  0.3
+
+After:
+
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket
+  ^C
+   Performance counter stats for 'system wide':
+
+                               CPI
+  S0        8                  2.1
+
+         1.813579830 seconds time elapsed
+
+  root@kbl-ppc:~# perf stat -a -M CPI --metric-only --per-socket -I1000
+  #           time socket cpus                  CPI
+       1.000415122 S0        8                  3.2
+       2.001630051 S0        8                  2.9
+       3.002612278 S0        8                  4.3
+       4.003523594 S0        8                  3.0
+       5.004504256 S0        8                  3.7
+
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200331180226.25915-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/mman.h | 5 +++--
- tools/perf/trace/beauty/mmap.c  | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/stat-shadow.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/tools/include/uapi/linux/mman.h b/tools/include/uapi/linux/mman.h
-index fc1a64c3447b..923cc162609c 100644
---- a/tools/include/uapi/linux/mman.h
-+++ b/tools/include/uapi/linux/mman.h
-@@ -5,8 +5,9 @@
- #include <asm/mman.h>
- #include <asm-generic/hugetlb_encode.h>
+diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+index 0fd713d3674f..03ecb8cd0eec 100644
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -803,8 +803,11 @@ static void generic_metric(struct perf_stat_config *config,
+ 				     out->force_header ?
+ 				     (metric_name ? metric_name : name) : "", 0);
+ 		}
+-	} else
+-		print_metric(config, ctxp, NULL, NULL, "", 0);
++	} else {
++		print_metric(config, ctxp, NULL, NULL,
++			     out->force_header ?
++			     (metric_name ? metric_name : name) : "", 0);
++	}
  
--#define MREMAP_MAYMOVE	1
--#define MREMAP_FIXED	2
-+#define MREMAP_MAYMOVE		1
-+#define MREMAP_FIXED		2
-+#define MREMAP_DONTUNMAP	4
- 
- #define OVERCOMMIT_GUESS		0
- #define OVERCOMMIT_ALWAYS		1
-diff --git a/tools/perf/trace/beauty/mmap.c b/tools/perf/trace/beauty/mmap.c
-index 9fa771a90d79..862c8331dded 100644
---- a/tools/perf/trace/beauty/mmap.c
-+++ b/tools/perf/trace/beauty/mmap.c
-@@ -69,6 +69,7 @@ static size_t syscall_arg__scnprintf_mremap_flags(char *bf, size_t size,
- 
- 	P_MREMAP_FLAG(MAYMOVE);
- 	P_MREMAP_FLAG(FIXED);
-+	P_MREMAP_FLAG(DONTUNMAP);
- #undef P_MREMAP_FLAG
- 
- 	if (flags)
+ 	for (i = 1; i < pctx.num_ids; i++)
+ 		zfree(&pctx.ids[i].name);
 -- 
 2.21.1
