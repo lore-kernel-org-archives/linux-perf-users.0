@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 08/15] tools include UAPI: Sync linux/vhost.h with the kernel sources
-Date: Tue, 14 Apr 2020 13:48:47 -0300
-Message-ID: <20200414164854.26026-9-acme@kernel.org>
+Subject: [PATCH 05/15] tools headers UAPI: Sync sched.h with the kernel
+Date: Tue, 14 Apr 2020 13:48:44 -0300
+Message-ID: <20200414164854.26026-6-acme@kernel.org>
 References: <20200414164854.26026-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,91 +9,79 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, "Michael S . Tsirkin" <mst@redhat.com>, Tiwei Bie <tiwei.bie@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Christian Brauner <christian.brauner@ubuntu.com>, Tejun Heo <tj@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 To get the changes in:
 
-  4c8cf31885f6 ("vhost: introduce vDPA-based backend")
+  ef2c41cf38a7 ("clone3: allow spawning processes into cgroups")
 
-Silencing this perf build warning:
+Add that to 'perf trace's clone 'flags' decoder.
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/vhost.h' differs from latest version at 'include/uapi/linux/vhost.h'
-  diff -u tools/include/uapi/linux/vhost.h include/uapi/linux/vhost.h
+This silences this perf build warning:
 
-This automatically picks these new ioctls, making tools such as 'perf
-trace' aware of them and possibly allowing to use the strings in
-filters, etc:
-
-  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > before
-  $ cp include/uapi/linux/vhost.h tools/include/uapi/linux/vhost.h
-  $ tools/perf/trace/beauty/vhost_virtio_ioctl.sh > after
-  $ diff -u before after
-  --- before	2020-04-14 09:12:28.559748968 -0300
-  +++ after	2020-04-14 09:12:38.781696242 -0300
-  @@ -24,9 +24,16 @@
-   	[0x44] = "SCSI_GET_EVENTS_MISSED",
-   	[0x60] = "VSOCK_SET_GUEST_CID",
-   	[0x61] = "VSOCK_SET_RUNNING",
-  +	[0x72] = "VDPA_SET_STATUS",
-  +	[0x74] = "VDPA_SET_CONFIG",
-  +	[0x75] = "VDPA_SET_VRING_ENABLE",
-   };
-   static const char *vhost_virtio_ioctl_read_cmds[] = {
-   	[0x00] = "GET_FEATURES",
-   	[0x12] = "GET_VRING_BASE",
-   	[0x26] = "GET_BACKEND_FEATURES",
-  +	[0x70] = "VDPA_GET_DEVICE_ID",
-  +	[0x71] = "VDPA_GET_STATUS",
-  +	[0x73] = "VDPA_GET_CONFIG",
-  +	[0x76] = "VDPA_GET_VRING_NUM",
-   };
-  $
+  Warning: Kernel ABI header at 'tools/include/uapi/linux/sched.h' differs from latest version at 'include/uapi/linux/sched.h'
+  diff -u tools/include/uapi/linux/sched.h include/uapi/linux/sched.h
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Michael S. Tsirkin <mst@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tiwei Bie <tiwei.bie@intel.com>
+Cc: Tejun Heo <tj@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/vhost.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ tools/include/uapi/linux/sched.h | 5 +++++
+ tools/perf/trace/beauty/clone.c  | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/tools/include/uapi/linux/vhost.h b/tools/include/uapi/linux/vhost.h
-index 40d028eed645..9fe72e4b1373 100644
---- a/tools/include/uapi/linux/vhost.h
-+++ b/tools/include/uapi/linux/vhost.h
-@@ -116,4 +116,28 @@
- #define VHOST_VSOCK_SET_GUEST_CID	_IOW(VHOST_VIRTIO, 0x60, __u64)
- #define VHOST_VSOCK_SET_RUNNING		_IOW(VHOST_VIRTIO, 0x61, int)
+diff --git a/tools/include/uapi/linux/sched.h b/tools/include/uapi/linux/sched.h
+index 2e3bc22c6f20..3bac0a8ceab2 100644
+--- a/tools/include/uapi/linux/sched.h
++++ b/tools/include/uapi/linux/sched.h
+@@ -35,6 +35,7 @@
  
-+/* VHOST_VDPA specific defines */
-+
-+/* Get the device id. The device ids follow the same definition of
-+ * the device id defined in virtio-spec.
-+ */
-+#define VHOST_VDPA_GET_DEVICE_ID	_IOR(VHOST_VIRTIO, 0x70, __u32)
-+/* Get and set the status. The status bits follow the same definition
-+ * of the device status defined in virtio-spec.
-+ */
-+#define VHOST_VDPA_GET_STATUS		_IOR(VHOST_VIRTIO, 0x71, __u8)
-+#define VHOST_VDPA_SET_STATUS		_IOW(VHOST_VIRTIO, 0x72, __u8)
-+/* Get and set the device config. The device config follows the same
-+ * definition of the device config defined in virtio-spec.
-+ */
-+#define VHOST_VDPA_GET_CONFIG		_IOR(VHOST_VIRTIO, 0x73, \
-+					     struct vhost_vdpa_config)
-+#define VHOST_VDPA_SET_CONFIG		_IOW(VHOST_VIRTIO, 0x74, \
-+					     struct vhost_vdpa_config)
-+/* Enable/disable the ring. */
-+#define VHOST_VDPA_SET_VRING_ENABLE	_IOW(VHOST_VIRTIO, 0x75, \
-+					     struct vhost_vring_state)
-+/* Get the max ring size. */
-+#define VHOST_VDPA_GET_VRING_NUM	_IOR(VHOST_VIRTIO, 0x76, __u16)
-+
+ /* Flags for the clone3() syscall. */
+ #define CLONE_CLEAR_SIGHAND 0x100000000ULL /* Clear any signal handler and reset to SIG_DFL. */
++#define CLONE_INTO_CGROUP 0x200000000ULL /* Clone into a specific cgroup given the right permissions. */
+ 
+ /*
+  * cloning flags intersect with CSIGNAL so can be used with unshare and clone3
+@@ -81,6 +82,8 @@
+  * @set_tid_size: This defines the size of the array referenced
+  *                in @set_tid. This cannot be larger than the
+  *                kernel's limit of nested PID namespaces.
++ * @cgroup:       If CLONE_INTO_CGROUP is specified set this to
++ *                a file descriptor for the cgroup.
+  *
+  * The structure is versioned by size and thus extensible.
+  * New struct members must go at the end of the struct and
+@@ -97,11 +100,13 @@ struct clone_args {
+ 	__aligned_u64 tls;
+ 	__aligned_u64 set_tid;
+ 	__aligned_u64 set_tid_size;
++	__aligned_u64 cgroup;
+ };
  #endif
+ 
+ #define CLONE_ARGS_SIZE_VER0 64 /* sizeof first published struct */
+ #define CLONE_ARGS_SIZE_VER1 80 /* sizeof second published struct */
++#define CLONE_ARGS_SIZE_VER2 88 /* sizeof third published struct */
+ 
+ /*
+  * Scheduling policies
+diff --git a/tools/perf/trace/beauty/clone.c b/tools/perf/trace/beauty/clone.c
+index 062ca849c8fd..f4db894e0af6 100644
+--- a/tools/perf/trace/beauty/clone.c
++++ b/tools/perf/trace/beauty/clone.c
+@@ -46,6 +46,7 @@ static size_t clone__scnprintf_flags(unsigned long flags, char *bf, size_t size,
+ 	P_FLAG(NEWNET);
+ 	P_FLAG(IO);
+ 	P_FLAG(CLEAR_SIGHAND);
++	P_FLAG(INTO_CGROUP);
+ #undef P_FLAG
+ 
+ 	if (flags)
 -- 
 2.21.1
