@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v5 2/3] tools api: add a lightweight buffered reading api
-Date: Tue, 14 Apr 2020 22:40:49 -0700
-Message-ID: <20200415054050.31645-3-irogers@google.com>
+Subject: [PATCH v5 1/3] perf bench: add a multi-threaded synthesize benchmark
+Date: Tue, 14 Apr 2020 22:40:48 -0700
+Message-ID: <20200415054050.31645-2-irogers@google.com>
 References: <20200415054050.31645-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,488 +12,292 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The synthesize benchmark shows the majority of execution time going to
-fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
-reading library that will be used to replace these calls in a follow-up
-CL. Add tests for the library to perf test.
+By default this isn't run as it reads /proc and may not have access.
+For consistency, modify the single threaded benchmark to compute an
+average time per event.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/io.h              | 112 ++++++++++++
- tools/perf/tests/Build          |   1 +
- tools/perf/tests/api-io.c       | 304 ++++++++++++++++++++++++++++++++
- tools/perf/tests/builtin-test.c |   4 +
- tools/perf/tests/tests.h        |   1 +
- 5 files changed, 422 insertions(+)
- create mode 100644 tools/lib/api/io.h
- create mode 100644 tools/perf/tests/api-io.c
+ tools/perf/bench/synthesize.c | 211 ++++++++++++++++++++++++++++++----
+ 1 file changed, 186 insertions(+), 25 deletions(-)
 
-diff --git a/tools/lib/api/io.h b/tools/lib/api/io.h
-new file mode 100644
-index 000000000000..b7e55b5f8a4a
---- /dev/null
-+++ b/tools/lib/api/io.h
-@@ -0,0 +1,112 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Lightweight buffered reading library.
-+ *
-+ * Copyright 2019 Google LLC.
-+ */
-+#ifndef __API_IO__
-+#define __API_IO__
-+
-+struct io {
-+	/* File descriptor being read/ */
-+	int fd;
-+	/* Size of the read buffer. */
-+	unsigned int buf_len;
-+	/* Pointer to storage for buffering read. */
-+	char *buf;
-+	/* End of the storage. */
-+	char *end;
-+	/* Currently accessed data pointer. */
-+	char *data;
-+	/* Set true on when the end of file on read error. */
-+	bool eof;
-+};
-+
-+static inline void io__init(struct io *io, int fd,
-+			    char *buf, unsigned int buf_len)
-+{
-+	io->fd = fd;
-+	io->buf_len = buf_len;
-+	io->buf = buf;
-+	io->end = buf;
-+	io->data = buf;
-+	io->eof = false;
-+}
-+
-+/* Reads one character from the "io" file with similar semantics to fgetc. */
-+static inline int io__get_char(struct io *io)
-+{
-+	char *ptr = io->data;
-+
-+	if (io->eof)
-+		return -1;
-+
-+	if (ptr == io->end) {
-+		ssize_t n = read(io->fd, io->buf, io->buf_len);
-+
-+		if (n <= 0) {
-+			io->eof = true;
-+			return -1;
-+		}
-+		ptr = &io->buf[0];
-+		io->end = &io->buf[n];
-+	}
-+	io->data = ptr + 1;
-+	return *ptr;
-+}
-+
-+/* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
-+ * first character isn't hexadecimal returns -2, io->eof returns -1, otherwise
-+ * returns the character after the hexadecimal value which may be -1 for eof.
-+ * If the read value is larger than a u64 the high-order bits will be dropped.
-+ */
-+static inline int io__get_hex(struct io *io, __u64 *hex)
-+{
-+	bool first_read = true;
-+
-+	*hex = 0;
-+	while (true) {
-+		int ch = io__get_char(io);
-+
-+		if (ch < 0)
-+			return ch;
-+		if (ch >= '0' && ch <= '9')
-+			*hex = (*hex << 4) | (ch - '0');
-+		else if (ch >= 'a' && ch <= 'f')
-+			*hex = (*hex << 4) | (ch - 'a' + 10);
-+		else if (ch >= 'A' && ch <= 'F')
-+			*hex = (*hex << 4) | (ch - 'A' + 10);
-+		else if (first_read)
-+			return -2;
-+		else
-+			return ch;
-+		first_read = false;
-+	}
-+}
-+
-+/* Read a positive decimal value with out argument dec. If the first character
-+ * isn't a decimal returns -2, io->eof returns -1, otherwise returns the
-+ * character after the decimal value which may be -1 for eof. If the read value
-+ * is larger than a u64 the high-order bits will be dropped.
-+ */
-+static inline int io__get_dec(struct io *io, __u64 *dec)
-+{
-+	bool first_read = true;
-+
-+	*dec = 0;
-+	while (true) {
-+		int ch = io__get_char(io);
-+
-+		if (ch < 0)
-+			return ch;
-+		if (ch >= '0' && ch <= '9')
-+			*dec = (*dec * 10) + ch - '0';
-+		else if (first_read)
-+			return -2;
-+		else
-+			return ch;
-+		first_read = false;
-+	}
-+}
-+
-+#endif /* __API_IO__ */
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index b3d1bf13ca07..c75557aeef0e 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -56,6 +56,7 @@ perf-y += mem2node.o
- perf-y += maps.o
- perf-y += time-utils-test.o
- perf-y += genelf.o
-+perf-y += api-io.o
+diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+index 6291257bc9c9..8d624aea1c5e 100644
+--- a/tools/perf/bench/synthesize.c
++++ b/tools/perf/bench/synthesize.c
+@@ -10,60 +10,105 @@
+ #include "bench.h"
+ #include "../util/debug.h"
+ #include "../util/session.h"
++#include "../util/stat.h"
+ #include "../util/synthetic-events.h"
+ #include "../util/target.h"
+ #include "../util/thread_map.h"
+ #include "../util/tool.h"
++#include "../util/util.h"
++#include <linux/atomic.h>
+ #include <linux/err.h>
+ #include <linux/time64.h>
+ #include <subcmd/parse-options.h>
  
- $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
- 	$(call rule_mkdir)
-diff --git a/tools/perf/tests/api-io.c b/tools/perf/tests/api-io.c
-new file mode 100644
-index 000000000000..2ada86ad6084
---- /dev/null
-+++ b/tools/perf/tests/api-io.c
-@@ -0,0 +1,304 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include <limits.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+
-+#include "debug.h"
-+#include "tests.h"
-+#include <api/io.h>
-+#include <linux/kernel.h>
-+
-+#define TEMPL "/tmp/perf-test-XXXXXX"
-+
-+#define EXPECT_EQUAL(val, expected)                             \
-+do {								\
-+	if (val != expected) {					\
-+		pr_debug("%s:%d: %d != %d\n",			\
-+			__FILE__, __LINE__, val, expected);	\
-+		ret = -1;					\
-+	}							\
-+} while (0)
-+
-+#define EXPECT_EQUAL64(val, expected)                           \
-+do {								\
-+	if (val != expected) {					\
-+		pr_debug("%s:%d: %lld != %lld\n",		\
-+			__FILE__, __LINE__, val, expected);	\
-+		ret = -1;					\
-+	}							\
-+} while (0)
-+
-+static int make_test_file(char path[PATH_MAX], const char *contents)
+-static unsigned int iterations = 10000;
++static unsigned int min_threads = 1;
++static unsigned int max_threads = UINT_MAX;
++static unsigned int single_iterations = 10000;
++static unsigned int multi_iterations = 10;
++static bool run_st;
++static bool run_mt;
+ 
+ static const struct option options[] = {
+-	OPT_UINTEGER('i', "iterations", &iterations,
+-		"Number of iterations used to compute average"),
++	OPT_BOOLEAN('s', "st", &run_st, "Run single threaded benchmark"),
++	OPT_BOOLEAN('t', "mt", &run_mt, "Run multi-threaded benchmark"),
++	OPT_UINTEGER('m', "min-threads", &min_threads,
++		"Minimum number of threads in multithreaded bench"),
++	OPT_UINTEGER('M', "max-threads", &max_threads,
++		"Maximum number of threads in multithreaded bench"),
++	OPT_UINTEGER('i', "single-iterations", &single_iterations,
++		"Number of iterations used to compute single-threaded average"),
++	OPT_UINTEGER('I', "multi-iterations", &multi_iterations,
++		"Number of iterations used to compute multi-threaded average"),
+ 	OPT_END()
+ };
+ 
+-static const char *const usage[] = {
++static const char *const bench_usage[] = {
+ 	"perf bench internals synthesize <options>",
+ 	NULL
+ };
+ 
++static atomic_t event_count;
+ 
+-static int do_synthesize(struct perf_session *session,
+-			struct perf_thread_map *threads,
+-			struct target *target, bool data_mmap)
++static int process_synthesized_event(struct perf_tool *tool __maybe_unused,
++				     union perf_event *event __maybe_unused,
++				     struct perf_sample *sample __maybe_unused,
++				     struct machine *machine __maybe_unused)
 +{
-+	ssize_t contents_len = strlen(contents);
-+	int fd;
-+
-+	strcpy(path, TEMPL);
-+	fd = mkstemp(path);
-+	if (fd < 0) {
-+		pr_debug("mkstemp failed");
-+		return -1;
-+	}
-+	if (write(fd, contents, contents_len) < contents_len) {
-+		pr_debug("short write");
-+		close(fd);
-+		unlink(path);
-+		return -1;
-+	}
-+	close(fd);
++	atomic_inc(&event_count);
 +	return 0;
 +}
 +
-+static int setup_test(char path[PATH_MAX], const char *contents,
-+		      size_t buf_size, struct io *io)
-+{
-+	if (make_test_file(path, contents))
-+		return -1;
++static int do_run_single_threaded(struct perf_session *session,
++				struct perf_thread_map *threads,
++				struct target *target, bool data_mmap)
+ {
+ 	const unsigned int nr_threads_synthesize = 1;
+ 	struct timeval start, end, diff;
+ 	u64 runtime_us;
+ 	unsigned int i;
+-	double average;
++	double time_average, time_stddev, event_average, event_stddev;
+ 	int err;
++	struct stats time_stats, event_stats;
+ 
+-	gettimeofday(&start, NULL);
+-	for (i = 0; i < iterations; i++) {
+-		err = machine__synthesize_threads(&session->machines.host,
+-						target, threads, data_mmap,
++	init_stats(&time_stats);
++	init_stats(&event_stats);
 +
-+	io->fd = open(path, O_RDONLY);
-+	if (io->fd < 0) {
-+		pr_debug("Failed to open '%s'\n", path);
-+		unlink(path);
-+		return -1;
++	for (i = 0; i < single_iterations; i++) {
++		atomic_set(&event_count, 0);
++		gettimeofday(&start, NULL);
++		err = __machine__synthesize_threads(&session->machines.host,
++						NULL,
++						target, threads,
++						process_synthesized_event,
++						data_mmap,
+ 						nr_threads_synthesize);
+ 		if (err)
+ 			return err;
++
++		gettimeofday(&end, NULL);
++		timersub(&end, &start, &diff);
++		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
++		update_stats(&time_stats, runtime_us);
++		update_stats(&event_stats, atomic_read(&event_count));
+ 	}
+ 
+-	gettimeofday(&end, NULL);
+-	timersub(&end, &start, &diff);
+-	runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+-	average = (double)runtime_us/(double)iterations;
+-	printf("Average %ssynthesis took: %f usec\n",
+-		data_mmap ? "data " : "", average);
++	time_average = avg_stats(&time_stats);
++	time_stddev = stddev_stats(&time_stats);
++	printf("  Average %ssynthesis took: %.3f usec (+- %.3f usec)\n",
++		data_mmap ? "data " : "", time_average, time_stddev);
++
++	event_average = avg_stats(&event_stats);
++	event_stddev = stddev_stats(&event_stats);
++	printf("  Average num. events: %.3f (+- %.3f)\n",
++		event_average, event_stddev);
++
++	printf("  Average time per event %.3f usec\n",
++		time_average / event_average);
+ 	return 0;
+ }
+ 
+-int bench_synthesize(int argc, const char **argv)
++static int run_single_threaded(void)
+ {
+-	struct perf_tool tool;
+ 	struct perf_session *session;
+ 	struct target target = {
+ 		.pid = "self",
+@@ -71,8 +116,7 @@ int bench_synthesize(int argc, const char **argv)
+ 	struct perf_thread_map *threads;
+ 	int err;
+ 
+-	argc = parse_options(argc, argv, options, usage, 0);
+-
++	perf_set_singlethreaded();
+ 	session = perf_session__new(NULL, false, NULL);
+ 	if (IS_ERR(session)) {
+ 		pr_err("Session creation failed.\n");
+@@ -84,13 +128,16 @@ int bench_synthesize(int argc, const char **argv)
+ 		err = -ENOMEM;
+ 		goto err_out;
+ 	}
+-	perf_tool__fill_defaults(&tool);
+ 
+-	err = do_synthesize(session, threads, &target, false);
++	puts(
++"Computing performance of single threaded perf event synthesis by\n"
++"synthesizing events on the perf process itself:");
++
++	err = do_run_single_threaded(session, threads, &target, false);
+ 	if (err)
+ 		goto err_out;
+ 
+-	err = do_synthesize(session, threads, &target, true);
++	err = do_run_single_threaded(session, threads, &target, true);
+ 
+ err_out:
+ 	if (threads)
+@@ -99,3 +146,117 @@ int bench_synthesize(int argc, const char **argv)
+ 	perf_session__delete(session);
+ 	return err;
+ }
++
++static int do_run_multi_threaded(struct target *target,
++				unsigned int nr_threads_synthesize)
++{
++	struct timeval start, end, diff;
++	u64 runtime_us;
++	unsigned int i;
++	double time_average, time_stddev, event_average, event_stddev;
++	int err;
++	struct stats time_stats, event_stats;
++	struct perf_session *session;
++
++	init_stats(&time_stats);
++	init_stats(&event_stats);
++	for (i = 0; i < multi_iterations; i++) {
++		session = perf_session__new(NULL, false, NULL);
++		if (!session)
++			return -ENOMEM;
++
++		atomic_set(&event_count, 0);
++		gettimeofday(&start, NULL);
++		err = __machine__synthesize_threads(&session->machines.host,
++						NULL,
++						target, NULL,
++						process_synthesized_event,
++						false,
++						nr_threads_synthesize);
++		if (err) {
++			perf_session__delete(session);
++			return err;
++		}
++
++		gettimeofday(&end, NULL);
++		timersub(&end, &start, &diff);
++		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
++		update_stats(&time_stats, runtime_us);
++		update_stats(&event_stats, atomic_read(&event_count));
++		perf_session__delete(session);
 +	}
-+	io->buf = malloc(buf_size);
-+	if (io->buf == NULL) {
-+		pr_debug("Failed to allocate memory");
-+		close(io->fd);
-+		unlink(path);
-+		return -1;
-+	}
-+	io__init(io, io->fd, io->buf, buf_size);
++
++	time_average = avg_stats(&time_stats);
++	time_stddev = stddev_stats(&time_stats);
++	printf("    Average synthesis took: %.3f usec (+- %.3f usec)\n",
++		time_average, time_stddev);
++
++	event_average = avg_stats(&event_stats);
++	event_stddev = stddev_stats(&event_stats);
++	printf("    Average num. events: %.3f (+- %.3f)\n",
++		event_average, event_stddev);
++
++	printf("    Average time per event %.3f usec\n",
++		time_average / event_average);
 +	return 0;
 +}
 +
-+static void cleanup_test(char path[PATH_MAX], struct io *io)
++static int run_multi_threaded(void)
 +{
-+	free(io->buf);
-+	close(io->fd);
-+	unlink(path);
-+}
-+
-+static int do_test_get_char(const char *test_string, size_t buf_size)
-+{
-+	char path[PATH_MAX];
-+	struct io io;
-+	int ch, ret = 0;
-+	size_t i;
-+
-+	if (setup_test(path, test_string, buf_size, &io))
-+		return -1;
-+
-+	for (i = 0; i < strlen(test_string); i++) {
-+		ch = io__get_char(&io);
-+
-+		EXPECT_EQUAL(ch, test_string[i]);
-+		EXPECT_EQUAL(io.eof, false);
-+	}
-+	ch = io__get_char(&io);
-+	EXPECT_EQUAL(ch, -1);
-+	EXPECT_EQUAL(io.eof, true);
-+
-+	cleanup_test(path, &io);
-+	return ret;
-+}
-+
-+static int test_get_char(void)
-+{
-+	int i, ret = 0;
-+	size_t j;
-+
-+	static const char *const test_strings[] = {
-+		"12345678abcdef90",
-+		"a\nb\nc\nd\n",
-+		"\a\b\t\v\f\r",
++	struct target target = {
++		.cpu_list = "0"
 +	};
-+	for (i = 0; i <= 10; i++) {
-+		for (j = 0; j < ARRAY_SIZE(test_strings); j++) {
-+			if (do_test_get_char(test_strings[j], 1 << i))
-+				ret = -1;
-+		}
++	unsigned int nr_threads_synthesize;
++	int err;
++
++	if (max_threads == UINT_MAX)
++		max_threads = sysconf(_SC_NPROCESSORS_ONLN);
++
++	puts(
++"Computing performance of multi threaded perf event synthesis by\n"
++"synthesizing events on CPU 0:");
++
++	for (nr_threads_synthesize = min_threads;
++	     nr_threads_synthesize <= max_threads;
++	     nr_threads_synthesize++) {
++		if (nr_threads_synthesize == 1)
++			perf_set_singlethreaded();
++		else
++			perf_set_multithreaded();
++
++		printf("  Number of synthesis threads: %u\n",
++			nr_threads_synthesize);
++
++		err = do_run_multi_threaded(&target, nr_threads_synthesize);
++		if (err)
++			return err;
 +	}
-+	return ret;
++	perf_set_singlethreaded();
++	return 0;
 +}
 +
-+static int do_test_get_hex(const char *test_string,
-+			__u64 val1, int ch1,
-+			__u64 val2, int ch2,
-+			__u64 val3, int ch3,
-+			bool end_eof)
++int bench_synthesize(int argc, const char **argv)
 +{
-+	char path[PATH_MAX];
-+	struct io io;
-+	int ch, ret = 0;
-+	__u64 hex;
++	int err = 0;
 +
-+	if (setup_test(path, test_string, 4, &io))
-+		return -1;
++	argc = parse_options(argc, argv, options, bench_usage, 0);
++	if (argc) {
++		usage_with_options(bench_usage, options);
++		exit(EXIT_FAILURE);
++	}
 +
-+	ch = io__get_hex(&io, &hex);
-+	EXPECT_EQUAL64(hex, val1);
-+	EXPECT_EQUAL(ch, ch1);
++	/*
++	 * If neither single threaded or multi-threaded are specified, default
++	 * to running just single threaded.
++	 */
++	if (!run_st && !run_mt)
++		run_st = true;
 +
-+	ch = io__get_hex(&io, &hex);
-+	EXPECT_EQUAL64(hex, val2);
-+	EXPECT_EQUAL(ch, ch2);
++	if (run_st)
++		err = run_single_threaded();
 +
-+	ch = io__get_hex(&io, &hex);
-+	EXPECT_EQUAL64(hex, val3);
-+	EXPECT_EQUAL(ch, ch3);
++	if (!err && run_mt)
++		err = run_multi_threaded();
 +
-+	EXPECT_EQUAL(io.eof, end_eof);
-+
-+	cleanup_test(path, &io);
-+	return ret;
++	return err;
 +}
-+
-+static int test_get_hex(void)
-+{
-+	int ret = 0;
-+
-+	if (do_test_get_hex("12345678abcdef90",
-+				0x12345678abcdef90, -1,
-+				0, -1,
-+				0, -1,
-+				true))
-+		ret = -1;
-+
-+	if (do_test_get_hex("1\n2\n3\n",
-+				1, '\n',
-+				2, '\n',
-+				3, '\n',
-+				false))
-+		ret = -1;
-+
-+	if (do_test_get_hex("12345678ABCDEF90;a;b",
-+				0x12345678abcdef90, ';',
-+				0xa, ';',
-+				0xb, -1,
-+				true))
-+		ret = -1;
-+
-+	if (do_test_get_hex("0x1x2x",
-+				0, 'x',
-+				1, 'x',
-+				2, 'x',
-+				false))
-+		ret = -1;
-+
-+	if (do_test_get_hex("x1x",
-+				0, -2,
-+				1, 'x',
-+				0, -1,
-+				true))
-+		ret = -1;
-+
-+	if (do_test_get_hex("10000000000000000000000000000abcdefgh99i",
-+				0xabcdef, 'g',
-+				0, -2,
-+				0x99, 'i',
-+				false))
-+		ret = -1;
-+
-+	return ret;
-+}
-+
-+static int do_test_get_dec(const char *test_string,
-+			__u64 val1, int ch1,
-+			__u64 val2, int ch2,
-+			__u64 val3, int ch3,
-+			bool end_eof)
-+{
-+	char path[PATH_MAX];
-+	struct io io;
-+	int ch, ret = 0;
-+	__u64 dec;
-+
-+	if (setup_test(path, test_string, 4, &io))
-+		return -1;
-+
-+	ch = io__get_dec(&io, &dec);
-+	EXPECT_EQUAL64(dec, val1);
-+	EXPECT_EQUAL(ch, ch1);
-+
-+	ch = io__get_dec(&io, &dec);
-+	EXPECT_EQUAL64(dec, val2);
-+	EXPECT_EQUAL(ch, ch2);
-+
-+	ch = io__get_dec(&io, &dec);
-+	EXPECT_EQUAL64(dec, val3);
-+	EXPECT_EQUAL(ch, ch3);
-+
-+	EXPECT_EQUAL(io.eof, end_eof);
-+
-+	cleanup_test(path, &io);
-+	return ret;
-+}
-+
-+static int test_get_dec(void)
-+{
-+	int ret = 0;
-+
-+	if (do_test_get_dec("12345678abcdef90",
-+				12345678, 'a',
-+				0, -2,
-+				0, -2,
-+				false))
-+		ret = -1;
-+
-+	if (do_test_get_dec("1\n2\n3\n",
-+				1, '\n',
-+				2, '\n',
-+				3, '\n',
-+				false))
-+		ret = -1;
-+
-+	if (do_test_get_dec("12345678;1;2",
-+				12345678, ';',
-+				1, ';',
-+				2, -1,
-+				true))
-+		ret = -1;
-+
-+	if (do_test_get_dec("0x1x2x",
-+				0, 'x',
-+				1, 'x',
-+				2, 'x',
-+				false))
-+		ret = -1;
-+
-+	if (do_test_get_dec("x1x",
-+				0, -2,
-+				1, 'x',
-+				0, -1,
-+				true))
-+		ret = -1;
-+
-+	if (do_test_get_dec("10000000000000000000000000000000000000000000000000000000000123456789ab99c",
-+				123456789, 'a',
-+				0, -2,
-+				99, 'c',
-+				false))
-+		ret = -1;
-+
-+	return ret;
-+}
-+
-+int test__api_io(struct test *test __maybe_unused,
-+		int subtest __maybe_unused)
-+{
-+	int ret = 0;
-+
-+	if (test_get_char())
-+		ret = TEST_FAIL;
-+	if (test_get_hex())
-+		ret = TEST_FAIL;
-+	if (test_get_dec())
-+		ret = TEST_FAIL;
-+	return ret;
-+}
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index b6322eb0f423..3471ec52ea11 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -309,6 +309,10 @@ static struct test generic_tests[] = {
- 		.desc = "Test jit_write_elf",
- 		.func = test__jit_write_elf,
- 	},
-+	{
-+		.desc = "Test api io",
-+		.func = test__api_io,
-+	},
- 	{
- 		.desc = "maps__merge_in",
- 		.func = test__maps__merge_in,
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 61a1ab032080..d6d4ac34eeb7 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -112,6 +112,7 @@ int test__mem2node(struct test *t, int subtest);
- int test__maps__merge_in(struct test *t, int subtest);
- int test__time_utils(struct test *t, int subtest);
- int test__jit_write_elf(struct test *test, int subtest);
-+int test__api_io(struct test *test, int subtest);
- 
- bool test__bp_signal_is_supported(void);
- bool test__bp_account_is_supported(void);
 -- 
 2.26.0.110.g2183baf09c-goog
