@@ -1,186 +1,132 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v8 4/4] perf tools: add support for libpfm4
-Date: Tue, 14 Apr 2020 11:14:01 -0700
-Message-ID: <CAP-5=fW6LgbEodo0StNXBm+hjEEhrQ8JFBU8tYEfeoCURmakaQ@mail.gmail.com>
-References: <20200411074631.9486-1-irogers@google.com> <20200411074631.9486-5-irogers@google.com>
- <20200414152102.GC208694@krava>
+From: Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v4 1/2] tools api: add a lightweight buffered reading api
+Date: Wed, 15 Apr 2020 11:20:32 +0900
+Message-ID: <CAM9d7chvpCOdSAeRH1+1vt_m+-Ecwm7jRXrN2OAjAP5yJwc=og@mail.gmail.com>
+References: <20200411064248.247530-1-irogers@google.com> <CAM9d7cgOO88sWDh8F1x2Mnk2ikSF0FUCp88c1wAheW5zJ9+B0g@mail.gmail.com>
+ <CAP-5=fW_5pPZTA3bXdT9d9Tt_d5aJw=4bf_fr9eqzGPfoVs3aQ@mail.gmail.com>
+ <CAM9d7cgsR7mU_N3BaOz3i2XWY_GchOYWHvNh8g+=2VHTFGEm9Q@mail.gmail.com> <CAP-5=fU+rrpK=zNBWWDBxUMYBz6yV3FZV3uhwye7euN7m8saDg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200414152102.GC208694@krava>
+In-Reply-To: <CAP-5=fU+rrpK=zNBWWDBxUMYBz6yV3FZV3uhwye7euN7m8saDg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Petr Mladek <pmladek@suse.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Apr 14, 2020 at 8:21 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Tue, Apr 14, 2020 at 9:48 AM Ian Rogers <irogers@google.com> wrote:
 >
-> On Sat, Apr 11, 2020 at 12:46:31AM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> >  TAG_FOLDERS= . ../lib ../include
-> >  TAG_FILES= ../../include/uapi/linux/perf_event.h
-> > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> > index 965ef017496f..7b64cd34266e 100644
-> > --- a/tools/perf/builtin-list.c
-> > +++ b/tools/perf/builtin-list.c
-> > @@ -18,6 +18,10 @@
-> >  #include <subcmd/parse-options.h>
-> >  #include <stdio.h>
+> On Mon, Apr 13, 2020 at 5:16 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > +#ifdef HAVE_LIBPFM
-> > +#include "util/pfm.h"
-> > +#endif
->
-> so we have the HAVE_LIBPFM you could do the:
->
-> #ifdef HAVE_LIBPFM
-> #else
-> #endif
->
-> in util/pfm.h and add stubs for libpfm_initialize and others
-> in case HAVE_LIBPFM is not defined.. that clear out all the
-> #ifdefs in the change
->
->
-> SNIP
->
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > index b6322eb0f423..8b323151f22c 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -313,6 +313,15 @@ static struct test generic_tests[] = {
-> >               .desc = "maps__merge_in",
-> >               .func = test__maps__merge_in,
-> >       },
-> > +     {
-> > +             .desc = "Test libpfm4 support",
-> > +             .func = test__pfm,
-> > +             .subtest = {
-> > +                     .skip_if_fail   = true,
-> > +                     .get_nr         = test__pfm_subtest_get_nr,
-> > +                     .get_desc       = test__pfm_subtest_get_desc,
-> > +             }
->
-> awesome :)
->
-> SNIP
->
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index d23db6755f51..83ad76d3d2be 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -2447,9 +2447,15 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
-> >               const char *sep = ":";
+> > On Tue, Apr 14, 2020 at 1:22 AM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Mon, Apr 13, 2020 at 12:29 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > On Sat, Apr 11, 2020 at 3:42 PM Ian Rogers <irogers@google.com> wrote:
+> > > > >
+> > > > > The synthesize benchmark shows the majority of execution time going to
+> > > > > fgets and sscanf, necessary to parse /proc/pid/maps. Add a new buffered
+> > > > > reading library that will be used to replace these calls in a follow-up
+> > > > > CL. Add tests for the library to perf test.
+> > > > >
+> > > > > v4 adds the test file missed in v3.
+> > > > >
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > ---
+> > > > > +/* Read a hexadecimal value with no 0x prefix into the out argument hex. If the
+> > > > > + * first character isn't hexadecimal returns -2, io->eof returns -1, otherwise
+> > > > > + * returns the character after the hexadecimal value which may be -1 for eof.
+> > > >
+> > > > I'm not sure returning -1 is good when it actually reads something and
+> > > > meets EOF.
+> > > > Although it would have a valid value, users might consider it an error IMHO.
+> > > > Why not returning 0 instead? (I'm ok with -1 for the later use of the API).
+> > >
+> > > Thanks for the feedback! In the code for /proc/pid/maps this is a
+> > > hypothetical, but I think having the API right is important. I didn't
+> > > go with 0 as you mention 0 'could' encode a character, for example,
+> > > 7fffabcd\0 wouldn't be distinguishable from 7fffabcd<EOF>.
 > >
-> >               /* Is there already the separator in the name. */
-> > +#ifndef HAVE_LIBPFM
-> >               if (strchr(name, '/') ||
-> >                   strchr(name, ':'))
-> >                       sep = "";
-> > +#else
-> > +             if (strchr(name, '/') ||
-> > +                 (strchr(name, ':') && !evsel->is_libpfm_event))
-> > +                     sep = "";
-> > +#endif
+> > Practically I don't think it matters in this case as long as we can
+> > distinguish them in the next call (if the user wants to do).
+> > What users want to do (I think) is whether the returned value
+> > (in *hex) is ok to use or not.  By returning -1 on EOF, it might
+> > be confusing for users..
 >
+> In the /proc/pid/maps case the code for reading an address like
+> "00400000-00452000 " the code is:
 >
->   ^^^^^^^^
+> if (io__get_hex(io, start) != '-')
+>   return false;
+> if (io__get_hex(io, end) != ' ')
+>   return false;
 >
-> >
-> >               if (asprintf(&new_name, "%s%su", name, sep) < 0)
-> >                       return false;
-> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > index 53187c501ee8..397d335d5e24 100644
-> > --- a/tools/perf/util/evsel.h
-> > +++ b/tools/perf/util/evsel.h
-> > @@ -76,6 +76,9 @@ struct evsel {
-> >       bool                    ignore_missing_thread;
-> >       bool                    forced_leader;
-> >       bool                    use_uncore_alias;
-> > +#ifdef HAVE_LIBPFM
-> > +     bool                    is_libpfm_event;
-> > +#endif
+> If io__get_hex doesn't return the next character it becomes:
 >
-> perhaps we could had this one in unconditionaly,
-> because I think we have some members like that
-> for aux tracing.. and that would remove the #ifdef
-> above
+> if (io__get_hex(io, start))
+>   return false;
+> if (io__get_char(io) != '-')
+>   return false;
+> if (io__get_hex(io, end))
+>   return false;
+> if (io__get_char(io) != ' ')
+>   return false;
 >
->
-> SNIP
->
-> >
-> > +#ifdef HAVE_LIBPFM
-> > +struct evsel *parse_events__pfm_add_event(int idx, struct perf_event_attr *attr,
-> > +                                     char *name, struct perf_pmu *pmu)
-> > +{
-> > +     return __add_event(NULL, &idx, attr, false, name, pmu, NULL, false,
-> > +                        NULL);
-> > +}
-> > +#endif
->
-> could you instead add parse_events__add_event and call it from pfm code?
+> Which is twice as verbose and requires that io have a rewind operation
+> to go backward when io__get_hex and io__get_dec have gone 1 character
+> too far.
 
-I wasn't clear whether this was just a name change given the different
-arguments on existing functions. Hopefully everything is addressed in
-the v9 set:
-https://lore.kernel.org/lkml/20200414181054.22435-2-irogers@google.com/T/#m32fc3e3605e49b01e12418f59ef3977cab0561ed
+Yeah, I'm not against returning the next character - it's good.
+The only concern was whether it should return -1 or 0 when
+it meets EOF after parsing some digits.
 
-Thanks,
-Ian
+But I think we can go with this version as there's no such case
+when parsing /proc/pid/maps.
 
-> SNIP
 >
-> > +             pmu = perf_pmu__find_by_type((unsigned int)attr.type);
-> > +             evsel = parse_events__pfm_add_event(evlist->core.nr_entries,
-> > +                                             &attr, q, pmu);
-> > +             if (evsel == NULL)
-> > +                     goto error;
-> > +
-> > +             evsel->is_libpfm_event = true;
-> > +
-> > +             evlist__add(evlist, evsel);
-> > +
-> > +             if (grp_evt == 0)
-> > +                     grp_leader = evsel;
-> > +
-> > +             if (grp_evt > -1) {
-> > +                     evsel->leader = grp_leader;
-> > +                     grp_leader->core.nr_members++;
-> > +                     grp_evt++;
-> > +             }
-> > +
-> > +             if (*sep == '}') {
-> > +                     if (grp_evt < 0) {
-> > +                             ui__error("cannot close a non-existing event group\n");
-> > +                             goto error;
-> > +                     }
-> > +                     evlist->nr_groups++;
-> > +                     grp_leader = NULL;
-> > +                     grp_evt = -1;
-> > +             }
-> > +             evsel->is_libpfm_event = true;
+> > > The updated
+> > > code distinguishes the cases as 0 meaning character \0, -1 meaning EOF
+> > > and -2 meaning bad encoding. Your worry is that a hex number that's
+> > > next to EOF will get a result of -1 showing the EOF came next. and
+> > > code that does 'if ( .. < 0)' would trigger. While clunky, it'd be
+> > > possible in those cases to change the code to 'if ( .. < -1)'.
+> >
+> > Yes, but it's not conventional IMHO.
+> >
+> >
+> > > So my thoughts are:
+> > > 1) being able to tell apart the 3 cases could be important - this is
+> > > all hypothetical;
+> > > 2) keeping EOF and error as negative numbers has a degree of consistency;
+> > > 3) using -1 for EOF comes from get_char, it'd be nice to have one
+> > > value mean EOF.
+> > > Perhaps the issue is the name of the function? It isn't a standard API
+> > > to return the next character, but it simplified things for me as I
+> > > didn't need to add a 'rewind' operation. The function names could be
+> > > something like io__get_hex_then_char and io__get_dec_then_char, EOF
+> > > for the 'then_char' part would be more consistent. I'd tried to keep
+> > > the names short and have a load bearing comment, which isn't ideal but
+> > > generally I believe the style is that function names are kept short.
+> > > Let me know what you think.
+> >
+> > I'm ok with the function name and understand your concerns.
+> > And I don't want to insist it strongly but just sharing my thoughts.
+> >
+> > Thanks
+> > Namhyung
 >
-> seems to be set twice in here
+> Thanks, feedback appreciated! It is useful to discuss and it is
+> straightforward to change the API but I'm in two minds as to whether
+> it would be better.
 >
->
-> > +     }
-> > +     return 0;
-> > +error:
-> > +     free(p_orig);
-> > +     return -1;
-> > +}
-> > +
-> > +static const char *srcs[PFM_ATTR_CTRL_MAX] = {
-> > +     [PFM_ATTR_CTRL_UNKNOWN] = "???",
-> > +     [PFM_ATTR_CTRL_PMU] = "PMU",
-> > +     [PFM_ATTR_CTRL_PERF_EVENT] = "perf_event",
-> > +};
->
-> SNIP
->
-> thanks,
-> jirka
->
+> I'd still like to land this and the next patch, as getting rid of
+> fgets/sscanf saves 50us from event synthesis. Breaking out the io part
+> of that change wasn't done so much with a view to replacing stdio, but
+> just something minimal that serves the /proc/pid/maps case.
+
+The performance gain looks nice!  Thanks for working on this.
+
+Thanks
+Namhyung
