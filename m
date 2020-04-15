@@ -1,260 +1,114 @@
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: Re: [PATCH 15/15] tools headers: Synchronize linux/bits.h with the
- kernel sources
-Date: Wed, 15 Apr 2020 10:14:06 +0100
-Message-ID: <7951882d-d13a-7b1e-36f4-73c188015161@arm.com>
-References: <20200414164854.26026-1-acme@kernel.org>
- <20200414164854.26026-16-acme@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
+Date: Wed, 15 Apr 2020 10:28:16 +0100
+Message-ID: <0b3999b8-c307-6b4a-1a1b-e90b45f50b61@huawei.com>
+References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
+ <6dbeabcf-c15a-0bbd-cef4-b25d0133854f@huawei.com>
+ <DB7PR04MB4618D2E1892120EB659B8695E6EC0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <2f81eb7a-a6e4-1cc6-cd0a-ca3d749bd552@huawei.com>
+ <DB7PR04MB4618C0A8DD9BAB2A529CDCECE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <a2cc0772-4f5d-aba3-1f5c-7d4eef7a3f72@huawei.com>
+ <DB7PR04MB461803AD15E47AA880F0915DE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <55836919-41b5-0834-f7a7-1a2a34535677@huawei.com>
+ <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
+ <DB8PR04MB6795996085AD2167E2358907E6C30@DB8PR04MB6795.eurprd04.prod.outlook.com>
+ <ccab39b0-c84f-e529-4067-07466b5433a1@huawei.com>
+ <VI1PR04MB68000808CEE4BC23403C35A0E6C00@VI1PR04MB6800.eurprd04.prod.outlook.com>
+ <ca2db002-975a-ffe0-2dfc-c85f4e6205bb@huawei.com>
+ <VI1PR04MB6800F2A5949F0AFAF2E82CE0E6C00@VI1PR04MB6800.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200414164854.26026-16-acme@kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
+In-Reply-To: <VI1PR04MB6800F2A5949F0AFAF2E82CE0E6C00@VI1PR04MB6800.eurprd04.prod.outlook.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Rikard Falkeborn <rikard.falkeborn@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
+To: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Zhangshaokun <zhangshaokun@hisilicon.com>, "will@kernel.org" <will@kernel.org>, Linuxarm <linuxarm@huawei.com>, "acme@kernel.org" <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Jiri Olsa <jolsa@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/14/20 5:48 PM, Arnaldo Carvalho de Melo wrote:
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 08/04/2020 12:41, Joakim Zhang wrote:
+>> That code should be effectively the same.
+>>
+>> What does perf list show for the metrics now?
+> root@imx8mmevk:~# ./perf list ddrc
 > 
-> To pick up the changes in these csets:
+> List of pre-defined events (to be used in -e):
 > 
->   295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
->   3945ff37d2f4 ("linux/bits.h: Extract common header for vDSO")
 > 
-> To address this tools/perf build warning:
+> ddrc:
+>    imx8_ddr.cycles
+>         [ddr cycles event. Unit: imx8_ddr]
+>    imx8_ddr.read
+>         [ddr read event. Unit: imx8_ddr]
+>    imx8_ddr.read_cycles
+>         [ddr read-cycles event. Unit: imx8_ddr]
+>    imx8_ddr.write
+>         [ddr write event. Unit: imx8_ddr]
+>    imx8_ddr.write_cycles
+>         [ddr write-cycles event. Unit: imx8_ddr]
 > 
->   Warning: Kernel ABI header at 'tools/include/linux/bits.h' differs from latest version at 'include/linux/bits.h'
->   diff -u tools/include/linux/bits.h include/linux/bits.h
+> root@imx8mmevk:~# ./perf list metric
 > 
-> This clashes with usage of userspace's static_assert(), that, at least
-> on glibc, is guarded by a ifnded/endif pair, do the same to our copy of
-> build_bug.h and avoid that diff in check_headers.sh so that we continue
-> checking for drifts with the kernel sources master copy.
+> List of pre-defined events (to be used in -e):
 > 
-> This will all be tested with the set of build containers that includes
-> uCLibc, musl libc, lots of glibc versions in lots of distros and cross
-> build environments.
 > 
-> The tools/objtool, tools/bpf, etc were tested as well.
->
+> Metrics:
+> 
+>    imx8mm_ddr_read.all
+>         [bytes all masters read from ddr based on read-cycles event. Unit: imx8_d
+> dr ]
+>    imx8mm_ddr_write.all
+>         [bytes all masters write to ddr based on read-cycles event. Unit: imx8_dd
+> r ]
+> 
+> root@imx8mmevk:~# ./perf stat -a -I 1000 -v -M imx8mm_ddr_read.all
+> Using CPUID 0x00000000410fd040
+> adding
+> event syntax error: ''
+>                        \___ parser error
+> 
+>   Usage: perf stat [<options>] [<command>]
+> 
+>      -M, --metrics <metric/metric group list>
+>                            monitor specified metrics or metric groups (separated by ,)
+> 
+> It seems that metricgroup fails to parse the metric expression.
+> metric.json:
+> [
+>     {
+> 	    "BriefDescription": "bytes all masters read from ddr based on read-cycles event",
+> 	    "MetricName": "imx8mm_ddr_read.all",
+> 	    "MetricExpr": "imx8_ddr.read_cycles * 4 * 4",
+> 	    "ScaleUnit": "9.765625e-4MB",
+> 	    "Unit": "imx8_ddr",
 
-Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # vDSO parts
+I noticed that previously we used imx8,ddr, which I think was wrong, so 
+can you try to remove this here?
 
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/include/linux/bits.h      | 24 ++++++++--
->  tools/include/linux/build_bug.h | 82 +++++++++++++++++++++++++++++++++
->  tools/include/linux/kernel.h    |  4 +-
->  tools/include/vdso/bits.h       |  9 ++++
->  tools/perf/check-headers.sh     |  2 +
->  5 files changed, 115 insertions(+), 6 deletions(-)
->  create mode 100644 tools/include/linux/build_bug.h
->  create mode 100644 tools/include/vdso/bits.h
-> 
-> diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
-> index 669d69441a62..4671fbf28842 100644
-> --- a/tools/include/linux/bits.h
-> +++ b/tools/include/linux/bits.h
-> @@ -3,9 +3,9 @@
->  #define __LINUX_BITS_H
->  
->  #include <linux/const.h>
-> +#include <vdso/bits.h>
->  #include <asm/bitsperlong.h>
->  
-> -#define BIT(nr)			(UL(1) << (nr))
->  #define BIT_ULL(nr)		(ULL(1) << (nr))
->  #define BIT_MASK(nr)		(UL(1) << ((nr) % BITS_PER_LONG))
->  #define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
-> @@ -18,12 +18,30 @@
->   * position @h. For example
->   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
->   */
-> -#define GENMASK(h, l) \
-> +#if !defined(__ASSEMBLY__) && \
-> +	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
-> +#include <linux/build_bug.h>
-> +#define GENMASK_INPUT_CHECK(h, l) \
-> +	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
-> +		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
-> +#else
-> +/*
-> + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
-> + * disable the input check if that is the case.
-> + */
-> +#define GENMASK_INPUT_CHECK(h, l) 0
-> +#endif
-> +
-> +#define __GENMASK(h, l) \
->  	(((~UL(0)) - (UL(1) << (l)) + 1) & \
->  	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
-> +#define GENMASK(h, l) \
-> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
->  
-> -#define GENMASK_ULL(h, l) \
-> +#define __GENMASK_ULL(h, l) \
->  	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
->  	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
-> +#define GENMASK_ULL(h, l) \
-> +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
->  
->  #endif	/* __LINUX_BITS_H */
-> diff --git a/tools/include/linux/build_bug.h b/tools/include/linux/build_bug.h
-> new file mode 100644
-> index 000000000000..cc7070c7439b
-> --- /dev/null
-> +++ b/tools/include/linux/build_bug.h
-> @@ -0,0 +1,82 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_BUILD_BUG_H
-> +#define _LINUX_BUILD_BUG_H
-> +
-> +#include <linux/compiler.h>
-> +
-> +#ifdef __CHECKER__
-> +#define BUILD_BUG_ON_ZERO(e) (0)
-> +#else /* __CHECKER__ */
-> +/*
-> + * Force a compilation error if condition is true, but also produce a
-> + * result (of value 0 and type int), so the expression can be used
-> + * e.g. in a structure initializer (or where-ever else comma expressions
-> + * aren't permitted).
-> + */
-> +#define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
-> +#endif /* __CHECKER__ */
-> +
-> +/* Force a compilation error if a constant expression is not a power of 2 */
-> +#define __BUILD_BUG_ON_NOT_POWER_OF_2(n)	\
-> +	BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
-> +#define BUILD_BUG_ON_NOT_POWER_OF_2(n)			\
-> +	BUILD_BUG_ON((n) == 0 || (((n) & ((n) - 1)) != 0))
-> +
-> +/*
-> + * BUILD_BUG_ON_INVALID() permits the compiler to check the validity of the
-> + * expression but avoids the generation of any code, even if that expression
-> + * has side-effects.
-> + */
-> +#define BUILD_BUG_ON_INVALID(e) ((void)(sizeof((__force long)(e))))
-> +
-> +/**
-> + * BUILD_BUG_ON_MSG - break compile if a condition is true & emit supplied
-> + *		      error message.
-> + * @condition: the condition which the compiler should know is false.
-> + *
-> + * See BUILD_BUG_ON for description.
-> + */
-> +#define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> +
-> +/**
-> + * BUILD_BUG_ON - break compile if a condition is true.
-> + * @condition: the condition which the compiler should know is false.
-> + *
-> + * If you have some code which relies on certain constants being equal, or
-> + * some other compile-time-evaluated condition, you should use BUILD_BUG_ON to
-> + * detect if someone changes it.
-> + */
-> +#define BUILD_BUG_ON(condition) \
-> +	BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> +
-> +/**
-> + * BUILD_BUG - break compile if used.
-> + *
-> + * If you have some code that you expect the compiler to eliminate at
-> + * build time, you should use BUILD_BUG to detect if it is
-> + * unexpectedly used.
-> + */
-> +#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
-> +
-> +/**
-> + * static_assert - check integer constant expression at build time
-> + *
-> + * static_assert() is a wrapper for the C11 _Static_assert, with a
-> + * little macro magic to make the message optional (defaulting to the
-> + * stringification of the tested expression).
-> + *
-> + * Contrary to BUILD_BUG_ON(), static_assert() can be used at global
-> + * scope, but requires the expression to be an integer constant
-> + * expression (i.e., it is not enough that __builtin_constant_p() is
-> + * true for expr).
-> + *
-> + * Also note that BUILD_BUG_ON() fails the build if the condition is
-> + * true, while static_assert() fails the build if the expression is
-> + * false.
-> + */
-> +#ifndef static_assert
-> +#define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
-> +#define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
-> +#endif // static_assert
-> +
-> +#endif	/* _LINUX_BUILD_BUG_H */
-> diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
-> index cba226948a0c..a7e54a08fb54 100644
-> --- a/tools/include/linux/kernel.h
-> +++ b/tools/include/linux/kernel.h
-> @@ -5,6 +5,7 @@
->  #include <stdarg.h>
->  #include <stddef.h>
->  #include <assert.h>
-> +#include <linux/build_bug.h>
->  #include <linux/compiler.h>
->  #include <endian.h>
->  #include <byteswap.h>
-> @@ -35,9 +36,6 @@
->  	(type *)((char *)__mptr - offsetof(type, member)); })
->  #endif
->  
-> -#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
-> -#define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
-> -
->  #ifndef max
->  #define max(x, y) ({				\
->  	typeof(x) _max1 = (x);			\
-> diff --git a/tools/include/vdso/bits.h b/tools/include/vdso/bits.h
-> new file mode 100644
-> index 000000000000..6d005a1f5d94
-> --- /dev/null
-> +++ b/tools/include/vdso/bits.h
-> @@ -0,0 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __VDSO_BITS_H
-> +#define __VDSO_BITS_H
-> +
-> +#include <vdso/const.h>
-> +
-> +#define BIT(nr)			(UL(1) << (nr))
-> +
-> +#endif	/* __VDSO_BITS_H */
-> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> index c905c683606a..cf147db4e5ca 100755
-> --- a/tools/perf/check-headers.sh
-> +++ b/tools/perf/check-headers.sh
-> @@ -22,6 +22,7 @@ include/uapi/linux/usbdevice_fs.h
->  include/uapi/linux/vhost.h
->  include/uapi/sound/asound.h
->  include/linux/bits.h
-> +include/vdso/bits.h
->  include/linux/const.h
->  include/vdso/const.h
->  include/linux/hash.h
-> @@ -116,6 +117,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
->  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
->  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
->  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
-> +check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
->  check include/linux/ctype.h	      '-I "isdigit("'
->  check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B'
->  check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
-> 
+If that doesn't work, then I'll try this myself.
 
--- 
-Regards,
-Vincenzo
+Thanks,
+John
+
+> 	    "Compat": "i.mx8mm"
+>      },
+>     {
+> 	    "BriefDescription": "bytes all masters write to ddr based on write-cycles event",
+> 	    "MetricName": "imx8mm_ddr_write.all",
+> 	    "MetricExpr": "imx8_ddr.write_cycles * 4 * 4",
+> 	    "ScaleUnit": "9.765625e-4MB",
+> 	    "Unit": "imx8_ddr",
+> 	    "Compat": "i.mx8mm"
+>      }
+> ]
+> 
+>>>>> root@imx8mmevk:~# ./perf stat
