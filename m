@@ -1,60 +1,116 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
-Date: Thu, 16 Apr 2020 11:55:48 +0200
-Message-ID: <20200416095548.GD369437@krava>
-References: <20200416063551.47637-1-irogers@google.com>
- <20200416063551.47637-5-irogers@google.com>
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Date: Thu, 16 Apr 2020 12:07:38 +0200
+Message-ID: <20200416100738.GC18982@gmail.com>
+References: <20200414164854.26026-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200416063551.47637-5-irogers@google.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
+In-Reply-To: <20200414164854.26026-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
 
-SNIP
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 1ab349abe904..80ac598f125b 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -43,6 +43,7 @@
->  #include "util/time-utils.h"
->  #include "util/units.h"
->  #include "util/bpf-event.h"
-> +#include "util/pfm.h"
->  #include "asm/bug.h"
->  #include "perf.h"
->  
-> @@ -64,6 +65,9 @@
->  #include <linux/zalloc.h>
->  #include <linux/bitmap.h>
->  
-> +
-> +
-> +
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit 8f3d9f354286745c751374f5f1fcafee6b3f3136:
+> 
+>   Linux 5.7-rc1 (2020-04-12 12:35:55 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.7-20200414
+> 
+> for you to fetch changes up to e3698b23ecb8c099b4b523e7d5c8c042e93ef15d:
+> 
+>   tools headers: Synchronize linux/bits.h with the kernel sources (2020-04-14 11:40:05 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> perf stat:
+> 
+>   Jin Yao:
+> 
+>   - Fix no metric header if --per-socket and --metric-only set
+> 
+> build system:
+> 
+>   - Fix python building when built with clang, that was failing if the clang
+>     version doesn't support -fno-semantic-interposition.
+> 
+> tools UAPI headers:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Update various copies of kernel headers, some ended up automatically
+>     updating build-time generated tables to enable tools such as 'perf trace'
+>     to decode syscalls and tracepoints arguments.
+> 
+>     Now the tools/perf build is free of UAPI drift warnings.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (14):
+>       tools arch x86: Sync the msr-index.h copy with the kernel sources
+>       perf python: Check if clang supports -fno-semantic-interposition
+>       tools headers: Update linux/vdso.h and grab a copy of vdso/const.h
+>       tools headers UAPI: Sync sched.h with the kernel
+>       tools headers UAPI: Sync linux/mman.h with the kernel
+>       tools arch x86: Sync asm/cpufeatures.h with the kernel sources
+>       tools include UAPI: Sync linux/vhost.h with the kernel sources
+>       tools headers UAPI: Sync linux/fscrypt.h with the kernel sources
+>       tools headers kvm: Sync linux/kvm.h with the kernel sources
+>       tools headers UAPI: Update tools's copy of drm.h headers
+>       tools headers UAPI: Sync drm/i915_drm.h with the kernel sources
+>       tools headers: Update x86's syscall_64.tbl with the kernel sources
+>       tools headers: Adopt verbatim copy of compiletime_assert() from kernel sources
+>       tools headers: Synchronize linux/bits.h with the kernel sources
+> 
+> Jin Yao (1):
+>       perf stat: Fix no metric header if --per-socket and --metric-only set
+> 
+>  tools/arch/x86/include/asm/cpufeatures.h          |   5 +-
+>  tools/arch/x86/include/asm/msr-index.h            |   9 +
+>  tools/include/linux/bits.h                        |  24 +-
+>  tools/include/linux/build_bug.h                   |  82 +++
+>  tools/include/linux/compiler.h                    |  26 +
+>  tools/include/linux/const.h                       |   5 +-
+>  tools/include/linux/kernel.h                      |   4 +-
+>  tools/include/uapi/drm/drm.h                      |   2 +
+>  tools/include/uapi/drm/i915_drm.h                 |  21 +
+>  tools/include/uapi/linux/fscrypt.h                |   1 +
+>  tools/include/uapi/linux/kvm.h                    |  47 +-
+>  tools/include/uapi/linux/mman.h                   |   5 +-
+>  tools/include/uapi/linux/sched.h                  |   5 +
+>  tools/include/uapi/linux/vhost.h                  |  24 +
+>  tools/include/vdso/bits.h                         |   9 +
+>  tools/include/vdso/const.h                        |  10 +
+>  tools/perf/arch/x86/entry/syscalls/syscall_64.tbl | 740 +++++++++++-----------
+>  tools/perf/check-headers.sh                       |   3 +
+>  tools/perf/trace/beauty/clone.c                   |   1 +
+>  tools/perf/trace/beauty/mmap.c                    |   1 +
+>  tools/perf/util/setup.py                          |   2 +
+>  tools/perf/util/stat-shadow.c                     |   7 +-
+>  22 files changed, 646 insertions(+), 387 deletions(-)
+>  create mode 100644 tools/include/linux/build_bug.h
+>  create mode 100644 tools/include/vdso/bits.h
+>  create mode 100644 tools/include/vdso/const.h
 
-extra new lines..
+Pulled into tip:perf/urgent, thanks a lot Arnaldo!
 
-jirka
-
->  struct switch_output {
->  	bool		 enabled;
->  	bool		 signal;
-> @@ -2421,6 +2425,11 @@ static struct option __record_options[] = {
->  #endif
->  	OPT_CALLBACK(0, "max-size", &record.output_max_size,
->  		     "size", "Limit the maximum size of the output file", parse_output_max_size),
-> +#ifdef HAVE_LIBPFM
-> +	OPT_CALLBACK(0, "pfm-events", &record.evlist, "event",
-> +		"libpfm4 event selector. use 'perf list' to list available events",
-> +		parse_libpfm_events_option),
-> +#endif
->  	OPT_END()
->  };
-
-SNIP
+	Ingo
