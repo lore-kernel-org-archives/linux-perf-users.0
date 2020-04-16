@@ -1,95 +1,61 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
-Date: Thu, 16 Apr 2020 07:15:24 +0000
-Message-ID: <DB8PR04MB67957F63165ACC0483F6AE39E6D80@DB8PR04MB6795.eurprd04.prod.outlook.com>
-References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
- <6dbeabcf-c15a-0bbd-cef4-b25d0133854f@huawei.com>
- <DB7PR04MB4618D2E1892120EB659B8695E6EC0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <2f81eb7a-a6e4-1cc6-cd0a-ca3d749bd552@huawei.com>
- <DB7PR04MB4618C0A8DD9BAB2A529CDCECE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <a2cc0772-4f5d-aba3-1f5c-7d4eef7a3f72@huawei.com>
- <DB7PR04MB461803AD15E47AA880F0915DE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <55836919-41b5-0834-f7a7-1a2a34535677@huawei.com>
- <bd67910e-1522-39cd-5527-b9b18f3da96d@huawei.com>
- <DB8PR04MB6795996085AD2167E2358907E6C30@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <ccab39b0-c84f-e529-4067-07466b5433a1@huawei.com>
- <VI1PR04MB68000808CEE4BC23403C35A0E6C00@VI1PR04MB6800.eurprd04.prod.outlook.com>
- <ca2db002-975a-ffe0-2dfc-c85f4e6205bb@huawei.com>
- <VI1PR04MB6800F2A5949F0AFAF2E82CE0E6C00@VI1PR04MB6800.eurprd04.prod.outlook.com>
- <0b3999b8-c307-6b4a-1a1b-e90b45f50b61@huawei.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
+Date: Thu, 16 Apr 2020 11:50:50 +0200
+Message-ID: <20200416095050.GB369437@krava>
+References: <20200416063551.47637-1-irogers@google.com>
+ <20200416063551.47637-5-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <0b3999b8-c307-6b4a-1a1b-e90b45f50b61@huawei.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: John Garry <john.garry@huawei.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Zhangshaokun <zhangshaokun@hisilicon.com>, "will@kernel.org" <will@kernel.org>, Linuxarm <linuxarm@huawei.com>, "acme@kernel.org" <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Jiri Olsa <jolsa@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200416063551.47637-5-irogers@google.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
 List-Id: linux-perf-users.vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
-Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMOW5tDTmnIgxNeaXpSAxNzoyOA0KPiBUbzog
-Sm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT4NCj4gQ2M6IHdpbGxAa2VybmVs
-Lm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGFjbWVAa2VybmVsLm9yZzsNCj4gbGludXgtcGVy
-Zi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+
-OyBKaXJpIE9sc2ENCj4gPGpvbHNhQHJlZGhhdC5jb20+OyBaaGFuZ3NoYW9rdW4gPHpoYW5nc2hh
-b2t1bkBoaXNpbGljb24uY29tPjsNCj4gTGludXhhcm0gPGxpbnV4YXJtQGh1YXdlaS5jb20+OyBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRD
-SCAwLzZdIHBlcmYvaW14X2RkcjogQWRkIG5hbWVzcGFjZSBmb3IgaS5NWDggRERSIFBlcmYNCj4g
-DQo+IE9uIDA4LzA0LzIwMjAgMTI6NDEsIEpvYWtpbSBaaGFuZyB3cm90ZToNCj4gPj4gVGhhdCBj
-b2RlIHNob3VsZCBiZSBlZmZlY3RpdmVseSB0aGUgc2FtZS4NCj4gPj4NCj4gPj4gV2hhdCBkb2Vz
-IHBlcmYgbGlzdCBzaG93IGZvciB0aGUgbWV0cmljcyBub3c/DQo+ID4gcm9vdEBpbXg4bW1ldms6
-fiMgLi9wZXJmIGxpc3QgZGRyYw0KPiA+DQo+ID4gTGlzdCBvZiBwcmUtZGVmaW5lZCBldmVudHMg
-KHRvIGJlIHVzZWQgaW4gLWUpOg0KPiA+DQo+ID4NCj4gPiBkZHJjOg0KPiA+ICAgIGlteDhfZGRy
-LmN5Y2xlcw0KPiA+ICAgICAgICAgW2RkciBjeWNsZXMgZXZlbnQuIFVuaXQ6IGlteDhfZGRyXQ0K
-PiA+ICAgIGlteDhfZGRyLnJlYWQNCj4gPiAgICAgICAgIFtkZHIgcmVhZCBldmVudC4gVW5pdDog
-aW14OF9kZHJdDQo+ID4gICAgaW14OF9kZHIucmVhZF9jeWNsZXMNCj4gPiAgICAgICAgIFtkZHIg
-cmVhZC1jeWNsZXMgZXZlbnQuIFVuaXQ6IGlteDhfZGRyXQ0KPiA+ICAgIGlteDhfZGRyLndyaXRl
-DQo+ID4gICAgICAgICBbZGRyIHdyaXRlIGV2ZW50LiBVbml0OiBpbXg4X2Rkcl0NCj4gPiAgICBp
-bXg4X2Rkci53cml0ZV9jeWNsZXMNCj4gPiAgICAgICAgIFtkZHIgd3JpdGUtY3ljbGVzIGV2ZW50
-LiBVbml0OiBpbXg4X2Rkcl0NCj4gPg0KPiA+IHJvb3RAaW14OG1tZXZrOn4jIC4vcGVyZiBsaXN0
-IG1ldHJpYw0KPiA+DQo+ID4gTGlzdCBvZiBwcmUtZGVmaW5lZCBldmVudHMgKHRvIGJlIHVzZWQg
-aW4gLWUpOg0KPiA+DQo+ID4NCj4gPiBNZXRyaWNzOg0KPiA+DQo+ID4gICAgaW14OG1tX2Rkcl9y
-ZWFkLmFsbA0KPiA+ICAgICAgICAgW2J5dGVzIGFsbCBtYXN0ZXJzIHJlYWQgZnJvbSBkZHIgYmFz
-ZWQgb24gcmVhZC1jeWNsZXMgZXZlbnQuDQo+ID4gVW5pdDogaW14OF9kIGRyIF0NCj4gPiAgICBp
-bXg4bW1fZGRyX3dyaXRlLmFsbA0KPiA+ICAgICAgICAgW2J5dGVzIGFsbCBtYXN0ZXJzIHdyaXRl
-IHRvIGRkciBiYXNlZCBvbiByZWFkLWN5Y2xlcyBldmVudC4NCj4gPiBVbml0OiBpbXg4X2RkIHIg
-XQ0KPiA+DQo+ID4gcm9vdEBpbXg4bW1ldms6fiMgLi9wZXJmIHN0YXQgLWEgLUkgMTAwMCAtdiAt
-TSBpbXg4bW1fZGRyX3JlYWQuYWxsDQo+ID4gVXNpbmcgQ1BVSUQgMHgwMDAwMDAwMDQxMGZkMDQw
-IGFkZGluZyBldmVudCBzeW50YXggZXJyb3I6ICcnDQo+ID4gICAgICAgICAgICAgICAgICAgICAg
-ICBcX19fIHBhcnNlciBlcnJvcg0KPiA+DQo+ID4gICBVc2FnZTogcGVyZiBzdGF0IFs8b3B0aW9u
-cz5dIFs8Y29tbWFuZD5dDQo+ID4NCj4gPiAgICAgIC1NLCAtLW1ldHJpY3MgPG1ldHJpYy9tZXRy
-aWMgZ3JvdXAgbGlzdD4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICBtb25pdG9yIHNw
-ZWNpZmllZCBtZXRyaWNzIG9yIG1ldHJpYyBncm91cHMNCj4gPiAoc2VwYXJhdGVkIGJ5ICwpDQo+
-ID4NCj4gPiBJdCBzZWVtcyB0aGF0IG1ldHJpY2dyb3VwIGZhaWxzIHRvIHBhcnNlIHRoZSBtZXRy
-aWMgZXhwcmVzc2lvbi4NCj4gPiBtZXRyaWMuanNvbjoNCj4gPiBbDQo+ID4gICAgIHsNCj4gPiAJ
-ICAgICJCcmllZkRlc2NyaXB0aW9uIjogImJ5dGVzIGFsbCBtYXN0ZXJzIHJlYWQgZnJvbSBkZHIg
-YmFzZWQgb24NCj4gcmVhZC1jeWNsZXMgZXZlbnQiLA0KPiA+IAkgICAgIk1ldHJpY05hbWUiOiAi
-aW14OG1tX2Rkcl9yZWFkLmFsbCIsDQo+ID4gCSAgICAiTWV0cmljRXhwciI6ICJpbXg4X2Rkci5y
-ZWFkX2N5Y2xlcyAqIDQgKiA0IiwNCj4gPiAJICAgICJTY2FsZVVuaXQiOiAiOS43NjU2MjVlLTRN
-QiIsDQo+ID4gCSAgICAiVW5pdCI6ICJpbXg4X2RkciIsDQo+IA0KPiBJIG5vdGljZWQgdGhhdCBw
-cmV2aW91c2x5IHdlIHVzZWQgaW14OCxkZHIsIHdoaWNoIEkgdGhpbmsgd2FzIHdyb25nLCBzbyBj
-YW4geW91DQo+IHRyeSB0byByZW1vdmUgdGhpcyBoZXJlPw0KPiANCj4gSWYgdGhhdCBkb2Vzbid0
-IHdvcmssIHRoZW4gSSdsbCB0cnkgdGhpcyBteXNlbGYuDQoNCkhpIEpvaG4sDQoNCkl0IHN0aWxs
-IGNhbm5vdCB3b3JrIHdpdGggdGhpcyBjb2RlIGNoYW5nZS4NCg0KQmVzdCBSZWdhcmRzLA0KSm9h
-a2ltIFpoYW5nDQo+IFRoYW5rcywNCj4gSm9obg0KPiANCj4gPiAJICAgICJDb21wYXQiOiAiaS5t
-eDhtbSINCj4gPiAgICAgIH0sDQo+ID4gICAgIHsNCj4gPiAJICAgICJCcmllZkRlc2NyaXB0aW9u
-IjogImJ5dGVzIGFsbCBtYXN0ZXJzIHdyaXRlIHRvIGRkciBiYXNlZCBvbg0KPiB3cml0ZS1jeWNs
-ZXMgZXZlbnQiLA0KPiA+IAkgICAgIk1ldHJpY05hbWUiOiAiaW14OG1tX2Rkcl93cml0ZS5hbGwi
-LA0KPiA+IAkgICAgIk1ldHJpY0V4cHIiOiAiaW14OF9kZHIud3JpdGVfY3ljbGVzICogNCAqIDQi
-LA0KPiA+IAkgICAgIlNjYWxlVW5pdCI6ICI5Ljc2NTYyNWUtNE1CIiwNCj4gPiAJICAgICJVbml0
-IjogImlteDhfZGRyIiwNCj4gPiAJICAgICJDb21wYXQiOiAiaS5teDhtbSINCj4gPiAgICAgIH0N
-Cj4gPiBdDQo+ID4NCj4gPj4+Pj4gcm9vdEBpbXg4bW1ldms6fiMgLi9wZXJmIHN0YXQNCg0KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
+
+SNIP
+
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 12a8204d63c6..26167ad38a47 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -1012,6 +1012,18 @@ ifdef LIBCLANGLLVM
+>    endif
+>  endif
+>  
+> +ifndef NO_LIBPFM4
+> +  ifeq ($(feature-libpfm4), 1)
+> +    CFLAGS += -DHAVE_LIBPFM
+> +    EXTLIBS += -lpfm
+> +    ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
+> +    $(call detected,CONFIG_LIBPFM4)
+> +  else
+> +    msg := $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev);
+> +    NO_LIBPFM4 := 1
+> +  endif
+> +endif
+
+now when it's in FEATURE_TESTS_EXTRA it will not get detected,
+unless you add the change below.. I wonder how come it was
+still being detected for you.. might be bug in feature detection
+stuff
+
+jirka
+
+
+---
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 26167ad38a47..b45c5d370b42 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1013,6 +1013,7 @@ ifdef LIBCLANGLLVM
+ endif
+ 
+ ifndef NO_LIBPFM4
++  $(call feature_check,libpfm4)
+   ifeq ($(feature-libpfm4), 1)
+     CFLAGS += -DHAVE_LIBPFM
+     EXTLIBS += -lpfm
