@@ -1,92 +1,146 @@
-From: Konstantin Kharlamov <hi-angel@yandex.ru>
-Subject: Re: [PATCH] perf stat: Honour --timeout for forked workloads
-Date: Wed, 15 Apr 2020 19:46:57 +0300
-Message-ID: <2996611.mvXUDI8C0e@constantine-n61ja>
-References: <20200415153803.GB20324@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Subject: [PATCH] perf/record: add num-synthesize-threads option
+Date: Wed, 15 Apr 2020 17:13:03 -0700
+Message-ID: <20200416001303.96841-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200415153803.GB20324@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Tested-by: Konstantin Kharlamov <hi-angel@yandex.ru>
+From: Stephane Eranian <eranian@google.com>
 
-On =D1=81=D1=80=D0=B5=D0=B4=D0=B0, 15 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F =
-2020 =D0=B3. 18:38:03 MSK Arnaldo Carvalho de Melo wrote:
-> Hi guys,
->=20
-> 	Please take a look and give this your acks, Tested-by, etc.
->=20
-> Thanks,
->=20
-> - Arnaldo
->=20
-> ----
->=20
-> When --timeout is used and a workload is specified to be started by
-> 'perf stat', i.e.
->=20
->   $ perf stat --timeout 1000 sleep 1h
->=20
-> The --timeout wasn't being honoured, i.e. the workload, 'sleep 1h' in
-> the above example, should be terminated after 1000ms, but it wasn't,
-> 'perf stat' was waiting for it to finish.
->=20
-> Fix it by sending a SIGTERM when the timeout expires.
->=20
-> Now it works:
->=20
->   # perf stat -e cycles --timeout 1234 sleep 1h
->   sleep: Terminated
->=20
->    Performance counter stats for 'sleep 1h':
->=20
->            1,066,692      cycles
->=20
->          1.234314838 seconds time elapsed
->=20
->          0.000750000 seconds user
->          0.000000000 seconds sys
->=20
->   #
->=20
-> Reported-by: Konstantin Kharlamov <hi-angel@yandex.ru>
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D207243
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/builtin-stat.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index ec053dc1e35c..9207b6c45475 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -686,8 +686,11 @@ static int __run_perf_stat(int argc, const char **ar=
-gv,
-> int run_idx) break;
->  			}
->  		}
-> -		if (child_pid !=3D -1)
-> +		if (child_pid !=3D -1) {
-> +			if (timeout)
-> +				kill(child_pid, SIGTERM);
->  			wait4(child_pid, &status, 0,=20
-&stat_config.ru_data);
-> +		}
->=20
->  		if (workload_exec_errno) {
->  			const char *emsg =3D=20
-str_error_r(workload_exec_errno, msg, sizeof(msg));
+To control degree of parallelism of the synthesize_mmap() code which
+is scanning /proc/PID/task/PID/maps and can be time consuming.
+Mimic perf top way of handling the option.
+If not specified will default to 1 thread, i.e. default behavior before
+this option.
 
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-record.txt |  4 +++
+ tools/perf/builtin-record.c              | 35 ++++++++++++++++++++++--
+ tools/perf/util/record.h                 |  1 +
+ 3 files changed, 38 insertions(+), 2 deletions(-)
 
-=2D-=20
-=D0=98=D0=BD=D0=B6=D0=B5=D0=BD=D0=B5=D1=80-=D1=80=D0=B0=D0=B7=D1=80=D0=B0=
-=D0=B1=D0=BE=D1=82=D1=87=D0=B8=D0=BA =D0=9A=D0=BE=D0=BD=D1=81=D1=82=D0=B0=
-=D0=BD=D1=82=D0=B8=D0=BD =D0=A5=D0=B0=D1=80=D0=BB=D0=B0=D0=BC=D0=BE=D0=B2
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b3f3b3f1c161..6e8b4649307c 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -596,6 +596,10 @@ Make a copy of /proc/kcore and place it into a directory with the perf data file
+ Limit the sample data max size, <size> is expected to be a number with
+ appended unit character - B/K/M/G
+ 
++--num-thread-synthesize::
++	The number of threads to run when synthesizing events for existing processes.
++	By default, the number of threads equals 1.
++
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349abe904..2f97d0c32a75 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -43,6 +43,7 @@
+ #include "util/time-utils.h"
+ #include "util/units.h"
+ #include "util/bpf-event.h"
++#include "util/util.h"
+ #include "asm/bug.h"
+ #include "perf.h"
+ 
+@@ -50,6 +51,7 @@
+ #include <inttypes.h>
+ #include <locale.h>
+ #include <poll.h>
++#include <pthread.h>
+ #include <unistd.h>
+ #include <sched.h>
+ #include <signal.h>
+@@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
+ 	return record__write(rec, NULL, event, event->header.size);
+ }
+ 
++static int process_locked_synthesized_event(struct perf_tool *tool,
++				     union perf_event *event,
++				     struct perf_sample *sample __maybe_unused,
++				     struct machine *machine __maybe_unused)
++{
++	static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
++	int ret;
++
++	pthread_mutex_lock(&synth_lock);
++	ret = process_synthesized_event(tool, event, sample, machine);
++	pthread_mutex_unlock(&synth_lock);
++	return ret;
++}
++
+ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ {
+ 	struct record *rec = to;
+@@ -1288,6 +1304,8 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	struct perf_tool *tool = &rec->tool;
+ 	int fd = perf_data__fd(data);
+ 	int err = 0;
++	int (*f)(struct perf_tool *, union perf_event *, struct perf_sample *,
++		struct machine *) = process_synthesized_event;
+ 
+ 	if (rec->opts.tail_synthesize != tail)
+ 		return 0;
+@@ -1402,9 +1420,18 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err < 0)
+ 		pr_warning("Couldn't synthesize cgroup events.\n");
+ 
++	if (rec->opts.nr_threads_synthesize > 1) {
++		perf_set_multithreaded();
++		f = process_locked_synthesized_event;
++	}
++
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
+-					    process_synthesized_event, opts->sample_address,
+-					    1);
++					    f, opts->sample_address,
++					    rec->opts.nr_threads_synthesize);
++
++	if (rec->opts.nr_threads_synthesize > 1)
++		perf_set_singlethreaded();
++
+ out:
+ 	return err;
+ }
+@@ -2232,6 +2259,7 @@ static struct record record = {
+ 			.default_per_cpu = true,
+ 		},
+ 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
++		.nr_threads_synthesize = 1,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -2421,6 +2449,9 @@ static struct option __record_options[] = {
+ #endif
+ 	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+ 		     "size", "Limit the maximum size of the output file", parse_output_max_size),
++	OPT_UINTEGER(0, "num-thread-synthesize",
++		     &record.opts.nr_threads_synthesize,
++		     "number of threads to run for event synthesis"),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 24316458be20..923565c3b155 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -68,6 +68,7 @@ struct record_opts {
+ 	int	      affinity;
+ 	int	      mmap_flush;
+ 	unsigned int  comp_level;
++	unsigned int  nr_threads_synthesize;
+ };
+ 
+ extern const char * const *record_usage;
+-- 
+2.26.0.110.g2183baf09c-goog
