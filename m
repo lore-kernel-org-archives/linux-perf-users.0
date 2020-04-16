@@ -1,7 +1,7 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
-Date: Thu, 16 Apr 2020 11:55:01 +0200
-Message-ID: <20200416095501.GC369437@krava>
+Date: Thu, 16 Apr 2020 11:55:48 +0200
+Message-ID: <20200416095548.GD369437@krava>
 References: <20200416063551.47637-1-irogers@google.com>
  <20200416063551.47637-5-irogers@google.com>
 Mime-Version: 1.0
@@ -15,37 +15,46 @@ Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 List-Id: linux-perf-users.vger.kernel.org
 
 On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
-> From: Stephane Eranian <eranian@google.com>
-> 
-> This patch links perf with the libpfm4 library if it is available
-> and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
-> contains hardware event tables for all processors supported by
-> perf_events. It is a helper library that helps convert from a
-> symbolic event name to the event encoding required by the
-> underlying kernel interface. This library is open-source and
-> available from: http://perfmon2.sf.net.
-> 
-> With this patch, it is possible to specify full hardware events
-> by name. Hardware filters are also supported. Events must be
-> specified via the --pfm-events and not -e option. Both options
-> are active at the same time and it is possible to mix and match:
-> 
-> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
-> 
-> Signed-off-by: Stephane Eranian <eranian@google.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
 
-	# perf list
-	...
-	perf_raw pfm-events
-	  r0000
-	    [perf_events raw event syntax: r[0-9a-fA-F]+]
+SNIP
 
-	skl pfm-events
-	  UNHALTED_CORE_CYCLES
-	    [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
-	  UNHALTED_REFERENCE_CYCLES
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 1ab349abe904..80ac598f125b 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -43,6 +43,7 @@
+>  #include "util/time-utils.h"
+>  #include "util/units.h"
+>  #include "util/bpf-event.h"
+> +#include "util/pfm.h"
+>  #include "asm/bug.h"
+>  #include "perf.h"
+>  
+> @@ -64,6 +65,9 @@
+>  #include <linux/zalloc.h>
+>  #include <linux/bitmap.h>
+>  
+> +
+> +
+> +
 
-please add ':' behind the '* pfm-events' label
+extra new lines..
 
 jirka
+
+>  struct switch_output {
+>  	bool		 enabled;
+>  	bool		 signal;
+> @@ -2421,6 +2425,11 @@ static struct option __record_options[] = {
+>  #endif
+>  	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+>  		     "size", "Limit the maximum size of the output file", parse_output_max_size),
+> +#ifdef HAVE_LIBPFM
+> +	OPT_CALLBACK(0, "pfm-events", &record.evlist, "event",
+> +		"libpfm4 event selector. use 'perf list' to list available events",
+> +		parse_libpfm_events_option),
+> +#endif
+>  	OPT_END()
+>  };
+
+SNIP
