@@ -1,55 +1,85 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v10 1/4] perf doc: allow ASCIIDOC_EXTRA to be an argument
-Date: Thu, 16 Apr 2020 13:23:09 -0300
-Message-ID: <20200416162309.GH2650@kernel.org>
-References: <20200416162058.201954-1-irogers@google.com>
- <20200416162058.201954-2-irogers@google.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v9 4/4] perf tools: add support for libpfm4
+Date: Thu, 16 Apr 2020 22:10:11 +0200
+Message-ID: <20200416201011.GB414900@krava>
+References: <20200416063551.47637-1-irogers@google.com>
+ <20200416063551.47637-5-irogers@google.com>
+ <20200416095501.GC369437@krava>
+ <CAP-5=fVOb1nV2gdGGWLQvTApoMR=qzaSQHSwxsAKAXQ=wqQV+g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200416162058.201954-2-irogers@google.com>
-Sender: netdev-owner@vger.kernel.org
+In-Reply-To: <CAP-5=fVOb1nV2gdGGWLQvTApoMR=qzaSQHSwxsAKAXQ=wqQV+g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhoujian <yuzhoujian>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thomas Gleixner <tglx@linutronix.de>, Igor Lubashev <ilubashe@akamai.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>, yuzhouji
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Apr 16, 2020 at 09:20:55AM -0700, Ian Rogers escreveu:
-> This will allow parent makefiles to pass values to asciidoc.
-
-Thanks, applied
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Documentation/Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Apr 16, 2020 at 09:02:54AM -0700, Ian Rogers wrote:
+> On Thu, Apr 16, 2020 at 2:55 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> >
+> > On Wed, Apr 15, 2020 at 11:35:51PM -0700, Ian Rogers wrote:
+> > > From: Stephane Eranian <eranian@google.com>
+> > >
+> > > This patch links perf with the libpfm4 library if it is available
+> > > and NO_LIBPFM4 isn't passed to the build. The libpfm4 library
+> > > contains hardware event tables for all processors supported by
+> > > perf_events. It is a helper library that helps convert from a
+> > > symbolic event name to the event encoding required by the
+> > > underlying kernel interface. This library is open-source and
+> > > available from: http://perfmon2.sf.net.
+> > >
+> > > With this patch, it is possible to specify full hardware events
+> > > by name. Hardware filters are also supported. Events must be
+> > > specified via the --pfm-events and not -e option. Both options
+> > > are active at the same time and it is possible to mix and match:
+> > >
+> > > $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> > >
+> > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > Reviewed-by: Ian Rogers <irogers@google.com>
+> >
+> >         # perf list
+> >         ...
+> >         perf_raw pfm-events
+> >           r0000
+> >             [perf_events raw event syntax: r[0-9a-fA-F]+]
+> >
+> >         skl pfm-events
+> >           UNHALTED_CORE_CYCLES
+> >             [Count core clock cycles whenever the clock signal on the specific core is running (not halted)]
+> >           UNHALTED_REFERENCE_CYCLES
+> >
+> > please add ':' behind the '* pfm-events' label
 > 
-> diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-> index 31824d5269cc..6e54979c2124 100644
-> --- a/tools/perf/Documentation/Makefile
-> +++ b/tools/perf/Documentation/Makefile
-> @@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
->  man7dir=$(mandir)/man7
->  
->  ASCIIDOC=asciidoc
-> -ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-> +ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
->  ASCIIDOC_HTML = xhtml11
->  MANPAGE_XSL = manpage-normal.xsl
->  XMLTO_EXTRA =
-> @@ -59,7 +59,7 @@ HTML_REF = origin/html
->  
->  ifdef USE_ASCIIDOCTOR
->  ASCIIDOC = asciidoctor
-> -ASCIIDOC_EXTRA = -a compat-mode
-> +ASCIIDOC_EXTRA += -a compat-mode
->  ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
->  ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
->  ASCIIDOC_HTML = xhtml5
-> -- 
-> 2.26.1.301.g55bc3eb7cb9-goog
-> 
+> Thanks! Not sure I follow here. skl here is the pmu. pfm-events is
+> here just to make it clearer these are --pfm-events. The event is
+> selected with '--pfm-events UNHALTED_CORE_CYCLES'. Will putting
+> skl:pfm-events here make it look like that is part of the event
+> encoding?
 
--- 
+aah I might have misunderstood the output here then, we have preceeding
+output like:
 
-- Arnaldo
+cache:
+  l1d.replacement                                   
+       [L1D data line replacements]
+
+so I thought the 'skl pfm-events' is just a label
+
+
+how about we use the first current label in the middle like:
+
+	# perf list
+	List of pre-defined events (to be used in -e):
+
+	  current events stuff
+
+	List of pfm events (to be used in --pfm-xxx):
+
+	  pfm events stuff
+
+or maybe put it under 'perf list --pfm', thoughts?
+
+jirka
