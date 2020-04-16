@@ -1,225 +1,268 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 11/16] perf intel-pt: Add support for synthesizing
- callchains for regular events
-Date: Thu, 16 Apr 2020 12:14:43 -0300
-Message-ID: <20200416151443.GA2650@kernel.org>
-References: <20200401101613.6201-1-adrian.hunter@intel.com>
- <20200401101613.6201-12-adrian.hunter@intel.com>
+Subject: Re: [PATCH 15/15] tools headers: Synchronize linux/bits.h with the
+ kernel sources
+Date: Thu, 16 Apr 2020 12:54:04 -0300
+Message-ID: <20200416155404.GE2650@kernel.org>
+References: <20200414164854.26026-1-acme@kernel.org>
+ <20200414164854.26026-16-acme@kernel.org>
+ <7951882d-d13a-7b1e-36f4-73c188015161@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200401101613.6201-12-adrian.hunter@intel.com>
+In-Reply-To: <7951882d-d13a-7b1e-36f4-73c188015161@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+To: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Rikard Falkeborn <rikard.falkeborn@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Apr 01, 2020 at 01:16:08PM +0300, Adrian Hunter escreveu:
-> Currently, callchains can be synthesized only for synthesized events.
-> Support also synthesizing callchains for regular events.
+Em Wed, Apr 15, 2020 at 10:14:06AM +0100, Vincenzo Frascino escreveu:
+> On 4/14/20 5:48 PM, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > 
+> > To pick up the changes in these csets:
+> > 
+> >   295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+> >   3945ff37d2f4 ("linux/bits.h: Extract common header for vDSO")
+> > 
+> > To address this tools/perf build warning:
+> > 
+> >   Warning: Kernel ABI header at 'tools/include/linux/bits.h' differs from latest version at 'include/linux/bits.h'
+> >   diff -u tools/include/linux/bits.h include/linux/bits.h
+> > 
+> > This clashes with usage of userspace's static_assert(), that, at least
+> > on glibc, is guarded by a ifnded/endif pair, do the same to our copy of
+> > build_bug.h and avoid that diff in check_headers.sh so that we continue
+> > checking for drifts with the kernel sources master copy.
+> > 
+> > This will all be tested with the set of build containers that includes
+> > uCLibc, musl libc, lots of glibc versions in lots of distros and cross
+> > build environments.
+> > 
+> > The tools/objtool, tools/bpf, etc were tested as well.
+> >
+> 
+> Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # vDSO parts
 
-This is super cool, I wonder if we shouldn't do it automatically or just
-adding a new type of callchains, i.e.:
-
-	perf record --call-graph pt uname
-
-Should take care of all the details, i.e. do the extra steps below
-behind the scenes.
-
-Possibly even find out that the workload specified was built with
--fomit-frame-pointers, that the hardware has Intel PT and do all behind
-the scenes for:
-
-	perf record -g uname
-
-Alternatively we could take some less seemingly far fetched approach and
-make this configurable via:
-
-	perf config call-graph.record-mode=pt
-
-What do you think?
+Hey, thanks a lot for checking it! :-)
 
 - Arnaldo
  
-> Example:
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/include/linux/bits.h      | 24 ++++++++--
+> >  tools/include/linux/build_bug.h | 82 +++++++++++++++++++++++++++++++++
+> >  tools/include/linux/kernel.h    |  4 +-
+> >  tools/include/vdso/bits.h       |  9 ++++
+> >  tools/perf/check-headers.sh     |  2 +
+> >  5 files changed, 115 insertions(+), 6 deletions(-)
+> >  create mode 100644 tools/include/linux/build_bug.h
+> >  create mode 100644 tools/include/vdso/bits.h
+> > 
+> > diff --git a/tools/include/linux/bits.h b/tools/include/linux/bits.h
+> > index 669d69441a62..4671fbf28842 100644
+> > --- a/tools/include/linux/bits.h
+> > +++ b/tools/include/linux/bits.h
+> > @@ -3,9 +3,9 @@
+> >  #define __LINUX_BITS_H
+> >  
+> >  #include <linux/const.h>
+> > +#include <vdso/bits.h>
+> >  #include <asm/bitsperlong.h>
+> >  
+> > -#define BIT(nr)			(UL(1) << (nr))
+> >  #define BIT_ULL(nr)		(ULL(1) << (nr))
+> >  #define BIT_MASK(nr)		(UL(1) << ((nr) % BITS_PER_LONG))
+> >  #define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
+> > @@ -18,12 +18,30 @@
+> >   * position @h. For example
+> >   * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+> >   */
+> > -#define GENMASK(h, l) \
+> > +#if !defined(__ASSEMBLY__) && \
+> > +	(!defined(CONFIG_CC_IS_GCC) || CONFIG_GCC_VERSION >= 49000)
+> > +#include <linux/build_bug.h>
+> > +#define GENMASK_INPUT_CHECK(h, l) \
+> > +	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
+> > +		__builtin_constant_p((l) > (h)), (l) > (h), 0)))
+> > +#else
+> > +/*
+> > + * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+> > + * disable the input check if that is the case.
+> > + */
+> > +#define GENMASK_INPUT_CHECK(h, l) 0
+> > +#endif
+> > +
+> > +#define __GENMASK(h, l) \
+> >  	(((~UL(0)) - (UL(1) << (l)) + 1) & \
+> >  	 (~UL(0) >> (BITS_PER_LONG - 1 - (h))))
+> > +#define GENMASK(h, l) \
+> > +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+> >  
+> > -#define GENMASK_ULL(h, l) \
+> > +#define __GENMASK_ULL(h, l) \
+> >  	(((~ULL(0)) - (ULL(1) << (l)) + 1) & \
+> >  	 (~ULL(0) >> (BITS_PER_LONG_LONG - 1 - (h))))
+> > +#define GENMASK_ULL(h, l) \
+> > +	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+> >  
+> >  #endif	/* __LINUX_BITS_H */
+> > diff --git a/tools/include/linux/build_bug.h b/tools/include/linux/build_bug.h
+> > new file mode 100644
+> > index 000000000000..cc7070c7439b
+> > --- /dev/null
+> > +++ b/tools/include/linux/build_bug.h
+> > @@ -0,0 +1,82 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _LINUX_BUILD_BUG_H
+> > +#define _LINUX_BUILD_BUG_H
+> > +
+> > +#include <linux/compiler.h>
+> > +
+> > +#ifdef __CHECKER__
+> > +#define BUILD_BUG_ON_ZERO(e) (0)
+> > +#else /* __CHECKER__ */
+> > +/*
+> > + * Force a compilation error if condition is true, but also produce a
+> > + * result (of value 0 and type int), so the expression can be used
+> > + * e.g. in a structure initializer (or where-ever else comma expressions
+> > + * aren't permitted).
+> > + */
+> > +#define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+> > +#endif /* __CHECKER__ */
+> > +
+> > +/* Force a compilation error if a constant expression is not a power of 2 */
+> > +#define __BUILD_BUG_ON_NOT_POWER_OF_2(n)	\
+> > +	BUILD_BUG_ON(((n) & ((n) - 1)) != 0)
+> > +#define BUILD_BUG_ON_NOT_POWER_OF_2(n)			\
+> > +	BUILD_BUG_ON((n) == 0 || (((n) & ((n) - 1)) != 0))
+> > +
+> > +/*
+> > + * BUILD_BUG_ON_INVALID() permits the compiler to check the validity of the
+> > + * expression but avoids the generation of any code, even if that expression
+> > + * has side-effects.
+> > + */
+> > +#define BUILD_BUG_ON_INVALID(e) ((void)(sizeof((__force long)(e))))
+> > +
+> > +/**
+> > + * BUILD_BUG_ON_MSG - break compile if a condition is true & emit supplied
+> > + *		      error message.
+> > + * @condition: the condition which the compiler should know is false.
+> > + *
+> > + * See BUILD_BUG_ON for description.
+> > + */
+> > +#define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+> > +
+> > +/**
+> > + * BUILD_BUG_ON - break compile if a condition is true.
+> > + * @condition: the condition which the compiler should know is false.
+> > + *
+> > + * If you have some code which relies on certain constants being equal, or
+> > + * some other compile-time-evaluated condition, you should use BUILD_BUG_ON to
+> > + * detect if someone changes it.
+> > + */
+> > +#define BUILD_BUG_ON(condition) \
+> > +	BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+> > +
+> > +/**
+> > + * BUILD_BUG - break compile if used.
+> > + *
+> > + * If you have some code that you expect the compiler to eliminate at
+> > + * build time, you should use BUILD_BUG to detect if it is
+> > + * unexpectedly used.
+> > + */
+> > +#define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+> > +
+> > +/**
+> > + * static_assert - check integer constant expression at build time
+> > + *
+> > + * static_assert() is a wrapper for the C11 _Static_assert, with a
+> > + * little macro magic to make the message optional (defaulting to the
+> > + * stringification of the tested expression).
+> > + *
+> > + * Contrary to BUILD_BUG_ON(), static_assert() can be used at global
+> > + * scope, but requires the expression to be an integer constant
+> > + * expression (i.e., it is not enough that __builtin_constant_p() is
+> > + * true for expr).
+> > + *
+> > + * Also note that BUILD_BUG_ON() fails the build if the condition is
+> > + * true, while static_assert() fails the build if the expression is
+> > + * false.
+> > + */
+> > +#ifndef static_assert
+> > +#define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+> > +#define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+> > +#endif // static_assert
+> > +
+> > +#endif	/* _LINUX_BUILD_BUG_H */
+> > diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
+> > index cba226948a0c..a7e54a08fb54 100644
+> > --- a/tools/include/linux/kernel.h
+> > +++ b/tools/include/linux/kernel.h
+> > @@ -5,6 +5,7 @@
+> >  #include <stdarg.h>
+> >  #include <stddef.h>
+> >  #include <assert.h>
+> > +#include <linux/build_bug.h>
+> >  #include <linux/compiler.h>
+> >  #include <endian.h>
+> >  #include <byteswap.h>
+> > @@ -35,9 +36,6 @@
+> >  	(type *)((char *)__mptr - offsetof(type, member)); })
+> >  #endif
+> >  
+> > -#define BUILD_BUG_ON(condition) ((void)sizeof(char[1 - 2*!!(condition)]))
+> > -#define BUILD_BUG_ON_ZERO(e) (sizeof(struct { int:-!!(e); }))
+> > -
+> >  #ifndef max
+> >  #define max(x, y) ({				\
+> >  	typeof(x) _max1 = (x);			\
+> > diff --git a/tools/include/vdso/bits.h b/tools/include/vdso/bits.h
+> > new file mode 100644
+> > index 000000000000..6d005a1f5d94
+> > --- /dev/null
+> > +++ b/tools/include/vdso/bits.h
+> > @@ -0,0 +1,9 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef __VDSO_BITS_H
+> > +#define __VDSO_BITS_H
+> > +
+> > +#include <vdso/const.h>
+> > +
+> > +#define BIT(nr)			(UL(1) << (nr))
+> > +
+> > +#endif	/* __VDSO_BITS_H */
+> > diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> > index c905c683606a..cf147db4e5ca 100755
+> > --- a/tools/perf/check-headers.sh
+> > +++ b/tools/perf/check-headers.sh
+> > @@ -22,6 +22,7 @@ include/uapi/linux/usbdevice_fs.h
+> >  include/uapi/linux/vhost.h
+> >  include/uapi/sound/asound.h
+> >  include/linux/bits.h
+> > +include/vdso/bits.h
+> >  include/linux/const.h
+> >  include/vdso/const.h
+> >  include/linux/hash.h
+> > @@ -116,6 +117,7 @@ check arch/x86/lib/memcpy_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/ex
+> >  check arch/x86/lib/memset_64.S        '-I "^EXPORT_SYMBOL" -I "^#include <asm/export.h>" -I"^SYM_FUNC_START\(_LOCAL\)*(memset_\(erms\|orig\))"'
+> >  check include/uapi/asm-generic/mman.h '-I "^#include <\(uapi/\)*asm-generic/mman-common\(-tools\)*.h>"'
+> >  check include/uapi/linux/mman.h       '-I "^#include <\(uapi/\)*asm/mman.h>"'
+> > +check include/linux/build_bug.h       '-I "^#\(ifndef\|endif\)\( \/\/\)* static_assert$"'
+> >  check include/linux/ctype.h	      '-I "isdigit("'
+> >  check lib/ctype.c		      '-I "^EXPORT_SYMBOL" -I "^#include <linux/export.h>" -B'
+> >  check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
+> > 
 > 
->  # perf record --kcore --aux-sample -e '{intel_pt//,cycles}' -c 10000 uname
->  Linux
->  [ perf record: Woken up 3 times to write data ]
->  [ perf record: Captured and wrote 0.532 MB perf.data ]
->  # perf script --itrace=Ge | head -20
->  uname  4864 2419025.358181:      10000     cycles:
->         ffffffffbba56965 apparmor_bprm_committing_creds+0x35 ([kernel.kallsyms])
->         ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
->         ffffffffbba07422 security_bprm_committing_creds+0x22 ([kernel.kallsyms])
->         ffffffffbb89805d install_exec_creds+0xd ([kernel.kallsyms])
->         ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
-> 
->  uname  4864 2419025.358185:      10000     cycles:
->         ffffffffbba56db0 apparmor_bprm_committed_creds+0x20 ([kernel.kallsyms])
->         ffffffffbc400cd5 __indirect_thunk_start+0x5 ([kernel.kallsyms])
->         ffffffffbba07452 security_bprm_committed_creds+0x22 ([kernel.kallsyms])
->         ffffffffbb89809a install_exec_creds+0x4a ([kernel.kallsyms])
->         ffffffffbb90d9ac load_elf_binary+0x3ac ([kernel.kallsyms])
-> 
->  uname  4864 2419025.358189:      10000     cycles:
->         ffffffffbb86fdf6 vma_adjust_trans_huge+0x6 ([kernel.kallsyms])
->         ffffffffbb821660 __vma_adjust+0x160 ([kernel.kallsyms])
->         ffffffffbb897be7 shift_arg_pages+0x97 ([kernel.kallsyms])
->         ffffffffbb897ed9 setup_arg_pages+0x1e9 ([kernel.kallsyms])
->         ffffffffbb90d9f2 load_elf_binary+0x3f2 ([kernel.kallsyms])
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/util/intel-pt.c | 68 ++++++++++++++++++++++++++++++++++----
->  1 file changed, 61 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index db25c77d82f3..a659b4a1b3f2 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -124,6 +124,8 @@ struct intel_pt {
->  
->  	struct range *time_ranges;
->  	unsigned int range_cnt;
-> +
-> +	struct ip_callchain *chain;
->  };
->  
->  enum switch_state {
-> @@ -868,6 +870,45 @@ static u64 intel_pt_ns_to_ticks(const struct intel_pt *pt, u64 ns)
->  		pt->tc.time_mult;
->  }
->  
-> +static struct ip_callchain *intel_pt_alloc_chain(struct intel_pt *pt)
-> +{
-> +	size_t sz = sizeof(struct ip_callchain);
-> +
-> +	/* Add 1 to callchain_sz for callchain context */
-> +	sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
-> +	return zalloc(sz);
-> +}
-> +
-> +static int intel_pt_callchain_init(struct intel_pt *pt)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(pt->session->evlist, evsel) {
-> +		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN))
-> +			evsel->synth_sample_type |= PERF_SAMPLE_CALLCHAIN;
-> +	}
-> +
-> +	pt->chain = intel_pt_alloc_chain(pt);
-> +	if (!pt->chain)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
-> +static void intel_pt_add_callchain(struct intel_pt *pt,
-> +				   struct perf_sample *sample)
-> +{
-> +	struct thread *thread = machine__findnew_thread(pt->machine,
-> +							sample->pid,
-> +							sample->tid);
-> +
-> +	thread_stack__sample_late(thread, sample->cpu, pt->chain,
-> +				  pt->synth_opts.callchain_sz + 1, sample->ip,
-> +				  pt->kernel_start);
-> +
-> +	sample->callchain = pt->chain;
-> +}
-> +
->  static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
->  						   unsigned int queue_nr)
->  {
-> @@ -880,11 +921,7 @@ static struct intel_pt_queue *intel_pt_alloc_queue(struct intel_pt *pt,
->  		return NULL;
->  
->  	if (pt->synth_opts.callchain) {
-> -		size_t sz = sizeof(struct ip_callchain);
-> -
-> -		/* Add 1 to callchain_sz for callchain context */
-> -		sz += (pt->synth_opts.callchain_sz + 1) * sizeof(u64);
-> -		ptq->chain = zalloc(sz);
-> +		ptq->chain = intel_pt_alloc_chain(pt);
->  		if (!ptq->chain)
->  			goto out_free;
->  	}
-> @@ -1992,7 +2029,8 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
->  	if (!(state->type & INTEL_PT_BRANCH))
->  		return 0;
->  
-> -	if (pt->synth_opts.callchain || pt->synth_opts.thread_stack)
-> +	if (pt->synth_opts.callchain || pt->synth_opts.add_callchain ||
-> +	    pt->synth_opts.thread_stack)
->  		thread_stack__event(ptq->thread, ptq->cpu, ptq->flags, state->from_ip,
->  				    state->to_ip, ptq->insn_len,
->  				    state->trace_nr);
-> @@ -2639,6 +2677,11 @@ static int intel_pt_process_event(struct perf_session *session,
->  	if (err)
->  		return err;
->  
-> +	if (event->header.type == PERF_RECORD_SAMPLE) {
-> +		if (pt->synth_opts.add_callchain && !sample->callchain)
-> +			intel_pt_add_callchain(pt, sample);
-> +	}
-> +
->  	if (event->header.type == PERF_RECORD_AUX &&
->  	    (event->aux.flags & PERF_AUX_FLAG_TRUNCATED) &&
->  	    pt->synth_opts.errors) {
-> @@ -2710,6 +2753,7 @@ static void intel_pt_free(struct perf_session *session)
->  	session->auxtrace = NULL;
->  	thread__put(pt->unknown_thread);
->  	addr_filters__exit(&pt->filts);
-> +	zfree(&pt->chain);
->  	zfree(&pt->filter);
->  	zfree(&pt->time_ranges);
->  	free(pt);
-> @@ -3348,6 +3392,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->  		    !session->itrace_synth_opts->inject) {
->  			pt->synth_opts.branches = false;
->  			pt->synth_opts.callchain = true;
-> +			pt->synth_opts.add_callchain = true;
->  		}
->  		pt->synth_opts.thread_stack =
->  				session->itrace_synth_opts->thread_stack;
-> @@ -3380,14 +3425,22 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->  		pt->branches_filter |= PERF_IP_FLAG_RETURN |
->  				       PERF_IP_FLAG_TRACE_BEGIN;
->  
-> -	if (pt->synth_opts.callchain && !symbol_conf.use_callchain) {
-> +	if ((pt->synth_opts.callchain || pt->synth_opts.add_callchain) &&
-> +	    !symbol_conf.use_callchain) {
->  		symbol_conf.use_callchain = true;
->  		if (callchain_register_param(&callchain_param) < 0) {
->  			symbol_conf.use_callchain = false;
->  			pt->synth_opts.callchain = false;
-> +			pt->synth_opts.add_callchain = false;
->  		}
->  	}
->  
-> +	if (pt->synth_opts.add_callchain) {
-> +		err = intel_pt_callchain_init(pt);
-> +		if (err)
-> +			goto err_delete_thread;
-> +	}
-> +
->  	err = intel_pt_synth_events(pt, session);
->  	if (err)
->  		goto err_delete_thread;
-> @@ -3410,6 +3463,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
->  	return 0;
->  
->  err_delete_thread:
-> +	zfree(&pt->chain);
->  	thread__zput(pt->unknown_thread);
->  err_free_queues:
->  	intel_pt_log_disable();
 > -- 
-> 2.17.1
-> 
+> Regards,
+> Vincenzo
 
 -- 
 
