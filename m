@@ -1,48 +1,61 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 11/16] perf intel-pt: Add support for synthesizing
- callchains for regular events
-Date: Fri, 17 Apr 2020 16:50:00 +0300
-Message-ID: <5b8f28f5-968f-bfff-68af-ed0350a90765@intel.com>
-References: <20200401101613.6201-1-adrian.hunter@intel.com>
- <20200401101613.6201-12-adrian.hunter@intel.com>
- <20200416151443.GA2650@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Subject: [PATCH] perf/core: fix parent pid/tid in task exit events
+Date: Fri, 17 Apr 2020 11:28:42 -0700
+Message-ID: <20200417182842.12522-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200416151443.GA2650@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>, KP Singh <kpsingh@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 16/04/20 6:14 pm, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Apr 01, 2020 at 01:16:08PM +0300, Adrian Hunter escreveu:
->> Currently, callchains can be synthesized only for synthesized events.
->> Support also synthesizing callchains for regular events.
-> 
-> This is super cool, I wonder if we shouldn't do it automatically or just
-> adding a new type of callchains, i.e.:
-> 
-> 	perf record --call-graph pt uname
-> 
-> Should take care of all the details, i.e. do the extra steps below
-> behind the scenes.
-> 
-> Possibly even find out that the workload specified was built with
-> -fomit-frame-pointers, that the hardware has Intel PT and do all behind
-> the scenes for:
-> 
-> 	perf record -g uname
-> 
-> Alternatively we could take some less seemingly far fetched approach and
-> make this configurable via:
-> 
-> 	perf config call-graph.record-mode=pt
-> 
-> What do you think?
+Current logic yields the child task as the parent.
 
-Adding a --call-graph option sounds reasonable, and config to define default
-callgraph options.  But this was done at Andi Kleen's request, so he may
-want to comment.
+Before:
+$ perf record bash -c "perf list > /dev/null"
+$ perf script -D |grep 'FORK\|EXIT'
+4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
+4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
+4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
+                                                   ^
+  Note the repeated values here -------------------/
+
+After:
+383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
+383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
+383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
+
+Reported-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ kernel/events/core.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bc9b98a9af9a..633b4ae72ed5 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7491,10 +7491,17 @@ static void perf_event_task_output(struct perf_event *event,
+ 		goto out;
+ 
+ 	task_event->event_id.pid = perf_event_pid(event, task);
+-	task_event->event_id.ppid = perf_event_pid(event, current);
+-
+ 	task_event->event_id.tid = perf_event_tid(event, task);
+-	task_event->event_id.ptid = perf_event_tid(event, current);
++
++	if (task_event->event_id.header.type == PERF_RECORD_EXIT) {
++		task_event->event_id.ppid = perf_event_pid(event,
++							task->real_parent);
++		task_event->event_id.ptid = perf_event_pid(event,
++							task->real_parent);
++	} else {  /* PERF_RECORD_FORK */
++		task_event->event_id.ppid = perf_event_pid(event, current);
++		task_event->event_id.ptid = perf_event_tid(event, current);
++	}
+ 
+ 	task_event->event_id.time = perf_event_clock(event);
+ 
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
