@@ -1,48 +1,55 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] perf/core: fix parent pid/tid in task exit events
-Date: Fri, 17 Apr 2020 14:31:04 -0700
-Message-ID: <CAP-5=fU=mBqrZYqMYSXd6_12YV43ZPNSqQ=8GCRj5ZAQRJperg@mail.gmail.com>
-References: <20200417182842.12522-1-irogers@google.com> <20200417184536.GK20730@hirez.programming.kicks-ass.net>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 11/16] perf intel-pt: Add support for synthesizing
+ callchains for regular events
+Date: Fri, 17 Apr 2020 18:37:04 -0300
+Message-ID: <20200417213704.GB21512@kernel.org>
+References: <20200401101613.6201-1-adrian.hunter@intel.com>
+ <20200401101613.6201-12-adrian.hunter@intel.com>
+ <20200416151443.GA2650@kernel.org>
+ <5b8f28f5-968f-bfff-68af-ed0350a90765@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200417184536.GK20730@hirez.programming.kicks-ass.net>
+Content-Disposition: inline
+In-Reply-To: <5b8f28f5-968f-bfff-68af-ed0350a90765@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>, KP Singh <kpsingh@google.com>
+To: Andi Kleen <ak@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Apr 17, 2020 at 11:45 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Apr 17, 2020 at 11:28:42AM -0700, Ian Rogers wrote:
-> > Current logic yields the child task as the parent.
-> >
-> > Before:
-> > $ perf record bash -c "perf list > /dev/null"
-> > $ perf script -D |grep 'FORK\|EXIT'
-> > 4387036190981094 0x5a70 [0x30]: PERF_RECORD_FORK(10472:10472):(10470:10470)
-> > 4387036606207580 0xf050 [0x30]: PERF_RECORD_EXIT(10472:10472):(10472:10472)
-> > 4387036607103839 0x17150 [0x30]: PERF_RECORD_EXIT(10470:10470):(10470:10470)
-> >                                                    ^
-> >   Note the repeated values here -------------------/
-> >
-> > After:
-> > 383281514043 0x9d8 [0x30]: PERF_RECORD_FORK(2268:2268):(2266:2266)
-> > 383442003996 0x2180 [0x30]: PERF_RECORD_EXIT(2268:2268):(2266:2266)
-> > 383451297778 0xb70 [0x30]: PERF_RECORD_EXIT(2266:2266):(2265:2265)
-> >
->
-> Fixes: .... ?
+Em Fri, Apr 17, 2020 at 04:50:00PM +0300, Adrian Hunter escreveu:
+> On 16/04/20 6:14 pm, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Apr 01, 2020 at 01:16:08PM +0300, Adrian Hunter escreveu:
+> >> Currently, callchains can be synthesized only for synthesized events.
+> >> Support also synthesizing callchains for regular events.
+> > 
+> > This is super cool, I wonder if we shouldn't do it automatically or just
+> > adding a new type of callchains, i.e.:
+> > 
+> > 	perf record --call-graph pt uname
+> > 
+> > Should take care of all the details, i.e. do the extra steps below
+> > behind the scenes.
+> > 
+> > Possibly even find out that the workload specified was built with
+> > -fomit-frame-pointers, that the hardware has Intel PT and do all behind
+> > the scenes for:
+> > 
+> > 	perf record -g uname
+> > 
+> > Alternatively we could take some less seemingly far fetched approach and
+> > make this configurable via:
+> > 
+> > 	perf config call-graph.record-mode=pt
+> > 
+> > What do you think?
+> 
+> Adding a --call-graph option sounds reasonable, and config to define default
+> callgraph options.  But this was done at Andi Kleen's request, so he may
+> want to comment.
 
-Fixes:  94d5d1b2d891 ("perf_counter: Report the cloning task as parent
-on perf_counter_fork()")
+Andi? My concern is that if this is the optimal solution for a good
+subset of the machines out there, then we need to make it easy to use,
+even transparent, if possible and safe to take that path.
 
-Sorry, re-sending as plain-text was disabled on the message and so it
-bounced on lkml. Took some digging to find the original commit :-)
-
-Thanks,
-Ian
-
->
-> > Reported-by: KP Singh <kpsingh@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+- Arnaldo
