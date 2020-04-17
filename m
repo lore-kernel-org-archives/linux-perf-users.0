@@ -1,7 +1,7 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
-Date: Fri, 17 Apr 2020 09:14:39 +0100
-Message-ID: <1952b369-f3fd-845f-650b-3c0464e37016@huawei.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [PATCH 0/6] perf/imx_ddr: Add namespace for i.MX8 DDR Perf
+Date: Fri, 17 Apr 2020 08:29:56 +0000
+Message-ID: <DB8PR04MB6795285BBB9DC3A7198C23DDE6D90@DB8PR04MB6795.eurprd04.prod.outlook.com>
 References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
  <DB7PR04MB4618C0A8DD9BAB2A529CDCECE6EA0@DB7PR04MB4618.eurprd04.prod.outlook.com>
  <a2cc0772-4f5d-aba3-1f5c-7d4eef7a3f72@huawei.com>
@@ -17,11 +17,12 @@ References: <20200222104621.2258-1-qiangqing.zhang@nxp.com>
  <DB8PR04MB67957F63165ACC0483F6AE39E6D80@DB8PR04MB6795.eurprd04.prod.outlook.com>
  <8341b035-2fac-52dd-45d1-2bf6f5ea4ba4@huawei.com>
  <DB8PR04MB67952380E7240167C7E81178E6D90@DB8PR04MB6795.eurprd04.prod.outlook.com>
+ <1952b369-f3fd-845f-650b-3c0464e37016@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org>
-In-Reply-To: <DB8PR04MB67952380E7240167C7E81178E6D90@DB8PR04MB6795.eurprd04.prod.outlook.com>
+In-Reply-To: <1952b369-f3fd-845f-650b-3c0464e37016@huawei.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -32,33 +33,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane-mx.org@lists.infradead.org
-To: Joakim Zhang <qiangqing.zhang@nxp.com>, "irogers@google.com" <irogers@google.com>
+To: John Garry <john.garry@huawei.com>, "irogers@google.com" <irogers@google.com>
 Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Zhangshaokun <zhangshaokun@hisilicon.com>, "will@kernel.org" <will@kernel.org>, Linuxarm <linuxarm@huawei.com>, "acme@kernel.org" <acme@kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Jiri Olsa <jolsa@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 17/04/2020 06:49, Joakim Zhang wrote:
->>   smmuv3_pmcg.transaction  (49.56%)
->> 124902473      smmuv3_pmcg.cycles       (49.56%)
->>
->>          1.001167246 seconds time elapsed
->>
->> So you can compare this to yours.
->>
->> I did have to fix what looks like a bug in mainline on that branch:
-> Tested on private-topic-perf-5.7-sys-pmu-events-v1-debug branch, DDR Perf can work now, thanks.
-> Please remember to update JSON files which notified before.
-> 
-> Best Regards,
-> Joakim Zhang
->> --->8-----
-
-
-ok, good. So without this fix I supplied, it did still look to work for 
-me, but will lots of complaining from perf.
-
-Anyway, I'll look to send this series soon, and I'll update the imx 
-JSONs as requested. You will need to then add a fresh signed-off-by to 
-what I send.
-
-thanks,
-john
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
+Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMOW5tDTmnIgxN+aXpSAxNjoxNQ0KPiBUbzog
+Sm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IGlyb2dlcnNAZ29vZ2xlLmNv
+bQ0KPiBDYzogd2lsbEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgYWNtZUBrZXJu
+ZWwub3JnOw0KPiBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14
+IDxsaW51eC1pbXhAbnhwLmNvbT47IEppcmkgT2xzYQ0KPiA8am9sc2FAcmVkaGF0LmNvbT47IFpo
+YW5nc2hhb2t1biA8emhhbmdzaGFva3VuQGhpc2lsaWNvbi5jb20+Ow0KPiBMaW51eGFybSA8bGlu
+dXhhcm1AaHVhd2VpLmNvbT47IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDAvNl0gcGVyZi9pbXhfZGRyOiBBZGQgbmFtZXNwYWNlIGZv
+ciBpLk1YOCBERFIgUGVyZg0KPiANCj4gT24gMTcvMDQvMjAyMCAwNjo0OSwgSm9ha2ltIFpoYW5n
+IHdyb3RlOg0KPiA+PiAgIHNtbXV2M19wbWNnLnRyYW5zYWN0aW9uICAoNDkuNTYlKQ0KPiA+PiAx
+MjQ5MDI0NzMgICAgICBzbW11djNfcG1jZy5jeWNsZXMgICAgICAgKDQ5LjU2JSkNCj4gPj4NCj4g
+Pj4gICAgICAgICAgMS4wMDExNjcyNDYgc2Vjb25kcyB0aW1lIGVsYXBzZWQNCj4gPj4NCj4gPj4g
+U28geW91IGNhbiBjb21wYXJlIHRoaXMgdG8geW91cnMuDQo+ID4+DQo+ID4+IEkgZGlkIGhhdmUg
+dG8gZml4IHdoYXQgbG9va3MgbGlrZSBhIGJ1ZyBpbiBtYWlubGluZSBvbiB0aGF0IGJyYW5jaDoN
+Cj4gPiBUZXN0ZWQgb24gcHJpdmF0ZS10b3BpYy1wZXJmLTUuNy1zeXMtcG11LWV2ZW50cy12MS1k
+ZWJ1ZyBicmFuY2gsIEREUiBQZXJmDQo+IGNhbiB3b3JrIG5vdywgdGhhbmtzLg0KPiA+IFBsZWFz
+ZSByZW1lbWJlciB0byB1cGRhdGUgSlNPTiBmaWxlcyB3aGljaCBub3RpZmllZCBiZWZvcmUuDQo+
+ID4NCj4gPiBCZXN0IFJlZ2FyZHMsDQo+ID4gSm9ha2ltIFpoYW5nDQo+ID4+IC0tLT44LS0tLS0N
+Cj4gDQo+IA0KPiBvaywgZ29vZC4gU28gd2l0aG91dCB0aGlzIGZpeCBJIHN1cHBsaWVkLCBpdCBk
+aWQgc3RpbGwgbG9vayB0byB3b3JrIGZvciBtZSwgYnV0IHdpbGwNCj4gbG90cyBvZiBjb21wbGFp
+bmluZyBmcm9tIHBlcmYuDQoNCkFncmVlIQ0KDQo+IEFueXdheSwgSSdsbCBsb29rIHRvIHNlbmQg
+dGhpcyBzZXJpZXMgc29vbiwgYW5kIEknbGwgdXBkYXRlIHRoZSBpbXggSlNPTnMgYXMNCj4gcmVx
+dWVzdGVkLiBZb3Ugd2lsbCBuZWVkIHRvIHRoZW4gYWRkIGEgZnJlc2ggc2lnbmVkLW9mZi1ieSB0
+byB3aGF0IEkgc2VuZC4NCg0KRmVlbCBmcmVlIGFkZCBteSBzaWduZWQtb2ZmLWJ5IHRhZyBkaXJl
+Y3RseToNCglTaWduZWQtb2ZmLWJ5OiBKb2FraW0gWmhhbmcgPHFpYW5ncWluZy56aGFuZ0BueHAu
+Y29tPg0KDQpBZnRlciB0ZXN0LCBJIHdpbGwgZ2l2ZSBteSBUZXN0ZWQtYnkgdGFnLg0KDQpUaGFu
+a3MuDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtpbSBaaGFuZw0KPiB0aGFua3MsDQo+IGpvaG4NCg0K
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
