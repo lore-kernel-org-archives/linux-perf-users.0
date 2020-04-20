@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 27/60] perf intel-bts: Implement ->evsel_is_auxtrace() callback
-Date: Mon, 20 Apr 2020 08:52:43 -0300
-Message-ID: <20200420115316.18781-28-acme@kernel.org>
+Subject: [PATCH 26/60] perf intel-pt: Implement ->evsel_is_auxtrace() callback
+Date: Mon, 20 Apr 2020 08:52:42 -0300
+Message-ID: <20200420115316.18781-27-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -19,39 +19,39 @@ Implement ->evsel_is_auxtrace() callback.
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-4-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200401101613.6201-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-bts.c | 10 ++++++++++
+ tools/perf/util/intel-pt.c | 10 ++++++++++
  1 file changed, 10 insertions(+)
 
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 34cb380d19a3..059e1c805ed0 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -728,6 +728,15 @@ static void intel_bts_free(struct perf_session *session)
- 	free(bts);
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 23c8289c2472..db25c77d82f3 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -2715,6 +2715,15 @@ static void intel_pt_free(struct perf_session *session)
+ 	free(pt);
  }
  
-+static bool intel_bts_evsel_is_auxtrace(struct perf_session *session,
-+					struct evsel *evsel)
++static bool intel_pt_evsel_is_auxtrace(struct perf_session *session,
++				       struct evsel *evsel)
 +{
-+	struct intel_bts *bts = container_of(session->auxtrace, struct intel_bts,
-+					     auxtrace);
++	struct intel_pt *pt = container_of(session->auxtrace, struct intel_pt,
++					   auxtrace);
 +
-+	return evsel->core.attr.type == bts->pmu_type;
++	return evsel->core.attr.type == pt->pmu_type;
 +}
 +
- struct intel_bts_synth {
- 	struct perf_tool dummy_tool;
- 	struct perf_session *session;
-@@ -883,6 +892,7 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 	bts->auxtrace.flush_events = intel_bts_flush;
- 	bts->auxtrace.free_events = intel_bts_free_events;
- 	bts->auxtrace.free = intel_bts_free;
-+	bts->auxtrace.evsel_is_auxtrace = intel_bts_evsel_is_auxtrace;
- 	session->auxtrace = &bts->auxtrace;
+ static int intel_pt_process_auxtrace_event(struct perf_session *session,
+ 					   union perf_event *event,
+ 					   struct perf_tool *tool __maybe_unused)
+@@ -3310,6 +3319,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 	pt->auxtrace.flush_events = intel_pt_flush;
+ 	pt->auxtrace.free_events = intel_pt_free_events;
+ 	pt->auxtrace.free = intel_pt_free;
++	pt->auxtrace.evsel_is_auxtrace = intel_pt_evsel_is_auxtrace;
+ 	session->auxtrace = &pt->auxtrace;
  
- 	intel_bts_print_info(&auxtrace_info->priv[0], INTEL_BTS_PMU_TYPE,
+ 	if (dump_trace)
 -- 
 2.21.1
