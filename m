@@ -1,170 +1,124 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 41/60] perf tools: Add support for leader-sampling with AUX area events
-Date: Mon, 20 Apr 2020 08:52:57 -0300
-Message-ID: <20200420115316.18781-42-acme@kernel.org>
+Subject: [PATCH 42/60] perf stat: Force error in fallback on :k events
+Date: Mon, 20 Apr 2020 08:52:58 -0300
+Message-ID: <20200420115316.18781-43-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Stephane Eranian <eranian@google.com>
 
-When AUX area events are used in sampling mode, they must be the group
-leader, but the group leader is also used for leader-sampling. However,
-it is not desirable to use an AUX area event as the leader for
-leader-sampling, because it doesn't have any samples of its own. To support
-leader-sampling with AUX area events, use the 2nd event of the group as the
-"leader" for the purposes of leader-sampling.
+When it is not possible for a non-privilege perf command to monitor at
+the kernel level (:k), the fallback code forces a :u. That works if the
+event was previously monitoring both levels.  But if the event was
+already constrained to kernel only, then it does not make sense to
+restrict it to user only.
 
-Example:
+Given the code works by exclusion, a kernel only event would have:
 
- # perf record --kcore --aux-sample -e '{intel_pt//,cycles,instructions}:S' -c 10000 uname
- [ perf record: Woken up 3 times to write data ]
- [ perf record: Captured and wrote 0.786 MB perf.data ]
- # perf report
- Samples: 380  of events 'anon group { cycles, instructions }', Event count (approx.): 3026164
-           Children              Self  Command  Shared Object      Symbol
- +   38.76%  42.65%     0.00%   0.00%  uname    [kernel.kallsyms]  [k] __x86_indirect_thunk_rax
- +   35.82%  31.33%     0.00%   0.00%  uname    ld-2.28.so         [.] _dl_start_user
- +   34.29%  29.74%     0.55%   0.47%  uname    ld-2.28.so         [.] _dl_start
- +   33.73%  28.62%     1.60%   0.97%  uname    ld-2.28.so         [.] dl_main
- +   33.19%  29.04%     0.52%   0.32%  uname    ld-2.28.so         [.] _dl_sysdep_start
- +   27.83%  33.74%     0.00%   0.00%  uname    [kernel.kallsyms]  [k] do_syscall_64
- +   26.76%  33.29%     0.00%   0.00%  uname    [kernel.kallsyms]  [k] entry_SYSCALL_64_after_hwframe
- +   23.78%  20.33%     5.97%   5.25%  uname    [kernel.kallsyms]  [k] page_fault
- +   23.18%  24.60%     0.00%   0.00%  uname    libc-2.28.so       [.] __libc_start_main
- +   22.64%  24.37%     0.00%   0.00%  uname    uname              [.] _start
- +   21.04%  23.27%     0.00%   0.00%  uname    uname              [.] main
- +   19.48%  18.08%     3.72%   3.64%  uname    ld-2.28.so         [.] _dl_relocate_object
- +   19.47%  21.81%     0.00%   0.00%  uname    libc-2.28.so       [.] setlocale
- +   19.44%  21.56%     0.52%   0.61%  uname    libc-2.28.so       [.] _nl_find_locale
- +   17.87%  19.66%     0.00%   0.00%  uname    libc-2.28.so       [.] _nl_load_locale_from_archive
- +   15.71%  13.73%     0.53%   0.52%  uname    [kernel.kallsyms]  [k] do_page_fault
- +   15.18%  13.21%     1.03%   0.68%  uname    [kernel.kallsyms]  [k] handle_mm_fault
- +   14.15%  12.53%     1.01%   1.12%  uname    [kernel.kallsyms]  [k] __handle_mm_fault
- +   12.03%   9.67%     0.54%   0.32%  uname    ld-2.28.so         [.] _dl_map_object
- +   10.55%   8.48%     0.00%   0.00%  uname    ld-2.28.so         [.] openaux
- +   10.55%  20.20%     0.52%   0.61%  uname    libc-2.28.so       [.] __run_exit_handlers
+  attr->exclude_user = 1
 
-Comnmitter notes:
+The fallback code would add:
 
-Fixed up this problem:
+  attr->exclude_kernel = 1
 
-  util/record.c: In function ‘perf_evlist__config’:
-  util/record.c:256:3: error: too few arguments to function ‘perf_evsel__config_leader_sampling’
-    256 |   perf_evsel__config_leader_sampling(evsel);
-        |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/record.c:190:13: note: declared here
-    190 | static void perf_evsel__config_leader_sampling(struct evsel *evsel,
-        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In the end the end would not monitor in either the user level or kernel
+level. In other words, it would count nothing.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+An event programmed to monitor kernel only cannot be switched to user
+only without seriously warning the user.
+
+This patch forces an error in this case to make it clear the request
+cannot really be satisfied.
+
+Behavior with paranoid 1:
+
+  $ sudo bash -c "echo 1 > /proc/sys/kernel/perf_event_paranoid"
+  $ perf stat -e cycles:k sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+           1,520,413      cycles:k
+
+         1.002361664 seconds time elapsed
+
+         0.002480000 seconds user
+         0.000000000 seconds sys
+
+Old behavior with paranoid 2:
+
+  $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
+  $ perf stat -e cycles:k sleep 1
+   Performance counter stats for 'sleep 1':
+
+                   0      cycles:ku
+
+         1.002358127 seconds time elapsed
+
+         0.002384000 seconds user
+         0.000000000 seconds sys
+
+New behavior with paranoid 2:
+
+  $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
+  $ perf stat -e cycles:k sleep 1
+  Error:
+  You may not have permission to collect stats.
+
+  Consider tweaking /proc/sys/kernel/perf_event_paranoid,
+  which controls use of the performance events system by
+  unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
+
+  The current value is 2:
+
+    -1: Allow use of (almost) all events by all users
+        Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+  >= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
+        Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
+  >= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
+  >= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
+
+  To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
+
+          kernel.perf_event_paranoid = -1
+
+v2 of this patch addresses the review feedback from jolsa@redhat.com.
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-17-adrian.hunter@intel.com
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200414161550.225588-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-list.txt |  3 ++
- tools/perf/util/record.c               | 45 ++++++++++++++++++++++----
- 2 files changed, 42 insertions(+), 6 deletions(-)
+ tools/perf/util/evsel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 6345db33c533..cb23667531ab 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -258,6 +258,9 @@ Normally all events in an event group sample, but with :S only
- the first event (the leader) samples, and it only reads the values of the
- other events in the group.
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 8300e8c7aea8..6a571d322bb2 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2427,6 +2427,10 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
+ 		char *new_name;
+ 		const char *sep = ":";
  
-+However, in the case AUX area events (e.g. Intel PT or CoreSight), the AUX
-+area event must be the leader, so then the second event samples, not the first.
++		/* If event has exclude user then don't exclude kernel. */
++		if (evsel->core.attr.exclude_user)
++			return false;
 +
- OPTIONS
- -------
- 
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 32aeeb8a8d00..6d3e3df6e2a1 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -167,17 +167,46 @@ bool perf_can_aux_sample(void)
- 	return true;
- }
- 
--static void perf_evsel__config_leader_sampling(struct evsel *evsel)
-+/*
-+ * perf_evsel__config_leader_sampling() uses special rules for leader sampling.
-+ * However, if the leader is an AUX area event, then assume the event to sample
-+ * is the next event.
-+ */
-+static struct evsel *perf_evsel__read_sampler(struct evsel *evsel,
-+					      struct evlist *evlist)
-+{
-+	struct evsel *leader = evsel->leader;
-+
-+	if (perf_evsel__is_aux_event(leader)) {
-+		evlist__for_each_entry(evlist, evsel) {
-+			if (evsel->leader == leader && evsel != evsel->leader)
-+				return evsel;
-+		}
-+	}
-+
-+	return leader;
-+}
-+
-+static void perf_evsel__config_leader_sampling(struct evsel *evsel,
-+					       struct evlist *evlist)
- {
- 	struct perf_event_attr *attr = &evsel->core.attr;
- 	struct evsel *leader = evsel->leader;
-+	struct evsel *read_sampler;
-+
-+	if (!leader->sample_read)
-+		return;
-+
-+	read_sampler = perf_evsel__read_sampler(evsel, evlist);
- 
--	if (leader == evsel || !leader->sample_read)
-+	if (evsel == read_sampler)
- 		return;
- 
- 	/*
--	 * Disable sampling for all group members other
--	 * than leader in case leader 'leads' the sampling.
-+	 * Disable sampling for all group members other than the leader in
-+	 * case the leader 'leads' the sampling, except when the leader is an
-+	 * AUX area event, in which case the 2nd event in the group is the one
-+	 * that 'leads' the sampling.
- 	 */
- 	attr->freq           = 0;
- 	attr->sample_freq    = 0;
-@@ -188,8 +217,12 @@ static void perf_evsel__config_leader_sampling(struct evsel *evsel)
- 	 * We don't get a sample for slave events, we make them when delivering
- 	 * the group leader sample. Set the slave event to follow the master
- 	 * sample_type to ease up reporting.
-+	 * An AUX area event also has sample_type requirements, so also include
-+	 * the sample type bits from the leader's sample_type to cover that
-+	 * case.
- 	 */
--	attr->sample_type = leader->core.attr.sample_type;
-+	attr->sample_type = read_sampler->core.attr.sample_type |
-+			    leader->core.attr.sample_type;
- }
- 
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
-@@ -220,7 +253,7 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 
- 	/* Configure leader sampling here now that the sample type is known */
- 	evlist__for_each_entry(evlist, evsel)
--		perf_evsel__config_leader_sampling(evsel);
-+		perf_evsel__config_leader_sampling(evsel, evlist);
- 
- 	if (opts->full_auxtrace) {
- 		/*
+ 		/* Is there already the separator in the name. */
+ 		if (strchr(name, '/') ||
+ 		    strchr(name, ':'))
 -- 
 2.21.1
