@@ -1,127 +1,184 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 38/60] perf evlist: Move leader-sampling configuration
-Date: Mon, 20 Apr 2020 08:52:54 -0300
-Message-ID: <20200420115316.18781-39-acme@kernel.org>
+Subject: [PATCH 46/60] perf parser: Add support to specify rXXX event with pmu
+Date: Mon, 20 Apr 2020 08:53:02 -0300
+Message-ID: <20200420115316.18781-47-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Sumanth Korikkar <sumanthk@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Jiri Olsa <jolsa@redhat.com>
 
-Move leader-sampling configuration in preparation for adding support for
-leader sampling with AUX area events.
+The current rXXXX event specification creates event under PERF_TYPE_RAW
+pmu type. This change allows to use rXXXX within pmu syntax, so it's
+type is used via the following syntax:
 
-Committer notes:
+  -e 'cpu/r3c/'
+  -e 'cpum_cf/r0/'
 
-It only makes sense when configuring an evsel that is part of an evlist,
-so the only case where it is called outside perf_evlist__config(), in
-some 'perf test' entry, is safe, and even there we should just use
-perf_evlist__config(), but since in that case we have just one evsel in
-the evlist, it is equivalent.
+The XXXX number goes directly to perf_event_attr::config the same way as
+in '-e rXXXX' event. The perf_event_attr::type is filled with pmu type.
 
-Also fixed up this problem:
+Committer testing:
 
-  util/record.c: In function ‘perf_evlist__config’:
-  util/record.c:223:3: error: too many arguments to function ‘perf_evsel__config_leader_sampling’
-    223 |   perf_evsel__config_leader_sampling(evsel, evlist);
-        |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  util/record.c:170:13: note: declared here
-    170 | static void perf_evsel__config_leader_sampling(struct evsel *evsel)
-        |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+So, lets see what goes in perf_event_attr::config for, say, the
+'instructions' PERF_TYPE_HARDWARE (0) event, first we should look at how
+to encode this event as a PERF_TYPE_RAW event for this specific CPU, an
+AMD Ryzen 5:
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200401101613.6201-14-adrian.hunter@intel.com
+  # cat /sys/devices/cpu/events/instructions
+  event=0xc0
+  #
+
+Then try with it _and_ the instruction, just to see that they are close
+enough:
+
+  # perf stat -e rc0,instructions sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+             919,794      rc0
+             919,898      instructions
+
+         1.000754579 seconds time elapsed
+
+         0.000715000 seconds user
+         0.000000000 seconds sys
+  #
+
+Now we should try, before this patch, the PMU event encoding:
+
+  # perf stat -e cpu/rc0/ sleep 1
+  event syntax error: 'cpu/rc0/'
+                           \___ unknown term
+
+  valid terms: event,edge,inv,umask,cmask,config,config1,config2,name,period,percore
+  #
+
+Now with this patch, the three ways of specifying the 'instructions' CPU
+counter are accepted:
+
+  # perf stat -e cpu/rc0/,rc0,instructions sleep 1
+
+   Performance counter stats for 'sleep 1':
+
+             892,948      cpu/rc0/
+             893,052      rc0
+             893,156      instructions
+
+         1.000931819 seconds time elapsed
+
+         0.000916000 seconds user
+         0.000000000 seconds sys
+
+  #
+
+Requested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Link: http://lore.kernel.org/lkml/20200416221405.437788-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c  | 19 -------------------
- tools/perf/util/record.c | 29 +++++++++++++++++++++++++++++
- 2 files changed, 29 insertions(+), 19 deletions(-)
+ tools/perf/Documentation/perf-list.txt |  5 +++++
+ tools/perf/tests/parse-events.c        | 17 ++++++++++++++++-
+ tools/perf/util/parse-events.l         |  1 +
+ tools/perf/util/parse-events.y         |  9 +++++++++
+ 4 files changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index f320adaf1326..8300e8c7aea8 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1002,25 +1002,6 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
- 		}
- 	}
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index cb23667531ab..376a50b3452d 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -115,6 +115,11 @@ raw encoding of 0x1A8 can be used:
+  perf stat -e r1a8 -a sleep 1
+  perf record -e r1a8 ...
  
--	/*
--	 * Disable sampling for all group members other
--	 * than leader in case leader 'leads' the sampling.
--	 */
--	if ((leader != evsel) && leader->sample_read) {
--		attr->freq           = 0;
--		attr->sample_freq    = 0;
--		attr->sample_period  = 0;
--		attr->write_backward = 0;
--
--		/*
--		 * We don't get sample for slave events, we make them
--		 * when delivering group leader sample. Set the slave
--		 * event to follow the master sample_type to ease up
--		 * report.
--		 */
--		attr->sample_type = leader->core.attr.sample_type;
--	}
--
- 	if (opts->no_samples)
- 		attr->sample_freq = 0;
++It's also possible to use pmu syntax:
++
++ perf record -e r1a8 -a sleep 1
++ perf record -e cpu/r1a8/ ...
++
+ You should refer to the processor specific documentation for getting these
+ details. Some of them are referenced in the SEE ALSO section below.
  
-diff --git a/tools/perf/util/record.c b/tools/perf/util/record.c
-index 7def66168503..8870ae451cac 100644
---- a/tools/perf/util/record.c
-+++ b/tools/perf/util/record.c
-@@ -167,6 +167,31 @@ bool perf_can_aux_sample(void)
- 	return true;
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 091c3aeccc27..902bd9d591a0 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1356,6 +1356,16 @@ static int test__checkevent_complex_name(struct evlist *evlist)
+ 	return 0;
  }
  
-+static void perf_evsel__config_leader_sampling(struct evsel *evsel)
++static int test__checkevent_raw_pmu(struct evlist *evlist)
 +{
-+	struct perf_event_attr *attr = &evsel->core.attr;
-+	struct evsel *leader = evsel->leader;
++	struct evsel *evsel = evlist__first(evlist);
 +
-+	/*
-+	 * Disable sampling for all group members other
-+	 * than leader in case leader 'leads' the sampling.
-+	 */
-+	if (leader != evsel && leader->sample_read) {
-+		attr->freq           = 0;
-+		attr->sample_freq    = 0;
-+		attr->sample_period  = 0;
-+		attr->write_backward = 0;
-+
-+		/*
-+		 * We don't get sample for slave events, we make them
-+		 * when delivering group leader sample. Set the slave
-+		 * event to follow the master sample_type to ease up
-+		 * report.
-+		 */
-+		attr->sample_type = leader->core.attr.sample_type;
-+	}
++	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
++	TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong config", 0x1a == evsel->core.attr.config);
++	return 0;
 +}
 +
- void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			 struct callchain_param *callchain)
+ static int test__sym_event_slash(struct evlist *evlist)
  {
-@@ -193,6 +218,10 @@ void perf_evlist__config(struct evlist *evlist, struct record_opts *opts,
- 			evsel->core.attr.comm_exec = 1;
- 	}
+ 	struct evsel *evsel = evlist__first(evlist);
+@@ -1750,7 +1760,12 @@ static struct evlist_test test__events_pmu[] = {
+ 		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp",
+ 		.check = test__checkevent_complex_name,
+ 		.id    = 3,
+-	}
++	},
++	{
++		.name  = "software/r1a/",
++		.check = test__checkevent_raw_pmu,
++		.id    = 4,
++	},
+ };
  
-+	/* Configure leader sampling here now that the sample type is known */
-+	evlist__for_each_entry(evlist, evsel)
-+		perf_evsel__config_leader_sampling(evsel);
+ struct terms_test {
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index baa48f28d57d..c589fc42f058 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -286,6 +286,7 @@ no-overwrite		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_NOOVERWRITE); }
+ percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
+ aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
+ aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
++r{num_raw_hex}		{ return raw(yyscanner); }
+ ,			{ return ','; }
+ "/"			{ BEGIN(INITIAL); return '/'; }
+ {name_minus}		{ return str(yyscanner, PE_NAME); }
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 94f8bcd83582..e879eb257874 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -706,6 +706,15 @@ event_term
+ }
+ 
+ event_term:
++PE_RAW
++{
++	struct parse_events_term *term;
 +
- 	if (opts->full_auxtrace) {
- 		/*
- 		 * Need to be able to synthesize and parse selected events with
++	ABORT_ON(parse_events_term__num(&term, PARSE_EVENTS__TERM_TYPE_CONFIG,
++					NULL, $1, false, &@1, NULL));
++	$$ = term;
++}
++|
+ PE_NAME '=' PE_NAME
+ {
+ 	struct parse_events_term *term;
 -- 
 2.21.1
