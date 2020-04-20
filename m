@@ -1,74 +1,65 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf/record: add num-synthesize-threads option
-Date: Mon, 20 Apr 2020 10:34:48 +0200
-Message-ID: <20200420075919.GA718574@krava>
-References: <20200416001303.96841-1-irogers@google.com>
+Subject: Re: [PATCH] perf record: add dummy event during system wide synthesis
+Date: Mon, 20 Apr 2020 10:43:39 +0200
+Message-ID: <20200420083720.GB718574@krava>
+References: <20200416004713.192740-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200416001303.96841-1-irogers@google.com>
+In-Reply-To: <20200416004713.192740-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:13:03PM -0700, Ian Rogers wrote:
-
-SNIP
-
+On Wed, Apr 15, 2020 at 05:47:13PM -0700, Ian Rogers wrote:
+> During the processing of /proc during event synthesis new processes may
+> start. Add a dummy event if /proc is to be processed, to capture mmaps
+> for starting processes. This reuses the existing logic for
+> initial-delay.
+> 
+> Suggested-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-record.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
 > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 1ab349abe904..2f97d0c32a75 100644
+> index 1ab349abe904..bab4fc8568d1 100644
 > --- a/tools/perf/builtin-record.c
 > +++ b/tools/perf/builtin-record.c
-> @@ -43,6 +43,7 @@
->  #include "util/time-utils.h"
->  #include "util/units.h"
->  #include "util/bpf-event.h"
-> +#include "util/util.h"
->  #include "asm/bug.h"
->  #include "perf.h"
+> @@ -805,16 +805,18 @@ static int record__open(struct record *rec)
+>  	int rc = 0;
 >  
-> @@ -50,6 +51,7 @@
->  #include <inttypes.h>
->  #include <locale.h>
->  #include <poll.h>
-> +#include <pthread.h>
->  #include <unistd.h>
->  #include <sched.h>
->  #include <signal.h>
-> @@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
->  	return record__write(rec, NULL, event, event->header.size);
->  }
->  
-> +static int process_locked_synthesized_event(struct perf_tool *tool,
-> +				     union perf_event *event,
-> +				     struct perf_sample *sample __maybe_unused,
-> +				     struct machine *machine __maybe_unused)
-> +{
-> +	static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
-> +	int ret;
-> +
-> +	pthread_mutex_lock(&synth_lock);
-> +	ret = process_synthesized_event(tool, event, sample, machine);
-> +	pthread_mutex_unlock(&synth_lock);
+>  	/*
+> -	 * For initial_delay we need to add a dummy event so that we can track
+> -	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
+> -	 * real events, the ones asked by the user.
+> +	 * For initial_delay or system wide, we need to add a dummy event so
+> +	 * that we can track PERF_RECORD_MMAP to cover the delay (of waiting or
+> +	 * synthesis) prior to the real user events being enabled.
+>  	 */
+> -	if (opts->initial_delay) {
+> +	if (opts->initial_delay || target__has_cpu(&opts->target)) {
 
-hum, so how much faster is the synthesizing with threads in record,
-given that we serialize it on every event that goes to the file?
-
-> +	return ret;
-> +}
-> +
->  static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
->  {
->  	struct record *rec = to;
-> @@ -1288,6 +1304,8 @@ static int record__synthesize(struct record *rec, bool tail)
->  	struct perf_tool *tool = &rec->tool;
->  	int fd = perf_data__fd(data);
->  	int err = 0;
-> +	int (*f)(struct perf_tool *, union perf_event *, struct perf_sample *,
-> +		struct machine *) = process_synthesized_event;
-
-there's event_op typedef in util/tools.h
+hum, how this works for system wide? IIRC the delay works
+for monitoring tasks by setting dummy with enable_on_exec,
+and enabling the rest by ioctl after the delay.. so without
+the monitored task there's no enable_on_exec effect
 
 jirka
+
+>  		if (perf_evlist__add_dummy(evlist))
+>  			return -ENOMEM;
+>  
+> +		/* Disable tracking of mmaps on lead event. */
+>  		pos = evlist__first(evlist);
+>  		pos->tracking = 0;
+> +		/* Activate dummy event immediately. */
+>  		pos = evlist__last(evlist);
+>  		pos->tracking = 1;
+>  		pos->core.attr.enable_on_exec = 1;
+> -- 
+> 2.26.0.110.g2183baf09c-goog
+> 
