@@ -1,124 +1,131 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 42/60] perf stat: Force error in fallback on :k events
-Date: Mon, 20 Apr 2020 08:52:58 -0300
-Message-ID: <20200420115316.18781-43-acme@kernel.org>
+Subject: [PATCH 43/60] tools lib traceevent: Take care of return value of asprintf
+Date: Mon, 20 Apr 2020 08:52:59 -0300
+Message-ID: <20200420115316.18781-44-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, He Zhe <zhe.he@windriver.com>, Steven Rostedt <rostedt@goodmis.org>, Tzvetomir Stoyanov <tstoyanov@vmware.com>, hewenliang4@huawei.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: He Zhe <zhe.he@windriver.com>
 
-When it is not possible for a non-privilege perf command to monitor at
-the kernel level (:k), the fallback code forces a :u. That works if the
-event was previously monitoring both levels.  But if the event was
-already constrained to kernel only, then it does not make sense to
-restrict it to user only.
+According to the API, if memory allocation wasn't possible, or some
+other error occurs, asprintf will return -1, and the contents of strp
+below are undefined.
 
-Given the code works by exclusion, a kernel only event would have:
+  int asprintf(char **strp, const char *fmt, ...);
 
-  attr->exclude_user = 1
+This patch takes care of return value of asprintf to make it less error
+prone and prevent the following build warning.
 
-The fallback code would add:
+  ignoring return value of ‘asprintf’, declared with attribute warn_unused_result [-Wunused-result]
 
-  attr->exclude_kernel = 1
-
-In the end the end would not monitor in either the user level or kernel
-level. In other words, it would count nothing.
-
-An event programmed to monitor kernel only cannot be switched to user
-only without seriously warning the user.
-
-This patch forces an error in this case to make it clear the request
-cannot really be satisfied.
-
-Behavior with paranoid 1:
-
-  $ sudo bash -c "echo 1 > /proc/sys/kernel/perf_event_paranoid"
-  $ perf stat -e cycles:k sleep 1
-
-   Performance counter stats for 'sleep 1':
-
-           1,520,413      cycles:k
-
-         1.002361664 seconds time elapsed
-
-         0.002480000 seconds user
-         0.000000000 seconds sys
-
-Old behavior with paranoid 2:
-
-  $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
-  $ perf stat -e cycles:k sleep 1
-   Performance counter stats for 'sleep 1':
-
-                   0      cycles:ku
-
-         1.002358127 seconds time elapsed
-
-         0.002384000 seconds user
-         0.000000000 seconds sys
-
-New behavior with paranoid 2:
-
-  $ sudo bash -c "echo 2 > /proc/sys/kernel/perf_event_paranoid"
-  $ perf stat -e cycles:k sleep 1
-  Error:
-  You may not have permission to collect stats.
-
-  Consider tweaking /proc/sys/kernel/perf_event_paranoid,
-  which controls use of the performance events system by
-  unprivileged users (without CAP_PERFMON or CAP_SYS_ADMIN).
-
-  The current value is 2:
-
-    -1: Allow use of (almost) all events by all users
-        Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-  >= 0: Disallow ftrace function tracepoint by users without CAP_PERFMON or CAP_SYS_ADMIN
-        Disallow raw tracepoint access by users without CAP_SYS_PERFMON or CAP_SYS_ADMIN
-  >= 1: Disallow CPU event access by users without CAP_PERFMON or CAP_SYS_ADMIN
-  >= 2: Disallow kernel profiling by users without CAP_PERFMON or CAP_SYS_ADMIN
-
-  To make this setting permanent, edit /etc/sysctl.conf too, e.g.:
-
-          kernel.perf_event_paranoid = -1
-
-v2 of this patch addresses the review feedback from jolsa@redhat.com.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200414161550.225588-1-irogers@google.com
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Cc: hewenliang4@huawei.com
+Link: http://lore.kernel.org/lkml/1582163930-233692-1-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/lib/traceevent/parse-filter.c | 29 +++++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8300e8c7aea8..6a571d322bb2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2427,6 +2427,10 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
- 		char *new_name;
- 		const char *sep = ":";
+diff --git a/tools/lib/traceevent/parse-filter.c b/tools/lib/traceevent/parse-filter.c
+index 20eed719542e..c271aeeb227d 100644
+--- a/tools/lib/traceevent/parse-filter.c
++++ b/tools/lib/traceevent/parse-filter.c
+@@ -1958,7 +1958,8 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 				default:
+ 					break;
+ 				}
+-				asprintf(&str, val ? "TRUE" : "FALSE");
++				if (asprintf(&str, val ? "TRUE" : "FALSE") < 0)
++					str = NULL;
+ 				break;
+ 			}
+ 		}
+@@ -1976,7 +1977,8 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 			break;
+ 		}
  
-+		/* If event has exclude user then don't exclude kernel. */
-+		if (evsel->core.attr.exclude_user)
-+			return false;
-+
- 		/* Is there already the separator in the name. */
- 		if (strchr(name, '/') ||
- 		    strchr(name, ':'))
+-		asprintf(&str, "(%s) %s (%s)", left, op, right);
++		if (asprintf(&str, "(%s) %s (%s)", left, op, right) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	case TEP_FILTER_OP_NOT:
+@@ -1992,10 +1994,12 @@ static char *op_to_str(struct tep_event_filter *filter, struct tep_filter_arg *a
+ 			right_val = 0;
+ 		if (right_val >= 0) {
+ 			/* just return the opposite */
+-			asprintf(&str, right_val ? "FALSE" : "TRUE");
++			if (asprintf(&str, right_val ? "FALSE" : "TRUE") < 0)
++				str = NULL;
+ 			break;
+ 		}
+-		asprintf(&str, "%s(%s)", op, right);
++		if (asprintf(&str, "%s(%s)", op, right) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2011,7 +2015,8 @@ static char *val_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ {
+ 	char *str = NULL;
+ 
+-	asprintf(&str, "%lld", arg->value.val);
++	if (asprintf(&str, "%lld", arg->value.val) < 0)
++		str = NULL;
+ 
+ 	return str;
+ }
+@@ -2069,7 +2074,8 @@ static char *exp_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		break;
+ 	}
+ 
+-	asprintf(&str, "%s %s %s", lstr, op, rstr);
++	if (asprintf(&str, "%s %s %s", lstr, op, rstr) < 0)
++		str = NULL;
+ out:
+ 	free(lstr);
+ 	free(rstr);
+@@ -2113,7 +2119,8 @@ static char *num_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		if (!op)
+ 			op = "<=";
+ 
+-		asprintf(&str, "%s %s %s", lstr, op, rstr);
++		if (asprintf(&str, "%s %s %s", lstr, op, rstr) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2148,8 +2155,9 @@ static char *str_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 		if (!op)
+ 			op = "!~";
+ 
+-		asprintf(&str, "%s %s \"%s\"",
+-			 arg->str.field->name, op, arg->str.val);
++		if (asprintf(&str, "%s %s \"%s\"",
++			 arg->str.field->name, op, arg->str.val) < 0)
++			str = NULL;
+ 		break;
+ 
+ 	default:
+@@ -2165,7 +2173,8 @@ static char *arg_to_str(struct tep_event_filter *filter, struct tep_filter_arg *
+ 
+ 	switch (arg->type) {
+ 	case TEP_FILTER_ARG_BOOLEAN:
+-		asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE");
++		if (asprintf(&str, arg->boolean.value ? "TRUE" : "FALSE") < 0)
++			str = NULL;
+ 		return str;
+ 
+ 	case TEP_FILTER_ARG_OP:
 -- 
 2.21.1
