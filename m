@@ -1,41 +1,74 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 11/16] perf intel-pt: Add support for synthesizing
- callchains for regular events
-Date: Sun, 19 Apr 2020 20:04:57 -0700
-Message-ID: <20200420030457.GA608746@tassilo.jf.intel.com>
-References: <20200401101613.6201-1-adrian.hunter@intel.com>
- <20200401101613.6201-12-adrian.hunter@intel.com>
- <20200416151443.GA2650@kernel.org>
- <5b8f28f5-968f-bfff-68af-ed0350a90765@intel.com>
- <20200417213704.GB21512@kernel.org>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] perf/record: add num-synthesize-threads option
+Date: Mon, 20 Apr 2020 10:34:48 +0200
+Message-ID: <20200420075919.GA718574@krava>
+References: <20200416001303.96841-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200417213704.GB21512@kernel.org>
+In-Reply-To: <20200416001303.96841-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-> Andi? My concern is that if this is the optimal solution for a good
-> subset of the machines out there, then we need to make it easy to use,
-> even transparent, if possible and safe to take that path.
+On Wed, Apr 15, 2020 at 05:13:03PM -0700, Ian Rogers wrote:
 
-I'm not sure it's that great in the general case.  A PT call graph
-would need a full PT recording from start to end.
+SNIP
 
-The problem with full PT recording is that it doesn't really work for a
-lot of workloads, because for anything doing enough computation the CPU
-just generates too much data and you end up with a lot of gaps in the
-trace when the perf record flushing cannot keep up.
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 1ab349abe904..2f97d0c32a75 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -43,6 +43,7 @@
+>  #include "util/time-utils.h"
+>  #include "util/units.h"
+>  #include "util/bpf-event.h"
+> +#include "util/util.h"
+>  #include "asm/bug.h"
+>  #include "perf.h"
+>  
+> @@ -50,6 +51,7 @@
+>  #include <inttypes.h>
+>  #include <locale.h>
+>  #include <poll.h>
+> +#include <pthread.h>
+>  #include <unistd.h>
+>  #include <sched.h>
+>  #include <signal.h>
+> @@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
+>  	return record__write(rec, NULL, event, event->header.size);
+>  }
+>  
+> +static int process_locked_synthesized_event(struct perf_tool *tool,
+> +				     union perf_event *event,
+> +				     struct perf_sample *sample __maybe_unused,
+> +				     struct machine *machine __maybe_unused)
+> +{
+> +	static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
+> +	int ret;
+> +
+> +	pthread_mutex_lock(&synth_lock);
+> +	ret = process_synthesized_event(tool, event, sample, machine);
+> +	pthread_mutex_unlock(&synth_lock);
 
-Also even if it worked you might end up with far too much data that
-will take a long time to process.
+hum, so how much faster is the synthesizing with threads in record,
+given that we serialize it on every event that goes to the file?
 
-So I suspect it wouldn't work often enough to be generally useful.
+> +	return ret;
+> +}
+> +
+>  static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+>  {
+>  	struct record *rec = to;
+> @@ -1288,6 +1304,8 @@ static int record__synthesize(struct record *rec, bool tail)
+>  	struct perf_tool *tool = &rec->tool;
+>  	int fd = perf_data__fd(data);
+>  	int err = 0;
+> +	int (*f)(struct perf_tool *, union perf_event *, struct perf_sample *,
+> +		struct machine *) = process_synthesized_event;
 
-For the leader sample case we just want to use some non PT method
-to get the call graph.
+there's event_op typedef in util/tools.h
 
--Andi
+jirka
