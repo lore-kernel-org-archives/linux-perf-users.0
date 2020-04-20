@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 18/60] perf bench: Add event synthesis benchmark
-Date: Mon, 20 Apr 2020 08:52:34 -0300
-Message-ID: <20200420115316.18781-19-acme@kernel.org>
+Subject: [PATCH 15/60] doc/admin-guide: Update perf-security.rst with CAP_PERFMON information
+Date: Mon, 20 Apr 2020 08:52:31 -0300
+Message-ID: <20200420115316.18781-16-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,233 +9,227 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Stephane Eranian <eranian@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Serge Hallyn <serge@hallyn.com>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-man@vger.kernel.org, linux-security-module@vger.kernel.org, selinux@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Alexey Budankov <alexey.budankov@linux.intel.com>
 
-Event synthesis may occur at the start or end (tail) of a perf command.
-In system-wide mode it can scan every process in /proc, which may add
-seconds of latency before event recording. Add a new benchmark that
-times how long event synthesis takes with and without data synthesis.
+Update perf-security.rst documentation file with the information
+related to usage of CAP_PERFMON capability to secure performance
+monitoring and observability operations in system.
 
-An example execution looks like:
+Committer notes:
 
- $ perf bench internals synthesize
- # Running 'internals/synthesize' benchmark:
- Average synthesis took: 168.253800 usec
- Average data synthesis took: 208.104700 usec
+While testing 'perf top' under cap_perfmon I noticed that it needs
+some more capability and Alexey pointed out cap_ipc_lock, as needed by
+this kernel chunk:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+  kernel/events/core.c: 6101
+       if ((locked > lock_limit) && perf_is_paranoid() &&
+               !capable(CAP_IPC_LOCK)) {
+               ret = -EPERM;
+               goto unlock;
+       }
+
+So I added it to the documentation, and also mentioned that if the
+libcap version doesn't yet supports 'cap_perfmon', its numeric value can
+be used instead, i.e. if:
+
+	# setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+
+Fails, try:
+
+	# setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
+
+I also added a paragraph stating that using an unpatched libcap will
+fail the check for CAP_PERFMON, as it checks the cap number against a
+maximum to see if it is valid, which makes it use as the default the
+'cycles:u' event, even tho a cap_perfmon capable perf binary can get
+kernel samples, to workaround that just use, e.g.:
+
+  # perf top -e cycles
+  # perf record -e cycles
+
+And it will sample kernel and user modes.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrey Zhizhikin <andrey.z@gmail.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Igor Lubashev <ilubashe@akamai.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
+Cc: Serge Hallyn <serge@hallyn.com>
+Cc: Song Liu <songliubraving@fb.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200402154357.107873-2-irogers@google.com
+Cc: intel-gfx@lists.freedesktop.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-man@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org
+Cc: selinux@vger.kernel.org
+Link: http://lore.kernel.org/lkml/17278551-9399-9ebe-d665-8827016a217d@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-bench.txt |   8 ++
- tools/perf/bench/Build                  |   2 +-
- tools/perf/bench/bench.h                |   2 +-
- tools/perf/bench/synthesize.c           | 101 ++++++++++++++++++++++++
- tools/perf/builtin-bench.c              |   6 ++
- 5 files changed, 117 insertions(+), 2 deletions(-)
- create mode 100644 tools/perf/bench/synthesize.c
+ Documentation/admin-guide/perf-security.rst | 86 +++++++++++++++------
+ 1 file changed, 61 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
-index 0921a3c67381..bad16512c48d 100644
---- a/tools/perf/Documentation/perf-bench.txt
-+++ b/tools/perf/Documentation/perf-bench.txt
-@@ -61,6 +61,9 @@ SUBSYSTEM
- 'epoll'::
- 	Eventpoll (epoll) stressing benchmarks.
+diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
+index 72effa7c23b9..1307b5274a0f 100644
+--- a/Documentation/admin-guide/perf-security.rst
++++ b/Documentation/admin-guide/perf-security.rst
+@@ -1,6 +1,6 @@
+ .. _perf_security:
  
-+'internals'::
-+	Benchmark internal perf functionality.
-+
- 'all'::
- 	All benchmark subsystems.
+-Perf Events and tool security
++Perf events and tool security
+ =============================
  
-@@ -214,6 +217,11 @@ Suite for evaluating concurrent epoll_wait calls.
- *ctl*::
- Suite for evaluating multiple epoll_ctl calls.
+ Overview
+@@ -42,11 +42,11 @@ categories:
+ Data that belong to the fourth category can potentially contain
+ sensitive process data. If PMUs in some monitoring modes capture values
+ of execution context registers or data from process memory then access
+-to such monitoring capabilities requires to be ordered and secured
+-properly. So, perf_events/Perf performance monitoring is the subject for
+-security access control management [5]_ .
++to such monitoring modes requires to be ordered and secured properly.
++So, perf_events performance monitoring and observability operations are
++the subject for security access control management [5]_ .
  
-+SUITES FOR 'internals'
-+~~~~~~~~~~~~~~~~~~~~~~
-+*synthesize*::
-+Suite for evaluating perf's event synthesis performance.
-+
- SEE ALSO
- --------
- linkperf:perf[1]
-diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
-index e4e321b6f883..042827385c87 100644
---- a/tools/perf/bench/Build
-+++ b/tools/perf/bench/Build
-@@ -6,9 +6,9 @@ perf-y += futex-wake.o
- perf-y += futex-wake-parallel.o
- perf-y += futex-requeue.o
- perf-y += futex-lock-pi.o
+-perf_events/Perf access control
++perf_events access control
+ -------------------------------
+ 
+ To perform security checks, the Linux implementation splits processes
+@@ -66,11 +66,25 @@ into distinct units, known as capabilities [6]_ , which can be
+ independently enabled and disabled on per-thread basis for processes and
+ files of unprivileged users.
+ 
+-Unprivileged processes with enabled CAP_SYS_ADMIN capability are treated
++Unprivileged processes with enabled CAP_PERFMON capability are treated
+ as privileged processes with respect to perf_events performance
+-monitoring and bypass *scope* permissions checks in the kernel.
 -
- perf-y += epoll-wait.o
- perf-y += epoll-ctl.o
-+perf-y += synthesize.o
+-Unprivileged processes using perf_events system call API is also subject
++monitoring and observability operations, thus, bypass *scope* permissions
++checks in the kernel. CAP_PERFMON implements the principle of least
++privilege [13]_ (POSIX 1003.1e: 2.2.2.39) for performance monitoring and
++observability operations in the kernel and provides a secure approach to
++perfomance monitoring and observability in the system.
++
++For backward compatibility reasons the access to perf_events monitoring and
++observability operations is also open for CAP_SYS_ADMIN privileged
++processes but CAP_SYS_ADMIN usage for secure monitoring and observability
++use cases is discouraged with respect to the CAP_PERFMON capability.
++If system audit records [14]_ for a process using perf_events system call
++API contain denial records of acquiring both CAP_PERFMON and CAP_SYS_ADMIN
++capabilities then providing the process with CAP_PERFMON capability singly
++is recommended as the preferred secure approach to resolve double access
++denial logging related to usage of performance monitoring and observability.
++
++Unprivileged processes using perf_events system call are also subject
+ for PTRACE_MODE_READ_REALCREDS ptrace access mode check [7]_ , whose
+ outcome determines whether monitoring is permitted. So unprivileged
+ processes provided with CAP_SYS_PTRACE capability are effectively
+@@ -82,14 +96,14 @@ performance analysis of monitored processes or a system. For example,
+ CAP_SYSLOG capability permits reading kernel space memory addresses from
+ /proc/kallsyms file.
  
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-lib.o
- perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
-diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
-index 4aa6de1aa67d..4d669c803237 100644
---- a/tools/perf/bench/bench.h
-+++ b/tools/perf/bench/bench.h
-@@ -41,9 +41,9 @@ int bench_futex_wake_parallel(int argc, const char **argv);
- int bench_futex_requeue(int argc, const char **argv);
- /* pi futexes */
- int bench_futex_lock_pi(int argc, const char **argv);
+-perf_events/Perf privileged users
++Privileged Perf users groups
+ ---------------------------------
+ 
+ Mechanisms of capabilities, privileged capability-dumb files [6]_ and
+-file system ACLs [10]_ can be used to create a dedicated group of
+-perf_events/Perf privileged users who are permitted to execute
+-performance monitoring without scope limits. The following steps can be
+-taken to create such a group of privileged Perf users.
++file system ACLs [10]_ can be used to create dedicated groups of
++privileged Perf users who are permitted to execute performance monitoring
++and observability without scope limits. The following steps can be
++taken to create such groups of privileged Perf users.
+ 
+ 1. Create perf_users group of privileged Perf users, assign perf_users
+    group to Perf tool executable and limit access to the executable for
+@@ -108,30 +122,51 @@ taken to create such a group of privileged Perf users.
+    -rwxr-x---  2 root perf_users  11M Oct 19 15:12 perf
+ 
+ 2. Assign the required capabilities to the Perf tool executable file and
+-   enable members of perf_users group with performance monitoring
++   enable members of perf_users group with monitoring and observability
+    privileges [6]_ :
+ 
+ ::
+ 
+-   # setcap "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
+-   # setcap -v "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
++   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
++   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
+    perf: OK
+    # getcap perf
+-   perf = cap_sys_ptrace,cap_sys_admin,cap_syslog+ep
++   perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
++
++If the libcap installed doesn't yet support "cap_perfmon", use "38" instead,
++i.e.:
++
++::
++
++   # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
++
++Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
++'perf top', alternatively use 'perf top -m N', to reduce the memory that
++it uses for the perf ring buffer, see the memory allocation section below.
++
++Using a libcap without support for CAP_PERFMON will make cap_get_flag(caps, 38,
++CAP_EFFECTIVE, &val) fail, which will lead the default event to be 'cycles:u',
++so as a workaround explicitly ask for the 'cycles' event, i.e.:
++
++::
++
++  # perf top -e cycles
++
++To get kernel and user samples with a perf binary with just CAP_PERFMON.
+ 
+ As a result, members of perf_users group are capable of conducting
+-performance monitoring by using functionality of the configured Perf
+-tool executable that, when executes, passes perf_events subsystem scope
+-checks.
++performance monitoring and observability by using functionality of the
++configured Perf tool executable that, when executes, passes perf_events
++subsystem scope checks.
+ 
+ This specific access control management is only available to superuser
+ or root running processes with CAP_SETPCAP, CAP_SETFCAP [6]_
+ capabilities.
+ 
+-perf_events/Perf unprivileged users
++Unprivileged users
+ -----------------------------------
+ 
+-perf_events/Perf *scope* and *access* control for unprivileged processes
++perf_events *scope* and *access* control for unprivileged processes
+ is governed by perf_event_paranoid [2]_ setting:
+ 
+ -1:
+@@ -166,7 +201,7 @@ is governed by perf_event_paranoid [2]_ setting:
+      perf_event_mlock_kb locking limit is imposed but ignored for
+      unprivileged processes with CAP_IPC_LOCK capability.
+ 
+-perf_events/Perf resource control
++Resource control
+ ---------------------------------
+ 
+ Open file descriptors
+@@ -227,4 +262,5 @@ Bibliography
+ .. [10] `<http://man7.org/linux/man-pages/man5/acl.5.html>`_
+ .. [11] `<http://man7.org/linux/man-pages/man2/getrlimit.2.html>`_
+ .. [12] `<http://man7.org/linux/man-pages/man5/limits.conf.5.html>`_
 -
- int bench_epoll_wait(int argc, const char **argv);
- int bench_epoll_ctl(int argc, const char **argv);
-+int bench_synthesize(int argc, const char **argv);
- 
- #define BENCH_FORMAT_DEFAULT_STR	"default"
- #define BENCH_FORMAT_DEFAULT		0
-diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
-new file mode 100644
-index 000000000000..6291257bc9c9
---- /dev/null
-+++ b/tools/perf/bench/synthesize.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Benchmark synthesis of perf events such as at the start of a 'perf
-+ * record'. Synthesis is done on the current process and the 'dummy' event
-+ * handlers are invoked that support dump_trace but otherwise do nothing.
-+ *
-+ * Copyright 2019 Google LLC.
-+ */
-+#include <stdio.h>
-+#include "bench.h"
-+#include "../util/debug.h"
-+#include "../util/session.h"
-+#include "../util/synthetic-events.h"
-+#include "../util/target.h"
-+#include "../util/thread_map.h"
-+#include "../util/tool.h"
-+#include <linux/err.h>
-+#include <linux/time64.h>
-+#include <subcmd/parse-options.h>
-+
-+static unsigned int iterations = 10000;
-+
-+static const struct option options[] = {
-+	OPT_UINTEGER('i', "iterations", &iterations,
-+		"Number of iterations used to compute average"),
-+	OPT_END()
-+};
-+
-+static const char *const usage[] = {
-+	"perf bench internals synthesize <options>",
-+	NULL
-+};
-+
-+
-+static int do_synthesize(struct perf_session *session,
-+			struct perf_thread_map *threads,
-+			struct target *target, bool data_mmap)
-+{
-+	const unsigned int nr_threads_synthesize = 1;
-+	struct timeval start, end, diff;
-+	u64 runtime_us;
-+	unsigned int i;
-+	double average;
-+	int err;
-+
-+	gettimeofday(&start, NULL);
-+	for (i = 0; i < iterations; i++) {
-+		err = machine__synthesize_threads(&session->machines.host,
-+						target, threads, data_mmap,
-+						nr_threads_synthesize);
-+		if (err)
-+			return err;
-+	}
-+
-+	gettimeofday(&end, NULL);
-+	timersub(&end, &start, &diff);
-+	runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+	average = (double)runtime_us/(double)iterations;
-+	printf("Average %ssynthesis took: %f usec\n",
-+		data_mmap ? "data " : "", average);
-+	return 0;
-+}
-+
-+int bench_synthesize(int argc, const char **argv)
-+{
-+	struct perf_tool tool;
-+	struct perf_session *session;
-+	struct target target = {
-+		.pid = "self",
-+	};
-+	struct perf_thread_map *threads;
-+	int err;
-+
-+	argc = parse_options(argc, argv, options, usage, 0);
-+
-+	session = perf_session__new(NULL, false, NULL);
-+	if (IS_ERR(session)) {
-+		pr_err("Session creation failed.\n");
-+		return PTR_ERR(session);
-+	}
-+	threads = thread_map__new_by_pid(getpid());
-+	if (!threads) {
-+		pr_err("Thread map creation failed.\n");
-+		err = -ENOMEM;
-+		goto err_out;
-+	}
-+	perf_tool__fill_defaults(&tool);
-+
-+	err = do_synthesize(session, threads, &target, false);
-+	if (err)
-+		goto err_out;
-+
-+	err = do_synthesize(session, threads, &target, true);
-+
-+err_out:
-+	if (threads)
-+		perf_thread_map__put(threads);
-+
-+	perf_session__delete(session);
-+	return err;
-+}
-diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
-index c06fe21c8613..11c79a8d85d6 100644
---- a/tools/perf/builtin-bench.c
-+++ b/tools/perf/builtin-bench.c
-@@ -76,6 +76,11 @@ static struct bench epoll_benchmarks[] = {
- };
- #endif // HAVE_EVENTFD
- 
-+static struct bench internals_benchmarks[] = {
-+	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
-+	{ NULL,		NULL,					NULL			}
-+};
-+
- struct collection {
- 	const char	*name;
- 	const char	*summary;
-@@ -92,6 +97,7 @@ static struct collection collections[] = {
- #ifdef HAVE_EVENTFD
- 	{"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
- #endif
-+	{ "internals",	"Perf-internals benchmarks",			internals_benchmarks	},
- 	{ "all",	"All benchmarks",				NULL			},
- 	{ NULL,		NULL,						NULL			}
- };
++.. [13] `<https://sites.google.com/site/fullycapable>`_
++.. [14] `<http://man7.org/linux/man-pages/man8/auditd.8.html>`_
 -- 
 2.21.1
