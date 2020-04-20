@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 15/60] doc/admin-guide: Update perf-security.rst with CAP_PERFMON information
-Date: Mon, 20 Apr 2020 08:52:31 -0300
-Message-ID: <20200420115316.18781-16-acme@kernel.org>
+Subject: [PATCH 20/60] perf synthetic-events: save 4kb from 2 stack frames
+Date: Mon, 20 Apr 2020 08:52:36 -0300
+Message-ID: <20200420115316.18781-21-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,227 +9,119 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, James Morris <jmorris@namei.org>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Serge Hallyn <serge@hallyn.com>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-man@vger.kernel.org, linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
 
-Update perf-security.rst documentation file with the information
-related to usage of CAP_PERFMON capability to secure performance
-monitoring and observability operations in system.
+Reuse an existing char buffer to avoid two PATH_MAX sized char buffers.
 
-Committer notes:
+Reduces stack frame sizes by 4kb.
 
-While testing 'perf top' under cap_perfmon I noticed that it needs
-some more capability and Alexey pointed out cap_ipc_lock, as needed by
-this kernel chunk:
+perf_event__synthesize_mmap_events before 'sub $0x45b8,%rsp' after
+'sub $0x35b8,%rsp'.
 
-  kernel/events/core.c: 6101
-       if ((locked > lock_limit) && perf_is_paranoid() &&
-               !capable(CAP_IPC_LOCK)) {
-               ret = -EPERM;
-               goto unlock;
-       }
+perf_event__get_comm_ids before 'sub $0x2028,%rsp' after
+'sub $0x1028,%rsp'.
 
-So I added it to the documentation, and also mentioned that if the
-libcap version doesn't yet supports 'cap_perfmon', its numeric value can
-be used instead, i.e. if:
+The performance impact of this change is negligible.
 
-	# setcap "cap_perfmon,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-
-Fails, try:
-
-	# setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-
-I also added a paragraph stating that using an unpatched libcap will
-fail the check for CAP_PERFMON, as it checks the cap number against a
-maximum to see if it is valid, which makes it use as the default the
-'cycles:u' event, even tho a cap_perfmon capable perf binary can get
-kernel samples, to workaround that just use, e.g.:
-
-  # perf top -e cycles
-  # perf record -e cycles
-
-And it will sample kernel and user modes.
-
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: James Morris <jmorris@namei.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrey Zhizhikin <andrey.z@gmail.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Song Liu <songliubraving@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/17278551-9399-9ebe-d665-8827016a217d@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200402154357.107873-4-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- Documentation/admin-guide/perf-security.rst | 86 +++++++++++++++------
- 1 file changed, 61 insertions(+), 25 deletions(-)
+ tools/perf/util/synthetic-events.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/admin-guide/perf-security.rst b/Documentation/admin-guide/perf-security.rst
-index 72effa7c23b9..1307b5274a0f 100644
---- a/Documentation/admin-guide/perf-security.rst
-+++ b/Documentation/admin-guide/perf-security.rst
-@@ -1,6 +1,6 @@
- .. _perf_security:
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index a661b122d9d8..9d4aa951eaa6 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -71,7 +71,6 @@ int perf_tool__process_synth_event(struct perf_tool *tool,
+ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 				    pid_t *tgid, pid_t *ppid)
+ {
+-	char filename[PATH_MAX];
+ 	char bf[4096];
+ 	int fd;
+ 	size_t size = 0;
+@@ -81,11 +80,11 @@ static int perf_event__get_comm_ids(pid_t pid, char *comm, size_t len,
+ 	*tgid = -1;
+ 	*ppid = -1;
  
--Perf Events and tool security
-+Perf events and tool security
- =============================
+-	snprintf(filename, sizeof(filename), "/proc/%d/status", pid);
++	snprintf(bf, sizeof(bf), "/proc/%d/status", pid);
  
- Overview
-@@ -42,11 +42,11 @@ categories:
- Data that belong to the fourth category can potentially contain
- sensitive process data. If PMUs in some monitoring modes capture values
- of execution context registers or data from process memory then access
--to such monitoring capabilities requires to be ordered and secured
--properly. So, perf_events/Perf performance monitoring is the subject for
--security access control management [5]_ .
-+to such monitoring modes requires to be ordered and secured properly.
-+So, perf_events performance monitoring and observability operations are
-+the subject for security access control management [5]_ .
+-	fd = open(filename, O_RDONLY);
++	fd = open(bf, O_RDONLY);
+ 	if (fd < 0) {
+-		pr_debug("couldn't open %s\n", filename);
++		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
  
--perf_events/Perf access control
-+perf_events access control
- -------------------------------
+@@ -281,9 +280,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 				       struct machine *machine,
+ 				       bool mmap_data)
+ {
+-	char filename[PATH_MAX];
+ 	FILE *fp;
+ 	unsigned long long t;
++	char bf[BUFSIZ];
+ 	bool truncation = false;
+ 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
+ 	int rc = 0;
+@@ -293,15 +292,15 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	if (machine__is_default_guest(machine))
+ 		return 0;
  
- To perform security checks, the Linux implementation splits processes
-@@ -66,11 +66,25 @@ into distinct units, known as capabilities [6]_ , which can be
- independently enabled and disabled on per-thread basis for processes and
- files of unprivileged users.
+-	snprintf(filename, sizeof(filename), "%s/proc/%d/task/%d/maps",
+-		 machine->root_dir, pid, pid);
++	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
++		machine->root_dir, pid, pid);
  
--Unprivileged processes with enabled CAP_SYS_ADMIN capability are treated
-+Unprivileged processes with enabled CAP_PERFMON capability are treated
- as privileged processes with respect to perf_events performance
--monitoring and bypass *scope* permissions checks in the kernel.
--
--Unprivileged processes using perf_events system call API is also subject
-+monitoring and observability operations, thus, bypass *scope* permissions
-+checks in the kernel. CAP_PERFMON implements the principle of least
-+privilege [13]_ (POSIX 1003.1e: 2.2.2.39) for performance monitoring and
-+observability operations in the kernel and provides a secure approach to
-+perfomance monitoring and observability in the system.
-+
-+For backward compatibility reasons the access to perf_events monitoring and
-+observability operations is also open for CAP_SYS_ADMIN privileged
-+processes but CAP_SYS_ADMIN usage for secure monitoring and observability
-+use cases is discouraged with respect to the CAP_PERFMON capability.
-+If system audit records [14]_ for a process using perf_events system call
-+API contain denial records of acquiring both CAP_PERFMON and CAP_SYS_ADMIN
-+capabilities then providing the process with CAP_PERFMON capability singly
-+is recommended as the preferred secure approach to resolve double access
-+denial logging related to usage of performance monitoring and observability.
-+
-+Unprivileged processes using perf_events system call are also subject
- for PTRACE_MODE_READ_REALCREDS ptrace access mode check [7]_ , whose
- outcome determines whether monitoring is permitted. So unprivileged
- processes provided with CAP_SYS_PTRACE capability are effectively
-@@ -82,14 +96,14 @@ performance analysis of monitored processes or a system. For example,
- CAP_SYSLOG capability permits reading kernel space memory addresses from
- /proc/kallsyms file.
+-	fp = fopen(filename, "r");
++	fp = fopen(bf, "r");
+ 	if (fp == NULL) {
+ 		/*
+ 		 * We raced with a task exiting - just return:
+ 		 */
+-		pr_debug("couldn't open %s\n", filename);
++		pr_debug("couldn't open %s\n", bf);
+ 		return -1;
+ 	}
  
--perf_events/Perf privileged users
-+Privileged Perf users groups
- ---------------------------------
+@@ -309,7 +308,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 	t = rdclock();
  
- Mechanisms of capabilities, privileged capability-dumb files [6]_ and
--file system ACLs [10]_ can be used to create a dedicated group of
--perf_events/Perf privileged users who are permitted to execute
--performance monitoring without scope limits. The following steps can be
--taken to create such a group of privileged Perf users.
-+file system ACLs [10]_ can be used to create dedicated groups of
-+privileged Perf users who are permitted to execute performance monitoring
-+and observability without scope limits. The following steps can be
-+taken to create such groups of privileged Perf users.
+ 	while (1) {
+-		char bf[BUFSIZ];
+ 		char prot[5];
+ 		char execname[PATH_MAX];
+ 		char anonstr[] = "//anon";
+@@ -321,10 +319,10 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
+ 			break;
  
- 1. Create perf_users group of privileged Perf users, assign perf_users
-    group to Perf tool executable and limit access to the executable for
-@@ -108,30 +122,51 @@ taken to create such a group of privileged Perf users.
-    -rwxr-x---  2 root perf_users  11M Oct 19 15:12 perf
- 
- 2. Assign the required capabilities to the Perf tool executable file and
--   enable members of perf_users group with performance monitoring
-+   enable members of perf_users group with monitoring and observability
-    privileges [6]_ :
- 
- ::
- 
--   # setcap "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
--   # setcap -v "cap_sys_admin,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-+   # setcap -v "cap_perfmon,cap_sys_ptrace,cap_syslog=ep" perf
-    perf: OK
-    # getcap perf
--   perf = cap_sys_ptrace,cap_sys_admin,cap_syslog+ep
-+   perf = cap_sys_ptrace,cap_syslog,cap_perfmon+ep
-+
-+If the libcap installed doesn't yet support "cap_perfmon", use "38" instead,
-+i.e.:
-+
-+::
-+
-+   # setcap "38,cap_ipc_lock,cap_sys_ptrace,cap_syslog=ep" perf
-+
-+Note that you may need to have 'cap_ipc_lock' in the mix for tools such as
-+'perf top', alternatively use 'perf top -m N', to reduce the memory that
-+it uses for the perf ring buffer, see the memory allocation section below.
-+
-+Using a libcap without support for CAP_PERFMON will make cap_get_flag(caps, 38,
-+CAP_EFFECTIVE, &val) fail, which will lead the default event to be 'cycles:u',
-+so as a workaround explicitly ask for the 'cycles' event, i.e.:
-+
-+::
-+
-+  # perf top -e cycles
-+
-+To get kernel and user samples with a perf binary with just CAP_PERFMON.
- 
- As a result, members of perf_users group are capable of conducting
--performance monitoring by using functionality of the configured Perf
--tool executable that, when executes, passes perf_events subsystem scope
--checks.
-+performance monitoring and observability by using functionality of the
-+configured Perf tool executable that, when executes, passes perf_events
-+subsystem scope checks.
- 
- This specific access control management is only available to superuser
- or root running processes with CAP_SETPCAP, CAP_SETFCAP [6]_
- capabilities.
- 
--perf_events/Perf unprivileged users
-+Unprivileged users
- -----------------------------------
- 
--perf_events/Perf *scope* and *access* control for unprivileged processes
-+perf_events *scope* and *access* control for unprivileged processes
- is governed by perf_event_paranoid [2]_ setting:
- 
- -1:
-@@ -166,7 +201,7 @@ is governed by perf_event_paranoid [2]_ setting:
-      perf_event_mlock_kb locking limit is imposed but ignored for
-      unprivileged processes with CAP_IPC_LOCK capability.
- 
--perf_events/Perf resource control
-+Resource control
- ---------------------------------
- 
- Open file descriptors
-@@ -227,4 +262,5 @@ Bibliography
- .. [10] `<http://man7.org/linux/man-pages/man5/acl.5.html>`_
- .. [11] `<http://man7.org/linux/man-pages/man2/getrlimit.2.html>`_
- .. [12] `<http://man7.org/linux/man-pages/man5/limits.conf.5.html>`_
--
-+.. [13] `<https://sites.google.com/site/fullycapable>`_
-+.. [14] `<http://man7.org/linux/man-pages/man8/auditd.8.html>`_
+ 		if ((rdclock() - t) > timeout) {
+-			pr_warning("Reading %s time out. "
++			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
+ 				   "You may want to increase "
+ 				   "the time limit by --proc-map-timeout\n",
+-				   filename);
++				   machine->root_dir, pid, pid);
+ 			truncation = true;
+ 			goto out;
+ 		}
 -- 
 2.21.1
