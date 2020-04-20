@@ -1,65 +1,59 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf record: add dummy event during system wide synthesis
-Date: Mon, 20 Apr 2020 10:43:39 +0200
-Message-ID: <20200420083720.GB718574@krava>
-References: <20200416004713.192740-1-irogers@google.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: Re: [PATCH 15/15] tools headers: Synchronize linux/bits.h with the
+ kernel sources
+Date: Mon, 20 Apr 2020 12:19:36 +0100
+Message-ID: <96ec5885-6f6a-288b-475d-99556113f95e@arm.com>
+References: <20200414164854.26026-1-acme@kernel.org>
+ <20200414164854.26026-16-acme@kernel.org>
+ <7951882d-d13a-7b1e-36f4-73c188015161@arm.com>
+ <20200416155404.GE2650@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200416004713.192740-1-irogers@google.com>
+In-Reply-To: <20200416155404.GE2650@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Rikard Falkeborn <rikard.falkeborn@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Apr 15, 2020 at 05:47:13PM -0700, Ian Rogers wrote:
-> During the processing of /proc during event synthesis new processes may
-> start. Add a dummy event if /proc is to be processed, to capture mmaps
-> for starting processes. This reuses the existing logic for
-> initial-delay.
+On 4/16/20 4:54 PM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Apr 15, 2020 at 10:14:06AM +0100, Vincenzo Frascino escreveu:
+>> On 4/14/20 5:48 PM, Arnaldo Carvalho de Melo wrote:
+>>> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>>
+>>> To pick up the changes in these csets:
+>>>
+>>>   295bcca84916 ("linux/bits.h: add compile time sanity check of GENMASK inputs")
+>>>   3945ff37d2f4 ("linux/bits.h: Extract common header for vDSO")
+>>>
+>>> To address this tools/perf build warning:
+>>>
+>>>   Warning: Kernel ABI header at 'tools/include/linux/bits.h' differs from latest version at 'include/linux/bits.h'
+>>>   diff -u tools/include/linux/bits.h include/linux/bits.h
+>>>
+>>> This clashes with usage of userspace's static_assert(), that, at least
+>>> on glibc, is guarded by a ifnded/endif pair, do the same to our copy of
+>>> build_bug.h and avoid that diff in check_headers.sh so that we continue
+>>> checking for drifts with the kernel sources master copy.
+>>>
+>>> This will all be tested with the set of build containers that includes
+>>> uCLibc, musl libc, lots of glibc versions in lots of distros and cross
+>>> build environments.
+>>>
+>>> The tools/objtool, tools/bpf, etc were tested as well.
+>>>
+>>
+>> Acked-by: Vincenzo Frascino <vincenzo.frascino@arm.com> # vDSO parts
 > 
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 1ab349abe904..bab4fc8568d1 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -805,16 +805,18 @@ static int record__open(struct record *rec)
->  	int rc = 0;
->  
->  	/*
-> -	 * For initial_delay we need to add a dummy event so that we can track
-> -	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
-> -	 * real events, the ones asked by the user.
-> +	 * For initial_delay or system wide, we need to add a dummy event so
-> +	 * that we can track PERF_RECORD_MMAP to cover the delay (of waiting or
-> +	 * synthesis) prior to the real user events being enabled.
->  	 */
-> -	if (opts->initial_delay) {
-> +	if (opts->initial_delay || target__has_cpu(&opts->target)) {
+> Hey, thanks a lot for checking it! :-)
+>
 
-hum, how this works for system wide? IIRC the delay works
-for monitoring tasks by setting dummy with enable_on_exec,
-and enabling the rest by ioctl after the delay.. so without
-the monitored task there's no enable_on_exec effect
+No issue :-) Thank you for updating the tools headers!
 
-jirka
+[...]
 
->  		if (perf_evlist__add_dummy(evlist))
->  			return -ENOMEM;
->  
-> +		/* Disable tracking of mmaps on lead event. */
->  		pos = evlist__first(evlist);
->  		pos->tracking = 0;
-> +		/* Activate dummy event immediately. */
->  		pos = evlist__last(evlist);
->  		pos->tracking = 1;
->  		pos->core.attr.enable_on_exec = 1;
-> -- 
-> 2.26.0.110.g2183baf09c-goog
-> 
+-- 
+Regards,
+Vincenzo
