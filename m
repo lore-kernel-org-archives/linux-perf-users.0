@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 14/60] drivers/oprofile: Open access for CAP_PERFMON privileged process
-Date: Mon, 20 Apr 2020 08:52:30 -0300
-Message-ID: <20200420115316.18781-15-acme@kernel.org>
+Subject: [PATCH 18/60] perf bench: Add event synthesis benchmark
+Date: Mon, 20 Apr 2020 08:52:34 -0300
+Message-ID: <20200420115316.18781-19-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,62 +9,233 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Alexey Budankov <alexey.budankov@linux.intel.com>, James Morris <jamorris@linux.microsoft.com>, Alexei Starovoitov <ast@kernel.org>, Andi Kleen <ak@linux.intel.com>, Igor Lubashev <ilubashe@akamai.com>, Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Serge Hallyn <serge@hallyn.com>, Song Liu <songliubraving@fb.com>, Stephane Eranian <eranian@google.com>, intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-man@vger.kernel.org, linux-security-module@vger.kernel.org, selinux@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
 
-Open access to monitoring for CAP_PERFMON privileged process.  Providing
-the access under CAP_PERFMON capability singly, without the rest of
-CAP_SYS_ADMIN credentials, excludes chances to misuse the credentials
-and makes operation more secure.
+Event synthesis may occur at the start or end (tail) of a perf command.
+In system-wide mode it can scan every process in /proc, which may add
+seconds of latency before event recording. Add a new benchmark that
+times how long event synthesis takes with and without data synthesis.
 
-CAP_PERFMON implements the principle of least privilege for performance
-monitoring and observability operations (POSIX IEEE 1003.1e 2.2.2.39
-principle of least privilege: A security design principle that states
-that a process or program be granted only those privileges (e.g.,
-capabilities) necessary to accomplish its legitimate function, and only
-for the time that such privileges are actually required)
+An example execution looks like:
 
-For backward compatibility reasons access to the monitoring remains open
-for CAP_SYS_ADMIN privileged processes but CAP_SYS_ADMIN usage for
-secure monitoring is discouraged with respect to CAP_PERFMON capability.
+ $ perf bench internals synthesize
+ # Running 'internals/synthesize' benchmark:
+ Average synthesis took: 168.253800 usec
+ Average data synthesis took: 208.104700 usec
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrey Zhizhikin <andrey.z@gmail.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Serge Hallyn <serge@hallyn.com>
-Cc: Song Liu <songliubraving@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-man@vger.kernel.org
-Cc: linux-security-module@vger.kernel.org
-Cc: selinux@vger.kernel.org
-Link: http://lore.kernel.org/lkml/691f1096-b15f-9b12-50a0-c2b93918149e@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200402154357.107873-2-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- drivers/oprofile/event_buffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/Documentation/perf-bench.txt |   8 ++
+ tools/perf/bench/Build                  |   2 +-
+ tools/perf/bench/bench.h                |   2 +-
+ tools/perf/bench/synthesize.c           | 101 ++++++++++++++++++++++++
+ tools/perf/builtin-bench.c              |   6 ++
+ 5 files changed, 117 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/bench/synthesize.c
 
-diff --git a/drivers/oprofile/event_buffer.c b/drivers/oprofile/event_buffer.c
-index 12ea4a4ad607..6c9edc8bbc95 100644
---- a/drivers/oprofile/event_buffer.c
-+++ b/drivers/oprofile/event_buffer.c
-@@ -113,7 +113,7 @@ static int event_buffer_open(struct inode *inode, struct file *file)
- {
- 	int err = -EPERM;
+diff --git a/tools/perf/Documentation/perf-bench.txt b/tools/perf/Documentation/perf-bench.txt
+index 0921a3c67381..bad16512c48d 100644
+--- a/tools/perf/Documentation/perf-bench.txt
++++ b/tools/perf/Documentation/perf-bench.txt
+@@ -61,6 +61,9 @@ SUBSYSTEM
+ 'epoll'::
+ 	Eventpoll (epoll) stressing benchmarks.
  
--	if (!capable(CAP_SYS_ADMIN))
-+	if (!perfmon_capable())
- 		return -EPERM;
++'internals'::
++	Benchmark internal perf functionality.
++
+ 'all'::
+ 	All benchmark subsystems.
  
- 	if (test_and_set_bit_lock(0, &buffer_opened))
+@@ -214,6 +217,11 @@ Suite for evaluating concurrent epoll_wait calls.
+ *ctl*::
+ Suite for evaluating multiple epoll_ctl calls.
+ 
++SUITES FOR 'internals'
++~~~~~~~~~~~~~~~~~~~~~~
++*synthesize*::
++Suite for evaluating perf's event synthesis performance.
++
+ SEE ALSO
+ --------
+ linkperf:perf[1]
+diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+index e4e321b6f883..042827385c87 100644
+--- a/tools/perf/bench/Build
++++ b/tools/perf/bench/Build
+@@ -6,9 +6,9 @@ perf-y += futex-wake.o
+ perf-y += futex-wake-parallel.o
+ perf-y += futex-requeue.o
+ perf-y += futex-lock-pi.o
+-
+ perf-y += epoll-wait.o
+ perf-y += epoll-ctl.o
++perf-y += synthesize.o
+ 
+ perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-lib.o
+ perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
+diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+index 4aa6de1aa67d..4d669c803237 100644
+--- a/tools/perf/bench/bench.h
++++ b/tools/perf/bench/bench.h
+@@ -41,9 +41,9 @@ int bench_futex_wake_parallel(int argc, const char **argv);
+ int bench_futex_requeue(int argc, const char **argv);
+ /* pi futexes */
+ int bench_futex_lock_pi(int argc, const char **argv);
+-
+ int bench_epoll_wait(int argc, const char **argv);
+ int bench_epoll_ctl(int argc, const char **argv);
++int bench_synthesize(int argc, const char **argv);
+ 
+ #define BENCH_FORMAT_DEFAULT_STR	"default"
+ #define BENCH_FORMAT_DEFAULT		0
+diff --git a/tools/perf/bench/synthesize.c b/tools/perf/bench/synthesize.c
+new file mode 100644
+index 000000000000..6291257bc9c9
+--- /dev/null
++++ b/tools/perf/bench/synthesize.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Benchmark synthesis of perf events such as at the start of a 'perf
++ * record'. Synthesis is done on the current process and the 'dummy' event
++ * handlers are invoked that support dump_trace but otherwise do nothing.
++ *
++ * Copyright 2019 Google LLC.
++ */
++#include <stdio.h>
++#include "bench.h"
++#include "../util/debug.h"
++#include "../util/session.h"
++#include "../util/synthetic-events.h"
++#include "../util/target.h"
++#include "../util/thread_map.h"
++#include "../util/tool.h"
++#include <linux/err.h>
++#include <linux/time64.h>
++#include <subcmd/parse-options.h>
++
++static unsigned int iterations = 10000;
++
++static const struct option options[] = {
++	OPT_UINTEGER('i', "iterations", &iterations,
++		"Number of iterations used to compute average"),
++	OPT_END()
++};
++
++static const char *const usage[] = {
++	"perf bench internals synthesize <options>",
++	NULL
++};
++
++
++static int do_synthesize(struct perf_session *session,
++			struct perf_thread_map *threads,
++			struct target *target, bool data_mmap)
++{
++	const unsigned int nr_threads_synthesize = 1;
++	struct timeval start, end, diff;
++	u64 runtime_us;
++	unsigned int i;
++	double average;
++	int err;
++
++	gettimeofday(&start, NULL);
++	for (i = 0; i < iterations; i++) {
++		err = machine__synthesize_threads(&session->machines.host,
++						target, threads, data_mmap,
++						nr_threads_synthesize);
++		if (err)
++			return err;
++	}
++
++	gettimeofday(&end, NULL);
++	timersub(&end, &start, &diff);
++	runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
++	average = (double)runtime_us/(double)iterations;
++	printf("Average %ssynthesis took: %f usec\n",
++		data_mmap ? "data " : "", average);
++	return 0;
++}
++
++int bench_synthesize(int argc, const char **argv)
++{
++	struct perf_tool tool;
++	struct perf_session *session;
++	struct target target = {
++		.pid = "self",
++	};
++	struct perf_thread_map *threads;
++	int err;
++
++	argc = parse_options(argc, argv, options, usage, 0);
++
++	session = perf_session__new(NULL, false, NULL);
++	if (IS_ERR(session)) {
++		pr_err("Session creation failed.\n");
++		return PTR_ERR(session);
++	}
++	threads = thread_map__new_by_pid(getpid());
++	if (!threads) {
++		pr_err("Thread map creation failed.\n");
++		err = -ENOMEM;
++		goto err_out;
++	}
++	perf_tool__fill_defaults(&tool);
++
++	err = do_synthesize(session, threads, &target, false);
++	if (err)
++		goto err_out;
++
++	err = do_synthesize(session, threads, &target, true);
++
++err_out:
++	if (threads)
++		perf_thread_map__put(threads);
++
++	perf_session__delete(session);
++	return err;
++}
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index c06fe21c8613..11c79a8d85d6 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -76,6 +76,11 @@ static struct bench epoll_benchmarks[] = {
+ };
+ #endif // HAVE_EVENTFD
+ 
++static struct bench internals_benchmarks[] = {
++	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
++	{ NULL,		NULL,					NULL			}
++};
++
+ struct collection {
+ 	const char	*name;
+ 	const char	*summary;
+@@ -92,6 +97,7 @@ static struct collection collections[] = {
+ #ifdef HAVE_EVENTFD
+ 	{"epoll",       "Epoll stressing benchmarks",                   epoll_benchmarks        },
+ #endif
++	{ "internals",	"Perf-internals benchmarks",			internals_benchmarks	},
+ 	{ "all",	"All benchmarks",				NULL			},
+ 	{ NULL,		NULL,						NULL			}
+ };
 -- 
 2.21.1
