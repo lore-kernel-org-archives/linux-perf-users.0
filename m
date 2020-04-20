@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 51/60] perf machine: Factor out lbr_callchain_add_lbr_ip()
-Date: Mon, 20 Apr 2020 08:53:07 -0300
-Message-ID: <20200420115316.18781-52-acme@kernel.org>
+Subject: [PATCH 52/60] perf thread: Add a knob for LBR stitch approach
+Date: Mon, 20 Apr 2020 08:53:08 -0300
+Message-ID: <20200420115316.18781-53-acme@kernel.org>
 References: <20200420115316.18781-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,8 +14,21 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Both caller and callee needs to add ip from LBR to callchain.
-Factor out lbr_callchain_add_lbr_ip() to improve code readability.
+The LBR stitch approach should be disabled by default. Because
+
+- The stitching approach base on LBR call stack technology. The known
+  limitations of LBR call stack technology still apply to the approach,
+  e.g. Exception handing such as setjmp/longjmp will have calls/returns
+  not match.
+
+- This approach is not foolproof. There can be cases where it creates
+  incorrect call stacks from incorrect matches. There is no attempt to
+  validate any matches in another way.
+
+The 'lbr_stitch_enable' is used to indicate whether enable LBR stitch
+approach, which is disabled by default. The following patch will
+introduce a new option for each tools to enable the LBR stitch
+approach.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
@@ -30,190 +43,38 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Link: http://lore.kernel.org/lkml/20200319202517.23423-9-kan.liang@linux.intel.com
+Link: http://lore.kernel.org/lkml/20200319202517.23423-10-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/machine.c | 143 +++++++++++++++++++-------------------
- 1 file changed, 73 insertions(+), 70 deletions(-)
+ tools/perf/util/thread.c | 1 +
+ tools/perf/util/thread.h | 3 +++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index a7f75fd43b0f..f9d69fce584a 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2224,6 +2224,74 @@ static int lbr_callchain_add_kernel_ip(struct thread *thread,
- 	return 0;
- }
- 
-+static int lbr_callchain_add_lbr_ip(struct thread *thread,
-+				    struct callchain_cursor *cursor,
-+				    struct perf_sample *sample,
-+				    struct symbol **parent,
-+				    struct addr_location *root_al,
-+				    u64 *branch_from,
-+				    bool callee)
-+{
-+	struct branch_stack *lbr_stack = sample->branch_stack;
-+	struct branch_entry *entries = perf_sample__branch_entries(sample);
-+	u8 cpumode = PERF_RECORD_MISC_USER;
-+	int lbr_nr = lbr_stack->nr;
-+	struct branch_flags *flags;
-+	int err, i;
-+	u64 ip;
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 28b719388028..1f080db23615 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -47,6 +47,7 @@ struct thread *thread__new(pid_t pid, pid_t tid)
+ 		thread->tid = tid;
+ 		thread->ppid = -1;
+ 		thread->cpu = -1;
++		thread->lbr_stitch_enable = false;
+ 		INIT_LIST_HEAD(&thread->namespaces_list);
+ 		INIT_LIST_HEAD(&thread->comm_list);
+ 		init_rwsem(&thread->namespaces_lock);
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 20b96b5d1f15..95294050cff2 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -46,6 +46,9 @@ struct thread {
+ 	struct srccode_state	srccode_state;
+ 	bool			filter;
+ 	int			filter_entry_depth;
 +
-+	if (callee) {
-+		/* Add LBR ip from first entries.to */
-+		ip = entries[0].to;
-+		flags = &entries[0].flags;
-+		*branch_from = entries[0].from;
-+		err = add_callchain_ip(thread, cursor, parent,
-+				       root_al, &cpumode, ip,
-+				       true, flags, NULL,
-+				       *branch_from);
-+		if (err)
-+			return err;
-+
-+		/* Add LBR ip from entries.from one by one. */
-+		for (i = 0; i < lbr_nr; i++) {
-+			ip = entries[i].from;
-+			flags = &entries[i].flags;
-+			err = add_callchain_ip(thread, cursor, parent,
-+					       root_al, &cpumode, ip,
-+					       true, flags, NULL,
-+					       *branch_from);
-+			if (err)
-+				return err;
-+		}
-+		return 0;
-+	}
-+
-+	/* Add LBR ip from entries.from one by one. */
-+	for (i = lbr_nr - 1; i >= 0; i--) {
-+		ip = entries[i].from;
-+		flags = &entries[i].flags;
-+		err = add_callchain_ip(thread, cursor, parent,
-+				       root_al, &cpumode, ip,
-+				       true, flags, NULL,
-+				       *branch_from);
-+		if (err)
-+			return err;
-+	}
-+
-+	/* Add LBR ip from first entries.to */
-+	ip = entries[0].to;
-+	flags = &entries[0].flags;
-+	*branch_from = entries[0].from;
-+	err = add_callchain_ip(thread, cursor, parent,
-+			       root_al, &cpumode, ip,
-+			       true, flags, NULL,
-+			       *branch_from);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
- /*
-  * Recolve LBR callstack chain sample
-  * Return:
-@@ -2240,14 +2308,7 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- {
- 	struct ip_callchain *chain = sample->callchain;
- 	int chain_nr = min(max_stack, (int)chain->nr), i;
--	u8 cpumode = PERF_RECORD_MISC_USER;
--	u64 ip, branch_from = 0;
--	struct branch_stack *lbr_stack;
--	struct branch_entry *entries;
--	int lbr_nr, j, k;
--	bool branch;
--	struct branch_flags *flags;
--	int mix_chain_nr;
-+	u64 branch_from = 0;
- 	int err;
++	/* LBR call stack stitch */
++	bool			lbr_stitch_enable;
+ };
  
- 	for (i = 0; i < chain_nr; i++) {
-@@ -2259,21 +2320,6 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- 	if (i == chain_nr)
- 		return 0;
- 
--	lbr_stack = sample->branch_stack;
--	entries = perf_sample__branch_entries(sample);
--	lbr_nr = lbr_stack->nr;
--	/*
--	 * LBR callstack can only get user call chain.
--	 * The mix_chain_nr is kernel call chain
--	 * number plus LBR user call chain number.
--	 * i is kernel call chain number,
--	 * 1 is PERF_CONTEXT_USER,
--	 * lbr_nr + 1 is the user call chain number.
--	 * For details, please refer to the comments
--	 * in callchain__printf
--	 */
--	mix_chain_nr = i + 1 + lbr_nr + 1;
--
- 	if (callchain_param.order == ORDER_CALLEE) {
- 		/* Add kernel ip */
- 		err = lbr_callchain_add_kernel_ip(thread, cursor, sample,
-@@ -2282,57 +2328,14 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- 		if (err)
- 			goto error;
- 
--		/* Add LBR ip from first entries.to */
--		ip = entries[0].to;
--		branch = true;
--		flags = &entries[0].flags;
--		branch_from = entries[0].from;
--		err = add_callchain_ip(thread, cursor, parent,
--				       root_al, &cpumode, ip,
--				       branch, flags, NULL,
--				       branch_from);
-+		err = lbr_callchain_add_lbr_ip(thread, cursor, sample, parent,
-+					       root_al, &branch_from, true);
- 		if (err)
- 			goto error;
- 
--		/* Add LBR ip from entries.from one by one. */
--		for (j = i + 2; j < mix_chain_nr; j++) {
--			k = j - i - 2;
--			ip = entries[k].from;
--			branch = true;
--			flags = &entries[k].flags;
--
--			err = add_callchain_ip(thread, cursor, parent,
--					       root_al, &cpumode, ip,
--					       branch, flags, NULL,
--					       branch_from);
--			if (err)
--				goto error;
--		}
- 	} else {
--		/* Add LBR ip from entries.from one by one. */
--		for (j = 0; j < lbr_nr; j++) {
--			k = lbr_nr - j - 1;
--			ip = entries[k].from;
--			branch = true;
--			flags = &entries[k].flags;
--
--			err = add_callchain_ip(thread, cursor, parent,
--					       root_al, &cpumode, ip,
--					       branch, flags, NULL,
--					       branch_from);
--			if (err)
--				goto error;
--		}
--
--		/* Add LBR ip from first entries.to */
--		ip = entries[0].to;
--		branch = true;
--		flags = &entries[0].flags;
--		branch_from = entries[0].from;
--		err = add_callchain_ip(thread, cursor, parent,
--				       root_al, &cpumode, ip,
--				       branch, flags, NULL,
--				       branch_from);
-+		err = lbr_callchain_add_lbr_ip(thread, cursor, sample, parent,
-+					       root_al, &branch_from, false);
- 		if (err)
- 			goto error;
- 
+ struct machine;
 -- 
 2.21.1
