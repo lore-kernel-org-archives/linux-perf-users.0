@@ -1,73 +1,78 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] perf record: add dummy event during system wide synthesis
-Date: Mon, 20 Apr 2020 23:17:12 -0700
-Message-ID: <CAP-5=fWMm+Bvuja8wLS4fSAxx5AVchKBGZ96KKc0sb0sze6x3Q@mail.gmail.com>
-References: <20200416004713.192740-1-irogers@google.com> <20200420083720.GB718574@krava>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: Re: [PATCH] perf symbol: Fix kernel symbol address display
+Date: Tue, 21 Apr 2020 13:18:03 +0200
+Message-ID: <6239b798-3bf5-c1a6-8acf-d4e293089145@linux.ibm.com>
+References: <20200415070744.59919-1-tmricht@linux.ibm.com>
+ <20200420204617.GA23638@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200420083720.GB718574@krava>
+In-Reply-To: <20200420204617.GA23638@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Apr 20, 2020 at 1:44 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Wed, Apr 15, 2020 at 05:47:13PM -0700, Ian Rogers wrote:
-> > During the processing of /proc during event synthesis new processes may
-> > start. Add a dummy event if /proc is to be processed, to capture mmaps
-> > for starting processes. This reuses the existing logic for
-> > initial-delay.
-> >
-> > Suggested-by: Stephane Eranian <eranian@google.com>
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-record.c | 10 ++++++----
-> >  1 file changed, 6 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 1ab349abe904..bab4fc8568d1 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -805,16 +805,18 @@ static int record__open(struct record *rec)
-> >       int rc = 0;
-> >
-> >       /*
-> > -      * For initial_delay we need to add a dummy event so that we can track
-> > -      * PERF_RECORD_MMAP while we wait for the initial delay to enable the
-> > -      * real events, the ones asked by the user.
-> > +      * For initial_delay or system wide, we need to add a dummy event so
-> > +      * that we can track PERF_RECORD_MMAP to cover the delay (of waiting or
-> > +      * synthesis) prior to the real user events being enabled.
-> >        */
-> > -     if (opts->initial_delay) {
-> > +     if (opts->initial_delay || target__has_cpu(&opts->target)) {
->
-> hum, how this works for system wide? IIRC the delay works
-> for monitoring tasks by setting dummy with enable_on_exec,
-> and enabling the rest by ioctl after the delay.. so without
-> the monitored task there's no enable_on_exec effect
+On 4/20/20 10:46 PM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Apr 15, 2020 at 09:07:44AM +0200, Thomas Richter escreveu:
+>> Running commands
+>>
+>>    ./perf record -e rb0000 -- find .
+>>    ./perf report -v
+> 
+> Or when pressing 'V' in the TUI.
+>  
+>> reveals symbol names and its addresses. There is a mismatch between
+> 
+> Yeah, an address that at some point was put there to help with debugging
+> the symbol resolution, IIRC how it looked like when looking at
+> 
+>   readelf -sW vmlinux
+> 
+> Or any other DSO, for instance, for a glibc symbol here:
+> 
+> Using 'perf report -s pid,dso,sym' then pressing 'V':
+> 
+>    1.55%    20325:perf  /usr/lib64/libc-2.30.so   0x161825   B [.] __strlen_avx2
+> 
+> [acme@five perf]$ readelf -sW /usr/lib64/libc-2.30.so | grep strlen_avx2
+>  24371: 0000000000161810   414 FUNC    LOCAL  DEFAULT   15 __strlen_avx2
+> [acme@five perf]$ 
+> 
+> Can you check if doing in /lib/modules/.../build/vmlinux produces what
+> appears when 'V' is in place?
+> 
 
-Thanks! I sent a 2nd version that makes the comments actually agree
-with the code :-)
-https://lore.kernel.org/lkml/20200421061103.109440-1-irogers@google.com/
+Yes, I used latest 5.7.0rc2 and did
+./perf record -e rb0000 -- find 
+./perf report -s pid,dso,sym 
+and pressed 'V' in the TUI.
 
-Ian
+This gives 
+     6.06%     9986:find     /lib/modules/5.7  0x1f0c86           v [k] check_chain_key 
+and 
+[root@m35lp76 ~]# readelf -sW /lib/modules/5.7.0-rc2d-perf+/build/vmlinux | fgrep  check_chain_key
+ 20698: 00000000001f0c70   486 FUNC    LOCAL  DEFAULT    1 check_chain_key
+[root@m35lp76 ~]# 
 
-> jirka
->
-> >               if (perf_evlist__add_dummy(evlist))
-> >                       return -ENOMEM;
-> >
-> > +             /* Disable tracking of mmaps on lead event. */
-> >               pos = evlist__first(evlist);
-> >               pos->tracking = 0;
-> > +             /* Activate dummy event immediately. */
-> >               pos = evlist__last(evlist);
-> >               pos->tracking = 1;
-> >               pos->core.attr.enable_on_exec = 1;
-> > --
-> > 2.26.0.110.g2183baf09c-goog
-> >
->
+which is perfectly good and in the range. 
+
+> And perhaps we can also show the DSO offset and the rip as it gets laid
+> out in memory in the end? So we have all the informations?
+> 
+> - Arnaldo
+> 
+
+I do not follow you here, do you mean something like DSO-name+offset
+for example libc-2.30.so+0x123?
+
+Thanks
+
+-- 
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
