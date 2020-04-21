@@ -1,145 +1,86 @@
 From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] perf/record: add num-synthesize-threads option
-Date: Mon, 20 Apr 2020 17:31:41 -0700
-Message-ID: <CAP-5=fUsdWOG6Xw_mcTA-HOg81GQxWe56h6dBZ2m7fygVN3W6w@mail.gmail.com>
-References: <20200416001303.96841-1-irogers@google.com> <20200420075919.GA718574@krava>
+Subject: [PATCH v2] perf record: add dummy event during system wide synthesis
+Date: Mon, 20 Apr 2020 23:11:03 -0700
+Message-ID: <20200421061103.109440-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200420075919.GA718574@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Tony Jones <tonyj@suse.de>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Apr 20, 2020 at 1:35 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Wed, Apr 15, 2020 at 05:13:03PM -0700, Ian Rogers wrote:
->
-> SNIP
->
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index 1ab349abe904..2f97d0c32a75 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -43,6 +43,7 @@
-> >  #include "util/time-utils.h"
-> >  #include "util/units.h"
-> >  #include "util/bpf-event.h"
-> > +#include "util/util.h"
-> >  #include "asm/bug.h"
-> >  #include "perf.h"
-> >
-> > @@ -50,6 +51,7 @@
-> >  #include <inttypes.h>
-> >  #include <locale.h>
-> >  #include <poll.h>
-> > +#include <pthread.h>
-> >  #include <unistd.h>
-> >  #include <sched.h>
-> >  #include <signal.h>
-> > @@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
-> >       return record__write(rec, NULL, event, event->header.size);
-> >  }
-> >
-> > +static int process_locked_synthesized_event(struct perf_tool *tool,
-> > +                                  union perf_event *event,
-> > +                                  struct perf_sample *sample __maybe_unused,
-> > +                                  struct machine *machine __maybe_unused)
-> > +{
-> > +     static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
-> > +     int ret;
-> > +
-> > +     pthread_mutex_lock(&synth_lock);
-> > +     ret = process_synthesized_event(tool, event, sample, machine);
-> > +     pthread_mutex_unlock(&synth_lock);
->
-> hum, so how much faster is the synthesizing with threads in record,
-> given that we serialize it on every event that goes to the file?
+During the processing of /proc during event synthesis new processes may
+start. Add a dummy event if /proc is to be processed, to capture mmaps
+for starting processes. This reuses the existing logic for
+initial-delay.
 
-We see long synthesis times of the order seconds on loaded >100 core
-servers. I've not been able to create a reproduction on my desktop.
-You are right that making synthesis multithreaded will suffer from
-Amdahl's law if the write is a synchronization point. Measuring with
-the following patch in place:
-https://lore.kernel.org/lkml/20200415054050.31645-4-irogers@google.com/
-without threads the portion that needs a lock is less than 1.5% of
-execution time and so there's plenty to still run in parallel:
-...
-      - 32.59% __perf_event__synthesize_threads
-         - 32.54% __event__synthesize_thread
-            + 22.13% perf_event__synthesize_mmap_events
-            + 6.68% perf_event__get_comm_ids.constprop.0
-            + 1.49% process_synthesized_event
-            + 1.29% __GI___readdir64
-            + 0.60% __opendir
-...
+v2 fixes the dummy event configuration and a branch stack issue.
 
-The multi-threaded benchmark in this patch (pass -t):
-https://lore.kernel.org/lkml/20200415054050.31645-2-irogers@google.com/
-shows:
+Suggested-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-record.c | 19 ++++++++++++++-----
+ tools/perf/util/evsel.c     |  5 ++++-
+ 2 files changed, 18 insertions(+), 6 deletions(-)
 
-Computing performance of multi threaded perf event synthesis by
-synthesizing events on CPU 0:
- Number of synthesis threads: 1
-   Average synthesis took: 127729.000 usec (+- 3372.880 usec)
-   Average num. events: 21548.600 (+- 0.306)
-   Average time per event 5.927 usec
- Number of synthesis threads: 2
-   Average synthesis took: 88863.500 usec (+- 385.168 usec)
-   Average num. events: 21552.800 (+- 0.327)
-   Average time per event 4.123 usec
- Number of synthesis threads: 3
-   Average synthesis took: 83257.400 usec (+- 348.617 usec)
-   Average num. events: 21553.200 (+- 0.327)
-   Average time per event 3.863 usec
- Number of synthesis threads: 4
-   Average synthesis took: 75093.000 usec (+- 422.978 usec)
-   Average num. events: 21554.200 (+- 0.200)
-   Average time per event 3.484 usec
- Number of synthesis threads: 5
-   Average synthesis took: 64896.600 usec (+- 353.348 usec)
-   Average num. events: 21558.000 (+- 0.000)
-   Average time per event 3.010 usec
- Number of synthesis threads: 6
-   Average synthesis took: 59210.200 usec (+- 342.890 usec)
-   Average num. events: 21560.000 (+- 0.000)
-   Average time per event 2.746 usec
- Number of synthesis threads: 7
-   Average synthesis took: 54093.900 usec (+- 306.247 usec)
-   Average num. events: 21562.000 (+- 0.000)
-   Average time per event 2.509 usec
- Number of synthesis threads: 8
-   Average synthesis took: 48938.700 usec (+- 341.732 usec)
-   Average num. events: 21564.000 (+- 0.000)
-   Average time per event 2.269 usec
-
-The event logic there is using an atomic rather than a lock and the
-scaling isn't linear as not all the logic is threaded. Still with 8
-threads we see things going about 2.6 times faster. On a large loaded
-machine that may bring 10 seconds of event synthesis down to less than
-4. On a desktop there's no measurable difference and the
---num-thread-synthesize is defaulted to 1.
-
-> > +     return ret;
-> > +}
-> > +
-> >  static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
-> >  {
-> >       struct record *rec = to;
-> > @@ -1288,6 +1304,8 @@ static int record__synthesize(struct record *rec, bool tail)
-> >       struct perf_tool *tool = &rec->tool;
-> >       int fd = perf_data__fd(data);
-> >       int err = 0;
-> > +     int (*f)(struct perf_tool *, union perf_event *, struct perf_sample *,
-> > +             struct machine *) = process_synthesized_event;
->
-> there's event_op typedef in util/tools.h
-
-Thanks! Updated here:
-https://lore.kernel.org/lkml/20200421003020.37611-1-irogers@google.com/
-
-Ian
-
-> jirka
->
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349abe904..8d1e93351298 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -805,19 +805,28 @@ static int record__open(struct record *rec)
+ 	int rc = 0;
+ 
+ 	/*
+-	 * For initial_delay we need to add a dummy event so that we can track
+-	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
+-	 * real events, the ones asked by the user.
++	 * For initial_delay or system wide, we need to add a dummy event so
++	 * that we can track PERF_RECORD_MMAP to cover the delay of waiting or
++	 * event synthesis.
+ 	 */
+-	if (opts->initial_delay) {
++	if (opts->initial_delay || target__has_cpu(&opts->target)) {
+ 		if (perf_evlist__add_dummy(evlist))
+ 			return -ENOMEM;
+ 
++		/* Disable tracking of mmaps on lead event. */
+ 		pos = evlist__first(evlist);
+ 		pos->tracking = 0;
++		/* Set up dummy event. */
+ 		pos = evlist__last(evlist);
+ 		pos->tracking = 1;
+-		pos->core.attr.enable_on_exec = 1;
++		/*
++		 * Enable the dummy event when the process is forked for
++		 * initial_delay, immediately for system wide.
++		 */
++		if (opts->initial_delay)
++			pos->core.attr.enable_on_exec = 1;
++		else
++			pos->immediate = 1;
+ 	}
+ 
+ 	perf_evlist__config(evlist, opts, &callchain_param);
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 6a571d322bb2..ca8f9533d8f9 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1163,11 +1163,14 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	}
+ 
+ 	/*
++	 * A dummy event never triggers any actual counter and therefore
++	 * cannot be used with branch_stack.
++	 *
+ 	 * For initial_delay, a dummy event is added implicitly.
+ 	 * The software event will trigger -EOPNOTSUPP error out,
+ 	 * if BRANCH_STACK bit is set.
+ 	 */
+-	if (opts->initial_delay && is_dummy_event(evsel))
++	if (is_dummy_event(evsel))
+ 		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
+ }
+ 
+-- 
+2.26.1.301.g55bc3eb7cb9-goog
