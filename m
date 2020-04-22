@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 07/11] perf expr: debug lex if debugging yacc
-Date: Wed, 22 Apr 2020 15:04:26 -0700
-Message-ID: <20200422220430.254014-8-irogers@google.com>
+Subject: [PATCH v2 09/11] perf metrics: fix parse errors in power9 metrics
+Date: Wed, 22 Apr 2020 15:04:28 -0700
+Message-ID: <20200422220430.254014-10-irogers@google.com>
 References: <20200422220430.254014-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,25 +12,26 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Only effects parser debugging (disabled by default). Enables displaying
-'--accepting rule at line .. ("...").
+Mismatched parentheses.
 
+Fixes: 7f3cf5ac7743 (perf vendor events power9: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/pmu-events/arch/powerpc/power9/metrics.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c3382d58cf40..8694bec86f1a 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -44,6 +44,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 
- #ifdef PARSER_DEBUG
- 	expr_debug = 1;
-+	expr_set_debug(1, scanner);
- #endif
- 
- 	ret = expr_parse(val, ctx, scanner);
+diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+index 811c2a8c1c9e..f427436f2c0a 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+@@ -362,7 +362,7 @@
+     },
+     {
+         "BriefDescription": "Completion stall for other reasons",
+-        "MetricExpr": "PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FIN - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
++        "MetricExpr": "(PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FIN - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
+         "MetricGroup": "cpi_breakdown",
+         "MetricName": "other_stall_cpi"
+     },
 -- 
 2.26.2.303.gf8c07b1a785-goog
