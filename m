@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 03/11] perf metrics: fix parse errors in skylake metrics
-Date: Wed, 22 Apr 2020 15:04:22 -0700
-Message-ID: <20200422220430.254014-4-irogers@google.com>
+Subject: [PATCH v2 04/11] perf expr: allow ',' to be an other token
+Date: Wed, 22 Apr 2020 15:04:23 -0700
+Message-ID: <20200422220430.254014-5-irogers@google.com>
 References: <20200422220430.254014-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,33 +12,25 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Remove over escaping with \\.
+Corrects parse errors in expr__find_other of expressions with min.
 
-Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/expr.y | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-index b4f91137f40c..390bdab1be9d 100644
---- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
-@@ -328,13 +328,13 @@
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-+        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x35\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "DRAM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
-+        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "DRAM_Parallel_Reads"
-     },
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index cd17486c1c5d..54260094b947 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -80,7 +80,7 @@ other: ID
+ 	ctx->ids[ctx->num_ids++].name = $1;
+ }
+ |
+-MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
++MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+ 
+ 
+ all_expr: if_expr			{ *final_val = $1; }
 -- 
 2.26.2.303.gf8c07b1a785-goog
