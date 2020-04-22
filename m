@@ -1,45 +1,29 @@
-From: Ingo Molnar <mingo@kernel.org>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Wed, 22 Apr 2020 14:09:43 +0200
-Message-ID: <20200422120943.GA110748@gmail.com>
-References: <20200420115316.18781-1-acme@kernel.org>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake
+ metrics
+Date: Wed, 22 Apr 2020 07:38:40 -0700
+Message-ID: <20200422143840.GJ608746@tassilo.jf.intel.com>
+References: <20200422074809.160248-1-irogers@google.com>
+ <20200422074809.160248-3-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200420115316.18781-1-acme@kernel.org>
+In-Reply-To: <20200422074809.160248-3-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andreas Gerstmayr <agerstmayr@redhat.com>, He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, Konstantin Kharlamov <hi-angel@yandex.ru>, Stephane Eranian <eranian@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
+> Remove over escaping with \\.
+> Remove extraneous if 1 if 0 == 1 else 0 else 0.
 
-* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+So where do these parse errors happen exactly? Some earlier 
+patches introduced them as regressions?
 
-> Hi Ingo/Thomas,
-> 
-> 	Please consider pulling,
-> 
-> Best regards,
-> 
-> - Arnaldo
-> 
-> Test results at the end of this message, as usual.
-> 
-> The following changes since commit cd0943357bc7570f081701d005318c20982178b8:
-> 
->   Merge tag 'perf-urgent-for-mingo-5.7-20200414' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux into perf/urgent (2020-04-16 10:21:31 +0200)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-core-for-mingo-5.8-20200420
-> 
-> for you to fetch changes up to 12e89e65f446476951f42aedeef56b6bd6f7f1e6:
-> 
->   perf hist: Add fast path for duplicate entries check (2020-04-18 09:05:01 -0300)
+The original metrics worked without parse errors as far as I know.
 
->  85 files changed, 1851 insertions(+), 513 deletions(-)
+If it fixes something earlier it would need Fixes: tags.
 
-Pulled, thanks a lot Arnaldo!
-
-	Ingo
+-Andi
