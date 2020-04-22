@@ -1,111 +1,66 @@
 From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH] perf/record: add num-synthesize-threads option
-Date: Wed, 22 Apr 2020 08:53:14 -0700
-Message-ID: <CAP-5=fUhnn=Shmea6KFeHFjApzZv8VO841=9vkO_f=t7UP7wZA@mail.gmail.com>
-References: <20200416001303.96841-1-irogers@google.com> <20200420075919.GA718574@krava>
- <CAP-5=fUsdWOG6Xw_mcTA-HOg81GQxWe56h6dBZ2m7fygVN3W6w@mail.gmail.com> <20200422081448.GD962614@krava>
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake metrics
+Date: Wed, 22 Apr 2020 09:18:57 -0700
+Message-ID: <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
+References: <20200422074809.160248-1-irogers@google.com> <20200422074809.160248-3-irogers@google.com>
+ <20200422143840.GJ608746@tassilo.jf.intel.com> <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200422081448.GD962614@krava>
+In-Reply-To: <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Tony Jones <tonyj@suse.de>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Apr 22, 2020 at 1:15 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Wed, Apr 22, 2020 at 8:34 AM Ian Rogers <irogers@google.com> wrote:
 >
-> On Mon, Apr 20, 2020 at 05:31:41PM -0700, Ian Rogers wrote:
+> On Wed, Apr 22, 2020 at 7:38 AM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > On Wed, Apr 22, 2020 at 12:48:03AM -0700, Ian Rogers wrote:
+> > > Remove over escaping with \\.
+> > > Remove extraneous if 1 if 0 == 1 else 0 else 0.
+> >
+> > So where do these parse errors happen exactly? Some earlier
+> > patches introduced them as regressions?
 >
-> SNIP
+> I'll work to track down a Fixes tag. I can repro the Skylakex errors
+> without the test in this series, by doing:
 >
-> > > > +{
-> > > > +     static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
-> > > > +     int ret;
-> > > > +
-> > > > +     pthread_mutex_lock(&synth_lock);
-> > > > +     ret = process_synthesized_event(tool, event, sample, machine);
-> > > > +     pthread_mutex_unlock(&synth_lock);
-> > >
-> > > hum, so how much faster is the synthesizing with threads in record,
-> > > given that we serialize it on every event that goes to the file?
-> >
-> > We see long synthesis times of the order seconds on loaded >100 core
-> > servers. I've not been able to create a reproduction on my desktop.
-> > You are right that making synthesis multithreaded will suffer from
-> > Amdahl's law if the write is a synchronization point. Measuring with
-> > the following patch in place:
-> > https://lore.kernel.org/lkml/20200415054050.31645-4-irogers@google.com/
-> > without threads the portion that needs a lock is less than 1.5% of
-> > execution time and so there's plenty to still run in parallel:
-> > ...
-> >       - 32.59% __perf_event__synthesize_threads
-> >          - 32.54% __event__synthesize_thread
-> >             + 22.13% perf_event__synthesize_mmap_events
-> >             + 6.68% perf_event__get_comm_ids.constprop.0
-> >             + 1.49% process_synthesized_event
-> >             + 1.29% __GI___readdir64
-> >             + 0.60% __opendir
-> > ...
-> >
-> > The multi-threaded benchmark in this patch (pass -t):
-> > https://lore.kernel.org/lkml/20200415054050.31645-2-irogers@google.com/
-> > shows:
-> >
-> > Computing performance of multi threaded perf event synthesis by
-> > synthesizing events on CPU 0:
-> >  Number of synthesis threads: 1
-> >    Average synthesis took: 127729.000 usec (+- 3372.880 usec)
-> >    Average num. events: 21548.600 (+- 0.306)
-> >    Average time per event 5.927 usec
-> >  Number of synthesis threads: 2
-> >    Average synthesis took: 88863.500 usec (+- 385.168 usec)
-> >    Average num. events: 21552.800 (+- 0.327)
-> >    Average time per event 4.123 usec
-> >  Number of synthesis threads: 3
-> >    Average synthesis took: 83257.400 usec (+- 348.617 usec)
-> >    Average num. events: 21553.200 (+- 0.327)
-> >    Average time per event 3.863 usec
-> >  Number of synthesis threads: 4
-> >    Average synthesis took: 75093.000 usec (+- 422.978 usec)
-> >    Average num. events: 21554.200 (+- 0.200)
-> >    Average time per event 3.484 usec
-> >  Number of synthesis threads: 5
-> >    Average synthesis took: 64896.600 usec (+- 353.348 usec)
-> >    Average num. events: 21558.000 (+- 0.000)
-> >    Average time per event 3.010 usec
-> >  Number of synthesis threads: 6
-> >    Average synthesis took: 59210.200 usec (+- 342.890 usec)
-> >    Average num. events: 21560.000 (+- 0.000)
-> >    Average time per event 2.746 usec
-> >  Number of synthesis threads: 7
-> >    Average synthesis took: 54093.900 usec (+- 306.247 usec)
-> >    Average num. events: 21562.000 (+- 0.000)
-> >    Average time per event 2.509 usec
-> >  Number of synthesis threads: 8
-> >    Average synthesis took: 48938.700 usec (+- 341.732 usec)
-> >    Average num. events: 21564.000 (+- 0.000)
-> >    Average time per event 2.269 usec
-> >
-> > The event logic there is using an atomic rather than a lock and the
-> > scaling isn't linear as not all the logic is threaded. Still with 8
-> > threads we see things going about 2.6 times faster. On a large loaded
-> > machine that may bring 10 seconds of event synthesis down to less than
-> > 4. On a desktop there's no measurable difference and the
-> > --num-thread-synthesize is defaulted to 1.
+> $ perf stat -M DRAM_Read_Latency sleep 1
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (cha/event=0x36\,uma
+> sk=0x21/).
+> /bin/dmesg | grep -i perf may provide additional information.
 >
-> ok, nice ;) sorry I did not get to this before you posted v2,
-> but could you plz send v3 with above in the changelog?
+> This was just the escaping issue. I'm less clear on the other cascade
+> lake issue, and it is a bit more work for me to test on cascade lake.
+> What is "if 1 if 0 == 1 else 0 else 0" trying to do? Perhaps hunting
+> for the Fixes will let me know, but it looks like a copy-paste error.
+>
+> > The original metrics worked without parse errors as far as I know.
+>
+> The skylake issue above repros on 5.2.17 and so it seems like it is
+> broken for a while. The test in this series will prevent this in the
+> future, but without this patch that test fails.
 
-Done.
-https://lore.kernel.org/lkml/20200422155038.9380-1-irogers@google.com/T/#u
-Not done initially as I wasn't sure the argument was coherent and also
-the other two patches haven't landed - it would be nice to avoid
-linking to the patches on the mailing list.
+The parse errors were introduced with the metrics, so they've never worked:
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=fd5500989c8f3c3944ac0a144be04bae2506f7ba
+
+I will send out a v2 with Fixes in the commit message but wanted to
+wait in case there was any more feedback. In particular the fixes to
+the new test and expr parser lex code. The lex code wasn't broken at
+the time the metrics were added and should be working again after this
+patch set.
 
 Thanks,
 Ian
 
-> thanks,
-> jirka
+> > If it fixes something earlier it would need Fixes: tags.
 >
+> Working on it. Thanks for the input!
+>
+> Ian
+>
+> > -Andi
