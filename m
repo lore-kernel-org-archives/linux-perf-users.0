@@ -1,67 +1,39 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: kernel/perf: Sample data being lost
-Date: Tue, 21 Apr 2020 12:59:46 -0300
-Message-ID: <20200421155946.GB12295@kernel.org>
-References: <f09e62d0-af40-683a-648f-3c3b7137369b@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Subject: [PATCH 0/8] perf metric fixes and test
+Date: Wed, 22 Apr 2020 00:48:01 -0700
+Message-ID: <20200422074809.160248-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f09e62d0-af40-683a-648f-3c3b7137369b@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: "linux-perf-use." <linux-perf-users@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Sumanth Korikkar <sumanthk@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Apr 21, 2020 at 05:54:29PM +0200, Thomas Richter escreveu:
-> Since a couple of days I see this warning popping up very often:
-> 
-> [root@m35lp76 perf]# ./perf record --call-graph dwarf -e rb0000 -- find /
-> [ perf record: Woken up 282 times to write data ]
-> Warning:
-> Processed 16999 events and lost 382 chunks!
-> 
-> Check IO/CPU overload!
-> 
-> [ perf record: Captured and wrote 125.730 MB perf.data (16219 samples) ]
-> [root@m35lp76 perf]#
-> 
-> The machine is idle, its my development system, so not much going on.
-> It also happens using a software event, for example cycles. It shows
-> up more often, the larger the sample size is. So for example:
-> 
-> [root@m35lp76 perf]# pwd
-> /root/linux/tools/perf
-> [root@m35lp76 perf]#  ./perf record  --call-graph dwarf -- find
-> [ perf record: Woken up 2 times to write data ]
-> Warning:
-> Processed 231 events and lost 7 chunks!
-> 
-> Check IO/CPU overload!
-> 
-> [ perf record: Captured and wrote 1.000 MB perf.data (130 samples) ]
-> [root@m35lp76 perf]#
-> 
-> I have very seldom observed this before, only in extremely rare cases with
-> a heavily loaded machine. I am wondering what has changed, I haven't
-> changed anything in the s390 PMU device drivers.
-> It could be
->  - common kernel code when writing into the ringbuffer.
->  - the perf tool too slow to read data from the mapped buffer.
->    However I have not come across changes in this area.
-> 
-> Has anybody observed similar issue?
-> 
-> PS: I have added some printk messages into my PMU devices drivers.
-> I have seen messages that the 16384 pages for auxilary buffers are full
-> and that samples have been dropped.
+Add a test that all perf metrics (for your architecture) are
+parsable. Fix bugs in the expr parser and in x86 metrics. Untested on
+architectures other than x86.
 
-Can you try to bisect tools/perf?
+Ian Rogers (8):
+  perf expr: unlimited escaped characters in a symbol
+  perf metrics: fix parse errors in cascade lake metrics
+  perf metrics: fix parse errors in skylake metrics
+  perf expr: allow ',' to be an other token
+  perf expr: increase max other
+  perf expr: parse numbers as doubles
+  perf expr: debug lex if debugging yaxx
+  perf test: add expr test for pmu metrics
 
-Something like:
+ .../arch/x86/cascadelakex/clx-metrics.json    | 10 +-
+ .../arch/x86/skylakex/skx-metrics.json        |  4 +-
+ tools/perf/tests/builtin-test.c               |  5 +
+ tools/perf/tests/expr.c                       | 91 ++++++++++++++++++-
+ tools/perf/tests/tests.h                      |  2 +
+ tools/perf/util/expr.c                        |  1 +
+ tools/perf/util/expr.h                        |  2 +-
+ tools/perf/util/expr.l                        | 16 ++--
+ tools/perf/util/expr.y                        |  2 +-
+ 9 files changed, 115 insertions(+), 18 deletions(-)
 
-git checkout v5.4
-
-build it, no problems? Use it as the 'git bisect good' starting point.
-
-- Arnaldo
+-- 
+2.26.2.303.gf8c07b1a785-goog
