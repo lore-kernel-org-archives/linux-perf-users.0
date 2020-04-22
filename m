@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 09/11] perf metrics: fix parse errors in power9 metrics
-Date: Wed, 22 Apr 2020 15:04:28 -0700
-Message-ID: <20200422220430.254014-10-irogers@google.com>
+Subject: [PATCH v2 10/11] perf expr: print a debug message for division by zero
+Date: Wed, 22 Apr 2020 15:04:29 -0700
+Message-ID: <20200422220430.254014-11-irogers@google.com>
 References: <20200422220430.254014-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,26 +12,39 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Mismatched parentheses.
+If an expression yields 0 and is then divided-by/modulus-by then the
+parsing aborts. Add a debug error message to better enable debugging
+when this happens.
 
-Fixes: 7f3cf5ac7743 (perf vendor events power9: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/powerpc/power9/metrics.json | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.y | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-index 811c2a8c1c9e..f427436f2c0a 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-@@ -362,7 +362,7 @@
-     },
-     {
-         "BriefDescription": "Completion stall for other reasons",
--        "MetricExpr": "PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FIN - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
-+        "MetricExpr": "(PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FIN - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
-         "MetricGroup": "cpi_breakdown",
-         "MetricName": "other_stall_cpi"
-     },
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 54260094b947..21e82a1e11a2 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -103,8 +103,18 @@ expr:	  NUMBER
+ 	| expr '+' expr		{ $$ = $1 + $3; }
+ 	| expr '-' expr		{ $$ = $1 - $3; }
+ 	| expr '*' expr		{ $$ = $1 * $3; }
+-	| expr '/' expr		{ if ($3 == 0) YYABORT; $$ = $1 / $3; }
+-	| expr '%' expr		{ if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
++	| expr '/' expr		{ if ($3 == 0) {
++					pr_debug("division by zero\n");
++					YYABORT;
++				  }
++				  $$ = $1 / $3;
++	                        }
++	| expr '%' expr		{ if ((long)$3 == 0) {
++					pr_debug("division by zero\n");
++					YYABORT;
++				  }
++				  $$ = (long)$1 % (long)$3;
++	                        }
+ 	| '-' expr %prec NEG	{ $$ = -$2; }
+ 	| '(' if_expr ')'	{ $$ = $2; }
+ 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
 -- 
 2.26.2.303.gf8c07b1a785-goog
