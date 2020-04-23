@@ -1,60 +1,52 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v2 10/11] perf expr: print a debug message for division
- by zero
-Date: Thu, 23 Apr 2020 13:28:37 +0200
-Message-ID: <20200423112837.GE1136647@krava>
+Subject: Re: [PATCH v2 11/11] perf test: add expr test for pmu metrics
+Date: Thu, 23 Apr 2020 13:28:47 +0200
+Message-ID: <20200423112847.GF1136647@krava>
 References: <20200422220430.254014-1-irogers@google.com>
- <20200422220430.254014-11-irogers@google.com>
+ <20200422220430.254014-12-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200422220430.254014-11-irogers@google.com>
+In-Reply-To: <20200422220430.254014-12-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Apr 22, 2020 at 03:04:29PM -0700, Ian Rogers wrote:
-> If an expression yields 0 and is then divided-by/modulus-by then the
-> parsing aborts. Add a debug error message to better enable debugging
-> when this happens.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/expr.y | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 54260094b947..21e82a1e11a2 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -103,8 +103,18 @@ expr:	  NUMBER
->  	| expr '+' expr		{ $$ = $1 + $3; }
->  	| expr '-' expr		{ $$ = $1 - $3; }
->  	| expr '*' expr		{ $$ = $1 * $3; }
-> -	| expr '/' expr		{ if ($3 == 0) YYABORT; $$ = $1 / $3; }
-> -	| expr '%' expr		{ if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
-> +	| expr '/' expr		{ if ($3 == 0) {
-> +					pr_debug("division by zero\n");
-> +					YYABORT;
-> +				  }
-> +				  $$ = $1 / $3;
-> +	                        }
-> +	| expr '%' expr		{ if ((long)$3 == 0) {
+On Wed, Apr 22, 2020 at 03:04:30PM -0700, Ian Rogers wrote:
 
-is that (long) cast necessary? it's missing for the '/' case
+SNIP
 
+> +
+> +static int pmu_tests(void)
+> +{
+> +	struct pmu_events_map *map;
+> +	struct pmu_event *pe;
+> +	int i, j, k;
+> +	const char **ids;
+> +	int idnum;
+> +	int ret = 0;
+> +	struct expr_parse_ctx ctx;
+> +	double result;
+> +
+> +	i = 0;
+> +	for (;;) {
+> +		map = &pmu_events_map[i++];
+> +		if (!map->table) {
+> +			map = NULL;
+> +			break;
+> +		}
+> +		j = 0;
+> +		for (;;) {
+> +			pe = &map->table[j++];
+> +			if (!pe->name && !pe->metric_group && !pe->metric_name)
+> +				break;
+> +			if (!pe->metric_expr)
+> +				continue;
+
+so we go throught all the metrics for the current cpu
+and test the parsing on them.. great!
+
+thanks,
 jirka
-
-> +					pr_debug("division by zero\n");
-> +					YYABORT;
-> +				  }
-> +				  $$ = (long)$1 % (long)$3;
-> +	                        }
->  	| '-' expr %prec NEG	{ $$ = -$2; }
->  	| '(' if_expr ')'	{ $$ = $2; }
->  	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
-> -- 
-> 2.26.2.303.gf8c07b1a785-goog
-> 
