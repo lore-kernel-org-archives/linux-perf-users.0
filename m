@@ -1,102 +1,70 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake metrics
-Date: Thu, 23 Apr 2020 07:34:15 -0700
-Message-ID: <CAP-5=fU499V1XE2WyhhuBgJ64--5dUeVg-zhXmuSEMsdyU-cBA@mail.gmail.com>
-References: <20200422074809.160248-1-irogers@google.com> <20200422074809.160248-3-irogers@google.com>
- <20200422143840.GJ608746@tassilo.jf.intel.com> <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
- <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
- <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com> <cb5fcb4b-3ac6-66b5-9f9e-7943f4a6dadf@linux.intel.com>
- <CAP-5=fXVF_ExxVuiivF0JY3MwgxrQZqyFoPwn-p7DPf6Gbdh0g@mail.gmail.com>
- <abec8f03-ecb5-9bfe-c8ab-2c6d2aad2a60@linux.intel.com> <20200423101030.GB1136647@krava>
- <20200423101120.GC1136647@krava>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v2 11/11] perf test: add expr test for pmu metrics
+Date: Thu, 23 Apr 2020 16:11:06 +0100
+Message-ID: <0edf66da-bedf-c5e9-aa2b-e9073a2d0203@huawei.com>
+References: <20200422220430.254014-1-irogers@google.com>
+ <20200422220430.254014-12-irogers@google.com>
+ <20200423112847.GF1136647@krava>
+ <CAP-5=fVwfu0s8Sqhs7+aTqN1Gh2SaEu=feOEQssSu9MB+7hk8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200423101120.GC1136647@krava>
+In-Reply-To: <CAP-5=fVwfu0s8Sqhs7+aTqN1Gh2SaEu=feOEQssSu9MB+7hk8Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: "Jin, Yao" <yao.jin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+To: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Apr 23, 2020 at 3:11 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Thu, Apr 23, 2020 at 12:10:36PM +0200, Jiri Olsa wrote:
-> > On Thu, Apr 23, 2020 at 03:51:18PM +0800, Jin, Yao wrote:
-> > > Hi Ian,
-> > >
-> > > On 4/23/2020 2:09 PM, Ian Rogers wrote:
-> > > > On Wed, Apr 22, 2020 at 10:54 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
-> > > > >
-> > > > > Hi Jiri,
-> > > > >
-> > > > > Bisected to this commit which introduced the regression.
-> > > > >
-> > > > > 26226a97724d ("perf expr: Move expr lexer to flex")
-> > > > >
-> > > > > Would you like to look at that?
-> > > >
-> > > > Hi Jin,
-> > > >
-> > > > that commit breaks parsing of things like ','. See fixes in this patch
-> > > > set such as:
-> > > > https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/
-> > > > Fixing the lex issues then exposes other bugs that need to be
-> > > > corrected in the json. I've added Fixes to the commit message of:
-> > > > https://lore.kernel.org/lkml/20200422220430.254014-3-irogers@google.com/
-> > > > https://lore.kernel.org/lkml/20200422220430.254014-4-irogers@google.com/
-> > > > and would be glad of a review. If we can land:
-> > > > https://lore.kernel.org/lkml/20200422220430.254014-12-irogers@google.com/
-> > > > then expr as the source of parse errors can go away :-) The next
-> > > > problem is the parse events code, but some of that logic is dependent
-> > > > on the machine it is running on. It'd be good to add a test that
-> > > > parsed events code can handle the events in metrics too, filtering out
-> > > > things like duration_time that are special to metrics.
-> > > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > >
-> > > Only with the fix
-> > > "https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/"
-> > > (without other json modifications), the issue was still there.
-> > >
-> > > localhost:~ # perf stat -M DRAM_Read_Latency
-> > > event syntax error:
-> > > '../event=0x36,,umask=0x21/,cha/event=0x35,cha_0/event=0x0/}:W,duration_time'
-> > >                                   \___ parser error
-> > >
-> > >  Usage: perf stat [<options>] [<command>]
-> > >
-> > >     -M, --metrics <metric/metric group list>
-> > >                           monitor specified metrics or metric groups
-> > > (separated by ,)
-> >
-> > hum, I don't have that metric, is there another example of broken metric?
-> >
-> > [jolsa@krava perf]$ sudo ./perf stat -M DRAM_Read_Latency
-> > Cannot find metric or group `DRAM_Read_Latency'
-> >
-> > >
-> > > So you added other commits which changed the json to let the parse work. But
-> > > I don't know if we have to do with this way because it should be a
-> > > regression issue.
-> > >
-> > > In my opinion, we'd better fix the issue in 26226a97724d ("perf expr: Move
-> > > expr lexer to flex") and try not to change the json if possible.
-> >
-> > yea, that change definitely had a potential of breaking things ;-)
-> > but it should be easy to fix them
-> >
-> > I'll go through the v3 of the patchset
->
-> ok, there's v2 now ;-)
+On 23/04/2020 15:22, Ian Rogers wrote:
+> On Thu, Apr 23, 2020 at 4:29 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>>
+>> On Wed, Apr 22, 2020 at 03:04:30PM -0700, Ian Rogers wrote:
+>>
+>> SNIP
+>>
+>>> +
+>>> +static int pmu_tests(void)
+>>> +{
+>>> +     struct pmu_events_map *map;
+>>> +     struct pmu_event *pe;
+>>> +     int i, j, k;
+>>> +     const char **ids;
+>>> +     int idnum;
+>>> +     int ret = 0;
+>>> +     struct expr_parse_ctx ctx;
+>>> +     double result;
+>>> +
+>>> +     i = 0;
+>>> +     for (;;) {
+>>> +             map = &pmu_events_map[i++];
+>>> +             if (!map->table) {
+>>> +                     map = NULL;
+>>> +                     break;
+>>> +             }
+>>> +             j = 0;
+>>> +             for (;;) {
+>>> +                     pe = &map->table[j++];
+>>> +                     if (!pe->name && !pe->metric_group && !pe->metric_name)
+>>> +                             break;
+>>> +                     if (!pe->metric_expr)
+>>> +                             continue;
+>>
+>> so we go throught all the metrics for the current cpu
+>> and test the parsing on them.. great!
+> 
+> It's not just the current CPU (such as skylake) it is every map
+> (skylake, cascade lake, etc), but this only works for the architecture
+> that jevents built.
+> If jevents built all architectures then this could check them as well.
+> Perhaps there should be a jevents test suite, but I think even then
+> this test has value.
 
-Fwiw, you can use the test CL without the others and then it should
-reproduce the problems. I placed it at the end of the series as
-otherwise the test is broken until all the fixes land.
+note: there is test__pmu_events(), which verifies that some test events 
+generated in pmu-events.c are as expected, and also verifies that we 
+create PMU events aliases as expected (for those test events). Nothing 
+is done for metrics, ATM.
 
 Thanks,
-Ian
-
-> jirka
->
+John
