@@ -1,75 +1,102 @@
 From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v2 00/11] perf metric fixes and test
-Date: Thu, 23 Apr 2020 07:31:25 -0700
-Message-ID: <CAP-5=fUO5sA8g2qv=Bg5LSSbG3nnhm57cBR7PsraH9+thph5qQ@mail.gmail.com>
-References: <20200422220430.254014-1-irogers@google.com> <20200423112825.GD1136647@krava>
- <1dd2e280-d711-2dda-61b1-b81609af6467@linux.intel.com> <20200423140249.GA1199027@krava>
+Subject: Re: [PATCH 2/8] perf metrics: fix parse errors in cascade lake metrics
+Date: Thu, 23 Apr 2020 07:34:15 -0700
+Message-ID: <CAP-5=fU499V1XE2WyhhuBgJ64--5dUeVg-zhXmuSEMsdyU-cBA@mail.gmail.com>
+References: <20200422074809.160248-1-irogers@google.com> <20200422074809.160248-3-irogers@google.com>
+ <20200422143840.GJ608746@tassilo.jf.intel.com> <CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com>
+ <CAP-5=fUMFqiSFLbKA-XWStrePwxiYfq7Jk6mS9=F56Q9y-KVsA@mail.gmail.com>
+ <46e803f3-80a4-0d37-9d39-b625b947ac7f@linux.intel.com> <cb5fcb4b-3ac6-66b5-9f9e-7943f4a6dadf@linux.intel.com>
+ <CAP-5=fXVF_ExxVuiivF0JY3MwgxrQZqyFoPwn-p7DPf6Gbdh0g@mail.gmail.com>
+ <abec8f03-ecb5-9bfe-c8ab-2c6d2aad2a60@linux.intel.com> <20200423101030.GB1136647@krava>
+ <20200423101120.GC1136647@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200423140249.GA1199027@krava>
+In-Reply-To: <20200423101120.GC1136647@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
-Cc: "Jin, Yao" <yao.jin@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
+Cc: "Jin, Yao" <yao.jin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, Apr 23, 2020 at 7:03 AM Jiri Olsa <jolsa@redhat.com> wrote:
+On Thu, Apr 23, 2020 at 3:11 AM Jiri Olsa <jolsa@redhat.com> wrote:
 >
-> On Thu, Apr 23, 2020 at 09:44:24PM +0800, Jin, Yao wrote:
-> > Hi Jiri,
-> >
-> > On 4/23/2020 7:28 PM, Jiri Olsa wrote:
-> > > On Wed, Apr 22, 2020 at 03:04:19PM -0700, Ian Rogers wrote:
-> > > > Add a test that all perf metrics (for your architecture) are
-> > > > parsable. Fix bugs in the expr parser and in x86 metrics. Untested on
-> > > > architectures other than x86.
+> On Thu, Apr 23, 2020 at 12:10:36PM +0200, Jiri Olsa wrote:
+> > On Thu, Apr 23, 2020 at 03:51:18PM +0800, Jin, Yao wrote:
+> > > Hi Ian,
+> > >
+> > > On 4/23/2020 2:09 PM, Ian Rogers wrote:
+> > > > On Wed, Apr 22, 2020 at 10:54 PM Jin, Yao <yao.jin@linux.intel.com> wrote:
+> > > > >
+> > > > > Hi Jiri,
+> > > > >
+> > > > > Bisected to this commit which introduced the regression.
+> > > > >
+> > > > > 26226a97724d ("perf expr: Move expr lexer to flex")
+> > > > >
+> > > > > Would you like to look at that?
 > > > >
-> > > > v2 adds Fixes tags to commit messages for when broken metrics were
-> > > >    first added. Adds a debug warning for division by zero in expr, and
-> > > >    adds a workaround for id values in the expr test necessary for
-> > > >    powerpc. It also fixes broken power8 and power9 metrics.
+> > > > Hi Jin,
+> > > >
+> > > > that commit breaks parsing of things like ','. See fixes in this patch
+> > > > set such as:
+> > > > https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/
+> > > > Fixing the lex issues then exposes other bugs that need to be
+> > > > corrected in the json. I've added Fixes to the commit message of:
+> > > > https://lore.kernel.org/lkml/20200422220430.254014-3-irogers@google.com/
+> > > > https://lore.kernel.org/lkml/20200422220430.254014-4-irogers@google.com/
+> > > > and would be glad of a review. If we can land:
+> > > > https://lore.kernel.org/lkml/20200422220430.254014-12-irogers@google.com/
+> > > > then expr as the source of parse errors can go away :-) The next
+> > > > problem is the parse events code, but some of that logic is dependent
+> > > > on the machine it is running on. It'd be good to add a test that
+> > > > parsed events code can handle the events in metrics too, filtering out
+> > > > things like duration_time that are special to metrics.
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
 > > >
-> > > looks good to me
+> > > Only with the fix
+> > > "https://lore.kernel.org/lkml/20200422220430.254014-5-irogers@google.com/"
+> > > (without other json modifications), the issue was still there.
 > > >
-> > > Jin Yao, is there a metric that's not working for you with this patchset
-> > > applied?
+> > > localhost:~ # perf stat -M DRAM_Read_Latency
+> > > event syntax error:
+> > > '../event=0x36,,umask=0x21/,cha/event=0x35,cha_0/event=0x0/}:W,duration_time'
+> > >                                   \___ parser error
 > > >
-> > > thanks,
-> > > jirka
+> > >  Usage: perf stat [<options>] [<command>]
 > > >
+> > >     -M, --metrics <metric/metric group list>
+> > >                           monitor specified metrics or metric groups
+> > > (separated by ,)
 > >
-> > Let me look for a CLX for testing, but maybe need some time.
+> > hum, I don't have that metric, is there another example of broken metric?
 > >
-> > BTW, suppose this patchset can work well, does it mean we will change the
-> > json file format in future?
+> > [jolsa@krava perf]$ sudo ./perf stat -M DRAM_Read_Latency
+> > Cannot find metric or group `DRAM_Read_Latency'
 > >
-> > For example,
+> > >
+> > > So you added other commits which changed the json to let the parse work. But
+> > > I don't know if we have to do with this way because it should be a
+> > > regression issue.
+> > >
+> > > In my opinion, we'd better fix the issue in 26226a97724d ("perf expr: Move
+> > > expr lexer to flex") and try not to change the json if possible.
 > >
-> > before:
-> > cha@event\\=0x36\\\\\\
+> > yea, that change definitely had a potential of breaking things ;-)
+> > but it should be easy to fix them
 > >
-> > after:
-> > cha@event\\=0x36\\
-> >
-> > "\\\\" are removed.
-> >
-> > If so, we need to change our event generation script.
+> > I'll go through the v3 of the patchset
 >
-> ok, maybe I got the wrong idea that the extra \\\\ were just
-> superfluous, what was the actual error there? and what's the
-> reason for that many '\' in there?
+> ok, there's v2 now ;-)
 
-I believe they are superfluous and break even before the flex change.
-I commented on it here with a reproduction of a parse events error on
-skylake:
-https://lore.kernel.org/lkml/CAP-5=fUnWAycQehCJ9=btquV2c3DVDX+tTEc85H8py9Kfehq4w@mail.gmail.com/
-
-Fixing the script that generates this would be great! With the test
-landed it should be much harder for this to be broken in the future.
+Fwiw, you can use the test CL without the others and then it should
+reproduce the problems. I placed it at the end of the series as
+otherwise the test is broken until all the fixes land.
 
 Thanks,
 Ian
-
 
 > jirka
 >
