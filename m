@@ -1,71 +1,71 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH v3] perf/record: add num-synthesize-threads option
-Date: Thu, 23 Apr 2020 11:11:08 -0300
-Message-ID: <20200423141108.GH19437@kernel.org>
-References: <20200422155038.9380-1-irogers@google.com>
- <20200423120957.GL1136647@krava>
+From: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v2 10/11] perf expr: print a debug message for division by zero
+Date: Thu, 23 Apr 2020 07:16:48 -0700
+Message-ID: <CAP-5=fVp7qJWqLfLQKeRmhnucWj2dYQ4K8RSAuiJ5TLd_PqXog@mail.gmail.com>
+References: <20200422220430.254014-1-irogers@google.com> <20200422220430.254014-11-irogers@google.com>
+ <20200423112837.GE1136647@krava>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200423120957.GL1136647@krava>
+In-Reply-To: <20200423112837.GE1136647@krava>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, yuzhoujian <yuzhoujian@didichuxing.com>, Tony Jones <tonyj@suse.de>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Apr 23, 2020 at 02:09:57PM +0200, Jiri Olsa escreveu:
-> On Wed, Apr 22, 2020 at 08:50:38AM -0700, Ian Rogers wrote:
-> > From: Stephane Eranian <eranian@google.com>
-> > 
-> 
-> SNIP
-> 
-> > That is the processing is 1.49% of execution time and there is plenty to
-> > make parallel. This is shown in the benchmark in this patch:
-> > https://lore.kernel.org/lkml/20200415054050.31645-2-irogers@google.com/
-> > Computing performance of multi threaded perf event synthesis by
-> > synthesizing events on CPU 0:
-> >  Number of synthesis threads: 1
-> >    Average synthesis took: 127729.000 usec (+- 3372.880 usec)
-> >    Average num. events: 21548.600 (+- 0.306)
-> >    Average time per event 5.927 usec
-> >  Number of synthesis threads: 2
-> >    Average synthesis took: 88863.500 usec (+- 385.168 usec)
-> >    Average num. events: 21552.800 (+- 0.327)
-> >    Average time per event 4.123 usec
-> >  Number of synthesis threads: 3
-> >    Average synthesis took: 83257.400 usec (+- 348.617 usec)
-> >    Average num. events: 21553.200 (+- 0.327)
-> >    Average time per event 3.863 usec
-> >  Number of synthesis threads: 4
-> >    Average synthesis took: 75093.000 usec (+- 422.978 usec)
-> >    Average num. events: 21554.200 (+- 0.200)
-> >    Average time per event 3.484 usec
-> >  Number of synthesis threads: 5
-> >    Average synthesis took: 64896.600 usec (+- 353.348 usec)
-> >    Average num. events: 21558.000 (+- 0.000)
-> >    Average time per event 3.010 usec
-> >  Number of synthesis threads: 6
-> >    Average synthesis took: 59210.200 usec (+- 342.890 usec)
-> >    Average num. events: 21560.000 (+- 0.000)
-> >    Average time per event 2.746 usec
-> >  Number of synthesis threads: 7
-> >    Average synthesis took: 54093.900 usec (+- 306.247 usec)
-> >    Average num. events: 21562.000 (+- 0.000)
-> >    Average time per event 2.509 usec
-> >  Number of synthesis threads: 8
-> >    Average synthesis took: 48938.700 usec (+- 341.732 usec)
-> >    Average num. events: 21564.000 (+- 0.000)
-> >    Average time per event 2.269 usec
-> > 
-> > Where average time per synthesized event goes from 5.927 usec with 1
-> > thread to 2.269 usec with 8. This isn't a linear speed up as not all of
-> > synthesize code has been made parallel. If the synthesis time was about
-> > 10 seconds then using 8 threads may bring this down to less than 4.
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+On Thu, Apr 23, 2020 at 4:28 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Wed, Apr 22, 2020 at 03:04:29PM -0700, Ian Rogers wrote:
+> > If an expression yields 0 and is then divided-by/modulus-by then the
+> > parsing aborts. Add a debug error message to better enable debugging
+> > when this happens.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/expr.y | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> > index 54260094b947..21e82a1e11a2 100644
+> > --- a/tools/perf/util/expr.y
+> > +++ b/tools/perf/util/expr.y
+> > @@ -103,8 +103,18 @@ expr:      NUMBER
+> >       | expr '+' expr         { $$ = $1 + $3; }
+> >       | expr '-' expr         { $$ = $1 - $3; }
+> >       | expr '*' expr         { $$ = $1 * $3; }
+> > -     | expr '/' expr         { if ($3 == 0) YYABORT; $$ = $1 / $3; }
+> > -     | expr '%' expr         { if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
+> > +     | expr '/' expr         { if ($3 == 0) {
+> > +                                     pr_debug("division by zero\n");
+> > +                                     YYABORT;
+> > +                               }
+> > +                               $$ = $1 / $3;
+> > +                             }
+> > +     | expr '%' expr         { if ((long)$3 == 0) {
+>
+> is that (long) cast necessary? it's missing for the '/' case
 
-Thanks, applied.
+Andi Kleen could say for sure :-) From my observation, the values are
+typically doubles and definitely need to be in the divide case. There
+is also code handling them as longs such as |, &, ^:
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/tools/perf/util/expr.y#n100
+There's an experiment to see if all of the long handling code could be
+removed. This change isn't modifying the existing behavior.
 
-- Arnaldo
+Thanks,
+Ian
+
+> jirka
+>
+> > +                                     pr_debug("division by zero\n");
+> > +                                     YYABORT;
+> > +                               }
+> > +                               $$ = (long)$1 % (long)$3;
+> > +                             }
+> >       | '-' expr %prec NEG    { $$ = -$2; }
+> >       | '(' if_expr ')'       { $$ = $2; }
+> >       | MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+> > --
+> > 2.26.2.303.gf8c07b1a785-goog
+> >
+>
