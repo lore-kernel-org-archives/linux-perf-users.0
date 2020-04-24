@@ -1,66 +1,140 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: Re: [PATCH] perf symbol: Fix kernel symbol address display
-Date: Fri, 24 Apr 2020 14:37:01 +0200
-Message-ID: <475a5c86-2be3-4f12-56f3-7bd6587e8ec3@linux.ibm.com>
-References: <20200415070744.59919-1-tmricht@linux.ibm.com>
- <20200420204617.GA23638@kernel.org>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Fri, 24 Apr 2020 10:07:22 -0300
+Message-ID: <20200424130722.GK19437@kernel.org>
+References: <20200420115316.18781-1-acme@kernel.org>
+ <20200422120943.GA110748@gmail.com>
+ <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200420204617.GA23638@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+To: Andreas Gerstmayr <agerstmayr@redhat.com>, Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, Konstantin Kharlamov <hi-angel@yandex.ru>, Stephane Eranian <eranian@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkft-triage@lists.linaro.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 4/20/20 10:46 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Apr 15, 2020 at 09:07:44AM +0200, Thomas Richter escreveu:
->> Running commands
->>
->>    ./perf record -e rb0000 -- find .
->>    ./perf report -v
-> 
-> Or when pressing 'V' in the TUI.
->  
->> reveals symbol names and its addresses. There is a mismatch between
-> 
-> Yeah, an address that at some point was put there to help with debugging
-> the symbol resolution, IIRC how it looked like when looking at
-> 
->   readelf -sW vmlinux
-> 
-> Or any other DSO, for instance, for a glibc symbol here:
-> 
-> Using 'perf report -s pid,dso,sym' then pressing 'V':
-> 
->    1.55%    20325:perf  /usr/lib64/libc-2.30.so   0x161825   B [.] __strlen_avx2
-> 
-> [acme@five perf]$ readelf -sW /usr/lib64/libc-2.30.so | grep strlen_avx2
->  24371: 0000000000161810   414 FUNC    LOCAL  DEFAULT   15 __strlen_avx2
-> [acme@five perf]$ 
-> 
-> Can you check if doing in /lib/modules/.../build/vmlinux produces what
-> appears when 'V' is in place?
-> 
-> And perhaps we can also show the DSO offset and the rip as it gets laid
-> out in memory in the end? So we have all the informations?
-> 
-> - Arnaldo
-> 
+Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel D�az escreveu:
+> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
+> > >  85 files changed, 1851 insertions(+), 513 deletions(-)
 
-Arnaldo,
-
-having verified this also works in the TUI mode using 'V', are you going to pick
-this patch?
-
-Thanks
+> > Pulled, thanks a lot Arnaldo!
+ 
+> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
+> script: Add flamegraph.py script"):
+>   ERROR: perf-1.0-r9 do_package_qa: QA Issue:
+> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
+> in package perf-python requires /usr/bin/sh, but no providers found in
+> RDEPENDS_perf-python? [file-rdeps]
 
 
--- 
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+yeah, the flamegraph scripts are the outliers, there, everything else is
+using /bin/bash, so I'll switch to that, ok Andreas?
+
+[acme@quaco perf]$ vim tools/perf/scripts/python/bin/*
+34 files to edit
+[acme@quaco perf]$ head -1 tools/perf/scripts/python/bin/*
+==> tools/perf/scripts/python/bin/compaction-times-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/compaction-times-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/event_analyzing_sample-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/event_analyzing_sample-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/export-to-postgresql-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/export-to-postgresql-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/export-to-sqlite-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/export-to-sqlite-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/failed-syscalls-by-pid-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/failed-syscalls-by-pid-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/flamegraph-record <==
+#!/usr/bin/sh
+
+==> tools/perf/scripts/python/bin/flamegraph-report <==
+#!/usr/bin/sh
+
+==> tools/perf/scripts/python/bin/futex-contention-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/futex-contention-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/intel-pt-events-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/intel-pt-events-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/mem-phys-addr-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/mem-phys-addr-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/netdev-times-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/netdev-times-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/net_dropmonitor-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/net_dropmonitor-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/powerpc-hcalls-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/powerpc-hcalls-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/sched-migration-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/sched-migration-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/sctop-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/sctop-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/stackcollapse-record <==
+#!/bin/sh
+
+==> tools/perf/scripts/python/bin/stackcollapse-report <==
+#!/bin/sh
+
+==> tools/perf/scripts/python/bin/syscall-counts-by-pid-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/syscall-counts-by-pid-report <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/syscall-counts-record <==
+#!/bin/bash
+
+==> tools/perf/scripts/python/bin/syscall-counts-report <==
+#!/bin/bash
+[acme@quaco perf]$
