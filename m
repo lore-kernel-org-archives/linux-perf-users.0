@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 6/7] perf evlist: Allow reusing the side band thread for more purposes
-Date: Mon, 27 Apr 2020 18:19:34 -0300
-Message-ID: <20200427211935.25789-7-acme@kernel.org>
+Subject: [PATCH 7/7] perf record: Introduce --switch-output-event
+Date: Mon, 27 Apr 2020 18:19:35 -0300
+Message-ID: <20200427211935.25789-8-acme@kernel.org>
 References: <20200427211935.25789-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,79 +9,198 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200427211935.25789-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-I.e. so far we had just one event in that side band thread, a dummy one
-with attr.bpf_event set, so that 'perf record' can go ahead and ask the
-kernel for further information about BPF programs being loaded.
+Now we can use it with --overwrite to have a flight recorder mode that
+gets snapshot requests from arbitrary events that are processed in the
+side band thread together with the PERF_RECORD_BPF_EVENT processing.
 
-Allow for more than one event to be there, so that we can use it as
-well for the upcoming --switch-output-event feature.
+Example:
+
+To collect scheduler events until a recvmmsg syscall happens, system
+wide:
+
+  [root@five a]# rm -f perf.data.2020042717*
+  [root@five a]# perf record --overwrite -e sched:*switch,syscalls:*recvmmsg --switch-output-event syscalls:sys_enter_recvmmsg
+  [ perf record: dump data: Woken up 1 times ]
+  [ perf record: Dump perf.data.2020042717585458 ]
+  [ perf record: dump data: Woken up 1 times ]
+  [ perf record: Dump perf.data.2020042717590235 ]
+  [ perf record: dump data: Woken up 1 times ]
+  [ perf record: Dump perf.data.2020042717590398 ]
+  ^C[ perf record: Woken up 1 times to write data ]
+  [ perf record: Dump perf.data.2020042717590511 ]
+  [ perf record: Captured and wrote 7.244 MB perf.data.<timestamp> ]
+
+So in the above case we had 3 snapshots, the fourth was forced by
+control+C:
+
+  [root@five a]# ls -la
+  total 20440
+  drwxr-xr-x.  2 root root    4096 Apr 27 17:59 .
+  dr-xr-x---. 12 root root    4096 Apr 27 17:46 ..
+  -rw-------.  1 root root 3936125 Apr 27 17:58 perf.data.2020042717585458
+  -rw-------.  1 root root 5074869 Apr 27 17:59 perf.data.2020042717590235
+  -rw-------.  1 root root 4291037 Apr 27 17:59 perf.data.2020042717590398
+  -rw-------.  1 root root 7617037 Apr 27 17:59 perf.data.2020042717590511
+  [root@five a]#
+
+One can make this more precise by adding the switch output event to the
+main -e events list, as since this is done asynchronously, a few events
+after the signal event will appear in the snapshots, as can be seen
+with:
+
+  [root@five a]# rm -f perf.data.20200427175*
+  [root@five a]# perf record --overwrite -e sched:*switch,syscalls:*recvmmsg --switch-output-event syscalls:sys_enter_recvmmsg
+  [ perf record: dump data: Woken up 1 times ]
+  [ perf record: Dump perf.data.2020042718024203 ]
+  [ perf record: dump data: Woken up 1 times ]
+  [ perf record: Dump perf.data.2020042718024301 ]
+  [ perf record: dump data: Woken up 1 times ]
+  [ perf record: Dump perf.data.2020042718024484 ]
+  ^C[ perf record: Woken up 1 times to write data ]
+  [ perf record: Dump perf.data.2020042718024562 ]
+  [ perf record: Captured and wrote 7.337 MB perf.data.<timestamp> ]
+  [root@five a]# perf script -i perf.data.2020042718024203 | tail -15
+       PacerThread 148586 [005] 122.830729: sched:sched_switch: prev_comm=PacerThread prev_pid=148586...
+           swapper      0 [000] 122.833588: sched:sched_switch: prev_comm=swapper/0 prev_pid=...
+    NetworkManager   1251 [000] 122.833619: syscalls:sys_enter_recvmmsg: fd: 0x0000001c, mmsg: 0x7ffe83054a1...
+           swapper      0 [002] 122.833624: sched:sched_switch: prev_comm=swapper/2 prev_pid=...
+           swapper      0 [003] 122.833624: sched:sched_switch: prev_comm=swapper/3 prev_pid=...
+    NetworkManager   1251 [000] 122.833626: syscalls:sys_exit_recvmmsg: 0x1
+   kworker/3:3-eve 158946 [003] 122.833628: sched:sched_switch: prev_comm=kworker/3:3 prev_pid=15894...
+           swapper      0 [004] 122.833641: sched:sched_switch: prev_comm=swapper/4 prev_pid=...
+    NetworkManager   1251 [000] 122.833642: sched:sched_switch: prev_comm=NetworkManage...
+              perf 228273 [002] 122.833645: sched:sched_switch: prev_comm=perf prev_pid=22827...
+           swapper      0 [011] 122.833646: sched:sched_switch: prev_comm=swapper/1...
+           swapper      0 [002] 122.833648: sched:sched_switch: prev_comm=swapper/...
+   kworker/0:2-eve 207387 [000] 122.833648: sched:sched_switch: prev_comm=kworker/0:2 prev_pid=20738...
+   kworker/2:3-eve 232038 [002] 122.833652: sched:sched_switch: prev_comm=kworker/2:3 prev_pid=23203...
+              perf 235825 [003] 122.833653: sched:sched_switch: prev_comm=perf prev_pid=23582...
+  [root@five a]#
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
+Cc: Wang Nan <wangnan0@huawei.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evlist.c | 22 ++++++++++++++++++++++
- tools/perf/util/evlist.h |  1 +
- 2 files changed, 23 insertions(+)
+ tools/perf/Documentation/perf-record.txt | 13 ++++++++
+ tools/perf/builtin-record.c              | 40 +++++++++++++++++++++---
+ 2 files changed, 49 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 1d0d36da223b..849058766757 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1777,6 +1777,19 @@ static void *perf_evlist__poll_thread(void *arg)
- 	return NULL;
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 6e8b4649307c..561ef55743e2 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -556,6 +556,19 @@ overhead. You can still switch them on with:
+ 
+   --switch-output --no-no-buildid  --no-no-buildid-cache
+ 
++--switch-output-event::
++Events that will cause the switch of the perf.data file, auto-selecting
++--switch-output=signal, the results are similar as internally the side band
++thread will also send a SIGUSR2 to the main one.
++
++Uses the same syntax as --event, it will just not be recorded, serving only to
++switch the perf.data file as soon as the --switch-output event is processed by
++a separate sideband thread.
++
++This sideband thread is also used to other purposes, like processing the
++PERF_RECORD_BPF_EVENT records as they happen, asking the kernel for extra BPF
++information, etc.
++
+ --switch-max-files=N::
+ 
+ When rotating perf.data with --switch-output, only keep N files.
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ed2244847400..8ff5eaec26e9 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -87,6 +87,7 @@ struct record {
+ 	struct evlist	*evlist;
+ 	struct perf_session	*session;
+ 	struct evlist		*sb_evlist;
++	pthread_t		thread_id;
+ 	int			realtime_prio;
+ 	bool			no_buildid;
+ 	bool			no_buildid_set;
+@@ -1436,6 +1437,13 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	return err;
  }
  
-+void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data)
++static int record__process_signal_event(union perf_event *event __maybe_unused, void *data)
 +{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		evsel->core.attr.sample_id_all	  = 1;
-+		evsel->core.attr.watermark	  = 1;
-+		evsel->core.attr.wakeup_watermark = 1;
-+		evsel->side_band.cb   = cb;
-+		evsel->side_band.data = data;
-+	}
++	struct record *rec = data;
++	pthread_kill(rec->thread_id, SIGUSR2);
++	return 0;
 +}
 +
- int perf_evlist__start_sb_thread(struct evlist *evlist,
- 				 struct target *target)
+ static int __cmd_record(struct record *rec, int argc, const char **argv)
  {
-@@ -1788,6 +1801,15 @@ int perf_evlist__start_sb_thread(struct evlist *evlist,
- 	if (perf_evlist__create_maps(evlist, target))
- 		goto out_delete_evlist;
+ 	int err;
+@@ -1580,12 +1588,24 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 		goto out_child;
+ 	}
  
-+	if (evlist->core.nr_entries > 1) {
-+		bool can_sample_identifier = perf_can_sample_identifier();
-+
-+		evlist__for_each_entry(evlist, counter)
-+			perf_evsel__set_sample_id(counter, can_sample_identifier);
-+
-+		perf_evlist__set_id_pos(evlist);
+-	if (!opts->no_bpf_event) {
+-		rec->sb_evlist = evlist__new();
++	if (rec->sb_evlist != NULL) {
++		/*
++		 * We get here if --switch-output-event populated the
++		 * sb_evlist, so associate a callback that will send a SIGUSR2
++		 * to the main thread.
++		 */
++		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
++		rec->thread_id = pthread_self();
 +	}
+ 
++	if (!opts->no_bpf_event) {
+ 		if (rec->sb_evlist == NULL) {
+-			pr_err("Couldn't create side band evlist.\n.");
+-			goto out_child;
++			rec->sb_evlist = evlist__new();
 +
- 	evlist__for_each_entry(evlist, counter) {
- 		if (evsel__open(counter, evlist->core.cpus,
- 				     evlist->core.threads) < 0)
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index 0f02408fff3e..1a8a979ae137 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -111,6 +111,7 @@ int perf_evlist__add_sb_event(struct evlist *evlist,
- 			      struct perf_event_attr *attr,
- 			      perf_evsel__sb_cb_t cb,
- 			      void *data);
-+void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data);
- int perf_evlist__start_sb_thread(struct evlist *evlist,
- 				 struct target *target);
- void perf_evlist__stop_sb_thread(struct evlist *evlist);
++			if (rec->sb_evlist == NULL) {
++				pr_err("Couldn't create side band evlist.\n.");
++				goto out_child;
++			}
+ 		}
+ 
+ 		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
+@@ -2179,10 +2199,19 @@ static int switch_output_setup(struct record *rec)
+ 	};
+ 	unsigned long val;
+ 
++	/*
++	 * If we're using --switch-output-events, then we imply its 
++	 * --switch-output=signal, as we'll send a SIGUSR2 from the side band
++	 *  thread to its parent.
++	 */
++	if (rec->sb_evlist != NULL)
++		goto do_signal;
++
+ 	if (!s->set)
+ 		return 0;
+ 
+ 	if (!strcmp(s->str, "signal")) {
++do_signal:
+ 		s->signal = true;
+ 		pr_debug("switch-output with SIGUSR2 signal\n");
+ 		goto enabled;
+@@ -2440,6 +2469,9 @@ static struct option __record_options[] = {
+ 			  &record.switch_output.set, "signal or size[BKMG] or time[smhd]",
+ 			  "Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold",
+ 			  "signal"),
++	OPT_CALLBACK(0, "switch-output-event", &record.sb_evlist, "switch output event",
++		     "switch output event selector. use 'perf list' to list available events",
++		     parse_events_option_new_evlist),
+ 	OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
+ 		   "Limit number of switch output generated files"),
+ 	OPT_BOOLEAN(0, "dry-run", &dry_run,
 -- 
 2.21.1
