@@ -1,109 +1,52 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v2 06/11] perf expr: parse numbers as doubles
-Date: Mon, 27 Apr 2020 11:03:13 -0700
-Message-ID: <CAP-5=fUWtQBBNqyr=xhKUO+jHxq=04SrBYD2Yh6QiH55BvtEWw@mail.gmail.com>
-References: <20200422220430.254014-1-irogers@google.com> <20200422220430.254014-7-irogers@google.com>
- <0cee674e-4084-07cb-1954-05dafc371648@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [RFC PATCHSET] Implement --switch-output-events
+Date: Mon, 27 Apr 2020 18:19:28 -0300
+Message-ID: <20200427211935.25789-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0cee674e-4084-07cb-1954-05dafc371648@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kajoljain <kjain@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>Stephane Eranian <e>
+To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, Apr 27, 2020 at 4:12 AM kajoljain <kjain@linux.ibm.com> wrote:
->
-> On 4/23/20 3:34 AM, Ian Rogers wrote:
-> > This is expected in expr.y and metrics use floating point values such as
-> > x86 broadwell IFetch_Line_Utilization.
-> >
-> > Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/expr.l | 14 +++++++-------
-> >  1 file changed, 7 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> > index 95bcf3629edf..0efda2ce2766 100644
-> > --- a/tools/perf/util/expr.l
-> > +++ b/tools/perf/util/expr.l
-> > @@ -10,12 +10,12 @@
-> >  char *expr_get_text(yyscan_t yyscanner);
-> >  YYSTYPE *expr_get_lval(yyscan_t yyscanner);
-> >
-> > -static int __value(YYSTYPE *yylval, char *str, int base, int token)
-> > +static double __value(YYSTYPE *yylval, char *str, int token)
-> >  {
-> > -     u64 num;
-> > +     double num;
-> >
-> >       errno = 0;
-> > -     num = strtoull(str, NULL, base);
-> > +     num = strtod(str, NULL);
-> >       if (errno)
-> >               return EXPR_ERROR;
-> >
-> > @@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
-> >       return token;
-> >  }
-> >
-> > -static int value(yyscan_t scanner, int base)
-> > +static int value(yyscan_t scanner)
-> >  {
-> >       YYSTYPE *yylval = expr_get_lval(scanner);
-> >       char *text = expr_get_text(scanner);
-> >
-> > -     return __value(yylval, text, base, NUMBER);
-> > +     return __value(yylval, text, NUMBER);
-> >  }
-> >
-> >  /*
-> > @@ -68,7 +68,7 @@ static int str(yyscan_t scanner, int token)
-> >  }
-> >  %}
-> >
-> > -number               [0-9]+
-> > +number               [0-9]*\.?[0-9]+
-> >
->
-> Hi Ian,
->     In this patch I saw the parsing of expression with '+number         [0-9]*\.?[0-9]+'
-> Could you please explain why '?' is introduced here, so that I can be sure that this is
-> not conflicting with my change to add '?'
+Hi guys,
 
-Hi Kajol,
-the '?' here is part of the regular expression. Basically it is saying
-that a number is a possible set of integers possibly followed by a '.'
-and then 1 or more integers. The expression comes from having seen
-Intel's metrics are of the form '.1234' in some of their topdown
-spreadsheets, so we need to be able to handle cases like '1.2', '123'
-and '.1234'. Having looked at your patch I don't believe it
-interferes.
+	Please take a look, the example provided is too simple, using
+'perf probe' to put probes in specific places in some workload to then
+get any other event close to the time the trigger hits comes to mind as
+well, using the signal was just to reuse the pre-existing logic and keep
+the patchkit small.
 
-> In this patch : https://lkml.org/lkml/2020/4/1/1427
-> I have used '?' symbol as part of metric expression in order to replace '?' with runtime
-> parameter.
+	Its available at:
 
-Interesting, I'll follow up with comments on that e-mail.
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/switch-output-event
 
-Thanks!
-Ian
+Best regards,
 
-> Thanks,
-> Kajol Jain
->
->
-> >  sch          [-,=]
-> >  spec         \\{sch}
-> > @@ -92,7 +92,7 @@ min         { return MIN; }
-> >  if           { return IF; }
-> >  else         { return ELSE; }
-> >  #smt_on              { return SMT_ON; }
-> > -{number}     { return value(yyscanner, 10); }
-> > +{number}     { return value(yyscanner); }
-> >  {symbol}     { return str(yyscanner, ID); }
-> >  "|"          { return '|'; }
-> >  "^"          { return '^'; }
-> >
+- Arnaldo
+
+Arnaldo Carvalho de Melo (7):
+  perf record: Move sb_evlist to 'struct record'
+  perf top: Move sb_evlist to 'struct perf_top'
+  perf bpf: Decouple creating the evlist from adding the SB event
+  perf bpf: Decouple creating the evlist from adding the SB event
+  perf parse-events: Add parse_events_option() variant that creates
+    evlist
+  perf evlist: Allow reusing the side band thread for more purposes
+  perf record: Introduce --switch-output-event
+
+ tools/perf/Documentation/perf-record.txt | 13 ++++++
+ tools/perf/builtin-record.c              | 55 +++++++++++++++++++++---
+ tools/perf/builtin-top.c                 | 20 ++++++---
+ tools/perf/util/bpf-event.c              |  3 +-
+ tools/perf/util/bpf-event.h              |  7 ++-
+ tools/perf/util/evlist.c                 | 39 +++++++++++------
+ tools/perf/util/evlist.h                 |  3 +-
+ tools/perf/util/parse-events.c           | 23 ++++++++++
+ tools/perf/util/parse-events.h           |  1 +
+ tools/perf/util/top.h                    |  2 +-
+ 10 files changed, 133 insertions(+), 33 deletions(-)
+
+-- 
+2.21.1
