@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 4/7] perf bpf: Decouple creating the evlist from adding the SB event
-Date: Mon, 27 Apr 2020 18:19:32 -0300
-Message-ID: <20200427211935.25789-5-acme@kernel.org>
+Subject: [PATCH 5/7] perf parse-events: Add parse_events_option() variant that creates evlist
+Date: Mon, 27 Apr 2020 18:19:33 -0300
+Message-ID: <20200427211935.25789-6-acme@kernel.org>
 References: <20200427211935.25789-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,12 +14,11 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Renaming bpf_event__add_sb_event() to evlist__add_sb_event() and
-requiring that the evlist be allocated beforehand.
-
-This will allow using the same side band thread and evlist to be used
-for multiple purposes in addition to react to PERF_RECORD_BPF_EVENT soon
-after they are generated.
+For the upcoming --switch-output-event option we want to create the side
+band event, populate it with the specified events and then, if it is
+present multiple times, go on adding to it, then, if the BPF tracking is
+required, use the first event to set its attr.bpf_event to get those
+PERF_RECORD_BPF_EVENT metadata events too.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
@@ -27,21 +26,55 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 23 +++++++++++++++++++++++
+ tools/perf/util/parse-events.h |  1 +
+ 2 files changed, 24 insertions(+)
 
-diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
-index 2c7a50509659..68f315c3df5b 100644
---- a/tools/perf/util/bpf-event.h
-+++ b/tools/perf/util/bpf-event.h
-@@ -45,7 +45,7 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
- 	return 0;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 10107747b361..5795f3a8f71c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2190,6 +2190,29 @@ int parse_events_option(const struct option *opt, const char *str,
+ 	return ret;
  }
  
--static inline int evlist__add_bpf_sb_event(struct evlist **evlist __maybe_unused,
-+static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
- 					   struct perf_env *env __maybe_unused)
- {
- 	return 0;
++int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset)
++{
++	struct evlist **evlistp = opt->value;
++	int ret;
++
++	if (*evlistp == NULL) {
++		*evlistp = evlist__new();
++
++		if (*evlistp == NULL) {
++			fprintf(stderr, "Not enough memory to create evlist\n");
++			return -1;
++		}
++	}
++
++	ret = parse_events_option(opt, str, unset);
++	if (ret) {
++		evlist__delete(*evlistp);
++		*evlistp = NULL;
++	}
++
++	return ret;
++}
++
+ static int
+ foreach_evsel_in_last_glob(struct evlist *evlist,
+ 			   int (*func)(struct evsel *evsel,
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 27596cbd0ba0..6ead9661238c 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -31,6 +31,7 @@ bool have_tracepoints(struct list_head *evlist);
+ const char *event_type(int type);
+ 
+ int parse_events_option(const struct option *opt, const char *str, int unset);
++int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
+ int parse_events(struct evlist *evlist, const char *str,
+ 		 struct parse_events_error *error);
+ int parse_events_terms(struct list_head *terms, const char *str);
 -- 
 2.21.1
