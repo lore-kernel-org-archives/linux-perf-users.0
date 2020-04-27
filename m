@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/7] perf record: Move sb_evlist to 'struct record'
-Date: Mon, 27 Apr 2020 18:19:29 -0300
-Message-ID: <20200427211935.25789-2-acme@kernel.org>
+Subject: [PATCH 2/7] perf top: Move sb_evlist to 'struct perf_top'
+Date: Mon, 27 Apr 2020 18:19:30 -0300
+Message-ID: <20200427211935.25789-3-acme@kernel.org>
 References: <20200427211935.25789-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Where state related to a 'perf record' session is grouped.
+Where state related to a 'perf top' session is grouped.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
@@ -22,49 +22,55 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ tools/perf/builtin-top.c | 7 +++----
+ tools/perf/util/top.h    | 2 +-
+ 2 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 2e8011f179f2..2348c4205e59 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -86,6 +86,7 @@ struct record {
- 	struct auxtrace_record	*itr;
- 	struct evlist	*evlist;
- 	struct perf_session	*session;
-+	struct evlist		*sb_evlist;
- 	int			realtime_prio;
- 	bool			no_buildid;
- 	bool			no_buildid_set;
-@@ -1446,7 +1447,6 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	struct perf_data *data = &rec->data;
- 	struct perf_session *session;
- 	bool disabled = false, draining = false;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 6b067a5ba1d5..70e1c732db6a 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1580,7 +1580,6 @@ int cmd_top(int argc, const char **argv)
+ 	OPTS_EVSWITCH(&top.evswitch),
+ 	OPT_END()
+ 	};
 -	struct evlist *sb_evlist = NULL;
- 	int fd;
- 	float ratio = 0;
- 
-@@ -1581,9 +1581,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	const char * const top_usage[] = {
+ 		"perf top [<options>]",
+ 		NULL
+@@ -1744,9 +1743,9 @@ int cmd_top(int argc, const char **argv)
  	}
  
- 	if (!opts->no_bpf_event)
--		bpf_event__add_sb_event(&sb_evlist, &session->header.env);
-+		bpf_event__add_sb_event(&rec->sb_evlist, &session->header.env);
+ 	if (!top.record_opts.no_bpf_event)
+-		bpf_event__add_sb_event(&sb_evlist, &perf_env);
++		bpf_event__add_sb_event(&top.sb_evlist, &perf_env);
  
--	if (perf_evlist__start_sb_thread(sb_evlist, &rec->opts.target)) {
-+	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
+-	if (perf_evlist__start_sb_thread(sb_evlist, target)) {
++	if (perf_evlist__start_sb_thread(top.sb_evlist, target)) {
  		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
  		opts->no_bpf_event = true;
  	}
-@@ -1857,7 +1857,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	perf_session__delete(session);
+@@ -1754,7 +1753,7 @@ int cmd_top(int argc, const char **argv)
+ 	status = __cmd_top(&top);
  
  	if (!opts->no_bpf_event)
 -		perf_evlist__stop_sb_thread(sb_evlist);
-+		perf_evlist__stop_sb_thread(rec->sb_evlist);
- 	return status;
- }
++		perf_evlist__stop_sb_thread(top.sb_evlist);
  
+ out_delete_evlist:
+ 	evlist__delete(top.evlist);
+diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+index 45dc84ddff37..ff8391208ecd 100644
+--- a/tools/perf/util/top.h
++++ b/tools/perf/util/top.h
+@@ -18,7 +18,7 @@ struct perf_session;
+ 
+ struct perf_top {
+ 	struct perf_tool   tool;
+-	struct evlist *evlist;
++	struct evlist *evlist, *sb_evlist;
+ 	struct record_opts record_opts;
+ 	struct annotation_options annotation_opts;
+ 	struct evswitch	   evswitch;
 -- 
 2.21.1
