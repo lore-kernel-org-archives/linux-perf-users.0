@@ -1,79 +1,67 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 7/7] perf record: Introduce --switch-output-event
-Date: Tue, 28 Apr 2020 15:22:57 +0200
-Message-ID: <20200428132257.GH1476763@krava>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 4/7] perf bpf: Decouple creating the evlist from adding
+ the SB event
+Date: Tue, 28 Apr 2020 14:21:34 -0300
+Message-ID: <20200428172134.GA5460@kernel.org>
 References: <20200427211935.25789-1-acme@kernel.org>
- <20200427211935.25789-8-acme@kernel.org>
- <20200428094839.GD1476763@krava>
- <20200428121601.GB2245@kernel.org>
+ <20200427211935.25789-5-acme@kernel.org>
+ <20200428094851.GE1476763@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200428121601.GB2245@kernel.org>
+In-Reply-To: <20200428094851.GE1476763@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Apr 28, 2020 at 09:16:01AM -0300, Arnaldo Carvalho de Melo wrote:
-
-SNIP
-
-> > > +				pr_err("Couldn't create side band evlist.\n.");
-> > > +				goto out_child;
-> > > +			}
-> > >  		}
-> > >  
-> > >  		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
+Em Tue, Apr 28, 2020 at 11:48:51AM +0200, Jiri Olsa escreveu:
+> On Mon, Apr 27, 2020 at 06:19:32PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > > 
-> > it's getting bigger, I wonder we should put all the sb_* setup in
-> > separated functions like sb_start/sb_stop
+> > Renaming bpf_event__add_sb_event() to evlist__add_sb_event() and
+> > requiring that the evlist be allocated beforehand.
 > 
-> Well, the rec->thread_id = pthread_self(); part is just for reusing a
-> 'perf record' specific mechanism, what to do when the event appears in
-> the side band thread ring buffer, the evlist__set_cb() also is related
-> to that, moving thread_id to evlist seems too much at this time.
+> hum, this seems to be done in previous patch, maybe you
+> need to squash this with the previous one?
 
-hum, I meant record specific static functions sb_start/sb_stop,
-not inside evlist.. just to have it separated
-
+Right, doing it now.
+ 
+> jirka
 > 
-> > > @@ -2179,10 +2199,19 @@ static int switch_output_setup(struct record *rec)
-> > >  	};
-> > >  	unsigned long val;
-> > >  
-> > > +	/*
-> > > +	 * If we're using --switch-output-events, then we imply its 
-> > > +	 * --switch-output=signal, as we'll send a SIGUSR2 from the side band
-> > > +	 *  thread to its parent.
-> > > +	 */
-> > > +	if (rec->sb_evlist != NULL)
-> > > +		goto do_signal;
-> > > +
-> > >  	if (!s->set)
-> > >  		return 0;
->  
-> > hum, it looks like this jump is not necessay and can be avoided
-> > by some bool checks.. could we add some bool when --switch-output-event
-> > is used, so we don't depend on wether rec->sb_evlist was allocated for
-> > whatever reason?
+> > 
+> > This will allow using the same side band thread and evlist to be used
+> > for multiple purposes in addition to react to PERF_RECORD_BPF_EVENT soon
+> > after they are generated.
+> > 
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/util/bpf-event.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/bpf-event.h b/tools/perf/util/bpf-event.h
+> > index 2c7a50509659..68f315c3df5b 100644
+> > --- a/tools/perf/util/bpf-event.h
+> > +++ b/tools/perf/util/bpf-event.h
+> > @@ -45,7 +45,7 @@ static inline int machine__process_bpf(struct machine *machine __maybe_unused,
+> >  	return 0;
+> >  }
+> >  
+> > -static inline int evlist__add_bpf_sb_event(struct evlist **evlist __maybe_unused,
+> > +static inline int evlist__add_bpf_sb_event(struct evlist *evlist __maybe_unused,
+> >  					   struct perf_env *env __maybe_unused)
+> >  {
+> >  	return 0;
+> > -- 
+> > 2.21.1
+> > 
 > 
-> If rec->sb_evlist is NULL, then there was no --switch-output-event
-> passed... The only advantage in adding the complexity below would be if
-> we had rec->switch_output_event_set which would clarify that sb_evlist
-> is not used only for --switch-output-event, to make things clearer.
-> 
-> And this still leaves us with the jump, otherwise we would have to test
-> it twice, right?
 
-still I like the idea of checking bool twice then adding jumps
+-- 
 
-> 
-> I think I'll separate the patch adding OPT_CALLBACK_SET(), then fold the
-> switch_output_event_set addition to builtin-record, ok?
-
-ok, or set the bool directly in the callback, both works for me ;-)
-
-thanks,
-jirka
+- Arnaldo
