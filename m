@@ -1,206 +1,140 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 7/7] perf record: Introduce --switch-output-event
-Date: Mon, 27 Apr 2020 18:19:35 -0300
-Message-ID: <20200427211935.25789-8-acme@kernel.org>
-References: <20200427211935.25789-1-acme@kernel.org>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v8 0/7] powerpc/perf: Add json file metric support for the
+ hv_24x7 socket/chip level events
+Date: Tue, 28 Apr 2020 12:02:42 +0530
+Message-ID: <fa31bc42-d34c-c788-0109-350d769b51ce@linux.ibm.com>
+References: <20200401203340.31402-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200427211935.25789-1-acme@kernel.org>
+In-Reply-To: <20200401203340.31402-1-kjain@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
+To: acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Hi Arnaldo,
+	Please let me know if there any changes required in this patchset,
+as some of its patches are still not part of your perf/core tree.
 
-Now we can use it with --overwrite to have a flight recorder mode that
-gets snapshot requests from arbitrary events that are processed in the
-side band thread together with the PERF_RECORD_BPF_EVENT processing.
+Thanks,
+Kajol Jain
 
-Example:
-
-To collect scheduler events until a recvmmsg syscall happens, system
-wide:
-
-  [root@five a]# rm -f perf.data.2020042717*
-  [root@five a]# perf record --overwrite -e sched:*switch,syscalls:*recvmmsg --switch-output-event syscalls:sys_enter_recvmmsg
-  [ perf record: dump data: Woken up 1 times ]
-  [ perf record: Dump perf.data.2020042717585458 ]
-  [ perf record: dump data: Woken up 1 times ]
-  [ perf record: Dump perf.data.2020042717590235 ]
-  [ perf record: dump data: Woken up 1 times ]
-  [ perf record: Dump perf.data.2020042717590398 ]
-  ^C[ perf record: Woken up 1 times to write data ]
-  [ perf record: Dump perf.data.2020042717590511 ]
-  [ perf record: Captured and wrote 7.244 MB perf.data.<timestamp> ]
-
-So in the above case we had 3 snapshots, the fourth was forced by
-control+C:
-
-  [root@five a]# ls -la
-  total 20440
-  drwxr-xr-x.  2 root root    4096 Apr 27 17:59 .
-  dr-xr-x---. 12 root root    4096 Apr 27 17:46 ..
-  -rw-------.  1 root root 3936125 Apr 27 17:58 perf.data.2020042717585458
-  -rw-------.  1 root root 5074869 Apr 27 17:59 perf.data.2020042717590235
-  -rw-------.  1 root root 4291037 Apr 27 17:59 perf.data.2020042717590398
-  -rw-------.  1 root root 7617037 Apr 27 17:59 perf.data.2020042717590511
-  [root@five a]#
-
-One can make this more precise by adding the switch output event to the
-main -e events list, as since this is done asynchronously, a few events
-after the signal event will appear in the snapshots, as can be seen
-with:
-
-  [root@five a]# rm -f perf.data.20200427175*
-  [root@five a]# perf record --overwrite -e sched:*switch,syscalls:*recvmmsg --switch-output-event syscalls:sys_enter_recvmmsg
-  [ perf record: dump data: Woken up 1 times ]
-  [ perf record: Dump perf.data.2020042718024203 ]
-  [ perf record: dump data: Woken up 1 times ]
-  [ perf record: Dump perf.data.2020042718024301 ]
-  [ perf record: dump data: Woken up 1 times ]
-  [ perf record: Dump perf.data.2020042718024484 ]
-  ^C[ perf record: Woken up 1 times to write data ]
-  [ perf record: Dump perf.data.2020042718024562 ]
-  [ perf record: Captured and wrote 7.337 MB perf.data.<timestamp> ]
-  [root@five a]# perf script -i perf.data.2020042718024203 | tail -15
-       PacerThread 148586 [005] 122.830729: sched:sched_switch: prev_comm=PacerThread prev_pid=148586...
-           swapper      0 [000] 122.833588: sched:sched_switch: prev_comm=swapper/0 prev_pid=...
-    NetworkManager   1251 [000] 122.833619: syscalls:sys_enter_recvmmsg: fd: 0x0000001c, mmsg: 0x7ffe83054a1...
-           swapper      0 [002] 122.833624: sched:sched_switch: prev_comm=swapper/2 prev_pid=...
-           swapper      0 [003] 122.833624: sched:sched_switch: prev_comm=swapper/3 prev_pid=...
-    NetworkManager   1251 [000] 122.833626: syscalls:sys_exit_recvmmsg: 0x1
-   kworker/3:3-eve 158946 [003] 122.833628: sched:sched_switch: prev_comm=kworker/3:3 prev_pid=15894...
-           swapper      0 [004] 122.833641: sched:sched_switch: prev_comm=swapper/4 prev_pid=...
-    NetworkManager   1251 [000] 122.833642: sched:sched_switch: prev_comm=NetworkManage...
-              perf 228273 [002] 122.833645: sched:sched_switch: prev_comm=perf prev_pid=22827...
-           swapper      0 [011] 122.833646: sched:sched_switch: prev_comm=swapper/1...
-           swapper      0 [002] 122.833648: sched:sched_switch: prev_comm=swapper/...
-   kworker/0:2-eve 207387 [000] 122.833648: sched:sched_switch: prev_comm=kworker/0:2 prev_pid=20738...
-   kworker/2:3-eve 232038 [002] 122.833652: sched:sched_switch: prev_comm=kworker/2:3 prev_pid=23203...
-              perf 235825 [003] 122.833653: sched:sched_switch: prev_comm=perf prev_pid=23582...
-  [root@five a]#
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Documentation/perf-record.txt | 13 ++++++++
- tools/perf/builtin-record.c              | 40 +++++++++++++++++++++---
- 2 files changed, 49 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 6e8b4649307c..561ef55743e2 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -556,6 +556,19 @@ overhead. You can still switch them on with:
- 
-   --switch-output --no-no-buildid  --no-no-buildid-cache
- 
-+--switch-output-event::
-+Events that will cause the switch of the perf.data file, auto-selecting
-+--switch-output=signal, the results are similar as internally the side band
-+thread will also send a SIGUSR2 to the main one.
-+
-+Uses the same syntax as --event, it will just not be recorded, serving only to
-+switch the perf.data file as soon as the --switch-output event is processed by
-+a separate sideband thread.
-+
-+This sideband thread is also used to other purposes, like processing the
-+PERF_RECORD_BPF_EVENT records as they happen, asking the kernel for extra BPF
-+information, etc.
-+
- --switch-max-files=N::
- 
- When rotating perf.data with --switch-output, only keep N files.
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index ed2244847400..8ff5eaec26e9 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -87,6 +87,7 @@ struct record {
- 	struct evlist	*evlist;
- 	struct perf_session	*session;
- 	struct evlist		*sb_evlist;
-+	pthread_t		thread_id;
- 	int			realtime_prio;
- 	bool			no_buildid;
- 	bool			no_buildid_set;
-@@ -1436,6 +1437,13 @@ static int record__synthesize(struct record *rec, bool tail)
- 	return err;
- }
- 
-+static int record__process_signal_event(union perf_event *event __maybe_unused, void *data)
-+{
-+	struct record *rec = data;
-+	pthread_kill(rec->thread_id, SIGUSR2);
-+	return 0;
-+}
-+
- static int __cmd_record(struct record *rec, int argc, const char **argv)
- {
- 	int err;
-@@ -1580,12 +1588,24 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_child;
- 	}
- 
--	if (!opts->no_bpf_event) {
--		rec->sb_evlist = evlist__new();
-+	if (rec->sb_evlist != NULL) {
-+		/*
-+		 * We get here if --switch-output-event populated the
-+		 * sb_evlist, so associate a callback that will send a SIGUSR2
-+		 * to the main thread.
-+		 */
-+		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-+		rec->thread_id = pthread_self();
-+	}
- 
-+	if (!opts->no_bpf_event) {
- 		if (rec->sb_evlist == NULL) {
--			pr_err("Couldn't create side band evlist.\n.");
--			goto out_child;
-+			rec->sb_evlist = evlist__new();
-+
-+			if (rec->sb_evlist == NULL) {
-+				pr_err("Couldn't create side band evlist.\n.");
-+				goto out_child;
-+			}
- 		}
- 
- 		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
-@@ -2179,10 +2199,19 @@ static int switch_output_setup(struct record *rec)
- 	};
- 	unsigned long val;
- 
-+	/*
-+	 * If we're using --switch-output-events, then we imply its 
-+	 * --switch-output=signal, as we'll send a SIGUSR2 from the side band
-+	 *  thread to its parent.
-+	 */
-+	if (rec->sb_evlist != NULL)
-+		goto do_signal;
-+
- 	if (!s->set)
- 		return 0;
- 
- 	if (!strcmp(s->str, "signal")) {
-+do_signal:
- 		s->signal = true;
- 		pr_debug("switch-output with SIGUSR2 signal\n");
- 		goto enabled;
-@@ -2440,6 +2469,9 @@ static struct option __record_options[] = {
- 			  &record.switch_output.set, "signal or size[BKMG] or time[smhd]",
- 			  "Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold",
- 			  "signal"),
-+	OPT_CALLBACK(0, "switch-output-event", &record.sb_evlist, "switch output event",
-+		     "switch output event selector. use 'perf list' to list available events",
-+		     parse_events_option_new_evlist),
- 	OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
- 		   "Limit number of switch output generated files"),
- 	OPT_BOOLEAN(0, "dry-run", &dry_run,
--- 
-2.21.1
+On 4/2/20 2:03 AM, Kajol Jain wrote:
+> Patchset adds json file metric support for the hv_24x7 socket/chip level
+> events. "hv_24x7" pmu interface events needs system dependent parameter
+> like socket/chip/core. For example, hv_24x7 chip level events needs
+> specific chip-id to which the data is requested should be added as part
+> of pmu events.
+> 
+> So to enable JSON file support to "hv_24x7" interface, patchset reads
+> total number of sockets details in sysfs under 
+> "/sys/devices/hv_24x7/interface/".
+> 
+> Second patch of the patchset adds expr_scanner_ctx object to hold user
+> data for the expr scanner, which can be used to hold runtime parameter.
+> 
+> Patch 4 & 6 of the patchset handles perf tool plumbing needed to replace
+> the "?" character in the metric expression to proper value and hv_24x7
+> json metric file for different Socket/chip resources.
+> 
+> Patch set also enable Hz/hz prinitg for --metric-only option to print
+> metric data for bus frequency.
+> 
+> Applied and tested all these patches cleanly on top of jiri's flex changes
+> with the changes done by Kan Liang for "Support metric group constraint"
+> patchset and made required changes.
+> 
+> Also apply this patch on top of the fix patch send earlier
+> for printing metric name incase overlapping events.
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=perf/core&id=37cd7f65bf71a48f25eeb6d9be5dacb20d008ea6
+> 
+> Changelog:
+> v7 -> v8
+> - Add test case for testing parsing of "?" in metric expression
+> - Reaname variables name to runtime
+> 
+> v6 -> v7
+> - Spit patchset into two patch series one for kernel changes and other
+>   for tool side changes.
+> - Made changes Suggested by Jiri, including rather then reading runtime
+>   parameter from metric name, actually add it in structure egroup and
+>   metric_expr.
+> - As we don't need to read runtime parameter from metric name,
+>   now I am not appending it and rather just printing it in
+>   generic_metric function.
+> 
+> Kernel Side changes patch series: https://lkml.org/lkml/2020/3/27/58
+> 
+> v5 -> v6
+> - resolve compilation issue due to rearranging patch series.
+> - Rather then adding new function to take careof case for runtime param
+>   in metricgroup__add_metric, using metricgroup__add_metric_param itself
+>   for that work.
+> - Address some optimization suggested like using directly file path
+>   rather then adding new macro in header.c
+> - Change commit message on patch where we are adding "?" support
+>   by adding simple example.
+> 
+> v4 -> v5
+> - Using sysfs__read_int instead of sysfs__read_ull while reading
+>   parameter value in powerpc/util/header.c file.
+> 
+> - Using asprintf rather then malloc and sprintf 
+>   Suggested by Arnaldo Carvalho de Melo
+> 
+> - Break patch 6 from previous version to two patch,
+>   - One to add refactor current "metricgroup__add_metric" function
+>     and another where actually "?" handling infra added.
+> 
+> - Add expr__runtimeparam as part of 'expr_scanner_ctx' struct
+>   rather then making it global variable. Thanks Jiri for
+>   adding this structure to hold user data for the expr scanner.
+> 
+> - Add runtime param as agrugement to function 'expr__find_other'
+>   and 'expr__parse' and made changes on references accordingly.
+> 
+> v3 -> v4
+> - Apply these patch on top of Kan liang changes.
+>   As suggested by Jiri.
+> 
+> v2 -> v3
+> - Remove setting  event_count to 0 part in function 'h_24x7_event_read'
+>   with comment rather then adding 0 to event_count value.
+>   Suggested by: Sukadev Bhattiprolu
+> 
+> - Apply tool side changes require to replace "?" on Jiri's flex patch
+>   series and made all require changes to make it compatible with added
+>   flex change.
+> 
+> v1 -> v2
+> - Rename hv-24x7 metric json file as nest_metrics.json
+> 
+> Jiri Olsa (2):
+>   perf expr: Add expr_ prefix for parse_ctx and parse_id
+>   perf expr: Add expr_scanner_ctx object
+> 
+> Kajol Jain (5):
+>   perf/tools: Refactoring metricgroup__add_metric function
+>   perf/tools: Enhance JSON/metric infrastructure to handle "?"
+>   perf/tests/expr: Added test for runtime param in metric expression
+>   tools/perf: Enable Hz/hz prinitg for --metric-only option
+>   perf/tools/pmu-events/powerpc: Add hv_24x7 socket/chip level metric
+>     events
+> 
+>  tools/perf/arch/powerpc/util/header.c         |  8 ++
+>  .../arch/powerpc/power9/nest_metrics.json     | 19 +++++
+>  tools/perf/tests/expr.c                       | 20 +++--
+>  tools/perf/util/expr.c                        | 25 +++---
+>  tools/perf/util/expr.h                        | 19 +++--
+>  tools/perf/util/expr.l                        | 37 ++++++---
+>  tools/perf/util/expr.y                        |  6 +-
+>  tools/perf/util/metricgroup.c                 | 78 +++++++++++++------
+>  tools/perf/util/metricgroup.h                 |  2 +
+>  tools/perf/util/stat-display.c                |  2 -
+>  tools/perf/util/stat-shadow.c                 | 19 +++--
+>  11 files changed, 164 insertions(+), 71 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> 
