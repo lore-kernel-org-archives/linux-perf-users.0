@@ -1,15 +1,15 @@
 From: Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: Re: [PATCH v7 1/5] powerpc/perf/hv-24x7: Fix inconsistent output
- values incase multiple hv-24x7 events run
-Date: Wed, 29 Apr 2020 14:26:06 +0530
-Message-ID: <3c209251-ceab-7381-99e3-b5664ce3104b@linux.ibm.com>
+Subject: Re: [PATCH v7 3/5] powerpc/hv-24x7: Add sysfs files inside hv-24x7
+ device to show processor details
+Date: Wed, 29 Apr 2020 14:38:58 +0530
+Message-ID: <f4e8fcfd-7147-e463-36d8-7e922f63b6bd@linux.ibm.com>
 References: <20200327063642.26175-1-kjain@linux.ibm.com>
- <20200327063642.26175-2-kjain@linux.ibm.com>
+ <20200327063642.26175-4-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200327063642.26175-2-kjain@linux.ibm.com>
+In-Reply-To: <20200327063642.26175-4-kjain@linux.ibm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
@@ -19,85 +19,66 @@ List-Id: linux-perf-users.vger.kernel.org
 
 
 On 3/27/20 12:06 PM, Kajol Jain wrote:
-> Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
-> values")' added to print _change_ in the counter value rather then raw
-> value for 24x7 counters. Incase of transactions, the event count
-> is set to 0 at the beginning of the transaction. It also sets
-> the event's prev_count to the raw value at the time of initialization.
-> Because of setting event count to 0, we are seeing some weird behaviour,
-> whenever we run multiple 24x7 events at a time.
->
-> For example:
->
-> command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
-> 			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
-> 	  		   -C 0 -I 1000 sleep 100
->
->       1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->
-> Getting these large values in case we do -I.
->
-> As we are setting event_count to 0, for interval case, overall event_count is not
-> coming in incremental order. As we may can get new delta lesser then previous count.
-> Because of which when we print intervals, we are getting negative value which create
-> these large values.
->
-> This patch removes part where we set event_count to 0 in function
-> 'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
-> to the raw value at the time of initialization to print change value.
->
-> With this patch
-> In power9 platform
->
-> command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
-> 		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
-> 			   -C 0 -I 1000 sleep 100
->
->       1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
->       4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
->       4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+> To expose the system dependent parameter like total number of
+> sockets and numbers of chips per socket, patch adds two sysfs files.
+> "sockets" and "chips" are added to /sys/devices/hv_24x7/interface/
+> of the "hv_24x7" pmu.
 >
 > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-
-Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-
 > ---
->   arch/powerpc/perf/hv-24x7.c | 10 ----------
->   1 file changed, 10 deletions(-)
+>   arch/powerpc/perf/hv-24x7.c | 22 ++++++++++++++++++++++
+>   1 file changed, 22 insertions(+)
 >
 > diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-> index 573e0b309c0c..48e8f4b17b91 100644
+> index 9ae00f29bd21..a31bd5b88f7a 100644
 > --- a/arch/powerpc/perf/hv-24x7.c
 > +++ b/arch/powerpc/perf/hv-24x7.c
-> @@ -1400,16 +1400,6 @@ static void h_24x7_event_read(struct perf_event *event)
->   			h24x7hw = &get_cpu_var(hv_24x7_hw);
->   			h24x7hw->events[i] = event;
->   			put_cpu_var(h24x7hw);
-> -			/*
-> -			 * Clear the event count so we can compute the _change_
-> -			 * in the 24x7 raw counter value at the end of the txn.
-> -			 *
-> -			 * Note that we could alternatively read the 24x7 value
-> -			 * now and save its value in event->hw.prev_count. But
-> -			 * that would require issuing a hcall, which would then
-> -			 * defeat the purpose of using the txn interface.
-> -			 */
-> -			local64_set(&event->count, 0);
->   		}
+> @@ -454,6 +454,20 @@ static ssize_t device_show_string(struct device *dev,
+>   	return sprintf(buf, "%s\n", (char *)d->var);
+>   }
 >
->   		put_cpu_var(hv_24x7_reqb);
+> +#ifdef CONFIG_PPC_RTAS
+> +static ssize_t sockets_show(struct device *dev,
+> +			    struct device_attribute *attr, char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", physsockets);
+> +}
+> +
+> +static ssize_t chips_show(struct device *dev, struct device_attribute *attr,
+> +			  char *buf)
+> +{
+> +	return sprintf(buf, "%d\n", physchips);
+> +}
+> +#endif
+> +
+
+rtas call gives you the cores per chip too. We can expose that
+also with this patch?  I understand tool side patchset is using
+only metrics added to socket/chip information, its better to
+include that cores also here..
+
+>   static struct attribute *device_str_attr_create_(char *name, char *str)
+>   {
+>   	struct dev_ext_attribute *attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+> @@ -1100,6 +1114,10 @@ PAGE_0_ATTR(catalog_len, "%lld\n",
+>   		(unsigned long long)be32_to_cpu(page_0->length) * 4096);
+>   static BIN_ATTR_RO(catalog, 0/* real length varies */);
+>   static DEVICE_ATTR_RO(domains);
+> +#ifdef CONFIG_PPC_RTAS
+> +static DEVICE_ATTR_RO(sockets);
+> +static DEVICE_ATTR_RO(chips);
+> +#endif
+>
+>   static struct bin_attribute *if_bin_attrs[] = {
+>   	&bin_attr_catalog,
+> @@ -1110,6 +1128,10 @@ static struct attribute *if_attrs[] = {
+>   	&dev_attr_catalog_len.attr,
+>   	&dev_attr_catalog_version.attr,
+>   	&dev_attr_domains.attr,
+> +#ifdef CONFIG_PPC_RTAS
+> +	&dev_attr_sockets.attr,
+> +	&dev_attr_chips.attr,
+> +#endif
+>   	NULL,
+>   };
+>
