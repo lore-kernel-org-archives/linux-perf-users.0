@@ -1,163 +1,103 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH 7/7] perf record: Introduce --switch-output-event
-Date: Wed, 29 Apr 2020 10:18:11 +0200
-Message-ID: <20200429081811.GK1476763@krava>
-References: <20200427211935.25789-1-acme@kernel.org>
- <20200427211935.25789-8-acme@kernel.org>
- <20200428094839.GD1476763@krava>
- <20200428121601.GB2245@kernel.org>
- <20200428132257.GH1476763@krava>
- <20200428180518.GF5460@kernel.org>
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: Re: [PATCH v7 1/5] powerpc/perf/hv-24x7: Fix inconsistent output
+ values incase multiple hv-24x7 events run
+Date: Wed, 29 Apr 2020 14:26:06 +0530
+Message-ID: <3c209251-ceab-7381-99e3-b5664ce3104b@linux.ibm.com>
+References: <20200327063642.26175-1-kjain@linux.ibm.com>
+ <20200327063642.26175-2-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200428180518.GF5460@kernel.org>
+In-Reply-To: <20200327063642.26175-2-kjain@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
+To: Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Apr 28, 2020 at 03:05:18PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Apr 28, 2020 at 03:22:57PM +0200, Jiri Olsa escreveu:
-> > On Tue, Apr 28, 2020 at 09:16:01AM -0300, Arnaldo Carvalho de Melo wrote:
-> > 
-> > SNIP
-> > 
-> > > > > +				pr_err("Couldn't create side band evlist.\n.");
-> > > > > +				goto out_child;
-> > > > > +			}
-> > > > >  		}
-> 
-> > > > >  		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
-> 
-> > > > it's getting bigger, I wonder we should put all the sb_* setup in
-> > > > separated functions like sb_start/sb_stop
-> 
-> > > Well, the rec->thread_id = pthread_self(); part is just for reusing a
-> > > 'perf record' specific mechanism, what to do when the event appears in
-> > > the side band thread ring buffer, the evlist__set_cb() also is related
-> > > to that, moving thread_id to evlist seems too much at this time.
-> 
-> > hum, I meant record specific static functions sb_start/sb_stop,
-> > not inside evlist.. just to have it separated
-> 
-> Ok, so I have the patch below on top of that series, and its all
-> available in my perf/switch-output-event, that is on top of more patches
-> collected today, all going well, this perf/switch-output-event will turn
-> into perf/core ang go upstream soon, then I have to loo at Adrian's
-> kernel+tooling patchkit,
 
-ok looks good
 
-thank,
-jirka
+On 3/27/20 12:06 PM, Kajol Jain wrote:
+> Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
+> values")' added to print _change_ in the counter value rather then raw
+> value for 24x7 counters. Incase of transactions, the event count
+> is set to 0 at the beginning of the transaction. It also sets
+> the event's prev_count to the raw value at the time of initialization.
+> Because of setting event count to 0, we are seeing some weird behaviour,
+> whenever we run multiple 24x7 events at a time.
+>
+> For example:
+>
+> command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+> 			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+> 	  		   -C 0 -I 1000 sleep 100
+>
+>       1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>
+> Getting these large values in case we do -I.
+>
+> As we are setting event_count to 0, for interval case, overall event_count is not
+> coming in incremental order. As we may can get new delta lesser then previous count.
+> Because of which when we print intervals, we are getting negative value which create
+> these large values.
+>
+> This patch removes part where we set event_count to 0 in function
+> 'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
+> to the raw value at the time of initialization to print change value.
+>
+> With this patch
+> In power9 platform
+>
+> command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
+> 		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
+> 			   -C 0 -I 1000 sleep 100
+>
+>       1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>       4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
+>       4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
 
-> 
-> - Arnaldo
-> 
-> commit a25516b4db23ba8f956b990d37ec6728e5221718
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Tue Apr 28 14:58:29 2020 -0300
-> 
->     perf record: Move side band evlist setup to separate routine
->     
->     It is quite big by now, move that code to a separate
->     record__setup_sb_evlist() routine.
->     
->     Suggested-by: Jiri Olsa <jolsa@redhat.com>
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Song Liu <songliubraving@fb.com>
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 7a6a89972691..bb3d30616bf3 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1445,6 +1445,44 @@ static int record__process_signal_event(union perf_event *event __maybe_unused,
->  	return 0;
->  }
->  
-> +static int record__setup_sb_evlist(struct record *rec)
-> +{
-> +	struct record_opts *opts = &rec->opts;
-> +
-> +	if (rec->sb_evlist != NULL) {
-> +		/*
-> +		 * We get here if --switch-output-event populated the
-> +		 * sb_evlist, so associate a callback that will send a SIGUSR2
-> +		 * to the main thread.
-> +		 */
-> +		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-> +		rec->thread_id = pthread_self();
-> +	}
-> +
-> +	if (!opts->no_bpf_event) {
-> +		if (rec->sb_evlist == NULL) {
-> +			rec->sb_evlist = evlist__new();
-> +
-> +			if (rec->sb_evlist == NULL) {
-> +				pr_err("Couldn't create side band evlist.\n.");
-> +				return -1;
-> +			}
-> +		}
-> +
-> +		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
-> +			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-> +			return -1;
-> +		}
-> +	}
-> +
-> +	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
-> +		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-> +		opts->no_bpf_event = true;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int __cmd_record(struct record *rec, int argc, const char **argv)
->  {
->  	int err;
-> @@ -1589,36 +1627,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
->  		goto out_child;
->  	}
->  
-> -	if (rec->sb_evlist != NULL) {
-> -		/*
-> -		 * We get here if --switch-output-event populated the
-> -		 * sb_evlist, so associate a callback that will send a SIGUSR2
-> -		 * to the main thread.
-> -		 */
-> -		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-> -		rec->thread_id = pthread_self();
-> -	}
-> -
-> -	if (!opts->no_bpf_event) {
-> -		if (rec->sb_evlist == NULL) {
-> -			rec->sb_evlist = evlist__new();
-> -
-> -			if (rec->sb_evlist == NULL) {
-> -				pr_err("Couldn't create side band evlist.\n.");
-> -				goto out_child;
-> -			}
-> -		}
-> -
-> -		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
-> -			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-> -			goto out_child;
-> -		}
-> -	}
-> -
-> -	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
-> -		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-> -		opts->no_bpf_event = true;
-> -	}
-> +	err = record__setup_sb_evlist(rec);
-> +	if (err)
-> +		goto out_child;
->  
->  	err = record__synthesize(rec, false);
->  	if (err < 0)
-> 
+Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+
+> ---
+>   arch/powerpc/perf/hv-24x7.c | 10 ----------
+>   1 file changed, 10 deletions(-)
+>
+> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+> index 573e0b309c0c..48e8f4b17b91 100644
+> --- a/arch/powerpc/perf/hv-24x7.c
+> +++ b/arch/powerpc/perf/hv-24x7.c
+> @@ -1400,16 +1400,6 @@ static void h_24x7_event_read(struct perf_event *event)
+>   			h24x7hw = &get_cpu_var(hv_24x7_hw);
+>   			h24x7hw->events[i] = event;
+>   			put_cpu_var(h24x7hw);
+> -			/*
+> -			 * Clear the event count so we can compute the _change_
+> -			 * in the 24x7 raw counter value at the end of the txn.
+> -			 *
+> -			 * Note that we could alternatively read the 24x7 value
+> -			 * now and save its value in event->hw.prev_count. But
+> -			 * that would require issuing a hcall, which would then
+> -			 * defeat the purpose of using the txn interface.
+> -			 */
+> -			local64_set(&event->count, 0);
+>   		}
+>
+>   		put_cpu_var(hv_24x7_reqb);
