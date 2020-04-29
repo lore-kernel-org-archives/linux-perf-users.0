@@ -1,154 +1,155 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 7/7] perf record: Introduce --switch-output-event
-Date: Tue, 28 Apr 2020 15:05:18 -0300
-Message-ID: <20200428180518.GF5460@kernel.org>
-References: <20200427211935.25789-1-acme@kernel.org>
- <20200427211935.25789-8-acme@kernel.org>
- <20200428094839.GD1476763@krava>
- <20200428121601.GB2245@kernel.org>
- <20200428132257.GH1476763@krava>
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: Re: [PATCH v7 2/5] powerpc/hv-24x7: Add rtas call in hv-24x7 driver
+ to get processor details
+Date: Wed, 29 Apr 2020 13:32:04 +0530
+Message-ID: <fc2f519f-7dc9-cc72-496e-bc1403aa2178@linux.ibm.com>
+References: <20200327063642.26175-1-kjain@linux.ibm.com>
+ <20200327063642.26175-3-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200428132257.GH1476763@krava>
+In-Reply-To: <20200327063642.26175-3-kjain@linux.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
+To: Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Apr 28, 2020 at 03:22:57PM +0200, Jiri Olsa escreveu:
-> On Tue, Apr 28, 2020 at 09:16:01AM -0300, Arnaldo Carvalho de Melo wrote:
-> 
-> SNIP
-> 
-> > > > +				pr_err("Couldn't create side band evlist.\n.");
-> > > > +				goto out_child;
-> > > > +			}
-> > > >  		}
 
-> > > >  		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
 
-> > > it's getting bigger, I wonder we should put all the sb_* setup in
-> > > separated functions like sb_start/sb_stop
+On 3/27/20 12:06 PM, Kajol Jain wrote:
+> For hv_24x7 socket/chip level events, specific chip-id to which
+> the data requested should be added as part of pmu events.
+> But number of chips/socket in the system details are not exposed.
+>
+> Patch implements read_sys_info_pseries() to get system
+> parameter values like number of sockets and chips per socket.
+> Rtas_call with token "PROCESSOR_MODULE_INFO"
+> is used to get these values.
 
-> > Well, the rec->thread_id = pthread_self(); part is just for reusing a
-> > 'perf record' specific mechanism, what to do when the event appears in
-> > the side band thread ring buffer, the evlist__set_cb() also is related
-> > to that, moving thread_id to evlist seems too much at this time.
+Patch looks good to me.
 
-> hum, I meant record specific static functions sb_start/sb_stop,
-> not inside evlist.. just to have it separated
+Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 
-Ok, so I have the patch below on top of that series, and its all
-available in my perf/switch-output-event, that is on top of more patches
-collected today, all going well, this perf/switch-output-event will turn
-into perf/core ang go upstream soon, then I have to loo at Adrian's
-kernel+tooling patchkit,
-
-- Arnaldo
-
-commit a25516b4db23ba8f956b990d37ec6728e5221718
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Tue Apr 28 14:58:29 2020 -0300
-
-    perf record: Move side band evlist setup to separate routine
-    
-    It is quite big by now, move that code to a separate
-    record__setup_sb_evlist() routine.
-    
-    Suggested-by: Jiri Olsa <jolsa@redhat.com>
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Song Liu <songliubraving@fb.com>
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 7a6a89972691..bb3d30616bf3 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1445,6 +1445,44 @@ static int record__process_signal_event(union perf_event *event __maybe_unused,
- 	return 0;
- }
- 
-+static int record__setup_sb_evlist(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+
-+	if (rec->sb_evlist != NULL) {
-+		/*
-+		 * We get here if --switch-output-event populated the
-+		 * sb_evlist, so associate a callback that will send a SIGUSR2
-+		 * to the main thread.
-+		 */
-+		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-+		rec->thread_id = pthread_self();
-+	}
-+
-+	if (!opts->no_bpf_event) {
-+		if (rec->sb_evlist == NULL) {
-+			rec->sb_evlist = evlist__new();
-+
-+			if (rec->sb_evlist == NULL) {
-+				pr_err("Couldn't create side band evlist.\n.");
-+				return -1;
-+			}
-+		}
-+
-+		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
-+			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			return -1;
-+		}
-+	}
-+
-+	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
-+		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-+		opts->no_bpf_event = true;
-+	}
-+
-+	return 0;
-+}
-+
- static int __cmd_record(struct record *rec, int argc, const char **argv)
- {
- 	int err;
-@@ -1589,36 +1627,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_child;
- 	}
- 
--	if (rec->sb_evlist != NULL) {
--		/*
--		 * We get here if --switch-output-event populated the
--		 * sb_evlist, so associate a callback that will send a SIGUSR2
--		 * to the main thread.
--		 */
--		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
--		rec->thread_id = pthread_self();
--	}
--
--	if (!opts->no_bpf_event) {
--		if (rec->sb_evlist == NULL) {
--			rec->sb_evlist = evlist__new();
--
--			if (rec->sb_evlist == NULL) {
--				pr_err("Couldn't create side band evlist.\n.");
--				goto out_child;
--			}
--		}
--
--		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
--			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
--			goto out_child;
--		}
--	}
--
--	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
--		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
--		opts->no_bpf_event = true;
--	}
-+	err = record__setup_sb_evlist(rec);
-+	if (err)
-+		goto out_child;
- 
- 	err = record__synthesize(rec, false);
- 	if (err < 0)
+> Sub-sequent patch exports these values via sysfs.
+>
+> Patch also make these parameters default to 1.
+>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>   arch/powerpc/perf/hv-24x7.c              | 72 ++++++++++++++++++++++++
+>   arch/powerpc/platforms/pseries/pseries.h |  3 +
+>   2 files changed, 75 insertions(+)
+>
+> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+> index 48e8f4b17b91..9ae00f29bd21 100644
+> --- a/arch/powerpc/perf/hv-24x7.c
+> +++ b/arch/powerpc/perf/hv-24x7.c
+> @@ -20,6 +20,11 @@
+>   #include <asm/io.h>
+>   #include <linux/byteorder/generic.h>
+>
+> +#ifdef CONFIG_PPC_RTAS
+> +#include <asm/rtas.h>
+> +#include <../../platforms/pseries/pseries.h>
+> +#endif
+> +
+>   #include "hv-24x7.h"
+>   #include "hv-24x7-catalog.h"
+>   #include "hv-common.h"
+> @@ -57,6 +62,69 @@ static bool is_physical_domain(unsigned domain)
+>   	}
+>   }
+>
+> +#ifdef CONFIG_PPC_RTAS
+> +#define PROCESSOR_MODULE_INFO   43
+> +#define PROCESSOR_MAX_LENGTH	(8 * 1024)
+> +
+> +static int strbe16toh(const char *buf, int offset)
+> +{
+> +	return (buf[offset] << 8) + buf[offset + 1];
+> +}
+> +
+> +static u32		physsockets;	/* Physical sockets */
+> +static u32		physchips;	/* Physical chips */
+> +
+> +/*
+> + * Function read_sys_info_pseries() make a rtas_call which require
+> + * data buffer of size 8K. As standard 'rtas_data_buf' is of size
+> + * 4K, we are adding new local buffer 'rtas_local_data_buf'.
+> + */
+> +char rtas_local_data_buf[PROCESSOR_MAX_LENGTH] __cacheline_aligned;
+> +
+> +/*
+> + * read_sys_info_pseries()
+> + * Retrieve the number of sockets and chips per socket details
+> + * through the get-system-parameter rtas call.
+> + */
+> +void read_sys_info_pseries(void)
+> +{
+> +	int call_status, len, ntypes;
+> +
+> +	/*
+> +	 * Making system parameter: chips and sockets default to 1.
+> +	 */
+> +	physsockets = 1;
+> +	physchips = 1;
+> +	memset(rtas_local_data_buf, 0, PROCESSOR_MAX_LENGTH);
+> +	spin_lock(&rtas_data_buf_lock);
+> +
+> +	call_status = rtas_call(rtas_token("ibm,get-system-parameter"), 3, 1,
+> +				NULL,
+> +				PROCESSOR_MODULE_INFO,
+> +				__pa(rtas_local_data_buf),
+> +				PROCESSOR_MAX_LENGTH);
+> +
+> +	spin_unlock(&rtas_data_buf_lock);
+> +
+> +	if (call_status != 0) {
+> +		pr_info("%s %s Error calling get-system-parameter (0x%x)\n",
+> +			__FILE__, __func__, call_status);
+> +	} else {
+> +		rtas_local_data_buf[PROCESSOR_MAX_LENGTH - 1] = '\0';
+> +		len = strbe16toh(rtas_local_data_buf, 0);
+> +		if (len < 6)
+> +			return;
+> +
+> +		ntypes = strbe16toh(rtas_local_data_buf, 2);
+> +
+> +		if (!ntypes)
+> +			return;
+> +		physsockets = strbe16toh(rtas_local_data_buf, 4);
+> +		physchips = strbe16toh(rtas_local_data_buf, 6);
+> +	}
+> +}
+> +#endif /* CONFIG_PPC_RTAS */
+> +
+>   /* Domains for which more than one result element are returned for each event. */
+>   static bool domain_needs_aggregation(unsigned int domain)
+>   {
+> @@ -1605,6 +1673,10 @@ static int hv_24x7_init(void)
+>   	if (r)
+>   		return r;
+>
+> +#ifdef CONFIG_PPC_RTAS
+> +	read_sys_info_pseries();
+> +#endif
+> +
+>   	return 0;
+>   }
+>
+> diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
+> index 13fa370a87e4..1727559ce304 100644
+> --- a/arch/powerpc/platforms/pseries/pseries.h
+> +++ b/arch/powerpc/platforms/pseries/pseries.h
+> @@ -19,6 +19,9 @@ extern void request_event_sources_irqs(struct device_node *np,
+>   struct pt_regs;
+>
+>   extern int pSeries_system_reset_exception(struct pt_regs *regs);
+> +#ifdef CONFIG_PPC_RTAS
+> +extern void read_sys_info_pseries(void);
+> +#endif
+>   extern int pSeries_machine_check_exception(struct pt_regs *regs);
+>   extern long pseries_machine_check_realmode(struct pt_regs *regs);
+>
