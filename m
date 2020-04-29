@@ -1,74 +1,71 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [RFC PATCHSET v2] Implement --switch-output-event
-Date: Wed, 29 Apr 2020 10:10:58 -0300
-Message-ID: <20200429131106.27974-1-acme@kernel.org>
+Subject: [PATCH 1/8] perf record: Move sb_evlist to 'struct record'
+Date: Wed, 29 Apr 2020 10:10:59 -0300
+Message-ID: <20200429131106.27974-2-acme@kernel.org>
+References: <20200429131106.27974-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200429131106.27974-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi guys,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	Please consider reviewing, this addresses comments by Jiri in
-the V1.
+Where state related to a 'perf record' session is grouped.
 
-	Again, the example provided is too simple, using 'perf probe' to
-put probes in specific places in some workload to then get any other
-event close to the time the trigger hits comes to mind as well, using
-the signal was just to reuse the pre-existing logic and keep the
-patchkit small.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Link: http://lore.kernel.org/lkml/20200427211935.25789-2-acme@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-record.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-	One other thing that occurred to me while testing is that this
-can be combined with 'perf report/perf script' --switch-off option:
-
-  $ perf report -h --switch-off
-
-  Usage: perf report [<options>]
-
-        --switch-off <event>
-                          Stop considering events after the ocurrence of this event
-
-  $
-
-	To remove from consideration the events that end up being
-recorded in the ring buffer after the --switch-output-event but gets in
-the ring buffer because we process the --switch-output-event
-asynchronously.
-
-        Its available at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/switch-output-event
-
-Best regards,
-
-- Arnaldo
-
-
-Arnaldo Carvalho de Melo (8):
-  perf record: Move sb_evlist to 'struct record'
-  perf top: Move sb_evlist to 'struct perf_top'
-  perf bpf: Decouple creating the evlist from adding the SB event
-  perf parse-events: Add parse_events_option() variant that creates evlist
-  perf evlist: Allow reusing the side band thread for more purposes
-  libsubcmd: Introduce OPT_CALLBACK_SET()
-  perf record: Introduce --switch-output-event
-  perf record: Move side band evlist setup to separate routine
-
- tools/lib/subcmd/parse-options.h         |  2 +
- tools/perf/Documentation/perf-record.txt | 13 ++++
- tools/perf/builtin-record.c              | 75 ++++++++++++++++++++----
- tools/perf/builtin-top.c                 | 20 +++++--
- tools/perf/util/bpf-event.c              |  3 +-
- tools/perf/util/bpf-event.h              |  7 +--
- tools/perf/util/evlist.c                 | 39 +++++++-----
- tools/perf/util/evlist.h                 |  3 +-
- tools/perf/util/parse-events.c           | 23 ++++++++
- tools/perf/util/parse-events.h           |  1 +
- tools/perf/util/top.h                    |  2 +-
- 11 files changed, 151 insertions(+), 37 deletions(-)
-
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 2e8011f179f2..2348c4205e59 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -86,6 +86,7 @@ struct record {
+ 	struct auxtrace_record	*itr;
+ 	struct evlist	*evlist;
+ 	struct perf_session	*session;
++	struct evlist		*sb_evlist;
+ 	int			realtime_prio;
+ 	bool			no_buildid;
+ 	bool			no_buildid_set;
+@@ -1446,7 +1447,6 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	struct perf_data *data = &rec->data;
+ 	struct perf_session *session;
+ 	bool disabled = false, draining = false;
+-	struct evlist *sb_evlist = NULL;
+ 	int fd;
+ 	float ratio = 0;
+ 
+@@ -1581,9 +1581,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	}
+ 
+ 	if (!opts->no_bpf_event)
+-		bpf_event__add_sb_event(&sb_evlist, &session->header.env);
++		bpf_event__add_sb_event(&rec->sb_evlist, &session->header.env);
+ 
+-	if (perf_evlist__start_sb_thread(sb_evlist, &rec->opts.target)) {
++	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
+ 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
+ 		opts->no_bpf_event = true;
+ 	}
+@@ -1857,7 +1857,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	perf_session__delete(session);
+ 
+ 	if (!opts->no_bpf_event)
+-		perf_evlist__stop_sb_thread(sb_evlist);
++		perf_evlist__stop_sb_thread(rec->sb_evlist);
+ 	return status;
+ }
+ 
 -- 
 2.21.1
