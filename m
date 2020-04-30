@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v3 06/12] perf expr: parse numbers as doubles
-Date: Thu, 30 Apr 2020 00:51:38 -0700
-Message-ID: <20200430075144.132716-7-irogers@google.com>
+Subject: [PATCH v3 05/12] perf expr: increase max other
+Date: Thu, 30 Apr 2020 00:51:37 -0700
+Message-ID: <20200430075144.132716-6-irogers@google.com>
 References: <20200430075144.132716-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,67 +12,26 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This is expected in expr.y and metrics use floating point values such as
-x86 broadwell IFetch_Line_Utilization.
+Large metrics such as Branch_Misprediction_Cost_SMT on x86 broadwell
+need more space.
 
-Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.l | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/util/expr.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 95bcf3629edf..0efda2ce2766 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -10,12 +10,12 @@
- char *expr_get_text(yyscan_t yyscanner);
- YYSTYPE *expr_get_lval(yyscan_t yyscanner);
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index 0938ad166ece..4938bfc608b7 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -2,7 +2,7 @@
+ #ifndef PARSE_CTX_H
+ #define PARSE_CTX_H 1
  
--static int __value(YYSTYPE *yylval, char *str, int base, int token)
-+static double __value(YYSTYPE *yylval, char *str, int token)
- {
--	u64 num;
-+	double num;
+-#define EXPR_MAX_OTHER 20
++#define EXPR_MAX_OTHER 64
+ #define MAX_PARSE_ID EXPR_MAX_OTHER
  
- 	errno = 0;
--	num = strtoull(str, NULL, base);
-+	num = strtod(str, NULL);
- 	if (errno)
- 		return EXPR_ERROR;
- 
-@@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
- 	return token;
- }
- 
--static int value(yyscan_t scanner, int base)
-+static int value(yyscan_t scanner)
- {
- 	YYSTYPE *yylval = expr_get_lval(scanner);
- 	char *text = expr_get_text(scanner);
- 
--	return __value(yylval, text, base, NUMBER);
-+	return __value(yylval, text, NUMBER);
- }
- 
- /*
-@@ -68,7 +68,7 @@ static int str(yyscan_t scanner, int token)
- }
- %}
- 
--number		[0-9]+
-+number		[0-9]*\.?[0-9]+
- 
- sch		[-,=]
- spec		\\{sch}
-@@ -92,7 +92,7 @@ min		{ return MIN; }
- if		{ return IF; }
- else		{ return ELSE; }
- #smt_on		{ return SMT_ON; }
--{number}	{ return value(yyscanner, 10); }
-+{number}	{ return value(yyscanner); }
- {symbol}	{ return str(yyscanner, ID); }
- "|"		{ return '|'; }
- "^"		{ return '^'; }
+ struct expr_parse_id {
 -- 
 2.26.2.303.gf8c07b1a785-goog
