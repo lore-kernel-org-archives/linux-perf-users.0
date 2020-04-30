@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v3 07/12] perf expr: debug lex if debugging yacc
-Date: Thu, 30 Apr 2020 00:51:39 -0700
-Message-ID: <20200430075144.132716-8-irogers@google.com>
+Subject: [PATCH v3 08/12] perf metrics: fix parse errors in power8 metrics
+Date: Thu, 30 Apr 2020 00:51:40 -0700
+Message-ID: <20200430075144.132716-9-irogers@google.com>
 References: <20200430075144.132716-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,25 +12,27 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Only effects parser debugging (disabled by default). Enables displaying
-'--accepting rule at line .. ("...").
+Mismatched parentheses.
 
+Fixes: dd81eafacc52 (perf vendor events power8: Cpi_breakdown & estimated_dcache_miss_cpi metrics)
+Reviewed-by: Paul A. Clarke <pc@us.ibm.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/pmu-events/arch/powerpc/power8/metrics.json | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index c3382d58cf40..8694bec86f1a 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -44,6 +44,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
- 
- #ifdef PARSER_DEBUG
- 	expr_debug = 1;
-+	expr_set_debug(1, scanner);
- #endif
- 
- 	ret = expr_parse(val, ctx, scanner);
+diff --git a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+index bffb2d4a6420..fc4aa6c2ddc9 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power8/metrics.json
+@@ -169,7 +169,7 @@
+     },
+     {
+         "BriefDescription": "Cycles GCT empty where dispatch was held",
+-        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL)",
++        "MetricExpr": "(PM_GCT_NOSLOT_DISP_HELD_MAP + PM_GCT_NOSLOT_DISP_HELD_SRQ + PM_GCT_NOSLOT_DISP_HELD_ISSQ + PM_GCT_NOSLOT_DISP_HELD_OTHER) / PM_RUN_INST_CMPL",
+         "MetricGroup": "cpi_breakdown",
+         "MetricName": "gct_empty_disp_held_cpi"
+     },
 -- 
 2.26.2.303.gf8c07b1a785-goog
