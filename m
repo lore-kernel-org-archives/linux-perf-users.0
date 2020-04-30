@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v3 04/12] perf expr: allow ',' to be an other token
-Date: Thu, 30 Apr 2020 00:51:36 -0700
-Message-ID: <20200430075144.132716-5-irogers@google.com>
+Subject: [PATCH v3 07/12] perf expr: debug lex if debugging yacc
+Date: Thu, 30 Apr 2020 00:51:39 -0700
+Message-ID: <20200430075144.132716-8-irogers@google.com>
 References: <20200430075144.132716-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,25 +12,25 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Corrects parse errors in expr__find_other of expressions with min.
+Only effects parser debugging (disabled by default). Enables displaying
+'--accepting rule at line .. ("...").
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index cd17486c1c5d..54260094b947 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -80,7 +80,7 @@ other: ID
- 	ctx->ids[ctx->num_ids++].name = $1;
- }
- |
--MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
-+MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index c3382d58cf40..8694bec86f1a 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -44,6 +44,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
  
+ #ifdef PARSER_DEBUG
+ 	expr_debug = 1;
++	expr_set_debug(1, scanner);
+ #endif
  
- all_expr: if_expr			{ *final_val = $1; }
+ 	ret = expr_parse(val, ctx, scanner);
 -- 
 2.26.2.303.gf8c07b1a785-goog
