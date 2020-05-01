@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v4 02/12] perf metrics: fix parse errors in cascade lake metrics
-Date: Fri,  1 May 2020 10:33:23 -0700
-Message-ID: <20200501173333.227162-3-irogers@google.com>
+Subject: [PATCH v4 01/12] perf expr: unlimited escaped characters in a symbol
+Date: Fri,  1 May 2020 10:33:22 -0700
+Message-ID: <20200501173333.227162-2-irogers@google.com>
 References: <20200501173333.227162-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,55 +12,27 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Remove over escaping with \\.
-Remove extraneous if 1 if 0 == 1 else 0 else 0.
+Current expression allows 2 escaped '-,=' characters. However, some
+metrics require more, for example Haswell DRAM_BW_Use.
 
-Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
+Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/cascadelakex/clx-metrics.json  | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/expr.l | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-index 7fde0d2943cd..d25eebce34c9 100644
---- a/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/cascadelakex/clx-metrics.json
-@@ -328,31 +328,31 @@
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-+        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x35\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "DRAM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
--        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
-+        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "DRAM_Parallel_Reads"
-     },
-     {
-         "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
--        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\\\\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( 1000000000 * ( imc@event\\=0xe0\\,umask\\=0x1@ / imc@event\\=0xe3@ ) / imc_0@event\\=0x0@ )",
-         "MetricGroup": "Memory_Lat",
-         "MetricName": "MEM_PMM_Read_Latency"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Read_BW"
-     },
-     {
-         "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
--        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time ) if 1 if 0 == 1 else 0 else 0",
-+        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time )",
-         "MetricGroup": "Memory_BW",
-         "MetricName": "PMM_Write_BW"
-     },
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index 74b9b59b1aa5..73db6a9ef97e 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -86,7 +86,7 @@ number		[0-9]+
+ sch		[-,=]
+ spec		\\{sch}
+ sym		[0-9a-zA-Z_\.:@?]+
+-symbol		{spec}*{sym}*{spec}*{sym}*{spec}*{sym}
++symbol		({spec}|{sym})+
+ 
+ %%
+ 	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
 -- 
 2.26.2.526.g744177e7f7-goog
