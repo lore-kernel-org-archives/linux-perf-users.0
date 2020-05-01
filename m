@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v4 05/12] perf expr: increase max other
-Date: Fri,  1 May 2020 10:33:26 -0700
-Message-ID: <20200501173333.227162-6-irogers@google.com>
+Subject: [PATCH v4 07/12] perf expr: debug lex if debugging yacc
+Date: Fri,  1 May 2020 10:33:28 -0700
+Message-ID: <20200501173333.227162-8-irogers@google.com>
 References: <20200501173333.227162-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,26 +12,25 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Large metrics such as Branch_Misprediction_Cost_SMT on x86 broadwell
-need more space.
+Only effects parser debugging (disabled by default). Enables displaying
+'--accepting rule at line .. ("...").
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/expr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index 87d627bb699b..40fc452b0f2b 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -2,7 +2,7 @@
- #ifndef PARSE_CTX_H
- #define PARSE_CTX_H 1
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index aa631e37ad1e..8b4ce704a68d 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -45,6 +45,7 @@ __expr__parse(double *val, struct expr_parse_ctx *ctx, const char *expr,
  
--#define EXPR_MAX_OTHER 20
-+#define EXPR_MAX_OTHER 64
- #define MAX_PARSE_ID EXPR_MAX_OTHER
+ #ifdef PARSER_DEBUG
+ 	expr_debug = 1;
++	expr_set_debug(1, scanner);
+ #endif
  
- struct expr_parse_id {
+ 	ret = expr_parse(val, ctx, scanner);
 -- 
 2.26.2.526.g744177e7f7-goog
