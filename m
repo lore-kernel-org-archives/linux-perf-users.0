@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v4 01/12] perf expr: unlimited escaped characters in a symbol
-Date: Fri,  1 May 2020 10:33:22 -0700
-Message-ID: <20200501173333.227162-2-irogers@google.com>
+Subject: [PATCH v4 04/12] perf expr: allow ',' to be an other token
+Date: Fri,  1 May 2020 10:33:25 -0700
+Message-ID: <20200501173333.227162-5-irogers@google.com>
 References: <20200501173333.227162-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,27 +12,25 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Current expression allows 2 escaped '-,=' characters. However, some
-metrics require more, for example Haswell DRAM_BW_Use.
+Corrects parse errors in expr__find_other of expressions with min.
 
-Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.l | 2 +-
+ tools/perf/util/expr.y | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 74b9b59b1aa5..73db6a9ef97e 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -86,7 +86,7 @@ number		[0-9]+
- sch		[-,=]
- spec		\\{sch}
- sym		[0-9a-zA-Z_\.:@?]+
--symbol		{spec}*{sym}*{spec}*{sym}*{spec}*{sym}
-+symbol		({spec}|{sym})+
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index cd17486c1c5d..54260094b947 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -80,7 +80,7 @@ other: ID
+ 	ctx->ids[ctx->num_ids++].name = $1;
+ }
+ |
+-MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')'
++MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
  
- %%
- 	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+ 
+ all_expr: if_expr			{ *final_val = $1; }
 -- 
 2.26.2.526.g744177e7f7-goog
