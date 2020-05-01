@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v4 06/12] perf expr: parse numbers as doubles
-Date: Fri,  1 May 2020 10:33:27 -0700
-Message-ID: <20200501173333.227162-7-irogers@google.com>
+Subject: [PATCH v4 03/12] perf metrics: fix parse errors in skylake metrics
+Date: Fri,  1 May 2020 10:33:24 -0700
+Message-ID: <20200501173333.227162-4-irogers@google.com>
 References: <20200501173333.227162-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,67 +12,33 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-This is expected in expr.y and metrics use floating point values such as
-x86 broadwell IFetch_Line_Utilization.
+Remove over escaping with \\.
 
-Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
+Fixes: fd5500989c8f (perf vendor events intel: Update metrics from TMAM 3.5)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.l | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-index 73db6a9ef97e..ceab11bea6f9 100644
---- a/tools/perf/util/expr.l
-+++ b/tools/perf/util/expr.l
-@@ -10,12 +10,12 @@
- char *expr_get_text(yyscan_t yyscanner);
- YYSTYPE *expr_get_lval(yyscan_t yyscanner);
- 
--static int __value(YYSTYPE *yylval, char *str, int base, int token)
-+static double __value(YYSTYPE *yylval, char *str, int token)
- {
--	u64 num;
-+	double num;
- 
- 	errno = 0;
--	num = strtoull(str, NULL, base);
-+	num = strtod(str, NULL);
- 	if (errno)
- 		return EXPR_ERROR;
- 
-@@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
- 	return token;
- }
- 
--static int value(yyscan_t scanner, int base)
-+static int value(yyscan_t scanner)
- {
- 	YYSTYPE *yylval = expr_get_lval(scanner);
- 	char *text = expr_get_text(scanner);
- 
--	return __value(yylval, text, base, NUMBER);
-+	return __value(yylval, text, NUMBER);
- }
- 
- /*
-@@ -81,7 +81,7 @@ static int str(yyscan_t scanner, int token, int runtime)
- }
- %}
- 
--number		[0-9]+
-+number		[0-9]*\.?[0-9]+
- 
- sch		[-,=]
- spec		\\{sch}
-@@ -105,7 +105,7 @@ min		{ return MIN; }
- if		{ return IF; }
- else		{ return ELSE; }
- #smt_on		{ return SMT_ON; }
--{number}	{ return value(yyscanner, 10); }
-+{number}	{ return value(yyscanner); }
- {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
- "|"		{ return '|'; }
- "^"		{ return '^'; }
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+index b4f91137f40c..390bdab1be9d 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json
+@@ -328,13 +328,13 @@
+     },
+     {
+         "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
+-        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x35\\\\\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
++        "MetricExpr": "1000000000 * ( cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x35\\,umask\\=0x21@ ) / ( cha_0@event\\=0x0@ / duration_time )",
+         "MetricGroup": "Memory_Lat",
+         "MetricName": "DRAM_Read_Latency"
+     },
+     {
+         "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
+-        "MetricExpr": "cha@event\\=0x36\\\\\\,umask\\=0x21@ / cha@event\\=0x36\\\\\\,umask\\=0x21\\\\\\,thresh\\=1@",
++        "MetricExpr": "cha@event\\=0x36\\,umask\\=0x21@ / cha@event\\=0x36\\,umask\\=0x21\\,thresh\\=1@",
+         "MetricGroup": "Memory_BW",
+         "MetricName": "DRAM_Parallel_Reads"
+     },
 -- 
 2.26.2.526.g744177e7f7-goog
