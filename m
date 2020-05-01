@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v4 10/12] perf expr: print a debug message for division by zero
-Date: Fri,  1 May 2020 10:33:31 -0700
-Message-ID: <20200501173333.227162-11-irogers@google.com>
+Subject: [PATCH v4 06/12] perf expr: parse numbers as doubles
+Date: Fri,  1 May 2020 10:33:27 -0700
+Message-ID: <20200501173333.227162-7-irogers@google.com>
 References: <20200501173333.227162-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,39 +12,67 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-If an expression yields 0 and is then divided-by/modulus-by then the
-parsing aborts. Add a debug error message to better enable debugging
-when this happens.
+This is expected in expr.y and metrics use floating point values such as
+x86 broadwell IFetch_Line_Utilization.
 
+Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/util/expr.l | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 54260094b947..21e82a1e11a2 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -103,8 +103,18 @@ expr:	  NUMBER
- 	| expr '+' expr		{ $$ = $1 + $3; }
- 	| expr '-' expr		{ $$ = $1 - $3; }
- 	| expr '*' expr		{ $$ = $1 * $3; }
--	| expr '/' expr		{ if ($3 == 0) YYABORT; $$ = $1 / $3; }
--	| expr '%' expr		{ if ((long)$3 == 0) YYABORT; $$ = (long)$1 % (long)$3; }
-+	| expr '/' expr		{ if ($3 == 0) {
-+					pr_debug("division by zero\n");
-+					YYABORT;
-+				  }
-+				  $$ = $1 / $3;
-+	                        }
-+	| expr '%' expr		{ if ((long)$3 == 0) {
-+					pr_debug("division by zero\n");
-+					YYABORT;
-+				  }
-+				  $$ = (long)$1 % (long)$3;
-+	                        }
- 	| '-' expr %prec NEG	{ $$ = -$2; }
- 	| '(' if_expr ')'	{ $$ = $2; }
- 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index 73db6a9ef97e..ceab11bea6f9 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -10,12 +10,12 @@
+ char *expr_get_text(yyscan_t yyscanner);
+ YYSTYPE *expr_get_lval(yyscan_t yyscanner);
+ 
+-static int __value(YYSTYPE *yylval, char *str, int base, int token)
++static double __value(YYSTYPE *yylval, char *str, int token)
+ {
+-	u64 num;
++	double num;
+ 
+ 	errno = 0;
+-	num = strtoull(str, NULL, base);
++	num = strtod(str, NULL);
+ 	if (errno)
+ 		return EXPR_ERROR;
+ 
+@@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
+ 	return token;
+ }
+ 
+-static int value(yyscan_t scanner, int base)
++static int value(yyscan_t scanner)
+ {
+ 	YYSTYPE *yylval = expr_get_lval(scanner);
+ 	char *text = expr_get_text(scanner);
+ 
+-	return __value(yylval, text, base, NUMBER);
++	return __value(yylval, text, NUMBER);
+ }
+ 
+ /*
+@@ -81,7 +81,7 @@ static int str(yyscan_t scanner, int token, int runtime)
+ }
+ %}
+ 
+-number		[0-9]+
++number		[0-9]*\.?[0-9]+
+ 
+ sch		[-,=]
+ spec		\\{sch}
+@@ -105,7 +105,7 @@ min		{ return MIN; }
+ if		{ return IF; }
+ else		{ return ELSE; }
+ #smt_on		{ return SMT_ON; }
+-{number}	{ return value(yyscanner, 10); }
++{number}	{ return value(yyscanner); }
+ {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
+ "|"		{ return '|'; }
+ "^"		{ return '^'; }
 -- 
 2.26.2.526.g744177e7f7-goog
