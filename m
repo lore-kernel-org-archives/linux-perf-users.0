@@ -1,43 +1,52 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v3 12/12] perf test: improve pmu event metric testing
-Date: Thu, 30 Apr 2020 18:53:28 +0100
-Message-ID: <49698917-cdc0-52d5-9c08-ba82f8438657@huawei.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v3 00/12] perf metric fixes and test
+Date: Fri, 1 May 2020 12:35:19 +0200
+Message-ID: <20200501103519.GB1789042@krava>
 References: <20200430075144.132716-1-irogers@google.com>
- <20200430075144.132716-13-irogers@google.com>
- <6a3d68fd-c489-c0d5-8612-69f15be1bf64@huawei.com>
- <CAP-5=fUA3UDNdreJBhdLBPgyFUutN_qUqaL-Diu3yihSDc_niw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP-5=fUA3UDNdreJBhdLBPgyFUutN_qUqaL-Diu3yihSDc_niw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200430075144.132716-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kajoljain <kjain@linux.ibm.com>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, kajoljain <kjain@linux.ibm.com>, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On 30/04/2020 15:31, Ian Rogers wrote:
-> On Thu, Apr 30, 2020 at 4:44 AM John Garry <john.garry@huawei.com> wrote:
->>
->> On 30/04/2020 08:51, Ian Rogers wrote:
->>> Add a basic floating point number test to expr.
->>> Break pmu-events test into 2 and add a test to verify that all pmu metric
->>> expressions simply parse.
->>
->> Could we add also add something in jevents to ensure this?
+On Thu, Apr 30, 2020 at 12:51:32AM -0700, Ian Rogers wrote:
+> Add a test that all perf metrics (for your architecture) are parsable
+> with the simple expression parser. Attempt to parse all events in
+> metrics but only fail if the metric is for the current CPU. Fix bugs
+> in the expr parser, x86 and powerpc metrics. Improve debug messages
+> around add PMU config term failures.
 > 
-> I think it is an interesting possibility. Instead of strings we could
-> also parse the metrics into C functions, that could cause build time
-> errors at least for the simple expressions. An issue I've faced is
-> that if jevents fails, such as a json parse error, it has an exit code
-> of 0 and creates an empty map file. This allows the build to proceed
-> but with the pmu-events functionality broken. I'd prefer a build to
-> fail as early as possible.
+> v3 adds parse event testing of ids and improves debug messages for add
+>   PMU. These messages are paticular visible with 'perf test 10
+>   -vvv'. It moves the testing logic from tests/expr.c to
+>   tests/pmu-events.c as suggested by John Garry
+>   <john.garry@huawei.com>.  
+> v2 adds Fixes tags to commit messages for when broken metrics were
+>   first added. Adds a debug warning for division by zero in expr, and
+>   adds a workaround for id values in the expr test necessary for
+>   powerpc. It also fixes broken power8 and power9 metrics.
+> 
+> Ian Rogers (12):
+>   perf expr: unlimited escaped characters in a symbol
+>   perf metrics: fix parse errors in cascade lake metrics
+>   perf metrics: fix parse errors in skylake metrics
+>   perf expr: allow ',' to be an other token
+>   perf expr: increase max other
+>   perf expr: parse numbers as doubles
+>   perf expr: debug lex if debugging yacc
+>   perf metrics: fix parse errors in power8 metrics
+>   perf metrics: fix parse errors in power9 metrics
+>   perf expr: print a debug message for division by zero
+>   perf parse-events: expand add PMU error/verbose messages
+>   perf test: improve pmu event metric testing
 
-Yeah, the idea is to allow perf to continue to build even when we have 
-broken JSONs, but without aliases. It's been that way since day one, so 
-maybe that can be turned off now.
+this does not apply on top of changes from Kajol Jain
+which are now in Arnaldo's perf/core.. could you please
+rebase?
 
-Thanks,
-John
+thanks,
+jirka
