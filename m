@@ -1,63 +1,46 @@
-From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH v4 12/12] perf test: improve pmu event metric testing
-Date: Mon, 4 May 2020 00:16:50 +0200
-Message-ID: <20200503221650.GA1916255@krava>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v4 01/12] perf expr: unlimited escaped characters in a
+ symbol
+Date: Mon, 4 May 2020 12:18:41 +0530
+Message-ID: <dfa7d820-668b-2269-98b9-398093a8d894@linux.ibm.com>
 References: <20200501173333.227162-1-irogers@google.com>
- <20200501173333.227162-13-irogers@google.com>
- <20200503145553.GA1865281@krava>
- <CAP-5=fXrwcz+MMF0Dqd_UnoXoTo1iO7T3-ENX0fzytPmJWmtoA@mail.gmail.com>
- <20200503170608.GA1915271@krava>
- <CAP-5=fVaLWVyxweesWYCj1=FFubM3t6OsF1Jd46d=FtsQUQVmQ@mail.gmail.com>
+ <20200501173333.227162-2-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVaLWVyxweesWYCj1=FFubM3t6OsF1Jd46d=FtsQUQVmQ@mail.gmail.com>
+In-Reply-To: <20200501173333.227162-2-irogers@google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, kajoljain <kjain@linux.ibm.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Sun, May 03, 2020 at 10:31:37AM -0700, Ian Rogers wrote:
 
-SNIP
 
-> > >
-> > > This looks like a bug in skl-metrics.json:
-> > >
-> > >    {
-> > >         "BriefDescription": "Average number of parallel data read
-> > > requests to external memory. Accounts for demand loads and L1/L2
-> > > prefetches",
-> > >         "MetricExpr": "arb@event\\=0x80\\,umask\\=0x2@ /
-> > > arb@event\\=0x80\\,umask\\=0x2\\,thresh\\=1@",
-> > >         "MetricGroup": "Memory_BW",
-> > >         "MetricName": "DRAM_Parallel_Reads"
-> > >     },
-> > >
-> > > which can be fixed by removing "\\,thresh\\=1" but looking at the
-> > > expression this will just make the expression yield a value of 1. As
-> > > this is an Intel json file could they comment? Jiri, could you be
-> > > missing a patch on the kernel side? We could lower this failure to
-> > > just a diagnostic message to land this set of patches, let me know
-> > > what you'd like me to do.
-> >
-> > I applied this on current Arnaldo's perf/core.. not sure there's
-> > more pending changes out there
-> >
-> > I'd like not to delay this patchset too long.. could we push the
-> > first 10 patches and solve the rest in separate change?
+On 5/1/20 11:03 PM, Ian Rogers wrote:
+> Current expression allows 2 escaped '-,=' characters. However, some
+> metrics require more, for example Haswell DRAM_BW_Use.
 > 
-> Thanks, I've attached a patch that can be squashed into 12 to make the
-> error non-fatal. Patch 11 is trying to make the diagnostics around
-> adding a PMU event clearer and aside warning messages, and removal of,
-> has no functional effect. I don't mind the first 10 being merged and
-> these coming later. I don't mind just patch 11 coming later as it'd be
-> nice to have the test so metrics can get fixed.
+> Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/expr.l | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+> index 74b9b59b1aa5..73db6a9ef97e 100644
+> --- a/tools/perf/util/expr.l
+> +++ b/tools/perf/util/expr.l
+> @@ -86,7 +86,7 @@ number		[0-9]+
+>  sch		[-,=]
+>  spec		\\{sch}
+>  sym		[0-9a-zA-Z_\.:@?]+
+> -symbol		{spec}*{sym}*{spec}*{sym}*{spec}*{sym}
+> +symbol		({spec}|{sym})+
 
-sounds good, for patches 1 - 10:
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
+Acked and Tested By: Kajol Jain <kjain@linux.ibm.com>
+>  
+>  %%
+>  	struct expr_scanner_ctx *sctx = expr_get_extra(yyscanner);
+> 
