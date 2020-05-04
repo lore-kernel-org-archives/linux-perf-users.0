@@ -1,84 +1,50 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v4 06/12] perf expr: parse numbers as doubles
-Date: Mon, 4 May 2020 12:20:24 +0530
-Message-ID: <352e5654-8a08-9144-ead4-75d1026ca9fc@linux.ibm.com>
-References: <20200501173333.227162-1-irogers@google.com>
- <20200501173333.227162-7-irogers@google.com>
+From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Mon, 4 May 2020 14:07:56 -0500
+Message-ID: <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
+References: <20200420115316.18781-1-acme@kernel.org> <20200422120943.GA110748@gmail.com>
+ <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
+ <20200424130722.GK19437@kernel.org> <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200501173333.227162-7-irogers@google.com>
-Content-Language: en-US
+In-Reply-To: <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: Stephane Eranian <eranian@google.com>
+To: Andreas Gerstmayr <agerstmayr@redhat.com>
+Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, Konstantin Kharlamov <hi-angel@yandex.ru>, Stephane Eranian <eranian@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkft-triage@lists.linaro.org
 List-Id: linux-perf-users.vger.kernel.org
 
+Hello!
 
+On Fri, 24 Apr 2020 at 09:10, Andreas Gerstmayr <agerstmayr@redhat.com> wro=
+te:
+>
+> On 24.04.20 15:07, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel D=C3=ADaz escreveu:
+> >> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
+> >>>>   85 files changed, 1851 insertions(+), 513 deletions(-)
+> >
+> >>> Pulled, thanks a lot Arnaldo!
+> >
+> >> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
+> >> script: Add flamegraph.py script"):
+> >>    ERROR: perf-1.0-r9 do_package_qa: QA Issue:
+> >> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
+> >> in package perf-python requires /usr/bin/sh, but no providers found in
+> >> RDEPENDS_perf-python? [file-rdeps]
+> >
+> >
+> > yeah, the flamegraph scripts are the outliers, there, everything else i=
+s
+> > using /bin/bash, so I'll switch to that, ok Andreas?
+>
+> Sure, no problem. Thanks!
 
-On 5/1/20 11:03 PM, Ian Rogers wrote:
-> This is expected in expr.y and metrics use floating point values such as
-> x86 broadwell IFetch_Line_Utilization.
-> 
-> Fixes: 26226a97724d (perf expr: Move expr lexer to flex)
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/expr.l | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> index 73db6a9ef97e..ceab11bea6f9 100644
-> --- a/tools/perf/util/expr.l
-> +++ b/tools/perf/util/expr.l
-> @@ -10,12 +10,12 @@
->  char *expr_get_text(yyscan_t yyscanner);
->  YYSTYPE *expr_get_lval(yyscan_t yyscanner);
->  
-> -static int __value(YYSTYPE *yylval, char *str, int base, int token)
-> +static double __value(YYSTYPE *yylval, char *str, int token)
->  {
-> -	u64 num;
-> +	double num;
->  
->  	errno = 0;
-> -	num = strtoull(str, NULL, base);
-> +	num = strtod(str, NULL);
->  	if (errno)
->  		return EXPR_ERROR;
->  
-> @@ -23,12 +23,12 @@ static int __value(YYSTYPE *yylval, char *str, int base, int token)
->  	return token;
->  }
->  
-> -static int value(yyscan_t scanner, int base)
-> +static int value(yyscan_t scanner)
->  {
->  	YYSTYPE *yylval = expr_get_lval(scanner);
->  	char *text = expr_get_text(scanner);
->  
-> -	return __value(yylval, text, base, NUMBER);
-> +	return __value(yylval, text, NUMBER);
->  }
->  
->  /*
-> @@ -81,7 +81,7 @@ static int str(yyscan_t scanner, int token, int runtime)
->  }
->  %}
->  
-> -number		[0-9]+
-> +number		[0-9]*\.?[0-9]+
->  
-Acked and Tested by: Kajol Jain <kjain@linux.ibm.com>
->  sch		[-,=]
->  spec		\\{sch}
-> @@ -105,7 +105,7 @@ min		{ return MIN; }
->  if		{ return IF; }
->  else		{ return ELSE; }
->  #smt_on		{ return SMT_ON; }
-> -{number}	{ return value(yyscanner, 10); }
-> +{number}	{ return value(yyscanner); }
->  {symbol}	{ return str(yyscanner, ID, sctx->runtime); }
->  "|"		{ return '|'; }
->  "^"		{ return '^'; }
-> 
+Just a gentle reminder that this can still be fixed in today's
+linux-next tree (next-20200504).
+
+Greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
