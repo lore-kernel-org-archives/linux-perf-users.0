@@ -1,93 +1,112 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v7 5/5] powerpc/hv-24x7: Update post_mobility_fixup() to handle migration
-Date: Tue, 05 May 2020 17:05:52 +1000
-Message-ID: <874ksueu9b.fsf@mpe.ellerman.id.au>
-References: <20200327063642.26175-1-kjain@linux.ibm.com> <20200327063642.26175-6-kjain@linux.ibm.com> <877dxyfrpz.fsf@mpe.ellerman.id.au> <9586f8ef-1f3e-d45c-e0dc-665889a4f190@linux.ibm.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [GIT PULL] perf/core improvements and fixes
+Date: Tue, 5 May 2020 13:37:45 -0300
+Message-ID: <20200505163745.GD3777@redhat.com>
+References: <20200420115316.18781-1-acme@kernel.org>
+ <20200422120943.GA110748@gmail.com>
+ <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
+ <20200424130722.GK19437@kernel.org>
+ <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
+ <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9586f8ef-1f3e-d45c-e0dc-665889a4f190@linux.ibm.com>
+Content-Disposition: inline
+In-Reply-To: <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kajoljain <kjain@linux.ibm.com>, acme@kernel.org, linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
+To: Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc: Andreas Gerstmayr <agerstmayr@redhat.com>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, Konstantin Kharlamov <hi-angel@yandex.ru>, Stephane Eranian <eranian@google.com>, Thomas Richter <tmricht@linux.ibm.com>, lkft-triage@lists.linaro.org
 List-Id: linux-perf-users.vger.kernel.org
 
-kajoljain <kjain@linux.ibm.com> writes:
-> On 4/29/20 5:07 PM, Michael Ellerman wrote:
->> Kajol Jain <kjain@linux.ibm.com> writes:
->>> Function 'read_sys_info_pseries()' is added to get system parameter
->>> values like number of sockets and chips per socket.
->>> and it gets these details via rtas_call with token
->>> "PROCESSOR_MODULE_INFO".
->>>
->>> Incase lpar migrate from one system to another, system
->>> parameter details like chips per sockets or number of sockets might
->>> change. So, it needs to be re-initialized otherwise, these values
->>> corresponds to previous system values.
->>> This patch adds a call to 'read_sys_info_pseries()' from
->>> 'post-mobility_fixup()' to re-init the physsockets and physchips values.
->>>
->>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->>> ---
->>>  arch/powerpc/platforms/pseries/mobility.c | 12 ++++++++++++
->>>  1 file changed, 12 insertions(+)
->>>
->>> diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
->>> index b571285f6c14..226accd6218b 100644
->>> --- a/arch/powerpc/platforms/pseries/mobility.c
->>> +++ b/arch/powerpc/platforms/pseries/mobility.c
->>> @@ -371,6 +371,18 @@ void post_mobility_fixup(void)
->>>  	/* Possibly switch to a new RFI flush type */
->>>  	pseries_setup_rfi_flush();
->>>  
->>> +	/*
->>> +	 * Incase lpar migrate from one system to another, system
->> 
->> In case an LPAR migrates
->> 
->>> +	 * parameter details like chips per sockets and number of sockets
->>> +	 * might change. So, it needs to be re-initialized otherwise these
->>                              ^                                       ^
->>                              they need                               the
->>> +	 * values corresponds to previous system.
->>                   ^
->>                   will correspond to the
->> 
->>> +	 * Here, adding a call to read_sys_info_pseries() declared in
->> 
->> Adding is the wrong tense in a comment. When someone reads the comment
->> the code has already been added. Past tense would be right, but really
->> the comment shouldn't say what you did, it should say why.
->> 
->>> +	 * platforms/pseries/pseries.h to re-init the physsockets and
->>> +	 * physchips value.
->> 
->> Call read_sys_info_pseries() to reinitialise the values.
->> 
->>> +	 */
->>> +	if (IS_ENABLED(CONFIG_HV_PERF_CTRS) && IS_ENABLED(CONFIG_PPC_RTAS))
->>> +		read_sys_info_pseries();
->> 
->> The RTAS check is not needed. pseries always selects RTAS.
->> 
->> You shouldn't need the IS_ENABLED() check here though, do it with an
->> empty version in the header when CONFIG_HV_PERF_CTRS is not enabled.
->> 
->
-> Hi Michael,
-> 	Thanks for reviewing the patch. Is something like this you are suggesting. Please
-> let me know if my understanding is fine.
->
-> +#ifndef CONFIG_HV_PERF_CTRS
-> +#define read_sys_info_pseries() 
-> +#endif
+Em Mon, May 04, 2020 at 02:07:56PM -0500, Daniel Díaz escreveu:
+> Hello!
+> 
+> On Fri, 24 Apr 2020 at 09:10, Andreas Gerstmayr <agerstmayr@redhat.com> wrote:
+> >
+> > On 24.04.20 15:07, Arnaldo Carvalho de Melo wrote:
+> > > Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel Díaz escreveu:
+> > >> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
+> > >>>>   85 files changed, 1851 insertions(+), 513 deletions(-)
+> > >
+> > >>> Pulled, thanks a lot Arnaldo!
+> > >
+> > >> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
+> > >> script: Add flamegraph.py script"):
+> > >>    ERROR: perf-1.0-r9 do_package_qa: QA Issue:
+> > >> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
+> > >> in package perf-python requires /usr/bin/sh, but no providers found in
+> > >> RDEPENDS_perf-python? [file-rdeps]
+> > >
+> > >
+> > > yeah, the flamegraph scripts are the outliers, there, everything else is
+> > > using /bin/bash, so I'll switch to that, ok Andreas?
+> >
+> > Sure, no problem. Thanks!
+> 
+> Just a gentle reminder that this can still be fixed in today's
+> linux-next tree (next-20200504).
 
-It should be an empty static inline. So more like:
+Thanks for the reminder, I've just added this to my tree:
 
-#ifdef CONFIG_HV_PERF_CTRS
-void read_sys_info_pseries(void);
-#else
-static inline void read_sys_info_pseries(void) { }
-#endif
+commit c74ab13a30d3bec443c116e25b611255c58f32c0
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Tue May 5 13:33:12 2020 -0300
 
-cheers
+    perf flamegraph: Use /bin/bash for report script
+    
+    As all the other tools/perf/scripts/python/bin/*-report scripts, fixing
+    the this problem reported by Daniel Diaz:
+    
+      Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
+      script: Add flamegraph.py script"):
+        ERROR: perf-1.0-r9 do_package_qa: QA Issue:
+      /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
+      in package perf-python requires /usr/bin/sh, but no providers found in
+      RDEPENDS_perf-python? [file-rdeps]
+    
+      This means that there is a new binary pulled in in the shebang line
+      which was unaccounted for: `/usr/bin/sh`. I don't see any other usage
+      of /usr/bin/sh in the kernel tree (does not even exist on my Ubuntu
+      dev machine) but plenty of /bin/sh. This patch is needed:
+      -----8<----------8<----------8<-----
+      diff --git a/tools/perf/scripts/python/bin/flamegraph-record
+      b/tools/perf/scripts/python/bin/flamegraph-record
+      index 725d66e71570..a2f3fa25ef81 100755
+      --- a/tools/perf/scripts/python/bin/flamegraph-record
+      +++ b/tools/perf/scripts/python/bin/flamegraph-record
+      @@ -1,2 +1,2 @@
+      -#!/usr/bin/sh
+      +#!/bin/sh
+       perf record -g "$@"
+      diff --git a/tools/perf/scripts/python/bin/flamegraph-report
+      b/tools/perf/scripts/python/bin/flamegraph-report
+      index b1a79afd903b..b0177355619b 100755
+      --- a/tools/perf/scripts/python/bin/flamegraph-report
+      +++ b/tools/perf/scripts/python/bin/flamegraph-report
+      @@ -1,3 +1,3 @@
+      -#!/usr/bin/sh
+      +#!/bin/sh
+       # description: create flame graphs
+       perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
+      ----->8---------->8---------->8-----
+    
+    Fixes: 5287f9269206 ("perf script: Add flamegraph.py script")
+    Reported-by: Daniel Díaz <daniel.diaz@linaro.org>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Andreas Gerstmayr <agerstmayr@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: lkft-triage@lists.linaro.org
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Link: http://lore.kernel.org/lkml/CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/perf/scripts/python/bin/flamegraph-report b/tools/perf/scripts/python/bin/flamegraph-report
+index b1a79afd903b..53c5dc90c87e 100755
+--- a/tools/perf/scripts/python/bin/flamegraph-report
++++ b/tools/perf/scripts/python/bin/flamegraph-report
+@@ -1,3 +1,3 @@
+-#!/usr/bin/sh
++#!/bin/bash
+ # description: create flame graphs
+ perf script -s "$PERF_EXEC_PATH"/scripts/python/flamegraph.py -- "$@"
