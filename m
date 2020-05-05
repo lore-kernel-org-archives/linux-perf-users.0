@@ -1,50 +1,94 @@
-From: =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Subject: Re: [GIT PULL] perf/core improvements and fixes
-Date: Mon, 4 May 2020 14:07:56 -0500
-Message-ID: <CAEUSe7_Ybp=7XC-2xMSEGYmCHvEMff0YbZq1f6akvxLVcS_ePA@mail.gmail.com>
-References: <20200420115316.18781-1-acme@kernel.org> <20200422120943.GA110748@gmail.com>
- <CAEUSe7_wmKS361mKLTB1eYbzYXcKkXdU26BX5BojdKRz8MfPCw@mail.gmail.com>
- <20200424130722.GK19437@kernel.org> <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH v7 5/5] powerpc/hv-24x7: Update post_mobility_fixup() to
+ handle migration
+Date: Tue, 5 May 2020 12:27:00 +0530
+Message-ID: <9586f8ef-1f3e-d45c-e0dc-665889a4f190@linux.ibm.com>
+References: <20200327063642.26175-1-kjain@linux.ibm.com>
+ <20200327063642.26175-6-kjain@linux.ibm.com>
+ <877dxyfrpz.fsf@mpe.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0f6403ec-36cd-f43f-b3a6-b87e628f3789@redhat.com>
+In-Reply-To: <877dxyfrpz.fsf@mpe.ellerman.id.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Gerstmayr <agerstmayr@redhat.com>
-Cc: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, open list <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, He Zhe <zhe.he@windriver.com>, Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, Konstantin Kharlamov <hi-angel@yandex.ru>, Stephane Eranian <eranian@google.com>, Thomas Richter <tmricht@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, lkft-triage@lists.linaro.org
+To: Michael Ellerman <mpe@ellerman.id.au>, acme@kernel.org, linuxppc-dev@lists.ozlabs.org, sukadev@linux.vnet.ibm.com
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com, peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com, alexander.shishkin@linux.intel.com, mingo@kernel.org, paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com, gregkh@linuxfoundation.org, benh@kernel.crashing.org, mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com, tglx@linutronix.de
 List-Id: linux-perf-users.vger.kernel.org
 
-Hello!
 
-On Fri, 24 Apr 2020 at 09:10, Andreas Gerstmayr <agerstmayr@redhat.com> wro=
-te:
->
-> On 24.04.20 15:07, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Apr 23, 2020 at 04:28:46PM -0500, Daniel D=C3=ADaz escreveu:
-> >> On Wed, 22 Apr 2020 at 07:09, Ingo Molnar <mingo@kernel.org> wrote:
-> >>>>   85 files changed, 1851 insertions(+), 513 deletions(-)
-> >
-> >>> Pulled, thanks a lot Arnaldo!
-> >
-> >> Our OpenEmbedded builds detected an issue with 5287f9269206 ("perf
-> >> script: Add flamegraph.py script"):
-> >>    ERROR: perf-1.0-r9 do_package_qa: QA Issue:
-> >> /usr/libexec/perf-core/scripts/python/bin/flamegraph-report contained
-> >> in package perf-python requires /usr/bin/sh, but no providers found in
-> >> RDEPENDS_perf-python? [file-rdeps]
-> >
-> >
-> > yeah, the flamegraph scripts are the outliers, there, everything else i=
-s
-> > using /bin/bash, so I'll switch to that, ok Andreas?
->
-> Sure, no problem. Thanks!
 
-Just a gentle reminder that this can still be fixed in today's
-linux-next tree (next-20200504).
+On 4/29/20 5:07 PM, Michael Ellerman wrote:
+> Kajol Jain <kjain@linux.ibm.com> writes:
+>> Function 'read_sys_info_pseries()' is added to get system parameter
+>> values like number of sockets and chips per socket.
+>> and it gets these details via rtas_call with token
+>> "PROCESSOR_MODULE_INFO".
+>>
+>> Incase lpar migrate from one system to another, system
+>> parameter details like chips per sockets or number of sockets might
+>> change. So, it needs to be re-initialized otherwise, these values
+>> corresponds to previous system values.
+>> This patch adds a call to 'read_sys_info_pseries()' from
+>> 'post-mobility_fixup()' to re-init the physsockets and physchips values.
+>>
+>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>> ---
+>>  arch/powerpc/platforms/pseries/mobility.c | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+>> index b571285f6c14..226accd6218b 100644
+>> --- a/arch/powerpc/platforms/pseries/mobility.c
+>> +++ b/arch/powerpc/platforms/pseries/mobility.c
+>> @@ -371,6 +371,18 @@ void post_mobility_fixup(void)
+>>  	/* Possibly switch to a new RFI flush type */
+>>  	pseries_setup_rfi_flush();
+>>  
+>> +	/*
+>> +	 * Incase lpar migrate from one system to another, system
+> 
+> In case an LPAR migrates
+> 
+>> +	 * parameter details like chips per sockets and number of sockets
+>> +	 * might change. So, it needs to be re-initialized otherwise these
+>                              ^                                       ^
+>                              they need                               the
+>> +	 * values corresponds to previous system.
+>                   ^
+>                   will correspond to the
+> 
+>> +	 * Here, adding a call to read_sys_info_pseries() declared in
+> 
+> Adding is the wrong tense in a comment. When someone reads the comment
+> the code has already been added. Past tense would be right, but really
+> the comment shouldn't say what you did, it should say why.
+> 
+>> +	 * platforms/pseries/pseries.h to re-init the physsockets and
+>> +	 * physchips value.
+> 
+> Call read_sys_info_pseries() to reinitialise the values.
+> 
+>> +	 */
+>> +	if (IS_ENABLED(CONFIG_HV_PERF_CTRS) && IS_ENABLED(CONFIG_PPC_RTAS))
+>> +		read_sys_info_pseries();
+> 
+> The RTAS check is not needed. pseries always selects RTAS.
+> 
+> You shouldn't need the IS_ENABLED() check here though, do it with an
+> empty version in the header when CONFIG_HV_PERF_CTRS is not enabled.
+> 
 
-Greetings!
+Hi Michael,
+	Thanks for reviewing the patch. Is something like this you are suggesting. Please
+let me know if my understanding is fine.
 
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
++#ifndef CONFIG_HV_PERF_CTRS
++#define read_sys_info_pseries() 
++#endif
+
+Thanks,
+Kajol Jain
+> cheers
+> 
