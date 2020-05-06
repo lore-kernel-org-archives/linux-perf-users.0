@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 61/91] perf evsel: Rename perf_evsel__open_per_*() to evsel__open_per_*()
-Date: Wed,  6 May 2020 12:22:04 -0300
-Message-ID: <20200506152234.21977-62-acme@kernel.org>
+Subject: [PATCH 53/91] perf evsel: Rename perf_evsel__exit() to evsel__exit()
+Date: Wed,  6 May 2020 12:21:56 -0300
+Message-ID: <20200506152234.21977-54-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,130 +14,66 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As those are not 'struct evsel' methods, not part of tools/lib/perf/,
-aka libperf, to whom the perf_ prefix belongs.
+As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+libperf, to whom the perf_ prefix belongs.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/event-times.c    | 8 ++++----
- tools/perf/tests/openat-syscall.c | 2 +-
- tools/perf/util/evsel.c           | 7 ++-----
- tools/perf/util/evsel.h           | 7 ++-----
- tools/perf/util/stat.c            | 4 ++--
- 5 files changed, 11 insertions(+), 17 deletions(-)
+ tools/perf/util/evsel.c  | 4 ++--
+ tools/perf/util/evsel.h  | 2 +-
+ tools/perf/util/python.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/event-times.c b/tools/perf/tests/event-times.c
-index 1e8a9f5c356d..db68894a6f40 100644
---- a/tools/perf/tests/event-times.c
-+++ b/tools/perf/tests/event-times.c
-@@ -72,7 +72,7 @@ static int attach__current_disabled(struct evlist *evlist)
- 
- 	evsel->core.attr.disabled = 1;
- 
--	err = perf_evsel__open_per_thread(evsel, threads);
-+	err = evsel__open_per_thread(evsel, threads);
- 	if (err) {
- 		pr_debug("Failed to open event cpu-clock:u\n");
- 		return err;
-@@ -96,7 +96,7 @@ static int attach__current_enabled(struct evlist *evlist)
- 		return -1;
- 	}
- 
--	err = perf_evsel__open_per_thread(evsel, threads);
-+	err = evsel__open_per_thread(evsel, threads);
- 
- 	perf_thread_map__put(threads);
- 	return err == 0 ? TEST_OK : TEST_FAIL;
-@@ -125,7 +125,7 @@ static int attach__cpu_disabled(struct evlist *evlist)
- 
- 	evsel->core.attr.disabled = 1;
- 
--	err = perf_evsel__open_per_cpu(evsel, cpus, -1);
-+	err = evsel__open_per_cpu(evsel, cpus, -1);
- 	if (err) {
- 		if (err == -EACCES)
- 			return TEST_SKIP;
-@@ -152,7 +152,7 @@ static int attach__cpu_enabled(struct evlist *evlist)
- 		return -1;
- 	}
- 
--	err = perf_evsel__open_per_cpu(evsel, cpus, -1);
-+	err = evsel__open_per_cpu(evsel, cpus, -1);
- 	if (err == -EACCES)
- 		return TEST_SKIP;
- 
-diff --git a/tools/perf/tests/openat-syscall.c b/tools/perf/tests/openat-syscall.c
-index 5ebffae18605..8497a1fe9bac 100644
---- a/tools/perf/tests/openat-syscall.c
-+++ b/tools/perf/tests/openat-syscall.c
-@@ -34,7 +34,7 @@ int test__openat_syscall_event(struct test *test __maybe_unused, int subtest __m
- 		goto out_thread_map_delete;
- 	}
- 
--	if (perf_evsel__open_per_thread(evsel, threads) < 0) {
-+	if (evsel__open_per_thread(evsel, threads) < 0) {
- 		pr_debug("failed to open counter: %s, "
- 			 "tweak /proc/sys/kernel/perf_event_paranoid?\n",
- 			 str_error_r(errno, sbuf, sizeof(sbuf)));
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 4f271764cbf2..bbd57e8fde7d 100644
+index db6d2a5f9b3c..11e754746984 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1863,9 +1863,7 @@ void evsel__close(struct evsel *evsel)
- 	perf_evsel__free_id(&evsel->core);
+@@ -1259,7 +1259,7 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+ 	}
  }
  
--int perf_evsel__open_per_cpu(struct evsel *evsel,
--			     struct perf_cpu_map *cpus,
--			     int cpu)
-+int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu)
+-void perf_evsel__exit(struct evsel *evsel)
++void evsel__exit(struct evsel *evsel)
  {
- 	if (cpu == -1)
- 		return evsel__open_cpu(evsel, cpus, NULL, 0,
-@@ -1874,8 +1872,7 @@ int perf_evsel__open_per_cpu(struct evsel *evsel,
- 	return evsel__open_cpu(evsel, cpus, NULL, cpu, cpu + 1);
+ 	assert(list_empty(&evsel->core.node));
+ 	assert(evsel->evlist == NULL);
+@@ -1279,7 +1279,7 @@ void perf_evsel__exit(struct evsel *evsel)
+ 
+ void evsel__delete(struct evsel *evsel)
+ {
+-	perf_evsel__exit(evsel);
++	evsel__exit(evsel);
+ 	free(evsel);
  }
  
--int perf_evsel__open_per_thread(struct evsel *evsel,
--				struct perf_thread_map *threads)
-+int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads)
- {
- 	return evsel__open(evsel, NULL, threads);
- }
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index df64d89cd916..e16a9b23556b 100644
+index 6187dba21298..2facb16e9f12 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -233,11 +233,8 @@ int evsel__enable(struct evsel *evsel);
- int evsel__disable(struct evsel *evsel);
- int evsel__disable_cpu(struct evsel *evsel, int cpu);
+@@ -183,7 +183,7 @@ struct evsel *perf_evsel__new_cycles(bool precise);
+ struct tep_event *event_format__new(const char *sys, const char *name);
  
--int perf_evsel__open_per_cpu(struct evsel *evsel,
--			     struct perf_cpu_map *cpus,
--			     int cpu);
--int perf_evsel__open_per_thread(struct evsel *evsel,
--				struct perf_thread_map *threads);
-+int evsel__open_per_cpu(struct evsel *evsel, struct perf_cpu_map *cpus, int cpu);
-+int evsel__open_per_thread(struct evsel *evsel, struct perf_thread_map *threads);
- int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads);
- void evsel__close(struct evsel *evsel);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index c27f01b944c5..3520b7443615 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -521,7 +521,7 @@ int create_perf_stat_counter(struct evsel *evsel,
- 	}
+ void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
+-void perf_evsel__exit(struct evsel *evsel);
++void evsel__exit(struct evsel *evsel);
+ void evsel__delete(struct evsel *evsel);
  
- 	if (target__has_cpu(target) && !target__has_per_thread(target))
--		return perf_evsel__open_per_cpu(evsel, evsel__cpus(evsel), cpu);
-+		return evsel__open_per_cpu(evsel, evsel__cpus(evsel), cpu);
+ struct callchain_param;
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 83212c65848b..67810d31f88d 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -801,7 +801,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
  
--	return perf_evsel__open_per_thread(evsel, evsel->core.threads);
-+	return evsel__open_per_thread(evsel, evsel->core.threads);
+ static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
+ {
+-	perf_evsel__exit(&pevsel->evsel);
++	evsel__exit(&pevsel->evsel);
+ 	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
  }
+ 
 -- 
 2.21.1
