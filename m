@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 36/91] libperf evlist: Fix a refcount leak
-Date: Wed,  6 May 2020 12:21:39 -0300
-Message-ID: <20200506152234.21977-37-acme@kernel.org>
+Subject: [PATCH 37/91] perf tools: Fix reading new topology attribute "core_cpus"
+Date: Wed,  6 May 2020 12:21:40 -0300
+Message-ID: <20200506152234.21977-38-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,43 +9,49 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, clang-built-linux@googlegroups.com, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, Andi Kleen <ak@linux.intel.com>, Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Memory leaks found by applying LLVM's libfuzzer on the tools/perf
-parse_events function.
+Check if access("devices/system/cpu/cpu%d/topology/core_cpus", F_OK)
+fails, which will happen unless the current directory is "/sys".
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Simply try to read this file first.
+
+Fixes: 0ccdb8407a46 ("perf tools: Apply new CPU topology sysfs attributes")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: clang-built-linux@googlegroups.com
-Link: http://lore.kernel.org/lkml/20200319023101.82458-2-irogers@google.com
-[ Did a minor adjustment due to some other previous patch having already set evlist->all_cpus to NULL at perf_evlist__exit() ]
+Link: http://lore.kernel.org/lkml/158817718710.747528.11009278875028211991.stgit@buzz
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/perf/evlist.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/smt.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index c481b62f2ce4..6a875a0f01bb 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -123,6 +123,7 @@ static void perf_evlist__purge(struct perf_evlist *evlist)
- void perf_evlist__exit(struct perf_evlist *evlist)
- {
- 	perf_cpu_map__put(evlist->cpus);
-+	perf_cpu_map__put(evlist->all_cpus);
- 	perf_thread_map__put(evlist->threads);
- 	evlist->cpus = NULL;
- 	evlist->all_cpus = NULL;
+diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
+index 3b791ef2cd50..8481842e9edb 100644
+--- a/tools/perf/util/smt.c
++++ b/tools/perf/util/smt.c
+@@ -24,13 +24,13 @@ int smt_on(void)
+ 
+ 		snprintf(fn, sizeof fn,
+ 			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
+-		if (access(fn, F_OK) == -1) {
++		if (sysfs__read_str(fn, &str, &strlen) < 0) {
+ 			snprintf(fn, sizeof fn,
+ 				"devices/system/cpu/cpu%d/topology/thread_siblings",
+ 				cpu);
++			if (sysfs__read_str(fn, &str, &strlen) < 0)
++				continue;
+ 		}
+-		if (sysfs__read_str(fn, &str, &strlen) < 0)
+-			continue;
+ 		/* Entry is hex, but does not have 0x, so need custom parser */
+ 		siblings = strtoull(str, NULL, 16);
+ 		free(str);
 -- 
 2.21.1
