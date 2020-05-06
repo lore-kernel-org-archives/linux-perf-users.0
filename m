@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 77/91] perf stat: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
-Date: Wed,  6 May 2020 12:22:20 -0300
-Message-ID: <20200506152234.21977-78-acme@kernel.org>
+Subject: [PATCH 79/91] perf lock: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date: Wed,  6 May 2020 12:22:22 -0300
+Message-ID: <20200506152234.21977-80-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -22,51 +22,64 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ tools/perf/builtin-lock.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b2a971961364..e0c1ad23c768 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -238,9 +238,8 @@ static int write_stat_round_event(u64 tm, u64 type)
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 5a19dc2f1636..f0a1dbacb46c 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -657,32 +657,28 @@ static struct trace_lock_handler report_lock_ops  = {
  
- #define SID(e, x, y) xyarray__entry(e->core.sample_id, x, y)
+ static struct trace_lock_handler *trace_handler;
  
--static int
--perf_evsel__write_stat_event(struct evsel *counter, u32 cpu, u32 thread,
--			     struct perf_counts_values *count)
-+static int evsel__write_stat_event(struct evsel *counter, u32 cpu, u32 thread,
-+				   struct perf_counts_values *count)
+-static int perf_evsel__process_lock_acquire(struct evsel *evsel,
+-					     struct perf_sample *sample)
++static int evsel__process_lock_acquire(struct evsel *evsel, struct perf_sample *sample)
  {
- 	struct perf_sample_id *sid = SID(counter, cpu, thread);
- 
-@@ -297,7 +296,7 @@ static int read_counter_cpu(struct evsel *counter, struct timespec *rs, int cpu)
- 		perf_counts__set_loaded(counter->counts, cpu, thread, false);
- 
- 		if (STAT_RECORD) {
--			if (perf_evsel__write_stat_event(counter, cpu, thread, count)) {
-+			if (evsel__write_stat_event(counter, cpu, thread, count)) {
- 				pr_err("failed to write stat event\n");
- 				return -1;
- 			}
-@@ -410,7 +409,7 @@ static void workload_exec_failed_signal(int signo __maybe_unused, siginfo_t *inf
- 	workload_exec_errno = info->si_value.sival_int;
+ 	if (trace_handler->acquire_event)
+ 		return trace_handler->acquire_event(evsel, sample);
+ 	return 0;
  }
  
--static bool perf_evsel__should_store_id(struct evsel *counter)
-+static bool evsel__should_store_id(struct evsel *counter)
+-static int perf_evsel__process_lock_acquired(struct evsel *evsel,
+-					      struct perf_sample *sample)
++static int evsel__process_lock_acquired(struct evsel *evsel, struct perf_sample *sample)
  {
- 	return STAT_RECORD || counter->core.attr.read_format & PERF_FORMAT_ID;
+ 	if (trace_handler->acquired_event)
+ 		return trace_handler->acquired_event(evsel, sample);
+ 	return 0;
  }
-@@ -635,7 +634,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 		if (l > stat_config.unit_width)
- 			stat_config.unit_width = l;
  
--		if (perf_evsel__should_store_id(counter) &&
-+		if (evsel__should_store_id(counter) &&
- 		    evsel__store_ids(counter, evsel_list))
- 			return -1;
- 	}
+-static int perf_evsel__process_lock_contended(struct evsel *evsel,
+-					      struct perf_sample *sample)
++static int evsel__process_lock_contended(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	if (trace_handler->contended_event)
+ 		return trace_handler->contended_event(evsel, sample);
+ 	return 0;
+ }
+ 
+-static int perf_evsel__process_lock_release(struct evsel *evsel,
+-					    struct perf_sample *sample)
++static int evsel__process_lock_release(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	if (trace_handler->release_event)
+ 		return trace_handler->release_event(evsel, sample);
+@@ -849,10 +845,10 @@ static void sort_result(void)
+ }
+ 
+ static const struct evsel_str_handler lock_tracepoints[] = {
+-	{ "lock:lock_acquire",	 perf_evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
+-	{ "lock:lock_acquired",	 perf_evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
+-	{ "lock:lock_contended", perf_evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
+-	{ "lock:lock_release",	 perf_evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
++	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
++	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
++	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
++	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
+ };
+ 
+ static bool force;
 -- 
 2.21.1
