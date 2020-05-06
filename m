@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 19/91] perf tests expr: Added test for runtime param in metric expression
-Date: Wed,  6 May 2020 12:21:22 -0300
-Message-ID: <20200506152234.21977-20-acme@kernel.org>
+Subject: [PATCH 20/91] perf tools: Enable Hz/hz prinitg for --metric-only option
+Date: Wed,  6 May 2020 12:21:23 -0300
+Message-ID: <20200506152234.21977-21-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,10 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Kajol Jain <kjain@linux.ibm.com>
 
-Added test case for parsing  "?" in metric expression.
+Commit 54b5091606c18 ("perf stat: Implement --metric-only mode") added
+function 'valid_only_metric()' which drops "Hz" or "hz", if it is part
+of "ScaleUnit". This patch enable it since hv_24x7 supports couple of
+frequency events.
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
@@ -38,30 +41,24 @@ Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Cc: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: linuxppc-dev@lists.ozlabs.org
-Link: http://lore.kernel.org/lkml/20200401203340.31402-6-kjain@linux.ibm.com
+Link: http://lore.kernel.org/lkml/20200401203340.31402-7-kjain@linux.ibm.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/expr.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/stat-display.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-index 516504cf0ea5..f9e8e5628836 100644
---- a/tools/perf/tests/expr.c
-+++ b/tools/perf/tests/expr.c
-@@ -59,6 +59,14 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
- 	TEST_ASSERT_VAL("find other", !strcmp(other[2], "BOZO"));
- 	TEST_ASSERT_VAL("find other", other[3] == NULL);
- 
-+	TEST_ASSERT_VAL("find other",
-+			expr__find_other("EVENT1\\,param\\=?@ + EVENT2\\,param\\=?@", NULL,
-+				   &other, &num_other, 3) == 0);
-+	TEST_ASSERT_VAL("find other", num_other == 2);
-+	TEST_ASSERT_VAL("find other", !strcmp(other[0], "EVENT1,param=3/"));
-+	TEST_ASSERT_VAL("find other", !strcmp(other[1], "EVENT2,param=3/"));
-+	TEST_ASSERT_VAL("find other", other[2] == NULL);
-+
- 	for (i = 0; i < num_other; i++)
- 		zfree(&other[i]);
- 	free((void *)other);
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 9e757d18d713..679aaa655824 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -237,8 +237,6 @@ static bool valid_only_metric(const char *unit)
+ 	if (!unit)
+ 		return false;
+ 	if (strstr(unit, "/sec") ||
+-	    strstr(unit, "hz") ||
+-	    strstr(unit, "Hz") ||
+ 	    strstr(unit, "CPUs utilized"))
+ 		return false;
+ 	return true;
 -- 
 2.21.1
