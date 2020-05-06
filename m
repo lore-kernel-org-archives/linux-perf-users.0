@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 47/91] perf intel-pt: Update documentation about using /proc/kcore
-Date: Wed,  6 May 2020 12:21:50 -0300
-Message-ID: <20200506152234.21977-48-acme@kernel.org>
+Subject: [PATCH 48/91] perf evsel: Rename 'struct perf_evsel__sb_cb_t' to 'struct evsel__sb_cb_t'
+Date: Wed,  6 May 2020 12:21:51 -0300
+Message-ID: <20200506152234.21977-49-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,58 +9,88 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>, Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Update documentation to reflect the advent of the --kcore option for
-'perf record'.
+As the "perf_" prefix should be restricted to functions and types in
+tools/lib/perf/, aka libperf, this way we reduce a bit the confusion for
+types only in libperf or the ones in the more contained tools/perf/
+project.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-10-adrian.hunter@intel.com
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-intel-pt.txt | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/evlist.h          | 4 ++--
+ tools/perf/util/evsel.h           | 6 +++---
+ tools/perf/util/sideband_evlist.c | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 782eb8a65caf..eb8b7d42591a 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -69,22 +69,22 @@ And profiled with 'perf report' e.g.
- To also trace kernel space presents a problem, namely kernel self-modifying
- code.  A fairly good kernel image is available in /proc/kcore but to get an
- accurate image a copy of /proc/kcore needs to be made under the same conditions
--as the data capture.  A script perf-with-kcore can do that, but beware that the
--script makes use of 'sudo' to copy /proc/kcore.  If you have perf installed
--locally from the source tree you can do:
-+as the data capture. 'perf record' can make a copy of /proc/kcore if the option
-+--kcore is used, but access to /proc/kcore is restricted e.g.
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 93de63e2a247..b6f325dfb4d2 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -109,9 +109,9 @@ int perf_evlist__add_dummy(struct evlist *evlist);
  
--	~/libexec/perf-core/perf-with-kcore record pt_ls -e intel_pt// -- ls
-+	sudo perf record -o pt_ls --kcore -e intel_pt// -- ls
+ int perf_evlist__add_sb_event(struct evlist *evlist,
+ 			      struct perf_event_attr *attr,
+-			      perf_evsel__sb_cb_t cb,
++			      evsel__sb_cb_t cb,
+ 			      void *data);
+-void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data);
++void evlist__set_cb(struct evlist *evlist, evsel__sb_cb_t cb, void *data);
+ int perf_evlist__start_sb_thread(struct evlist *evlist,
+ 				 struct target *target);
+ void perf_evlist__stop_sb_thread(struct evlist *evlist);
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index bf999e3c50c7..7ff37c4cdf9f 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -18,7 +18,7 @@ struct perf_counts;
+ struct perf_stat_evsel;
+ union perf_event;
  
--which will create a directory named 'pt_ls' and put the perf.data file and
--copies of /proc/kcore, /proc/kallsyms and /proc/modules into it.  Then to use
--'perf report' becomes:
-+which will create a directory named 'pt_ls' and put the perf.data file (named
-+simply 'data') and copies of /proc/kcore, /proc/kallsyms and /proc/modules into
-+it.  The other tools understand the directory format, so to use 'perf report'
-+becomes:
+-typedef int (perf_evsel__sb_cb_t)(union perf_event *event, void *data);
++typedef int (evsel__sb_cb_t)(union perf_event *event, void *data);
  
--	~/libexec/perf-core/perf-with-kcore report pt_ls
-+	sudo perf report -i pt_ls
+ enum perf_tool_event {
+ 	PERF_TOOL_NONE		= 0,
+@@ -101,8 +101,8 @@ struct evsel {
+ 	int			cpu_iter;
+ 	const char		*pmu_name;
+ 	struct {
+-		perf_evsel__sb_cb_t	*cb;
+-		void			*data;
++		evsel__sb_cb_t	*cb;
++		void		*data;
+ 	} side_band;
+ 	/*
+ 	 * For reporting purposes, an evsel sample can have a callchain
+diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
+index 1d6f470d64c4..bb3706fbcc0c 100644
+--- a/tools/perf/util/sideband_evlist.c
++++ b/tools/perf/util/sideband_evlist.c
+@@ -13,7 +13,7 @@
+ #include <stdbool.h>
  
- Because samples are synthesized after-the-fact, the sampling period can be
- selected for reporting. e.g. sample every microsecond
+ int perf_evlist__add_sb_event(struct evlist *evlist, struct perf_event_attr *attr,
+-			      perf_evsel__sb_cb_t cb, void *data)
++			      evsel__sb_cb_t cb, void *data)
+ {
+ 	struct evsel *evsel;
  
--	~/libexec/perf-core/perf-with-kcore report pt_ls --itrace=i1usge
-+	sudo perf report pt_ls --itrace=i1usge
+@@ -81,7 +81,7 @@ static void *perf_evlist__poll_thread(void *arg)
+ 	return NULL;
+ }
  
- See the sections below for more information about the --itrace option.
+-void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data)
++void evlist__set_cb(struct evlist *evlist, evsel__sb_cb_t cb, void *data)
+ {
+ 	struct evsel *evsel;
  
 -- 
 2.21.1
