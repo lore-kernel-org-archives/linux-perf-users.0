@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 46/91] perf intel-pt: Update documentation about itrace G and L options
-Date: Wed,  6 May 2020 12:21:49 -0300
-Message-ID: <20200506152234.21977-47-acme@kernel.org>
+Subject: [PATCH 42/91] perf auxtrace: Add option to synthesize branch stack for regular events
+Date: Wed,  6 May 2020 12:21:45 -0300
+Message-ID: <20200506152234.21977-43-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,87 +14,123 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-Provide a little more information about the new G and L options,
-particularly the issue with large PEBs.
+There is an existing option to synthesize branch stacks for synthesized
+events. Add a new option to synthesize branch stacks for regular events.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lore.kernel.org/lkml/20200429150751.12570-9-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200429150751.12570-5-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/itrace.txt        |  4 +++
- tools/perf/Documentation/perf-intel-pt.txt | 35 ++++++++++++++++++++++
- 2 files changed, 39 insertions(+)
+ tools/perf/Documentation/itrace.txt | 1 +
+ tools/perf/builtin-inject.c         | 3 ++-
+ tools/perf/builtin-report.c         | 5 +++--
+ tools/perf/util/auxtrace.c          | 6 +++++-
+ tools/perf/util/auxtrace.h          | 2 ++
+ tools/perf/util/s390-cpumsf.c       | 3 ++-
+ 6 files changed, 15 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/Documentation/itrace.txt b/tools/perf/Documentation/itrace.txt
-index 0326050beebd..271484754fee 100644
+index 671e154ede03..0326050beebd 100644
 --- a/tools/perf/Documentation/itrace.txt
 +++ b/tools/perf/Documentation/itrace.txt
-@@ -33,6 +33,10 @@
- 	Also the number of last branch entries (default 64, max. 1024) for
- 	instructions or transactions events can be specified.
+@@ -12,6 +12,7 @@
+ 		g	synthesize a call chain (use with i or x)
+ 		G	synthesize a call chain on existing event records
+ 		l	synthesize last branch entries (use with i or x)
++		L	synthesize last branch entries on existing event records
+ 		s       skip initial number of events
  
-+	Similar to options g and l, size may also be specified for options G and L.
-+	On x86, note that G and L work poorly when data has been recorded with
-+	large PEBS. Refer linkperf:perf-intel-pt[1] man page for details.
-+
- 	It is also possible to skip events generated (instructions, branches, transactions,
- 	ptwrite, power) at the beginning. This is useful to ignore initialization code.
+ 	The default is all events i.e. the same as --itrace=ibxwpe,
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 7e124a7b8bfd..7c4403cf8dcb 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -684,7 +684,8 @@ static int __cmd_inject(struct perf_inject *inject)
  
-diff --git a/tools/perf/Documentation/perf-intel-pt.txt b/tools/perf/Documentation/perf-intel-pt.txt
-index 456fdcbf26ac..782eb8a65caf 100644
---- a/tools/perf/Documentation/perf-intel-pt.txt
-+++ b/tools/perf/Documentation/perf-intel-pt.txt
-@@ -821,7 +821,9 @@ The letters are:
- 	e	synthesize tracing error events
- 	d	create a debug log
- 	g	synthesize a call chain (use with i or x)
-+	G	synthesize a call chain on existing event records
- 	l	synthesize last branch entries (use with i or x)
-+	L	synthesize last branch entries on existing event records
- 	s	skip initial number of events
+ 			perf_header__clear_feat(&session->header,
+ 						HEADER_AUXTRACE);
+-			if (inject->itrace_synth_opts.last_branch)
++			if (inject->itrace_synth_opts.last_branch ||
++			    inject->itrace_synth_opts.add_last_branch)
+ 				perf_header__set_feat(&session->header,
+ 						      HEADER_BRANCH_STACK);
+ 			evsel = perf_evlist__id2evsel_strict(session->evlist,
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 7da1342a1f4e..0eea667bfb76 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -349,7 +349,8 @@ static int report__setup_sample_type(struct report *rep)
+ 	     !session->itrace_synth_opts->set))
+ 		sample_type |= PERF_SAMPLE_CALLCHAIN;
  
- "Instructions" events look like they were recorded by "perf record -e
-@@ -912,6 +914,39 @@ transactions events can be specified. e.g.
- Note that last branch entries are cleared for each sample, so there is no overlap
- from one sample to the next.
+-	if (session->itrace_synth_opts->last_branch)
++	if (session->itrace_synth_opts->last_branch ||
++	    session->itrace_synth_opts->add_last_branch)
+ 		sample_type |= PERF_SAMPLE_BRANCH_STACK;
  
-+The G and L options are designed in particular for sample mode, and work much
-+like g and l but add call chain and branch stack to the other selected events
-+instead of synthesized events. For example, to record branch-misses events for
-+'ls' and then add a call chain derived from the Intel PT trace:
-+
-+	perf record --aux-sample -e '{intel_pt//u,branch-misses:u}' -- ls
-+	perf report --itrace=Ge
-+
-+Although in fact G is a default for perf report, so that is the same as just:
-+
-+	perf report
-+
-+One caveat with the G and L options is that they work poorly with "Large PEBS".
-+Large PEBS means PEBS records will be accumulated by hardware and the written
-+into the event buffer in one go.  That reduces interrupts, but can give very
-+late timestamps.  Because the Intel PT trace is synchronized by timestamps,
-+the PEBS events do not match the trace.  Currently, Large PEBS is used only in
-+certain circumstances:
-+	- hardware supports it
-+	- PEBS is used
-+	- event period is specified, instead of frequency
-+	- the sample type is limited to the following flags:
-+		PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_ADDR |
-+		PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_STREAM_ID |
-+		PERF_SAMPLE_DATA_SRC | PERF_SAMPLE_IDENTIFIER |
-+		PERF_SAMPLE_TRANSACTION | PERF_SAMPLE_PHYS_ADDR |
-+		PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER |
-+		PERF_SAMPLE_PERIOD (and sometimes) | PERF_SAMPLE_TIME
-+Because Intel PT sample mode uses a different sample type to the list above,
-+Large PEBS is not used with Intel PT sample mode. To avoid Large PEBS in other
-+cases, avoid specifying the event period i.e. avoid the 'perf record' -c option,
-+--count option, or 'period' config term.
-+
- To disable trace decoding entirely, use the option --no-itrace.
+ 	if (!is_pipe && !(sample_type & PERF_SAMPLE_CALLCHAIN)) {
+@@ -1393,7 +1394,7 @@ int cmd_report(int argc, const char **argv)
+ 		goto error;
+ 	}
  
- It is also possible to skip events generated (instructions, branches, transactions)
+-	if (itrace_synth_opts.last_branch)
++	if (itrace_synth_opts.last_branch || itrace_synth_opts.add_last_branch)
+ 		has_br_stack = true;
+ 
+ 	if (has_br_stack && branch_call_mode)
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index ac6e09965a78..83ea7ca24686 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1464,8 +1464,12 @@ int itrace_parse_synth_opts(const struct option *opt, const char *str,
+ 				synth_opts->callchain_sz = val;
+ 			}
+ 			break;
++		case 'L':
+ 		case 'l':
+-			synth_opts->last_branch = true;
++			if (p[-1] == 'L')
++				synth_opts->add_last_branch = true;
++			else
++				synth_opts->last_branch = true;
+ 			synth_opts->last_branch_sz =
+ 					PERF_ITRACE_DEFAULT_LAST_BRANCH_SZ;
+ 			while (*p == ' ' || *p == ',')
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index dd8a4ff8209e..0220a2e86c16 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -77,6 +77,7 @@ enum itrace_period_type {
+  * @add_callchain: add callchain to existing event records
+  * @thread_stack: feed branches to the thread_stack
+  * @last_branch: add branch context to 'instruction' events
++ * @add_last_branch: add branch context to existing event records
+  * @callchain_sz: maximum callchain size
+  * @last_branch_sz: branch context size
+  * @period: 'instructions' events period
+@@ -105,6 +106,7 @@ struct itrace_synth_opts {
+ 	bool			add_callchain;
+ 	bool			thread_stack;
+ 	bool			last_branch;
++	bool			add_last_branch;
+ 	unsigned int		callchain_sz;
+ 	unsigned int		last_branch_sz;
+ 	unsigned long long	period;
+diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+index 38a942881d1a..f8861998e5bd 100644
+--- a/tools/perf/util/s390-cpumsf.c
++++ b/tools/perf/util/s390-cpumsf.c
+@@ -1079,7 +1079,8 @@ static bool check_auxtrace_itrace(struct itrace_synth_opts *itops)
+ 		itops->pwr_events || itops->errors ||
+ 		itops->dont_decode || itops->calls || itops->returns ||
+ 		itops->callchain || itops->thread_stack ||
+-		itops->last_branch || itops->add_callchain;
++		itops->last_branch || itops->add_callchain ||
++		itops->add_last_branch;
+ 	if (!ison)
+ 		return true;
+ 	pr_err("Unsupported --itrace options specified\n");
 -- 
 2.21.1
