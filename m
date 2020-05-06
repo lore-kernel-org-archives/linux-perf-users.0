@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 11/91] perf synthetic events: Remove use of sscanf from /proc reading
-Date: Wed,  6 May 2020 12:21:14 -0300
-Message-ID: <20200506152234.21977-12-acme@kernel.org>
+Subject: [PATCH 12/91] perf script: Remove extraneous newline in perf_sample__fprintf_regs()
+Date: Wed,  6 May 2020 12:21:15 -0300
+Message-ID: <20200506152234.21977-13-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,360 +9,144 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andrey Zhizhikin <andrey.z@gmail.com>, Kan Liang <kan.liang@linux.intel.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Petr Mladek <pmladek@suse.com>, Stephane Eranian <eranian@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Stephane Eranian <eranian@google.com>
 
-The synthesize benchmark, run on a single process and thread, shows
-perf_event__synthesize_mmap_events as the hottest function with fgets
-and sscanf taking the majority of execution time.
-
-fscanf performs similarly well. Replace the scanf call with manual
-reading of each field of the /proc/pid/maps line, and remove some
-unnecessary buffering.
-
-This change also addresses potential, but unlikely, buffer overruns for
-the string values read by scanf.
-
-Performance before is:
-
-  $ sudo perf bench internals synthesize -m 16 -M 16 -s -t
-  \# Running 'internals/synthesize' benchmark:
-  Computing performance of single threaded perf event synthesis by
-  synthesizing events on the perf process itself:
-    Average synthesis took: 102.810 usec (+- 0.027 usec)
-    Average num. events: 17.000 (+- 0.000)
-    Average time per event 6.048 usec
-    Average data synthesis took: 106.325 usec (+- 0.018 usec)
-    Average num. events: 89.000 (+- 0.000)
-    Average time per event 1.195 usec
-  Computing performance of multi threaded perf event synthesis by
-  synthesizing events on CPU 0:
-    Number of synthesis threads: 16
-      Average synthesis took: 68103.100 usec (+- 441.234 usec)
-      Average num. events: 30703.000 (+- 0.730)
-      Average time per event 2.218 usec
-
-And after is:
-
-  $ sudo perf bench internals synthesize -m 16 -M 16 -s -t
-  \# Running 'internals/synthesize' benchmark:
-  Computing performance of single threaded perf event synthesis by
-  synthesizing events on the perf process itself:
-    Average synthesis took: 50.388 usec (+- 0.031 usec)
-    Average num. events: 17.000 (+- 0.000)
-    Average time per event 2.964 usec
-    Average data synthesis took: 52.693 usec (+- 0.020 usec)
-    Average num. events: 89.000 (+- 0.000)
-    Average time per event 0.592 usec
-  Computing performance of multi threaded perf event synthesis by
-  synthesizing events on CPU 0:
-    Number of synthesis threads: 16
-      Average synthesis took: 45022.400 usec (+- 552.740 usec)
-      Average num. events: 30624.200 (+- 10.037)
-      Average time per event 1.470 usec
-
-On a Intel Xeon 6154 compiling with Debian gcc 9.2.1.
-
-Committer testing:
-
-On a AMD Ryzen 5 3600X 6-Core Processor:
+When printing iregs, there was a double newline printed because
+perf_sample__fprintf_regs() was printing its own and then at the end of
+all fields, perf script was adding one.  This was causing blank line in
+the output:
 
 Before:
 
-  # perf bench internals synthesize --min-threads 12 --max-threads 12 --st --mt
-  # Running 'internals/synthesize' benchmark:
-  Computing performance of single threaded perf event synthesis by
-  synthesizing events on the perf process itself:
-    Average synthesis took: 267.491 usec (+- 0.176 usec)
-    Average num. events: 56.000 (+- 0.000)
-    Average time per event 4.777 usec
-    Average data synthesis took: 277.257 usec (+- 0.169 usec)
-    Average num. events: 287.000 (+- 0.000)
-    Average time per event 0.966 usec
-  Computing performance of multi threaded perf event synthesis by
-  synthesizing events on CPU 0:
-    Number of synthesis threads: 12
-      Average synthesis took: 81599.500 usec (+- 346.315 usec)
-      Average num. events: 36096.100 (+- 2.523)
-      Average time per event 2.261 usec
-  #
+  $ perf script -Fip,iregs
+             401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
+
+             401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
+
+             401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
+
+             401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
 
 After:
 
-  # perf bench internals synthesize --min-threads 12 --max-threads 12 --st --mt
-  # Running 'internals/synthesize' benchmark:
-  Computing performance of single threaded perf event synthesis by
-  synthesizing events on the perf process itself:
-    Average synthesis took: 110.125 usec (+- 0.080 usec)
-    Average num. events: 56.000 (+- 0.000)
-    Average time per event 1.967 usec
-    Average data synthesis took: 118.518 usec (+- 0.057 usec)
-    Average num. events: 287.000 (+- 0.000)
-    Average time per event 0.413 usec
-  Computing performance of multi threaded perf event synthesis by
-  synthesizing events on CPU 0:
-    Number of synthesis threads: 12
-      Average synthesis took: 43490.700 usec (+- 284.527 usec)
-      Average num. events: 37028.500 (+- 0.563)
-      Average time per event 1.175 usec
+  $ perf script -Fip,iregs
+             401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
+             401b8d ABI:2    DX:0x100    SI:0x4a9340    DI:0x4a8340
+             401b8d ABI:2    DX:0x100    SI:0x4a8340    DI:0x4a9340
+
+Committer testing:
+
+First we need to figure out how to request that registers be recorded,
+so we use:
+
+  # perf record -h reg
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -I, --intr-regs[=<any register>]
+                            sample selected machine registers on interrupt, use '-I?' to list register names
+          --buildid-all     Record build-id of all DSOs regardless of hits
+          --user-regs[=<any register>]
+                            sample selected machine registers on interrupt, use '--user-regs=?' to list register names
+
   #
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Ok, now lets ask for them all:
+
+  # perf record -a --intr-regs --user-regs sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 4.105 MB perf.data (2760 samples) ]
+  #
+
+Lets look at the first 6 output lines:
+
+  # perf script -Fip,iregs | head -6
+   ffffffff8a06f2f4 ABI:2    AX:0xffffd168fee0a980    BX:0xffff8a23b087f000    CX:0xfffeb69aaeb25d73    DX:0xffff8a253e8310f0    SI:0xfffffff9bafe7359    DI:0xffffb1690204fb10    BP:0xffffd168fee0a950    SP:0xffffb1690204fb88    IP:0xffffffff8a06f2f4 FLAGS:0x4e    CS:0x10    SS:0x18    R8:0x1495f0a91129a    R9:0xffff8a23b087f000   R10:0x1   R11:0xffffffff   R12:0x0   R13:0xffff8a253e827e00   R14:0xffffd168fee0aa5c   R15:0xffffd168fee0a980
+
+   ffffffff8a06f2f4 ABI:2    AX:0x0    BX:0xffffd168fee0a950    CX:0x5684cc1118491900    DX:0x0    SI:0xffffd168fee0a9d0    DI:0x202    BP:0xffffb1690204fd70    SP:0xffffb1690204fd20    IP:0xffffffff8a06f2f4 FLAGS:0x24e    CS:0x10    SS:0x18    R8:0x0    R9:0xffffd168fee0a9d0   R10:0x1   R11:0xffffffff   R12:0xffffffff8a23e480   R13:0xffff8a23b087f240   R14:0xffff8a23b087f000   R15:0xffffd168fee0a950
+
+   ffffffff8a06f2f4 ABI:2    AX:0x0    BX:0x0    CX:0x7f25f334335b    DX:0x0    SI:0x2400    DI:0x4    BP:0x7fff5f264570    SP:0x7fff5f264538    IP:0xffffffff8a06f2f4 FLAGS:0x24e    CS:0x10    SS:0x2b    R8:0x0    R9:0x2312d20   R10:0x0   R11:0x246   R12:0x22cc0e0   R13:0x0   R14:0x0   R15:0x22d0780
+
+  #
+
+Reproduced, apply the patch and:
+
+[root@five ~]# perf script -Fip,iregs | head -6
+ ffffffff8a06f2f4 ABI:2    AX:0xffffd168fee0a980    BX:0xffff8a23b087f000    CX:0xfffeb69aaeb25d73    DX:0xffff8a253e8310f0    SI:0xfffffff9bafe7359    DI:0xffffb1690204fb10    BP:0xffffd168fee0a950    SP:0xffffb1690204fb88    IP:0xffffffff8a06f2f4 FLAGS:0x4e    CS:0x10    SS:0x18    R8:0x1495f0a91129a    R9:0xffff8a23b087f000   R10:0x1   R11:0xffffffff   R12:0x0   R13:0xffff8a253e827e00   R14:0xffffd168fee0aa5c   R15:0xffffd168fee0a980
+ ffffffff8a06f2f4 ABI:2    AX:0x0    BX:0xffffd168fee0a950    CX:0x5684cc1118491900    DX:0x0    SI:0xffffd168fee0a9d0    DI:0x202    BP:0xffffb1690204fd70    SP:0xffffb1690204fd20    IP:0xffffffff8a06f2f4 FLAGS:0x24e    CS:0x10    SS:0x18    R8:0x0    R9:0xffffd168fee0a9d0   R10:0x1   R11:0xffffffff   R12:0xffffffff8a23e480   R13:0xffff8a23b087f240   R14:0xffff8a23b087f000   R15:0xffffd168fee0a950
+ ffffffff8a06f2f4 ABI:2    AX:0x0    BX:0x0    CX:0x7f25f334335b    DX:0x0    SI:0x2400    DI:0x4    BP:0x7fff5f264570    SP:0x7fff5f264538    IP:0xffffffff8a06f2f4 FLAGS:0x24e    CS:0x10    SS:0x2b    R8:0x0    R9:0x2312d20   R10:0x0   R11:0x246   R12:0x22cc0e0   R13:0x0   R14:0x0   R15:0x22d0780
+ ffffffff8a24074b ABI:2    AX:0xcb    BX:0xcb    CX:0x0    DX:0x0    SI:0xffffb1690204ff58    DI:0xcb    BP:0xffffb1690204ff58    SP:0xffffb1690204ff40    IP:0xffffffff8a24074b FLAGS:0x24e    CS:0x10    SS:0x18    R8:0x0    R9:0x0   R10:0x0   R11:0x0   R12:0x0   R13:0x0   R14:0x0   R15:0x0
+ ffffffff8a310600 ABI:2    AX:0x0    BX:0xffffffff8b8c39a0    CX:0x0    DX:0xffff8a2503890300    SI:0xffffb1690204ff20    DI:0xffff8a23e4080000    BP:0xffff8a23e4080000    SP:0xffffb1690204fec0    IP:0xffffffff8a310600 FLAGS:0x28e    CS:0x10    SS:0x18    R8:0x0    R9:0x0   R10:0x0   R11:0x0   R12:0xffffffffffffffea   R13:0xffff8a23e4080020   R14:0x0   R15:0x0
+ ffffffff8a11b688 ABI:2    AX:0x0    BX:0xffff8a237b7c8800    CX:0xffffb1690204fae0    DX:0x78    SI:0xffff8a237b7c8800    DI:0xffffb1690204fa10    BP:0xffffb1690204fb00    SP:0xffffb1690204fa00    IP:0xffffffff8a11b688 FLAGS:0x8a    CS:0x10    SS:0x18    R8:0x1495f0a917eba    R9:0xffffd168fde19a48   R10:0xffffb1690204fd98   R11:0xffff8a253e82afb0   R12:0xffff8a237b7c8800   R13:0xffffb1690204fb00   R14:0x0   R15:0xffff8a237b7c8800
+[root@five ~]#
+
+To see it more clearly, lets get just two of those registers by sample:
+
+  # perf record -a --intr-regs=ax,bx --user-regs=cx,dx sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 3.502 MB perf.data (1653 samples) ]
+  #
+
+Extra info, lets see what gets setup in that 'struct perf_event_attr':
+
+  # perf evlist -v
+  cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CPU|PERIOD|REGS_USER|REGS_INTR, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 2, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, sample_regs_user: 0xc, sample_regs_intr: 0x3
+  #
+
+Cook, some PERF_SAMPLE_REGS_USER|PERF_SAMPLE_REGS_INTR +
+attr.sample_regs_user and attr.sample_regs_intr register masks, now lets
+see if those newlines are gone in a more compact fashion:
+
+  # perf script -Fip,iregs,uregs
+   ffffffff8a56df78 ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a29b78d ABI:2    AX:0x2a20ffcd6000    BX:0x2ec7d9000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+  #
+
+And where was that?
+
+  # perf script -Fip,iregs,uregs,sym,dso
+   ffffffff8a56df78 strrchr (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 strrchr (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 strrchr (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 strrchr (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 strrchr (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a56df78 strrchr (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0xffff8a25137b6028    BX:0xffff8a2502f18000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+   ffffffff8a29b78d __vma_link_rb (/lib/modules/5.7.0-rc2/build/vmlinux) ABI:2    AX:0x2a20ffcd6000    BX:0x2ec7d9000  ABI:2    CX:0x7f204460e49b    DX:0xf42920
+  #
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrey Zhizhikin <andrey.z@gmail.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lore.kernel.org/lkml/20200415054050.31645-4-irogers@google.com
+Link: http://lore.kernel.org/lkml/20200418231908.152212-1-eranian@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/synthetic-events.c | 157 +++++++++++++++++++----------
- 1 file changed, 105 insertions(+), 52 deletions(-)
+ tools/perf/builtin-script.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 9d4aa951eaa6..1ea9adaef9c7 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -37,6 +37,7 @@
- #include <string.h>
- #include <uapi/linux/mman.h> /* To get things like MAP_HUGETLB even on older libc headers */
- #include <api/fs/fs.h>
-+#include <api/io.h>
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-@@ -273,6 +274,79 @@ static int perf_event__synthesize_fork(struct perf_tool *tool,
- 	return 0;
- }
- 
-+static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
-+				u32 *prot, u32 *flags, __u64 *offset,
-+				u32 *maj, u32 *min,
-+				__u64 *inode,
-+				ssize_t pathname_size, char *pathname)
-+{
-+	__u64 temp;
-+	int ch;
-+	char *start_pathname = pathname;
-+
-+	if (io__get_hex(io, start) != '-')
-+		return false;
-+	if (io__get_hex(io, end) != ' ')
-+		return false;
-+
-+	/* map protection and flags bits */
-+	*prot = 0;
-+	ch = io__get_char(io);
-+	if (ch == 'r')
-+		*prot |= PROT_READ;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 'w')
-+		*prot |= PROT_WRITE;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 'x')
-+		*prot |= PROT_EXEC;
-+	else if (ch != '-')
-+		return false;
-+	ch = io__get_char(io);
-+	if (ch == 's')
-+		*flags = MAP_SHARED;
-+	else if (ch == 'p')
-+		*flags = MAP_PRIVATE;
-+	else
-+		return false;
-+	if (io__get_char(io) != ' ')
-+		return false;
-+
-+	if (io__get_hex(io, offset) != ' ')
-+		return false;
-+
-+	if (io__get_hex(io, &temp) != ':')
-+		return false;
-+	*maj = temp;
-+	if (io__get_hex(io, &temp) != ' ')
-+		return false;
-+	*min = temp;
-+
-+	ch = io__get_dec(io, inode);
-+	if (ch != ' ') {
-+		*pathname = '\0';
-+		return ch == '\n';
-+	}
-+	do {
-+		ch = io__get_char(io);
-+	} while (ch == ' ');
-+	while (true) {
-+		if (ch < 0)
-+			return false;
-+		if (ch == '\0' || ch == '\n' ||
-+		    (pathname + 1 - start_pathname) >= pathname_size) {
-+			*pathname = '\0';
-+			return true;
-+		}
-+		*pathname++ = ch;
-+		ch = io__get_char(io);
-+	}
-+}
-+
- int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       union perf_event *event,
- 				       pid_t pid, pid_t tgid,
-@@ -280,9 +354,9 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 				       struct machine *machine,
- 				       bool mmap_data)
- {
--	FILE *fp;
- 	unsigned long long t;
- 	char bf[BUFSIZ];
-+	struct io io;
- 	bool truncation = false;
- 	unsigned long long timeout = proc_map_timeout * 1000000ULL;
- 	int rc = 0;
-@@ -295,28 +369,39 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 	snprintf(bf, sizeof(bf), "%s/proc/%d/task/%d/maps",
- 		machine->root_dir, pid, pid);
- 
--	fp = fopen(bf, "r");
--	if (fp == NULL) {
-+	io.fd = open(bf, O_RDONLY, 0);
-+	if (io.fd < 0) {
- 		/*
- 		 * We raced with a task exiting - just return:
- 		 */
- 		pr_debug("couldn't open %s\n", bf);
- 		return -1;
- 	}
-+	io__init(&io, io.fd, bf, sizeof(bf));
- 
- 	event->header.type = PERF_RECORD_MMAP2;
- 	t = rdclock();
- 
--	while (1) {
--		char prot[5];
--		char execname[PATH_MAX];
--		char anonstr[] = "//anon";
--		unsigned int ino;
-+	while (!io.eof) {
-+		static const char anonstr[] = "//anon";
- 		size_t size;
--		ssize_t n;
- 
--		if (fgets(bf, sizeof(bf), fp) == NULL)
--			break;
-+		/* ensure null termination since stack will be reused. */
-+		event->mmap2.filename[0] = '\0';
-+
-+		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
-+		if (!read_proc_maps_line(&io,
-+					&event->mmap2.start,
-+					&event->mmap2.len,
-+					&event->mmap2.prot,
-+					&event->mmap2.flags,
-+					&event->mmap2.pgoff,
-+					&event->mmap2.maj,
-+					&event->mmap2.min,
-+					&event->mmap2.ino,
-+					sizeof(event->mmap2.filename),
-+					event->mmap2.filename))
-+			continue;
- 
- 		if ((rdclock() - t) > timeout) {
- 			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
-@@ -327,23 +412,6 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			goto out;
- 		}
- 
--		/* ensure null termination since stack will be reused. */
--		strcpy(execname, "");
--
--		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
--		n = sscanf(bf, "%"PRI_lx64"-%"PRI_lx64" %s %"PRI_lx64" %x:%x %u %[^\n]\n",
--		       &event->mmap2.start, &event->mmap2.len, prot,
--		       &event->mmap2.pgoff, &event->mmap2.maj,
--		       &event->mmap2.min,
--		       &ino, execname);
--
--		/*
-- 		 * Anon maps don't have the execname.
-- 		 */
--		if (n < 7)
--			continue;
--
--		event->mmap2.ino = (u64)ino;
- 		event->mmap2.ino_generation = 0;
- 
- 		/*
-@@ -354,23 +422,8 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		else
- 			event->header.misc = PERF_RECORD_MISC_GUEST_USER;
- 
--		/* map protection and flags bits */
--		event->mmap2.prot = 0;
--		event->mmap2.flags = 0;
--		if (prot[0] == 'r')
--			event->mmap2.prot |= PROT_READ;
--		if (prot[1] == 'w')
--			event->mmap2.prot |= PROT_WRITE;
--		if (prot[2] == 'x')
--			event->mmap2.prot |= PROT_EXEC;
--
--		if (prot[3] == 's')
--			event->mmap2.flags |= MAP_SHARED;
--		else
--			event->mmap2.flags |= MAP_PRIVATE;
--
--		if (prot[2] != 'x') {
--			if (!mmap_data || prot[0] != 'r')
-+		if ((event->mmap2.prot & PROT_EXEC) == 0) {
-+			if (!mmap_data || (event->mmap2.prot & PROT_READ) == 0)
- 				continue;
- 
- 			event->header.misc |= PERF_RECORD_MISC_MMAP_DATA;
-@@ -380,17 +433,17 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 		if (truncation)
- 			event->header.misc |= PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT;
- 
--		if (!strcmp(execname, ""))
--			strcpy(execname, anonstr);
-+		if (!strcmp(event->mmap2.filename, ""))
-+			strcpy(event->mmap2.filename, anonstr);
- 
- 		if (hugetlbfs_mnt_len &&
--		    !strncmp(execname, hugetlbfs_mnt, hugetlbfs_mnt_len)) {
--			strcpy(execname, anonstr);
-+		    !strncmp(event->mmap2.filename, hugetlbfs_mnt,
-+			     hugetlbfs_mnt_len)) {
-+			strcpy(event->mmap2.filename, anonstr);
- 			event->mmap2.flags |= MAP_HUGETLB;
- 		}
- 
--		size = strlen(execname) + 1;
--		memcpy(event->mmap2.filename, execname, size);
-+		size = strlen(event->mmap2.filename) + 1;
- 		size = PERF_ALIGN(size, sizeof(u64));
- 		event->mmap2.len -= event->mmap.start;
- 		event->mmap2.header.size = (sizeof(event->mmap2) -
-@@ -409,7 +462,7 @@ int perf_event__synthesize_mmap_events(struct perf_tool *tool,
- 			break;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index a2236542900d..3aadefd2791e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -604,8 +604,6 @@ static int perf_sample__fprintf_regs(struct regs_dump *regs, uint64_t mask,
+ 		printed += fprintf(fp, "%5s:0x%"PRIx64" ", perf_reg_name(r), val);
  	}
  
--	fclose(fp);
-+	close(io.fd);
- 	return rc;
+-	fprintf(fp, "\n");
+-
+ 	return printed;
  }
  
 -- 
