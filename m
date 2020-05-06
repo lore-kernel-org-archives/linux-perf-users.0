@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 31/91] perf record: Move side band evlist setup to separate routine
-Date: Wed,  6 May 2020 12:21:34 -0300
-Message-ID: <20200506152234.21977-32-acme@kernel.org>
+Subject: [PATCH 32/91] libperf: Add NULL pointer check for cpu_map iteration and NULL assignment for all_cpus.
+Date: Wed,  6 May 2020 12:21:35 -0300
+Message-ID: <20200506152234.21977-33-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,113 +9,50 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, He Zhe <zhe.he@windriver.com>, Andi Kleen <ak@linux.intel.com>, Kyle Meyer <meyerk@hpe.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: He Zhe <zhe.he@windriver.com>
 
-It is quite big by now, move that code to a separate
-record__setup_sb_evlist() routine.
+A NULL pointer may be passed to perf_cpu_map__cpu and then cause a
+crash, such as the one commit cb71f7d43ece ("libperf: Setup initial
+evlist::all_cpus value") fix.
 
-Suggested-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200429131106.27974-9-acme@kernel.org
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kyle Meyer <meyerk@hpe.com>
+Link: http://lore.kernel.org/lkml/1583665157-349023-1-git-send-email-zhe.he@windriver.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 71 +++++++++++++++++++++----------------
- 1 file changed, 41 insertions(+), 30 deletions(-)
+ tools/lib/perf/cpumap.c | 2 +-
+ tools/lib/perf/evlist.c | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index bb5b4d2fc32b..cfb9a69a42dd 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1446,6 +1446,44 @@ static int record__process_signal_event(union perf_event *event __maybe_unused,
- 	return 0;
- }
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index f93f4e703e4c..ca0215047c32 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -247,7 +247,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
  
-+static int record__setup_sb_evlist(struct record *rec)
-+{
-+	struct record_opts *opts = &rec->opts;
-+
-+	if (rec->sb_evlist != NULL) {
-+		/*
-+		 * We get here if --switch-output-event populated the
-+		 * sb_evlist, so associate a callback that will send a SIGUSR2
-+		 * to the main thread.
-+		 */
-+		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-+		rec->thread_id = pthread_self();
-+	}
-+
-+	if (!opts->no_bpf_event) {
-+		if (rec->sb_evlist == NULL) {
-+			rec->sb_evlist = evlist__new();
-+
-+			if (rec->sb_evlist == NULL) {
-+				pr_err("Couldn't create side band evlist.\n.");
-+				return -1;
-+			}
-+		}
-+
-+		if (evlist__add_bpf_sb_event(rec->sb_evlist, &rec->session->header.env)) {
-+			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			return -1;
-+		}
-+	}
-+
-+	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
-+		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
-+		opts->no_bpf_event = true;
-+	}
-+
-+	return 0;
-+}
-+
- static int __cmd_record(struct record *rec, int argc, const char **argv)
+ int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
  {
- 	int err;
-@@ -1590,36 +1628,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		goto out_child;
- 	}
+-	if (idx < cpus->nr)
++	if (cpus && idx < cpus->nr)
+ 		return cpus->map[idx];
  
--	if (rec->sb_evlist != NULL) {
--		/*
--		 * We get here if --switch-output-event populated the
--		 * sb_evlist, so associate a callback that will send a SIGUSR2
--		 * to the main thread.
--		 */
--		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
--		rec->thread_id = pthread_self();
--	}
--
--	if (!opts->no_bpf_event) {
--		if (rec->sb_evlist == NULL) {
--			rec->sb_evlist = evlist__new();
--
--			if (rec->sb_evlist == NULL) {
--				pr_err("Couldn't create side band evlist.\n.");
--				goto out_child;
--			}
--		}
--
--		if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
--			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
--			goto out_child;
--		}
--	}
--
--	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
--		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
--		opts->no_bpf_event = true;
--	}
-+	err = record__setup_sb_evlist(rec);
-+	if (err)
-+		goto out_child;
- 
- 	err = record__synthesize(rec, false);
- 	if (err < 0)
+ 	return -1;
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index def55054c55b..c481b62f2ce4 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -125,6 +125,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
+ 	perf_cpu_map__put(evlist->cpus);
+ 	perf_thread_map__put(evlist->threads);
+ 	evlist->cpus = NULL;
++	evlist->all_cpus = NULL;
+ 	evlist->threads = NULL;
+ 	fdarray__exit(&evlist->pollfd);
+ }
 -- 
 2.21.1
