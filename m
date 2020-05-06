@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 07/91] perf test session topology: Fix data path
-Date: Wed,  6 May 2020 12:21:10 -0300
-Message-ID: <20200506152234.21977-8-acme@kernel.org>
+Subject: [PATCH 08/91] perf record: Add num-synthesize-threads option
+Date: Wed,  6 May 2020 12:21:11 -0300
+Message-ID: <20200506152234.21977-9-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,99 +9,216 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Tommi Rantala <tommi.t.rantala@nokia.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Tony Jones <tonyj@suse.de>, yuzhoujian <yuzhoujian@didichuxing.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Tommi Rantala <tommi.t.rantala@nokia.com>
+From: Stephane Eranian <eranian@google.com>
 
-Commit 2d4f27999b88 ("perf data: Add global path holder") missed path
-conversion in tests/topology.c, causing the "Session topology" testcase
-to "hang" (waits forever for input from stdin) when doing "ssh $VM perf
-test".
+To control degree of parallelism of the synthesize_mmap() code which
+is scanning /proc/PID/task/PID/maps and can be time consuming.
+Mimic perf top way of handling the option.
+If not specified will default to 1 thread, i.e. default behavior before
+this option.
 
-Can be reproduced by running "cat | perf test topo", and crashed by
-replacing cat with true:
+On a desktop computer the processing of /proc/PID/task/PID/maps isn't
+slow enough to warrant parallel processing and the thread creation has
+some cost - hence the default of 1. On a loaded server with
+>100 cores it is possible to see synthesis times in the order of
+seconds and in this case having the option is desirable.
 
-  $ true | perf test -v topo
-  40: Session topology                                      :
-  --- start ---
-  test child forked, pid 3638
-  templ file: /tmp/perf-test-QPvAch
-  incompatible file format
-  incompatible file format (rerun with -v to learn more)
-  free(): invalid pointer
-  test child interrupted
-  ---- end ----
-  Session topology: FAILED!
+As the processing is a synchronization point, it is legitimate to worry if
+Amdahl's law will apply to this patch. Profiling with this patch in
+place:
+https://lore.kernel.org/lkml/20200415054050.31645-4-irogers@google.com/
+shows:
+...
+      - 32.59% __perf_event__synthesize_threads
+         - 32.54% __event__synthesize_thread
+            + 22.13% perf_event__synthesize_mmap_events
+            + 6.68% perf_event__get_comm_ids.constprop.0
+            + 1.49% process_synthesized_event
+            + 1.29% __GI___readdir64
+            + 0.60% __opendir
+...
+That is the processing is 1.49% of execution time and there is plenty to
+make parallel. This is shown in the benchmark in this patch:
 
-Committer testing:
+https://lore.kernel.org/lkml/20200415054050.31645-2-irogers@google.com/
 
-Reproduced the above result before the patch and after it is back
-working:
+  Computing performance of multi threaded perf event synthesis by
+  synthesizing events on CPU 0:
+   Number of synthesis threads: 1
+     Average synthesis took: 127729.000 usec (+- 3372.880 usec)
+     Average num. events: 21548.600 (+- 0.306)
+     Average time per event 5.927 usec
+   Number of synthesis threads: 2
+     Average synthesis took: 88863.500 usec (+- 385.168 usec)
+     Average num. events: 21552.800 (+- 0.327)
+     Average time per event 4.123 usec
+   Number of synthesis threads: 3
+     Average synthesis took: 83257.400 usec (+- 348.617 usec)
+     Average num. events: 21553.200 (+- 0.327)
+     Average time per event 3.863 usec
+   Number of synthesis threads: 4
+     Average synthesis took: 75093.000 usec (+- 422.978 usec)
+     Average num. events: 21554.200 (+- 0.200)
+     Average time per event 3.484 usec
+   Number of synthesis threads: 5
+     Average synthesis took: 64896.600 usec (+- 353.348 usec)
+     Average num. events: 21558.000 (+- 0.000)
+     Average time per event 3.010 usec
+   Number of synthesis threads: 6
+     Average synthesis took: 59210.200 usec (+- 342.890 usec)
+     Average num. events: 21560.000 (+- 0.000)
+     Average time per event 2.746 usec
+   Number of synthesis threads: 7
+     Average synthesis took: 54093.900 usec (+- 306.247 usec)
+     Average num. events: 21562.000 (+- 0.000)
+     Average time per event 2.509 usec
+   Number of synthesis threads: 8
+     Average synthesis took: 48938.700 usec (+- 341.732 usec)
+     Average num. events: 21564.000 (+- 0.000)
+     Average time per event 2.269 usec
 
-  # true | perf test -v topo
-  41: Session topology                                      :
-  --- start ---
-  test child forked, pid 19374
-  templ file: /tmp/perf-test-YOTEQg
-  CPU 0, core 0, socket 0
-  CPU 1, core 1, socket 0
-  CPU 2, core 2, socket 0
-  CPU 3, core 3, socket 0
-  CPU 4, core 0, socket 0
-  CPU 5, core 1, socket 0
-  CPU 6, core 2, socket 0
-  CPU 7, core 3, socket 0
-  test child finished with 0
-  ---- end ----
-  Session topology: Ok
-  #
+Where average time per synthesized event goes from 5.927 usec with 1
+thread to 2.269 usec with 8. This isn't a linear speed up as not all of
+synthesize code has been made parallel. If the synthesis time was about
+10 seconds then using 8 threads may bring this down to less than 4.
 
-Fixes: 2d4f27999b88 ("perf data: Add global path holder")
-Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mamatha Inamdar <mamatha4@linux.vnet.ibm.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200423115341.562782-1-tommi.t.rantala@nokia.com
+Cc: Tony Jones <tonyj@suse.de>
+Cc: yuzhoujian <yuzhoujian@didichuxing.com>
+Link: http://lore.kernel.org/lkml/20200422155038.9380-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/topology.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ tools/perf/Documentation/perf-record.txt |  4 +++
+ tools/perf/builtin-record.c              | 34 ++++++++++++++++++++++--
+ tools/perf/util/record.h                 |  1 +
+ 3 files changed, 37 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 4a800499d7c3..22daf2bdf5fa 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -33,10 +33,8 @@ static int session_write_header(char *path)
- {
- 	struct perf_session *session;
- 	struct perf_data data = {
--		.file      = {
--			.path = path,
--		},
--		.mode      = PERF_DATA_MODE_WRITE,
-+		.path = path,
-+		.mode = PERF_DATA_MODE_WRITE,
- 	};
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index b3f3b3f1c161..6e8b4649307c 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -596,6 +596,10 @@ Make a copy of /proc/kcore and place it into a directory with the perf data file
+ Limit the sample data max size, <size> is expected to be a number with
+ appended unit character - B/K/M/G
  
- 	session = perf_session__new(&data, false, NULL);
-@@ -63,10 +61,8 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- {
- 	struct perf_session *session;
- 	struct perf_data data = {
--		.file      = {
--			.path = path,
--		},
--		.mode      = PERF_DATA_MODE_READ,
-+		.path = path,
-+		.mode = PERF_DATA_MODE_READ,
- 	};
- 	int i;
++--num-thread-synthesize::
++	The number of threads to run when synthesizing events for existing processes.
++	By default, the number of threads equals 1.
++
+ SEE ALSO
+ --------
+ linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349abe904..2e8011f179f2 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -43,6 +43,7 @@
+ #include "util/time-utils.h"
+ #include "util/units.h"
+ #include "util/bpf-event.h"
++#include "util/util.h"
+ #include "asm/bug.h"
+ #include "perf.h"
  
+@@ -50,6 +51,7 @@
+ #include <inttypes.h>
+ #include <locale.h>
+ #include <poll.h>
++#include <pthread.h>
+ #include <unistd.h>
+ #include <sched.h>
+ #include <signal.h>
+@@ -503,6 +505,20 @@ static int process_synthesized_event(struct perf_tool *tool,
+ 	return record__write(rec, NULL, event, event->header.size);
+ }
+ 
++static int process_locked_synthesized_event(struct perf_tool *tool,
++				     union perf_event *event,
++				     struct perf_sample *sample __maybe_unused,
++				     struct machine *machine __maybe_unused)
++{
++	static pthread_mutex_t synth_lock = PTHREAD_MUTEX_INITIALIZER;
++	int ret;
++
++	pthread_mutex_lock(&synth_lock);
++	ret = process_synthesized_event(tool, event, sample, machine);
++	pthread_mutex_unlock(&synth_lock);
++	return ret;
++}
++
+ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ {
+ 	struct record *rec = to;
+@@ -1288,6 +1304,7 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	struct perf_tool *tool = &rec->tool;
+ 	int fd = perf_data__fd(data);
+ 	int err = 0;
++	event_op f = process_synthesized_event;
+ 
+ 	if (rec->opts.tail_synthesize != tail)
+ 		return 0;
+@@ -1402,9 +1419,18 @@ static int record__synthesize(struct record *rec, bool tail)
+ 	if (err < 0)
+ 		pr_warning("Couldn't synthesize cgroup events.\n");
+ 
++	if (rec->opts.nr_threads_synthesize > 1) {
++		perf_set_multithreaded();
++		f = process_locked_synthesized_event;
++	}
++
+ 	err = __machine__synthesize_threads(machine, tool, &opts->target, rec->evlist->core.threads,
+-					    process_synthesized_event, opts->sample_address,
+-					    1);
++					    f, opts->sample_address,
++					    rec->opts.nr_threads_synthesize);
++
++	if (rec->opts.nr_threads_synthesize > 1)
++		perf_set_singlethreaded();
++
+ out:
+ 	return err;
+ }
+@@ -2232,6 +2258,7 @@ static struct record record = {
+ 			.default_per_cpu = true,
+ 		},
+ 		.mmap_flush          = MMAP_FLUSH_DEFAULT,
++		.nr_threads_synthesize = 1,
+ 	},
+ 	.tool = {
+ 		.sample		= process_sample_event,
+@@ -2421,6 +2448,9 @@ static struct option __record_options[] = {
+ #endif
+ 	OPT_CALLBACK(0, "max-size", &record.output_max_size,
+ 		     "size", "Limit the maximum size of the output file", parse_output_max_size),
++	OPT_UINTEGER(0, "num-thread-synthesize",
++		     &record.opts.nr_threads_synthesize,
++		     "number of threads to run for event synthesis"),
+ 	OPT_END()
+ };
+ 
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 24316458be20..923565c3b155 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -68,6 +68,7 @@ struct record_opts {
+ 	int	      affinity;
+ 	int	      mmap_flush;
+ 	unsigned int  comp_level;
++	unsigned int  nr_threads_synthesize;
+ };
+ 
+ extern const char * const *record_usage;
 -- 
 2.21.1
