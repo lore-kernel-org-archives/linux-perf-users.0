@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 37/91] perf tools: Fix reading new topology attribute "core_cpus"
-Date: Wed,  6 May 2020 12:21:40 -0300
-Message-ID: <20200506152234.21977-38-acme@kernel.org>
+Subject: [PATCH 38/91] perf tools: Simplify checking if SMT is active.
+Date: Wed,  6 May 2020 12:21:41 -0300
+Message-ID: <20200506152234.21977-39-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,44 +14,45 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Check if access("devices/system/cpu/cpu%d/topology/core_cpus", F_OK)
-fails, which will happen unless the current directory is "/sys".
+SMT now could be disabled via "/sys/devices/system/cpu/smt/control".
 
-Simply try to read this file first.
+Status is shown in "/sys/devices/system/cpu/smt/active" simply as "0" / "1".
 
-Fixes: 0ccdb8407a46 ("perf tools: Apply new CPU topology sysfs attributes")
+If this knob isn't here then fallback to checking topology as before.
+
 Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/158817718710.747528.11009278875028211991.stgit@buzz
+Link: http://lore.kernel.org/lkml/158817741394.748034.9273604089138009552.stgit@buzz
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/smt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/smt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
-index 3b791ef2cd50..8481842e9edb 100644
+index 8481842e9edb..20bacd5972ad 100644
 --- a/tools/perf/util/smt.c
 +++ b/tools/perf/util/smt.c
-@@ -24,13 +24,13 @@ int smt_on(void)
+@@ -15,6 +15,9 @@ int smt_on(void)
+ 	if (cached)
+ 		return cached_result;
  
- 		snprintf(fn, sizeof fn,
- 			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
--		if (access(fn, F_OK) == -1) {
-+		if (sysfs__read_str(fn, &str, &strlen) < 0) {
- 			snprintf(fn, sizeof fn,
- 				"devices/system/cpu/cpu%d/topology/thread_siblings",
- 				cpu);
-+			if (sysfs__read_str(fn, &str, &strlen) < 0)
-+				continue;
- 		}
--		if (sysfs__read_str(fn, &str, &strlen) < 0)
--			continue;
- 		/* Entry is hex, but does not have 0x, so need custom parser */
- 		siblings = strtoull(str, NULL, 16);
- 		free(str);
++	if (sysfs__read_int("devices/system/cpu/smt/active", &cached_result) > 0)
++		goto done;
++
+ 	ncpu = sysconf(_SC_NPROCESSORS_CONF);
+ 	for (cpu = 0; cpu < ncpu; cpu++) {
+ 		unsigned long long siblings;
+@@ -42,6 +45,7 @@ int smt_on(void)
+ 	}
+ 	if (!cached) {
+ 		cached_result = 0;
++done:
+ 		cached = true;
+ 	}
+ 	return cached_result;
 -- 
 2.21.1
