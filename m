@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 53/91] perf evsel: Rename perf_evsel__exit() to evsel__exit()
-Date: Wed,  6 May 2020 12:21:56 -0300
-Message-ID: <20200506152234.21977-54-acme@kernel.org>
+Subject: [PATCH 55/91] perf evsel: Rename perf_evsel__calc_id_pos() to evsel__calc_id_pos()
+Date: Wed,  6 May 2020 12:21:58 -0300
+Message-ID: <20200506152234.21977-56-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -22,58 +22,76 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/evsel.c  | 4 ++--
+ tools/perf/util/evlist.c | 2 +-
+ tools/perf/util/evsel.c  | 8 ++++----
  tools/perf/util/evsel.h  | 2 +-
- tools/perf/util/python.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 6d902c02fd95..8b691151bae3 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -119,7 +119,7 @@ static void perf_evlist__update_id_pos(struct evlist *evlist)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel)
+-		perf_evsel__calc_id_pos(evsel);
++		evsel__calc_id_pos(evsel);
+ 
+ 	perf_evlist__set_id_pos(evlist);
+ }
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index db6d2a5f9b3c..11e754746984 100644
+index f88cf7961d49..896b0b9798d8 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1259,7 +1259,7 @@ static void perf_evsel__free_config_terms(struct evsel *evsel)
+@@ -178,7 +178,7 @@ static int __perf_evsel__calc_is_pos(u64 sample_type)
+ 	return idx;
+ }
+ 
+-void perf_evsel__calc_id_pos(struct evsel *evsel)
++void evsel__calc_id_pos(struct evsel *evsel)
+ {
+ 	evsel->id_pos = __perf_evsel__calc_id_pos(evsel->core.attr.sample_type);
+ 	evsel->is_pos = __perf_evsel__calc_is_pos(evsel->core.attr.sample_type);
+@@ -190,7 +190,7 @@ void __perf_evsel__set_sample_bit(struct evsel *evsel,
+ 	if (!(evsel->core.attr.sample_type & bit)) {
+ 		evsel->core.attr.sample_type |= bit;
+ 		evsel->sample_size += sizeof(u64);
+-		perf_evsel__calc_id_pos(evsel);
++		evsel__calc_id_pos(evsel);
  	}
  }
  
--void perf_evsel__exit(struct evsel *evsel)
-+void evsel__exit(struct evsel *evsel)
- {
- 	assert(list_empty(&evsel->core.node));
- 	assert(evsel->evlist == NULL);
-@@ -1279,7 +1279,7 @@ void perf_evsel__exit(struct evsel *evsel)
- 
- void evsel__delete(struct evsel *evsel)
- {
--	perf_evsel__exit(evsel);
-+	evsel__exit(evsel);
- 	free(evsel);
+@@ -200,7 +200,7 @@ void __perf_evsel__reset_sample_bit(struct evsel *evsel,
+ 	if (evsel->core.attr.sample_type & bit) {
+ 		evsel->core.attr.sample_type &= ~bit;
+ 		evsel->sample_size -= sizeof(u64);
+-		perf_evsel__calc_id_pos(evsel);
++		evsel__calc_id_pos(evsel);
+ 	}
  }
  
+@@ -250,7 +250,7 @@ void evsel__init(struct evsel *evsel,
+ 	INIT_LIST_HEAD(&evsel->config_terms);
+ 	perf_evsel__object.init(evsel);
+ 	evsel->sample_size = __perf_evsel__sample_size(attr->sample_type);
+-	perf_evsel__calc_id_pos(evsel);
++	evsel__calc_id_pos(evsel);
+ 	evsel->cmdline_group_boundary = false;
+ 	evsel->metric_expr   = NULL;
+ 	evsel->metric_name   = NULL;
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6187dba21298..2facb16e9f12 100644
+index 617cb3fa0353..35ad62807eaf 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -183,7 +183,7 @@ struct evsel *perf_evsel__new_cycles(bool precise);
- struct tep_event *event_format__new(const char *sys, const char *name);
+@@ -194,7 +194,7 @@ void evsel__config_callchain(struct evsel *evsel, struct record_opts *opts,
+ 			     struct callchain_param *callchain);
  
- void evsel__init(struct evsel *evsel, struct perf_event_attr *attr, int idx);
--void perf_evsel__exit(struct evsel *evsel);
-+void evsel__exit(struct evsel *evsel);
- void evsel__delete(struct evsel *evsel);
+ int __perf_evsel__sample_size(u64 sample_type);
+-void perf_evsel__calc_id_pos(struct evsel *evsel);
++void evsel__calc_id_pos(struct evsel *evsel);
  
- struct callchain_param;
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 83212c65848b..67810d31f88d 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -801,7 +801,7 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
- 
- static void pyrf_evsel__delete(struct pyrf_evsel *pevsel)
- {
--	perf_evsel__exit(&pevsel->evsel);
-+	evsel__exit(&pevsel->evsel);
- 	Py_TYPE(pevsel)->tp_free((PyObject*)pevsel);
- }
+ bool perf_evsel__is_cache_op_valid(u8 type, u8 op);
  
 -- 
 2.21.1
