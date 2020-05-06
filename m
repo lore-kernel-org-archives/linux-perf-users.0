@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 04/91] perf script: Avoid NULL dereference on symbol
-Date: Wed,  6 May 2020 12:21:07 -0300
-Message-ID: <20200506152234.21977-5-acme@kernel.org>
+Subject: [PATCH 05/91] perf stat: Zero all the 'ena' and 'run' array slot stats for interval mode
+Date: Wed,  6 May 2020 12:21:08 -0300
+Message-ID: <20200506152234.21977-6-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,39 +9,50 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-al->sym may be NULL given current if conditions and may cause a segv.
+As the code comments in perf_stat_process_counter() say, we calculate
+counter's data every interval, and the display code shows ps->res_stats
+avg value. We need to zero the stats for interval mode.
 
-Fixes: d2bedb7863e9 ("perf script: Allow --symbol to accept hexadecimal addresses")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+But the current code only zeros the res_stats[0], it doesn't zero the
+res_stats[1] and res_stats[2], which are for ena and run of counter.
+
+This patch zeros the whole res_stats[] for interval mode.
+
+Fixes: 51fd2df1e882 ("perf stat: Fix interval output values")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20200421004329.43109-1-irogers@google.com
+Link: http://lore.kernel.org/lkml/20200409070755.17261-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/stat.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index dc0e11214ae1..f581550a3015 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -626,7 +626,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 			ret = strlist__has_entry(symbol_conf.sym_list,
- 						al->sym->name);
- 		}
--		if (!(ret && al->sym)) {
-+		if (!ret && al->sym) {
- 			snprintf(al_addr_str, sz, "0x%"PRIx64,
- 				al->map->unmap_ip(al->map, al->sym->start));
- 			ret = strlist__has_entry(symbol_conf.sym_list,
+diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+index 5f26137b8d60..242476eb808c 100644
+--- a/tools/perf/util/stat.c
++++ b/tools/perf/util/stat.c
+@@ -368,8 +368,10 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+ 	 * interval mode, otherwise overall avg running
+ 	 * averages will be shown for each interval.
+ 	 */
+-	if (config->interval)
+-		init_stats(ps->res_stats);
++	if (config->interval) {
++		for (i = 0; i < 3; i++)
++			init_stats(&ps->res_stats[i]);
++	}
+ 
+ 	if (counter->per_pkg)
+ 		zero_per_pkg(counter);
 -- 
 2.21.1
