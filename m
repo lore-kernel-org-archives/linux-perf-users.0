@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 32/91] libperf: Add NULL pointer check for cpu_map iteration and NULL assignment for all_cpus.
-Date: Wed,  6 May 2020 12:21:35 -0300
-Message-ID: <20200506152234.21977-33-acme@kernel.org>
+Subject: [PATCH 33/91] perf parse-events: Fix memory leaks found on parse_events
+Date: Wed,  6 May 2020 12:21:36 -0300
+Message-ID: <20200506152234.21977-34-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,50 +9,42 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, He Zhe <zhe.he@windriver.com>, Andi Kleen <ak@linux.intel.com>, Kyle Meyer <meyerk@hpe.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, clang-built-linux@googlegroups.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: He Zhe <zhe.he@windriver.com>
+From: Ian Rogers <irogers@google.com>
 
-A NULL pointer may be passed to perf_cpu_map__cpu and then cause a
-crash, such as the one commit cb71f7d43ece ("libperf: Setup initial
-evlist::all_cpus value") fix.
+Fix a memory leak found by applying LLVM's libfuzzer on parse_events().
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kyle Meyer <meyerk@hpe.com>
-Link: http://lore.kernel.org/lkml/1583665157-349023-1-git-send-email-zhe.he@windriver.com
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200319023101.82458-1-irogers@google.com
+[ split from a larger patch, use zfree() ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/perf/cpumap.c | 2 +-
- tools/lib/perf/evlist.c | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index f93f4e703e4c..ca0215047c32 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -247,7 +247,7 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 5795f3a8f71c..6dc9e57ab95b 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1482,6 +1482,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
  
- int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
- {
--	if (idx < cpus->nr)
-+	if (cpus && idx < cpus->nr)
- 		return cpus->map[idx];
- 
- 	return -1;
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index def55054c55b..c481b62f2ce4 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -125,6 +125,7 @@ void perf_evlist__exit(struct perf_evlist *evlist)
- 	perf_cpu_map__put(evlist->cpus);
- 	perf_thread_map__put(evlist->threads);
- 	evlist->cpus = NULL;
-+	evlist->all_cpus = NULL;
- 	evlist->threads = NULL;
- 	fdarray__exit(&evlist->pollfd);
- }
+ 		list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+ 			list_del_init(&pos->list);
++			zfree(&pos->val.str);
+ 			free(pos);
+ 		}
+ 		return -EINVAL;
 -- 
 2.21.1
