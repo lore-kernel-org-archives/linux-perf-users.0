@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 80/91] perf sched: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
-Date: Wed,  6 May 2020 12:22:23 -0300
-Message-ID: <20200506152234.21977-81-acme@kernel.org>
+Subject: [PATCH 83/91] perf annotate: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date: Wed,  6 May 2020 12:22:26 -0300
+Message-ID: <20200506152234.21977-84-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -22,73 +22,36 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-sched.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ tools/perf/builtin-annotate.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index b99398031131..459e4229945e 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -1848,7 +1848,7 @@ static inline void print_sched_time(unsigned long long nsecs, int width)
-  * returns runtime data for event, allocating memory for it the
-  * first time it is used.
-  */
--static struct evsel_runtime *perf_evsel__get_runtime(struct evsel *evsel)
-+static struct evsel_runtime *evsel__get_runtime(struct evsel *evsel)
- {
- 	struct evsel_runtime *r = evsel->priv;
- 
-@@ -1863,10 +1863,9 @@ static struct evsel_runtime *perf_evsel__get_runtime(struct evsel *evsel)
- /*
-  * save last time event was seen per cpu
-  */
--static void perf_evsel__save_time(struct evsel *evsel,
--				  u64 timestamp, u32 cpu)
-+static void evsel__save_time(struct evsel *evsel, u64 timestamp, u32 cpu)
- {
--	struct evsel_runtime *r = perf_evsel__get_runtime(evsel);
-+	struct evsel_runtime *r = evsel__get_runtime(evsel);
- 
- 	if (r == NULL)
- 		return;
-@@ -1890,9 +1889,9 @@ static void perf_evsel__save_time(struct evsel *evsel,
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index b0e5a30755ce..d3e5a84f87a2 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -212,11 +212,9 @@ static bool has_annotation(struct perf_annotate *ann)
+ 	return ui__has_annotation() || ann->use_stdio2;
  }
  
- /* returns last time this event was seen on the given cpu */
--static u64 perf_evsel__get_time(struct evsel *evsel, u32 cpu)
-+static u64 evsel__get_time(struct evsel *evsel, u32 cpu)
+-static int perf_evsel__add_sample(struct evsel *evsel,
+-				  struct perf_sample *sample,
+-				  struct addr_location *al,
+-				  struct perf_annotate *ann,
+-				  struct machine *machine)
++static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
++			     struct addr_location *al, struct perf_annotate *ann,
++			     struct machine *machine)
  {
--	struct evsel_runtime *r = perf_evsel__get_runtime(evsel);
-+	struct evsel_runtime *r = evsel__get_runtime(evsel);
+ 	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_entry *he;
+@@ -278,7 +276,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 		goto out_put;
  
- 	if ((r == NULL) || (r->last_time == NULL) || (cpu >= r->ncpu))
- 		return 0;
-@@ -2548,7 +2547,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 		goto out;
- 	}
- 
--	tprev = perf_evsel__get_time(evsel, sample->cpu);
-+	tprev = evsel__get_time(evsel, sample->cpu);
- 
- 	/*
- 	 * If start time given:
-@@ -2631,7 +2630,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 		tr->ready_to_run = 0;
- 	}
- 
--	perf_evsel__save_time(evsel, sample->time, sample->cpu);
-+	evsel__save_time(evsel, sample->time, sample->cpu);
- 
- 	return rc;
- }
-@@ -2941,7 +2940,7 @@ static int timehist_check_attr(struct perf_sched *sched,
- 	struct evsel_runtime *er;
- 
- 	list_for_each_entry(evsel, &evlist->core.entries, core.node) {
--		er = perf_evsel__get_runtime(evsel);
-+		er = evsel__get_runtime(evsel);
- 		if (er == NULL) {
- 			pr_err("Failed to allocate memory for evsel runtime data\n");
- 			return -1;
+ 	if (!al.filtered &&
+-	    perf_evsel__add_sample(evsel, sample, &al, ann, machine)) {
++	    evsel__add_sample(evsel, sample, &al, ann, machine)) {
+ 		pr_warning("problem incrementing symbol count, "
+ 			   "skipping event\n");
+ 		ret = -1;
 -- 
 2.21.1
