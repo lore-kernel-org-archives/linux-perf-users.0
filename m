@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 83/91] perf annotate: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
-Date: Wed,  6 May 2020 12:22:26 -0300
-Message-ID: <20200506152234.21977-84-acme@kernel.org>
+Subject: [PATCH 84/91] perf inject: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date: Wed,  6 May 2020 12:22:27 -0300
+Message-ID: <20200506152234.21977-85-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -22,36 +22,31 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-annotate.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ tools/perf/builtin-inject.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index b0e5a30755ce..d3e5a84f87a2 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -212,11 +212,9 @@ static bool has_annotation(struct perf_annotate *ann)
- 	return ui__has_annotation() || ann->use_stdio2;
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index aad007bfb581..53932db97a79 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -561,8 +561,7 @@ static void sig_handler(int sig __maybe_unused)
+ 	session_done = 1;
  }
  
--static int perf_evsel__add_sample(struct evsel *evsel,
--				  struct perf_sample *sample,
--				  struct addr_location *al,
--				  struct perf_annotate *ann,
--				  struct machine *machine)
-+static int evsel__add_sample(struct evsel *evsel, struct perf_sample *sample,
-+			     struct addr_location *al, struct perf_annotate *ann,
-+			     struct machine *machine)
+-static int perf_evsel__check_stype(struct evsel *evsel,
+-				   u64 sample_type, const char *sample_msg)
++static int evsel__check_stype(struct evsel *evsel, u64 sample_type, const char *sample_msg)
  {
- 	struct hists *hists = evsel__hists(evsel);
- 	struct hist_entry *he;
-@@ -278,7 +276,7 @@ static int process_sample_event(struct perf_tool *tool,
- 		goto out_put;
+ 	struct perf_event_attr *attr = &evsel->core.attr;
+ 	const char *name = evsel__name(evsel);
+@@ -625,7 +624,7 @@ static int __cmd_inject(struct perf_inject *inject)
+ 			const char *name = evsel__name(evsel);
  
- 	if (!al.filtered &&
--	    perf_evsel__add_sample(evsel, sample, &al, ann, machine)) {
-+	    evsel__add_sample(evsel, sample, &al, ann, machine)) {
- 		pr_warning("problem incrementing symbol count, "
- 			   "skipping event\n");
- 		ret = -1;
+ 			if (!strcmp(name, "sched:sched_switch")) {
+-				if (perf_evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
++				if (evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID"))
+ 					return -EINVAL;
+ 
+ 				evsel->handler = perf_inject__sched_switch;
 -- 
 2.21.1
