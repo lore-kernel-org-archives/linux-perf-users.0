@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 76/91] perf evsel: Rename perf_evsel__store_ids() to evsel__store_id()
-Date: Wed,  6 May 2020 12:22:19 -0300
-Message-ID: <20200506152234.21977-77-acme@kernel.org>
+Subject: [PATCH 78/91] perf kmem: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date: Wed,  6 May 2020 12:22:21 -0300
+Message-ID: <20200506152234.21977-79-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,7 +14,7 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-As it is a 'struct evsel' method, not part of tools/lib/perf/, aka
+As those is a 'struct evsel' methods, not part of tools/lib/perf/, aka
 libperf, to whom the perf_ prefix belongs.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -22,47 +22,89 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-stat.c | 2 +-
- tools/perf/util/evsel.c   | 2 +-
- tools/perf/util/evsel.h   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/builtin-kmem.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 188b2f957856..b2a971961364 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -636,7 +636,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
- 			stat_config.unit_width = l;
- 
- 		if (perf_evsel__should_store_id(counter) &&
--		    perf_evsel__store_ids(counter, evsel_list))
-+		    evsel__store_ids(counter, evsel_list))
- 			return -1;
- 	}
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 32d178a3f933..f3e60c45d59a 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2588,7 +2588,7 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 0a296fbf9194..38a5ab683ebc 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -169,8 +169,7 @@ static int insert_caller_stat(unsigned long call_site,
  	return 0;
  }
  
--int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist)
-+int evsel__store_ids(struct evsel *evsel, struct evlist *evlist)
+-static int perf_evsel__process_alloc_event(struct evsel *evsel,
+-					   struct perf_sample *sample)
++static int evsel__process_alloc_event(struct evsel *evsel, struct perf_sample *sample)
  {
- 	struct perf_cpu_map *cpus = evsel->core.cpus;
- 	struct perf_thread_map *threads = evsel->core.threads;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index d76111c2d6a8..351c0aaf2a11 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -403,5 +403,5 @@ static inline bool evsel__has_br_stack(const struct evsel *evsel)
+ 	unsigned long ptr = evsel__intval(evsel, sample, "ptr"),
+ 		      call_site = evsel__intval(evsel, sample, "call_site");
+@@ -188,10 +187,9 @@ static int perf_evsel__process_alloc_event(struct evsel *evsel,
+ 	return 0;
+ }
  
- struct perf_env *evsel__env(struct evsel *evsel);
+-static int perf_evsel__process_alloc_node_event(struct evsel *evsel,
+-						struct perf_sample *sample)
++static int evsel__process_alloc_node_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+-	int ret = perf_evsel__process_alloc_event(evsel, sample);
++	int ret = evsel__process_alloc_event(evsel, sample);
  
--int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
-+int evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
- #endif /* __PERF_EVSEL_H */
+ 	if (!ret) {
+ 		int node1 = cpu__get_node(sample->cpu),
+@@ -232,8 +230,7 @@ static struct alloc_stat *search_alloc_stat(unsigned long ptr,
+ 	return NULL;
+ }
+ 
+-static int perf_evsel__process_free_event(struct evsel *evsel,
+-					  struct perf_sample *sample)
++static int evsel__process_free_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	unsigned long ptr = evsel__intval(evsel, sample, "ptr");
+ 	struct alloc_stat *s_alloc, *s_caller;
+@@ -784,8 +781,7 @@ static int parse_gfp_flags(struct evsel *evsel, struct perf_sample *sample,
+ 	return 0;
+ }
+ 
+-static int perf_evsel__process_page_alloc_event(struct evsel *evsel,
+-						struct perf_sample *sample)
++static int evsel__process_page_alloc_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	u64 page;
+ 	unsigned int order = evsel__intval(evsel, sample, "order");
+@@ -857,8 +853,7 @@ static int perf_evsel__process_page_alloc_event(struct evsel *evsel,
+ 	return 0;
+ }
+ 
+-static int perf_evsel__process_page_free_event(struct evsel *evsel,
+-						struct perf_sample *sample)
++static int evsel__process_page_free_event(struct evsel *evsel, struct perf_sample *sample)
+ {
+ 	u64 page;
+ 	unsigned int order = evsel__intval(evsel, sample, "order");
+@@ -1371,15 +1366,15 @@ static int __cmd_kmem(struct perf_session *session)
+ 	struct evsel *evsel;
+ 	const struct evsel_str_handler kmem_tracepoints[] = {
+ 		/* slab allocator */
+-		{ "kmem:kmalloc",		perf_evsel__process_alloc_event, },
+-    		{ "kmem:kmem_cache_alloc",	perf_evsel__process_alloc_event, },
+-		{ "kmem:kmalloc_node",		perf_evsel__process_alloc_node_event, },
+-    		{ "kmem:kmem_cache_alloc_node", perf_evsel__process_alloc_node_event, },
+-		{ "kmem:kfree",			perf_evsel__process_free_event, },
+-    		{ "kmem:kmem_cache_free",	perf_evsel__process_free_event, },
++		{ "kmem:kmalloc",		evsel__process_alloc_event, },
++		{ "kmem:kmem_cache_alloc",	evsel__process_alloc_event, },
++		{ "kmem:kmalloc_node",		evsel__process_alloc_node_event, },
++		{ "kmem:kmem_cache_alloc_node", evsel__process_alloc_node_event, },
++		{ "kmem:kfree",			evsel__process_free_event, },
++		{ "kmem:kmem_cache_free",	evsel__process_free_event, },
+ 		/* page allocator */
+-		{ "kmem:mm_page_alloc",		perf_evsel__process_page_alloc_event, },
+-		{ "kmem:mm_page_free",		perf_evsel__process_page_free_event, },
++		{ "kmem:mm_page_alloc",		evsel__process_page_alloc_event, },
++		{ "kmem:mm_page_free",		evsel__process_page_free_event, },
+ 	};
+ 
+ 	if (!perf_session__has_traces(session, "kmem record"))
 -- 
 2.21.1
