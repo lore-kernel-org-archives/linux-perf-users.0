@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 65/91] tools feature: Add support for detecting libpfm4
-Date: Wed,  6 May 2020 12:22:08 -0300
-Message-ID: <20200506152234.21977-66-acme@kernel.org>
+Subject: [PATCH 63/91] perf mem2node: Avoid double free related to realloc
+Date: Wed,  6 May 2020 12:22:06 -0300
+Message-ID: <20200506152234.21977-64-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -9,101 +9,82 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200506152234.21977-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Alexei Starovoitov <ast@kernel.org>, Alexey Budankov <alexey.budankov@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Andrii Nakryiko <andriin@fb.com>, Daniel Borkmann <daniel@iogearbox.net>, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Igor Lubashev <ilubashe@akamai.com>, Jin Yao <yao.jin@linux.intel.com>, Jiwei Sun <jiwei.sun@windriver.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>, Stephane Eranian <eranian@google.com>, clang-built-linux@googlegroups.com, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Stephane Eranian <eranian@google.com>
+From: Ian Rogers <irogers@google.com>
 
-libpfm4 provides an alternate command line encoding of perf events.
+Realloc of size zero is a free not an error, avoid this causing a double
+free. Caught by clang's address sanitizer:
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+==2634==ERROR: AddressSanitizer: attempting double-free on 0x6020000015f0 in thread T0:
+    #0 0x5649659297fd in free llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:123:3
+    #1 0x5649659e9251 in __zfree tools/lib/zalloc.c:13:2
+    #2 0x564965c0f92c in mem2node__exit tools/perf/util/mem2node.c:114:2
+    #3 0x564965a08b4c in perf_c2c__report tools/perf/builtin-c2c.c:2867:2
+    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #8 0x564965942e41 in main tools/perf/perf.c:538:3
+
+0x6020000015f0 is located 0 bytes inside of 1-byte region [0x6020000015f0,0x6020000015f1)
+freed by thread T0 here:
+    #0 0x564965929da3 in realloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:164:3
+    #1 0x564965c0f55e in mem2node__init tools/perf/util/mem2node.c:97:16
+    #2 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+    #3 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #4 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #5 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #6 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #7 0x564965942e41 in main tools/perf/perf.c:538:3
+
+previously allocated by thread T0 here:
+    #0 0x564965929c42 in calloc third_party/llvm/llvm-project/compiler-rt/lib/asan/asan_malloc_linux.cpp:154:3
+    #1 0x5649659e9220 in zalloc tools/lib/zalloc.c:8:9
+    #2 0x564965c0f32d in mem2node__init tools/perf/util/mem2node.c:61:12
+    #3 0x564965a08956 in perf_c2c__report tools/perf/builtin-c2c.c:2803:8
+    #4 0x564965a0616a in cmd_c2c tools/perf/builtin-c2c.c:2989:10
+    #5 0x564965944348 in run_builtin tools/perf/perf.c:312:11
+    #6 0x564965943235 in handle_internal_command tools/perf/perf.c:364:8
+    #7 0x5649659440c4 in run_argv tools/perf/perf.c:408:2
+    #8 0x564965942e41 in main tools/perf/perf.c:538:3
+
+v2: add a WARN_ON_ONCE when the free condition arises.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiwei Sun <jiwei.sun@windriver.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Leo Yan <leo.yan@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: bpf@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: yuzhoujian <yuzhoujian@didichuxing.com>
-Link: http://lore.kernel.org/lkml/20200429231443.207201-3-irogers@google.com
+Cc: Stephane Eranian <eranian@google.com>
+Cc: clang-built-linux@googlegroups.com
+Link: http://lore.kernel.org/lkml/20200320182347.87675-1-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/build/Makefile.feature       | 3 ++-
- tools/build/feature/Makefile       | 6 +++++-
- tools/build/feature/test-libpfm4.c | 9 +++++++++
- 3 files changed, 16 insertions(+), 2 deletions(-)
- create mode 100644 tools/build/feature/test-libpfm4.c
+ tools/perf/util/mem2node.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3e0c019ef297..3abd4316cd4f 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -98,7 +98,8 @@ FEATURE_TESTS_EXTRA :=                  \
-          llvm                           \
-          llvm-version                   \
-          clang                          \
--         libbpf
-+         libbpf                         \
-+         libpfm4
+diff --git a/tools/perf/util/mem2node.c b/tools/perf/util/mem2node.c
+index 797d86a1ab09..c84f5841c7ab 100644
+--- a/tools/perf/util/mem2node.c
++++ b/tools/perf/util/mem2node.c
+@@ -1,5 +1,6 @@
+ #include <errno.h>
+ #include <inttypes.h>
++#include <asm/bug.h>
+ #include <linux/bitmap.h>
+ #include <linux/kernel.h>
+ #include <linux/zalloc.h>
+@@ -95,7 +96,7 @@ int mem2node__init(struct mem2node *map, struct perf_env *env)
  
- FEATURE_TESTS ?= $(FEATURE_TESTS_BASIC)
+ 	/* Cut unused entries, due to merging. */
+ 	tmp_entries = realloc(entries, sizeof(*entries) * j);
+-	if (tmp_entries)
++	if (tmp_entries || WARN_ON_ONCE(j == 0))
+ 		entries = tmp_entries;
  
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 92012381393a..84f845b9627d 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -69,7 +69,8 @@ FILES=                                          \
-          test-libaio.bin			\
-          test-libzstd.bin			\
-          test-clang-bpf-global-var.bin		\
--         test-file-handle.bin
-+         test-file-handle.bin			\
-+         test-libpfm4.bin
- 
- FILES := $(addprefix $(OUTPUT),$(FILES))
- 
-@@ -331,6 +332,9 @@ $(OUTPUT)test-clang-bpf-global-var.bin:
- $(OUTPUT)test-file-handle.bin:
- 	$(BUILD)
- 
-+$(OUTPUT)test-libpfm4.bin:
-+	$(BUILD) -lpfm
-+
- ###############################
- 
- clean:
-diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
-new file mode 100644
-index 000000000000..af49b259459e
---- /dev/null
-+++ b/tools/build/feature/test-libpfm4.c
-@@ -0,0 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <sys/types.h>
-+#include <perfmon/pfmlib.h>
-+
-+int main(void)
-+{
-+	pfm_initialize();
-+	return 0;
-+}
+ 	for (i = 0; i < j; i++) {
 -- 
 2.21.1
