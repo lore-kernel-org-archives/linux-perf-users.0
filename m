@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 26/91] perf parse-events: Add parse_events_option() variant that creates evlist
-Date: Wed,  6 May 2020 12:21:29 -0300
-Message-ID: <20200506152234.21977-27-acme@kernel.org>
+Subject: [PATCH 28/91] perf evlist: Allow reusing the side band thread for more purposes
+Date: Wed,  6 May 2020 12:21:31 -0300
+Message-ID: <20200506152234.21977-29-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,68 +14,83 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-For the upcoming --switch-output-event option we want to create the side
-band event, populate it with the specified events and then, if it is
-present multiple times, go on adding to it, then, if the BPF tracking is
-required, use the first event to set its attr.bpf_event to get those
-PERF_RECORD_BPF_EVENT metadata events too.
+I.e. so far we had just one event in that side band thread, a dummy one
+with attr.bpf_event set, so that 'perf record' can go ahead and ask the
+kernel for further information about BPF programs being loaded.
+
+Allow for more than one event to be there, so that we can use it as
+well for the upcoming --switch-output-event feature.
 
 Acked-by: Jiri Olsa <jolsa@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
-Link: http://lore.kernel.org/lkml/20200429131106.27974-5-acme@kernel.org
+Link: http://lore.kernel.org/lkml/20200429131106.27974-6-acme@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/parse-events.c | 23 +++++++++++++++++++++++
- tools/perf/util/parse-events.h |  1 +
+ tools/perf/util/evlist.h          |  1 +
+ tools/perf/util/sideband_evlist.c | 23 +++++++++++++++++++++++
  2 files changed, 24 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 10107747b361..5795f3a8f71c 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -2190,6 +2190,29 @@ int parse_events_option(const struct option *opt, const char *str,
- 	return ret;
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index a9d01a11570a..93de63e2a247 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -111,6 +111,7 @@ int perf_evlist__add_sb_event(struct evlist *evlist,
+ 			      struct perf_event_attr *attr,
+ 			      perf_evsel__sb_cb_t cb,
+ 			      void *data);
++void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data);
+ int perf_evlist__start_sb_thread(struct evlist *evlist,
+ 				 struct target *target);
+ void perf_evlist__stop_sb_thread(struct evlist *evlist);
+diff --git a/tools/perf/util/sideband_evlist.c b/tools/perf/util/sideband_evlist.c
+index 073d201bb6ea..1d6f470d64c4 100644
+--- a/tools/perf/util/sideband_evlist.c
++++ b/tools/perf/util/sideband_evlist.c
+@@ -4,6 +4,7 @@
+ #include "util/evlist.h"
+ #include "util/evsel.h"
+ #include "util/mmap.h"
++#include "util/perf_api_probe.h"
+ #include <perf/mmap.h>
+ #include <linux/perf_event.h>
+ #include <limits.h>
+@@ -80,6 +81,19 @@ static void *perf_evlist__poll_thread(void *arg)
+ 	return NULL;
  }
  
-+int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset)
++void evlist__set_cb(struct evlist *evlist, perf_evsel__sb_cb_t cb, void *data)
 +{
-+	struct evlist **evlistp = opt->value;
-+	int ret;
++	struct evsel *evsel;
 +
-+	if (*evlistp == NULL) {
-+		*evlistp = evlist__new();
-+
-+		if (*evlistp == NULL) {
-+			fprintf(stderr, "Not enough memory to create evlist\n");
-+			return -1;
-+		}
-+	}
-+
-+	ret = parse_events_option(opt, str, unset);
-+	if (ret) {
-+		evlist__delete(*evlistp);
-+		*evlistp = NULL;
-+	}
-+
-+	return ret;
++	evlist__for_each_entry(evlist, evsel) {
++		evsel->core.attr.sample_id_all    = 1;
++		evsel->core.attr.watermark        = 1;
++		evsel->core.attr.wakeup_watermark = 1;
++		evsel->side_band.cb   = cb;
++		evsel->side_band.data = data;
++      }
 +}
 +
- static int
- foreach_evsel_in_last_glob(struct evlist *evlist,
- 			   int (*func)(struct evsel *evsel,
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 27596cbd0ba0..6ead9661238c 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -31,6 +31,7 @@ bool have_tracepoints(struct list_head *evlist);
- const char *event_type(int type);
+ int perf_evlist__start_sb_thread(struct evlist *evlist, struct target *target)
+ {
+ 	struct evsel *counter;
+@@ -90,6 +104,15 @@ int perf_evlist__start_sb_thread(struct evlist *evlist, struct target *target)
+ 	if (perf_evlist__create_maps(evlist, target))
+ 		goto out_delete_evlist;
  
- int parse_events_option(const struct option *opt, const char *str, int unset);
-+int parse_events_option_new_evlist(const struct option *opt, const char *str, int unset);
- int parse_events(struct evlist *evlist, const char *str,
- 		 struct parse_events_error *error);
- int parse_events_terms(struct list_head *terms, const char *str);
++	if (evlist->core.nr_entries > 1) {
++		bool can_sample_identifier = perf_can_sample_identifier();
++
++		evlist__for_each_entry(evlist, counter)
++			perf_evsel__set_sample_id(counter, can_sample_identifier);
++
++		perf_evlist__set_id_pos(evlist);
++	}
++
+ 	evlist__for_each_entry(evlist, counter) {
+ 		if (evsel__open(counter, evlist->core.cpus, evlist->core.threads) < 0)
+ 			goto out_delete_evlist;
 -- 
 2.21.1
