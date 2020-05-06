@@ -1,7 +1,7 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 79/91] perf lock: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
-Date: Wed,  6 May 2020 12:22:22 -0300
-Message-ID: <20200506152234.21977-80-acme@kernel.org>
+Subject: [PATCH 80/91] perf sched: Rename perf_evsel__*() operating on 'struct evsel *' to evsel__*()
+Date: Wed,  6 May 2020 12:22:23 -0300
+Message-ID: <20200506152234.21977-81-acme@kernel.org>
 References: <20200506152234.21977-1-acme@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -22,64 +22,73 @@ Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-lock.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
+ tools/perf/builtin-sched.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 5a19dc2f1636..f0a1dbacb46c 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -657,32 +657,28 @@ static struct trace_lock_handler report_lock_ops  = {
- 
- static struct trace_lock_handler *trace_handler;
- 
--static int perf_evsel__process_lock_acquire(struct evsel *evsel,
--					     struct perf_sample *sample)
-+static int evsel__process_lock_acquire(struct evsel *evsel, struct perf_sample *sample)
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index b99398031131..459e4229945e 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1848,7 +1848,7 @@ static inline void print_sched_time(unsigned long long nsecs, int width)
+  * returns runtime data for event, allocating memory for it the
+  * first time it is used.
+  */
+-static struct evsel_runtime *perf_evsel__get_runtime(struct evsel *evsel)
++static struct evsel_runtime *evsel__get_runtime(struct evsel *evsel)
  {
- 	if (trace_handler->acquire_event)
- 		return trace_handler->acquire_event(evsel, sample);
- 	return 0;
+ 	struct evsel_runtime *r = evsel->priv;
+ 
+@@ -1863,10 +1863,9 @@ static struct evsel_runtime *perf_evsel__get_runtime(struct evsel *evsel)
+ /*
+  * save last time event was seen per cpu
+  */
+-static void perf_evsel__save_time(struct evsel *evsel,
+-				  u64 timestamp, u32 cpu)
++static void evsel__save_time(struct evsel *evsel, u64 timestamp, u32 cpu)
+ {
+-	struct evsel_runtime *r = perf_evsel__get_runtime(evsel);
++	struct evsel_runtime *r = evsel__get_runtime(evsel);
+ 
+ 	if (r == NULL)
+ 		return;
+@@ -1890,9 +1889,9 @@ static void perf_evsel__save_time(struct evsel *evsel,
  }
  
--static int perf_evsel__process_lock_acquired(struct evsel *evsel,
--					      struct perf_sample *sample)
-+static int evsel__process_lock_acquired(struct evsel *evsel, struct perf_sample *sample)
+ /* returns last time this event was seen on the given cpu */
+-static u64 perf_evsel__get_time(struct evsel *evsel, u32 cpu)
++static u64 evsel__get_time(struct evsel *evsel, u32 cpu)
  {
- 	if (trace_handler->acquired_event)
- 		return trace_handler->acquired_event(evsel, sample);
- 	return 0;
+-	struct evsel_runtime *r = perf_evsel__get_runtime(evsel);
++	struct evsel_runtime *r = evsel__get_runtime(evsel);
+ 
+ 	if ((r == NULL) || (r->last_time == NULL) || (cpu >= r->ncpu))
+ 		return 0;
+@@ -2548,7 +2547,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 		goto out;
+ 	}
+ 
+-	tprev = perf_evsel__get_time(evsel, sample->cpu);
++	tprev = evsel__get_time(evsel, sample->cpu);
+ 
+ 	/*
+ 	 * If start time given:
+@@ -2631,7 +2630,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 		tr->ready_to_run = 0;
+ 	}
+ 
+-	perf_evsel__save_time(evsel, sample->time, sample->cpu);
++	evsel__save_time(evsel, sample->time, sample->cpu);
+ 
+ 	return rc;
  }
+@@ -2941,7 +2940,7 @@ static int timehist_check_attr(struct perf_sched *sched,
+ 	struct evsel_runtime *er;
  
--static int perf_evsel__process_lock_contended(struct evsel *evsel,
--					      struct perf_sample *sample)
-+static int evsel__process_lock_contended(struct evsel *evsel, struct perf_sample *sample)
- {
- 	if (trace_handler->contended_event)
- 		return trace_handler->contended_event(evsel, sample);
- 	return 0;
- }
- 
--static int perf_evsel__process_lock_release(struct evsel *evsel,
--					    struct perf_sample *sample)
-+static int evsel__process_lock_release(struct evsel *evsel, struct perf_sample *sample)
- {
- 	if (trace_handler->release_event)
- 		return trace_handler->release_event(evsel, sample);
-@@ -849,10 +845,10 @@ static void sort_result(void)
- }
- 
- static const struct evsel_str_handler lock_tracepoints[] = {
--	{ "lock:lock_acquire",	 perf_evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
--	{ "lock:lock_acquired",	 perf_evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
--	{ "lock:lock_contended", perf_evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
--	{ "lock:lock_release",	 perf_evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
-+	{ "lock:lock_acquire",	 evsel__process_lock_acquire,   }, /* CONFIG_LOCKDEP */
-+	{ "lock:lock_acquired",	 evsel__process_lock_acquired,  }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
-+	{ "lock:lock_contended", evsel__process_lock_contended, }, /* CONFIG_LOCKDEP, CONFIG_LOCK_STAT */
-+	{ "lock:lock_release",	 evsel__process_lock_release,   }, /* CONFIG_LOCKDEP */
- };
- 
- static bool force;
+ 	list_for_each_entry(evsel, &evlist->core.entries, core.node) {
+-		er = perf_evsel__get_runtime(evsel);
++		er = evsel__get_runtime(evsel);
+ 		if (er == NULL) {
+ 			pr_err("Failed to allocate memory for evsel runtime data\n");
+ 			return -1;
 -- 
 2.21.1
