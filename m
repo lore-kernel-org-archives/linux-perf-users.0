@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH 3/7] perf metricgroup: free metric_events on error
-Date: Thu,  7 May 2020 01:14:32 -0700
-Message-ID: <20200507081436.49071-4-irogers@google.com>
+Subject: [RFC PATCH 6/7] perf metricgroup: order event groups by size
+Date: Thu,  7 May 2020 01:14:35 -0700
+Message-ID: <20200507081436.49071-7-irogers@google.com>
 References: <20200507081436.49071-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,38 +12,44 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Avoid a simple memory leak.
+When adding event groups to the group list, insert them in size order.
+This performs an insertion sort on the group list. By placing the
+largest groups at the front of the group list it is possible to see if a
+larger group contains the same events as a later group. This can make
+the later group redundant - it can reuse the events from the large group.
+A later patch will add this sharing.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/metricgroup.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index dcd175c05872..2356dda92a07 100644
+index 0a00c0f87872..25e3e8df6b45 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -185,6 +185,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
- 					eg->metric_name, eg->metric_expr);
-+			free(metric_events);
- 			continue;
- 		}
- 		for (i = 0; metric_events[i]; i++)
-@@ -192,11 +193,13 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		me = metricgroup__lookup(metric_events_list, evsel, true);
- 		if (!me) {
- 			ret = -ENOMEM;
-+			free(metric_events);
- 			break;
- 		}
- 		expr = malloc(sizeof(struct metric_expr));
- 		if (!expr) {
- 			ret = -ENOMEM;
-+			free(metric_events);
- 			break;
- 		}
- 		expr->metric_expr = eg->metric_expr;
+@@ -519,7 +519,21 @@ static int __metricgroup__add_metric(struct list_head *group_list,
+ 		return -EINVAL;
+ 	}
+ 
+-	list_add_tail(&eg->nd, group_list);
++	if (list_empty(group_list))
++		list_add(&eg->nd, group_list);
++	else {
++		struct list_head *pos;
++
++		/* Place the largest groups at the front. */
++		list_for_each_prev(pos, group_list) {
++			struct egroup *old = list_entry(pos, struct egroup, nd);
++
++			if (hashmap__size(&eg->pctx.ids) <=
++			    hashmap__size(&old->pctx.ids))
++				break;
++		}
++		list_add(&eg->nd, pos);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.26.2.526.g744177e7f7-goog
