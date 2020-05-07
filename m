@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH 7/7] perf metricgroup: remove duped metric group events
-Date: Thu,  7 May 2020 01:14:36 -0700
-Message-ID: <20200507081436.49071-8-irogers@google.com>
+Subject: [RFC PATCH 5/7] perf metricgroup: delay events string creation
+Date: Thu,  7 May 2020 01:14:34 -0700
+Message-ID: <20200507081436.49071-6-irogers@google.com>
 References: <20200507081436.49071-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,219 +12,112 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-A metric group contains multiple metrics. These metrics may use the same
-events. If metrics use separate events then it leads to more
-multiplexing and overall metric counts fail to sum to 100%.
-Modify how metrics are associated with events so that if the events in
-an earlier group satisfy the current metric, the same events are used.
-A record of used events is kept and at the end of processing unnecessary
-events are eliminated.
-
-Before:
-$ perf stat -a -M TopDownL1 sleep 1
-
- Performance counter stats for 'system wide':
-
-       920,211,343      uops_issued.any           #      0.5 Backend_Bound            (16.56%)
-     1,977,733,128      idq_uops_not_delivered.core                                     (16.56%)
-        51,668,510      int_misc.recovery_cycles                                      (16.56%)
-       732,305,692      uops_retired.retire_slots                                     (16.56%)
-     1,497,621,849      cycles                                                        (16.56%)
-       721,098,274      uops_issued.any           #      0.1 Bad_Speculation          (16.79%)
-     1,332,681,791      cycles                                                        (16.79%)
-       552,475,482      uops_retired.retire_slots                                     (16.79%)
-        47,708,340      int_misc.recovery_cycles                                      (16.79%)
-     1,383,713,292      cycles
-                                                  #      0.4 Frontend_Bound           (16.76%)
-     2,013,757,701      idq_uops_not_delivered.core                                     (16.76%)
-     1,373,363,790      cycles
-                                                  #      0.1 Retiring                 (33.54%)
-       577,302,589      uops_retired.retire_slots                                     (33.54%)
-       392,766,987      inst_retired.any          #      0.3 IPC                      (50.24%)
-     1,351,873,350      cpu_clk_unhalted.thread                                       (50.24%)
-     1,332,510,318      cycles
-                                                  # 5330041272.0 SLOTS                (49.90%)
-
-       1.006336145 seconds time elapsed
-
-After:
-$ perf stat -a -M TopDownL1 sleep 1
-
- Performance counter stats for 'system wide':
-
-       765,949,145      uops_issued.any           #      0.1 Bad_Speculation
-                                                  #      0.5 Backend_Bound            (50.09%)
-     1,883,830,591      idq_uops_not_delivered.core #      0.3 Frontend_Bound           (50.09%)
-        48,237,080      int_misc.recovery_cycles                                      (50.09%)
-       581,798,385      uops_retired.retire_slots #      0.1 Retiring                 (50.09%)
-     1,361,628,527      cycles
-                                                  # 5446514108.0 SLOTS                (50.09%)
-       391,415,714      inst_retired.any          #      0.3 IPC                      (49.91%)
-     1,336,486,781      cpu_clk_unhalted.thread                                       (49.91%)
-
-       1.005469298 seconds time elapsed
-
-Note: Bad_Speculation + Backend_Bound + Frontend_Bound + Retiring = 100%
-after, where as before it is 110%. After there are 2 groups, whereas
-before there are 6. After the cycles event appears once, before it
-appeared 5 times.
+Currently event groups are placed into groups_list at the same time as
+the events string containing the events is built. Separate these two
+operations and build the groups_list first, then the event string from
+the groups_list. This adds an ability to reorder the groups_list that
+will be used in a later patch.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 97 ++++++++++++++++++++++-------------
- 1 file changed, 61 insertions(+), 36 deletions(-)
+ tools/perf/util/metricgroup.c | 38 +++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 25e3e8df6b45..8bb2aeeb70ad 100644
+index 48d0143b4b0c..0a00c0f87872 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -93,44 +93,72 @@ struct egroup {
- 	bool has_constraint;
+@@ -90,6 +90,7 @@ struct egroup {
+ 	const char *metric_expr;
+ 	const char *metric_unit;
+ 	int runtime;
++	bool has_constraint;
  };
  
-+/**
-+ * Find a group of events in perf_evlist that correpond to those from a parsed
-+ * metric expression.
-+ * @perf_evlist: a list of events something like: {metric1 leader, metric1
-+ * sibling, metric1 sibling}:W,duration_time,{metric2 leader, metric2 sibling,
-+ * metric2 sibling}:W,duration_time
-+ * @pctx: the parse context for the metric expression.
-+ * @has_constraint: is there a contraint on the group of events? In which case
-+ * the events won't be grouped.
-+ * @metric_events: out argument, null terminated array of evsel's associated
-+ * with the metric.
-+ * @evlist_used: in/out argument, bitmap tracking which evlist events are used.
-+ * @return the first metric event or NULL on failure.
-+ */
  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				      struct expr_parse_ctx *pctx,
-+				      bool has_constraint,
- 				      struct evsel **metric_events,
- 				      unsigned long *evlist_used)
+@@ -496,8 +497,8 @@ int __weak arch_get_runtimeparam(void)
+ 	return 1;
+ }
+ 
+-static int __metricgroup__add_metric(struct strbuf *events,
+-		struct list_head *group_list, struct pmu_event *pe, int runtime)
++static int __metricgroup__add_metric(struct list_head *group_list,
++				     struct pmu_event *pe, int runtime)
  {
--	struct evsel *ev;
--	bool leader_found;
--	const size_t idnum = hashmap__size(&pctx->ids);
--	size_t i = 0;
--	int j = 0;
--	double *val_ptr;
-+	struct evsel *ev, *current_leader = NULL;
-+        double *val_ptr;
-+	int i = 0, matched_events = 0, events_to_match;
-+	const int idnum = (int)hashmap__size(&pctx->ids);
-+
-+	/* duration_time is grouped separately. */
-+	if (!has_constraint &&
-+	    hashmap__find(&pctx->ids, "duration_time", (void**)&val_ptr))
-+		events_to_match = idnum - 1;
-+	else
-+		events_to_match = idnum;
- 
- 	evlist__for_each_entry (perf_evlist, ev) {
--		if (test_bit(j++, evlist_used))
-+		/*
-+		 * Events with a constraint aren't grouped and match the first
-+		 * events available.
-+		 */
-+		if (has_constraint && ev->weak_group)
- 			continue;
--		if (hashmap__find(&pctx->ids, ev->name, (void**)&val_ptr)) {
--			if (!metric_events[i])
--				metric_events[i] = ev;
--			i++;
--			if (i == idnum)
--				break;
--		} else {
--			/* Discard the whole match and start again */
--			i = 0;
-+		if (!has_constraint && ev->leader != current_leader) {
-+			/*
-+			 * Start of a new group, discard the whole match and
-+			 * start again.
-+			 */
-+			matched_events = 0;
- 			memset(metric_events, 0,
- 				sizeof(struct evsel *) * idnum);
-+			current_leader = ev->leader;
-+		}
-+		if (hashmap__find(&pctx->ids, ev->name, (void**)&val_ptr))
-+			metric_events[matched_events++] = ev;
-+		if (matched_events == events_to_match)
-+			break;
-+	}
- 
--			if (hashmap__find(&pctx->ids, ev->name, (void**)&val_ptr)) {
--				if (!metric_events[i])
--					metric_events[i] = ev;
--				i++;
--				if (i == idnum)
--					break;
-+	if (events_to_match != idnum) {
-+		/* Add the first duration_time. */
-+		evlist__for_each_entry (perf_evlist, ev) {
-+			if (!strcmp(ev->name, "duration_time")) {
-+				metric_events[matched_events++] = ev;
-+				break;
- 			}
- 		}
- 	}
- 
--	if (i != idnum) {
-+	if (matched_events != idnum) {
- 		/* Not whole match */
- 		return NULL;
- 	}
-@@ -138,18 +166,8 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 	metric_events[idnum] = NULL;
- 
- 	for (i = 0; i < idnum; i++) {
--		leader_found = false;
--		evlist__for_each_entry(perf_evlist, ev) {
--			if (!leader_found && (ev == metric_events[i]))
--				leader_found = true;
--
--			if (leader_found &&
--			    !strcmp(ev->name, metric_events[i]->name)) {
--				ev->metric_leader = metric_events[i];
--			}
--			j++;
--		}
- 		ev = metric_events[i];
-+		ev->metric_leader = ev;
- 		set_bit(ev->idx, evlist_used);
- 	}
- 
-@@ -165,7 +183,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 	int i = 0;
- 	int ret = 0;
  	struct egroup *eg;
--	struct evsel *evsel;
-+	struct evsel *evsel, *tmp;
- 	unsigned long *evlist_used;
  
- 	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
-@@ -181,7 +199,8 @@ static int metricgroup__setup_events(struct list_head *groups,
- 			ret = -ENOMEM;
- 			break;
- 		}
--		evsel = find_evsel_group(perf_evlist, &eg->pctx, metric_events,
-+		evsel = find_evsel_group(perf_evlist, &eg->pctx,
-+					eg->has_constraint, metric_events,
- 					evlist_used);
- 		if (!evsel) {
- 			pr_debug("Cannot resolve %s: %s\n",
-@@ -211,6 +230,12 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		list_add(&expr->nd, &me->head);
+@@ -510,6 +511,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 	eg->metric_expr = pe->metric_expr;
+ 	eg->metric_unit = pe->unit;
+ 	eg->runtime = runtime;
++	eg->has_constraint = metricgroup__has_constraint(pe);
+ 
+ 	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+ 		expr__ctx_clear(&eg->pctx);
+@@ -517,14 +519,6 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 		return -EINVAL;
  	}
  
-+	evlist__for_each_entry_safe (perf_evlist, tmp, evsel) {
-+		if (!test_bit(evsel->idx, evlist_used)) {
-+			evlist__remove(perf_evlist, evsel);
-+			evsel__delete(evsel);
+-	if (events->len > 0)
+-		strbuf_addf(events, ",");
+-
+-	if (metricgroup__has_constraint(pe))
+-		metricgroup__add_metric_non_group(events, &eg->pctx);
+-	else
+-		metricgroup__add_metric_weak_group(events, &eg->pctx);
+-
+ 	list_add_tail(&eg->nd, group_list);
+ 
+ 	return 0;
+@@ -535,6 +529,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ {
+ 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
+ 	struct pmu_event *pe;
++	struct egroup *eg;
+ 	int i, ret = -EINVAL;
+ 
+ 	if (!map)
+@@ -553,7 +548,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 
+ 			if (!strstr(pe->metric_expr, "?")) {
+-				ret = __metricgroup__add_metric(events, group_list, pe, 1);
++				ret = __metricgroup__add_metric(group_list,
++								pe, 1);
+ 			} else {
+ 				int j, count;
+ 
+@@ -564,13 +560,29 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				 * those events to group_list.
+ 				 */
+ 
+-				for (j = 0; j < count; j++)
+-					ret = __metricgroup__add_metric(events, group_list, pe, j);
++				for (j = 0; j < count; j++) {
++					ret = __metricgroup__add_metric(
++						group_list, pe, j);
++				}
+ 			}
+ 			if (ret == -ENOMEM)
+ 				break;
+ 		}
+ 	}
++	if (!ret) {
++		list_for_each_entry (eg, group_list, nd) {
++			if (events->len > 0)
++				strbuf_addf(events, ",");
++
++			if (eg->has_constraint) {
++				metricgroup__add_metric_non_group(events,
++								  &eg->pctx);
++			} else {
++				metricgroup__add_metric_weak_group(events,
++								   &eg->pctx);
++			}
 +		}
 +	}
- 	bitmap_free(evlist_used);
- 
  	return ret;
+ }
+ 
 -- 
 2.26.2.526.g744177e7f7-goog
