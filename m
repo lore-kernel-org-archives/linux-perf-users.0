@@ -1,123 +1,69 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH 5/7] perf metricgroup: delay events string creation
-Date: Thu,  7 May 2020 01:14:34 -0700
-Message-ID: <20200507081436.49071-6-irogers@google.com>
+Subject: [RFC PATCH 4/7] perf metricgroup: always place duration_time last
+Date: Thu,  7 May 2020 01:14:33 -0700
+Message-ID: <20200507081436.49071-5-irogers@google.com>
 References: <20200507081436.49071-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20200507081436.49071-1-irogers@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong
 Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Currently event groups are placed into groups_list at the same time as
-the events string containing the events is built. Separate these two
-operations and build the groups_list first, then the event string from
-the groups_list. This adds an ability to reorder the groups_list that
-will be used in a later patch.
+If a metric contains the duration_time event then the event is placed
+outside of the metric's group of events. Rather than split the group,
+make it so the duration_time is immediately after the group.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 38 +++++++++++++++++++++++------------
- 1 file changed, 25 insertions(+), 13 deletions(-)
+ tools/perf/util/metricgroup.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 48d0143b4b0c..0a00c0f87872 100644
+index 2356dda92a07..48d0143b4b0c 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -90,6 +90,7 @@ struct egroup {
- 	const char *metric_expr;
- 	const char *metric_unit;
- 	int runtime;
-+	bool has_constraint;
- };
- 
- static struct evsel *find_evsel_group(struct evlist *perf_evlist,
-@@ -496,8 +497,8 @@ int __weak arch_get_runtimeparam(void)
- 	return 1;
- }
- 
--static int __metricgroup__add_metric(struct strbuf *events,
--		struct list_head *group_list, struct pmu_event *pe, int runtime)
-+static int __metricgroup__add_metric(struct list_head *group_list,
-+				     struct pmu_event *pe, int runtime)
+@@ -421,8 +421,8 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
+ 					       struct expr_parse_ctx *ctx)
  {
- 	struct egroup *eg;
+ 	struct hashmap_entry *cur;
+-	size_t bkt, i = 0;
+-	bool no_group = false;
++	size_t bkt;
++	bool no_group = true, has_duration = false;
  
-@@ -510,6 +511,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
- 	eg->metric_expr = pe->metric_expr;
- 	eg->metric_unit = pe->unit;
- 	eg->runtime = runtime;
-+	eg->has_constraint = metricgroup__has_constraint(pe);
- 
- 	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
- 		expr__ctx_clear(&eg->pctx);
-@@ -517,14 +519,6 @@ static int __metricgroup__add_metric(struct strbuf *events,
- 		return -EINVAL;
- 	}
- 
--	if (events->len > 0)
--		strbuf_addf(events, ",");
--
--	if (metricgroup__has_constraint(pe))
--		metricgroup__add_metric_non_group(events, &eg->pctx);
--	else
--		metricgroup__add_metric_weak_group(events, &eg->pctx);
--
- 	list_add_tail(&eg->nd, group_list);
- 
- 	return 0;
-@@ -535,6 +529,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- {
- 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
- 	struct pmu_event *pe;
-+	struct egroup *eg;
- 	int i, ret = -EINVAL;
- 
- 	if (!map)
-@@ -553,7 +548,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
- 
- 			if (!strstr(pe->metric_expr, "?")) {
--				ret = __metricgroup__add_metric(events, group_list, pe, 1);
-+				ret = __metricgroup__add_metric(group_list,
-+								pe, 1);
- 			} else {
- 				int j, count;
- 
-@@ -564,13 +560,29 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				 * those events to group_list.
- 				 */
- 
--				for (j = 0; j < count; j++)
--					ret = __metricgroup__add_metric(events, group_list, pe, j);
-+				for (j = 0; j < count; j++) {
-+					ret = __metricgroup__add_metric(
-+						group_list, pe, j);
-+				}
- 			}
- 			if (ret == -ENOMEM)
- 				break;
+ 	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
+ 		pr_debug("found event %s\n", (const char*)cur->key);
+@@ -432,20 +432,20 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
+ 		 * group.
+ 		 */
+ 		if (!strcmp(cur->key, "duration_time")) {
+-			if (i > 0)
+-				strbuf_addf(events, "}:W,");
+-			strbuf_addf(events, "duration_time");
+-			no_group = true;
++			has_duration = true;
+ 			continue;
  		}
+ 		strbuf_addf(events, "%s%s",
+-			i == 0 || no_group ? "{" : ",",
++			no_group ? "{" : ",",
+ 			(const char*)cur->key);
+ 		no_group = false;
+-		i++;
  	}
-+	if (!ret) {
-+		list_for_each_entry (eg, group_list, nd) {
-+			if (events->len > 0)
-+				strbuf_addf(events, ",");
-+
-+			if (eg->has_constraint) {
-+				metricgroup__add_metric_non_group(events,
-+								  &eg->pctx);
-+			} else {
-+				metricgroup__add_metric_weak_group(events,
-+								   &eg->pctx);
-+			}
-+		}
-+	}
- 	return ret;
+-	if (!no_group)
+-		strbuf_addf(events, "}:W");
++	if (!no_group) {
++                strbuf_addf(events, "}:W");
++		if (has_duration)
++			strbuf_addf(events, ",duration_time");
++	} else if (has_duration)
++		strbuf_addf(events, "duration_time");
  }
  
+ static void metricgroup__add_metric_non_group(struct strbuf *events,
 -- 
 2.26.2.526.g744177e7f7-goog
