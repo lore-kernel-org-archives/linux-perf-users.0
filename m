@@ -1,69 +1,79 @@
-From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH 4/7] perf metricgroup: always place duration_time last
-Date: Thu,  7 May 2020 01:14:33 -0700
-Message-ID: <20200507081436.49071-5-irogers@google.com>
-References: <20200507081436.49071-1-irogers@google.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v4 00/12] perf metric fixes and test
+Date: Thu, 7 May 2020 10:44:45 +0200
+Message-ID: <20200507084445.GA2447905@krava>
+References: <20200501173333.227162-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20200507081436.49071-1-irogers@google.com>
-Sender: netdev-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200501173333.227162-1-irogers@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, kajoljain <kjain@linux.ibm.com>, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-If a metric contains the duration_time event then the event is placed
-outside of the metric's group of events. Rather than split the group,
-make it so the duration_time is immediately after the group.
+On Fri, May 01, 2020 at 10:33:21AM -0700, Ian Rogers wrote:
+> Add a test that all perf metrics (for your architecture) are parsable
+> with the simple expression parser. Attempt to parse all events in
+> metrics but only fail if the metric is for the current CPU. Fix bugs
+> in the expr parser, x86 and powerpc metrics. Improve debug messages
+> around add PMU config term failures.
+> 
+> v4 rebases after Kajol Jain's patches and fixes an asprintf warning.
+> v3 adds parse event testing of ids and improves debug messages for add
+>   PMU. These messages are paticular visible with 'perf test 10
+>   -vvv'. It moves the testing logic from tests/expr.c to
+>   tests/pmu-events.c as suggested by John Garry
+>   <john.garry@huawei.com>.  
+> v2 adds Fixes tags to commit messages for when broken metrics were
+>   first added. Adds a debug warning for division by zero in expr, and
+>   adds a workaround for id values in the expr test necessary for
+>   powerpc. It also fixes broken power8 and power9 metrics.
+> 
+> Ian Rogers (12):
+>   perf expr: unlimited escaped characters in a symbol
+>   perf metrics: fix parse errors in cascade lake metrics
+>   perf metrics: fix parse errors in skylake metrics
+>   perf expr: allow ',' to be an other token
+>   perf expr: increase max other
+>   perf expr: parse numbers as doubles
+>   perf expr: debug lex if debugging yacc
+>   perf metrics: fix parse errors in power8 metrics
+>   perf metrics: fix parse errors in power9 metrics
+>   perf expr: print a debug message for division by zero
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/metricgroup.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+heya,
+could we please get the 1st 10 patches in? they are important,
+and let's not block them with new versions for patches 11/12
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 2356dda92a07..48d0143b4b0c 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -421,8 +421,8 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
- 					       struct expr_parse_ctx *ctx)
- {
- 	struct hashmap_entry *cur;
--	size_t bkt, i = 0;
--	bool no_group = false;
-+	size_t bkt;
-+	bool no_group = true, has_duration = false;
- 
- 	hashmap__for_each_entry((&ctx->ids), cur, bkt) {
- 		pr_debug("found event %s\n", (const char*)cur->key);
-@@ -432,20 +432,20 @@ static void metricgroup__add_metric_weak_group(struct strbuf *events,
- 		 * group.
- 		 */
- 		if (!strcmp(cur->key, "duration_time")) {
--			if (i > 0)
--				strbuf_addf(events, "}:W,");
--			strbuf_addf(events, "duration_time");
--			no_group = true;
-+			has_duration = true;
- 			continue;
- 		}
- 		strbuf_addf(events, "%s%s",
--			i == 0 || no_group ? "{" : ",",
-+			no_group ? "{" : ",",
- 			(const char*)cur->key);
- 		no_group = false;
--		i++;
- 	}
--	if (!no_group)
--		strbuf_addf(events, "}:W");
-+	if (!no_group) {
-+                strbuf_addf(events, "}:W");
-+		if (has_duration)
-+			strbuf_addf(events, ",duration_time");
-+	} else if (has_duration)
-+		strbuf_addf(events, "duration_time");
- }
- 
- static void metricgroup__add_metric_non_group(struct strbuf *events,
--- 
-2.26.2.526.g744177e7f7-goog
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+>   perf parse-events: expand add PMU error/verbose messages
+>   perf test: improve pmu event metric testing
+> 
+>  tools/perf/arch/x86/util/intel-pt.c           |  32 ++--
+>  .../arch/powerpc/power8/metrics.json          |   2 +-
+>  .../arch/powerpc/power9/metrics.json          |   2 +-
+>  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
+>  .../arch/x86/skylakex/skx-metrics.json        |   4 +-
+>  tools/perf/tests/builtin-test.c               |   5 +
+>  tools/perf/tests/expr.c                       |   1 +
+>  tools/perf/tests/pmu-events.c                 | 156 +++++++++++++++++-
+>  tools/perf/tests/pmu.c                        |   4 +-
+>  tools/perf/tests/tests.h                      |   2 +
+>  tools/perf/util/expr.c                        |   1 +
+>  tools/perf/util/expr.h                        |   2 +-
+>  tools/perf/util/expr.l                        |  16 +-
+>  tools/perf/util/expr.y                        |  16 +-
+>  tools/perf/util/parse-events.c                |  29 +++-
+>  tools/perf/util/pmu.c                         |  33 ++--
+>  tools/perf/util/pmu.h                         |   2 +-
+>  17 files changed, 262 insertions(+), 55 deletions(-)
+> 
+> -- 
+> 2.26.2.526.g744177e7f7-goog
+> 
