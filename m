@@ -1,211 +1,132 @@
-From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
-Date: Thu, 7 May 2020 13:57:40 -0300
-Message-ID: <20200507165740.GF31109@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 1/2] perf: Fix POWER9 metric 'lsu_other_stall_cpi'
+Date: Thu, 7 May 2020 10:21:55 -0700
+Message-ID: <CAP-5=fXKprz247P8iwH4EwxVarS_j_Y=fNRxBryPAi3N97ksPg@mail.gmail.com>
 References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
- <1588868938-21933-3-git-send-email-pc@us.ibm.com>
+ <1588868938-21933-2-git-send-email-pc@us.ibm.com> <20200507164825.GE31109@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1588868938-21933-3-git-send-email-pc@us.ibm.com>
+In-Reply-To: <20200507164825.GE31109@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Paul A. Clarke" <pc@us.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, mpe@ellerman.id.au, irogers@google.com
+To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc: "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, mpe@ellerman.id.au
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, May 07, 2020 at 11:28:58AM -0500, Paul A. Clarke escreveu:
-> From: "Paul A. Clarke" <pc@us.ibm.com>
-> 
-> Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
-> - ict_noslot_br_mpred_cpi
-> - ict_noslot_br_mpred_icmiss_cpi
-> - ict_noslot_cyc_other_cpi
-> - ict_noslot_disp_held_cpi
-> - ict_noslot_disp_held_hb_full_cpi
-> - ict_noslot_disp_held_issq_cpi
-> - ict_noslot_disp_held_other_cpi
-> - ict_noslot_disp_held_sync_cpi
-> - ict_noslot_disp_held_tbegin_cpi
-> - ict_noslot_ic_l2_cpi
-> - ict_noslot_ic_l3_cpi
-> - ict_noslot_ic_l3miss_cpi
-> - ict_noslot_ic_miss_cpi
+On Thu, May 7, 2020 at 9:48 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Thu, May 07, 2020 at 11:28:57AM -0500, Paul A. Clarke escreveu:
+> > From: "Paul A. Clarke" <pc@us.ibm.com>
+> >
+> > The metric definition is too long for the current value of EXPR_MAX_OTHER.
+> > Increase the value EXPR_MAX_OTHER sufficiently to allow
+> > 'lsu_other_stall_cpi' to build properly.
+>
+> I already have a patch from Ian that bumps this further:
 
-Can folks provide Acked-by or Reviewed-by? Thanks,
+I sent out:
+https://lore.kernel.org/lkml/20200507081436.49071-2-irogers@google.com/
+which removes this constant and moves the code to use a hashmap.
+Unfortunately, the hashmap comes from libbpf and so there is a
+dependency issue to resolve. Perhaps libapi can have a hashmap? I'm
+not sure who resolves these issues. A short-term fix is just to make
+the constant bigger.
 
-- Arnaldo
- 
-> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
-> ---
->  .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
->  1 file changed, 78 insertions(+), 65 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> index 811c2a8c1c9e..6169351a72c8 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> @@ -207,6 +207,84 @@
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "fxu_stall_cpi"
->      },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_br_mpred_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "ICT other stalls",
-> +        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_cyc_other_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_issq_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> +        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_other_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_sync_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-> +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> +        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_l2_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_l3_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_l3miss_cpi"
-> +    },
-> +    {
-> +        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> +        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-> +        "MetricGroup": "cpi_breakdown",
-> +        "MetricName": "ict_noslot_ic_miss_cpi"
-> +    },
->      {
->          "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
-> @@ -1819,71 +1897,6 @@
->          "MetricExpr": "PM_FXU_IDLE / PM_CYC",
->          "MetricName": "fxu_all_idle"
->      },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_br_mpred_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "ICT other stalls",
-> -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_cyc_other_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_issq_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_other_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_sync_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-> -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_l2_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_l3_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_l3miss_cpi"
-> -    },
-> -    {
-> -        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> -        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-> -        "MetricName": "ict_noslot_ic_miss_cpi"
-> -    },
->      {
->          "BriefDescription": "Rate of IERAT reloads from L2",
->          "MetricExpr": "PM_IPTEG_FROM_L2 * 100 / PM_RUN_INST_CMPL",
-> -- 
-> 2.18.2
-> 
+Thanks,
+Ian
 
--- 
-
-- Arnaldo
+> [acme@five perf]$ git log -p tools/perf/util/expr.h
+> commit 26d3350db3e4668c1b1ff7f81c419afe71a2e8d9
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Fri May 1 10:33:26 2020 -0700
+>
+>     perf expr: Increase max other
+>
+>     Large metrics such as Branch_Misprediction_Cost_SMT on x86 broadwell
+>     need more space.
+>
+>     Signed-off-by: Ian Rogers <irogers@google.com>
+>     Acked-by: Jiri Olsa <jolsa@redhat.com>
+>     Cc: Adrian Hunter <adrian.hunter@intel.com>
+>     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>     Cc: Andi Kleen <ak@linux.intel.com>
+>     Cc: Haiyan Song <haiyanx.song@intel.com>
+>     Cc: Jin Yao <yao.jin@linux.intel.com>
+>     Cc: John Garry <john.garry@huawei.com>
+>     Cc: Kajol Jain <kjain@linux.ibm.com>
+>     Cc: Kan Liang <kan.liang@linux.intel.com>
+>     Cc: Leo Yan <leo.yan@linaro.org>
+>     Cc: Mark Rutland <mark.rutland@arm.com>
+>     Cc: Namhyung Kim <namhyung@kernel.org>
+>     Cc: Paul Clarke <pc@us.ibm.com>
+>     Cc: Peter Zijlstra <peterz@infradead.org>
+>     Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+>     Cc: Song Liu <songliubraving@fb.com>
+>     Cc: Stephane Eranian <eranian@google.com>
+>     Link: http://lore.kernel.org/lkml/20200501173333.227162-6-irogers@google.com
+>     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 87d627bb699b..40fc452b0f2b 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -2,7 +2,7 @@
+>  #ifndef PARSE_CTX_H
+>  #define PARSE_CTX_H 1
+>
+> -#define EXPR_MAX_OTHER 20
+> +#define EXPR_MAX_OTHER 64
+>  #define MAX_PARSE_ID EXPR_MAX_OTHER
+>
+>  struct expr_parse_id {
+>
+>
+> > Before:
+> > --
+> > $ perf list | grep lsu_other
+> >   lsu_other_stall_cpi
+> > # perf stat -a --metrics lsu_other_stall_cpi /bin/sleep 1
+> > Cannot find metric or group `lsu_other_stall_cpi'
+> >
+> >  Usage: perf stat [<options>] [<command>]
+> >
+> >     -M, --metrics <metric/metric group list>
+> >                           monitor specified metrics or metric groups (separated by ,)
+> > --
+> >
+> > After:
+> > --
+> > # perf stat -a --metrics lsu_other_stall_cpi /bin/sleep 1
+> >
+> >  Performance counter stats for 'system wide':
+> >
+> >        438,086,889      pm_cmplu_stall_lsu        #     1.74 lsu_other_stall_cpi
+> > [...]
+> > --
+> >
+> > Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> > ---
+> >  tools/perf/util/expr.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> > index 87d627bb699b..a0991959cca4 100644
+> > --- a/tools/perf/util/expr.h
+> > +++ b/tools/perf/util/expr.h
+> > @@ -2,7 +2,7 @@
+> >  #ifndef PARSE_CTX_H
+> >  #define PARSE_CTX_H 1
+> >
+> > -#define EXPR_MAX_OTHER 20
+> > +#define EXPR_MAX_OTHER 28
+> >  #define MAX_PARSE_ID EXPR_MAX_OTHER
+> >
+> >  struct expr_parse_id {
+> > --
+> > 2.18.2
+> >
+>
+> --
+>
+> - Arnaldo
