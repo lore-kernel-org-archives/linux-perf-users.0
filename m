@@ -1,47 +1,86 @@
-From: Andi Kleen <ak@linux.intel.com>
-Subject: Re: [RFC PATCH 0/7] Share events between metrics
-Date: Thu, 7 May 2020 14:46:52 -0700
-Message-ID: <20200507214652.GC3538@tassilo.jf.intel.com>
-References: <20200507081436.49071-1-irogers@google.com>
- <20200507174835.GB3538@tassilo.jf.intel.com>
- <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
+From: Anand K Mistry <amistry@google.com>
+Subject: [PATCH] perf record: Use an eventfd to wakeup when done
+Date: Fri,  8 May 2020 14:56:43 +1000
+Message-ID: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>Kim
+To: linux-perf-users@vger.kernel.org
+Cc: Anand K Mistry <amistry@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-> > - without this change events within a metric may get scheduled
-> >   together, after they may appear as part of a larger group and be
-> >   multiplexed at different times, lowering accuracy - however, less
-> >   multiplexing may compensate for this.
-> 
-> I agree the heuristic in this patch set is naive and would welcome to
-> improve it from your toplev experience. I think this change is
-> progress on TopDownL1 - would you agree?
+The setting and checking of 'done' contains a rare race where the signal
+handler setting 'done' is run after checking to break the loop, but
+before waiting in evlist__poll(). In this case, the main loop won't wake
+up until either another signal is sent, or the perf data fd causes a
+wake up.
 
-TopdownL1 in non SMT mode should always fit. Inside a group
-deduping always makes sense. 
+The following simple script can trigger this condition (but you might
+need to run it for several hours):
+for ((i = 0; i >= 0; i++)) ; do
+  echo "Loop $i"
+  delay=$(echo "scale=4; 0.1 * $RANDOM/32768" | bc)
+  ./perf record -- sleep 30000000 >/dev/null&
+  pid=$!
+  sleep $delay
+  kill -TERM $pid
+  echo "PID $pid"
+  wait $pid
+done
 
-The problem is SMT mode where it doesn't fit. toplev tries
-to group each node and each level together.
+At some point, the loop will stall. Adding logging, even though perf has
+received the SIGTERM and set 'done = 1', perf will remain sleeping until
+a second signal is sent.
 
-> 
-> I'm wondering if what is needed are flags to control behavior. For
-> example, avoiding the use of groups altogether. For TopDownL1 I see.
+Signed-off-by: Anand K Mistry <amistry@google.com>
 
-Yes the current situation isn't great.
+---
 
-For Topdown your patch clearly is an improvement, I'm not sure
-it's for everything though.
+ tools/perf/builtin-record.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Probably the advanced heuristics are only useful for a few
-formulas, most are very simple. So maybe it's ok. I guess
-would need some testing over the existing formulas.
-
-
--Andi
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 1ab349abe90469..ce5fc3860131d2 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -53,6 +53,7 @@
+ #include <unistd.h>
+ #include <sched.h>
+ #include <signal.h>
++#include <sys/eventfd.h>
+ #include <sys/mman.h>
+ #include <sys/wait.h>
+ #include <sys/types.h>
+@@ -518,15 +519,19 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
+ 
+ static volatile int signr = -1;
+ static volatile int child_finished;
++static int done_fd = -1;
+ 
+ static void sig_handler(int sig)
+ {
++	u64 tmp = 1;
+ 	if (sig == SIGCHLD)
+ 		child_finished = 1;
+ 	else
+ 		signr = sig;
+ 
+ 	done = 1;
++	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
++		pr_err("failed to signal wakeup fd\n");
+ }
+ 
+ static void sigsegv_handler(int sig)
+@@ -1424,6 +1429,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+ 	int fd;
+ 	float ratio = 0;
+ 
++	done_fd = eventfd(0, EFD_NONBLOCK);
++	evlist__add_pollfd(rec->evlist, done_fd);
++
+ 	atexit(record__sig_exit);
+ 	signal(SIGCHLD, sig_handler);
+ 	signal(SIGINT, sig_handler);
+-- 
+2.26.2.645.ge9eca65c58-goog
