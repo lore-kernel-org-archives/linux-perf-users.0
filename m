@@ -1,86 +1,200 @@
-From: Anand K Mistry <amistry@google.com>
-Subject: [PATCH] perf record: Use an eventfd to wakeup when done
-Date: Fri,  8 May 2020 14:56:43 +1000
-Message-ID: <20200508145624.1.I4d7421c6bbb1f83ea58419082481082e19097841@changeid>
+From: Ian Rogers <irogers@google.com>
+Subject: [RFC PATCH v3 00/14] Share events between metrics
+Date: Thu,  7 May 2020 22:36:15 -0700
+Message-ID: <20200508053629.210324-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org
-Cc: Anand K Mistry <amistry@google.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong
+Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The setting and checking of 'done' contains a rare race where the signal
-handler setting 'done' is run after checking to break the loop, but
-before waiting in evlist__poll(). In this case, the main loop won't wake
-up until either another signal is sent, or the perf data fd causes a
-wake up.
+Metric groups contain metrics. Metrics create groups of events to
+ideally be scheduled together. Often metrics refer to the same events,
+for example, a cache hit and cache miss rate. Using separate event
+groups means these metrics are multiplexed at different times and the
+counts don't sum to 100%. More multiplexing also decreases the
+accuracy of the measurement.
 
-The following simple script can trigger this condition (but you might
-need to run it for several hours):
-for ((i = 0; i >= 0; i++)) ; do
-  echo "Loop $i"
-  delay=$(echo "scale=4; 0.1 * $RANDOM/32768" | bc)
-  ./perf record -- sleep 30000000 >/dev/null&
-  pid=$!
-  sleep $delay
-  kill -TERM $pid
-  echo "PID $pid"
-  wait $pid
-done
+This change orders metrics from groups or the command line, so that
+the ones with the most events are set up first. Later metrics see if
+groups already provide their events, and reuse them if
+possible. Unnecessary events and groups are eliminated.
 
-At some point, the loop will stall. Adding logging, even though perf has
-received the SIGTERM and set 'done = 1', perf will remain sleeping until
-a second signal is sent.
+The option --metric-no-group is added so that metrics aren't placed in
+groups. This affects multiplexing and may increase sharing.
 
-Signed-off-by: Anand K Mistry <amistry@google.com>
+The option --metric-mo-merge is added and with this option the
+existing grouping behavior is preserved.
 
----
+RFC because:
+ - without this change events within a metric may get scheduled
+   together, after they may appear as part of a larger group and be
+   multiplexed at different times, lowering accuracy - however, less
+   multiplexing may compensate for this.
+ - libbpf's hashmap is used, however, libbpf is an optional
+   requirement for building perf.
+ - other things I'm not thinking of.
 
- tools/perf/builtin-record.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Thanks!
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 1ab349abe90469..ce5fc3860131d2 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -53,6 +53,7 @@
- #include <unistd.h>
- #include <sched.h>
- #include <signal.h>
-+#include <sys/eventfd.h>
- #include <sys/mman.h>
- #include <sys/wait.h>
- #include <sys/types.h>
-@@ -518,15 +519,19 @@ static int record__pushfn(struct mmap *map, void *to, void *bf, size_t size)
- 
- static volatile int signr = -1;
- static volatile int child_finished;
-+static int done_fd = -1;
- 
- static void sig_handler(int sig)
- {
-+	u64 tmp = 1;
- 	if (sig == SIGCHLD)
- 		child_finished = 1;
- 	else
- 		signr = sig;
- 
- 	done = 1;
-+	if (write(done_fd, &tmp, sizeof(tmp)) < 0)
-+		pr_err("failed to signal wakeup fd\n");
- }
- 
- static void sigsegv_handler(int sig)
-@@ -1424,6 +1429,9 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 	int fd;
- 	float ratio = 0;
- 
-+	done_fd = eventfd(0, EFD_NONBLOCK);
-+	evlist__add_pollfd(rec->evlist, done_fd);
-+
- 	atexit(record__sig_exit);
- 	signal(SIGCHLD, sig_handler);
- 	signal(SIGINT, sig_handler);
+Example on Sandybridge:
+
+$ perf stat -a --metric-no-merge -M TopDownL1_SMT sleep 1
+
+ Performance counter stats for 'system wide':
+
+          14931177      cpu_clk_unhalted.one_thread_active #     0.47 Backend_Bound_SMT        (12.45%)
+          32314653      int_misc.recovery_cycles_any                                     (16.23%)
+         555020905      uops_issued.any                                               (18.85%)
+        1038651176      idq_uops_not_delivered.core                                     (24.95%)
+          43003170      cpu_clk_unhalted.ref_xclk                                     (25.20%)
+        1154926272      cpu_clk_unhalted.thread                                       (31.50%)
+         656873544      uops_retired.retire_slots                                     (31.11%)
+          16491988      cpu_clk_unhalted.one_thread_active #     0.06 Bad_Speculation_SMT      (31.10%)
+          32064061      int_misc.recovery_cycles_any                                     (31.04%)
+         648394934      uops_issued.any                                               (31.14%)
+          42107506      cpu_clk_unhalted.ref_xclk                                     (24.94%)
+        1124565282      cpu_clk_unhalted.thread                                       (31.14%)
+         523430886      uops_retired.retire_slots                                     (31.05%)
+          12328380      cpu_clk_unhalted.one_thread_active #     0.35 Frontend_Bound_SMT       (10.08%)
+          42651836      cpu_clk_unhalted.ref_xclk                                     (10.08%)
+        1006287722      idq_uops_not_delivered.core                                     (10.08%)
+        1130593027      cpu_clk_unhalted.thread                                       (10.08%)
+          14209258      cpu_clk_unhalted.one_thread_active #     0.18 Retiring_SMT             (6.39%)
+          41904474      cpu_clk_unhalted.ref_xclk                                     (6.39%)
+         522251584      uops_retired.retire_slots                                     (6.39%)
+        1111257754      cpu_clk_unhalted.thread                                       (6.39%)
+          12930094      cpu_clk_unhalted.one_thread_active # 2865823806.05 SLOTS_SMT           (11.06%)
+          40975376      cpu_clk_unhalted.ref_xclk                                     (11.06%)
+        1089204936      cpu_clk_unhalted.thread                                       (11.06%)
+
+       1.002165509 seconds time elapsed
+
+$ perf stat -a -M TopDownL1_SMT sleep 1
+
+ Performance counter stats for 'system wide':
+
+          11893411      cpu_clk_unhalted.one_thread_active # 2715516883.49 SLOTS_SMT         
+                                                  #     0.19 Retiring_SMT           
+                                                  #     0.33 Frontend_Bound_SMT     
+                                                  #     0.04 Bad_Speculation_SMT    
+                                                  #     0.44 Backend_Bound_SMT        (71.46%)
+          28458253      int_misc.recovery_cycles_any                                     (71.44%)
+         562710994      uops_issued.any                                               (71.42%)
+         907105260      idq_uops_not_delivered.core                                     (57.12%)
+          39797715      cpu_clk_unhalted.ref_xclk                                     (57.12%)
+        1045357060      cpu_clk_unhalted.thread                                       (71.41%)
+         504809283      uops_retired.retire_slots                                     (71.44%)
+
+       1.001939294 seconds time elapsed
+
+Note that without merging the metrics sum to 1.06, but with merging
+the sum is 1.
+
+Example on Cascadelake:
+
+$ perf stat -a --metric-no-merge -M TopDownL1_SMT sleep 1
+
+ Performance counter stats for 'system wide':
+
+          13678949      cpu_clk_unhalted.one_thread_active #     0.59 Backend_Bound_SMT        (13.35%)
+         121286613      int_misc.recovery_cycles_any                                     (18.58%)
+        4041490966      uops_issued.any                                               (18.81%)
+        2665605457      idq_uops_not_delivered.core                                     (24.81%)
+         111757608      cpu_clk_unhalted.ref_xclk                                     (25.03%)
+        7579026491      cpu_clk_unhalted.thread                                       (31.27%)
+        3848429110      uops_retired.retire_slots                                     (31.23%)
+          15554046      cpu_clk_unhalted.one_thread_active #     0.02 Bad_Speculation_SMT      (31.19%)
+         119582342      int_misc.recovery_cycles_any                                     (31.16%)
+        3813943706      uops_issued.any                                               (31.14%)
+         113151605      cpu_clk_unhalted.ref_xclk                                     (24.89%)
+        7621196102      cpu_clk_unhalted.thread                                       (31.12%)
+        3735690253      uops_retired.retire_slots                                     (31.12%)
+          13727352      cpu_clk_unhalted.one_thread_active #     0.16 Frontend_Bound_SMT       (12.50%)
+         115441454      cpu_clk_unhalted.ref_xclk                                     (12.50%)
+        2824946246      idq_uops_not_delivered.core                                     (12.50%)
+        7817227775      cpu_clk_unhalted.thread                                       (12.50%)
+          13267908      cpu_clk_unhalted.one_thread_active #     0.21 Retiring_SMT             (6.31%)
+         114015605      cpu_clk_unhalted.ref_xclk                                     (6.31%)
+        3722498773      uops_retired.retire_slots                                     (6.31%)
+        7771438396      cpu_clk_unhalted.thread                                       (6.31%)
+          14948307      cpu_clk_unhalted.one_thread_active # 18085611559.36 SLOTS_SMT          (6.30%)
+         115632797      cpu_clk_unhalted.ref_xclk                                     (6.30%)
+        8007628156      cpu_clk_unhalted.thread                                       (6.30%)
+
+       1.006256703 seconds time elapsed
+
+$ perf stat -a -M TopDownL1_SMT sleep 1
+
+ Performance counter stats for 'system wide':
+
+          35999534      cpu_clk_unhalted.one_thread_active # 25969550384.66 SLOTS_SMT        
+                                                  #     0.40 Retiring_SMT           
+                                                  #     0.14 Frontend_Bound_SMT     
+                                                  #     0.02 Bad_Speculation_SMT    
+                                                  #     0.44 Backend_Bound_SMT        (71.35%)
+         133499018      int_misc.recovery_cycles_any                                     (71.36%)
+       10736468874      uops_issued.any                                               (71.40%)
+        3518076530      idq_uops_not_delivered.core                                     (57.24%)
+          78296616      cpu_clk_unhalted.ref_xclk                                     (57.25%)
+        8894997400      cpu_clk_unhalted.thread                                       (71.50%)
+       10409738753      uops_retired.retire_slots                                     (71.40%)
+
+       1.011611791 seconds time elapsed
+
+Note that without merging the metrics sum to 0.98, but with merging
+the sum is 1.
+
+v3. is a rebase with following the merging of patches in v2. It also
+adds the metric-no-group and metric-no-merge flags.
+v2. is the entire patch set based on acme's perf/core tree and includes a
+cherry-picks. Patch 13 was sent for review to the bpf maintainers here:
+https://lore.kernel.org/lkml/20200506205257.8964-2-irogers@google.com/
+v1. was based on the perf metrics fixes and test sent here:
+https://lore.kernel.org/lkml/20200501173333.227162-1-irogers@google.com/
+
+Andrii Nakryiko (1):
+  libbpf: Fix memory leak and possible double-free in hashmap__clear
+
+Ian Rogers (13):
+  perf parse-events: expand add PMU error/verbose messages
+  perf test: improve pmu event metric testing
+  lib/bpf hashmap: increase portability
+  perf expr: fix memory leaks in bison
+  perf evsel: fix 2 memory leaks
+  perf expr: migrate expr ids table to libbpf's hashmap
+  perf metricgroup: change evlist_used to a bitmap
+  perf metricgroup: free metric_events on error
+  perf metricgroup: always place duration_time last
+  perf metricgroup: delay events string creation
+  perf metricgroup: order event groups by size
+  perf metricgroup: remove duped metric group events
+  perf metricgroup: add options to not group or merge
+
+ tools/lib/bpf/hashmap.c                |   7 +
+ tools/lib/bpf/hashmap.h                |   3 +-
+ tools/perf/Documentation/perf-stat.txt |  19 ++
+ tools/perf/arch/x86/util/intel-pt.c    |  32 +--
+ tools/perf/builtin-stat.c              |  11 +-
+ tools/perf/tests/builtin-test.c        |   5 +
+ tools/perf/tests/expr.c                |  41 ++--
+ tools/perf/tests/pmu-events.c          | 159 +++++++++++++-
+ tools/perf/tests/pmu.c                 |   4 +-
+ tools/perf/tests/tests.h               |   2 +
+ tools/perf/util/evsel.c                |   2 +
+ tools/perf/util/expr.c                 | 129 +++++++-----
+ tools/perf/util/expr.h                 |  22 +-
+ tools/perf/util/expr.y                 |  25 +--
+ tools/perf/util/metricgroup.c          | 277 ++++++++++++++++---------
+ tools/perf/util/metricgroup.h          |   6 +-
+ tools/perf/util/parse-events.c         |  29 ++-
+ tools/perf/util/pmu.c                  |  33 +--
+ tools/perf/util/pmu.h                  |   2 +-
+ tools/perf/util/stat-shadow.c          |  49 +++--
+ tools/perf/util/stat.h                 |   2 +
+ 21 files changed, 592 insertions(+), 267 deletions(-)
+
 -- 
 2.26.2.645.ge9eca65c58-goog
