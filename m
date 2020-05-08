@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH v3 08/14] perf metricgroup: change evlist_used to a bitmap
-Date: Thu,  7 May 2020 22:36:23 -0700
-Message-ID: <20200508053629.210324-9-irogers@google.com>
+Subject: [RFC PATCH v3 11/14] perf metricgroup: delay events string creation
+Date: Thu,  7 May 2020 22:36:26 -0700
+Message-ID: <20200508053629.210324-12-irogers@google.com>
 References: <20200508053629.210324-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,70 +12,112 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Use a bitmap rather than an array of bools.
+Currently event groups are placed into groups_list at the same time as
+the events string containing the events is built. Separate these two
+operations and build the groups_list first, then the event string from
+the groups_list. This adds an ability to reorder the groups_list that
+will be used in a later patch.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ tools/perf/util/metricgroup.c | 38 +++++++++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 37be5a368d6e..4f7e36bc49d9 100644
+index 2c684fd3c4e3..2a6456fa178b 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -95,7 +95,7 @@ struct egroup {
+@@ -90,6 +90,7 @@ struct egroup {
+ 	const char *metric_expr;
+ 	const char *metric_unit;
+ 	int runtime;
++	bool has_constraint;
+ };
+ 
  static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 				      struct expr_parse_ctx *pctx,
- 				      struct evsel **metric_events,
--				      bool *evlist_used)
-+				      unsigned long *evlist_used)
+@@ -497,8 +498,8 @@ int __weak arch_get_runtimeparam(void)
+ 	return 1;
+ }
+ 
+-static int __metricgroup__add_metric(struct strbuf *events,
+-		struct list_head *group_list, struct pmu_event *pe, int runtime)
++static int __metricgroup__add_metric(struct list_head *group_list,
++				     struct pmu_event *pe, int runtime)
  {
- 	struct evsel *ev;
- 	bool leader_found;
-@@ -105,7 +105,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 	double *val_ptr;
- 
- 	evlist__for_each_entry (perf_evlist, ev) {
--		if (evlist_used[j++])
-+		if (test_bit(j++, evlist_used))
- 			continue;
- 		if (hashmap__find(&pctx->ids, ev->name, (void **)&val_ptr)) {
- 			if (!metric_events[i])
-@@ -150,7 +150,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
- 			j++;
- 		}
- 		ev = metric_events[i];
--		evlist_used[ev->idx] = true;
-+		set_bit(ev->idx, evlist_used);
- 	}
- 
- 	return metric_events[0];
-@@ -166,13 +166,11 @@ static int metricgroup__setup_events(struct list_head *groups,
- 	int ret = 0;
  	struct egroup *eg;
- 	struct evsel *evsel;
--	bool *evlist_used;
-+	unsigned long *evlist_used;
  
--	evlist_used = calloc(perf_evlist->core.nr_entries, sizeof(bool));
--	if (!evlist_used) {
--		ret = -ENOMEM;
--		return ret;
--	}
-+	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
-+	if (!evlist_used)
-+		return -ENOMEM;
+@@ -511,6 +512,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 	eg->metric_expr = pe->metric_expr;
+ 	eg->metric_unit = pe->unit;
+ 	eg->runtime = runtime;
++	eg->has_constraint = metricgroup__has_constraint(pe);
  
- 	list_for_each_entry (eg, groups, nd) {
- 		struct evsel **metric_events;
-@@ -210,7 +208,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 		list_add(&expr->nd, &me->head);
+ 	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+ 		expr__ctx_clear(&eg->pctx);
+@@ -518,14 +520,6 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 		return -EINVAL;
  	}
  
--	free(evlist_used);
-+	bitmap_free(evlist_used);
+-	if (events->len > 0)
+-		strbuf_addf(events, ",");
+-
+-	if (metricgroup__has_constraint(pe))
+-		metricgroup__add_metric_non_group(events, &eg->pctx);
+-	else
+-		metricgroup__add_metric_weak_group(events, &eg->pctx);
+-
+ 	list_add_tail(&eg->nd, group_list);
  
+ 	return 0;
+@@ -536,6 +530,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ {
+ 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
+ 	struct pmu_event *pe;
++	struct egroup *eg;
+ 	int i, ret = -EINVAL;
+ 
+ 	if (!map)
+@@ -554,7 +549,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 
+ 			if (!strstr(pe->metric_expr, "?")) {
+-				ret = __metricgroup__add_metric(events, group_list, pe, 1);
++				ret = __metricgroup__add_metric(group_list,
++								pe, 1);
+ 			} else {
+ 				int j, count;
+ 
+@@ -565,13 +561,29 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				 * those events to group_list.
+ 				 */
+ 
+-				for (j = 0; j < count; j++)
+-					ret = __metricgroup__add_metric(events, group_list, pe, j);
++				for (j = 0; j < count; j++) {
++					ret = __metricgroup__add_metric(
++						group_list, pe, j);
++				}
+ 			}
+ 			if (ret == -ENOMEM)
+ 				break;
+ 		}
+ 	}
++	if (!ret) {
++		list_for_each_entry(eg, group_list, nd) {
++			if (events->len > 0)
++				strbuf_addf(events, ",");
++
++			if (eg->has_constraint) {
++				metricgroup__add_metric_non_group(events,
++								  &eg->pctx);
++			} else {
++				metricgroup__add_metric_weak_group(events,
++								   &eg->pctx);
++			}
++		}
++	}
  	return ret;
  }
+ 
 -- 
 2.26.2.645.ge9eca65c58-goog
