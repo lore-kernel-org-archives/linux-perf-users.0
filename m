@@ -1,47 +1,53 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH v3 05/14] perf expr: fix memory leaks in bison
-Date: Thu,  7 May 2020 22:36:20 -0700
-Message-ID: <20200508053629.210324-6-irogers@google.com>
+Subject: [RFC PATCH v3 04/14] libbpf: Fix memory leak and possible double-free
+ in hashmap__clear
+Date: Thu,  7 May 2020 22:36:19 -0700
+Message-ID: <20200508053629.210324-5-irogers@google.com>
 References: <20200508053629.210324-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20200508053629.210324-1-irogers@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
+Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Alston Tang <alston64@fb.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Add a destructor for strings to reclaim memory in the event of errors.
-Free the ID given for a lookup.
+From: Andrii Nakryiko <andriin@fb.com>
 
+Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
+of the remaining entries. Also NULL-out bucket list to prevent possible
+double-free between hashmap__clear() and hashmap__free().
+
+Running test_progs-asan flavor clearly showed this problem.
+
+Reported-by: Alston Tang <alston64@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.y | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/lib/bpf/hashmap.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index 21e82a1e11a2..3b49b230b111 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -27,6 +27,7 @@
- %token EXPR_PARSE EXPR_OTHER EXPR_ERROR
- %token <num> NUMBER
- %token <str> ID
-+%destructor { free ($$); } <str>
- %token MIN MAX IF ELSE SMT_ON
- %left MIN MAX IF
- %left '|'
-@@ -94,8 +95,10 @@ if_expr:
- expr:	  NUMBER
- 	| ID			{ if (lookup_id(ctx, $1, &$$) < 0) {
- 					pr_debug("%s not found\n", $1);
-+					free($1);
- 					YYABORT;
- 				  }
-+				  free($1);
- 				}
- 	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
- 	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
+diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
+index 54c30c802070..cffb96202e0d 100644
+--- a/tools/lib/bpf/hashmap.c
++++ b/tools/lib/bpf/hashmap.c
+@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
+ 
+ void hashmap__clear(struct hashmap *map)
+ {
++	struct hashmap_entry *cur, *tmp;
++	int bkt;
++
++	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
++		free(cur);
++	}
+ 	free(map->buckets);
++	map->buckets = NULL;
+ 	map->cap = map->cap_bits = map->sz = 0;
+ }
+ 
 -- 
 2.26.2.645.ge9eca65c58-goog
