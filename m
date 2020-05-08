@@ -1,53 +1,65 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH v3 04/14] libbpf: Fix memory leak and possible double-free
- in hashmap__clear
-Date: Thu,  7 May 2020 22:36:19 -0700
-Message-ID: <20200508053629.210324-5-irogers@google.com>
-References: <20200508053629.210324-1-irogers@google.com>
+Subject: Re: [RFC PATCH 0/7] Share events between metrics
+Date: Thu, 7 May 2020 22:43:43 -0700
+Message-ID: <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
+References: <20200507081436.49071-1-irogers@google.com> <20200507174835.GB3538@tassilo.jf.intel.com>
+ <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com> <20200507214652.GC3538@tassilo.jf.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20200508053629.210324-1-irogers@google.com>
-Sender: netdev-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Alston Tang <alston64@fb.com>, Ian Rogers <irogers@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200507214652.GC3538@tassilo.jf.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>Kim
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+On Thu, May 7, 2020 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
+>
+> > > - without this change events within a metric may get scheduled
+> > >   together, after they may appear as part of a larger group and be
+> > >   multiplexed at different times, lowering accuracy - however, less
+> > >   multiplexing may compensate for this.
+> >
+> > I agree the heuristic in this patch set is naive and would welcome to
+> > improve it from your toplev experience. I think this change is
+> > progress on TopDownL1 - would you agree?
+>
+> TopdownL1 in non SMT mode should always fit. Inside a group
+> deduping always makes sense.
+>
+> The problem is SMT mode where it doesn't fit. toplev tries
+> to group each node and each level together.
 
-Fix memory leak in hashmap_clear() not freeing hashmap_entry structs for each
-of the remaining entries. Also NULL-out bucket list to prevent possible
-double-free between hashmap__clear() and hashmap__free().
+Thanks Andi, I've provided some examples of TopDownL3_SMT in the cover
+letter of the v3 patch set:
+https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
+I tested sandybridge and cascadelake and the results look similar to
+the non-SMT version. Let me know if there's a different variant to
+test.
 
-Running test_progs-asan flavor clearly showed this problem.
+> >
+> > I'm wondering if what is needed are flags to control behavior. For
+> > example, avoiding the use of groups altogether. For TopDownL1 I see.
+>
+> Yes the current situation isn't great.
+>
+> For Topdown your patch clearly is an improvement, I'm not sure
+> it's for everything though.
+>
+> Probably the advanced heuristics are only useful for a few
+> formulas, most are very simple. So maybe it's ok. I guess
+> would need some testing over the existing formulas.
 
-Reported-by: Alston Tang <alston64@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200429012111.277390-5-andriin@fb.com
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/lib/bpf/hashmap.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Agreed, do you have a pointer on a metric group where things would
+obviously be worse? I started off with a cache miss and hit rate
+metric and similar to topdown this approach is a benefit.
 
-diff --git a/tools/lib/bpf/hashmap.c b/tools/lib/bpf/hashmap.c
-index 54c30c802070..cffb96202e0d 100644
---- a/tools/lib/bpf/hashmap.c
-+++ b/tools/lib/bpf/hashmap.c
-@@ -59,7 +59,14 @@ struct hashmap *hashmap__new(hashmap_hash_fn hash_fn,
- 
- void hashmap__clear(struct hashmap *map)
- {
-+	struct hashmap_entry *cur, *tmp;
-+	int bkt;
-+
-+	hashmap__for_each_entry_safe(map, cur, tmp, bkt) {
-+		free(cur);
-+	}
- 	free(map->buckets);
-+	map->buckets = NULL;
- 	map->cap = map->cap_bits = map->sz = 0;
- }
- 
--- 
-2.26.2.645.ge9eca65c58-goog
+In v3 I've added a --metric-no-merge option to retain existing
+grouping behavior, I've also added a --metric-no-group that avoids
+groups for all metrics. This may be useful if the NMI watchdog can't
+be disabled.
+
+Thanks for the input!
+Ian
+
+> -Andi
