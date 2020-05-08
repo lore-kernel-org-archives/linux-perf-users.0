@@ -1,65 +1,77 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [RFC PATCH 0/7] Share events between metrics
-Date: Thu, 7 May 2020 22:43:43 -0700
-Message-ID: <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
-References: <20200507081436.49071-1-irogers@google.com> <20200507174835.GB3538@tassilo.jf.intel.com>
- <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com> <20200507214652.GC3538@tassilo.jf.intel.com>
+From: kajoljain <kjain@linux.ibm.com>
+Subject: Re: [PATCH 1/2] perf: Fix POWER9 metric 'lsu_other_stall_cpi'
+Date: Fri, 8 May 2020 12:01:56 +0530
+Message-ID: <fa59ef0f-50b3-0ca5-adbe-9dcf06627c06@linux.ibm.com>
+References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
+ <1588868938-21933-2-git-send-email-pc@us.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200507214652.GC3538@tassilo.jf.intel.com>
+In-Reply-To: <1588868938-21933-2-git-send-email-pc@us.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@chromium.org>, Kajol Jain <kjain@linux.ibm.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>Kim
+To: "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, acme@kernel.org, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, mpe@ellerman.id.au, irogers@google.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Thu, May 7, 2020 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
->
-> > > - without this change events within a metric may get scheduled
-> > >   together, after they may appear as part of a larger group and be
-> > >   multiplexed at different times, lowering accuracy - however, less
-> > >   multiplexing may compensate for this.
-> >
-> > I agree the heuristic in this patch set is naive and would welcome to
-> > improve it from your toplev experience. I think this change is
-> > progress on TopDownL1 - would you agree?
->
-> TopdownL1 in non SMT mode should always fit. Inside a group
-> deduping always makes sense.
->
-> The problem is SMT mode where it doesn't fit. toplev tries
-> to group each node and each level together.
 
-Thanks Andi, I've provided some examples of TopDownL3_SMT in the cover
-letter of the v3 patch set:
-https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-I tested sandybridge and cascadelake and the results look similar to
-the non-SMT version. Let me know if there's a different variant to
-test.
 
-> >
-> > I'm wondering if what is needed are flags to control behavior. For
-> > example, avoiding the use of groups altogether. For TopDownL1 I see.
->
-> Yes the current situation isn't great.
->
-> For Topdown your patch clearly is an improvement, I'm not sure
-> it's for everything though.
->
-> Probably the advanced heuristics are only useful for a few
-> formulas, most are very simple. So maybe it's ok. I guess
-> would need some testing over the existing formulas.
+On 5/7/20 9:58 PM, Paul A. Clarke wrote:
+> From: "Paul A. Clarke" <pc@us.ibm.com>
+> 
+> The metric definition is too long for the current value of EXPR_MAX_OTHER.
+> Increase the value EXPR_MAX_OTHER sufficiently to allow
+> 'lsu_other_stall_cpi' to build properly.
+> 
+> Before:
+> --
+> $ perf list | grep lsu_other
+>   lsu_other_stall_cpi
+> # perf stat -a --metrics lsu_other_stall_cpi /bin/sleep 1
+> Cannot find metric or group `lsu_other_stall_cpi'
+> 
+>  Usage: perf stat [<options>] [<command>]
+> 
+>     -M, --metrics <metric/metric group list>
+>                           monitor specified metrics or metric groups (separated by ,)
+> --
+> 
+> After:
+> --
+> # perf stat -a --metrics lsu_other_stall_cpi /bin/sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+>        438,086,889      pm_cmplu_stall_lsu        #     1.74 lsu_other_stall_cpi
+> [...]
+> --
+> 
+> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> ---
+>  tools/perf/util/expr.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+> index 87d627bb699b..a0991959cca4 100644
+> --- a/tools/perf/util/expr.h
+> +++ b/tools/perf/util/expr.h
+> @@ -2,7 +2,7 @@
+>  #ifndef PARSE_CTX_H
+>  #define PARSE_CTX_H 1
+>  
+> -#define EXPR_MAX_OTHER 20
+> +#define EXPR_MAX_OTHER 28
 
-Agreed, do you have a pointer on a metric group where things would
-obviously be worse? I started off with a cache miss and hit rate
-metric and similar to topdown this approach is a benefit.
+Hi Paul,
+	Ian already add one patch to increase EXPR_MAX_OTHER value to 68 which is Acked-by: Jiri
 
-In v3 I've added a --metric-no-merge option to retain existing
-grouping behavior, I've also added a --metric-no-group that avoids
-groups for all metrics. This may be useful if the NMI watchdog can't
-be disabled.
+Link to the patch: https://lkml.org/lkml/2020/5/1/1023
 
-Thanks for the input!
-Ian
+Thanks,
+Kajol Jain
 
-> -Andi
+>  #define MAX_PARSE_ID EXPR_MAX_OTHER
+>  
+>  struct expr_parse_id {
+> 
