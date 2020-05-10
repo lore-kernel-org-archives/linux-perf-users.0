@@ -1,128 +1,213 @@
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
-Subject: RE: [RFC] Issue in final aggregate value, in case of multiple events
- present in metric expression
-Date: Sat, 9 May 2020 05:52:53 +0000
-Message-ID: <DB8PR04MB6795DE74059AD3CA8DA7BB5CE6A30@DB8PR04MB6795.eurprd04.prod.outlook.com>
-References: <20200212054102.9259-1-kjain@linux.ibm.com>
- <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
- <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
- <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <6f98d281-f3de-b547-70d4-8fc95515b12f@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
+Date: Sat, 9 May 2020 23:26:56 -0700
+Message-ID: <CAP-5=fV4-m-x6hNLvVGcBHHrL_Z67+4tM=ruxbZJpjn5V6Eqtg@mail.gmail.com>
+References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
+ <1588868938-21933-3-git-send-email-pc@us.ibm.com> <0b276c65-9c54-c6eb-0381-f56c4ccf5ec2@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6f98d281-f3de-b547-70d4-8fc95515b12f@linux.ibm.com>
-Content-Language: en-US
+In-Reply-To: <0b276c65-9c54-c6eb-0381-f56c4ccf5ec2@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kajoljain <kjain@linux.ibm.com>, "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+To: kajoljain <kjain@linux.ibm.com>
+Cc: "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, mpe@ellerman.id.au
 List-Id: linux-perf-users.vger.kernel.org
 
-DQpIaSBBcm5hbGRvLA0KDQpLYWpvbCByZWZsZWN0cyB0aGlzIGlzc3VlIGZvciBhbG1vc3QgdHdv
-IG1vbnRocywgZ290IG5vIGZlZWRiYWNrcywgZG8geW91IGhhdmUgYW55IGNvbW1lbnRzPyBUaGF0
-IGNvdWxkIGJlIGFwcHJlY2lhdGVkIGlmIHlvdSBjYW4gbG9vayBpbnRvIGl0LiBUaGFua3MgYSBs
-b3QhDQoNClBsZWFzZSByZWZlciB0byBiZWxvdyBsaW5rOg0KaHR0cHM6Ly93d3cuc3Bpbmljcy5u
-ZXQvbGlzdHMvbGludXgtcGVyZi11c2Vycy9tc2cxMTAxMS5odG1sDQoNCkJlc3QgUmVnYXJkcywN
-CkpvYWtpbSBaaGFuZw0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGth
-am9samFpbiA8a2phaW5AbGludXguaWJtLmNvbT4NCj4gU2VudDogMjAyMOW5tDPmnIgyNOaXpSAx
-NjowMQ0KPiBUbzogSm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IGFjbWVA
-a2VybmVsLm9yZzsgSmlyaSBPbHNhDQo+IDxqb2xzYUBrZXJuZWwub3JnPjsgQW5kaSBLbGVlbiA8
-YWtAbGludXguaW50ZWwuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IEthbiBMaWFuZw0KPiA8a2FuLmxpYW5n
-QGxpbnV4LmludGVsLmNvbT47IE1hZGhhdmFuIFNyaW5pdmFzYW4NCj4gPG1hZGR5QGxpbnV4LnZu
-ZXQuaWJtLmNvbT47IEFuanUgVCBTdWRoYWthciA8YW5qdUBsaW51eC52bmV0LmlibS5jb20+Ow0K
-PiBSYXZpIEJhbmdvcmlhIDxyYXZpLmJhbmdvcmlhQGxpbnV4LmlibS5jb20+DQo+IFN1YmplY3Q6
-IFtSRkNdIElzc3VlIGluIGZpbmFsIGFnZ3JlZ2F0ZSB2YWx1ZSwgaW4gY2FzZSBvZiBtdWx0aXBs
-ZSBldmVudHMgcHJlc2VudA0KPiBpbiBtZXRyaWMgZXhwcmVzc2lvbg0KPiANCj4gSGVsbG8gQWxs
-LA0KPiAJSSB3YW50IHRvIGRpc2N1c3Mgb25lIGlzc3VlIHJhaXNlZCBieSBKb2FraW0gWmhhbmcg
-d2hlcmUgaGUgbWVudGlvbmVkDQo+IHRoYXQsIHdlIGFyZSBub3QgZ2V0dGluZyBjb3JyZWN0IHJl
-c3VsdCBpbi1jYXNlIG9mIG11bHRpcGxlIGV2ZW50cyBwcmVzZW50IGluDQo+IG1ldHJpYyBleHBy
-ZXNzaW9uLg0KPiANCj4gVGhpcyBpcyBvbmUgZXhhbXBsZSBwb2ludGVkIGJ5IGhpbSA6DQo+IA0K
-PiBiZWxvdyBpcyB0aGUgSlNPTiBmaWxlIGFuZCByZXN1bHQuDQo+IFsNCj4gICAgICAgICB7DQo+
-ICAgICAgICAgICAgICAiUHVibGljRGVzY3JpcHRpb24iOiAiQ2FsY3VsYXRlIEREUjAgYnVzIGFj
-dHVhbCB1dGlsaXphdGlvbg0KPiB3aGljaCB2YXJ5IGZyb20gRERSMCBjb250cm9sbGVyIGNsb2Nr
-IGZyZXF1ZW5jeSIsDQo+ICAgICAgICAgICAgICAiQnJpZWZEZXNjcmlwdGlvbiI6ICJpbXg4cW06
-IGRkcjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbiIsDQo+ICAgICAgICAgICAgICAiTWV0cmljTmFt
-ZSI6ICJpbXg4cW0tZGRyMC1idXMtdXRpbCIsDQo+ICAgICAgICAgICAgICAiTWV0cmljRXhwciI6
-ICIoIGlteDhfZGRyMFxcL3JlYWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBcXC93cml0ZVxc
-LWN5Y2xlc1xcLyApIiwNCj4gICAgICAgICAgICAgICJNZXRyaWNHcm91cCI6ICJpLk1YOFFNX0RE
-UjBfQlVTX1VUSUwiDQo+ICAgICAgICAgfQ0KPiBdDQo+IC4vcGVyZiBzdGF0IC1JIDEwMDAgLU0g
-aW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gIyAgICAgICAgICAgdGltZSAgICAgICAgICAgICBjb3Vu
-dHMgdW5pdCBldmVudHMNCj4gICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAgMTY3MjAgICAg
-ICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDIyOTIxLjAgaW14OHFtLWRkcjAtYnVzLXV0
-aWwNCj4gICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAgIDYyMDEgICAgICBpbXg4X2RkcjAv
-d3JpdGUtY3ljbGVzLw0KPiAgICAgIDIuMDAwNTI1NjI1ICAgICAgICAgICAgICAgODMxNiAgICAg
-IGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8NCj4gIyAgMTI3ODUuNSBpbXg4cW0tZGRyMC1idXMtdXRp
-bA0KPiAgICAgIDIuMDAwNTI1NjI1ICAgICAgICAgICAgICAgMjczOCAgICAgIGlteDhfZGRyMC93
-cml0ZS1jeWNsZXMvDQo+ICAgICAgMy4wMDA4MTkxMjUgICAgICAgICAgICAgICAxMDU2ICAgICAg
-aW14OF9kZHIwL3JlYWQtY3ljbGVzLw0KPiAjICAgNDEzNi43IGlteDhxbS1kZHIwLWJ1cy11dGls
-DQo+ICAgICAgMy4wMDA4MTkxMjUgICAgICAgICAgICAgICAgMzAzICAgICAgaW14OF9kZHIwL3dy
-aXRlLWN5Y2xlcy8NCj4gICAgICA0LjAwMTEwMzc1MCAgICAgICAgICAgICAgIDYyNjAgICAgICBp
-bXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgICA5MTQ5LjggaW14OHFtLWRkcjAtYnVzLXV0aWwN
-Cj4gICAgICA0LjAwMTEwMzc1MCAgICAgICAgICAgICAgIDIzMTcgICAgICBpbXg4X2RkcjAvd3Jp
-dGUtY3ljbGVzLw0KPiAgICAgIDUuMDAxMzkyNzUwICAgICAgICAgICAgICAgMjA4NCAgICAgIGlt
-eDhfZGRyMC9yZWFkLWN5Y2xlcy8NCj4gIyAgIDQ1MTYuMCBpbXg4cW0tZGRyMC1idXMtdXRpbA0K
-PiAgICAgIDUuMDAxMzkyNzUwICAgICAgICAgICAgICAgIDYwMSAgICAgIGlteDhfZGRyMC93cml0
-ZS1jeWNsZXMvDQo+IA0KPiBCYXNlZCBvbiBnaXZlbiBtZXRyaWMgZXhwcmVzc2lvbiwgdGhlIHN1
-bSBjb21pbmcgY29ycmVjdCBmb3IgZmlyc3QgaXRlcmF0aW9uDQo+IHdoaWxlIGZvciByZXN0LCB3
-ZSB3b24ndCBzZWUgc2FtZSBhZGRpdGlvbiByZXN1bHQuIEJ1dCBpbi1jYXNlIHdlIGhhdmUgc2lu
-Z2xlDQo+IGV2ZW50IGluIG1ldHJpYyBleHByZXNzaW9uLCB3ZSBhcmUgZ2V0dGluZyBjb3JyZWN0
-IHJlc3VsdCBhcyBleHBlY3RlZC4NCj4gDQo+IA0KPiBTbywgSSB0cnkgdG8gbG9vayBpbnRvIHRo
-aXMgaXNzdWUgYW5kIHVuZGVyc3RhbmQgdGhlIGZsb3cuIEZyb20gbXkgdW5kZXJzdGFuZGluZywN
-Cj4gd2hlbmV2ZXIgd2UgZG8gY2FsY3VsYXRpb24gb2YgbWV0cmljIGV4cHJlc3Npb24gd2UgZG9u
-J3QgdXNlIGV4YWN0IGNvdW50IHdlDQo+IGFyZSBnZXR0aW5nLg0KPiBCYXNpY2FsbHkgd2UgdXNl
-IG1lYW4gdmFsdWUgb2YgZWFjaCBtZXRyaWMgZXZlbnQgaW4gdGhlIGNhbGN1bGF0aW9uIG9mIG1l
-dHJpYw0KPiBleHByZXNzaW9uLg0KPiANCj4gU28sIEkgdGFrZSBzYW1lIGV4YW1wbGU6DQo+IA0K
-PiBNZXRyaWMgRXZlbnQ6IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+IE1ldHJpY0V4cHIiOiAiKCBp
-bXg4X2RkcjBcXC9yZWFkXFwtY3ljbGVzXFwvICsgaW14OF9kZHIwXFwvd3JpdGVcXC1jeWNsZXNc
-XC8gKSINCj4gDQo+IGNvbW1hbmQjOiAuL3BlcmYgc3RhdCAtSSAxMDAwIC1NIGlteDhxbS1kZHIw
-LWJ1cy11dGlsDQo+IA0KPiAjICAgICAgICAgICB0aW1lICAgICAgICAgICAgIGNvdW50cyB1bml0
-IGV2ZW50cw0KPiAgICAgIDEuMDAwMTA0MjUwICAgICAgICAgICAgICAxNjcyMCAgICAgIGlteDhf
-ZGRyMC9yZWFkLWN5Y2xlcy8NCj4gIyAgMjI5MjEuMCBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiAg
-ICAgIDEuMDAwMTA0MjUwICAgICAgICAgICAgICAgNjIwMSAgICAgIGlteDhfZGRyMC93cml0ZS1j
-eWNsZXMvDQo+ICAgICAgMi4wMDA1MjU2MjUgICAgICAgICAgICAgICA4MzE2ICAgICAgaW14OF9k
-ZHIwL3JlYWQtY3ljbGVzLw0KPiAjICAxMjc4NS41IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ICAg
-ICAgMi4wMDA1MjU2MjUgICAgICAgICAgICAgICAyNzM4ICAgICAgaW14OF9kZHIwL3dyaXRlLWN5
-Y2xlcy8NCj4gICAgICAzLjAwMDgxOTEyNSAgICAgICAgICAgICAgIDEwNTYgICAgICBpbXg4X2Rk
-cjAvcmVhZC1jeWNsZXMvDQo+ICMgICA0MTM2LjcgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gICAg
-ICAzLjAwMDgxOTEyNSAgICAgICAgICAgICAgICAzMDMgICAgICBpbXg4X2RkcjAvd3JpdGUtY3lj
-bGVzLw0KPiAgICAgIDQuMDAxMTAzNzUwICAgICAgICAgICAgICAgNjI2MCAgICAgIGlteDhfZGRy
-MC9yZWFkLWN5Y2xlcy8NCj4gIyAgIDkxNDkuOCBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiAgICAg
-IDQuMDAxMTAzNzUwICAgICAgICAgICAgICAgMjMxNyAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNs
-ZXMvDQo+ICAgICAgNS4wMDEzOTI3NTAgICAgICAgICAgICAgICAyMDg0ICAgICAgaW14OF9kZHIw
-L3JlYWQtY3ljbGVzLw0KPiAjICAgNDUxNi4wIGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ICAgICAg
-NS4wMDEzOTI3NTAgICAgICAgICAgICAgICAgNjAxICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xl
-cy8NCj4gDQo+IFNvLCB0aGVyZSBpcyBvbmUgZnVuY3Rpb24gY2FsbGVkICd1cGRhdGVfc3RhdHMn
-IGluIGZpbGUgdXRpbC9zdGF0LmMgd2hlcmUgd2UgZG8gdGhpcw0KPiBjYWxjdWxhdGlvbiBhbmQg
-dXBkYXRpbmcgc3RhdHMtPm1lYW4gdmFsdWUuIEFuZCB0aGlzIG1lYW4gdmFsdWUgaXMgd2hhdCB3
-ZQ0KPiBhcmUgYWN0dWFsbHkgdXNpbmcgaW4gb3VyIG1ldHJpYyBleHByZXNzaW9uIGNhbGN1bGF0
-aW9uLg0KPiANCj4gV2UgY2FsbCB0aGlzIGZ1bmN0aW9uIGluIGVhY2ggaXRlcmF0aW9uIHdoZXJl
-IHdlIHVwZGF0ZSBzdGF0cy0+bWVhbiBhbmQNCj4gc3RhdHMtPm4gZm9yIGVhY2ggZXZlbnQuDQo+
-IEJ1dCBvbmUgd2VpcmQgaXNzdWUgaXMsIGZvciB2ZXJ5IGZpcnN0IGV2ZW50LCBzdGF0LT5uIGlz
-IGFsd2F5cyAxIHRoYXQgaXMgd2h5IHdlDQo+IGFyZSBnZXR0aW5nIG1lYW4gc2FtZSBhcyBjb3Vu
-dC4NCj4gDQo+IFNvIHRoaXMgdGhlIHJlYXNvbiB3aHkgZm9yIHNpbmdsZSBldmVudCB3ZSBnZXQg
-ZXhhY3QgYWdncmVnYXRlIG9mIG1ldHJpYw0KPiBleHByZXNzaW9uLg0KPiBTbyBkb2Vzbid0IG1h
-dHRlciBob3cgbWFueSBldmVudHMgeW91IGhhdmUgaW4geW91ciBtZXRyaWMgZXhwcmVzc2lvbiwg
-ZXZlcnkNCj4gdGltZSB5b3UgdGFrZSBleGFjdCBjb3VudCBmb3IgZmlyc3Qgb25lIGFuZCBub3Jt
-YWxpemVkIHZhbHVlIGZvciByZXN0IHdoaWNoIGlzDQo+IHdlaXJkLg0KPiANCj4gQWNjb3JkaW5n
-IHRvIHVwZGF0ZV9zdGF0cyBmdW5jdGlvbjogIFdlIGFyZSB1cGRhdGluZyBtZWFuIGFzOg0KPiAN
-Cj4gc3RhdHMtPm1lYW4gKz0gZGVsdGEgLyBzdGF0cy0+biB3aGVyZSwgIGRlbHRhID0gdmFsIC0g
-c3RhdHMtPm1lYW4uDQo+IA0KPiBJZiB3ZSB0YWtlIHdyaXRlLWN5Y2xlcyBoZXJlLiBJbml0aWFs
-bHkgbWVhbiA9IDAgYW5kIG4gPSAxLg0KPiANCj4gMXN0IGl0ZXJhdGlvbjogbj0xLCB3cml0ZSBj
-eWNsZSA6IDYyMDEgYW5kIG1lYW4gPSA2MjAxICAoRmluYWwgYWdnIHZhbHVlOiAxNjcyMA0KPiAr
-IDYyMDEgPSAyMjkyMSkgMm5kIGl0ZXJhdGlvbjogbj0yLCB3cml0ZSBjeWNsZXM6ICA2MjAxICsg
-KDI3MzggLSA2MjAxKS8yID0NCj4gNDQ2OS41ICAoRmluYWwgYWdnciB2YWx1ZTogODMxNiArIDQ0
-NjkuNSA9IDEyNzg1LjUpIDNyZCBpdGVyYXRpb246IG49Mywgd3JpdGUNCj4gY3ljbGVzOiA0NDY5
-LjUgKyAoMzAzIC0gNDQ2OS41KS8zID0gMzA4MC42NjY3IChGaW5hbCBhZ2dyIHZhbHVlOiAxMDU2
-ICsNCj4gMzA4MC42NjY3ID0gNDEzNi43KQ0KPiANCj4gSSBhbSBub3Qgc3VyZSBpZiBpdHMgZXhw
-ZWN0ZWQgYmVoYXZpb3IuIEkgbWVhbiBzaG91bGRuJ3Qgd2UgZWl0aGVyIHRha2UgbWVhbg0KPiB2
-YWx1ZSBvZiBlYWNoIGV2ZW50IG9yIHRha2UgbiBhcyAxIGZvciBlYWNoIGV2ZW50Lg0KPiANCj4g
-DQo+IEkgYW0gdGhpbmtpbmcsIFNob3VsZCB3ZSBhZGQgYW4gb3B0aW9uIHRvIHNheSB3aGV0aGVy
-IHVzZXIgd2FudCBleGFjdA0KPiBhZ2dyZWdhdGUgb3INCj4gdGhpcyBub3JtYWxpemUgYWdncmVn
-YXRlIHRvIHJlbW92ZSB0aGUgY29uZnVzaW9uPyBJIHRyeSB0byBmaW5kIGl0IG91dCBpZiB3ZQ0K
-PiBhbHJlYWR5IGhhdmUgb25lIGJ1dCBkaWRuJ3QgZ2V0Lg0KPiBQbGVhc2UgbGV0IG1lIGtub3cg
-aWYgbXkgdW5kZXJzdGFuZGluZyBpcyBmaW5lLiBPciBzb21ldGhpbmcgSSBjYW4gYWRkIHRvDQo+
-IHJlc29sdmUgdGhpcyBpc3N1ZS4NCj4gDQo+IFRoYW5rcywNCj4gS2Fqb2wNCg0K
+On Fri, May 8, 2020 at 12:05 AM kajoljain <kjain@linux.ibm.com> wrote:
+> On 5/7/20 9:58 PM, Paul A. Clarke wrote:
+> > From: "Paul A. Clarke" <pc@us.ibm.com>
+> >
+> > Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
+> > - ict_noslot_br_mpred_cpi
+> > - ict_noslot_br_mpred_icmiss_cpi
+> > - ict_noslot_cyc_other_cpi
+> > - ict_noslot_disp_held_cpi
+> > - ict_noslot_disp_held_hb_full_cpi
+> > - ict_noslot_disp_held_issq_cpi
+> > - ict_noslot_disp_held_other_cpi
+> > - ict_noslot_disp_held_sync_cpi
+> > - ict_noslot_disp_held_tbegin_cpi
+> > - ict_noslot_ic_l2_cpi
+> > - ict_noslot_ic_l3_cpi
+> > - ict_noslot_ic_l3miss_cpi
+> > - ict_noslot_ic_miss_cpi
+> >
+> > Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+>
+> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+
+Tested with:
+https://lore.kernel.org/lkml/20200508053629.210324-3-irogers@google.com/
+Tested-by: Ian Rogers <irogers@google.com>
+
+Thanks,
+Ian
+
+> Thanks,
+> Kajol Jain
+> > ---
+> >  .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
+> >  1 file changed, 78 insertions(+), 65 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > index 811c2a8c1c9e..6169351a72c8 100644
+> > --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > @@ -207,6 +207,84 @@
+> >          "MetricGroup": "cpi_breakdown",
+> >          "MetricName": "fxu_stall_cpi"
+> >      },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to branch mispred",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_br_mpred_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "ICT other stalls",
+> > +        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_cyc_other_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_disp_held_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_disp_held_issq_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
+> > +        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_disp_held_other_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_disp_held_sync_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
+> > +        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_ic_l2_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_ic_l3_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_ic_l3miss_cpi"
+> > +    },
+> > +    {
+> > +        "BriefDescription": "Ict empty for this thread due to Icache Miss",
+> > +        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
+> > +        "MetricGroup": "cpi_breakdown",
+> > +        "MetricName": "ict_noslot_ic_miss_cpi"
+> > +    },
+> >      {
+> >          "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
+> >          "MetricGroup": "cpi_breakdown",
+> > @@ -1819,71 +1897,6 @@
+> >          "MetricExpr": "PM_FXU_IDLE / PM_CYC",
+> >          "MetricName": "fxu_all_idle"
+> >      },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to branch mispred",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_br_mpred_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "ICT other stalls",
+> > -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_cyc_other_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_disp_held_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_disp_held_issq_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
+> > -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_disp_held_other_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_disp_held_sync_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
+> > -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_ic_l2_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_ic_l3_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_ic_l3miss_cpi"
+> > -    },
+> > -    {
+> > -        "BriefDescription": "Ict empty for this thread due to Icache Miss",
+> > -        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
+> > -        "MetricName": "ict_noslot_ic_miss_cpi"
+> > -    },
+> >      {
+> >          "BriefDescription": "Rate of IERAT reloads from L2",
+> >          "MetricExpr": "PM_IPTEG_FROM_L2 * 100 / PM_RUN_INST_CMPL",
+> >
