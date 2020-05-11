@@ -1,224 +1,90 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
-Date: Mon, 11 May 2020 12:29:15 -0300
-Message-ID: <20200511152915.GC28888@kernel.org>
-References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
- <1588868938-21933-3-git-send-email-pc@us.ibm.com>
- <0b276c65-9c54-c6eb-0381-f56c4ccf5ec2@linux.ibm.com>
- <CAP-5=fV4-m-x6hNLvVGcBHHrL_Z67+4tM=ruxbZJpjn5V6Eqtg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/12] perf metric fixes and test
+Date: Mon, 11 May 2020 12:32:07 -0300
+Message-ID: <20200511153207.GD28888@kernel.org>
+References: <20200501173333.227162-1-irogers@google.com>
+ <20200507084445.GA2447905@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fV4-m-x6hNLvVGcBHHrL_Z67+4tM=ruxbZJpjn5V6Eqtg@mail.gmail.com>
+In-Reply-To: <20200507084445.GA2447905@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: kajoljain <kjain@linux.ibm.com>, "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, mpe@ellerman.id.au
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, linux-kernel@vger.kernel.org, kajoljain <kjain@linux.ibm.com>, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Sat, May 09, 2020 at 11:26:56PM -0700, Ian Rogers escreveu:
-> On Fri, May 8, 2020 at 12:05 AM kajoljain <kjain@linux.ibm.com> wrote:
-> > On 5/7/20 9:58 PM, Paul A. Clarke wrote:
-> > > From: "Paul A. Clarke" <pc@us.ibm.com>
-> > >
-> > > Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
-> > > - ict_noslot_br_mpred_cpi
-> > > - ict_noslot_br_mpred_icmiss_cpi
-> > > - ict_noslot_cyc_other_cpi
-> > > - ict_noslot_disp_held_cpi
-> > > - ict_noslot_disp_held_hb_full_cpi
-> > > - ict_noslot_disp_held_issq_cpi
-> > > - ict_noslot_disp_held_other_cpi
-> > > - ict_noslot_disp_held_sync_cpi
-> > > - ict_noslot_disp_held_tbegin_cpi
-> > > - ict_noslot_ic_l2_cpi
-> > > - ict_noslot_ic_l3_cpi
-> > > - ict_noslot_ic_l3miss_cpi
-> > > - ict_noslot_ic_miss_cpi
-> > >
-> > > Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
-> >
-> > Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+Em Thu, May 07, 2020 at 10:44:45AM +0200, Jiri Olsa escreveu:
+> On Fri, May 01, 2020 at 10:33:21AM -0700, Ian Rogers wrote:
+> > Add a test that all perf metrics (for your architecture) are parsable
+> > with the simple expression parser. Attempt to parse all events in
+> > metrics but only fail if the metric is for the current CPU. Fix bugs
+> > in the expr parser, x86 and powerpc metrics. Improve debug messages
+> > around add PMU config term failures.
+> > 
+> > v4 rebases after Kajol Jain's patches and fixes an asprintf warning.
+> > v3 adds parse event testing of ids and improves debug messages for add
+> >   PMU. These messages are paticular visible with 'perf test 10
+> >   -vvv'. It moves the testing logic from tests/expr.c to
+> >   tests/pmu-events.c as suggested by John Garry
+> >   <john.garry@huawei.com>.  
+> > v2 adds Fixes tags to commit messages for when broken metrics were
+> >   first added. Adds a debug warning for division by zero in expr, and
+> >   adds a workaround for id values in the expr test necessary for
+> >   powerpc. It also fixes broken power8 and power9 metrics.
+> > 
+> > Ian Rogers (12):
+> >   perf expr: unlimited escaped characters in a symbol
+> >   perf metrics: fix parse errors in cascade lake metrics
+> >   perf metrics: fix parse errors in skylake metrics
+> >   perf expr: allow ',' to be an other token
+> >   perf expr: increase max other
+> >   perf expr: parse numbers as doubles
+> >   perf expr: debug lex if debugging yacc
+> >   perf metrics: fix parse errors in power8 metrics
+> >   perf metrics: fix parse errors in power9 metrics
+> >   perf expr: print a debug message for division by zero
 > 
-> Tested with:
-> https://lore.kernel.org/lkml/20200508053629.210324-3-irogers@google.com/
-> Tested-by: Ian Rogers <irogers@google.com>
+> heya,
+> could we please get the 1st 10 patches in? they are important,
+> and let's not block them with new versions for patches 11/12
+> 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Thanks, looking up that series now,
+The first ten patches are in, can we go with what Ian suggested for the
+last two patches?
 
 - Arnaldo
  
-> Thanks,
-> Ian
+> thanks,
+> jirka
 > 
-> > Thanks,
-> > Kajol Jain
-> > > ---
-> > >  .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
-> > >  1 file changed, 78 insertions(+), 65 deletions(-)
-> > >
-> > > diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> > > index 811c2a8c1c9e..6169351a72c8 100644
-> > > --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> > > +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> > > @@ -207,6 +207,84 @@
-> > >          "MetricGroup": "cpi_breakdown",
-> > >          "MetricName": "fxu_stall_cpi"
-> > >      },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_br_mpred_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "ICT other stalls",
-> > > +        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_cyc_other_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_disp_held_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_disp_held_issq_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> > > +        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_disp_held_other_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_disp_held_sync_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> > > +        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_ic_l2_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_ic_l3_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_ic_l3miss_cpi"
-> > > +    },
-> > > +    {
-> > > +        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> > > +        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-> > > +        "MetricGroup": "cpi_breakdown",
-> > > +        "MetricName": "ict_noslot_ic_miss_cpi"
-> > > +    },
-> > >      {
-> > >          "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
-> > >          "MetricGroup": "cpi_breakdown",
-> > > @@ -1819,71 +1897,6 @@
-> > >          "MetricExpr": "PM_FXU_IDLE / PM_CYC",
-> > >          "MetricName": "fxu_all_idle"
-> > >      },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_br_mpred_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "ICT other stalls",
-> > > -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_cyc_other_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_disp_held_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_disp_held_issq_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> > > -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_disp_held_other_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_disp_held_sync_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> > > -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_ic_l2_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_ic_l3_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_ic_l3miss_cpi"
-> > > -    },
-> > > -    {
-> > > -        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> > > -        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
-> > > -        "MetricName": "ict_noslot_ic_miss_cpi"
-> > > -    },
-> > >      {
-> > >          "BriefDescription": "Rate of IERAT reloads from L2",
-> > >          "MetricExpr": "PM_IPTEG_FROM_L2 * 100 / PM_RUN_INST_CMPL",
-> > >
+> >   perf parse-events: expand add PMU error/verbose messages
+> >   perf test: improve pmu event metric testing
+> > 
+> >  tools/perf/arch/x86/util/intel-pt.c           |  32 ++--
+> >  .../arch/powerpc/power8/metrics.json          |   2 +-
+> >  .../arch/powerpc/power9/metrics.json          |   2 +-
+> >  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
+> >  .../arch/x86/skylakex/skx-metrics.json        |   4 +-
+> >  tools/perf/tests/builtin-test.c               |   5 +
+> >  tools/perf/tests/expr.c                       |   1 +
+> >  tools/perf/tests/pmu-events.c                 | 156 +++++++++++++++++-
+> >  tools/perf/tests/pmu.c                        |   4 +-
+> >  tools/perf/tests/tests.h                      |   2 +
+> >  tools/perf/util/expr.c                        |   1 +
+> >  tools/perf/util/expr.h                        |   2 +-
+> >  tools/perf/util/expr.l                        |  16 +-
+> >  tools/perf/util/expr.y                        |  16 +-
+> >  tools/perf/util/parse-events.c                |  29 +++-
+> >  tools/perf/util/pmu.c                         |  33 ++--
+> >  tools/perf/util/pmu.h                         |   2 +-
+> >  17 files changed, 262 insertions(+), 55 deletions(-)
+> > 
+> > -- 
+> > 2.26.2.526.g744177e7f7-goog
+> > 
+> 
 
 -- 
 
