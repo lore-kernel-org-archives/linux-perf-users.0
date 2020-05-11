@@ -1,239 +1,225 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 7/8] perf record: Introduce --switch-output-event
-Date: Mon, 11 May 2020 12:04:43 -0300
-Message-ID: <20200511150443.GB9116@redhat.com>
-References: <20200429131106.27974-1-acme@kernel.org>
- <20200429131106.27974-8-acme@kernel.org>
- <CAP-5=fWX4V6gzma_NeWh-niUqMq8vDXU77p9zQZKF6wSP0BPbQ@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [PATCH 2/2] perf: Add missing metrics to POWER9 'cpi_breakdown'
+Date: Mon, 11 May 2020 12:29:15 -0300
+Message-ID: <20200511152915.GC28888@kernel.org>
+References: <1588868938-21933-1-git-send-email-pc@us.ibm.com>
+ <1588868938-21933-3-git-send-email-pc@us.ibm.com>
+ <0b276c65-9c54-c6eb-0381-f56c4ccf5ec2@linux.ibm.com>
+ <CAP-5=fV4-m-x6hNLvVGcBHHrL_Z67+4tM=ruxbZJpjn5V6Eqtg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWX4V6gzma_NeWh-niUqMq8vDXU77p9zQZKF6wSP0BPbQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fV4-m-x6hNLvVGcBHHrL_Z67+4tM=ruxbZJpjn5V6Eqtg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Song Liu <songliubraving@fb.com>, Wang Nan <wangnan0@huawei.com>
+Cc: kajoljain <kjain@linux.ibm.com>, "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, mpe@ellerman.id.au
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Apr 29, 2020 at 10:25:52AM -0700, Ian Rogers escreveu:
-> On Wed, Apr 29, 2020 at 6:14 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+Em Sat, May 09, 2020 at 11:26:56PM -0700, Ian Rogers escreveu:
+> On Fri, May 8, 2020 at 12:05 AM kajoljain <kjain@linux.ibm.com> wrote:
+> > On 5/7/20 9:58 PM, Paul A. Clarke wrote:
+> > > From: "Paul A. Clarke" <pc@us.ibm.com>
+> > >
+> > > Add the following metrics to the POWER9 'cpi_breakdown' metricgroup:
+> > > - ict_noslot_br_mpred_cpi
+> > > - ict_noslot_br_mpred_icmiss_cpi
+> > > - ict_noslot_cyc_other_cpi
+> > > - ict_noslot_disp_held_cpi
+> > > - ict_noslot_disp_held_hb_full_cpi
+> > > - ict_noslot_disp_held_issq_cpi
+> > > - ict_noslot_disp_held_other_cpi
+> > > - ict_noslot_disp_held_sync_cpi
+> > > - ict_noslot_disp_held_tbegin_cpi
+> > > - ict_noslot_ic_l2_cpi
+> > > - ict_noslot_ic_l3_cpi
+> > > - ict_noslot_ic_l3miss_cpi
+> > > - ict_noslot_ic_miss_cpi
+> > >
+> > > Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
 > >
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> >
-> > Now we can use it with --overwrite to have a flight recorder mode that
-> > gets snapshot requests from arbitrary events that are processed in the
-> > side band thread together with the PERF_RECORD_BPF_EVENT processing.
-> >
-> > Example:
-> >
-> > To collect scheduler events until a recvmmsg syscall happens, system
-> > wide:
-> >
-> >   [root@five a]# rm -f perf.data.2020042717*
-> >   [root@five a]# perf record --overwrite -e sched:*switch,syscalls:*recvmmsg --switch-output-event syscalls:sys_enter_recvmmsg
-> >   [ perf record: dump data: Woken up 1 times ]
-> >   [ perf record: Dump perf.data.2020042717585458 ]
-> >   [ perf record: dump data: Woken up 1 times ]
-> >   [ perf record: Dump perf.data.2020042717590235 ]
-> >   [ perf record: dump data: Woken up 1 times ]
-> >   [ perf record: Dump perf.data.2020042717590398 ]
-> >   ^C[ perf record: Woken up 1 times to write data ]
-> >   [ perf record: Dump perf.data.2020042717590511 ]
-> >   [ perf record: Captured and wrote 7.244 MB perf.data.<timestamp> ]
-> >
-> > So in the above case we had 3 snapshots, the fourth was forced by
-> > control+C:
-> >
-> >   [root@five a]# ls -la
-> >   total 20440
-> >   drwxr-xr-x.  2 root root    4096 Apr 27 17:59 .
-> >   dr-xr-x---. 12 root root    4096 Apr 27 17:46 ..
-> >   -rw-------.  1 root root 3936125 Apr 27 17:58 perf.data.2020042717585458
-> >   -rw-------.  1 root root 5074869 Apr 27 17:59 perf.data.2020042717590235
-> >   -rw-------.  1 root root 4291037 Apr 27 17:59 perf.data.2020042717590398
-> >   -rw-------.  1 root root 7617037 Apr 27 17:59 perf.data.2020042717590511
-> >   [root@five a]#
-> >
-> > One can make this more precise by adding the switch output event to the
-> > main -e events list, as since this is done asynchronously, a few events
-> > after the signal event will appear in the snapshots, as can be seen
-> > with:
-> >
-> >   [root@five a]# rm -f perf.data.20200427175*
-> >   [root@five a]# perf record --overwrite -e sched:*switch,syscalls:*recvmmsg --switch-output-event syscalls:sys_enter_recvmmsg
-> >   [ perf record: dump data: Woken up 1 times ]
-> >   [ perf record: Dump perf.data.2020042718024203 ]
-> >   [ perf record: dump data: Woken up 1 times ]
-> >   [ perf record: Dump perf.data.2020042718024301 ]
-> >   [ perf record: dump data: Woken up 1 times ]
-> >   [ perf record: Dump perf.data.2020042718024484 ]
-> >   ^C[ perf record: Woken up 1 times to write data ]
-> >   [ perf record: Dump perf.data.2020042718024562 ]
-> >   [ perf record: Captured and wrote 7.337 MB perf.data.<timestamp> ]
-> >   [root@five a]# perf script -i perf.data.2020042718024203 | tail -15
-> >        PacerThread 148586 [005] 122.830729: sched:sched_switch: prev_comm=PacerThread prev_pid=148586...
-> >            swapper      0 [000] 122.833588: sched:sched_switch: prev_comm=swapper/0 prev_pid=...
-> >     NetworkManager   1251 [000] 122.833619: syscalls:sys_enter_recvmmsg: fd: 0x0000001c, mmsg: 0x7ffe83054a1...
-> >            swapper      0 [002] 122.833624: sched:sched_switch: prev_comm=swapper/2 prev_pid=...
-> >            swapper      0 [003] 122.833624: sched:sched_switch: prev_comm=swapper/3 prev_pid=...
-> >     NetworkManager   1251 [000] 122.833626: syscalls:sys_exit_recvmmsg: 0x1
-> >    kworker/3:3-eve 158946 [003] 122.833628: sched:sched_switch: prev_comm=kworker/3:3 prev_pid=15894...
-> >            swapper      0 [004] 122.833641: sched:sched_switch: prev_comm=swapper/4 prev_pid=...
-> >     NetworkManager   1251 [000] 122.833642: sched:sched_switch: prev_comm=NetworkManage...
-> >               perf 228273 [002] 122.833645: sched:sched_switch: prev_comm=perf prev_pid=22827...
-> >            swapper      0 [011] 122.833646: sched:sched_switch: prev_comm=swapper/1...
-> >            swapper      0 [002] 122.833648: sched:sched_switch: prev_comm=swapper/...
-> >    kworker/0:2-eve 207387 [000] 122.833648: sched:sched_switch: prev_comm=kworker/0:2 prev_pid=20738...
-> >    kworker/2:3-eve 232038 [002] 122.833652: sched:sched_switch: prev_comm=kworker/2:3 prev_pid=23203...
-> >               perf 235825 [003] 122.833653: sched:sched_switch: prev_comm=perf prev_pid=23582...
-> >   [root@five a]#
-> >
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Song Liu <songliubraving@fb.com>
-> > Cc: Wang Nan <wangnan0@huawei.com>
-> > Link: http://lore.kernel.org/lkml/20200427211935.25789-8-acme@kernel.org
-> > Link: http://lore.kernel.org/lkml/20200428121601.GB2245@kernel.org
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/Documentation/perf-record.txt | 13 ++++++++
-> >  tools/perf/builtin-record.c              | 41 +++++++++++++++++++++---
-> >  2 files changed, 50 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> > index 6e8b4649307c..561ef55743e2 100644
-> > --- a/tools/perf/Documentation/perf-record.txt
-> > +++ b/tools/perf/Documentation/perf-record.txt
-> > @@ -556,6 +556,19 @@ overhead. You can still switch them on with:
-> >
-> >    --switch-output --no-no-buildid  --no-no-buildid-cache
-> >
-> > +--switch-output-event::
-> > +Events that will cause the switch of the perf.data file, auto-selecting
-> > +--switch-output=signal, the results are similar as internally the side band
-> > +thread will also send a SIGUSR2 to the main one.
+> > Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
 > 
-> I found this paragraph a little hard, perhaps:
-> A list of events that when they occur cause the output perf.data file
-> to be ended and a new one created. The signal event,
-> --switch-output=signal, is auto-selected as SIGUSR2 is used internally
-> by the thread monitoring the events.
+> Tested with:
+> https://lore.kernel.org/lkml/20200508053629.210324-3-irogers@google.com/
+> Tested-by: Ian Rogers <irogers@google.com>
 
-Good suggestions (the one above and the one at the end of this message),
-can you please put those in a formal patch?
-
-Thanks,
+Thanks, looking up that series now,
 
 - Arnaldo
  
-> > +Uses the same syntax as --event, it will just not be recorded, serving only to
-> > +switch the perf.data file as soon as the --switch-output event is processed by
-> > +a separate sideband thread.
-> > +
-> > +This sideband thread is also used to other purposes, like processing the
-> > +PERF_RECORD_BPF_EVENT records as they happen, asking the kernel for extra BPF
-> > +information, etc.
-> > +
-> >  --switch-max-files=N::
-> >
-> >  When rotating perf.data with --switch-output, only keep N files.
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index ed2244847400..7a6a89972691 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -87,7 +87,9 @@ struct record {
-> >         struct evlist   *evlist;
-> >         struct perf_session     *session;
-> >         struct evlist           *sb_evlist;
-> > +       pthread_t               thread_id;
-> >         int                     realtime_prio;
-> > +       bool                    switch_output_event_set;
-> >         bool                    no_buildid;
-> >         bool                    no_buildid_set;
-> >         bool                    no_buildid_cache;
-> > @@ -1436,6 +1438,13 @@ static int record__synthesize(struct record *rec, bool tail)
-> >         return err;
-> >  }
-> >
-> > +static int record__process_signal_event(union perf_event *event __maybe_unused, void *data)
-> > +{
-> > +       struct record *rec = data;
-> > +       pthread_kill(rec->thread_id, SIGUSR2);
-> > +       return 0;
-> > +}
-> > +
-> >  static int __cmd_record(struct record *rec, int argc, const char **argv)
-> >  {
-> >         int err;
-> > @@ -1580,12 +1589,24 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
-> >                 goto out_child;
-> >         }
-> >
-> > -       if (!opts->no_bpf_event) {
-> > -               rec->sb_evlist = evlist__new();
-> > +       if (rec->sb_evlist != NULL) {
-> > +               /*
-> > +                * We get here if --switch-output-event populated the
-> > +                * sb_evlist, so associate a callback that will send a SIGUSR2
-> > +                * to the main thread.
-> > +                */
-> > +               evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
-> > +               rec->thread_id = pthread_self();
-> > +       }
-> >
-> > +       if (!opts->no_bpf_event) {
-> >                 if (rec->sb_evlist == NULL) {
-> > -                       pr_err("Couldn't create side band evlist.\n.");
-> > -                       goto out_child;
-> > +                       rec->sb_evlist = evlist__new();
-> > +
-> > +                       if (rec->sb_evlist == NULL) {
-> > +                               pr_err("Couldn't create side band evlist.\n.");
-> > +                               goto out_child;
-> > +                       }
-> >                 }
-> >
-> >                 if (evlist__add_bpf_sb_event(rec->sb_evlist, &session->header.env)) {
-> > @@ -2179,10 +2200,19 @@ static int switch_output_setup(struct record *rec)
-> >         };
-> >         unsigned long val;
-> >
-> > +       /*
-> > +        * If we're using --switch-output-events, then we imply its
-> > +        * --switch-output=signal, as we'll send a SIGUSR2 from the side band
-> > +        *  thread to its parent.
-> > +        */
-> > +       if (rec->switch_output_event_set)
-> > +               goto do_signal;
-> > +
-> >         if (!s->set)
-> >                 return 0;
-> >
-> >         if (!strcmp(s->str, "signal")) {
-> > +do_signal:
-> >                 s->signal = true;
-> >                 pr_debug("switch-output with SIGUSR2 signal\n");
-> >                 goto enabled;
-> > @@ -2440,6 +2470,9 @@ static struct option __record_options[] = {
-> >                           &record.switch_output.set, "signal or size[BKMG] or time[smhd]",
-> >                           "Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold",
-> >                           "signal"),
-> > +       OPT_CALLBACK_SET(0, "switch-output-event", &record.sb_evlist, &record.switch_output_event_set, "switch output event",
-> > +                        "switch output event selector. use 'perf list' to list available events",
-> 
-> Perhaps:
-> "A list of events, see 'perf list', that when they occur cause the end
-> of one perf.data file and the creation of another"
-> 
 > Thanks,
 > Ian
 > 
-> > +                        parse_events_option_new_evlist),
-> >         OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
-> >                    "Limit number of switch output generated files"),
-> >         OPT_BOOLEAN(0, "dry-run", &dry_run,
-> > --
-> > 2.21.1
-> >
+> > Thanks,
+> > Kajol Jain
+> > > ---
+> > >  .../arch/powerpc/power9/metrics.json          | 143 ++++++++++--------
+> > >  1 file changed, 78 insertions(+), 65 deletions(-)
+> > >
+> > > diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > > index 811c2a8c1c9e..6169351a72c8 100644
+> > > --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > > +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > > @@ -207,6 +207,84 @@
+> > >          "MetricGroup": "cpi_breakdown",
+> > >          "MetricName": "fxu_stall_cpi"
+> > >      },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to branch mispred",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_br_mpred_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "ICT other stalls",
+> > > +        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_cyc_other_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_disp_held_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_disp_held_issq_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
+> > > +        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_disp_held_other_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_disp_held_sync_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
+> > > +        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_ic_l2_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_ic_l3_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_ic_l3miss_cpi"
+> > > +    },
+> > > +    {
+> > > +        "BriefDescription": "Ict empty for this thread due to Icache Miss",
+> > > +        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
+> > > +        "MetricGroup": "cpi_breakdown",
+> > > +        "MetricName": "ict_noslot_ic_miss_cpi"
+> > > +    },
+> > >      {
+> > >          "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
+> > >          "MetricGroup": "cpi_breakdown",
+> > > @@ -1819,71 +1897,6 @@
+> > >          "MetricExpr": "PM_FXU_IDLE / PM_CYC",
+> > >          "MetricName": "fxu_all_idle"
+> > >      },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to branch mispred",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_br_mpred_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "ICT other stalls",
+> > > -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_cyc_other_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Cycles in which the NTC instruciton is held at dispatch for any reason",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_disp_held_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_disp_held_hb_full_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_disp_held_issq_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
+> > > -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DISP_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBEGIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_disp_held_other_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Dispatch held due to a synchronizing instruction at dispatch",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_SYNC/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_disp_held_sync_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "the NTC instruction is being held at dispatch because it is a tbegin instruction and there is an older tbegin in the pipeline that must complete before the younger tbegin can dispatch",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_TBEGIN/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_disp_held_tbegin_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
+> > > -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3 - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_ic_l2_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_ic_l3_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_ic_l3miss_cpi"
+> > > -    },
+> > > -    {
+> > > -        "BriefDescription": "Ict empty for this thread due to Icache Miss",
+> > > -        "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
+> > > -        "MetricName": "ict_noslot_ic_miss_cpi"
+> > > -    },
+> > >      {
+> > >          "BriefDescription": "Rate of IERAT reloads from L2",
+> > >          "MetricExpr": "PM_IPTEG_FROM_L2 * 100 / PM_RUN_INST_CMPL",
+> > >
+
+-- 
+
+- Arnaldo
