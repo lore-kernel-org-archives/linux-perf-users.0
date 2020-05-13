@@ -1,128 +1,165 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v4 00/12] perf metric fixes and test
-Date: Tue, 12 May 2020 23:32:15 -0700
-Message-ID: <CAP-5=fUj_htQNqqMkhqM6Az0iEh1ekU5AbLRPh_x4jRoagqzZA@mail.gmail.com>
-References: <20200501173333.227162-1-irogers@google.com> <20200507084445.GA2447905@krava>
- <20200511153207.GD28888@kernel.org> <CAP-5=fUEz6iBYfiwHgyGCuVNuPGAQN+Fgbcd4ZSn5cV_VAsFvw@mail.gmail.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [RFC] Issue in final aggregate value, in case of multiple events
+ present in metric expression
+Date: Wed, 13 May 2020 08:08:40 +0000
+Message-ID: <DB8PR04MB6795BAC703801B3780F8A9A9E6BF0@DB8PR04MB6795.eurprd04.prod.outlook.com>
+References: <20200212054102.9259-1-kjain@linux.ibm.com>
+ <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
+ <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
+ <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <6f98d281-f3de-b547-70d4-8fc95515b12f@linux.ibm.com>
+ <ea7e21e3-b324-3286-bcaa-cd37a4036c95@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAP-5=fUEz6iBYfiwHgyGCuVNuPGAQN+Fgbcd4ZSn5cV_VAsFvw@mail.gmail.com>
+In-Reply-To: <ea7e21e3-b324-3286-bcaa-cd37a4036c95@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Haiyan Song <haiyanx.song@intel.com>, Jin Yao <yao.jin@linux.intel.com>, Song Liu <songliubraving@fb.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Paul Clarke <pc@us.ibm.com>, LKML <linux-kernel@vger.kernel.org>, kajoljain <kjain@linux.ibm.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, Stephane Eranian <eranian@goog>
+To: "Jin, Yao" <yao.jin@linux.intel.com>, kajoljain <kjain@linux.ibm.com>, "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Madhavan Srinivasan <maddy@linux.vnet.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Mon, May 11, 2020 at 9:12 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Mon, May 11, 2020 at 8:32 AM Arnaldo Carvalho de Melo
-> <arnaldo.melo@gmail.com> wrote:
-> >
-> > Em Thu, May 07, 2020 at 10:44:45AM +0200, Jiri Olsa escreveu:
-> > > On Fri, May 01, 2020 at 10:33:21AM -0700, Ian Rogers wrote:
-> > > > Add a test that all perf metrics (for your architecture) are parsable
-> > > > with the simple expression parser. Attempt to parse all events in
-> > > > metrics but only fail if the metric is for the current CPU. Fix bugs
-> > > > in the expr parser, x86 and powerpc metrics. Improve debug messages
-> > > > around add PMU config term failures.
-> > > >
-> > > > v4 rebases after Kajol Jain's patches and fixes an asprintf warning.
-> > > > v3 adds parse event testing of ids and improves debug messages for add
-> > > >   PMU. These messages are paticular visible with 'perf test 10
-> > > >   -vvv'. It moves the testing logic from tests/expr.c to
-> > > >   tests/pmu-events.c as suggested by John Garry
-> > > >   <john.garry@huawei.com>.
-> > > > v2 adds Fixes tags to commit messages for when broken metrics were
-> > > >   first added. Adds a debug warning for division by zero in expr, and
-> > > >   adds a workaround for id values in the expr test necessary for
-> > > >   powerpc. It also fixes broken power8 and power9 metrics.
-> > > >
-> > > > Ian Rogers (12):
-> > > >   perf expr: unlimited escaped characters in a symbol
-> > > >   perf metrics: fix parse errors in cascade lake metrics
-> > > >   perf metrics: fix parse errors in skylake metrics
-> > > >   perf expr: allow ',' to be an other token
-> > > >   perf expr: increase max other
-> > > >   perf expr: parse numbers as doubles
-> > > >   perf expr: debug lex if debugging yacc
-> > > >   perf metrics: fix parse errors in power8 metrics
-> > > >   perf metrics: fix parse errors in power9 metrics
-> > > >   perf expr: print a debug message for division by zero
-> > >
-> > > heya,
-> > > could we please get the 1st 10 patches in? they are important,
-> > > and let's not block them with new versions for patches 11/12
-> > >
-> > > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> >
-> > The first ten patches are in, can we go with what Ian suggested for the
-> > last two patches?
-
-To follow up, I've resent the last two patches here:
-https://lore.kernel.org/lkml/20200513001729.21155-1-irogers@google.com/
-https://lore.kernel.org/lkml/20200513062752.3681-1-irogers@google.com/T/#t
-The event parsing errors don't cause the test to fail in the latter.
-
-Thanks,
-Ian
-
-> It seems sad not to make this test fail for broken event encodings, as
-> perf test does a good job of swallowing the test's debug output
-> (fork...). I was thinking that I'll split out the test and various
-> fixes in:
-> https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-> The test will only do something if there is a MetricExpr for an
-> architecture. There are currently only MetricExpr for x86 and powerpc.
-> I've tested power 9 with the test, which tests the expressions for
-> power 8 but not the events, and everything passes. The area the test
-> can fail is x86 and I should be able to get reasonable coverage there
-> by grabbing cloud machines. When an x86 test fails it is hard to know
-> what to do. In Jiri's Skylake case naively 'fixing' the expression to
-> remove 'thresh=1' yields an expression that will only give the value
-> 1. Perhaps a better 'fix' is just to remove the expressions in those
-> cases and wait for someone like Intel to refresh them? If that
-> expression will only work on a newer kernel then we need to identify a
-> constraint, etc. However, we couldn't see thresh as an event parameter
-> in a recent tree. Removing the expression seems like the most
-> expedient fix to get the test in, so that new expressions don't break
-> things :-)
->
-> Thanks Arnaldo for following up on this!
->
-> Ian
->
-> > - Arnaldo
-> >
-> > > thanks,
-> > > jirka
-> > >
-> > > >   perf parse-events: expand add PMU error/verbose messages
-> > > >   perf test: improve pmu event metric testing
-> > > >
-> > > >  tools/perf/arch/x86/util/intel-pt.c           |  32 ++--
-> > > >  .../arch/powerpc/power8/metrics.json          |   2 +-
-> > > >  .../arch/powerpc/power9/metrics.json          |   2 +-
-> > > >  .../arch/x86/cascadelakex/clx-metrics.json    |  10 +-
-> > > >  .../arch/x86/skylakex/skx-metrics.json        |   4 +-
-> > > >  tools/perf/tests/builtin-test.c               |   5 +
-> > > >  tools/perf/tests/expr.c                       |   1 +
-> > > >  tools/perf/tests/pmu-events.c                 | 156 +++++++++++++++++-
-> > > >  tools/perf/tests/pmu.c                        |   4 +-
-> > > >  tools/perf/tests/tests.h                      |   2 +
-> > > >  tools/perf/util/expr.c                        |   1 +
-> > > >  tools/perf/util/expr.h                        |   2 +-
-> > > >  tools/perf/util/expr.l                        |  16 +-
-> > > >  tools/perf/util/expr.y                        |  16 +-
-> > > >  tools/perf/util/parse-events.c                |  29 +++-
-> > > >  tools/perf/util/pmu.c                         |  33 ++--
-> > > >  tools/perf/util/pmu.h                         |   2 +-
-> > > >  17 files changed, 262 insertions(+), 55 deletions(-)
-> > > >
-> > > > --
-> > > > 2.26.2.526.g744177e7f7-goog
-> > > >
-> > >
-> >
-> > --
-> >
-> > - Arnaldo
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEppbiwgWWFvIDx5YW8uamlu
+QGxpbnV4LmludGVsLmNvbT4NCj4gU2VudDogMjAyMOW5tDXmnIgxMeaXpSA5OjEyDQo+IFRvOiBr
+YWpvbGphaW4gPGtqYWluQGxpbnV4LmlibS5jb20+OyBKb2FraW0gWmhhbmcNCj4gPHFpYW5ncWlu
+Zy56aGFuZ0BueHAuY29tPjsgYWNtZUBrZXJuZWwub3JnOyBKaXJpIE9sc2EgPGpvbHNhQGtlcm5l
+bC5vcmc+Ow0KPiBBbmRpIEtsZWVuIDxha0BsaW51eC5pbnRlbC5jb20+DQo+IENjOiBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsg
+S2FuIExpYW5nDQo+IDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPjsgTWFkaGF2YW4gU3Jpbml2
+YXNhbg0KPiA8bWFkZHlAbGludXgudm5ldC5pYm0uY29tPjsgQW5qdSBUIFN1ZGhha2FyIDxhbmp1
+QGxpbnV4LnZuZXQuaWJtLmNvbT47DQo+IFJhdmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFAbGlu
+dXguaWJtLmNvbT4NCj4gU3ViamVjdDogUmU6IFtSRkNdIElzc3VlIGluIGZpbmFsIGFnZ3JlZ2F0
+ZSB2YWx1ZSwgaW4gY2FzZSBvZiBtdWx0aXBsZSBldmVudHMNCj4gcHJlc2VudCBpbiBtZXRyaWMg
+ZXhwcmVzc2lvbg0KPiANCj4gSGkgS2Fqb2wsDQo+IA0KPiBPbiAzLzI0LzIwMjAgNDowMCBQTSwg
+a2Fqb2xqYWluIHdyb3RlOg0KPiA+IEhlbGxvIEFsbCwNCj4gPiAJSSB3YW50IHRvIGRpc2N1c3Mg
+b25lIGlzc3VlIHJhaXNlZCBieSBKb2FraW0gWmhhbmcgd2hlcmUgaGUgbWVudGlvbmVkDQo+ID4g
+dGhhdCwgd2UgYXJlIG5vdCBnZXR0aW5nIGNvcnJlY3QgcmVzdWx0IGluLWNhc2Ugb2YgbXVsdGlw
+bGUgZXZlbnRzDQo+ID4gcHJlc2VudCBpbiBtZXRyaWMgZXhwcmVzc2lvbi4NCj4gPg0KPiA+IFRo
+aXMgaXMgb25lIGV4YW1wbGUgcG9pbnRlZCBieSBoaW0gOg0KPiA+DQo+ID4gYmVsb3cgaXMgdGhl
+IEpTT04gZmlsZSBhbmQgcmVzdWx0Lg0KPiA+IFsNCj4gPiAgICAgICAgICB7DQo+ID4gICAgICAg
+ICAgICAgICAiUHVibGljRGVzY3JpcHRpb24iOiAiQ2FsY3VsYXRlIEREUjAgYnVzIGFjdHVhbCB1
+dGlsaXphdGlvbg0KPiB3aGljaCB2YXJ5IGZyb20gRERSMCBjb250cm9sbGVyIGNsb2NrIGZyZXF1
+ZW5jeSIsDQo+ID4gICAgICAgICAgICAgICAiQnJpZWZEZXNjcmlwdGlvbiI6ICJpbXg4cW06IGRk
+cjAgYnVzIGFjdHVhbCB1dGlsaXphdGlvbiIsDQo+ID4gICAgICAgICAgICAgICAiTWV0cmljTmFt
+ZSI6ICJpbXg4cW0tZGRyMC1idXMtdXRpbCIsDQo+ID4gICAgICAgICAgICAgICAiTWV0cmljRXhw
+ciI6ICIoIGlteDhfZGRyMFxcL3JlYWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBcXC93cml0
+ZVxcLWN5Y2xlc1xcLyApIiwNCj4gPiAgICAgICAgICAgICAgICJNZXRyaWNHcm91cCI6ICJpLk1Y
+OFFNX0REUjBfQlVTX1VUSUwiDQo+ID4gICAgICAgICAgfQ0KPiA+IF0NCj4gPiAuL3BlcmYgc3Rh
+dCAtSSAxMDAwIC1NIGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gIyAgICAgICAgICAgdGltZSAg
+ICAgICAgICAgICBjb3VudHMgdW5pdCBldmVudHMNCj4gPiAgICAgICAxLjAwMDEwNDI1MCAgICAg
+ICAgICAgICAgMTY3MjAgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDIyOTIxLjAg
+aW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICAxLjAwMDEwNDI1MCAgICAgICAgICAgICAg
+IDYyMDEgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KPiA+ICAgICAgIDIuMDAwNTI1NjI1
+ICAgICAgICAgICAgICAgODMxNiAgICAgIGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8NCj4gIyAgMTI3
+ODUuNSBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiA+ICAgICAgIDIuMDAwNTI1NjI1ICAgICAgICAg
+ICAgICAgMjczOCAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICAgMy4wMDA4
+MTkxMjUgICAgICAgICAgICAgICAxMDU2ICAgICAgaW14OF9kZHIwL3JlYWQtY3ljbGVzLw0KPiAj
+ICAgNDEzNi43IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gICAgICAgMy4wMDA4MTkxMjUgICAg
+ICAgICAgICAgICAgMzAzICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCj4gPiAgICAgICA0
+LjAwMTEwMzc1MCAgICAgICAgICAgICAgIDYyNjAgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMv
+DQo+ICMgICA5MTQ5LjggaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICA0LjAwMTEwMzc1
+MCAgICAgICAgICAgICAgIDIzMTcgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KPiA+ICAg
+ICAgIDUuMDAxMzkyNzUwICAgICAgICAgICAgICAgMjA4NCAgICAgIGlteDhfZGRyMC9yZWFkLWN5
+Y2xlcy8NCj4gIyAgIDQ1MTYuMCBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiA+ICAgICAgIDUuMDAx
+MzkyNzUwICAgICAgICAgICAgICAgIDYwMSAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+
+ID4NCj4gPiBCYXNlZCBvbiBnaXZlbiBtZXRyaWMgZXhwcmVzc2lvbiwgdGhlIHN1bSBjb21pbmcg
+Y29ycmVjdCBmb3IgZmlyc3QNCj4gPiBpdGVyYXRpb24gd2hpbGUgZm9yIHJlc3QsIHdlIHdvbid0
+IHNlZSBzYW1lIGFkZGl0aW9uIHJlc3VsdC4gQnV0DQo+ID4gaW4tY2FzZSB3ZSBoYXZlIHNpbmds
+ZSBldmVudCBpbiBtZXRyaWMgZXhwcmVzc2lvbiwgd2UgYXJlIGdldHRpbmcgY29ycmVjdA0KPiBy
+ZXN1bHQgYXMgZXhwZWN0ZWQuDQo+ID4NCj4gPg0KPiA+IFNvLCBJIHRyeSB0byBsb29rIGludG8g
+dGhpcyBpc3N1ZSBhbmQgdW5kZXJzdGFuZCB0aGUgZmxvdy4gRnJvbSBteQ0KPiA+IHVuZGVyc3Rh
+bmRpbmcsIHdoZW5ldmVyIHdlIGRvIGNhbGN1bGF0aW9uIG9mIG1ldHJpYyBleHByZXNzaW9uIHdl
+IGRvbid0IHVzZQ0KPiBleGFjdCBjb3VudCB3ZSBhcmUgZ2V0dGluZy4NCj4gPiBCYXNpY2FsbHkg
+d2UgdXNlIG1lYW4gdmFsdWUgb2YgZWFjaCBtZXRyaWMgZXZlbnQgaW4gdGhlIGNhbGN1bGF0aW9u
+IG9mIG1ldHJpYw0KPiBleHByZXNzaW9uLg0KPiA+DQo+ID4gU28sIEkgdGFrZSBzYW1lIGV4YW1w
+bGU6DQo+ID4NCj4gPiBNZXRyaWMgRXZlbnQ6IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gTWV0
+cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3JlYWRcXC1jeWNsZXNcXC8gKw0KPiBpbXg4X2RkcjBc
+XC93cml0ZVxcLWN5Y2xlc1xcLyApIg0KPiA+DQo+ID4gY29tbWFuZCM6IC4vcGVyZiBzdGF0IC1J
+IDEwMDAgLU0gaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPg0KPiA+ICMgICAgICAgICAgIHRpbWUg
+ICAgICAgICAgICAgY291bnRzIHVuaXQgZXZlbnRzDQo+ID4gICAgICAgMS4wMDAxMDQyNTAgICAg
+ICAgICAgICAgIDE2NzIwICAgICAgaW14OF9kZHIwL3JlYWQtY3ljbGVzLw0KPiAjICAyMjkyMS4w
+IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gICAgICAgMS4wMDAxMDQyNTAgICAgICAgICAgICAg
+ICA2MjAxICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCj4gPiAgICAgICAyLjAwMDUyNTYy
+NSAgICAgICAgICAgICAgIDgzMTYgICAgICBpbXg4X2RkcjAvcmVhZC1jeWNsZXMvDQo+ICMgIDEy
+Nzg1LjUgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICAyLjAwMDUyNTYyNSAgICAgICAg
+ICAgICAgIDI3MzggICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0KPiA+ICAgICAgIDMuMDAw
+ODE5MTI1ICAgICAgICAgICAgICAgMTA1NiAgICAgIGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8NCj4g
+IyAgIDQxMzYuNyBpbXg4cW0tZGRyMC1idXMtdXRpbA0KPiA+ICAgICAgIDMuMDAwODE5MTI1ICAg
+ICAgICAgICAgICAgIDMwMyAgICAgIGlteDhfZGRyMC93cml0ZS1jeWNsZXMvDQo+ID4gICAgICAg
+NC4wMDExMDM3NTAgICAgICAgICAgICAgICA2MjYwICAgICAgaW14OF9kZHIwL3JlYWQtY3ljbGVz
+Lw0KPiAjICAgOTE0OS44IGlteDhxbS1kZHIwLWJ1cy11dGlsDQo+ID4gICAgICAgNC4wMDExMDM3
+NTAgICAgICAgICAgICAgICAyMzE3ICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCj4gPiAg
+ICAgICA1LjAwMTM5Mjc1MCAgICAgICAgICAgICAgIDIwODQgICAgICBpbXg4X2RkcjAvcmVhZC1j
+eWNsZXMvDQo+ICMgICA0NTE2LjAgaW14OHFtLWRkcjAtYnVzLXV0aWwNCj4gPiAgICAgICA1LjAw
+MTM5Mjc1MCAgICAgICAgICAgICAgICA2MDEgICAgICBpbXg4X2RkcjAvd3JpdGUtY3ljbGVzLw0K
+PiA+DQo+ID4gU28sIHRoZXJlIGlzIG9uZSBmdW5jdGlvbiBjYWxsZWQgJ3VwZGF0ZV9zdGF0cycg
+aW4gZmlsZSB1dGlsL3N0YXQuYw0KPiA+IHdoZXJlIHdlIGRvIHRoaXMgY2FsY3VsYXRpb24gYW5k
+IHVwZGF0aW5nIHN0YXRzLT5tZWFuIHZhbHVlLiBBbmQgdGhpcw0KPiA+IG1lYW4gdmFsdWUgaXMg
+d2hhdCB3ZSBhcmUgYWN0dWFsbHkgdXNpbmcgaW4gb3VyIG1ldHJpYyBleHByZXNzaW9uIGNhbGN1
+bGF0aW9uLg0KPiA+DQo+ID4gV2UgY2FsbCB0aGlzIGZ1bmN0aW9uIGluIGVhY2ggaXRlcmF0aW9u
+IHdoZXJlIHdlIHVwZGF0ZSBzdGF0cy0+bWVhbiBhbmQNCj4gc3RhdHMtPm4gZm9yIGVhY2ggZXZl
+bnQuDQo+ID4gQnV0IG9uZSB3ZWlyZCBpc3N1ZSBpcywgZm9yIHZlcnkgZmlyc3QgZXZlbnQsIHN0
+YXQtPm4gaXMgYWx3YXlzIDEgdGhhdA0KPiA+IGlzIHdoeSB3ZSBhcmUgZ2V0dGluZyBtZWFuIHNh
+bWUgYXMgY291bnQuDQo+ID4NCj4gPiBTbyB0aGlzIHRoZSByZWFzb24gd2h5IGZvciBzaW5nbGUg
+ZXZlbnQgd2UgZ2V0IGV4YWN0IGFnZ3JlZ2F0ZSBvZiBtZXRyaWMNCj4gZXhwcmVzc2lvbi4NCj4g
+PiBTbyBkb2Vzbid0IG1hdHRlciBob3cgbWFueSBldmVudHMgeW91IGhhdmUgaW4geW91ciBtZXRy
+aWMgZXhwcmVzc2lvbiwNCj4gPiBldmVyeSB0aW1lIHlvdSB0YWtlIGV4YWN0IGNvdW50IGZvciBm
+aXJzdCBvbmUgYW5kIG5vcm1hbGl6ZWQgdmFsdWUgZm9yIHJlc3QNCj4gd2hpY2ggaXMgd2VpcmQu
+DQo+ID4NCj4gPiBBY2NvcmRpbmcgdG8gdXBkYXRlX3N0YXRzIGZ1bmN0aW9uOiAgV2UgYXJlIHVw
+ZGF0aW5nIG1lYW4gYXM6DQo+ID4NCj4gPiBzdGF0cy0+bWVhbiArPSBkZWx0YSAvIHN0YXRzLT5u
+IHdoZXJlLCAgZGVsdGEgPSB2YWwgLSBzdGF0cy0+bWVhbi4NCj4gPg0KPiA+IElmIHdlIHRha2Ug
+d3JpdGUtY3ljbGVzIGhlcmUuIEluaXRpYWxseSBtZWFuID0gMCBhbmQgbiA9IDEuDQo+ID4NCj4g
+PiAxc3QgaXRlcmF0aW9uOiBuPTEsIHdyaXRlIGN5Y2xlIDogNjIwMSBhbmQgbWVhbiA9IDYyMDEg
+IChGaW5hbCBhZ2cNCj4gPiB2YWx1ZTogMTY3MjAgKyA2MjAxID0gMjI5MjEpIDJuZCBpdGVyYXRp
+b246IG49Miwgd3JpdGUgY3ljbGVzOiAgNjIwMSArDQo+ID4gKDI3MzggLSA2MjAxKS8yID0gIDQ0
+NjkuNSAgKEZpbmFsIGFnZ3IgdmFsdWU6IDgzMTYgKyA0NDY5LjUgPSAxMjc4NS41KQ0KPiA+IDNy
+ZCBpdGVyYXRpb246IG49Mywgd3JpdGUgY3ljbGVzOiA0NDY5LjUgKyAoMzAzIC0gNDQ2OS41KS8z
+ID0NCj4gPiAzMDgwLjY2NjcgKEZpbmFsIGFnZ3IgdmFsdWU6IDEwNTYgKyAzMDgwLjY2NjcgPSA0
+MTM2LjcpDQo+ID4NCj4gPiBJIGFtIG5vdCBzdXJlIGlmIGl0cyBleHBlY3RlZCBiZWhhdmlvci4g
+SSBtZWFuIHNob3VsZG4ndCB3ZSBlaXRoZXINCj4gPiB0YWtlIG1lYW4gdmFsdWUgb2YgZWFjaCBl
+dmVudCBvciB0YWtlIG4gYXMgMSBmb3IgZWFjaCBldmVudC4NCj4gPg0KPiA+DQo+ID4gSSBhbSB0
+aGlua2luZywgU2hvdWxkIHdlIGFkZCBhbiBvcHRpb24gdG8gc2F5IHdoZXRoZXIgdXNlciB3YW50
+IGV4YWN0DQo+ID4gYWdncmVnYXRlIG9yIHRoaXMgbm9ybWFsaXplIGFnZ3JlZ2F0ZSB0byByZW1v
+dmUgdGhlIGNvbmZ1c2lvbj8gSSB0cnkgdG8gZmluZA0KPiBpdCBvdXQgaWYgd2UgYWxyZWFkeSBo
+YXZlIG9uZSBidXQgZGlkbid0IGdldC4NCj4gPiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgbXkgdW5k
+ZXJzdGFuZGluZyBpcyBmaW5lLiBPciBzb21ldGhpbmcgSSBjYW4gYWRkIHRvDQo+IHJlc29sdmUg
+dGhpcyBpc3N1ZS4NCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBLYWpvbA0KPiA+DQo+IA0KPiBTaW5j
+ZSB5b3UgdXNlIHRoZSBpbnRlcnZhbCBtb2RlLCBjYW4gdGhpcyBjb21taXQgZml4IHRoZSBpc3N1
+ZT8NCj4gDQo+IGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20v
+P3VybD1odHRwJTNBJTJGJTJGbG9yZS5rZXJuDQo+IGVsLm9yZyUyRmxrbWwlMkYyMDIwMDQyMDE0
+NTQxNy42ODY0LTEteWFvLmppbiU0MGxpbnV4LmludGVsLmNvbSZhbXA7ZGF0DQo+IGE9MDIlN0Mw
+MSU3Q3FpYW5ncWluZy56aGFuZyU0MG54cC5jb20lN0NiMjQ5YmE5Y2FjNTk0YzU3MjA4YzA4ZDcN
+Cj4gZjU0ODVmZWIlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdD
+NjM3MjQ3NTYzDQo+IDUwNDkwMDIxMSZhbXA7c2RhdGE9NmV5V0k5MTVzZm9ac09nOVhzZGFhQkhh
+RVYxd2R3STI2aWtLeEhGVDRhOA0KPiAlM0QmYW1wO3Jlc2VydmVkPTANCg0KSGkgSmluIFlhbywg
+QW5kaSwNCg0KSSBhcHBsaWVkIHRoaXMgcGF0Y2ggb24gTDUuNCBrZXJuZWwsIGl0IHJlYWxseSBj
+YW4gZml4IHN1Y2ggaXNzdWUsIHdlIGNhbiBnZXQgdGhlIGNvcnJlY3QgcmVzdWx0IHdpdGggaW50
+ZXJ2YWwgbW9kZS4NCg0KMSkgIk1ldHJpY0V4cHIiOiAiKCBpbXg4X2RkcjBcXC9yZWFkXFwtY3lj
+bGVzXFwvICsgaW14OF9kZHIwXFwvd3JpdGVcXC1jeWNsZXNcXC8gKSIsDQoJV2UgY2FuIGFsd2F5
+cyBnZXQgdGhlIGNvcnJlY3QgcmVzdWx0IGZvciBleHByZXNzaW9uIDEpLCBubyBtYXR0ZXIgdGhl
+IGludGVydmFsIHZhbHVlLg0KDQoyKSAiTWV0cmljRXhwciI6ICIoIGlteDhfZGRyMFxcL3JlYWRc
+XC1jeWNsZXNcXC8gKyBpbXg4X2RkcjBcXC93cml0ZVxcLWN5Y2xlc1xcLyApIC8gZHVyYXRpb25f
+dGltZSIsDQoJSG93ZXZlciwgd2hlbiBJIHVzZSB0aGUgZHVyYXRpb25fdGltZSBldmVudCBpbiBl
+eHByZXNzaW9uIDIpLCB3ZSBjYW5ub3QgYWx3YXlzIGdldCB0aGUgY29ycmVjdCByZXN1bHQuDQoN
+CglXaGVuIGludGVydmFsIDw9IDRtcywgaXQgY2FuIGNhbGN1bGF0ZSBjb3JyZWN0bHkuIFRoZSBy
+ZXN1bHQgaXMgKDEwNzAxNiArIDE1OTEwKSAvIDQgPSAzMDczMS41LCBjb3JyZWN0IQ0KCXJvb3RA
+aW14OG1wZXZrOn4jIC4vcGVyZiBzdGF0IC1hIC1JIDQwMDAgLU0gaW14OG1wLWxwZGRyNC1iYW5k
+d2lkdGgtdXNhZ2UNCgkjICAgICAgICAgICB0aW1lICAgICAgICAgICAgIGNvdW50cyB1bml0IGV2
+ZW50cw0KICAgIAkgNC4wMDA3MDQ3NTAgICAgICAgICAgICAgMTA3MDE2ICAgICAgaW14OF9kZHIw
+L3JlYWQtY3ljbGVzLyAgICAjICAzMDczMS41IGlteDhtcC1scGRkcjQtYmFuZHdpZHRoLXVzYWdl
+DQogICAgIAkgNC4wMDA3MDQ3NTAgICAgICAgICAgICAgIDE1OTEwICAgICAgaW14OF9kZHIwL3dy
+aXRlLWN5Y2xlcy8NCiAgICAgCSA0LjAwMDcwNDc1MCAgICAgICAgIDQwMDA3MDQ3NTAgbnMgICBk
+dXJhdGlvbl90aW1lDQoNCglXaGVuIGludGVydmFsID49IDVtcywgdGhlIHJlc3VsdCBpcyBpbiBj
+b3JyZWN0LiBUaGUgcmVzdWx0IHNob3VsZCBiZSAoMjM1OTQ4ICsgNDI4NzgpIC8gNSA9IDU1NzY1
+LjIsIGluY29ycmVjdCENCglyb290QGlteDhtcGV2azp+IyAuL3BlcmYgc3RhdCAtYSAtSSA1MDAw
+IC1NIGlteDhtcC1scGRkcjQtYmFuZHdpZHRoLXVzYWdlDQoJIyAgICAgICAgICAgdGltZSAgICAg
+ICAgICAgICBjb3VudHMgdW5pdCBldmVudHMNCiAgICAgCTUuMDAwNzMzMjUwICAgICAgICAgICAg
+IDIzNTk0OCAgICAgIGlteDhfZGRyMC9yZWFkLWN5Y2xlcy8gICAgIyAzOTU0NzkuNSBpbXg4bXAt
+bHBkZHI0LWJhbmR3aWR0aC11c2FnZQ0KICAgICAJNS4wMDA3MzMyNTAgICAgICAgICAgICAgIDQy
+ODc4ICAgICAgaW14OF9kZHIwL3dyaXRlLWN5Y2xlcy8NCiAgICAgCTUuMDAwNzMzMjUwICAgICAg
+ICAgNTAwMDczMzI1MCBucyAgIGR1cmF0aW9uX3RpbWUNCg0KRG8geW91IGtub3cgdGhlcmUgYXJl
+IHNvbWUgbGltaXRhdGlvbiBvZiBkdXJhdGlvbl90aW1lIGV2ZW50PyBUaGFua3MgYSBsb3QhDQoN
+CkJlc3QgUmVnYXJkcywNCkpvYWtpbSBaaGFuZw0KPiBUaGFua3MNCj4gSmluIFlhbw0K
