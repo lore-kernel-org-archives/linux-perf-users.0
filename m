@@ -1,142 +1,85 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 0/7] Share events between metrics
-Date: Wed, 20 May 2020 11:20:04 -0700
-Message-ID: <20200520182011.32236-1-irogers@google.com>
+Subject: [PATCH v2 2/7] perf metricgroup: Use early return in add_metric
+Date: Wed, 20 May 2020 11:20:06 -0700
+Message-ID: <20200520182011.32236-3-irogers@google.com>
+References: <20200520182011.32236-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200520182011.32236-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andriin@fb.com>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Kim Phillips <kim.phillips@amd.com>, Paul Clarke <pc@us.ibm.com>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
 Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Metric groups contain metrics. Metrics create groups of events to
-ideally be scheduled together. Often metrics refer to the same events,
-for example, a cache hit and cache miss rate. Using separate event
-groups means these metrics are multiplexed at different times and the
-counts don't sum to 100%. More multiplexing also decreases the
-accuracy of the measurement.
+Use early return in metricgroup__add_metric and try to make the intent
+of the returns more intention revealing.
 
-This change orders metrics from groups or the command line, so that
-the ones with the most events are set up first. Later metrics see if
-groups already provide their events, and reuse them if
-possible. Unnecessary events and groups are eliminated.
+Suggested-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/metricgroup.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-The option --metric-no-group is added so that metrics aren't placed in
-groups. This affects multiplexing and may increase sharing.
-
-The option --metric-mo-merge is added and with this option the
-existing grouping behavior is preserved.
-
-Using skylakex metrics I ran the following shell code to count the
-number of events for each metric group (this ignores metric groups
-with a single metric, and one of the duplicated TopdownL1 and
-TopDownL1 groups):
-
-for i in all Branches BrMispredicts Cache_Misses FLOPS Instruction_Type Memory_BW Pipeline Power SMT Summary TopdownL1 TopdownL1_SMT
-do
-  echo Metric group: $i
-  echo -n " - No merging (old default, now --metric-no-merge): "
-  /tmp/perf/perf stat -a --metric-no-merge -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]" | wc -l
-  echo -n " - Merging over metrics (new default)             : "
-  /tmp/perf/perf stat -a -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
-  echo -n " - No event groups and merging (--metric-no-group): "
-  /tmp/perf/perf stat -a --metric-no-group -M $i sleep 1 2>&1 | grep -v "^ *#" | egrep " +[0-9,.]+ [^s]"|wc -l
-done
-
-Metric group: all
- - No merging (old default, now --metric-no-merge): 193
- - Merging over metrics (new default)             : 142
- - No event groups and merging (--metric-no-group): 84
-Metric group: Branches
- - No merging (old default, now --metric-no-merge): 8
- - Merging over metrics (new default)             : 8
- - No event groups and merging (--metric-no-group): 4
-Metric group: BrMispredicts
- - No merging (old default, now --metric-no-merge): 11
- - Merging over metrics (new default)             : 11
- - No event groups and merging (--metric-no-group): 10
-Metric group: Cache_Misses
- - No merging (old default, now --metric-no-merge): 11
- - Merging over metrics (new default)             : 9
- - No event groups and merging (--metric-no-group): 6
-Metric group: FLOPS
- - No merging (old default, now --metric-no-merge): 18
- - Merging over metrics (new default)             : 10
- - No event groups and merging (--metric-no-group): 10
-Metric group: Instruction_Type
- - No merging (old default, now --metric-no-merge): 6
- - Merging over metrics (new default)             : 6
- - No event groups and merging (--metric-no-group): 4
-Metric group: Pipeline
- - No merging (old default, now --metric-no-merge): 6
- - Merging over metrics (new default)             : 6
- - No event groups and merging (--metric-no-group): 5
-Metric group: Power
- - No merging (old default, now --metric-no-merge): 16
- - Merging over metrics (new default)             : 16
- - No event groups and merging (--metric-no-group): 10
-Metric group: SMT
- - No merging (old default, now --metric-no-merge): 11
- - Merging over metrics (new default)             : 8
- - No event groups and merging (--metric-no-group): 7
-Metric group: Summary
- - No merging (old default, now --metric-no-merge): 19
- - Merging over metrics (new default)             : 17
- - No event groups and merging (--metric-no-group): 17
-Metric group: TopdownL1
- - No merging (old default, now --metric-no-merge): 16
- - Merging over metrics (new default)             : 7
- - No event groups and merging (--metric-no-group): 7
-Metric group: TopdownL1_SMT
- - No merging (old default, now --metric-no-merge): 24
- - Merging over metrics (new default)             : 7
- - No event groups and merging (--metric-no-group): 7
-
-There are 5 out of 12 metric groups where no events are shared, such
-as Power, however, disabling grouping of events always reduces the
-number of events.
-
-The result for Memory_BW needs explanation:
-
-Metric group: Memory_BW
- - No merging (old default, now --metric-no-merge): 9
- - Merging over metrics (new default)             : 5
- - No event groups and merging (--metric-no-group): 11
-
-Both with and without merging the groups fail to be set up and so the
-event counts here are for broken metrics. The --metric-no-group number
-is accurate as all the events are scheduled. Ideally a constraint
-would be added for these metrics in the json code to avoid grouping.
-
-v2. rebases on kernel/git/acme/linux.git branch tmp.perf/core, fixes a
-missing comma with metric lists (reported-by Jiri Olsa
-<jolsa@redhat.com>) and adds early returns to metricgroup__add_metric
-(suggested-by Jiri Olsa).
-
-v1. was prepared on kernel/git/acme/linux.git branch tmp.perf/core
-
-Compared to RFC v3: fix a bug where unnecessary commas were passed to
-parse-events and were echoed. Fix a bug where the same event could be
-matched more than once with --metric-no-group, causing there to be
-events missing.
-https://lore.kernel.org/lkml/20200508053629.210324-1-irogers@google.com/
-
-Ian Rogers (7):
-  perf metricgroup: Always place duration_time last
-  perf metricgroup: Use early return in add_metric
-  perf metricgroup: Delay events string creation
-  perf metricgroup: Order event groups by size
-  perf metricgroup: Remove duped metric group events
-  perf metricgroup: Add options to not group or merge
-  perf metricgroup: Remove unnecessary ',' from events
-
- tools/perf/Documentation/perf-stat.txt |  19 ++
- tools/perf/builtin-stat.c              |  11 +-
- tools/perf/util/metricgroup.c          | 239 ++++++++++++++++++-------
- tools/perf/util/metricgroup.h          |   6 +-
- tools/perf/util/stat.h                 |   2 +
- 5 files changed, 207 insertions(+), 70 deletions(-)
-
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 7a43ee0a2e40..5c0603ef4c75 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -524,7 +524,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ {
+ 	struct pmu_events_map *map = perf_pmu__find_map(NULL);
+ 	struct pmu_event *pe;
+-	int i, ret = -EINVAL;
++	int i, ret;
++	bool has_match = false;
+ 
+ 	if (!map)
+ 		return 0;
+@@ -532,17 +533,23 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 	for (i = 0; ; i++) {
+ 		pe = &map->table[i];
+ 
+-		if (!pe->name && !pe->metric_group && !pe->metric_name)
++		if (!pe->name && !pe->metric_group && !pe->metric_name) {
++			/* End of pmu events. */
++			if (!has_match)
++				return -EINVAL;
+ 			break;
++		}
+ 		if (!pe->metric_expr)
+ 			continue;
+ 		if (match_metric(pe->metric_group, metric) ||
+ 		    match_metric(pe->metric_name, metric)) {
+-
++			has_match = true;
+ 			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
+ 
+ 			if (!strstr(pe->metric_expr, "?")) {
+ 				ret = __metricgroup__add_metric(events, group_list, pe, 1);
++				if (ret)
++					return ret;
+ 			} else {
+ 				int j, count;
+ 
+@@ -553,14 +560,15 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+ 				 * those events to group_list.
+ 				 */
+ 
+-				for (j = 0; j < count; j++)
++				for (j = 0; j < count; j++) {
+ 					ret = __metricgroup__add_metric(events, group_list, pe, j);
++					if (ret)
++						return ret;
++				}
+ 			}
+-			if (ret == -ENOMEM)
+-				break;
+ 		}
+ 	}
+-	return ret;
++	return 0;
+ }
+ 
+ static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
 -- 
 2.26.2.761.g0e0b3e54be-goog
