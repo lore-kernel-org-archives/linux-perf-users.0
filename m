@@ -1,65 +1,48 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] perf bpf-loader: Add missing '*' for key_scan_pos
-Date: Wed, 20 May 2020 12:30:06 +0200
-Message-ID: <20200520103006.GA157452@krava>
-References: <20200520033216.48310-1-bobo.shaobowang@huawei.com>
- <20200520070551.GC110644@krava>
- <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
+Subject: Re: [PATCH 0/7] Share events between metrics
+Date: Wed, 20 May 2020 15:13:59 +0200
+Message-ID: <20200520131359.GJ157452@krava>
+References: <20200520072814.128267-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ac38c44e-ebce-28eb-37f5-bf05572b9232@huawei.com>
+In-Reply-To: <20200520072814.128267-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Cc: cj.chengjian@huawei.com, huawei.libin@huawei.com, xiexiuqi@huawei.com, mark.rutland@arm.com, guohanjun@huawei.com, acme@kernel.org, alexander.shishkin@linux.intel.com, wangnan0@huawei.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andriin@fb.com>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Kim Phillips <kim.phillips@amd.com>, Paul Clarke <pc@us.ibm.com>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, May 20, 2020 at 06:22:12PM +0800, Wangshaobo (bobo) wrote:
+On Wed, May 20, 2020 at 12:28:07AM -0700, Ian Rogers wrote:
+> Metric groups contain metrics. Metrics create groups of events to
+> ideally be scheduled together. Often metrics refer to the same events,
+> for example, a cache hit and cache miss rate. Using separate event
+> groups means these metrics are multiplexed at different times and the
+> counts don't sum to 100%. More multiplexing also decreases the
+> accuracy of the measurement.
 > 
-> 在 2020/5/20 15:05, Jiri Olsa 写道:
-> > On Wed, May 20, 2020 at 11:32:16AM +0800, Wang ShaoBo wrote:
-> > > key_scan_pos is a pointer for getting scan position in
-> > > bpf__obj_config_map() for each BPF map configuration term,
-> > > but it's misused when error not happened.
-> > > 
-> > > Fixes: 066dacbf2a32 ("perf bpf: Add API to set values to map entries in a bpf object")
-> > > Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
-> > > ---
-> > >   tools/perf/util/bpf-loader.c | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/tools/perf/util/bpf-loader.c b/tools/perf/util/bpf-loader.c
-> > > index 10c187b8b8ea..460056bc072c 100644
-> > > --- a/tools/perf/util/bpf-loader.c
-> > > +++ b/tools/perf/util/bpf-loader.c
-> > > @@ -1225,7 +1225,7 @@ bpf__obj_config_map(struct bpf_object *obj,
-> > >   out:
-> > >   	free(map_name);
-> > >   	if (!err)
-> > > -		key_scan_pos += strlen(map_opt);
-> > > +		*key_scan_pos += strlen(map_opt);
-> > seems good, was there something failing because of this?
-> > 
-> > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> > 
-> > thanks,
-> > jirka
+> This change orders metrics from groups or the command line, so that
+> the ones with the most events are set up first. Later metrics see if
+> groups already provide their events, and reuse them if
+> possible. Unnecessary events and groups are eliminated.
 > 
->   I found this problem when i checked this code, I think it is
+> The option --metric-no-group is added so that metrics aren't placed in
+> groups. This affects multiplexing and may increase sharing.
 > 
->   an implicit question, but if we delete the two line,  the problem
+> The option --metric-mo-merge is added and with this option the
+> existing grouping behavior is preserved.
 > 
->   also no longer exists.
+> Using skylakex metrics I ran the following shell code to count the
+> number of events for each metric group (this ignores metric groups
+> with a single metric, and one of the duplicated TopdownL1 and
+> TopDownL1 groups):
 
-and what's the actual problem, what's broken?
+hi,
+I'm getting parser error with:
+
+[jolsa@krava perf]$ sudo ./perf stat -M IPC,CPI -a -I 1000
+event syntax error: '..ed.thread}:W{inst_retired.any,cpu_clk_unhalted.thread}:W,{inst_retired.any,cycles}:W'
+                                  \___ parser error
+
 
 jirka
-
-> 
->   thanks,
-> 
->   Wang ShaoBo
-> 
-> 
