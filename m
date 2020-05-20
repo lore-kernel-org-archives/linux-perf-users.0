@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 2/7] perf metricgroup: Use early return in add_metric
-Date: Wed, 20 May 2020 11:20:06 -0700
-Message-ID: <20200520182011.32236-3-irogers@google.com>
+Subject: [PATCH v2 3/7] perf metricgroup: Delay events string creation
+Date: Wed, 20 May 2020 11:20:07 -0700
+Message-ID: <20200520182011.32236-4-irogers@google.com>
 References: <20200520182011.32236-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -12,74 +12,108 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnal
 Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, Vince Weaver <vincent.weaver@maine.edu>, Stephane Eranian <eranian@google.com>, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Use early return in metricgroup__add_metric and try to make the intent
-of the returns more intention revealing.
+Currently event groups are placed into groups_list at the same time as
+the events string containing the events is built. Separate these two
+operations and build the groups_list first, then the event string from
+the groups_list. This adds an ability to reorder the groups_list that
+will be used in a later patch.
 
-Suggested-by: Jiri Olsa <jolsa@redhat.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ tools/perf/util/metricgroup.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 7a43ee0a2e40..5c0603ef4c75 100644
+index 5c0603ef4c75..dca433520b92 100644
 --- a/tools/perf/util/metricgroup.c
 +++ b/tools/perf/util/metricgroup.c
-@@ -524,7 +524,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
+@@ -90,6 +90,7 @@ struct egroup {
+ 	const char *metric_expr;
+ 	const char *metric_unit;
+ 	int runtime;
++	bool has_constraint;
+ };
+ 
+ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+@@ -485,8 +486,8 @@ int __weak arch_get_runtimeparam(void)
+ 	return 1;
+ }
+ 
+-static int __metricgroup__add_metric(struct strbuf *events,
+-		struct list_head *group_list, struct pmu_event *pe, int runtime)
++static int __metricgroup__add_metric(struct list_head *group_list,
++				     struct pmu_event *pe, int runtime)
+ {
+ 	struct egroup *eg;
+ 
+@@ -499,6 +500,7 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 	eg->metric_expr = pe->metric_expr;
+ 	eg->metric_unit = pe->unit;
+ 	eg->runtime = runtime;
++	eg->has_constraint = metricgroup__has_constraint(pe);
+ 
+ 	if (expr__find_other(pe->metric_expr, NULL, &eg->pctx, runtime) < 0) {
+ 		expr__ctx_clear(&eg->pctx);
+@@ -506,14 +508,6 @@ static int __metricgroup__add_metric(struct strbuf *events,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (events->len > 0)
+-		strbuf_addf(events, ",");
+-
+-	if (metricgroup__has_constraint(pe))
+-		metricgroup__add_metric_non_group(events, &eg->pctx);
+-	else
+-		metricgroup__add_metric_weak_group(events, &eg->pctx);
+-
+ 	list_add_tail(&eg->nd, group_list);
+ 
+ 	return 0;
+@@ -524,6 +518,7 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
  {
  	struct pmu_events_map *map = perf_pmu__find_map(NULL);
  	struct pmu_event *pe;
--	int i, ret = -EINVAL;
-+	int i, ret;
-+	bool has_match = false;
++	struct egroup *eg;
+ 	int i, ret;
+ 	bool has_match = false;
  
- 	if (!map)
- 		return 0;
-@@ -532,17 +533,23 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 	for (i = 0; ; i++) {
- 		pe = &map->table[i];
- 
--		if (!pe->name && !pe->metric_group && !pe->metric_name)
-+		if (!pe->name && !pe->metric_group && !pe->metric_name) {
-+			/* End of pmu events. */
-+			if (!has_match)
-+				return -EINVAL;
- 			break;
-+		}
- 		if (!pe->metric_expr)
- 			continue;
- 		if (match_metric(pe->metric_group, metric) ||
- 		    match_metric(pe->metric_name, metric)) {
--
-+			has_match = true;
+@@ -547,7 +542,8 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
  			pr_debug("metric expr %s for %s\n", pe->metric_expr, pe->metric_name);
  
  			if (!strstr(pe->metric_expr, "?")) {
- 				ret = __metricgroup__add_metric(events, group_list, pe, 1);
-+				if (ret)
-+					return ret;
+-				ret = __metricgroup__add_metric(events, group_list, pe, 1);
++				ret = __metricgroup__add_metric(group_list,
++								pe, 1);
+ 				if (ret)
+ 					return ret;
  			} else {
- 				int j, count;
- 
-@@ -553,14 +560,15 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
- 				 * those events to group_list.
+@@ -561,13 +557,26 @@ static int metricgroup__add_metric(const char *metric, struct strbuf *events,
  				 */
  
--				for (j = 0; j < count; j++)
-+				for (j = 0; j < count; j++) {
- 					ret = __metricgroup__add_metric(events, group_list, pe, j);
-+					if (ret)
-+						return ret;
-+				}
+ 				for (j = 0; j < count; j++) {
+-					ret = __metricgroup__add_metric(events, group_list, pe, j);
++					ret = __metricgroup__add_metric(
++						group_list, pe, j);
+ 					if (ret)
+ 						return ret;
+ 				}
  			}
--			if (ret == -ENOMEM)
--				break;
  		}
  	}
--	return ret;
-+	return 0;
++	list_for_each_entry(eg, group_list, nd) {
++		if (events->len > 0)
++			strbuf_addf(events, ",");
++
++		if (eg->has_constraint) {
++			metricgroup__add_metric_non_group(events,
++							  &eg->pctx);
++		} else {
++			metricgroup__add_metric_weak_group(events,
++							   &eg->pctx);
++		}
++	}
+ 	return 0;
  }
  
- static int metricgroup__add_metric_list(const char *list, struct strbuf *events,
 -- 
 2.26.2.761.g0e0b3e54be-goog
