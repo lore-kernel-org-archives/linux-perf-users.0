@@ -1,118 +1,204 @@
 From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [PATCH] perf stat: POWER9 metrics: expand "ICT" acronym
-Date: Tue, 19 May 2020 22:44:02 -0300
-Message-ID: <20200520014402.GA32678@kernel.org>
-References: <1589915886-22992-1-git-send-email-pc@us.ibm.com>
+Subject: Re: [PATCH v3] perf record: add dummy event during system wide
+ synthesis
+Date: Tue, 19 May 2020 22:54:35 -0300
+Message-ID: <20200520015435.GB32678@kernel.org>
+References: <20200422173615.59436-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1589915886-22992-1-git-send-email-pc@us.ibm.com>
+In-Reply-To: <20200422173615.59436-1-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Paul A. Clarke" <pc@us.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, mpe@ellerman.id.au, ananth@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com, sukadev@linux.ibm.com, irogers@google.com
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, May 19, 2020 at 02:18:06PM -0500, Paul A. Clarke escreveu:
-> From: "Paul A. Clarke" <pc@us.ibm.com>
+Em Wed, Apr 22, 2020 at 10:36:15AM -0700, Ian Rogers escreveu:
+> During the processing of /proc during event synthesis new processes may
+> start. Add a dummy event if /proc is to be processed, to capture mmaps
+> for starting processes. This reuses the existing logic for
+> initial-delay.
 > 
-> Uses of "ICT" and "Ict" are expanded to "Instruction Completion Table".
+> v3 fixes the attr test of test-record-C0
+> v2 fixes the dummy event configuration and a branch stack issue.
 
-Applied,
+Something I noticed only now is that this ends up in the perf.data file,
+and we don't need it at all there, i.e.
+
+  # perf record -I
+
+I.e. system wide, asking for registers now ends up with:
+
+[root@quaco ~]# perf record -I
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 2.855 MB perf.data (4902 samples) ]
+[root@quaco ~]# perf evlist
+cycles
+dummy:HG
+[root@quaco ~]# perf evlist -v
+cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1, inherit: 1, freq: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, sample_regs_intr: 0xff0fff
+dummy:HG: type: 1, size: 120, config: 0x9, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ID|CPU|PERIOD|REGS_INTR, read_format: ID, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, sample_regs_intr: 0xff0fff
+[root@quaco ~]#
+
+For perf top is ok to reuse the main evlist, as those are not going to
+hit the disk, but for 'perf record' it pollutes the perf.data file with
+that dummy event.
+
+This was a problem introduced with initial-delay, that IIRC predates the
+side band thread tho, I'll have to think about it, just writing this
+down to revisit this, as may raise some eyebrows by now being more
+exposed.
 
 - Arnaldo
  
-> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> Suggested-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  .../arch/powerpc/power9/metrics.json          | 20 +++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+>  tools/perf/builtin-record.c             | 19 +++++++---
+>  tools/perf/tests/attr/system-wide-dummy | 50 +++++++++++++++++++++++++
+>  tools/perf/tests/attr/test-record-C0    | 12 +++++-
+>  tools/perf/util/evsel.c                 |  5 ++-
+>  4 files changed, 78 insertions(+), 8 deletions(-)
+>  create mode 100644 tools/perf/tests/attr/system-wide-dummy
 > 
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> index f371104dcbe3..80816d6402e9 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> @@ -208,19 +208,19 @@
->          "MetricName": "fxu_stall_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to branch mispred",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to branch mispred",
->          "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_br_mpred_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to Icache Miss and branch mispred",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to Icache Miss and branch mispred",
->          "MetricExpr": "PM_ICT_NOSLOT_BR_MPRED_ICMISS/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_br_mpred_icmiss_cpi"
->      },
->      {
-> -        "BriefDescription": "ICT other stalls",
-> +        "BriefDescription": "Instruction Completion Table other stalls",
->          "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DISP_HELD)/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_cyc_other_cpi"
-> @@ -232,13 +232,13 @@
->          "MetricName": "ict_noslot_disp_held_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to dispatch holds because the History Buffer was full. Could be GPR/VSR/VMR/FPR/CR/XVF",
->          "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_HB_FULL/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_disp_held_hb_full_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to dispatch hold on this thread due to Issue q full, BRQ full, XVCF Full, Count cache, Link, Tar full",
->          "MetricExpr": "PM_ICT_NOSLOT_DISP_HELD_ISSQ/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_disp_held_issq_cpi"
-> @@ -268,19 +268,19 @@
->          "MetricName": "ict_noslot_ic_l2_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from the local L3",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to icache misses that were sourced from the local L3",
->          "MetricExpr": "PM_ICT_NOSLOT_IC_L3/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_ic_l3_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to icache misses that were sourced from beyond the local L3. The source could be local/remote/distant memory or another core's cache",
->          "MetricExpr": "PM_ICT_NOSLOT_IC_L3MISS/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_ic_l3miss_cpi"
->      },
->      {
-> -        "BriefDescription": "Ict empty for this thread due to Icache Miss",
-> +        "BriefDescription": "Instruction Completion Table empty for this thread due to Icache Miss",
->          "MetricExpr": "PM_ICT_NOSLOT_IC_MISS/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "ict_noslot_ic_miss_cpi"
-> @@ -391,7 +391,7 @@
->          "MetricName": "nested_tend_stall_cpi"
->      },
->      {
-> -        "BriefDescription": "Number of cycles the ICT has no itags assigned to this thread",
-> +        "BriefDescription": "Number of cycles the Instruction Completion Table has no itags assigned to this thread",
->          "MetricExpr": "PM_ICT_NOSLOT_CYC/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "nothing_dispatched_cpi"
-> @@ -503,7 +503,7 @@
->          "MetricName": "st_fwd_stall_cpi"
->      },
->      {
-> -        "BriefDescription": "Nothing completed and ICT not empty",
-> +        "BriefDescription": "Nothing completed and Instruction Completion Table not empty",
->          "MetricExpr": "PM_CMPLU_STALL/PM_RUN_INST_CMPL",
->          "MetricGroup": "cpi_breakdown",
->          "MetricName": "stall_cpi"
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 1ab349abe904..8d1e93351298 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -805,19 +805,28 @@ static int record__open(struct record *rec)
+>  	int rc = 0;
+>  
+>  	/*
+> -	 * For initial_delay we need to add a dummy event so that we can track
+> -	 * PERF_RECORD_MMAP while we wait for the initial delay to enable the
+> -	 * real events, the ones asked by the user.
+> +	 * For initial_delay or system wide, we need to add a dummy event so
+> +	 * that we can track PERF_RECORD_MMAP to cover the delay of waiting or
+> +	 * event synthesis.
+>  	 */
+> -	if (opts->initial_delay) {
+> +	if (opts->initial_delay || target__has_cpu(&opts->target)) {
+>  		if (perf_evlist__add_dummy(evlist))
+>  			return -ENOMEM;
+>  
+> +		/* Disable tracking of mmaps on lead event. */
+>  		pos = evlist__first(evlist);
+>  		pos->tracking = 0;
+> +		/* Set up dummy event. */
+>  		pos = evlist__last(evlist);
+>  		pos->tracking = 1;
+> -		pos->core.attr.enable_on_exec = 1;
+> +		/*
+> +		 * Enable the dummy event when the process is forked for
+> +		 * initial_delay, immediately for system wide.
+> +		 */
+> +		if (opts->initial_delay)
+> +			pos->core.attr.enable_on_exec = 1;
+> +		else
+> +			pos->immediate = 1;
+>  	}
+>  
+>  	perf_evlist__config(evlist, opts, &callchain_param);
+> diff --git a/tools/perf/tests/attr/system-wide-dummy b/tools/perf/tests/attr/system-wide-dummy
+> new file mode 100644
+> index 000000000000..eba723cc0d38
+> --- /dev/null
+> +++ b/tools/perf/tests/attr/system-wide-dummy
+> @@ -0,0 +1,50 @@
+> +# Event added by system-wide or CPU perf-record to handle the race of
+> +# processes starting while /proc is processed.
+> +[event]
+> +fd=1
+> +group_fd=-1
+> +cpu=*
+> +pid=-1
+> +flags=8
+> +type=1
+> +size=120
+> +config=9
+> +sample_period=4000
+> +sample_type=455
+> +read_format=4
+> +# Event will be enabled right away.
+> +disabled=0
+> +inherit=1
+> +pinned=0
+> +exclusive=0
+> +exclude_user=0
+> +exclude_kernel=0
+> +exclude_hv=0
+> +exclude_idle=0
+> +mmap=1
+> +comm=1
+> +freq=1
+> +inherit_stat=0
+> +enable_on_exec=0
+> +task=1
+> +watermark=0
+> +precise_ip=0
+> +mmap_data=0
+> +sample_id_all=1
+> +exclude_host=0
+> +exclude_guest=0
+> +exclude_callchain_kernel=0
+> +exclude_callchain_user=0
+> +mmap2=1
+> +comm_exec=1
+> +context_switch=0
+> +write_backward=0
+> +namespaces=0
+> +use_clockid=0
+> +wakeup_events=0
+> +bp_type=0
+> +config1=0
+> +config2=0
+> +branch_sample_type=0
+> +sample_regs_user=0
+> +sample_stack_user=0
+> diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/attr/test-record-C0
+> index 93818054ae20..317730b906dd 100644
+> --- a/tools/perf/tests/attr/test-record-C0
+> +++ b/tools/perf/tests/attr/test-record-C0
+> @@ -9,6 +9,14 @@ cpu=0
+>  # no enable on exec for CPU attached
+>  enable_on_exec=0
+>  
+> -# PERF_SAMPLE_IP | PERF_SAMPLE_TID PERF_SAMPLE_TIME | # PERF_SAMPLE_PERIOD
+> +# PERF_SAMPLE_IP | PERF_SAMPLE_TID | PERF_SAMPLE_TIME |
+> +# PERF_SAMPLE_ID | PERF_SAMPLE_PERIOD
+>  # + PERF_SAMPLE_CPU added by -C 0
+> -sample_type=391
+> +sample_type=455
+> +
+> +# Dummy event handles mmaps, comm and task.
+> +mmap=0
+> +comm=0
+> +task=0
+> +
+> +[event:system-wide-dummy]
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 6a571d322bb2..ca8f9533d8f9 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1163,11 +1163,14 @@ void perf_evsel__config(struct evsel *evsel, struct record_opts *opts,
+>  	}
+>  
+>  	/*
+> +	 * A dummy event never triggers any actual counter and therefore
+> +	 * cannot be used with branch_stack.
+> +	 *
+>  	 * For initial_delay, a dummy event is added implicitly.
+>  	 * The software event will trigger -EOPNOTSUPP error out,
+>  	 * if BRANCH_STACK bit is set.
+>  	 */
+> -	if (opts->initial_delay && is_dummy_event(evsel))
+> +	if (is_dummy_event(evsel))
+>  		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
+>  }
+>  
 > -- 
-> 2.18.2
+> 2.26.2.303.gf8c07b1a785-goog
 > 
 
 -- 
