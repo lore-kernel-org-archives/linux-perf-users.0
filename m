@@ -1,55 +1,276 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 0/7] Share events between metrics
-Date: Wed, 20 May 2020 07:50:30 -0700
-Message-ID: <CAP-5=fXZVmjuiGyRsjzjfsBOpN50SeA+Gi66Of_wa61j7f6X5Q@mail.gmail.com>
-References: <20200520072814.128267-1-irogers@google.com> <20200520131359.GJ157452@krava>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20200520131359.GJ157452@krava>
-Sender: netdev-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Song Liu <songliubraving@fb.com>, Andrii Nakryiko <andriin@fb.com>, Kajol Jain <kjain@linux.ibm.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, Cong Wang <xiyou.wangcong@gmail.com>, Kim Phillips <kim.phillips@amd.com>, Paul Clarke <pc@us.ibm.com>, Srikar Dronamraju <srikar@linux.vnet.ibm.com>, LKML <linux-kernel@vger.kernel.org>, Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>li
+From: "Paul A. Clarke" <pc@us.ibm.com>
+Subject: [PATCH] perf config: Add stat.big-num support
+Date: Wed, 20 May 2020 10:32:55 -0500
+Message-ID: <1589988775-9995-1-git-send-email-pc@us.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, May 20, 2020 at 6:14 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Wed, May 20, 2020 at 12:28:07AM -0700, Ian Rogers wrote:
-> > Metric groups contain metrics. Metrics create groups of events to
-> > ideally be scheduled together. Often metrics refer to the same events,
-> > for example, a cache hit and cache miss rate. Using separate event
-> > groups means these metrics are multiplexed at different times and the
-> > counts don't sum to 100%. More multiplexing also decreases the
-> > accuracy of the measurement.
-> >
-> > This change orders metrics from groups or the command line, so that
-> > the ones with the most events are set up first. Later metrics see if
-> > groups already provide their events, and reuse them if
-> > possible. Unnecessary events and groups are eliminated.
-> >
-> > The option --metric-no-group is added so that metrics aren't placed in
-> > groups. This affects multiplexing and may increase sharing.
-> >
-> > The option --metric-mo-merge is added and with this option the
-> > existing grouping behavior is preserved.
-> >
-> > Using skylakex metrics I ran the following shell code to count the
-> > number of events for each metric group (this ignores metric groups
-> > with a single metric, and one of the duplicated TopdownL1 and
-> > TopDownL1 groups):
->
-> hi,
-> I'm getting parser error with:
->
-> [jolsa@krava perf]$ sudo ./perf stat -M IPC,CPI -a -I 1000
-> event syntax error: '..ed.thread}:W{inst_retired.any,cpu_clk_unhalted.thread}:W,{inst_retired.any,cycles}:W'
->                                   \___ parser error
->
-> jirka
+From: "Paul A. Clarke" <pc@us.ibm.com>
 
-Ah, looks like an issue introduced by:
-https://lore.kernel.org/lkml/20200520072814.128267-8-irogers@google.com/
-as there is a missing comma. I'll investigate after some breakfast.
+Add support for new "stat.big-num" boolean option.
 
-Thanks,
-Ian
+This allows a user to set a default for "--no-big-num" for "perf stat"
+commands.
+
+$ perf config stat.big-num
+$ perf stat --event cycles /bin/true
+
+ Performance counter stats for '/bin/true':
+
+           803,684      cycles                                                      
+[...]
+$ perf config stat.big-num=0
+$ perf config stat.big-num
+stat.big-num=0
+$ perf stat --event cycles /bin/true
+
+ Performance counter stats for '/bin/true':
+
+            790448      cycles                                                      
+[...]
+
+There is an interaction with "--field-separator" that must be
+accommodated, such that specifying "--big-num --field-separator={x}"
+still reports an invalid combination of options.
+
+Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+---
+Testing results with a matrix of:
+- nothing in .perfconfig, stat.big-num=0, stat.big-num=1
+- --field-separator not set, --field-separator=:
+- no "--big-num", --big-num, --no-big-num
+
+$ perf config stat.big-num
+$ perf stat --event cycles /bin/true
+
+ Performance counter stats for '/bin/true':
+
+           803,684      cycles                                                      
+
+       0.000592761 seconds time elapsed
+
+       0.000672000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --big-num /bin/true
+
+ Performance counter stats for '/bin/true':
+
+           809,599      cycles                                                      
+
+       0.000576090 seconds time elapsed
+
+       0.000627000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --no-big-num /bin/true
+
+ Performance counter stats for '/bin/true':
+
+            793870      cycles                                                      
+
+       0.000574928 seconds time elapsed
+
+       0.000625000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --field-separator=: /bin/true
+790255::cycles:346960:100.00::
+$ perf stat --event cycles --big-num --field-separator=: /bin/true
+-B option not supported with -x
+
+ Usage: perf stat [<options>] [<command>]
+
+    -B, --big-num         print large numbers with thousands' separators
+    -x, --field-separator <separator>
+                          print counts with custom separator
+$ perf stat --event cycles --no-big-num --field-separator=: /bin/true
+764548::cycles:335938:100.00::
+$ perf config stat.big-num=0
+$ perf config stat.big-num
+stat.big-num=0
+$ perf stat --event cycles /bin/true
+
+ Performance counter stats for '/bin/true':
+
+            790448      cycles                                                      
+
+       0.000567659 seconds time elapsed
+
+       0.000619000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --big-num /bin/true
+
+ Performance counter stats for '/bin/true':
+
+           751,377      cycles                                                      
+
+       0.000534888 seconds time elapsed
+
+       0.000587000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --no-big-num /bin/true
+
+ Performance counter stats for '/bin/true':
+
+            803738      cycles                                                      
+
+       0.000576151 seconds time elapsed
+
+       0.000657000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --field-separator=: /bin/true
+774897::cycles:339986:100.00::
+$ perf stat --event cycles --big-num --field-separator=: /bin/true
+-B option not supported with -x
+
+ Usage: perf stat [<options>] [<command>]
+
+    -B, --big-num         print large numbers with thousands' separators
+    -x, --field-separator <separator>
+                          print counts with custom separator
+$ perf stat --event cycles --no-big-num --field-separator=: /bin/true
+814619::cycles:358260:100.00::
+$ perf config stat.big-num=1
+$ perf config stat.big-num
+stat.big-num=1
+$ perf stat --event cycles /bin/true
+
+ Performance counter stats for '/bin/true':
+
+           787,680      cycles                                                      
+
+       0.000555401 seconds time elapsed
+
+       0.000623000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --big-num /bin/true
+
+ Performance counter stats for '/bin/true':
+
+           783,287      cycles                                                      
+
+       0.000562255 seconds time elapsed
+
+       0.000636000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --no-big-num /bin/true
+
+ Performance counter stats for '/bin/true':
+
+            748802      cycles                                                      
+
+       0.000525658 seconds time elapsed
+
+       0.000586000 seconds user
+       0.000000000 seconds sys
+
+
+$ perf stat --event cycles --field-separator=: /bin/true
+785868::cycles:344508:100.00::
+$ perf stat --event cycles --big-num --field-separator=: /bin/true
+-B option not supported with -x
+
+ Usage: perf stat [<options>] [<command>]
+
+    -B, --big-num         print large numbers with thousands' separators
+    -x, --field-separator <separator>
+                          print counts with custom separator
+$ perf stat --event cycles --no-big-num --field-separator=: /bin/true
+794273::cycles:349600:100.00::
+$ 
+--
+ tools/perf/builtin-stat.c |  6 ++++++
+ tools/perf/util/config.c  | 13 +++++++++++++
+ tools/perf/util/stat.h    |  2 ++
+ 3 files changed, 21 insertions(+)
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index e0c1ad23c768..c39305907940 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -821,10 +821,16 @@ static void sig_atexit(void)
+ 	kill(getpid(), signr);
+ }
+ 
++void perf_stat__set_big_num(int set)
++{
++	stat_config.big_num = (set != 0);
++}
++
+ static int stat__set_big_num(const struct option *opt __maybe_unused,
+ 			     const char *s __maybe_unused, int unset)
+ {
+ 	big_num_opt = unset ? 0 : 1;
++	perf_stat__set_big_num(!unset);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index ef38eba56ed0..8e65f1fa421f 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -17,6 +17,7 @@
+ #include "util/event.h"  /* proc_map_timeout */
+ #include "util/hist.h"  /* perf_hist_config */
+ #include "util/llvm-utils.h"   /* perf_llvm_config */
++#include "util/stat.h"  /* perf_stat__set_big_num */
+ #include "build-id.h"
+ #include "debug.h"
+ #include "config.h"
+@@ -452,6 +453,15 @@ static int perf_ui_config(const char *var, const char *value)
+ 	return 0;
+ }
+ 
++static int perf_stat_config(const char *var, const char *value)
++{
++	if (!strcmp(var, "stat.big-num"))
++		perf_stat__set_big_num(perf_config_bool(var, value));
++
++	/* Add other config variables here. */
++	return 0;
++}
++
+ int perf_default_config(const char *var, const char *value,
+ 			void *dummy __maybe_unused)
+ {
+@@ -473,6 +483,9 @@ int perf_default_config(const char *var, const char *value,
+ 	if (strstarts(var, "buildid."))
+ 		return perf_buildid_config(var, value);
+ 
++	if (strstarts(var, "stat."))
++		return perf_stat_config(var, value);
++
+ 	/* Add other config variables here. */
+ 	return 0;
+ }
+diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+index b4fdfaa7f2c0..4bd6dc6cb6aa 100644
+--- a/tools/perf/util/stat.h
++++ b/tools/perf/util/stat.h
+@@ -132,6 +132,8 @@ struct perf_stat_config {
+ 	struct rblist		 metric_events;
+ };
+ 
++void perf_stat__set_big_num(int set);
++
+ void update_stats(struct stats *stats, u64 val);
+ double avg_stats(struct stats *stats);
+ double stddev_stats(struct stats *stats);
+-- 
+2.18.2
