@@ -1,163 +1,127 @@
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: Perf Reports Jump Instructions as Memory Access Instructions
-Date: Tue, 26 May 2020 10:38:17 -0300
-Message-ID: <20200526133817.GA23187@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-trace-users-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-trace-users-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>, Andi Kleen <andi@firstfloor.org>, Jin Yao <yao.jin@linux.intel.com>
-Cc: ahmadkhorrami <ahmadkhorrami@ut.ac.ir>, Linux-trace Users <linux-trace-users@vger.kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH] perf tools: Fix debuginfo search for Ubuntu
+Date: Tue, 26 May 2020 18:29:10 +0300
+Message-ID: <20200526152910.1587-1-adrian.hunter@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>, Travis Downs <travis.downs@gmail.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, May 25, 2020 at 10:52:25AM -0400, Steven Rostedt escreveu:
-> Arnaldo,
->
-> This one may be for you ;-)
+Reportedly, from 19.10 Ubuntu has begun mixing up the location of some
+debug symbol files, putting files expected to be in
+/usr/lib/debug/usr/lib into /usr/lib/debug/lib instead. Fix by adding
+another dso_binary_type.
 
-Humm, I think linux-perf-users@vger.kernel.org may be better, I'm also
-adding some Intel guys that work on perf that may be of help.
+Example on Ubuntu 20.04
 
-Jin came to mind as having worked in this feature in the past:
+  Before:
 
-commit 7e63a13a266da652f82731b845b5c35dd866ec7e
-Author: Jin Yao <yao.jin@linux.intel.com>
-Date:   Fri Jul 7 13:06:35 2017 +0800
+    $ perf record -e intel_pt//u uname
+    Linux
+    [ perf record: Woken up 1 times to write data ]
+    [ perf record: Captured and wrote 0.030 MB perf.data ]
+    $ perf script --call-trace | head -5
+           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
+           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          7f1e71cc4100
+           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4df0
+           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc4e18
+           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )              7f1e71cc5128
 
-    perf annotate: Implement visual marker for macro fusion
+  After:
 
-    For marking fused instructions clearly this patch adds a line before
-the
-    first instruction of pair and joins it with the arrow of the jump to
-its
-    target.
+    $ perf script --call-trace | head -5
+           uname 14003 [005] 15321.764958566:  cbr: 42 freq: 4219 MHz (156%)
+           uname 14003 [005] 15321.764958566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )      _start
+           uname 14003 [005] 15321.764961566: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+           uname 14003 [005] 15321.764961900: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
+           uname 14003 [005] 15321.764963233: (/usr/lib/x86_64-linux-gnu/ld-2.31.so              )          _dl_start
 
-    For example, when "je" is selected in annotate view, the line before
-    cmpl is displayed and joins the arrow of "je".
+Reported-by: Travis Downs <travis.downs@gmail.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: stable@vger.kernel.org
+---
+ tools/perf/util/dso.c          | 14 ++++++++++++++
+ tools/perf/util/dso.h          |  1 +
+ tools/perf/util/probe-finder.c |  1 +
+ tools/perf/util/symbol.c       |  2 ++
+ 4 files changed, 18 insertions(+)
 
-           │   ┌──cmpl   $0x0,argp_program_version_hook
-     81.93 │   ├──je     20
-           │   │  lock   cmpxchg %esi,0x38a9a4(%rip)
-           │   │↓ jne    29
-           │   │↓ jmp    43
-     11.47 │20:└─→cmpxch %esi,0x38a999(%rip)
-
-I took a stab at explaining it, but I'm not sure that makes sense, take
-a look :)
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index e68e1375e3c0..15b635d6c83c 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -47,6 +47,7 @@ char dso__symtab_origin(const struct dso *dso)
+ 		[DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO]	= 'D',
+ 		[DSO_BINARY_TYPE__FEDORA_DEBUGINFO]		= 'f',
+ 		[DSO_BINARY_TYPE__UBUNTU_DEBUGINFO]		= 'u',
++		[DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO]	= 'x',
+ 		[DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO]	= 'o',
+ 		[DSO_BINARY_TYPE__BUILDID_DEBUGINFO]		= 'b',
+ 		[DSO_BINARY_TYPE__SYSTEM_PATH_DSO]		= 'd',
+@@ -129,6 +130,19 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 		snprintf(filename + len, size - len, "%s", dso->long_name);
+ 		break;
  
-> On Sun, 17 May 2020 19:40:52 +0430 ahmadkhorrami <ahmadkhorrami@ut.ac.ir> wrote:
-> > I used the following perf command to sample user space read accesses to 
-> > DRAM by evince:
-> > perf record -d --call-graph dwarf -c 100 -e 
-> > mem_load_uops_retired.l3_miss:uppp /opt/evince-3.28.4/bin/evince
-
-> > As can be seen, I used the PEBS feature to increase the accuracy of 
-> > sampling. But there are some non-memory accesses reported as memory 
-> > ones. Here is one of them reported by perf script -D:
-> > 11159097179866 0xfb80 [0x1778]: PERF_RECORD_SAMPLE(IP, 0x4002): 
-> > 7309/7309: 0x7ffff6d6c310 period: 10000 addr: 0x7ffff7034e50
-> > ... FP chain: nr:0
-> > ... user regs: mask 0xff0fff ABI 64-bit
-> > .... AX    0x555555b8b4c0
-> > .... BX    0x555555c48e10
-> > .... CX    0x1
-> > .... DX    0x7fffffffd988
-> > .... SI    0x7fffffffd980
-> > .... DI    0x555555b8b4c0
-> > .... BP    0x258
-> > .... SP    0x7fffffffd978
-> > .... IP    0x7ffff6d6c310
-> > .... FLAGS 0x20e
-> > .... CS    0x33
-> > .... SS    0x2b
-> > .... R8    0x27c
-> > .... R9    0x24
-> > .... R10   0x2a2
-> > .... R11   0x0
-> > .... R12   0x258
-> > .... R13   0x555555b8b4c0
-> > .... R14   0x3000
-> > .... R15   0x7ffff5747000
-> > ... ustack: size 5768, offset 0xd8
-> >   . data_src: 0x5080022
-> >   ... thread: evince:7309
-> >   ...... dso: /usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30
-> > evince  7309 11159.097179:      10000    
-> > mem_load_uops_retired.l3_miss:uppp:     7ffff7034e50         5080022 
-> > N/A|SNP N/A|TLB N/A|LCK N/A
-> >          7ffff6d6c310 cairo_surface_get_device_scale@plt+0x0 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d91029 gdk_window_create_similar_surface+0xc9 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d95410 gdk_window_begin_paint_internal+0x350 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d956f1 gdk_window_begin_draw_frame+0xc1 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff73c4942 gtk_widget_render+0xd2 
-> > (/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
-> >          7ffff7268858 gtk_main_do_event+0x708 
-> > (/usr/lib/x86_64-linux-gnu/libgtk-3.so.0.2200.30)
-> >          7ffff6d79764 _gdk_event_emit+0x24 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d897f4 _gdk_window_process_updates_recurse_helper+0x104 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d8a9f5 gdk_window_process_updates_internal+0x165 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d8abef gdk_window_process_updates_with_mode+0x11f 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff574510c g_closure_invoke+0x19c 
-> > (/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.4)
-> >          7ffff575805d signal_emit_unlocked_R+0xf4d 
-> > (/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.4)
-> >          7ffff5760714 g_signal_emit_valist+0xa74 
-> > (/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.4)
-> >          7ffff576112e g_signal_emit+0x8e 
-> > (/usr/lib/x86_64-linux-gnu/libgobject-2.0.so.0.5600.4)
-> >          7ffff6d82ac8 gdk_frame_clock_paint_idle+0x3c8 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff6d6e07f gdk_threads_dispatch+0x1f 
-> > (/usr/lib/x86_64-linux-gnu/libgdk-3.so.0.2200.30)
-> >          7ffff546ad02 g_timeout_dispatch+0x12 
-> > (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.4)
-> >          7ffff546a284 g_main_dispatch+0x154 (inlined)
-> >          7ffff546a284 g_main_context_dispatch+0x154 
-> > (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.4)
-> >          7ffff546a64f g_main_context_iterate+0x1ff (inlined)
-> >          7ffff546a6db g_main_context_iteration+0x2b 
-> > (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5600.4)
-> >          7ffff5a2be3c g_application_run+0x1fc 
-> > (/usr/lib/x86_64-linux-gnu/libgio-2.0.so.0.5600.4)
-> >          555555573707 main+0x447 (/opt/evince-3.28.4/bin/evince)
-> >          7ffff4a91b96 __libc_start_main+0xe6 
-> > (/lib/x86_64-linux-gnu/libc-2.27.so)
-> >          555555573899 _start+0x29 (/opt/evince-3.28.4/bin/evince)
-> > 
-> > The access point is at offset 0 of the following disassembly:
- > Dump of assembler code for function cairo_surface_get_device_scale@plt:
-> >     0x000000000002a310 <+0>:     jmpq   *0x2c8b3a(%rip)        # 0x2f2e50
-> >     0x000000000002a316 <+6>:     pushq  $0x1c7
-> >     0x000000000002a31b <+11>:    jmpq   0x28690
-> > 
-> > This is an unconditional jump which will not lead to macrofusion.
-
-But that will access memory, no? The instruction at offset 0.
-
- 11159097179866 0xfb80 [0x1778]: PERF_RECORD_SAMPLE(IP, 0x4002): 7309/7309: 0x7ffff6d6c310 period: 10000 addr: 0x7ffff7034e50
-
- .... IP    0x7ffff6d6c310
-
-So the sample was at 0x7ffff6d6c310 and was for the addr 0x7ffff7034e50:
-
-  jmpq   *0x2c8b3a(%rip)
-
-IP + 0x2c8b3a == 0x7ffff6d6c310 + 0x2c8b3a == 0x7ffff7034e4a
-
-0x7ffff7034e4a - 0x7ffff7034e50 == -0x6
-
-Close enough? Some PEBS measurement skid? Jin?
-
-> > Any help is appreciated.
-
-- Arnaldo
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++		/*
++		 * Ubuntu can mixup /usr/lib with /lib, putting debuginfo in
++		 * /usr/lib/debug/lib when it is expected to be in
++		 * /usr/lib/debug/usr/lib
++		 */
++		if (strlen(dso->long_name) < 9 ||
++		    strncmp(dso->long_name, "/usr/lib/", 9))
++			ret = -1;
++		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
++		snprintf(filename + len, size - len, "%s", dso->long_name + 4);
++		break;
++
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+ 	{
+ 		const char *last_slash;
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 42b3a278ac59..8b7958f02609 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -30,6 +30,7 @@ enum dso_binary_type {
+ 	DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO,
+ 	DSO_BINARY_TYPE__FEDORA_DEBUGINFO,
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_DSO,
+ 	DSO_BINARY_TYPE__GUEST_KMODULE,
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index e4cff49384f4..55924255c535 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -101,6 +101,7 @@ enum dso_binary_type distro_dwarf_types[] = {
+ 	DSO_BINARY_TYPE__UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
+ 	DSO_BINARY_TYPE__BUILDID_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
+ 
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 7725c83996f4..44d81f90b604 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -79,6 +79,7 @@ static enum dso_binary_type binary_type_symtab[] = {
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE,
+ 	DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP,
+ 	DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO,
++	DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO,
+ 	DSO_BINARY_TYPE__NOT_FOUND,
+ };
+ 
+@@ -1529,6 +1530,7 @@ static bool dso__is_compatible_symtab_type(struct dso *dso, bool kmod,
+ 	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+ 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+ 	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+ 		return !kmod && dso->kernel == DSO_TYPE_USER;
+-- 
+2.17.1
