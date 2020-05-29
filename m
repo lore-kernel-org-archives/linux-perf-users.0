@@ -1,43 +1,35 @@
-From: ahmadkhorrami <ahmadkhorrami@ut.ac.ir>
-Subject: Re: Perf Reports Jump Instructions as Memory Access Instructions
-Date: Wed, 27 May 2020 00:25:35 +0430
-Message-ID: <3043c6c2f878ad3419e350867903cb0a@ut.ac.ir>
-References: <20200526133817.GA23187@redhat.com>
- <20200526164159.dsnboewwdyczr5j6@two.firstfloor.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [RFC 0/2] tools/build/ patches to allow setting NO_SYSCALL_TABLE=1 from make command line
+Date: Fri, 29 May 2020 12:55:50 -0300
+Message-ID: <20200529155552.463-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-trace-users-owner@vger.kernel.org>
-In-Reply-To: <20200526164159.dsnboewwdyczr5j6@two.firstfloor.org>
-Sender: linux-trace-users-owner@vger.kernel.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Jin Yao <yao.jin@linux.intel.com>, Linux-trace Users <linux-trace-users@vger.kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Thanks! This seems reasonable. But as Arnaldo says, why is there a skid 
-in the access address while PEBS is used? Both RIP and Access Address 
-should match, Right?
-Regards.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On 2020-05-26 21:12, Andi Kleen wrote:
+Hi Jiri,
 
-> The access point is at offset 0 of the following disassembly:
-   > Dump of assembler code for function 
-cairo_surface_get_device_scale@plt:
+	Can you please take a look if these are ok? I've tested it
+extensively, but being Makefiles, I may be missing something... There
+are more patches on top of these in the tmp.perf/core branch in my tree,
+if you could take a quick look on those, that would be great as well.
+The one that makes libaudit not be tested by default, for instace.
 
->> 0x000000000002a310 <+0>:     jmpq   *0x2c8b3a(%rip)        # 0x2f2e50
->> 0x000000000002a316 <+6>:     pushq  $0x1c7
->> 0x000000000002a31b <+11>:    jmpq   0x28690
->> 
->> This is an unconditional jump which will not lead to macrofusion.
+Best regards,
 
-But that will access memory, no? The instruction at offset 0.
-Instruction fetches are not sampled by the MEM_INST_RETIRED event.
+- Arnaldo
 
-This is an indirect jump through memory, so it accesses the memory at
-0x2c8b3a(%rip). These kind of accesses are sampled by the event.
+Arnaldo Carvalho de Melo (2):
+  perf build: Group the NO_SYSCALL_TABLE logic
+  perf build: Allow explicitely disabling the NO_SYSCALL_TABLE variable
 
-Other memory accesses as part of other instructions may be sampled too.
+ tools/perf/Makefile.config | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
--Andi
+-- 
+2.25.3
