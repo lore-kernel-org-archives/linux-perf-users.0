@@ -1,71 +1,109 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 2/2] perf build: Allow explicitely disabling the
- NO_SYSCALL_TABLE variable
-Date: Fri, 29 May 2020 16:45:15 -0300
-Message-ID: <20200529194515.GB31795@kernel.org>
+Subject: Re: [PATCH 1/2] perf build: Group the NO_SYSCALL_TABLE logic
+Date: Fri, 29 May 2020 17:19:27 -0300
+Message-ID: <20200529201927.GC31795@kernel.org>
 References: <20200529155552.463-1-acme@kernel.org>
- <20200529155552.463-3-acme@kernel.org>
- <20200529180717.GF506785@krava>
+ <20200529155552.463-2-acme@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200529180717.GF506785@krava>
+In-Reply-To: <20200529155552.463-2-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
+To: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Fri, May 29, 2020 at 08:07:17PM +0200, Jiri Olsa escreveu:
-> On Fri, May 29, 2020 at 12:55:52PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > This is useful to see if, on x86, the legacy libaudit still works, as it
-> > is used in architectures that don't have the SYSCALL_TABLE logic and we
-> > want to have it tested in 'make -C tools/perf/ build-test'.
-> > 
-> > E.g.:
-> > 
-> > Without having audit-libs-devel installed:
-> > 
-> >   $ make NO_SYSCALL_TABLE=1 O=/tmp/build/perf -C tools/perf install-bin
-> >   make: Entering directory '/home/acme/git/perf/tools/perf'
-> >     BUILD:   Doing 'make -j12' parallel build
-> >   <SNIP>
-> >   Auto-detecting system features:
-> >   <SNIP>
-> >   ...                      libaudit: [ OFF ]
-> >   ...                        libbfd: [ on  ]
-> >   ...                        libcap: [ on  ]
-> >   <SNIP>
-> >   Makefile.config:664: No libaudit.h found, disables 'trace' tool, please install audit-libs-devel or libaudit-dev
-> >   <SNIP>
-> > 
-> > After installing it:
-> > 
-> >   $ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
-> >   $ time make NO_SYSCALL_TABLE=1 O=/tmp/build/perf  -C tools/perf install-bin ; perf test python
+Em Fri, May 29, 2020 at 12:55:51PM -0300, Arnaldo Carvalho de Melo escreveu:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> heya,
-> seems ok, perhaps also put it in comment to Makefile.perf
-> among other NO_* stuff and to tests/make
+> To help in allowing to disable it from the make command line.
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/Makefile.config | 23 +++++++++++++++--------
+>  1 file changed, 15 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index ae325f79e598..93fb7510a9a9 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -23,12 +23,26 @@ include $(srctree)/tools/scripts/Makefile.arch
+>  $(call detected_var,SRCARCH)
+>  
+>  NO_PERF_REGS := 1
+> +
+>  NO_SYSCALL_TABLE := 1
+>  
+> +ifeq ($(SRCARCH),x86)
+> +  ifeq (${IS_64_BIT}, 1)
+> +    NO_SYSCALL_TABLE := 0
+> +  endif
+> +else
+> +  ifneq ($(SRCARCH),$(filter $(SRCARCH),powerpc arm64 s390))
 
-
-Added this and your Acked-by (from the "seems ok") :-) Ok?
+The above should've been a ifeq, to see if SRCARCH is one of those,
+detected in the cross build tests, fixed.
 
 - Arnaldo
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 30e41dcd4095..e3a34af38130 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -118,6 +118,9 @@ include ../scripts/utilities.mak
- #
- # Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
- #
-+# Define NO_SYSCALL_TABLE=1 to disable the use of syscall id to/from name tables
-+# generated from the kernel .tbl or unistd.h files and use, if available, libaudit
-+# for doing the conversions to/from strings/id.
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
+> +    NO_SYSCALL_TABLE := 0
+> +  endif
+> +endif
+> +
+> +ifneq ($(NO_SYSCALL_TABLE),1)
+> +  CFLAGS += -DHAVE_SYSCALL_TABLE_SUPPORT
+> +endif
+> +
+>  # Additional ARCH settings for ppc
+>  ifeq ($(SRCARCH),powerpc)
+>    NO_PERF_REGS := 0
+> -  NO_SYSCALL_TABLE := 0
+>    CFLAGS += -I$(OUTPUT)arch/powerpc/include/generated
+>    LIBUNWIND_LIBS := -lunwind -lunwind-ppc64
+>  endif
+> @@ -37,7 +51,6 @@ endif
+>  ifeq ($(SRCARCH),x86)
+>    $(call detected,CONFIG_X86)
+>    ifeq (${IS_64_BIT}, 1)
+> -    NO_SYSCALL_TABLE := 0
+>      CFLAGS += -DHAVE_ARCH_X86_64_SUPPORT -I$(OUTPUT)arch/x86/include/generated
+>      ARCH_INCLUDE = ../../arch/x86/lib/memcpy_64.S ../../arch/x86/lib/memset_64.S
+>      LIBUNWIND_LIBS = -lunwind-x86_64 -lunwind -llzma
+> @@ -55,7 +68,6 @@ endif
+>  
+>  ifeq ($(SRCARCH),arm64)
+>    NO_PERF_REGS := 0
+> -  NO_SYSCALL_TABLE := 0
+>    CFLAGS += -I$(OUTPUT)arch/arm64/include/generated
+>    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+>  endif
+> @@ -70,7 +82,6 @@ endif
+>  
+>  ifeq ($(ARCH),s390)
+>    NO_PERF_REGS := 0
+> -  NO_SYSCALL_TABLE := 0
+>    CFLAGS += -fPIC -I$(OUTPUT)arch/s390/include/generated
+>  endif
+>  
+> @@ -78,10 +89,6 @@ ifeq ($(NO_PERF_REGS),0)
+>    $(call detected,CONFIG_PERF_REGS)
+>  endif
+>  
+> -ifneq ($(NO_SYSCALL_TABLE),1)
+> -  CFLAGS += -DHAVE_SYSCALL_TABLE_SUPPORT
+> -endif
+> -
+>  # So far there's only x86 and arm libdw unwind support merged in perf.
+>  # Disable it on all other architectures in case libdw unwind
+>  # support is detected in system. Add supported architectures
+> -- 
+> 2.25.3
+> 
+
+-- 
+
+- Arnaldo
