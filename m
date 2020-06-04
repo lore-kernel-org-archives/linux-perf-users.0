@@ -1,48 +1,24 @@
-From: ahmadkhorrami <ahmadkhorrami@ut.ac.ir>
-Subject: Re: Perf Reports Jump Instructions as Memory Access Instructions
-Date: Wed, 03 Jun 2020 08:19:34 +0430
-Message-ID: <1113a5891fcccce6cfe59e6da59eee95@ut.ac.ir>
-References: <20200526133817.GA23187@redhat.com>
- <20200526164159.dsnboewwdyczr5j6@two.firstfloor.org>
- <3043c6c2f878ad3419e350867903cb0a@ut.ac.ir>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-trace-users-owner@vger.kernel.org>
-In-Reply-To: <3043c6c2f878ad3419e350867903cb0a@ut.ac.ir>
-Sender: linux-trace-users-owner@vger.kernel.org
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, Jin Yao <yao.jin@linux.intel.com>, Linux-trace Users <linux-trace-users@vger.kernel.org>, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, linux-trace-users-owner@vger.kernel.org
+From: pr-tracker-bot@kernel.org
+Subject: Re: [GIT PULL] perf tooling changes for v5.8
+Date: Thu, 04 Jun 2020 17:35:07 +0000
+Message-ID: <159129210795.22790.14622941457346390218.pr-tracker-bot@kernel.org>
+References: <20200602182423.2451-1-acme@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200602182423.2451-1-acme@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Anand K Mistry <amistry@google.com>, Andi Kleen <ak@linux.intel.com>, Changbin Du <changbin.du@gmail.com>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, Joakim Zhang <qiangqing.zhang@nxp.com>, Kajol Jain <kjain@linux.ibm.com>, Li Bin <huawei.libin@huawei.com>, Masami Hiramatsu <mhiramat@kernel.or>
 List-Id: linux-perf-users.vger.kernel.org
 
-Thanks everybody, specially, Steven, Arnaldo and Andi.
+The pull request you sent on Tue,  2 Jun 2020 15:24:23 -0300:
 
-On 2020-05-27 00:25, ahmadkhorrami wrote:
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools-2020-06-02
 
-> Thanks! This seems reasonable. But as Arnaldo says, why is there a skid 
-> in the access address while PEBS is used? Both RIP and Access Address 
-> should match, Right?
-> Regards.
-> 
-> On 2020-05-26 21:12, Andi Kleen wrote:
-> 
->> The access point is at offset 0 of the following disassembly:
->> Dump of assembler code for function 
->> cairo_surface_get_device_scale@plt:
-> 
-> 0x000000000002a310 <+0>:     jmpq   *0x2c8b3a(%rip)        # 0x2f2e50
-> 0x000000000002a316 <+6>:     pushq  $0x1c7
-> 0x000000000002a31b <+11>:    jmpq   0x28690
-> 
-> This is an unconditional jump which will not lead to macrofusion.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/38b3a5aaf2fd35e997550b855cfb7460b077236a
 
-But that will access memory, no? The instruction at offset 0.
-Instruction fetches are not sampled by the MEM_INST_RETIRED event.
+Thank you!
 
-This is an indirect jump through memory, so it accesses the memory at
-0x2c8b3a(%rip). These kind of accesses are sampled by the event.
-
-Other memory accesses as part of other instructions may be sampled too.
-
--Andi
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
