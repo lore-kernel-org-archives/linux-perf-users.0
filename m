@@ -1,24 +1,149 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] perf tooling changes for v5.8
-Date: Thu, 04 Jun 2020 17:35:07 +0000
-Message-ID: <159129210795.22790.14622941457346390218.pr-tracker-bot@kernel.org>
-References: <20200602182423.2451-1-acme@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH v2 1/2] perf: Fix user attribute access in kprobes
+Date: Tue, 9 Jun 2020 12:13:44 -0300
+Message-ID: <20200609151344.GD24868@kernel.org>
+References: <20200609081019.60234-1-sumanthk@linux.ibm.com>
+ <20200609081019.60234-2-sumanthk@linux.ibm.com>
+ <20200609150931.GC24868@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200602182423.2451-1-acme@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200609150931.GC24868@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, Adrian Hunter <adrian.hunter@intel.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Anand K Mistry <amistry@google.com>, Andi Kleen <ak@linux.intel.com>, Changbin Du <changbin.du@gmail.com>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, Joakim Zhang <qiangqing.zhang@nxp.com>, Kajol Jain <kjain@linux.ibm.com>, Li Bin <huawei.libin@huawei.com>, Masami Hiramatsu <mhiramat@kernel.or>
+To: Sumanth Korikkar <sumanthk@linux.ibm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, jolsa@redhat.com, tmricht@linux.ibm.com, heiko.carstens@de.ibm.com, mhiramat@kernel.org, iii@linux.ibm.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-The pull request you sent on Tue,  2 Jun 2020 15:24:23 -0300:
+Em Tue, Jun 09, 2020 at 12:09:31PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Jun 09, 2020 at 10:10:18AM +0200, Sumanth Korikkar escreveu:
+> > Issue:
+> > perf probe -a 'do_sched_setscheduler  pid policy
+> > param->sched_priority@user' did not work before.
+> > 
+> > Fix:
+> > Make (perf probe -a 'do_sched_setscheduler  pid policy
+> > param->sched_priority@user') output equivalent to ftrace
+> > ('p:probe/do_sched_setscheduler _text+517384 pid=%r2:s32 policy=%r3:s32
+> > sched_priority=+u0(%r4):s32' > kprobe_events)
+> > 
+> > Other:
+> > 1. Right now, __match_glob() does not handle [u]<offset>. For now, use
+> >   *u]<offset>.
+> > 2. @user attribute was introduced in commit 1e032f7cfa14 ("perf-probe:
+> >    Add user memory access attribute support")
+> > 
+> > Test:
+> > 1. perf probe -a 'do_sched_setscheduler  pid policy
+> >    param->sched_priority@user'
+> > 
+> > 2 ./perf script
+> >    sched 305669 [000] 1614458.838675: perf_bpf_probe:func: (2904e508)
+> >    pid=261614 policy=2 sched_priority=1
+> > 
+> > 3. cat /sys/kernel/debug/tracing/trace
+> >    <...>-309956 [006] .... 1616098.093957: 0: prio: 1
+> 
+> Thanks, I'm adding this:
+> 
+> Fixes: 1e032f7cfa14 ("perf-probe: Add user memory access attribute support")
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> So that the stable guys pick this up eventually,
+> 
+> That first hunk with the strcmp() return check could have gone into a
+> separate patch, but I'll process it as-is for expediency,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools-2020-06-02
+I also added this:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/38b3a5aaf2fd35e997550b855cfb7460b077236a
+ommitter testing:
 
-Thank you!
+Before:
+
+  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
+  param(type:sched_param) has no member sched_priority@user.
+    Error: Failed to add events.
+  # pahole sched_param
+  struct sched_param {
+        int                        sched_priority;       /*     0     4 */
+
+        /* size: 4, cachelines: 1, members: 1 */
+        /* last cacheline: 4 bytes */
+  };
+  #
+
+After:
+
+  # perf probe -a 'do_sched_setscheduler pid policy param->sched_priority@user'
+  Added new event:
+    probe:do_sched_setscheduler (on do_sched_setscheduler with pid policy sched_priority=param->sched_priority)
+
+  You can now use it in all perf tools, such as:
+
+        perf record -e probe:do_sched_setscheduler -aR sleep 1
+
+  # cat /sys/kernel/debug/tracing/kprobe_events
+  p:probe/do_sched_setscheduler _text+1113792 pid=%di:s32 policy=%si:s32 sched_priority=+u0(%dx):s32
+  #
+
+ 
+> - Arnaldo
+>  
+> > Signed-off-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> > Reviewed-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  tools/perf/util/probe-event.c | 7 +++++--
+> >  tools/perf/util/probe-file.c  | 2 +-
+> >  2 files changed, 6 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
+> > index a08f373d3305..df713a5d1e26 100644
+> > --- a/tools/perf/util/probe-event.c
+> > +++ b/tools/perf/util/probe-event.c
+> > @@ -1575,7 +1575,7 @@ static int parse_perf_probe_arg(char *str, struct perf_probe_arg *arg)
+> >  	}
+> >  
+> >  	tmp = strchr(str, '@');
+> > -	if (tmp && tmp != str && strcmp(tmp + 1, "user")) { /* user attr */
+> > +	if (tmp && tmp != str && !strcmp(tmp + 1, "user")) { /* user attr */
+> >  		if (!user_access_is_supported()) {
+> >  			semantic_error("ftrace does not support user access\n");
+> >  			return -EINVAL;
+> > @@ -1995,7 +1995,10 @@ static int __synthesize_probe_trace_arg_ref(struct probe_trace_arg_ref *ref,
+> >  		if (depth < 0)
+> >  			return depth;
+> >  	}
+> > -	err = strbuf_addf(buf, "%+ld(", ref->offset);
+> > +	if (ref->user_access)
+> > +		err = strbuf_addf(buf, "%s%ld(", "+u", ref->offset);
+> > +	else
+> > +		err = strbuf_addf(buf, "%+ld(", ref->offset);
+> >  	return (err < 0) ? err : depth;
+> >  }
+> >  
+> > diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+> > index 8c852948513e..064b63a6a3f3 100644
+> > --- a/tools/perf/util/probe-file.c
+> > +++ b/tools/perf/util/probe-file.c
+> > @@ -1044,7 +1044,7 @@ static struct {
+> >  	DEFINE_TYPE(FTRACE_README_PROBE_TYPE_X, "*type: * x8/16/32/64,*"),
+> >  	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
+> >  	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
+> > -	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
+> > +	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*u]<offset>*"),
+> >  	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
+> >  	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
+> >  };
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+
+- Arnaldo
