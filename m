@@ -1,107 +1,80 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 2/2] perf: Fix bpf prologue generation
-Date: Tue, 9 Jun 2020 12:27:14 -0300
-Message-ID: <20200609152714.GE24868@kernel.org>
-References: <20200609081019.60234-1-sumanthk@linux.ibm.com>
- <20200609081019.60234-3-sumanthk@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Subject: [PATCH 1/2] perf expr: Add d_ratio operation
+Date: Tue,  9 Jun 2020 22:17:15 -0700
+Message-ID: <20200610051717.170457-1-irogers@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200609081019.60234-3-sumanthk@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sumanth Korikkar <sumanthk@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, tmricht@linux.ibm.com, heiko.carstens@de.ibm.com, mhiramat@kernel.org, iii@linux.ibm.com, Steven Rostedt <rostedt@goodmis.org>, Namhyung Kim <namhyung@kernel.org>, Wang Nan <wangnan0@huawei.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, John Garry <john.garry@huawei.com>, Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: Stephane Eranian <eranian@google.com>, linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jun 09, 2020 at 10:10:19AM +0200, Sumanth Korikkar escreveu:
-> Issue:
-> bpf_probe_read is no longer available for architecture which has
-> overlapping address space. Hence bpf prologue generation fails
-> 
-> Fix:
-> Use bpf_probe_read_kernel for kernel member access. For user
-> attribute access in kprobes, use bpf_probe_read_user.
-> 
-> Other:
-> @user attribute was introduced in commit 1e032f7cfa14 ("perf-probe:
->  Add user memory access attribute support")
-> 
-> Test:
-> 1. ulimit -l 128 ; ./perf record -e tests/bpf_sched_setscheduler.c
-> 2. cat tests/bpf_sched_setscheduler.c
-> 
-> static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) =
->         (void *) 6;
-> static int (*bpf_probe_read_user)(void *dst, __u32 size,
->                                   const void *unsafe_ptr) = (void *) 112;
-> static int (*bpf_probe_read_kernel)(void *dst, __u32 size,
->         const void *unsafe_ptr) = (void *) 113;
-> 
-> SEC("func=do_sched_setscheduler  pid policy param->sched_priority@user")
-> int bpf_func__setscheduler(void *ctx, int err, pid_t pid, int policy,
->                            int param)
-> {
->         char fmt[] = "prio: %ld";
->         bpf_trace_printk(fmt, sizeof(fmt), param);
->         return 1;
-> }
-> 
-> char _license[] SEC("license") = "GPL";
-> int _version SEC("version") = LINUX_VERSION_CODE;
-> 
-> 3. ./perf script
->    sched 305669 [000] 1614458.838675: perf_bpf_probe:func: (2904e508)
->    pid=261614 policy=2 sched_priority=1
-> 
-> 4. cat /sys/kernel/debug/tracing/trace
->    <...>-309956 [006] .... 1616098.093957: 0: prio: 1
+This simplifies computing ratios in json expressions.
 
-Thanks for providing a detailed set of steps to test your patch, that is
-great!
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/expr.l |  1 +
+ tools/perf/util/expr.y | 14 ++++++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
-I added this, an alterenative way to test it, combining all the aspects
-in one 'perf trace' call:
-
-Committer testing:
-
-I had to add some missing headers in the bpf_sched_setscheduler.c test
-proggie, then instead of using record+script I used 'perf trace' to
-drive everything in one go:
-
-  # cat bpf_sched_setscheduler.c
-  #include <linux/types.h>
-  #include <bpf.h>
-
-  static void (*bpf_trace_printk)(const char *fmt, int fmt_size, ...) = (void *) 6;
-  static int (*bpf_probe_read_user)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 112;
-  static int (*bpf_probe_read_kernel)(void *dst, __u32 size, const void *unsafe_ptr) = (void *) 113;
-
-  SEC("func=do_sched_setscheduler  pid policy param->sched_priority@user")
-  int bpf_func__setscheduler(void *ctx, int err, pid_t pid, int policy, int param)
-  {
-          char fmt[] = "prio: %ld";
-          bpf_trace_printk(fmt, sizeof(fmt), param);
-          return 1;
-  }
-
-  char _license[] SEC("license") = "GPL";
-  int _version SEC("version") = LINUX_VERSION_CODE;
-  #
-  #
-  # perf trace -e bpf_sched_setscheduler.c chrt -f 42 sleep 1
-     0.000 chrt/80125 perf_bpf_probe:func(__probe_ip: -1676607808, policy: 1, sched_priority: 42)
-  #
-
-And even with backtraces :-)
-
-  # perf trace -e bpf_sched_setscheduler.c/max-stack=8/ chrt -f 42 sleep 1
-       0.000 chrt/79805 perf_bpf_probe:func(__probe_ip: -1676607808, policy: 1, sched_priority: 42)
-                                         do_sched_setscheduler ([kernel.kallsyms])
-                                         __x64_sys_sched_setscheduler ([kernel.kallsyms])
-                                         do_syscall_64 ([kernel.kallsyms])
-                                         entry_SYSCALL_64 ([kernel.kallsyms])
-                                         __GI___sched_setscheduler (/usr/lib64/libc-2.30.so)
-  # 
-
-- Arnaldo
+diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
+index f397bf8b1a48..298d86660a96 100644
+--- a/tools/perf/util/expr.l
++++ b/tools/perf/util/expr.l
+@@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
+ 		}
+ 	}
+ 
++d_ratio		{ return D_RATIO; }
+ max		{ return MAX; }
+ min		{ return MIN; }
+ if		{ return IF; }
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index bf3e898e3055..fe145344bb39 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -10,6 +10,14 @@
+ #include "smt.h"
+ #include <string.h>
+ 
++static double d_ratio(double val0, double val1)
++{
++	if (val1 == 0) {
++		return 0;
++	}
++	return  val0 / val1;
++}
++
+ %}
+ 
+ %define api.pure full
+@@ -28,7 +36,7 @@
+ %token <num> NUMBER
+ %token <str> ID
+ %destructor { free ($$); } <str>
+-%token MIN MAX IF ELSE SMT_ON
++%token MIN MAX IF ELSE SMT_ON D_RATIO
+ %left MIN MAX IF
+ %left '|'
+ %left '^'
+@@ -64,7 +72,8 @@ other: ID
+ }
+ |
+ MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
+-
++|
++D_RATIO
+ 
+ all_expr: if_expr			{ *final_val = $1; }
+ 	;
+@@ -105,6 +114,7 @@ expr:	  NUMBER
+ 	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
+ 	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
+ 	| SMT_ON		 { $$ = smt_on() > 0; }
++	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
+ 	;
+ 
+ %%
+-- 
+2.27.0.278.ge193c7cf3a9-goog
