@@ -1,89 +1,75 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/2] perf expr: Add d_ratio operation
-Date: Wed, 10 Jun 2020 11:19:49 -0300
-Message-ID: <20200610141949.GN24868@kernel.org>
+Subject: Re: [PATCH 2/2] perf expr: Add < and > operators
+Date: Wed, 10 Jun 2020 11:21:36 -0300
+Message-ID: <20200610142136.GO24868@kernel.org>
 References: <20200610051717.170457-1-irogers@google.com>
+ <20200610051717.170457-2-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200610051717.170457-1-irogers@google.com>
+In-Reply-To: <20200610051717.170457-2-irogers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ian Rogers <irogers@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, John Garry <john.garry@huawei.com>, Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Jun 09, 2020 at 10:17:15PM -0700, Ian Rogers escreveu:
-> This simplifies computing ratios in json expressions.
+Em Tue, Jun 09, 2020 at 10:17:16PM -0700, Ian Rogers escreveu:
+> These are broadly useful and necessary for Intel's top-down analysis.
 
-Appling to my local branch, Jiri, can I have your acked-by?
+Ditto.
 
 - Arnaldo
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/expr.l |  1 +
->  tools/perf/util/expr.y | 14 ++++++++++++--
->  2 files changed, 13 insertions(+), 2 deletions(-)
+>  tools/perf/util/expr.l | 2 ++
+>  tools/perf/util/expr.y | 5 ++++-
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 > 
 > diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> index f397bf8b1a48..298d86660a96 100644
+> index 298d86660a96..13e5e3c75f56 100644
 > --- a/tools/perf/util/expr.l
 > +++ b/tools/perf/util/expr.l
-> @@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
->  		}
->  	}
->  
-> +d_ratio		{ return D_RATIO; }
->  max		{ return MAX; }
->  min		{ return MIN; }
->  if		{ return IF; }
+> @@ -111,6 +111,8 @@ else		{ return ELSE; }
+>  "|"		{ return '|'; }
+>  "^"		{ return '^'; }
+>  "&"		{ return '&'; }
+> +"<"		{ return '<'; }
+> +">"		{ return '>'; }
+>  "-"		{ return '-'; }
+>  "+"		{ return '+'; }
+>  "*"		{ return '*'; }
 > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index bf3e898e3055..fe145344bb39 100644
+> index fe145344bb39..5fcb98800f9c 100644
 > --- a/tools/perf/util/expr.y
 > +++ b/tools/perf/util/expr.y
-> @@ -10,6 +10,14 @@
->  #include "smt.h"
->  #include <string.h>
->  
-> +static double d_ratio(double val0, double val1)
-> +{
-> +	if (val1 == 0) {
-> +		return 0;
-> +	}
-> +	return  val0 / val1;
-> +}
-> +
->  %}
->  
->  %define api.pure full
-> @@ -28,7 +36,7 @@
->  %token <num> NUMBER
->  %token <str> ID
->  %destructor { free ($$); } <str>
-> -%token MIN MAX IF ELSE SMT_ON
-> +%token MIN MAX IF ELSE SMT_ON D_RATIO
->  %left MIN MAX IF
+> @@ -41,6 +41,7 @@ static double d_ratio(double val0, double val1)
 >  %left '|'
 >  %left '^'
-> @@ -64,7 +72,8 @@ other: ID
->  }
+>  %left '&'
+> +%left '<' '>'
+>  %left '-' '+'
+>  %left '*' '/' '%'
+>  %left NEG NOT
+> @@ -73,7 +74,7 @@ other: ID
 >  |
 >  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
-> -
-> +|
-> +D_RATIO
+>  |
+> -D_RATIO
+> +'<' | '>' | D_RATIO
 >  
 >  all_expr: if_expr			{ *final_val = $1; }
 >  	;
-> @@ -105,6 +114,7 @@ expr:	  NUMBER
->  	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
->  	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
->  	| SMT_ON		 { $$ = smt_on() > 0; }
-> +	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
->  	;
->  
->  %%
+> @@ -94,6 +95,8 @@ expr:	  NUMBER
+>  	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
+>  	| expr '&' expr		{ $$ = (long)$1 & (long)$3; }
+>  	| expr '^' expr		{ $$ = (long)$1 ^ (long)$3; }
+> +	| expr '<' expr		{ $$ = $1 < $3; }
+> +	| expr '>' expr		{ $$ = $1 > $3; }
+>  	| expr '+' expr		{ $$ = $1 + $3; }
+>  	| expr '-' expr		{ $$ = $1 - $3; }
+>  	| expr '*' expr		{ $$ = $1 * $3; }
 > -- 
 > 2.27.0.278.ge193c7cf3a9-goog
 > 
