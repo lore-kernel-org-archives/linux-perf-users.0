@@ -1,125 +1,110 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH v2 1/2] perf expr: Add d_ratio operation
-Date: Thu, 11 Jun 2020 10:09:38 -0300
-Message-ID: <20200611130938.GB18482@kernel.org>
-References: <20200610235823.52557-1-irogers@google.com>
- <20200611083846.GA1786122@krava>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: Perf Script Erroneous User Stack Trace
+Date: Mon, 15 Jun 2020 16:31:45 -0400
+Message-ID: <20200615163145.458bd878@oasis.local.home>
+References: <816cb5f558cd0e528812dff2168ef4ca@ut.ac.ir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200611083846.GA1786122@krava>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, John Garry <john.garry@huawei.com>, Paul Clarke <pc@us.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, linux-kernel@vger.kernel.org, Stephane Eranian <eranian@google.com>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-trace-users-owner@vger.kernel.org>
+In-Reply-To: <816cb5f558cd0e528812dff2168ef4ca@ut.ac.ir>
+Sender: linux-trace-users-owner@vger.kernel.org
+To: ahmadkhorrami <ahmadkhorrami@ut.ac.ir>
+Cc: Linux-trace Users <linux-trace-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Thu, Jun 11, 2020 at 10:38:46AM +0200, Jiri Olsa escreveu:
-> On Wed, Jun 10, 2020 at 04:58:22PM -0700, Ian Rogers wrote:
-> > d_ratio avoids division by 0 yielding infinity, such as when a counter
-> > doesn't get scheduled. An example usage is:
-> > 
-> > {
-> >     "BriefDescription": "DCache L1 misses",
-> >     "MetricExpr": "d_ratio(MEM_LOAD_RETIRED.L1_MISS, MEM_LOAD_RETIRED.L1_HIT + MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT)",
-> >     "MetricGroup": "DCache;DCache_L1",
-> >     "MetricName": "DCache_L1_Miss",
-> >     "ScaleUnit": "100%",
-> > }
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
+On Sun, 14 Jun 2020 18:13:21 +0430
+ahmadkhorrami <ahmadkhorrami@ut.ac.ir> wrote:
+
+> Hi,
 > 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-Thanks, applied both,
-
-- Arnaldo
- 
-> thanks,
-> jirka
+> I used the following command to sample backtraces for a simple "ffmpeg" 
+> benchmark:
+> sudo perf record -d --call-graph dwarf,65528 -c 1000000 -e 
+> mem_load_uops_retired.l3_miss:u ffmpeg -i 
+> /media/ahmad/DATA/Videos/video.mp4 -threads 1 -vf spp out.mp4
 > 
-> > ---
-> >  tools/perf/tests/expr.c |  2 ++
-> >  tools/perf/util/expr.l  |  1 +
-> >  tools/perf/util/expr.y  | 14 ++++++++++++--
-> >  3 files changed, 15 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> > index 1cb02ca2b15f..c4877b36ab58 100644
-> > --- a/tools/perf/tests/expr.c
-> > +++ b/tools/perf/tests/expr.c
-> > @@ -39,6 +39,8 @@ int test__expr(struct test *t __maybe_unused, int subtest __maybe_unused)
-> >  	ret |= test(&ctx, "1+1 if 3*4 else 0", 2);
-> >  	ret |= test(&ctx, "1.1 + 2.1", 3.2);
-> >  	ret |= test(&ctx, ".1 + 2.", 2.1);
-> > +	ret |= test(&ctx, "d_ratio(1, 2)", 0.5);
-> > +	ret |= test(&ctx, "d_ratio(2.5, 0)", 0);
-> >  
-> >  	if (ret)
-> >  		return ret;
-> > diff --git a/tools/perf/util/expr.l b/tools/perf/util/expr.l
-> > index f397bf8b1a48..298d86660a96 100644
-> > --- a/tools/perf/util/expr.l
-> > +++ b/tools/perf/util/expr.l
-> > @@ -100,6 +100,7 @@ symbol		({spec}|{sym})+
-> >  		}
-> >  	}
-> >  
-> > +d_ratio		{ return D_RATIO; }
-> >  max		{ return MAX; }
-> >  min		{ return MIN; }
-> >  if		{ return IF; }
-> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> > index bf3e898e3055..fe145344bb39 100644
-> > --- a/tools/perf/util/expr.y
-> > +++ b/tools/perf/util/expr.y
-> > @@ -10,6 +10,14 @@
-> >  #include "smt.h"
-> >  #include <string.h>
-> >  
-> > +static double d_ratio(double val0, double val1)
-> > +{
-> > +	if (val1 == 0) {
-> > +		return 0;
-> > +	}
-> > +	return  val0 / val1;
-> > +}
-> > +
-> >  %}
-> >  
-> >  %define api.pure full
-> > @@ -28,7 +36,7 @@
-> >  %token <num> NUMBER
-> >  %token <str> ID
-> >  %destructor { free ($$); } <str>
-> > -%token MIN MAX IF ELSE SMT_ON
-> > +%token MIN MAX IF ELSE SMT_ON D_RATIO
-> >  %left MIN MAX IF
-> >  %left '|'
-> >  %left '^'
-> > @@ -64,7 +72,8 @@ other: ID
-> >  }
-> >  |
-> >  MIN | MAX | IF | ELSE | SMT_ON | NUMBER | '|' | '^' | '&' | '-' | '+' | '*' | '/' | '%' | '(' | ')' | ','
-> > -
-> > +|
-> > +D_RATIO
-> >  
-> >  all_expr: if_expr			{ *final_val = $1; }
-> >  	;
-> > @@ -105,6 +114,7 @@ expr:	  NUMBER
-> >  	| MIN '(' expr ',' expr ')' { $$ = $3 < $5 ? $3 : $5; }
-> >  	| MAX '(' expr ',' expr ')' { $$ = $3 > $5 ? $3 : $5; }
-> >  	| SMT_ON		 { $$ = smt_on() > 0; }
-> > +	| D_RATIO '(' expr ',' expr ')' { $$ = d_ratio($3,$5); }
-> >  	;
-> >  
-> >  %%
-> > -- 
-> > 2.27.0.278.ge193c7cf3a9-goog
-> > 
+> As can be seen PEBS is not used, the stack size is set to the maximum 
+> and the sampling period is quite large. I also limited the thread count, 
+> but this is the first portion of "perf script --no-demangle" output:
+> ffmpeg 11750  6670.061261:    1000000 mem_load_uops_retired.l3_miss:u:   
+>               0         5080021 N/A|SNP N/A|TLB N/A|LCK N/A
+>          7fffeab68844 x264_pixel_avg_w16_avx2+0x4 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
 > 
+> ffmpeg 11750  6670.274835:    1000000 mem_load_uops_retired.l3_miss:u:   
+>               0         5080021 N/A|SNP N/A|TLB N/A|LCK N/A
+>          7fffeab68844 x264_pixel_avg_w16_avx2+0x4 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+> 
+> ffmpeg 11750  6670.496159:    1000000 mem_load_uops_retired.l3_miss:u:   
+>               0         5080021 N/A|SNP N/A|TLB N/A|LCK N/A
+>          7fffeab8ef89 x264_pixel_sad_x4_16x16_avx2+0x49 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+> 
+> ffmpeg 11750  6670.852598:    1000000 mem_load_uops_retired.l3_miss:u:   
+>               0         5080021 N/A|SNP N/A|TLB N/A|LCK N/A
+>          7fffeaac97b3 pixel_memset+0x293 (inlined)
+>          7fffeaac97b3 plane_expand_border+0x293 (inlined)
+>          7fffeaac97b3 x264_frame_expand_border_filtered+0x293 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab463bc x264_fdec_filter_row+0x69c 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab49523 x264_slice_write+0x1873 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab85285 x264_stack_align+0x15 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab45bdb x264_slices_write+0xfb 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          5555561e3d87 [unknown] ([heap])
+> 
+> ffmpeg 11750  6671.110007:    1000000 mem_load_uops_retired.l3_miss:u:   
+>               0         5080021 N/A|SNP N/A|TLB N/A|LCK N/A
+>          7fffeab6cdde x264_frame_init_lowres_core_avx2+0x8e 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+> 
+> ffmpeg 11750  6671.463562:    1000000 mem_load_uops_retired.l3_miss:u:   
+>               0         5080021 N/A|SNP N/A|TLB N/A|LCK N/A
+>          7fffeaabf806 x264_macroblock_load_pic_pointers+0x886 (inlined)
+>          7fffeaabf806 x264_macroblock_cache_load+0x886 (inlined)
+>          7fffeaabf806 x264_macroblock_cache_load_progressive+0x886 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab49204 x264_slice_write+0x1554 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab85285 x264_stack_align+0x15 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>          7fffeab45bdb x264_slices_write+0xfb 
+> (/usr/lib/x86_64-linux-gnu/libx264.so.152)
+>                    1c [unknown] ([unknown])
+> 
+> None of the backtraces are correct. Because none of them begin with 
+> "__start" or "__GI___clone". I also used "LBR", instead. But it has more 
+> size constraints and, therefore, not suitable. The important thing to 
+> note is that the problem occurs only with user space events (and for all 
+> events that I checked). I do not think that the problem is with 
+> DebugInfo. Because I manually used "perf_event_open()" system call 
+> (without using "Perf") and the problem was still there (with raw 
+> callstack IPs).
+> 
+> Therefore, I assumed that the problem is inside the kernel. Precisely, 
+> it should be where the userspace callchain is extracted or dumped. I 
+> looked for the latter (i.e., the callchain dump implementation) and it 
+> seemed to be here:
+> https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L6786
+> 
+> But I could not (or, equivalently, did not know how to) view the user 
+> callchain instruction pointers.
+> Am I on the right track? Does anybody know the kernel mechanism for 
+> extracting userspace callchains?
+> 
+> Please accept my apology for my frequent questions. I tried to get 
+> around the problem, myself, but it has taken more than three complete 
+> days and I'm stuck!
+> I really appreciate any suggestions.
 
--- 
+No problem, but please note that perf questions are more likely to be
+answered via: linux-perf-users@vger.kernel.org and not
+linux-trace-users. As linux-trace-users are more for ftrace and not
+perf.
 
-- Arnaldo
+-- Steve
