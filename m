@@ -1,38 +1,94 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [RFC 0/3] powerpc/perf: Add json file support for hv_24x7 core level events
-Date: Thu, 25 Jun 2020 17:17:15 +0530
-Message-ID: <20200625114718.229911-1-kjain@linux.ibm.com>
+Subject: [RFC 2/3] perf/tools: Pass pmu_event structure as a parameter for arch_get_runtimeparam
+Date: Thu, 25 Jun 2020 17:17:17 +0530
+Message-ID: <20200625114718.229911-3-kjain@linux.ibm.com>
+References: <20200625114718.229911-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200625114718.229911-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Patchset enhance current runtime parameter support. It introduces new
-fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-used to specify perpkg events. 
+This patch adds passing of  pmu_event as a parameter in function
+'arch_get_runtimeparam' which can be used to get details like
+if the event is percore/perchip.
 
-The "PerCore" and "PerChip" specifies whether its core or chip events.
-Based on which we can decide which runtime parameter user want to
-access. Now character  '?' can refers different parameter based on user
-requirement.
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/arch/powerpc/util/header.c | 7 +++++--
+ tools/perf/util/metricgroup.c         | 5 ++---
+ tools/perf/util/metricgroup.h         | 3 ++-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-Kajol Jain (3):
-  perf jevents: Add support for parsing perchip/percore events
-  perf/tools: Pass pmu_event structure as a parameter for
-    arch_get_runtimeparam
-  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-
- tools/perf/arch/powerpc/util/header.c         |  7 ++--
- .../arch/powerpc/power9/nest_metrics.json     | 15 ++++++--
- tools/perf/pmu-events/jevents.c               | 34 +++++++++++++++----
- tools/perf/pmu-events/jevents.h               |  3 +-
- tools/perf/pmu-events/pmu-events.h            |  2 ++
- tools/perf/util/metricgroup.c                 |  5 ++-
- tools/perf/util/metricgroup.h                 |  3 +-
- 7 files changed, 53 insertions(+), 16 deletions(-)
-
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index d4870074f14c..fe684e0af5b3 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -47,8 +47,11 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ 	return bufp;
+ }
+ 
+-int arch_get_runtimeparam(void)
++int arch_get_runtimeparam(struct pmu_event *pe)
+ {
+ 	int count;
+-	return sysfs__read_int("/devices/hv_24x7/interface/sockets", &count) < 0 ? 1 : count;
++	char path[PATH_MAX] = "/devices/hv_24x7/interface/";
++
++	pe->perchip ? strcat(path, "sockets") : strcat(path, "coresperchip");
++	return sysfs__read_int(path, &count) < 0 ? 1 : count;
+ }
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 9e21aa767e41..c06166ec64d6 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -15,7 +15,6 @@
+ #include "rblist.h"
+ #include <string.h>
+ #include <errno.h>
+-#include "pmu-events/pmu-events.h"
+ #include "strlist.h"
+ #include <assert.h>
+ #include <linux/ctype.h>
+@@ -547,7 +546,7 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
+ 	return false;
+ }
+ 
+-int __weak arch_get_runtimeparam(void)
++int __weak arch_get_runtimeparam(struct pmu_event *pe __maybe_unused)
+ {
+ 	return 1;
+ }
+@@ -634,7 +633,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 			} else {
+ 				int j, count;
+ 
+-				count = arch_get_runtimeparam();
++				count = arch_get_runtimeparam(pe);
+ 
+ 				/* This loop is added to create multiple
+ 				 * events depend on count value and add
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 287850bcdeca..c0bf77514343 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -5,6 +5,7 @@
+ #include <linux/list.h>
+ #include <linux/rbtree.h>
+ #include <stdbool.h>
++#include "pmu-events/pmu-events.h"
+ 
+ struct evsel;
+ struct option;
+@@ -37,5 +38,5 @@ int metricgroup__parse_groups(const struct option *opt,
+ void metricgroup__print(bool metrics, bool groups, char *filter,
+ 			bool raw, bool details);
+ bool metricgroup__has_metric(const char *metric);
+-int arch_get_runtimeparam(void);
++int arch_get_runtimeparam(struct pmu_event *pe __maybe_unused);
+ #endif
 -- 
 2.26.2
