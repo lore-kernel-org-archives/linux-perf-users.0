@@ -1,66 +1,103 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH] perf/tools/pmu-events/powerpc: Added nest imc metric events
-Date: Fri,  3 Jul 2020 12:26:58 +0530
-Message-ID: <20200703065658.377467-1-kjain@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH] perf/tools/pmu-events/powerpc: Added nest imc metric events
+Date: Sun, 5 Jul 2020 18:30:30 -0700
+Message-ID: <CAP-5=fUraGwGLC79g51eZpcB9e2P=tOmz7U7G=RAu+Hmjjjxzw@mail.gmail.com>
+References: <20200703065658.377467-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200703065658.377467-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com, kjain@linux.ibm.com
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Paul Clarke <pc@us.ibm.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, "Liang, Kan" <kan.liang@linux.intel.com>, nasastry@in.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Added nest imc metric events.
+On Thu, Jul 2, 2020 at 11:57 PM Kajol Jain <kjain@linux.ibm.com> wrote:
+>
+> Added nest imc metric events.
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 35 +++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Acked-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-index c121e526442a..8383a37647ad 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -15,5 +15,40 @@
- 	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
-         "MetricName": "PowerBUS_Frequency",
-         "ScaleUnit": "2.5e-7GHz"
-+    },
-+    {
-+	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
-+	"MetricName" : "mcs01-read",
-+	"MetricGroup" : "memory_bw",
-+	"ScaleUnit": "6.1e-5MB"
-+    },
-+    {
-+	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
-+	"MetricName" : "mcs23-read",
-+	"MetricGroup" : "memory_bw",
-+	"ScaleUnit": "6.1e-5MB"
-+    },
-+    {
-+	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
-+	"MetricName" : "mcs01-write",
-+	"MetricGroup" : "memory_bw",
-+	"ScaleUnit": "6.1e-5MB"
-+    },
-+    {
-+	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
-+	"MetricName" : "mcs23-write",
-+	"MetricGroup" : "memory-bandwidth",
-+	"ScaleUnit": "6.1e-5MB"
-+    },
-+    {
-+	"MetricExpr" : "nest_powerbus0_imc@PM_PB_CYC@",
-+	"MetricName" : "powerbus_freq",
-+	"ScaleUnit": "1e-9GHz"
-+    },
-+    {
-+	"MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@)",
-+	"MetricName" : "Memory-bandwidth-MCS",
-+	"MetricGroup" : "memory_bw",
-+	"ScaleUnit": "6.1e-5MB"
-     }
- ]
--- 
-2.17.1
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  .../arch/powerpc/power9/nest_metrics.json     | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json =
+b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> index c121e526442a..8383a37647ad 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+> @@ -15,5 +15,40 @@
+>         "MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=3D?@ )",
+>          "MetricName": "PowerBUS_Frequency",
+>          "ScaleUnit": "2.5e-7GHz"
+> +    },
+> +    {
+> +       "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + ne=
+st_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
+> +       "MetricName" : "mcs01-read",
+> +       "MetricGroup" : "memory_bw",
+> +       "ScaleUnit": "6.1e-5MB"
+
+nit: I'm guessing this is from:
+64.0/(1024.0*1024.0) =3D 6.103515625e-05
+and for reference:
+64.0/(1000.0*1000.0) =3D 6.3999999999999997e-05
+should the unit be MiB?
+https://en.wikipedia.org/wiki/Kibibyte
+
+Searching around I only see knightslanding using MiB but it seems to
+be using it in the 1000^2 case which probably means it should be MB:
+knightslanding/uncore-memory.json:        "ScaleUnit": "6.4e-05MiB"
+
+Given there is some confusion I wonder if it makes sense to just make
+this 0.015625B and then we have a utility function that selects the
+best unit for "bytes" with config options similar to --big-num?
+
+Thanks,
+Ian
+
+> +    },
+> +    {
+> +       "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + ne=
+st_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
+> +       "MetricName" : "mcs23-read",
+> +       "MetricGroup" : "memory_bw",
+> +       "ScaleUnit": "6.1e-5MB"
+> +    },
+> +    {
+> +       "MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + ne=
+st_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
+> +       "MetricName" : "mcs01-write",
+> +       "MetricGroup" : "memory_bw",
+> +       "ScaleUnit": "6.1e-5MB"
+> +    },
+> +    {
+> +       "MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + ne=
+st_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
+> +       "MetricName" : "mcs23-write",
+> +       "MetricGroup" : "memory-bandwidth",
+> +       "ScaleUnit": "6.1e-5MB"
+> +    },
+> +    {
+> +       "MetricExpr" : "nest_powerbus0_imc@PM_PB_CYC@",
+> +       "MetricName" : "powerbus_freq",
+> +       "ScaleUnit": "1e-9GHz"
+> +    },
+> +    {
+> +       "MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + n=
+est_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_=
+RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01=
+_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_P=
+ORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_M=
+CS23_128B_WR_DISP_PORT23@)",
+> +       "MetricName" : "Memory-bandwidth-MCS",
+> +       "MetricGroup" : "memory_bw",
+> +       "ScaleUnit": "6.1e-5MB"
+>      }
+>  ]
+> --
+> 2.17.1
+>
