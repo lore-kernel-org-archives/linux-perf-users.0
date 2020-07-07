@@ -1,89 +1,71 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [RFC v2 0/5] tools/perf/pmu-events/jevents.c
-Date: Tue,  7 Jul 2020 17:53:09 +0530
-Message-ID: <20200707122314.624400-1-kjain@linux.ibm.com>
+Subject: [RFC v2 3/5] perf jevents: Add support for parsing perchip/percore events
+Date: Tue,  7 Jul 2020 17:53:12 +0530
+Message-ID: <20200707122314.624400-4-kjain@linux.ibm.com>
+References: <20200707122314.624400-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200707122314.624400-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Patchset enhance current runtime parameter support. It introduces new
-fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-used to specify perpkg events. 
+Added the "PerChip" field  in enum so that perf knows they are
+per chip events.
 
-The "PerCore" and "PerChip" specifies whether its core or chip events.
-Based on which we can decide which runtime parameter user want to
-access. Now character  '?' can refers different parameter based on user
-requirement.
+Added the "PerCore" field in enum so that perf knows they are
+per core events and add these fields to pmu_event structure.
 
-Initially, every time we want to add new terms like chip, core, thread
-etc, we need to create corrsponding fields in pmu_events and event
-struct.
-This patchset adds an enum called 'aggr_mode_class' which store all these
-aggregation like perpkg/percore. It also adds new field 'AggregationMode'
-to capture these terms.
-Now, if user wants to add any new term, they just need to add it in
-the enum defined. I try to test it with  my current setup.
+Similar to the way we had "PerPkg field
+to specify perpkg events.
 
-I also need to replace PerPkg field to AggregationMode in all the
-x86 uncore json files. It will great if Andi and team can test it
-and let me know if they have any concerns.
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/pmu-events/jevents.c    | 8 +++++++-
+ tools/perf/pmu-events/pmu-events.h | 4 +++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-Changelog:
-v1 -> v2:
-- Rather then adding new field as PerCore/PerChip, created a new enum
-  to get these fields. And new field as "AggregationMode" which can
-  be used to capture these fields from json file.
-
-Kajol Jain (5):
-  perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
-  pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
-    json files
-  perf jevents: Add support for parsing perchip/percore events
-  perf/tools: Pass pmu_event structure as a parameter for
-    arch_get_runtimeparam
-  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-
- tools/perf/arch/powerpc/util/header.c         |   7 +-
- .../arch/powerpc/power9/nest_metrics.json     |  17 +-
- .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
- .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
- .../arch/x86/broadwellde/uncore-power.json    |  18 +-
- .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
- .../x86/broadwellx/uncore-interconnect.json   |   6 +-
- .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
- .../arch/x86/broadwellx/uncore-power.json     |  18 +-
- .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
- .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
- .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
- .../x86/haswellx/uncore-interconnect.json     |   6 +-
- .../arch/x86/haswellx/uncore-memory.json      |  18 +-
- .../arch/x86/haswellx/uncore-power.json       |  18 +-
- .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
- .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
- .../arch/x86/ivytown/uncore-memory.json       |  16 +-
- .../arch/x86/ivytown/uncore-power.json        |  52 +--
- .../arch/x86/jaketown/uncore-cache.json       |  40 +--
- .../x86/jaketown/uncore-interconnect.json     |  10 +-
- .../arch/x86/jaketown/uncore-memory.json      |  18 +-
- .../arch/x86/jaketown/uncore-power.json       |  52 +--
- .../x86/knightslanding/uncore-memory.json     |   8 +-
- .../arch/x86/skylakex/uncore-memory.json      |  36 +-
- .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
- .../arch/x86/tremontx/uncore-memory.json      |  14 +-
- .../arch/x86/tremontx/uncore-other.json       |  70 ++--
- .../arch/x86/tremontx/uncore-power.json       |   2 +-
- tools/perf/pmu-events/jevents.c               |  45 ++-
- tools/perf/pmu-events/jevents.h               |   2 +-
- tools/perf/pmu-events/pmu-events.h            |   8 +-
- tools/perf/tests/pmu-events.c                 |   8 +-
- tools/perf/util/metricgroup.c                 |   5 +-
- tools/perf/util/metricgroup.h                 |   3 +-
- tools/perf/util/pmu.c                         |   6 +-
- 36 files changed, 724 insertions(+), 689 deletions(-)
-
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index b2f59f0af63d..1f65047db000 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -54,13 +54,19 @@ int verbose;
+ char *prog;
+ 
+ enum aggr_mode_class {
+-	PerPkg = 1
++	PerChip = 0,
++	PerPkg = 1,
++	PerCore = 2
+ };
+ 
+ enum aggr_mode_class convert(const char *aggr_mode)
+ {
+ 	if (!strcmp(aggr_mode, "PerPkg"))
+ 		return PerPkg;
++	else if (!strcmp(aggr_mode, "PerCore"))
++		return PerCore;
++	else if (!strcmp(aggr_mode, "PerChip"))
++		return PerChip;
+ 	return -1;
+ }
+ 
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 71b7aa6278d0..114ae1559358 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -3,7 +3,9 @@
+ #define PMU_EVENTS_H
+ 
+ enum aggr_mode_class {
+-	PerPkg = 1
++	PerChip = 0,
++	PerPkg = 1,
++	PerCore = 2
+ };
+ 
+ /*
 -- 
 2.26.2
