@@ -1,78 +1,51 @@
 From: Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [RFC v2 5/5] perf/tools/pmu_events/powerpc: Add hv_24x7 core
- level metric events
-Date: Sun, 12 Jul 2020 20:55:43 +0200
-Message-ID: <20200712185543.GC147742@krava>
+Subject: Re: [RFC v2 0/5] tools/perf/pmu-events/jevents.c
+Date: Sun, 12 Jul 2020 20:57:46 +0200
+Message-ID: <20200712185746.GD147742@krava>
 References: <20200707122314.624400-1-kjain@linux.ibm.com>
- <20200707122314.624400-6-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200707122314.624400-6-kjain@linux.ibm.com>
+In-Reply-To: <20200707122314.624400-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kajol Jain <kjain@linux.ibm.com>
 Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Jul 07, 2020 at 05:53:14PM +0530, Kajol Jain wrote:
-> This patch adds hv_24x7 core level events in nest_metric.json file
-> and also add PerChip/PerCore field in metric events.
+On Tue, Jul 07, 2020 at 05:53:09PM +0530, Kajol Jain wrote:
+> Patchset enhance current runtime parameter support. It introduces new
+> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+> used to specify perpkg events. 
 > 
-> Result:
+> The "PerCore" and "PerChip" specifies whether its core or chip events.
+> Based on which we can decide which runtime parameter user want to
+> access. Now character  '?' can refers different parameter based on user
+> requirement.
 > 
-> power9 platform:
+> Initially, every time we want to add new terms like chip, core, thread
+> etc, we need to create corrsponding fields in pmu_events and event
+> struct.
+> This patchset adds an enum called 'aggr_mode_class' which store all these
+> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
+> to capture these terms.
+> Now, if user wants to add any new term, they just need to add it in
+> the enum defined. I try to test it with  my current setup.
 > 
-> command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
->      1.000070601                        1.9                        2.0
->      2.000253881                        2.0                        1.9
->      3.000364810                        2.0                        2.0
+> I also need to replace PerPkg field to AggregationMode in all the
+> x86 uncore json files. It will great if Andi and team can test it
+> and let me know if they have any concerns.
 > 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->  .../arch/powerpc/power9/nest_metrics.json       | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> index c121e526442a..2a471cb5dd7a 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-> @@ -3,17 +3,26 @@
->          "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
->          "MetricName": "Memory_RD_BW_Chip",
->          "MetricGroup": "Memory_BW",
-> -        "ScaleUnit": "1.6e-2MB"
-> +        "ScaleUnit": "1.6e-2MB",
-> +	"AggregationMode": "PerChip"
->      },
->      {
->  	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
->          "MetricName": "Memory_WR_BW_Chip",
->          "MetricGroup": "Memory_BW",
-> -        "ScaleUnit": "1.6e-2MB"
-> +        "ScaleUnit": "1.6e-2MB",
-> +	"AggregationMode": "PerChip"
+> Changelog:
+> v1 -> v2:
+> - Rather then adding new field as PerCore/PerChip, created a new enum
+>   to get these fields. And new field as "AggregationMode" which can
+>   be used to capture these fields from json file.
 
-please keep the same indentation, also below
+few nits, but generaly looks good to me
+
+Andi,
+are you ok with this change? not sure how bad is the
+PerPkg -> AggregationMode json change for you
 
 jirka
-
->      },
->      {
->  	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
->          "MetricName": "PowerBUS_Frequency",
-> -        "ScaleUnit": "2.5e-7GHz"
-> -    }
-> +        "ScaleUnit": "2.5e-7GHz",
-> +	"AggregationMode": "PerChip"
-> +    },
-> +    {
-> +	"MetricExpr": "(hv_24x7@CPM_CS_32MHZ_CYC\\,domain\\=3\\,core\\=?@ )",
-> +        "MetricName": "CPM_CS_32MHZ_CYC",
-> +        "ScaleUnit": "1MHz",
-> +	"AggregationMode": "PerCore"
-> +     }
->  ]
-> -- 
-> 2.26.2
-> 
