@@ -1,68 +1,98 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [RFC v2 3/5] perf jevents: Add support for parsing
- perchip/percore events
-Date: Tue, 14 Jul 2020 14:42:15 +0530
-Message-ID: <92f5fb5e-8abb-64a4-a217-0dc068a2a47b@linux.ibm.com>
-References: <20200707122314.624400-1-kjain@linux.ibm.com>
- <20200707122314.624400-4-kjain@linux.ibm.com> <20200712185523.GA147742@krava>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v3 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date: Thu, 16 Jul 2020 15:12:11 +0530
+Message-ID: <20200716094216.1418659-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200712185523.GA147742@krava>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com
+To: acme@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events. 
+
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
+
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perpkg/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined. I try to test it with  my current setup.
+
+I also need to replace PerPkg field to AggregationMode in all the
+x86 uncore json files. It will great if Andi and team can test it
+and let me know if they have any concerns.
+
+Changelog:
+v2 -> v3:
+- Did some nits changes suggested by Jiri include correction of
+  indentation, and making PerCore/PerChip values forward after
+  PerPkg as 1 in the enum.
+- Rebase the patchset on Arnaldo's tmp.perf/core branch.
+- Change RFC tag
+
+v1 -> v2:
+- Rather then adding new field as PerCore/PerChip, created a new enum
+  to get these fields. And new field as "AggregationMode" which can
+  be used to capture these fields from json file.
+  - Suggested By Ian Rogers
 
 
-On 7/13/20 12:25 AM, Jiri Olsa wrote:
-> On Tue, Jul 07, 2020 at 05:53:12PM +0530, Kajol Jain wrote:
->> Added the "PerChip" field  in enum so that perf knows they are
->> per chip events.
->>
->> Added the "PerCore" field in enum so that perf knows they are
->> per core events and add these fields to pmu_event structure.
->>
->> Similar to the way we had "PerPkg field
->> to specify perpkg events.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>  tools/perf/pmu-events/jevents.c    | 8 +++++++-
->>  tools/perf/pmu-events/pmu-events.h | 4 +++-
->>  2 files changed, 10 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->> index b2f59f0af63d..1f65047db000 100644
->> --- a/tools/perf/pmu-events/jevents.c
->> +++ b/tools/perf/pmu-events/jevents.c
->> @@ -54,13 +54,19 @@ int verbose;
->>  char *prog;
->>  
->>  enum aggr_mode_class {
->> -	PerPkg = 1
->> +	PerChip = 0,
-> 
-> is there a reason for the values? just wonder if it's wise to have PerChip == 0,
-> and why you would not continue with forward when PerPkg is 1
+Kajol Jain (5):
+  perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
+  pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86
+    json files
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
 
-Hi Jiri,
-     Yes, there is no reason for having particular values, It just added to get which parameter
-we are referring. I can sure continue it after Perpkg.
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  27 +-
+ .../arch/x86/broadwellde/uncore-cache.json    |  62 ++--
+ .../arch/x86/broadwellde/uncore-memory.json   |  18 +-
+ .../arch/x86/broadwellde/uncore-power.json    |  18 +-
+ .../arch/x86/broadwellx/uncore-cache.json     |  62 ++--
+ .../x86/broadwellx/uncore-interconnect.json   |   6 +-
+ .../arch/x86/broadwellx/uncore-memory.json    |  18 +-
+ .../arch/x86/broadwellx/uncore-power.json     |  18 +-
+ .../arch/x86/cascadelakex/uncore-memory.json  |  64 ++--
+ .../arch/x86/cascadelakex/uncore-other.json   | 332 +++++++++---------
+ .../arch/x86/haswellx/uncore-cache.json       |  62 ++--
+ .../x86/haswellx/uncore-interconnect.json     |   6 +-
+ .../arch/x86/haswellx/uncore-memory.json      |  18 +-
+ .../arch/x86/haswellx/uncore-power.json       |  18 +-
+ .../arch/x86/ivytown/uncore-cache.json        |  62 ++--
+ .../arch/x86/ivytown/uncore-interconnect.json |  10 +-
+ .../arch/x86/ivytown/uncore-memory.json       |  16 +-
+ .../arch/x86/ivytown/uncore-power.json        |  52 +--
+ .../arch/x86/jaketown/uncore-cache.json       |  40 +--
+ .../x86/jaketown/uncore-interconnect.json     |  10 +-
+ .../arch/x86/jaketown/uncore-memory.json      |  18 +-
+ .../arch/x86/jaketown/uncore-power.json       |  52 +--
+ .../x86/knightslanding/uncore-memory.json     |   8 +-
+ .../arch/x86/skylakex/uncore-memory.json      |  36 +-
+ .../arch/x86/skylakex/uncore-other.json       | 220 ++++++------
+ .../arch/x86/tremontx/uncore-memory.json      |  14 +-
+ .../arch/x86/tremontx/uncore-other.json       |  70 ++--
+ .../arch/x86/tremontx/uncore-power.json       |   2 +-
+ tools/perf/pmu-events/jevents.c               |  45 ++-
+ tools/perf/pmu-events/jevents.h               |   2 +-
+ tools/perf/pmu-events/pmu-events.h            |   8 +-
+ tools/perf/tests/pmu-events.c                 |   8 +-
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ tools/perf/util/pmu.c                         |   6 +-
+ 36 files changed, 729 insertions(+), 694 deletions(-)
 
-Thanks,
-Kajol Jain
-
-> 
-> jirka
-> 
->> +	PerPkg = 1,
->> +	PerCore = 2
->>  };
->>  
-> 
-> SNIP
-> 
+-- 
+2.26.2
