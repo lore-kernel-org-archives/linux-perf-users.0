@@ -1,7 +1,7 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v3 4/5] perf/tools: Pass pmu_event structure as a parameter for arch_get_runtimeparam
-Date: Thu, 16 Jul 2020 15:12:15 +0530
-Message-ID: <20200716094216.1418659-5-kjain@linux.ibm.com>
+Subject: [PATCH v3 5/5] perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+Date: Thu, 16 Jul 2020 15:12:16 +0530
+Message-ID: <20200716094216.1418659-6-kjain@linux.ibm.com>
 References: <20200716094216.1418659-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,84 +12,65 @@ To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch adds passing of  pmu_event as a parameter in function
-'arch_get_runtimeparam' which can be used to get details like
-if the event is percore/perchip.
+This patch adds hv_24x7 core level events in nest_metric.json file
+and also add PerChip/PerCore field in metric events.
+
+Result:
+
+power9 platform:
+
+command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
+     1.000070601                        1.9                        2.0
+     2.000253881                        2.0                        1.9
+     3.000364810                        2.0                        2.0
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 ---
- tools/perf/arch/powerpc/util/header.c | 7 +++++--
- tools/perf/util/metricgroup.c         | 5 ++---
- tools/perf/util/metricgroup.h         | 3 ++-
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ .../arch/powerpc/power9/nest_metrics.json     | 27 ++++++++++++-------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-index d4870074f14c..c8a33120a7a3 100644
---- a/tools/perf/arch/powerpc/util/header.c
-+++ b/tools/perf/arch/powerpc/util/header.c
-@@ -47,8 +47,11 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
- 	return bufp;
- }
- 
--int arch_get_runtimeparam(void)
-+int arch_get_runtimeparam(struct pmu_event *pe)
- {
- 	int count;
--	return sysfs__read_int("/devices/hv_24x7/interface/sockets", &count) < 0 ? 1 : count;
-+	char path[PATH_MAX] = "/devices/hv_24x7/interface/";
-+
-+	atoi(pe->aggr_mode) == PerChip ? strcat(path, "sockets") : strcat(path, "coresperchip");
-+	return sysfs__read_int(path, &count) < 0 ? 1 : count;
- }
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 82fecb5a302d..58054588f599 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -15,7 +15,6 @@
- #include "rblist.h"
- #include <string.h>
- #include <errno.h>
--#include "pmu-events/pmu-events.h"
- #include "strlist.h"
- #include <assert.h>
- #include <linux/ctype.h>
-@@ -566,7 +565,7 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
- 	return false;
- }
- 
--int __weak arch_get_runtimeparam(void)
-+int __weak arch_get_runtimeparam(struct pmu_event *pe __maybe_unused)
- {
- 	return 1;
- }
-@@ -650,7 +649,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
- 			} else {
- 				int j, count;
- 
--				count = arch_get_runtimeparam();
-+				count = arch_get_runtimeparam(pe);
- 
- 				/* This loop is added to create multiple
- 				 * events depend on count value and add
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 8315bd1a7da4..3917b5e43ebb 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -5,6 +5,7 @@
- #include <linux/list.h>
- #include <linux/rbtree.h>
- #include <stdbool.h>
-+#include "pmu-events/pmu-events.h"
- 
- struct evsel;
- struct evlist;
-@@ -46,6 +47,6 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- void metricgroup__print(bool metrics, bool groups, char *filter,
- 			bool raw, bool details);
- bool metricgroup__has_metric(const char *metric);
--int arch_get_runtimeparam(void);
-+int arch_get_runtimeparam(struct pmu_event *pe __maybe_unused);
- void metricgroup__rblist_exit(struct rblist *metric_events);
- #endif
+diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+index 8383a37647ad..4672e6d7e7cb 100644
+--- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
++++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
+@@ -1,20 +1,29 @@
+ [
+     {
+-        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
+-        "MetricName": "Memory_RD_BW_Chip",
+-        "MetricGroup": "Memory_BW",
+-        "ScaleUnit": "1.6e-2MB"
++	"MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
++	"MetricName": "Memory_RD_BW_Chip",
++	"MetricGroup": "Memory_BW",
++	"ScaleUnit": "1.6e-2MB",
++	"AggregationMode": "PerChip"
+     },
+     {
+ 	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
+-        "MetricName": "Memory_WR_BW_Chip",
+-        "MetricGroup": "Memory_BW",
+-        "ScaleUnit": "1.6e-2MB"
++	"MetricName": "Memory_WR_BW_Chip",
++	"MetricGroup": "Memory_BW",
++	"ScaleUnit": "1.6e-2MB",
++	"AggregationMode": "PerChip"
+     },
+     {
+ 	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
+-        "MetricName": "PowerBUS_Frequency",
+-        "ScaleUnit": "2.5e-7GHz"
++	"MetricName": "PowerBUS_Frequency",
++	"ScaleUnit": "2.5e-7GHz",
++	"AggregationMode": "PerChip"
++    },
++    {
++	"MetricExpr": "(hv_24x7@CPM_CS_32MHZ_CYC\\,domain\\=3\\,core\\=?@ )",
++	"MetricName": "CPM_CS_32MHZ_CYC",
++	"ScaleUnit": "1MHz",
++	"AggregationMode": "PerCore"
+     },
+     {
+ 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
 -- 
 2.26.2
