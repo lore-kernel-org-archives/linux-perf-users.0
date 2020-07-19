@@ -1,82 +1,57 @@
-From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v3 0/5] powerpc/perf: Add json file support for hv_24x7
- core level events
-Date: Fri, 17 Jul 2020 15:11:11 -0700
-Message-ID: <CAP-5=fVu5wcb864RWa8_j8kv3XLU0Cr5nbhvrwBNytfgmuPObg@mail.gmail.com>
-References: <20200716094216.1418659-1-kjain@linux.ibm.com> <20200716152237.GC373728@kernel.org>
- <a80eebc2-885c-171d-7c7a-74df727d60b4@linux.ibm.com> <20200717085536.GC528602@krava>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL] perf/urgent improvements and fixes
+Date: Sun, 19 Jul 2020 10:02:05 -0300
+Message-ID: <20200719130205.2430019-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200717085536.GC528602@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: kajoljain <kjain@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Paul Clarke <pc@us.ibm.com>, Namhyung Kim <namhyung@kernel.org>, Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, maddy@linux.ibm.com, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Anju T Sudhakar <anju@linux.vnet.ibm.com>, "Liang, Kan" <kan.liang@linux.intel.com>, nasastry@in.ibm.com
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Fri, Jul 17, 2020 at 1:55 AM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Jul 17, 2020 at 01:41:22PM +0530, kajoljain wrote:
-> >
-> >
-> > On 7/16/20 8:52 PM, Arnaldo Carvalho de Melo wrote:
-> > > Em Thu, Jul 16, 2020 at 03:12:11PM +0530, Kajol Jain escreveu:
-> > >> Patchset enhance current runtime parameter support. It introduces new
-> > >> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-> > >> used to specify perpkg events.
-> > >>
-> > >> The "PerCore" and "PerChip" specifies whether its core or chip events.
-> > >> Based on which we can decide which runtime parameter user want to
-> > >> access. Now character  '?' can refers different parameter based on user
-> > >> requirement.
-> > >>
-> > >> Initially, every time we want to add new terms like chip, core, thread
-> > >> etc, we need to create corrsponding fields in pmu_events and event
-> > >> struct.
-> > >> This patchset adds an enum called 'aggr_mode_class' which store all these
-> > >> aggregation like perpkg/percore. It also adds new field 'AggregationMode'
-> > >> to capture these terms.
-> > >> Now, if user wants to add any new term, they just need to add it in
-> > >> the enum defined. I try to test it with  my current setup.
-> > >>
-> > >> I also need to replace PerPkg field to AggregationMode in all the
-> > >> x86 uncore json files. It will great if Andi and team can test it
-> > >> and let me know if they have any concerns.
-> > >>
-> > >> Changelog:
-> > >> v2 -> v3:
-> > >> - Did some nits changes suggested by Jiri include correction of
-> > >>   indentation, and making PerCore/PerChip values forward after
-> > >>   PerPkg as 1 in the enum.
-> > >> - Rebase the patchset on Arnaldo's tmp.perf/core branch.
-> > >> - Change RFC tag
-> > >
-> > > Hey, have anybody provided Acked-by/Reviewed-by for previous revisions
-> > > of this patchset? If so you could have collected them for patches
-> > > without changes, was that the case?
-> >
-> > Hi Arnaldo,
-> >       I did get "Acked-by: Ian Rogers" on my initial prototype which I send in my RFC.
-> > Link to the patch: https://lkml.org/lkml/2020/7/5/399
-> >
-> > After that, I break it down and made some nits changes as suggested by Jiri, that's why I didn't
-> > add his Acked-by tag.
-> > Ian should I add it, if it seems fine to you.
->
-> I posted one more comment and I'd also like to hear from
-> guys maintainng json list on intel side that they are ok
-> with this, mainly the change introduced in:
->
->   pmu-events/x86/uncore: Replace PerPkg field to AggregationMode in x86 json files
->
-> Andi?
->
-> thanks,
-> jirka
+Hi Linus,
 
-I am happy with this change.
+	Please consider pulling,
 
-Acked-by: Ian Rogers <irogers@google.com>
+Best regards,
 
-Thanks,
-Ian
+- Arnaldo
+
+The following changes since commit 8882572675c1bb1cc544f4e229a11661f1fc52e4:
+
+  Merge tag 'drm-fixes-2020-07-17-1' of git://anongit.freedesktop.org/drm/drm into master (2020-07-16 21:39:51 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-07-19
+
+for you to fetch changes up to 25d4e7f513d4f8afcf81cb6f00edf1248b0ff8fc:
+
+  tools arch kvm: Sync kvm headers with the kernel sources (2020-07-17 09:39:16 -0300)
+
+----------------------------------------------------------------
+Third batch of perf tooling fixes for 5.8:
+
+- Update hashmap.h from libbpf and kvm.h from x86's kernel UAPI,
+  silencing build warnings.
+
+- Set opt->set in libsubcmd's OPT_CALLBACK_SET(). Fixes
+  'perf record --switch-output-event event-name' usage.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Arnaldo Carvalho de Melo (2):
+  perf tools: Sync hashmap.h with libbpf's
+  tools arch kvm: Sync kvm headers with the kernel sources
+
+Ravi Bangoria (1):
+  libsubcmd: Fix OPT_CALLBACK_SET()
+
+ tools/arch/x86/include/uapi/asm/kvm.h |  5 +++--
+ tools/lib/subcmd/parse-options.c      |  3 +++
+ tools/perf/util/hashmap.h             | 12 ++++++++----
+ 3 files changed, 14 insertions(+), 6 deletions(-)
+
+-- 
+2.26.2
