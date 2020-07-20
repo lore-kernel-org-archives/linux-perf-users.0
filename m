@@ -1,7 +1,7 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v4 1/5] perf/pmu-events/jevents: Add enum to store aggregation like PerPkg
-Date: Mon, 20 Jul 2020 12:31:23 +0530
-Message-ID: <20200720070127.109234-2-kjain@linux.ibm.com>
+Subject: [PATCH v4 4/5] perf/tools: Pass pmu_event structure as a parameter for arch_get_runtimeparam
+Date: Mon, 20 Jul 2020 12:31:26 +0530
+Message-ID: <20200720070127.109234-5-kjain@linux.ibm.com>
 References: <20200720070127.109234-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,247 +12,85 @@ To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Initially, every time we want to add new terms like chip, core thread etc,
-we need to create corrsponding fields in pmu_events and event struct.
-This patch adds an enum called 'aggr_mode_class' which store all these
-aggregation like perpkg/percore. It also adds new field 'aggr_mode'
-to capture these terms.
-Now, if user wants to add any new term, they just need to add it in
-the enum defined.
+This patch adds passing of  pmu_event as a parameter in function
+'arch_get_runtimeparam' which can be used to get details like
+if the event is percore/perchip.
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 Acked-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/jevents.c    | 36 ++++++++++++++++++------------
- tools/perf/pmu-events/jevents.h    |  2 +-
- tools/perf/pmu-events/pmu-events.h |  6 ++++-
- tools/perf/tests/pmu-events.c      |  8 +++----
- tools/perf/util/pmu.c              |  6 ++---
- 5 files changed, 35 insertions(+), 23 deletions(-)
+ tools/perf/arch/powerpc/util/header.c | 7 +++++--
+ tools/perf/util/metricgroup.c         | 5 ++---
+ tools/perf/util/metricgroup.h         | 3 ++-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index fa86c5f997cc..6601f1fd2e80 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -49,10 +49,18 @@
- #include "jsmn.h"
- #include "json.h"
- #include "jevents.h"
-+#include "pmu-events.h"
+diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+index d4870074f14c..c8a33120a7a3 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -47,8 +47,11 @@ get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+ 	return bufp;
+ }
  
- int verbose;
- char *prog;
- 
-+enum aggr_mode_class convert(const char *aggr_mode)
-+{
-+	if (!strcmp(aggr_mode, "PerPkg"))
-+		return PerPkg;
-+	return -1;
-+}
+-int arch_get_runtimeparam(void)
++int arch_get_runtimeparam(struct pmu_event *pe)
+ {
+ 	int count;
+-	return sysfs__read_int("/devices/hv_24x7/interface/sockets", &count) < 0 ? 1 : count;
++	char path[PATH_MAX] = "/devices/hv_24x7/interface/";
 +
- int eprintf(int level, int var, const char *fmt, ...)
++	atoi(pe->aggr_mode) == PerChip ? strcat(path, "sockets") : strcat(path, "coresperchip");
++	return sysfs__read_int(path, &count) < 0 ? 1 : count;
+ }
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 82fecb5a302d..58054588f599 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -15,7 +15,6 @@
+ #include "rblist.h"
+ #include <string.h>
+ #include <errno.h>
+-#include "pmu-events/pmu-events.h"
+ #include "strlist.h"
+ #include <assert.h>
+ #include <linux/ctype.h>
+@@ -566,7 +565,7 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
+ 	return false;
+ }
+ 
+-int __weak arch_get_runtimeparam(void)
++int __weak arch_get_runtimeparam(struct pmu_event *pe __maybe_unused)
  {
+ 	return 1;
+ }
+@@ -650,7 +649,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+ 			} else {
+ 				int j, count;
  
-@@ -320,7 +328,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
+-				count = arch_get_runtimeparam();
++				count = arch_get_runtimeparam(pe);
  
- static int print_events_table_entry(void *data, char *name, char *event,
- 				    char *desc, char *long_desc,
--				    char *pmu, char *unit, char *perpkg,
-+				    char *pmu, char *unit, char *aggr_mode,
- 				    char *metric_expr,
- 				    char *metric_name, char *metric_group,
- 				    char *deprecated, char *metric_constraint)
-@@ -345,10 +353,10 @@ static int print_events_table_entry(void *data, char *name, char *event,
- 		fprintf(outfp, "\t.long_desc = \"%s\",\n", long_desc);
- 	if (pmu)
- 		fprintf(outfp, "\t.pmu = \"%s\",\n", pmu);
-+	if (aggr_mode)
-+		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(aggr_mode));
- 	if (unit)
- 		fprintf(outfp, "\t.unit = \"%s\",\n", unit);
--	if (perpkg)
--		fprintf(outfp, "\t.perpkg = \"%s\",\n", perpkg);
- 	if (metric_expr)
- 		fprintf(outfp, "\t.metric_expr = \"%s\",\n", metric_expr);
- 	if (metric_name)
-@@ -372,7 +380,7 @@ struct event_struct {
- 	char *long_desc;
- 	char *pmu;
- 	char *unit;
--	char *perpkg;
-+	char *aggr_mode;
- 	char *metric_expr;
- 	char *metric_name;
- 	char *metric_group;
-@@ -401,7 +409,7 @@ struct event_struct {
- 	op(long_desc);						\
- 	op(pmu);						\
- 	op(unit);						\
--	op(perpkg);						\
-+	op(aggr_mode);					\
- 	op(metric_expr);					\
- 	op(metric_name);					\
- 	op(metric_group);					\
-@@ -423,7 +431,7 @@ static void free_arch_std_events(void)
+ 				/* This loop is added to create multiple
+ 				 * events depend on count value and add
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 8315bd1a7da4..3917b5e43ebb 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -5,6 +5,7 @@
+ #include <linux/list.h>
+ #include <linux/rbtree.h>
+ #include <stdbool.h>
++#include "pmu-events/pmu-events.h"
  
- static int save_arch_std_events(void *data, char *name, char *event,
- 				char *desc, char *long_desc, char *pmu,
--				char *unit, char *perpkg, char *metric_expr,
-+				char *unit, char *aggr_mode, char *metric_expr,
- 				char *metric_name, char *metric_group,
- 				char *deprecated, char *metric_constraint)
- {
-@@ -487,7 +495,7 @@ static char *real_event(const char *name, char *event)
- static int
- try_fixup(const char *fn, char *arch_std, char **event, char **desc,
- 	  char **name, char **long_desc, char **pmu, char **filter,
--	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
-+	  char **aggr_mode, char **unit, char **metric_expr, char **metric_name,
- 	  char **metric_group, unsigned long long eventcode,
- 	  char **deprecated, char **metric_constraint)
- {
-@@ -515,7 +523,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
- int json_events(const char *fn,
- 	  int (*func)(void *data, char *name, char *event, char *desc,
- 		      char *long_desc,
--		      char *pmu, char *unit, char *perpkg,
-+		      char *pmu, char *unit, char *aggr_mode,
- 		      char *metric_expr,
- 		      char *metric_name, char *metric_group,
- 		      char *deprecated, char *metric_constraint),
-@@ -542,7 +550,7 @@ int json_events(const char *fn,
- 		char *extra_desc = NULL;
- 		char *pmu = NULL;
- 		char *filter = NULL;
--		char *perpkg = NULL;
-+		char *aggr_mode = NULL;
- 		char *unit = NULL;
- 		char *metric_expr = NULL;
- 		char *metric_name = NULL;
-@@ -625,8 +633,8 @@ int json_events(const char *fn,
- 				addfield(map, &filter, "", "", val);
- 			} else if (json_streq(map, field, "ScaleUnit")) {
- 				addfield(map, &unit, "", "", val);
--			} else if (json_streq(map, field, "PerPkg")) {
--				addfield(map, &perpkg, "", "", val);
-+			} else if (json_streq(map, field, "AggregationMode")) {
-+				addfield(map, &aggr_mode, "", "", val);
- 			} else if (json_streq(map, field, "Deprecated")) {
- 				addfield(map, &deprecated, "", "", val);
- 			} else if (json_streq(map, field, "MetricName")) {
-@@ -673,7 +681,7 @@ int json_events(const char *fn,
- 			 * fixup any unassigned values.
- 			 */
- 			err = try_fixup(fn, arch_std, &event, &desc, &name,
--					&long_desc, &pmu, &filter, &perpkg,
-+					&long_desc, &pmu, &filter, &aggr_mode,
- 					&unit, &metric_expr, &metric_name,
- 					&metric_group, eventcode,
- 					&deprecated, &metric_constraint);
-@@ -681,7 +689,7 @@ int json_events(const char *fn,
- 				goto free_strings;
- 		}
- 		err = func(data, name, real_event(name, event), desc, long_desc,
--			   pmu, unit, perpkg, metric_expr, metric_name,
-+			   pmu, unit, aggr_mode, metric_expr, metric_name,
- 			   metric_group, deprecated, metric_constraint);
- free_strings:
- 		free(event);
-@@ -691,7 +699,7 @@ int json_events(const char *fn,
- 		free(extra_desc);
- 		free(pmu);
- 		free(filter);
--		free(perpkg);
-+		free(aggr_mode);
- 		free(deprecated);
- 		free(unit);
- 		free(metric_expr);
-diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-index 2afc8304529e..63e72c0c312f 100644
---- a/tools/perf/pmu-events/jevents.h
-+++ b/tools/perf/pmu-events/jevents.h
-@@ -6,7 +6,7 @@ int json_events(const char *fn,
- 		int (*func)(void *data, char *name, char *event, char *desc,
- 				char *long_desc,
- 				char *pmu,
--				char *unit, char *perpkg, char *metric_expr,
-+				char *unit, char *aggr_mode, char *metric_expr,
- 				char *metric_name, char *metric_group,
- 				char *deprecated, char *metric_constraint),
- 		void *data);
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index c8f306b572f4..71b7aa6278d0 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -2,6 +2,10 @@
- #ifndef PMU_EVENTS_H
- #define PMU_EVENTS_H
- 
-+enum aggr_mode_class {
-+	PerPkg = 1
-+};
-+
- /*
-  * Describe each PMU event. Each CPU has a table of PMU events.
-  */
-@@ -13,7 +17,7 @@ struct pmu_event {
- 	const char *long_desc;
- 	const char *pmu;
- 	const char *unit;
--	const char *perpkg;
-+	const char *aggr_mode;
- 	const char *metric_expr;
- 	const char *metric_name;
- 	const char *metric_group;
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index b66b021476ec..377211d4c849 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -206,10 +206,10 @@ static int test_pmu_event_table(void)
- 				return -1;
- 			}
- 
--			if (!is_same(table->perpkg, te->perpkg)) {
--				pr_debug2("testing event table %s: mismatched perpkg, %s vs %s\n",
--					  table->name, table->perpkg,
--					  te->perpkg);
-+			if (!is_same(table->aggr_mode, te->aggr_mode)) {
-+				pr_debug2("testing event table %s: mismatched aggr_mode, %s vs %s\n",
-+					  table->name, table->aggr_mode,
-+					  te->aggr_mode);
- 				return -1;
- 			}
- 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index f1688e1f6ed7..a0e3ea75a3c6 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -308,7 +308,7 @@ static bool perf_pmu_merge_alias(struct perf_pmu_alias *newalias,
- static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 				 char *desc, char *val,
- 				 char *long_desc, char *topic,
--				 char *unit, char *perpkg,
-+				 char *unit, char *aggr_mode,
- 				 char *metric_expr,
- 				 char *metric_name,
- 				 char *deprecated)
-@@ -380,7 +380,7 @@ static int __perf_pmu__new_alias(struct list_head *list, char *dir, char *name,
- 			return -1;
- 		snprintf(alias->unit, sizeof(alias->unit), "%s", unit);
- 	}
--	alias->per_pkg = perpkg && sscanf(perpkg, "%d", &num) == 1 && num == 1;
-+	alias->per_pkg = aggr_mode && sscanf(aggr_mode, "%d", &num) == 1 && num == PerPkg;
- 	alias->str = strdup(newval);
- 
- 	if (deprecated)
-@@ -778,7 +778,7 @@ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
- 		__perf_pmu__new_alias(head, NULL, (char *)pe->name,
- 				(char *)pe->desc, (char *)pe->event,
- 				(char *)pe->long_desc, (char *)pe->topic,
--				(char *)pe->unit, (char *)pe->perpkg,
-+				(char *)pe->unit, (char *)pe->aggr_mode,
- 				(char *)pe->metric_expr,
- 				(char *)pe->metric_name,
- 				(char *)pe->deprecated);
+ struct evsel;
+ struct evlist;
+@@ -46,6 +47,6 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
+ void metricgroup__print(bool metrics, bool groups, char *filter,
+ 			bool raw, bool details);
+ bool metricgroup__has_metric(const char *metric);
+-int arch_get_runtimeparam(void);
++int arch_get_runtimeparam(struct pmu_event *pe __maybe_unused);
+ void metricgroup__rblist_exit(struct rblist *metric_events);
+ #endif
 -- 
 2.26.2
