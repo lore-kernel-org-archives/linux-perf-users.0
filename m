@@ -1,100 +1,45 @@
-From: Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] Fix s390x compile error on F32 utils/stat-display.c
-Date: Wed, 22 Jul 2020 11:20:53 +0200
-Message-ID: <20200722092053.22345-1-tmricht@linux.ibm.com>
+From: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Subject: [PATCH -next] tools lib traceevent: Remove process in finding plugin options
+Date: Fri, 24 Jul 2020 17:59:57 +0800
+Message-ID: <20200724095957.48159-1-bobo.shaobowang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Cc: cj.chengjian@huawei.com, huawei.libin@huawei.com, rostedt@goodmis.org, acme@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-Fix a compile error on F32 and gcc version 10.1 on s390 in file
-utils/stat-display.c.  The error does not show up with make DEBUG=y.
-In fact the issue shows up when using both compiler options
--O6 and -D_FORTIFY_SOURCE=2 (which are omitted with DEBUG=Y).
+In function load_plugin, we get symbol loaded address from symbol name
+TEP_PLUGIN_LOADER_NAME, whereas the symbol name TEP_PLUGIN_ALIAS_NAME
+is optionally used for finding plugin options which is not used after.
 
-This is the offending call chain:
-print_counter_aggr()
-  printout(config, -1, 0, ...)  with 2nd parm id set to -1
-    aggr_printout(config, x, id --> -1, ...) which leads to this code:
-		case AGGR_NONE:
-                if (evsel->percore && !config->percore_show_thread) {
-                        ....
-                } else {
-                        fprintf(config->output, "CPU%*d%s",
-                                config->csv_output ? 0 : -7,
-                                evsel__cpus(evsel)->map[id],
-				                        ^^ id is -1 !!!!
-                                config->csv_sep);
-                }
-
-This is a compiler inlining issue which is detected on s390 but not on
-other plattforms.
-
-Output before:
- # make util/stat-display.o
-    .....
-
-  util/stat-display.c: In function ‘perf_evlist__print_counters’:
-  util/stat-display.c:121:4: error: array subscript -1 is below array
-      bounds of ‘int[]’ [-Werror=array-bounds]
-  121 |    fprintf(config->output, "CPU%*d%s",
-      |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  122 |     config->csv_output ? 0 : -7,
-      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  123 |     evsel__cpus(evsel)->map[id],
-      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  124 |     config->csv_sep);
-      |     ~~~~~~~~~~~~~~~~
-  In file included from util/evsel.h:13,
-                 from util/evlist.h:13,
-                 from util/stat-display.c:9:
-  /root/linux/tools/lib/perf/include/internal/cpumap.h:10:7:
-  note: while referencing ‘map’
-   10 |  int  map[];
-      |       ^~~
-  cc1: all warnings being treated as errors
-  mv: cannot stat 'util/.stat-display.o.tmp': No such file or directory
-  make[3]: *** [/root/linux/tools/build/Makefile.build:97: util/stat-display.o]
-  Error 1
-  make[2]: *** [Makefile.perf:716: util/stat-display.o] Error 2
-  make[1]: *** [Makefile.perf:231: sub-make] Error 2
-  make: *** [Makefile:110: util/stat-display.o] Error 2
-  [root@t35lp46 perf]#
-
-Output after:
-  # make util/stat-display.o
-    .....
-  CC       util/stat-display.o
-  [root@t35lp46 perf]#
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
 ---
- tools/perf/util/stat-display.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ tools/lib/traceevent/event-plugin.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 57d0706e1330..e49e544188e4 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -118,10 +118,11 @@ static void aggr_printout(struct perf_stat_config *config,
- 				config->csv_output ? 0 : -3,
- 				cpu_map__id_to_cpu(id), config->csv_sep);
- 		} else {
--			fprintf(config->output, "CPU%*d%s",
--				config->csv_output ? 0 : -7,
--				evsel__cpus(evsel)->map[id],
--				config->csv_sep);
-+			if (id > -1)
-+				fprintf(config->output, "CPU%*d%s",
-+					config->csv_output ? 0 : -7,
-+					evsel__cpus(evsel)->map[id],
-+					config->csv_sep);
- 		}
- 		break;
- 	case AGGR_THREAD:
+diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
+index e1f7ddd5a6cf..c6435087b5b6 100644
+--- a/tools/lib/traceevent/event-plugin.c
++++ b/tools/lib/traceevent/event-plugin.c
+@@ -275,7 +275,6 @@ load_plugin(struct tep_handle *tep, const char *path,
+ 	struct tep_plugin_list **plugin_list = data;
+ 	tep_plugin_load_func func;
+ 	struct tep_plugin_list *list;
+-	const char *alias;
+ 	char *plugin;
+ 	void *handle;
+ 	int ret;
+@@ -293,10 +292,6 @@ load_plugin(struct tep_handle *tep, const char *path,
+ 		goto out_free;
+ 	}
+ 
+-	alias = dlsym(handle, TEP_PLUGIN_ALIAS_NAME);
+-	if (!alias)
+-		alias = file;
+-
+ 	func = dlsym(handle, TEP_PLUGIN_LOADER_NAME);
+ 	if (!func) {
+ 		warning("could not find func '%s' in plugin '%s'\n%s\n",
 -- 
-2.26.2
+2.17.1
