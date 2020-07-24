@@ -1,45 +1,66 @@
 From: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Subject: [PATCH -next] tools lib traceevent: Remove process in finding plugin options
-Date: Fri, 24 Jul 2020 17:59:57 +0800
-Message-ID: <20200724095957.48159-1-bobo.shaobowang@huawei.com>
+Subject: [PATCH -next] tools build: Check return value of fwrite_unlocked in jvmti_agent.c
+Date: Fri, 24 Jul 2020 18:07:06 +0800
+Message-ID: <20200724100706.48330-1-bobo.shaobowang@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: cj.chengjian@huawei.com, huawei.libin@huawei.com, rostedt@goodmis.org, acme@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: cj.chengjian@huawei.com, huawei.libin@huawei.com, jolsa@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-In function load_plugin, we get symbol loaded address from symbol name
-TEP_PLUGIN_LOADER_NAME, whereas the symbol name TEP_PLUGIN_ALIAS_NAME
-is optionally used for finding plugin options which is not used after.
+Function jvmti_write_code called by compiled_method_load_cb may return
+error in using fwrite_unlocked, this failure should be captured and
+warned.
 
 Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
 ---
- tools/lib/traceevent/event-plugin.c | 5 -----
- 1 file changed, 5 deletions(-)
+ tools/perf/jvmti/jvmti_agent.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-plugin.c b/tools/lib/traceevent/event-plugin.c
-index e1f7ddd5a6cf..c6435087b5b6 100644
---- a/tools/lib/traceevent/event-plugin.c
-+++ b/tools/lib/traceevent/event-plugin.c
-@@ -275,7 +275,6 @@ load_plugin(struct tep_handle *tep, const char *path,
- 	struct tep_plugin_list **plugin_list = data;
- 	tep_plugin_load_func func;
- 	struct tep_plugin_list *list;
--	const char *alias;
- 	char *plugin;
- 	void *handle;
- 	int ret;
-@@ -293,10 +292,6 @@ load_plugin(struct tep_handle *tep, const char *path,
- 		goto out_free;
- 	}
+diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+index 88108598d6e9..a1fe6aa16b6d 100644
+--- a/tools/perf/jvmti/jvmti_agent.c
++++ b/tools/perf/jvmti/jvmti_agent.c
+@@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	struct jr_code_load rec;
+ 	size_t sym_len;
+ 	FILE *fp = agent;
+-	int ret = -1;
++	int ret;
  
--	alias = dlsym(handle, TEP_PLUGIN_ALIAS_NAME);
--	if (!alias)
--		alias = file;
+ 	/* don't care about 0 length function, no samples */
+ 	if (size == 0)
+@@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
+ 	rec.code_index = code_generation++;
+ 
+ 	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+-	fwrite_unlocked(sym, sym_len, 1, fp);
++	if (ret)
++		goto error;
++	ret = fwrite_unlocked(sym, sym_len, 1, fp);
++	if (ret)
++		goto error;
+ 
+-	if (code)
+-		fwrite_unlocked(code, size, 1, fp);
++	if (code) {
++		ret = fwrite_unlocked(code, size, 1, fp);
++		if (ret)
++			goto error;
++	}
+ 
+ 	funlockfile(fp);
 -
- 	func = dlsym(handle, TEP_PLUGIN_LOADER_NAME);
- 	if (!func) {
- 		warning("could not find func '%s' in plugin '%s'\n%s\n",
+-	ret = 0;
+-
+-	return ret;
++	return 0;
++error:
++	funlockfile(fp);
++	return -1;
+ }
+ 
+ int
 -- 
 2.17.1
