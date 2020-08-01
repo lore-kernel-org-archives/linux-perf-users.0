@@ -1,107 +1,62 @@
-From: "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
-Subject: Re: [PATCH -next] tools build: Check return value of fwrite_unlocked
- in jvmti_agent.c
-Date: Fri, 31 Jul 2020 19:58:58 +0800
-Message-ID: <c83e1354-29a8-82d5-8963-96c71f4de1de@huawei.com>
-References: <20200724100706.48330-1-bobo.shaobowang@huawei.com>
- <CAP-5=fX9YUucA-3QMxO_jV954104UPNg04=_JGstuLekNJHzJw@mail.gmail.com>
- <20200730100357.GD424218@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [GIT PULL] Fourth batch of perf tooling fixes for v5.8
+Date: Sat,  1 Aug 2020 16:06:18 -0300
+Message-ID: <20200801190618.3311731-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200730100357.GD424218@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: cj.chengjian@huawei.com, Li Bin <huawei.libin@huawei.com>, Jiri Olsa <jolsa@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, Philippe Duplessis-Guindon <pduplessis@efficios.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Salvatore Bonaccorso <carnil@debian.org>, Thomas Richter <tmricht@linux.ibm.com>, Wei Li <liwei391@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi Linus,
 
-在 2020/7/30 18:03, Arnaldo Carvalho de Melo 写道:
-> Em Wed, Jul 29, 2020 at 04:47:36PM -0700, Ian Rogers escreveu:
->> On Fri, Jul 24, 2020 at 3:07 AM Wang ShaoBo <bobo.shaobowang@huawei.com> wrote:
->>> Function jvmti_write_code called by compiled_method_load_cb may return
->>> error in using fwrite_unlocked, this failure should be captured and
->>> warned.
->>>
->>> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
->>> ---
->>>   tools/perf/jvmti/jvmti_agent.c | 23 +++++++++++++++--------
->>>   1 file changed, 15 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
->>> index 88108598d6e9..a1fe6aa16b6d 100644
->>> --- a/tools/perf/jvmti/jvmti_agent.c
->>> +++ b/tools/perf/jvmti/jvmti_agent.c
->>> @@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
->>>          struct jr_code_load rec;
->>>          size_t sym_len;
->>>          FILE *fp = agent;
->>> -       int ret = -1;
->>> +       int ret;
->>>
->>>          /* don't care about 0 length function, no samples */
->>>          if (size == 0)
->>> @@ -401,16 +401,23 @@ jvmti_write_code(void *agent, char const *sym,
->>>          rec.code_index = code_generation++;
->>>
->>>          ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
->>> -       fwrite_unlocked(sym, sym_len, 1, fp);
->>> +       if (ret)
->>> +               goto error;
->> Sorry, it seems I lost a reply to this. Won't ret here be the number
->> of items written and not an error code? Consequently all writes will
->> immediately goto error?
-> Yeah, I removed it from tmp.perf/core.
->
-> Wang, please address Ian review, and consider having just one out exit
-> label.
->
-> - Arnaldo
->   
+	Please consider pulling,
 
-I am sorry I forgot what does fwrite_unlocked return, as same as fwrite 
-error happens,
+Best regards,
 
-the return val is a short item count (or zero)  but not equals the items 
-written. I have fixed
+- Arnaldo
 
-it and already sent v2 and address Ian review, thanks a lot.
+The following changes since commit d8b9faec54ae4bc2fff68bcd0befa93ace8256ce:
 
-... and i refer to the writing of function jvmti_write_debug_info() for 
-giving out exit label,
+  Merge tag 'drm-fixes-2020-07-31' of git://anongit.freedesktop.org/drm/drm (2020-07-30 21:26:42 -0700)
 
-thanks again,
+are available in the Git repository at:
 
-- Wang ShaoBo
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-08-01
 
->> Thanks,
->> Ian
->>
->>> +       ret = fwrite_unlocked(sym, sym_len, 1, fp);
->>> +       if (ret)
->>> +               goto error;
->>>
->>> -       if (code)
->>> -               fwrite_unlocked(code, size, 1, fp);
->>> +       if (code) {
->>> +               ret = fwrite_unlocked(code, size, 1, fp);
->>> +               if (ret)
->>> +                       goto error;
->>> +       }
->>>
->>>          funlockfile(fp);
->>> -
->>> -       ret = 0;
->>> -
->>> -       return ret;
->>> +       return 0;
->>> +error:
->>> +       funlockfile(fp);
->>> +       return -1;
->>>   }
->>>
->>>   int
->>> --
->>> 2.17.1
->>>
+for you to fetch changes up to 39efdd94e314336f4acbac4c07e0f37bdc3bef71:
+
+  libtraceevent: Fix build with binutils 2.35 (2020-07-31 09:31:55 -0300)
+
+----------------------------------------------------------------
+Fourth batch of perf tooling fixes for v5.8:
+
+- Fix libtraceevent build with binutils 2.35.
+
+- Fix memory leak in process_dynamic_array_len in libtraceevent.
+
+- Fix 'perf test 68' zstd compression for s390.
+
+- Fix record failure when mixed with ARM SPE event.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Ben Hutchings (1):
+      libtraceevent: Fix build with binutils 2.35
+
+Philippe Duplessis-Guindon (1):
+      tools lib traceevent: Fix memory leak in process_dynamic_array_len
+
+Thomas Richter (1):
+      perf tests: Fix test 68 zstd compression for s390
+
+Wei Li (1):
+      perf tools: Fix record failure when mixed with ARM SPE event
+
+ tools/lib/traceevent/event-parse.c                | 1 +
+ tools/lib/traceevent/plugins/Makefile             | 2 +-
+ tools/perf/arch/arm/util/auxtrace.c               | 8 ++++----
+ tools/perf/tests/shell/record+zstd_comp_decomp.sh | 3 ++-
+ 4 files changed, 8 insertions(+), 6 deletions(-)
