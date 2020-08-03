@@ -1,23 +1,68 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] Fourth batch of perf tooling fixes for v5.8
-Date: Sun, 02 Aug 2020 00:00:04 +0000
-Message-ID: <159632640437.16599.15587396153041720392.pr-tracker-bot@kernel.org>
-References: <20200801190618.3311731-1-acme@kernel.org>
+From: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Subject: [PATCH v2 -next] tools build: Check return value of fwrite_unlocked in jvmti_agent.c
+Date: Mon, 3 Aug 2020 08:56:29 +0800
+Message-ID: <20200803005629.40651-1-bobo.shaobowang@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200801190618.3311731-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, Philippe Duplessis-Guindon <pduplessis@efficios.com>, Ravi Bangoria <ravi.bangoria@linux.ibm.com>, Salvatore Bonaccorso <carnil@debian.org>, Thomas Richter <tmricht@linux.ibm.com>, Wei Li <liwei391@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: cj.chengjian@huawei.com, acme@kernel.org, irogers@google.com, huawei.libin@huawei.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-The pull request you sent on Sat,  1 Aug 2020 16:06:18 -0300:
+Function jvmti_write_code called by compiled_method_load_cb may return
+error in using fwrite_unlocked, this failure should be captured and
+warned.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-2020-08-01
+Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+---
+ tools/perf/jvmti/jvmti_agent.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bf121a0bda29daa67a1fcedbdf479f6b03c9f977
-
-Thank you!
-
+diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
+index 88108598d6e9..dfb6cb8564cb 100644
+--- a/tools/perf/jvmti/jvmti_agent.c
++++ b/tools/perf/jvmti/jvmti_agent.c
+@@ -363,7 +363,7 @@ jvmti_write_code(void *agent, char const *sym,
+ 	struct jr_code_load rec;
+ 	size_t sym_len;
+ 	FILE *fp = agent;
+-	int ret = -1;
++	int sret;
+ 
+ 	/* don't care about 0 length function, no samples */
+ 	if (size == 0)
+@@ -400,17 +400,24 @@ jvmti_write_code(void *agent, char const *sym,
+ 	 */
+ 	rec.code_index = code_generation++;
+ 
+-	ret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
+-	fwrite_unlocked(sym, sym_len, 1, fp);
++	sret = fwrite_unlocked(&rec, sizeof(rec), 1, fp);
++	if (sret != 1)
++		goto error;
++	sret = fwrite_unlocked(sym, sym_len, 1, fp);
++	if (sret != 1)
++		goto error;
+ 
+-	if (code)
+-		fwrite_unlocked(code, size, 1, fp);
++	if (code) {
++		sret = fwrite_unlocked(code, size, 1, fp);
++		if (sret != 1)
++			goto error;
++	}
+ 
+ 	funlockfile(fp);
+-
+-	ret = 0;
+-
+-	return ret;
++	return 0;
++error:
++	funlockfile(fp);
++	return -1;
+ }
+ 
+ int
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.25.1
