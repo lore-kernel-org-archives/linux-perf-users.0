@@ -1,54 +1,33 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v5 0/3]  powerpc/perf: Add json file support for hv_24x7 core level events
-Date: Sun, 16 Aug 2020 14:37:16 +0530
-Message-ID: <20200816090719.72018-1-kjain@linux.ibm.com>
+From: Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v5 1/3] perf jevents: Add support for parsing
+ perchip/percore events
+Date: Sun, 16 Aug 2020 09:35:21 -0700
+Message-ID: <20200816163521.GF1486171@tassilo.jf.intel.com>
+References: <20200816090719.72018-1-kjain@linux.ibm.com>
+ <20200816090719.72018-2-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20200816090719.72018-2-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com, kjain@linux.ibm.com
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Patchset enhance current runtime parameter support. It introduces new
-fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
-used to specify perpkg events. 
+> @@ -321,7 +331,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
+>  static int print_events_table_entry(void *data, char *name, char *event,
+>  				    char *desc, char *long_desc,
+>  				    char *pmu, char *unit, char *perpkg,
+> -				    char *metric_expr,
+> +				    char *metric_expr, char *aggr_mode,
+>  				    char *metric_name, char *metric_group,
+>  				    char *deprecated, char *metric_constraint)
 
-The "PerCore" and "PerChip" specifies whether its core or chip events.
-Based on which we can decide which runtime parameter user want to
-access. Now character  '?' can refers different parameter based on user
-requirement.
+We should really define a struct now to pass the parameters,
+the callback prototype is getting ridiculous.
 
-Initially, every time we want to add new terms like chip, core, thread
-etc, we need to create corrsponding fields in pmu_events and event
-struct.
-This patchset adds an enum called 'aggr_mode_class' which store all these
-aggregation like perchip/percore. It also adds new field 'AggregationMode'
-to capture these terms.
-Now, if user wants to add any new term, they just need to add it in
-the enum defined.
+I know it's my fault originally, but sorry you probably have to do it
+because you are touching it last.
 
-Changelog:
-v4 -> v5
-- Remove intel side changes on uncore events by removing PerPkg
-  field from enum "AggregationMode" and other corresponding changes.
-
-Link to previous patchset: https://lkml.org/lkml/2020/7/20/124
-
-Kajol Jain (3):
-  perf jevents: Add support for parsing perchip/percore events
-  perf/tools: Pass pmu_event structure as a parameter for
-    arch_get_runtimeparam
-  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-
- tools/perf/arch/powerpc/util/header.c         |  7 ++--
- .../arch/powerpc/power9/nest_metrics.json     | 35 ++++++++++++-------
- tools/perf/pmu-events/jevents.c               | 32 +++++++++++++----
- tools/perf/pmu-events/jevents.h               |  2 +-
- tools/perf/pmu-events/pmu-events.h            |  6 ++++
- tools/perf/util/metricgroup.c                 |  5 ++-
- tools/perf/util/metricgroup.h                 |  3 +-
- 7 files changed, 63 insertions(+), 27 deletions(-)
-
--- 
-2.26.2
+-Andi
