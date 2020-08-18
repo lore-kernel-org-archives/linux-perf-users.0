@@ -1,45 +1,49 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v5 1/3] perf jevents: Add support for parsing
- perchip/percore events
-Date: Tue, 18 Aug 2020 14:46:10 +0530
-Message-ID: <1265e9f4-fcfd-bb21-bf27-4ce56a04bcb9@linux.ibm.com>
-References: <20200816090719.72018-1-kjain@linux.ibm.com>
- <20200816090719.72018-2-kjain@linux.ibm.com>
- <20200816163521.GF1486171@tassilo.jf.intel.com>
+From: Muni Sekhar <munisekharrms@gmail.com>
+Subject: Scheduler benchmarks
+Date: Tue, 18 Aug 2020 20:00:11 +0530
+Message-ID: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200816163521.GF1486171@tassilo.jf.intel.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Kleen <ak@linux.intel.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, anju@linux.vnet.ibm.com, kan.liang@linux.intel.com, nasastry@in.ibm.com
+To: kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi all,
+
+I=E2=80=99ve two identical Linux systems with only kernel differences.
+While doing kernel profiling with perf, I got the below mentioned
+metrics for Scheduler benchmarks.
+
+1st system (older kernel version compared to the other system) benchmark re=
+sult:
+
+$ perf bench sched messaging -g 64
+# Running 'sched/messaging' benchmark:
+# 20 sender and receiver processes per group
+# 64 groups =3D=3D 2560 processes run
+
+     Total time: 2.936 [sec]
 
 
-On 8/16/20 10:05 PM, Andi Kleen wrote:
->> @@ -321,7 +331,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
->>  static int print_events_table_entry(void *data, char *name, char *event,
->>  				    char *desc, char *long_desc,
->>  				    char *pmu, char *unit, char *perpkg,
->> -				    char *metric_expr,
->> +				    char *metric_expr, char *aggr_mode,
->>  				    char *metric_name, char *metric_group,
->>  				    char *deprecated, char *metric_constraint)
-> 
-> We should really define a struct now to pass the parameters,
-> the callback prototype is getting ridiculous.
-> 
-> I know it's my fault originally, but sorry you probably have to do it
-> because you are touching it last.
+2nd system benchmark result:
 
-Hi Andi,
-   I will look into it.
+$ perf bench sched messaging -g 64
+# Running 'sched/messaging' benchmark:
+# 20 sender and receiver processes per group
+# 64 groups =3D=3D 2560 processes run
 
+     Total time: 10.074 [sec]
+
+
+So as per scheduler benchmark results, clearly a huge difference
+between two systems.
+Can anyone suggest to me how to dive deeper to know the root cause for
+it. Also are there any tunable kernel parameters related to this one?
+
+
+
+--=20
 Thanks,
-Kajol Jain
-> 
-> -Andi
-> 
+Sekhar
