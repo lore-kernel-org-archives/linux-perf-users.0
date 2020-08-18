@@ -1,122 +1,51 @@
-From: Muni Sekhar <munisekharrms@gmail.com>
+From: Greg KH <greg@kroah.com>
 Subject: Re: Scheduler benchmarks
-Date: Tue, 18 Aug 2020 23:01:35 +0530
-Message-ID: <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
+Date: Tue, 18 Aug 2020 19:36:56 +0200
+Message-ID: <20200818173656.GA748290@kroah.com>
 References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
- <20200818143633.GA628293@kroah.com> <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
+ <20200818143633.GA628293@kroah.com>
+ <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
  <20200818171457.GA736234@kroah.com>
+ <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200818171457.GA736234@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <kernelnewbies-bounces@kernelnewbies.org>
+Content-Disposition: inline
+In-Reply-To: <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.kernelnewbies.org/mailman/options/kernelnewbies>,
+ <mailto:kernelnewbies-request@kernelnewbies.org?subject=unsubscribe>
+List-Archive: <http://lists.kernelnewbies.org/pipermail/kernelnewbies/>
+List-Post: <mailto:kernelnewbies@kernelnewbies.org>
+List-Help: <mailto:kernelnewbies-request@kernelnewbies.org?subject=help>
+List-Subscribe: <https://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
+ <mailto:kernelnewbies-request@kernelnewbies.org?subject=subscribe>
+Errors-To: kernelnewbies-bounces@kernelnewbies.org
+To: Muni Sekhar <munisekharrms@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, kernelnewbies <kernelnewbies@kernelnewbies.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
->
-> On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
-> > On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
-> > >
-> > > On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
-> > > > Hi all,
-> > > >
-> > > > I=E2=80=99ve two identical Linux systems with only kernel differenc=
-es.
-> > >
-> > > What are the differences in the kernels?
->
-> You didn't answer this question, is this the same kernel source being
-> compared here?  Same version?  Same compiler?  Everything identical?
-Both systems are having exactly the same hardware configuration.
-Compiler and kernel versions are different. One system has Ubuntu
-16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel and
-the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gcc
-version 7.5.0).
-
-
-
->
-> > > > While doing kernel profiling with perf, I got the below mentioned
-> > > > metrics for Scheduler benchmarks.
-> > > >
-> > > > 1st system (older kernel version compared to the other system) benc=
-hmark result:
-> > > >
-> > > > $ perf bench sched messaging -g 64
-> > > > # Running 'sched/messaging' benchmark:
-> > > > # 20 sender and receiver processes per group
-> > > > # 64 groups =3D=3D 2560 processes run
-> > > >
-> > > >      Total time: 2.936 [sec]
-> > > >
-> > > >
-> > > > 2nd system benchmark result:
-> > > >
-> > > > $ perf bench sched messaging -g 64
-> > > > # Running 'sched/messaging' benchmark:
-> > > > # 20 sender and receiver processes per group
-> > > > # 64 groups =3D=3D 2560 processes run
-> > > >
-> > > >      Total time: 10.074 [sec]
-> > > >
-> > > >
-> > > > So as per scheduler benchmark results, clearly a huge difference
-> > > > between two systems.
-> > > > Can anyone suggest to me how to dive deeper to know the root cause =
-for
-> > > > it.
-> > >
-> > > Look a the differences between your different kernels, that would be =
-a
-> > > great start :)
-> > I created the difference between two kernel config files and then
-> > tried to spot the CONFIG*SCHED* differences.
-> > Interestingly I see the difference in I/O scheduler config, 1st system
-> > is set to =E2=80=9Cdeadline=E2=80=9D and other one is set to =E2=80=9Cc=
-fq=E2=80=9D. So I made it equal
-> > by echoing to =E2=80=9C/sys/block/<disk device>/queue/scheduler" but st=
-ill no
-> > change in scheduler benchmark metrics.
-> >
-> > Is it the correct way to find the differences between kernels? If so,
-> > what other important CONFIG_* variables need to consider?
-> >
-> >
-> > $ cat config.patch | grep -i sched
-> >
-> >  CONFIG_HAVE_UNSTABLE_SCHED_CLOCK=3Dy
-> >  CONFIG_CGROUP_SCHED=3Dy
-> >  CONFIG_FAIR_GROUP_SCHED=3Dy
-> >  # CONFIG_RT_GROUP_SCHED is not set
-> >  # IO Schedulers
-> > @@ -369,10 +434,14 @@ CONFIG_IOSCHED_NOOP=3Dy
-> >  CONFIG_IOSCHED_DEADLINE=3Dy
-> >  CONFIG_IOSCHED_CFQ=3Dy
-> >  CONFIG_CFQ_GROUP_IOSCHED=3Dy
-> > -CONFIG_DEFAULT_IOSCHED=3D"deadline"
-> > +CONFIG_DEFAULT_IOSCHED=3D"cfq"
-> > +CONFIG_MQ_IOSCHED_DEADLINE=3Dm
-> > +CONFIG_MQ_IOSCHED_KYBER=3Dm
-> > +CONFIG_IOSCHED_BFQ=3Dm
-> > +CONFIG_BFQ_GROUP_IOSCHED=3Dy
-> >  CONFIG_SCHED_SMT=3Dy
-> >  CONFIG_SCHED_MC=3Dy
-> > +CONFIG_SCHED_MC_PRIO=3Dy
-> > +# CONFIG_CPU_FREQ_DEFAULT_GOV_SCHEDUTIL is not set
-> > +CONFIG_CPU_FREQ_GOV_SCHEDUTIL=3Dy
->
-> There's lots of other options that affect performance, depending on your
-> specific benchmark, other than these.
->
-> good luck!
->
-> greg k-h
-
-
-
---=20
-Thanks,
-Sekhar
+T24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMTE6MDE6MzVQTSArMDUzMCwgTXVuaSBTZWtoYXIgd3Jv
+dGU6Cj4gT24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMTA6NDQgUE0gR3JlZyBLSCA8Z3JlZ0Brcm9h
+aC5jb20+IHdyb3RlOgo+ID4KPiA+IE9uIFR1ZSwgQXVnIDE4LCAyMDIwIGF0IDEwOjI0OjEzUE0g
+KzA1MzAsIE11bmkgU2VraGFyIHdyb3RlOgo+ID4gPiBPbiBUdWUsIEF1ZyAxOCwgMjAyMCBhdCA4
+OjA2IFBNIEdyZWcgS0ggPGdyZWdAa3JvYWguY29tPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IE9u
+IFR1ZSwgQXVnIDE4LCAyMDIwIGF0IDA4OjAwOjExUE0gKzA1MzAsIE11bmkgU2VraGFyIHdyb3Rl
+Ogo+ID4gPiA+ID4gSGkgYWxsLAo+ID4gPiA+ID4KPiA+ID4gPiA+IEnigJl2ZSB0d28gaWRlbnRp
+Y2FsIExpbnV4IHN5c3RlbXMgd2l0aCBvbmx5IGtlcm5lbCBkaWZmZXJlbmNlcy4KPiA+ID4gPgo+
+ID4gPiA+IFdoYXQgYXJlIHRoZSBkaWZmZXJlbmNlcyBpbiB0aGUga2VybmVscz8KPiA+Cj4gPiBZ
+b3UgZGlkbid0IGFuc3dlciB0aGlzIHF1ZXN0aW9uLCBpcyB0aGlzIHRoZSBzYW1lIGtlcm5lbCBz
+b3VyY2UgYmVpbmcKPiA+IGNvbXBhcmVkIGhlcmU/ICBTYW1lIHZlcnNpb24/ICBTYW1lIGNvbXBp
+bGVyPyAgRXZlcnl0aGluZyBpZGVudGljYWw/Cj4gQm90aCBzeXN0ZW1zIGFyZSBoYXZpbmcgZXhh
+Y3RseSB0aGUgc2FtZSBoYXJkd2FyZSBjb25maWd1cmF0aW9uLgo+IENvbXBpbGVyIGFuZCBrZXJu
+ZWwgdmVyc2lvbnMgYXJlIGRpZmZlcmVudC4gT25lIHN5c3RlbSBoYXMgVWJ1bnR1Cj4gMTYuMDQu
+NCBMVFMoNC40LjAtNjYtZ2VuZXJpYyBrZXJuZWwgd2l0aCBnY2MgdmVyc2lvbiA1LjQuMCkga2Vy
+bmVsIGFuZAo+IHRoZSBvdGhlciBvbmUgaGFzIFVidW50dSAxOC4wNC40IExUUyg0LjE1LjAtOTEt
+Z2VuZXJpYyBrZXJuZWwgd2l0aCBnY2MKPiB2ZXJzaW9uIDcuNS4wKS4KClRob3NlIGFyZSBfdmVy
+eV8gZGlmZmVyZW50IGtlcm5lbCB2ZXJzaW9ucywgd2l0aCBtYW55IHllYXJzIGFuZCB0ZW5zIG9m
+CnRob3VzYW5kcyBvZiBkaWZmZXJlbnQgY2hhbmdlcyBiZXR3ZWVuIHRoZW0uCgpIb3BlZnVsbHkg
+dGhlIG5ld2VyIGtlcm5lbCBpcyBmYXN0ZXIsIHNvIGp1c3Qgc3RpY2sgd2l0aCB0aGF0IDopCgpn
+cmVnIGstaAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+S2VybmVsbmV3YmllcyBtYWlsaW5nIGxpc3QKS2VybmVsbmV3Ymllc0BrZXJuZWxuZXdiaWVzLm9y
+ZwpodHRwczovL2xpc3RzLmtlcm5lbG5ld2JpZXMub3JnL21haWxtYW4vbGlzdGluZm8va2VybmVs
+bmV3Ymllcwo=
