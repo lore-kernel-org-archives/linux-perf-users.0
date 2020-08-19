@@ -1,7 +1,7 @@
-From: Greg KH <greg@kroah.com>
-Subject: Re: Scheduler benchmarks
-Date: Wed, 19 Aug 2020 12:42:54 +0200
-Message-ID: <20200819104254.GA41946@kroah.com>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: Scheduler benchmarks
+Date: Wed, 19 Aug 2020 14:36:25 +0000
+Message-ID: <e8acd1a8444846b196d5fa1fe45806bb@AcuMS.aculab.com>
 References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
  <20200818143633.GA628293@kroah.com>
  <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
@@ -11,72 +11,37 @@ References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
  <CAHhAz+hi9rh5w8hNyas0RkO4WwZXsSNh5g0nS710NSr6-ntioQ@mail.gmail.com>
  <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com>
  <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
+ <4a20a4bb-0bc7-edb1-bd27-217d8dafe87c@petrovitsch.priv.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
+In-Reply-To: <4a20a4bb-0bc7-edb1-bd27-217d8dafe87c@petrovitsch.priv.at>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Muni Sekhar <munisekharrms@gmail.com>
-Cc: peter enderborg <peter.enderborg@sony.com>, kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+To: 'Bernd Petrovitsch' <bernd@petrovitsch.priv.at>, Muni Sekhar <munisekharrms@gmail.com>
+Cc: peter enderborg <peter.enderborg@sony.com>, Greg KH <greg@kroah.com>, kernelnewbies <kernelnewbies@kernelnewbies.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:46:06PM +0530, Muni Sekhar wrote:
-> On Tue, Aug 18, 2020 at 11:45 PM peter enderborg
-> <peter.enderborg@sony.com> wrote:
-> >
-> > On 8/18/20 7:53 PM, Muni Sekhar wrote:
-> > > On Tue, Aug 18, 2020 at 11:06 PM Greg KH <greg@kroah.com> wrote:
-> > >> On Tue, Aug 18, 2020 at 11:01:35PM +0530, Muni Sekhar wrote:
-> > >>> On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
-> > >>>> On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
-> > >>>>> On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
-> > >>>>>> On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
-> > >>>>>>> Hi all,
-> > >>>>>>>
-> > >>>>>>> I’ve two identical Linux systems with only kernel differences.
-> > >>>>>> What are the differences in the kernels?
-> > >>>> You didn't answer this question, is this the same kernel source being
-> > >>>> compared here?  Same version?  Same compiler?  Everything identical?
-> > >>> Both systems are having exactly the same hardware configuration.
-> > >>> Compiler and kernel versions are different. One system has Ubuntu
-> > >>> 16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel and
-> > >>> the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gcc
-> > >>> version 7.5.0).
-> > >> Those are _very_ different kernel versions, with many years and tens of
-> > >> thousands of different changes between them.
-> > >>
-> > >> Hopefully the newer kernel is faster, so just stick with that :)
-> > > But unfortunately the newer kernel is very slow, that is the reason
-> > > for starting this investigation :)
-> > > Any type of help,  and guidelines to dive deeper will be highly appreciated.
-> >
-> > On the 4.4 kernel you dont have
-> >
-> > +CONFIG_RETPOLINE=y
-> > +CONFIG_INTEL_RDT=y
-> Thanks! That is helpful. Yes, I see 4.4 kernel don't have the above
-> two config options.
-> What analysis can be done to narrow down the root cause?
-
-"root cause" is you are comparing a kernel without any spectre/meltdown
-mitigations, with one that has it.
-
-Those mitigations are known to have a huge slowdown on some
-benchmarks/workloads, as you have shown here.
-
-If you don't like this, you can disable these changes on newer kernels,
-if you really really know what you are doing, but I strongly do not
-recommend it.
-
-Also you can complain to your hardware vendors for selling you broken
-hardware :)
-
-> Any example of reference could be helpful to understand.
-
-Look up Spectre and Meltdown for many many examples of what happened and
-what went wrong with chip designs and how we had to fix these things in
-the kernel a few years ago.
-
-greg k-h
+RnJvbTogQmVybmQgUGV0cm92aXRzY2gNCj4gU2VudDogMTkgQXVndXN0IDIwMjAgMTE6MjINCj4g
+DQo+IE9uIDE5LzA4LzIwMjAgMTA6MTYsIE11bmkgU2VraGFyIHdyb3RlOg0KPiA+IE9uIFR1ZSwg
+QXVnIDE4LCAyMDIwIGF0IDExOjQ1IFBNIHBldGVyIGVuZGVyYm9yZw0KPiA+IDxwZXRlci5lbmRl
+cmJvcmdAc29ueS5jb20+IHdyb3RlOg0KPiBbLi4uXQ0KPiA+PiBPbiB0aGUgNC40IGtlcm5lbCB5
+b3UgZG9udCBoYXZlDQo+ID4+DQo+ID4+ICtDT05GSUdfUkVUUE9MSU5FPXkNCj4gPj4gK0NPTkZJ
+R19JTlRFTF9SRFQ9eQ0KPiA+IFRoYW5rcyEgVGhhdCBpcyBoZWxwZnVsLiBZZXMsIEkgc2VlIDQu
+NCBrZXJuZWwgZG9uJ3QgaGF2ZSB0aGUgYWJvdmUNCj4gPiB0d28gY29uZmlnIG9wdGlvbnMuDQo+
+ID4gV2hhdCBhbmFseXNpcyBjYW4gYmUgZG9uZSB0byBuYXJyb3cgZG93biB0aGUgcm9vdCBjYXVz
+ZT8NCj4gPiBBbnkgZXhhbXBsZSBvZiByZWZlcmVuY2UgY291bGQgYmUgaGVscGZ1bCB0byB1bmRl
+cnN0YW5kLg0KPiANCj4gSSBoYXZlbid0IGNoZWNrZWQgdGhlIGRhdGUgb2YgdGhlIG9sZGVyIGtl
+cm5lbCBidXQgU3BlY3RyZSsNCj4gTWVsdGRvd24gbWl0aWdhdGlvbiBjb3N0cyBhIGxvdCAoMjAl
+LTMwJSBzcGVlZCBJSVJDLCBvdXQNCj4gb2YgdGhlIHRvcCBvZiBteSBoZWFkKS4NCg0KSXQgZGVw
+ZW5kcyBncmVhdGx5IG9uIHRoZSBiZW5jaG1hcmsuDQoNClBhZ2UgdGFibGUgc2VwYXJhdGlvbiBo
+YXMgYSBtYXNzaXZlIGVmZmVjdCBvbiBhbnl0aGluZyB0aGF0DQpkb2VzIGEgbG90IG9mIHNob3J0
+IHN5c3RlbSBjYWxscy4NClRoZXJlIG1heSBiZSBzb21lIG1pdGlnYXRpb24gaW4gdmVyeSByZWNl
+bnQgaGFyZHdhcmUuDQpBbmQgSSBjYW4ndCByZW1lbWJlciBpZiBpdCBnZXRzIGRpc2FibGVkIGZv
+ciAncm9vdCcgcHJvY2Vzc2VzDQood2hpY2ggY2FuIHJlYWQga2VybmVsIG1lbW9yeSBhbnl3YXkp
+Lg0KDQpJdCBpcyBkZWZpbml0ZWx5IHdvcnRoIGJ1aWxkaW5nIGEga2VybmVsIHdpdGggdGhlIG1p
+dGlnYXRpb25zDQpkaXNhYmxlZCAgLSBpZiBvbmx5IHRvIGNoZWNrIHRoYXQgdGhleSBhcmUgcmVz
+cG9uc2libGUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJy
+YW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lz
+dHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
