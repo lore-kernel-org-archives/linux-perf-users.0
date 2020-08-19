@@ -1,47 +1,52 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: Scheduler benchmarks
-Date: Wed, 19 Aug 2020 14:36:25 +0000
-Message-ID: <e8acd1a8444846b196d5fa1fe45806bb@AcuMS.aculab.com>
-References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
- <20200818143633.GA628293@kroah.com>
- <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
- <20200818171457.GA736234@kroah.com>
- <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com>
- <20200818173656.GA748290@kroah.com>
- <CAHhAz+hi9rh5w8hNyas0RkO4WwZXsSNh5g0nS710NSr6-ntioQ@mail.gmail.com>
- <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com>
- <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
- <4a20a4bb-0bc7-edb1-bd27-217d8dafe87c@petrovitsch.priv.at>
+From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+Subject: Re: Scheduler benchmarks
+Date: Wed, 19 Aug 2020 12:43:52 -0400
+Message-ID: <135393.1597855432@turing-police>
+References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com> <20200818143633.GA628293@kroah.com> <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com> <20200818171457.GA736234@kroah.com> <CAHhAz+ggd4DPFfWPB+h6Obkjebf5mv5cV6307oKEkEYMhAB3wQ@mail.gmail.com> <20200818173656.GA748290@kroah.com> <CAHhAz+hi9rh5w8hNyas0RkO4WwZXsSNh5g0nS710NSr6-ntioQ@mail.gmail.com> <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com> <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
+ <20200819104254.GA41946@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; boundary="==_Exmh_1597855432_10889P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4a20a4bb-0bc7-edb1-bd27-217d8dafe87c@petrovitsch.priv.at>
-Content-Language: en-US
+In-Reply-To: <20200819104254.GA41946@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Bernd Petrovitsch' <bernd@petrovitsch.priv.at>, Muni Sekhar <munisekharrms@gmail.com>
-Cc: peter enderborg <peter.enderborg@sony.com>, Greg KH <greg@kroah.com>, kernelnewbies <kernelnewbies@kernelnewbies.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+To: Greg KH <greg@kroah.com>
+Cc: Muni Sekhar <munisekharrms@gmail.com>, peter enderborg <peter.enderborg@sony.com>, kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-RnJvbTogQmVybmQgUGV0cm92aXRzY2gNCj4gU2VudDogMTkgQXVndXN0IDIwMjAgMTE6MjINCj4g
-DQo+IE9uIDE5LzA4LzIwMjAgMTA6MTYsIE11bmkgU2VraGFyIHdyb3RlOg0KPiA+IE9uIFR1ZSwg
-QXVnIDE4LCAyMDIwIGF0IDExOjQ1IFBNIHBldGVyIGVuZGVyYm9yZw0KPiA+IDxwZXRlci5lbmRl
-cmJvcmdAc29ueS5jb20+IHdyb3RlOg0KPiBbLi4uXQ0KPiA+PiBPbiB0aGUgNC40IGtlcm5lbCB5
-b3UgZG9udCBoYXZlDQo+ID4+DQo+ID4+ICtDT05GSUdfUkVUUE9MSU5FPXkNCj4gPj4gK0NPTkZJ
-R19JTlRFTF9SRFQ9eQ0KPiA+IFRoYW5rcyEgVGhhdCBpcyBoZWxwZnVsLiBZZXMsIEkgc2VlIDQu
-NCBrZXJuZWwgZG9uJ3QgaGF2ZSB0aGUgYWJvdmUNCj4gPiB0d28gY29uZmlnIG9wdGlvbnMuDQo+
-ID4gV2hhdCBhbmFseXNpcyBjYW4gYmUgZG9uZSB0byBuYXJyb3cgZG93biB0aGUgcm9vdCBjYXVz
-ZT8NCj4gPiBBbnkgZXhhbXBsZSBvZiByZWZlcmVuY2UgY291bGQgYmUgaGVscGZ1bCB0byB1bmRl
-cnN0YW5kLg0KPiANCj4gSSBoYXZlbid0IGNoZWNrZWQgdGhlIGRhdGUgb2YgdGhlIG9sZGVyIGtl
-cm5lbCBidXQgU3BlY3RyZSsNCj4gTWVsdGRvd24gbWl0aWdhdGlvbiBjb3N0cyBhIGxvdCAoMjAl
-LTMwJSBzcGVlZCBJSVJDLCBvdXQNCj4gb2YgdGhlIHRvcCBvZiBteSBoZWFkKS4NCg0KSXQgZGVw
-ZW5kcyBncmVhdGx5IG9uIHRoZSBiZW5jaG1hcmsuDQoNClBhZ2UgdGFibGUgc2VwYXJhdGlvbiBo
-YXMgYSBtYXNzaXZlIGVmZmVjdCBvbiBhbnl0aGluZyB0aGF0DQpkb2VzIGEgbG90IG9mIHNob3J0
-IHN5c3RlbSBjYWxscy4NClRoZXJlIG1heSBiZSBzb21lIG1pdGlnYXRpb24gaW4gdmVyeSByZWNl
-bnQgaGFyZHdhcmUuDQpBbmQgSSBjYW4ndCByZW1lbWJlciBpZiBpdCBnZXRzIGRpc2FibGVkIGZv
-ciAncm9vdCcgcHJvY2Vzc2VzDQood2hpY2ggY2FuIHJlYWQga2VybmVsIG1lbW9yeSBhbnl3YXkp
-Lg0KDQpJdCBpcyBkZWZpbml0ZWx5IHdvcnRoIGJ1aWxkaW5nIGEga2VybmVsIHdpdGggdGhlIG1p
-dGlnYXRpb25zDQpkaXNhYmxlZCAgLSBpZiBvbmx5IHRvIGNoZWNrIHRoYXQgdGhleSBhcmUgcmVz
-cG9uc2libGUuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJy
-YW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lz
-dHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+--==_Exmh_1597855432_10889P
+Content-Type: text/plain; charset=us-ascii
+
+On Wed, 19 Aug 2020 12:42:54 +0200, Greg KH said:
+> Look up Spectre and Meltdown for many many examples of what happened and
+> what went wrong with chip designs and how we had to fix these things in
+> the kernel a few years ago.
+
+And I'm sure that nobody sane thinks we're done with security holes
+caused by speculative execution... :)
+
+
+
+--==_Exmh_1597855432_10889P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXz1WyAdmEQWDXROgAQLvYA//Zid3mkIQtxFpwWwthIpN8HcojKM7Z2T2
+oY5BiorcBXMPsBYbsHQwP6b+07rHu6O5SDGQ/x62cS7CyrvbO7bdBhOdqp52zPpr
+E70nhNcTnk73nJhw/s/JzxvdlfCTvBAw2JcASZ1ySU2fobeKAfm0CVnphtVZJT/i
+3yOGQIuPL6fsycHJyiyLn5zGkFxIH/XtmB743hsUZUpEYfCbdGoAJaxrcI0jpAnj
+mO4uzsryTtcS84d2o0xiHViR3tC8v+J0Qayv5Tm+e8zgzsDXukjsxMc1efqCaWON
+NVhno9tUAq8AtE2JVHNpgNpgWU39+H0/rhvlTRIIBN+S+zM1G/tne9FeCPJSX8A3
+nw9WYnqcLR/j3OTO0sv91w7EhLHxE+IJa3bNN8Xr2+dDmG3eULd1wYAK8a891QzL
+jkKzxvAJFhan/IV3Szrp+d/8LwlQMxGiKx8PQjAREFwAZgMI1c5AFAzQf+weAm6A
+o/Fp+22xQJ/2cuam5AXrPNkmRNG33rOWdRoIc6JV6MW1uKXBWQ8pfOfpeVzK0Cy+
+Mvuk8S44zoCORLt+ExO0kGUmNX33SbsPhCI4Badcv8qzQ1zsF8T1sH7ZBhxCXzme
+aGXI3DRkyxQD/3eFkLNzV4cpYKTb5gf8VS1QDoVGhOMepyz73TZLENHr71Ri9KYt
+pCcVMLn6+Tw=
+=NfwL
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1597855432_10889P--
