@@ -1,7 +1,7 @@
-From: Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+From: Greg KH <greg@kroah.com>
 Subject: Re: Scheduler benchmarks
-Date: Wed, 19 Aug 2020 10:21:50 +0000
-Message-ID: <4a20a4bb-0bc7-edb1-bd27-217d8dafe87c@petrovitsch.priv.at>
+Date: Wed, 19 Aug 2020 12:42:54 +0200
+Message-ID: <20200819104254.GA41946@kroah.com>
 References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
  <20200818143633.GA628293@kroah.com>
  <CAHhAz+hG5kS5rhph4SaSLOEc5PgcSOTPWpiANLNpwotY9Zy6qQ@mail.gmail.com>
@@ -12,118 +12,71 @@ References: <CAHhAz+inPwKYx_4qaujQ=bGG9twashiuqLhQQ-+vgHWF7FLhRA@mail.gmail.com>
  <84362b8b-971f-fb89-115d-41d2457c24fd@sony.com>
  <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------7CFE939DF1E22D7C4FEBF2B7"
-Return-path: <kernelnewbies-bounces@kernelnewbies.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <CAHhAz+iC_F5w5EoZP8-dBNm+DV0uNMva6Mr2uBdmZtejL1OH-w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.kernelnewbies.org/mailman/options/kernelnewbies>,
- <mailto:kernelnewbies-request@kernelnewbies.org?subject=unsubscribe>
-List-Archive: <http://lists.kernelnewbies.org/pipermail/kernelnewbies/>
-List-Post: <mailto:kernelnewbies@kernelnewbies.org>
-List-Help: <mailto:kernelnewbies-request@kernelnewbies.org?subject=help>
-List-Subscribe: <https://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies>,
- <mailto:kernelnewbies-request@kernelnewbies.org?subject=subscribe>
-Errors-To: kernelnewbies-bounces@kernelnewbies.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Muni Sekhar <munisekharrms@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, Greg KH <greg@kroah.com>, linux-kernel@vger.kernel.org, peter enderborg <peter.enderborg@sony.com>, kernelnewbies <kernelnewbies@kernelnewbies.org>
+Cc: peter enderborg <peter.enderborg@sony.com>, kernelnewbies <kernelnewbies@kernelnewbies.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------7CFE939DF1E22D7C4FEBF2B7
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 19/08/2020 10:16, Muni Sekhar wrote:
+On Wed, Aug 19, 2020 at 03:46:06PM +0530, Muni Sekhar wrote:
 > On Tue, Aug 18, 2020 at 11:45 PM peter enderborg
 > <peter.enderborg@sony.com> wrote:
-[...]
->> On the 4.4 kernel you dont have
->>
->> +CONFIG_RETPOLINE=3Dy
->> +CONFIG_INTEL_RDT=3Dy
+> >
+> > On 8/18/20 7:53 PM, Muni Sekhar wrote:
+> > > On Tue, Aug 18, 2020 at 11:06 PM Greg KH <greg@kroah.com> wrote:
+> > >> On Tue, Aug 18, 2020 at 11:01:35PM +0530, Muni Sekhar wrote:
+> > >>> On Tue, Aug 18, 2020 at 10:44 PM Greg KH <greg@kroah.com> wrote:
+> > >>>> On Tue, Aug 18, 2020 at 10:24:13PM +0530, Muni Sekhar wrote:
+> > >>>>> On Tue, Aug 18, 2020 at 8:06 PM Greg KH <greg@kroah.com> wrote:
+> > >>>>>> On Tue, Aug 18, 2020 at 08:00:11PM +0530, Muni Sekhar wrote:
+> > >>>>>>> Hi all,
+> > >>>>>>>
+> > >>>>>>> I’ve two identical Linux systems with only kernel differences.
+> > >>>>>> What are the differences in the kernels?
+> > >>>> You didn't answer this question, is this the same kernel source being
+> > >>>> compared here?  Same version?  Same compiler?  Everything identical?
+> > >>> Both systems are having exactly the same hardware configuration.
+> > >>> Compiler and kernel versions are different. One system has Ubuntu
+> > >>> 16.04.4 LTS(4.4.0-66-generic kernel with gcc version 5.4.0) kernel and
+> > >>> the other one has Ubuntu 18.04.4 LTS(4.15.0-91-generic kernel with gcc
+> > >>> version 7.5.0).
+> > >> Those are _very_ different kernel versions, with many years and tens of
+> > >> thousands of different changes between them.
+> > >>
+> > >> Hopefully the newer kernel is faster, so just stick with that :)
+> > > But unfortunately the newer kernel is very slow, that is the reason
+> > > for starting this investigation :)
+> > > Any type of help,  and guidelines to dive deeper will be highly appreciated.
+> >
+> > On the 4.4 kernel you dont have
+> >
+> > +CONFIG_RETPOLINE=y
+> > +CONFIG_INTEL_RDT=y
 > Thanks! That is helpful. Yes, I see 4.4 kernel don't have the above
 > two config options.
 > What analysis can be done to narrow down the root cause?
+
+"root cause" is you are comparing a kernel without any spectre/meltdown
+mitigations, with one that has it.
+
+Those mitigations are known to have a huge slowdown on some
+benchmarks/workloads, as you have shown here.
+
+If you don't like this, you can disable these changes on newer kernels,
+if you really really know what you are doing, but I strongly do not
+recommend it.
+
+Also you can complain to your hardware vendors for selling you broken
+hardware :)
+
 > Any example of reference could be helpful to understand.
 
-I haven't checked the date of the older kernel but Spectre+
-Meltdown mitigation costs a lot (20%-30% speed IIRC, out
-of the top of my head).
+Look up Spectre and Meltdown for many many examples of what happened and
+what went wrong with chip designs and how we had to fix these things in
+the kernel a few years ago.
 
-MfG,
-	Bernd
---=20
-There is no cloud, just other people computers.
--- https://static.fsf.org/nosvn/stickers/thereisnocloud.svg
-
---------------7CFE939DF1E22D7C4FEBF2B7
-Content-Type: application/pgp-keys;
- name="pEpkey.asc"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment;
- filename="pEpkey.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-lyN9df2R4qM7JHa5IGK2t9DC65Ur+0E7EEckVQ=3D=3D
-=3DOPxp
------END PGP PUBLIC KEY BLOCK-----
-
---------------7CFE939DF1E22D7C4FEBF2B7
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Kernelnewbies mailing list
-Kernelnewbies@kernelnewbies.org
-https://lists.kernelnewbies.org/mailman/listinfo/kernelnewbies
-
---------------7CFE939DF1E22D7C4FEBF2B7--
+greg k-h
