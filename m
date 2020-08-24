@@ -1,73 +1,52 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH] perf/tools/pmu-events/powerpc: update nest metric event to utilize other metrics
-Date: Fri, 21 Aug 2020 13:39:23 +0530
-Message-ID: <20200821080923.126522-1-kjain@linux.ibm.com>
+From: Al Grant <al.grant@foss.arm.com>
+Subject: [PATCH] perf: correct SNOOPX field offset
+Date: Mon, 24 Aug 2020 10:28:34 +0100
+Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, kjain@linux.ibm.com
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, ak@linux.intel.com, acme@redhat.com
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch take advantage of the new capability added to use
-computed metrics in calculating other metrics. It also update
-metric group for nest events to make it consistent for all nest
-memory events.
+perf_event.h has macros that define the field offsets in the
+data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+were both 37. These are distinct fields, and the bitfield layout
+in perf_mem_data_src confirms that SNOOPX should be at offset 38.
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power9/nest_metrics.json      | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+From: Al Grant <al.grant@arm.com>
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-index 8383a37647ad..a21e179edaf9 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -18,25 +18,25 @@
-     },
-     {
- 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
--	"MetricName" : "mcs01-read",
--	"MetricGroup" : "memory_bw",
-+	"MetricName" : "mcs01_read",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
--	"MetricName" : "mcs23-read",
--	"MetricGroup" : "memory_bw",
-+	"MetricName" : "mcs23_read",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
--	"MetricName" : "mcs01-write",
--	"MetricGroup" : "memory_bw",
-+	"MetricName" : "mcs01_write",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@",
--	"MetricName" : "mcs23-write",
-+	"MetricName" : "mcs23_write",
- 	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-@@ -46,9 +46,9 @@
- 	"ScaleUnit": "1e-9GHz"
-     },
-     {
--	"MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@)",
-+	"MetricExpr" : "mcs01_read + mcs23_read + mcs01_write + mcs23_write",
- 	"MetricName" : "Memory-bandwidth-MCS",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     }
- ]
--- 
-2.17.1
+  include/uapi/linux/perf_event.h       | 2 +-
+  tools/include/uapi/linux/perf_event.h | 2 +-
+  2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/perf_event.h 
+b/include/uapi/linux/perf_event.h
+index 077e7ee69e3d..3e5dcdd48a49 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+
+  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+  /* 1 free */
+-#define PERF_MEM_SNOOPX_SHIFT  37
++#define PERF_MEM_SNOOPX_SHIFT  38
+
+  /* locked instruction */
+  #define PERF_MEM_LOCK_NA       0x01 /* not available */
+diff --git a/tools/include/uapi/linux/perf_event.h 
+b/tools/include/uapi/linux/perf_event.h
+index 077e7ee69e3d..3e5dcdd48a49 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+
+  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+  /* 1 free */
+-#define PERF_MEM_SNOOPX_SHIFT  37
++#define PERF_MEM_SNOOPX_SHIFT  38
+
+  /* locked instruction */
+  #define PERF_MEM_LOCK_NA       0x01 /* not available */
