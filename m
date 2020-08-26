@@ -1,44 +1,78 @@
-From: Al Grant <al.grant@foss.arm.com>
-Subject: [PATCH] perf inject: correct event attribute sizes
-Date: Wed, 26 Aug 2020 10:42:04 +0100
-Message-ID: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
+Date: Wed, 26 Aug 2020 12:56:56 +0200
+Message-ID: <20200826105656.GC703542@krava>
+References: <20200825074041.378520-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20200825074041.378520-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-When perf inject reads a perf.data file from an older version of perf,
-it writes event attributes into the output with the original size field,
-but lays them out as if they had the size currently used. Readers see
-a corrupt file. Update the size field to match the layout.
+On Tue, Aug 25, 2020 at 01:10:41PM +0530, Kajol Jain wrote:
 
-From: Denis Nikitin <denik@google.com>
-Signed-off-by: Al Grant <al.grant@foss.arm.com>
+SNIP
 
-  tools/perf/util/header.c | 8 ++++++++
-  1 file changed, 8 insertions(+)
+>  {
+>  	/* try to find matching event from arch standard values */
+>  	struct event_struct *es;
+> @@ -498,8 +486,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+>  		if (!strcmp(arch_std, es->name)) {
+>  			if (!eventcode && es->event) {
+>  				/* allow EventCode to be overridden */
+> -				free(*event);
+> -				*event = NULL;
+> +				je->event = NULL;
+>  			}
+>  			FOR_ALL_EVENT_STRUCT_FIELDS(TRY_FIXUP_FIELD);
+>  			return 0;
+> @@ -513,13 +500,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+>  
+>  /* Call func with each event in the json file */
+>  int json_events(const char *fn,
+> -	  int (*func)(void *data, char *name, char *event, char *desc,
+> -		      char *long_desc,
+> -		      char *pmu, char *unit, char *perpkg,
+> -		      char *metric_expr,
+> -		      char *metric_name, char *metric_group,
+> -		      char *deprecated, char *metric_constraint),
+> -	  void *data)
+> +		int (*func)(void *data, struct json_event *je),
+> +			void *data)
+>  {
+>  	int err;
+>  	size_t size;
+> @@ -537,24 +519,16 @@ int json_events(const char *fn,
+>  	EXPECT(tokens->type == JSMN_ARRAY, tokens, "expected top level array");
+>  	tok = tokens + 1;
+>  	for (i = 0; i < tokens->size; i++) {
+> -		char *event = NULL, *desc = NULL, *name = NULL;
+> -		char *long_desc = NULL;
+>  		char *extra_desc = NULL;
+> -		char *pmu = NULL;
+>  		char *filter = NULL;
+> -		char *perpkg = NULL;
+> -		char *unit = NULL;
+> -		char *metric_expr = NULL;
+> -		char *metric_name = NULL;
+> -		char *metric_group = NULL;
+> -		char *deprecated = NULL;
+> -		char *metric_constraint = NULL;
+> +		struct json_event *je;
+>  		char *arch_std = NULL;
+>  		unsigned long long eventcode = 0;
+>  		struct msrmap *msr = NULL;
+>  		jsmntok_t *msrval = NULL;
+>  		jsmntok_t *precise = NULL;
+>  		jsmntok_t *obj = tok++;
+> +		je = (struct json_event *)calloc(1, sizeof(struct json_event));
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 9cf4efdcbbbd..762eb94bd532 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
-perf_session *session,
-         attr_offset = lseek(ff.fd, 0, SEEK_CUR);
+hum, you don't check je pointer in here.. but does it need to be allocated?
+looks like you could just have je on stack as well..
 
-         evlist__for_each_entry(evlist, evsel) {
-+               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
-+                       /*
-+                        * We are likely in "perf inject" and have read 
-+                        * from an older file. Update attr size so that
-+                        * reader gets the right offset to the ids.
-+                        */
-+                       evsel->core.attr.size = sizeof(evsel->core.attr);
-+               }
-                 f_attr = (struct perf_file_attr){
-                         .attr = evsel->core.attr,
-                         .ids  = {
+thanks,
+jirka
