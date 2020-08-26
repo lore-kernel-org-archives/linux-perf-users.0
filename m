@@ -1,73 +1,53 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] perf: correct SNOOPX field offset
-Date: Wed, 26 Aug 2020 12:24:35 +0100
-Message-ID: <20200826112435.GA43491@C02TD0UTHF1T.local>
-References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+Subject: Re: [PATCH] perf inject: correct event attribute sizes
+Date: Wed, 26 Aug 2020 12:27:45 +0100
+Message-ID: <20200826112745.GB43491@C02TD0UTHF1T.local>
+References: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+In-Reply-To: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Al Grant <al.grant@foss.arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, ak@linux.intel.com, acme@redhat.com, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, Denis Nikitin <denik@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hi,
-
-[ adding the kernel-side perf maintainers ]
-
-Please note that scripts/get_maintainer.pl can help to find relevant
-maintainers.
-
-On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
-> perf_event.h has macros that define the field offsets in the
-> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-> were both 37. These are distinct fields, and the bitfield layout
-> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
->
-> From: Al Grant <al.grant@arm.com>
-
-This needs a Signed-off-by line from you. See:
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
-
-The patch itself looks right to me, so provided you add an S-o-B line:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark
-
+On Wed, Aug 26, 2020 at 10:42:04AM +0100, Al Grant wrote:
+> When perf inject reads a perf.data file from an older version of perf,
+> it writes event attributes into the output with the original size field,
+> but lays them out as if they had the size currently used. Readers see
+> a corrupt file. Update the size field to match the layout.
 > 
->  include/uapi/linux/perf_event.h       | 2 +-
->  tools/include/uapi/linux/perf_event.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> From: Denis Nikitin <denik@google.com>
+> Signed-off-by: Al Grant <al.grant@foss.arm.com>
+
+Did Denis write this patch?
+
+If so, we need an S-o-B line from them.
+
+Mark.
+
+>  tools/perf/util/header.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/include/uapi/linux/perf_event.h
-> b/include/uapi/linux/perf_event.h
-> index 077e7ee69e3d..3e5dcdd48a49 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 9cf4efdcbbbd..762eb94bd532 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
+> perf_session *session,
+>         attr_offset = lseek(ff.fd, 0, SEEK_CUR);
 > 
->  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
->  /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT  37
-> +#define PERF_MEM_SNOOPX_SHIFT  38
-> 
->  /* locked instruction */
->  #define PERF_MEM_LOCK_NA       0x01 /* not available */
-> diff --git a/tools/include/uapi/linux/perf_event.h
-> b/tools/include/uapi/linux/perf_event.h
-> index 077e7ee69e3d..3e5dcdd48a49 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> 
->  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
->  /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT  37
-> +#define PERF_MEM_SNOOPX_SHIFT  38
-> 
->  /* locked instruction */
->  #define PERF_MEM_LOCK_NA       0x01 /* not available */
+>         evlist__for_each_entry(evlist, evsel) {
+> +               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
+> +                       /*
+> +                        * We are likely in "perf inject" and have read +
+> * from an older file. Update attr size so that
+> +                        * reader gets the right offset to the ids.
+> +                        */
+> +                       evsel->core.attr.size = sizeof(evsel->core.attr);
+> +               }
+>                 f_attr = (struct perf_file_attr){
+>                         .attr = evsel->core.attr,
+>                         .ids  = {
