@@ -1,111 +1,58 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
-Date: Wed, 26 Aug 2020 16:54:46 +0530
-Message-ID: <5d91b929-cffd-265a-dd0c-f63bc3d1565d@linux.ibm.com>
-References: <20200825074041.378520-1-kjain@linux.ibm.com>
- <bc078472-e859-b7dc-c451-d737dd573edf@huawei.com>
- <20200826110046.GF703542@krava>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf test: Perf test 67 dumps core on s390
+Date: Wed, 26 Aug 2020 09:55:57 -0300
+Message-ID: <20200826125557.GD1059382@kernel.org>
+References: <20200825071211.16959-1-tmricht@linux.ibm.com>
+ <CAP-5=fUkOyVUgagpkh6zgbjA1Dd0oP_WmP4HVA8f6J3WifwM9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200826110046.GF703542@krava>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUkOyVUgagpkh6zgbjA1Dd0oP_WmP4HVA8f6J3WifwM9w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>
-Cc: acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com
+To: Ian Rogers <irogers@google.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Tue, Aug 25, 2020 at 02:04:30PM -0700, Ian Rogers escreveu:
+> On Tue, Aug 25, 2020 at 12:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> > Linux 5.9 introduced perf test case "Parse and process metrics" and
+> > on s390 this test case always dumps core:
+
+<SNIP>
+
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> This also shows up with address sanitizer on all architectures
+> (perhaps change the patch title) and perhaps add a "Fixes: <commit>"
+> tag.
+
+$ git tag --contains 0a507af9c681ac2adedc5fe1b2d534e27be85446
+perf-tools-2020-08-10
+perf-tools-2020-08-14
+perf-tools-tests-2020-07-02
+perf-tools-tests-2020-07-17
+perf-tools-tests-2020-08-05
+perf-tools-tests-2020-08-06
+v5.9-rc1
+v5.9-rc2
+$
 
 
-On 8/26/20 4:30 PM, Jiri Olsa wrote:
-> On Tue, Aug 25, 2020 at 09:14:11AM +0100, John Garry wrote:
-> 
-> SNIP
-> 
->>>   				goto free_strings;
->>>   		}
->>> -		err = func(data, name, real_event(name, event), desc, long_desc,
->>> -			   pmu, unit, perpkg, metric_expr, metric_name,
->>> -			   metric_group, deprecated, metric_constraint);
->>> +		je->event = real_event(je->name, je->event);
->>> +		err = func(data, je);
->>>   free_strings:
->>> -		free(event);
->>> -		free(desc);
->>> -		free(name);
->>> -		free(long_desc);
->>>   		free(extra_desc);
->>> -		free(pmu);
->>>   		free(filter);
->>> -		free(perpkg);
->>> -		free(deprecated);
->>> -		free(unit);
->>> -		free(metric_expr);
->>> -		free(metric_name);
->>> -		free(metric_group);
->>> -		free(metric_constraint);
->>>   		free(arch_std);
->>> +		free(je);
->>>   		if (err)
->>>   			break;
->>> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
->>> index 2afc8304529e..e696edf70e9a 100644
->>> --- a/tools/perf/pmu-events/jevents.h
->>> +++ b/tools/perf/pmu-events/jevents.h
->>
->> Somewhat unrelated - this file only seems to be included in jevents.c, so I
->> don't see why it exists...
-> 
-> ah right.. I won't mind getting rid of it
+I added this:
 
-Hi John and  Jiri
-     Thanks for reviewing the patch. I can remove this file and add these structure inside jevents.c
+Fixes: 0a507af9c681ac2a ("perf tests: Add parse metric test for ipc metric")
 
-Thanks,
-Kajol Jain
->  
->>> @@ -2,14 +2,28 @@
->>>   #ifndef JEVENTS_H
->>>   #define JEVENTS_H 1
->>> +#include "pmu-events.h"
->>> +
->>> +struct json_event {
->>> +	char *name;
->>> +	char *event;
->>> +	char *desc;
->>> +	char *topic;
->>> +	char *long_desc;
->>> +	char *pmu;
->>> +	char *unit;
->>> +	char *perpkg;
->>> +	char *metric_expr;
->>> +	char *metric_name;
->>> +	char *metric_group;
->>> +	char *deprecated;
->>> +	char *metric_constraint;
->>
->> This looks very much like struct event_struct, so could look to consolidate:
->>
->> struct event_struct {
->> 	struct list_head list;
->> 	char *name;
->> 	char *event;
->> 	char *desc;
->> 	char *long_desc;
->> 	char *pmu;
->> 	char *unit;
->> 	char *perpkg;
->> 	char *metric_expr;
->> 	char *metric_name;
->> 	char *metric_group;
->> 	char *deprecated;
->> 	char *metric_constraint;
->> };
-> 
-> as Andi said they come from different layers, I think it's
-> better to keep them separated even if they share some fields
-> 
-> thanks,
-> jirka
-> 
+As Jiri forgot to add that sentinel when he first introduced this
+pmu_event table, iterators depend on the .name to be NULL to stop.
+
+And added Jiri to the CC, as well as Namhyung Kim, as they are listed in
+MAINTAINERS as reviewers for perf:
+
+PERFORMANCE EVENTS SUBSYSTEM
+R:      Jiri Olsa <jolsa@redhat.com>
+R:      Namhyung Kim <namhyung@kernel.org>
+
+And help me with reviewing all this, thanks,
+
+- Arnaldo
