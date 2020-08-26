@@ -1,71 +1,68 @@
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [RFC] perf/core: Fixes hung issue on perf stat command during
- cpu hotplug
-Date: Wed, 26 Aug 2020 10:21:07 -0300
-Message-ID: <20200826132107.GH1059382@kernel.org>
-References: <20200826093236.446024-1-kjain@linux.ibm.com>
+From: Al Grant <al.grant@foss.arm.com>
+Subject: Re: [PATCH] perf inject: correct event attribute sizes
+Date: Wed, 26 Aug 2020 14:23:59 +0100
+Message-ID: <9a48bd74-42ad-4498-7f38-aed560031c4e@foss.arm.com>
+References: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
+ <20200826112745.GB43491@C02TD0UTHF1T.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200826093236.446024-1-kjain@linux.ibm.com>
+In-Reply-To: <20200826112745.GB43491@C02TD0UTHF1T.local>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, namhyung@kernel.org, daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, Denis Nikitin <denik@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Wed, Aug 26, 2020 at 03:02:36PM +0530, Kajol Jain escreveu:
-> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
-> added assignment of ret value as -EAGAIN in case function
-> call to 'smp_call_function_single' fails.
-> For non-zero ret value, it did 
-> 'ret = !ret ? data.ret : -EAGAIN;', which always
-> assign -EAGAIN to ret and make second if condition useless.
+On 26/08/2020 12:27, Mark Rutland wrote:
+> On Wed, Aug 26, 2020 at 10:42:04AM +0100, Al Grant wrote:
+>> When perf inject reads a perf.data file from an older version of perf,
+>> it writes event attributes into the output with the original size field,
+>> but lays them out as if they had the size currently used. Readers see
+>> a corrupt file. Update the size field to match the layout.
+>>
+>> From: Denis Nikitin <denik@google.com>
+>> Signed-off-by: Al Grant <al.grant@foss.arm.com>
 > 
-> In scenarios like when executing a perf stat with --per-thread option, and 
-> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
-> function could return -ENXIO, and with the above check,
-> task_function_call hung and increases CPU
-> usage (because of repeated 'smp_call_function_single()')
-> 
-> Recration scenario:
-> 	# perf stat -a --per-thread && (offline a CPU )
+> Did Denis write this patch?
 
-Peter, this is kernel stuff, can you take a look?
+Joint work - I fixed the sizes in the event attributes section,
+but Denis noticed that the copies in HEADER_EVENT_DESC also need
+fixing, so the final text is his.
 
-- Arnaldo
- 
-> Patch here removes the tertiary condition added as part of that 
-> commit and added a check for NULL and -EAGAIN.
-> 
-> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-> ---
->  kernel/events/core.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 5bfe8e3c6e44..330c53f7df9c 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -115,9 +115,9 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
->  	for (;;) {
->  		ret = smp_call_function_single(task_cpu(p), remote_function,
->  					       &data, 1);
-> -		ret = !ret ? data.ret : -EAGAIN;
-> -
-> -		if (ret != -EAGAIN)
-> +		if (!ret)
-> +			ret = data.ret;
-> +		else if (ret != -EAGAIN)
->  			break;
->  
->  		cond_resched();
-> -- 
-> 2.26.2
-> 
+> If so, we need an S-o-B line from them.
 
--- 
+I have his approval to upstream this, so:
 
-- Arnaldo
+Signed-off-by: Denis Nikitin <denik@google.com>
+
+Al
+
+
+> 
+> Mark.
+> 
+>>   tools/perf/util/header.c | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+>> index 9cf4efdcbbbd..762eb94bd532 100644
+>> --- a/tools/perf/util/header.c
+>> +++ b/tools/perf/util/header.c
+>> @@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
+>> perf_session *session,
+>>          attr_offset = lseek(ff.fd, 0, SEEK_CUR);
+>>
+>>          evlist__for_each_entry(evlist, evsel) {
+>> +               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
+>> +                       /*
+>> +                        * We are likely in "perf inject" and have read +
+>> * from an older file. Update attr size so that
+>> +                        * reader gets the right offset to the ids.
+>> +                        */
+>> +                       evsel->core.attr.size = sizeof(evsel->core.attr);
+>> +               }
+>>                  f_attr = (struct perf_file_attr){
+>>                          .attr = evsel->core.attr,
+>>                          .ids  = {
