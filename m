@@ -1,94 +1,73 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
-Date: Wed, 26 Aug 2020 17:02:04 +0530
-Message-ID: <6a4e977e-4f77-6a2a-252c-cfdda26db3e2@linux.ibm.com>
-References: <20200825074041.378520-1-kjain@linux.ibm.com>
- <20200826105656.GC703542@krava>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+Date: Wed, 26 Aug 2020 12:24:35 +0100
+Message-ID: <20200826112435.GA43491@C02TD0UTHF1T.local>
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200826105656.GC703542@krava>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com
+To: Al Grant <al.grant@foss.arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, ak@linux.intel.com, acme@redhat.com, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
+Hi,
 
+[ adding the kernel-side perf maintainers ]
 
-On 8/26/20 4:26 PM, Jiri Olsa wrote:
-> On Tue, Aug 25, 2020 at 01:10:41PM +0530, Kajol Jain wrote:
-> 
-> SNIP
-> 
->>  {
->>  	/* try to find matching event from arch standard values */
->>  	struct event_struct *es;
->> @@ -498,8 +486,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
->>  		if (!strcmp(arch_std, es->name)) {
->>  			if (!eventcode && es->event) {
->>  				/* allow EventCode to be overridden */
->> -				free(*event);
->> -				*event = NULL;
->> +				je->event = NULL;
->>  			}
->>  			FOR_ALL_EVENT_STRUCT_FIELDS(TRY_FIXUP_FIELD);
->>  			return 0;
->> @@ -513,13 +500,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
->>  
->>  /* Call func with each event in the json file */
->>  int json_events(const char *fn,
->> -	  int (*func)(void *data, char *name, char *event, char *desc,
->> -		      char *long_desc,
->> -		      char *pmu, char *unit, char *perpkg,
->> -		      char *metric_expr,
->> -		      char *metric_name, char *metric_group,
->> -		      char *deprecated, char *metric_constraint),
->> -	  void *data)
->> +		int (*func)(void *data, struct json_event *je),
->> +			void *data)
->>  {
->>  	int err;
->>  	size_t size;
->> @@ -537,24 +519,16 @@ int json_events(const char *fn,
->>  	EXPECT(tokens->type == JSMN_ARRAY, tokens, "expected top level array");
->>  	tok = tokens + 1;
->>  	for (i = 0; i < tokens->size; i++) {
->> -		char *event = NULL, *desc = NULL, *name = NULL;
->> -		char *long_desc = NULL;
->>  		char *extra_desc = NULL;
->> -		char *pmu = NULL;
->>  		char *filter = NULL;
->> -		char *perpkg = NULL;
->> -		char *unit = NULL;
->> -		char *metric_expr = NULL;
->> -		char *metric_name = NULL;
->> -		char *metric_group = NULL;
->> -		char *deprecated = NULL;
->> -		char *metric_constraint = NULL;
->> +		struct json_event *je;
->>  		char *arch_std = NULL;
->>  		unsigned long long eventcode = 0;
->>  		struct msrmap *msr = NULL;
->>  		jsmntok_t *msrval = NULL;
->>  		jsmntok_t *precise = NULL;
->>  		jsmntok_t *obj = tok++;
->> +		je = (struct json_event *)calloc(1, sizeof(struct json_event));
-> 
-> hum, you don't check je pointer in here.. but does it need to be allocated?
-> looks like you could just have je on stack as well..
+Please note that scripts/get_maintainer.pl can help to find relevant
+maintainers.
 
-Hi Jiri,
-   Yes I will add check for je pointer here.The reason for allocating memory to 'je' is,
-later we are actually referring one by one to its field and in case if won't allocate memory
-we will get segmentaion fault as otherwise je will be NULL. Please let me know if I am
-getting correct.
+On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
+> perf_event.h has macros that define the field offsets in the
+> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+> were both 37. These are distinct fields, and the bitfield layout
+> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+>
+> From: Al Grant <al.grant@arm.com>
 
-Thanks,
-Kajol Jain
+This needs a Signed-off-by line from you. See:
+
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
+
+The patch itself looks right to me, so provided you add an S-o-B line:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark
 
 > 
-> thanks,
-> jirka
+>  include/uapi/linux/perf_event.h       | 2 +-
+>  tools/include/uapi/linux/perf_event.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/include/uapi/linux/perf_event.h
+> b/include/uapi/linux/perf_event.h
+> index 077e7ee69e3d..3e5dcdd48a49 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> 
+>  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+>  /* 1 free */
+> -#define PERF_MEM_SNOOPX_SHIFT  37
+> +#define PERF_MEM_SNOOPX_SHIFT  38
+> 
+>  /* locked instruction */
+>  #define PERF_MEM_LOCK_NA       0x01 /* not available */
+> diff --git a/tools/include/uapi/linux/perf_event.h
+> b/tools/include/uapi/linux/perf_event.h
+> index 077e7ee69e3d..3e5dcdd48a49 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> 
+>  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+>  /* 1 free */
+> -#define PERF_MEM_SNOOPX_SHIFT  37
+> +#define PERF_MEM_SNOOPX_SHIFT  38
+> 
+>  /* locked instruction */
+>  #define PERF_MEM_LOCK_NA       0x01 /* not available */
