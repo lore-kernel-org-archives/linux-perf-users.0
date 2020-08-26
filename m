@@ -1,7 +1,7 @@
 From: Jiri Olsa <jolsa@redhat.com>
 Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
-Date: Wed, 26 Aug 2020 12:57:12 +0200
-Message-ID: <20200826105712.GE703542@krava>
+Date: Wed, 26 Aug 2020 12:57:05 +0200
+Message-ID: <20200826105705.GD703542@krava>
 References: <20200825074041.378520-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -17,40 +17,45 @@ On Tue, Aug 25, 2020 at 01:10:41PM +0530, Kajol Jain wrote:
 
 SNIP
 
->  	}
->  }
+> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+> index 2afc8304529e..e696edf70e9a 100644
+> --- a/tools/perf/pmu-events/jevents.h
+> +++ b/tools/perf/pmu-events/jevents.h
+> @@ -2,14 +2,28 @@
+>  #ifndef JEVENTS_H
+>  #define JEVENTS_H 1
 >  
-> -static int save_arch_std_events(void *data, char *name, char *event,
-> -				char *desc, char *long_desc, char *pmu,
+> +#include "pmu-events.h"
+> +
+> +struct json_event {
+> +	char *name;
+> +	char *event;
+> +	char *desc;
+> +	char *topic;
+> +	char *long_desc;
+> +	char *pmu;
+> +	char *unit;
+> +	char *perpkg;
+> +	char *metric_expr;
+> +	char *metric_name;
+> +	char *metric_group;
+> +	char *deprecated;
+> +	char *metric_constraint;
+> +};
+> +
+>  int json_events(const char *fn,
+> -		int (*func)(void *data, char *name, char *event, char *desc,
+> -				char *long_desc,
+> -				char *pmu,
 > -				char *unit, char *perpkg, char *metric_expr,
 > -				char *metric_name, char *metric_group,
-> -				char *deprecated, char *metric_constraint)
-> +static int save_arch_std_events(void *data, struct json_event *je)
->  {
->  	struct event_struct *es;
->  
-> @@ -485,11 +476,8 @@ static char *real_event(const char *name, char *event)
->  }
->  
->  static int
-> -try_fixup(const char *fn, char *arch_std, char **event, char **desc,
-> -	  char **name, char **long_desc, char **pmu, char **filter,
-> -	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
-> -	  char **metric_group, unsigned long long eventcode,
-> -	  char **deprecated, char **metric_constraint)
-> +try_fixup(const char *fn, char *arch_std, unsigned long long eventcode,
-> +	  struct json_event *je)
->  {
->  	/* try to find matching event from arch standard values */
->  	struct event_struct *es;
-> @@ -498,8 +486,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
->  		if (!strcmp(arch_std, es->name)) {
->  			if (!eventcode && es->event) {
->  				/* allow EventCode to be overridden */
-> -				free(*event);
-> -				*event = NULL;
-> +				je->event = NULL;
+> -				char *deprecated, char *metric_constraint),
+> -		void *data);
+> +		int (*func)(void *data, struct json_event *je),
+> +			void *data);
 
-should you free je->event in here?
+please also add typedef for the function,
+it's used in other places as well
 
+thanks,
 jirka
