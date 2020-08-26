@@ -1,58 +1,63 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf test: Perf test 67 dumps core on s390
-Date: Wed, 26 Aug 2020 09:55:57 -0300
-Message-ID: <20200826125557.GD1059382@kernel.org>
-References: <20200825071211.16959-1-tmricht@linux.ibm.com>
- <CAP-5=fUkOyVUgagpkh6zgbjA1Dd0oP_WmP4HVA8f6J3WifwM9w@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: Fix s390x compile error on F32
+ utils/stat-display.c
+Date: Wed, 26 Aug 2020 10:00:03 -0300
+Message-ID: <20200826130003.GE1059382@kernel.org>
+References: <20200825063304.77733-1-tmricht@linux.ibm.com>
+ <20200825071442.GB631468@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUkOyVUgagpkh6zgbjA1Dd0oP_WmP4HVA8f6J3WifwM9w@mail.gmail.com>
+In-Reply-To: <20200825071442.GB631468@krava>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Rogers <irogers@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Aug 25, 2020 at 02:04:30PM -0700, Ian Rogers escreveu:
-> On Tue, Aug 25, 2020 at 12:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > Linux 5.9 introduced perf test case "Parse and process metrics" and
-> > on s390 this test case always dumps core:
-
-<SNIP>
-
-> Acked-by: Ian Rogers <irogers@google.com>
+Em Tue, Aug 25, 2020 at 09:14:42AM +0200, Jiri Olsa escreveu:
+> On Tue, Aug 25, 2020 at 08:33:04AM +0200, Thomas Richter wrote:
 > 
-> This also shows up with address sanitizer on all architectures
-> (perhaps change the patch title) and perhaps add a "Fixes: <commit>"
-> tag.
+> SNIP
+> 
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 57d0706e1330..cbe836649f84 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -117,12 +117,11 @@ static void aggr_printout(struct perf_stat_config *config,
+> >  				cpu_map__id_to_die(id),
+> >  				config->csv_output ? 0 : -3,
+> >  				cpu_map__id_to_cpu(id), config->csv_sep);
+> > -		} else {
+> > +		} else if (id > -1)
+> >  			fprintf(config->output, "CPU%*d%s",
+> >  				config->csv_output ? 0 : -7,
+> >  				evsel__cpus(evsel)->map[id],
+> >  				config->csv_sep);
+> > -		}
+ 
+> I think we want multiple if lines within  { } but
+> scripts/checkpatch.pl does not scream about this, so leaving this to
+> Arnaldo ;-)
 
-$ git tag --contains 0a507af9c681ac2adedc5fe1b2d534e27be85446
-perf-tools-2020-08-10
-perf-tools-2020-08-14
-perf-tools-tests-2020-07-02
-perf-tools-tests-2020-07-17
-perf-tools-tests-2020-08-05
-perf-tools-tests-2020-08-06
-v5.9-rc1
-v5.9-rc2
-$
+Yeah, I removed the removal of the {} for a multiline else block, added
+your Acked-by, thanks,
 
+- Analdo
+ 
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
+> 
+> thanks,
+> jirka
+> 
+> >  		break;
+> >  	case AGGR_THREAD:
+> >  		fprintf(config->output, "%*s-%*d%s",
+> > -- 
+> > 2.26.2
+> > 
+> 
 
-I added this:
-
-Fixes: 0a507af9c681ac2a ("perf tests: Add parse metric test for ipc metric")
-
-As Jiri forgot to add that sentinel when he first introduced this
-pmu_event table, iterators depend on the .name to be NULL to stop.
-
-And added Jiri to the CC, as well as Namhyung Kim, as they are listed in
-MAINTAINERS as reviewers for perf:
-
-PERFORMANCE EVENTS SUBSYSTEM
-R:      Jiri Olsa <jolsa@redhat.com>
-R:      Namhyung Kim <namhyung@kernel.org>
-
-And help me with reviewing all this, thanks,
+-- 
 
 - Arnaldo
