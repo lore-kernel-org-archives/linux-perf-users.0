@@ -1,68 +1,33 @@
-From: Al Grant <al.grant@foss.arm.com>
-Subject: Re: [PATCH] perf inject: correct event attribute sizes
-Date: Wed, 26 Aug 2020 14:23:59 +0100
-Message-ID: <9a48bd74-42ad-4498-7f38-aed560031c4e@foss.arm.com>
-References: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
- <20200826112745.GB43491@C02TD0UTHF1T.local>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+Date: Wed, 26 Aug 2020 11:26:31 -0300
+Message-ID: <20200826142631.GA5351@redhat.com>
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+ <20200825174043.GQ1509399@tassilo.jf.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200826112745.GB43491@C02TD0UTHF1T.local>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <20200825174043.GQ1509399@tassilo.jf.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com, Denis Nikitin <denik@google.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Al Grant <al.grant@foss.arm.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-On 26/08/2020 12:27, Mark Rutland wrote:
-> On Wed, Aug 26, 2020 at 10:42:04AM +0100, Al Grant wrote:
->> When perf inject reads a perf.data file from an older version of perf,
->> it writes event attributes into the output with the original size field,
->> but lays them out as if they had the size currently used. Readers see
->> a corrupt file. Update the size field to match the layout.
->>
->> From: Denis Nikitin <denik@google.com>
->> Signed-off-by: Al Grant <al.grant@foss.arm.com>
+Em Tue, Aug 25, 2020 at 10:40:43AM -0700, Andi Kleen escreveu:
+> On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
+> > perf_event.h has macros that define the field offsets in the
+> > data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+> > were both 37. These are distinct fields, and the bitfield layout
+> > in perf_mem_data_src confirms that SNOOPX should be at offset 38.
 > 
-> Did Denis write this patch?
-
-Joint work - I fixed the sizes in the event attributes section,
-but Denis noticed that the copies in HEADER_EVENT_DESC also need
-fixing, so the final text is his.
-
-> If so, we need an S-o-B line from them.
-
-I have his approval to upstream this, so:
-
-Signed-off-by: Denis Nikitin <denik@google.com>
-
-Al
-
-
+> Looks good.
 > 
-> Mark.
+> Reviewed-by: Andi Kleen <ak@linux.intel.com>
 > 
->>   tools/perf/util/header.c | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
->> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
->> index 9cf4efdcbbbd..762eb94bd532 100644
->> --- a/tools/perf/util/header.c
->> +++ b/tools/perf/util/header.c
->> @@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
->> perf_session *session,
->>          attr_offset = lseek(ff.fd, 0, SEEK_CUR);
->>
->>          evlist__for_each_entry(evlist, evsel) {
->> +               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
->> +                       /*
->> +                        * We are likely in "perf inject" and have read +
->> * from an older file. Update attr size so that
->> +                        * reader gets the right offset to the ids.
->> +                        */
->> +                       evsel->core.attr.size = sizeof(evsel->core.attr);
->> +               }
->>                  f_attr = (struct perf_file_attr){
->>                          .attr = evsel->core.attr,
->>                          .ids  = {
+> Probably should have a Fixes: header
+
+Please do so, find the patch that introduced the error, add the Fixes
+tag, will help me not having to do it myself :-)
+
+- Arnaldo
