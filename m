@@ -1,119 +1,402 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [perf/core] 16fb162e78:
- WARNING:at_kernel/events/core.c:#list_add_event
-Date: Thu, 27 Aug 2020 18:32:44 +0530
-Message-ID: <bd699fba-7227-c18f-3d05-919b7876ae6f@linux.ibm.com>
-References: <20200827083757.GQ4299@shao2-debian>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v6 2/5] perf/jevents: Add new structure to pass json fields.
+Date: Thu, 27 Aug 2020 18:39:55 +0530
+Message-ID: <20200827130958.189146-3-kjain@linux.ibm.com>
+References: <20200827130958.189146-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200827083757.GQ4299@shao2-debian>
-Content-Language: en-US
+In-Reply-To: <20200827130958.189146-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kernel test robot <rong.a.chen@intel.com>
-Cc: acme@kernel.org, jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, namhyung@kernel.org, daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com, 0day robot <lkp@intel.com>, lkp@lists.01.org
+To: acme@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+This patch adds new structure called 'json_event' inside jevents.h
+file to improve the callback prototype inside jevent files.
+Initially, whenever user want to add new field, they need to update
+in all function callback which make it more and more complex with
+increased number of parmeters.
+With this change, we just need to add it in new structure 'json_event'.
 
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/pmu-events/jevents.c | 222 +++++++++++++++-----------------
+ 1 file changed, 105 insertions(+), 117 deletions(-)
 
-On 8/27/20 2:07 PM, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 16fb162e7868b8f3c1fc09ef0d683c9554cb6404 ("[RFC] perf/core: Fixes hung issue on perf stat command during cpu hotplug")
-> url: https://github.com/0day-ci/linux/commits/Kajol-Jain/perf-core-Fixes-hung-issue-on-perf-stat-command-during-cpu-hotplug/20200826-173643
-> base: https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git 2cb5383b30d47c446ec7d884cd80f93ffcc31817
-> 
-
-Hi Rong Chen,
-	Thanks for checking. Actually this is old patch, I recently send new updated patch.
-Please let me know if in this patch also you are seeing same issue.
-
-Link to the patch: https://lkml.org/lkml/2020/8/27/101
-
-Thanks,
-Kajol Jain
-
-> in testcase: trinity
-> with following parameters:
-> 
-> 	runtime: 300s
-> 
-> test-description: Trinity is a linux system call fuzz tester.
-> test-url: http://codemonkey.org.uk/projects/trinity/
-> 
-> 
-> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> +-------------------------------------------------+------------+------------+
-> |                                                 | 2cb5383b30 | 16fb162e78 |
-> +-------------------------------------------------+------------+------------+
-> | boot_successes                                  | 4          | 0          |
-> | boot_failures                                   | 0          | 8          |
-> | WARNING:at_kernel/events/core.c:#list_add_event | 0          | 8          |
-> | EIP:list_add_event                              | 0          | 8          |
-> | kernel_BUG_at_lib/list_debug.c                  | 0          | 8          |
-> | invalid_opcode:#[##]                            | 0          | 8          |
-> | EIP:__list_add_valid                            | 0          | 8          |
-> | Kernel_panic-not_syncing:Fatal_exception        | 0          | 8          |
-> +-------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <rong.a.chen@intel.com>
-> 
-> 
-> [   97.084211] WARNING: CPU: 0 PID: 593 at kernel/events/core.c:1807 list_add_event+0x29e/0x4b0
-> [   97.086779] Modules linked in:
-> [   97.087756] CPU: 0 PID: 593 Comm: trinity-main Not tainted 5.9.0-rc1-00012-g16fb162e7868b #1
-> [   97.089783] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-> [   97.091980] EIP: list_add_event+0x29e/0x4b0
-> [   97.093322] Code: ef c2 c4 01 83 15 44 ef c2 c4 00 8b 43 60 a8 01 0f 84 9a fd ff ff 8d b6 00 00 00 00 83 05 48 ef c2 c4 01 83 15 4c ef c2 c4 00 <0f> 0b 83 05 50 ef c2 c4 01 83 15 54 ef c2 c4 00 e9 71 fd ff ff 8d
-> [   97.097789] EAX: 00000007 EBX: eee48000 ECX: 00000001 EDX: ee125280
-> [   97.099297] ESI: eeebe200 EDI: 00000001 EBP: eee67dfc ESP: eee67dec
-> [   97.101008] DS: 007b ES: 007b FS: 00d8 GS: 0033 SS: 0068 EFLAGS: 00010046
-> [   97.106936] CR0: 80050033 CR2: 08dfc000 CR3: 2e0bb000 CR4: 00040690
-> [   97.108599] Call Trace:
-> [   97.109457]  __perf_install_in_context+0x286/0x3e0
-> [   97.110759]  remote_function+0x79/0x90
-> [   97.111897]  generic_exec_single+0xc3/0x190
-> [   97.113101]  smp_call_function_single+0x1a3/0x2d0
-> [   97.114364]  ? bpf_fd_reuseport_array_update_elem+0x300/0x300
-> [   97.115866]  task_function_call+0x87/0xc0
-> [   97.117025]  ? __perf_event_enable+0x740/0x740
-> [   97.118248]  perf_install_in_context+0x110/0x450
-> [   97.119540]  __do_sys_perf_event_open+0x13cb/0x1ed0
-> [   97.120833]  __ia32_sys_perf_event_open+0x24/0x40
-> [   97.122097]  __do_fast_syscall_32+0x99/0x110
-> [   97.123213]  do_fast_syscall_32+0x37/0x130
-> [   97.124409]  do_SYSENTER_32+0x23/0x40
-> [   97.125470]  entry_SYSENTER_32+0xb0/0x10d
-> [   97.126592] EIP: 0xb7f11549
-> [   97.127449] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-> [   97.131832] EAX: ffffffda EBX: 08e38318 ECX: 00000000 EDX: ffffffff
-> [   97.137556] ESI: ffffffff EDI: 00000002 EBP: 6d656d83 ESP: bfa804ec
-> [   97.139119] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000286
-> [   97.140732] ---[ end trace 57d55e687e8b0e41 ]---
-> 
-> 
-> To reproduce:
-> 
->         # build kernel
-> 	cd linux
-> 	cp config-5.9.0-rc1-00012-g16fb162e7868b .config
-> 	make HOSTCC=gcc-9 CC=gcc-9 ARCH=i386 olddefconfig prepare modules_prepare bzImage
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         bin/lkp qemu -k <bzImage> job-script # job-script is attached in this email
-> 
-> 
-> 
-> Thanks,
-> Rong Chen
-> 
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 1c55cc754b5a..b205cd904a4f 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -52,6 +52,21 @@
+ int verbose;
+ char *prog;
+ 
++struct json_event {
++	char *name;
++	char *event;
++	char *desc;
++	char *long_desc;
++	char *pmu;
++	char *unit;
++	char *perpkg;
++	char *metric_expr;
++	char *metric_name;
++	char *metric_group;
++	char *deprecated;
++	char *metric_constraint;
++};
++
+ #ifndef min
+ #define min(x, y) ({				\
+ 	typeof(x) _min1 = (x);			\
+@@ -60,6 +75,8 @@ char *prog;
+ 	_min1 < _min2 ? _min1 : _min2; })
+ #endif
+ 
++typedef int (*func)(void *data, struct json_event *je);
++
+ int eprintf(int level, int var, const char *fmt, ...)
+ {
+ 
+@@ -325,12 +342,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
+ 	close_table = 1;
+ }
+ 
+-static int print_events_table_entry(void *data, char *name, char *event,
+-				    char *desc, char *long_desc,
+-				    char *pmu, char *unit, char *perpkg,
+-				    char *metric_expr,
+-				    char *metric_name, char *metric_group,
+-				    char *deprecated, char *metric_constraint)
++static int print_events_table_entry(void *data, struct json_event *je)
+ {
+ 	struct perf_entry_data *pd = data;
+ 	FILE *outfp = pd->outfp;
+@@ -342,30 +354,30 @@ static int print_events_table_entry(void *data, char *name, char *event,
+ 	 */
+ 	fprintf(outfp, "{\n");
+ 
+-	if (name)
+-		fprintf(outfp, "\t.name = \"%s\",\n", name);
+-	if (event)
+-		fprintf(outfp, "\t.event = \"%s\",\n", event);
+-	fprintf(outfp, "\t.desc = \"%s\",\n", desc);
++	if (je->name)
++		fprintf(outfp, "\t.name = \"%s\",\n", je->name);
++	if (je->event)
++		fprintf(outfp, "\t.event = \"%s\",\n", je->event);
++	fprintf(outfp, "\t.desc = \"%s\",\n", je->desc);
+ 	fprintf(outfp, "\t.topic = \"%s\",\n", topic);
+-	if (long_desc && long_desc[0])
+-		fprintf(outfp, "\t.long_desc = \"%s\",\n", long_desc);
+-	if (pmu)
+-		fprintf(outfp, "\t.pmu = \"%s\",\n", pmu);
+-	if (unit)
+-		fprintf(outfp, "\t.unit = \"%s\",\n", unit);
+-	if (perpkg)
+-		fprintf(outfp, "\t.perpkg = \"%s\",\n", perpkg);
+-	if (metric_expr)
+-		fprintf(outfp, "\t.metric_expr = \"%s\",\n", metric_expr);
+-	if (metric_name)
+-		fprintf(outfp, "\t.metric_name = \"%s\",\n", metric_name);
+-	if (metric_group)
+-		fprintf(outfp, "\t.metric_group = \"%s\",\n", metric_group);
+-	if (deprecated)
+-		fprintf(outfp, "\t.deprecated = \"%s\",\n", deprecated);
+-	if (metric_constraint)
+-		fprintf(outfp, "\t.metric_constraint = \"%s\",\n", metric_constraint);
++	if (je->long_desc && je->long_desc[0])
++		fprintf(outfp, "\t.long_desc = \"%s\",\n", je->long_desc);
++	if (je->pmu)
++		fprintf(outfp, "\t.pmu = \"%s\",\n", je->pmu);
++	if (je->unit)
++		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
++	if (je->perpkg)
++		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
++	if (je->metric_expr)
++		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
++	if (je->metric_name)
++		fprintf(outfp, "\t.metric_name = \"%s\",\n", je->metric_name);
++	if (je->metric_group)
++		fprintf(outfp, "\t.metric_group = \"%s\",\n", je->metric_group);
++	if (je->deprecated)
++		fprintf(outfp, "\t.deprecated = \"%s\",\n", je->deprecated);
++	if (je->metric_constraint)
++		fprintf(outfp, "\t.metric_constraint = \"%s\",\n", je->metric_constraint);
+ 	fprintf(outfp, "},\n");
+ 
+ 	return 0;
+@@ -387,17 +399,17 @@ struct event_struct {
+ 	char *metric_constraint;
+ };
+ 
+-#define ADD_EVENT_FIELD(field) do { if (field) {		\
+-	es->field = strdup(field);				\
++#define ADD_EVENT_FIELD(field) do { if (je->field) {		\
++	es->field = strdup(je->field);				\
+ 	if (!es->field)						\
+ 		goto out_free;					\
+ } } while (0)
+ 
+ #define FREE_EVENT_FIELD(field) free(es->field)
+ 
+-#define TRY_FIXUP_FIELD(field) do { if (es->field && !*field) {\
+-	*field = strdup(es->field);				\
+-	if (!*field)						\
++#define TRY_FIXUP_FIELD(field) do { if (es->field && !je->field) {\
++	je->field = strdup(es->field);				\
++	if (!je->field)						\
+ 		return -ENOMEM;					\
+ } } while (0)
+ 
+@@ -428,11 +440,7 @@ static void free_arch_std_events(void)
+ 	}
+ }
+ 
+-static int save_arch_std_events(void *data, char *name, char *event,
+-				char *desc, char *long_desc, char *pmu,
+-				char *unit, char *perpkg, char *metric_expr,
+-				char *metric_name, char *metric_group,
+-				char *deprecated, char *metric_constraint)
++static int save_arch_std_events(void *data, struct json_event *je)
+ {
+ 	struct event_struct *es;
+ 
+@@ -486,17 +494,16 @@ static char *real_event(const char *name, char *event)
+ 		return NULL;
+ 
+ 	for (i = 0; fixed[i].name; i++)
+-		if (!strcasecmp(name, fixed[i].name))
+-			return (char *)fixed[i].event;
++		if (!strcasecmp(name, fixed[i].name)) {
++			strcpy(event, fixed[i].event);
++			return event;
++		}
+ 	return event;
+ }
+ 
+ static int
+-try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+-	  char **name, char **long_desc, char **pmu, char **filter,
+-	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
+-	  char **metric_group, unsigned long long eventcode,
+-	  char **deprecated, char **metric_constraint)
++try_fixup(const char *fn, char *arch_std, unsigned long long eventcode,
++	  struct json_event *je)
+ {
+ 	/* try to find matching event from arch standard values */
+ 	struct event_struct *es;
+@@ -505,8 +512,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+ 		if (!strcmp(arch_std, es->name)) {
+ 			if (!eventcode && es->event) {
+ 				/* allow EventCode to be overridden */
+-				free(*event);
+-				*event = NULL;
++				free(je->event);
++				je->event = NULL;
+ 			}
+ 			FOR_ALL_EVENT_STRUCT_FIELDS(TRY_FIXUP_FIELD);
+ 			return 0;
+@@ -520,13 +527,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+ 
+ /* Call func with each event in the json file */
+ int json_events(const char *fn,
+-	  int (*func)(void *data, char *name, char *event, char *desc,
+-		      char *long_desc,
+-		      char *pmu, char *unit, char *perpkg,
+-		      char *metric_expr,
+-		      char *metric_name, char *metric_group,
+-		      char *deprecated, char *metric_constraint),
+-	  void *data)
++		int (*func)(void *data, struct json_event *je),
++			void *data)
+ {
+ 	int err;
+ 	size_t size;
+@@ -544,18 +546,9 @@ int json_events(const char *fn,
+ 	EXPECT(tokens->type == JSMN_ARRAY, tokens, "expected top level array");
+ 	tok = tokens + 1;
+ 	for (i = 0; i < tokens->size; i++) {
+-		char *event = NULL, *desc = NULL, *name = NULL;
+-		char *long_desc = NULL;
+ 		char *extra_desc = NULL;
+-		char *pmu = NULL;
+ 		char *filter = NULL;
+-		char *perpkg = NULL;
+-		char *unit = NULL;
+-		char *metric_expr = NULL;
+-		char *metric_name = NULL;
+-		char *metric_group = NULL;
+-		char *deprecated = NULL;
+-		char *metric_constraint = NULL;
++		struct json_event je = {};
+ 		char *arch_std = NULL;
+ 		unsigned long long eventcode = 0;
+ 		struct msrmap *msr = NULL;
+@@ -577,7 +570,7 @@ int json_events(const char *fn,
+ 			       "Expected string value");
+ 
+ 			nz = !json_streq(map, val, "0");
+-			if (match_field(map, field, nz, &event, val)) {
++			if (match_field(map, field, nz, &je.event, val)) {
+ 				/* ok */
+ 			} else if (json_streq(map, field, "EventCode")) {
+ 				char *code = NULL;
+@@ -590,14 +583,14 @@ int json_events(const char *fn,
+ 				eventcode |= strtoul(code, NULL, 0) << 21;
+ 				free(code);
+ 			} else if (json_streq(map, field, "EventName")) {
+-				addfield(map, &name, "", "", val);
++				addfield(map, &je.name, "", "", val);
+ 			} else if (json_streq(map, field, "BriefDescription")) {
+-				addfield(map, &desc, "", "", val);
+-				fixdesc(desc);
++				addfield(map, &je.desc, "", "", val);
++				fixdesc(je.desc);
+ 			} else if (json_streq(map, field,
+ 					     "PublicDescription")) {
+-				addfield(map, &long_desc, "", "", val);
+-				fixdesc(long_desc);
++				addfield(map, &je.long_desc, "", "", val);
++				fixdesc(je.long_desc);
+ 			} else if (json_streq(map, field, "PEBS") && nz) {
+ 				precise = val;
+ 			} else if (json_streq(map, field, "MSRIndex") && nz) {
+@@ -617,34 +610,34 @@ int json_events(const char *fn,
+ 
+ 				ppmu = field_to_perf(unit_to_pmu, map, val);
+ 				if (ppmu) {
+-					pmu = strdup(ppmu);
++					je.pmu = strdup(ppmu);
+ 				} else {
+-					if (!pmu)
+-						pmu = strdup("uncore_");
+-					addfield(map, &pmu, "", "", val);
+-					for (s = pmu; *s; s++)
++					if (!je.pmu)
++						je.pmu = strdup("uncore_");
++					addfield(map, &je.pmu, "", "", val);
++					for (s = je.pmu; *s; s++)
+ 						*s = tolower(*s);
+ 				}
+-				addfield(map, &desc, ". ", "Unit: ", NULL);
+-				addfield(map, &desc, "", pmu, NULL);
+-				addfield(map, &desc, "", " ", NULL);
++				addfield(map, &je.desc, ". ", "Unit: ", NULL);
++				addfield(map, &je.desc, "", je.pmu, NULL);
++				addfield(map, &je.desc, "", " ", NULL);
+ 			} else if (json_streq(map, field, "Filter")) {
+ 				addfield(map, &filter, "", "", val);
+ 			} else if (json_streq(map, field, "ScaleUnit")) {
+-				addfield(map, &unit, "", "", val);
++				addfield(map, &je.unit, "", "", val);
+ 			} else if (json_streq(map, field, "PerPkg")) {
+-				addfield(map, &perpkg, "", "", val);
++				addfield(map, &je.perpkg, "", "", val);
+ 			} else if (json_streq(map, field, "Deprecated")) {
+-				addfield(map, &deprecated, "", "", val);
++				addfield(map, &je.deprecated, "", "", val);
+ 			} else if (json_streq(map, field, "MetricName")) {
+-				addfield(map, &metric_name, "", "", val);
++				addfield(map, &je.metric_name, "", "", val);
+ 			} else if (json_streq(map, field, "MetricGroup")) {
+-				addfield(map, &metric_group, "", "", val);
++				addfield(map, &je.metric_group, "", "", val);
+ 			} else if (json_streq(map, field, "MetricConstraint")) {
+-				addfield(map, &metric_constraint, "", "", val);
++				addfield(map, &je.metric_constraint, "", "", val);
+ 			} else if (json_streq(map, field, "MetricExpr")) {
+-				addfield(map, &metric_expr, "", "", val);
+-				for (s = metric_expr; *s; s++)
++				addfield(map, &je.metric_expr, "", "", val);
++				for (s = je.metric_expr; *s; s++)
+ 					*s = tolower(*s);
+ 			} else if (json_streq(map, field, "ArchStdEvent")) {
+ 				addfield(map, &arch_std, "", "", val);
+@@ -653,7 +646,7 @@ int json_events(const char *fn,
+ 			}
+ 			/* ignore unknown fields */
+ 		}
+-		if (precise && desc && !strstr(desc, "(Precise Event)")) {
++		if (precise && je.desc && !strstr(je.desc, "(Precise Event)")) {
+ 			if (json_streq(map, precise, "2"))
+ 				addfield(map, &extra_desc, " ",
+ 						"(Must be precise)", NULL);
+@@ -662,49 +655,44 @@ int json_events(const char *fn,
+ 						"(Precise event)", NULL);
+ 		}
+ 		snprintf(buf, sizeof buf, "event=%#llx", eventcode);
+-		addfield(map, &event, ",", buf, NULL);
+-		if (desc && extra_desc)
+-			addfield(map, &desc, " ", extra_desc, NULL);
+-		if (long_desc && extra_desc)
+-			addfield(map, &long_desc, " ", extra_desc, NULL);
++		addfield(map, &je.event, ",", buf, NULL);
++		if (je.desc && extra_desc)
++			addfield(map, &je.desc, " ", extra_desc, NULL);
++		if (je.long_desc && extra_desc)
++			addfield(map, &je.long_desc, " ", extra_desc, NULL);
+ 		if (filter)
+-			addfield(map, &event, ",", filter, NULL);
++			addfield(map, &je.event, ",", filter, NULL);
+ 		if (msr != NULL)
+-			addfield(map, &event, ",", msr->pname, msrval);
+-		if (name)
+-			fixname(name);
++			addfield(map, &je.event, ",", msr->pname, msrval);
++		if (je.name)
++			fixname(je.name);
+ 
+ 		if (arch_std) {
+ 			/*
+ 			 * An arch standard event is referenced, so try to
+ 			 * fixup any unassigned values.
+ 			 */
+-			err = try_fixup(fn, arch_std, &event, &desc, &name,
+-					&long_desc, &pmu, &filter, &perpkg,
+-					&unit, &metric_expr, &metric_name,
+-					&metric_group, eventcode,
+-					&deprecated, &metric_constraint);
++			err = try_fixup(fn, arch_std, eventcode, &je);
+ 			if (err)
+ 				goto free_strings;
+ 		}
+-		err = func(data, name, real_event(name, event), desc, long_desc,
+-			   pmu, unit, perpkg, metric_expr, metric_name,
+-			   metric_group, deprecated, metric_constraint);
++		je.event = real_event(je.name, je.event);
++		err = func(data, &je);
+ free_strings:
+-		free(event);
+-		free(desc);
+-		free(name);
+-		free(long_desc);
++		free(je.event);
++		free(je.desc);
++		free(je.name);
++		free(je.long_desc);
+ 		free(extra_desc);
+-		free(pmu);
++		free(je.pmu);
+ 		free(filter);
+-		free(perpkg);
+-		free(deprecated);
+-		free(unit);
+-		free(metric_expr);
+-		free(metric_name);
+-		free(metric_group);
+-		free(metric_constraint);
++		free(je.perpkg);
++		free(je.deprecated);
++		free(je.unit);
++		free(je.metric_expr);
++		free(je.metric_name);
++		free(je.metric_group);
++		free(je.metric_constraint);
+ 		free(arch_std);
+ 
+ 		if (err)
+-- 
+2.26.2
