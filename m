@@ -1,138 +1,263 @@
 From: kajoljain <kjain@linux.ibm.com>
 Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
-Date: Thu, 27 Aug 2020 18:27:17 +0530
-Message-ID: <db9dd8b3-e2ca-6773-a8bb-0f635eb84953@linux.ibm.com>
+Date: Thu, 27 Aug 2020 18:28:02 +0530
+Message-ID: <135098ed-b5cd-31e3-9e0b-f78b08f91c04@linux.ibm.com>
 References: <20200825074041.378520-1-kjain@linux.ibm.com>
- <bc078472-e859-b7dc-c451-d737dd573edf@huawei.com>
- <20200826110046.GF703542@krava>
- <5d91b929-cffd-265a-dd0c-f63bc3d1565d@linux.ibm.com>
- <ac9acc5f-7ce1-c9c9-91f5-598ca13a4a89@huawei.com>
+ <20200826105656.GC703542@krava>
+ <6a4e977e-4f77-6a2a-252c-cfdda26db3e2@linux.ibm.com>
+ <20200826115954.GA766216@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ac9acc5f-7ce1-c9c9-91f5-598ca13a4a89@huawei.com>
+In-Reply-To: <20200826115954.GA766216@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>
+To: Jiri Olsa <jolsa@redhat.com>
 Cc: acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
 
 
-On 8/26/20 5:03 PM, John Garry wrote:
-> On 26/08/2020 12:24, kajoljain wrote:
+On 8/26/20 5:29 PM, Jiri Olsa wrote:
+> On Wed, Aug 26, 2020 at 05:02:04PM +0530, kajoljain wrote:
 >>
 >>
->> On 8/26/20 4:30 PM, Jiri Olsa wrote:
->>> On Tue, Aug 25, 2020 at 09:14:11AM +0100, John Garry wrote:
+>> On 8/26/20 4:26 PM, Jiri Olsa wrote:
+>>> On Tue, Aug 25, 2020 at 01:10:41PM +0530, Kajol Jain wrote:
 >>>
 >>> SNIP
 >>>
->>>>>                    goto free_strings;
->>>>>            }
->>>>> -        err = func(data, name, real_event(name, event), desc, long_desc,
->>>>> -               pmu, unit, perpkg, metric_expr, metric_name,
->>>>> -               metric_group, deprecated, metric_constraint);
->>>>> +        je->event = real_event(je->name, je->event);
->>>>> +        err = func(data, je);
->>>>>    free_strings:
->>>>> -        free(event);
->>>>> -        free(desc);
->>>>> -        free(name);
->>>>> -        free(long_desc);
->>>>>            free(extra_desc);
->>>>> -        free(pmu);
->>>>>            free(filter);
->>>>> -        free(perpkg);
->>>>> -        free(deprecated);
->>>>> -        free(unit);
->>>>> -        free(metric_expr);
->>>>> -        free(metric_name);
->>>>> -        free(metric_group);
->>>>> -        free(metric_constraint);
+>>>>  {
+>>>>  	/* try to find matching event from arch standard values */
+>>>>  	struct event_struct *es;
+>>>> @@ -498,8 +486,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+>>>>  		if (!strcmp(arch_std, es->name)) {
+>>>>  			if (!eventcode && es->event) {
+>>>>  				/* allow EventCode to be overridden */
+>>>> -				free(*event);
+>>>> -				*event = NULL;
+>>>> +				je->event = NULL;
+>>>>  			}
+>>>>  			FOR_ALL_EVENT_STRUCT_FIELDS(TRY_FIXUP_FIELD);
+>>>>  			return 0;
+>>>> @@ -513,13 +500,8 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+>>>>  
+>>>>  /* Call func with each event in the json file */
+>>>>  int json_events(const char *fn,
+>>>> -	  int (*func)(void *data, char *name, char *event, char *desc,
+>>>> -		      char *long_desc,
+>>>> -		      char *pmu, char *unit, char *perpkg,
+>>>> -		      char *metric_expr,
+>>>> -		      char *metric_name, char *metric_group,
+>>>> -		      char *deprecated, char *metric_constraint),
+>>>> -	  void *data)
+>>>> +		int (*func)(void *data, struct json_event *je),
+>>>> +			void *data)
+>>>>  {
+>>>>  	int err;
+>>>>  	size_t size;
+>>>> @@ -537,24 +519,16 @@ int json_events(const char *fn,
+>>>>  	EXPECT(tokens->type == JSMN_ARRAY, tokens, "expected top level array");
+>>>>  	tok = tokens + 1;
+>>>>  	for (i = 0; i < tokens->size; i++) {
+>>>> -		char *event = NULL, *desc = NULL, *name = NULL;
+>>>> -		char *long_desc = NULL;
+>>>>  		char *extra_desc = NULL;
+>>>> -		char *pmu = NULL;
+>>>>  		char *filter = NULL;
+>>>> -		char *perpkg = NULL;
+>>>> -		char *unit = NULL;
+>>>> -		char *metric_expr = NULL;
+>>>> -		char *metric_name = NULL;
+>>>> -		char *metric_group = NULL;
+>>>> -		char *deprecated = NULL;
+>>>> -		char *metric_constraint = NULL;
+>>>> +		struct json_event *je;
+>>>>  		char *arch_std = NULL;
+>>>>  		unsigned long long eventcode = 0;
+>>>>  		struct msrmap *msr = NULL;
+>>>>  		jsmntok_t *msrval = NULL;
+>>>>  		jsmntok_t *precise = NULL;
+>>>>  		jsmntok_t *obj = tok++;
+>>>> +		je = (struct json_event *)calloc(1, sizeof(struct json_event));
+>>>
+>>> hum, you don't check je pointer in here.. but does it need to be allocated?
+>>> looks like you could just have je on stack as well..
+>>
+>> Hi Jiri,
+>>    Yes I will add check for je pointer here.The reason for allocating memory to 'je' is,
+>> later we are actually referring one by one to its field and in case if won't allocate memory
+>> we will get segmentaion fault as otherwise je will be NULL. Please let me know if I am
+>> getting correct.
 > 
-> Hi Kajol Jain,
-> 
-> Do we need to free je->metric_name and the rest still? From a glance, that memory is still separately alloc'ed in addfield.
+> I don't see reason why not to use automatic variable in here,
+> I tried and it seems to work.. below is diff to your changes,
+> feel free to squash it with your changes
 
-Hi John,
-    yes right we should free them as well. Thanks for pointing it, I will update.
+Hi Jiri,
+    Thanks for the changes, I will update.
 
 Thanks,
 Kajol Jain
 > 
->>>>>            free(arch_std);
->>>>> +        free(je);
->>>>>            if (err)
->>>>>                break;
->>>>> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
->>>>> index 2afc8304529e..e696edf70e9a 100644
->>>>> --- a/tools/perf/pmu-events/jevents.h
->>>>> +++ b/tools/perf/pmu-events/jevents.h
->>>>
->>>> Somewhat unrelated - this file only seems to be included in jevents.c, so I
->>>> don't see why it exists...
->>>
->>> ah right.. I won't mind getting rid of it
->>
->> Hi John and  Jiri
->>       Thanks for reviewing the patch. I can remove this file and add these structure inside jevents.c
+> jirka
 > 
-> thanks
+> ---
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index 606805af69fe..eaac5c126a52 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -521,14 +521,13 @@ int json_events(const char *fn,
+>  	for (i = 0; i < tokens->size; i++) {
+>  		char *extra_desc = NULL;
+>  		char *filter = NULL;
+> -		struct json_event *je;
+> +		struct json_event je = {};
+>  		char *arch_std = NULL;
+>  		unsigned long long eventcode = 0;
+>  		struct msrmap *msr = NULL;
+>  		jsmntok_t *msrval = NULL;
+>  		jsmntok_t *precise = NULL;
+>  		jsmntok_t *obj = tok++;
+> -		je = (struct json_event *)calloc(1, sizeof(struct json_event));
+>  
+>  		EXPECT(obj->type == JSMN_OBJECT, obj, "expected object");
+>  		for (j = 0; j < obj->size; j += 2) {
+> @@ -544,7 +543,7 @@ int json_events(const char *fn,
+>  			       "Expected string value");
+>  
+>  			nz = !json_streq(map, val, "0");
+> -			if (match_field(map, field, nz, &je->event, val)) {
+> +			if (match_field(map, field, nz, &je.event, val)) {
+>  				/* ok */
+>  			} else if (json_streq(map, field, "EventCode")) {
+>  				char *code = NULL;
+> @@ -557,14 +556,14 @@ int json_events(const char *fn,
+>  				eventcode |= strtoul(code, NULL, 0) << 21;
+>  				free(code);
+>  			} else if (json_streq(map, field, "EventName")) {
+> -				addfield(map, &je->name, "", "", val);
+> +				addfield(map, &je.name, "", "", val);
+>  			} else if (json_streq(map, field, "BriefDescription")) {
+> -				addfield(map, &je->desc, "", "", val);
+> -				fixdesc(je->desc);
+> +				addfield(map, &je.desc, "", "", val);
+> +				fixdesc(je.desc);
+>  			} else if (json_streq(map, field,
+>  					     "PublicDescription")) {
+> -				addfield(map, &je->long_desc, "", "", val);
+> -				fixdesc(je->long_desc);
+> +				addfield(map, &je.long_desc, "", "", val);
+> +				fixdesc(je.long_desc);
+>  			} else if (json_streq(map, field, "PEBS") && nz) {
+>  				precise = val;
+>  			} else if (json_streq(map, field, "MSRIndex") && nz) {
+> @@ -584,34 +583,34 @@ int json_events(const char *fn,
+>  
+>  				ppmu = field_to_perf(unit_to_pmu, map, val);
+>  				if (ppmu) {
+> -					je->pmu = strdup(ppmu);
+> +					je.pmu = strdup(ppmu);
+>  				} else {
+> -					if (!je->pmu)
+> -						je->pmu = strdup("uncore_");
+> -					addfield(map, &je->pmu, "", "", val);
+> -					for (s = je->pmu; *s; s++)
+> +					if (!je.pmu)
+> +						je.pmu = strdup("uncore_");
+> +					addfield(map, &je.pmu, "", "", val);
+> +					for (s = je.pmu; *s; s++)
+>  						*s = tolower(*s);
+>  				}
+> -				addfield(map, &je->desc, ". ", "Unit: ", NULL);
+> -				addfield(map, &je->desc, "", je->pmu, NULL);
+> -				addfield(map, &je->desc, "", " ", NULL);
+> +				addfield(map, &je.desc, ". ", "Unit: ", NULL);
+> +				addfield(map, &je.desc, "", je.pmu, NULL);
+> +				addfield(map, &je.desc, "", " ", NULL);
+>  			} else if (json_streq(map, field, "Filter")) {
+>  				addfield(map, &filter, "", "", val);
+>  			} else if (json_streq(map, field, "ScaleUnit")) {
+> -				addfield(map, &je->unit, "", "", val);
+> +				addfield(map, &je.unit, "", "", val);
+>  			} else if (json_streq(map, field, "PerPkg")) {
+> -				addfield(map, &je->perpkg, "", "", val);
+> +				addfield(map, &je.perpkg, "", "", val);
+>  			} else if (json_streq(map, field, "Deprecated")) {
+> -				addfield(map, &je->deprecated, "", "", val);
+> +				addfield(map, &je.deprecated, "", "", val);
+>  			} else if (json_streq(map, field, "MetricName")) {
+> -				addfield(map, &je->metric_name, "", "", val);
+> +				addfield(map, &je.metric_name, "", "", val);
+>  			} else if (json_streq(map, field, "MetricGroup")) {
+> -				addfield(map, &je->metric_group, "", "", val);
+> +				addfield(map, &je.metric_group, "", "", val);
+>  			} else if (json_streq(map, field, "MetricConstraint")) {
+> -				addfield(map, &je->metric_constraint, "", "", val);
+> +				addfield(map, &je.metric_constraint, "", "", val);
+>  			} else if (json_streq(map, field, "MetricExpr")) {
+> -				addfield(map, &je->metric_expr, "", "", val);
+> -				for (s = je->metric_expr; *s; s++)
+> +				addfield(map, &je.metric_expr, "", "", val);
+> +				for (s = je.metric_expr; *s; s++)
+>  					*s = tolower(*s);
+>  			} else if (json_streq(map, field, "ArchStdEvent")) {
+>  				addfield(map, &arch_std, "", "", val);
+> @@ -620,7 +619,7 @@ int json_events(const char *fn,
+>  			}
+>  			/* ignore unknown fields */
+>  		}
+> -		if (precise && je->desc && !strstr(je->desc, "(Precise Event)")) {
+> +		if (precise && je.desc && !strstr(je.desc, "(Precise Event)")) {
+>  			if (json_streq(map, precise, "2"))
+>  				addfield(map, &extra_desc, " ",
+>  						"(Must be precise)", NULL);
+> @@ -629,34 +628,33 @@ int json_events(const char *fn,
+>  						"(Precise event)", NULL);
+>  		}
+>  		snprintf(buf, sizeof buf, "event=%#llx", eventcode);
+> -		addfield(map, &je->event, ",", buf, NULL);
+> -		if (je->desc && extra_desc)
+> -			addfield(map, &je->desc, " ", extra_desc, NULL);
+> -		if (je->long_desc && extra_desc)
+> -			addfield(map, &je->long_desc, " ", extra_desc, NULL);
+> +		addfield(map, &je.event, ",", buf, NULL);
+> +		if (je.desc && extra_desc)
+> +			addfield(map, &je.desc, " ", extra_desc, NULL);
+> +		if (je.long_desc && extra_desc)
+> +			addfield(map, &je.long_desc, " ", extra_desc, NULL);
+>  		if (filter)
+> -			addfield(map, &je->event, ",", filter, NULL);
+> +			addfield(map, &je.event, ",", filter, NULL);
+>  		if (msr != NULL)
+> -			addfield(map, &je->event, ",", msr->pname, msrval);
+> -		if (je->name)
+> -			fixname(je->name);
+> +			addfield(map, &je.event, ",", msr->pname, msrval);
+> +		if (je.name)
+> +			fixname(je.name);
+>  
+>  		if (arch_std) {
+>  			/*
+>  			 * An arch standard event is referenced, so try to
+>  			 * fixup any unassigned values.
+>  			 */
+> -			err = try_fixup(fn, arch_std, eventcode, je);
+> +			err = try_fixup(fn, arch_std, eventcode, &je);
+>  			if (err)
+>  				goto free_strings;
+>  		}
+> -		je->event = real_event(je->name, je->event);
+> -		err = func(data, je);
+> +		je.event = real_event(je.name, je.event);
+> +		err = func(data, &je);
+>  free_strings:
+>  		free(extra_desc);
+>  		free(filter);
+>  		free(arch_std);
+> -		free(je);
+>  
+>  		if (err)
+>  			break;
 > 
->>
->> Thanks,
->> Kajol Jain
->>>  
->>>>> @@ -2,14 +2,28 @@
->>>>>    #ifndef JEVENTS_H
->>>>>    #define JEVENTS_H 1
->>>>> +#include "pmu-events.h"
->>>>> +
->>>>> +struct json_event {
->>>>> +    char *name;
->>>>> +    char *event;
->>>>> +    char *desc;
->>>>> +    char *topic;
->>>>> +    char *long_desc;
->>>>> +    char *pmu;
->>>>> +    char *unit;
->>>>> +    char *perpkg;
->>>>> +    char *metric_expr;
->>>>> +    char *metric_name;
->>>>> +    char *metric_group;
->>>>> +    char *deprecated;
->>>>> +    char *metric_constraint;
->>>>
->>>> This looks very much like struct event_struct, so could look to consolidate:
->>>>
->>>> struct event_struct {
->>>>     struct list_head list;
->>>>     char *name;
->>>>     char *event;
->>>>     char *desc;
->>>>     char *long_desc;
->>>>     char *pmu;
->>>>     char *unit;
->>>>     char *perpkg;
->>>>     char *metric_expr;
->>>>     char *metric_name;
->>>>     char *metric_group;
->>>>     char *deprecated;
->>>>     char *metric_constraint;
->>>> };
->>>
->>> as Andi said they come from different layers, I think it's
->>> better to keep them separated even if they share some fields
-> 
-> I was just suggesting to make:
->  struct event_struct {
->     struct list_head list;
->     struct json_event je;
->  }
-> 
-> No biggie if against this.
-> 
-> Cheers,
-> John
