@@ -1,73 +1,86 @@
 From: Kim Phillips <kim.phillips@amd.com>
-Subject: [PATCH] perf record/stat: Explicitly call out event modifiers in the documentation
-Date: Tue,  1 Sep 2020 16:58:53 -0500
-Message-ID: <20200901215853.276234-1-kim.phillips@amd.com>
+Subject: [PATCH 1/4] perf vendor events amd: Add L2 Prefetch events for zen1
+Date: Tue,  1 Sep 2020 17:09:41 -0500
+Message-ID: <20200901220944.277505-1-kim.phillips@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
 To: Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Stephane Eranian <eranian@google.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Tony Jones <tonyj@suse.de>, Jin Yao <yao.jin@linux.intel.com>, Ian Rogers <irogers@google.com>, "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>, Stephane Eranian <eranian@google.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Event modifiers are not mentioned in the perf record or perf stat
-manpages.  Add them to orient new users more effectively by pointing
-them to the perf list manpage for details.
+Later revisions of PPRs that post-date the original Family 17h events
+submission patch add these events.
+
+Specifically, they were not in this 2017 revision of the F17h PPR:
+
+Processor Programming Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors Rev 1.14 - April 15, 2017
+
+But e.g., are included in this 2019 version of the PPR:
+
+Processor Programming Reference (PPR) for AMD Family 17h Model 18h, Revision B1 Processors Rev. 3.14 - Sep 26, 2019
 
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-Cc: Peter Zijlstra <peterz@infradead.org> 
-Cc: Ingo Molnar <mingo@redhat.com> 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org> 
-Cc: Mark Rutland <mark.rutland@arm.com> 
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com> 
-Cc: Jiri Olsa <jolsa@redhat.com> 
-Cc: Namhyung Kim <namhyung@kernel.org> 
-Cc: Adrian Hunter <adrian.hunter@intel.com> 
-Cc: Stephane Eranian <eranian@google.com> 
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com> 
-Cc: Tony Jones <tonyj@suse.de> 
-Cc: Jin Yao <yao.jin@linux.intel.com> 
-Cc: Ian Rogers <irogers@google.com> 
-Cc: "Paul A. Clarke" <pc@us.ibm.com> 
+Fixes: 98c07a8f74f8 ("perf vendor events amd: perf PMU events for AMD Family 17h")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vijay Thakkar <vijaythakkar@me.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Yunfeng Ye <yeyunfeng@huawei.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: "Martin Liška" <mliska@suse.cz>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Jon Grimm <jon.grimm@amd.com>
+Cc: Martin Jambor <mjambor@suse.cz>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: William Cohen <wcohen@redhat.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: stable@vger.kernel.org
 ---
- tools/perf/Documentation/perf-record.txt | 4 ++++
- tools/perf/Documentation/perf-stat.txt   | 4 ++++
- 2 files changed, 8 insertions(+)
+ .../pmu-events/arch/x86/amdzen1/cache.json     | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 3f72d8e261f3..bd50cdff08a8 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -33,6 +33,10 @@ OPTIONS
-         - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
- 
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
- 	  'param1', 'param2', etc are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*.
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index c9bfefc051fb..a4b1d11fefc8 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -39,6 +39,10 @@ report::
- 	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
- 
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
- 	  param1 and param2 are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+index 404d4c569c01..695ed3ffa3a6 100644
+--- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
++++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+@@ -249,6 +249,24 @@
+     "BriefDescription": "Cycles with fill pending from L2. Total cycles spent with one or more fill requests in flight from L2.",
+     "UMask": "0x1"
+   },
++  {
++    "EventName": "l2_pf_hit_l2",
++    "EventCode": "0x70",
++    "BriefDescription": "L2 prefetch hit in L2.",
++    "UMask": "0xff"
++  },
++  {
++    "EventName": "l2_pf_miss_l2_hit_l3",
++    "EventCode": "0x71",
++    "BriefDescription": "L2 prefetcher hits in L3. Counts all L2 prefetches accepted by the L2 pipeline which miss the L2 cache and hit the L3.",
++    "UMask": "0xff"
++  },
++  {
++    "EventName": "l2_pf_miss_l2_l3",
++    "EventCode": "0x72",
++    "BriefDescription": "L2 prefetcher misses in L3. All L2 prefetches accepted by the L2 pipeline which miss the L2 and the L3 caches.",
++    "UMask": "0xff"
++  },
+   {
+     "EventName": "l3_request_g1.caching_l3_cache_accesses",
+     "EventCode": "0x01",
 -- 
 2.27.0
