@@ -1,15 +1,15 @@
 From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v6 2/5] perf/jevents: Add new structure to pass json
- fields.
-Date: Tue, 1 Sep 2020 11:32:45 +0530
-Message-ID: <e0cd9e5c-2e9a-5198-108e-14998a757d62@linux.ibm.com>
+Subject: Re: [PATCH v6 3/5] perf jevents: Add support for parsing
+ perchip/percore events
+Date: Tue, 1 Sep 2020 11:33:23 +0530
+Message-ID: <466a0e9a-ad01-f436-8f70-10aba586796e@linux.ibm.com>
 References: <20200827130958.189146-1-kjain@linux.ibm.com>
- <20200827130958.189146-3-kjain@linux.ibm.com> <20200831084357.GC287892@krava>
+ <20200827130958.189146-4-kjain@linux.ibm.com> <20200831084404.GD287892@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200831084357.GC287892@krava>
+In-Reply-To: <20200831084404.GD287892@krava>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jiri Olsa <jolsa@redhat.com>
@@ -18,62 +18,67 @@ List-Id: linux-perf-users.vger.kernel.org
 
 
 
-On 8/31/20 2:13 PM, Jiri Olsa wrote:
-> On Thu, Aug 27, 2020 at 06:39:55PM +0530, Kajol Jain wrote:
+On 8/31/20 2:14 PM, Jiri Olsa wrote:
+> On Thu, Aug 27, 2020 at 06:39:56PM +0530, Kajol Jain wrote:
+>> Initially, every time we want to add new terms like chip, core thread etc,
+>> we need to create corrsponding fields in pmu_events and event struct.
+>> This patch adds an enum called 'aggr_mode_class' which store all these
+>> aggregation like perchip/percore. It also adds new field 'aggr_mode'
+>> to capture these terms.
+>> Now, if user wants to add any new term, they just need to add it in
+>> the enum defined.
+>>
+>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>> ---
+>>  tools/perf/pmu-events/jevents.c    | 16 ++++++++++++++++
+>>  tools/perf/pmu-events/pmu-events.h |  6 ++++++
+>>  2 files changed, 22 insertions(+)
+>>
+>> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+>> index b205cd904a4f..f4ad2d403533 100644
+>> --- a/tools/perf/pmu-events/jevents.c
+>> +++ b/tools/perf/pmu-events/jevents.c
+>> @@ -48,6 +48,7 @@
+>>  #include <linux/list.h>
+>>  #include "jsmn.h"
+>>  #include "json.h"
+>> +#include "pmu-events.h"
+>>  
+>>  int verbose;
+>>  char *prog;
+>> @@ -60,6 +61,7 @@ struct json_event {
+>>  	char *pmu;
+>>  	char *unit;
+>>  	char *perpkg;
+>> +	char *aggr_mode;
+>>  	char *metric_expr;
+>>  	char *metric_name;
+>>  	char *metric_group;
+>> @@ -74,6 +76,14 @@ struct json_event {
+>>  	(void)(&_min1 == &_min2);		\
+>>  	_min1 < _min2 ? _min1 : _min2; })
+>>  #endif
 > 
-> SNIP
-> 
->> -	if (!*field)						\
->> +#define TRY_FIXUP_FIELD(field) do { if (es->field && !je->field) {\
->> +	je->field = strdup(es->field);				\
->> +	if (!je->field)						\
->>  		return -ENOMEM;					\
->>  } } while (0)
->>  
->> @@ -428,11 +440,7 @@ static void free_arch_std_events(void)
->>  	}
->>  }
->>  
->> -static int save_arch_std_events(void *data, char *name, char *event,
->> -				char *desc, char *long_desc, char *pmu,
->> -				char *unit, char *perpkg, char *metric_expr,
->> -				char *metric_name, char *metric_group,
->> -				char *deprecated, char *metric_constraint)
->> +static int save_arch_std_events(void *data, struct json_event *je)
->>  {
->>  	struct event_struct *es;
->>  
->> @@ -486,17 +494,16 @@ static char *real_event(const char *name, char *event)
->>  		return NULL;
->>  
->>  	for (i = 0; fixed[i].name; i++)
->> -		if (!strcasecmp(name, fixed[i].name))
->> -			return (char *)fixed[i].event;
->> +		if (!strcasecmp(name, fixed[i].name)) {
->> +			strcpy(event, fixed[i].event);
-> 
-> hum what's this strcpy for in here? we're just replacing separated
-> variables with struct members, why do you need to copy the event in
-> here?
+> please add new line in here
 > 
 
-Hi Jiri,
-    Actually, initially when events is not part of 'json_event' structure, we are not
-assigning result of function `real_event` to event field. But as we are not passing
-event filed separately in functions like 'save_arch_std_events', freeing event
-memory was giving me issue as we are returning pointer from real_event function in some cases.
-So, that's why I replace it to strcpy to make sure we free je.event memory. Or should I remove
-free(je.event) part?
+yes, will add.
 
--		err = func(data, name, real_event(name, event), desc, long_desc,
--			   pmu, unit, perpkg, metric_expr, metric_name,
--			   metric_group, deprecated, metric_constraint);
-+		je.event = real_event(je.name, je.event);
+>> +enum aggr_mode_class convert(const char *aggr_mode)
+>> +{
+>> +	if (!strcmp(aggr_mode, "PerCore"))
+>> +		return PerCore;
+>> +	else if (!strcmp(aggr_mode, "PerChip"))
+>> +		return PerChip;
+>> +	return -1;
+> 
+> should we display some warning in here?
 
-This is the part, I am referring, here we are assigning result of real_event into je.event field.
+Sure can do that.
 
 Thanks,
 Kajol Jain
+> 
 > thanks,
 > jirka
 > 
