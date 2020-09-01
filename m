@@ -1,86 +1,55 @@
-From: peterz@infradead.org
-Subject: Re: [PATCH] perf: correct SNOOPX field offset
-Date: Tue, 1 Sep 2020 17:12:04 +0200
-Message-ID: <20200901151204.GE2674@hirez.programming.kicks-ass.net>
-References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
- <20200825174043.GQ1509399@tassilo.jf.intel.com>
- <20200826142631.GA5351@redhat.com>
- <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
- <20200901150225.GA1424523@kernel.org>
- <20200901150630.GB1424523@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf inject: correct event attribute sizes
+Date: Tue, 1 Sep 2020 14:26:08 -0300
+Message-ID: <20200901172608.GE1424523@kernel.org>
+References: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200901150630.GB1424523@kernel.org>
+In-Reply-To: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Al Grant <al.grant@foss.arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Al Grant <al.grant@foss.arm.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, acme@redhat.com
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Sep 01, 2020 at 12:06:30PM -0300, Arnaldo Carvalho de Melo wrote:
+Em Wed, Aug 26, 2020 at 10:42:04AM +0100, Al Grant escreveu:
+> When perf inject reads a perf.data file from an older version of perf,
+> it writes event attributes into the output with the original size field,
+> but lays them out as if they had the size currently used. Readers see
+> a corrupt file. Update the size field to match the layout.
+> 
+> From: Denis Nikitin <denik@google.com>
+> Signed-off-by: Al Grant <al.grant@foss.arm.com>
 
-> Also you mixed up tools/ with include/ things, the perf part of the
-> kernel is maintained by Ingo, PeterZ.
+Ok, so the author is Denis, has he provided his Signed-off-by?
 
-Right, it helps if the right people are on Cc.
+- Arnaldo
+ 
+>  tools/perf/util/header.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 9cf4efdcbbbd..762eb94bd532 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
+> perf_session *session,
+>         attr_offset = lseek(ff.fd, 0, SEEK_CUR);
+> 
+>         evlist__for_each_entry(evlist, evsel) {
+> +               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
+> +                       /*
+> +                        * We are likely in "perf inject" and have read +
+> * from an older file. Update attr size so that
+> +                        * reader gets the right offset to the ids.
+> +                        */
+> +                       evsel->core.attr.size = sizeof(evsel->core.attr);
+> +               }
+>                 f_attr = (struct perf_file_attr){
+>                         .attr = evsel->core.attr,
+>                         .ids  = {
 
-> Peter, the patch is the one below, I'll collect the
-> tools/include/uapi/linux/perf_event.h bit as it fixes the tooling,
-> please consider taking the kernel part.
+-- 
 
-Al, can you resend with the right people on Cc? Also see below.
-
-> ---
-> 
-> From:   Al Grant <al.grant@foss.arm.com>
-> Subject: [PATCH] perf: correct SNOOPX field offset
-> Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
-> Date:   Mon, 24 Aug 2020 10:28:34 +0100
-> 
-> perf_event.h has macros that define the field offsets in the
-> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-> were both 37. These are distinct fields, and the bitfield layout
-> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
-> 
-
-This needs a Fixes: tag.
-
-> Signed-off-by: Al Grant <al.grant@arm.com>
-> 
-> ---
-> 
->   include/uapi/linux/perf_event.h       | 2 +-
->   tools/include/uapi/linux/perf_event.h | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> ---
-> 
-> diff --git a/include/uapi/linux/perf_event.h 
-> b/include/uapi/linux/perf_event.h
-> index 077e7ee69e3d..3e5dcdd48a49 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> 
->   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
->   /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT  37
-> +#define PERF_MEM_SNOOPX_SHIFT  38
-> 
->   /* locked instruction */
->   #define PERF_MEM_LOCK_NA       0x01 /* not available */
-> diff --git a/tools/include/uapi/linux/perf_event.h 
-> b/tools/include/uapi/linux/perf_event.h
-> index 077e7ee69e3d..3e5dcdd48a49 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> 
->   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
->   /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT  37
-> +#define PERF_MEM_SNOOPX_SHIFT  38
-> 
->   /* locked instruction */
->   #define PERF_MEM_LOCK_NA       0x01 /* not available */
+- Arnaldo
