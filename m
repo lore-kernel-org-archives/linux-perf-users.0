@@ -1,84 +1,48 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v6 3/5] perf jevents: Add support for parsing
- perchip/percore events
-Date: Tue, 1 Sep 2020 11:33:23 +0530
-Message-ID: <466a0e9a-ad01-f436-8f70-10aba586796e@linux.ibm.com>
-References: <20200827130958.189146-1-kjain@linux.ibm.com>
- <20200827130958.189146-4-kjain@linux.ibm.com> <20200831084404.GD287892@krava>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+Date: Tue, 1 Sep 2020 12:02:25 -0300
+Message-ID: <20200901150225.GA1424523@kernel.org>
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+ <20200825174043.GQ1509399@tassilo.jf.intel.com>
+ <20200826142631.GA5351@redhat.com>
+ <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200831084404.GD287892@krava>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com
+To: Al Grant <al.grant@foss.arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Andi Kleen <ak@linux.intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: linux-perf-users.vger.kernel.org
 
-
-
-On 8/31/20 2:14 PM, Jiri Olsa wrote:
-> On Thu, Aug 27, 2020 at 06:39:56PM +0530, Kajol Jain wrote:
->> Initially, every time we want to add new terms like chip, core thread etc,
->> we need to create corrsponding fields in pmu_events and event struct.
->> This patch adds an enum called 'aggr_mode_class' which store all these
->> aggregation like perchip/percore. It also adds new field 'aggr_mode'
->> to capture these terms.
->> Now, if user wants to add any new term, they just need to add it in
->> the enum defined.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>  tools/perf/pmu-events/jevents.c    | 16 ++++++++++++++++
->>  tools/perf/pmu-events/pmu-events.h |  6 ++++++
->>  2 files changed, 22 insertions(+)
->>
->> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->> index b205cd904a4f..f4ad2d403533 100644
->> --- a/tools/perf/pmu-events/jevents.c
->> +++ b/tools/perf/pmu-events/jevents.c
->> @@ -48,6 +48,7 @@
->>  #include <linux/list.h>
->>  #include "jsmn.h"
->>  #include "json.h"
->> +#include "pmu-events.h"
->>  
->>  int verbose;
->>  char *prog;
->> @@ -60,6 +61,7 @@ struct json_event {
->>  	char *pmu;
->>  	char *unit;
->>  	char *perpkg;
->> +	char *aggr_mode;
->>  	char *metric_expr;
->>  	char *metric_name;
->>  	char *metric_group;
->> @@ -74,6 +76,14 @@ struct json_event {
->>  	(void)(&_min1 == &_min2);		\
->>  	_min1 < _min2 ? _min1 : _min2; })
->>  #endif
+Em Wed, Aug 26, 2020 at 03:33:35PM +0100, Al Grant escreveu:
+> On 26/08/2020 15:26, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Aug 25, 2020 at 10:40:43AM -0700, Andi Kleen escreveu:
+> > > On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
+> > > > perf_event.h has macros that define the field offsets in the
+> > > > data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+> > > > were both 37. These are distinct fields, and the bitfield layout
+> > > > in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+> > > 
+> > > Looks good.
+> > > 
+> > > Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> > > 
+> > > Probably should have a Fixes: header
+> > 
+> > Please do so, find the patch that introduced the error, add the Fixes
+> > tag, will help me not having to do it myself :-)
 > 
-> please add new line in here
-> 
+> Fixes: 52839e653b562 ("perf tools: Add support for printing new mem_info
+> encodings")
 
-yes, will add.
+Ok, I'll add that, thanks.
 
->> +enum aggr_mode_class convert(const char *aggr_mode)
->> +{
->> +	if (!strcmp(aggr_mode, "PerCore"))
->> +		return PerCore;
->> +	else if (!strcmp(aggr_mode, "PerChip"))
->> +		return PerChip;
->> +	return -1;
-> 
-> should we display some warning in here?
+But you forgot to add your Signed-off-by:, can you please provide it?
 
-Sure can do that.
+There was also a minor problem in the patch, there was no separation of
+--- from the patch comment section to the patch itself, I'll fix that as
+well.
 
-Thanks,
-Kajol Jain
-> 
-> thanks,
-> jirka
-> 
+- Arnaldo
