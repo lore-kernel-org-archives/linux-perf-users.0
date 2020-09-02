@@ -1,31 +1,23 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: pr-tracker-bot@kernel.org
 Subject: Re: [GIT PULL] perf tools fixes for v5.9
-Date: Tue, 1 Sep 2020 19:43:33 -0700
-Message-ID: <CAHk-=wifL-04oOF3RAbX9Odyfgz4zc4dE=pq-QL+2C-aTxUmqw@mail.gmail.com>
+Date: Wed, 02 Sep 2020 02:45:21 +0000
+Message-ID: <159901472136.4624.16783161865001951925.pr-tracker-bot@kernel.org>
 References: <20200901224154.3436175-1-acme@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20200901224154.3436175-1-acme@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Al Grant <al.grant@arm.com>, Chris Wilson <chris@chris-wilson.co.uk>, David Ahern <dsahern@kernel.org>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Like Xu <like.xu@linux.intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Sumanth Korikkar <sumanthk@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, Wei Li <liwei391@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Al Grant <al.grant@arm.com>, Chris Wilson <chris@chris-wilson.co.uk>, David Ahern <dsahern@kernel.org>, Ian Rogers <irogers@google.com>, Jin Yao <yao.jin@linux.intel.com>, Leo Yan <leo.yan@linaro.org>, Like Xu <like.xu@linux.intel.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Sumanth Korikkar <sumanthk@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, Wei Li <liwei391@huawei.com>Arnaldo
 List-Id: linux-perf-users.vger.kernel.org
 
-On Tue, Sep 1, 2020 at 3:42 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->
-> - The SNOOPX and REMOTE offsets in the data_src bitmask in perf records were
->   were both 37, SNOOPX is 38, fix it.
+The pull request you sent on Tue,  1 Sep 2020 19:41:54 -0300:
 
-The kernel uapi side thinks it's 37. What's up?
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-01
 
-  $ git grep PERF_MEM_SNOOPX_SHIFT
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/9c7d619be5a002ea29c172df5e3c1227c22cbb41
 
-results in
+Thank you!
 
-  include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT   37
-  tools/include/uapi/linux/perf_event.h:#define PERF_MEM_SNOOPX_SHIFT     38
-
-Hmm?
-
-                   Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
