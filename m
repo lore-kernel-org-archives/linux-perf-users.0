@@ -1,166 +1,90 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH] perf/core: Fix hung issue on perf stat command during cpu
- hotplug
-Date: Wed, 2 Sep 2020 21:27:54 +0530
-Message-ID: <42e61c14-4774-600d-2347-2cf2f8b2a59e@linux.ibm.com>
-References: <20200827064732.20860-1-kjain@linux.ibm.com>
- <20200902150516.GA3474644@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v7 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date: Wed,  2 Sep 2020 21:34:34 +0530
+Message-ID: <20200902160439.335232-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200902150516.GA3474644@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, maddy@linux.ibm.com, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, namhyung@kernel.org, daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com
+To: acme@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events.
 
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
 
-On 9/2/20 8:35 PM, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Aug 27, 2020 at 12:17:32PM +0530, Kajol Jain escreveu:
->> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
->> added assignment of ret value as -EAGAIN in case function
->> call to 'smp_call_function_single' fails.
->> For non-zero ret value, it did
->> 'ret = !ret ? data.ret : -EAGAIN;', which always
->> assign -EAGAIN to ret and make second if condition useless.
->>
->> In scenarios like when executing a perf stat with --per-thread option, and
->> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
->> function could return -ENXIO, and with the above check,
->> task_function_call hung and increases CPU
->> usage (because of repeated 'smp_call_function_single()')
->>
->> Recration scenario:
->> 	# perf stat -a --per-thread && (offline a CPU )
->>
->> Patch here removes the tertiary condition added as part of that
->> commit and added a check for NULL and -EAGAIN.
-> 
-> I reproduced this issue with v5.9-rc3, now have to reboot for a conf
-> call, will try to test the patch afterwards,
-> 
-> [65108.467416] IRQ 165: no longer affine to CPU23
-> [65108.468495] smpboot: CPU 23 is now offline
-> [65129.003879] Uhhuh. NMI received for unknown reason 1c on CPU 20.
-> [65129.003880] Do you have a strange power saving mode enabled?
-> [65129.003880] Dazed and confused, but trying to continue
-> [65156.155539] Uhhuh. NMI received for unknown reason 1c on CPU 2.
-> [65156.155539] Do you have a strange power saving mode enabled?
-> [65156.155540] Dazed and confused, but trying to continue
-> [65161.985284] Uhhuh. NMI received for unknown reason 1c on CPU 21.
-> [65161.985285] Do you have a strange power saving mode enabled?
-> [65161.985285] Dazed and confused, but trying to continue
-> [65183.154444] Uhhuh. NMI received for unknown reason 1c on CPU 1.
-> [65183.154445] Do you have a strange power saving mode enabled?
-> [65183.154446] Dazed and confused, but trying to continue
-> [65189.724797] Uhhuh. NMI received for unknown reason 0c on CPU 4.
-> [65189.724798] Do you have a strange power saving mode enabled?
-> [65189.724799] Dazed and confused, but trying to continue
-> [65196.259918] Uhhuh. NMI received for unknown reason 1c on CPU 11.
-> [65196.259918] Do you have a strange power saving mode enabled?
-> [65196.259918] Dazed and confused, but trying to continue
-> [65234.794490] Uhhuh. NMI received for unknown reason 0c on CPU 5.
-> [65234.794491] Do you have a strange power saving mode enabled?
-> [65234.794491] Dazed and confused, but trying to continue
-> [65454.559831] Uhhuh. NMI received for unknown reason 1c on CPU 19.
-> [65454.559832] Do you have a strange power saving mode enabled?
-> [65454.559832] Dazed and confused, but trying to continue
-> [65529.657789] Uhhuh. NMI received for unknown reason 1c on CPU 3.
-> [65529.657790] Do you have a strange power saving mode enabled?
-> [65529.657790] Dazed and confused, but trying to continue
-> [acme@five perf]$
-> 
-> 
-> Things seems to be working again after bringing that CPU back online:
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-Hi Arnaldo,
-    You are right, once we bring back the CPU again, things will start working as our 'smp_call_function_single'
-will not fail and we will come out of the loop. But till then, task_function_call will be hung.
+This patchset also adds  changes of adding new structure
+called 'json_event' inside jevents.h
+file to improve the callback prototype inside jevent files.
+Initially, whenever user want to add new field, they need to update
+in all function callback which makes it more and more complex with
+increased number of parmeters.
+With this change, we just need to add it in new structure 'json_event'.
+link to the patch: https://lkml.org/lkml/2020/8/25/217
 
-Thanks,
-Kajol Jain
-> 
-> [root@five ~]# perf top --stdio -C 0-22
-> Error:
-> The sys_perf_event_open() syscall returned with 16 (Device or resource busy) for event (cycles).
-> /bin/dmesg | grep -i perf may provide additional information.
-> 
-> [root@five ~]# perf stat -e cycles sleep 1
-> Error:
-> The sys_perf_event_open() syscall returned with 16 (Device or resource busy) for event (cycles).
-> /bin/dmesg | grep -i perf may provide additional information.
-> 
-> [root@five ~]# perf record -e cycles sleep 1
-> Error:
-> The sys_perf_event_open() syscall returned with 16 (Device or resource busy) for event (cycles).
-> /bin/dmesg | grep -i perf may provide additional information.
-> 
-> [root@five ~]# echo 1 > /sys/devices/system/cpu/cpu23/online
-> [root@five ~]# perf record -e cycles sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.039 MB perf.data (7 samples) ]
-> [root@five ~]# perf stat -e cycles sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->            842,743      cycles
-> 
->        1.000903853 seconds time elapsed
-> 
->        0.000902000 seconds user
->        0.000000000 seconds sys
-> 
-> 
-> [root@five ~]# perf stat -e cycles sleep 1
-> 
-> 
-> - Arnaldo
-> 
->  
->> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
->> Reviewed-by: Barret Rhoden <brho@google.com>
->> Tested-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
->> ---
->>  kernel/events/core.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> Changelog:
->> - Remove RFC tag
->> - Resolve some nits issues like space after if and
->>   added -ENXIO in comment msg of function 'task_function_call'
->>   as suggested by Barret Rhoden.
->>
->> Link to the RFC: https://lkml.org/lkml/2020/8/26/896
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 5bfe8e3c6e44..cef646084198 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -99,7 +99,7 @@ static void remote_function(void *data)
->>   * retry due to any failures in smp_call_function_single(), such as if the
->>   * task_cpu() goes offline concurrently.
->>   *
->> - * returns @func return value or -ESRCH when the process isn't running
->> + * returns @func return value or -ESRCH or -ENXIO when the process isn't running
->>   */
->>  static int
->>  task_function_call(struct task_struct *p, remote_function_f func, void *info)
->> @@ -115,7 +115,8 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
->>  	for (;;) {
->>  		ret = smp_call_function_single(task_cpu(p), remote_function,
->>  					       &data, 1);
->> -		ret = !ret ? data.ret : -EAGAIN;
->> +		if (!ret)
->> +			ret = data.ret;
->>  
->>  		if (ret != -EAGAIN)
->>  			break;
->> -- 
->> 2.26.2
->>
-> 
+Changelog:
+v6 -> v7
+- Remove min and get_cpu_str functions from jevents.c
+- Make json_events function static to solve warning part [John Garry].
+- Add event attribute in json_events function to remove strcpy from
+  real_event function, as suggested by Jiri Olsa.
+- Add warning while checking aggr_mode value [Jiri Olsa].
+
+v5 -> v6
+- Made changes to improve callback prototype inside jevent file
+  by adding new struture 'json_event' as suggested by Andi Kleen.
+
+- Added Reviewd-by tag from Andi Kleen
+
+- Made changes suggested by Jiri Olsa and John garry includes:
+  - Removing jevents.h file.
+  - Some nits like freeing je->event mem, adding typedef for func
+    and not allocating mem for json_event structure.
+  - Added free for each field in json_event as suggested by
+    John Garry.
+  - In real_event function, rather then returning fixed structure
+    pointer, used strcpy to copy event to je->event field.
+
+- Also merge some changes in this patch set from the patch-
+  https://lkml.org/lkml/2020/8/21/222. except nest event
+  change which was using capability of defining metric using other metric.
+
+- Make power side changes as per new struture added.
+
+Link to the previous version patchset: https://lkml.org/lkml/2020/8/27/799
+
+Kajol Jain (5):
+  perf/jevents: Remove jevents.h file
+  perf/jevents: Add new structure to pass json fields.
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  35 ++-
+ tools/perf/pmu-events/jevents.c               | 234 +++++++++---------
+ tools/perf/pmu-events/jevents.h               |  23 --
+ tools/perf/pmu-events/pmu-events.h            |   6 +
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ 7 files changed, 154 insertions(+), 159 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/jevents.h
+
+-- 
+2.26.2
