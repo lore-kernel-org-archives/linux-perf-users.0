@@ -1,7 +1,7 @@
 From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v7 5/5] perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-Date: Wed,  2 Sep 2020 21:34:39 +0530
-Message-ID: <20200902160439.335232-6-kjain@linux.ibm.com>
+Subject: [PATCH v7 3/5] perf jevents: Add support for parsing perchip/percore events
+Date: Wed,  2 Sep 2020 21:34:37 +0530
+Message-ID: <20200902160439.335232-4-kjain@linux.ibm.com>
 References: <20200902160439.335232-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,95 +12,115 @@ To: acme@kernel.org
 Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch adds hv_24x7 core level events in nest_metric.json file
-and also add PerChip/PerCore field in metric events.
-
-Result:
-
-power9 platform:
-
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-     1.000070601                        1.9                        2.0
-     2.000253881                        2.0                        1.9
-     3.000364810                        2.0                        2.0
+Initially, every time we want to add new terms like chip, core thread etc,
+we need to create corrsponding fields in pmu_events and event struct.
+This patch adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'aggr_mode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/powerpc/power9/nest_metrics.json     | 35 ++++++++++++-------
- 1 file changed, 22 insertions(+), 13 deletions(-)
+ tools/perf/pmu-events/jevents.c    | 19 +++++++++++++++++++
+ tools/perf/pmu-events/pmu-events.h |  6 ++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-index 8383a37647ad..7a5d1bf543f8 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -1,37 +1,46 @@
- [
-     {
--        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
--        "MetricName": "Memory_RD_BW_Chip",
--        "MetricGroup": "Memory_BW",
--        "ScaleUnit": "1.6e-2MB"
-+	"MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+	"MetricName": "Memory_RD_BW_Chip",
-+	"MetricGroup": "Memory_BW",
-+	"ScaleUnit": "1.6e-2MB",
-+	"AggregationMode": "PerChip"
-     },
-     {
- 	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
--        "MetricName": "Memory_WR_BW_Chip",
--        "MetricGroup": "Memory_BW",
--        "ScaleUnit": "1.6e-2MB"
-+	"MetricName": "Memory_WR_BW_Chip",
-+	"MetricGroup": "Memory_BW",
-+	"ScaleUnit": "1.6e-2MB",
-+	"AggregationMode": "PerChip"
-     },
-     {
- 	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
--        "MetricName": "PowerBUS_Frequency",
--        "ScaleUnit": "2.5e-7GHz"
-+	"MetricName": "PowerBUS_Frequency",
-+	"ScaleUnit": "2.5e-7GHz",
-+	"AggregationMode": "PerChip"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@CPM_CS_32MHZ_CYC\\,domain\\=3\\,core\\=?@ )",
-+	"MetricName": "CPM_CS_32MHZ_CYC",
-+	"ScaleUnit": "1MHz",
-+	"AggregationMode": "PerCore"
-     },
-     {
- 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
- 	"MetricName" : "mcs01-read",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
- 	"MetricName" : "mcs23-read",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
- 	"MetricName" : "mcs01-write",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
-@@ -48,7 +57,7 @@
-     {
- 	"MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@)",
- 	"MetricName" : "Memory-bandwidth-MCS",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     }
- ]
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 388dd287d736..767a6d59b07a 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -48,6 +48,7 @@
+ #include <linux/list.h>
+ #include "jsmn.h"
+ #include "json.h"
++#include "pmu-events.h"
+ 
+ int verbose;
+ char *prog;
+@@ -60,6 +61,7 @@ struct json_event {
+ 	char *pmu;
+ 	char *unit;
+ 	char *perpkg;
++	char *aggr_mode;
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
+@@ -67,6 +69,17 @@ struct json_event {
+ 	char *metric_constraint;
+ };
+ 
++enum aggr_mode_class convert(const char *aggr_mode)
++{
++	if (!strcmp(aggr_mode, "PerCore"))
++		return PerCore;
++	else if (!strcmp(aggr_mode, "PerChip"))
++		return PerChip;
++
++	pr_err("%s: Wrong AggregationMode value '%s'\n", prog, aggr_mode);
++	return -1;
++}
++
+ typedef int (*func)(void *data, struct json_event *je);
+ 
+ int eprintf(int level, int var, const char *fmt, ...)
+@@ -355,6 +368,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
+ 		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
+ 	if (je->perpkg)
+ 		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
++	if (je->aggr_mode)
++		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
+ 	if (je->metric_expr)
+ 		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
+ 	if (je->metric_name)
+@@ -379,6 +394,7 @@ struct event_struct {
+ 	char *pmu;
+ 	char *unit;
+ 	char *perpkg;
++	char *aggr_mode;
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
+@@ -408,6 +424,7 @@ struct event_struct {
+ 	op(pmu);						\
+ 	op(unit);						\
+ 	op(perpkg);						\
++	op(aggr_mode);						\
+ 	op(metric_expr);					\
+ 	op(metric_name);					\
+ 	op(metric_group);					\
+@@ -613,6 +630,8 @@ static int json_events(const char *fn,
+ 				addfield(map, &je.unit, "", "", val);
+ 			} else if (json_streq(map, field, "PerPkg")) {
+ 				addfield(map, &je.perpkg, "", "", val);
++			} else if (json_streq(map, field, "AggregationMode")) {
++				addfield(map, &je.aggr_mode, "", "", val);
+ 			} else if (json_streq(map, field, "Deprecated")) {
+ 				addfield(map, &je.deprecated, "", "", val);
+ 			} else if (json_streq(map, field, "MetricName")) {
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index c8f306b572f4..7da1a3743b77 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -2,6 +2,11 @@
+ #ifndef PMU_EVENTS_H
+ #define PMU_EVENTS_H
+ 
++enum aggr_mode_class {
++	PerChip = 1,
++	PerCore
++};
++
+ /*
+  * Describe each PMU event. Each CPU has a table of PMU events.
+  */
+@@ -14,6 +19,7 @@ struct pmu_event {
+ 	const char *pmu;
+ 	const char *unit;
+ 	const char *perpkg;
++	const char *aggr_mode;
+ 	const char *metric_expr;
+ 	const char *metric_name;
+ 	const char *metric_group;
 -- 
 2.26.2
