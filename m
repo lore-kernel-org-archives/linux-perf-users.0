@@ -1,43 +1,57 @@
 From: Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 1/4] perf vendor events amd: Add L2 Prefetch events for zen1
-Date: Wed, 2 Sep 2020 22:40:35 -0700
-Message-ID: <CAP-5=fXE3SC8Lj1K30ooA1kJJqFyAA0AzSyMRh4VG+480tupZQ@mail.gmail.com>
-References: <20200901220944.277505-1-kim.phillips@amd.com>
+Subject: Re: [PATCH 2/4] perf vendor events amd: Add ITLB Instruction Fetch
+ Hits event for zen1
+Date: Wed, 2 Sep 2020 23:03:38 -0700
+Message-ID: <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
+References: <20200901220944.277505-1-kim.phillips@amd.com> <20200901220944.277505-2-kim.phillips@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20200901220944.277505-1-kim.phillips@amd.com>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20200901220944.277505-2-kim.phillips@amd.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Kim Phillips <kim.phillips@amd.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
 On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
 >
-> Later revisions of PPRs that post-date the original Family 17h events
-> submission patch add these events.
+> The ITLB Instruction Fetch Hits event isn't documented even in
+> later zen1 PPRs, but it seems to count correctly on zen1 hardware.
 >
-> Specifically, they were not in this 2017 revision of the F17h PPR:
+> Add it to zen1 group so zen1 users can use the upcoming IC Fetch Miss
+> Ratio Metric.
 >
-> Processor Programming Reference (PPR) for AMD Family 17h Model 01h, Revis=
-ion B1 Processors Rev 1.14 - April 15, 2017
+> The IF1G, 1IF2M, IF4K (Instruction fetches to a 1 GB, 2 MB, and 4K page)
+> unit masks are not added because unlike zen2 hardware, zen1 hardware
+> counts all its unit masks with a 0 unit mask according to the old
+> convention:
 >
-> But e.g., are included in this 2019 version of the PPR:
+> zen1$ perf stat -e cpu/event=3D0x94/,cpu/event=3D0x94,umask=3D0xff/ sleep=
+ 1
 >
-> Processor Programming Reference (PPR) for AMD Family 17h Model 18h, Revis=
-ion B1 Processors Rev. 3.14 - Sep 26, 2019
+>  Performance counter stats for 'sleep 1':
+>
+>            211,318      cpu/event=3D0x94/u
+>            211,318      cpu/event=3D0x94,umask=3D0xff/u
+>
+> Rome/zen2:
+>
+> zen2$ perf stat -e cpu/event=3D0x94/,cpu/event=3D0x94,umask=3D0xff/ sleep=
+ 1
+>
+>  Performance counter stats for 'sleep 1':
+>
+>                  0      cpu/event=3D0x94/u
+>            190,744      cpu/event=3D0x94,umask=3D0xff/u
 >
 > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Ian Rogers <irogers@google.com>
 
-Sanity checked manual and ran tests. Thanks,
+Thanks,
 Ian
 
-> Fixes: 98c07a8f74f8 ("perf vendor events amd: perf PMU events for AMD Fam=
-ily 17h")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D206537
 > Cc: Peter Zijlstra <peterz@infradead.org>
 > Cc: Ingo Molnar <mingo@redhat.com>
 > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -61,44 +75,28 @@ ily 17h")
 > Cc: Ian Rogers <irogers@google.com>
 > Cc: linux-perf-users@vger.kernel.org
 > Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
 > ---
->  .../pmu-events/arch/x86/amdzen1/cache.json     | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
+>  tools/perf/pmu-events/arch/x86/amdzen1/branch.json | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/pe=
-rf/pmu-events/arch/x86/amdzen1/cache.json
-> index 404d4c569c01..695ed3ffa3a6 100644
-> --- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-> @@ -249,6 +249,24 @@
->      "BriefDescription": "Cycles with fill pending from L2. Total cycles =
-spent with one or more fill requests in flight from L2.",
->      "UMask": "0x1"
->    },
-> +  {
-> +    "EventName": "l2_pf_hit_l2",
-> +    "EventCode": "0x70",
-> +    "BriefDescription": "L2 prefetch hit in L2.",
-> +    "UMask": "0xff"
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/branch.json b/tools/p=
+erf/pmu-events/arch/x86/amdzen1/branch.json
+> index a9943eeb8d6b..4ceb67a0db21 100644
+> --- a/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+> @@ -19,5 +19,10 @@
+>      "EventName": "bp_de_redirect",
+>      "EventCode": "0x91",
+>      "BriefDescription": "Decoder Overrides Existing Branch Prediction (s=
+peculative)."
 > +  },
 > +  {
-> +    "EventName": "l2_pf_miss_l2_hit_l3",
-> +    "EventCode": "0x71",
-> +    "BriefDescription": "L2 prefetcher hits in L3. Counts all L2 prefetc=
-hes accepted by the L2 pipeline which miss the L2 cache and hit the L3.",
-> +    "UMask": "0xff"
-> +  },
-> +  {
-> +    "EventName": "l2_pf_miss_l2_l3",
-> +    "EventCode": "0x72",
-> +    "BriefDescription": "L2 prefetcher misses in L3. All L2 prefetches a=
-ccepted by the L2 pipeline which miss the L2 and the L3 caches.",
-> +    "UMask": "0xff"
-> +  },
->    {
->      "EventName": "l3_request_g1.caching_l3_cache_accesses",
->      "EventCode": "0x01",
+> +    "EventName": "bp_l1_tlb_fetch_hit",
+> +    "EventCode": "0x94",
+> +    "BriefDescription": "The number of instruction fetches that hit in t=
+he L1 ITLB."
+>    }
+>  ]
 > --
 > 2.27.0
 >
