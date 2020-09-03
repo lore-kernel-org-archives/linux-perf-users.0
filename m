@@ -1,33 +1,39 @@
-From: Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v7 2/5] perf/jevents: Add new structure to pass json fields.
-Date: Thu, 3 Sep 2020 23:54:54 +0900
-Message-ID: <CAM9d7cjDRGDuZhbZ1BJ2tF_hyrS0-b61kaL2=0VHtSFUcJN7sg@mail.gmail.com>
-References: <20200902160439.335232-1-kjain@linux.ibm.com> <20200902160439.335232-3-kjain@linux.ibm.com>
+From: Kim Phillips <kim.phillips@amd.com>
+Subject: Re: [PATCH 3/4] perf vendor events amd: Add recommended events
+Date: Thu, 3 Sep 2020 13:26:58 -0500
+Message-ID: <7a0b893d-8f65-6423-3818-5dafc880dca1@amd.com>
+References: <20200901220944.277505-1-kim.phillips@amd.com>
+ <20200901220944.277505-3-kim.phillips@amd.com>
+ <CAP-5=fVwuKOACD++6UyBVW_fgbTXrOwuOJHSYenD87dwVJk0OA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200902160439.335232-3-kjain@linux.ibm.com>
+In-Reply-To: <CAP-5=fVwuKOACD++6UyBVW_fgbTXrOwuOJHSYenD87dwVJk0OA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, pc@us.ibm.com, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Yao Jin <yao.jin@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Ian Rogers <irogers@google.com>, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, John Garry <john.garry@huawei.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Hello,
+On 9/3/20 1:19 AM, Ian Rogers wrote:
+> On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
+>> The nps1_die_to_dram event may need perf stat's --metric-no-group
+>> switch if the number of available data fabric counters is less
+>> than the number it uses (8).
+> 
+> These are really excellent additions! Does:
+> "MetricConstraint": "NO_NMI_WATCHDOG"
+> solve the grouping issue? Perhaps the MetricConstraint needs to be
+> named more generically to cover this case as it seems sub-optimal to
+> require the use of --metric-no-group.
 
-On Thu, Sep 3, 2020 at 1:05 AM Kajol Jain <kjain@linux.ibm.com> wrote:
->
-> This patch adds new structure called 'json_event' inside jevents.h
+That metric uses data fabric (DFPMC/amd_df) events, not Core PMC
+events, which the watchdog uses, so NO_NMI_WATCHDOG wouldn't have
+an effect.  The event is defined as an approximation anyway.
 
-jevents.c ?
+I'll have to get back to you on the other items.
 
-Thanks
-Namhyung
+Thanks for your review!
 
-> file to improve the callback prototype inside jevent files.
-> Initially, whenever user want to add new field, they need to update
-> in all function callback which make it more and more complex with
-> increased number of parmeters.
-> With this change, we just need to add it in new structure 'json_event'.
->
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Kim
