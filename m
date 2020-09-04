@@ -1,101 +1,55 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 1/4] perf vendor events amd: Add L2 Prefetch events for
- zen1
-Date: Fri, 4 Sep 2020 16:18:52 -0300
-Message-ID: <20200904191852.GE3753976@kernel.org>
+Subject: Re: [PATCH 2/4] perf vendor events amd: Add ITLB Instruction Fetch
+ Hits event for zen1
+Date: Fri, 4 Sep 2020 16:19:12 -0300
+Message-ID: <20200904191912.GF3753976@kernel.org>
 References: <20200901220944.277505-1-kim.phillips@amd.com>
+ <20200901220944.277505-2-kim.phillips@amd.com>
+ <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20200901220944.277505-1-kim.phillips@amd.com>
+In-Reply-To: <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@amd.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>, Stephane Eranian <eranian@google.com>, Ian
+To: Ian Rogers <irogers@google.com>
+Cc: Kim Phillips <kim.phillips@amd.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>, Steph
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Sep 01, 2020 at 05:09:41PM -0500, Kim Phillips escreveu:
-> Later revisions of PPRs that post-date the original Family 17h events
-> submission patch add these events.
+Em Wed, Sep 02, 2020 at 11:03:38PM -0700, Ian Rogers escreveu:
+> On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
+> >
+> > The ITLB Instruction Fetch Hits event isn't documented even in
+> > later zen1 PPRs, but it seems to count correctly on zen1 hardware.
+> >
+> > Add it to zen1 group so zen1 users can use the upcoming IC Fetch Miss
+> > Ratio Metric.
+> >
+> > The IF1G, 1IF2M, IF4K (Instruction fetches to a 1 GB, 2 MB, and 4K page)
+> > unit masks are not added because unlike zen2 hardware, zen1 hardware
+> > counts all its unit masks with a 0 unit mask according to the old
+> > convention:
+> >
+> > zen1$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
+> >
+> >  Performance counter stats for 'sleep 1':
+> >
+> >            211,318      cpu/event=0x94/u
+> >            211,318      cpu/event=0x94,umask=0xff/u
+> >
+> > Rome/zen2:
+> >
+> > zen2$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
+> >
+> >  Performance counter stats for 'sleep 1':
+> >
+> >                  0      cpu/event=0x94/u
+> >            190,744      cpu/event=0x94,umask=0xff/u
+> >
+> > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 > 
-> Specifically, they were not in this 2017 revision of the F17h PPR:
-> 
-> Processor Programming Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors Rev 1.14 - April 15, 2017
-> 
-> But e.g., are included in this 2019 version of the PPR:
-> 
-> Processor Programming Reference (PPR) for AMD Family 17h Model 18h, Revision B1 Processors Rev. 3.14 - Sep 26, 2019
-
+> Acked-by: Ian Rogers <irogers@google.com>
 
 Thanks, applied.
-
-- Arnaldo
- 
-> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> Fixes: 98c07a8f74f8 ("perf vendor events amd: perf PMU events for AMD Family 17h")
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Vijay Thakkar <vijaythakkar@me.com>
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Yunfeng Ye <yeyunfeng@huawei.com>
-> Cc: Jin Yao <yao.jin@linux.intel.com>
-> Cc: "Martin Liška" <mliska@suse.cz>
-> Cc: Borislav Petkov <bp@suse.de>
-> Cc: Jon Grimm <jon.grimm@amd.com>
-> Cc: Martin Jambor <mjambor@suse.cz>
-> Cc: Michael Petlan <mpetlan@redhat.com>
-> Cc: William Cohen <wcohen@redhat.com>
-> Cc: Stephane Eranian <eranian@google.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> ---
->  .../pmu-events/arch/x86/amdzen1/cache.json     | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-> index 404d4c569c01..695ed3ffa3a6 100644
-> --- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-> @@ -249,6 +249,24 @@
->      "BriefDescription": "Cycles with fill pending from L2. Total cycles spent with one or more fill requests in flight from L2.",
->      "UMask": "0x1"
->    },
-> +  {
-> +    "EventName": "l2_pf_hit_l2",
-> +    "EventCode": "0x70",
-> +    "BriefDescription": "L2 prefetch hit in L2.",
-> +    "UMask": "0xff"
-> +  },
-> +  {
-> +    "EventName": "l2_pf_miss_l2_hit_l3",
-> +    "EventCode": "0x71",
-> +    "BriefDescription": "L2 prefetcher hits in L3. Counts all L2 prefetches accepted by the L2 pipeline which miss the L2 cache and hit the L3.",
-> +    "UMask": "0xff"
-> +  },
-> +  {
-> +    "EventName": "l2_pf_miss_l2_l3",
-> +    "EventCode": "0x72",
-> +    "BriefDescription": "L2 prefetcher misses in L3. All L2 prefetches accepted by the L2 pipeline which miss the L2 and the L3 caches.",
-> +    "UMask": "0xff"
-> +  },
->    {
->      "EventName": "l3_request_g1.caching_l3_cache_accesses",
->      "EventCode": "0x01",
-> -- 
-> 2.27.0
-> 
-
--- 
 
 - Arnaldo
