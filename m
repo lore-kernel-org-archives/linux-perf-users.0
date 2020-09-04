@@ -1,47 +1,101 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v7 2/5] perf/jevents: Add new structure to pass json
- fields.
-Date: Fri, 4 Sep 2020 14:00:38 +0530
-Message-ID: <7da87918-2ddd-5090-5ed4-0c209a75858b@linux.ibm.com>
-References: <20200902160439.335232-1-kjain@linux.ibm.com>
- <20200902160439.335232-3-kjain@linux.ibm.com>
- <CAM9d7cjDRGDuZhbZ1BJ2tF_hyrS0-b61kaL2=0VHtSFUcJN7sg@mail.gmail.com>
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 1/4] perf vendor events amd: Add L2 Prefetch events for
+ zen1
+Date: Fri, 4 Sep 2020 16:18:52 -0300
+Message-ID: <20200904191852.GE3753976@kernel.org>
+References: <20200901220944.277505-1-kim.phillips@amd.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAM9d7cjDRGDuZhbZ1BJ2tF_hyrS0-b61kaL2=0VHtSFUcJN7sg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200901220944.277505-1-kim.phillips@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, pc@us.ibm.com, Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>, Yao Jin <yao.jin@linux.intel.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, Ian Rogers <irogers@google.com>, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, John Garry <john.garry@huawei.com>
+To: Kim Phillips <kim.phillips@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>, Stephane Eranian <eranian@google.com>, Ian
 List-Id: linux-perf-users.vger.kernel.org
 
+Em Tue, Sep 01, 2020 at 05:09:41PM -0500, Kim Phillips escreveu:
+> Later revisions of PPRs that post-date the original Family 17h events
+> submission patch add these events.
+> 
+> Specifically, they were not in this 2017 revision of the F17h PPR:
+> 
+> Processor Programming Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors Rev 1.14 - April 15, 2017
+> 
+> But e.g., are included in this 2019 version of the PPR:
+> 
+> Processor Programming Reference (PPR) for AMD Family 17h Model 18h, Revision B1 Processors Rev. 3.14 - Sep 26, 2019
 
 
-On 9/3/20 8:24 PM, Namhyung Kim wrote:
-> Hello,
-> 
-> On Thu, Sep 3, 2020 at 1:05 AM Kajol Jain <kjain@linux.ibm.com> wrote:
->>
->> This patch adds new structure called 'json_event' inside jevents.h
-> 
-> jevents.c ?
+Thanks, applied.
 
-Hi Namhyung,
-       Right, I will update it.
+- Arnaldo
+ 
+> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+> Fixes: 98c07a8f74f8 ("perf vendor events amd: perf PMU events for AMD Family 17h")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Vijay Thakkar <vijaythakkar@me.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: John Garry <john.garry@huawei.com>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Yunfeng Ye <yeyunfeng@huawei.com>
+> Cc: Jin Yao <yao.jin@linux.intel.com>
+> Cc: "Martin Liška" <mliska@suse.cz>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: Jon Grimm <jon.grimm@amd.com>
+> Cc: Martin Jambor <mjambor@suse.cz>
+> Cc: Michael Petlan <mpetlan@redhat.com>
+> Cc: William Cohen <wcohen@redhat.com>
+> Cc: Stephane Eranian <eranian@google.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: stable@vger.kernel.org
+> ---
+>  .../pmu-events/arch/x86/amdzen1/cache.json     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+> index 404d4c569c01..695ed3ffa3a6 100644
+> --- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+> +++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+> @@ -249,6 +249,24 @@
+>      "BriefDescription": "Cycles with fill pending from L2. Total cycles spent with one or more fill requests in flight from L2.",
+>      "UMask": "0x1"
+>    },
+> +  {
+> +    "EventName": "l2_pf_hit_l2",
+> +    "EventCode": "0x70",
+> +    "BriefDescription": "L2 prefetch hit in L2.",
+> +    "UMask": "0xff"
+> +  },
+> +  {
+> +    "EventName": "l2_pf_miss_l2_hit_l3",
+> +    "EventCode": "0x71",
+> +    "BriefDescription": "L2 prefetcher hits in L3. Counts all L2 prefetches accepted by the L2 pipeline which miss the L2 cache and hit the L3.",
+> +    "UMask": "0xff"
+> +  },
+> +  {
+> +    "EventName": "l2_pf_miss_l2_l3",
+> +    "EventCode": "0x72",
+> +    "BriefDescription": "L2 prefetcher misses in L3. All L2 prefetches accepted by the L2 pipeline which miss the L2 and the L3 caches.",
+> +    "UMask": "0xff"
+> +  },
+>    {
+>      "EventName": "l3_request_g1.caching_l3_cache_accesses",
+>      "EventCode": "0x01",
+> -- 
+> 2.27.0
+> 
 
-Thanks,
-Kajol Jain
-> 
-> Thanks
-> Namhyung
-> 
->> file to improve the callback prototype inside jevent files.
->> Initially, whenever user want to add new field, they need to update
->> in all function callback which make it more and more complex with
->> increased number of parmeters.
->> With this change, we just need to add it in new structure 'json_event'.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+-- 
+
+- Arnaldo
