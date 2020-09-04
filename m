@@ -1,86 +1,89 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf record/stat: Explicitly call out event modifiers in
- the documentation
-Date: Thu, 3 Sep 2020 16:01:01 -0300
-Message-ID: <20200903190101.GH3495158@kernel.org>
-References: <20200901215853.276234-1-kim.phillips@amd.com>
+Subject: [GIT PULL] perf tools fixes for v5.9: 2nd batch
+Date: Thu,  3 Sep 2020 23:07:28 -0300
+Message-ID: <20200904020728.3734002-1-acme@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20200901215853.276234-1-kim.phillips@amd.com>
-Sender: stable-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@amd.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Stephane Eranian <eranian@google.com>, Alexey Budankov <alexey.budankov@linux.intel.com>, Tony Jones <tonyj@suse.de>, Jin Yao <yao.jin@linux.intel.com>, Ian Rogers <irogers@google.com>, "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Kim Phillips <kim.phillips@amd.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, YueHaibing <yuehaibing@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Tue, Sep 01, 2020 at 04:58:53PM -0500, Kim Phillips escreveu:
-> Event modifiers are not mentioned in the perf record or perf stat
-> manpages.  Add them to orient new users more effectively by pointing
-> them to the perf list manpage for details.
+Hi Linus,
 
-Thanks, applied.
+	Please consider pulling,
 
-- Arnaldo
- 
-> Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-> Cc: Peter Zijlstra <peterz@infradead.org> 
-> Cc: Ingo Molnar <mingo@redhat.com> 
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org> 
-> Cc: Mark Rutland <mark.rutland@arm.com> 
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com> 
-> Cc: Jiri Olsa <jolsa@redhat.com> 
-> Cc: Namhyung Kim <namhyung@kernel.org> 
-> Cc: Adrian Hunter <adrian.hunter@intel.com> 
-> Cc: Stephane Eranian <eranian@google.com> 
-> Cc: Alexey Budankov <alexey.budankov@linux.intel.com> 
-> Cc: Tony Jones <tonyj@suse.de> 
-> Cc: Jin Yao <yao.jin@linux.intel.com> 
-> Cc: Ian Rogers <irogers@google.com> 
-> Cc: "Paul A. Clarke" <pc@us.ibm.com> 
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: stable@vger.kernel.org
-> ---
->  tools/perf/Documentation/perf-record.txt | 4 ++++
->  tools/perf/Documentation/perf-stat.txt   | 4 ++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 3f72d8e261f3..bd50cdff08a8 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -33,6 +33,10 @@ OPTIONS
->          - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
->  	  hexadecimal event descriptor.
->  
-> +        - a symbolic or raw PMU event followed by an optional colon
-> +	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-> +	  linkperf:perf-list[1] man page for details on event modifiers.
-> +
->  	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
->  	  'param1', 'param2', etc are defined as formats for the PMU in
->  	  /sys/bus/event_source/devices/<pmu>/format/*.
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index c9bfefc051fb..a4b1d11fefc8 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -39,6 +39,10 @@ report::
->  	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
->  	  hexadecimal event descriptor.
->  
-> +        - a symbolic or raw PMU event followed by an optional colon
-> +	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-> +	  linkperf:perf-list[1] man page for details on event modifiers.
-> +
->  	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
->  	  param1 and param2 are defined as formats for the PMU in
->  	  /sys/bus/event_source/devices/<pmu>/format/*
-> -- 
-> 2.27.0
-> 
-
--- 
+Best regards,
 
 - Arnaldo
+
+Comprehensive test results are available in the signed tag.
+
+The following changes since commit e28f0104343d0c132fa37f479870c9e43355fee4:
+
+  Merge tag 'fixes-2020-09-03' of git://git.kernel.org/pub/scm/linux/kernel/git/rppt/memblock (2020-09-03 10:05:48 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-03
+
+for you to fetch changes up to 830fadfd954c6782b7a8a2461c76a568c7153b9a:
+
+  perf tools: Add bpf image check to __map__is_kmodule (2020-09-03 16:04:46 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v5.9: 2nd batch
+
+- Use uintptr_t when casting numbers to pointers
+
+- Keep output expected by 3rd parties: Turn off summary for interval
+  mode by default.
+
+- BPF is in kernel space, make sure do_validate_kcore_modules() knows
+  about that.
+
+- Explicitly call out event modifiers in the documentation.
+
+- Fix jevents() allocation of space for regular expressions.
+
+- Address libtraceevent build warnings on 32-bit arches.
+
+- Fix checking of functions returns using ERR_PTR() in 'perf bench'.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (1):
+      perf parse-events: Use uintptr_t when casting numbers to pointers
+
+Jin Yao (1):
+      perf stat: Turn off summary for interval mode by default
+
+Jiri Olsa (1):
+      perf tools: Add bpf image check to __map__is_kmodule
+
+Kim Phillips (1):
+      perf record/stat: Explicitly call out event modifiers in the documentation
+
+Namhyung Kim (1):
+      perf jevents: Fix suspicious code in fixregex()
+
+Tzvetomir Stoyanov (VMware) (1):
+      libtraceevent: Fix build warning on 32-bit arches
+
+YueHaibing (1):
+      perf bench: The do_run_multi_threaded() function must use IS_ERR(perf_session__new())
+
+ tools/lib/traceevent/event-parse.c       |  2 +-
+ tools/perf/Documentation/perf-record.txt |  4 ++++
+ tools/perf/Documentation/perf-stat.txt   |  7 +++++++
+ tools/perf/bench/synthesize.c            |  4 ++--
+ tools/perf/builtin-stat.c                |  8 +++++---
+ tools/perf/pmu-events/jevents.c          |  2 +-
+ tools/perf/util/machine.c                |  6 ------
+ tools/perf/util/map.c                    | 16 ++++++++++++++++
+ tools/perf/util/map.h                    |  9 ++++++++-
+ tools/perf/util/parse-events.y           |  8 ++++----
+ tools/perf/util/stat.h                   |  1 +
+ 11 files changed, 49 insertions(+), 18 deletions(-)
