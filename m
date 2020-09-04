@@ -1,23 +1,45 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] perf tools fixes for v5.9: 2nd batch
-Date: Fri, 04 Sep 2020 02:13:07 +0000
-Message-ID: <159918558786.15567.14911656149995703564.pr-tracker-bot@kernel.org>
-References: <20200904020728.3734002-1-acme@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 3/4] perf vendor events amd: Add recommended events
+Date: Thu, 3 Sep 2020 22:48:15 -0700
+Message-ID: <CAP-5=fW8zLRgxXgY-CFUnU0HiiZMKhJ6b1znMxT8WeLO5Z-wZA@mail.gmail.com>
+References: <20200901220944.277505-1-kim.phillips@amd.com> <20200901220944.277505-3-kim.phillips@amd.com>
+ <CAP-5=fVwuKOACD++6UyBVW_fgbTXrOwuOJHSYenD87dwVJk0OA@mail.gmail.com> <7a0b893d-8f65-6423-3818-5dafc880dca1@amd.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200904020728.3734002-1-acme@kernel.org>
+In-Reply-To: <7a0b893d-8f65-6423-3818-5dafc880dca1@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>, Jin Yao <yao.jin@linux.intel.com>, Kim Phillips <kim.phillips@amd.com>, Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, YueHaibing <yuehaibing@huawei.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: Kim Phillips <kim.phillips@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, Vijay Thakkar <vijaythakkar@me.com>, Andi Kleen <ak@linux.intel.com>, John Garry <john.garry@huawei.com>, Kan Liang <kan.liang@linux.intel.com>, Yunfeng Ye <yeyunfeng@huawei.com>, Jin Yao <yao.jin@linux.intel.com>, =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>, Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>, Martin Jambor <mjambor@suse.cz>, Michael Petlan <mpetlan@redhat.com>, William Cohen <wcohen@redhat.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The pull request you sent on Thu,  3 Sep 2020 23:07:28 -0300:
+On Thu, Sep 3, 2020 at 11:27 AM Kim Phillips <kim.phillips@amd.com> wrote:
+>
+> On 9/3/20 1:19 AM, Ian Rogers wrote:
+> > On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
+> >> The nps1_die_to_dram event may need perf stat's --metric-no-group
+> >> switch if the number of available data fabric counters is less
+> >> than the number it uses (8).
+> >
+> > These are really excellent additions! Does:
+> > "MetricConstraint": "NO_NMI_WATCHDOG"
+> > solve the grouping issue? Perhaps the MetricConstraint needs to be
+> > named more generically to cover this case as it seems sub-optimal to
+> > require the use of --metric-no-group.
+>
+> That metric uses data fabric (DFPMC/amd_df) events, not Core PMC
+> events, which the watchdog uses, so NO_NMI_WATCHDOG wouldn't have
+> an effect.  The event is defined as an approximation anyway.
+>
+> I'll have to get back to you on the other items.
+>
+> Thanks for your review!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-03
+NP, more nits than anything else.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/59126901f200f5fc907153468b03c64e0081b6e6
+Acked-by: Ian Rogers <irogers@google.com>
 
-Thank you!
+Thanks,
+Ian
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> Kim
