@@ -1,67 +1,71 @@
-From: Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH] tools feature: Add missing -lzstd to the fast path
- feature detection
-Date: Sat, 5 Sep 2020 13:44:16 +0300
-Message-ID: <2ddf68fc-3079-56eb-4214-e9176909f941@linux.intel.com>
-References: <20200904202611.GJ3753976@kernel.org>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v8 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date: Sun,  6 Sep 2020 16:49:59 +0530
+Message-ID: <20200906112004.49574-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200904202611.GJ3753976@kernel.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+To: acme@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events.
 
-On 04.09.2020 23:26, Arnaldo Carvalho de Melo wrote:
-> We were failing that due to GTK2+ and then for the ZSTD test, which made
-> test-all.c, the fast path feature detection file to fail and thus
-> trigger building all of the feature tests, slowing down the test.
-> 
-> Eventually the ZSTD test would be built and would succeed, since it had
-> the needed -lzstd, avoiding:
-> 
->   $ cat /tmp/build/perf/feature/test-all.make.output
->   /usr/bin/ld: /tmp/ccRRJQ4u.o: in function `main_test_libzstd':
->   /home/acme/git/perf/tools/build/feature/test-libzstd.c:8: undefined reference to `ZSTD_createCStream'
->   /usr/bin/ld: /home/acme/git/perf/tools/build/feature/test-libzstd.c:9: undefined reference to `ZSTD_freeCStream'
->   collect2: error: ld returned 1 exit status
->   $
-> 
-> Fix it by adding -lzstd to the test-all target.
-> 
-> Now I need an entry to 'perf test' to make sure that
-> /tmp/build/perf/feature/test-all.make.output is empty...
-> 
-> Fixes: 3b1c5d9659718263 ("tools build: Implement libzstd feature check, LIBZSTD_DIR and NO_LIBZSTD defines")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> ---
-> 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 977067e34dff064d..ec815ffc7777a02b 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -91,7 +91,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
->  ###############################
->  
->  $(OUTPUT)test-all.bin:
-> -	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
-> +	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
->  
->  $(OUTPUT)test-hello.bin:
->  	$(BUILD)
-> 
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
 
-Reviewed-by: Alexei Budankov <alexey.budankov@linux.intel.com>
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-Thanks!
-Alexei
+This patchset also adds  changes of adding new structure
+called 'json_event' inside jevents.c
+file to improve the callback prototype inside jevent file.
+Initially, whenever user want to add new field, they need to update
+in all function callback which makes it more and more complex with
+increased number of parmeters.
+With this change, we just need to add it in new structure 'json_event'.
+link to the RFC patch: https://lkml.org/lkml/2020/8/25/217
+
+Changelog:
+v7 -> v8
+- Change commit typo from jevents.h to jevents.c
+- Make json_events function static in first patch.
+
+v6 -> v7
+- Remove min and get_cpu_str functions from jevents.c
+- Make json_events function static to solve warning part [John Garry].
+- Add event attribute in json_events function to remove strcpy from
+  real_event function, as suggested by Jiri Olsa.
+- Add warning while checking aggr_mode value [Jiri Olsa].
+
+Kajol Jain (5):
+  perf/jevents: Remove jevents.h file
+  perf/jevents: Add new structure to pass json fields.
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  35 ++-
+ tools/perf/pmu-events/jevents.c               | 234 +++++++++---------
+ tools/perf/pmu-events/jevents.h               |  23 --
+ tools/perf/pmu-events/pmu-events.h            |   6 +
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ 7 files changed, 154 insertions(+), 159 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/jevents.h
+
+-- 
+2.26.2
