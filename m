@@ -1,100 +1,74 @@
-From: kajoljain <kjain@linux.ibm.com>
-Subject: Re: [PATCH v8 3/5] perf jevents: Add support for parsing
- perchip/percore events
-Date: Mon, 7 Sep 2020 12:10:05 +0530
-Message-ID: <c414cdac-9051-5e0f-b638-3c3cca5394a6@linux.ibm.com>
-References: <20200906112004.49574-1-kjain@linux.ibm.com>
- <20200906112004.49574-4-kjain@linux.ibm.com> <20200906125552.GC1199773@krava>
+From: Kajol Jain <kjain@linux.ibm.com>
+Subject: [PATCH v9 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date: Mon,  7 Sep 2020 12:11:28 +0530
+Message-ID: <20200907064133.75090-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200906125552.GC1199773@krava>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Olsa <jolsa@redhat.com>
-Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com
+To: acme@kernel.org
+Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com, kjain@linux.ibm.com
 List-Id: linux-perf-users.vger.kernel.org
 
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events.
 
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
 
-On 9/6/20 6:25 PM, Jiri Olsa wrote:
-> On Sun, Sep 06, 2020 at 04:50:02PM +0530, Kajol Jain wrote:
-> 
-> SNIP
-> 
->>  typedef int (*func)(void *data, struct json_event *je);
->>  
->>  int eprintf(int level, int var, const char *fmt, ...)
->> @@ -355,6 +368,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
->>  		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
->>  	if (je->perpkg)
->>  		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
->> +	if (je->aggr_mode)
->> +		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
->>  	if (je->metric_expr)
->>  		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
->>  	if (je->metric_name)
->> @@ -379,6 +394,7 @@ struct event_struct {
->>  	char *pmu;
->>  	char *unit;
->>  	char *perpkg;
->> +	char *aggr_mode;
->>  	char *metric_expr;
->>  	char *metric_name;
->>  	char *metric_group;
->> @@ -408,6 +424,7 @@ struct event_struct {
->>  	op(pmu);						\
->>  	op(unit);						\
->>  	op(perpkg);						\
->> +	op(aggr_mode);						\
->>  	op(metric_expr);					\
->>  	op(metric_name);					\
->>  	op(metric_group);					\
->> @@ -613,6 +630,8 @@ static int json_events(const char *fn,
->>  				addfield(map, &je.unit, "", "", val);
->>  			} else if (json_streq(map, field, "PerPkg")) {
->>  				addfield(map, &je.perpkg, "", "", val);
->> +			} else if (json_streq(map, field, "AggregationMode")) {
->> +				addfield(map, &je.aggr_mode, "", "", val);
-> 
-> I think you should free je.aggr_mode
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-My bad, missed that part. Will send updated one.
+This patchset also adds  changes of adding new structure
+called 'json_event' inside jevents.c
+file to improve the callback prototype inside jevent file.
+Initially, whenever user want to add new field, they need to update
+in all function callback which makes it more and more complex with
+increased number of parmeters.
+With this change, we just need to add it in new structure 'json_event'.
+link to the RFC patch: https://lkml.org/lkml/2020/8/25/217
 
-Thanks,
-Kajol Jain
-> 
-> jirka
-> 
->>  			} else if (json_streq(map, field, "Deprecated")) {
->>  				addfield(map, &je.deprecated, "", "", val);
->>  			} else if (json_streq(map, field, "MetricName")) {
->> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
->> index c8f306b572f4..7da1a3743b77 100644
->> --- a/tools/perf/pmu-events/pmu-events.h
->> +++ b/tools/perf/pmu-events/pmu-events.h
->> @@ -2,6 +2,11 @@
->>  #ifndef PMU_EVENTS_H
->>  #define PMU_EVENTS_H
->>  
->> +enum aggr_mode_class {
->> +	PerChip = 1,
->> +	PerCore
->> +};
->> +
->>  /*
->>   * Describe each PMU event. Each CPU has a table of PMU events.
->>   */
->> @@ -14,6 +19,7 @@ struct pmu_event {
->>  	const char *pmu;
->>  	const char *unit;
->>  	const char *perpkg;
->> +	const char *aggr_mode;
->>  	const char *metric_expr;
->>  	const char *metric_name;
->>  	const char *metric_group;
->> -- 
->> 2.26.2
->>
-> 
+Changelog:
+v8 -> v9
+- Free aggr_mode memory [Jiri Olsa].
+
+v7 -> v8
+- Change commit typo from jevents.h to jevents.c
+- Make json_events function static in first patch.
+
+v6 -> v7
+- Remove min and get_cpu_str functions from jevents.c
+- Make json_events function static to solve warning part [John Garry].
+- Add event attribute in json_events function to remove strcpy from
+  real_event function, as suggested by Jiri Olsa.
+- Add warning while checking aggr_mode value [Jiri Olsa].
+
+Kajol Jain (5):
+  perf/jevents: Remove jevents.h file
+  perf/jevents: Add new structure to pass json fields.
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  35 ++-
+ tools/perf/pmu-events/jevents.c               | 234 +++++++++---------
+ tools/perf/pmu-events/jevents.h               |  23 --
+ tools/perf/pmu-events/pmu-events.h            |   6 +
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ 7 files changed, 154 insertions(+), 159 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/jevents.h
+
+-- 
+2.26.2
