@@ -1,106 +1,86 @@
-From: Kajol Jain <kjain@linux.ibm.com>
-Subject: [PATCH v9 5/5] perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
-Date: Mon,  7 Sep 2020 12:11:33 +0530
-Message-ID: <20200907064133.75090-6-kjain@linux.ibm.com>
+From: Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH v9 0/5] powerpc/perf: Add json file support for hv_24x7
+ core level events
+Date: Mon, 7 Sep 2020 12:05:29 +0200
+Message-ID: <20200907100529.GF1199773@krava>
 References: <20200907064133.75090-1-kjain@linux.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
 In-Reply-To: <20200907064133.75090-1-kjain@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: acme@kernel.org
-Cc: peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com, kjain@linux.ibm.com
+To: Kajol Jain <kjain@linux.ibm.com>
+Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, irogers@google.com, maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com, john.garry@huawei.com
 List-Id: linux-perf-users.vger.kernel.org
 
-This patch adds hv_24x7 core level events in nest_metric.json file
-and also add PerChip/PerCore field in metric events.
+On Mon, Sep 07, 2020 at 12:11:28PM +0530, Kajol Jain wrote:
+> Patchset enhance current runtime parameter support. It introduces new
+> fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+> used to specify perpkg events.
+> 
+> The "PerCore" and "PerChip" specifies whether its core or chip events.
+> Based on which we can decide which runtime parameter user want to
+> access. Now character  '?' can refers different parameter based on user
+> requirement.
+> 
+> Initially, every time we want to add new terms like chip, core, thread
+> etc, we need to create corrsponding fields in pmu_events and event
+> struct.
+> This patchset adds an enum called 'aggr_mode_class' which store all these
+> aggregation like perchip/percore. It also adds new field 'AggregationMode'
+> to capture these terms.
+> Now, if user wants to add any new term, they just need to add it in
+> the enum defined.
+> 
+> This patchset also adds  changes of adding new structure
+> called 'json_event' inside jevents.c
+> file to improve the callback prototype inside jevent file.
+> Initially, whenever user want to add new field, they need to update
+> in all function callback which makes it more and more complex with
+> increased number of parmeters.
+> With this change, we just need to add it in new structure 'json_event'.
+> link to the RFC patch: https://lkml.org/lkml/2020/8/25/217
+> 
+> Changelog:
+> v8 -> v9
+> - Free aggr_mode memory [Jiri Olsa].
 
-Result:
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-power9 platform:
+thanks,
+jirka
 
-command:# ./perf stat --metric-only -M PowerBUS_Frequency -C 0 -I 1000
-     1.000070601                        1.9                        2.0
-     2.000253881                        2.0                        1.9
-     3.000364810                        2.0                        2.0
-
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Acked-by: Ian Rogers <irogers@google.com>
----
- .../arch/powerpc/power9/nest_metrics.json     | 35 ++++++++++++-------
- 1 file changed, 22 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-index 8383a37647ad..7a5d1bf543f8 100644
---- a/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power9/nest_metrics.json
-@@ -1,37 +1,46 @@
- [
-     {
--        "MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
--        "MetricName": "Memory_RD_BW_Chip",
--        "MetricGroup": "Memory_BW",
--        "ScaleUnit": "1.6e-2MB"
-+	"MetricExpr": "(hv_24x7@PM_MCS01_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_RD_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_RD_DISP_PORT23\\,chip\\=?@)",
-+	"MetricName": "Memory_RD_BW_Chip",
-+	"MetricGroup": "Memory_BW",
-+	"ScaleUnit": "1.6e-2MB",
-+	"AggregationMode": "PerChip"
-     },
-     {
- 	"MetricExpr": "(hv_24x7@PM_MCS01_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS01_128B_WR_DISP_PORT23\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT01\\,chip\\=?@ + hv_24x7@PM_MCS23_128B_WR_DISP_PORT23\\,chip\\=?@ )",
--        "MetricName": "Memory_WR_BW_Chip",
--        "MetricGroup": "Memory_BW",
--        "ScaleUnit": "1.6e-2MB"
-+	"MetricName": "Memory_WR_BW_Chip",
-+	"MetricGroup": "Memory_BW",
-+	"ScaleUnit": "1.6e-2MB",
-+	"AggregationMode": "PerChip"
-     },
-     {
- 	"MetricExpr": "(hv_24x7@PM_PB_CYC\\,chip\\=?@ )",
--        "MetricName": "PowerBUS_Frequency",
--        "ScaleUnit": "2.5e-7GHz"
-+	"MetricName": "PowerBUS_Frequency",
-+	"ScaleUnit": "2.5e-7GHz",
-+	"AggregationMode": "PerChip"
-+    },
-+    {
-+	"MetricExpr": "(hv_24x7@CPM_CS_32MHZ_CYC\\,domain\\=3\\,core\\=?@ )",
-+	"MetricName": "CPM_CS_32MHZ_CYC",
-+	"ScaleUnit": "1MHz",
-+	"AggregationMode": "PerCore"
-     },
-     {
- 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@",
- 	"MetricName" : "mcs01-read",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@",
- 	"MetricName" : "mcs23-read",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
- 	"MetricExpr" : "nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@",
- 	"MetricName" : "mcs01-write",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     },
-     {
-@@ -48,7 +57,7 @@
-     {
- 	"MetricExpr" : "(nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_RD_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_RD_DISP_PORT23@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT01@ + nest_mcs01_imc@PM_MCS01_128B_WR_DISP_PORT23@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT01@ + nest_mcs23_imc@PM_MCS23_128B_WR_DISP_PORT23@)",
- 	"MetricName" : "Memory-bandwidth-MCS",
--	"MetricGroup" : "memory_bw",
-+	"MetricGroup" : "memory-bandwidth",
- 	"ScaleUnit": "6.1e-5MB"
-     }
- ]
--- 
-2.26.2
+> 
+> v7 -> v8
+> - Change commit typo from jevents.h to jevents.c
+> - Make json_events function static in first patch.
+> 
+> v6 -> v7
+> - Remove min and get_cpu_str functions from jevents.c
+> - Make json_events function static to solve warning part [John Garry].
+> - Add event attribute in json_events function to remove strcpy from
+>   real_event function, as suggested by Jiri Olsa.
+> - Add warning while checking aggr_mode value [Jiri Olsa].
+> 
+> Kajol Jain (5):
+>   perf/jevents: Remove jevents.h file
+>   perf/jevents: Add new structure to pass json fields.
+>   perf jevents: Add support for parsing perchip/percore events
+>   perf/tools: Pass pmu_event structure as a parameter for
+>     arch_get_runtimeparam
+>   perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+> 
+>  tools/perf/arch/powerpc/util/header.c         |   7 +-
+>  .../arch/powerpc/power9/nest_metrics.json     |  35 ++-
+>  tools/perf/pmu-events/jevents.c               | 234 +++++++++---------
+>  tools/perf/pmu-events/jevents.h               |  23 --
+>  tools/perf/pmu-events/pmu-events.h            |   6 +
+>  tools/perf/util/metricgroup.c                 |   5 +-
+>  tools/perf/util/metricgroup.h                 |   3 +-
+>  7 files changed, 154 insertions(+), 159 deletions(-)
+>  delete mode 100644 tools/perf/pmu-events/jevents.h
+> 
+> -- 
+> 2.26.2
+> 
