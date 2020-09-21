@@ -1,23 +1,39 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] perf tools fixes for v5.9: 3rd batch
-Date: Wed, 16 Sep 2020 19:15:27 +0000
-Message-ID: <160028372723.18192.3648447354528059926.pr-tracker-bot@kernel.org>
-References: <20200916174433.1328420-1-acme@kernel.org>
+From: Al Grant <al.grant@foss.arm.com>
+Subject: [PATCH] perf: correct SNOOPX field offset
+Date: Mon, 21 Sep 2020 21:46:37 +0100
+Message-ID: <4ac9f5cc-4388-b34a-9999-418a4099415d@foss.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20200916174433.1328420-1-acme@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, David Sharp <dhsharp@google.com>, Henry Burns <henrywolfeburns@gmail.com>, Ian Rogers <irogers@google.com>, Qi Liu <liuqi115@huawei.com>, Stephane Eranian <eranian@google.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Language: en-GB
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, Alexander Shishkin <alexander.shishkin@linux.intel.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The pull request you sent on Wed, 16 Sep 2020 14:44:33 -0300:
+perf_event.h has macros that define the field offsets in the
+data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+were both 37. These are distinct fields, and the bitfield layout
+in perf_mem_data_src confirms that SNOOPX should be at offset 38.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-16
+Fixes: 52839e653b5629bd ("perf tools: Add support for printing new 
+mem_info encodings")
+Signed-off-by: Al Grant <al.grant@foss.arm.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+---
+  include/uapi/linux/perf_event.h | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5925fa68fe8244651b3f78a88c4af99190a88f0d
+diff --git a/include/uapi/linux/perf_event.h 
+b/include/uapi/linux/perf_event.h
+index 077e7ee69e3d..3e5dcdd48a49 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
 
-Thank you!
+  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+  /* 1 free */
+-#define PERF_MEM_SNOOPX_SHIFT  37
++#define PERF_MEM_SNOOPX_SHIFT  38
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+  /* locked instruction */
+  #define PERF_MEM_LOCK_NA       0x01 /* not available */
