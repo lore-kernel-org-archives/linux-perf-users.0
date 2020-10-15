@@ -1,236 +1,42 @@
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH] perf vendor events: Fix typos in power8 PMU events
-Date: Tue, 13 Oct 2020 09:24:36 -0300
-Message-ID: <20201013122436.GB560293@kernel.org>
-References: <20201012050205.328523-1-sandipan@linux.ibm.com>
- <badc113f-3024-1317-af16-c3714605ac74@linux.ibm.com>
+Subject: Re: perf test 67 dumps core on linux v5.9
+Date: Thu, 15 Oct 2020 13:31:40 -0300
+Message-ID: <20201015163140.GB308748@kernel.org>
+References: <a0474694-ab14-3131-0076-a67dba0586f1@linux.ibm.com>
+ <20201015125259.GB1461394@krava>
+ <7dab863f-6a2b-edf1-5049-9398cb53a68d@linux.ibm.com>
+ <20201015145044.GC1461394@krava>
+ <20201015150917.GD1461394@krava>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <badc113f-3024-1317-af16-c3714605ac74@linux.ibm.com>
-To: kajoljain <kjain@linux.ibm.com>
-Cc: Sandipan Das <sandipan@linux.ibm.com>, mpe@ellerman.id.au, ravi.bangoria@linux.ibm.com, sukadev@linux.vnet.ibm.com, maddy@linux.vnet.ibm.com, jolsa@redhat.com, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20201015150917.GD1461394@krava>
+To: Jiri Olsa <jolsa@redhat.com>
+Cc: Thomas Richter <tmricht@linux.ibm.com>, "linux-perf-use." <linux-perf-users@vger.kernel.org>, Sumanth Korikkar <sumanthk@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: linux-perf-users.vger.kernel.org
 
-Em Mon, Oct 12, 2020 at 01:21:26PM +0530, kajoljain escreveu:
-> 
-> 
-> On 10/12/20 10:32 AM, Sandipan Das wrote:
-> > This replaces the incorrectly spelled word "localtion"
-> > with "location" in some power8 PMU event descriptions.
-> 
-> Patch looks good to me, Thanks for correcting it.
-> 
-> Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+Em Thu, Oct 15, 2020 at 05:09:17PM +0200, Jiri Olsa escreveu:
+> ah when puting it on top of perf/core I found it's already fixed there:
+>   a55b7bb1c146 (tag: perf-tools-tests-v5.10-2020-09-28) perf test: Fix msan uninitialized use.
  
+> so we should be fine
 
-Thanks, applied.
+For 5.10, yes, but probably we need to send this to stable@ since Thomas
+reported it failing on v5.9.
 
-- Arnaldo
+Does a55b7bb1c146 have a Fixes: tag?
 
-> Thanks,
-> Kajol Jain
-> > 
-> > Fixes: 2a81fa3bb5ed ("perf vendor events: Add power8 PMU events")
-> > Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-> > ---
-> >  .../pmu-events/arch/powerpc/power8/cache.json    | 10 +++++-----
-> >  .../pmu-events/arch/powerpc/power8/frontend.json | 12 ++++++------
-> >  .../pmu-events/arch/powerpc/power8/marked.json   | 10 +++++-----
-> >  .../pmu-events/arch/powerpc/power8/other.json    | 16 ++++++++--------
-> >  .../arch/powerpc/power8/translation.json         |  2 +-
-> >  5 files changed, 25 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/tools/perf/pmu-events/arch/powerpc/power8/cache.json b/tools/perf/pmu-events/arch/powerpc/power8/cache.json
-> > index 6b792b2c87e2..05a17084d939 100644
-> > --- a/tools/perf/pmu-events/arch/powerpc/power8/cache.json
-> > +++ b/tools/perf/pmu-events/arch/powerpc/power8/cache.json
-> > @@ -32,8 +32,8 @@
-> >    {
-> >      "EventCode": "0x1c04e",
-> >      "EventName": "PM_DATA_FROM_L2MISS_MOD",
-> > -    "BriefDescription": "The processor's data cache was reloaded from a localtion other than the local core's L2 due to a demand load",
-> > -    "PublicDescription": "The processor's data cache was reloaded from a localtion other than the local core's L2 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> > +    "BriefDescription": "The processor's data cache was reloaded from a location other than the local core's L2 due to a demand load",
-> > +    "PublicDescription": "The processor's data cache was reloaded from a location other than the local core's L2 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x3c040",
-> > @@ -74,8 +74,8 @@
-> >    {
-> >      "EventCode": "0x4c04e",
-> >      "EventName": "PM_DATA_FROM_L3MISS_MOD",
-> > -    "BriefDescription": "The processor's data cache was reloaded from a localtion other than the local core's L3 due to a demand load",
-> > -    "PublicDescription": "The processor's data cache was reloaded from a localtion other than the local core's L3 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> > +    "BriefDescription": "The processor's data cache was reloaded from a location other than the local core's L3 due to a demand load",
-> > +    "PublicDescription": "The processor's data cache was reloaded from a location other than the local core's L3 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x3c042",
-> > @@ -134,7 +134,7 @@
-> >    {
-> >      "EventCode": "0x4e04e",
-> >      "EventName": "PM_DPTEG_FROM_L3MISS",
-> > -    "BriefDescription": "A Page Table Entry was loaded into the TLB from a localtion other than the local core's L3 due to a data side request",
-> > +    "BriefDescription": "A Page Table Entry was loaded into the TLB from a location other than the local core's L3 due to a data side request",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > diff --git a/tools/perf/pmu-events/arch/powerpc/power8/frontend.json b/tools/perf/pmu-events/arch/powerpc/power8/frontend.json
-> > index 1ddc30655d43..1c902a8263b6 100644
-> > --- a/tools/perf/pmu-events/arch/powerpc/power8/frontend.json
-> > +++ b/tools/perf/pmu-events/arch/powerpc/power8/frontend.json
-> > @@ -116,8 +116,8 @@
-> >    {
-> >      "EventCode": "0x1404e",
-> >      "EventName": "PM_INST_FROM_L2MISS",
-> > -    "BriefDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L2 due to an instruction fetch (not prefetch)",
-> > -    "PublicDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L2 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> > +    "BriefDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L2 due to an instruction fetch (not prefetch)",
-> > +    "PublicDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L2 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x34040",
-> > @@ -158,8 +158,8 @@
-> >    {
-> >      "EventCode": "0x4404e",
-> >      "EventName": "PM_INST_FROM_L3MISS_MOD",
-> > -    "BriefDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L3 due to a instruction fetch",
-> > -    "PublicDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L3 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> > +    "BriefDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L3 due to a instruction fetch",
-> > +    "PublicDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L3 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x34042",
-> > @@ -320,7 +320,7 @@
-> >    {
-> >      "EventCode": "0x1504e",
-> >      "EventName": "PM_IPTEG_FROM_L2MISS",
-> > -    "BriefDescription": "A Page Table Entry was loaded into the TLB from a localtion other than the local core's L2 due to a instruction side request",
-> > +    "BriefDescription": "A Page Table Entry was loaded into the TLB from a location other than the local core's L2 due to a instruction side request",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > @@ -344,7 +344,7 @@
-> >    {
-> >      "EventCode": "0x4504e",
-> >      "EventName": "PM_IPTEG_FROM_L3MISS",
-> > -    "BriefDescription": "A Page Table Entry was loaded into the TLB from a localtion other than the local core's L3 due to a instruction side request",
-> > +    "BriefDescription": "A Page Table Entry was loaded into the TLB from a location other than the local core's L3 due to a instruction side request",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > diff --git a/tools/perf/pmu-events/arch/powerpc/power8/marked.json b/tools/perf/pmu-events/arch/powerpc/power8/marked.json
-> > index 94dc58b83b7e..6de61a797bbd 100644
-> > --- a/tools/perf/pmu-events/arch/powerpc/power8/marked.json
-> > +++ b/tools/perf/pmu-events/arch/powerpc/power8/marked.json
-> > @@ -92,7 +92,7 @@
-> >    {
-> >      "EventCode": "0x4c12e",
-> >      "EventName": "PM_MRK_DATA_FROM_L2MISS_CYC",
-> > -    "BriefDescription": "Duration in cycles to reload from a localtion other than the local core's L2 due to a marked load",
-> > +    "BriefDescription": "Duration in cycles to reload from a location other than the local core's L2 due to a marked load",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > @@ -158,13 +158,13 @@
-> >    {
-> >      "EventCode": "0x201e4",
-> >      "EventName": "PM_MRK_DATA_FROM_L3MISS",
-> > -    "BriefDescription": "The processor's data cache was reloaded from a localtion other than the local core's L3 due to a marked load",
-> > +    "BriefDescription": "The processor's data cache was reloaded from a location other than the local core's L3 due to a marked load",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> >      "EventCode": "0x2d12e",
-> >      "EventName": "PM_MRK_DATA_FROM_L3MISS_CYC",
-> > -    "BriefDescription": "Duration in cycles to reload from a localtion other than the local core's L3 due to a marked load",
-> > +    "BriefDescription": "Duration in cycles to reload from a location other than the local core's L3 due to a marked load",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > @@ -392,7 +392,7 @@
-> >    {
-> >      "EventCode": "0x1f14e",
-> >      "EventName": "PM_MRK_DPTEG_FROM_L2MISS",
-> > -    "BriefDescription": "A Page Table Entry was loaded into the TLB from a localtion other than the local core's L2 due to a marked data side request",
-> > +    "BriefDescription": "A Page Table Entry was loaded into the TLB from a location other than the local core's L2 due to a marked data side request",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > @@ -416,7 +416,7 @@
-> >    {
-> >      "EventCode": "0x4f14e",
-> >      "EventName": "PM_MRK_DPTEG_FROM_L3MISS",
-> > -    "BriefDescription": "A Page Table Entry was loaded into the TLB from a localtion other than the local core's L3 due to a marked data side request",
-> > +    "BriefDescription": "A Page Table Entry was loaded into the TLB from a location other than the local core's L3 due to a marked data side request",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > diff --git a/tools/perf/pmu-events/arch/powerpc/power8/other.json b/tools/perf/pmu-events/arch/powerpc/power8/other.json
-> > index f4e760cab111..84a0cedf1fd9 100644
-> > --- a/tools/perf/pmu-events/arch/powerpc/power8/other.json
-> > +++ b/tools/perf/pmu-events/arch/powerpc/power8/other.json
-> > @@ -410,8 +410,8 @@
-> >    {
-> >      "EventCode": "0x61c04e",
-> >      "EventName": "PM_DATA_ALL_FROM_L2MISS_MOD",
-> > -    "BriefDescription": "The processor's data cache was reloaded from a localtion other than the local core's L2 due to either demand loads or data prefetch",
-> > -    "PublicDescription": "The processor's data cache was reloaded from a localtion other than the local core's L2 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> > +    "BriefDescription": "The processor's data cache was reloaded from a location other than the local core's L2 due to either demand loads or data prefetch",
-> > +    "PublicDescription": "The processor's data cache was reloaded from a location other than the local core's L2 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x63c040",
-> > @@ -470,8 +470,8 @@
-> >    {
-> >      "EventCode": "0x64c04e",
-> >      "EventName": "PM_DATA_ALL_FROM_L3MISS_MOD",
-> > -    "BriefDescription": "The processor's data cache was reloaded from a localtion other than the local core's L3 due to either demand loads or data prefetch",
-> > -    "PublicDescription": "The processor's data cache was reloaded from a localtion other than the local core's L3 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> > +    "BriefDescription": "The processor's data cache was reloaded from a location other than the local core's L3 due to either demand loads or data prefetch",
-> > +    "PublicDescription": "The processor's data cache was reloaded from a location other than the local core's L3 due to either only demand loads or demand loads plus prefetches if MMCR1[16] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x63c042",
-> > @@ -1280,8 +1280,8 @@
-> >    {
-> >      "EventCode": "0x51404e",
-> >      "EventName": "PM_INST_ALL_FROM_L2MISS",
-> > -    "BriefDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L2 due to instruction fetches and prefetches",
-> > -    "PublicDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L2 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> > +    "BriefDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L2 due to instruction fetches and prefetches",
-> > +    "PublicDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L2 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x534040",
-> > @@ -1340,8 +1340,8 @@
-> >    {
-> >      "EventCode": "0x54404e",
-> >      "EventName": "PM_INST_ALL_FROM_L3MISS_MOD",
-> > -    "BriefDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L3 due to a instruction fetch",
-> > -    "PublicDescription": "The processor's Instruction cache was reloaded from a localtion other than the local core's L3 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> > +    "BriefDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L3 due to a instruction fetch",
-> > +    "PublicDescription": "The processor's Instruction cache was reloaded from a location other than the local core's L3 due to either an instruction fetch or instruction fetch plus prefetch if MMCR1[17] is 1"
-> >    },
-> >    {
-> >      "EventCode": "0x534042",
-> > diff --git a/tools/perf/pmu-events/arch/powerpc/power8/translation.json b/tools/perf/pmu-events/arch/powerpc/power8/translation.json
-> > index 623e7475b010..a1657f5fdc6b 100644
-> > --- a/tools/perf/pmu-events/arch/powerpc/power8/translation.json
-> > +++ b/tools/perf/pmu-events/arch/powerpc/power8/translation.json
-> > @@ -44,7 +44,7 @@
-> >    {
-> >      "EventCode": "0x1e04e",
-> >      "EventName": "PM_DPTEG_FROM_L2MISS",
-> > -    "BriefDescription": "A Page Table Entry was loaded into the TLB from a localtion other than the local core's L2 due to a data side request",
-> > +    "BriefDescription": "A Page Table Entry was loaded into the TLB from a location other than the local core's L2 due to a data side request",
-> >      "PublicDescription": ""
-> >    },
-> >    {
-> > 
+Yes!
 
--- 
+[acme@five perf]$ git show a55b7bb1c146 | grep Fixes:
+    Fixes: commit f5a56570a3f2 ("perf test: Fix memory leaks in parse-metric test")
+[acme@five perf]$ git tag --contains f5a56570a3f2 | grep ^v | head -1
+v5.9
+[acme@five perf]$
+
+So v5.9.1 will probably get this automagically cherry-picked.
+
+Good.
 
 - Arnaldo
