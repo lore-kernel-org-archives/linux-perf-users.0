@@ -1,22 +1,50 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] perf tools changes for v5.11
-Date: Tue, 03 Nov 2020 21:51:11 +0000
-Message-ID: <160444027158.10573.9293757010281158003.pr-tracker-bot@kernel.org>
-References: <20201103194441.197821-1-acme@kernel.org>
+From: Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Omit test 68 for s390.
+Date: Wed,  4 Nov 2020 09:29:54 +0100
+Message-ID: <20201104082954.57338-1-tmricht@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20201103194441.197821-1-acme@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Jin Yao <yao.jin@linux.intel.com>, "Justin M . Forbes" <jforbes@fedoraproject.org>, Peter Zijlstra <peterz@infradead.org>, Song Liu <songliubraving@fb.com>, Stanislav Ivanichkin <sivanichkin@yandex-team.ru>, Tommi Rantala <tommi.t.rantala@nokia.com>, Arnaldo Carvalho de Melo <acme@redhat.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-The pull request you sent on Tue,  3 Nov 2020 16:44:41 -0300:
+Commit ed21d6d7c48e6e ("perf tests: Add test for PE binary format support")
+adds a WINDOWS EXE file named tests/pe-file.exe, which is
+examined by the test case 'PE file support'.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.10-2020-11-03
+This test reads the buildid from the file tests/pe-file.exe,
+which is a Portable Executable (PE) binary file used by the
+Windows operating system.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4ef8451b332662d004df269d4cdeb7d9f31419b5
+Since s390 does not support PE files, omit this test.
 
-Thank you!
+Output before:
+[root@t35lp46 perf]# ./perf test -F 68
+68: PE file support                               : Failed!
+[root@t35lp46 perf]#
 
+Output after:
+[root@t35lp46 perf]# ./perf test -F 68
+68: PE file support                               : Skip
+[root@t35lp46 perf]#
+
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/pe-file-parsing.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/pe-file-parsing.c b/tools/perf/tests/pe-file-parsing.c
+index 58b90c42eb38..4e45178c50f6 100644
+--- a/tools/perf/tests/pe-file-parsing.c
++++ b/tools/perf/tests/pe-file-parsing.c
+@@ -18,7 +18,7 @@
+ 
+ #include "tests.h"
+ 
+-#ifdef HAVE_LIBBFD_SUPPORT
++#if defined(HAVE_LIBBFD_SUPPORT) && !defined(__s390x__)
+ 
+ static int run_dir(const char *d)
+ {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.26.2
