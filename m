@@ -1,39 +1,70 @@
-From: Namhyung Kim <namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] perf_event_open.2: Update man page with recent changes
-Date: Thu,  5 Nov 2020 17:28:37 +0900
-Message-ID: <20201105082837.271636-1-namhyung@kernel.org>
+From: Alejandro Colomar <colomar.6.4.3@gmail.com>
+Subject: [PATCH v2] perf_event_open.2: Update man page with recent changes
+Date: Thu,  5 Nov 2020 16:30:10 +0100
+Message-ID: <20201105153009.36415-1-colomar.6.4.3@gmail.com>
+References: <20201105082837.271636-1-namhyung@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-man-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-To: Arnaldo Carvalho de Melo <acme-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-man-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Song Liu <songliubraving-b10kYP2dOMg@public.gmane.org>, Kan Liang <kan.liang-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Ian Rogers <irogers-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andi Kleen <ak-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-perf-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vince Weaver <vincent.weaver-e7X0jjDqjFGHXe+LvDLADg@public.gmane.org>, Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20201105082837.271636-1-namhyung@kernel.org>
+To: namhyung@kernel.org, mtk.manpages@gmail.com
+Cc: Namhyung Kim <namhyung@gmail.com>, acme@kernel.org, adrian.hunter@intel.com, ak@linux.intel.com, alexander.shishkin@linux.intel.com, eranian@google.com, irogers@google.com, jolsa@redhat.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, linux-man@vger.kernel.org, linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@kernel.org, peterz@infradead.org, songliubraving@fb.com, Alejandro Colomar <colomar.6.4.3@gmail.com>
 List-Id: linux-perf-users.vger.kernel.org
 
-From: Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Namhyung Kim <namhyung@gmail.com>
 
 There are lots of changes as usual.  I've tried to fill some missing
 bits in the man page but it'd be nice if you could take a look and put
 more info there.
 
-Signed-off-by: Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Namhyung Kim <namhyung@gmail.com>
+[colomar.6.4.3@gmail.com: ffix + tfix]
+Co-developed-by : Alejandro Colomar <colomar.6.4.3@gmail.com>
+Signed-off-by: Alejandro Colomar <colomar.6.4.3@gmail.com>
 ---
- man2/perf_event_open.2 | 262 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 260 insertions(+), 2 deletions(-)
+
+I wrapped a few lines, and did some formatting fixes to the patch.
+However, there are some parts where
+I found the text to be a bit unclear to me.
+Maybe you could rephrase them:
+- The paragraph right under 'write_backward'.
+- Text right under 'text_poke': "there's a changes"
+
+I would cheange
+[[
+    struct { u64 dev, inode } [nr_namespaces];
+]]
+to
+[[
+    struct {
+        u64 dev;
+        u64 inode;
+    } [nr_namespaces];
+]]
+Woudln't you?
+
+Thanks,
+
+Alex
+
+ man2/perf_event_open.2 | 265 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 263 insertions(+), 2 deletions(-)
 
 diff --git a/man2/perf_event_open.2 b/man2/perf_event_open.2
-index 72afafb50..e86adfa41 100644
+index 72afafb50..4adeccdde 100644
 --- a/man2/perf_event_open.2
 +++ b/man2/perf_event_open.2
-@@ -247,8 +247,15 @@ struct perf_event_attr {
+@@ -247,8 +247,17 @@ struct perf_event_attr {
                                     due to exec */
            use_clockid    :  1,  /* use clockid for time fields */
            context_switch :  1,  /* context switch data */
-+          write_backward :  1,  /* Write ring buffer from end to beginning */
++          write_backward :  1,  /* Write ring buffer from end
++                                   to beginning */
 +          namespaces     :  1,  /* include namespaces data */
 +          ksymbol        :  1,  /* include ksymbol events */
 +          bpf_event      :  1,  /* include bpf events */
-+          aux_output     :  1,  /* generate AUX records instead of events */
++          aux_output     :  1,  /* generate AUX records
++                                   instead of events */
 +          cgroup         :  1,  /* include cgroup events */
 +          text_poke      :  1,  /* include text poke events */
  
@@ -42,7 +73,7 @@ index 72afafb50..e86adfa41 100644
  
      union {
          __u32 wakeup_events;    /* wakeup every n events */
-@@ -854,6 +861,20 @@ is set higher than zero then the register
+@@ -854,6 +863,20 @@ is set higher than zero then the register
  values returned are those captured by
  hardware at the time of the sampled
  instruction's retirement.
@@ -63,55 +94,55 @@ index 72afafb50..e86adfa41 100644
  .RE
  .TP
  .IR "read_format"
-@@ -1189,6 +1210,47 @@ information even with strict
+@@ -1189,6 +1212,47 @@ information even with strict
  .I perf_event_paranoid
  settings.
  .TP
-+.IR "write_backward" " (since Linux 4.6)"
++.IR write_backward " (since Linux 4.6)"
 +.\" commit 9ecda41acb971ebd07c8fb35faf24005c0baea12
 +This makes the ring buffer is written from end to beginning.
 +This is to support reading from overwritable ring buffer.
 +.TP
-+.IR "namespaces" " (since Linux 4.11)"
++.IR namespaces " (since Linux 4.11)"
 +.\" commit e422267322cd319e2695a535e47c5b1feeac45eb
 +This enables the generation of
 +.B PERF_RECORD_NAMESPACES
-+records when a task is entering to a new namespace.  Each namespace has a
-+combination of device and inode numbers.
++records when a task is entering to a new namespace.
++Each namespace has a combination of device and inode numbers.
 +.TP
-+.IR "ksymbol" " (since Linux 5.0)"
++.IR ksymbol " (since Linux 5.0)"
 +.\" commit 76193a94522f1d4edf2447a536f3f796ce56343b
 +This enables the generation of
 +.B PERF_RECORD_KSYMBOL
 +records when a new kernel symbols are registered or unregistered.
 +This is analyzing dynamic kernel functions like eBPF.
 +.TP
-+.IR "bpf_event" " (since Linux 5.0)"
++.IR bpf_event " (since Linux 5.0)"
 +.\" commit 6ee52e2a3fe4ea35520720736e6791df1fb67106
 +This enables the generation of
 +.B PERF_RECORD_BPF_EVENT
 +records when a eBPF program is loaded or unloaded.
-+.IR "auxevent" " (since Linux 5.4)"
++.IR auxevent " (since Linux 5.4)"
 +.\" commit ab43762ef010967e4ccd53627f70a2eecbeafefb
 +This allows normal (non-AUX) events to generate data for AUX events
 +if the hardware supports it.
-+.IR "cgroup" " (since Linux 5.7)"
++.IR cgroup " (since Linux 5.7)"
 +.\" commit 96aaab686505c449e24d76e76507290dcc30e008
 +This enables the generation of
 +.B PERF_RECORD_CGROUP
 +records when a new cgroup is created (and activated).
 +.TR
-+.IR "text_poke" " (since Linux 5.8)"
++.IR text_poke " (since Linux 5.8)"
 +.\" commit e17d43b93e544f5016c0251d2074c15568d5d963
 +This enables the generation of
 +.B PERF_RECORD_TEXT_POKE
-+records when there's a changes to the kernel text (i.e. self-modifying
-+code).
++records when there's a changes to the kernel text
++(i.e. self-modifying code).
 +.TP
  .IR "wakeup_events" ", " "wakeup_watermark"
  This union sets how many samples
  .RI ( wakeup_events )
-@@ -2101,7 +2163,7 @@ struct {
+@@ -2101,7 +2165,7 @@ struct {
      u64    nr;          /* if PERF_SAMPLE_CALLCHAIN */
      u64    ips[nr];     /* if PERF_SAMPLE_CALLCHAIN */
      u32    size;        /* if PERF_SAMPLE_RAW */
@@ -120,7 +151,7 @@ index 72afafb50..e86adfa41 100644
      u64    bnr;         /* if PERF_SAMPLE_BRANCH_STACK */
      struct perf_branch_entry lbr[bnr];
                          /* if PERF_SAMPLE_BRANCH_STACK */
-@@ -2118,6 +2180,8 @@ struct {
+@@ -2118,6 +2182,8 @@ struct {
      u64    abi;         /* if PERF_SAMPLE_REGS_INTR */
      u64    regs[weight(mask)];
                          /* if PERF_SAMPLE_REGS_INTR */
@@ -129,7 +160,7 @@ index 72afafb50..e86adfa41 100644
  };
  .EE
  .in
-@@ -2744,6 +2808,200 @@ or next (if switching out) process on the CPU.
+@@ -2744,6 +2810,201 @@ or next (if switching out) process on the CPU.
  The thread ID of the previous (if switching in)
  or next (if switching out) thread on the CPU.
  .RE
@@ -137,7 +168,8 @@ index 72afafb50..e86adfa41 100644
 +.BR PERF_RECORD_NAMESPACES " (since Linux 4.11)"
 +.\" commit e422267322cd319e2695a535e47c5b1feeac45eb
 +This record includes various namespace information of a process.
-+.IP
++.RS
++.PP
 +.in +4n
 +.EX
 +struct {
@@ -150,7 +182,6 @@ index 72afafb50..e86adfa41 100644
 +};
 +.EE
 +.in
-+.RS
 +.TP
 +.I pid
 +is the process ID
@@ -160,15 +191,13 @@ index 72afafb50..e86adfa41 100644
 +.TP
 +.I nr_namespace
 +is the number of namespaces in this record
-+.RE
-+.IP
++.PP
 +Each namespace has
 +.I dev
 +and
 +.I inode
 +fields and is recorded in the
 +fixed position like below:
-+.RS
 +.TP
 +.BR NET_NS_INDEX = 0
 +Network namespace
@@ -196,7 +225,8 @@ index 72afafb50..e86adfa41 100644
 +.BR PERF_RECORD_KSYMBOL " (since Linux 5.0)"
 +.\" commit 76193a94522f1d4edf2447a536f3f796ce56343b
 +This record indicates kernel symbol register/unregister events.
-+.IP
++.RS
++.PP
 +.in +4n
 +.EX
 +struct {
@@ -210,7 +240,6 @@ index 72afafb50..e86adfa41 100644
 +};
 +.EE
 +.in
-+.RS
 +.TP
 +.I addr
 +is the address of the kernel symbol
@@ -219,7 +248,8 @@ index 72afafb50..e86adfa41 100644
 +is the length of the kernel symbol
 +.TP
 +.I ksym_type
-+is the type of the kernel symbol.  Currently following types are available:
++is the type of the kernel symbol.
++Currently following types are available:
 +.RS
 +.TP
 +.B PERF_RECORD_KSYMBOL_TYPE_BPF
@@ -235,7 +265,8 @@ index 72afafb50..e86adfa41 100644
 +.BR PERF_RECORD_BPF_EVENT " (since Linux 5.0)"
 +.\" commit 6ee52e2a3fe4ea35520720736e6791df1fb67106
 +This record indicates BPF program is loaded or unloaded.
-+.IP
++.RS
++.PP
 +.in +4n
 +.EX
 +struct {
@@ -248,7 +279,6 @@ index 72afafb50..e86adfa41 100644
 +};
 +.EE
 +.in
-+.RS
 +.TP
 +.I type
 +is one of the following values:
@@ -265,15 +295,17 @@ index 72afafb50..e86adfa41 100644
 +is the id of the BPF program.
 +.TP
 +.I tag
-+is the tag of the BPF program.  Currently
-+.BR BPF_TAG_SIZE
++is the tag of the BPF program.
++Currently,
++.B BPF_TAG_SIZE
 +is defined as 8.
 +.RE
 +.TP
 +.BR PERF_RECORD_CGROUP " (since Linux 5.7)"
 +.\" commit 96aaab686505c449e24d76e76507290dcc30e008
 +This record indicates a new cgroup is created and activated.
-+.IP
++.RS
++.PP
 +.in +4n
 +.EX
 +struct {
@@ -284,10 +316,10 @@ index 72afafb50..e86adfa41 100644
 +};
 +.EE
 +.in
-+.RS
 +.TP
 +.I id
-+is the cgroup identifier.  This can be also retreived by
++is the cgroup identifier.
++This can be also retreived by
 +.BR name_to_handle_at (2)
 +on the cgroup path (as a file handle).
 +.TP
@@ -297,10 +329,11 @@ index 72afafb50..e86adfa41 100644
 +.TP
 +.BR PERF_RECORD_TEXT_POKE " (since Linux 5.8)"
 +.\" commit e17d43b93e544f5016c0251d2074c15568d5d963
-+This record indicates a change in the kernel text.  This includes
-+addition and removal of the text and the corresponding length is zero
-+in this case.
-+.IP
++This record indicates a change in the kernel text.
++This includes addition and removal of the text
++and the corresponding length is zero in this case.
++.RS
++.PP
 +.in +4n
 +.EX
 +struct {
@@ -313,7 +346,6 @@ index 72afafb50..e86adfa41 100644
 +};
 +.EE
 +.in
-+.RS
 +.TP
 +.I addr
 +is the address of the change
@@ -331,4 +363,4 @@ index 72afafb50..e86adfa41 100644
  .SS Overflow handling
  Events can be set to notify when a threshold is crossed,
 -- 
-2.29.1.341.ge80a0c044ae-goog
+2.28.0
