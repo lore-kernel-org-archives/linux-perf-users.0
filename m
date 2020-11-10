@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH 09/12] perf topdown-paser: Add code generation API.
-Date: Tue, 10 Nov 2020 02:03:43 -0800
-Message-ID: <20201110100346.2527031-10-irogers@google.com>
+Subject: [RFC PATCH 02/12] perf topdown-parser: Add utility functions.
+Date: Tue, 10 Nov 2020 02:03:36 -0800
+Message-ID: <20201110100346.2527031-3-irogers@google.com>
 References: <20201110100346.2527031-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -14,157 +14,333 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Sandeep Dasgupta <sdasgup@google.com>
 
-Add API that is called to generate code using all registered targets.
+Basic string, ostream and file functions.
 
-Co-authored-by: Stephane Eranian <eranian@google.com>
+Co-authored-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Sandeep Dasgupta <sdasgup@google.com>
 ---
- .../topdown-parser/code_gen_target.cpp        | 51 ++++++++++++
- .../topdown-parser/code_gen_target.h          | 77 +++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100644 tools/perf/pmu-events/topdown-parser/code_gen_target.cpp
- create mode 100644 tools/perf/pmu-events/topdown-parser/code_gen_target.h
+ .../topdown-parser/general_utils.cpp          | 173 ++++++++++++++++++
+ .../pmu-events/topdown-parser/general_utils.h | 131 +++++++++++++
+ 2 files changed, 304 insertions(+)
+ create mode 100644 tools/perf/pmu-events/topdown-parser/general_utils.cpp
+ create mode 100644 tools/perf/pmu-events/topdown-parser/general_utils.h
 
-diff --git a/tools/perf/pmu-events/topdown-parser/code_gen_target.cpp b/tools/perf/pmu-events/topdown-parser/code_gen_target.cpp
+diff --git a/tools/perf/pmu-events/topdown-parser/general_utils.cpp b/tools/perf/pmu-events/topdown-parser/general_utils.cpp
 new file mode 100644
-index 000000000000..c6d7ce8eb661
+index 000000000000..810c27cf3724
 --- /dev/null
-+++ b/tools/perf/pmu-events/topdown-parser/code_gen_target.cpp
-@@ -0,0 +1,51 @@
++++ b/tools/perf/pmu-events/topdown-parser/general_utils.cpp
+@@ -0,0 +1,173 @@
 +/*
 + * Copyright 2020 Google LLC.
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#include "code_gen_target.h"
++#include "general_utils.h"
 +
-+#include "configuration.h"
++#include <dirent.h>
++#include <sys/stat.h>
++#include <unistd.h>
++
++#include <regex>
++#include <sstream>
++
++#include "logging.h"
 +
 +namespace topdown_parser
 +{
-+/**
-+ * Dump event list. Used for testing of auto-generation.
-+ */
-+bool g_DumpEvents = false;
-+
-+namespace
++std::string Trim(const std::string &str)
 +{
-+/**
-+ * `kRegisteredTargets` enumerates all the target supported by the
-+ * topdown generator tool. Each target is responsible for generating a
-+ * "code", which essentially encodes the topdown metric expressions, in
-+ * a particular language or format support.
-+ */
-+TargetInfo *kRegisteredTargets[] = {
-+	&kTargetPerfJson /* target to generate JSon code */,
-+};
++	const char *ws = " \t\n\r\f\v";
++	size_t endpos = str.find_last_not_of(ws);
++	if (endpos == std::string::npos)
++		return "";
 +
-+} // namespace
++	size_t startpos = str.find_first_not_of(ws);
++	return str.substr(startpos, endpos - startpos + 1);
++}
 +
-+void CodeGenTarget(
-+	const std::unordered_map<std::string, MappedData> &dependence_dag)
++std::vector<std::string> Split(const std::string &str, char delim)
 +{
-+	for (size_t i = 0;
-+	     i < sizeof(kRegisteredTargets) / sizeof(TargetInfo *); ++i) {
-+		const std::string &target_name = kRegisteredTargets[i]->name;
++	std::vector<std::string> tokens;
++	std::string token;
++	std::istringstream tokenStream(str);
++	while (std::getline(tokenStream, token, delim)) {
++		tokens.push_back(Trim(token));
++	}
++	return tokens;
++}
 +
-+		if (target_name == kConfigParams->target_) {
-+			kRegisteredTargets[i]->codegen_entry_point(
-+				dependence_dag);
-+			if (kRegisteredTargets[i]
-+				    ->codegen_test_harness_entry_point) {
-+				kRegisteredTargets[i]
-+					->codegen_test_harness_entry_point();
-+			}
-+			break;
++std::string Strip(const std::string &str, char delim)
++{
++	std::string retval("");
++	for (size_t i = 0; i < str.length(); ++i) {
++		if (str[i] != delim) {
++			retval += str[i];
 +		}
 +	}
++	return retval;
++}
++
++std::vector<std::string> WhitespaceSplit(const std::string &s)
++{
++	std::vector<std::string> split_tokens = Split(s, ' ');
++	std::vector<std::string> retval;
++	for (auto &split_token : split_tokens) {
++		if (split_token.empty() || split_token == " ") {
++			continue;
++		}
++		retval.push_back(split_token);
++	}
++	return retval;
++}
++
++bool IsOperator(const std::string &str)
++{
++	std::regex r(
++		"\\/|\\-|\\+|\\*|\\(|\\)|\\<|\\>|min|max|\\?|\\:|,|==|>=|<=|="
++		"|if|else|d_ratio|#Model|in|\\[|\\]");
++	return regex_match(Trim(str), r);
++}
++
++bool IsConstant(const std::string &str)
++{
++	std::regex integer("[-+]?[0-9]+");
++	std::regex floating("[-+]?[0-9]*\\.?[0-9]+");
++
++	return regex_match(str, integer) || regex_match(str, floating);
++}
++
++time_t GetTimestamp(const std::string &fname)
++{
++	struct stat st;
++	int ierr = stat(fname.c_str(), &st);
++	if (ierr != 0) {
++		ERROR("Error getting stat on file: " << fname);
++		return 0;
++	}
++	return st.st_mtime;
++}
++
++bool CheckDirPathExists(const std::string &dirname)
++{
++	return opendir(dirname.c_str()) != nullptr;
++}
++
++std::string ConvertToCIdentifier(const std::string &str)
++{
++	static const char *int_to_word[] = { "zero",  "one",  "two", "three",
++					     "four",  "five", "six", "seven",
++					     "eight", "nine" };
++	std::regex r("\\/|#|\\.|-|:|=");
++	std::string retval = regex_replace(str, r, "_");
++
++	std::smatch sm;
++	if (regex_match(retval, sm, std::regex("^([0-9])(.*)"))) {
++		auto digit = stoi(sm[1].str());
++		std::string word = int_to_word[digit];
++		std::string rest = sm[2].str();
++		return word + "_" + rest;
++	}
++	return retval;
++}
++
++std::string ToLower(const std::string &str)
++{
++	std::string retval("");
++
++	for (auto &c : str) {
++		retval.append(1, std::tolower(c));
++	}
++	return retval;
++}
++
++std::vector<std::string> NormalizeModel(const std::vector<std::string> &tokens,
++					const std::string &cpu)
++{
++	std::vector<std::string> retval;
++	// Track the event if encountering a '['
++	bool match_start = false;
++	// The evaluated value of the sub-expression #Model in ['CPUX' 'CPUY']
++	int condition = 0;
++
++	for (size_t i = 0; i < tokens.size(); ++i) {
++		// Skip keywords like "#Model" and "in"
++		if (tokens[i] == "#Model" || tokens[i] == "in") {
++			continue;
++		}
++		if (tokens[i] == "[") {
++			match_start = true;
++			continue;
++		}
++
++		if (tokens[i] == "]") {
++			retval.push_back(std::to_string(condition));
++			match_start = false;
++			continue;
++		}
++
++		if (match_start) {
++			if (cpu == Strip(tokens[i], '\'')) {
++				condition = condition | 1;
++			}
++			continue;
++		}
++
++		// Rest of tokens
++		retval.push_back(tokens[i]);
++	}
++
++	return retval;
++}
++
++std::string InjectSanityChecksAndReturn(const std::string &str)
++{
++	std::string injected_string =
++		std::string("double retval = ") + str + ";\n\n";
++	injected_string += "\treturn  retval < 0.0 ? 0.0 : retval;";
++
++	return injected_string;
 +}
 +
 +} // namespace topdown_parser
-diff --git a/tools/perf/pmu-events/topdown-parser/code_gen_target.h b/tools/perf/pmu-events/topdown-parser/code_gen_target.h
+diff --git a/tools/perf/pmu-events/topdown-parser/general_utils.h b/tools/perf/pmu-events/topdown-parser/general_utils.h
 new file mode 100644
-index 000000000000..ab3e2b48bebc
+index 000000000000..6e1213247011
 --- /dev/null
-+++ b/tools/perf/pmu-events/topdown-parser/code_gen_target.h
-@@ -0,0 +1,77 @@
++++ b/tools/perf/pmu-events/topdown-parser/general_utils.h
+@@ -0,0 +1,131 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
 +
-+// --------------------------------------------------
-+// File: code_gen_target.h
-+// --------------------------------------------------
++// ------------------------------------------------
++// File: general_utils.h
++// ------------------------------------------------
 +//
++// The header implements the interface of common utilities used by the
++// topdown generator.
 +
-+// The header provides the interface `CodeGenTarget` to generate code, encoding
-+// the topdown metric expressions, using the data `dependence_dag` read from
-+// the input csv file. The language or format of the generated code is the one
-+// supported by a specific project (e.g. perf or projects using perf ) to encode
-+// the topdown metric metric expressions. We define a `target` as a specific
-+// project and use that to guide generation of topdown code in a language
-+// supported by the project.
++#ifndef TOPDOWN_PARSER_GENERAL_UTILS_H_
++#define TOPDOWN_PARSER_GENERAL_UTILS_H_
 +
-+#ifndef TOPDOWN_PARSER_CODE_GEN_TARGET_H_
-+#define TOPDOWN_PARSER_CODE_GEN_TARGET_H_
-+
++#include <set>
 +#include <string>
-+#include <unordered_map>
++#include <unordered_set>
++#include <vector>
 +
 +namespace topdown_parser
 +{
-+class MappedData;
++/**
++ * Overloading << operators for various STL containers.
++ */
++template <typename T>
++std::ostream &operator<<(std::ostream &OS, std::vector<T> V)
++{
++	for (size_t i = 0; i < V.size(); ++i)
++		OS << V[i] << ",";
++
++	return OS;
++}
++
++template <typename T> std::ostream &operator<<(std::ostream &OS, std::set<T> V)
++{
++	for (auto &f : V)
++		OS << f << "|";
++
++	return OS;
++}
++
++template <typename T>
++std::ostream &operator<<(std::ostream &OS, std::unordered_set<T> V)
++{
++	for (auto &f : V)
++		OS << f << "|";
++
++	return OS;
++}
 +
 +/**
-+ * Dump event list. Used for testing of auto-generation.
++ * Function used for splitting a string 'str' based on a delimiter 'delim'.
 + */
-+extern bool g_DumpEvents;
++std::vector<std::string> Split(const std::string &str, char delim);
 +
 +/**
-+ * The structure `TargetInfo` is used to specify a target.
++ * Function used for
++ * (1) splitting a string 'str' based on a whitespace, and
++ * (2) pruning the splits resulting in empty string or string containing only
++ * whitespaces.
++ * Example: For an input string s = "a  b   d"
++ *  Result: {"a", "b", "c"}
 + */
-+struct TargetInfo {
-+	/**
-+	 * Name of the target. This will be used to invoke code generation for a
-+	 * particular target.
-+	 */
-+	std::string name;
-+
-+	/**
-+	 * Descriptive information of the target (Optional).
-+	 */
-+	std::string description;
-+
-+	/**
-+	 * The entry point function for generating code.
-+	 */
-+	void (*codegen_entry_point)(
-+		const std::unordered_map<std::string, MappedData>
-+			&dependence_dag);
-+
-+	/**
-+	 * Function to generate golden reference for testing the auto-generated
-+	 * code.
-+	 * (Optional)
-+	 */
-+	void (*codegen_test_harness_entry_point)();
-+};
++std::vector<std::string> WhitespaceSplit(const std::string &str);
 +
 +/**
-+ * Target information for generating JSon code for perf encoding the topdown
-+ * metric expressions.
++ * Trim removes the leading and trailing whitespaces of a string `str`.
 + */
-+extern TargetInfo kTargetPerfJson;
++std::string Trim(const std::string &str);
 +
 +/**
-+ * `CodeGenTarget` dispatches an appropriate callback, based on the
-+ * configuration variable `kConfigParams->target_`, to generate  "code" for a
-+ * particular target.
++ * Remove a char 'delim' from anywhere in string 'str'.
 + */
-+void CodeGenTarget(
-+	const std::unordered_map<std::string, MappedData> &dependence_dag);
++std::string Strip(const std::string &str, char delim);
++
++/**
++ * Check if the string `str` is an operator.
++ */
++bool IsOperator(const std::string &str);
++
++/**
++ * Check if the string `str` is an constant decimal numer or float.
++ */
++bool IsConstant(const std::string &);
++
++/**
++ * Returns timestamp of a file `fname`
++ */
++time_t GetTimestamp(const std::string &fname);
++
++/*
++ * Check if a directory path `dirname` exists
++ */
++bool CheckDirPathExists(const std::string &dirname);
++
++/**
++ * Convert an arbitrary string `str` to C identifier.
++ * It converts some characters like '#', '.', '-', '=' to '_', if appear
++ * anywhere in the string.
++ */
++std::string ConvertToCIdentifier(const std::string &str);
++
++/**
++ * Lowercase a string `str`
++ */
++std::string ToLower(const std::string &str);
++
++/**
++ * The input csv file might contain formula like
++ *    "Exp1 if #Model in ['CPUX' 'CPUY'] else Expr2 "
++ *  in a column specifying a list of CPUs as CPUX/CPUY/CPUZ
++ * We want to generate the following formulas for each cpu
++ *  For CPUX: Expr1 if 1 else Expr2
++ *  For CPUY: Expr1 if 1 else Expr2
++ *  For CPUZ: Expr1 if 0 else Expr2
++ *
++ *  `tokens`: A list of tokens representing the formula delimited by whitespace.
++ *  `cpu`: The CPU for which we want to generate the formula.
++ */
++std::vector<std::string> NormalizeModel(const std::vector<std::string> &tokens,
++					const std::string &cpu);
++
++/**
++ * `InjectSanityChecksAndReturn` converts a formula 'str'
++ * to
++ *  double retval = str < 0.0 ? 0.0 : str;
++ *  return retval;
++ */
++std::string InjectSanityChecksAndReturn(const std::string &str);
 +
 +} // namespace topdown_parser
 +
-+#endif // TOPDOWN_PARSER_CODE_GEN_TARGET_H_
++#endif // TOPDOWN_PARSER_GENERAL_UTILS_H_
 -- 
 2.29.2.222.g5d2a92d10f8-goog
