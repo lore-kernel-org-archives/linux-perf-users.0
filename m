@@ -1,7 +1,7 @@
 From: Ian Rogers <irogers@google.com>
-Subject: [RFC PATCH 11/12] perf topdown-parser: Main driver.
-Date: Tue, 10 Nov 2020 02:03:45 -0800
-Message-ID: <20201110100346.2527031-12-irogers@google.com>
+Subject: [RFC PATCH 09/12] perf topdown-paser: Add code generation API.
+Date: Tue, 10 Nov 2020 02:03:43 -0800
+Message-ID: <20201110100346.2527031-10-irogers@google.com>
 References: <20201110100346.2527031-1-irogers@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -14,193 +14,157 @@ List-Id: linux-perf-users.vger.kernel.org
 
 From: Sandeep Dasgupta <sdasgup@google.com>
 
-Invoke the necessary configuration reading and parsing, then code
-generation. Handles command line arguments.
-Add a minor README.
+Add API that is called to generate code using all registered targets.
 
 Co-authored-by: Stephane Eranian <eranian@google.com>
-Co-authored-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Sandeep Dasgupta <sdasgup@google.com>
 ---
- tools/perf/pmu-events/topdown-parser/README   |   5 +
- .../topdown-parser/topdown_parser_main.cpp    | 155 ++++++++++++++++++
- 2 files changed, 160 insertions(+)
- create mode 100644 tools/perf/pmu-events/topdown-parser/README
- create mode 100644 tools/perf/pmu-events/topdown-parser/topdown_parser_main.cpp
+ .../topdown-parser/code_gen_target.cpp        | 51 ++++++++++++
+ .../topdown-parser/code_gen_target.h          | 77 +++++++++++++++++++
+ 2 files changed, 128 insertions(+)
+ create mode 100644 tools/perf/pmu-events/topdown-parser/code_gen_target.cpp
+ create mode 100644 tools/perf/pmu-events/topdown-parser/code_gen_target.h
 
-diff --git a/tools/perf/pmu-events/topdown-parser/README b/tools/perf/pmu-events/topdown-parser/README
+diff --git a/tools/perf/pmu-events/topdown-parser/code_gen_target.cpp b/tools/perf/pmu-events/topdown-parser/code_gen_target.cpp
 new file mode 100644
-index 000000000000..7f100792b00c
+index 000000000000..c6d7ce8eb661
 --- /dev/null
-+++ b/tools/perf/pmu-events/topdown-parser/README
-@@ -0,0 +1,5 @@
-+Topdown parser and code generator
-+=================================
-+
-+The topdown parser processes a TMA_Metrics.csv file and generates
-+Intel specific metrics from the data in the spreadsheet cells.
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/topdown-parser/topdown_parser_main.cpp b/tools/perf/pmu-events/topdown-parser/topdown_parser_main.cpp
-new file mode 100644
-index 000000000000..ba9acd32726e
---- /dev/null
-+++ b/tools/perf/pmu-events/topdown-parser/topdown_parser_main.cpp
-@@ -0,0 +1,155 @@
++++ b/tools/perf/pmu-events/topdown-parser/code_gen_target.cpp
+@@ -0,0 +1,51 @@
 +/*
 + * Copyright 2020 Google LLC.
 + * SPDX-License-Identifier: GPL-2.0
 + */
 +
-+#include <getopt.h>
-+#include <stdlib.h>
-+
-+#include <iostream>
-+#include <string>
-+#include <unordered_map>
-+#include <vector>
-+
 +#include "code_gen_target.h"
++
 +#include "configuration.h"
-+#include "csvreader.h"
-+#include "dependence_dag_utils.h"
-+#include "event_info.h"
-+#include "logging.h"
 +
 +namespace topdown_parser
 +{
++/**
++ * Dump event list. Used for testing of auto-generation.
++ */
++bool g_DumpEvents = false;
++
 +namespace
 +{
 +/**
-+ * Printing usage model
++ * `kRegisteredTargets` enumerates all the target supported by the
++ * topdown generator tool. Each target is responsible for generating a
++ * "code", which essentially encodes the topdown metric expressions, in
++ * a particular language or format support.
 + */
-+[[noreturn]] void ShowUsage()
-+{
-+	std::cout
-+		<< "\n"
-+		   " Usage: topdown_parser  --csv-file <csv input file>\n"
-+		   "                         --events-data-dir <path of event "
-+		   "encoding JSon files>\n"
-+		   "                         --config-file <path to "
-+		   "configuration.json>\n"
-+		   "                         --output-path <path to "
-+		   "output the topdown file(s)>\n"
-+		   "                         [Options]\n"
-+		   " Synopsis: Auto-generates topdown.c \n\n"
-+		   " Options\n"
-+		   "\t--dump-events :    Dump the unique events for each metric.\n"
-+		   "generated topdown file. Used for testing.\n"
-+		   "\t--help        :    Show help\n";
-+	exit(0);
-+}
-+
-+/**
-+ * The input csv file name specifying formula encoding for topdown
-+ * metric
-+ */
-+char *g_CsvFile = nullptr;
-+
-+/**
-+ * ProcessArgs parses command-line arguments
-+ */
-+bool ProcessArgs(int argc, char **argv)
-+{
-+	// The following command-line arguments to the program
-+	// todown_parser are required: --csv-file <file>,
-+	// --events-data-dir <dir>, --config-file <file> --output-path
-+	// <path>
-+	if (argc < 9) {
-+		ShowUsage();
-+		return false;
-+	}
-+
-+	const char *const short_opts = "f:a:z:hdt";
-+	const option long_opts[] = {
-+		{ "csv-file", required_argument, nullptr, 'f' },
-+		{ "events-data-dir", required_argument, nullptr, 'a' },
-+		{ "config-file", required_argument, nullptr, 'z' },
-+		{ "output-path", required_argument, nullptr, 'o' },
-+		{ "dump-events", no_argument, nullptr, 'd' },
-+		{ "help", no_argument, nullptr, 'h' },
-+		{ nullptr, no_argument, nullptr, 0 }
-+	};
-+
-+	while (true) {
-+		const auto opt =
-+			getopt_long(argc, argv, short_opts, long_opts, nullptr);
-+
-+		if (opt == -1)
-+			break;
-+
-+		switch (opt) {
-+		case 'f':
-+			g_CsvFile = optarg;
-+			break;
-+
-+		case 'a':
-+			kConfigParams->event_data_dir_ = optarg;
-+			kConfigParams->event_data_dir_ += "/";
-+			break;
-+
-+		case 'z':
-+			kConfigParams->config_file_ = optarg;
-+			break;
-+
-+		case 'o':
-+			kConfigParams->output_path_ = optarg;
-+			break;
-+
-+		case 'd':
-+			g_DumpEvents = true;
-+			break;
-+
-+		case 'h':
-+		case '?':
-+		default:
-+			ShowUsage();
-+			return false;
-+		}
-+	}
-+
-+	INFO("csv filename: |" << g_CsvFile << "|");
-+	INFO("events data dir: |" << kConfigParams->event_data_dir_ << "|");
-+	INFO("config file : |" << kConfigParams->config_file_ << "|");
-+	return true;
-+}
++TargetInfo *kRegisteredTargets[] = {
++	&kTargetPerfJson /* target to generate JSon code */,
++};
 +
 +} // namespace
 +
++void CodeGenTarget(
++	const std::unordered_map<std::string, MappedData> &dependence_dag)
++{
++	for (size_t i = 0;
++	     i < sizeof(kRegisteredTargets) / sizeof(TargetInfo *); ++i) {
++		const std::string &target_name = kRegisteredTargets[i]->name;
++
++		if (target_name == kConfigParams->target_) {
++			kRegisteredTargets[i]->codegen_entry_point(
++				dependence_dag);
++			if (kRegisteredTargets[i]
++				    ->codegen_test_harness_entry_point) {
++				kRegisteredTargets[i]
++					->codegen_test_harness_entry_point();
++			}
++			break;
++		}
++	}
++}
++
 +} // namespace topdown_parser
+diff --git a/tools/perf/pmu-events/topdown-parser/code_gen_target.h b/tools/perf/pmu-events/topdown-parser/code_gen_target.h
+new file mode 100644
+index 000000000000..ab3e2b48bebc
+--- /dev/null
++++ b/tools/perf/pmu-events/topdown-parser/code_gen_target.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++// --------------------------------------------------
++// File: code_gen_target.h
++// --------------------------------------------------
++//
++
++// The header provides the interface `CodeGenTarget` to generate code, encoding
++// the topdown metric expressions, using the data `dependence_dag` read from
++// the input csv file. The language or format of the generated code is the one
++// supported by a specific project (e.g. perf or projects using perf ) to encode
++// the topdown metric metric expressions. We define a `target` as a specific
++// project and use that to guide generation of topdown code in a language
++// supported by the project.
++
++#ifndef TOPDOWN_PARSER_CODE_GEN_TARGET_H_
++#define TOPDOWN_PARSER_CODE_GEN_TARGET_H_
++
++#include <string>
++#include <unordered_map>
++
++namespace topdown_parser
++{
++class MappedData;
 +
 +/**
-+ * Main driver function for generating topdown files.
++ * Dump event list. Used for testing of auto-generation.
 + */
-+int main(int argc, char *argv[])
-+{
-+	bool process_arg_stat = topdown_parser::ProcessArgs(argc, argv);
-+	if (!process_arg_stat) {
-+		FATAL("Failed to process the command-line arguments");
-+	}
++extern bool g_DumpEvents;
 +
-+	// Read the configuration file "configuration.json"
-+	int read_config_stat = topdown_parser::ReadConfig();
-+	if (read_config_stat != 0) {
-+		FATAL("Failed to read configuration file");
-+	}
++/**
++ * The structure `TargetInfo` is used to specify a target.
++ */
++struct TargetInfo {
++	/**
++	 * Name of the target. This will be used to invoke code generation for a
++	 * particular target.
++	 */
++	std::string name;
 +
-+	// Read the input csv file
-+	topdown_parser::CsvReader reader(topdown_parser::g_CsvFile);
-+	std::vector<std::vector<std::string> > records = reader.getData();
-+	std::unordered_map<std::string, topdown_parser::MappedData>
-+		dependence_dag = topdown_parser::ProcessRecords(&records);
++	/**
++	 * Descriptive information of the target (Optional).
++	 */
++	std::string description;
 +
-+	// Read and process the json files specifying the event encodings
-+	topdown_parser::ProcessEventEncodings();
++	/**
++	 * The entry point function for generating code.
++	 */
++	void (*codegen_entry_point)(
++		const std::unordered_map<std::string, MappedData>
++			&dependence_dag);
 +
-+	// Generate topdown files for a specific target (or purpose)
-+	topdown_parser::CodeGenTarget(dependence_dag);
++	/**
++	 * Function to generate golden reference for testing the auto-generated
++	 * code.
++	 * (Optional)
++	 */
++	void (*codegen_test_harness_entry_point)();
++};
 +
-+	return 0;
-+}
++/**
++ * Target information for generating JSon code for perf encoding the topdown
++ * metric expressions.
++ */
++extern TargetInfo kTargetPerfJson;
++
++/**
++ * `CodeGenTarget` dispatches an appropriate callback, based on the
++ * configuration variable `kConfigParams->target_`, to generate  "code" for a
++ * particular target.
++ */
++void CodeGenTarget(
++	const std::unordered_map<std::string, MappedData> &dependence_dag);
++
++} // namespace topdown_parser
++
++#endif // TOPDOWN_PARSER_CODE_GEN_TARGET_H_
 -- 
 2.29.2.222.g5d2a92d10f8-goog
