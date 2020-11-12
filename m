@@ -1,352 +1,270 @@
-From: Alejandro Colomar <alx.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] perf_event_open.2: Update man page with recent changes
-Date: Thu, 12 Nov 2020 11:32:41 +0100
-Message-ID: <20201112103240.18363-1-alx.manpages@gmail.com>
-References: <CAM9d7cgO78XbErZU8VVSOHyf8_L+O1FVXcwD=H4z-9AptyPEJg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-man-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM9d7cgO78XbErZU8VVSOHyf8_L+O1FVXcwD=H4z-9AptyPEJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-To: Michael Kerrisk-manpages <mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Namhyung Kim <namhyung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnaldo Carvalho de Melo <acme-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alejandro Colomar <colomar.6.4.3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andi Kleen <ak-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephane Eranian <eranian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Ian Rogers <irogers-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jiri Olsa <jolsa-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kan Liang <kan.liang-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-man-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-perf-users <linux-perf-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Song Liu <songliubraving-b10kYP2dOMg@public.gmane.org>, Alejandro Colomar <alx.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Id: linux-perf-users.vger.kernel.org
+Return-Path: <linux-perf-users-owner@kernel.org>
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-korg-lkml-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE236C5519F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Nov 2020 15:18:19 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.kernel.org (Postfix) with ESMTP id 8186522240
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Nov 2020 15:18:19 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1728570AbgKLPST (ORCPT
+        <rfc822;linux-perf-users@archiver.kernel.org>);
+        Thu, 12 Nov 2020 10:18:19 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:2095 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728563AbgKLPSS (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 12 Nov 2020 10:18:18 -0500
+Received: from fraeml736-chm.china.huawei.com (unknown [172.18.147.201])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4CX4v96klrz67D5r;
+        Thu, 12 Nov 2020 23:16:37 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml736-chm.china.huawei.com (10.206.15.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Thu, 12 Nov 2020 16:18:15 +0100
+Received: from [10.47.81.47] (10.47.81.47) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 12 Nov
+ 2020 15:18:14 +0000
+Subject: Re: [PATCH V2 2/3] perf tools: Replace aggregation ID with a struct
+To:     James Clark <james.clark@arm.com>,
+        <linux-perf-users@vger.kernel.org>, <jolsa@redhat.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        "Alexey Budankov" <alexey.budankov@linux.intel.com>
+References: <20201004203545.GB217601@krava>
+ <20201028094311.8563-1-james.clark@arm.com>
+ <20201028094311.8563-3-james.clark@arm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <0024879f-d326-966d-86b0-8cda91483bfe@huawei.com>
+Date:   Thu, 12 Nov 2020 15:18:05 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20201028094311.8563-3-james.clark@arm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.81.47]
+X-ClientProxiedBy: lhreml748-chm.china.huawei.com (10.201.108.198) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
+Precedence: bulk
+List-ID: <linux-perf-users.vger.kernel.org>
+X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-There are lots of changes as usual.  I've tried to fill some missing
-bits in the man page but it'd be nice if you could take a look and put
-more info there.
+>   
+> +static void cpu_aggr_map__delete(struct cpu_aggr_map *map)
+> +{
+> +	if (map) {
 
-Signed-off-by: Namhyung Kim <namhyung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-[alx: ffix + tfix]
-Cowritten-by : Alejandro Colomar <alx.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Alejandro Colomar <alx.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+is this check just paranoia?
 
-Hi Namhyung,
+> +		WARN_ONCE(refcount_read(&map->refcnt) != 0,
+> +			  "cpu_aggr_map refcnt unbalanced\n");
 
-I fixed a few more typos,
-and changed a bit the formatting.
+and this?
 
-Cheers,
+> +		free(map);
+> +	}
+> +}
+> +
+> +static void cpu_aggr_map__put(struct cpu_aggr_map *map)
+> +{
+> +	if (map && refcount_dec_and_test(&map->refcnt))
+> +		cpu_aggr_map__delete(map);
+> +}
+> +
+>   static void perf_stat__exit_aggr_mode(void)
 
-Alex
+...
 
- man2/perf_event_open.2 | 266 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 264 insertions(+), 2 deletions(-)
+>   
+> +struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr)
+> +{
+> +	struct cpu_aggr_map *cpus = malloc(sizeof(*cpus) + sizeof(struct aggr_cpu_id) * nr);
+> +
 
-diff --git a/man2/perf_event_open.2 b/man2/perf_event_open.2
-index 4d93a0be2..9a3e37bf6 100644
---- a/man2/perf_event_open.2
-+++ b/man2/perf_event_open.2
-@@ -247,8 +247,17 @@ struct perf_event_attr {
-                                    due to exec */
-           use_clockid    :  1,  /* use clockid for time fields */
-           context_switch :  1,  /* context switch data */
-+          write_backward :  1,  /* Write ring buffer from end
-+                                   to beginning */
-+          namespaces     :  1,  /* include namespaces data */
-+          ksymbol        :  1,  /* include ksymbol events */
-+          bpf_event      :  1,  /* include bpf events */
-+          aux_output     :  1,  /* generate AUX records
-+                                   instead of events */
-+          cgroup         :  1,  /* include cgroup events */
-+          text_poke      :  1,  /* include text poke events */
- 
--          __reserved_1   : 37;
-+          __reserved_1   : 30;
- 
-     union {
-         __u32 wakeup_events;    /* wakeup every n events */
-@@ -875,6 +884,20 @@ is set higher than zero then the register
- values returned are those captured by
- hardware at the time of the sampled
- instruction's retirement.
-+.TP
-+.BR PERF_SAMPLE_PHYS_ADDR " (since Linux 4.13)"
-+.\" commit fc7ce9c74c3ad232b084d80148654f926d01ece7
-+Records physical address of data like in
-+.B PERF_SAMPLE_ADDR .
-+.TP
-+.BR PERF_SAMPLE_CGROUP " (since Linux 5.7)"
-+.\" commit 96aaab686505c449e24d76e76507290dcc30e008
-+Records (perf_event) cgroup id of the process.
-+This corresponds to the
-+.I id
-+field in the
-+.B PERF_RECORD_CGROUP
-+event.
- .RE
- .TP
- .I read_format
-@@ -1218,6 +1241,48 @@ information even with strict
- .I perf_event_paranoid
- settings.
- .TP
-+.IR write_backward " (since Linux 4.6)"
-+.\" commit 9ecda41acb971ebd07c8fb35faf24005c0baea12
-+This makes the ring buffer is written from end to beginning.
-+This is to support reading from overwritable ring buffer.
-+.TP
-+.IR namespaces " (since Linux 4.11)"
-+.\" commit e422267322cd319e2695a535e47c5b1feeac45eb
-+This enables the generation of
-+.B PERF_RECORD_NAMESPACES
-+records when a task is entering to a new namespace.
-+Each namespace has a combination of device and inode numbers.
-+.TP
-+.IR ksymbol " (since Linux 5.0)"
-+.\" commit 76193a94522f1d4edf2447a536f3f796ce56343b
-+This enables the generation of
-+.B PERF_RECORD_KSYMBOL
-+records when a new kernel symbols are registered or unregistered.
-+This is analyzing dynamic kernel functions like eBPF.
-+.TP
-+.IR bpf_event " (since Linux 5.0)"
-+.\" commit 6ee52e2a3fe4ea35520720736e6791df1fb67106
-+This enables the generation of
-+.B PERF_RECORD_BPF_EVENT
-+records when a eBPF program is loaded or unloaded.
-+.TP
-+.IR auxevent " (since Linux 5.4)"
-+.\" commit ab43762ef010967e4ccd53627f70a2eecbeafefb
-+This allows normal (non-AUX) events to generate data for AUX events
-+if the hardware supports it.
-+.IR cgroup " (since Linux 5.7)"
-+.\" commit 96aaab686505c449e24d76e76507290dcc30e008
-+This enables the generation of
-+.B PERF_RECORD_CGROUP
-+records when a new cgroup is created (and activated).
-+.TP
-+.IR text_poke " (since Linux 5.8)"
-+.\" commit e17d43b93e544f5016c0251d2074c15568d5d963
-+This enables the generation of
-+.B PERF_RECORD_TEXT_POKE
-+records when there's a changes to the kernel text
-+(i.e. self-modifying code).
-+.TP
- .IR wakeup_events ", " wakeup_watermark
- .RS
- This union sets how many samples
-@@ -2132,7 +2197,7 @@ struct {
-     u64    nr;          /* if PERF_SAMPLE_CALLCHAIN */
-     u64    ips[nr];     /* if PERF_SAMPLE_CALLCHAIN */
-     u32    size;        /* if PERF_SAMPLE_RAW */
--    char  data[size];   /* if PERF_SAMPLE_RAW */
-+    char   data[size];  /* if PERF_SAMPLE_RAW */
-     u64    bnr;         /* if PERF_SAMPLE_BRANCH_STACK */
-     struct perf_branch_entry lbr[bnr];
-                         /* if PERF_SAMPLE_BRANCH_STACK */
-@@ -2149,6 +2214,8 @@ struct {
-     u64    abi;         /* if PERF_SAMPLE_REGS_INTR */
-     u64    regs[weight(mask)];
-                         /* if PERF_SAMPLE_REGS_INTR */
-+    u64    phys_addr;   /* if PERF_SAMPLE_PHYS_ADDR */
-+    u64    cgroup;      /* if PERF_SAMPLE_CGROUP */
- };
- .EE
- .in
-@@ -2775,6 +2842,201 @@ or next (if switching out) process on the CPU.
- The thread ID of the previous (if switching in)
- or next (if switching out) thread on the CPU.
- .RE
-+.TP
-+.BR PERF_RECORD_NAMESPACES " (since Linux 4.11)"
-+.\" commit e422267322cd319e2695a535e47c5b1feeac45eb
-+.RS
-+This record includes various namespace information of a process.
-+.PP
-+.RS 4
-+.EX
-+struct {
-+    struct perf_event_header header;
-+    u32 pid;
-+    u32 tid;
-+    u64 nr_namespaces;
-+    struct { u64 dev, inode } [nr_namespaces];
-+    struct sample_id sample_id;
-+};
-+.EE
-+.RE
-+.TP
-+.I pid
-+is the process ID
-+.TP
-+.I tid
-+is the thread ID
-+.TP
-+.I nr_namespace
-+is the number of namespaces in this record
-+.PP
-+Each namespace has
-+.I dev
-+and
-+.I inode
-+fields and is recorded in the
-+fixed position like below:
-+.TP
-+.BR NET_NS_INDEX = 0
-+Network namespace
-+.TP
-+.BR UTS_NS_INDEX = 1
-+UTS namespace
-+.TP
-+.BR IPC_NS_INDEX = 2
-+IPC namespace
-+.TP
-+.BR PID_NS_INDEX = 3
-+PID namespace
-+.TP
-+.BR USER_NS_INDEX = 4
-+User namespace
-+.TP
-+.BR MNT_NS_INDEX = 5
-+Mount namespace
-+.TP
-+.BR CGROUP_NS_INDEX = 6
-+Cgroup namespace
-+.PP
-+.RE
-+.TP
-+.BR PERF_RECORD_KSYMBOL " (since Linux 5.0)"
-+.\" commit 76193a94522f1d4edf2447a536f3f796ce56343b
-+.RS
-+This record indicates kernel symbol register/unregister events.
-+.PP
-+.RS 4
-+.EX
-+struct {
-+    struct perf_event_header header;
-+    u64 addr;
-+    u32 len;
-+    u16 ksym_type;
-+    u16 flags;
-+    char name[];
-+    struct sample_id sample_id;
-+};
-+.EE
-+.RE
-+.TP
-+.I addr
-+is the address of the kernel symbol
-+.TP
-+.I len
-+is the length of the kernel symbol
-+.TP
-+.I ksym_type
-+.RS
-+is the type of the kernel symbol.
-+Currently following types are available:
-+.TP
-+.B PERF_RECORD_KSYMBOL_TYPE_BPF
-+The kernel symbols is a BPF function.
-+.RE
-+.TP
-+.I flags
-+If the
-+.B PERF_RECORD_KSYMBOL_FLAGS_UNREGISTER
-+is set, then this event is for unregistering the kernel symbol.
-+.RE
-+.TP
-+.BR PERF_RECORD_BPF_EVENT " (since Linux 5.0)"
-+.\" commit 6ee52e2a3fe4ea35520720736e6791df1fb67106
-+.RS
-+This record indicates BPF program is loaded or unloaded.
-+.PP
-+.RS 4
-+.EX
-+struct {
-+    struct perf_event_header header;
-+    u16 type;
-+    u16 flags;
-+    u32 id;
-+    u8 tag[BPF_TAG_SIZE];
-+    struct sample_id sample_id;
-+};
-+.EE
-+.RE
-+.TP
-+.I type
-+.RS
-+is one of the following values:
-+.TP
-+.B PERF_BPF_EVENT_PROG_LOAD
-+A BPF program is loaded
-+.TP
-+.B PERF_BPF_EVENT_PROG_UNLOAD
-+A BPF program is unloaded
-+.RE
-+.TP
-+.I id
-+is the id of the BPF program.
-+.TP
-+.I tag
-+is the tag of the BPF program.
-+Currently,
-+.B BPF_TAG_SIZE
-+is defined as 8.
-+.RE
-+.TP
-+.BR PERF_RECORD_CGROUP " (since Linux 5.7)"
-+.\" commit 96aaab686505c449e24d76e76507290dcc30e008
-+.RS
-+This record indicates a new cgroup is created and activated.
-+.PP
-+.RS 4
-+.EX
-+struct {
-+    struct perf_event_header header;
-+    u64 id;
-+    char path[];
-+    struct sample_id sample_id;
-+};
-+.EE
-+.RE
-+.TP
-+.I id
-+is the cgroup identifier.
-+This can be also retreived by
-+.BR name_to_handle_at (2)
-+on the cgroup path (as a file handle).
-+.TP
-+.I path
-+is the path of the cgroup from the root.
-+.RE
-+.TP
-+.BR PERF_RECORD_TEXT_POKE " (since Linux 5.8)"
-+.\" commit e17d43b93e544f5016c0251d2074c15568d5d963
-+.RS
-+This record indicates a change in the kernel text.
-+This includes addition and removal of the text
-+and the corresponding length is zero in this case.
-+.PP
-+.RS 4
-+.EX
-+struct {
-+    struct perf_event_header header;
-+    u64 addr;
-+    u16 old_len;
-+    u16 new_len;
-+    u8 bytes[];
-+    struct sample_id sample_id;
-+};
-+.EE
-+.RE
-+.TP
-+.I addr
-+is the address of the change
-+.TP
-+.I old_len
-+is the old length
-+.TP
-+.I new_len
-+is the new length
-+.TP
-+.I bytes
-+contains old bytes immediately followed by new bytes.
-+.RE
- .RE
- .SS Overflow handling
- Events can be set to notify when a threshold is crossed,
--- 
-2.28.0
+if (!cpus)
+	return NULL
+
+cpus->nr = nr;
+...
+
+this avoids extra indentation and {}
+
+> +	if (cpus != NULL) {
+> +		int i;
+> +
+> +		cpus->nr = nr;
+> +		for (i = 0; i < nr; i++)
+> +			cpus->map[i] = cpu_map__empty_aggr_cpu_id();
+> +
+> +		refcount_set(&cpus->refcnt, 1);
+> +	}
+> +
+> +	return cpus;
+> +}
+> +
+>   static int cpu__get_topology_int(int cpu, const char *name, int *value)
+>   {
+>   	char path[PATH_MAX];
+> @@ -111,40 +128,47 @@ int cpu_map__get_socket_id(int cpu)
+>   	return ret ?: value;
+>   }
+>   
+> -int cpu_map__get_socket(struct perf_cpu_map *map, int idx, void *data __maybe_unused)
+> +struct aggr_cpu_id cpu_map__get_socket(struct perf_cpu_map *map, int idx,
+> +					void *data __maybe_unused)
+>   {
+>   	int cpu;
+> +	struct aggr_cpu_id socket = cpu_map__empty_aggr_cpu_id();
+>   
+>   	if (idx > map->nr)
+> -		return -1;
+> +		return cpu_map__empty_aggr_cpu_id();
+>   
+>   	cpu = map->map[idx];
+>   
+> -	return cpu_map__get_socket_id(cpu);
+> +	socket.id = cpu_map__get_socket_id(cpu);
+> +	return socket;
+>   }
+>   
+> -static int cmp_ids(const void *a, const void *b)
+> +static int cmp_aggr_cpu_id(const void *a_pointer, const void *b_pointer)
+>   {
+> -	return *(int *)a - *(int *)b;
+> +	struct aggr_cpu_id *a = (struct aggr_cpu_id *)a_pointer;
+> +	struct aggr_cpu_id *b = (struct aggr_cpu_id *)b_pointer;
+> +
+> +	return a->id - b->id;
+>   }
+>   
+> -int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
+> -		       int (*f)(struct perf_cpu_map *map, int cpu, void *data),
+> +int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
+> +		       struct aggr_cpu_id (*f)(struct perf_cpu_map *map, int cpu, void *data),
+>   		       void *data)
+>   {
+> -	struct perf_cpu_map *c;
+> +	struct cpu_aggr_map *c;
+>   	int nr = cpus->nr;
+> -	int cpu, s1, s2;
+> +	int cpu, s2;
+> +	struct aggr_cpu_id s1;
+>   
+>   	/* allocate as much as possible */
+> -	c = calloc(1, sizeof(*c) + nr * sizeof(int));
+> +	c = calloc(1, sizeof(*c) + nr * sizeof(struct aggr_cpu_id));
+>   	if (!c)
+>   		return -1;
+>   
+>   	for (cpu = 0; cpu < nr; cpu++) {
+>   		s1 = f(cpus, cpu, data);
+>   		for (s2 = 0; s2 < c->nr; s2++) {
+> -			if (s1 == c->map[s2])
+> +			if (cpu_map__compare_aggr_cpu_id(s1, c->map[s2]))
+>   				break;
+>   		}
+>   		if (s2 == c->nr) {
+> @@ -153,7 +177,7 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
+>   		}
+>   	}
+>   	/* ensure we process id in increasing order */
+> -	qsort(c->map, c->nr, sizeof(int), cmp_ids);
+> +	qsort(c->map, c->nr, sizeof(struct aggr_cpu_id), cmp_aggr_cpu_id);
+>   
+>   	refcount_set(&c->refcnt, 1);
+>   	*res = c;
+> @@ -167,23 +191,24 @@ int cpu_map__get_die_id(int cpu)
+>   	return ret ?: value;
+>   }
+>   
+> -int cpu_map__get_die(struct perf_cpu_map *map, int idx, void *data)
+> +struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx, void *data)
+>   {
+> -	int cpu, die_id, s;
+> +	int cpu, s;
+> +	struct aggr_cpu_id die_id = cpu_map__empty_aggr_cpu_id();
+>   
+>   	if (idx > map->nr)
+> -		return -1;
+> +		return cpu_map__empty_aggr_cpu_id();
+>   
+>   	cpu = map->map[idx];
+>   
+> -	die_id = cpu_map__get_die_id(cpu);
+> +	die_id.id = cpu_map__get_die_id(cpu);
+>   	/* There is no die_id on legacy system. */
+> -	if (die_id == -1)
+> -		die_id = 0;
+> +	if (die_id.id == -1)
+> +		die_id.id = 0;
+>   
+> -	s = cpu_map__get_socket(map, idx, data);
+> +	s = cpu_map__get_socket(map, idx, data).id;
+>   	if (s == -1)
+> -		return -1;
+> +		return cpu_map__empty_aggr_cpu_id();
+>   
+>   	/*
+>   	 * Encode socket in bit range 15:8
+> @@ -191,13 +216,14 @@ int cpu_map__get_die(struct perf_cpu_map *map, int idx, void *data)
+>   	 * we need a global id. So we combine
+>   	 * socket + die id
+>   	 */
+> -	if (WARN_ONCE(die_id >> 8, "The die id number is too big.\n"))
+> -		return -1;
+> +	if (WARN_ONCE(die_id.id >> 8, "The die id number is too big.\n"))
+> +		return cpu_map__empty_aggr_cpu_id();
+>   
+>   	if (WARN_ONCE(s >> 8, "The socket id number is too big.\n"))
+> -		return -1;
+> +		return cpu_map__empty_aggr_cpu_id();
+>   
+> -	return (s << 8) | (die_id & 0xff);
+> +	die_id.id = (s << 8) | (die_id.id & 0xff);
+> +	return die_id;
+>   }
+>   
+>   int cpu_map__get_core_id(int cpu)
+> @@ -211,21 +237,22 @@ int cpu_map__get_node_id(int cpu)
+>   	return cpu__get_node(cpu);
+>   }
+>   
+> -int cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
+> +struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data)
+>   {
+> -	int cpu, s_die;
+> +	int cpu;
+> +	struct aggr_cpu_id core = cpu_map__empty_aggr_cpu_id();
+>   
+>   	if (idx > map->nr)
+
+should pre-existing code be idx >= map->nr? I didn't check the code any 
+deeper
+
+> -		return -1;
+> +		return cpu_map__empty_aggr_cpu_id();
+>   
+>   	cpu = map->map[idx];
+>   
