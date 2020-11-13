@@ -2,114 +2,438 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EB6C55ABD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 20:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 989A7C4742C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 21:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058592223C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 20:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C94D22255
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 21:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOf4gnzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726070AbgKMUia (ORCPT
+        id S1726406AbgKMV3K (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Nov 2020 15:38:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:45242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgKMUia (ORCPT
+        Fri, 13 Nov 2020 16:29:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbgKMV3I (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Nov 2020 15:38:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93AD51042;
-        Fri, 13 Nov 2020 12:38:29 -0800 (PST)
-Received: from [10.57.54.165] (unknown [10.57.54.165])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6ACA83F73C;
-        Fri, 13 Nov 2020 12:38:28 -0800 (PST)
-Subject: [PATCH] perf inject corrupts file by deleting event
-From:   Al Grant <al.grant@foss.arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 13 Nov 2020 16:29:08 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F248C08E9AA;
+        Fri, 13 Nov 2020 13:28:56 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id p1so11650498wrf.12;
+        Fri, 13 Nov 2020 13:28:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Hx7j5qMAHaj9jQTo3kOZboVTcbbavQH4tugRAc6oSZk=;
+        b=QOf4gnzoj4mJi0gkfmQBKwo1LuHbgaegOZP8ij2iArRMR5x1pZbETvrJIjOJxJF36r
+         q2IajpS7vwT+KzEW2qTuDsADLYg/gNCqG49zhPDBcsJx9BbVUMr93xiOuBe7X2jQ+ua6
+         FErPzThERNiCcK1dyCG7T98TjR8tgqJz27hl7WW6PcdiTRmev6ylW/Sw5pHrMPTtjS75
+         3tIv1nZbsYjlnjZq5SWSINAiI1CWcZDxbkDHTZ943ANvXuKBTBu+9OO8NeWUdJZ1QNJE
+         Z8qDMP9HitjxgrzqVZDCx9wCzPFmdh8BGkRru3KZZGyhJIk8sWte1IXf4Iyh+bzd2Hwq
+         Jh9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Hx7j5qMAHaj9jQTo3kOZboVTcbbavQH4tugRAc6oSZk=;
+        b=mjoXLaqnTlSTbKdekKTW/MRHw8viFAXGvnr5bb+d/jEaEt8/zsrVN+vsnM0APWc9qt
+         6GuGxVG9s4t5gaoOwx5p/agPnklBRhnT0tDYpzYrPc8i8iJ/m6I7nrT5VofJ7aoXe+G4
+         jZLYlxTQmj1RRzZMFWsy5RTq7YfOARx5B8auNxCY8OJYB8KtJInfOO5CSWx74WwpVnMv
+         FBSHQ9uYsSPbMRWCzI9E0DZlZ7IkqPoAjAAcM+7BdWLk3lJSOV+WtKFXF5OD+yvjjtcp
+         xEmmRka71FGCCp66rk1gyQro2E+qao4tCiALZ0ciesEPu9y6n0ssHtklxQ6w4UuY8ZEs
+         nf6g==
+X-Gm-Message-State: AOAM530BUBKhJqO5mMKVVCRoM1r4dHiMWJluy0sp/qVctxYQjl1FMfQ7
+        DPG4otd7zzJhmOv6XuB7fG8=
+X-Google-Smtp-Source: ABdhPJyEJAG5nvnICA01Y72HHw9FlIn5n2lkPxnHq4rCqcANd1fQItogInTpQXl+meeslEllgNMcNw==
+X-Received: by 2002:a5d:4612:: with SMTP id t18mr5771664wrq.401.1605302934817;
+        Fri, 13 Nov 2020 13:28:54 -0800 (PST)
+Received: from localhost.localdomain ([170.253.51.130])
+        by smtp.gmail.com with ESMTPSA id z189sm6761852wme.23.2020.11.13.13.28.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Nov 2020 13:28:54 -0800 (PST)
+From:   Alejandro Colomar <alx.manpages@gmail.com>
+To:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Namhyung Kim <namhyung@gmail.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Alejandro Colomar <colomar.6.4.3@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
-Message-ID: <b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com>
-Date:   Fri, 13 Nov 2020 20:38:26 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.0.1
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-man@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Alejandro Colomar <alx.manpages@gmail.com>
+Subject: [PATCH v4] perf_event_open.2: Update man page with recent changes
+Date:   Fri, 13 Nov 2020 22:26:23 +0100
+Message-Id: <20201113212622.15031-1-alx.manpages@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20201112103240.18363-1-alx.manpages@gmail.com>
+References: <20201112103240.18363-1-alx.manpages@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-"perf inject" can create corrupt files when synthesizing sample
-events from AUX data. This happens when in the input file, the
-first event (for the AUX data) has a different sample_type from
-the second event (generally dummy). Specifically, they differ in
-the bits that indicate the standard fields appended to perf
-records in the mmap buffer. "perf inject" deletes the first event
-and moves up the second event to first position. The problem is
-with the synthetic PERF_RECORD_MMAP (etc.) events created by
-"perf record". Since these are synthetic versions of events which
-are normally produced by the kernel, they have to have the
-standard fields appended as described by sample_type. "perf record"
-fills these in with zeroes, including the IDENTIFIER field;
-perf readers interpret records with zero IDENTIFIER using the
-descriptor for the first event in the file. Since "perf inject"
-changes the first event, these synthetic records are then
-processed with the wrong value of sample_type, and the perf
-reader reads bad data, reports on incorrect length records etc.
+From: Namhyung Kim <namhyung@gmail.com>
 
-Mismatching sample_types are seen with "perf record -e cs_etm//",
-where the AUX event has TID|TIME|CPU|IDENTIFIER and the dummy
-event has TID|TIME|IDENTIFIER. Perhaps they could be the same,
-but it isn't normally a problem if they aren't - perf has
-no problems reading the file. The sample_types have to agree on
-the position of IDENTIFIER, because that's how perf finds the
-right event descriptor in the first place, but they don't normally
-have to agree on other fields, and perf doesn't check that they do.
-The problem is specific to the way "perf inject" reorganizes the
-events and the way synthetic MMAP events are recorded with a zero
-identifier. A simple solution is to stop "perf inject" deleting
-the tracing event.
+There are lots of changes as usual.  I've tried to fill some missing
+bits in the man page but it'd be nice if you could take a look and put
+more info there.
 
-Signed-off-by: Al Grant <al.grant@arm.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@gmail.com>
+[alx: ffix + tfix]
+Cowritten-by : Alejandro Colomar <alx.manpages@gmail.com>
+Signed-off-by: Alejandro Colomar <alx.manpages@gmail.com>
 ---
-  tools/perf/builtin-inject.c | 7 -------
-  1 file changed, 7 deletions(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 452a75fe68e5..f4968ebf5f3a 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -791,13 +791,6 @@ static int __cmd_inject(struct perf_inject *inject)
-                             inject->itrace_synth_opts.add_last_branch)
-                                 perf_header__set_feat(&session->header,
-                                                       HEADER_BRANCH_STACK);
--                       evsel = perf_evlist__id2evsel_strict(session->evlist,
--                                                            inject->aux_id);
--                       if (evsel) {
--                               pr_debug("Deleting %s\n", evsel__name(evsel));
--                               evlist__remove(session->evlist, evsel);
--                               evsel__delete(evsel);
--                       }
-                 }
-                 session->header.data_offset = output_data_offset;
-                 session->header.data_size = inject->bytes_written;
+Hi Nahmyung,
+
+I fixed another typo,
+and mainly fixed many formatting changes I introduced
+a few days ago because we were discussing about
+trying to improve the formatting,
+but finally decided to continue with the old way.
+
+Cheers,
+
+Alex
+
+
+ man2/perf_event_open.2 | 267 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 265 insertions(+), 2 deletions(-)
+
+diff --git a/man2/perf_event_open.2 b/man2/perf_event_open.2
+index e7b0aa132..e1c7789b9 100644
+--- a/man2/perf_event_open.2
++++ b/man2/perf_event_open.2
+@@ -247,8 +247,17 @@ struct perf_event_attr {
+                                    due to exec */
+           use_clockid    :  1,  /* use clockid for time fields */
+           context_switch :  1,  /* context switch data */
++          write_backward :  1,  /* Write ring buffer from end
++                                   to beginning */
++          namespaces     :  1,  /* include namespaces data */
++          ksymbol        :  1,  /* include ksymbol events */
++          bpf_event      :  1,  /* include bpf events */
++          aux_output     :  1,  /* generate AUX records
++                                   instead of events */
++          cgroup         :  1,  /* include cgroup events */
++          text_poke      :  1,  /* include text poke events */
+ 
+-          __reserved_1   : 37;
++          __reserved_1   : 30;
+ 
+     union {
+         __u32 wakeup_events;    /* wakeup every n events */
+@@ -867,6 +876,20 @@ is set higher than zero then the register
+ values returned are those captured by
+ hardware at the time of the sampled
+ instruction's retirement.
++.TP
++.BR PERF_SAMPLE_PHYS_ADDR " (since Linux 4.13)"
++.\" commit fc7ce9c74c3ad232b084d80148654f926d01ece7
++Records physical address of data like in
++.B PERF_SAMPLE_ADDR .
++.TP
++.BR PERF_SAMPLE_CGROUP " (since Linux 5.7)"
++.\" commit 96aaab686505c449e24d76e76507290dcc30e008
++Records (perf_event) cgroup id of the process.
++This corresponds to the
++.I id
++field in the
++.B PERF_RECORD_CGROUP
++event.
+ .RE
+ .TP
+ .I read_format
+@@ -1202,6 +1225,48 @@ information even with strict
+ .I perf_event_paranoid
+ settings.
+ .TP
++.IR write_backward " (since Linux 4.6)"
++.\" commit 9ecda41acb971ebd07c8fb35faf24005c0baea12
++This makes the ring buffer is written from end to beginning.
++This is to support reading from overwritable ring buffer.
++.TP
++.IR namespaces " (since Linux 4.11)"
++.\" commit e422267322cd319e2695a535e47c5b1feeac45eb
++This enables the generation of
++.B PERF_RECORD_NAMESPACES
++records when a task is entering to a new namespace.
++Each namespace has a combination of device and inode numbers.
++.TP
++.IR ksymbol " (since Linux 5.0)"
++.\" commit 76193a94522f1d4edf2447a536f3f796ce56343b
++This enables the generation of
++.B PERF_RECORD_KSYMBOL
++records when a new kernel symbols are registered or unregistered.
++This is analyzing dynamic kernel functions like eBPF.
++.TP
++.IR bpf_event " (since Linux 5.0)"
++.\" commit 6ee52e2a3fe4ea35520720736e6791df1fb67106
++This enables the generation of
++.B PERF_RECORD_BPF_EVENT
++records when a eBPF program is loaded or unloaded.
++.TP
++.IR auxevent " (since Linux 5.4)"
++.\" commit ab43762ef010967e4ccd53627f70a2eecbeafefb
++This allows normal (non-AUX) events to generate data for AUX events
++if the hardware supports it.
++.IR cgroup " (since Linux 5.7)"
++.\" commit 96aaab686505c449e24d76e76507290dcc30e008
++This enables the generation of
++.B PERF_RECORD_CGROUP
++records when a new cgroup is created (and activated).
++.TP
++.IR text_poke " (since Linux 5.8)"
++.\" commit e17d43b93e544f5016c0251d2074c15568d5d963
++This enables the generation of
++.B PERF_RECORD_TEXT_POKE
++records when there's a changes to the kernel text
++(i.e. self-modifying code).
++.TP
+ .IR wakeup_events ", " wakeup_watermark
+ This union sets how many samples
+ .RI ( wakeup_events )
+@@ -2131,7 +2196,7 @@ struct {
+     u64    nr;          /* if PERF_SAMPLE_CALLCHAIN */
+     u64    ips[nr];     /* if PERF_SAMPLE_CALLCHAIN */
+     u32    size;        /* if PERF_SAMPLE_RAW */
+-    char  data[size];   /* if PERF_SAMPLE_RAW */
++    char   data[size];  /* if PERF_SAMPLE_RAW */
+     u64    bnr;         /* if PERF_SAMPLE_BRANCH_STACK */
+     struct perf_branch_entry lbr[bnr];
+                         /* if PERF_SAMPLE_BRANCH_STACK */
+@@ -2148,6 +2213,8 @@ struct {
+     u64    abi;         /* if PERF_SAMPLE_REGS_INTR */
+     u64    regs[weight(mask)];
+                         /* if PERF_SAMPLE_REGS_INTR */
++    u64    phys_addr;   /* if PERF_SAMPLE_PHYS_ADDR */
++    u64    cgroup;      /* if PERF_SAMPLE_CGROUP */
+ };
+ .EE
+ .in
+@@ -2776,6 +2843,202 @@ or next (if switching out) process on the CPU.
+ The thread ID of the previous (if switching in)
+ or next (if switching out) thread on the CPU.
+ .RE
++.TP
++.BR PERF_RECORD_NAMESPACES " (since Linux 4.11)"
++.\" commit e422267322cd319e2695a535e47c5b1feeac45eb
++This record includes various namespace information of a process.
++.IP
++.in +4n
++.EX
++struct {
++    struct perf_event_header header;
++    u32 pid;
++    u32 tid;
++    u64 nr_namespaces;
++    struct { u64 dev, inode } [nr_namespaces];
++    struct sample_id sample_id;
++};
++.EE
++.in
++.RS
++.TP
++.I pid
++is the process ID
++.TP
++.I tid
++is the thread ID
++.TP
++.I nr_namespace
++is the number of namespaces in this record
++.RE
++.IP
++Each namespace has
++.I dev
++and
++.I inode
++fields and is recorded in the
++fixed position like below:
++.RS
++.TP
++.BR NET_NS_INDEX = 0
++Network namespace
++.TP
++.BR UTS_NS_INDEX = 1
++UTS namespace
++.TP
++.BR IPC_NS_INDEX = 2
++IPC namespace
++.TP
++.BR PID_NS_INDEX = 3
++PID namespace
++.TP
++.BR USER_NS_INDEX = 4
++User namespace
++.TP
++.BR MNT_NS_INDEX = 5
++Mount namespace
++.TP
++.BR CGROUP_NS_INDEX = 6
++Cgroup namespace
++.RE
++.TP
++.BR PERF_RECORD_KSYMBOL " (since Linux 5.0)"
++.\" commit 76193a94522f1d4edf2447a536f3f796ce56343b
++This record indicates kernel symbol register/unregister events.
++.IP
++.in +4n
++.EX
++struct {
++    struct perf_event_header header;
++    u64 addr;
++    u32 len;
++    u16 ksym_type;
++    u16 flags;
++    char name[];
++    struct sample_id sample_id;
++};
++.EE
++.in
++.RS
++.TP
++.I addr
++is the address of the kernel symbol
++.TP
++.I len
++is the length of the kernel symbol
++.TP
++.I ksym_type
++is the type of the kernel symbol.
++Currently following types are available:
++.RS
++.TP
++.B PERF_RECORD_KSYMBOL_TYPE_BPF
++The kernel symbols is a BPF function.
++.RE
++.TP
++.I flags
++If the
++.B PERF_RECORD_KSYMBOL_FLAGS_UNREGISTER
++is set, then this event is for unregistering the kernel symbol.
++.RE
++.TP
++.BR PERF_RECORD_BPF_EVENT " (since Linux 5.0)"
++.\" commit 6ee52e2a3fe4ea35520720736e6791df1fb67106
++This record indicates BPF program is loaded or unloaded.
++.IP
++.in +4n
++.EX
++struct {
++    struct perf_event_header header;
++    u16 type;
++    u16 flags;
++    u32 id;
++    u8 tag[BPF_TAG_SIZE];
++    struct sample_id sample_id;
++};
++.EE
++.in
++.RS
++.TP
++.I type
++is one of the following values:
++.RS
++.TP
++.B PERF_BPF_EVENT_PROG_LOAD
++A BPF program is loaded
++.TP
++.B PERF_BPF_EVENT_PROG_UNLOAD
++A BPF program is unloaded
++.RE
++.TP
++.I id
++is the id of the BPF program.
++.TP
++.I tag
++is the tag of the BPF program.
++Currently,
++.B BPF_TAG_SIZE
++is defined as 8.
++.RE
++.TP
++.BR PERF_RECORD_CGROUP " (since Linux 5.7)"
++.\" commit 96aaab686505c449e24d76e76507290dcc30e008
++This record indicates a new cgroup is created and activated.
++.IP
++.in +4n
++.EX
++struct {
++    struct perf_event_header header;
++    u64 id;
++    char path[];
++    struct sample_id sample_id;
++};
++.EE
++.in
++.RS
++.TP
++.I id
++is the cgroup identifier.
++This can be also retreived by
++.BR name_to_handle_at (2)
++on the cgroup path (as a file handle).
++.TP
++.I path
++is the path of the cgroup from the root.
++.RE
++.TP
++.BR PERF_RECORD_TEXT_POKE " (since Linux 5.8)"
++.\" commit e17d43b93e544f5016c0251d2074c15568d5d963
++This record indicates a change in the kernel text.
++This includes addition and removal of the text
++and the corresponding length is zero in this case.
++.IP
++.in +4n
++.EX
++struct {
++    struct perf_event_header header;
++    u64 addr;
++    u16 old_len;
++    u16 new_len;
++    u8 bytes[];
++    struct sample_id sample_id;
++};
++.EE
++.in
++.RS
++.TP
++.I addr
++is the address of the change
++.TP
++.I old_len
++is the old length
++.TP
++.I new_len
++is the new length
++.TP
++.I bytes
++contains old bytes immediately followed by new bytes.
++.RE
+ .RE
+ .SS Overflow handling
+ Events can be set to notify when a threshold is crossed,
+-- 
+2.28.0
+
