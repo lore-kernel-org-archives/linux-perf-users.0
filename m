@@ -2,59 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B776DC55ABD
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 17:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EB6C55ABD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 20:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC6821D7F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 17:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 058592223C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 20:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726478AbgKMR1S (ORCPT
+        id S1726070AbgKMUia (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Nov 2020 12:27:18 -0500
-Received: from foss.arm.com ([217.140.110.172]:42274 "EHLO foss.arm.com"
+        Fri, 13 Nov 2020 15:38:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:45242 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbgKMR1Q (ORCPT
+        id S1725866AbgKMUia (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Nov 2020 12:27:16 -0500
+        Fri, 13 Nov 2020 15:38:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0005914BF;
-        Fri, 13 Nov 2020 09:27:15 -0800 (PST)
-Received: from e121896.arm.com (unknown [10.57.58.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E2073F718;
-        Fri, 13 Nov 2020 09:27:14 -0800 (PST)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com
-Cc:     james.clark@arm.com, Peter Zijlstra <peterz@infradead.org>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 93AD51042;
+        Fri, 13 Nov 2020 12:38:29 -0800 (PST)
+Received: from [10.57.54.165] (unknown [10.57.54.165])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6ACA83F73C;
+        Fri, 13 Nov 2020 12:38:28 -0800 (PST)
+Subject: [PATCH] perf inject corrupts file by deleting event
+From:   Al Grant <al.grant@foss.arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 01/13 v4] perf tools: Improve topology test
-Date:   Fri, 13 Nov 2020 19:26:42 +0200
-Message-Id: <20201113172654.989-2-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20201113172654.989-1-james.clark@arm.com>
-References: <20201113172654.989-1-james.clark@arm.com>
+        linux-perf-users@vger.kernel.org
+References: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
+Message-ID: <b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com>
+Date:   Fri, 13 Nov 2020 20:38:26 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.0.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Improve the topology test to check all aggregation
-types. This is to lock down the behaviour before
-'id' is changed into a struct in later commits.
+"perf inject" can create corrupt files when synthesizing sample
+events from AUX data. This happens when in the input file, the
+first event (for the AUX data) has a different sample_type from
+the second event (generally dummy). Specifically, they differ in
+the bits that indicate the standard fields appended to perf
+records in the mmap buffer. "perf inject" deletes the first event
+and moves up the second event to first position. The problem is
+with the synthetic PERF_RECORD_MMAP (etc.) events created by
+"perf record". Since these are synthetic versions of events which
+are normally produced by the kernel, they have to have the
+standard fields appended as described by sample_type. "perf record"
+fills these in with zeroes, including the IDENTIFIER field;
+perf readers interpret records with zero IDENTIFIER using the
+descriptor for the first event in the file. Since "perf inject"
+changes the first event, these synthetic records are then
+processed with the wrong value of sample_type, and the perf
+reader reads bad data, reports on incorrect length records etc.
 
-Signed-off-by: James Clark <james.clark@arm.com>
+Mismatching sample_types are seen with "perf record -e cs_etm//",
+where the AUX event has TID|TIME|CPU|IDENTIFIER and the dummy
+event has TID|TIME|IDENTIFIER. Perhaps they could be the same,
+but it isn't normally a problem if they aren't - perf has
+no problems reading the file. The sample_types have to agree on
+the position of IDENTIFIER, because that's how perf finds the
+right event descriptor in the first place, but they don't normally
+have to agree on other fields, and perf doesn't check that they do.
+The problem is specific to the way "perf inject" reorganizes the
+events and the way synthetic MMAP events are recorded with a zero
+identifier. A simple solution is to stop "perf inject" deleting
+the tracing event.
+
+Signed-off-by: Al Grant <al.grant@arm.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -62,100 +91,25 @@ Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.ibm.com>
-Cc: John Garry <john.garry@huawei.com>
 ---
- tools/perf/tests/topology.c | 53 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 46 insertions(+), 7 deletions(-)
+  tools/perf/builtin-inject.c | 7 -------
+  1 file changed, 7 deletions(-)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 22daf2bdf5fa..7bd8848d36b6 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -64,10 +64,11 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 		.path = path,
- 		.mode = PERF_DATA_MODE_READ,
- 	};
--	int i;
-+	int i, id;
- 
- 	session = perf_session__new(&data, false, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
-+	cpu__setup_cpunode_map();
- 
- 	/* On platforms with large numbers of CPUs process_cpu_topology()
- 	 * might issue an error while reading the perf.data file section
-@@ -85,11 +86,18 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	 *  "socket_id number is too big. You may need to upgrade the
- 	 *  perf tool."
- 	 *
--	 *  This is the reason why this test might be skipped.
-+	 *  This is the reason why this test might be skipped. aarch64 and
-+	 *  s390 always write this part of the header, even when the above
-+	 *  condition is true (see do_core_id_test in header.c). So always
-+	 *  run this test on those platforms.
- 	 */
--	if (!session->header.env.cpu)
-+	if (!session->header.env.cpu
-+			&& strncmp(session->header.env.arch, "s390", 4)
-+			&& strncmp(session->header.env.arch, "aarch64", 7))
- 		return TEST_SKIP;
- 
-+	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
-+
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
- 		if (!cpu_map__has(map, i))
- 			continue;
-@@ -98,14 +106,45 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			 session->header.env.cpu[i].socket_id);
- 	}
- 
-+	// Test that core ID contains socket, die and core
-+	for (i = 0; i < map->nr; i++) {
-+		id = cpu_map__get_core(map, i, NULL);
-+		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
-+			session->header.env.cpu[map->map[i]].core_id == cpu_map__id_to_cpu(id));
-+
-+		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
-+			session->header.env.cpu[map->map[i]].socket_id ==
-+				cpu_map__id_to_socket(id));
-+
-+		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
-+			session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
-+	}
-+
-+	// Test that die ID contains socket and die
- 	for (i = 0; i < map->nr; i++) {
--		TEST_ASSERT_VAL("Core ID doesn't match",
--			(session->header.env.cpu[map->map[i]].core_id == (cpu_map__get_core(map, i, NULL) & 0xffff)));
-+		id = cpu_map__get_die(map, i, NULL);
-+		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
-+			session->header.env.cpu[map->map[i]].socket_id ==
-+				cpu_map__id_to_socket(id));
- 
--		TEST_ASSERT_VAL("Socket ID doesn't match",
--			(session->header.env.cpu[map->map[i]].socket_id == cpu_map__get_socket(map, i, NULL)));
-+		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
-+			session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
- 	}
- 
-+	// Test that socket ID contains only socket
-+	for (i = 0; i < map->nr; i++) {
-+		id = cpu_map__get_socket(map, i, NULL);
-+		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
-+			session->header.env.cpu[map->map[i]].socket_id ==
-+				cpu_map__id_to_socket(id));
-+	}
-+
-+	// Test that node ID contains only node
-+	for (i = 0; i < map->nr; i++) {
-+		id = cpu_map__get_node(map, i, NULL);
-+		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
-+			cpu__get_node(map->map[i]) == id);
-+	}
- 	perf_session__delete(session);
- 
- 	return 0;
--- 
-2.28.0
-
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index 452a75fe68e5..f4968ebf5f3a 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -791,13 +791,6 @@ static int __cmd_inject(struct perf_inject *inject)
+                             inject->itrace_synth_opts.add_last_branch)
+                                 perf_header__set_feat(&session->header,
+                                                       HEADER_BRANCH_STACK);
+-                       evsel = perf_evlist__id2evsel_strict(session->evlist,
+-                                                            inject->aux_id);
+-                       if (evsel) {
+-                               pr_debug("Deleting %s\n", evsel__name(evsel));
+-                               evlist__remove(session->evlist, evsel);
+-                               evsel__delete(evsel);
+-                       }
+                 }
+                 session->header.data_offset = output_data_offset;
+                 session->header.data_size = inject->bytes_written;
