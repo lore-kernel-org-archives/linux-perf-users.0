@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AA5C388F7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 17:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AA2C388F7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 17:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA1122226
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 17:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DBB21D1A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 17:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgKMR1V (ORCPT
+        id S1726605AbgKMR10 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 13 Nov 2020 12:27:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:42310 "EHLO foss.arm.com"
+        Fri, 13 Nov 2020 12:27:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:42340 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbgKMR1V (ORCPT
+        id S1726593AbgKMR1Z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 13 Nov 2020 12:27:21 -0500
+        Fri, 13 Nov 2020 12:27:25 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1AF49153B;
-        Fri, 13 Nov 2020 09:27:20 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 525831534;
+        Fri, 13 Nov 2020 09:27:24 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.58.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48BEA3F718;
-        Fri, 13 Nov 2020 09:27:18 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 80FD73F718;
+        Fri, 13 Nov 2020 09:27:22 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         jolsa@redhat.com
@@ -38,9 +38,9 @@ Cc:     james.clark@arm.com, Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH 03/13 v4] perf tools: Add new struct for cpu aggregation
-Date:   Fri, 13 Nov 2020 19:26:44 +0200
-Message-Id: <20201113172654.989-4-james.clark@arm.com>
+Subject: [PATCH 05/13 v4] perf tools: add new map type for aggregation
+Date:   Fri, 13 Nov 2020 19:26:46 +0200
+Message-Id: <20201113172654.989-6-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201113172654.989-1-james.clark@arm.com>
 References: <20201113172654.989-1-james.clark@arm.com>
@@ -50,12 +50,11 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This struct currently has only a single int member so that
-it can be used as a drop in replacement for the existing
-behaviour.
+Currently this is a duplicate of perf_cpu_map so that
+it can be used as a drop in replacement.
 
-Comparison and constructor functions have also been added
-that will replace usages of '==' and '= -1'.
+In a later commit it will be changed from a map of ints
+to use the new cpu_aggr_id struct.
 
 No functional changes.
 
@@ -70,60 +69,77 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: John Garry <john.garry@huawei.com>
 ---
- tools/perf/util/cpumap.c | 18 ++++++++++++++++++
- tools/perf/util/cpumap.h |  8 ++++++++
- 2 files changed, 26 insertions(+)
+ tools/perf/util/cpumap.c | 32 ++++++++++++++++++++++++++++++++
+ tools/perf/util/cpumap.h | 10 ++++++++++
+ 2 files changed, 42 insertions(+)
 
 diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index fd7d0a77a9e6..e6b4def17839 100644
+index e777024c6676..7500225c8571 100644
 --- a/tools/perf/util/cpumap.c
 +++ b/tools/perf/util/cpumap.c
-@@ -587,3 +587,21 @@ const struct perf_cpu_map *cpu_map__online(void) /* thread unsafe */
- 
- 	return online;
+@@ -95,6 +95,38 @@ struct perf_cpu_map *perf_cpu_map__empty_new(int nr)
+ 	return cpus;
  }
-+
-+bool cpu_map__compare_aggr_cpu_id(struct aggr_cpu_id a, struct aggr_cpu_id b)
+ 
++struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr)
 +{
-+	return a.id == b.id;
++	struct cpu_aggr_map *cpus = malloc(sizeof(*cpus) + sizeof(int) * nr);
++
++	if (cpus != NULL) {
++		int i;
++
++		cpus->nr = nr;
++		for (i = 0; i < nr; i++)
++			cpus->map[i] = -1;
++
++		refcount_set(&cpus->refcnt, 1);
++	}
++
++	return cpus;
 +}
 +
-+bool cpu_map__aggr_cpu_id_is_empty(struct aggr_cpu_id a)
++void cpu_aggr_map__delete(struct cpu_aggr_map *map)
 +{
-+	return a.id == -1;
++	if (map) {
++		WARN_ONCE(refcount_read(&map->refcnt) != 0,
++			  "cpu_aggr_map refcnt unbalanced\n");
++		free(map);
++	}
 +}
 +
-+struct aggr_cpu_id cpu_map__empty_aggr_cpu_id(void)
++void cpu_aggr_map__put(struct cpu_aggr_map *map)
 +{
-+	struct aggr_cpu_id ret = {
-+		.id = -1
-+	};
-+	return ret;
++	if (map && refcount_dec_and_test(&map->refcnt))
++		cpu_aggr_map__delete(map);
 +}
++
+ static int cpu__get_topology_int(int cpu, const char *name, int *value)
+ {
+ 	char path[PATH_MAX];
 diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 3a442f021468..1cdccc69cd4b 100644
+index b8c2288a3f6d..ab6be8ef696f 100644
 --- a/tools/perf/util/cpumap.h
 +++ b/tools/perf/util/cpumap.h
-@@ -7,6 +7,10 @@
- #include <internal/cpumap.h>
- #include <perf/cpumap.h>
+@@ -11,9 +11,19 @@ struct aggr_cpu_id {
+ 	int id;
+ };
  
-+struct aggr_cpu_id {
-+	int id;
++struct cpu_aggr_map {
++	refcount_t refcnt;
++	int nr;
++	int map[];
 +};
 +
  struct perf_record_cpu_map_data;
  
  struct perf_cpu_map *perf_cpu_map__empty_new(int nr);
-@@ -64,4 +68,8 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
- int cpu_map__cpu(struct perf_cpu_map *cpus, int idx);
- bool cpu_map__has(struct perf_cpu_map *cpus, int cpu);
- 
-+bool cpu_map__compare_aggr_cpu_id(struct aggr_cpu_id a, struct aggr_cpu_id b);
-+bool cpu_map__aggr_cpu_id_is_empty(struct aggr_cpu_id a);
-+struct aggr_cpu_id cpu_map__empty_aggr_cpu_id(void);
++struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr);
++void cpu_aggr_map__delete(struct cpu_aggr_map *map);
++void cpu_aggr_map__put(struct cpu_aggr_map *map);
 +
- #endif /* __PERF_CPUMAP_H */
+ struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data);
+ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
+ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size);
 -- 
 2.28.0
 
