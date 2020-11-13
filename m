@@ -2,148 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5F8C388F7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Nov 2020 21:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C3BC388F7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 00:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D67FD22227
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Nov 2020 21:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3AEB2223F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Nov 2020 00:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gv4ZyMIw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eSV+mjSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgKLV2c (ORCPT
+        id S1726172AbgKMARA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 Nov 2020 16:28:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58767 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726960AbgKLV2b (ORCPT
+        Thu, 12 Nov 2020 19:17:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgKMAQ4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 Nov 2020 16:28:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1605216509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=31V0kyw/NhyHSO/KjODwhVAGkINQtFRjV2lgoBeJ2/k=;
-        b=Gv4ZyMIwHlaa5vBe/zfrxopO/TNNQ1D37dXMFi1sHFvkytWJg2B/bBnefrFiqlWPtZWX+1
-        l1K51TQSU+yxYw/2l6O3Bk3dcuYhaBWG+jOleQS8S43vf9PerkctNPWwGFvU7wwEyBNHfl
-        HabC0jjk3/fnU46UIkcslBSQAFy1cig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-3nghB2AhPby-mYvSNYV2BQ-1; Thu, 12 Nov 2020 16:28:26 -0500
-X-MC-Unique: 3nghB2AhPby-mYvSNYV2BQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35A981882FCA;
-        Thu, 12 Nov 2020 21:28:24 +0000 (UTC)
-Received: from krava (unknown [10.40.194.120])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DCA2A55763;
-        Thu, 12 Nov 2020 21:28:20 +0000 (UTC)
-Date:   Thu, 12 Nov 2020 22:28:19 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 12 Nov 2020 19:16:56 -0500
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3080FC0613D4
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2020 16:16:56 -0800 (PST)
+Received: by mail-qk1-x749.google.com with SMTP id b191so5499450qkc.10
+        for <linux-perf-users@vger.kernel.org>; Thu, 12 Nov 2020 16:16:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=SF2/0cBD4SDXrx4kSO5jpkw3cm1P8On8XdzbrxLvYHc=;
+        b=eSV+mjSXgJcCb1CVnnrLnnD0ABu+pRfHzud1Sn/xHVeRS4cxxt3tssKBrDRO+fvBNl
+         0ZI6atxrCJKqLTib4fLCMfKcyXqzMMxqRmGwZB6kZV3d713uwHTsAWiAPQ3BP8h1qrKb
+         TU/OoojdIdLIvGZ2Q9zoAbQNUsq5rpuuqHYWv0yEp01ATsqJ0+fOGFjYxlzCgCIpJtE1
+         0dYhn80pwsJbwuLdnT6UhKvH87Q9JzkmnPKU1YYnmaiZ4hVkpGoABNePD8RMumgQqvJ0
+         Mm01M3GvVx8X6GiaFUjEvzf+UinZIO31niJV0uM+tFxVRvcEMyUkRi8RADxJxfiEJzOO
+         3QYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=SF2/0cBD4SDXrx4kSO5jpkw3cm1P8On8XdzbrxLvYHc=;
+        b=W0ILQvkwdWqukDNLsKXWWWBzJfQaS1OGqQ2ia5ZzoVbo7T5msDywQxU+pdBErM4I26
+         xbmKAlK3FD7PV1Q/7WLodG0pTXE+Iu/IHddue3+JIIOTSLGsMKiKy2GYaaONVQu1Fxha
+         Ua5+6/eIgezvn9CPkD9Gm6BHTray3NSbmJEztVQS6Q80Okdek5eORlz03aiY4n5iU+0/
+         yITqNUrpUAn4mRXF6qPai6Z09Qy8P7u/KJX8FKF6qbRzM9DGn4B9IOocjqs7Fqmu4Zx0
+         MWb/npWklIM/z7Q+o4ZALih8tSqGqoFicOIIir71MEm7FVRXS4Vf6OLaqMjLTKzDYUUK
+         VTuw==
+X-Gm-Message-State: AOAM533FdFLn9h91u3kE/xF/4rYozTN3hJmJFEfEjm/2dtZzr+9oaoVS
+        CaitSeWqRKU8PJ5zl4E6r9u8ZVBsYyj0
+X-Google-Smtp-Source: ABdhPJwyboO74LHKP98PlInQeAm3Rn2ncH8TrzT9NTK5yWDR5AbUSz+LT4KC0pVNzuUBfniZGLxyJE9p1S3T
+Sender: "irogers via sendgmr" <irogers@irogers.svl.corp.google.com>
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:2:f693:9fff:fef4:4583])
+ (user=irogers job=sendgmr) by 2002:a0c:c18a:: with SMTP id
+ n10mr2475691qvh.54.1605226615225; Thu, 12 Nov 2020 16:16:55 -0800 (PST)
+Date:   Thu, 12 Nov 2020 16:16:46 -0800
+Message-Id: <20201113001651.544348-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.29.2.299.gdc1121823c-goog
+Subject: [PATCH 0/5] Don't compute events that won't be used in a metric.
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Jin Yao <yao.jin@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH V2 3/3] perf tools: fix perf stat with large socket IDs
-Message-ID: <20201112212819.GB753418@krava>
-References: <20201004203545.GB217601@krava>
- <20201028094311.8563-1-james.clark@arm.com>
- <20201028094311.8563-4-james.clark@arm.com>
- <20201108124412.GA196289@krava>
- <ec3e153b-f5b9-dc70-a012-d180d1f32932@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec3e153b-f5b9-dc70-a012-d180d1f32932@arm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        John Garry <john.garry@huawei.com>,
+        Paul Clarke <pc@us.ibm.com>, kajoljain <kjain@linux.ibm.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Sandeep Dasgupta <sdasgup@google.com>,
+        linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Nov 12, 2020 at 09:42:42PM +0200, James Clark wrote:
-> 
-> 
-> On 08/11/2020 14:44, Jiri Olsa wrote:
-> > On Wed, Oct 28, 2020 at 09:43:11AM +0000, James Clark wrote:
-> > 
-> > SNIP
-> > 
-> >> -		 * Encode socket in bit range 31:24
-> >> -		 * encode die id in bit range 23:16
-> >>  		 * core_id is relative to socket and die,
-> >>  		 * we need a global id. So we combine
-> >>  		 * socket + die id + core id
-> >>  		 */
-> >> -		if (WARN_ONCE(env->cpu[cpu].socket_id >> 8, "The socket id number is too big.\n"))
-> >> -			return cpu_map__empty_aggr_cpu_id();
-> >> -
-> >> -		if (WARN_ONCE(env->cpu[cpu].die_id >> 8, "The die id number is too big.\n"))
-> >> -			return cpu_map__empty_aggr_cpu_id();
-> >> -
-> >> -		if (WARN_ONCE(env->cpu[cpu].core_id >> 16, "The core id number is too big.\n"))
-> >> -			return cpu_map__empty_aggr_cpu_id();
-> >> -
-> >> -		core.id = (env->cpu[cpu].socket_id << 24) |
-> >> -		       (env->cpu[cpu].die_id << 16) |
-> >> -		       (env->cpu[cpu].core_id & 0xffff);
-> >> +		core.socket_id = env->cpu[cpu].socket_id;
-> >> +		core.die_id = env->cpu[cpu].die_id;
-> >> +		core.core_id = env->cpu[cpu].core_id;
-> > 
-> > all 3 functions above look like they could be united just
-> > to single one, because they are no longer steping on ech
-> > other data
-> > 
-> > perhaps best as separate patch, so the change is clean
-> > 
-> > there are also the 'system retrieval counter' functions,
-> > where it's possible better to keep it separated from
-> > performance reasons, but here it's just value assigment
-> 
-> Hi Jiri,
-> 
-> I have a new patchset ready without this change, and I started working on this, but I came
-> across some issues:
-> 
-> For example if all of the members are filled in regardless of the aggregation type,
-> then the comparison function that actually decides whether cores should be aggregated or
-> not will need to be modified to accept the current aggregation mode.
+    
+For a metric like:
+  EVENT1 if #smt_on else EVENT2
+    
+currently EVENT1 and EVENT2 will be measured and then when the metric
+is reported EVENT1 or EVENT2 will be printed depending on the value
+from smt_on() during the expr parsing. Computing both events is
+unnecessary and can lead to multiplexing as discussed in this thread:
+https://lore.kernel.org/lkml/20201110100346.2527031-1-irogers@google.com/
 
-ah, because we compare all the values regardless and normaly there'd be -1
+This change modifies expression parsing so that constants are
+considered when building the set of ids (events) and only events not
+contributing to a constant value are measured.
 
-> 
-> This would be possible, but would have a knock on effect when the values are read
-> from the system if the code is to be shared.
-> 
-> Also there is a second issue where some of the current functions have different failure
-> conditions. For example if socket can't be read, then that mode will fail, but other
-> aggregation modes will still work. If we make the change to unify all the functions then
-> that could get a bit more complicated.
-> 
-> I just wanted to get your opinion whether to submit the broken up set without this extra
-> change or carry on trying to work out a solution?
+Ian Rogers (5):
+  perf metric: Restructure struct expr_parse_ctx.
+  perf metric: Use NAN for missing event IDs.
+  perf metric: Rename expr__find_other.
+  perf metric: Add utilities to work on ids map.
+  perf metric: Don't compute unused events.
 
-ok forget it then, seems like possible follow up changes if it's even worthy
+ tools/perf/tests/expr.c       | 148 ++++++++++-----
+ tools/perf/tests/pmu-events.c |  42 +++--
+ tools/perf/util/expr.c        | 136 ++++++++++++--
+ tools/perf/util/expr.h        |  17 +-
+ tools/perf/util/expr.l        |   9 -
+ tools/perf/util/expr.y        | 343 +++++++++++++++++++++++++++-------
+ tools/perf/util/metricgroup.c |  44 +++--
+ tools/perf/util/stat-shadow.c |  54 ++++--
+ 8 files changed, 586 insertions(+), 207 deletions(-)
 
-thanks for checking on that
-
-jirka
+-- 
+2.29.2.299.gdc1121823c-goog
 
