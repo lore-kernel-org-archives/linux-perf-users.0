@@ -2,215 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582F2C2D0A3
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Nov 2020 17:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CEAC2D0A3
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Nov 2020 19:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42CE221F8
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Nov 2020 17:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E10C92225E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Nov 2020 19:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQOp7htm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FuVwPzVm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731626AbgKPQ7u (ORCPT
+        id S1729202AbgKPTWd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Nov 2020 11:59:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729849AbgKPQ7u (ORCPT
+        Mon, 16 Nov 2020 14:22:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgKPTWd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Nov 2020 11:59:50 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0569920773;
-        Mon, 16 Nov 2020 16:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1605545989;
-        bh=LT5+rTERX8jGWbyDUURv5hSfq1VyEiKCvmY5DnNwRSI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQOp7htmt57QXwGTKfdrUxYTSN/7VZfN6WCRTX/QyXDs7mwjBWh9ea+s6WQQ2p2ji
-         LRpITw0g9872umaKiXh8u50Pe4mYYy+gM0VN/VIgnLOC9kXoS/S5nI0xQ9zvlE1Dbl
-         c2aki1NDdCiv36EvNZcwRGNQZH8JTOcUbVQA4rG4=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B3A43411D1; Mon, 16 Nov 2020 13:59:46 -0300 (-03)
-Date:   Mon, 16 Nov 2020 13:59:46 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Al Grant <al.grant@foss.arm.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 16 Nov 2020 14:22:33 -0500
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F3AC0613CF;
+        Mon, 16 Nov 2020 11:22:32 -0800 (PST)
+Received: by mail-wr1-x443.google.com with SMTP id j7so20016748wrp.3;
+        Mon, 16 Nov 2020 11:22:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=14bPYV2knZJtYUG1KcgdCm7PQP7xKN/R/o8I5J+Sbyk=;
+        b=FuVwPzVmOTUPtrPxtRZbjLhpKfT2RmPp7UVJTe3wEwPsnvgpu0EpcaZeMULYwNRMvw
+         wDcKDVf5uiKY2j6T7oGUqpmE/vtYlYmk3PGA/jh3pq8kMXda+QMWNwQ7yzFs65ak11kL
+         TcuNM0JdofNCMyn7YZVn6O0Nde+eJa0T5nCLYMdjADDQhE6fupj/wJrCBGf3Hevw93aH
+         FtOZTshGSntgHELGHHOcXwnM0UuVj5MKCi8AQzCViNuVYbnLNJuQNnH1RB05nm4nIuJ3
+         q9AHkx/YJWeOK9NrUTyI0MSsCTMZhMu6WEsSg/XiOgJBeNFLCiEuvyEEt8/RVo+sbYY6
+         y0kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=14bPYV2knZJtYUG1KcgdCm7PQP7xKN/R/o8I5J+Sbyk=;
+        b=Y9+Q42Fm8LWkwYe1JmRtk97sHXSsuYYocvf/lGjksECson5m6zOv9YqMy4HZ1vs0pA
+         TGkijlKpUTYo00AL7RbEy4g+X505QtsCqbCUS8v1ptgNTHH3BPz4+wd5HbVBxM36lE0u
+         gIcE1zkLoLeFpWjIGxwF+nxvgrXugfoVcb7NLspFfVzmJT8fp73XIdEPL38Nc9xJytQq
+         CkIbp60UGClrvf6zfoYyvx1BYU/0oPibjUh5F5zxBU9lribUh/f9EgETV7f8/rN2+Esm
+         1Hx/ANwUEcOwvNkYeYd31W6wTzAB9T+ydgwpwLov1Kup19GIRNsr9PBbFjKQqOmZb3J+
+         nliQ==
+X-Gm-Message-State: AOAM532xUc0o5I+amGavFCRmlz5CE9FiWw2pHXRu3Nxg32E9f/vgHLH9
+        zi+UWoaW2W5ZDdcGHA/zNNs=
+X-Google-Smtp-Source: ABdhPJxWiKfLDy0RD/0V+R0zWI4yxEbQZv4EsqYOwuuzep0F3uc01mXvnZrO9ISZBkALAIC5xC5jbg==
+X-Received: by 2002:a5d:614e:: with SMTP id y14mr22482984wrt.25.1605554550837;
+        Mon, 16 Nov 2020 11:22:30 -0800 (PST)
+Received: from [192.168.1.143] ([170.253.51.130])
+        by smtp.gmail.com with ESMTPSA id d10sm24099050wro.89.2020.11.16.11.22.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Nov 2020 11:22:30 -0800 (PST)
+Subject: Re: [PATCH v4] perf_event_open.2: Update man page with recent changes
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Michael Kerrisk-manpages <mtk.manpages@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alejandro Colomar <colomar.6.4.3@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf inject corrupts file by deleting event
-Message-ID: <20201116165946.GE509215@kernel.org>
-References: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
- <b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com>
- <CAM9d7cgmQ552DFpPo6b8kCwq4B9faSPxGE3tTBW6jfJd1xMVwA@mail.gmail.com>
- <20201116164533.GC509215@kernel.org>
- <20201116164839.GD509215@kernel.org>
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-man@vger.kernel.org,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>
+References: <20201112103240.18363-1-alx.manpages@gmail.com>
+ <20201113212622.15031-1-alx.manpages@gmail.com>
+ <CAM9d7cjfbF7vR8dOM0EWSESEkO5m+AyawunNg4C3y8kziNNRdg@mail.gmail.com>
+From:   "Alejandro Colomar (man-pages)" <alx.manpages@gmail.com>
+Message-ID: <19b639c1-27aa-4392-3b21-76704765ef14@gmail.com>
+Date:   Mon, 16 Nov 2020 20:22:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201116164839.GD509215@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAM9d7cjfbF7vR8dOM0EWSESEkO5m+AyawunNg4C3y8kziNNRdg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Nov 16, 2020 at 01:48:39PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Nov 16, 2020 at 01:45:33PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Tue, Nov 17, 2020 at 01:25:09AM +0900, Namhyung Kim escreveu:
-> > > On Sat, Nov 14, 2020 at 5:38 AM Al Grant <al.grant@foss.arm.com> wrote:
-> > > > Mismatching sample_types are seen with "perf record -e cs_etm//",
-> > > > where the AUX event has TID|TIME|CPU|IDENTIFIER and the dummy
-> > > > event has TID|TIME|IDENTIFIER. Perhaps they could be the same,
-> > > > but it isn't normally a problem if they aren't - perf has
-> > > > no problems reading the file. The sample_types have to agree on
-> > > > the position of IDENTIFIER, because that's how perf finds the
-> > > > right event descriptor in the first place, but they don't normally
-> > > > have to agree on other fields, and perf doesn't check that they do.
-> > > > The problem is specific to the way "perf inject" reorganizes the
-> > > > events and the way synthetic MMAP events are recorded with a zero
-> > > > identifier. A simple solution is to stop "perf inject" deleting
-> > > > the tracing event.
-> 
-> > > > Signed-off-by: Al Grant <al.grant@arm.com>
-> > > > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> 
-> > > While I'm ok with this change,
-> > 
-> > So, to make progress, I'll take your phrase as an Acked-by, as described
-> > in Documentation/process/submitting-patches.rst, ok?
-> 
-> But I'll have to apply by hand:
-> 
-> [acme@five perf]$ am /wb/1.patch
-> warning: Patch sent with format=flowed; space at the end of lines might be lost.
-> Applying: perf inject corrupts file by deleting event
-> error: patch failed: tools/perf/builtin-inject.c:791
-> error: tools/perf/builtin-inject.c: patch does not apply
-> Patch failed at 0001 perf inject corrupts file by deleting event
-> hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> When you have resolved this problem, run "git am --continue".
-> If you prefer to skip this patch, run "git am --skip" instead.
-> To restore the original branch and stop patching, run "git am --abort".
-> [acme@five perf]$
 
-And you also forgot to update the comment and to remove the now unused
-'evsel' variable, find the updated patch below, please check.
+On 11/16/20 5:17 PM, Namhyung Kim wrote:
+> Hello Alex,
+> 
+> On Sat, Nov 14, 2020 at 6:28 AM Alejandro Colomar
+> <alx.manpages@gmail.com> wrote:
+>>
+>> From: Namhyung Kim <namhyung@gmail.com>
+>>
+>> There are lots of changes as usual.  I've tried to fill some missing
+>> bits in the man page but it'd be nice if you could take a look and put
+>> more info there.
+>>
+>> Signed-off-by: Namhyung Kim <namhyung@gmail.com>
+>> [alx: ffix + tfix]
+>> Cowritten-by : Alejandro Colomar <alx.manpages@gmail.com>
+>> Signed-off-by: Alejandro Colomar <alx.manpages@gmail.com>
+>> ---
+>>
+>> Hi Nahmyung,
+>>
+>> I fixed another typo,
+>> and mainly fixed many formatting changes I introduced
+>> a few days ago because we were discussing about
+>> trying to improve the formatting,
+>> but finally decided to continue with the old way.
+> 
+> Thanks a lot for fixing them!
+> 
+> I also found a broken formatting below and would like
+> to add more description of PERF_RECORD_SAMPLE.
+
+Hi Namhyung,
+
+Fine, could you send an updated patch with the changes?
 
 Thanks,
 
-- Arnaldo
-
-commit 2dd954d9ec9059f330799a32d1cfa507beb18e1a
-Author: Al Grant <al.grant@foss.arm.com>
-Date:   Fri Nov 13 20:38:26 2020 +0000
-
-    perf inject: Fix file corruption due to event deletion
-    
-    "perf inject" can create corrupt files when synthesizing sample events from AUX
-    data. This happens when in the input file, the first event (for the AUX data)
-    has a different sample_type from the second event (generally dummy).
-    
-    Specifically, they differ in the bits that indicate the standard fields
-    appended to perf records in the mmap buffer. "perf inject" deletes the first
-    event and moves up the second event to first position.
-    
-    The problem is with the synthetic PERF_RECORD_MMAP (etc.) events created
-    by "perf record".
-    
-    Since these are synthetic versions of events which are normally produced
-    by the kernel, they have to have the standard fields appended as
-    described by sample_type.
-    
-    "perf record" fills these in with zeroes, including the IDENTIFIER
-    field; perf readers interpret records with zero IDENTIFIER using the
-    descriptor for the first event in the file.
-    
-    Since "perf inject" changes the first event, these synthetic records are
-    then processed with the wrong value of sample_type, and the perf reader
-    reads bad data, reports on incorrect length records etc.
-    
-    Mismatching sample_types are seen with "perf record -e cs_etm//", where the AUX
-    event has TID|TIME|CPU|IDENTIFIER and the dummy event has TID|TIME|IDENTIFIER.
-    
-    Perhaps they could be the same, but it isn't normally a problem if they aren't
-    - perf has no problems reading the file.
-    
-    The sample_types have to agree on the position of IDENTIFIER, because
-    that's how perf finds the right event descriptor in the first place, but
-    they don't normally have to agree on other fields, and perf doesn't
-    check that they do.
-    
-    The problem is specific to the way "perf inject" reorganizes the events
-    and the way synthetic MMAP events are recorded with a zero identifier. A
-    simple solution is to stop "perf inject" deleting the tracing event.
-    
-    Committer testing
-    
-    Removed the now unused 'evsel' variable, update the comment about the
-    evsel removal not being performed anymore, and apply the patch manually
-    as it failed with this warning:
-    
-      warning: Patch sent with format=flowed; space at the end of lines might be lost.
-    
-    Testing it with:
-    
-      $ perf bench internals inject-build-id
-      # Running 'internals/inject-build-id' benchmark:
-        Average build-id injection took: 8.543 msec (+- 0.130 msec)
-        Average time per event: 0.838 usec (+- 0.013 usec)
-        Average memory usage: 12717 KB (+- 9 KB)
-        Average build-id-all injection took: 5.710 msec (+- 0.058 msec)
-        Average time per event: 0.560 usec (+- 0.006 usec)
-        Average memory usage: 12079 KB (+- 7 KB)
-      $
-    
-    Signed-off-by: Al Grant <al.grant@arm.com>
-    Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-    Acked-by: Namhyung Kim <namhyung@kernel.org>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    LPU-Reference: b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 14d6c88fed76f249..43937f4b399ad2ca 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -779,25 +779,15 @@ static int __cmd_inject(struct perf_inject *inject)
- 			dsos__hit_all(session);
- 		/*
- 		 * The AUX areas have been removed and replaced with
--		 * synthesized hardware events, so clear the feature flag and
--		 * remove the evsel.
-+		 * synthesized hardware events, so clear the feature flag.
- 		 */
- 		if (inject->itrace_synth_opts.set) {
--			struct evsel *evsel;
--
- 			perf_header__clear_feat(&session->header,
- 						HEADER_AUXTRACE);
- 			if (inject->itrace_synth_opts.last_branch ||
- 			    inject->itrace_synth_opts.add_last_branch)
- 				perf_header__set_feat(&session->header,
- 						      HEADER_BRANCH_STACK);
--			evsel = perf_evlist__id2evsel_strict(session->evlist,
--							     inject->aux_id);
--			if (evsel) {
--				pr_debug("Deleting %s\n", evsel__name(evsel));
--				evlist__remove(session->evlist, evsel);
--				evsel__delete(evsel);
--			}
- 		}
- 		session->header.data_offset = output_data_offset;
- 		session->header.data_size = inject->bytes_written;
+Alex
