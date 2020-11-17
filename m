@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A3EC5519F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Nov 2020 14:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A27C64E7B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Nov 2020 14:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715DE22240
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Nov 2020 14:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC31F223C7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Nov 2020 14:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgKQOtD (ORCPT
+        id S1729367AbgKQOtM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Nov 2020 09:49:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:59180 "EHLO foss.arm.com"
+        Tue, 17 Nov 2020 09:49:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:59242 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728198AbgKQOtD (ORCPT
+        id S1729358AbgKQOtL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Nov 2020 09:49:03 -0500
+        Tue, 17 Nov 2020 09:49:11 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7F1B101E;
-        Tue, 17 Nov 2020 06:49:02 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FD7311D4;
+        Tue, 17 Nov 2020 06:49:11 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.59.185])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A9A1B3F718;
-        Tue, 17 Nov 2020 06:49:00 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 69C263F718;
+        Tue, 17 Nov 2020 06:49:09 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         jolsa@redhat.com
@@ -38,9 +38,9 @@ Cc:     james.clark@arm.com, Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v5 01/12] perf tools: Improve topology test
-Date:   Tue, 17 Nov 2020 16:48:34 +0200
-Message-Id: <20201117144845.13714-2-james.clark@arm.com>
+Subject: [PATCH v5 05/12] perf tools: add new map type for aggregation
+Date:   Tue, 17 Nov 2020 16:48:38 +0200
+Message-Id: <20201117144845.13714-6-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201117144845.13714-1-james.clark@arm.com>
 References: <20201117144845.13714-1-james.clark@arm.com>
@@ -50,9 +50,13 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Improve the topology test to check all aggregation
-types. This is to lock down the behaviour before
-'id' is changed into a struct in later commits.
+Currently this is a duplicate of perf_cpu_map so that
+it can be used as a drop in replacement.
+
+In a later commit it will be changed from a map of ints
+to use the new cpu_aggr_id struct.
+
+No functional changes.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -65,97 +69,60 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: John Garry <john.garry@huawei.com>
 ---
- tools/perf/tests/topology.c | 53 ++++++++++++++++++++++++++++++++-----
- 1 file changed, 46 insertions(+), 7 deletions(-)
+ tools/perf/util/cpumap.c | 17 +++++++++++++++++
+ tools/perf/util/cpumap.h |  8 ++++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 22daf2bdf5fa..7bd8848d36b6 100644
---- a/tools/perf/tests/topology.c
-+++ b/tools/perf/tests/topology.c
-@@ -64,10 +64,11 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 		.path = path,
- 		.mode = PERF_DATA_MODE_READ,
- 	};
--	int i;
-+	int i, id;
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index e05a12bde073..b18e53506656 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -95,6 +95,23 @@ struct perf_cpu_map *perf_cpu_map__empty_new(int nr)
+ 	return cpus;
+ }
  
- 	session = perf_session__new(&data, false, NULL);
- 	TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
-+	cpu__setup_cpunode_map();
- 
- 	/* On platforms with large numbers of CPUs process_cpu_topology()
- 	 * might issue an error while reading the perf.data file section
-@@ -85,11 +86,18 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 	 *  "socket_id number is too big. You may need to upgrade the
- 	 *  perf tool."
- 	 *
--	 *  This is the reason why this test might be skipped.
-+	 *  This is the reason why this test might be skipped. aarch64 and
-+	 *  s390 always write this part of the header, even when the above
-+	 *  condition is true (see do_core_id_test in header.c). So always
-+	 *  run this test on those platforms.
- 	 */
--	if (!session->header.env.cpu)
-+	if (!session->header.env.cpu
-+			&& strncmp(session->header.env.arch, "s390", 4)
-+			&& strncmp(session->header.env.arch, "aarch64", 7))
- 		return TEST_SKIP;
- 
-+	TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
++struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr)
++{
++	struct cpu_aggr_map *cpus = malloc(sizeof(*cpus) + sizeof(int) * nr);
 +
- 	for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
- 		if (!cpu_map__has(map, i))
- 			continue;
-@@ -98,14 +106,45 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			 session->header.env.cpu[i].socket_id);
- 	}
- 
-+	// Test that core ID contains socket, die and core
-+	for (i = 0; i < map->nr; i++) {
-+		id = cpu_map__get_core(map, i, NULL);
-+		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
-+			session->header.env.cpu[map->map[i]].core_id == cpu_map__id_to_cpu(id));
++	if (cpus != NULL) {
++		int i;
 +
-+		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
-+			session->header.env.cpu[map->map[i]].socket_id ==
-+				cpu_map__id_to_socket(id));
++		cpus->nr = nr;
++		for (i = 0; i < nr; i++)
++			cpus->map[i] = -1;
 +
-+		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
-+			session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
++		refcount_set(&cpus->refcnt, 1);
 +	}
 +
-+	// Test that die ID contains socket and die
- 	for (i = 0; i < map->nr; i++) {
--		TEST_ASSERT_VAL("Core ID doesn't match",
--			(session->header.env.cpu[map->map[i]].core_id == (cpu_map__get_core(map, i, NULL) & 0xffff)));
-+		id = cpu_map__get_die(map, i, NULL);
-+		TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
-+			session->header.env.cpu[map->map[i]].socket_id ==
-+				cpu_map__id_to_socket(id));
- 
--		TEST_ASSERT_VAL("Socket ID doesn't match",
--			(session->header.env.cpu[map->map[i]].socket_id == cpu_map__get_socket(map, i, NULL)));
-+		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
-+			session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
- 	}
- 
-+	// Test that socket ID contains only socket
-+	for (i = 0; i < map->nr; i++) {
-+		id = cpu_map__get_socket(map, i, NULL);
-+		TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
-+			session->header.env.cpu[map->map[i]].socket_id ==
-+				cpu_map__id_to_socket(id));
-+	}
++	return cpus;
++}
 +
-+	// Test that node ID contains only node
-+	for (i = 0; i < map->nr; i++) {
-+		id = cpu_map__get_node(map, i, NULL);
-+		TEST_ASSERT_VAL("Node map - Node ID doesn't match",
-+			cpu__get_node(map->map[i]) == id);
-+	}
- 	perf_session__delete(session);
+ static int cpu__get_topology_int(int cpu, const char *name, int *value)
+ {
+ 	char path[PATH_MAX];
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index b8c2288a3f6d..ebd65c4f431b 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -11,9 +11,17 @@ struct aggr_cpu_id {
+ 	int id;
+ };
  
- 	return 0;
++struct cpu_aggr_map {
++	refcount_t refcnt;
++	int nr;
++	int map[];
++};
++
+ struct perf_record_cpu_map_data;
+ 
+ struct perf_cpu_map *perf_cpu_map__empty_new(int nr);
++struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr);
++
+ struct perf_cpu_map *cpu_map__new_data(struct perf_record_cpu_map_data *data);
+ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size);
+ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size);
 -- 
 2.28.0
 
