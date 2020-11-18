@@ -2,187 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCAEC5519F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 11:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC02C5519F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 16:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9EEE24199
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 11:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAF624835
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 16:37:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ffe8wuBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbgKRLVz (ORCPT
+        id S1725814AbgKRQhn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Nov 2020 06:21:55 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34756 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726297AbgKRLVz (ORCPT
+        Wed, 18 Nov 2020 11:37:43 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725874AbgKRQhn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Nov 2020 06:21:55 -0500
-Received: by mail-qk1-f195.google.com with SMTP id n132so1410626qke.1;
-        Wed, 18 Nov 2020 03:21:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ue6h7UrfTqoxTlMyjwQTIShtLqaWRi/0J/fOLIXOaXM=;
-        b=A2PtbYglonwLPFesxXBDyCBLcXCneraKCdPUNoilWNzOTyyvcGtm/bH4RDZF4yApFd
-         F9iPsfsSK1oFSxke9vuXfMwWb2fo4AXdmfZw/fSzYnf+54ln27qpl8srtQX9qtwTNdkb
-         vzBPz1GaJeKkGUa7XQG1AVPCQpW4oEybX0TK1WSWsZAzWgJcPLr57mBSxVVwVKzkrA3o
-         RE6vU3frI/3P6i4zq3us1bkzbnAxV+whjc6hWRZkqdPR7E8wpGeiVxLz/tXPEvDJn/em
-         SlmbvIGYNtdSKk/qZL8t6S+KHc7yjjZWYltiw7kiUroG6nkI4kz6FSwhx65MUnd6cDGq
-         3I6w==
-X-Gm-Message-State: AOAM530LaY1z8yHpMn8fqdkAGeZ950hwn09k5yLjMAXOD0MbuL1rzo3q
-        PW2k7gRwwCxNTZXEnf+/ObMgiqQjCFT5HSZ8qtK/8Yiv
-X-Google-Smtp-Source: ABdhPJzFvf4BA8UuO9eIPHYyF2YFEZwKd9mZInl4BmMFqjDraqOhBdMLaklXb42+gPLuClGm6bsZ3bagsHLD2Vzs+0w=
-X-Received: by 2002:a37:7201:: with SMTP id n1mr4002674qkc.148.1605698513321;
- Wed, 18 Nov 2020 03:21:53 -0800 (PST)
+        Wed, 18 Nov 2020 11:37:43 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AIGbeXI169112;
+        Wed, 18 Nov 2020 11:37:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : from : subject
+ : message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=g8MoWEQrUkbg6Xow9L7VByJNZkMRo/gP21k5U7kUm4E=;
+ b=Ffe8wuBYlD5ErC1bwUUSYR+awBdL71XHApQU8AOVzt8tI2khPB1SfTw8A+p8rS3CKiLp
+ eQoRcntgLDQO+8fWAVw3ns1/BtPzTyPxvOo3/SE+78z81JyYTOj8YF5rfXPpBkuXQPfH
+ IkAC1TFDvglEegbUioMKt98UPGeihvaXJKWPWtOHuzIImYXGVzfm9BygI5ZKqTaBLomc
+ Oq3yYwvGBflZs+t+Ym/RyxBypCb0IyRPNs1byKn6V5bFRHcRBAxoJZH+nSVv+ASEuAbK
+ uRM1+wFi8HqserV5dmDFBiZxB1ykugYxB3R3G/dJlotL+ODshvO6qAMatAIKVSzLwA/f Nw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 34w4xae1x3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Nov 2020 11:37:40 -0500
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AIGaxnR016705;
+        Wed, 18 Nov 2020 16:37:31 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma03ams.nl.ibm.com with ESMTP id 34t6v8cb5x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Nov 2020 16:37:31 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AIGbTcs29688088
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Nov 2020 16:37:29 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17F4E42041;
+        Wed, 18 Nov 2020 16:37:29 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8C1F4204D;
+        Wed, 18 Nov 2020 16:37:25 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.81.222.209])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Nov 2020 16:37:25 +0000 (GMT)
+To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Subject: Fedora 33 and perf probe failures
+Organization: IBM
+Message-ID: <63cdd43f-c970-6c7e-b322-a41f6d418cf7@linux.ibm.com>
+Date:   Wed, 18 Nov 2020 17:37:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-References: <20201117144845.13714-1-james.clark@arm.com> <20201117144845.13714-2-james.clark@arm.com>
-In-Reply-To: <20201117144845.13714-2-james.clark@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 18 Nov 2020 20:21:40 +0900
-Message-ID: <CAM9d7cj6zbsVB_DNmH0R9XqVJfXe9bofMwreH+u-BaDL-xm2_A@mail.gmail.com>
-Subject: Re: [PATCH v5 01/12] perf tools: Improve topology test
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-18_04:2020-11-17,2020-11-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 suspectscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2011180113
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+I debugged the failure of some perf test cases on Fedora 33. The following
+test cases fail on s390 and x86_64 using
 
-On Tue, Nov 17, 2020 at 11:49 PM James Clark <james.clark@arm.com> wrote:
->
-> Improve the topology test to check all aggregation
-> types. This is to lock down the behaviour before
-> 'id' is changed into a struct in later commits.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: John Garry <john.garry@huawei.com>
-> ---
->  tools/perf/tests/topology.c | 53 ++++++++++++++++++++++++++++++++-----
->  1 file changed, 46 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-> index 22daf2bdf5fa..7bd8848d36b6 100644
-> --- a/tools/perf/tests/topology.c
-> +++ b/tools/perf/tests/topology.c
-> @@ -64,10 +64,11 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->                 .path = path,
->                 .mode = PERF_DATA_MODE_READ,
->         };
-> -       int i;
-> +       int i, id;
->
->         session = perf_session__new(&data, false, NULL);
->         TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
-> +       cpu__setup_cpunode_map();
->
->         /* On platforms with large numbers of CPUs process_cpu_topology()
->          * might issue an error while reading the perf.data file section
-> @@ -85,11 +86,18 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->          *  "socket_id number is too big. You may need to upgrade the
->          *  perf tool."
->          *
-> -        *  This is the reason why this test might be skipped.
-> +        *  This is the reason why this test might be skipped. aarch64 and
-> +        *  s390 always write this part of the header, even when the above
-> +        *  condition is true (see do_core_id_test in header.c). So always
-> +        *  run this test on those platforms.
->          */
-> -       if (!session->header.env.cpu)
-> +       if (!session->header.env.cpu
-> +                       && strncmp(session->header.env.arch, "s390", 4)
-> +                       && strncmp(session->header.env.arch, "aarch64", 7))
->                 return TEST_SKIP;
->
-> +       TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
-> +
->         for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
->                 if (!cpu_map__has(map, i))
->                         continue;
-> @@ -98,14 +106,45 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
->                          session->header.env.cpu[i].socket_id);
->         }
->
-> +       // Test that core ID contains socket, die and core
-> +       for (i = 0; i < map->nr; i++) {
-> +               id = cpu_map__get_core(map, i, NULL);
-> +               TEST_ASSERT_VAL("Core map - Core ID doesn't match",
-> +                       session->header.env.cpu[map->map[i]].core_id == cpu_map__id_to_cpu(id));
-> +
-> +               TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
-> +                       session->header.env.cpu[map->map[i]].socket_id ==
-> +                               cpu_map__id_to_socket(id));
-> +
-> +               TEST_ASSERT_VAL("Core map - Die ID doesn't match",
-> +                       session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
-> +       }
-> +
-> +       // Test that die ID contains socket and die
->         for (i = 0; i < map->nr; i++) {
-> -               TEST_ASSERT_VAL("Core ID doesn't match",
-> -                       (session->header.env.cpu[map->map[i]].core_id == (cpu_map__get_core(map, i, NULL) & 0xffff)));
-> +               id = cpu_map__get_die(map, i, NULL);
-> +               TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
-> +                       session->header.env.cpu[map->map[i]].socket_id ==
-> +                               cpu_map__id_to_socket(id));
+[root@f33 yum.repos.d]# uname -a
+Linux f33 5.9.8-200.fc33.x86_64 #1 SMP Tue Nov 10 21:58:19 UTC 2020
+                                x86_64 x86_64 x86_64 GNU/Linux
+[root@f33 yum.repos.d]#
 
-I'm not sure it works.  It seems cpu_map__get_die() returns
-16 bit id (socket | die) but cpu_map__id_to_socket() takes
-32 bit id (socket | die | core), right?
+[root@f33 yum.repos.d]# perf test -F 74 77 78
+74: Use vfs_getname probe to get syscall args filenames
+                :Failed to write event: Invalid argument
+Error: Failed to add events.
+FAILED!
+77: Check open filename arg using perf trace + vfs_getname
+                :Failed to write event: Invalid argument
+Error: Failed to add events.
+FAILED!
+78: Add vfs_getname probe to get syscall args filenames
+                :Failed to write event: Invalid argument
+Error: Failed to add events.
+FAILED!
+[root@f33 yum.repos.d]#
 
->
-> -               TEST_ASSERT_VAL("Socket ID doesn't match",
-> -                       (session->header.env.cpu[map->map[i]].socket_id == cpu_map__get_socket(map, i, NULL)));
-> +               TEST_ASSERT_VAL("Die map - Die ID doesn't match",
-> +                       session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
->         }
->
-> +       // Test that socket ID contains only socket
-> +       for (i = 0; i < map->nr; i++) {
-> +               id = cpu_map__get_socket(map, i, NULL);
-> +               TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
-> +                       session->header.env.cpu[map->map[i]].socket_id ==
-> +                               cpu_map__id_to_socket(id));
+The root cause is the output of perf probe -L which returns:
+[root@f33 yum.repos.d]# perf probe -L getname_flags
+Specified source line is not found.
+Error: Failed to show lines.
+[root@f33 yum.repos.d]#
 
-Same here.
+whereas on my Fedora 32 installation this command shows
+[root@t35lp46 perf]# cat /etc/redhat-release
+Fedora release 32 (Thirty Two)
+[root@t35lp46 perf]#
 
-Thanks,
-Namhyung
+[root@t35lp46 perf]# ./perf probe -L getname_flags | tail -10
+     68                         return ERR_PTR(-ENOENT);
+                        }
+                }
 
+     72         result->uptr = filename;
+     73         result->aname = NULL;
+     74         audit_getname(result);
+                return result;
+}
 
-> +       }
-> +
-> +       // Test that node ID contains only node
-> +       for (i = 0; i < map->nr; i++) {
-> +               id = cpu_map__get_node(map, i, NULL);
-> +               TEST_ASSERT_VAL("Node map - Node ID doesn't match",
-> +                       cpu__get_node(map->map[i]) == id);
-> +       }
->         perf_session__delete(session);
->
->         return 0;
-> --
-> 2.28.0
->
+[root@t35lp46 perf]#
+
+Any ideas how to fix this? Is this failure related to a missing debuginfod
+setup, even when I have installed the debuginfo packages for the kernel:
+
+[root@f33 ~]# perf probe -L getname_flags
+Specified source line is not found.
+  Error: Failed to show lines.
+[root@f33 ~]# uname -a
+Linux f33 5.9.8-200.fc33.x86_64 #1 SMP Tue Nov 10 21:58:19 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+[root@f33 ~]# rpm -qa | fgrep kernel | fgrep debuginfo
+kernel-debuginfo-common-x86_64-5.9.8-200.fc33.x86_64
+kernel-debuginfo-5.9.8-200.fc33.x86_64
+kernel-tools-debuginfo-5.9.7-200.fc33.x86_64
+[root@f33 ~]#
+~                          
+
+Thanks a lot
+-- 
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
