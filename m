@@ -2,66 +2,69 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0175CC6369E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E5DC6379F
 	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 05:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7BC2220B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 05:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F632220B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 18 Nov 2020 05:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FC+BZ7Dw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSx5Exb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725832AbgKRFDl (ORCPT
+        id S1726200AbgKRFDq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 18 Nov 2020 00:03:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36526 "EHLO
+        Wed, 18 Nov 2020 00:03:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgKRFDl (ORCPT
+        with ESMTP id S1725834AbgKRFDp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 18 Nov 2020 00:03:41 -0500
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A7BC061A4D
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2020 21:03:39 -0800 (PST)
-Received: by mail-pf1-x44a.google.com with SMTP id x26so462144pfo.23
-        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2020 21:03:39 -0800 (PST)
+        Wed, 18 Nov 2020 00:03:45 -0500
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FFAC0613D4
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2020 21:03:44 -0800 (PST)
+Received: by mail-yb1-xb4a.google.com with SMTP id e19so716540ybc.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Nov 2020 21:03:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=XHkS0IrFQcowDQBwZTxPmQOZ+zkcfaqHXqP/H07K9L8=;
-        b=FC+BZ7DwsOGlR228NtU5hM1UOWWRWd4j2y3XsIXaj+BztrgBkUKQLp5agLO50EuGHK
-         VBPShpXThhe/yQIfU4Elk70+vBOiaZdX3PFTH482HLd5av3h8oxYQG3Z8aIxRCC5i9p4
-         o1SMwtKq5JPUd82iBg2K4MaqS5eZrmuuwHzQ8wE/aDp/qrZk5OC9nPiC/BRIDmEa1+VT
-         IxtL+3d94VngkJBEIjHOXSNF3s4pNlVImhO2uW+kV/McI7EUq5s9sR9pvPqLcbx9uWaF
-         tLBeUaVbtsD6gjVqLyG2thxDvkcA1pELbzlm0B/birJ0wEfa0G6/J8VpiP1hlCeotuJO
-         W+5w==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=uFz0KCM73TpvJCsC+Abj2fPwPBVrxW/KqD+HHaF74Ug=;
+        b=oSx5Exb7+cNxEE0tsBJewNc1XQ0zwGl6fMGhQV1zNGdi3GpS1bOKS+G8ee+E3OYNYf
+         mIGbYeDaGQrRUswlRGxWhyNrZJYbDfk+nsjc8fd9smnH9TKZQmcLBjolSr3AeC1HXPuT
+         5UnJFd/kbwIERQw6UDQ6uonoqXABpBDxDHGxmUWDePAix+jEfD+d6/Hl5vLjVzgnx2dV
+         uM0l7sitTPHjDeeaoHDIIWwm9HNk4EJeke4J0aMeE1RVQIycKGjBEMQMsDalELkRR+DZ
+         0JcGsrWhFAdfVO1OLF18q7VHzZtCrtz2UoSsJ5RvHuow6UOWvPTb06qIJUaJG39qLNUi
+         24pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=XHkS0IrFQcowDQBwZTxPmQOZ+zkcfaqHXqP/H07K9L8=;
-        b=XukAHkD2OC5XwyrCOqMfYUvmGRbPT0tNe3/PvyTB2n7f2dH1ZHHNigilZKwrfpKAYS
-         VvyhMWZb6XVvmVL+JGZ8WluhhvD7PNnjtZ64KCTkQbU0seYck9s0u3DbqE+AEPLcutUj
-         DjE+cffM2KVZS+e6EL4xoOEa2omXg1BaNiI+/nWB8rr0U4awxpQbNfETHjuRyp1o+PFo
-         b9WSPUe8zFEvQ3DRQaHWQDvNkS8QLPr3LFAqnIPf5rtTJpq/wOSCBLM95Qjgx7Zl3G4Q
-         MkogDSZYmK7JOBb5fFiEfjuPX8fujZK9+EyTWEImY9FMhwR5P6NAP8SoL1rFpfMUorms
-         ilNw==
-X-Gm-Message-State: AOAM533JnoeNPECe5BcOuMQ9cBfYYZG7nVmZ5VzObGQmd/Zh0f4p/QWt
-        mXd9RRKwa4NdhSYAAnwzNCoNbB3L8kFp
-X-Google-Smtp-Source: ABdhPJy5wv5rrYgY4sH21jS/d/gz+btK3xy7UuenbdxpWfMfNB1LJOXdCr321EkxP2OpB1Yh6BzSnq10jTL5
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=uFz0KCM73TpvJCsC+Abj2fPwPBVrxW/KqD+HHaF74Ug=;
+        b=YtMMngNX5QIIbVXQ70Hdcp7HHBC8OLv0/Ox9gFp6qhWnST3zEhjtmbnGFJyf8mapLB
+         mVq0PMqyextLRCcUe3PTnrqx0bXETnthqL71K49PTpiIID6u7yN2xgWCLXSrIuNTLUq5
+         1CmYbnXFlWpaduUMKodTPGDB2RKTOO4o5J7Lxh++R8qkGIseb/FnRfUwUTbeZkOyAWg7
+         sqxZHF9mg5jhx7nCtB045OC3NSxlbfbC4Q4xnPPfNO7x4DjpesqiQq8M7eJ0JyPhZDu8
+         kTEKa3pbYyWA1pb8CaBs2tliqhahNc+O+hrWteAXfv2gn5XfJqfiUat+kZRNEDBCUNHh
+         1uYQ==
+X-Gm-Message-State: AOAM532Wbz0ttBylDAvlBtkpUsMSPUelBBQ8CtQ9B/NpfIaQ0mKAO57U
+        7frfu0jaIHsAHrmz9VQ84CKyV52wFLKB
+X-Google-Smtp-Source: ABdhPJxRzirO/Q7puaOoiAnbUo7FcbeTkhNPn6XpYgRnM1LY0V5WAHOAUwt8soC5QsRoLNj23OyKGe9Iv8mL
 Sender: "irogers via sendgmr" <irogers@irogers.svl.corp.google.com>
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:2:f693:9fff:fef4:4583])
- (user=irogers job=sendgmr) by 2002:a17:902:8685:b029:d7:bb:aa2 with SMTP id
- g5-20020a1709028685b02900d700bb0aa2mr2808834plo.13.1605675819020; Tue, 17 Nov
- 2020 21:03:39 -0800 (PST)
-Date:   Tue, 17 Nov 2020 21:03:30 -0800
-Message-Id: <20201118050335.2347358-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:ae14:: with SMTP id
+ a20mr5529367ybj.43.1605675823256; Tue, 17 Nov 2020 21:03:43 -0800 (PST)
+Date:   Tue, 17 Nov 2020 21:03:32 -0800
+In-Reply-To: <20201118050335.2347358-1-irogers@google.com>
+Message-Id: <20201118050335.2347358-3-irogers@google.com>
 Mime-Version: 1.0
+References: <20201118050335.2347358-1-irogers@google.com>
 X-Mailer: git-send-email 2.29.2.299.gdc1121823c-goog
-Subject: [PATCH v2 0/5] Don't compute events that won't be used in a metric.
+Subject: [PATCH v2 2/5] perf metric: Use NAN for missing event IDs.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,39 +85,38 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-    
-For a metric like:
-  EVENT1 if #smt_on else EVENT2
-    
-currently EVENT1 and EVENT2 will be measured and then when the metric
-is reported EVENT1 or EVENT2 will be printed depending on the value
-from smt_on() during the expr parsing. Computing both events is
-unnecessary and can lead to multiplexing as discussed in this thread:
-https://lore.kernel.org/lkml/20201110100346.2527031-1-irogers@google.com/
+If during computing a metric an event (id) is missing the parsing
+aborts. A later patch will make it so that events that aren't used in
+the output are deliberately omitted, in which case we don't want the
+abort. Modify the missing ID case to report NAN for these cases.
 
-This change modifies expression parsing so that constants are
-considered when building the set of ids (events) and only events not
-contributing to a constant value are measured.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/expr.y | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v2. is a rebase.
-
-Ian Rogers (5):
-  perf metric: Restructure struct expr_parse_ctx.
-  perf metric: Use NAN for missing event IDs.
-  perf metric: Rename expr__find_other.
-  perf metric: Add utilities to work on ids map.
-  perf metric: Don't compute unused events.
-
- tools/perf/tests/expr.c       | 148 ++++++++++-----
- tools/perf/tests/pmu-events.c |  42 +++--
- tools/perf/util/expr.c        | 136 ++++++++++++--
- tools/perf/util/expr.h        |  17 +-
- tools/perf/util/expr.l        |   9 -
- tools/perf/util/expr.y        | 343 +++++++++++++++++++++++++++-------
- tools/perf/util/metricgroup.c |  44 +++--
- tools/perf/util/stat-shadow.c |  54 ++++--
- 8 files changed, 586 insertions(+), 207 deletions(-)
-
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index b2ada8f8309a..c22e3500a40f 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -1,6 +1,7 @@
+ /* Simple expression parser */
+ %{
+ #define YYDEBUG 1
++#include <math.h>
+ #include <stdio.h>
+ #include "util.h"
+ #include "util/debug.h"
+@@ -89,8 +90,7 @@ expr:	  NUMBER
+ 					struct expr_id_data *data;
+ 
+ 					if (expr__resolve_id(ctx, $1, &data)) {
+-						free($1);
+-						YYABORT;
++						$$ = NAN;
+ 					}
+ 
+ 					$$ = expr_id_data__value(data);
 -- 
 2.29.2.299.gdc1121823c-goog
 
