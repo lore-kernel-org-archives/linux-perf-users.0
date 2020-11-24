@@ -2,112 +2,117 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E6DC2D0E4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Nov 2020 22:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B83FC56202
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Nov 2020 09:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6A23206A5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Nov 2020 22:13:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1350E2076B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Nov 2020 09:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H1enj2LQ"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rjMCEQAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgKWWNQ (ORCPT
+        id S1731107AbgKXJfI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Nov 2020 17:13:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:39594 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728989AbgKWWNQ (ORCPT
+        Tue, 24 Nov 2020 04:35:08 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14064 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731004AbgKXJfH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Nov 2020 17:13:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606169595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LUzeaMowYEmx6ZVoUNh1z7hTPU36/6HTvCubjhwIgxw=;
-        b=H1enj2LQ5gltY7Y65aCi52IQN0AGuIkSZjCbKM9wh9w3IvH4nSmCvZVbHvXpdgJgUjLh9W
-        kfOyeFkbxv13ni7OZZz+p/M89ovGyjrzIUQWybUCiGdp/462LbBNCKbBqRar0EUiTVBM9r
-        Tkvf3XkIrzzhEVB9VXUzwVfPeCram/g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-270-XPe7M0S2NUKxa2Ga9LXB2Q-1; Mon, 23 Nov 2020 17:13:00 -0500
-X-MC-Unique: XPe7M0S2NUKxa2Ga9LXB2Q-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C1665A0C06;
-        Mon, 23 Nov 2020 22:12:58 +0000 (UTC)
-Received: from krava (unknown [10.40.195.242])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5A2455D9E3;
-        Mon, 23 Nov 2020 22:12:47 +0000 (UTC)
-Date:   Mon, 23 Nov 2020 23:12:47 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jan Kratochvil <jan.kratochvil@redhat.com>
-Cc:     "Frank Ch. Eigler" <fche@redhat.com>,
-        Mark Wielaard <mjw@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        John Levon <levon@movementarian.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: libdw dwarf unwind issue
-Message-ID: <20201123221247.GC2003988@krava>
-References: <20201103221709.GL3597846@krava>
- <20201122222751.GA1362915@host1.jankratochvil.net>
+        Tue, 24 Nov 2020 04:35:07 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0AO9XR7P120656;
+        Tue, 24 Nov 2020 04:35:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=NoNyQzr1jquBdTjKz6J3ZBvOvZAC+40G7+eT7V7mZ4Q=;
+ b=rjMCEQAMHyGVjpr3oXhEVT4wq/9FZ6LGAFFiLtfLejwT7gOr9mRSUzdgFtQiYOpScigU
+ k6XdHPhfIGgVL0B2qG676QYWlrPT2YF9Ug7Ln0ov9Ic3WSXG8INPFcB9OftodtPTUGqK
+ 89Or6khfjkpTBQcwrDgM/S4WWdQAo9S7SPPX92+dSff8oTXWK3fR1g2+g/eMhHk2ngO7
+ KWvKSye/NYkV9PnRuJMMU5I3IYy6dEhAC2Hn7WgQguin68v5yJazz06We/1iIof6FR3Q
+ jAVyjb52UReMKLVIWkSiin8Ic3Lz7WbLRQ20GghP8UJp+gAN3xcybuRLdKd9SzdEpGZl 3Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 350n10a3nd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Nov 2020 04:35:02 -0500
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0AO9YSIU127745;
+        Tue, 24 Nov 2020 04:35:02 -0500
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 350n10a3m6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Nov 2020 04:35:02 -0500
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0AO9WB8M025222;
+        Tue, 24 Nov 2020 09:35:00 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 34xt5hbend-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Nov 2020 09:34:59 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0AO9YvHh6292200
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Nov 2020 09:34:57 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1497D4C04A;
+        Tue, 24 Nov 2020 09:34:57 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58CEB4C058;
+        Tue, 24 Nov 2020 09:34:54 +0000 (GMT)
+Received: from [9.199.32.189] (unknown [9.199.32.189])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Nov 2020 09:34:54 +0000 (GMT)
+Subject: Re: [PATCH] perf test: Skip test 68 for Powerpc
+To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org
+Cc:     jolsa@redhat.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        irogers@google.com, tmricht@linux.ibm.com, rbernon@codeweavers.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20201104082954.57338-1-tmricht@linux.ibm.com>
+ <20201119135022.36340-1-kjain@linux.ibm.com>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Message-ID: <4a2908ca-6b75-c688-ec3b-7f37783f08cc@linux.ibm.com>
+Date:   Tue, 24 Nov 2020 15:04:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201122222751.GA1362915@host1.jankratochvil.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20201119135022.36340-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.312,18.0.737
+ definitions=2020-11-24_04:2020-11-24,2020-11-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 clxscore=1011 phishscore=0 bulkscore=0
+ mlxscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2011240058
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Nov 22, 2020 at 11:27:51PM +0100, Jan Kratochvil wrote:
 
-SNIP
 
->              --1.15%--iothread_run
->                        aio_poll
->                        qemu_poll_ns
+On 11/19/20 7:20 PM, Kajol Jain wrote:
+> Commit ed21d6d7c48e6e ("perf tests: Add test for PE binary format support")
+> adds a WINDOWS EXE file named tests/pe-file.exe, which is
+> examined by the test case 'PE file support'. As powerpc doesn't support
+> it, we are skipping this test.
 > 
+> Result in power9 platform before this patach:
+> [command]# ./perf test -F 68
+> 68: PE file support                               : Failed!
 > 
-> > any idea why libdw is doing that? ;-)
+> Result in power9 platform after this patch:
+> [command]# ./perf test -F 68
+> 68: PE file support                               : Skip
 > 
-> Because libdw was reporting separate debuginfo file as the main file:
-> 
-> (lldb) p thread->process->dwfl->modulelist->main.name
-> (char *) $1 = 0x0000000000b52490 "/home/jkratoch/.debug/.build-id/fc/d0111443729957fa8ef9511ff5dc3e9a5ccf9d/debug"
-> (lldb) p thread->process->dwfl->modulelist->debug.name
-> (char *) $2 = 0x0000000000000000
-> 
-> The correct way is to report the main ELF file as the main file:
-> 
-> (lldb) p thread->process->dwfl->modulelist->main.name
-> (char *) $1 = 0x0000000000b52490 "/home/jkratoch/.debug/.build-id/fc/d0111443729957fa8ef9511ff5dc3e9a5ccf9d/elf"
-> (lldb) p thread->process->dwfl->modulelist->debug.name
-> (char *) $2 = 0x0000000000000000
-> 
-> In some cases it may later fill-in even the ->debug.name with "/debug" filename.
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 
-hi,
-it fixes the issue for me, but it breaks the dwarf test:
-
-72: DWARF unwind                                                    : FAILED!
-[jolsa@krava perf]$ sudo ./perf test dwarf -v
-72: DWARF unwind                                                    :
---- start ---
-test child forked, pid 2084484
-unwind: failed with 'No such file or directory'
-got wrong number of stack entries 0 != 8
-test child finished with -1
----- end ----
-DWARF unwind: FAILED!
-
-thanks,
-jirka
-
+Reviewed-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
