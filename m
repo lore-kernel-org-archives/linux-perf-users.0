@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5A1C64E7A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D1AC64E7B
 	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 14:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C153620B80
+	by mail.kernel.org (Postfix) with ESMTP id F34DC2053B
 	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 14:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390780AbgKZOOC (ORCPT
+        id S2390231AbgKZOOF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Nov 2020 09:14:02 -0500
-Received: from foss.arm.com ([217.140.110.172]:34244 "EHLO foss.arm.com"
+        Thu, 26 Nov 2020 09:14:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:34258 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389867AbgKZOOB (ORCPT
+        id S2389834AbgKZOOE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Nov 2020 09:14:01 -0500
+        Thu, 26 Nov 2020 09:14:04 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3B211516;
-        Thu, 26 Nov 2020 06:14:00 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77F771516;
+        Thu, 26 Nov 2020 06:14:03 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.53.242])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A5CDD3F71F;
-        Thu, 26 Nov 2020 06:13:58 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 420B93F71F;
+        Thu, 26 Nov 2020 06:14:01 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         jolsa@redhat.com, namhyung@kernel.org
@@ -37,9 +37,9 @@ Cc:     james.clark@arm.com, john.garry@huawei.com,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v6 06/12] perf tools: drop in cpu_aggr_map struct
-Date:   Thu, 26 Nov 2020 16:13:22 +0200
-Message-Id: <20201126141328.6509-7-james.clark@arm.com>
+Subject: [PATCH v6 07/12] perf tools: Start using cpu_aggr_id in map
+Date:   Thu, 26 Nov 2020 16:13:23 +0200
+Message-Id: <20201126141328.6509-8-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201126141328.6509-1-james.clark@arm.com>
 References: <20201126141328.6509-1-james.clark@arm.com>
@@ -49,12 +49,8 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Replace usages of perf_cpu_map with cpu_aggr map in
-places that are involved with perf stat aggregation.
-
-This will then later be changed to be a map of
-cpu_aggr_id rather than an int so that more data can
-be stored.
+Use the new cpu_aggr_id struct in the cpu map
+instead of int so that it can store more data.
 
 No functional changes.
 
@@ -69,169 +65,109 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: John Garry <john.garry@huawei.com>
 ---
- tools/perf/builtin-stat.c | 29 ++++++++++++++++++++++-------
- tools/perf/util/cpumap.c  | 12 ++++++------
- tools/perf/util/cpumap.h  | 10 +++++-----
- tools/perf/util/stat.h    |  4 ++--
- 4 files changed, 35 insertions(+), 20 deletions(-)
+ tools/perf/builtin-stat.c      | 6 +++---
+ tools/perf/util/cpumap.c       | 8 ++++----
+ tools/perf/util/cpumap.h       | 2 +-
+ tools/perf/util/stat-display.c | 6 +++---
+ 4 files changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f10c67a26472..344e50651b55 100644
+index 344e50651b55..afe9fa6112b6 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -1322,14 +1322,29 @@ static int perf_stat_init_aggr_mode(void)
- 	 * the aggregation translate cpumap.
- 	 */
- 	nr = perf_cpu_map__max(evsel_list->core.cpus);
--	stat_config.cpus_aggr_map = perf_cpu_map__empty_new(nr + 1);
-+	stat_config.cpus_aggr_map = cpu_aggr_map__empty_new(nr + 1);
- 	return stat_config.cpus_aggr_map ? 0 : -ENOMEM;
- }
+@@ -1223,10 +1223,10 @@ static struct aggr_cpu_id perf_stat__get_aggr(struct perf_stat_config *config,
  
-+static void cpu_aggr_map__delete(struct cpu_aggr_map *map)
-+{
-+	if (map) {
-+		WARN_ONCE(refcount_read(&map->refcnt) != 0,
-+			  "cpu_aggr_map refcnt unbalanced\n");
-+		free(map);
-+	}
-+}
-+
-+static void cpu_aggr_map__put(struct cpu_aggr_map *map)
-+{
-+	if (map && refcount_dec_and_test(&map->refcnt))
-+		cpu_aggr_map__delete(map);
-+}
-+
- static void perf_stat__exit_aggr_mode(void)
- {
--	perf_cpu_map__put(stat_config.aggr_map);
--	perf_cpu_map__put(stat_config.cpus_aggr_map);
-+	cpu_aggr_map__put(stat_config.aggr_map);
-+	cpu_aggr_map__put(stat_config.cpus_aggr_map);
- 	stat_config.aggr_map = NULL;
- 	stat_config.cpus_aggr_map = NULL;
- }
-@@ -1427,25 +1442,25 @@ static struct aggr_cpu_id perf_env__get_node(struct perf_cpu_map *map, int idx,
- }
+ 	cpu = map->map[idx];
  
- static int perf_env__build_socket_map(struct perf_env *env, struct perf_cpu_map *cpus,
--				      struct perf_cpu_map **sockp)
-+				      struct cpu_aggr_map **sockp)
- {
- 	return cpu_map__build_map(cpus, sockp, perf_env__get_socket, env);
- }
+-	if (config->cpus_aggr_map->map[cpu] == -1)
+-		config->cpus_aggr_map->map[cpu] = get_id(config, map, idx).id;
++	if (cpu_map__aggr_cpu_id_is_empty(config->cpus_aggr_map->map[cpu]))
++		config->cpus_aggr_map->map[cpu] = get_id(config, map, idx);
  
- static int perf_env__build_die_map(struct perf_env *env, struct perf_cpu_map *cpus,
--				   struct perf_cpu_map **diep)
-+				   struct cpu_aggr_map **diep)
- {
- 	return cpu_map__build_map(cpus, diep, perf_env__get_die, env);
- }
- 
- static int perf_env__build_core_map(struct perf_env *env, struct perf_cpu_map *cpus,
--				    struct perf_cpu_map **corep)
-+				    struct cpu_aggr_map **corep)
- {
- 	return cpu_map__build_map(cpus, corep, perf_env__get_core, env);
- }
- 
- static int perf_env__build_node_map(struct perf_env *env, struct perf_cpu_map *cpus,
--				    struct perf_cpu_map **nodep)
-+				    struct cpu_aggr_map **nodep)
- {
- 	return cpu_map__build_map(cpus, nodep, perf_env__get_node, env);
- }
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index b18e53506656..ea81586305f4 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -151,12 +151,12 @@ static int cmp_aggr_cpu_id(const void *a_pointer, const void *b_pointer)
- 	return a->id - b->id;
- }
- 
--int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
-+int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
- 		       struct aggr_cpu_id (*f)(struct perf_cpu_map *map, int cpu, void *data),
- 		       void *data)
- {
- 	int nr = cpus->nr;
--	struct perf_cpu_map *c = perf_cpu_map__empty_new(nr);
-+	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(nr);
- 	int cpu, s2;
- 	struct aggr_cpu_id s1;
- 
-@@ -279,22 +279,22 @@ struct aggr_cpu_id cpu_map__get_node(struct perf_cpu_map *map, int idx, void *da
+-	id.id = config->cpus_aggr_map->map[cpu];
++	id = config->cpus_aggr_map->map[cpu];
  	return id;
  }
  
--int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct perf_cpu_map **sockp)
-+int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp)
- {
- 	return cpu_map__build_map(cpus, sockp, cpu_map__get_socket, NULL);
- }
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index ea81586305f4..b50609b9a585 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -97,14 +97,14 @@ struct perf_cpu_map *perf_cpu_map__empty_new(int nr)
  
--int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct perf_cpu_map **diep)
-+int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep)
+ struct cpu_aggr_map *cpu_aggr_map__empty_new(int nr)
  {
- 	return cpu_map__build_map(cpus, diep, cpu_map__get_die, NULL);
- }
+-	struct cpu_aggr_map *cpus = malloc(sizeof(*cpus) + sizeof(int) * nr);
++	struct cpu_aggr_map *cpus = malloc(sizeof(*cpus) + sizeof(struct aggr_cpu_id) * nr);
  
--int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct perf_cpu_map **corep)
-+int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **corep)
- {
- 	return cpu_map__build_map(cpus, corep, cpu_map__get_core, NULL);
- }
+ 	if (cpus != NULL) {
+ 		int i;
  
--int cpu_map__build_node_map(struct perf_cpu_map *cpus, struct perf_cpu_map **numap)
-+int cpu_map__build_node_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **numap)
- {
- 	return cpu_map__build_map(cpus, numap, cpu_map__get_node, NULL);
- }
+ 		cpus->nr = nr;
+ 		for (i = 0; i < nr; i++)
+-			cpus->map[i] = -1;
++			cpus->map[i] = cpu_map__empty_aggr_cpu_id();
+ 
+ 		refcount_set(&cpus->refcnt, 1);
+ 	}
+@@ -169,11 +169,11 @@ int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
+ 	for (cpu = 0; cpu < nr; cpu++) {
+ 		s1 = f(cpus, cpu, data);
+ 		for (s2 = 0; s2 < c->nr; s2++) {
+-			if (s1.id == c->map[s2])
++			if (cpu_map__compare_aggr_cpu_id(s1, c->map[s2]))
+ 				break;
+ 		}
+ 		if (s2 == c->nr) {
+-			c->map[c->nr] = s1.id;
++			c->map[c->nr] = s1;
+ 			c->nr++;
+ 		}
+ 	}
 diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index ebd65c4f431b..b112069038be 100644
+index b112069038be..d8fc265bc762 100644
 --- a/tools/perf/util/cpumap.h
 +++ b/tools/perf/util/cpumap.h
-@@ -34,10 +34,10 @@ int cpu_map__get_core_id(int cpu);
- struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *data);
- int cpu_map__get_node_id(int cpu);
- struct aggr_cpu_id  cpu_map__get_node(struct perf_cpu_map *map, int idx, void *data);
--int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct perf_cpu_map **sockp);
--int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct perf_cpu_map **diep);
--int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct perf_cpu_map **corep);
--int cpu_map__build_node_map(struct perf_cpu_map *cpus, struct perf_cpu_map **nodep);
-+int cpu_map__build_socket_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **sockp);
-+int cpu_map__build_die_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **diep);
-+int cpu_map__build_core_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **corep);
-+int cpu_map__build_node_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **nodep);
- const struct perf_cpu_map *cpu_map__online(void); /* thread unsafe */
+@@ -14,7 +14,7 @@ struct aggr_cpu_id {
+ struct cpu_aggr_map {
+ 	refcount_t refcnt;
+ 	int nr;
+-	int map[];
++	struct aggr_cpu_id map[];
+ };
  
- static inline int cpu_map__socket(struct perf_cpu_map *sock, int s)
-@@ -69,7 +69,7 @@ int cpu__max_cpu(void);
- int cpu__max_present_cpu(void);
- int cpu__get_node(int cpu);
+ struct perf_record_cpu_map_data;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 1a3d66329d73..da0766403d3b 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -509,7 +509,7 @@ static void aggr_update_shadow(struct perf_stat_config *config,
+ 	struct evsel *counter;
  
--int cpu_map__build_map(struct perf_cpu_map *cpus, struct perf_cpu_map **res,
-+int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
- 		       struct aggr_cpu_id (*f)(struct perf_cpu_map *map, int cpu, void *data),
- 		       void *data);
+ 	for (s = 0; s < config->aggr_map->nr; s++) {
+-		id.id = config->aggr_map->map[s];
++		id = config->aggr_map->map[s];
+ 		evlist__for_each_entry(evlist, counter) {
+ 			val = 0;
+ 			for (cpu = 0; cpu < evsel__nr_cpus(counter); cpu++) {
+@@ -641,7 +641,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	struct aggr_cpu_id id;
+ 	double uval;
  
-diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-index 888a78bef014..15b88c2c5101 100644
---- a/tools/perf/util/stat.h
-+++ b/tools/perf/util/stat.h
-@@ -139,9 +139,9 @@ struct perf_stat_config {
- 	const char		*csv_sep;
- 	struct stats		*walltime_nsecs_stats;
- 	struct rusage		 ru_data;
--	struct perf_cpu_map		*aggr_map;
-+	struct cpu_aggr_map	*aggr_map;
- 	aggr_get_id_t		 aggr_get_id;
--	struct perf_cpu_map		*cpus_aggr_map;
-+	struct cpu_aggr_map	*cpus_aggr_map;
- 	u64			*walltime_run;
- 	struct rblist		 metric_events;
- 	int			 ctl_fd;
+-	ad.id.id = id.id = config->aggr_map->map[s];
++	ad.id = id = config->aggr_map->map[s];
+ 	ad.val = ad.ena = ad.run = 0;
+ 	ad.nr = 0;
+ 	if (!collect_data(config, counter, aggr_cb, &ad))
+@@ -1169,7 +1169,7 @@ static void print_percore_thread(struct perf_stat_config *config,
+ 	for (int i = 0; i < evsel__nr_cpus(counter); i++) {
+ 		s2 = config->aggr_get_id(config, evsel__cpus(counter), i);
+ 		for (s = 0; s < config->aggr_map->nr; s++) {
+-			id.id = config->aggr_map->map[s];
++			id = config->aggr_map->map[s];
+ 			if (cpu_map__compare_aggr_cpu_id(s2, id))
+ 				break;
+ 		}
 -- 
 2.28.0
 
