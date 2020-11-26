@@ -5,28 +5,28 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3402AC71155
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB93DC8300B
 	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 14:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00EE020B80
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 14:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859182053B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 14:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390916AbgKZOOM (ORCPT
+        id S2390906AbgKZOOP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Nov 2020 09:14:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:34312 "EHLO foss.arm.com"
+        Thu, 26 Nov 2020 09:14:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:34330 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390906AbgKZOOM (ORCPT
+        id S2390266AbgKZOOP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Nov 2020 09:14:12 -0500
+        Thu, 26 Nov 2020 09:14:15 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 803961516;
-        Thu, 26 Nov 2020 06:14:11 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78A3A153B;
+        Thu, 26 Nov 2020 06:14:14 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.53.242])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3F0DE3F71F;
-        Thu, 26 Nov 2020 06:14:09 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0E023F71F;
+        Thu, 26 Nov 2020 06:14:11 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         jolsa@redhat.com, namhyung@kernel.org
@@ -37,9 +37,9 @@ Cc:     james.clark@arm.com, john.garry@huawei.com,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH v6 10/12] perf tools: Add separate die member
-Date:   Thu, 26 Nov 2020 16:13:26 +0200
-Message-Id: <20201126141328.6509-11-james.clark@arm.com>
+Subject: [PATCH v6 11/12] perf tools: Add separate core member
+Date:   Thu, 26 Nov 2020 16:13:27 +0200
+Message-Id: <20201126141328.6509-12-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20201126141328.6509-1-james.clark@arm.com>
 References: <20201126141328.6509-1-james.clark@arm.com>
@@ -49,7 +49,7 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add die as a separate member so that it doesn't have to be
+Add core as a separate member so that it doesn't have to be
 packed into the int value.
 
 Signed-off-by: James Clark <james.clark@arm.com>
@@ -63,233 +63,227 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Thomas Richter <tmricht@linux.ibm.com>
 Cc: John Garry <john.garry@huawei.com>
 ---
- tools/perf/builtin-stat.c      | 14 +++-----------
- tools/perf/tests/topology.c    |  8 +++++---
- tools/perf/util/cpumap.c       | 28 ++++++++++++++--------------
+ tools/perf/builtin-stat.c      |  9 +++------
+ tools/perf/tests/topology.c    |  6 +++++-
+ tools/perf/util/cpumap.c       | 18 ++++++++++--------
  tools/perf/util/cpumap.h       |  6 +-----
- tools/perf/util/stat-display.c |  6 +++---
- 5 files changed, 26 insertions(+), 36 deletions(-)
+ tools/perf/util/stat-display.c | 16 ++++++++--------
+ 5 files changed, 27 insertions(+), 28 deletions(-)
 
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 193e7a4e0c7b..514144dad8b1 100644
+index 514144dad8b1..d79a29e22dfd 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -1389,11 +1389,7 @@ static struct aggr_cpu_id perf_env__get_die(struct perf_cpu_map *map, int idx, v
- 		 * make a unique ID.
- 		 */
- 		id.socket = env->cpu[cpu].socket_id;
--
--		if (WARN_ONCE(env->cpu[cpu].die_id >> 8, "The die id number is too big.\n"))
--			return cpu_map__empty_aggr_cpu_id();
--
--		id.id = env->cpu[cpu].die_id & 0xff;
-+		id.die = env->cpu[cpu].die_id;
- 	}
- 
- 	return id;
-@@ -1407,20 +1403,16 @@ static struct aggr_cpu_id perf_env__get_core(struct perf_cpu_map *map, int idx,
- 
+@@ -1404,15 +1404,12 @@ static struct aggr_cpu_id perf_env__get_core(struct perf_cpu_map *map, int idx,
  	if (cpu != -1) {
  		/*
--		 * encode die id in bit range 23:16
  		 * core_id is relative to socket and die,
- 		 * we need a global id. So we combine
- 		 * socket + die id + core id
+-		 * we need a global id. So we combine
+-		 * socket + die id + core id
++		 * we need a global id. So we set
++		 * socket, die id and core id
  		 */
--		if (WARN_ONCE(env->cpu[cpu].die_id >> 8, "The die id number is too big.\n"))
+-		if (WARN_ONCE(env->cpu[cpu].core_id >> 16, "The core id number is too big.\n"))
 -			return cpu_map__empty_aggr_cpu_id();
 -
- 		if (WARN_ONCE(env->cpu[cpu].core_id >> 16, "The core id number is too big.\n"))
- 			return cpu_map__empty_aggr_cpu_id();
- 
  		id.socket = env->cpu[cpu].socket_id;
--		id.id = (env->cpu[cpu].die_id << 16) |
--		       (env->cpu[cpu].core_id & 0xffff);
-+		id.die = env->cpu[cpu].die_id;
-+		id.id = env->cpu[cpu].core_id & 0xffff;
+ 		id.die = env->cpu[cpu].die_id;
+-		id.id = env->cpu[cpu].core_id & 0xffff;
++		id.core = env->cpu[cpu].core_id;
  	}
  
  	return id;
 diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
-index 7a07827c0707..da6ed47db491 100644
+index da6ed47db491..6779c7b93649 100644
 --- a/tools/perf/tests/topology.c
 +++ b/tools/perf/tests/topology.c
-@@ -117,7 +117,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			session->header.env.cpu[map->map[i]].socket_id == id.socket);
+@@ -111,7 +111,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+ 	for (i = 0; i < map->nr; i++) {
+ 		id = cpu_map__get_core(map, i, NULL);
+ 		TEST_ASSERT_VAL("Core map - Core ID doesn't match",
+-			session->header.env.cpu[map->map[i]].core_id == cpu_map__id_to_cpu(id.id));
++			session->header.env.cpu[map->map[i]].core_id == id.core);
  
+ 		TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
+ 			session->header.env.cpu[map->map[i]].socket_id == id.socket);
+@@ -119,6 +119,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
  		TEST_ASSERT_VAL("Core map - Die ID doesn't match",
--			session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id.id));
-+			session->header.env.cpu[map->map[i]].die_id == id.die);
+ 			session->header.env.cpu[map->map[i]].die_id == id.die);
  		TEST_ASSERT_VAL("Core map - Node ID is set", id.node == -1);
++		TEST_ASSERT_VAL("Core map - ID is set", id.id == -1);
  	}
  
-@@ -128,10 +128,10 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			session->header.env.cpu[map->map[i]].socket_id == id.socket);
- 
- 		TEST_ASSERT_VAL("Die map - Die ID doesn't match",
--			session->header.env.cpu[map->map[i]].die_id ==
--				cpu_map__id_to_die(id.id << 16));
-+			session->header.env.cpu[map->map[i]].die_id == id.die);
+ 	// Test that die ID contains socket and die
+@@ -132,6 +133,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
  
  		TEST_ASSERT_VAL("Die map - Node ID is set", id.node == -1);
-+		TEST_ASSERT_VAL("Die map - ID is set", id.id == -1);
+ 		TEST_ASSERT_VAL("Die map - ID is set", id.id == -1);
++		TEST_ASSERT_VAL("Die map - Core is set", id.core == -1);
  	}
  
  	// Test that socket ID contains only socket
-@@ -141,6 +141,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			session->header.env.cpu[map->map[i]].socket_id == id.socket);
- 
+@@ -143,6 +145,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
  		TEST_ASSERT_VAL("Socket map - Node ID is set", id.node == -1);
-+		TEST_ASSERT_VAL("Socket map - Die ID is set", id.die == -1);
+ 		TEST_ASSERT_VAL("Socket map - Die ID is set", id.die == -1);
  		TEST_ASSERT_VAL("Socket map - ID is set", id.id == -1);
++		TEST_ASSERT_VAL("Socket map - Core is set", id.core == -1);
  	}
  
-@@ -151,6 +152,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
- 			cpu__get_node(map->map[i]) == id.node);
+ 	// Test that node ID contains only node
+@@ -153,6 +156,7 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
  		TEST_ASSERT_VAL("Node map - ID is set", id.id == -1);
  		TEST_ASSERT_VAL("Node map - Socket is set", id.socket == -1);
-+		TEST_ASSERT_VAL("Node map - Die ID is set", id.die == -1);
+ 		TEST_ASSERT_VAL("Node map - Die ID is set", id.die == -1);
++		TEST_ASSERT_VAL("Node map - Core is set", id.core == -1);
  	}
  	perf_session__delete(session);
  
 diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index d2630f03f682..10a52058d838 100644
+index 10a52058d838..d164f7bd1ac7 100644
 --- a/tools/perf/util/cpumap.c
 +++ b/tools/perf/util/cpumap.c
-@@ -152,8 +152,10 @@ static int cmp_aggr_cpu_id(const void *a_pointer, const void *b_pointer)
- 		return a->id - b->id;
- 	else if (a->node != b->node)
+@@ -154,8 +154,10 @@ static int cmp_aggr_cpu_id(const void *a_pointer, const void *b_pointer)
  		return a->node - b->node;
--	else
-+	else if (a->socket != b->socket)
+ 	else if (a->socket != b->socket)
  		return a->socket - b->socket;
+-	else
++	else if (a->die != b->die)
+ 		return a->die - b->die;
 +	else
-+		return a->die - b->die;
++		return a->core - b->core;
  }
  
  int cpu_map__build_map(struct perf_cpu_map *cpus, struct cpu_aggr_map **res,
-@@ -220,10 +222,7 @@ struct aggr_cpu_id cpu_map__get_die(struct perf_cpu_map *map, int idx, void *dat
- 	if (cpu_map__aggr_cpu_id_is_empty(id))
- 		return id;
- 
--	if (WARN_ONCE(die >> 8, "The die id number is too big.\n"))
+@@ -258,10 +260,7 @@ struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *da
+ 	 * core_id is relative to socket and die, we need a global id.
+ 	 * So we combine the result from cpu_map__get_die with the core id
+ 	 */
+-	if (WARN_ONCE(cpu >> 16, "The core id number is too big.\n"))
 -		return cpu_map__empty_aggr_cpu_id();
 -
--	id.id = (die & 0xff);
-+	id.die = die;
+-	id.id = (cpu & 0xffff);
++	id.core = cpu;
  	return id;
  }
  
-@@ -250,21 +249,19 @@ struct aggr_cpu_id cpu_map__get_core(struct perf_cpu_map *map, int idx, void *da
- 
- 	cpu = cpu_map__get_core_id(cpu);
- 
--	/* cpu_map__get_die returns the combination of socket + die id */
-+	/* cpu_map__get_die returns a struct with socket and die set*/
- 	id = cpu_map__get_die(map, idx, data);
- 	if (cpu_map__aggr_cpu_id_is_empty(id))
- 		return id;
- 
- 	/*
--	 * encode die id in bit range 23:16
--	 * core_id is relative to socket and die,
--	 * we need a global id. So we combine
--	 * socket + die id + core id
-+	 * core_id is relative to socket and die, we need a global id.
-+	 * So we combine the result from cpu_map__get_die with the core id
- 	 */
- 	if (WARN_ONCE(cpu >> 16, "The core id number is too big.\n"))
- 		return cpu_map__empty_aggr_cpu_id();
- 
--	id.id = (id.id << 16) | (cpu & 0xffff);
-+	id.id = (cpu & 0xffff);
- 	return id;
- }
- 
-@@ -622,14 +619,16 @@ bool cpu_map__compare_aggr_cpu_id(struct aggr_cpu_id a, struct aggr_cpu_id b)
- {
+@@ -620,7 +619,8 @@ bool cpu_map__compare_aggr_cpu_id(struct aggr_cpu_id a, struct aggr_cpu_id b)
  	return a.id == b.id &&
  		a.node == b.node &&
--		a.socket == b.socket;
-+		a.socket == b.socket &&
-+		a.die == b.die;
+ 		a.socket == b.socket &&
+-		a.die == b.die;
++		a.die == b.die &&
++		a.core == b.core;
  }
  
  bool cpu_map__aggr_cpu_id_is_empty(struct aggr_cpu_id a)
- {
+@@ -628,7 +628,8 @@ bool cpu_map__aggr_cpu_id_is_empty(struct aggr_cpu_id a)
  	return a.id == -1 &&
  		a.node == -1 &&
--		a.socket == -1;
-+		a.socket == -1 &&
-+		a.die == -1;
+ 		a.socket == -1 &&
+-		a.die == -1;
++		a.die == -1 &&
++		a.core == -1;
  }
  
  struct aggr_cpu_id cpu_map__empty_aggr_cpu_id(void)
-@@ -637,7 +636,8 @@ struct aggr_cpu_id cpu_map__empty_aggr_cpu_id(void)
- 	struct aggr_cpu_id ret = {
+@@ -637,7 +638,8 @@ struct aggr_cpu_id cpu_map__empty_aggr_cpu_id(void)
  		.id = -1,
  		.node = -1,
--		.socket = -1
-+		.socket = -1,
-+		.die = -1
+ 		.socket = -1,
+-		.die = -1
++		.die = -1,
++		.core = -1
  	};
  	return ret;
  }
 diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-index 0123ecc90694..51bbe1eca3f4 100644
+index 51bbe1eca3f4..1bb8f7d47206 100644
 --- a/tools/perf/util/cpumap.h
 +++ b/tools/perf/util/cpumap.h
-@@ -11,6 +11,7 @@ struct aggr_cpu_id {
- 	int id;
+@@ -12,6 +12,7 @@ struct aggr_cpu_id {
  	int node;
  	int socket;
-+	int die;
+ 	int die;
++	int core;
  };
  
  struct cpu_aggr_map {
-@@ -49,11 +50,6 @@ static inline int cpu_map__socket(struct perf_cpu_map *sock, int s)
+@@ -50,11 +51,6 @@ static inline int cpu_map__socket(struct perf_cpu_map *sock, int s)
  	return sock->map[s];
  }
  
--static inline int cpu_map__id_to_die(int id)
+-static inline int cpu_map__id_to_cpu(int id)
 -{
--	return (id >> 16) & 0xff;
+-	return id & 0xffff;
 -}
 -
- static inline int cpu_map__id_to_cpu(int id)
- {
- 	return id & 0xffff;
+ int cpu__setup_cpunode_map(void);
+ 
+ int cpu__max_node(void);
 diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 732d88bdc32f..d27ef1e4658f 100644
+index d27ef1e4658f..df54036c5e39 100644
 --- a/tools/perf/util/stat-display.c
 +++ b/tools/perf/util/stat-display.c
-@@ -74,7 +74,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 	case AGGR_CORE:
- 		fprintf(config->output, "S%d-D%d-C%*d%s%*d%s",
+@@ -76,7 +76,7 @@ static void aggr_printout(struct perf_stat_config *config,
  			id.socket,
--			cpu_map__id_to_die(id.id),
-+			id.die,
+ 			id.die,
  			config->csv_output ? 0 : -8,
- 			cpu_map__id_to_cpu(id.id),
- 			config->csv_sep,
-@@ -86,7 +86,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 		fprintf(config->output, "S%d-D%*d%s%*d%s",
- 			id.socket,
- 			config->csv_output ? 0 : -8,
--			cpu_map__id_to_die(id.id << 16),
-+			id.die,
+-			cpu_map__id_to_cpu(id.id),
++			id.core,
  			config->csv_sep,
  			config->csv_output ? 0 : 4,
  			nr,
-@@ -114,7 +114,7 @@ static void aggr_printout(struct perf_stat_config *config,
- 		if (evsel->percore && !config->percore_show_thread) {
- 			fprintf(config->output, "S%d-D%d-C%*d%s",
+@@ -116,11 +116,11 @@ static void aggr_printout(struct perf_stat_config *config,
  				id.socket,
--				cpu_map__id_to_die(id.id),
-+				id.die,
+ 				id.die,
  				config->csv_output ? 0 : -3,
- 				cpu_map__id_to_cpu(id.id), config->csv_sep);
- 		} else if (id.id > -1) {
+-				cpu_map__id_to_cpu(id.id), config->csv_sep);
+-		} else if (id.id > -1) {
++				id.core, config->csv_sep);
++		} else if (id.core > -1) {
+ 			fprintf(config->output, "CPU%*d%s",
+ 				config->csv_output ? 0 : -7,
+-				evsel__cpus(evsel)->map[id.id],
++				evsel__cpus(evsel)->map[id.core],
+ 				config->csv_sep);
+ 		}
+ 		break;
+@@ -329,7 +329,7 @@ static int first_shadow_cpu(struct perf_stat_config *config,
+ 		return 0;
+ 
+ 	if (config->aggr_mode == AGGR_NONE)
+-		return id.id;
++		return id.core;
+ 
+ 	if (config->aggr_mode == AGGR_GLOBAL)
+ 		return 0;
+@@ -661,7 +661,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 	uval = val * counter->scale;
+ 	if (cpu != -1) {
+ 		id = cpu_map__empty_aggr_cpu_id();
+-		id.id = cpu;
++		id.core = cpu;
+ 	}
+ 	printout(config, id, nr, counter, uval,
+ 		 prefix, run, ena, 1.0, &rt_stat);
+@@ -874,7 +874,7 @@ static void print_counter(struct perf_stat_config *config,
+ 
+ 		uval = val * counter->scale;
+ 		id = cpu_map__empty_aggr_cpu_id();
+-		id.id = cpu;
++		id.core = cpu;
+ 		printout(config, id, 0, counter, uval, prefix,
+ 			 run, ena, 1.0, &rt_stat);
+ 
+@@ -901,7 +901,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 			fputs(prefix, config->output);
+ 		evlist__for_each_entry(evlist, counter) {
+ 			id = cpu_map__empty_aggr_cpu_id();
+-			id.id = cpu;
++			id.core = cpu;
+ 			if (first) {
+ 				aggr_printout(config, counter, id, 0);
+ 				first = false;
 -- 
 2.28.0
 
