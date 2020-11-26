@@ -2,148 +2,206 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E7AC56202
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 13:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8583C63697
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 13:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1311B221E9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 13:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAClFcLF"
+	by mail.kernel.org (Postfix) with ESMTP id 9142B20644
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Nov 2020 13:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389742AbgKZNIx (ORCPT
+        id S2390810AbgKZNqj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Nov 2020 08:08:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47146 "EHLO mail.kernel.org"
+        Thu, 26 Nov 2020 08:46:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:33426 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390067AbgKZNIx (ORCPT
+        id S2390637AbgKZNqj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Nov 2020 08:08:53 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0CE821D46;
-        Thu, 26 Nov 2020 13:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606396132;
-        bh=viiBRexjTrW8vzVFXbk6VdMTF1/y030vXai4MZE/kN8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CAClFcLFWsgL5TmyoOoBfT2ApTsYlNcdWBfVUcyO2qfw4+FqA3t7oNSzbuaKBw0qS
-         hKcPSQIRV2XNhIqlsHeYJYmySOW48ygtjz41NRMoS99tsJsn/3L0vktxAhvqsDD4v9
-         GWpgvm6wFgBSiSGm0zWlJST7x6QIq6PIP2vnBVsQ=
-Date:   Thu, 26 Nov 2020 22:08:48 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Thu, 26 Nov 2020 08:46:39 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CFB931B;
+        Thu, 26 Nov 2020 05:46:38 -0800 (PST)
+Received: from [10.57.53.242] (unknown [10.57.53.242])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4B1A3F71F;
+        Thu, 26 Nov 2020 05:46:36 -0800 (PST)
+Subject: Re: [PATCH v5 01/12] perf tools: Improve topology test
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: Fedora 33 and perf probe failures
-Message-Id: <20201126220848.e515e3da6921d1512108e3bf@kernel.org>
-In-Reply-To: <42f12f48-d515-8d7b-0116-d063afea9273@linux.ibm.com>
-References: <63cdd43f-c970-6c7e-b322-a41f6d418cf7@linux.ibm.com>
-        <20201119100711.2309580850fec6a58142f7f1@kernel.org>
-        <42f12f48-d515-8d7b-0116-d063afea9273@linux.ibm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>
+References: <20201117144845.13714-1-james.clark@arm.com>
+ <20201117144845.13714-2-james.clark@arm.com>
+ <CAM9d7cj6zbsVB_DNmH0R9XqVJfXe9bofMwreH+u-BaDL-xm2_A@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <d1742147-eebd-a03d-6f09-174448e0d02d@arm.com>
+Date:   Thu, 26 Nov 2020 15:46:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAM9d7cj6zbsVB_DNmH0R9XqVJfXe9bofMwreH+u-BaDL-xm2_A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Thomas,
 
-I've setup fedora33 and found strange debuginfo.
 
-On Thu, 19 Nov 2020 09:16:57 +0100
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+On 18/11/2020 13:21, Namhyung Kim wrote:
+> Hello,
+> 
+> On Tue, Nov 17, 2020 at 11:49 PM James Clark <james.clark@arm.com> wrote:
+>>
+>> Improve the topology test to check all aggregation
+>> types. This is to lock down the behaviour before
+>> 'id' is changed into a struct in later commits.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>> Cc: Jiri Olsa <jolsa@redhat.com>
+>> Cc: Namhyung Kim <namhyung@kernel.org>
+>> Cc: Thomas Richter <tmricht@linux.ibm.com>
+>> Cc: John Garry <john.garry@huawei.com>
+>> ---
+>>  tools/perf/tests/topology.c | 53 ++++++++++++++++++++++++++++++++-----
+>>  1 file changed, 46 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/topology.c b/tools/perf/tests/topology.c
+>> index 22daf2bdf5fa..7bd8848d36b6 100644
+>> --- a/tools/perf/tests/topology.c
+>> +++ b/tools/perf/tests/topology.c
+>> @@ -64,10 +64,11 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>>                 .path = path,
+>>                 .mode = PERF_DATA_MODE_READ,
+>>         };
+>> -       int i;
+>> +       int i, id;
+>>
+>>         session = perf_session__new(&data, false, NULL);
+>>         TEST_ASSERT_VAL("can't get session", !IS_ERR(session));
+>> +       cpu__setup_cpunode_map();
+>>
+>>         /* On platforms with large numbers of CPUs process_cpu_topology()
+>>          * might issue an error while reading the perf.data file section
+>> @@ -85,11 +86,18 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>>          *  "socket_id number is too big. You may need to upgrade the
+>>          *  perf tool."
+>>          *
+>> -        *  This is the reason why this test might be skipped.
+>> +        *  This is the reason why this test might be skipped. aarch64 and
+>> +        *  s390 always write this part of the header, even when the above
+>> +        *  condition is true (see do_core_id_test in header.c). So always
+>> +        *  run this test on those platforms.
+>>          */
+>> -       if (!session->header.env.cpu)
+>> +       if (!session->header.env.cpu
+>> +                       && strncmp(session->header.env.arch, "s390", 4)
+>> +                       && strncmp(session->header.env.arch, "aarch64", 7))
+>>                 return TEST_SKIP;
+>>
+>> +       TEST_ASSERT_VAL("Session header CPU map not set", session->header.env.cpu);
+>> +
+>>         for (i = 0; i < session->header.env.nr_cpus_avail; i++) {
+>>                 if (!cpu_map__has(map, i))
+>>                         continue;
+>> @@ -98,14 +106,45 @@ static int check_cpu_topology(char *path, struct perf_cpu_map *map)
+>>                          session->header.env.cpu[i].socket_id);
+>>         }
+>>
+>> +       // Test that core ID contains socket, die and core
+>> +       for (i = 0; i < map->nr; i++) {
+>> +               id = cpu_map__get_core(map, i, NULL);
+>> +               TEST_ASSERT_VAL("Core map - Core ID doesn't match",
+>> +                       session->header.env.cpu[map->map[i]].core_id == cpu_map__id_to_cpu(id));
+>> +
+>> +               TEST_ASSERT_VAL("Core map - Socket ID doesn't match",
+>> +                       session->header.env.cpu[map->map[i]].socket_id ==
+>> +                               cpu_map__id_to_socket(id));
+>> +
+>> +               TEST_ASSERT_VAL("Core map - Die ID doesn't match",
+>> +                       session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
+>> +       }
+>> +
+>> +       // Test that die ID contains socket and die
+>>         for (i = 0; i < map->nr; i++) {
+>> -               TEST_ASSERT_VAL("Core ID doesn't match",
+>> -                       (session->header.env.cpu[map->map[i]].core_id == (cpu_map__get_core(map, i, NULL) & 0xffff)));
+>> +               id = cpu_map__get_die(map, i, NULL);
+>> +               TEST_ASSERT_VAL("Die map - Socket ID doesn't match",
+>> +                       session->header.env.cpu[map->map[i]].socket_id ==
+>> +                               cpu_map__id_to_socket(id));
+> 
+> I'm not sure it works.  It seems cpu_map__get_die() returns
+> 16 bit id (socket | die) but cpu_map__id_to_socket() takes
+> 32 bit id (socket | die | core), right?
 
-> [root@f33 ~]# perf probe -vvv -L getname_flags
-> Looking at the vmlinux_path (8 entries long)
-> Using /lib/modules/5.9.8-200.fc33.x86_64/build/vmlinux for symbols
-> Open Debuginfo file: /lib/modules/5.9.8-200.fc33.x86_64/build/vmlinux
-> fname: ./include/linux/fs.h, lineno:2527
-> New line range: 2527 to 2147483647
-> path: (null)
-> Specified source line is not found.
->   Error: Failed to show lines. Reason: No such file or directory (Code: -2)
+Hi Namhyung,
 
-Above error was reproduced, and I found that the perf-probe's routine
-failed to find the real function definition.
+Yes you are right. I assumed the cpu_map__id_to_...() etc functions applied in all cases. Actually
+they only work in the per core aggregation mode. In stat-display.c the id is shifted when in die
+mode to account for this:
 
-I decoded the vmlinux with eu-readelf -w, and I found there were 2
-entries (DIEs) for the getname_flags.
+  	case AGGR_DIE:
+		fprintf(config->output, "S%d-D%*d%s%*d%s",
+			cpu_map__id_to_socket(id << 16),
+			config->csv_output ? 0 : -8,
+			cpu_map__id_to_die(id << 16),
 
-(1)
- [2dbe7c6]    subprogram           abbrev: 54
-             external             (flag_present) yes
-             name                 (strp) "getname_flags"
-             decl_file            (data1) fs.h (8)
-             decl_line            (data2) 2527
-             decl_column          (data1) 25
-             prototyped           (flag_present) yes
-             type                 (ref4) [2dbe7e7]
-             sibling              (ref4) [2dbe7e7]
- [2dbe7d7]      formal_parameter     abbrev: 4
-               type                 (ref4) [2da9721]
- [2dbe7dc]      formal_parameter     abbrev: 4
-               type                 (ref4) [2da97a1]
- [2dbe7e1]      formal_parameter     abbrev: 4
-               type                 (ref4) [2dabbdd]
+I've updated the test to match this in patchset v6. When running the test on a multi socket machine it did fail,
+but now it passes. The reason I didn't see the issue is because I only tested the last patchset in the
+series which doesn't have this issue.
 
-(2)
- [2e0fde0]    subprogram           abbrev: 162
-             external             (flag_present) yes
-             name                 (strp) "getname_flags"
-             decl_file            (data1) namei.c (1)
-             decl_line            (data1) 128
-             decl_column          (data1) 1
-             prototyped           (flag_present) yes
-             type                 (ref4) [2dfced6]
-             inline               (data1) inlined (1)
-             sibling              (ref4) [2e0fe49]
- [2e0fdf2]      formal_parameter     abbrev: 31
-               name                 (strp) "filename"
-               decl_file            (data1) namei.c (1)
-               decl_line            (data1) 128
-               decl_column          (data1) 34
-               type                 (ref4) [2de77f3]
- [2e0fdfe]      formal_parameter     abbrev: 31
-               name                 (strp) "flags"
-               decl_file            (data1) namei.c (1)
-               decl_line            (data1) 128
-               decl_column          (data1) 48
-               type                 (ref4) [2de7873]
- [2e0fe0a]      formal_parameter     abbrev: 31
-               name                 (strp) "empty"
-               decl_file            (data1) namei.c (1)
-               decl_line            (data1) 128
-               decl_column          (data1) 60
-               type                 (ref4) [2de9ce4]
 
-The first one is not the actual function, but that is a DIE
-for the declaration. However, this DIE doesn't have DW_AT_declaration
-attribute, it should be there if the DIE represents the declaration.
+Thanks
+James
 
-In perf, die_is_func_def() checks that attribute, and if the DIE doen't
-have DW_AT_declaration, line_range_search_cb() think the DIE represents
-the function definition (function prototype). And search the instance
-to find the line range.
-
-However, since the (1) has no DW_AT_declaration, perf probe was mislead
-that the DIE is the function definition, and search the function instance
-which links to the DIE. And it failed to find any instances because
-the DIE it found was just a prototype in the header file. (But it seems
-some call-site DIE refers the declaration DIE.)
-
-Let me try to fix if we skip the first DIE.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> 
+>>
+>> -               TEST_ASSERT_VAL("Socket ID doesn't match",
+>> -                       (session->header.env.cpu[map->map[i]].socket_id == cpu_map__get_socket(map, i, NULL)));
+>> +               TEST_ASSERT_VAL("Die map - Die ID doesn't match",
+>> +                       session->header.env.cpu[map->map[i]].die_id == cpu_map__id_to_die(id));
+>>         }
+>>
+>> +       // Test that socket ID contains only socket
+>> +       for (i = 0; i < map->nr; i++) {
+>> +               id = cpu_map__get_socket(map, i, NULL);
+>> +               TEST_ASSERT_VAL("Socket map - Socket ID doesn't match",
+>> +                       session->header.env.cpu[map->map[i]].socket_id ==
+>> +                               cpu_map__id_to_socket(id));
+> 
+> Same here.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>> +       }
+>> +
+>> +       // Test that node ID contains only node
+>> +       for (i = 0; i < map->nr; i++) {
+>> +               id = cpu_map__get_node(map, i, NULL);
+>> +               TEST_ASSERT_VAL("Node map - Node ID doesn't match",
+>> +                       cpu__get_node(map->map[i]) == id);
+>> +       }
+>>         perf_session__delete(session);
+>>
+>>         return 0;
+>> --
+>> 2.28.0
+>>
