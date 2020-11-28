@@ -2,152 +2,163 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75527C5519F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Nov 2020 17:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA7BC83011
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Nov 2020 17:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3072221534
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Nov 2020 17:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C167222456
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Nov 2020 17:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOtUgtWW"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D1FywNu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbgK0Rgc (ORCPT
+        id S1732220AbgK1Rz4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Nov 2020 12:36:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730603AbgK0Rgc (ORCPT
+        Sat, 28 Nov 2020 12:55:56 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51193 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732116AbgK1EQK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Nov 2020 12:36:32 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 27 Nov 2020 23:16:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1606536968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mGy9MC++iUetXwyOWNxP3piqOboqqpFGKFPhLKLWvzk=;
+        b=D1FywNu8fmIePrDHXOYA+l7ErWzCZGqNHZxL/M1TF0KuhTIrqK0Ozu4EQKYvRA+zeDUUJF
+        A6B34UpGvcJSBde4Gvs5WMGSxldt+CrxkWX2N3Q5/eYGUK2ghMv5lWMuYqA5a4HvcN2tPm
+        ZhSzCUaKIe6OwQqgsyLC/qAcAP2B8GE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-156-w60uy-TkOIarwnaXd8Ma7g-1; Fri, 27 Nov 2020 23:07:50 -0500
+X-MC-Unique: w60uy-TkOIarwnaXd8Ma7g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BDDC206CA;
-        Fri, 27 Nov 2020 17:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606498591;
-        bh=ZPPJbupxbpXsjev8DgFJhnZBqhC9z8zd29YDNWFaFpA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZOtUgtWWlFZtcTtJyKGU3EAbP4aeDSiMOErMV5bQGmN5S9i5MaqKSMkTjToA+uTUs
-         L/wqT3eKnl+1L/9iBsgVgwXwiHupJsXO5AYAB2uYevCnjbvQFwlVFLQZWLP0xICqLT
-         OZvTKbhdL0is8Tkjspl2fsLb0JuiBR4072dNop4Q=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8599240D0D; Fri, 27 Nov 2020 14:36:29 -0300 (-03)
-Date:   Fri, 27 Nov 2020 14:36:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-Subject: Re: [PATCH 2/2] perf-probe: Change function definition check due to
- broken dwarf
-Message-ID: <20201127173629.GP70905@kernel.org>
-References: <20201126172849.GE53384@kernel.org>
- <160645613571.2824037.7441351537890235895.stgit@devnote2>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74ADF51D5;
+        Sat, 28 Nov 2020 04:07:49 +0000 (UTC)
+Received: from host1.jankratochvil.net (ovpn-112-104.ams2.redhat.com [10.36.112.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA2A41A7C1;
+        Sat, 28 Nov 2020 04:07:43 +0000 (UTC)
+Date:   Sat, 28 Nov 2020 05:07:40 +0100
+From:   Jan Kratochvil <jan.kratochvil@redhat.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     "Frank Ch. Eigler" <fche@redhat.com>,
+        Mark Wielaard <mjw@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Milian Wolff <milian.wolff@kdab.com>,
+        John Levon <levon@movementarian.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: libdw dwarf unwind issue
+Message-ID: <20201128040740.GA446287@host1.jankratochvil.net>
+References: <20201103221709.GL3597846@krava>
+ <20201122222751.GA1362915@host1.jankratochvil.net>
+ <20201123221247.GC2003988@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="0F1p//8PRICkK4MW"
 Content-Disposition: inline
-In-Reply-To: <160645613571.2824037.7441351537890235895.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20201123221247.GC2003988@krava>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Nov 27, 2020 at 02:48:55PM +0900, Masami Hiramatsu escreveu:
-> Since some gcc generates a broken DWARF which lacks DW_AT_declaration
-> attribute from the subprogram DIE of function prototype.
-> (https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97060)
+
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, 23 Nov 2020 23:12:47 +0100, Jiri Olsa wrote:
+> it fixes the issue for me, but it breaks the dwarf test:
 > 
-> So, in addition to the DW_AT_declaration check, we also check the
-> subprogram DIE has DW_AT_inline or actual entry pc.
+> 72: DWARF unwind                                                    : FAILED!
+> [jolsa@krava perf]$ sudo ./perf test dwarf -v
+> 72: DWARF unwind                                                    :
+> --- start ---
+> test child forked, pid 2084484
+> unwind: failed with 'No such file or directory'
+> got wrong number of stack entries 0 != 8
+> test child finished with -1
+> ---- end ----
+> DWARF unwind: FAILED!
 
-Thanks, applied and tested both patches on a fedora 33 system where
-previously those tests were failing:
+The previous patch required ~/.debug/ build-id symlink, fixed.
 
-    Committer testing:
-
-      # cat /etc/fedora-release
-      Fedora release 33 (Thirty Three)
-      #
-
-    Before:
-
-      # perf test vfs_getname
-      78: Use vfs_getname probe to get syscall args filenames             : FAILED!
-      79: Check open filename arg using perf trace + vfs_getname          : FAILED!
-      81: Add vfs_getname probe to get syscall args filenames             : FAILED!
-      #
-
-    After:
-
-      # perf test vfs_getname
-      78: Use vfs_getname probe to get syscall args filenames             : Ok
-      79: Check open filename arg using perf trace + vfs_getname          : Ok
-      81: Add vfs_getname probe to get syscall args filenames             : Ok
-      #
+I hope dso->symsrc_filename is always already set if a separate debug info is
+present.
 
 
-- Arnaldo
+Jan
+
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline; filename="libdw-unwind2.patch"
+
+diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+index 7a3dbc259cec..400e4832b50e 100644
+--- a/tools/perf/util/unwind-libdw.c
++++ b/tools/perf/util/unwind-libdw.c
+@@ -20,10 +20,25 @@
  
-> Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/perf/util/dwarf-aux.c    |   20 ++++++++++++++++++--
->  tools/perf/util/probe-finder.c |    3 +--
->  2 files changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 03c1a39c312a..7b2d471a6419 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -356,9 +356,25 @@ bool die_is_signed_type(Dwarf_Die *tp_die)
->  bool die_is_func_def(Dwarf_Die *dw_die)
->  {
->  	Dwarf_Attribute attr;
-> +	Dwarf_Addr addr = 0;
-> +
-> +	if (dwarf_tag(dw_die) != DW_TAG_subprogram)
-> +		return false;
-> +
-> +	if (dwarf_attr(dw_die, DW_AT_declaration, &attr))
-> +		return false;
->  
-> -	return (dwarf_tag(dw_die) == DW_TAG_subprogram &&
-> -		dwarf_attr(dw_die, DW_AT_declaration, &attr) == NULL);
-> +	/*
-> +	 * DW_AT_declaration can be lost from function declaration
-> +	 * by gcc's bug #97060.
-> +	 * So we need to check this subprogram DIE has DW_AT_inline
-> +	 * or an entry address.
-> +	 */
-> +	if (!dwarf_attr(dw_die, DW_AT_inline, &attr) &&
-> +	    die_entrypc(dw_die, &addr) < 0)
-> +		return false;
-> +
-> +	return true;
->  }
->  
->  /**
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 2c4061035f77..76dd349aa48d 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -1885,8 +1885,7 @@ static int line_range_search_cb(Dwarf_Die *sp_die, void *data)
->  	if (lr->file && strtailcmp(lr->file, dwarf_decl_file(sp_die)))
->  		return DWARF_CB_OK;
->  
-> -	if (die_is_func_def(sp_die) &&
-> -	    die_match_name(sp_die, lr->function)) {
-> +	if (die_match_name(sp_die, lr->function) && die_is_func_def(sp_die)) {
->  		lf->fname = dwarf_decl_file(sp_die);
->  		dwarf_decl_line(sp_die, &lr->offset);
->  		pr_debug("fname: %s, lineno:%d\n", lf->fname, lr->offset);
-> 
+ static char *debuginfo_path;
+ 
++static int __find_debuginfo(Dwfl_Module *mod __maybe_unused, void **userdata,
++			    const char *modname __maybe_unused, Dwarf_Addr base __maybe_unused,
++			    const char *file_name __maybe_unused,
++			    const char *debuglink_file __maybe_unused,
++			    GElf_Word debuglink_crc __maybe_unused, char **debuginfo_file_name)
++{
++	const struct dso *dso = *userdata;
++
++	assert(dso);
++	if (dso->symsrc_filename)
++		*debuginfo_file_name = strdup(dso->symsrc_filename);
++	return -1;
++}
++
+ static const Dwfl_Callbacks offline_callbacks = {
+-	.find_debuginfo		= dwfl_standard_find_debuginfo,
++	.find_debuginfo		= __find_debuginfo,
+ 	.debuginfo_path		= &debuginfo_path,
+ 	.section_address	= dwfl_offline_section_address,
++	// .find_elf is not set as we use dwfl_report_elf() instead.
+ };
+ 
+ static int __report_module(struct addr_location *al, u64 ip,
+@@ -46,16 +61,24 @@ static int __report_module(struct addr_location *al, u64 ip,
+ 	mod = dwfl_addrmodule(ui->dwfl, ip);
+ 	if (mod) {
+ 		Dwarf_Addr s;
++		void **userdatap;
+ 
+-		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
++		dwfl_module_info(mod, &userdatap, &s, NULL, NULL, NULL, NULL, NULL);
++		*userdatap = dso;
+ 		if (s != al->map->start - al->map->pgoff)
+ 			mod = 0;
+ 	}
+ 
+ 	if (!mod)
+-		mod = dwfl_report_elf(ui->dwfl, dso->short_name,
+-				      (dso->symsrc_filename ? dso->symsrc_filename : dso->long_name), -1, al->map->start - al->map->pgoff,
+-				      false);
++		mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
++				      al->map->start - al->map->pgoff, false);
++	if (!mod) {
++		char filename[PATH_MAX];
++
++		if (dso__build_id_filename(dso, filename, sizeof(filename), false))
++			mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
++					      al->map->start - al->map->pgoff, false);
++	}
+ 
+ 	return mod && dwfl_addrmodule(ui->dwfl, ip) == mod ? 0 : -1;
+ }
 
--- 
+--0F1p//8PRICkK4MW--
 
-- Arnaldo
