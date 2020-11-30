@@ -2,97 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BBFC64E7B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Nov 2020 14:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC79C63777
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Nov 2020 15:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544C620725
-	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Nov 2020 14:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B966E2076E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 30 Nov 2020 15:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgK3Oe3 (ORCPT
+        id S1727476AbgK3Pzq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 30 Nov 2020 09:34:29 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38967 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbgK3Oe2 (ORCPT
+        Mon, 30 Nov 2020 10:55:46 -0500
+Received: from foss.arm.com ([217.140.110.172]:57016 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbgK3Pzp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 30 Nov 2020 09:34:28 -0500
-Received: by mail-lf1-f65.google.com with SMTP id j205so22023095lfj.6;
-        Mon, 30 Nov 2020 06:34:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8YkcOXBhPRFIqBGIfVEc2ybUnI8ZtfJ9QAi+Wv6+Psc=;
-        b=eUKKdJN115G6LIkcsT9YTnt1IsviXnTmsRK1d5Wq0jqI37fFTWYyELnMtO+vPgxNAh
-         bSCyCbj4dqT+vvq+bGZO26HdkTXh32BcxDwx1pq4UeXPLo68Y7AE33ckcy6YArI6SKts
-         xfzCp7l4CmLkSz/R/2CWuAOdlBfb9MEX3suj1T8LbmyyBzGw2RLxhSbE+vPn3N7ps1W6
-         pgrhSnmVh3BcCrr6FM5LJxL6k183Sv64/QsR44WZNl/kkYePqHDoQQuS3ZF3Plk7yTkX
-         WRL6CJUrdIJCV7Bt6gIak+0mbJoQGiLshKbjOc0eC1lpYG7uSw9VHjcdqCwJh85tsi2s
-         8/sw==
-X-Gm-Message-State: AOAM531LHY+NBzA6Ym17NFU5hM1lX3NOCkdB4aVlFUaOlhFio8c/PoGS
-        EB/sIHMdnSvOfPfslq/pHouYa1/6Bl5wnLOdrLA=
-X-Google-Smtp-Source: ABdhPJwlG6QMaNGMPb2gPkPlyqGaKbiUhwbKmXSmogtb7ZahR6PluAlOGCFNc3sjNtliHP+BdCrmwGC3Zh2JnMhjVeE=
-X-Received: by 2002:a19:4154:: with SMTP id o81mr8986318lfa.540.1606746826174;
- Mon, 30 Nov 2020 06:33:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20201126141328.6509-1-james.clark@arm.com>
-In-Reply-To: <20201126141328.6509-1-james.clark@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 30 Nov 2020 23:33:34 +0900
-Message-ID: <CAM9d7cgVkiRMiSVO25s0DMYE7q8_Uc7Xn8E4kXf6CUbNy86_hQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/12] perf tools: fix perf stat with large socket IDs
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mon, 30 Nov 2020 10:55:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1540BD6E;
+        Mon, 30 Nov 2020 07:55:00 -0800 (PST)
+Received: from [10.57.27.168] (unknown [10.57.27.168])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECE973F718;
+        Mon, 30 Nov 2020 07:54:58 -0800 (PST)
+Subject: Re: [PATCH] perf tools: add aarch64 registers to --user-regs
+To:     Alexandre Truong <alexandre.truong@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     John Garry <john.garry@huawei.com>, Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        Namhyung Kim <namhyung@kernel.org>
+References: <20201127153923.26717-1-alexandre.truong@arm.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <cd0592be-68d2-c88d-ff18-05f7d3ba8cc2@arm.com>
+Date:   Mon, 30 Nov 2020 17:54:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20201127153923.26717-1-alexandre.truong@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On Thu, Nov 26, 2020 at 11:13 PM James Clark <james.clark@arm.com> wrote:
->
-> Changes since v5:
->   * Fix test for cpu_map__get_die() by shifting id before testing.
->   * Fix test for cpu_map__get_socket() by not using cpu_map__id_to_socket()
->     which is only valid in CPU aggregation mode.
->
-> James Clark (12):
->   perf tools: Improve topology test
->   perf tools: Use allocator for perf_cpu_map
->   perf tools: Add new struct for cpu aggregation
->   perf tools: Replace aggregation ID with a struct
->   perf tools: add new map type for aggregation
->   perf tools: drop in cpu_aggr_map struct
->   perf tools: Start using cpu_aggr_id in map
->   perf tools: Add separate node member
->   perf tools: Add separate socket member
->   perf tools: Add separate die member
->   perf tools: Add separate core member
->   perf tools: Add separate thread member
+On 27/11/2020 17:39, Alexandre Truong wrote:
+> Previously, this command returns no help message on aarch64:
+> 
+>   -> ./perf record --user-regs=?
+> 
+>   available registers:
+>   Usage: perf record [<options>] [<command>]
+>       or: perf record [<options>] -- <command> [<options>]
+> 
+> With this change, the registers are listed.
+> 
+>   -> ./perf record --user-regs=?
+> 
+>   available registers: x0 x1 x2 x3 x4 x5 x6 x7 x8 x9 x10 x11 x12 x13 x14 x15 x16 x17 x18 x19 x20 x21 x22 x23 x24 x25 x26 x27 x28 x29 lr sp pc
+> 
+> It's also now possible to record subsets of registers on aarch64:
+> 
+>   -> ./perf record --user-regs=x4,x5 ls
+>   -> ./perf report --dump-raw-trace
+> 
+>   12801163749305260 0xc70 [0x40]: PERF_RECORD_SAMPLE(IP, 0x2): 51956/51956: 0xffffaa6571f0 period: 145785 addr: 0
+>   ... user regs: mask 0x30 ABI 64-bit
+>   .... x4    0x000000000000006c
+>   .... x5    0x0000001001000001
+>    ... thread: ls:51956
+>     ...... dso: /usr/lib64/ld-2.17.so
+> 
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Checked that the registers can be listed with =? and that recording different combinations of registers works as expected.
 
-Thanks,
-Namhyung
-
->
->  tools/perf/builtin-stat.c      | 128 ++++++++++++------------
->  tools/perf/tests/topology.c    |  64 ++++++++++--
->  tools/perf/util/cpumap.c       | 171 ++++++++++++++++++++++-----------
->  tools/perf/util/cpumap.h       |  55 ++++++-----
->  tools/perf/util/stat-display.c | 102 ++++++++++++--------
->  tools/perf/util/stat.c         |   2 +-
->  tools/perf/util/stat.h         |   9 +-
->  7 files changed, 337 insertions(+), 194 deletions(-)
->
-> --
-> 2.28.0
->
+Tested-by: James Clark <james.clark@arm.com>
