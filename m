@@ -2,49 +2,49 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08B5C64E8A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 10:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBFCC71155
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 10:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDBC22202
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 10:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72ACD2222A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 10:57:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387880AbgLBKI1 (ORCPT
+        id S1726636AbgLBK5p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Dec 2020 05:08:27 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57188 "EHLO
+        Wed, 2 Dec 2020 05:57:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57447 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387847AbgLBKI0 (ORCPT
+        by vger.kernel.org with ESMTP id S1726498AbgLBK5p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Dec 2020 05:08:26 -0500
+        Wed, 2 Dec 2020 05:57:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606903620;
+        s=mimecast20190719; t=1606906578;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=T27NRS5DZzpB5xTInJB/o5j1C9KdCZyEjKJA0VpT/KI=;
-        b=WN4n8rbFLIhOGBzI3v3vJDzlVphuRWV6tOFEpw8xLHChlOrsjPy3OY+7pGZA0h0y+KHlh7
-        NiEqXEYjCSA3d57kl1fJxAWEsf4/LbJif+I98UBntEWU1p1bMJQ1lWkhQSbjV+yTh2Pe4z
-        7NMiEbwfw7UqozamcIwEZbdJRP1EGfY=
+        bh=Xp7VW90h5LfVjW1LO0EhnhSWIUXcbMA/k7nCGdFE7co=;
+        b=jMnEc8R3Y5/MrE8jH5E4+7PGTSbqvIrHQShrSlN5mdpuK9qAfoe0DiyueZCZ38XIFgahgD
+        qDE7NMYw0RLONk5OZiZX9NLtubppz64j+rA+8n7pGYEMNCFY0L6DJR0mcB1Gqj9QfW2VHP
+        dVbL9AgPrSmJw+YdbRxUXk/6PXmIp9Q=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-162-BEwxzlRWNyaGsibrOFmI8Q-1; Wed, 02 Dec 2020 05:06:55 -0500
-X-MC-Unique: BEwxzlRWNyaGsibrOFmI8Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-100-ThjeyCMzMEuVB6-Fabk8MQ-1; Wed, 02 Dec 2020 05:56:16 -0500
+X-MC-Unique: ThjeyCMzMEuVB6-Fabk8MQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7016D817BA0;
-        Wed,  2 Dec 2020 10:06:54 +0000 (UTC)
-Received: from host1.jankratochvil.net (ovpn-112-104.ams2.redhat.com [10.36.112.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 107F3189BB;
-        Wed,  2 Dec 2020 10:06:48 +0000 (UTC)
-Date:   Wed, 2 Dec 2020 11:06:46 +0100
-From:   Jan Kratochvil <jan.kratochvil@redhat.com>
-To:     Jiri Olsa <jolsa@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 742EB10151EC;
+        Wed,  2 Dec 2020 10:56:15 +0000 (UTC)
+Received: from krava (unknown [10.40.195.190])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B1F4A5C1BD;
+        Wed,  2 Dec 2020 10:56:05 +0000 (UTC)
+Date:   Wed, 2 Dec 2020 11:56:04 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jan Kratochvil <jan.kratochvil@redhat.com>
 Cc:     "Frank Ch. Eigler" <fche@redhat.com>,
         Mark Wielaard <mjw@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -53,109 +53,108 @@ Cc:     "Frank Ch. Eigler" <fche@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org
 Subject: Re: libdw dwarf unwind issue
-Message-ID: <20201202100646.GA1731774@host1.jankratochvil.net>
+Message-ID: <20201202105604.GA3433097@krava>
 References: <20201103221709.GL3597846@krava>
  <20201122222751.GA1362915@host1.jankratochvil.net>
  <20201123221247.GC2003988@krava>
  <20201128040740.GA446287@host1.jankratochvil.net>
  <20201201194116.GC3169083@krava>
+ <20201202100646.GA1731774@host1.jankratochvil.net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="5vNYLRcllDrimb99"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201201194116.GC3169083@krava>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20201202100646.GA1731774@host1.jankratochvil.net>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Dec 02, 2020 at 11:06:46AM +0100, Jan Kratochvil wrote:
+> On Tue, 01 Dec 2020 20:41:16 +0100, Jiri Olsa wrote:
+> > the fix is working for me, would you mind send full patch?
+> > or just provide me with changelog and I can do it for you
+> 
+> I am not proficient with all the meta-tags there, I make no copyright claims
+> to this patch.
+> 
+> 
+> Regards,
+> Jan
 
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> perf libdw: Fix separte debug info files
+> 
+> elfutils needs to be provided main binary and separate debug info file
+> respectively. Providing separate debug info file instead of the main binary is
+> not sufficient.
+> 
+> One needs to try both supplied filename and its possible cache by its build-id
+> depending on the use case.
 
-On Tue, 01 Dec 2020 20:41:16 +0100, Jiri Olsa wrote:
-> the fix is working for me, would you mind send full patch?
-> or just provide me with changelog and I can do it for you
+it's great, I'll just add your's SOB if that's ok:
 
-I am not proficient with all the meta-tags there, I make no copyright claims
-to this patch.
+Signed-off-by: Jan Kratochvil <jan.kratochvil@redhat.com>
 
+thanks,
+jirka
 
-Regards,
-Jan
-
---5vNYLRcllDrimb99
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline; filename="libdw-unwind3.patch"
-
-perf libdw: Fix separte debug info files
-
-elfutils needs to be provided main binary and separate debug info file
-respectively. Providing separate debug info file instead of the main binary is
-not sufficient.
-
-One needs to try both supplied filename and its possible cache by its build-id
-depending on the use case.
-
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 7a3dbc259cec..0ada907c60d4 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -20,10 +20,24 @@
- 
- static char *debuginfo_path;
- 
-+static int __find_debuginfo(Dwfl_Module *mod __maybe_unused, void **userdata,
-+			    const char *modname __maybe_unused, Dwarf_Addr base __maybe_unused,
-+			    const char *file_name, const char *debuglink_file __maybe_unused,
-+			    GElf_Word debuglink_crc __maybe_unused, char **debuginfo_file_name)
-+{
-+	const struct dso *dso = *userdata;
-+
-+	assert(dso);
-+	if (dso->symsrc_filename && strcmp (file_name, dso->symsrc_filename))
-+		*debuginfo_file_name = strdup(dso->symsrc_filename);
-+	return -1;
-+}
-+
- static const Dwfl_Callbacks offline_callbacks = {
--	.find_debuginfo		= dwfl_standard_find_debuginfo,
-+	.find_debuginfo		= __find_debuginfo,
- 	.debuginfo_path		= &debuginfo_path,
- 	.section_address	= dwfl_offline_section_address,
-+	// .find_elf is not set as we use dwfl_report_elf() instead.
- };
- 
- static int __report_module(struct addr_location *al, u64 ip,
-@@ -46,16 +60,24 @@ static int __report_module(struct addr_location *al, u64 ip,
- 	mod = dwfl_addrmodule(ui->dwfl, ip);
- 	if (mod) {
- 		Dwarf_Addr s;
-+		void **userdatap;
- 
--		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
-+		dwfl_module_info(mod, &userdatap, &s, NULL, NULL, NULL, NULL, NULL);
-+		*userdatap = dso;
- 		if (s != al->map->start - al->map->pgoff)
- 			mod = 0;
- 	}
- 
- 	if (!mod)
--		mod = dwfl_report_elf(ui->dwfl, dso->short_name,
--				      (dso->symsrc_filename ? dso->symsrc_filename : dso->long_name), -1, al->map->start - al->map->pgoff,
--				      false);
-+		mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
-+				      al->map->start - al->map->pgoff, false);
-+	if (!mod) {
-+		char filename[PATH_MAX];
-+
-+		if (dso__build_id_filename(dso, filename, sizeof(filename), false))
-+			mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
-+					      al->map->start - al->map->pgoff, false);
-+	}
- 
- 	return mod && dwfl_addrmodule(ui->dwfl, ip) == mod ? 0 : -1;
- }
-
---5vNYLRcllDrimb99--
+> 
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
+> index 7a3dbc259cec..0ada907c60d4 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -20,10 +20,24 @@
+>  
+>  static char *debuginfo_path;
+>  
+> +static int __find_debuginfo(Dwfl_Module *mod __maybe_unused, void **userdata,
+> +			    const char *modname __maybe_unused, Dwarf_Addr base __maybe_unused,
+> +			    const char *file_name, const char *debuglink_file __maybe_unused,
+> +			    GElf_Word debuglink_crc __maybe_unused, char **debuginfo_file_name)
+> +{
+> +	const struct dso *dso = *userdata;
+> +
+> +	assert(dso);
+> +	if (dso->symsrc_filename && strcmp (file_name, dso->symsrc_filename))
+> +		*debuginfo_file_name = strdup(dso->symsrc_filename);
+> +	return -1;
+> +}
+> +
+>  static const Dwfl_Callbacks offline_callbacks = {
+> -	.find_debuginfo		= dwfl_standard_find_debuginfo,
+> +	.find_debuginfo		= __find_debuginfo,
+>  	.debuginfo_path		= &debuginfo_path,
+>  	.section_address	= dwfl_offline_section_address,
+> +	// .find_elf is not set as we use dwfl_report_elf() instead.
+>  };
+>  
+>  static int __report_module(struct addr_location *al, u64 ip,
+> @@ -46,16 +60,24 @@ static int __report_module(struct addr_location *al, u64 ip,
+>  	mod = dwfl_addrmodule(ui->dwfl, ip);
+>  	if (mod) {
+>  		Dwarf_Addr s;
+> +		void **userdatap;
+>  
+> -		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
+> +		dwfl_module_info(mod, &userdatap, &s, NULL, NULL, NULL, NULL, NULL);
+> +		*userdatap = dso;
+>  		if (s != al->map->start - al->map->pgoff)
+>  			mod = 0;
+>  	}
+>  
+>  	if (!mod)
+> -		mod = dwfl_report_elf(ui->dwfl, dso->short_name,
+> -				      (dso->symsrc_filename ? dso->symsrc_filename : dso->long_name), -1, al->map->start - al->map->pgoff,
+> -				      false);
+> +		mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
+> +				      al->map->start - al->map->pgoff, false);
+> +	if (!mod) {
+> +		char filename[PATH_MAX];
+> +
+> +		if (dso__build_id_filename(dso, filename, sizeof(filename), false))
+> +			mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
+> +					      al->map->start - al->map->pgoff, false);
+> +	}
+>  
+>  	return mod && dwfl_addrmodule(ui->dwfl, ip) == mod ? 0 : -1;
+>  }
 
