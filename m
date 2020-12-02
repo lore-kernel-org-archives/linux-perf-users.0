@@ -2,93 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.2 required=3.0 tests=BAYES_20,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F69C64E7A
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Dec 2020 23:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1896C64E8A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 02:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23E82220B
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Dec 2020 23:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911B921D7E
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 02:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgLAXKW (ORCPT
+        id S1727589AbgLBCIM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Dec 2020 18:10:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbgLAXKW (ORCPT
+        Tue, 1 Dec 2020 21:08:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbgLBCIM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Dec 2020 18:10:22 -0500
-Date:   Tue, 1 Dec 2020 23:09:36 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1606864181;
-        bh=R1LZxKhC63MgOhIWSKRcfmgG/w02ZOoz7xHqWe+Pr7k=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=zsaqQBCXac4ssa46wKGJrHjx78Yx+BKPCLV22+wvuO2lvTanFDGUxj+NCPAd7BT2E
-         TQo1DGLBSM79hGhonz/V0LYXVbogx5ZAv/HDAPU3QyZI4crCjRZPDk3x8CH2QsIBsJ
-         5osHzXr+wQYAdBUuuOnHChySkw+W5DZWwAQdrdJ8=
-From:   Will Deacon <will@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Al Grant <al.grant@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH] drivers/perf: Enable PID_IN_CONTEXTIDR with SPE
-Message-ID: <20201201230935.GD28496@willie-the-truck>
-References: <20201130162454.28255-1-james.clark@arm.com>
- <20201130164650.GA25187@willie-the-truck>
- <20201201041040.GC28939@leoy-ThinkPad-X240s>
+        Tue, 1 Dec 2020 21:08:12 -0500
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CDCC0613CF
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Dec 2020 18:07:32 -0800 (PST)
+Received: by mail-yb1-xb32.google.com with SMTP id v92so211233ybi.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Dec 2020 18:07:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=CjwbtncPbogbIDD0Gg+rLiO4d1+jiP/isiqdMbl8Qv0=;
+        b=uohgXlFa6vgFpYEfgkgQvWYYdM0JwyPgGuWN9qiWk4cqWoqKhFk3lWoIJjf+SEWV4f
+         WJJdh1wMSLRWSBlFCUhvQU71GKUyBBeaLzsbumGpYfaUan5nHPP5xXvruRdQRvnVhEjm
+         ZITHKH4/bZGoM2Q2MCrcqpNjTKHfEVi200KZ6HKZq2MLe7o/nWKzsU61cwK2qiTVSPJt
+         8bAoYolSo4TZvijmqIAGoaYazsVAdhoKU6/Da35h3W7rLNInJ3o1G7XoifbetTieDGRk
+         vSIge7oyQgz/xVvcQYq+gVpBJoROSxILhWZqAyBRLOoggkbPHGRYgrQzpfph6GJBBqAd
+         gR2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=CjwbtncPbogbIDD0Gg+rLiO4d1+jiP/isiqdMbl8Qv0=;
+        b=Cz5jOU3ae6iQe+9v5E9Nvqd2V/4wsEfLV+9sEqt4lCfsTXInrO0l5GUII5Y2KWWtHE
+         6BRW8/DTjd7KRkgtJhmQVEaYR35NH7PTx8X7ye4fbY1JxzWQdb9zuvZhvfa0rwADILID
+         hv9zat3rL/AmUBq9JuCgMV4iFvIcSFJVFpw3OeaNFGiXf/NseDVJtcLo+4JaQxyFBo4a
+         ydr8BcYYaxDD2prULGF2RHXzaTjeoEIWm7VCTzqiwSOAv/uU5EuGOKo1yfX8ULbaOWd0
+         S54c6gaGRICCjCOIrJQx5auQ43Oowm4ba54iWxoWD9Se/1HK6MnR8gA34EYweC47hFMS
+         0NgQ==
+X-Gm-Message-State: AOAM531ob2IB8GCmFNKbfHO8dimBstcLMFxe/uyVNCa6D/ShBjiRa9cx
+        Y/mLqUUIUxeBy9rUPDebyXnI81Fz5RodieaEvTT5V8hqVx9Sl3mt
+X-Google-Smtp-Source: ABdhPJwRBIHnBdVGbE3eZOmidN/EzJbQxDjso5IGFFukx4A5Mjt2e4guflik6wrfE1fANYPQ6Idw+e3bmWZ5UDge3bo=
+X-Received: by 2002:a25:905:: with SMTP id 5mr589606ybj.44.1606874851342; Tue,
+ 01 Dec 2020 18:07:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20201201041040.GC28939@leoy-ThinkPad-X240s>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAAmvLXs_RUTPd_O7iXVrcD_L25G77zFPUX1KM=gW3_A2dhyB1A@mail.gmail.com>
+ <CAAmvLXua-7y+DSRSegH9dVt8hEQEOvDou8O1Mfe-xAzfRc180Q@mail.gmail.com>
+ <CAAmvLXsjgwMy84_Nm2YmbgS1TZEa_DD+A4YnvvhRQRz2J53uJg@mail.gmail.com>
+ <CAAmvLXv25yobsSSt57kZB-wYh7wxSKkz_qrSSGuVUDriQHZdbw@mail.gmail.com> <CAAmvLXtqyxUBEGPxP6pUspHTk_SdzbM00H=tUX+sdCCN6iLWAw@mail.gmail.com>
+In-Reply-To: <CAAmvLXtqyxUBEGPxP6pUspHTk_SdzbM00H=tUX+sdCCN6iLWAw@mail.gmail.com>
+From:   =?UTF-8?B?7ZWc66+47ISg?= <mesunyyam@gmail.com>
+Date:   Tue, 1 Dec 2020 18:05:55 -0800
+Message-ID: <CAAmvLXtPpqyun9goLw1JeQw0+s-6Y6WUdmH_qj4HiWW9FDTAPQ@mail.gmail.com>
+Subject: Asking about PMU tool issues
+To:     linux-perf-users@vger.kernel.org, pmu-tools@halobates.de
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 01, 2020 at 12:10:40PM +0800, Leo Yan wrote:
-> On Mon, Nov 30, 2020 at 04:46:51PM +0000, Will Deacon wrote:
-> > On Mon, Nov 30, 2020 at 06:24:54PM +0200, James Clark wrote:
-> > > Enable PID_IN_CONTEXTIDR by default when Arm SPE is enabled.
-> > > This flag is required to get PID data in the SPE trace. Without
-> > > it the perf tool will report 0 for PID which isn't very useful,
-> > > especially when doing system wide profiling or profiling
-> > > applications that fork.
-> > 
-> > Can perf not figure out the pid some other way? (e.g. by tracing context
-> > switches and correlating that with the SPE data?).
-> 
-> For perf 'per-thread' mode, we can use context switch trace event as
-> assisted info to select thread context.  But for "system wide" mode and
-> "snapshot" mode in perf tool, since the trace data is continuous, I
-> think we cannot use context switch trace event to correlate the SPE
-> trace data.
+Hello, I am Miseon Han.
 
-Is there no way to correlate them with something like CNTVCT?
+Currently, I am using jevents of PMU-tools for testing and gathering
+addresses of memory accesses.
 
-> > Also, how does this work with pid namespaces?
-> 
-> Here we are studying the implemetation of Intel-PT and Arm CoreSight.
-> 
-> The context ID is stored into the hardware trace data when record;
-> afterwards when perf tool decodes the trace data and detects the
-> packet for context ID, it will select the machine's thread context in
-> perf [1].  Since the perf tool gathers all the threads infomation in
-> perf data file, based on the context ID, it can find the corresponding
-> thread pointer with function machine__find_thread() [2].
-> 
-> Since your question is for "pid namespace", to be honest, I don't know
-> how perf tool to handle any confliction for differrent processes share
-> the same PID, and I am not sure if you are asking CGroup related stuff
-> or not.  If this cannot answer your question, please let me know.
+However, I have an issue that the number of gathered addresses is too
+small even if the memory footprint size of the target is quite large.
+I opened issues in pmu-tools/issues of github site - issue number 364
+In the page, more details are written.
 
-My point was that the pid value written to CONTEXTIDR is a global pid
-and does not take namespacing into account. If perf is run inside a pid
-namespace, it will therefore not work.
-
-Will
+Could you help me to solve this issue?
