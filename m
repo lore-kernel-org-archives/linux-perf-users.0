@@ -2,159 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBFCC71155
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 10:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CC4C63777
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Dec 2020 06:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72ACD2222A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Dec 2020 10:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47870206B6
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Dec 2020 06:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgLBK5p (ORCPT
+        id S1725984AbgLCGk3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Dec 2020 05:57:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57447 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726498AbgLBK5p (ORCPT
+        Thu, 3 Dec 2020 01:40:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51954 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbgLCGk3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Dec 2020 05:57:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1606906578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xp7VW90h5LfVjW1LO0EhnhSWIUXcbMA/k7nCGdFE7co=;
-        b=jMnEc8R3Y5/MrE8jH5E4+7PGTSbqvIrHQShrSlN5mdpuK9qAfoe0DiyueZCZ38XIFgahgD
-        qDE7NMYw0RLONk5OZiZX9NLtubppz64j+rA+8n7pGYEMNCFY0L6DJR0mcB1Gqj9QfW2VHP
-        dVbL9AgPrSmJw+YdbRxUXk/6PXmIp9Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-100-ThjeyCMzMEuVB6-Fabk8MQ-1; Wed, 02 Dec 2020 05:56:16 -0500
-X-MC-Unique: ThjeyCMzMEuVB6-Fabk8MQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 742EB10151EC;
-        Wed,  2 Dec 2020 10:56:15 +0000 (UTC)
-Received: from krava (unknown [10.40.195.190])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B1F4A5C1BD;
-        Wed,  2 Dec 2020 10:56:05 +0000 (UTC)
-Date:   Wed, 2 Dec 2020 11:56:04 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jan Kratochvil <jan.kratochvil@redhat.com>
-Cc:     "Frank Ch. Eigler" <fche@redhat.com>,
-        Mark Wielaard <mjw@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Milian Wolff <milian.wolff@kdab.com>,
-        John Levon <levon@movementarian.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: libdw dwarf unwind issue
-Message-ID: <20201202105604.GA3433097@krava>
-References: <20201103221709.GL3597846@krava>
- <20201122222751.GA1362915@host1.jankratochvil.net>
- <20201123221247.GC2003988@krava>
- <20201128040740.GA446287@host1.jankratochvil.net>
- <20201201194116.GC3169083@krava>
- <20201202100646.GA1731774@host1.jankratochvil.net>
+        Thu, 3 Dec 2020 01:40:29 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F85C061A4D
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Dec 2020 22:39:49 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id s2so582480plr.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Dec 2020 22:39:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p90ZTrcODaMIh1PUcjXTtSOF3aHh5Iqv2c9lQCLd5uw=;
+        b=mQlNuueE54XSMWq6SP8fFDIEQPOEDPETEey3dENLqhob4IP0rwSDaMWufXPbwQrTy5
+         DfOrJG0MoN015zDuWdAoZ4n0MZyPwbYHfBWIKxRgyAUBU8n1e0wiQO1R+V7ZpQmTwAEx
+         Dv4qJX6AA5LkzCGWlZJt2qIot4zzQBc8GU68zXp4UDW6ZK01adsFGAIjkUQMLlNpuBRr
+         eO3/jXso0XELDb0aW38cbsWgQVhK175ctbxvqRBykQYaE45dzfpt/UoIGjViFAY404Dq
+         XzE3KsYbpByBOeAmpCl4EtATdsHpDQQcly+6UBNE16+Jp/Q2yirUSTKopr+zqgNnwDY5
+         cTng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p90ZTrcODaMIh1PUcjXTtSOF3aHh5Iqv2c9lQCLd5uw=;
+        b=pFGFk9RRnGXL6nPq5HUuKCoedWLc7OXqC5cBDLlK2Vgm/yxRuXI7fN8C0vIwRTThJX
+         ZVdY2u/pywl1Vjpq1M42PyWzRJmLnOTI4vF5p/KQMZ9lqpJm8rD+Za0GkXWM65HmKz79
+         mLk4frLP4h+n6tNsEdoxtq4Tx2o54XU1zvJ3PA9Hy5mEn/n63xJMLTQ6UXrZkACrWbW6
+         OFV1y0aj99lBkW3RUf+VVCqjeXtQiHx8VEmreRs+4Wiz12ViJn6DyVmvkFw6/8hhim+s
+         vsXIExLJKUg8UEacaR2sLcZeqjVQDpJDBwHLKLA8fXzkSP363aux8/fKYhJFDNWFFiJy
+         sPjA==
+X-Gm-Message-State: AOAM532dgOJL2s47y+0XMAoOXprS61+26F1RI0TQCrc4i/8jLT+4pQT8
+        kSZb57iiXZP1aw9fGqh6aOtG5A==
+X-Google-Smtp-Source: ABdhPJyOoElyxwiAEuD0omkoyT6H/99s9lIaMAXnW6c09Gjnn8aUkR6r+ju4a9dxwk4XRIAiskjs6A==
+X-Received: by 2002:a17:902:b498:b029:da:84a7:be94 with SMTP id y24-20020a170902b498b02900da84a7be94mr1731127plr.52.1606977588537;
+        Wed, 02 Dec 2020 22:39:48 -0800 (PST)
+Received: from leoy-ThinkPad-X240s ([202.155.204.36])
+        by smtp.gmail.com with ESMTPSA id j10sm306546pji.29.2020.12.02.22.39.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 02 Dec 2020 22:39:47 -0800 (PST)
+Date:   Thu, 3 Dec 2020 14:39:41 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Al Grant <al.grant@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH] drivers/perf: Enable PID_IN_CONTEXTIDR with SPE
+Message-ID: <20201203063941.GE28939@leoy-ThinkPad-X240s>
+References: <20201130162454.28255-1-james.clark@arm.com>
+ <20201130164650.GA25187@willie-the-truck>
+ <20201201041040.GC28939@leoy-ThinkPad-X240s>
+ <20201201230935.GD28496@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201202100646.GA1731774@host1.jankratochvil.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20201201230935.GD28496@willie-the-truck>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Dec 02, 2020 at 11:06:46AM +0100, Jan Kratochvil wrote:
-> On Tue, 01 Dec 2020 20:41:16 +0100, Jiri Olsa wrote:
-> > the fix is working for me, would you mind send full patch?
-> > or just provide me with changelog and I can do it for you
-> 
-> I am not proficient with all the meta-tags there, I make no copyright claims
-> to this patch.
-> 
-> 
-> Regards,
-> Jan
+Hi Will,
 
-> perf libdw: Fix separte debug info files
+[ + Mathieu ]
+
+On Tue, Dec 01, 2020 at 11:09:36PM +0000, Will Deacon wrote:
+> On Tue, Dec 01, 2020 at 12:10:40PM +0800, Leo Yan wrote:
+> > On Mon, Nov 30, 2020 at 04:46:51PM +0000, Will Deacon wrote:
+> > > On Mon, Nov 30, 2020 at 06:24:54PM +0200, James Clark wrote:
+> > > > Enable PID_IN_CONTEXTIDR by default when Arm SPE is enabled.
+> > > > This flag is required to get PID data in the SPE trace. Without
+> > > > it the perf tool will report 0 for PID which isn't very useful,
+> > > > especially when doing system wide profiling or profiling
+> > > > applications that fork.
+> > > 
+> > > Can perf not figure out the pid some other way? (e.g. by tracing context
+> > > switches and correlating that with the SPE data?).
+> > 
+> > For perf 'per-thread' mode, we can use context switch trace event as
+> > assisted info to select thread context.  But for "system wide" mode and
+> > "snapshot" mode in perf tool, since the trace data is continuous, I
+> > think we cannot use context switch trace event to correlate the SPE
+> > trace data.
 > 
-> elfutils needs to be provided main binary and separate debug info file
-> respectively. Providing separate debug info file instead of the main binary is
-> not sufficient.
+> Is there no way to correlate them with something like CNTVCT?
+
+Good point.  Yes, we can convert CNTVCT to system time; I read the
+code in the perf's intel-pt.c and found the timestamp is used to
+correlate the auxtrace heap.  I think it's better to dig more for
+detailed implementation.
+
+> > > Also, how does this work with pid namespaces?
+> > 
+> > Here we are studying the implemetation of Intel-PT and Arm CoreSight.
+> > 
+> > The context ID is stored into the hardware trace data when record;
+> > afterwards when perf tool decodes the trace data and detects the
+> > packet for context ID, it will select the machine's thread context in
+> > perf [1].  Since the perf tool gathers all the threads infomation in
+> > perf data file, based on the context ID, it can find the corresponding
+> > thread pointer with function machine__find_thread() [2].
+> > 
+> > Since your question is for "pid namespace", to be honest, I don't know
+> > how perf tool to handle any confliction for differrent processes share
+> > the same PID, and I am not sure if you are asking CGroup related stuff
+> > or not.  If this cannot answer your question, please let me know.
 > 
-> One needs to try both supplied filename and its possible cache by its build-id
-> depending on the use case.
+> My point was that the pid value written to CONTEXTIDR is a global pid
+> and does not take namespacing into account. If perf is run inside a pid
+> namespace, it will therefore not work.
 
-it's great, I'll just add your's SOB if that's ok:
+Understand now.
 
-Signed-off-by: Jan Kratochvil <jan.kratochvil@redhat.com>
+The perf events PERF_RECORD_ITRACE_START/PERF_RECORD_SWITCH/
+PERF_RECORD_SWITCH_CPU_WIDE can be used to set pid/tid in perf.  So this
+would be a safe way for perf tool running in pid namespace.
 
-thanks,
-jirka
+Loop in Mathieu, this is a common issue for both Arm SPE and CoreSight
+(IIRC, though CoreSight's timestamp is not strictly attaching to Arm arch
+timer counter, the trend is to unify this for using arch timer
+counter).
 
-> 
-> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> index 7a3dbc259cec..0ada907c60d4 100644
-> --- a/tools/perf/util/unwind-libdw.c
-> +++ b/tools/perf/util/unwind-libdw.c
-> @@ -20,10 +20,24 @@
->  
->  static char *debuginfo_path;
->  
-> +static int __find_debuginfo(Dwfl_Module *mod __maybe_unused, void **userdata,
-> +			    const char *modname __maybe_unused, Dwarf_Addr base __maybe_unused,
-> +			    const char *file_name, const char *debuglink_file __maybe_unused,
-> +			    GElf_Word debuglink_crc __maybe_unused, char **debuginfo_file_name)
-> +{
-> +	const struct dso *dso = *userdata;
-> +
-> +	assert(dso);
-> +	if (dso->symsrc_filename && strcmp (file_name, dso->symsrc_filename))
-> +		*debuginfo_file_name = strdup(dso->symsrc_filename);
-> +	return -1;
-> +}
-> +
->  static const Dwfl_Callbacks offline_callbacks = {
-> -	.find_debuginfo		= dwfl_standard_find_debuginfo,
-> +	.find_debuginfo		= __find_debuginfo,
->  	.debuginfo_path		= &debuginfo_path,
->  	.section_address	= dwfl_offline_section_address,
-> +	// .find_elf is not set as we use dwfl_report_elf() instead.
->  };
->  
->  static int __report_module(struct addr_location *al, u64 ip,
-> @@ -46,16 +60,24 @@ static int __report_module(struct addr_location *al, u64 ip,
->  	mod = dwfl_addrmodule(ui->dwfl, ip);
->  	if (mod) {
->  		Dwarf_Addr s;
-> +		void **userdatap;
->  
-> -		dwfl_module_info(mod, NULL, &s, NULL, NULL, NULL, NULL, NULL);
-> +		dwfl_module_info(mod, &userdatap, &s, NULL, NULL, NULL, NULL, NULL);
-> +		*userdatap = dso;
->  		if (s != al->map->start - al->map->pgoff)
->  			mod = 0;
->  	}
->  
->  	if (!mod)
-> -		mod = dwfl_report_elf(ui->dwfl, dso->short_name,
-> -				      (dso->symsrc_filename ? dso->symsrc_filename : dso->long_name), -1, al->map->start - al->map->pgoff,
-> -				      false);
-> +		mod = dwfl_report_elf(ui->dwfl, dso->short_name, dso->long_name, -1,
-> +				      al->map->start - al->map->pgoff, false);
-> +	if (!mod) {
-> +		char filename[PATH_MAX];
-> +
-> +		if (dso__build_id_filename(dso, filename, sizeof(filename), false))
-> +			mod = dwfl_report_elf(ui->dwfl, dso->short_name, filename, -1,
-> +					      al->map->start - al->map->pgoff, false);
-> +	}
->  
->  	return mod && dwfl_addrmodule(ui->dwfl, ip) == mod ? 0 : -1;
->  }
+I think James could continue to upstream a new patch by following your
+suggestion for enabling PID_IN_CONTEXTIDR, eventually, it's a feature
+for Arm SPE to record CONTEXTIDR in its packet.
 
+Your questions inspired me, thanks!
+
+Leo
