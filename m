@@ -2,112 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6E1C4361B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Dec 2020 08:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCDFC4361B
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Dec 2020 16:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75CD022A85
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Dec 2020 08:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A28422286
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Dec 2020 16:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407260AbgLNIwI (ORCPT
+        id S2440056AbgLNQbn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Dec 2020 03:52:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:44602 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726463AbgLNIwH (ORCPT
+        Mon, 14 Dec 2020 11:31:43 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732019AbgLNQbd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Dec 2020 03:52:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3A121FB;
-        Mon, 14 Dec 2020 00:51:21 -0800 (PST)
-Received: from [10.57.30.226] (unknown [10.57.30.226])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E26373F66E;
-        Mon, 14 Dec 2020 00:51:19 -0800 (PST)
-Subject: Re: [PATCH] drivers/perf: Enable PID_IN_CONTEXTIDR with SPE
-To:     Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Al Grant <al.grant@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20201130162454.28255-1-james.clark@arm.com>
- <20201130164650.GA25187@willie-the-truck>
- <20201201041040.GC28939@leoy-ThinkPad-X240s>
- <20201201230935.GD28496@willie-the-truck>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <eec66e26-f0eb-9926-fdbd-995907e8fe48@arm.com>
-Date:   Mon, 14 Dec 2020 10:51:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 14 Dec 2020 11:31:33 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BEG40gx121385
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Dec 2020 11:30:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : from : subject
+ : message-id : date : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=yPdvSFYhobH9KUkaQsUdBORo6RLqfUB8+5QDKeiwzhk=;
+ b=GzSu7qawiGJVfCg68w6C8rBRU+ubjXd8Hx/X5AJrRvILxPurvb26CESrz2Oa1ybnBDCF
+ ron2J3Z6vU/V0fY7GvVpLm/la4oMOo4hqnDkbLXk7sI3/cg7WOGgCWLScrFr+E1ORLCP
+ ajRSuedWyVJPCckQXFXLmzl2u9YXsSl/bzeqd3Y5Tmtzb0GdaOXvY4JwyC8lNKrWeR1d
+ fwhgtA5fEOoIbdZuQPtI6igXuPYdsdxW9DLiDFV6EqFAzgOfhApLjSUa1kqu/zpbmtQb
+ 85pD6OrGiHa8JsrP9Xx0vf3GMRYUIwQut228v2KUMybayHJBIPsu9agYauSFMyGMumpF 7A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35eag1tuy9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Dec 2020 11:30:52 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BEG4GD3123245
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Dec 2020 11:30:52 -0500
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 35eag1tuxd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Dec 2020 11:30:52 -0500
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BEGMWjV001624;
+        Mon, 14 Dec 2020 16:30:50 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 35cng82bv3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 14 Dec 2020 16:30:49 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BEGUkoC23462292
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Dec 2020 16:30:46 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B688E52059;
+        Mon, 14 Dec 2020 16:30:46 +0000 (GMT)
+Received: from li-e35baacc-2106-11b2-a85c-8f97eb669a6e.ibm.com (unknown [9.145.5.84])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8888F52057;
+        Mon, 14 Dec 2020 16:30:46 +0000 (GMT)
+To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Arnaldo de Melo <acme@redhat.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Subject: perf test 42 failure on x86
+Organization: IBM
+Message-ID: <18a7ad32-1da7-f744-411d-d08ff4dfa91a@linux.ibm.com>
+Date:   Mon, 14 Dec 2020 17:30:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.3.1
 MIME-Version: 1.0
-In-Reply-To: <20201201230935.GD28496@willie-the-truck>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-14_06:2020-12-11,2020-12-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 adultscore=0 impostorscore=0 clxscore=1015 phishscore=0
+ mlxlogscore=999 bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2012140108
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi,
 
+I just installed Fedora 33 and its latest kernel on my x86_64 virtual machine and
+ran into a perf test issue:
 
-On 02/12/2020 01:09, Will Deacon wrote:
-> On Tue, Dec 01, 2020 at 12:10:40PM +0800, Leo Yan wrote:
->> On Mon, Nov 30, 2020 at 04:46:51PM +0000, Will Deacon wrote:
->>> On Mon, Nov 30, 2020 at 06:24:54PM +0200, James Clark wrote:
->>>> Enable PID_IN_CONTEXTIDR by default when Arm SPE is enabled.
->>>> This flag is required to get PID data in the SPE trace. Without
->>>> it the perf tool will report 0 for PID which isn't very useful,
->>>> especially when doing system wide profiling or profiling
->>>> applications that fork.
->>>
->>> Can perf not figure out the pid some other way? (e.g. by tracing context
->>> switches and correlating that with the SPE data?).
->>
->> For perf 'per-thread' mode, we can use context switch trace event as
->> assisted info to select thread context.  But for "system wide" mode and
->> "snapshot" mode in perf tool, since the trace data is continuous, I
->> think we cannot use context switch trace event to correlate the SPE
->> trace data.
-> 
-> Is there no way to correlate them with something like CNTVCT?
-> 
->>> Also, how does this work with pid namespaces?
->>
->> Here we are studying the implemetation of Intel-PT and Arm CoreSight.
->>
->> The context ID is stored into the hardware trace data when record;
->> afterwards when perf tool decodes the trace data and detects the
->> packet for context ID, it will select the machine's thread context in
->> perf [1].  Since the perf tool gathers all the threads infomation in
->> perf data file, based on the context ID, it can find the corresponding
->> thread pointer with function machine__find_thread() [2].
->>
->> Since your question is for "pid namespace", to be honest, I don't know
->> how perf tool to handle any confliction for differrent processes share
->> the same PID, and I am not sure if you are asking CGroup related stuff
->> or not.  If this cannot answer your question, please let me know.
-> 
-> My point was that the pid value written to CONTEXTIDR is a global pid
-> and does not take namespacing into account. If perf is run inside a pid
-> namespace, it will therefore not work.
+[root@f33 ~]# uname -a
+Linux f33 5.9.13-200.fc33.x86_64 #1 SMP Tue Dec 8 15:42:52 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+[root@f33 ~]#[root@f33 ~]# perf test -F 42
+42: BPF filter                                            :
+42.1: Basic BPF filtering                                 : Ok
+42.2: BPF pinning                                         : Ok
+42.3: BPF prologue generation                             : Ok
+42.4: BPF relocation checker                              : FAILED!
+[root@f33 ~]# 
 
-That's an interesting point, but I think we should improve this for the simple
-use case without namespaces first just to improve the user experience, so I've
-sent v2 of the patch with the change you suggested about using "default y".
+The last test fails due to unexpected success:
+[root@f33 ~]# perf test -v -F 42
+42: BPF filter                                            :
+42.1: Basic BPF filtering                                 :
+--- start ---
+....
+libbpf: skip section(9) .eh_frame
+libbpf: section(10) .rel.eh_frame, size 16, link 12, flags 0, type=9
+libbpf: skip relo .rel.eh_frame(10) for section(9)
+libbpf: section(11) .llvm_addrsig, size 5, link 12, flags 80000000, type=1879002115
+libbpf: skip section(11) .llvm_addrsig
+libbpf: section(12) .symtab, size 192, link 1, flags 0, type=2
+libbpf: looking for externs among 8 symbols...
+libbpf: collected 0 externs total
+libbpf: maps in [bpf_relocation_test]: 1 maps in 16 bytes
+libbpf: map 'my_table' (legacy): at sec_idx 5, offset 0.
+libbpf: map 6 is "my_table"
+libbpf: map '_bpf_rel.bss' (global data): at sec_idx 6, offset 0, flags 400.
+libbpf: map 1 is "_bpf_rel.bss"
+libbpf: collecting relocating info for: 'func=sys_write'
+libbpf: relo for shdr 6, symb 7, value 0, type 1, bind 1, name 26 ('this_is_a_global_val'), insn 7
+libbpf: found data map 1 (_bpf_rel.bss, sec 6, off 0) for insn 7
+Success unexpectedly: libbpf error when dealing with relocation
+---- end ----
+BPF filter subtest 4: FAILED!
+[root@f33 ~]#
 
-One other thing that is an issue that I'd like to ask about is this line in
-arm_spe_pmu.c:
+There is success when failure is expected. Has anybody already started to look into this?
+--
 
-	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
-		reg |= BIT(SYS_PMSCR_EL1_CX_SHIFT);
-
-This means that the user has to be root to get the context saved with SPE.
-Is this a necessary security feature? I thought that PIDs are viewable by
-all users anyway? Do you think there is any way we could remove the perfmon_capable()
-requirement?
-
-James
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
