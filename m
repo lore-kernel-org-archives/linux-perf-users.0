@@ -2,123 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE11AC4361B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 13:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 087D6C4361B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 15:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7313D223D6
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 13:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41502073C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 15:10:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgLONdr (ORCPT
+        id S1729632AbgLOPJq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Dec 2020 08:33:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbgLONdh (ORCPT
+        Tue, 15 Dec 2020 10:09:46 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48930 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729611AbgLOPJp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Dec 2020 08:33:37 -0500
-Date:   Tue, 15 Dec 2020 10:33:07 -0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1608039174;
-        bh=08Ht/Ta5+Dg2pqKm7AilgXrZxrvrjBxvd2Hv3Z/7W7E=;
-        h=From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fxZWh0+o/hafqho46ammiZUn73U2gZPxqgLTrnAKlF2uStHjxGJavb13XeFkwwjfR
-         hUOj7o9S5pBG6Lfw4e074cq3I48Iwx+3v0LgYbt+TUAlJsK4adCE2bJ/7pyGMwot4P
-         JooMCLtSbelDiKZBnlnPza0fJsP55vmKRW2QwMn2q7UKMsWBQvUOHUSPzwyqFimb5o
-         ITRxLQTQLZT1yrz8WOxWsWbM+BAnJJoAFVQitvU6ILlMfsEBGbMBuM2yCIOPNGlKLX
-         xVxWOFZWrhI4bZ1VAPEG17fNw/T2i9cmcZBYWqdvESKv8nHfzTpCyd6HM7VBoptQnN
-         ZVDIT6hr9LHyA==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Al Grant <al.grant@foss.arm.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Tue, 15 Dec 2020 10:09:45 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BFF2WU7020881;
+        Tue, 15 Dec 2020 10:08:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=r0PBX5LPJBsbD47eMoyZlxW9UV/WvCEQWeyIO+CX+2Y=;
+ b=RfZBLsxDUZDEO6ZJeABHZ0p/w4tkuEAulFpZaKG8DWJazVK1KqHYL2rAtSjfxdVJH/r6
+ Qcsk4K+Y8IoIWGdJKokq14vWmj8JFUQg8FJ1nTBHYSzzTgjOJ5q2ORZV4E4nmHQKAGSW
+ 5daFL8i0DH6VFJUPgqHF2ijpUiyYL6+mqJy9c5E9VM+0EkaVZUxDJPMc88P5079VFKql
+ 2AnafpF2fkHyadRQr+Ne0c7C2Ft9ritzguQg9VJVCn1qB2kkp+k0UTiHda7GC0/KMN8+
+ rIz6lQT+nEVWPZGsSeCbMSvxlG3m49Yk/yM15DUK2OnPnO+PMB5zSGb6qDbCq5fGQEUi Tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35ewkymapm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 10:08:22 -0500
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BFF3RBR029189;
+        Tue, 15 Dec 2020 10:08:21 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 35ewkymant-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 10:08:21 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BFF2puO006607;
+        Tue, 15 Dec 2020 15:08:19 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02dal.us.ibm.com with ESMTP id 35d525ruad-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Dec 2020 15:08:19 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BFF8Ipd24445244
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Dec 2020 15:08:18 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C9A3BE04F;
+        Tue, 15 Dec 2020 15:08:18 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80185BE051;
+        Tue, 15 Dec 2020 15:08:14 +0000 (GMT)
+Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.80.199.149])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Tue, 15 Dec 2020 15:08:14 +0000 (GMT)
+Date:   Tue, 15 Dec 2020 09:08:12 -0600
+From:   "Paul A. Clarke" <pc@us.ibm.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH] perf inject corrupts file by deleting event
-Message-ID: <20201215133307.GB252952@kernel.org>
-References: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
- <b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com>
- <CAM9d7cgmQ552DFpPo6b8kCwq4B9faSPxGE3tTBW6jfJd1xMVwA@mail.gmail.com>
- <20201116164533.GC509215@kernel.org>
- <20201116164839.GD509215@kernel.org>
- <20201116165946.GE509215@kernel.org>
- <5d085d2a-7f76-88ab-25c4-1370f7e1589e@foss.arm.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        John Garry <john.garry@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [RFC PATCH 0/7] Share events between metrics
+Message-ID: <20201215150812.GA38786@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+References: <20200507081436.49071-1-irogers@google.com>
+ <20200507174835.GB3538@tassilo.jf.intel.com>
+ <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
+ <20200507214652.GC3538@tassilo.jf.intel.com>
+ <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5d085d2a-7f76-88ab-25c4-1370f7e1589e@foss.arm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
+ definitions=2020-12-15_12:2020-12-15,2020-12-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ suspectscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxlogscore=999 bulkscore=0 adultscore=0 malwarescore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2012150104
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Dec 15, 2020 at 09:48:32AM +0000, Al Grant escreveu:
-> On 16/11/2020 16:59, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Nov 16, 2020 at 01:48:39PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Mon, Nov 16, 2020 at 01:45:33PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Em Tue, Nov 17, 2020 at 01:25:09AM +0900, Namhyung Kim escreveu:
-> > > > > On Sat, Nov 14, 2020 at 5:38 AM Al Grant <al.grant@foss.arm.com> wrote:
-> > > > > > Mismatching sample_types are seen with "perf record -e cs_etm//",
-> > > > > > where the AUX event has TID|TIME|CPU|IDENTIFIER and the dummy
-> > > > > > event has TID|TIME|IDENTIFIER. Perhaps they could be the same,
-> > > > > > but it isn't normally a problem if they aren't - perf has
-> > > > > > no problems reading the file. The sample_types have to agree on
-> > > > > > the position of IDENTIFIER, because that's how perf finds the
-> > > > > > right event descriptor in the first place, but they don't normally
-> > > > > > have to agree on other fields, and perf doesn't check that they do.
-> > > > > > The problem is specific to the way "perf inject" reorganizes the
-> > > > > > events and the way synthetic MMAP events are recorded with a zero
-> > > > > > identifier. A simple solution is to stop "perf inject" deleting
-> > > > > > the tracing event.
-> > > 
-> > > > > > Signed-off-by: Al Grant <al.grant@arm.com>
-> > > > > > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> > > 
-> > > > > While I'm ok with this change,
-> > > > 
-> > > > So, to make progress, I'll take your phrase as an Acked-by, as described
-> > > > in Documentation/process/submitting-patches.rst, ok?
-> > > 
-> > > But I'll have to apply by hand:
-> > > 
-> > > [acme@five perf]$ am /wb/1.patch
-> > > warning: Patch sent with format=flowed; space at the end of lines might be lost.
-> > > Applying: perf inject corrupts file by deleting event
-> > > error: patch failed: tools/perf/builtin-inject.c:791
-> > > error: tools/perf/builtin-inject.c: patch does not apply
-> > > Patch failed at 0001 perf inject corrupts file by deleting event
-> > > hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> > > When you have resolved this problem, run "git am --continue".
-> > > If you prefer to skip this patch, run "git am --skip" instead.
-> > > To restore the original branch and stop patching, run "git am --abort".
-> > > [acme@five perf]$
-> > 
-> > And you also forgot to update the comment and to remove the now unused
-> > 'evsel' variable, find the updated patch below, please check.
-> 
-> Thanks for tidying it up, it looks good to me. Do you need me to resubmit
-> or can you take it as it is now with your changes?
-> 
-> Al
+On Thu, May 07, 2020 at 10:43:43PM -0700, Ian Rogers wrote:
+> On Thu, May 7, 2020 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > > > - without this change events within a metric may get scheduled
+> > > >   together, after they may appear as part of a larger group and be
+> > > >   multiplexed at different times, lowering accuracy - however, less
+> > > >   multiplexing may compensate for this.
 
+Does mutiplexing somewhat related events at different times actually reduce
+accuracy, or is it just more likely to give that appearance?
 
-Its already in v5.10:
+It seems that perf measurements are only useful if the workload is in a
+fairly steady state.  If there is some wobbling, then measuring at the
+same time is more accurate for the periods where the events are being
+measured simultaneously, but may be far off for when they are not being
+measured at all.  Spreading them out over a longer duration may actually
+increase accuracy by sampling over more varied intervals.
 
-[acme@five perf]$ git log --oneline -1 1c756cd429d8f3da33d31f2a970284b9d5260534
-1c756cd429d8f3da perf inject: Fix file corruption due to event deletion
-[acme@five perf]$ git tag --contains 1c756cd429d8f3da33d31f2a970284b9d5260534 | grep ^v
-v5.10
-v5.10-rc5
-v5.10-rc6
-v5.10-rc7
-[acme@five perf]$
+Or, is the concern more about trying to time-slice the results in a 
+fairly granular way and expecting accurate results then?
 
-Thanks for checking,
+(Or, maybe my ignorance is showing again.  :-)
 
-- Arnaldo
+PC
