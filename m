@@ -2,70 +2,41 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087D6C4361B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 15:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C15C2BB48
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 18:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C41502073C
-	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 15:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36B522B2C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 18:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgLOPJq (ORCPT
+        id S1730981AbgLOSlj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 15 Dec 2020 10:09:46 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48930 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729611AbgLOPJp (ORCPT
+        Tue, 15 Dec 2020 13:41:39 -0500
+Received: from mga17.intel.com ([192.55.52.151]:52574 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730517AbgLOSlj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 15 Dec 2020 10:09:45 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BFF2WU7020881;
-        Tue, 15 Dec 2020 10:08:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=r0PBX5LPJBsbD47eMoyZlxW9UV/WvCEQWeyIO+CX+2Y=;
- b=RfZBLsxDUZDEO6ZJeABHZ0p/w4tkuEAulFpZaKG8DWJazVK1KqHYL2rAtSjfxdVJH/r6
- Qcsk4K+Y8IoIWGdJKokq14vWmj8JFUQg8FJ1nTBHYSzzTgjOJ5q2ORZV4E4nmHQKAGSW
- 5daFL8i0DH6VFJUPgqHF2ijpUiyYL6+mqJy9c5E9VM+0EkaVZUxDJPMc88P5079VFKql
- 2AnafpF2fkHyadRQr+Ne0c7C2Ft9ritzguQg9VJVCn1qB2kkp+k0UTiHda7GC0/KMN8+
- rIz6lQT+nEVWPZGsSeCbMSvxlG3m49Yk/yM15DUK2OnPnO+PMB5zSGb6qDbCq5fGQEUi Tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35ewkymapm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Dec 2020 10:08:22 -0500
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BFF3RBR029189;
-        Tue, 15 Dec 2020 10:08:21 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 35ewkymant-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Dec 2020 10:08:21 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BFF2puO006607;
-        Tue, 15 Dec 2020 15:08:19 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma02dal.us.ibm.com with ESMTP id 35d525ruad-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 15 Dec 2020 15:08:19 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BFF8Ipd24445244
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Dec 2020 15:08:18 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C9A3BE04F;
-        Tue, 15 Dec 2020 15:08:18 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80185BE051;
-        Tue, 15 Dec 2020 15:08:14 +0000 (GMT)
-Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.80.199.149])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Tue, 15 Dec 2020 15:08:14 +0000 (GMT)
-Date:   Tue, 15 Dec 2020 09:08:12 -0600
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
+        Tue, 15 Dec 2020 13:41:39 -0500
+IronPort-SDR: eCf5TbFDh4pOE8ld4EVKW8hfWStMXbniN/noN/Qe8L/ACoxBEChmKicZf8kYDVI0vaMKNeITbn
+ 71bes5xRqNqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9836"; a="154739041"
+X-IronPort-AV: E=Sophos;i="5.78,422,1599548400"; 
+   d="scan'208";a="154739041"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 10:39:52 -0800
+IronPort-SDR: WZcHuhWOoUxXCDbN+e8Bj2ffHJhRAf1F6LGhGhN1dUdzaKFB0VpJ41e9Q2eiuyhO7mZoGQIXzi
+ pevHk8hEmZOQ==
+X-IronPort-AV: E=Sophos;i="5.78,422,1599548400"; 
+   d="scan'208";a="352032975"
+Received: from tassilo.jf.intel.com ([10.54.74.11])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2020 10:39:52 -0800
+Date:   Tue, 15 Dec 2020 10:39:51 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     "Paul A. Clarke" <pc@us.ibm.com>
+Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -91,50 +62,26 @@ Cc:     Andi Kleen <ak@linux.intel.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [RFC PATCH 0/7] Share events between metrics
-Message-ID: <20201215150812.GA38786@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+Message-ID: <20201215183951.GB1538637@tassilo.jf.intel.com>
 References: <20200507081436.49071-1-irogers@google.com>
  <20200507174835.GB3538@tassilo.jf.intel.com>
  <CAP-5=fUdoGJs+yViq3BOcJa7YyF53AD9RGQm8aRW72nMH0sKDA@mail.gmail.com>
  <20200507214652.GC3538@tassilo.jf.intel.com>
  <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
+ <20201215150812.GA38786@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fV2eNAt0LLHYXeLMR6GZi_oGZyzz8psErNkbahLQs-VLQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-15_12:2020-12-15,2020-12-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- suspectscore=0 impostorscore=0 lowpriorityscore=0 priorityscore=1501
- mlxlogscore=999 bulkscore=0 adultscore=0 malwarescore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2012150104
+In-Reply-To: <20201215150812.GA38786@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 07, 2020 at 10:43:43PM -0700, Ian Rogers wrote:
-> On Thu, May 7, 2020 at 2:47 PM Andi Kleen <ak@linux.intel.com> wrote:
-> >
-> > > > - without this change events within a metric may get scheduled
-> > > >   together, after they may appear as part of a larger group and be
-> > > >   multiplexed at different times, lowering accuracy - however, less
-> > > >   multiplexing may compensate for this.
+> Or, is the concern more about trying to time-slice the results in a 
+> fairly granular way and expecting accurate results then?
 
-Does mutiplexing somewhat related events at different times actually reduce
-accuracy, or is it just more likely to give that appearance?
+Usually the later. It's especially important for divisions. You want
+both divisor and dividend to be in the same time slice, otherwise
+the result usually doesn't make a lot of sense.
 
-It seems that perf measurements are only useful if the workload is in a
-fairly steady state.  If there is some wobbling, then measuring at the
-same time is more accurate for the periods where the events are being
-measured simultaneously, but may be far off for when they are not being
-measured at all.  Spreading them out over a longer duration may actually
-increase accuracy by sampling over more varied intervals.
-
-Or, is the concern more about trying to time-slice the results in a 
-fairly granular way and expecting accurate results then?
-
-(Or, maybe my ignorance is showing again.  :-)
-
-PC
+-Andi
