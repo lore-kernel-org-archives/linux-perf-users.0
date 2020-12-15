@@ -2,138 +2,216 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCDFC4361B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Dec 2020 16:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3AFC2BB48
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 09:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A28422286
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Dec 2020 16:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC69224B1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Dec 2020 09:49:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440056AbgLNQbn (ORCPT
+        id S1728506AbgLOJtY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Dec 2020 11:31:43 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10236 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732019AbgLNQbd (ORCPT
+        Tue, 15 Dec 2020 04:49:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:58272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728501AbgLOJtR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Dec 2020 11:31:33 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0BEG40gx121385
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Dec 2020 11:30:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : from : subject
- : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=yPdvSFYhobH9KUkaQsUdBORo6RLqfUB8+5QDKeiwzhk=;
- b=GzSu7qawiGJVfCg68w6C8rBRU+ubjXd8Hx/X5AJrRvILxPurvb26CESrz2Oa1ybnBDCF
- ron2J3Z6vU/V0fY7GvVpLm/la4oMOo4hqnDkbLXk7sI3/cg7WOGgCWLScrFr+E1ORLCP
- ajRSuedWyVJPCckQXFXLmzl2u9YXsSl/bzeqd3Y5Tmtzb0GdaOXvY4JwyC8lNKrWeR1d
- fwhgtA5fEOoIbdZuQPtI6igXuPYdsdxW9DLiDFV6EqFAzgOfhApLjSUa1kqu/zpbmtQb
- 85pD6OrGiHa8JsrP9Xx0vf3GMRYUIwQut228v2KUMybayHJBIPsu9agYauSFMyGMumpF 7A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35eag1tuy9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Dec 2020 11:30:52 -0500
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0BEG4GD3123245
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Dec 2020 11:30:52 -0500
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 35eag1tuxd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Dec 2020 11:30:52 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0BEGMWjV001624;
-        Mon, 14 Dec 2020 16:30:50 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 35cng82bv3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 14 Dec 2020 16:30:49 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0BEGUkoC23462292
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Dec 2020 16:30:46 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B688E52059;
-        Mon, 14 Dec 2020 16:30:46 +0000 (GMT)
-Received: from li-e35baacc-2106-11b2-a85c-8f97eb669a6e.ibm.com (unknown [9.145.5.84])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8888F52057;
-        Mon, 14 Dec 2020 16:30:46 +0000 (GMT)
-To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo de Melo <acme@redhat.com>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Subject: perf test 42 failure on x86
-Organization: IBM
-Message-ID: <18a7ad32-1da7-f744-411d-d08ff4dfa91a@linux.ibm.com>
-Date:   Mon, 14 Dec 2020 17:30:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.3.1
+        Tue, 15 Dec 2020 04:49:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FCFE1FB;
+        Tue, 15 Dec 2020 01:48:35 -0800 (PST)
+Received: from [10.57.62.191] (unknown [10.57.62.191])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CED473F66E;
+        Tue, 15 Dec 2020 01:48:33 -0800 (PST)
+Subject: Re: [PATCH] perf inject corrupts file by deleting event
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <83633eb2-04dc-4a13-3ad7-abd3a7459ac1@foss.arm.com>
+ <b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com>
+ <CAM9d7cgmQ552DFpPo6b8kCwq4B9faSPxGE3tTBW6jfJd1xMVwA@mail.gmail.com>
+ <20201116164533.GC509215@kernel.org> <20201116164839.GD509215@kernel.org>
+ <20201116165946.GE509215@kernel.org>
+From:   Al Grant <al.grant@foss.arm.com>
+Message-ID: <5d085d2a-7f76-88ab-25c4-1370f7e1589e@foss.arm.com>
+Date:   Tue, 15 Dec 2020 09:48:32 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.343,18.0.737
- definitions=2020-12-14_06:2020-12-11,2020-12-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 adultscore=0 impostorscore=0 clxscore=1015 phishscore=0
- mlxlogscore=999 bulkscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
- definitions=main-2012140108
+In-Reply-To: <20201116165946.GE509215@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On 16/11/2020 16:59, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Nov 16, 2020 at 01:48:39PM -0300, Arnaldo Carvalho de Melo escreveu:
+>> Em Mon, Nov 16, 2020 at 01:45:33PM -0300, Arnaldo Carvalho de Melo escreveu:
+>>> Em Tue, Nov 17, 2020 at 01:25:09AM +0900, Namhyung Kim escreveu:
+>>>> On Sat, Nov 14, 2020 at 5:38 AM Al Grant <al.grant@foss.arm.com> wrote:
+>>>>> Mismatching sample_types are seen with "perf record -e cs_etm//",
+>>>>> where the AUX event has TID|TIME|CPU|IDENTIFIER and the dummy
+>>>>> event has TID|TIME|IDENTIFIER. Perhaps they could be the same,
+>>>>> but it isn't normally a problem if they aren't - perf has
+>>>>> no problems reading the file. The sample_types have to agree on
+>>>>> the position of IDENTIFIER, because that's how perf finds the
+>>>>> right event descriptor in the first place, but they don't normally
+>>>>> have to agree on other fields, and perf doesn't check that they do.
+>>>>> The problem is specific to the way "perf inject" reorganizes the
+>>>>> events and the way synthetic MMAP events are recorded with a zero
+>>>>> identifier. A simple solution is to stop "perf inject" deleting
+>>>>> the tracing event.
+>>
+>>>>> Signed-off-by: Al Grant <al.grant@arm.com>
+>>>>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>>
+>>>> While I'm ok with this change,
+>>>
+>>> So, to make progress, I'll take your phrase as an Acked-by, as described
+>>> in Documentation/process/submitting-patches.rst, ok?
+>>
+>> But I'll have to apply by hand:
+>>
+>> [acme@five perf]$ am /wb/1.patch
+>> warning: Patch sent with format=flowed; space at the end of lines might be lost.
+>> Applying: perf inject corrupts file by deleting event
+>> error: patch failed: tools/perf/builtin-inject.c:791
+>> error: tools/perf/builtin-inject.c: patch does not apply
+>> Patch failed at 0001 perf inject corrupts file by deleting event
+>> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+>> When you have resolved this problem, run "git am --continue".
+>> If you prefer to skip this patch, run "git am --skip" instead.
+>> To restore the original branch and stop patching, run "git am --abort".
+>> [acme@five perf]$
+> 
+> And you also forgot to update the comment and to remove the now unused
+> 'evsel' variable, find the updated patch below, please check.
 
-I just installed Fedora 33 and its latest kernel on my x86_64 virtual machine and
-ran into a perf test issue:
+Thanks for tidying it up, it looks good to me. Do you need me to resubmit
+or can you take it as it is now with your changes?
 
-[root@f33 ~]# uname -a
-Linux f33 5.9.13-200.fc33.x86_64 #1 SMP Tue Dec 8 15:42:52 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
-[root@f33 ~]#[root@f33 ~]# perf test -F 42
-42: BPF filter                                            :
-42.1: Basic BPF filtering                                 : Ok
-42.2: BPF pinning                                         : Ok
-42.3: BPF prologue generation                             : Ok
-42.4: BPF relocation checker                              : FAILED!
-[root@f33 ~]# 
+Al
 
-The last test fails due to unexpected success:
-[root@f33 ~]# perf test -v -F 42
-42: BPF filter                                            :
-42.1: Basic BPF filtering                                 :
---- start ---
-....
-libbpf: skip section(9) .eh_frame
-libbpf: section(10) .rel.eh_frame, size 16, link 12, flags 0, type=9
-libbpf: skip relo .rel.eh_frame(10) for section(9)
-libbpf: section(11) .llvm_addrsig, size 5, link 12, flags 80000000, type=1879002115
-libbpf: skip section(11) .llvm_addrsig
-libbpf: section(12) .symtab, size 192, link 1, flags 0, type=2
-libbpf: looking for externs among 8 symbols...
-libbpf: collected 0 externs total
-libbpf: maps in [bpf_relocation_test]: 1 maps in 16 bytes
-libbpf: map 'my_table' (legacy): at sec_idx 5, offset 0.
-libbpf: map 6 is "my_table"
-libbpf: map '_bpf_rel.bss' (global data): at sec_idx 6, offset 0, flags 400.
-libbpf: map 1 is "_bpf_rel.bss"
-libbpf: collecting relocating info for: 'func=sys_write'
-libbpf: relo for shdr 6, symb 7, value 0, type 1, bind 1, name 26 ('this_is_a_global_val'), insn 7
-libbpf: found data map 1 (_bpf_rel.bss, sec 6, off 0) for insn 7
-Success unexpectedly: libbpf error when dealing with relocation
----- end ----
-BPF filter subtest 4: FAILED!
-[root@f33 ~]#
 
-There is success when failure is expected. Has anybody already started to look into this?
---
-
-Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> 
+> Thanks,
+> 
+> - Arnaldo
+> 
+> commit 2dd954d9ec9059f330799a32d1cfa507beb18e1a
+> Author: Al Grant <al.grant@foss.arm.com>
+> Date:   Fri Nov 13 20:38:26 2020 +0000
+> 
+>      perf inject: Fix file corruption due to event deletion
+>      
+>      "perf inject" can create corrupt files when synthesizing sample events from AUX
+>      data. This happens when in the input file, the first event (for the AUX data)
+>      has a different sample_type from the second event (generally dummy).
+>      
+>      Specifically, they differ in the bits that indicate the standard fields
+>      appended to perf records in the mmap buffer. "perf inject" deletes the first
+>      event and moves up the second event to first position.
+>      
+>      The problem is with the synthetic PERF_RECORD_MMAP (etc.) events created
+>      by "perf record".
+>      
+>      Since these are synthetic versions of events which are normally produced
+>      by the kernel, they have to have the standard fields appended as
+>      described by sample_type.
+>      
+>      "perf record" fills these in with zeroes, including the IDENTIFIER
+>      field; perf readers interpret records with zero IDENTIFIER using the
+>      descriptor for the first event in the file.
+>      
+>      Since "perf inject" changes the first event, these synthetic records are
+>      then processed with the wrong value of sample_type, and the perf reader
+>      reads bad data, reports on incorrect length records etc.
+>      
+>      Mismatching sample_types are seen with "perf record -e cs_etm//", where the AUX
+>      event has TID|TIME|CPU|IDENTIFIER and the dummy event has TID|TIME|IDENTIFIER.
+>      
+>      Perhaps they could be the same, but it isn't normally a problem if they aren't
+>      - perf has no problems reading the file.
+>      
+>      The sample_types have to agree on the position of IDENTIFIER, because
+>      that's how perf finds the right event descriptor in the first place, but
+>      they don't normally have to agree on other fields, and perf doesn't
+>      check that they do.
+>      
+>      The problem is specific to the way "perf inject" reorganizes the events
+>      and the way synthetic MMAP events are recorded with a zero identifier. A
+>      simple solution is to stop "perf inject" deleting the tracing event.
+>      
+>      Committer testing
+>      
+>      Removed the now unused 'evsel' variable, update the comment about the
+>      evsel removal not being performed anymore, and apply the patch manually
+>      as it failed with this warning:
+>      
+>        warning: Patch sent with format=flowed; space at the end of lines might be lost.
+>      
+>      Testing it with:
+>      
+>        $ perf bench internals inject-build-id
+>        # Running 'internals/inject-build-id' benchmark:
+>          Average build-id injection took: 8.543 msec (+- 0.130 msec)
+>          Average time per event: 0.838 usec (+- 0.013 usec)
+>          Average memory usage: 12717 KB (+- 9 KB)
+>          Average build-id-all injection took: 5.710 msec (+- 0.058 msec)
+>          Average time per event: 0.560 usec (+- 0.006 usec)
+>          Average memory usage: 12079 KB (+- 7 KB)
+>        $
+>      
+>      Signed-off-by: Al Grant <al.grant@arm.com>
+>      Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>      Acked-by: Namhyung Kim <namhyung@kernel.org>
+>      Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>      Cc: Jiri Olsa <jolsa@redhat.com>
+>      Cc: Mark Rutland <mark.rutland@arm.com>
+>      Cc: Peter Zijlstra <peterz@infradead.org>
+>      LPU-Reference: b9cf5611-daae-2390-3439-6617f8f0a34b@foss.arm.com
+>      Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 14d6c88fed76f249..43937f4b399ad2ca 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -779,25 +779,15 @@ static int __cmd_inject(struct perf_inject *inject)
+>   			dsos__hit_all(session);
+>   		/*
+>   		 * The AUX areas have been removed and replaced with
+> -		 * synthesized hardware events, so clear the feature flag and
+> -		 * remove the evsel.
+> +		 * synthesized hardware events, so clear the feature flag.
+>   		 */
+>   		if (inject->itrace_synth_opts.set) {
+> -			struct evsel *evsel;
+> -
+>   			perf_header__clear_feat(&session->header,
+>   						HEADER_AUXTRACE);
+>   			if (inject->itrace_synth_opts.last_branch ||
+>   			    inject->itrace_synth_opts.add_last_branch)
+>   				perf_header__set_feat(&session->header,
+>   						      HEADER_BRANCH_STACK);
+> -			evsel = perf_evlist__id2evsel_strict(session->evlist,
+> -							     inject->aux_id);
+> -			if (evsel) {
+> -				pr_debug("Deleting %s\n", evsel__name(evsel));
+> -				evlist__remove(session->evlist, evsel);
+> -				evsel__delete(evsel);
+> -			}
+>   		}
+>   		session->header.data_offset = output_data_offset;
+>   		session->header.data_size = inject->bytes_written;
+> 
