@@ -2,108 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0F8C4361B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Dec 2020 07:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7C1C4361B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Dec 2020 14:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A644023339
-	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Dec 2020 07:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395872335A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 16 Dec 2020 14:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726242AbgLPG7v (ORCPT
+        id S1726328AbgLPN74 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 16 Dec 2020 01:59:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725956AbgLPG7u (ORCPT
+        Wed, 16 Dec 2020 08:59:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726242AbgLPN74 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 16 Dec 2020 01:59:50 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2E5C061793
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Dec 2020 22:59:10 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id x18so6299183pln.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Dec 2020 22:59:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zhh1pQkLVhgQ5Bdk80ml0sCZvQJ6VWOxAZ9L31P9tUQ=;
-        b=BnP51QMuAt6sAG2RdDeSxYVxGgP79V4uDOcZBlu0sOd1MHHkLty0B+WMApPX1Jh3jU
-         MBVzoqP0+FbiNLa9PSVDIim3rZ4q+DjIJdOpIP4pp/LT+r+8DR687fjgN+YKrpjJNzIe
-         MU8AbohgA9+vmBoaoMKYBnHYukMRf1Atl1wMk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zhh1pQkLVhgQ5Bdk80ml0sCZvQJ6VWOxAZ9L31P9tUQ=;
-        b=Lp49JtOfRZBBz0hyJK3nOcl80vx01oMFZSLSPKOyceJaqdPqaT7qt8YYMTiCp0gc5L
-         SfHKEK8+NF6ew/vLdf6NUgcJNHUXfd38BkkvUwTSveVIXjsRmv32/NO054/iJj5lxp06
-         0mNV1hsfeBbeFfg/ESo9CZDZGS0/BHb6cNtD9WV5o8Exly198p+sHoid8868TxhJ3Knh
-         sYrN+jT4qvvhubKG9vOEvLSHUVCPU2qeeOp0TvGG37Vq3Oi/i5xpTjasRvbUep0xBVph
-         arsgHgQ3NamSTFdhg9l9lKWcCSEjhIO/gjhGPRey01QCKB4sFoX17GckM5JEzpNuCeir
-         LhKQ==
-X-Gm-Message-State: AOAM5331sGaZa8IYpsHLdU9FTGDDADfl7VgbyY9XI+rPvgcWVYV134Mi
-        n8HN9Zfdh5J96UK9kobxUdSDyho7bEJ2ZA==
-X-Google-Smtp-Source: ABdhPJygsZN1K2nEB30fjcwNAUaVZFw2oTn9RqNYSj7yNc/nOa7BtV5IN0wam+sODhmGLeMwRB6sXQ==
-X-Received: by 2002:a17:902:aa4b:b029:d8:f87e:1f3c with SMTP id c11-20020a170902aa4bb02900d8f87e1f3cmr21431244plr.23.1608101949683;
-        Tue, 15 Dec 2020 22:59:09 -0800 (PST)
-Received: from localhost ([2620:15c:2ce:200:f693:9fff:fef4:20dd])
-        by smtp.gmail.com with ESMTPSA id k129sm1295423pgk.1.2020.12.15.22.59.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Dec 2020 22:59:09 -0800 (PST)
-From:   Denis Nikitin <denik@chromium.org>
-To:     linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org
-Cc:     al.grant@arm.com, al.grant@foss.arm.com,
-        linux-kernel@vger.kernel.org, denik@chromium.org
-Subject: [PATCH] perf inject: correct event attribute sizes
-Date:   Tue, 15 Dec 2020 22:58:16 -0800
-Message-Id: <20201216065816.1840893-1-denik@chromium.org>
-X-Mailer: git-send-email 2.29.2.684.gfbc64c5ab5-goog
-In-Reply-To: <20201124195818.30603-1-al.grant@arm.com>
-References: <20201124195818.30603-1-al.grant@arm.com>
+        Wed, 16 Dec 2020 08:59:56 -0500
+Date:   Wed, 16 Dec 2020 10:59:29 -0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1608127155;
+        bh=Y07yZLNYZu6pc5dhJagZ/igm7UpnDoJzpTI0/uaZtKY=;
+        h=From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SiglF3VLg2kgPaeZmZ/RHSsSpv+JKb0KM/q02xTLcrDdTl1EynOET9t879yxioo3b
+         Pp4ZwXTwY9NulDSLbItBCFkFsZJyR6FftFJk50j7DtBU5RAttxHxTzkqj/11RNnwx4
+         Ma3J+6tuu6kbLfwbI6nMskd+YhWQdaebkv9v0DKai30Suv8YDgUn/vfW0ho6Hdt+Wf
+         bBWqumoBj6TzeB+R5MTpHb3y8Rj2jt9rn4vI0XoftzqhhlIXB81LoPMwr18x7vD/z1
+         yQb0o2iFbOfjQQFITAlGB9BUHwUqEDAkkqmdZ2iYSX18uRGw/XejyQgU1QY7rl3EGE
+         TlSWoqVPuBmAQ==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [BUG] perf probe can't remove probes
+Message-ID: <20201216135929.GA294100@kernel.org>
+References: <20201125172755.GA53351@kernel.org>
+ <20201126092125.402257a8776637d6bd2e090c@kernel.org>
+ <20201126172603.GD53384@kernel.org>
+ <20201216091640.402d51e22dff04fff8ba6d79@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20201216091640.402d51e22dff04fff8ba6d79@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When perf inject reads a perf.data file from an older version of perf,
-it writes event attributes into the output with the original size field,
-but lays them out as if they had the size currently used. Readers see
-a corrupt file. Update the size field to match the layout.
+Em Wed, Dec 16, 2020 at 09:16:40AM +0900, Masami Hiramatsu escreveu:
+> On Thu, 26 Nov 2020 14:26:03 -0300
+ Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Em Thu, Nov 26, 2020 at 09:21:25AM +0900, Masami Hiramatsu escreveu:
+> > > On Wed, 25 Nov 2020 14:27:55 -0300 Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > As you can see, "-D" is showing definition. Not delete. (*)
+> > > Delete is "-d" or "--del".
 
-Signed-off-by: Al Grant <al.grant@foss.arm.com>
-Signed-off-by: Denis Nikitin <denik@chromium.org>
----
- tools/perf/util/header.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> > Yeah, I was in a hurry and looked at just the first line right after the
+> > command, didn't want to forget reporting it so sent the "bug" report,
+> > d0h, sorry about the noise, using -d or --del works.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index be850e9f8852..0d95981df8dd 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -3331,6 +3331,14 @@ int perf_session__write_header(struct perf_session *session,
- 	attr_offset = lseek(ff.fd, 0, SEEK_CUR);
+> > But having both -d and -D, in retrospect, wasn't such a good idea :-\
+> 
+> Sorry for confusing :(
  
- 	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
-+			/*
-+			 * We are likely in "perf inject" and have read
-+			 * from an older file. Update attr size so that
-+			 * reader gets the right offset to the ids.
-+			 */
-+			evsel->core.attr.size = sizeof(evsel->core.attr);
-+		}
- 		f_attr = (struct perf_file_attr){
- 			.attr = evsel->core.attr,
- 			.ids  = {
--- 
-2.29.2.684.gfbc64c5ab5-goog
+> Hmm, would we better to remove -D and keep only --definition?
+> But it is already there, I think we should keep this option
+> for backward compatibility.
 
+Nah, since we have it there, lets take this just as a lesson and in the
+future use single letter options just for core functionality, leaving
+things like --definition to be just a long option.
+
+We can't change it now :-)
+
+- Arnaldo
