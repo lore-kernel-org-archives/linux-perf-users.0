@@ -5,113 +5,149 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E62C433E0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Dec 2020 22:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5652C433DB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Dec 2020 22:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCC6322283
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Dec 2020 22:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A357522283
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Dec 2020 22:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgLWWMo (ORCPT
+        id S1725885AbgLWWTV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Dec 2020 17:12:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:25857 "EHLO
+        Wed, 23 Dec 2020 17:19:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:59346 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727134AbgLWWMn (ORCPT
+        by vger.kernel.org with ESMTP id S1725811AbgLWWTU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Dec 2020 17:12:43 -0500
+        Wed, 23 Dec 2020 17:19:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1608761477;
+        s=mimecast20190719; t=1608761873;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=MYTG9iXqzUmfK52yJWZCu8FMFbHFYcDD55d0R+uDFu8=;
-        b=RxIOYqUBg1lZSAYdanrVdRE8Q3FRmFXVDG9v3V2w2kl7zfjaZG/Mcd61gbSUg8c87AAeJ6
-        DFo89IlXD7kqrSU24kiS1dqkjAoBTKaEsgjLK14uuM+AmxJX4QQ9CJdK+IQAwM03amjzUH
-        kdkpd8rzQNV2dtTxPWD5kf4wPJVyX84=
+        bh=6Ck1I5IrcfRnzD5SQ2UFbqmp5MXdOKhjN9/IxJ3cG8s=;
+        b=jH/iQIaKW6DwCdcMroULe4RtSmlzPgg+ic8n1YHCBkyU0m75K1n6JpOKggaUdMS66VMAH9
+        42Ur3DJCACc85vya2Mr4JP8VuwlgzFMka7IVrxXOtoCKUzjWu6kLsHWvn23ikUgPdVbjw4
+        IaK0eW8DmxknWpz17EAMiFdKxEd2T8o=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-529-s2q2O-1ZPAeR--bKvC_Skg-1; Wed, 23 Dec 2020 17:11:10 -0500
-X-MC-Unique: s2q2O-1ZPAeR--bKvC_Skg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-226-5aHaB8T0OqWGAb0lOIsWTw-1; Wed, 23 Dec 2020 17:17:51 -0500
+X-MC-Unique: 5aHaB8T0OqWGAb0lOIsWTw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A0851800D42;
-        Wed, 23 Dec 2020 22:11:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3716801AB3;
+        Wed, 23 Dec 2020 22:17:49 +0000 (UTC)
 Received: from krava (unknown [10.40.192.56])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C96315D9D5;
-        Wed, 23 Dec 2020 22:11:05 +0000 (UTC)
-Date:   Wed, 23 Dec 2020 23:11:05 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id DFF662BFE3;
+        Wed, 23 Dec 2020 22:17:47 +0000 (UTC)
+Date:   Wed, 23 Dec 2020 23:17:47 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Denis Nikitin <denik@chromium.org>
-Cc:     linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        al.grant@arm.com, al.grant@foss.arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf inject: correct event attribute sizes
-Message-ID: <20201223221105.GA236568@krava>
-References: <20201124195818.30603-1-al.grant@arm.com>
- <20201216065816.1840893-1-denik@chromium.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: Re: [PATCH v6 00/12] perf tools: fix perf stat with large socket IDs
+Message-ID: <20201223221747.GB236568@krava>
+References: <20201126141328.6509-1-james.clark@arm.com>
+ <20201203153923.GA3613481@krava>
+ <30c4426d-b314-98ff-e6d5-6d5152f316e8@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20201216065816.1840893-1-denik@chromium.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <30c4426d-b314-98ff-e6d5-6d5152f316e8@huawei.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Dec 15, 2020 at 10:58:16PM -0800, Denis Nikitin wrote:
-> When perf inject reads a perf.data file from an older version of perf,
-> it writes event attributes into the output with the original size field,
-> but lays them out as if they had the size currently used. Readers see
-> a corrupt file. Update the size field to match the layout.
+On Fri, Dec 04, 2020 at 11:48:36AM +0000, John Garry wrote:
+> On 03/12/2020 15:39, Jiri Olsa wrote:
 > 
-> Signed-off-by: Al Grant <al.grant@foss.arm.com>
-> Signed-off-by: Denis Nikitin <denik@chromium.org>
-> ---
->  tools/perf/util/header.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> +
 > 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index be850e9f8852..0d95981df8dd 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -3331,6 +3331,14 @@ int perf_session__write_header(struct perf_session *session,
->  	attr_offset = lseek(ff.fd, 0, SEEK_CUR);
->  
->  	evlist__for_each_entry(evlist, evsel) {
-> +		if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
-> +			/*
-> +			 * We are likely in "perf inject" and have read
-> +			 * from an older file. Update attr size so that
-> +			 * reader gets the right offset to the ids.
-> +			 */
-> +			evsel->core.attr.size = sizeof(evsel->core.attr);
-> +		}
+> > On Thu, Nov 26, 2020 at 04:13:16PM +0200, James Clark wrote:
+> > > Changes since v5:
+> > >    * Fix test for cpu_map__get_die() by shifting id before testing.
+> > >    * Fix test for cpu_map__get_socket() by not using cpu_map__id_to_socket()
+> > >      which is only valid in CPU aggregation mode.
+> > > 
+> > > James Clark (12):
+> > >    perf tools: Improve topology test
+> > >    perf tools: Use allocator for perf_cpu_map
+> > >    perf tools: Add new struct for cpu aggregation
+> > >    perf tools: Replace aggregation ID with a struct
+> > >    perf tools: add new map type for aggregation
+> > >    perf tools: drop in cpu_aggr_map struct
+> > >    perf tools: Start using cpu_aggr_id in map
+> > >    perf tools: Add separate node member
+> > >    perf tools: Add separate socket member
+> > >    perf tools: Add separate die member
+> > >    perf tools: Add separate core member
+> > >    perf tools: Add separate thread member
+> > 
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > 
+> 
+> Tested-by: John Garry <john.garry@huawei.com>
 
-seems ok, just wondering if it would be better
-to fix it in perf_event__process_attr instead
+hi,
+I was wondering where this went, and noticed that
+Arnaldo was not CC-ed on the cover letter ;-)
 
-where we know where the data is coming from,
-here we could cover for some unexpected case
-of having different attr.size?
-
-anyway both would be probably equal, I'm ok
-with either way
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
 jirka
 
-
->  		f_attr = (struct perf_file_attr){
->  			.attr = evsel->core.attr,
->  			.ids  = {
-> -- 
-> 2.29.2.684.gfbc64c5ab5-goog
+> 
+> I still think that vendors (like us) need to fix/improve their firmware
+> tables so that we don't get silly big numbers for socket/package IDs, like
+> S5418-D0, below:
+> 
+> $./perf stat -a --per-die
+> 
+>  Performance counter stats for 'system wide':
+> 
+> S36-D0   48   72,216.31 msec cpu-clock      #   47.933 CPUs utilized
+> S36-D0   48        174     context-switches #   0.002 K/sec
+> S36-D0   48         48     cpu-migrations   #   0.001 K/sec
+> S36-D0   48         0     page-faults    #   0.000 K/sec
+> S36-D0   48   7,991,698     cycles    #   0.000 GHz
+> S36-D0   48   4,750,040     instructions   #   0.59  insn per cycle
+> S36-D0    1   <not supported>     branches
+> S36-D0   48      32,928     branch-misses    #   0.00% of all branches
+> S5418-D0   48   72,189.54 msec cpu-clock     #   47.915 CPUs utilized
+> S5418-D0   48        176     context-switches  #   0.002 K/sec
+> S5418-D0   48         48     cpu-migrations   #   0.001 K/sec
+> S5418-D0   48         0     page-faults     #   0.000 K/sec
+> S5418-D0   48   5,677,218     cycles    #    0.000 GHz
+> S5418-D0   48   3,872,285     instructions   #  0.68  insn per cycle
+> S5418-D0    1   <not supported>     branches
+> S5418-D0   48      29,208     branch-misses   #  0.00% of all branches
+> 
+>       1.506615297 seconds time elapsed
+> 
+> but at least it works now. Thanks.
+> 
+> > 
+> > > 
+> > >   tools/perf/builtin-stat.c      | 128 ++++++++++++------------
+> > >   tools/perf/tests/topology.c    |  64 ++++++++++--
+> > >   tools/perf/util/cpumap.c       | 171 ++++++++++++++++++++++-----------
+> > >   tools/perf/util/cpumap.h       |  55 ++++++-----
+> > >   tools/perf/util/stat-display.c | 102 ++++++++++++--------
+> > >   tools/perf/util/stat.c         |   2 +-
+> > >   tools/perf/util/stat.h         |   9 +-
+> > >   7 files changed, 337 insertions(+), 194 deletions(-)
+> > > 
+> > > -- 
+> > > 2.28.0
+> > > 
+> > 
+> > .
+> > 
 > 
 
