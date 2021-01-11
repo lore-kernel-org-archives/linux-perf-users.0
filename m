@@ -2,290 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B0BC433E9
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jan 2021 09:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BE7C433DB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jan 2021 16:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17A523A79
-	for <linux-perf-users@archiver.kernel.org>; Sat,  9 Jan 2021 09:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36557229CA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 11 Jan 2021 16:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbhAII77 (ORCPT
+        id S1730486AbhAKQ4s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 9 Jan 2021 03:59:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
+        Mon, 11 Jan 2021 11:56:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbhAII77 (ORCPT
+        with ESMTP id S1729821AbhAKQ4r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 9 Jan 2021 03:59:59 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66129C061786
-        for <linux-perf-users@vger.kernel.org>; Sat,  9 Jan 2021 00:59:19 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id c12so7793277pfo.10
-        for <linux-perf-users@vger.kernel.org>; Sat, 09 Jan 2021 00:59:19 -0800 (PST)
+        Mon, 11 Jan 2021 11:56:47 -0500
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD5F9C061786
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jan 2021 08:56:07 -0800 (PST)
+Received: by mail-pl1-x634.google.com with SMTP id e2so123436plt.12
+        for <linux-perf-users@vger.kernel.org>; Mon, 11 Jan 2021 08:56:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version;
-        bh=wN9cewZw1rEgawFFah78eSjUxeD7cVJrpgL94TErRzk=;
-        b=oTzNfe77AMDlcu879/MisWv4649hNSH4Pb2II7UWAJ4DBzVxE2f+TYvmK7iZM6gw2R
-         rRSfvnRXBeBndnGp9S+VAQ2hWFjsNXCjwJRAIiu7CAmgRA8BdQRw18WnJirHlsqY66Q0
-         aBlZEeYEF8XF/p/COVldsmFX3xxu66HLkQ/O9J7+y50C91HxErHB+8JJTF9qr6poE240
-         tebIcYqgkpgOEez7B3YufTDwoXklLiWuOAwg1NNrjkKMfYeiFo3Y3/t3YDDhKESiXO1o
-         tu1tKXi5QaCCoXtr+NiJisgbg/Io2XdHzkuHMj1EeEbz2ZCiXvIZ1qUnERH8oNEeYgz/
-         Zt4Q==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sq2FqrzDyoQz9BNrYG3sZPVfF1ZaYE0pB1skj9ELFjc=;
+        b=onrBw1GPHkgynAnAEeSSbPWi21Krue7y5Rhppl5Q7EyJqoIg3uViib/enI60U0SpG5
+         86Cd9fRvacZZO3GTdg5LTL3kN/Ynd7cVPDu7WVQWSyPd4cowrbhJ43fqGuaFTzaa8Tbs
+         T4Umg3Uej6PrrSW9byEJIojRYLftXr5Kk1L39qrK0Hm3HpcODM5OHoX7FJnnIo4bl8CJ
+         zEPeQrAo5Y6K3s2j3HMkRnPYUNNYgvaTnnBToe4Zmrr764ynX7/eIlP8J5rkPEYrfNPh
+         jGeGkKfezWJbv9BI9WzUiMIwelyNYaT2vMBhcufypl0ET9MfVLzvqq8Mz1VLRadBfV9n
+         XIUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version;
-        bh=wN9cewZw1rEgawFFah78eSjUxeD7cVJrpgL94TErRzk=;
-        b=AU5fADdZFwqr60TeOMeYMXp3jl2PzUo9p6mlyt1+t0oXc9/zrxscaEhRs3uiKHs5QW
-         gCMJ972LaIIr4s+zSZIPE/FGXR2rWxOi0BMWMwpU22x0IZgMdZ13ghFIvwtxwRhEAsgd
-         TIdnwNxwtVRbD2b8Cak2zBEM1LZwAS8x0a8/5FD4AYrvvYy7YZW8MFhsJPD+tVeu5cfX
-         r7A2PlKyS3OBahv1JL9/dJY8CEvKkvk+C4dLE3/wY/JNKZ9b1GXP43pCGitf6ihy9lWL
-         P7dFTZ0I4reWeZwwRMQ87hEzHup9jKAzhhqq5xeXgnKyAUvOQ7D15mcxXunAlz8hR5Q7
-         ad4A==
-X-Gm-Message-State: AOAM532aduLBITCVPV/6eatW+GpihSz8zmqgzxpM8K3ZuL1tD4sTN2Bt
-        nQvjBFOERARcMtt4oN2t/qDUs8u56us=
-X-Google-Smtp-Source: ABdhPJxJ+et5rmgCMpoAL+nNEHCTPJ0ZU0tUx8xLV9bpurAun7fUsGMXl2LRvFWeAx/M3cdUNPJGVg==
-X-Received: by 2002:a63:947:: with SMTP id 68mr10969345pgj.279.1610182758520;
-        Sat, 09 Jan 2021 00:59:18 -0800 (PST)
-Received: from [0.0.0.0] (tunnel595741-pt.tunnel.tserv22.tyo1.ipv6.he.net. [2001:470:23:8a4::2])
-        by smtp.gmail.com with ESMTPSA id v19sm7593297pjg.50.2021.01.09.00.59.16
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 09 Jan 2021 00:59:17 -0800 (PST)
-To:     linux-perf-users@vger.kernel.org
-From:   Zhang Boyang <zhangboyang.id@gmail.com>
-Subject: [BUG] JIT symbols not resolved after mprotect() combined vma
-Message-ID: <40d550d6-e698-fad2-be81-aab6a56c5e64@gmail.com>
-Date:   Sat, 9 Jan 2021 16:59:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sq2FqrzDyoQz9BNrYG3sZPVfF1ZaYE0pB1skj9ELFjc=;
+        b=YfT6Utae5kA9TAEYFXcxDcgbvVymdU+OhdhW7WDzjTT0kfTCiq5JJQm7lw0BEFUgbS
+         95jrwHCq1xgQ5NEynHHudnzQWYYletXvjPMIiIuazyqkNdO0P2E7Fh1slsJAbQ8bQKa8
+         qDvRKQl5Gc39PfWVcR6TBCOvrLcv2e+YCq4vjd1L5PQ+8oxZK+H2RdOozn1IS2fthdSx
+         aPSoPdDCkMvjrEL1e6e8Qkrh/UnFCJxyLhLswKfQBCtbdhz60JKnRreQs3GCqXNvylIR
+         2VQx46ZUeTS2iml3+druDqRHtBcP0/agLXus4dl8VKbzIgJzYUvOuKT2GUXUmiuLVubE
+         z0hA==
+X-Gm-Message-State: AOAM531Rd1AjnZYHTw4+yFjtxGyz0whVuzkBtdDZROsphjUWcSmJ3PoH
+        MzEhA/IgPBuWD+Npp42p5uUqOg==
+X-Google-Smtp-Source: ABdhPJw5Ga1bQgrMJQN1BQDx7WNtwLOuNJl3y3VbY7TEzg1avaAboesxUzYk01s/y/E+/kYsj4no5w==
+X-Received: by 2002:a17:902:a401:b029:dc:3e1d:234a with SMTP id p1-20020a170902a401b02900dc3e1d234amr223959plq.48.1610384167224;
+        Mon, 11 Jan 2021 08:56:07 -0800 (PST)
+Received: from xps15 (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id a29sm160231pfr.73.2021.01.11.08.56.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Jan 2021 08:56:06 -0800 (PST)
+Date:   Mon, 11 Jan 2021 09:56:04 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     James Clark <james.clark@arm.com>, acme@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Al Grant <al.grant@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH] perf tools: Update OpenCSD to v1.0.0
+Message-ID: <20210111165604.GA144935@xps15>
+References: <20210108142752.27872-1-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
- boundary="------------50B2E399DEF5A744A96073DA"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210108142752.27872-1-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------50B2E399DEF5A744A96073DA
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+On Fri, Jan 08, 2021 at 04:27:52PM +0200, James Clark wrote:
+> Replace the OCSD_INSTR switch statement with an if to
+> fix compilation error about unhandled values and avoid
+> this issue again in the future.
+> 
+> Add new OCSD_GEN_TRC_ELEM_SYNC_MARKER and
+> OCSD_GEN_TRC_ELEM_MEMTRANS enum values to fix unhandled
+> value compilation error. Currently they are ignored.
+> 
+> Increase the minimum version number to v1.0.0 now
+> that new enum values are used that are only present
+> in this version.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> Cc: John Garry <john.garry@huawei.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: Al Grant <al.grant@arm.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/build/feature/test-libopencsd.c           |  4 ++--
+>  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 15 ++++-----------
+>  2 files changed, 6 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/build/feature/test-libopencsd.c b/tools/build/feature/test-libopencsd.c
+> index 1547bc2c0950..52c790b0317b 100644
+> --- a/tools/build/feature/test-libopencsd.c
+> +++ b/tools/build/feature/test-libopencsd.c
+> @@ -4,9 +4,9 @@
+>  /*
+>   * Check OpenCSD library version is sufficient to provide required features
+>   */
+> -#define OCSD_MIN_VER ((0 << 16) | (14 << 8) | (0))
+> +#define OCSD_MIN_VER ((1 << 16) | (0 << 8) | (0))
+>  #if !defined(OCSD_VER_NUM) || (OCSD_VER_NUM < OCSD_MIN_VER)
+> -#error "OpenCSD >= 0.14.0 is required"
+> +#error "OpenCSD >= 1.0.0 is required"
+>  #endif
+>  
+>  int main(void)
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> index cd007cc9c283..3f4bc4050477 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> @@ -419,19 +419,10 @@ cs_etm_decoder__buffer_range(struct cs_etm_queue *etmq,
+>  	packet->last_instr_subtype = elem->last_i_subtype;
+>  	packet->last_instr_cond = elem->last_instr_cond;
+>  
+> -	switch (elem->last_i_type) {
+> -	case OCSD_INSTR_BR:
+> -	case OCSD_INSTR_BR_INDIRECT:
+> +	if (elem->last_i_type == OCSD_INSTR_BR || elem->last_i_type == OCSD_INSTR_BR_INDIRECT)
+>  		packet->last_instr_taken_branch = elem->last_instr_exec;
+> -		break;
+> -	case OCSD_INSTR_ISB:
+> -	case OCSD_INSTR_DSB_DMB:
+> -	case OCSD_INSTR_WFI_WFE:
+> -	case OCSD_INSTR_OTHER:
+> -	default:
+> +	else
+>  		packet->last_instr_taken_branch = false;
+> -		break;
+> -	}
+>  
+>  	packet->last_instr_size = elem->last_instr_sz;
+>  
+> @@ -572,6 +563,8 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+>  	case OCSD_GEN_TRC_ELEM_EVENT:
+>  	case OCSD_GEN_TRC_ELEM_SWTRACE:
+>  	case OCSD_GEN_TRC_ELEM_CUSTOM:
+> +	case OCSD_GEN_TRC_ELEM_SYNC_MARKER:
+> +	case OCSD_GEN_TRC_ELEM_MEMTRANS:
+>  	default:
+>  		break;
 
-Hello,
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-   I'm using perf to measure my LLVM jitted code performance. However, I 
-found with some condition, perf will unable to resolve or annotate JIT 
-symbols. After some debugging, I found the cause is mprotect() combined 
-two adjacent vma, and report a MMAP2 event of merged vma, confusing perf.
-   I wrote a sample program (sample.c). It creates function computing 
-factorial. First it creates test1() and exec it for 10000 times. Then, 
-it creates test2() and exec both test1() and test2() for 10000 times 
-respectively. As a result, test1() was executed 20000 times, and test2() 
-was executed 10000 times.
-   However, perf report shows:
+Arnaldo please consider.
 
-   33.33%  a.out    jitted-10742-3.so    [.] test2
-   33.30%  a.out    jitted-10742-2.so    [.] test1
-   33.26%  a.out    [JIT] tid 10742      [.] 0x00007f4b8cb3d010 // test1
+Thanks,
+Mathieu
 
-   This is because LLVM create jitted code by using mmap() and 
-mprotect(): (the address is different because of ASLR)
-
-//// compile test1
-mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) 
-= 0x7fca1a491000
-mprotect(0x7fca1a491000, 4096, PROT_READ|PROT_EXEC) = 0
-//// compile test2
-mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) 
-= 0x7fca1a490000
-mprotect(0x7fca1a490000, 4096, PROT_READ|PROT_EXEC) = 0
-
-   The second mprotect will merge two adjacent vma, and report a MMAP2 
-event of merged vma. The pref tool saw this:
-
-9547033496331 0x2510 [0x60]: PERF_RECORD_MMAP2 10742/10742: 
-[0x7f4b8cb3d000(0x2000) @ 0x7f4b8cb3d000 00:00 0 0]: r-xp //anon
-9547033524086 0xf00 [0xb0]: PERF_RECORD_MMAP2 10742/10742: 
-[0x7f4b8cb3d000(0x18) @ 0x40 08:02 10224200 1]: --xs 
-/home/zby/src/qemuproject/qemu/.debug/jit/llvm-IR-jit-20210109-ad4573/jitted-10742-2.so
-9553628266188 0x103898 [0x60]: PERF_RECORD_MMAP2 10742/10742: 
-[0x7f4b8cb3c000(0x3000) @ 0x7f4b8cb3c000 00:00 0 0]: r-xp //anon
-9553628283472 0xfb0 [0xb0]: PERF_RECORD_MMAP2 10742/10742: 
-[0x7f4b8cb3c000(0x18) @ 0x40 08:02 10224201 1]: --xs 
-/home/zby/src/qemuproject/qemu/.debug/jit/llvm-IR-jit-20210109-ad4573/jitted-10742-3.so
-
-   The event of third line, confusing perf, make it thinks test1() had 
-disappear. Then perf if unable to resolve test1() or annotate it.
-
-
-Thank you very much!
-Zhang Boyang
-
---------------50B2E399DEF5A744A96073DA
-Content-Type: text/x-csrc; charset=UTF-8;
- name="sample.c"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="sample.c"
-
-// Compile me with: (NOTE: LLVM must be compiled with LLVM_USE_PERF=On)
-//   gcc -O2 -Wall sample.c $(llvm-config --cflags --ldflags --libs --system-libs) -lstdc++
-// Run me with:
-//   perf record -k 1 ./a.out
-// View perf result with:
-//   perf inject -j -i perf.data -o perf.data.jitted && perf report -i perf.data.jitted
-
-
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <llvm-c/Core.h>
-#include <llvm-c/Target.h>
-#include <llvm-c/Orc.h>
-#include <llvm-c/OrcEE.h>
-#include <llvm-c/LLJIT.h>
-#include <llvm-c/Analysis.h>
-#include <llvm-c/Transforms/PassManagerBuilder.h>
-
-static LLVMOrcLLJITRef jit;
-static LLVMOrcThreadSafeContextRef tsctx;
-static LLVMContextRef ctx;
-static LLVMBuilderRef bldr;
-static LLVMOrcJITDylibRef jd;
-static LLVMPassManagerBuilderRef pmb;
-static LLVMPassManagerRef mpm;
-static LLVMTypeRef int_ty;
-static LLVMValueRef int_0, int_1;
-
-typedef int (*MyFunc)(int n);
-
-static inline void check_error(LLVMErrorRef e)
-{
-    if (e) {
-        char *m = LLVMGetErrorMessage(e);
-        puts(m);
-        LLVMDisposeErrorMessage(m);
-        exit(1);
-    }
-}
-static inline void dump_module(LLVMModuleRef mdl)
-{
-    char *str = LLVMPrintModuleToString(mdl);
-    puts(str);
-    LLVMDisposeMessage(str);
-}
-
-static MyFunc create_function(const char *name)
-{
-    LLVMModuleRef mod;
-    LLVMValueRef fn, next;
-    LLVMTypeRef fn_type;
-    LLVMBasicBlockRef entry_bb, recurse_bb, return_bb;
-    LLVMOrcJITTargetAddress addr;
-    LLVMOrcThreadSafeModuleRef tsm;
-
-    mod = LLVMModuleCreateWithNameInContext(name, ctx);
-    fn_type = LLVMFunctionType(int_ty, &int_ty, 1, 0);
-
-    fn = LLVMAddFunction(mod, name, fn_type);
-    entry_bb = LLVMAppendBasicBlockInContext(ctx, fn, "entrybb");
-    recurse_bb = LLVMAppendBasicBlockInContext(ctx, fn, "recursebb");
-    return_bb = LLVMAppendBasicBlockInContext(ctx, fn, "returnbb");
-
-    LLVMPositionBuilderAtEnd(bldr, entry_bb);
-    LLVMBuildCondBr(bldr,
-        LLVMBuildICmp(bldr,
-            LLVMIntEQ,
-            LLVMGetParam(fn, 0),
-            int_0, ""),
-        return_bb,
-        recurse_bb);
-    
-    LLVMPositionBuilderAtEnd(bldr, return_bb);
-    LLVMBuildRet(bldr, int_1);
-
-    LLVMPositionBuilderAtEnd(bldr, recurse_bb);
-    next = LLVMBuildSub(bldr,
-        LLVMGetParam(fn, 0),
-        int_1, "");
-    LLVMBuildRet(bldr,
-        LLVMBuildMul(bldr,
-            LLVMBuildCall(bldr, fn, &next, 1, ""),
-            LLVMGetParam(fn, 0), ""));
-
-    LLVMVerifyFunction(fn, LLVMAbortProcessAction);
-
-    LLVMRunPassManager(mpm, mod);
-    //dump_module(mod);
-
-    tsm = LLVMOrcCreateNewThreadSafeModule(mod, tsctx);
-    check_error(LLVMOrcLLJITAddLLVMIRModule(jit, jd, tsm));
-    LLVMOrcLLJITLookup(jit, &addr, name);
-    
-    printf("COMPILE DONE! %s = %p\n", name, (void *)addr);
-    return (void *)addr;
-}
-
-static LLVMOrcObjectLayerRef create_oll(
-    void *Ctx, LLVMOrcExecutionSessionRef ES, const char *Triple)
-{
-    LLVMOrcObjectLayerRef ol;
-    LLVMJITEventListenerRef perf;
-    ol = LLVMOrcCreateRTDyldObjectLinkingLayerWithSectionMemoryManager(ES);
-    perf = LLVMCreatePerfJITEventListener();
-    assert(perf); // LLVM must be compiled with LLVM_USE_PERF=On
-    LLVMOrcRTDyldObjectLinkingLayerRegisterJITEventListener(ol, perf);
-    return ol;
-}
-
-int main()
-{
-    int i;
-    MyFunc factorial, test1, test2;
-    LLVMOrcLLJITBuilderRef jb;
-
-    LLVMInitializeNativeTarget();
-    LLVMInitializeNativeAsmPrinter();
-    LLVMInitializeNativeAsmParser();
-
-    jb = LLVMOrcCreateLLJITBuilder();
-    LLVMOrcLLJITBuilderSetObjectLinkingLayerCreator(jb, create_oll, NULL);
-
-    check_error(LLVMOrcCreateLLJIT(&jit, jb));
-    tsctx = LLVMOrcCreateNewThreadSafeContext();
-    ctx = LLVMOrcThreadSafeContextGetContext(tsctx);
-    bldr = LLVMCreateBuilderInContext(ctx);
-    jd = LLVMOrcLLJITGetMainJITDylib(jit);
-    
-    pmb = LLVMPassManagerBuilderCreate();
-    mpm = LLVMCreatePassManager();
-    LLVMPassManagerBuilderSetOptLevel(pmb, 2);
-    LLVMPassManagerBuilderPopulateModulePassManager(pmb, mpm);
-
-    int_ty = LLVMInt32TypeInContext(ctx);
-    int_0 = LLVMConstInt(int_ty, 0, 0);
-    int_1 = LLVMConstInt(int_ty, 1, 0);
-
-    factorial = create_function("factorial");
-    printf("10! = %d\n", factorial(10)); // should be 3628800
-
-    puts("TEST BEGIN!");
-    test1 = create_function("test1");
-    for (i = 0; i < 10000; i++) {
-        test1(1000000);
-    }
-    test2 = create_function("test2");
-    for (i = 0; i < 10000; i++) {
-        test1(1000000);
-        test2(1000000);
-    }
-    puts("TEST END!");
-    return 0;
-}
-
---------------50B2E399DEF5A744A96073DA--
+>  	}
+> -- 
+> 2.28.0
+> 
