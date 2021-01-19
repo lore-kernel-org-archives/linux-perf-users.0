@@ -2,167 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2F7C433E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jan 2021 20:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD90C433DB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 02:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7797E22B49
-	for <linux-perf-users@archiver.kernel.org>; Mon, 18 Jan 2021 20:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8936C206C0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 02:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437737AbhART74 (ORCPT
+        id S2388859AbhASC7A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jan 2021 14:59:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2437748AbhART7s (ORCPT
+        Mon, 18 Jan 2021 21:59:00 -0500
+Received: from mail-eopbgr20056.outbound.protection.outlook.com ([40.107.2.56]:47429
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727953AbhASC6z (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jan 2021 14:59:48 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A87EA22D49
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jan 2021 19:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1610999947;
-        bh=RCF30Vg+Wet2xG0r5EVf+JhKfFllDWby8xnGyCy3/os=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tb+LhWWVVm/CDSo5AOmq2nZBXXcERQnH6IFdRuOpDu/Hvo/Ry1txTMD23JffiNC2S
-         ySl4dNCXQjXcuepatqXeakayxAabZzFOJce6/nKB+XLG7FIS3cpIGnzBqaRKWDFm5g
-         SPY7Gj3RUDwl949l/coONnPhriIPEzHF5Taco5p1zg2jEq244dKlYB6g852yuG9m2g
-         b/WDzqbIbiIR1tzmWYcMqXJQZWU42/BzhQdtIUZz3rGo7XOEucliupkF5pHBq1VLxq
-         RujirAW0DaXDrQ7mInJLCYYvKgkd/cNFkpkKTq4zEFERZcx2KTy5MzaFzUcCOUCL/E
-         eBczurIhN7N5Q==
-Received: by mail-oo1-f50.google.com with SMTP id k7so4377353ooa.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 18 Jan 2021 11:59:07 -0800 (PST)
-X-Gm-Message-State: AOAM533kcy9/jAKqRLcpR3l9J6OutLLivv1ez2CtnDv2C+4c4v0FUJqi
-        8j+97lCXXZt0Cm+dfLdb9N4ZfVN+CDTPQF5Mw/I=
-X-Google-Smtp-Source: ABdhPJzZtNhOIcSnPc2C9uk4dCBsiSFAZW0suvVs39FcXLlFxO1IdYB5x2Ivodp8tsQXHrAXohEfi6f9S0TSFB1J1ic=
-X-Received: by 2002:a4a:9c01:: with SMTP id y1mr527885ooj.15.1610999946950;
- Mon, 18 Jan 2021 11:59:06 -0800 (PST)
+        Mon, 18 Jan 2021 21:58:55 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OPZUxjwGVO9iIutqRkKE+Q4RENNAGLZeggzMKBChzZKMoXsGHdZ8e2c0dpKtCsBm3A83iI5BnlkUokLu/1+JqjXxDP9YmDgR3IvuLqxcN65E53fWza5IPHjEGE2wYF9mUiom29F2THkRnxekSXBygi826c5QlKsh6zUcWcNnGBxW9VSd95t0D6CHzze6+YTjhKaPLdy9LFvDY8UnN46ROhHgegG/RsCt4sHErdE4WI2zXtiqX4l184QsZZRgTV00cdgvAhTYgdYQx2eZ9PoHP3/uezbXQT7hTpzHQBfIPXtQpONa7pvHRzqazt2uqE1q/Ib6tTwcC2Zq8PlzhcZ5Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BgnIucgQ+gf+7t185aPSPK/ha93JKPb1gI9kPZ4Wnb8=;
+ b=cmgvp7tFJUsJUJ4+pEtNiRSdxqbPCxNXcnAdUXIGsF24F/wtn2aGtS4SE8gfmwKp5s8iyWkNwMqu69zd8qCHoG1dAZX2z6UNRjG0lfKpV49jKrgBGxNaHiFHfooxBndcNVJNv059rqhfTPfNLCAhg3i/BmahSPEgQHNevzMKYpNfpcWfhR4fHEl1Tei1FQ+qU+FfVw6juTlvdf5cLnTrSnm9QTSK9kS3tNLJRwjd15Rf3oYpqwtI9HrDY69I40Sa1lz+x4/nahomVuozqlx44CSIYVSex2p/9za6Zv+VeVaPvieQzFxbMo7n423x3R4LLAQzo/+WLJg6cgOlCekv4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BgnIucgQ+gf+7t185aPSPK/ha93JKPb1gI9kPZ4Wnb8=;
+ b=myp7IxSXBM8KW2j4D4ac2GyV9eyFkWSlCwWx+RvgV+L5DDQbeP4d58Z/0lRQV0ZJhquJajbB+w260Yn4COf33aEwfsKNUs/6EFYSdCLAjspPgL2Y/brGEnkEXn+2IvE3t2LJCJEEwAxGvRxfiO2lUIU2tOCMg0vkJ3P+p69zXIM=
+Authentication-Results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
+ by DB6PR0402MB2903.eurprd04.prod.outlook.com (2603:10a6:4:9b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.14; Tue, 19 Jan
+ 2021 02:58:05 +0000
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::b83c:2edc:17e8:2666]) by DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::b83c:2edc:17e8:2666%4]) with mapi id 15.20.3763.014; Tue, 19 Jan 2021
+ 02:58:05 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     john.garry@huawei.com, acme@kernel.org, jolsa@redhat.com
+Cc:     will@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-imx@nxp.com, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH V1 0/4] tools: perf: Add JSON metrics for i.MX8M platforms
+Date:   Tue, 19 Jan 2021 10:56:43 +0800
+Message-Id: <20210119025647.12569-1-qiangqing.zhang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-Originating-IP: [119.31.174.71]
+X-ClientProxiedBy: SG2PR06CA0231.apcprd06.prod.outlook.com
+ (2603:1096:4:ac::15) To DB8PR04MB6795.eurprd04.prod.outlook.com
+ (2603:10a6:10:fa::15)
 MIME-Version: 1.0
-References: <CAK8P3a0dJnKiX5minsUNdAcNnxPvZkyK363f1ibj_x0L2MQiPQ@mail.gmail.com>
- <YAVynNqAwBt5GzQT@ingrassia.epigenesys.com> <CAK8P3a33i2r0xx==3hTW32pc_Sm33EMDXYAS4PtEaEV8DX4s_A@mail.gmail.com>
- <YAWaQVBM84CaY1B2@ingrassia.epigenesys.com> <YAWg6KQt6hAtIR6O@ingrassia.epigenesys.com>
- <CAK8P3a3Vc4wrLvrfwkHd6HCMohk07Yi6P_jKaC_5AybCMBNjPA@mail.gmail.com> <YAWqS9YZ0rpXPoSN@ingrassia.epigenesys.com>
-In-Reply-To: <YAWqS9YZ0rpXPoSN@ingrassia.epigenesys.com>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Mon, 18 Jan 2021 20:58:50 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a31ssD+FS1tAUxVHzrtUz-L9=mYCbv=ShEMci_bDdiTAg@mail.gmail.com>
-Message-ID: <CAK8P3a31ssD+FS1tAUxVHzrtUz-L9=mYCbv=ShEMci_bDdiTAg@mail.gmail.com>
-Subject: Re: perf tools build broken for RISCV 32 bit
-To:     Emiliano Ingrassia <ingrassia@epigenesys.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Khem Raj <raj.khem@gmail.com>,
-        Richard Purdie <richard.purdie@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.71) by SG2PR06CA0231.apcprd06.prod.outlook.com (2603:1096:4:ac::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.9 via Frontend Transport; Tue, 19 Jan 2021 02:58:02 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 897f6e21-6039-4ce1-c75a-08d8bc260b05
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2903:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB2903A8C83B80A200AAA2328CE6A30@DB6PR0402MB2903.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YxfE3GsvFO453N8W+iIuJZNL1hN2p7jxznRF6smYWCIcXrvW4SKSsUbgIiO9gGGQcSRE5hMRMtre/kua8cfrEME+MezYrqS3Z50v1kMNBydHPJt4IwO7XF9ZOwJnwXX5oSDWruUer6XxH/p+W5iOF/FitnGkuKCVw0fNE2NMRAwBHsxHH4F9zAKEjoJ/A7eMg+G+8HiBvypxz3L3pDY2nhktVvUVdHtMYRLQh+JacBYban1jRBEXgUOcBonYo6Z4SpWUMeq6QhfQr9cWTmP6CgE8BBgdR/8QqfjyV2MdEJfzQ2LMVgMeWWPQH+kUgya8z3/ua4CkZJDldG2jHWQcBsd6mTftM5eWuEVerLtFTbCeKm0Po1gneiqRDZvnI+OXAsWmdgSqkSornE3NrFd9jtjYd5qMDSudEF3ecT3+/nLhj/KyWYuAQV1a6EMM/6YHMZTIYdVpcyHJWBxVnipZdg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(36756003)(8936002)(4326008)(6512007)(316002)(8676002)(2906002)(86362001)(66556008)(69590400011)(1076003)(6506007)(6666004)(6486002)(186003)(26005)(5660300002)(478600001)(16526019)(52116002)(83380400001)(2616005)(956004)(66946007)(66476007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?ycl6Z+9X0ke8nWt0SvKd0rhCmmnyqOQckQu2BegYQHiiDmcXIPiTQiTpQ2PK?=
+ =?us-ascii?Q?vS0cer/sUdG7S4Ts8Kd0r87yXuC+vYPg+aypyOsqsZrjynUMEBN1NiVTPObW?=
+ =?us-ascii?Q?MyFrNqh4RN8ltHp07jjG1vbMXSxgaHk0fN4eSXAwCPGFIio0GBK1mOivoYIV?=
+ =?us-ascii?Q?H0ldEv87l17veCZrD0v0q1xdnzvOfBuU8qVNfhVGAXWQNGH5BnuaRRorAu/5?=
+ =?us-ascii?Q?QHXV8xaxRwPykPoBWO0UhKU9kSx3pjgmQBKRPbmIPkLm4o99eHLLI3/wgg1H?=
+ =?us-ascii?Q?UwGHt9ojZuYt+vOn8dhrytjYTrULqga+2ixGFxwoEM+l9722RToWpzhTkLIr?=
+ =?us-ascii?Q?+YdRLQO/9gMpJ8p+qZDn8Jv76b5KG0EQCSqMlfaAGdIqbMoOJV3FjXKfhVfp?=
+ =?us-ascii?Q?xCuxSH8lpeZck7BC6l1ZMSH08cO7wA/aaL6gS8iX/bMh3ifu8p4yyRHSHPjP?=
+ =?us-ascii?Q?ZsQ4r6aMm7qj2n2gI8+WqKfi2dgnSFbrD1tg9QKzXM+0xvnyfaKSaIB11z7T?=
+ =?us-ascii?Q?Y1Yidwg5lPz6Q01PBSXb9SpKecdQMbS5JrRzw8u+vyXN4bW+lW6j3tw532+T?=
+ =?us-ascii?Q?1w1uEzRuSdGtJCpSU9s2Oi6g+A4vBBHZSN8rgdBk3AYGQG47vDUxGPi35f+q?=
+ =?us-ascii?Q?wYJzqeJb1rJe0JabhQacOggebiOiwWc1VEVSwYrBSwUwRR8QpqXuvmILDCsI?=
+ =?us-ascii?Q?IeOc6eU3MWE/PI9/eVrdSAT2HRuBPN1aYM7SRlwTX6e7dJU5L+Te0tSBmHtl?=
+ =?us-ascii?Q?RRFVWT4bR6k/7JiwSv8uglJUCGnkuObUfbvnxQDRaF7clXQqPMpVUcbHRYFV?=
+ =?us-ascii?Q?u8H4p4qCdyqnpBokp+07nuKJUDUJLd3ocky84r0CbNOVUhfV7avvT6wA5GNd?=
+ =?us-ascii?Q?Bt8/MDATmnoN49vlXgjQSFZ8Mw31qTPMkwAke9W3XyYZgWlVFzhJkYjQIX8d?=
+ =?us-ascii?Q?JALiBMxv0HsFnxHubXZFP4bpLfy6Xj92NVpZYW1ZPTpHQcss+tB3GSY5hE4O?=
+ =?us-ascii?Q?wfe8?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 897f6e21-6039-4ce1-c75a-08d8bc260b05
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6795.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2021 02:58:05.5310
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: q5/DfvscDhnCn0efpqjt2YguZJBP9U95nWRO4B3422kbV9d5HnMNJmEpvXYb6mlXwuBOWK2cDl9FyTsE8eVauw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2903
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jan 18, 2021 at 4:33 PM Emiliano Ingrassia
-<ingrassia@epigenesys.com> wrote:
-> On Mon, Jan 18, 2021 at 04:19:47PM +0100, Arnd Bergmann wrote:
-> > On Mon, Jan 18, 2021 at 3:53 PM Emiliano Ingrassia <ingrassia@epigenesys.com> wrote:
-> > >
-> > > Hi,
-> > >
-> > > after some searching I found this patch from Yocto project:
-> > >
-> > > https://www.mail-archive.com/linux-yocto@lists.yoctoproject.org/msg01004.html.
-> > >
-> > > I don't know if it's ever been proposed as mainline patch.
-> > >
-> > > What do you think about it? Could it be the right solution?
-> >
-> > No. While this makes it work on rv32, it does not fix it in a
-> > way that makes it work on other architectures with a time64
-> > libc. If you fix it, please do it in a way that works on all architectures.
->
-> Ok, I totally agree with you on this point.
->
-> So, it is right to conclude that the problem is not in perf
-> implementation but in the libc implementation?
-> That is, for example, glibc should define SYS_futex as SYS_futex_time64
-> in case of riscv 32 bit because of its support to 64 bit time_t?
+Add JSON metrics for i.MX8M platforms
 
-Actually, there might be a somewhat less ugly workaround, if we decide
-to put a correct wrapper into the exported kernel headers, e.g. adding
-something along these lines to include/uapi/linux/futex.h or a new header
-from the kernel:
+Joakim Zhang (4):
+  perf vendor events: Add bandwidth metric for imx8mm
+  perf vendor events: Add JSON metrics for imx8mn DDR Perf
+  perf vendor events: Add JSON metrics for imx8mq DDR Perf
+  perf vendor events: Add JSON metrics for imx8mp DDR Perf
 
-#ifndef __KERNEL__
-#include <linux/futex.h>
-#include <linux/time_types.h>
-#include <asm/unistd.h>
-#include <sys/time.h>
-#include <unistd.h>
-#include <errno.h>
+ .../arm64/freescale/imx8mm/sys/metrics.json   |  20 +-
+ .../arch/arm64/freescale/imx8mn/sys/ddrc.json |  37 ++
+ .../arm64/freescale/imx8mn/sys/metrics.json   |  34 ++
+ .../arch/arm64/freescale/imx8mp/sys/ddrc.json |  37 ++
+ .../arm64/freescale/imx8mp/sys/metrics.json   | 474 ++++++++++++++++++
+ .../arch/arm64/freescale/imx8mq/sys/ddrc.json |  37 ++
+ .../arm64/freescale/imx8mq/sys/metrics.json   |  26 +
+ 7 files changed, 663 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/ddrc.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mp/sys/ddrc.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mp/sys/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mq/sys/ddrc.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mq/sys/metrics.json
 
-#define __kernel_futex __kernel_futex
-typedef union __attribute__ ((__transparent_union__)) {
-       const struct timespec *timeout;
-       unsigned int intval;
-} __kernel_futex_union;
+-- 
+2.17.1
 
-struct __kernel_old_timespec {
-       __kernel_time_t tv_sec;                 /* seconds */
-       long            tv_nsec;                /* nanoseconds */
-};
-
-static inline int __kernel_futex(int *uaddr, int op, int val,
-                                 __kernel_futex_union val2,
-                                 unsigned *uaddr2, int val3)
-{
-        int cmd = op & FUTEX_CMD_MASK;
-        int ret = -ENOSYS;
-#ifdef __NR_futex64
-        {
-                if (((cmd != FUTEX_WAIT) && (cmd != FUTEX_WAIT_BITSET)) ||
-                    (sizeof(time_t) == sizeof(__u64))) {
-                        ret = syscall(__NR_futex64, uaddr, op, val,
-                                      val2.timeout, uaddr2, val3);
-                }
-
-                if (ret != -ENOSYS && ret != -EPERM)
-                        return ret;
-        }
-#endif
-#ifdef __NR_futex
-        {
-                if (((cmd != FUTEX_WAIT) && (cmd != FUTEX_WAIT_BITSET)) ||
-                    sizeof(time_t) == sizeof(__kernel_long_t)) {
-                        ret = syscall(__NR_futex, uaddr, op, val,
-                                       val2.timeout, uaddr2, val3);
-                } else {
-                        struct __kernel_old_timespec oldtimeout = {
-                                .tv_sec  = val2.timeout->tv_sec,
-                                .tv_nsec = val2.timeout->tv_nsec,
-                        };
-                        ret = syscall(__NR_futex, uaddr, op, val,
-                                      &oldtimeout, uaddr2, val3);
-                }
-        }
-#endif
-        return ret;
-}
-#endif /* __KERNEL__
-
-With this, applications can be changed to define their own
-
-#ifdef __kernel_futex
-#define futex(uaddr, futex_op, val, val2, uaddr2, val3) \
-      __kernel_futex(uaddr, futex_op, val, val2, uaddr2, val3)
-#else
-#define futex(uaddr, futex_op, val, val2, uaddr2, val3) \
-       syscall(__NR_futex, uaddr, futex_op, val, val2, uaddr2, val3)
-#endif
-
-         Arnd
