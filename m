@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7BBC433E6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67019C43219
 	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF8F22E00
+	by mail.kernel.org (Postfix) with ESMTP id 3782F2310B
 	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392070AbhASRzU (ORCPT
+        id S1732521AbhASRym (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jan 2021 12:55:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:34516 "EHLO foss.arm.com"
+        Tue, 19 Jan 2021 12:54:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:34358 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391230AbhASOuL (ORCPT
+        id S2389089AbhASOsQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jan 2021 09:50:11 -0500
+        Tue, 19 Jan 2021 09:48:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE798147A;
-        Tue, 19 Jan 2021 06:47:42 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 254C5142F;
+        Tue, 19 Jan 2021 06:47:31 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.56.227])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 37BAD3F66E;
-        Tue, 19 Jan 2021 06:47:38 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 556B23F66E;
+        Tue, 19 Jan 2021 06:47:27 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
@@ -45,9 +45,9 @@ Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
         Wei Li <liwei391@huawei.com>,
         Tan Xiaojun <tanxiaojun@huawei.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 8/8] perf arm-spe: Set thread TID
-Date:   Tue, 19 Jan 2021 16:46:58 +0200
-Message-Id: <20210119144658.793-8-james.clark@arm.com>
+Subject: [PATCH 5/8] perf arm-spe: Synthesize memory event
+Date:   Tue, 19 Jan 2021 16:46:55 +0200
+Message-Id: <20210119144658.793-5-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20210119144658.793-1-james.clark@arm.com>
 References: <20210119144658.793-1-james.clark@arm.com>
@@ -59,13 +59,22 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-Set thread TID for SPE samples. Now that the context ID is saved
-in each record it can be used to set the TID for a sample.
+The memory event can deliver two benefits:
 
-The context ID is only present in SPE data if the kernel is
-compiled with CONFIG_PID_IN_CONTEXTIDR and perf record is
-run as root. Otherwise the PID of the first process is assigned
-to each SPE sample.
+- The first benefit is the memory event can give out global view for
+  memory accessing, rather than organizing events with scatter mode
+  (e.g. uses separate event for L1 cache, last level cache, etc) which
+  which can only display a event for single memory type, memory events
+  include all memory accessing so it can display the data accessing
+  cross memory levels in the same view;
+
+- The second benefit is the sample generation might introduce a big
+  overhead and need to wait for long time for Perf reporting, we can
+  specify itrace option '--itrace=M' to filter out other events and only
+  output memory events, this can significantly reduce the overhead
+  caused by generating samples.
+
+This patch is to enable memory event for Arm SPE.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: James Clark <james.clark@arm.com>
@@ -85,123 +94,78 @@ Cc: Wei Li <liwei391@huawei.com>
 Cc: Tan Xiaojun <tanxiaojun@huawei.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/arm-spe.c | 75 ++++++++++++++++++++++++++-------------
- 1 file changed, 50 insertions(+), 25 deletions(-)
+ tools/perf/util/arm-spe.c | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 27a0b9dfe22d..9828fad7e516 100644
+index 578725344603..5550906486d8 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -223,6 +223,46 @@ static inline u8 arm_spe_cpumode(struct arm_spe *spe, u64 ip)
- 		PERF_RECORD_MISC_USER;
+@@ -53,6 +53,7 @@ struct arm_spe {
+ 	u8				sample_tlb;
+ 	u8				sample_branch;
+ 	u8				sample_remote_access;
++	u8				sample_memory;
+ 
+ 	u64				l1d_miss_id;
+ 	u64				l1d_access_id;
+@@ -62,6 +63,7 @@ struct arm_spe {
+ 	u64				tlb_access_id;
+ 	u64				branch_miss_id;
+ 	u64				remote_access_id;
++	u64				memory_id;
+ 
+ 	u64				kernel_start;
+ 
+@@ -293,6 +295,18 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
  }
  
-+static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
-+				    struct auxtrace_queue *queue)
++#define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
++			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
++			 ARM_SPE_REMOTE_ACCESS)
++
++static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
 +{
-+	struct arm_spe_queue *speq = queue->priv;
-+	pid_t tid;
++	if (type & SPE_MEM_TYPE)
++		return true;
 +
-+	tid = machine__get_current_tid(spe->machine, speq->cpu);
-+	if (tid != -1) {
-+		speq->tid = tid;
-+		thread__zput(speq->thread);
-+	} else
-+		speq->tid = queue->tid;
-+
-+	if ((!speq->thread) && (speq->tid != -1)) {
-+		speq->thread = machine__find_thread(spe->machine, -1,
-+						    speq->tid);
-+	}
-+
-+	if (speq->thread) {
-+		speq->pid = speq->thread->pid_;
-+		if (queue->cpu == -1)
-+			speq->cpu = speq->thread->cpu;
-+	}
++	return false;
 +}
 +
-+static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
-+{
-+	int err;
-+	struct arm_spe *spe = speq->spe;
-+	struct auxtrace_queue *queue;
-+
-+	err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
-+	if (err)
-+		return err;
-+
-+	queue = &speq->spe->queues.queue_array[speq->queue_nr];
-+	arm_spe_set_pid_tid_cpu(speq->spe, queue);
-+	return 0;
-+}
-+
- static void arm_spe_prep_sample(struct arm_spe *spe,
- 				struct arm_spe_queue *speq,
- 				union perf_event *event,
-@@ -431,6 +471,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
+ static int arm_spe_sample(struct arm_spe_queue *speq)
  {
- 	struct arm_spe *spe = speq->spe;
-+	const struct arm_spe_record *record;
- 	int ret;
+ 	const struct arm_spe_record *record = &speq->decoder->record;
+@@ -354,6 +368,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 			return err;
+ 	}
  
- 	if (!spe->kernel_start)
-@@ -450,6 +491,11 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
- 		if (ret < 0)
- 			continue;
- 
-+		record = &speq->decoder->record;
-+		ret = arm_spe_set_tid(speq, record->context_id);
-+		if (ret)
-+			return ret;
++	if (spe->sample_memory && arm_spe__is_memory_event(record->type)) {
++		err = arm_spe__synth_mem_sample(speq, spe->memory_id);
++		if (err)
++			return err;
++	}
 +
- 		ret = arm_spe_sample(speq);
- 		if (ret)
- 			return ret;
-@@ -500,6 +546,10 @@ static int arm_spe__setup_queue(struct arm_spe *spe,
- 
- 		record = &speq->decoder->record;
- 
-+		ret = arm_spe_set_tid(speq, record->context_id);
-+		if (ret)
-+			return ret;
-+
- 		speq->timestamp = record->timestamp;
- 		ret = auxtrace_heap__add(&spe->heap, queue_nr, speq->timestamp);
- 		if (ret)
-@@ -552,31 +602,6 @@ static bool arm_spe__is_timeless_decoding(struct arm_spe *spe)
- 	return timeless_decoding;
+ 	return 0;
  }
  
--static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
--				    struct auxtrace_queue *queue)
--{
--	struct arm_spe_queue *speq = queue->priv;
--	pid_t tid;
--
--	tid = machine__get_current_tid(spe->machine, speq->cpu);
--	if (tid != -1) {
--		speq->tid = tid;
--		thread__zput(speq->thread);
--	} else
--		speq->tid = queue->tid;
--
--	if ((!speq->thread) && (speq->tid != -1)) {
--		speq->thread = machine__find_thread(spe->machine, -1,
--						    speq->tid);
--	}
--
--	if (speq->thread) {
--		speq->pid = speq->thread->pid_;
--		if (queue->cpu == -1)
--			speq->cpu = speq->thread->cpu;
--	}
--}
--
- static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
- {
- 	unsigned int queue_nr;
+@@ -917,6 +937,16 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		id += 1;
+ 	}
+ 
++	if (spe->synth_opts.mem) {
++		spe->sample_memory = true;
++
++		err = arm_spe_synth_event(session, &attr, id);
++		if (err)
++			return err;
++		spe->memory_id = id;
++		arm_spe_set_event_name(evlist, id, "memory");
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.28.0
 
