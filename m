@@ -7,53 +7,54 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70AF6C433DB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 02:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD6D5C433E0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 02:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4441120702
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 02:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858AC206F1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 02:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbhASC7N (ORCPT
+        id S2388693AbhASC7d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 18 Jan 2021 21:59:13 -0500
-Received: from mail-eopbgr10060.outbound.protection.outlook.com ([40.107.1.60]:4855
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        Mon, 18 Jan 2021 21:59:33 -0500
+Received: from mail-eopbgr20045.outbound.protection.outlook.com ([40.107.2.45]:25915
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728406AbhASC7D (ORCPT
+        id S1728506AbhASC7a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 18 Jan 2021 21:59:03 -0500
+        Mon, 18 Jan 2021 21:59:30 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d2TKDdjbQnC945kakWNmURZku+QADknED04J2L/67jgEe6Tty8uaj0pzLECphRdUpfO2BHtECoiaGj9I3nZfAmG5uPJyj0cDLquIkNSorl6ywPaYU2e0uya+AEWR0+SLPYt/qsnjQE2Kx3/xf5DwmM1mtcuX+GkC4ocxGGzFIAckEW7gLC2ywl4EEpmsUG1GLQzX5jrg7UnXlzompCLJSljNVQb3VE7XgNbdoUsoBUmbNicabJ4tfBYDCeJYGLYGooSgctZfL+p0w99G36kV4QniXXmkivMHiYw+s950UMGQ/gALr63GVU75XtrY+iqu3ChXYMu5pRqXKcgvuUqbSg==
+ b=kxEiSYVlXa6BOiPlCvyrDPm3CNdgkavt+z20eo929PBt9lGNVK2mKZSq3ThrgOd4GX6WXwFIQHqIKuW/qI8nYFIr1GgNblkZBOnEfG412dq8YlSXKGxA1RC6xMKfVmy88aERirzUDya9/eCtK4XKkiI2/sc+EY54QeIz+tbNPyGFHF6PQhWyCeP0zw+jdwUmE3ZkZwS4iCkCDkfiivz7jTP0HC5lQf+D4aHoz0j4HgIvXgb1i18yM9p6bxNMNoJ0ukDJ6XkgCPJ3LPA6R8jZ0DatUjsBpQjCh8xvmrMEIdnytcZDG8V8olVgsvZE2rIlEjHKz+C9WiGHixyhlvP3xg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T2/irs94rONu4l1lTGrbeawZx802h7ywLDN4IElNw3w=;
- b=BMsmaBgRAbat7IqtOf/ct/VbAVypzi17ggXT15DXGS0fACDTl90q+qG4Uy4ayGtK+LdkmBGagxLvV3df1tAsy/HI2Pj0BrUXvHtkEUKg4CQdn0WHSPzGTL/8iWwVJvwEvMQRth4r3QHx4YTWgO3vueappJslJcJmKvMdxu5ggjbg3iLbbhMZd3t1lr9ia5ghTyuMHJdhiCU+I/7Tqn/ltThZozMCJ2AMINjIjSnIVzRCgJAR3INeFfiek7vFo9yhqKkiuBA5JF+IR9f6CDppg7cFqpQpuQK/Q4iNhwiHF5vEjG3d+MaoyIUnM7dWb8ZG8l53mKL35OT0j5gra2zzSA==
+ bh=QqdgHv3Wn1thkJFioUq3L6g9Oote1LH+IcQOmFEdHDE=;
+ b=OTy9sVbYxTHt3Rhhiwx5WCyhTOksTGvz3ah34x+tSMgfYGlHnUptsZBqoNHiVD70v7YJxRGRMuTgiI4e5dw6PZZVmziWBlIsFImiya4Lz9CSY9RMiolvlELpm4/6HdeE32AvGU6sxLI3t9F7TrQgi6OsmiozjQD70UaUk9Di8YORzJx0HdjQsIKlhwPJUdsNTgetzQ3Y1sBEDQHfaQEcFj2R911WmUfStS9REcBV13yBk7j8SRABFs0OMwkHX+SFzvRGoiS6TSIO0ZJaMcmnBVSgLK2oRnj85dd2JcVjVcIWN7HAmDMyV9WFsHbs4+CYYUtDd+Wpk8Wu219F5fVKuw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T2/irs94rONu4l1lTGrbeawZx802h7ywLDN4IElNw3w=;
- b=Zv3HaOEuW35EovxUYoPfurY0egdLp+RXwFAMyCMzyTTg+2Pip+huhykcDuGO34ug9jydB8OFrhT0bIIVfBtZm3DIAGPUdxYzVwtA8eifNo5iqTwybKhYh0gwB/oxi9mXls2S3E7Tme2OaXK0jhG8FriiFZDPSnB/0nbc3Tj3Uv8=
+ bh=QqdgHv3Wn1thkJFioUq3L6g9Oote1LH+IcQOmFEdHDE=;
+ b=PxcqkXFXOpnvVL9IknQz1rQDF9afGxf0Jkyvfn1JpTbRNdcwOr05HOFjH9BRDK+NMccSzW0ngppKTOesPUiFTrqssns5okNpoBLN4Druqk/rjgCOS4j2EYiFG7/hZ1MK/FDfbb4M9eHJ61IoOkewhBeUhvS9KLn5T04dSXX3RDE=
 Authentication-Results: huawei.com; dkim=none (message not signed)
  header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
 Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
- by DB6PR04MB3208.eurprd04.prod.outlook.com (2603:10a6:6:3::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3763.14; Tue, 19 Jan 2021 02:58:11 +0000
+ by DB6PR0402MB2903.eurprd04.prod.outlook.com (2603:10a6:4:9b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.14; Tue, 19 Jan
+ 2021 02:58:08 +0000
 Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
  ([fe80::b83c:2edc:17e8:2666]) by DB8PR04MB6795.eurprd04.prod.outlook.com
  ([fe80::b83c:2edc:17e8:2666%4]) with mapi id 15.20.3763.014; Tue, 19 Jan 2021
- 02:58:11 +0000
+ 02:58:08 +0000
 From:   Joakim Zhang <qiangqing.zhang@nxp.com>
 To:     john.garry@huawei.com, acme@kernel.org, jolsa@redhat.com
 Cc:     will@kernel.org, linux-perf-users@vger.kernel.org,
         linux-imx@nxp.com, mark.rutland@arm.com,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH V1 2/4] perf vendor events: Add JSON metrics for imx8mn DDR Perf
-Date:   Tue, 19 Jan 2021 10:56:45 +0800
-Message-Id: <20210119025647.12569-3-qiangqing.zhang@nxp.com>
+Subject: [PATCH V1 1/4] perf vendor events: Add bandwidth metric for imx8mm
+Date:   Tue, 19 Jan 2021 10:56:44 +0800
+Message-Id: <20210119025647.12569-2-qiangqing.zhang@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210119025647.12569-1-qiangqing.zhang@nxp.com>
 References: <20210119025647.12569-1-qiangqing.zhang@nxp.com>
@@ -64,144 +65,99 @@ X-ClientProxiedBy: SG2PR06CA0231.apcprd06.prod.outlook.com
  (2603:10a6:10:fa::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.71) by SG2PR06CA0231.apcprd06.prod.outlook.com (2603:1096:4:ac::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.9 via Frontend Transport; Tue, 19 Jan 2021 02:58:08 +0000
+Received: from localhost.localdomain (119.31.174.71) by SG2PR06CA0231.apcprd06.prod.outlook.com (2603:1096:4:ac::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.9 via Frontend Transport; Tue, 19 Jan 2021 02:58:05 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eee10435-a9c7-442e-fc62-08d8bc260eb3
-X-MS-TrafficTypeDiagnostic: DB6PR04MB3208:
+X-MS-Office365-Filtering-Correlation-Id: e02b34c9-580b-4353-aab9-08d8bc260cdb
+X-MS-TrafficTypeDiagnostic: DB6PR0402MB2903:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR04MB32080657F9ADAF9882267312E6A30@DB6PR04MB3208.eurprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DB6PR0402MB2903613F04C8CE400346FD0AE6A30@DB6PR0402MB2903.eurprd04.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:1247;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 92mpDZvdeXsry/fRUbQiKsYst7OM+yEC/LyJxT5LJviAmdBlINOEqk76jSjvPtHDTwP5nejYYlILUFk3HMYpNl3TygIgq+KLNRiB3N5i1iBSYfO6v5+vIN3yBINbWexLonqhepbGL0LZAADqUrNcYfmTT6apK85yhHBK2EHPNR/lTgK4QbGXHjGpZbdlt5EhkjIl9hkJzoYx1KiXxErPpO5yPKLPhfcT9uGzy/1A9/WhiM6my/YSWPwu0ffuOq0eqRlOwzHCJHYR6gtaz6EOFLL3DuFqxH72PJZt23PPM2zgFEDi7FzClEb3CQmgBCkvDT+hywQbkgRk3t5yb3u/FeyWpojDkBomymRsgHxdhpt45fd1EkGiJltgxbVPBqnINAKgekLvXctsdqJ1JADkHfyrt392pgYscH52S7iN0Jqd2pxZxy8pQ/Eoqv/2G69jAivhSsH9qPc8JFPVSAhs0sJpukzZtlIW1nBHItLAQiz64wXGvGi6ZIlgxTOcqV+aoeGgl90LmoFSHhP5uEUwuB7/cqntXBQUJa+g4ptrmnCR8gPFNqE3uX2wNYaK6FpigV6QdjrPHgYagGn+75u/qXARTN78AtdLfYvaYkGVW+I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(36756003)(1076003)(6506007)(956004)(2616005)(66556008)(26005)(16526019)(8936002)(5660300002)(186003)(52116002)(6512007)(66946007)(69590400011)(8676002)(66476007)(6486002)(4326008)(6666004)(2906002)(478600001)(86362001)(316002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?wP/31k4VNatVPMfv7KlTbkGOukoqLcnqeW1PDI0DFaQe6jQX4xt8LHwNQ4A/?=
- =?us-ascii?Q?6Sq1hBLJvxqhEFSTGT37rd/QjS5jWadv1fC67gN3fk8SLOSfZx0Ndl/7gjH0?=
- =?us-ascii?Q?O3fZ882lZyBZaHMaoO3uTBgs4DaHvtj0W8CitI4fNbNNY5B9fEmBvX0lITps?=
- =?us-ascii?Q?+J3eiPrSRjfCAlBf90ElzCuD3LpphtWIkwhdPjiOsw0Vkf6ddmwansvWkzp7?=
- =?us-ascii?Q?O56mhlBja/1WbYTjpD85rc5DulDi1dUZwBbLJk77WdwEc/6O87DJcGr5MApH?=
- =?us-ascii?Q?Am62Q355L/SDGpBJTMhuln+KwGsOZdiPzOviQ1N2FTK+DGXXke3W0uBo5QTv?=
- =?us-ascii?Q?0YXsB7tWFrUoPkiZDZdPFmGzdIAzXUbc3aN8DKSzJPCkAHyT+/1SYKyJQNI9?=
- =?us-ascii?Q?iRSw5OrU+ZAY3VatmKQAKOq1RocMm4FZBslFCxyq8c9jolUkRiTsFOhYAbSw?=
- =?us-ascii?Q?1Dz/T/JS2A1wsqUINlEXN7lXohPROdaMuw6kFTIVshSHBI7UJmnYs4dL073C?=
- =?us-ascii?Q?hNkN3SuU5EZ+gftrtI3PJ7ahrxwHwxmEQpEODSDu91LSKA4jJsOzN0GvKLJu?=
- =?us-ascii?Q?moMuxTRhr6Aik0GgrJewLO/YIR0u178RWZXji+gX8A0z9KfbC2VtSiG/6gub?=
- =?us-ascii?Q?YSf22JjC7zUcCt9jlD5k4rNcUm37ur5f14ZURW54Q8epuVrm+0FVUrE5aVsQ?=
- =?us-ascii?Q?DmykoQ99kG5I6h/wGpMqPVnHFOAWPacbva5MgOYwKW252ify43q5i63ja8NH?=
- =?us-ascii?Q?A8gT3lQjtMgT3nuEzm/2DFmxSZ3GhCaI7iP7kTsAEQ8mYkEEX2DBite2YblN?=
- =?us-ascii?Q?69/t7XNkbQHwPUeUO/f420bll3Nk3IoCtbjUXF6wPha5UOawxx/CzxfiGcQx?=
- =?us-ascii?Q?EI/Q/r+bQuIYz1tMQ2V7o3jO0KT/9130o8BvHpI7LsUPWfwvZ3/2PjsCnHnt?=
- =?us-ascii?Q?IzYUVvUiEgB9NIMTjsG1T9bfw7oisj/kNhc0lfRSPl2lk1jALbl+cc9iXEI1?=
- =?us-ascii?Q?dgvK?=
+X-Microsoft-Antispam-Message-Info: tJYSrwqN3284Cqf+ib00JEdSrmLuIXOznfopwktfC8hJm6j40IFSu628fSV4ymorGwODFhSgNHDAhvo5ip6xMTunHDPEtjjkFov+qtVsgsQ7G3ANkW5aS8x0pZ5HCdHaUiSQCtE/cN+gHaArPKHTOFPUquS2TKQBfKYjSJCXNSrCc8i+mVgjZdgIkidvByh7tUVwLtZ98xMUdrMZBtPSj3wKnZPdFH+PZnrtpBUUDVF3qEzQL5V/H4M4qn/qsj4I4XtGVA9WElVBGpoO6pOR8ZISCMB5V+PxmkxhBKmg/QPlDAWA36twF5kxZVyjTZwPQpwKLgjhEXUHS4rWNNQwPI/3kkprU+58xrpBF5QeGL/vKa2v+5kG/ANWZjrOOQFZkb2PnGPYnLqydX2oEQin+vXcuypKPi279AC75p9ZJfMUwLib5HEBn3Ryic0suA1KMwddayXWHg+oy8zu65HhTbwTwez0mxt/iNbPiATTlFw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(36756003)(8936002)(4326008)(6512007)(316002)(8676002)(2906002)(86362001)(66556008)(69590400011)(1076003)(6506007)(6666004)(6486002)(186003)(26005)(5660300002)(478600001)(16526019)(52116002)(83380400001)(2616005)(956004)(66946007)(66476007)(32563001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?AnPxx0p9bbCTRTum3VtQL7mfgGo20dtrQfexP7ua4hejifuR/P2T0UaafMIZ?=
+ =?us-ascii?Q?UVr+A7RLhPV76PZTYbV2FSK5UEiMcmR43CBZqCkfWcCTHtt1IL/oSZPS8Jpx?=
+ =?us-ascii?Q?eL9CpXpvZMnObb3jWg75HJla7siXg8oaxb+UdXtrslsZCkfj4Ou04tPDNhlE?=
+ =?us-ascii?Q?vNNy+H0sirtUtHP6l4mgD8bCnJTdVwzfaTYH06jP0lpmF0lgmXhA60ryje9V?=
+ =?us-ascii?Q?Tw2iEMP6BvgvgPYKxrRyThXI/V4xIXLg8DWeR2XO5glLTbCwTlObwArHA6gF?=
+ =?us-ascii?Q?2FIB4jHdS9GZPru6ZoUYa6drwb/nU8ZAa0hxdADn/LNiK6/9/9hkoxnRkQ3A?=
+ =?us-ascii?Q?B0gOAyrDsnRIZzCsxsb7HPthH8GlHI+kTxJgL6ic6GDqsYKEjbwwht83ly1/?=
+ =?us-ascii?Q?JtwFJofgdhTXc5h/LJMuSeCMv8D5O/ltWFuw/LaDiH+x4v4dZAntEq4KyC0O?=
+ =?us-ascii?Q?aVJgkL+LLbQJYtxpFdVEXU6OWoA8kALNgJpneesm/JIjjxaVKdqYRwAbyw9d?=
+ =?us-ascii?Q?2MndoNxg2w/kVt81ShpRq6PKcH/CZjGVksMr935ykMQd36rW6zs8JdwLLpyf?=
+ =?us-ascii?Q?4SnyBxznFXVnOO7Ntf02Ijy5PFTnGRrK/+XxfXNXrHZyOvxlRZxd6Sqpmwtt?=
+ =?us-ascii?Q?aWcqRQgC/lVt0DjkgWH1DJzIHQA2lZfV1eTzW9ZhBegnuS+bzReQg9Lyjafo?=
+ =?us-ascii?Q?TNeNUxbl0XqjJQ6CEtKePsD7ybpG/J3O57yOB0Jwwhsn+mT1H7IzHrxmoh9I?=
+ =?us-ascii?Q?xlX9sUE4xnxB26U6Y2t3ZJr1a1Pqk411dfTxPmNY1Hplbr9k/3usg6gqxpSm?=
+ =?us-ascii?Q?VT46AMiRSCzXlNtTnhjZk2sW09+T+wxyjdgDgmLfI7RDiclDlD20C0w44nmi?=
+ =?us-ascii?Q?GNUHyvDQWbuqqng90BQyRfAm3t7/u0D/U0N+uRmV2u9e6RWDv+SCkBjCuulh?=
+ =?us-ascii?Q?WVRuwjLpucHj44r6OiH1XDTqKidN2wfCR8lcqvuuwV1qTYvncE420Kwrhc8p?=
+ =?us-ascii?Q?zsf6?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eee10435-a9c7-442e-fc62-08d8bc260eb3
+X-MS-Exchange-CrossTenant-Network-Message-Id: e02b34c9-580b-4353-aab9-08d8bc260cdb
 X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6795.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2021 02:58:11.6163
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2021 02:58:08.5159
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b0BL9B6u/AVIqccZhkjwE5eGdL3Xb4KFg+drCTByHabNNDnOK9kXgTltaOKedZl5M7VI9DVpq1QpCNwe+QmK9g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR04MB3208
+X-MS-Exchange-CrossTenant-UserPrincipalName: tOjzwCmDBQiEa67Fck/7dT+TIHL65uV697Ig3Fd3tPYtP9ZiEj4TtOtg5gvQ2klGJfdyCAMMAjAzGFMNxGCOfA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2903
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add JSON metrics for imx8mn DDR Perf.
+Add bandwidth metric for imx8mm.
 
 Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 ---
- .../arch/arm64/freescale/imx8mn/sys/ddrc.json | 37 +++++++++++++++++++
- .../arm64/freescale/imx8mn/sys/metrics.json   | 34 +++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/ddrc.json
- create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/metrics.json
+ .../arm64/freescale/imx8mm/sys/metrics.json   | 20 +++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/ddrc.json b/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/ddrc.json
-new file mode 100644
-index 000000000000..8352e73d6d35
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/ddrc.json
-@@ -0,0 +1,37 @@
-+[
-+   {
-+           "BriefDescription": "ddr cycles event",
-+           "EventCode": "0x00",
-+           "EventName": "imx8mn_ddr.cycles",
-+           "Unit": "imx8_ddr",
-+           "Compat": "i.MX8MN"
-+   },
-+   {
-+           "BriefDescription": "ddr read-cycles event",
-+           "EventCode": "0x2a",
-+           "EventName": "imx8mn_ddr.read_cycles",
-+           "Unit": "imx8_ddr",
-+           "Compat": "i.MX8MN"
-+   },
-+   {
-+           "BriefDescription": "ddr write-cycles event",
-+           "EventCode": "0x2b",
-+           "EventName": "imx8mn_ddr.write_cycles",
-+           "Unit": "imx8_ddr",
-+           "Compat": "i.MX8MN"
-+   },
-+   {
-+           "BriefDescription": "ddr read event",
-+           "EventCode": "0x35",
-+           "EventName": "imx8mn_ddr.read",
-+           "Unit": "imx8_ddr",
-+           "Compat": "i.MX8MN"
-+   },
-+   {
-+           "BriefDescription": "ddr write event",
-+           "EventCode": "0x38",
-+           "EventName": "imx8mn_ddr.write",
-+           "Unit": "imx8_ddr",
-+           "Compat": "i.MX8MN"
-+   }
-+]
-diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/metrics.json
-new file mode 100644
-index 000000000000..f71f6b0f3822
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/freescale/imx8mn/sys/metrics.json
-@@ -0,0 +1,34 @@
-+[
+diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx8mm/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/imx8mm/sys/metrics.json
+index 8e553b67cae6..615be286ecaf 100644
+--- a/tools/perf/pmu-events/arch/arm64/freescale/imx8mm/sys/metrics.json
++++ b/tools/perf/pmu-events/arch/arm64/freescale/imx8mm/sys/metrics.json
+@@ -1,4 +1,20 @@
+ [
 +   {
 +	    "BriefDescription": "bandwidth usage for lpddr4 evk board",
-+	    "MetricName": "imx8mn_bandwidth_usage.lpddr4",
-+	    "MetricExpr": "(( imx8_ddr0@read\\-cycles@ + imx8_ddr0@write\\-cycles@ ) * 4 * 2 / duration_time) / (800 * 1000000 * 4 * 2)",
++	    "MetricName": "imx8mm_bandwidth_usage.lpddr4",
++	    "MetricExpr": "(( imx8_ddr0@read\\-cycles@ + imx8_ddr0@write\\-cycles@ ) * 4 * 4 / duration_time) / (750 * 1000000 * 4 * 4)",
 +	    "ScaleUnit": "1e2%",
 +	    "Unit": "imx8_ddr",
-+	    "Compat": "i.MX8MN"
++	    "Compat": "i.MX8MM"
 +   },
 +   {
 +	    "BriefDescription": "bandwidth usage for ddr4 evk board",
-+	    "MetricName": "imx8mn_bandwidth_usage.ddr4",
-+	    "MetricExpr": "(( imx8_ddr0@read\\-cycles@ + imx8_ddr0@write\\-cycles@ ) * 4 * 2 / duration_time) / (600 * 1000000 * 4 * 2)",
++	    "MetricName": "imx8mm_bandwidth_usage.ddr4",
++	    "MetricExpr": "(( imx8_ddr0@read\\-cycles@ + imx8_ddr0@write\\-cycles@ ) * 4 * 4 / duration_time) / (600 * 1000000 * 4 * 4)",
 +	    "ScaleUnit": "1e2%",
 +	    "Unit": "imx8_ddr",
-+	    "Compat": "i.MX8MN"
++	    "Compat": "i.MX8MM"
 +   },
-+   {
-+	    "BriefDescription": "bytes all masters read from ddr based on read-cycles event",
-+	    "MetricName": "imx8mn_ddr_read.all",
-+	    "MetricExpr": "imx8mn_ddr.read_cycles * 4 * 4",
-+	    "ScaleUnit": "9.765625e-4KB",
-+	    "Unit": "imx8_ddr",
-+	    "Compat": "i.MX8MN"
+    {
+ 	    "BriefDescription": "bytes all masters read from ddr based on read-cycles event",
+ 	    "MetricName": "imx8mm_ddr_read.all",
+@@ -6,7 +22,7 @@
+ 	    "ScaleUnit": "9.765625e-4KB",
+ 	    "Unit": "imx8_ddr",
+ 	    "Compat": "i.MX8MM"
+-    },
 +   },
-+   {
-+	    "BriefDescription": "bytes all masters write to ddr based on write-cycles event",
-+	    "MetricName": "imx8mn_ddr_write.all",
-+	    "MetricExpr": "imx8mn_ddr.write_cycles * 4 * 4",
-+	    "ScaleUnit": "9.765625e-4KB",
-+	    "Unit": "imx8_ddr",
-+	    "Compat": "i.MX8MN"
+    {
+ 	    "BriefDescription": "bytes all masters write to ddr based on write-cycles event",
+ 	    "MetricName": "imx8mm_ddr_write.all",
+@@ -14,5 +30,5 @@
+ 	    "ScaleUnit": "9.765625e-4KB",
+ 	    "Unit": "imx8_ddr",
+ 	    "Compat": "i.MX8MM"
+-    }
 +   }
-+]
+ ]
 -- 
 2.17.1
 
