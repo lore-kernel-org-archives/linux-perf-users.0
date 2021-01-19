@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEDC468C6
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7BBC433E6
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B8922D2A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF8F22E00
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732455AbhASRyO (ORCPT
+        id S2392070AbhASRzU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jan 2021 12:54:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:34314 "EHLO foss.arm.com"
+        Tue, 19 Jan 2021 12:55:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:34516 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728787AbhASOsI (ORCPT
+        id S2391230AbhASOuL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jan 2021 09:48:08 -0500
+        Tue, 19 Jan 2021 09:50:11 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55EFA139F;
-        Tue, 19 Jan 2021 06:47:22 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE798147A;
+        Tue, 19 Jan 2021 06:47:42 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.56.227])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E40853F66E;
-        Tue, 19 Jan 2021 06:47:17 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 37BAD3F66E;
+        Tue, 19 Jan 2021 06:47:38 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
@@ -45,9 +45,9 @@ Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
         Wei Li <liwei391@huawei.com>,
         Tan Xiaojun <tanxiaojun@huawei.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 3/8] perf arm-spe: Store operation type in packet
-Date:   Tue, 19 Jan 2021 16:46:53 +0200
-Message-Id: <20210119144658.793-3-james.clark@arm.com>
+Subject: [PATCH 8/8] perf arm-spe: Set thread TID
+Date:   Tue, 19 Jan 2021 16:46:58 +0200
+Message-Id: <20210119144658.793-8-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20210119144658.793-1-james.clark@arm.com>
 References: <20210119144658.793-1-james.clark@arm.com>
@@ -59,7 +59,13 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-This patch is to store operation type in packet structure.
+Set thread TID for SPE samples. Now that the context ID is saved
+in each record it can be used to set the TID for a sample.
+
+The context ID is only present in SPE data if the kernel is
+compiled with CONFIG_PID_IN_CONTEXTIDR and perf record is
+run as root. Otherwise the PID of the first process is assigned
+to each SPE sample.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: James Clark <james.clark@arm.com>
@@ -79,47 +85,123 @@ Cc: Wei Li <liwei391@huawei.com>
 Cc: Tan Xiaojun <tanxiaojun@huawei.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 6 ++++++
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 6 ++++++
- 2 files changed, 12 insertions(+)
+ tools/perf/util/arm-spe.c | 75 ++++++++++++++++++++++++++-------------
+ 1 file changed, 50 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 7aac3048b090..32fe41835fa6 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -182,6 +182,12 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 		case ARM_SPE_CONTEXT:
- 			break;
- 		case ARM_SPE_OP_TYPE:
-+			if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
-+				if (payload & 0x1)
-+					decoder->record.op = ARM_SPE_ST;
-+				else
-+					decoder->record.op = ARM_SPE_LD;
-+			}
- 			break;
- 		case ARM_SPE_EVENTS:
- 			if (payload & BIT(EV_L1D_REFILL))
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 7b845001afe7..59bdb7309674 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -24,9 +24,15 @@ enum arm_spe_sample_type {
- 	ARM_SPE_REMOTE_ACCESS	= 1 << 7,
- };
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 27a0b9dfe22d..9828fad7e516 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -223,6 +223,46 @@ static inline u8 arm_spe_cpumode(struct arm_spe *spe, u64 ip)
+ 		PERF_RECORD_MISC_USER;
+ }
  
-+enum arm_spe_op_type {
-+	ARM_SPE_LD		= 1 << 0,
-+	ARM_SPE_ST		= 1 << 1,
-+};
++static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
++				    struct auxtrace_queue *queue)
++{
++	struct arm_spe_queue *speq = queue->priv;
++	pid_t tid;
 +
- struct arm_spe_record {
- 	enum arm_spe_sample_type type;
- 	int err;
-+	u32 op;
- 	u64 from_ip;
- 	u64 to_ip;
- 	u64 timestamp;
++	tid = machine__get_current_tid(spe->machine, speq->cpu);
++	if (tid != -1) {
++		speq->tid = tid;
++		thread__zput(speq->thread);
++	} else
++		speq->tid = queue->tid;
++
++	if ((!speq->thread) && (speq->tid != -1)) {
++		speq->thread = machine__find_thread(spe->machine, -1,
++						    speq->tid);
++	}
++
++	if (speq->thread) {
++		speq->pid = speq->thread->pid_;
++		if (queue->cpu == -1)
++			speq->cpu = speq->thread->cpu;
++	}
++}
++
++static int arm_spe_set_tid(struct arm_spe_queue *speq, pid_t tid)
++{
++	int err;
++	struct arm_spe *spe = speq->spe;
++	struct auxtrace_queue *queue;
++
++	err = machine__set_current_tid(spe->machine, speq->cpu, tid, tid);
++	if (err)
++		return err;
++
++	queue = &speq->spe->queues.queue_array[speq->queue_nr];
++	arm_spe_set_pid_tid_cpu(speq->spe, queue);
++	return 0;
++}
++
+ static void arm_spe_prep_sample(struct arm_spe *spe,
+ 				struct arm_spe_queue *speq,
+ 				union perf_event *event,
+@@ -431,6 +471,7 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
+ {
+ 	struct arm_spe *spe = speq->spe;
++	const struct arm_spe_record *record;
+ 	int ret;
+ 
+ 	if (!spe->kernel_start)
+@@ -450,6 +491,11 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
+ 		if (ret < 0)
+ 			continue;
+ 
++		record = &speq->decoder->record;
++		ret = arm_spe_set_tid(speq, record->context_id);
++		if (ret)
++			return ret;
++
+ 		ret = arm_spe_sample(speq);
+ 		if (ret)
+ 			return ret;
+@@ -500,6 +546,10 @@ static int arm_spe__setup_queue(struct arm_spe *spe,
+ 
+ 		record = &speq->decoder->record;
+ 
++		ret = arm_spe_set_tid(speq, record->context_id);
++		if (ret)
++			return ret;
++
+ 		speq->timestamp = record->timestamp;
+ 		ret = auxtrace_heap__add(&spe->heap, queue_nr, speq->timestamp);
+ 		if (ret)
+@@ -552,31 +602,6 @@ static bool arm_spe__is_timeless_decoding(struct arm_spe *spe)
+ 	return timeless_decoding;
+ }
+ 
+-static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
+-				    struct auxtrace_queue *queue)
+-{
+-	struct arm_spe_queue *speq = queue->priv;
+-	pid_t tid;
+-
+-	tid = machine__get_current_tid(spe->machine, speq->cpu);
+-	if (tid != -1) {
+-		speq->tid = tid;
+-		thread__zput(speq->thread);
+-	} else
+-		speq->tid = queue->tid;
+-
+-	if ((!speq->thread) && (speq->tid != -1)) {
+-		speq->thread = machine__find_thread(spe->machine, -1,
+-						    speq->tid);
+-	}
+-
+-	if (speq->thread) {
+-		speq->pid = speq->thread->pid_;
+-		if (queue->cpu == -1)
+-			speq->cpu = speq->thread->cpu;
+-	}
+-}
+-
+ static int arm_spe_process_queues(struct arm_spe *spe, u64 timestamp)
+ {
+ 	unsigned int queue_nr;
 -- 
 2.28.0
 
