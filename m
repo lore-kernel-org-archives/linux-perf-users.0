@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE72C282E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEDC468C6
 	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5153823103
+	by mail.kernel.org (Postfix) with ESMTP id 21B8922D2A
 	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392014AbhASRy6 (ORCPT
+        id S1732455AbhASRyO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jan 2021 12:54:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:34518 "EHLO foss.arm.com"
+        Tue, 19 Jan 2021 12:54:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:34314 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391243AbhASOuL (ORCPT
+        id S1728787AbhASOsI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jan 2021 09:50:11 -0500
+        Tue, 19 Jan 2021 09:48:08 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D11A11474;
-        Tue, 19 Jan 2021 06:47:38 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55EFA139F;
+        Tue, 19 Jan 2021 06:47:22 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.56.227])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 201AE3F66E;
-        Tue, 19 Jan 2021 06:47:34 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E40853F66E;
+        Tue, 19 Jan 2021 06:47:17 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
@@ -45,9 +45,9 @@ Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
         Wei Li <liwei391@huawei.com>,
         Tan Xiaojun <tanxiaojun@huawei.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 7/8] perf arm-spe: Save context ID in record
-Date:   Tue, 19 Jan 2021 16:46:57 +0200
-Message-Id: <20210119144658.793-7-james.clark@arm.com>
+Subject: [PATCH 3/8] perf arm-spe: Store operation type in packet
+Date:   Tue, 19 Jan 2021 16:46:53 +0200
+Message-Id: <20210119144658.793-3-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20210119144658.793-1-james.clark@arm.com>
 References: <20210119144658.793-1-james.clark@arm.com>
@@ -59,8 +59,7 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-This patch is to save context ID in record, this will be used to set TID
-for samples.
+This patch is to store operation type in packet structure.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: James Clark <james.clark@arm.com>
@@ -80,42 +79,47 @@ Cc: Wei Li <liwei391@huawei.com>
 Cc: Tan Xiaojun <tanxiaojun@huawei.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 2 ++
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 1 +
- 2 files changed, 3 insertions(+)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 6 ++++++
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index 32fe41835fa6..1b58859d2314 100644
+index 7aac3048b090..32fe41835fa6 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -151,6 +151,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 	u64 payload, ip;
- 
- 	memset(&decoder->record, 0x0, sizeof(decoder->record));
-+	decoder->record.context_id = -1;
- 
- 	while (1) {
- 		err = arm_spe_get_next_packet(decoder);
-@@ -180,6 +181,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 		case ARM_SPE_COUNTER:
- 			break;
+@@ -182,6 +182,12 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
  		case ARM_SPE_CONTEXT:
-+			decoder->record.context_id = payload;
  			break;
  		case ARM_SPE_OP_TYPE:
- 			if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
++			if (idx == SPE_OP_PKT_HDR_CLASS_LD_ST_ATOMIC) {
++				if (payload & 0x1)
++					decoder->record.op = ARM_SPE_ST;
++				else
++					decoder->record.op = ARM_SPE_LD;
++			}
+ 			break;
+ 		case ARM_SPE_EVENTS:
+ 			if (payload & BIT(EV_L1D_REFILL))
 diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 59bdb7309674..46a8556a9e95 100644
+index 7b845001afe7..59bdb7309674 100644
 --- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
 +++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -38,6 +38,7 @@ struct arm_spe_record {
- 	u64 timestamp;
- 	u64 virt_addr;
- 	u64 phys_addr;
-+	u64 context_id;
+@@ -24,9 +24,15 @@ enum arm_spe_sample_type {
+ 	ARM_SPE_REMOTE_ACCESS	= 1 << 7,
  };
  
- struct arm_spe_insn;
++enum arm_spe_op_type {
++	ARM_SPE_LD		= 1 << 0,
++	ARM_SPE_ST		= 1 << 1,
++};
++
+ struct arm_spe_record {
+ 	enum arm_spe_sample_type type;
+ 	int err;
++	u32 op;
+ 	u64 from_ip;
+ 	u64 to_ip;
+ 	u64 timestamp;
 -- 
 2.28.0
 
