@@ -2,106 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2EECC4332D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95F2C4332B
 	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97552253A
+	by mail.kernel.org (Postfix) with ESMTP id A124A23107
 	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 18:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389069AbhASOiy (ORCPT
+        id S2387559AbhASOiu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jan 2021 09:38:54 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2376 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391077AbhASM31 (ORCPT
+        Tue, 19 Jan 2021 09:38:50 -0500
+Received: from dd17628.kasserver.com ([85.13.138.83]:55730 "EHLO
+        dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391573AbhASLgT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jan 2021 07:29:27 -0500
-Received: from fraeml740-chm.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DKntH0CScz67dgZ;
-        Tue, 19 Jan 2021 20:25:27 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml740-chm.china.huawei.com (10.206.15.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Tue, 19 Jan 2021 13:28:34 +0100
-Received: from [10.47.10.61] (10.47.10.61) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Tue, 19 Jan
- 2021 12:28:33 +0000
-Subject: Re: [PATCH V1 3/4] perf vendor events: Add JSON metrics for imx8mq
- DDR Perf
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>
-CC:     "will@kernel.org" <will@kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20210119025647.12569-1-qiangqing.zhang@nxp.com>
- <20210119025647.12569-4-qiangqing.zhang@nxp.com>
- <20a74eda-ae1b-249e-06f1-4ab70e20f684@huawei.com>
- <DB8PR04MB6795A3ED474456F17F52680AE6A30@DB8PR04MB6795.eurprd04.prod.outlook.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <65bb44fa-a75a-4425-5289-7ac6374b9285@huawei.com>
-Date:   Tue, 19 Jan 2021 12:27:20 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 19 Jan 2021 06:36:19 -0500
+Received: from milian-workstation.localnet (p4fd6c50d.dip0.t-ipconnect.de [79.214.197.13])
+        by dd17628.kasserver.com (Postfix) with ESMTPSA id 1B577628543A;
+        Tue, 19 Jan 2021 12:35:34 +0100 (CET)
+From:   Milian Wolff <mail@milianw.de>
+To:     Namhyung Kim <namhyung@gmail.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kenel.org>
+Subject: Re: missing mmap events in perf profiles without dwarf callgraph
+Date:   Tue, 19 Jan 2021 12:33:12 +0100
+Message-ID: <6799156.55LOemW0PR@milian-workstation>
+In-Reply-To: <CAM9d7cihUNLX9wAWkNi5-J1HC4NPhD_mFW9EFc77t=SAFF10-A@mail.gmail.com>
+References: <8218693.uYs0DeGetE@milian-workstation> <7161646.QLfhZlOSzD@milian-workstation> <CAM9d7cihUNLX9wAWkNi5-J1HC4NPhD_mFW9EFc77t=SAFF10-A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <DB8PR04MB6795A3ED474456F17F52680AE6A30@DB8PR04MB6795.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.47.10.61]
-X-ClientProxiedBy: lhreml742-chm.china.huawei.com (10.201.108.192) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="nextPart5902756.XR8F9sFZxY"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 19/01/2021 11:00, Joakim Zhang wrote:
->> -----Original Message-----
->> From: John Garry<john.garry@huawei.com>
->> Sent: 2021年1月19日 18:40
->> To: Joakim Zhang<qiangqing.zhang@nxp.com>;acme@kernel.org;
->> jolsa@redhat.com
->> Cc:will@kernel.org;linux-perf-users@vger.kernel.org; dl-linux-imx
->> <linux-imx@nxp.com>;mark.rutland@arm.com;
->> linux-arm-kernel@lists.infradead.org
->> Subject: Re: [PATCH V1 3/4] perf vendor events: Add JSON metrics for imx8mq
->> DDR Perf
->>
->> On 19/01/2021 02:56, Joakim Zhang wrote:
->>> index 000000000000..c3e9f89a4a4d
->>> --- /dev/null
->>> +++ b/tools/perf/pmu-events/arch/arm64/freescale/imx8mq/sys/metrics.js
->>> +++ on
->>> @@ -0,0 +1,26 @@
->>> +[
->>> +   {
->>> +	    "BriefDescription": "bandwidth usage for lpddr4 evk board",
->> Why mention the evk board specifically? Is this metric only specific to that
->> board, and not all i.MX8MQ platforms?
-> Yes, John, we have lpddr4 evk board and ddr4 evk borad......
+--nextPart5902756.XR8F9sFZxY
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
+From: Milian Wolff <mail@milianw.de>
+To: Namhyung Kim <namhyung@gmail.com>
+Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kenel.org>
+Subject: Re: missing mmap events in perf profiles without dwarf callgraph
+Date: Tue, 19 Jan 2021 12:33:12 +0100
+Message-ID: <6799156.55LOemW0PR@milian-workstation>
+In-Reply-To: <CAM9d7cihUNLX9wAWkNi5-J1HC4NPhD_mFW9EFc77t=SAFF10-A@mail.gmail.com>
+References: <8218693.uYs0DeGetE@milian-workstation> <7161646.QLfhZlOSzD@milian-workstation> <CAM9d7cihUNLX9wAWkNi5-J1HC4NPhD_mFW9EFc77t=SAFF10-A@mail.gmail.com>
+
+On Dienstag, 19. Januar 2021 10:36:11 CET Namhyung Kim wrote:
+> Hi Milian,
 > 
+> On Tue, Jan 19, 2021 at 5:11 PM Milian Wolff <mail@milianw.de> wrote:
+> > On Donnerstag, 14. Januar 2021 09:56:36 CET Namhyung Kim wrote:
+> > > What I noticed is ss->adjust_symbols which is set for user DSOs.  It
+> > > does
+> > > 
+> > >   sym.st_value -= shdr.sh_addr - shdr.sh_offset
+> > > 
+> > > Maybe your program's section header has different values?
+> > 
+> > Hey Namhyung,
+> > 
+> > how would I figure that one out? Isn't that data shown in the readelf
+> > output above? Put differently: Could someone else maybe show his readelf
+> > output so we can compare?
+> 
+> I mean the below.  In my case, address and offset of the .text section are
+> same as 0x1080.
 
-How is this supposed to work?
+Ah, indeed for me it's not the same - there's the discrepancy of 0x1000 again:
 
-So perf matches on the identifier file for system PMUs; however the 
-contents of this file are based on the HW implementation for imx DDR 
-PMU, not the board.
+  [13] .text             PROGBITS         0000000000001610  00000610
+       0000000000000185  0000000000000000  AX       0     0     16
 
-> John, change to your new framework, I found it can't support all features which is supported in 5.10 kernel.
+Thanks, that gives me a (complicated) path forward. We'd have to essentially 
+load the elf file, find this offset, and then take it into account when 
+telling elfutils where the file was actually mapped to originally.
 
-Yes, so let me know about all the problems.
+Cheers
 
-Thanks,
-john
+-- 
+Milian Wolff
+mail@milianw.de
+http://milianw.de
+--nextPart5902756.XR8F9sFZxY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEezawi1aUvUGg3A1+8zYW/HGdOX8FAmAGw3gACgkQ8zYW/HGd
+OX+pjBAAx0Xy3gyCcK5ESmSh0l/jdneaV6Vl7a5OGtGK1wfwV1g7PQGGXt7nCUnh
+Aa8LCiz961saHpthyqkAM4BGAJLMYTNkAxkE/3G7mPNwJkJi1TnUwk3o6JnLFDcZ
+akn65CPFdH47BRd9DYUQw9gKrjPa98rcJwX66ldenD7bRTQIMQYgsk1ATy8evoz3
+/A/Aww8O9CvRrLzmWvy4KPRhIIX93wSyWpBk0Evb7p9OYI7u6jCiJrzlwZ5MK1pD
+462+5M26OwdPa2DJRVA+wEaN8dL0/tMvt1wjajwGoHtoVk6/E9AmBW06k3Mg0ZUU
+QCKrarFoJSYhVuiutd6CbNWcBGKDHLmCWRzkqL7EyRPMgj5Vehb8lhZVcc9jfHoZ
+VM+PYzwavlGcbOtStn3QU+zw09t6mHv5BJgvH5zNsuVE5PnWrzib3BYybmZ8OvSK
+7F1zhXUiqPL0slyYiQFWhk1XN5HKtl0tAPLPrVgoxPbFDx/hbXbhiH7XI0lT5kZF
+a+JgvsTCMd+uptPOEm8fyATGFByOP8qEGaWN+fQHbV/zA+b+V/sIEKdZyaNvokaS
+5QUuRqyJUBWlnN46ueQzStvCQYS4q6GgBoTrDHFS11A5UQIsm95iA+TBaQ581cTu
+ZMRcP6P92fdHN5YxM3Gl7mB4NElA5GW6Yx9/+rpzishpyp+azAc=
+=Q4h0
+-----END PGP SIGNATURE-----
+
+--nextPart5902756.XR8F9sFZxY--
+
 
 
