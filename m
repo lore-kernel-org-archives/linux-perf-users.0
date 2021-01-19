@@ -2,303 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528F5C433E0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 08:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988F9C433E0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 14:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F1B2311C
-	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 08:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB88206E5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 19 Jan 2021 14:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725983AbhASIND (ORCPT
+        id S2387645AbhASOi3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 19 Jan 2021 03:13:03 -0500
-Received: from dd17628.kasserver.com ([85.13.138.83]:49528 "EHLO
-        dd17628.kasserver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731792AbhASIMb (ORCPT
+        Tue, 19 Jan 2021 09:38:29 -0500
+Received: from mail-eopbgr130088.outbound.protection.outlook.com ([40.107.13.88]:2910
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404943AbhASLBX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 19 Jan 2021 03:12:31 -0500
-Received: from milian-workstation.localnet (p4fd6c50d.dip0.t-ipconnect.de [79.214.197.13])
-        by dd17628.kasserver.com (Postfix) with ESMTPSA id 5413E628046D;
-        Tue, 19 Jan 2021 09:11:41 +0100 (CET)
-From:   Milian Wolff <mail@milianw.de>
-To:     Namhyung Kim <namhyung@gmail.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kenel.org>
-Subject: Re: missing mmap events in perf profiles without dwarf callgraph
-Date:   Tue, 19 Jan 2021 09:09:19 +0100
-Message-ID: <7161646.QLfhZlOSzD@milian-workstation>
-In-Reply-To: <CAM9d7cjvzO3D-vbf+-kFH1MbsiLhVxm4qAA=ySxe8FmiLKfMKQ@mail.gmail.com>
-References: <8218693.uYs0DeGetE@milian-workstation> <4450842.bcbERlpMrJ@milian-workstation> <CAM9d7cjvzO3D-vbf+-kFH1MbsiLhVxm4qAA=ySxe8FmiLKfMKQ@mail.gmail.com>
+        Tue, 19 Jan 2021 06:01:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b+kRB0l8A9QqntRhMHdPYdMRUZdB6LdPZliLkav/FEtHN3Hgqosd+zIx8N0lvDD0mSXqhC2v1l7+N0kTriCB8UF2C/wb6a3FDHkGzPbNu/1PPTTsFgXZcGSs5znW0tEEFo5AkUU+TrESV2hEsaaVWoVYnq5uw0xVOD3ElQRqghWyRmsUjPO+lvVyyz8jhH95Cco5BncVO8HFvZ2j3FlCy+EqjyOf1AkUGKo0YRmnOG/ZzkFfylBHYojZ15WpLNO/tv9UdvFJUD47aD5/DIarYFrRBf/q7Ihg8J1Q4XsXpuMmeM04M/dupI7sHUPRw8PIQCO2wRGwGvwePGplzodmyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DBlnsWsBB6ZNL3AS8tvQUfJKfZ/hqa4Ybli/XBqlC0c=;
+ b=Ex+WVqwm8Oc9g0fTiBECC+9F3mH+34sLxJh5sA+BdFGNzG7vHtu34db+9mlufI+ROH0VVQYiywKt5heoLl2RHYJJvdt0l7MbhcdRe2FvslcFsZziHRDFoAlNlQwwigShyVf3E4uG070nl7kJ1U04TNSjiK27bYc0UwFbp2HNXC41o7zJZ1YbZ/MAz+jjlODommuSpmHTgW3nLjPZMyPkFTg/mkAVQtC2CgQuFLUDaFqxsZDNv/tSI1Ssgw4P21MjT+nYXD1/72pgUs32NtA4eRpEXEu5LllEu/XrVeLlnZNpLhFRPABYtbfL6x3wBTZ+38SLoo3M1pL+mXNwTpsThA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DBlnsWsBB6ZNL3AS8tvQUfJKfZ/hqa4Ybli/XBqlC0c=;
+ b=dTXc1ngMWr69BPycQsOvbmIaowZ/1+WWhwpOQw/mTCjVO4hhytbc5tUh7zGLuKUfjUZWYo488P+byQy0f9NmjxBdY1UivappagJ9Pk2CqXtdZ+f9DPZC6LrZeboypabCdO0wBDdjH/GDggNMO9hU2i4+RnzFORSFtJsGRAz4yvY=
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com (2603:10a6:10:fa::15)
+ by DB7PR04MB4522.eurprd04.prod.outlook.com (2603:10a6:5:35::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3763.12; Tue, 19 Jan
+ 2021 11:00:30 +0000
+Received: from DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::b83c:2edc:17e8:2666]) by DB8PR04MB6795.eurprd04.prod.outlook.com
+ ([fe80::b83c:2edc:17e8:2666%4]) with mapi id 15.20.3763.014; Tue, 19 Jan 2021
+ 11:00:30 +0000
+From:   Joakim Zhang <qiangqing.zhang@nxp.com>
+To:     John Garry <john.garry@huawei.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "jolsa@redhat.com" <jolsa@redhat.com>
+CC:     "will@kernel.org" <will@kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH V1 3/4] perf vendor events: Add JSON metrics for imx8mq
+ DDR Perf
+Thread-Topic: [PATCH V1 3/4] perf vendor events: Add JSON metrics for imx8mq
+ DDR Perf
+Thread-Index: AQHW7g7uaO/NwgWkPU2zY0Lz58OHbKouwtGAgAAEwLA=
+Date:   Tue, 19 Jan 2021 11:00:30 +0000
+Message-ID: <DB8PR04MB6795A3ED474456F17F52680AE6A30@DB8PR04MB6795.eurprd04.prod.outlook.com>
+References: <20210119025647.12569-1-qiangqing.zhang@nxp.com>
+ <20210119025647.12569-4-qiangqing.zhang@nxp.com>
+ <20a74eda-ae1b-249e-06f1-4ab70e20f684@huawei.com>
+In-Reply-To: <20a74eda-ae1b-249e-06f1-4ab70e20f684@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 61bd7630-237e-4783-ae7a-08d8bc696fc7
+x-ms-traffictypediagnostic: DB7PR04MB4522:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB45222AB485B9DF8F440AF002E6A30@DB7PR04MB4522.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZadcJ14VY1/uOLFuPiD1LuklS6SKNK9psRTPQKn5jOylVYKnkI/Em90D8Omo1D8+CcGtz4WBfConPP4Q6ZpypqM02+i+XuZFlIEY6ORAVLcn51wbgTZbYMnqSsBG7W+ktRZ2g3frFH24AV4YyI1W/hPEnUGUCV2rYlM+z/ObhWNeB4p6nZoJWCEsbFJ2RzcjGU7C1d/qDKKgfZ3KFjAwTgkrVhkUKcnKoFkNsDGgFfpnoiSUhf0O6OYYWkRZPAgmrSKKsF92shIk+KaZI5h3/qTxhuFyCUAm3ngD2AG9my48gwWh4OnDgPCdMp8mU2PPzyTyDM8bGW0mW6HV3rNfsFKbOm0uFxyCXmd/h6kBx54PVfYmojuuOTCgR94OYsEGzSm8Oi0TledT6Psnj7iEDKJYBxiSjAdxER5N/F2fvBK6IUJH4ZCn+Z3fAaZeKrZ0PgQTxYntfpmQ6uueI4ThOTZd7mY9UBMt4Lm7SSdhnCB8TYX4xMK9vIiKpb0SYEfuOWxjCVOdrH+EX5ExVPSS/iXkts/co7BC0dt6D44h1lS/g3lmY+7prHWt5m6ecG/4
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR04MB6795.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(346002)(39850400004)(376002)(6506007)(8936002)(316002)(64756008)(4326008)(7696005)(8676002)(9686003)(53546011)(55016002)(478600001)(5660300002)(110136005)(54906003)(66946007)(186003)(52536014)(26005)(2906002)(66476007)(66556008)(66446008)(33656002)(76116006)(86362001)(71200400001)(83380400001)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: =?utf-8?B?anBXalFqL0RzM0ticWw2M0NDNUxNQ1NmUm85RmVpY1RaNWZ2MnZsMEF6KzZj?=
+ =?utf-8?B?a0JnYUhseW4zR05TVDVvcW9ZaWUxcll4SVJPYWswQWcrNGI4OWVmN0NaSzUy?=
+ =?utf-8?B?dmNnRkgxelRUc1BaZVREZ3l0UWlFdlhDczlGdU9qa1R1YVZTaVI5SUNkWG4v?=
+ =?utf-8?B?bkt6MUprRi9LVEUvRnNEbHlSRE4vZitSWFdkWjgxaSt4Y0ROTkZtUXhFTUNM?=
+ =?utf-8?B?NmVRUDVsa0FYWVp5Q3VtUUV5UG5NeDRoZm1RM2JOVU1zSm1xOVBWWGVITWFv?=
+ =?utf-8?B?MlBuYVl2QzJhQ1lVZWNna2hIVVpJTm11NVkxdnVhRTMzU1hUYmE5MjB1Vm1E?=
+ =?utf-8?B?elNGanBHMXFMMTdXK0pNUndGMnVUOU1UTUxydnFVeEtzbzJaRFF0cXV6dFpM?=
+ =?utf-8?B?UUdiM1YxSnR1aVVhMGhCRGgzMkFJS2xjUUFEd0pXTkVGenI0MnRwRWRURkNo?=
+ =?utf-8?B?Yk1VZ3E3cGJLMnZrT1BPNGtlVTZaM2craDlXcWV4R0ZoOTUvd1BmWXdvTEFL?=
+ =?utf-8?B?ZElFNm5nbHlNN09kS0t3TWlJV1htS21DcUlCUndxVmtQakplOTY4SDBHMGFj?=
+ =?utf-8?B?L3B0OFJHZ3JYQTdVU3RhS1VJaFlHTTFMdXhXNnhmUkZhaHZqK29BdEpDNFgr?=
+ =?utf-8?B?YkZCUGJEMzVBalpyMnJhMnlyajM3V1QxTFppTjlreHVJT201YzhGNHBQQzVL?=
+ =?utf-8?B?NjBlRXJvRzQyd2JtWCt1NnFMTkZubGFtaEZHVXNudnRNMzRUWjFCZCtJKzNv?=
+ =?utf-8?B?d25DOWszRGFMb1BIM3ZLVzQ0bmVqd05ndHVDYVhwYXFvZEN1ZXdOdUR0MURR?=
+ =?utf-8?B?YjhTdjZJM2tadVZKbkZkSThPRFY0VGpQTk53akVFOFg5d0gxTllQK1RYZGI1?=
+ =?utf-8?B?S1FQWnRHVStvd2J6elVPNnp6Z2hQSXp1M0NPeEZoeGN4amdFREhpczhsaXdl?=
+ =?utf-8?B?NXRMOXdEbVlzdTBNcTRSb2ZkenR1OG1IN05LWHVVTVU2RFFWVDMxZisyN2lQ?=
+ =?utf-8?B?ak14RzJQOEJ5K29vbFhCTkNhVlRQcWIyYkE3M0pjdGxPaS84elJXSXZhaGU4?=
+ =?utf-8?B?bUxORmNBRXR1Um5MSEgvN3UweUdvN3hIamFCWTVPUEovOHB5SFEvQ21Kekxu?=
+ =?utf-8?B?NEl6cXZFcDlvOGh5MnZMUVV0aFFkdjM3NGgwNkpFbTVZYUFUc2hUS2JQdUQ1?=
+ =?utf-8?B?enNnT3lVMTZlaWQ4SjdvTDJFKzFPeERCc3FkSWE3cENGQk5xN1hFdVZhdkty?=
+ =?utf-8?B?L3FWdjIyRm1qcEtOdlB2YVZSaWlBUHZsSFR3T0tMN0RDWGYwYTBxZkVEOU0r?=
+ =?utf-8?Q?6CVD5VcQ3fWG8=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2356779.EW4P4RBxm5"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB8PR04MB6795.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 61bd7630-237e-4783-ae7a-08d8bc696fc7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jan 2021 11:00:30.5342
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HApq/l9fyPObVphQTEVhpuCCLwl67BpFjteB33o2xdcFWtNAOJnW9HyhFQWOSYu6K0rknpRnWQS4aRNt7HsJ2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4522
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
---nextPart2356779.EW4P4RBxm5
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Milian Wolff <mail@milianw.de>
-To: Namhyung Kim <namhyung@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>, linux-perf-users <linux-perf-users@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@kenel.org>
-Subject: Re: missing mmap events in perf profiles without dwarf callgraph
-Date: Tue, 19 Jan 2021 09:09:19 +0100
-Message-ID: <7161646.QLfhZlOSzD@milian-workstation>
-In-Reply-To: <CAM9d7cjvzO3D-vbf+-kFH1MbsiLhVxm4qAA=ySxe8FmiLKfMKQ@mail.gmail.com>
-References: <8218693.uYs0DeGetE@milian-workstation> <4450842.bcbERlpMrJ@milian-workstation> <CAM9d7cjvzO3D-vbf+-kFH1MbsiLhVxm4qAA=ySxe8FmiLKfMKQ@mail.gmail.com>
-
-On Donnerstag, 14. Januar 2021 09:56:36 CET Namhyung Kim wrote:
-> Hi,
-> 
-> On Thu, Jan 14, 2021 at 4:24 AM Milian Wolff <mail@milianw.de> wrote:
-> > On Mittwoch, 13. Januar 2021 19:45:54 CET Jiri Olsa wrote:
-> > > On Wed, Jan 13, 2021 at 06:47:22PM +0100, Milian Wolff wrote:
-> > > > On Mittwoch, 13. Januar 2021 11:30:31 CET Jiri Olsa wrote:
-> > > > > On Mon, Jan 11, 2021 at 05:56:52PM +0100, Milian Wolff wrote:
-> > > > > > Hey there,
-> > > > > > 
-> > > > > > in hotspot I noticed a symbolization bug for perf.data files that
-> > > > > > are
-> > > > > > recorded without `--call-graph dwarf`, i.e. something like this:
-> > > > > > 
-> > > > > > ```
-> > > > > > $ cat test.c
-> > > > > > int main()
-> > > > > > {
-> > > > > > 
-> > > > > >     int sum = 0;
-> > > > > >     for (int i = 0; i < 100000; ++i) sum += i;
-> > > > > >     return sum > 0;
-> > > > > > 
-> > > > > > }
-> > > > > > $ gcc -O0 -g test.c
-> > > > > > $ perf record ./a.out
-> > > > > > $ perf script --show-mmap-events | grep /a.out
-> > > > > > 
-> > > > > >            a.out 149719 18106.394277: PERF_RECORD_MMAP2 
-149719/149719:
-> > > > > > [0x55e0b3b5e000(0x1000) @ 0 00:31 22086 3699042272]: r-xp
-> > > > > > /tmp/a.out
-> > > > > > 
-> > > > > >            a.out 149719 18106.394748:     275254 cycles:u:
-> > > > > >            55e0b3b5e72e
-> > > > > > 
-> > > > > > main+0x25 (/tmp/a.out)
-> > > > > > 
-> > > > > >            a.out 149719 18106.395011:     486078 cycles:u:
-> > > > > >            55e0b3b5e72e
-> > > > > > 
-> > > > > > main+0x25 (/tmp/a.out)
-> > > > > > ```
-> > > > > 
-> > > > > for some reason I can't reproduce this and also I'm not getting
-> > > > > randomized VA for your example, while I see it in other processes,
-> > > > > which is strange.. I'll check on it deeper
-> > > > 
-> > > > Out of interest: what exactly are you not reproducing? And what do you
-> > > > mean by "randomized VA"?
-> > > 
-> > > that address 55e0b3b5e72e is randomized by kernel,
-> > > but I had to compile your example with -pie to get it,
-> > > otherwise I was seeing the standard 0x0400000 something
-> > > 
-> > > I'm now seeing:
-> > >               ex 1381597 1084961.360877: PERF_RECORD_MMAP2 
-1381597/1381597:
-> > > [0x558f08599000(0x1000) @ 0x1000 fd:03 155428 2806170740]: r-xp
-> > > /home/jolsa/trash/ex ex 1381597 1084961.360889: PERF_RECORD_MMAP2
-> > > 1381597/1381597: [0x7f283cc80000(0x21000) @ 0x2000 fd:01 274841
-> > > 3265102552]: r-xp /usr/lib64/ld-2.31.so ex 1381597 1084961.360898:
-> > > PERF_RECORD_MMAP2 1381597/1381597: [0x7ffc2cd9c000(0x2000) @ 0 00:00 0
-> > > 0]:
-> > > r-xp [vdso] ex 1381597 1084961.360917:          1 cycles:u:
-> > > ffffffffabc01007 [unknown] ([unknown]) ex 1381597 1084961.360920:
-> > > 1 cycles:u:  ffffffffabc01007 [unknown] ([unknown]) ex 1381597
-> > > 1084961.360922:          9 cycles:u:  ffffffffabc01007 [unknown]
-> > > ([unknown]) ex 1381597 1084961.360924:        180 cycles:u:
-> > > ffffffffabc01007 [unknown] ([unknown]) ex 1381597 1084961.360929:
-> > > 3839 cycles:u:  ffffffffabc01007 [unknown] ([unknown]) ex 1381597
-> > > 1084961.361010: PERF_RECORD_MMAP2 1381597/1381597:
-> > > [0x7f283caa4000(0x150000) @ 0x25000 fd:01 313184 1927740165]: r-xp
-> > > 
-> > > /usr/lib64/libc-2.31.so ex 1381597 1084961.361695:      22432 cycles:u:
-> > >  558f08599140 main+0x17 (/home/jolsa/trash/ex) ex 1381597 
-1084961.361702:
-> > >    20545 cycles:u:      558f08599140 main+0x17 (/home/jolsa/trash/ex) ex
-> > > 
-> > > 1381597 1084961.361709:      99474 cycles:u:      558f08599140 main+0x17
-> > > (/home/jolsa/trash/ex)
-> > > 
-> > > and it seems to work because there's 0x1000 pgoffset (number behind @)
-> > > which for your test seems to be 0
-> > 
-> > Yes, that seems to be the issue here... Can anyone explain why that is the
-> > case for me? When I let my little test app print /proc/self/maps (strace
-> > and perf trace don't see mmap syscalls for these events btw -
-> > interesting), then I see this:
-> > 
-> > ```
-> > 55ac3bae5000-55ac3bae6000 r--p 00000000 00:31 11568                     
-> > /tmp/ a.out
-> > 55ac3bae6000-55ac3bae7000 r-xp 00000000 00:31 11568                     
-> > /tmp/ a.out
-> > 55ac3bae7000-55ac3bae9000 r--p 00000000 00:31 11568                     
-> > /tmp/ a.out
-> > 55ac3bae9000-55ac3baea000 rw-p 00001000 00:31 11568                     
-> > /tmp/ a.out
-> > ```
-> > 
-> > That matches what I'm getting from the perf events, i.e. pgoff = 0 for the
-> > second (executable) mapping... Here's the output of `readelf -l a.out` -
-> > can anyone explain what I'm seeing based on that maybe? My personal
-> > knowlege in that area is not sufficient.
-> > 
-> > ```
-> > $ readelf -l a.out
-> > Elf file type is DYN (Shared object file)
-> > Entry point 0x1b10
-> > There are 11 program headers, starting at offset 64
-> > 
-> > Program Headers:
-> >   Type           Offset             VirtAddr           PhysAddr
-> >   
-> >                  FileSiz            MemSiz              Flags  Align
-> >   
-> >   PHDR           0x0000000000000040 0x0000000000000040 0x0000000000000040
-> >   
-> >                  0x0000000000000268 0x0000000000000268  R      0x8
-> >   
-> >   INTERP         0x00000000000002a8 0x00000000000002a8 0x00000000000002a8
-> >   
-> >                  0x000000000000001c 0x000000000000001c  R      0x1
-> >       
-> >       [Requesting program interpreter: /lib64/ld-linux-x86-64.so.2]
-> >   
-> >   LOAD           0x0000000000000000 0x0000000000000000 0x0000000000000000
-> >   
-> >                  0x0000000000000b0c 0x0000000000000b0c  R      0x1000
-> >   
-> >   LOAD           0x0000000000000b10 0x0000000000001b10 0x0000000000001b10
-> >   
-> >                  0x0000000000000370 0x0000000000000370  R E    0x1000
-> >   
-> >   LOAD           0x0000000000000e80 0x0000000000002e80 0x0000000000002e80
-> >   
-> >                  0x0000000000000218 0x0000000000000218  RW     0x1000
-> >   
-> >   LOAD           0x0000000000001098 0x0000000000004098 0x0000000000004098
-> >   
-> >                  0x0000000000000070 0x00000000000001f8  RW     0x1000
-> >   
-> >   DYNAMIC        0x0000000000000e98 0x0000000000002e98 0x0000000000002e98
-> >   
-> >                  0x00000000000001d0 0x00000000000001d0  RW     0x8
-> >   
-> >   GNU_RELRO      0x0000000000000e80 0x0000000000002e80 0x0000000000002e80
-> >   
-> >                  0x0000000000000218 0x0000000000001180  R      0x1
-> >   
-> >   GNU_EH_FRAME   0x0000000000000988 0x0000000000000988 0x0000000000000988
-> >   
-> >                  0x0000000000000044 0x0000000000000044  R      0x4
-> >   
-> >   GNU_STACK      0x0000000000000000 0x0000000000000000 0x0000000000000000
-> >   
-> >                  0x0000000000000000 0x0000000000000000  RW     0x0
-> >   
-> >   NOTE           0x00000000000002c4 0x00000000000002c4 0x00000000000002c4
-> >   
-> >                  0x0000000000000038 0x0000000000000038  R      0x4
-> >  
-> >  Section to Segment mapping:
-> >   Segment Sections...
-> >   
-> >    00
-> >    01     .interp
-> >    02     .interp .note.ABI-tag .note.gnu.build-id .dynsym .gnu.version
-> > 
-> > .gnu.version_r .gnu.hash .dynstr .rela.dyn .rela.plt .rodata
-> > .gcc_except_table .eh_frame_hdr .eh_frame
-> > 
-> >    03     .text .init .fini .plt
-> >    04     .fini_array .init_array .dynamic .got
-> >    05     .data .tm_clone_table .got.plt .bss
-> >    06     .dynamic
-> >    07     .fini_array .init_array .dynamic .got
-> >    08     .eh_frame_hdr
-> >    09
-> >    10     .note.ABI-tag .note.gnu.build-id
-> > 
-> > ```
-> > 
-> > I note that the following seems to correspond to my mapping event:
-> > 
-> > ```
-> > 
-> >   LOAD           0x0000000000000b10 0x0000000000001b10 0x0000000000001b10
-> >   
-> >                  0x0000000000000370 0x0000000000000370  R E    0x1000
-> > 
-> > ```
-> > 
-> > This is interesting - note how there's a difference of 0x100 between the
-> > offset 0xb10 and the virt/phys addr at 0x1b10...
-> > 
-> > So to me it looks like it's correct that pgoff is 0, as the file offset is
-> > 0xb10. But it's not enough to just look at the mapping information to
-> > deduce the offset <-> virt/phys addr discrepancy.
-> > 
-> > Which makes it just the more surprising to me that perf script/report
-> > seemingly copes with this situation despite these problems...
-> 
-> What I noticed is ss->adjust_symbols which is set for user DSOs.  It does
-> 
->   sym.st_value -= shdr.sh_addr - shdr.sh_offset
-> 
-> Maybe your program's section header has different values?
-
-Hey Namhyung,
-
-how would I figure that one out? Isn't that data shown in the readelf output 
-above? Put differently: Could someone else maybe show his readelf output so we 
-can compare?
-
-@ jirka: did you have a chance to figure out why/how perf stat/report is 
-figuring out the right mapping address from the singular mapping event?
-
-Thanks
-
--- 
-Milian Wolff
-mail@milianw.de
-http://milianw.de
---nextPart2356779.EW4P4RBxm5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEezawi1aUvUGg3A1+8zYW/HGdOX8FAmAGk68ACgkQ8zYW/HGd
-OX9q3g/8D67bQSUvRW8qt/jSL0DCY/q0yHzJ6oY8YOCRJU7pIq8RBpgb/cbirUxl
-4HrC/opI0JAVAmMJWTHZlznyz+vxD2RYtEYjVyZ1wQO4XcCFMaBRO0zHTHJQLOto
-SNeflyXyLRdawtgLBnYlTBBnooxZmPEdXrET6jJnjHh2Wy+MTQCfwRcHljtDWgzU
-U2DK3rzVyPNwfv8I/6iG4PVbuBcBzNh8NqxQS9RVCndhfaLPuCAqFcgddyb46A3n
-4Szdi5tdL4Oy9LNS/+C4KFH9fJ41F0D11kV/3gkMbv8AhyJ4uv7nzobsQWxA8Vnk
-1b2MubzcGAvRymKs208aio3OuekKipFkTphJHEeZnVG+FhPMBXDDl4R5zzA56dtI
-Vtx400fGnWWBqbjBxJlX/W9Zb9A723FlPqvsypXLV3J40FCUV+EkpksHtGQGSXMv
-ke3FjjQsbbSqcZBrT+nx5X62poKPeuYG3JNt3Fpdgvw2qvWw5UFgMtmbxUUh4tcZ
-k76WPAqjoVeDVymAtsyVSg0FMIHip1TCNjQNyFXv11OOwN4LmYgBwu8McH2yrSy+
-7VzPB669TA8+sKaHkVdL6UMvyXex+TONKIR+jGD4k1YZ3ibYrKWEpyo8WER2GW/V
-hgqBaR8QyVLtq72S3ELpWYARY2A4gVbRCHDF4PvAfj6B4ynSxHA=
-=xsrI
------END PGP SIGNATURE-----
-
---nextPart2356779.EW4P4RBxm5--
-
-
-
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEpvaG4gR2FycnkgPGpvaG4u
+Z2FycnlAaHVhd2VpLmNvbT4NCj4gU2VudDogMjAyMeW5tDHmnIgxOeaXpSAxODo0MA0KPiBUbzog
+Sm9ha2ltIFpoYW5nIDxxaWFuZ3FpbmcuemhhbmdAbnhwLmNvbT47IGFjbWVAa2VybmVsLm9yZzsN
+Cj4gam9sc2FAcmVkaGF0LmNvbQ0KPiBDYzogd2lsbEBrZXJuZWwub3JnOyBsaW51eC1wZXJmLXVz
+ZXJzQHZnZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47
+IG1hcmsucnV0bGFuZEBhcm0uY29tOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMSAzLzRdIHBlcmYgdmVuZG9yIGV2ZW50czog
+QWRkIEpTT04gbWV0cmljcyBmb3IgaW14OG1xDQo+IEREUiBQZXJmDQo+IA0KPiBPbiAxOS8wMS8y
+MDIxIDAyOjU2LCBKb2FraW0gWmhhbmcgd3JvdGU6DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5j
+M2U5Zjg5YTRhNGQNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvdG9vbHMvcGVyZi9wbXUt
+ZXZlbnRzL2FyY2gvYXJtNjQvZnJlZXNjYWxlL2lteDhtcS9zeXMvbWV0cmljcy5qcw0KPiA+ICsr
+KyBvbg0KPiA+IEBAIC0wLDAgKzEsMjYgQEANCj4gPiArWw0KPiA+ICsgICB7DQo+ID4gKwkgICAg
+IkJyaWVmRGVzY3JpcHRpb24iOiAiYmFuZHdpZHRoIHVzYWdlIGZvciBscGRkcjQgZXZrIGJvYXJk
+IiwNCj4gDQo+IFdoeSBtZW50aW9uIHRoZSBldmsgYm9hcmQgc3BlY2lmaWNhbGx5PyBJcyB0aGlz
+IG1ldHJpYyBvbmx5IHNwZWNpZmljIHRvIHRoYXQNCj4gYm9hcmQsIGFuZCBub3QgYWxsIGkuTVg4
+TVEgcGxhdGZvcm1zPw0KDQpZZXMsIEpvaG4sIHdlIGhhdmUgbHBkZHI0IGV2ayBib2FyZCBhbmQg
+ZGRyNCBldmsgYm9yYWQuLi4uLi4NCg0KSm9obiwgY2hhbmdlIHRvIHlvdXIgbmV3IGZyYW1ld29y
+aywgSSBmb3VuZCBpdCBjYW4ndCBzdXBwb3J0IGFsbCBmZWF0dXJlcyB3aGljaCBpcyBzdXBwb3J0
+ZWQgaW4gNS4xMCBrZXJuZWwuDQoNCkJlc3QgUmVnYXJkcywNCkpvYWtpbSBaaGFuZw0KPiBUaGFu
+a3MsDQo+IEpvaG4NCj4gDQo+ID4gKwkgICAgIk1ldHJpY05hbWUiOiAiaW14OG1xX2JhbmR3aWR0
+aF91c2FnZS5scGRkcjQiLA0KPiA+ICsJICAgICJNZXRyaWNFeHByIjogIigoIGlteDhfZGRyMEBy
+ZWFkXFwtY3ljbGVzQCArDQo+IGlteDhfZGRyMEB3cml0ZVxcLWN5Y2xlc0AgKSAqIDQgKiA0IC8g
+ZHVyYXRpb25fdGltZSkgLyAoODAwICogMTAwMDAwMCAqIDQgKg0KPiA0KSIsDQo+ID4gKwkgICAg
+IlNjYWxlVW5pdCI6ICIxZTIlIiwNCj4gPiArCSAgICAiVW5pdCI6ICJpbXg4X2RkciIsDQo+ID4g
+KwkgICAgIkNvbXBhdCI6ICJpLk1YOE1RIg0KPiA+ICsgICB9LA0KDQo=
