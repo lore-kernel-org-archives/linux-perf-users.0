@@ -2,252 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E6EC4332B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jan 2021 17:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1689AC433E9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jan 2021 22:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26FB23A79
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jan 2021 17:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9AC23B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jan 2021 22:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbhAVQ4a (ORCPT
+        id S1729606AbhAVWBA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Jan 2021 11:56:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:55698 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729570AbhAVQUq (ORCPT
+        Fri, 22 Jan 2021 17:01:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730880AbhAVWAO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Jan 2021 11:20:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94AFB1595;
-        Fri, 22 Jan 2021 08:20:00 -0800 (PST)
-Received: from e125528.arm.com (unknown [10.57.9.161])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 282773F719;
-        Fri, 22 Jan 2021 08:19:54 -0800 (PST)
-From:   Alexandre Truong <alexandre.truong@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Alexandre Truong <alexandre.truong@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        Ian Rogers <irogers@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Al Grant <al.grant@arm.com>, James Clark <james.clark@arm.com>,
-        Wilco Dijkstra <wilco.dijkstra@arm.com>
-Subject: [PATCH 4/4] perf tools: determine if LR is the return address
-Date:   Fri, 22 Jan 2021 16:18:54 +0000
-Message-Id: <20210122161854.5289-4-alexandre.truong@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20210122161854.5289-1-alexandre.truong@arm.com>
-References: <20210122161854.5289-1-alexandre.truong@arm.com>
+        Fri, 22 Jan 2021 17:00:14 -0500
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18201C061793
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jan 2021 13:59:23 -0800 (PST)
+Received: by mail-lj1-x22d.google.com with SMTP id f17so8219883ljg.12
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jan 2021 13:59:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=10zR+Da5IgJKyDEut9vatyUY62coO2MZOjRWuHR4NQc=;
+        b=K/sIrGKNua7CS+pDc7Rg25lUeBFZxVGGXFVYonO67VjHPv/Fwmv2LfKFRuBm2NLtnt
+         VAUJBiLqDkkkfM52N6mhXyEMKvN/4FY+3WM2M00S3QVcQNPRUHfGBueqqYxTckOHyPnO
+         Z+lnjbz8naGv67+FX9YkAiYk7H8qBgUgCl7Po=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=10zR+Da5IgJKyDEut9vatyUY62coO2MZOjRWuHR4NQc=;
+        b=F9aAbMRvbEbOWb5ko+ThyzbE51QRngyqZXOUdsvKKtn4QLHNBO8Abhos8ZHBgSWCyS
+         yQvgaldZ/cRXdUR/bIZ2b2BM7gFC4qIj7coDZQBCaBWRj1u1eKqRx4V2+SeH4l0Kqfnw
+         ZFoFtP+wIWKeLea/WMMrQ2TVvBA3N898/4WrCNJpfpIJP22RTkwkUzGJ8ZMR7TQT4urE
+         V02Zvtomnq01iIuj3hmnoc05q8yo5ar2jw7znddwgBvHuWzsdCz+78stvZu0zyBg84Ii
+         x7j6PdKIURxKudVkIJqJNADeR/BrmuEyHbxdyRFbYZoRHBCFTtEwlXAP67jyji9QwJHl
+         GB2w==
+X-Gm-Message-State: AOAM5330sigxU5zkivJQT/CjhyWLLbhIkFC2ab3e5cNoNNX5x443HhDD
+        ap2LvbZ4ZfZqk8+tsBu5w3K6JxgFwL7nJQ==
+X-Google-Smtp-Source: ABdhPJxatCGmKctjydoyngMeAnjAhC+MGHiiUhXqp4EEcz3TsvSkYQ7eXJLfxwMZFu1RsTyRC0T1WA==
+X-Received: by 2002:a2e:92d6:: with SMTP id k22mr634703ljh.219.1611352760811;
+        Fri, 22 Jan 2021 13:59:20 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id x18sm1020017lfe.36.2021.01.22.13.59.19
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Jan 2021 13:59:19 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id o17so9624951lfg.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 22 Jan 2021 13:59:19 -0800 (PST)
+X-Received: by 2002:ac2:420a:: with SMTP id y10mr3048221lfh.377.1611352758767;
+ Fri, 22 Jan 2021 13:59:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210122135156.608434-1-acme@kernel.org>
+In-Reply-To: <20210122135156.608434-1-acme@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 22 Jan 2021 13:59:02 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjXjWWwOtGv22Edx+hv1od3g_eR+68J+bS93GiKqok15w@mail.gmail.com>
+Message-ID: <CAHk-=wjXjWWwOtGv22Edx+hv1od3g_eR+68J+bS93GiKqok15w@mail.gmail.com>
+Subject: Re: [GIT PULL] perf tools fixes for v5.11, 2nd batch
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        John Garry <john.garry@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On arm64 and frame pointer mode (e.g: perf record --callgraph fp),
-use dwarf unwind info to check if the link register is the return
-address in order to inject it to the frame pointer stack.
+On Fri, Jan 22, 2021 at 5:52 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Test results in the signed tag at:
 
-Write the following application:
+Side note: I'd actually prefer if you didn't do this. These big things
+end up being (a hidden) part of the merge commit (and that's how the
+tag verification works after-the-fact: ie I don't just verify the tag
+when I pull, you can also do the verification later), and it really
+makes zero sense to add 28kB of data to each merge just because you
+hid them in the signed tag.
 
-	int a = 10;
+It would actually be better to have it just in the email at the end,
+not in the tag.
 
-	void f2(void)
-	{
-		for (int i = 0; i < 1000000; i++)
-			a *= a;
-	}
+Please?
 
-	void f1()
-	{
-		f2();
-	}
-
-	int main (void)
-	{
-		f1();
-		return 0;
-	}
-
-with the following compilation flags:
-	gcc -g -fno-omit-frame-pointer -fno-inline -O1
-
-The compiler omits the frame pointer for f2 on arm. This is a problem
-with any leaf call, for example an application with many different
-calls to malloc() would always omit the calling frame, even if it
-can be determined.
-
-	./perf record --call-graph fp ./a.out
-	./perf report
-
-currently gives the following stack:
-
-0xffffea52f361
-_start
-__libc_start_main
-main
-f2
-
-After this change, perf report correctly shows f1() calling f2(),
-even though it was missing from the frame pointer unwind:
-
-	./perf report
-
-0xffffea52f361
-_start
-__libc_start_main
-main
-f1
-f2
-
-Signed-off-by: Alexandre Truong <alexandre.truong@arm.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Kemeng Shi <shikemeng@huawei.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Al Grant <al.grant@arm.com>
-Cc: James Clark <james.clark@arm.com>
-Cc: Wilco Dijkstra <wilco.dijkstra@arm.com>
----
- tools/perf/util/Build                         |  1 +
- .../util/arm-frame-pointer-unwind-support.c   | 43 +++++++++++++++++++
- .../util/arm-frame-pointer-unwind-support.h   |  7 +++
- tools/perf/util/machine.c                     |  9 ++--
- 4 files changed, 57 insertions(+), 3 deletions(-)
- create mode 100644 tools/perf/util/arm-frame-pointer-unwind-support.c
- create mode 100644 tools/perf/util/arm-frame-pointer-unwind-support.h
-
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index e2563d0154eb..2009d5f02972 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -1,3 +1,4 @@
-+perf-y += arm-frame-pointer-unwind-support.o
- perf-y += annotate.o
- perf-y += block-info.o
- perf-y += block-range.o
-diff --git a/tools/perf/util/arm-frame-pointer-unwind-support.c b/tools/perf/util/arm-frame-pointer-unwind-support.c
-new file mode 100644
-index 000000000000..2901ae2917e9
---- /dev/null
-+++ b/tools/perf/util/arm-frame-pointer-unwind-support.c
-@@ -0,0 +1,43 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "../arch/arm64/include/uapi/asm/perf_regs.h"
-+#include "arch/arm64/include/perf_regs.h"
-+#include "event.h"
-+#include "arm-frame-pointer-unwind-support.h"
-+#include "callchain.h"
-+#include "unwind.h"
-+
-+struct entries {
-+	u64 stack[2];
-+	int i;
-+};
-+
-+static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
-+{
-+	return callchain_param.record_mode != CALLCHAIN_FP || !sample->user_regs.regs
-+		|| sample->user_regs.mask != PERF_REGS_MASK;
-+}
-+
-+static int add_entry(struct unwind_entry *entry, void *arg)
-+{
-+	struct entries *entries = arg;
-+
-+	entries->stack[entries->i++] = entry->ip;
-+	return 0;
-+}
-+
-+u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread)
-+{
-+	u64 leaf_frame;
-+	struct entries entries = {{0, 0}, 0};
-+
-+	if (get_leaf_frame_caller_enabled(sample))
-+		return 0;
-+
-+	unwind__get_entries(add_entry, &entries, thread, sample, 2);
-+	leaf_frame = callchain_param.order == ORDER_CALLER ?
-+		entries.stack[0] : entries.stack[1];
-+
-+	if (leaf_frame + 1 == sample->user_regs.regs[PERF_REG_ARM64_LR])
-+		return sample->user_regs.regs[PERF_REG_ARM64_LR];
-+	return 0;
-+}
-diff --git a/tools/perf/util/arm-frame-pointer-unwind-support.h b/tools/perf/util/arm-frame-pointer-unwind-support.h
-new file mode 100644
-index 000000000000..16dc03fa9abe
---- /dev/null
-+++ b/tools/perf/util/arm-frame-pointer-unwind-support.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
-+#define __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
-+
-+u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread);
-+
-+#endif /* __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H */
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 40082d70eec1..bc6147e46c89 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -34,6 +34,7 @@
- #include "bpf-event.h"
- #include <internal/lib.h> // page_size
- #include "cgroup.h"
-+#include "arm-frame-pointer-unwind-support.h"
- 
- #include <linux/ctype.h>
- #include <symbol/kallsyms.h>
-@@ -2671,10 +2672,12 @@ static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
- 	return err;
- }
- 
--static u64 get_leaf_frame_caller(struct perf_sample *sample __maybe_unused,
--		struct thread *thread __maybe_unused)
-+static u64 get_leaf_frame_caller(struct perf_sample *sample, struct thread *thread)
- {
--	return 0;
-+	if (strncmp(thread->maps->machine->env->arch, "aarch64", 7) == 0)
-+		return get_leaf_frame_caller_aarch64(sample, thread);
-+	else
-+		return 0;
- }
- 
- static int thread__resolve_callchain_sample(struct thread *thread,
--- 
-2.23.0
-
+              Linus
