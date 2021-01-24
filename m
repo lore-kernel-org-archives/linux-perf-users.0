@@ -2,75 +2,170 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEE8C433DB
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jan 2021 22:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C1BC433E0
+	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Jan 2021 00:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0BC623B06
-	for <linux-perf-users@archiver.kernel.org>; Fri, 22 Jan 2021 22:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C17622CF7
+	for <linux-perf-users@archiver.kernel.org>; Sun, 24 Jan 2021 00:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbhAVWEd (ORCPT
+        id S1726264AbhAXAHH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 22 Jan 2021 17:04:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730607AbhAVWBT (ORCPT
+        Sat, 23 Jan 2021 19:07:07 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:41472 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbhAXAHG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 22 Jan 2021 17:01:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPS id 9578923B17;
-        Fri, 22 Jan 2021 22:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1611352839;
-        bh=9kwNm4P10i9O3BIphHH/GNZHPJGH0UcwvlCZF5aeO7M=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Yxyp5Pf3uH/j1W8339zyquj02XsnUnCE+xZ9xE5KRm2hkawy5dslVta/zoqU1F6OU
-         BAzO7dx0Wxu8E2qyX/If/sHikpokj/u9Q3qFu8aEGBbtDfmudlwc8hrawiAKvZ7PwR
-         0jkSaUwOzAWCbodI9FQSBoXVUtDsGa6sydOxqsbC1QUGjcPYpzkDAyVmXFl5/GrFyl
-         BjNpL73xKGMXi2QjbeNGAcPO8QzX/S2ra8XNK3o/bDGHYdx31EBLXjlAJxqWE05DOV
-         8gn4fohByPVrwY9m9pAN/L2JdkUmFsx2Hs9thEGyaaDz0U1UOwcNH1pF39qr/iclfL
-         /v+5pgob5ESlg==
-Subject: Re: [GIT PULL] perf tools fixes for v5.11, 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210122135156.608434-1-acme@kernel.org>
-References: <20210122135156.608434-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210122135156.608434-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-v5.11-2-2021-01-22
-X-PR-Tracked-Commit-Id: 8adc0a06d68a2e433b960377e515e7a6b19b429f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: faba877b3bccb5af79f0cd8c6af93392030e6e41
-Message-Id: <161135283958.4174.10836254569905042796.pr-tracker-bot@kernel.org>
-Date:   Fri, 22 Jan 2021 22:00:39 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Sat, 23 Jan 2021 19:07:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1611446739;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0zeO9jgxTSyiJSDmbRWmL8FPQld5X/dLvYotSElL8o4=;
+        b=BEh86JJrC4rO2J5n+r2XsqQDUHldmZtmGCY0A2EwdK5AUUq+CylgwbCe86jGZiu4qFYNJJ
+        EILdanJn1hJla8ZZ/Kn8E5tE8plun69F93+Zla+SgPMC2lNbxIIq1qfOpMTOCouK8sj339
+        XQUNC6bWtMCIkSjHPsVOJxPyXdqecBE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-358-CiH7exTBPE27zlcW22yLyQ-1; Sat, 23 Jan 2021 19:05:35 -0500
+X-MC-Unique: CiH7exTBPE27zlcW22yLyQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 513F759;
+        Sun, 24 Jan 2021 00:05:32 +0000 (UTC)
+Received: from krava (unknown [10.40.192.55])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 895599CA0;
+        Sun, 24 Jan 2021 00:05:27 +0000 (UTC)
+Date:   Sun, 24 Jan 2021 01:05:26 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexandre Truong <alexandre.truong@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         John Garry <john.garry@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Al Grant <al.grant@arm.com>, James Clark <james.clark@arm.com>,
+        Wilco Dijkstra <wilco.dijkstra@arm.com>
+Subject: Re: [PATCH 4/4] perf tools: determine if LR is the return address
+Message-ID: <20210124000526.GE138414@krava>
+References: <20210122161854.5289-1-alexandre.truong@arm.com>
+ <20210122161854.5289-4-alexandre.truong@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210122161854.5289-4-alexandre.truong@arm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri, 22 Jan 2021 10:51:56 -0300:
+On Fri, Jan 22, 2021 at 04:18:54PM +0000, Alexandre Truong wrote:
+> On arm64 and frame pointer mode (e.g: perf record --callgraph fp),
+> use dwarf unwind info to check if the link register is the return
+> address in order to inject it to the frame pointer stack.
+> 
+> Write the following application:
+> 
+> 	int a = 10;
+> 
+> 	void f2(void)
+> 	{
+> 		for (int i = 0; i < 1000000; i++)
+> 			a *= a;
+> 	}
+> 
+> 	void f1()
+> 	{
+> 		f2();
+> 	}
+> 
+> 	int main (void)
+> 	{
+> 		f1();
+> 		return 0;
+> 	}
+> 
+> with the following compilation flags:
+> 	gcc -g -fno-omit-frame-pointer -fno-inline -O1
+> 
+> The compiler omits the frame pointer for f2 on arm. This is a problem
+> with any leaf call, for example an application with many different
+> calls to malloc() would always omit the calling frame, even if it
+> can be determined.
+> 
+> 	./perf record --call-graph fp ./a.out
+> 	./perf report
+> 
+> currently gives the following stack:
+> 
+> 0xffffea52f361
+> _start
+> __libc_start_main
+> main
+> f2
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-v5.11-2-2021-01-22
+reproduced on x86 as well
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/faba877b3bccb5af79f0cd8c6af93392030e6e41
+> +static bool get_leaf_frame_caller_enabled(struct perf_sample *sample)
+> +{
+> +	return callchain_param.record_mode != CALLCHAIN_FP || !sample->user_regs.regs
+> +		|| sample->user_regs.mask != PERF_REGS_MASK;
+> +}
+> +
+> +static int add_entry(struct unwind_entry *entry, void *arg)
+> +{
+> +	struct entries *entries = arg;
+> +
+> +	entries->stack[entries->i++] = entry->ip;
+> +	return 0;
+> +}
+> +
+> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread)
+> +{
+> +	u64 leaf_frame;
+> +	struct entries entries = {{0, 0}, 0};
+> +
+> +	if (get_leaf_frame_caller_enabled(sample))
 
-Thank you!
+the name suggest you'd want to continue if it's true
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> +		return 0;
+> +
+> +	unwind__get_entries(add_entry, &entries, thread, sample, 2);
+
+I'm scratching my head how this unwinds anything, you enabled just
+registers, not the stack right? so the unwind code would do just
+IP -> LR + 1 shift?
+
+thanks,
+jirka
+
+> +	leaf_frame = callchain_param.order == ORDER_CALLER ?
+> +		entries.stack[0] : entries.stack[1];
+> +
+> +	if (leaf_frame + 1 == sample->user_regs.regs[PERF_REG_ARM64_LR])
+> +		return sample->user_regs.regs[PERF_REG_ARM64_LR];
+> +	return 0;
+> +}
+
+SNIP
+
