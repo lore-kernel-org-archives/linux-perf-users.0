@@ -2,92 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98642C433E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jan 2021 13:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3ADC433DB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jan 2021 16:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C87123101
-	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jan 2021 13:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1A0225AB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 25 Jan 2021 16:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbhAYNsw (ORCPT
+        id S1730806AbhAYQj5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 25 Jan 2021 08:48:52 -0500
-Received: from frasgout.his.huawei.com ([185.176.79.56]:2411 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729044AbhAYNrm (ORCPT
+        Mon, 25 Jan 2021 11:39:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730600AbhAYQjw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 25 Jan 2021 08:47:42 -0500
-Received: from fraeml738-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4DPWKL6Lzbz67ghP;
-        Mon, 25 Jan 2021 21:43:18 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml738-chm.china.huawei.com (10.206.15.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2106.2; Mon, 25 Jan 2021 14:46:35 +0100
-Received: from [10.47.2.25] (10.47.2.25) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2106.2; Mon, 25 Jan
- 2021 13:46:34 +0000
-Subject: Re: [PATCH V2 4/4] perf vendor events: Add JSON metrics for imx8mp
- DDR Perf
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>, <acme@kernel.org>,
-        <jolsa@redhat.com>
-CC:     <will@kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-imx@nxp.com>, <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20210125085927.27322-1-qiangqing.zhang@nxp.com>
- <20210125085927.27322-5-qiangqing.zhang@nxp.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <d3035793-d348-7343-a7a5-38b1d0d93852@huawei.com>
-Date:   Mon, 25 Jan 2021 13:45:14 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 25 Jan 2021 11:39:52 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2F82D225AB;
+        Mon, 25 Jan 2021 16:39:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1611592751;
+        bh=vMUD38Yg0SsfRc0DMiTzjJn/7LThB+u3+w33+LXOenM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g8xxrArqOOO5WZwKKulg5CcIUMZh7KX0zIQF+0YZNPqHZzJs3tbdXhaIXGtOaL5lp
+         pK1oRvPQxqyHRRfCSc2+f2fAOMERTII9bGic5pdU1UjcKIFPdtq8XF9E6YvEc3ymxQ
+         arQ2z9XacZ8IGxw9oy+mAdQvMGlEZkKQXY2CUL7GcmHhWFtqbJB6vU9DViVQSoyM/V
+         b9yj8WzoE+Mmm9MxELAkLvMO7+9/j4cdx2vDgYnuRYiHtgAowwpkYT6ingD1q0FbaE
+         K+tZNcPCoLGi4RQz86mm8oHTwWu+mCr+JLbxS3LjnrUln74g+tgTd16RbXhr2cF0dK
+         3gxYiEJJstz/Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B57CC40513; Mon, 25 Jan 2021 13:39:06 -0300 (-03)
+Date:   Mon, 25 Jan 2021 13:39:06 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        John Garry <john.garry@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf tools fixes for v5.11, 2nd batch
+Message-ID: <20210125163906.GD617095@kernel.org>
+References: <20210122135156.608434-1-acme@kernel.org>
+ <CAHk-=wjXjWWwOtGv22Edx+hv1od3g_eR+68J+bS93GiKqok15w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210125085927.27322-5-qiangqing.zhang@nxp.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.2.25]
-X-ClientProxiedBy: lhreml745-chm.china.huawei.com (10.201.108.195) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjXjWWwOtGv22Edx+hv1od3g_eR+68J+bS93GiKqok15w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25/01/2021 08:59, Joakim Zhang wrote:
-> +   },
-> +   {
-> +	   "BriefDescription": "bytes of display isp1 read from ddr",
+Em Fri, Jan 22, 2021 at 01:59:02PM -0800, Linus Torvalds escreveu:
+> On Fri, Jan 22, 2021 at 5:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-is it proper to have "bytes", while scale unit has KB?
+> > Test results in the signed tag at:
+ 
+> Side note: I'd actually prefer if you didn't do this. These big things
+> end up being (a hidden) part of the merge commit (and that's how the
+> tag verification works after-the-fact: ie I don't just verify the tag
+> when I pull, you can also do the verification later), and it really
+> makes zero sense to add 28kB of data to each merge just because you
+> hid them in the signed tag.
+ 
+> It would actually be better to have it just in the email at the end,
+> not in the tag.
+ 
+> Please?
 
-> +	   "MetricName": "imx8mp_ddr_read.isp1",
-> +	   "MetricExpr": "imx8_ddr0@axid\\-read\\,axi_mask\\=0x0000\\,axi_id\\=0x006d@",
+Sure, intention was to record that tests were done and where it was
+done, and at the same time not to bother you with test results in the
+pull request.
 
-eh, does this really even qualify as a "metric"? Seems only a single 
-event...
-
-> +	   "ScaleUnit": "9.765625e-4KB",
-> +	   "Unit": "imx8_ddr",
-> +	   "Compat": "i.MX8MP"
-> +   },
-> +   {
-> +	   "BriefDescription": "bytes of display isp1 write to ddr",
-> +	   "MetricName": "imx8mp_ddr_write.isp1",
-> +	   "MetricExpr": "imx8_ddr0@axid\\-write\\,axi_mask\\=0x0000\\,axi_id\\=0x006d@",
-> +	   "MetricGroup": "imx8_ddr_DDR_MON",
-> +	   "Unit": "imx8_ddr",
-
-why no scale unit here?
-
-> +	   "Compat": "i.MX8MP"
-
-btw, not sure if Arnaldo is ok with you not cc'ing other guys mentioned 
-in "performance events subsystem" or "performance events tooling arm64"..
+But as you point out and was discussed somewhere else, it doesn't ends
+up accessible upstream, so I'll do as you suggest and just leave it in
+the cover letter, as I did in the past when submitting to Ingo.
 
 Thanks,
-john
+
+- Arnaldo
