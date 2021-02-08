@@ -2,86 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=BAYES_05,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7F0C433DB
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Feb 2021 03:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCB2C433E6
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Feb 2021 15:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5537B64E66
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Feb 2021 03:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12AE864E6E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 Feb 2021 15:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbhBHDtJ (ORCPT
+        id S231974AbhBHPmy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 7 Feb 2021 22:49:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46468 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbhBHDtJ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 Feb 2021 22:49:09 -0500
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08DAC061756
-        for <linux-perf-users@vger.kernel.org>; Sun,  7 Feb 2021 19:48:28 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id c18so15248475ljd.9
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Feb 2021 19:48:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=1LlbffZc5cOH9P6UdEMc+3Aj+bZpmTWkvqNz6rS7Ezc=;
-        b=Hrdf714uXsSz2V0GarHGRnM9b69NbxPGnlCvSik66larPXk+ryNaWxBfWl6yDjYgdb
-         a9M2HRnM5owQHcK4tLCQzgSJNa7nqR5qA2b6JJhFEBvKBmudgdziKr6/AtPvkzjTFfyA
-         PfcukGKTAs5USTGnX8znD0fNTAal97zC/FLkuVTCmLKJ9P2s0xqjztfwOPRD9C08ugmI
-         lUGi5JmzneWZE/FhsF9cLVVHGMbbfgUlBz7AEi8FP0HUcERqhZX7YyshG2FkCFt+bx+H
-         5GBCZgElZnCUzYs8QkDWHNZo1db/ljcZd8j8EWqm6/UODpTYdBFrsutLBHLa6uCCSu8U
-         Ugmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=1LlbffZc5cOH9P6UdEMc+3Aj+bZpmTWkvqNz6rS7Ezc=;
-        b=q6wVBC3Xpy29Q9uwX9erfX/BzLEfmHN5aYbJM16HXXxNTBIiTCQYcDu6618iiy2ynW
-         CoISy8YYeXeghJ3ti696wSaiE4FQ/WScDEhC2RciNSrKvpJu6nrNyOQ1hEReJR0qzvgf
-         Enj2CSxydi/8jGZdtDbxT36w5OlaQd3pUBB8ly9fFP58TUbz6tl5mkh3fWih3zotulEC
-         +QPiig0ze/VdW3sqQoR+nFpQaEljA4wn7ZvPk10qbv4wWuB/EWej/LPevr6A/esPF7wE
-         1JAZNMoh+y2CSI1XujQBkFIOe4iJBy/RNy62QlHLxkOofI1pB3w2DFcwvrCBy8r88LSp
-         kaCA==
-X-Gm-Message-State: AOAM530VaIF/l0a8SOCLoaInYGr1l2bhg7argp7CMOzDL3VQmv2cduup
-        qAcvNGw79x+ba9adW3MUartKLPUxiX8+vUZICsLih2cjJ4s2Fd12
-X-Google-Smtp-Source: ABdhPJwcRsKxhipMMKOFXo7CUJfqMgoU410DorHYaTqZ5CH2DXvpNv1OychJBMW1Uc4xBkv6iunSdsTihE8a754LscA=
-X-Received: by 2002:a2e:9ac1:: with SMTP id p1mr9689871ljj.327.1612756107203;
- Sun, 07 Feb 2021 19:48:27 -0800 (PST)
+        Mon, 8 Feb 2021 10:42:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:36986 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233438AbhBHPkn (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 8 Feb 2021 10:40:43 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB9C11FB;
+        Mon,  8 Feb 2021 07:39:56 -0800 (PST)
+Received: from [10.57.43.128] (unknown [10.57.43.128])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1E6E3F719;
+        Mon,  8 Feb 2021 07:39:52 -0800 (PST)
+Subject: Re: [PATCH 4/4] perf tools: determine if LR is the return address
+To:     Alexandre Truong <alexandre.truong@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Al Grant <al.grant@arm.com>,
+        Wilco Dijkstra <wilco.dijkstra@arm.com>
+References: <20210122161854.5289-1-alexandre.truong@arm.com>
+ <20210122161854.5289-4-alexandre.truong@arm.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <3184a838-9784-eb86-09ad-ceadabcd3381@arm.com>
+Date:   Mon, 8 Feb 2021 17:39:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-From:   rainkin <rainkin1993@gmail.com>
-Date:   Mon, 8 Feb 2021 11:47:51 +0800
-Message-ID: <CAHb-xavRszhCbGcs0DgrdoJCHmOznHC4UzhLXxtXz=gXXk+wMQ@mail.gmail.com>
-Subject: [Question] How to sample PERF_TYPE_HARDWARE
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210122161854.5289-4-alexandre.truong@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello~
 
-My goal is to record the number of occurring PERF_TYPE_HARDWARE events
-(e.g., branches) every N events.
 
-In my understanding, the "perf stat -e branches -I N " command is not
-sampling, it is actually count model which records branches every N
-millisecond. Thus perf stat does not meet my goal.
+On 22/01/2021 18:18, Alexandre Truong wrote:
 
-For the "perf record -e cycles -b" command, it does sampling, which
-records a LBR sample every N cycles events. However, it seems that
-"perf record" does not support sampling PERF_TYPE_HARDWARE.
+> +}
+> +
+> +static int add_entry(struct unwind_entry *entry, void *arg)
+> +{
+> +	struct entries *entries = arg;
+> +
+> +	entries->stack[entries->i++] = entry->ip;
+> +	return 0;
+> +}
+> +
+> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread)
+> +{
+> +	u64 leaf_frame;
+> +	struct entries entries = {{0, 0}, 0};
+> +
+> +	if (get_leaf_frame_caller_enabled(sample))
+> +		return 0;
+> +
+> +	unwind__get_entries(add_entry, &entries, thread, sample, 2);
+> +	leaf_frame = callchain_param.order == ORDER_CALLER ?
+> +		entries.stack[0] : entries.stack[1];
+> +
+> +	if (leaf_frame + 1 == sample->user_regs.regs[PERF_REG_ARM64_LR])
+> +		return sample->user_regs.regs[PERF_REG_ARM64_LR];
 
-I also look at the syscall perf_event_open, but still cannot find any
-documentation about how to sample PERF_TYPE_HARDWARE.
+Hi Alex,
 
-Does anyone know how to do that=EF=BC=9FAny suggestions is helpful for me :=
-)
+From your other reply about your investigation it looks like the check against PERF_REG_ARM64_LR isn't
+required because libunwind won't return a value if it's not correct. Whether it's equal to the LR or not.
 
-Rainkin
+And PERF_REG_ARM64_LR points to the instruction _after_ the call site. i.e. where to return to,
+not where the call was made from. So just leaf_frame rather than leaf_frame+1 would be more accurate.
+
+I was also looking at unwind_entry in machine.c which is similar to your add_entry function and saw that it
+does some extra bits like this:
+
+	if (symbol_conf.hide_unresolved && entry->ms.sym == NULL)
+		return 0;
+
+	if (append_inlines(cursor, &entry->ms, entry->ip) == 0)
+		return 0;
+
+	/*
+	 * Convert entry->ip from a virtual address to an offset in
+	 * its corresponding binary.
+	 */
+	if (entry->ms.map)
+		addr = map__map_ip(entry->ms.map, entry->ip);
+
+I have a feeling you will also need to do those on your values returned from libunwind to make it 100%
+equivalent.
+
+James
+
+> +	return 0;
+> +}
+> diff --git a/tools/perf/util/arm-frame-pointer-unwind-support.h b/tools/perf/util/arm-frame-pointer-unwind-support.h
+> new file mode 100644
+> index 000000000000..16dc03fa9abe
+> --- /dev/null
+> +++ b/tools/perf/util/arm-frame-pointer-unwind-support.h
+> @@ -0,0 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
+> +#define __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
+> +
+> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct thread *thread);
+> +
+> +#endif /* __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H */
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 40082d70eec1..bc6147e46c89 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -34,6 +34,7 @@
+>  #include "bpf-event.h"
+>  #include <internal/lib.h> // page_size
+>  #include "cgroup.h"
+> +#include "arm-frame-pointer-unwind-support.h"
+>  
+>  #include <linux/ctype.h>
+>  #include <symbol/kallsyms.h>
+> @@ -2671,10 +2672,12 @@ static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
+>  	return err;
+>  }
+>  
+> -static u64 get_leaf_frame_caller(struct perf_sample *sample __maybe_unused,
+> -		struct thread *thread __maybe_unused)
+> +static u64 get_leaf_frame_caller(struct perf_sample *sample, struct thread *thread)
+>  {
+> -	return 0;
+> +	if (strncmp(thread->maps->machine->env->arch, "aarch64", 7) == 0)
+> +		return get_leaf_frame_caller_aarch64(sample, thread);
+> +	else
+> +		return 0;
+>  }
+>  
+>  static int thread__resolve_callchain_sample(struct thread *thread,
+> 
