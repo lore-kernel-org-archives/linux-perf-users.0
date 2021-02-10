@@ -2,64 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC6DC433E0
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Feb 2021 12:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D77C433E0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Feb 2021 12:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8514D64E3B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Feb 2021 12:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD02464E0D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Feb 2021 12:08:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231334AbhBJMFf (ORCPT
+        id S231394AbhBJMIU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Feb 2021 07:05:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbhBJMEd (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Feb 2021 07:04:33 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9623FC061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Feb 2021 04:03:52 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id d26so1128819pfn.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Feb 2021 04:03:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=MA62Id4xvlTd2MzFrmGX4Z33bCUmSIvf/5faUyJz8co=;
-        b=ag7xEWDr1k9w0e2byUNqku+dVvYFDaUp0MgCFy6ZmZfRFvKSdqMg/hGThPcaalxW1b
-         oGLpWD/F45oTUqy5/lCJjqArRn14QdCNneQhPdWUKChXmmeyFkYnG9VJGgiyP/b+THDe
-         87Fy1StKXGQ6i04jJ2u3ZLQ7muck3VepZLzSGsxIjIJv3TgulfVSZdH0adOUZEU3k4N7
-         BlOCHQoq1S60KOa9iTmoQlZrBuUyXhxhr+PaxUCVxMq4GHq0ruhqMSVzcbPzK/5PJpY5
-         fDTzh2KiRVuIGPzxsb4Z37ss5ZyOFmsg0Dccl1KL9fg49gtiqfZhVugF5yLbbkphvCls
-         RDFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MA62Id4xvlTd2MzFrmGX4Z33bCUmSIvf/5faUyJz8co=;
-        b=sGwUvy73/xDWKILwks0KZPTYG5AMUj1hIpWheQcO7FTh/aVlUUnujGx2/Gnrcg6Fpa
-         ITL7HZX0XuOwybR4XtB7RHAsA6Vy4IlSXiuaRrYaF/RzdEMjK+uGRmbGN712etrajuEs
-         JaiH2wVUCoIPEknpriGcrO6lgmyY4ygIxX5NL1FR8uq7kVBN07g9bZQC71sRtkshb25s
-         wJTVm12EqTMVa8kgNPrBcEXbxmI5V5+/DbqNsvEu8WfirZkaMNgohh6B0iWeNrb4eeLS
-         7/pTMmFI8b7r1b4M42glPuVsPHOC9aEi0jmwTcK1ag5jsIyITC+nU60n2ltz3ID4Rg7b
-         6UMw==
-X-Gm-Message-State: AOAM5329Mp0ACxUmy/VD2APnOLQJ86Iy8PcHwWQqPeiL3EN24lSUFdxP
-        CBu+j8kRKzSjyhaMBeJvHRKA6A==
-X-Google-Smtp-Source: ABdhPJwElRvUwrpiCjZadB6NI/AowooQkhirbHr8u+TJJJh4wPCy2xKy9RcwKBcewLQs/zb2Vf2tOQ==
-X-Received: by 2002:a63:1c13:: with SMTP id c19mr2694048pgc.359.1612958631896;
-        Wed, 10 Feb 2021 04:03:51 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([202.131.71.236])
-        by smtp.gmail.com with ESMTPSA id j73sm2324218pfd.170.2021.02.10.04.03.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Feb 2021 04:03:51 -0800 (PST)
-Date:   Wed, 10 Feb 2021 20:03:41 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Wed, 10 Feb 2021 07:08:20 -0500
+Received: from mail-eopbgr150073.outbound.protection.outlook.com ([40.107.15.73]:56388
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S230260AbhBJMGe (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 10 Feb 2021 07:06:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bZeofFwylZ5xdKCzQx+H7r2jk620ULdh/EfYIBkGHts=;
+ b=hXzez1/0P4B9N1rDQ9B6Z6dkJyIh2RbFaR6Er4GtXTuCto0Dq9iexipyzxUqPuqn0cwHUm+vIIiJKSbOJPdMRBb2h7d5DiuoofaDi1V2QScBTY/I9MYdoIAQFWdLzCtSx3UkQOHC7doGUrzapEFhAxHx9QyDJaP/CwG/vbI7pkk=
+Received: from AM6P191CA0023.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8b::36)
+ by DB7PR08MB3035.eurprd08.prod.outlook.com (2603:10a6:5:1d::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.25; Wed, 10 Feb
+ 2021 12:05:41 +0000
+Received: from AM5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:8b:cafe::18) by AM6P191CA0023.outlook.office365.com
+ (2603:10a6:209:8b::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27 via Frontend
+ Transport; Wed, 10 Feb 2021 12:05:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=pass action=none
+ header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT045.mail.protection.outlook.com (10.152.17.105) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3846.25 via Frontend Transport; Wed, 10 Feb 2021 12:05:40 +0000
+Received: ("Tessian outbound 2b57fdd78668:v71"); Wed, 10 Feb 2021 12:05:39 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 90e7e0a89e567587
+X-CR-MTA-TID: 64aa7808
+Received: from e4cff2d38ed9.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 20BDE09E-1138-4E45-B69E-8524AE1A1D7C.1;
+        Wed, 10 Feb 2021 12:05:28 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e4cff2d38ed9.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 10 Feb 2021 12:05:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=flzByQlQkstRzHDBMyh6Tx02cOPdRNKWcTGdJmxSw6VpDDgB03TZBPG4jCKUa7eYz7bef/cr+o5JerkY+rDMTW9ZNWQ5fCNhz51CUYBL7pgSunl8mio9yMTDXu/BIAmOiwHO38Z/WE3w/4QxOIdNPOy8/mq6MueQaMDAIQEsR+hoYDccwvkyH93h71xbLlvcnwoyul6zLpgXDaovT6YMiSEUJmj3QSxNEJCDplX0QsGhn+D+xfd5svz3OFmXk+jCKBWYtGI+EvX0vtBB0v8nxhGT1y2/DASsQLXpDFSYqxrgwhZ0/TAhu3fqm+8Rc4icUE48yyrxMcnbGDC2HyrabA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bZeofFwylZ5xdKCzQx+H7r2jk620ULdh/EfYIBkGHts=;
+ b=lqJFueaeEPYai2kDUiVysyTaGKpur6vxiP+kegg88g7rJLMQwgGfrTxMCYHMOysgOYznnr0ja3g5QWeBZQcGodR4UJZRJl+Am0s49+977ow5rN5AJsvM+perqi4xx408YTYRuU36B+1h93H+BXvqyuiWAYsKo3rBy1C6HP+PiV0Y9r5s23+33ibAmZSOejMjOARfH0X42RZyHDF84+2d/q+hGvt1ZSyK6exyWA/fe78eGd2tH5hXXYqkiMeRR5fpKGSmr2HpEiN8OSUPeo5L58x9LZM7IldoS2Ihg5OkhQEf0qkWi6GI6y1K6PCt8/epGulRFogVaQAz3kJusZBquA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bZeofFwylZ5xdKCzQx+H7r2jk620ULdh/EfYIBkGHts=;
+ b=hXzez1/0P4B9N1rDQ9B6Z6dkJyIh2RbFaR6Er4GtXTuCto0Dq9iexipyzxUqPuqn0cwHUm+vIIiJKSbOJPdMRBb2h7d5DiuoofaDi1V2QScBTY/I9MYdoIAQFWdLzCtSx3UkQOHC7doGUrzapEFhAxHx9QyDJaP/CwG/vbI7pkk=
+Authentication-Results-Original: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+Received: from AS8PR08MB6120.eurprd08.prod.outlook.com (2603:10a6:20b:299::13)
+ by AM6PR08MB4102.eurprd08.prod.outlook.com (2603:10a6:20b:ab::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.27; Wed, 10 Feb
+ 2021 12:05:26 +0000
+Received: from AS8PR08MB6120.eurprd08.prod.outlook.com
+ ([fe80::3c1e:d3bd:de58:dee8]) by AS8PR08MB6120.eurprd08.prod.outlook.com
+ ([fe80::3c1e:d3bd:de58:dee8%7]) with mapi id 15.20.3825.020; Wed, 10 Feb 2021
+ 12:05:26 +0000
+Subject: Re: [PATCH 4/4] perf tools: determine if LR is the return address
+To:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     John Garry <john.garry@huawei.com>, Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -67,113 +97,253 @@ Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Al Grant <al.grant@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Wei Li <liwei391@huawei.com>,
-        Tan Xiaojun <tanxiaojun@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 8/8] perf arm-spe: Set thread TID
-Message-ID: <20210210120341.GD29117@leoy-ThinkPad-X240s>
-References: <20210119144658.793-1-james.clark@arm.com>
- <20210119144658.793-8-james.clark@arm.com>
- <20210131120156.GB230721@leoy-ThinkPad-X240s>
- <cb7c6deb-e4a1-95fa-b0d2-e4405f644e63@arm.com>
- <20210204102734.GA4737@leoy-ThinkPad-X240s>
- <258ff186-7be0-7b83-fb29-e8223e780f73@arm.com>
- <6c5760aa-76aa-3a56-9a12-9f331b254173@arm.com>
+        Wilco Dijkstra <wilco.dijkstra@arm.com>
+References: <20210122161854.5289-1-alexandre.truong@arm.com>
+ <20210122161854.5289-4-alexandre.truong@arm.com>
+ <3184a838-9784-eb86-09ad-ceadabcd3381@arm.com>
+From:   Alexandre Truong <alexandre.truong@arm.com>
+Message-ID: <fef4739e-ccdf-7a60-3f4d-e8583ec27e9e@arm.com>
+Date:   Wed, 10 Feb 2021 12:05:22 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <3184a838-9784-eb86-09ad-ceadabcd3381@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [217.140.99.251]
+X-ClientProxiedBy: LO4P123CA0159.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:188::20) To AS8PR08MB6120.eurprd08.prod.outlook.com
+ (2603:10a6:20b:299::13)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6c5760aa-76aa-3a56-9a12-9f331b254173@arm.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.57.16.51] (217.140.99.251) by LO4P123CA0159.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:188::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3825.19 via Frontend Transport; Wed, 10 Feb 2021 12:05:23 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: ecda558e-f0bf-4720-5627-08d8cdbc2f6a
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4102:|DB7PR08MB3035:
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DB7PR08MB303559F5E550FCAAF6EF674B9C8D9@DB7PR08MB3035.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 7HaPteX11pd9pLSTqsyWgZW5buDw+JVC/6n/nkMwBKiU/O35nXFlpNQ8lyHE+ZDVR7pWri9rEFpYhvb0l8t4REozAhGZmUEN357rjFWpKP51FxaY9xDDlXyfOCjRFszgOvqqypapj7oqnsThie+DTtqUwnekI3HqDJ8ZHDTSMIAexkQ6lFHLvJfAw3CtcrCOvZ35R3TDH+we1nt7jyHqGmzvus+bGdcOsBX+4eXkpVwqlY/2/pOJ5M5/YFUhs20YX/f42hI0LZkxXlS2XeCzjB4Udmgcc1MpUr63gLrGaEgzwnxjn1XNBuidiDRHcK7wGCQDlKDoatNqQ5XFKyXD9rR64TOWM2oa91Td1sTe9faakJ58tixBW0qtL6VKD1Mh+akoj2w4Fqe+EVctoRk8szxHA8+ysOOCT/3HkUdUSJ38two/nFTAW2ae8RiotSPhMZSoQWesP5Z9K45o/NS54rq7VQHZnfS8YD78nQiuRG+ZsbAJF+F6F84tKNp2xpVpVyMX62HiO0k8ZaiCwUxf7cvayWNGYv9pYg4lMdo+XA4/o4rSczt0OKVIjUdoPympmRhS8gZqCtg69IXE4l/7y0oeic9R5pFeeU2NGobUizM=
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR08MB6120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39850400004)(396003)(376002)(136003)(54906003)(2906002)(86362001)(44832011)(8676002)(7416002)(2616005)(31686004)(52116002)(53546011)(186003)(316002)(4326008)(956004)(16526019)(6486002)(5660300002)(16576012)(83380400001)(26005)(66946007)(66556008)(66476007)(8936002)(31696002)(478600001)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?d0Q2UTNJUm92VHRHSWJnV1dZVjBpWmRacUZQZmtKVEtOdjB4eE9CRkZHNlo2?=
+ =?utf-8?B?dkpQRmRoQ0VQTzZvM0NqZ3pLZkdiUFl6b3Q4clg3TDZ6SE9VbFNsRklHNXBU?=
+ =?utf-8?B?OWdIOC9MRHpqWmFDSmg1bFEvTDFSWUZBQVdObTdIOTdiMzNldnEwYnZrVmxF?=
+ =?utf-8?B?a21oeGZoZFNXRGVWS2xQTEIzVmgyeVJNbWJkQnNoMGRIRjJKN2ZQT3Y4Mi9H?=
+ =?utf-8?B?TWVROW5kQ0wzeW9vWmVmR3MvKzh1bkFzeE1zRlJsSmdHbEtKdFgyc3pYdjRT?=
+ =?utf-8?B?RE9WTDlCM1BxNG53VHBya3hjenZNUWhnTXpIcm41L2NqM1M4ZXlyU2hZa2w3?=
+ =?utf-8?B?TmFJRGhvS0R0b28zK2tYZFlFYit0aFlYd3pJUEhnZUtOTXNHMGl0ei83RXUr?=
+ =?utf-8?B?bmE3eUR2dmNHekVjWStDcGxzdVN3V1RDVmFJVjl2a1JyQ2pZWndkRHN3bkI1?=
+ =?utf-8?B?K1JuMzZyMkdwV2toRThCVENxSVZVWUZqY3F3RDUrVGFFVjlKUjUvYXdhOVpP?=
+ =?utf-8?B?WnkvcldQRDBjOFFWSGplM2xybk9KSnBEN1E4dDlEeFJPVEdhUURZSGpLQUph?=
+ =?utf-8?B?WHF1UXRtSXFqR3pGVVhrSEhnczNpVE1heG5WT0ZNcS9wbmFzOUJMWnhnaVR2?=
+ =?utf-8?B?RE9vNnBsOTUrNTRIRDFucUZiWUN0dWhKbHlVVHIxNUVhZ20zR3Bvb2UxZm11?=
+ =?utf-8?B?eGNVYzc0UE5rQVk0RmxjQ1dQeVl5MUovc05MMzhzdFZkS2hZenYvT2VneFJR?=
+ =?utf-8?B?dk55azVPWE50eW1QMlEwbmxZYzV1aVFheGRVSU9qWlhwVzl6RlpTOUJhVkZp?=
+ =?utf-8?B?UGx2WmJuZnc1K3FiL0hpTi9GSHVING5YR0ZOY2FUVzlaaDJVcm5TU09vdW1Q?=
+ =?utf-8?B?aU90NmlJVGM2VVZVVlZHM0hnVGhIbmFIOFczb2NoUGFRZ1ZQd2lrREQxdU5y?=
+ =?utf-8?B?dGcvcUZaSEpuUUxwMFN1azg3dzl6cnhwS0hoc01iOXVWRXZYWThLR3VzQm4r?=
+ =?utf-8?B?L2xTQ1dEWWN2OXJFTzBCcjhjblJ0Zk1oeklzZXBhZS8yVDFrTWR1RHg4U3h5?=
+ =?utf-8?B?VDYxc2ozcVJ6UUVGOE9FS1gyem9kRHlQU2J0Q1plamRwOGpFemppUjV5Z3VY?=
+ =?utf-8?B?SHRHeFhZa0labW9aM1NMSkt3Nmhvb0VhUUM3QnE3SzNzQzBmaDFwSFpZSVJI?=
+ =?utf-8?B?bDRhby9udlZwa05obVBWenl0VmYyUWZoQnZmUXdaUWFMRmtHaHJ5a0xxaUVO?=
+ =?utf-8?B?Y2xEOXQzSE1TRlF3b0s0a2g0akNEcE9LbGJDVHE2SXV1UEkybURlbm9pQjNj?=
+ =?utf-8?B?dzVJVmtteFMveTM5MTBuMjEreGNNUGxJbzl4YzdvemlLandEdWpTRFEyeENn?=
+ =?utf-8?B?bnYwNWtlR2daVzJHVFhrYk42N214dFFhWldlL2tqSkc5SFhOemV5aFdITnNy?=
+ =?utf-8?B?dksvSWM1ck03RHE4WDBJR3dlZGswS21LSHJlUDZLSVZTTERheDhpYjR5WmNR?=
+ =?utf-8?B?UEF6dnNiOExjaXFGajhlZ2RtSWJobEIrVXYxbXNCSi9mWVlFOWtOQTVvSUF2?=
+ =?utf-8?B?SHFnYk84RFJyR1pQV1FremIzVGRnWnZTRnc2MUhualptY1dkdnBRNzdqNDNo?=
+ =?utf-8?B?eGsvRlhEWEswSG5COUc3MnJOTWluRUVKTW5vUGNCMHBGNERhZS8ydWo3Q1oy?=
+ =?utf-8?B?Z3FJeFk4ZnNGVDEwNFpCWHlScEQ3WWs2Um50cVpPcVFEUEZSY3NMTGRydXVC?=
+ =?utf-8?Q?Wjf1J6UC3NVvi7G7s3NM0GUzF9p3IUbCj+XKo+D?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4102
+Original-Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 50e77702-7cdb-47e9-c022-08d8cdbc26b2
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cD6Vkf5lw0Neds/sKV8xmbaSVXC4wUhDS0VYHDR3O6NzV8uryOHJZpDuZsl3O7KbybC55Z8KzBiRjbhuTxEXSf/37kLzMLf/rIrPtjO4h/xnbri4GZ8FJ9cUG5wezfi6nveYb0wyQoKUiIRbVp/8jqM5NhN/6rJZIZAa41Hvbu6JPIgZ9fyvmjqD+fYlntmsrfdjcQFGVF5e0F0BWJrqg0BC9dlqzq9teNl9+7WYUltWtwSXfA3qvrtVc3+ZdAkCWC0hA8S61MvBt6Uu1ZnunZDr209EtkrHhbKr8k0NEJoJ+EWxstouVOPk5/hPvwDyclfkW2oJ5SFGjqyTX5U7wm52fOJAL6SS62ROJDdsbidsOnGIDEPtOv2nCvcXA7U7bpfc+2Uhc4jmUWBWbpBp4creNhjlhflkCtwbV7+TZgtug15hR6+9O2EcUJFaQWINVN3T+mIYyBTyMddrANL5aGy4EQNudLri7LjH/hiZwM04OemaJ8oEVZcP/40Z0y5lQ/5c8x3FXkZpJ46fW5iqYbutA2ZB3F2FBiYu+i3azw4ZhFyieHLtGUK/8biXoTsvAlHFZc9UDx+yOPij3/RyFnKCoQMkUT4CruFwJEJvGZCR5MTBAVMLdQj/LkSodO7oEGJVtznoMRwiUGaWFkvdTfYt1B2haHvtwRMfmZKkAWkasr61PS0egabMzDZW8jhv
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(39850400004)(376002)(346002)(36840700001)(46966006)(4326008)(956004)(70206006)(356005)(31686004)(2616005)(36860700001)(478600001)(70586007)(450100002)(86362001)(336012)(82740400003)(53546011)(82310400003)(81166007)(8936002)(44832011)(6486002)(8676002)(16526019)(316002)(16576012)(36756003)(186003)(47076005)(5660300002)(83380400001)(54906003)(2906002)(31696002)(26005)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2021 12:05:40.5029
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ecda558e-f0bf-4720-5627-08d8cdbc2f6a
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: AM5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3035
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+
+
+On 2/8/21 3:39 PM, James Clark wrote:
+>
+>
+> On 22/01/2021 18:18, Alexandre Truong wrote:
+>
+>> +}
+>> +
+>> +static int add_entry(struct unwind_entry *entry, void *arg)
+>> +{
+>> +    struct entries *entries =3D arg;
+>> +
+>> +    entries->stack[entries->i++] =3D entry->ip;
+>> +    return 0;
+>> +}
+>> +
+>> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct th=
+read *thread)
+>> +{
+>> +    u64 leaf_frame;
+>> +    struct entries entries =3D {{0, 0}, 0};
+>> +
+>> +    if (get_leaf_frame_caller_enabled(sample))
+>> +            return 0;
+>> +
+>> +    unwind__get_entries(add_entry, &entries, thread, sample, 2);
+>> +    leaf_frame =3D callchain_param.order =3D=3D ORDER_CALLER ?
+>> +            entries.stack[0] : entries.stack[1];
+>> +
+>> +    if (leaf_frame + 1 =3D=3D sample->user_regs.regs[PERF_REG_ARM64_LR]=
+)
+>> +            return sample->user_regs.regs[PERF_REG_ARM64_LR];
+>
+> Hi Alex,
+>
+>  From your other reply about your investigation it looks like the check a=
+gainst PERF_REG_ARM64_LR isn't
+> required because libunwind won't return a value if it's not correct. Whet=
+her it's equal to the LR or not.
+>
+> And PERF_REG_ARM64_LR points to the instruction _after_ the call site. i.=
+e. where to return to,
+> not where the call was made from. So just leaf_frame rather than leaf_fra=
+me+1 would be more accurate.
+>
+> I was also looking at unwind_entry in machine.c which is similar to your =
+add_entry function and saw that it
+> does some extra bits like this:
+>
+>       if (symbol_conf.hide_unresolved && entry->ms.sym =3D=3D NULL)
+>               return 0;
+>
+>       if (append_inlines(cursor, &entry->ms, entry->ip) =3D=3D 0)
+>               return 0;
+>
+>       /*
+>        * Convert entry->ip from a virtual address to an offset in
+>        * its corresponding binary.
+>        */
+>       if (entry->ms.map)
+>               addr =3D map__map_ip(entry->ms.map, entry->ip);
+>
+> I have a feeling you will also need to do those on your values returned f=
+rom libunwind to make it 100%
+> equivalent.
+>
+> James
+>
+
 Hi James,
 
-On Wed, Feb 10, 2021 at 12:16:58PM +0200, James Clark wrote:
-> 
-> 
-> On 09/02/2021 17:36, James Clark wrote:
-> > 
-> > 
-> > On 04/02/2021 12:27, Leo Yan wrote:
-> >> On Mon, Feb 01, 2021 at 07:40:45PM +0200, James Clark wrote:
-> >>>
-> >>> On 31/01/2021 14:01, Leo Yan wrote:
-> >>>> Option 1: by merging patches 07/08 and 08/08, we can firstly support PID
-> >>>> tracing for root namespace, and later we can extend to support PID
-> >>>> tracing in container (and in VMs).
-> >>>>
-> >> Arm SPE has the problem for step2, due to the trace uses statistical
-> >> approach, it doesn't trace the complete branch instructions, so it
-> >> cannot promise to capture all branches for the symbol "__switch_to".
-> >> If we only use the events PERF_RECORD_SWITCH /
-> >> PERF_RECORD_SWITCH_CPU_WIDE, then it will lead to the coarse result
-> >> for PID tracing.
-> >>
-> >> For this reason, seems to me it's pragmatic to use CONTEXTIDR for
-> >> PID tracing at current stage, at least it can allow the root domain
-> >> tracing works accurately.  But this will leave the issue for tracing
-> >> PID in non root namespace, we need to figure out solution later.
-> >>
-> >> Hi Mark.R, Al, do you have any comments for this?
-> > 
-> > Hi Leo,
-> > 
-> > I spoke with Al and his suggestion is to clear the PID value if the event
-> > was opened outside of the root namespace.
-> > 
-> > I think that's not a bad idea as it gets us PIDs in most cases but also
-> > doesn't show any incorrect data. Do you know if it's possible to determine
-> > that from a perf.data file? Unfortunately it doesn't seem to be possible
-> > to disable CONTEXTIDR tracing when opening the event as it's compile time
-> > only and can't be disabled dynamically.
-> > 
-> > James
-> > 
-> 
-> I've had a think about it and I think we should do one of two things:
+Thanks for your reply.
 
-Thanks a lot for digging!
+The check against PERF_REG_ARM64_LR is indeed not required and I can
+check if libunwind goes successfully.
 
-> #1) Remove the PID setting from the data source patchset. This will keep the
->     existing behaviour of using the PID of the first traced process only even
->     if there are forks. Later we can implement #2 or attempt to make it work
->     even in non root namespaces.
+I am going to follow up with a v2 of the patch applying these changes.
 
-I agree.  Let's simplify the data source patch set; could you resend the
-data source patch set so this can allow perf maintainer to easier follow
-up (and merge) the patch series?  Thanks!
+I think the bits you mentioned don't need to be added because this check
+is already done in add_callchain_ip() called afterwards in machine.c :
 
->     I'm not sure how this will impact your c2c patchset if you are relying on
->     the PID data Leo?
+     if (symbol_conf.hide_unresolved && entry->ms.sym =3D=3D NULL)
+         return 0;
 
-Yes, based on the experiment, if we want to extend "perf c2c" for
-exhibit multi-threading info, then it depends on PID tracing.
+For the second one, I don't think it needs to be added either because
+append_inlines() appends ip on the cursor which is also already done by
+add_callchain_ip().
 
-> #2) Make a change in the SPE driver to add an option for disabling CONTEXTIDR.
->     We will disable this from userspace if the event is opened in a non root
->     namespace. So we will only show PID data if we know it's valid, otherwise
->     the existing behaviour of only using the first PID will remain.
+For the last one, the conversion from a virtual address to a binary one
+isn't required.
 
-Yeah, just a minor difference in my head.
 
-Yes, we can use the kernel to export an extra PMU format, e.g. a new PMU format
-"contextid", so the kernel provides a knob for userspace (this is similiar with
-perf cs-etm :)).
+Also for the expansion to all platforms, it doesn't work on x86 so I'll
+leave it just for arm for now.
 
-I am just wandering if we can disable CONTEXTIDR tracing in the kernel side,
-e.g. when the kernel detects if it's running on non root namespace, it should
-not set bit SYS_PMSCR_EL1_CX_SHIFT; so if the tool in the userspace has
-specified the PMU format "contextid" from non root namespace, the kernel should
-report failure for without permission.
+Regards,
 
-This seems to me, at least, we can have a sane solution for root
-namespace.
+Alexandre
 
-Thanks,
-Leo
+>> +    return 0;
+>> +}
+>> diff --git a/tools/perf/util/arm-frame-pointer-unwind-support.h b/tools/=
+perf/util/arm-frame-pointer-unwind-support.h
+>> new file mode 100644
+>> index 000000000000..16dc03fa9abe
+>> --- /dev/null
+>> +++ b/tools/perf/util/arm-frame-pointer-unwind-support.h
+>> @@ -0,0 +1,7 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
+>> +#define __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H
+>> +
+>> +u64 get_leaf_frame_caller_aarch64(struct perf_sample *sample, struct th=
+read *thread);
+>> +
+>> +#endif /* __PERF_ARM_FRAME_POINTER_UNWIND_SUPPORT_H */
+>> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+>> index 40082d70eec1..bc6147e46c89 100644
+>> --- a/tools/perf/util/machine.c
+>> +++ b/tools/perf/util/machine.c
+>> @@ -34,6 +34,7 @@
+>>   #include "bpf-event.h"
+>>   #include <internal/lib.h> // page_size
+>>   #include "cgroup.h"
+>> +#include "arm-frame-pointer-unwind-support.h"
+>>
+>>   #include <linux/ctype.h>
+>>   #include <symbol/kallsyms.h>
+>> @@ -2671,10 +2672,12 @@ static int find_prev_cpumode(struct ip_callchain=
+ *chain, struct thread *thread,
+>>      return err;
+>>   }
+>>
+>> -static u64 get_leaf_frame_caller(struct perf_sample *sample __maybe_unu=
+sed,
+>> -            struct thread *thread __maybe_unused)
+>> +static u64 get_leaf_frame_caller(struct perf_sample *sample, struct thr=
+ead *thread)
+>>   {
+>> -    return 0;
+>> +    if (strncmp(thread->maps->machine->env->arch, "aarch64", 7) =3D=3D =
+0)
+>> +            return get_leaf_frame_caller_aarch64(sample, thread);
+>> +    else
+>> +            return 0;
+>>   }
+>>
+>>   static int thread__resolve_callchain_sample(struct thread *thread,
+>>
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
