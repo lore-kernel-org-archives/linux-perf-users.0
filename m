@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E435C433E0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Feb 2021 13:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051BEC43381
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Feb 2021 13:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 428C364DC3
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Feb 2021 13:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A181A64E92
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 Feb 2021 13:44:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbhBKNnT (ORCPT
+        id S230314AbhBKNoS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 Feb 2021 08:43:19 -0500
-Received: from foss.arm.com ([217.140.110.172]:52116 "EHLO foss.arm.com"
+        Thu, 11 Feb 2021 08:44:18 -0500
+Received: from foss.arm.com ([217.140.110.172]:52164 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231175AbhBKNkX (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 Feb 2021 08:40:23 -0500
+        id S231968AbhBKNmP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 11 Feb 2021 08:42:15 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A8E91424;
-        Thu, 11 Feb 2021 05:39:36 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22115142F;
+        Thu, 11 Feb 2021 05:39:40 -0800 (PST)
 Received: from e121896.arm.com (unknown [10.57.43.88])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B04E93F73B;
-        Thu, 11 Feb 2021 05:39:31 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 696D53F73B;
+        Thu, 11 Feb 2021 05:39:36 -0800 (PST)
 From:   James Clark <james.clark@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
@@ -43,9 +43,9 @@ Cc:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>,
         Andre Przywara <andre.przywara@arm.com>,
         Wei Li <liwei391@huawei.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH v2 5/6] perf arm-spe: Synthesize memory event
-Date:   Thu, 11 Feb 2021 15:38:55 +0200
-Message-Id: <20210211133856.2137-5-james.clark@arm.com>
+Subject: [PATCH v2 6/6] perf arm-spe: Set sample's data source field
+Date:   Thu, 11 Feb 2021 15:38:56 +0200
+Message-Id: <20210211133856.2137-6-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20210211133856.2137-1-james.clark@arm.com>
 References: <20210211133856.2137-1-james.clark@arm.com>
@@ -57,22 +57,40 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-The memory event can deliver two benefits:
+The sample structure contains the field 'data_src' which is used to
+tell the data operation attributions, e.g. operation type is loading or
+storing, cache level, it's snooping or remote accessing, etc.  At the
+end, the 'data_src' will be parsed by perf mem/c2c tools to display
+human readable strings.
 
-- The first benefit is the memory event can give out global view for
-  memory accessing, rather than organizing events with scatter mode
-  (e.g. uses separate event for L1 cache, last level cache, etc) which
-  which can only display a event for single memory type, memory events
-  include all memory accessing so it can display the data accessing
-  cross memory levels in the same view;
+This patch is to fill the 'data_src' field in the synthesized samples
+base on different types.  Currently perf tool can display statistics for
+L1/L2/L3 caches but it doesn't support the 'last level cache'.  To fit
+to current implementation, 'data_src' field uses L3 cache for last level
+cache.
 
-- The second benefit is the sample generation might introduce a big
-  overhead and need to wait for long time for Perf reporting, we can
-  specify itrace option '--itrace=M' to filter out other events and only
-  output memory events, this can significantly reduce the overhead
-  caused by generating samples.
+Before this commit, perf mem report looks like this:
+    # Samples: 75K of event 'l1d-miss'
+    # Total weight : 75951
+    # Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
+    #
+    # Overhead       Samples  Local Weight  Memory access             Symbol                  Shared Object     Data Symbol             Data Object       Snoop         TLB access
+    # ........  ............  ............  ........................  ......................  ................  ......................  ................  ............  ...................
+    #
+        81.56%         61945  0             N/A                       [.] 0x00000000000009d8  serial_c          [.] 0000000000000000    [unknown]         N/A           N/A
+        18.44%         14003  0             N/A                       [.] 0x0000000000000828  serial_c          [.] 0000000000000000    [unknown]         N/A           N/A
 
-This patch is to enable memory event for Arm SPE.
+Now on a system with Arm SPE, addresses and access types are displayed:
+
+    # Samples: 75K of event 'l1d-miss'
+    # Total weight : 75951
+    # Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked
+    #
+    # Overhead       Samples  Local Weight  Memory access             Symbol                  Shared Object     Data Symbol             Data Object  Snoop         TLB access
+    # ........  ............  ............  ........................  ......................  ................  ......................  ...........  ............  ......................
+    #
+         0.43%           324  0             L1 miss                   [.] 0x00000000000009d8  serial_c          [.] 0x0000ffff80794e00  anon         N/A           Walker hit
+         0.42%           322  0             L1 miss                   [.] 0x00000000000009d8  serial_c          [.] 0x0000ffff80794580  anon         N/A           Walker hit
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: James Clark <james.clark@arm.com>
@@ -93,78 +111,152 @@ Cc: Andre Przywara <andre.przywara@arm.com>
 Cc: Wei Li <liwei391@huawei.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/util/arm-spe.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ tools/perf/util/arm-spe.c | 69 ++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 60 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 578725344603..5550906486d8 100644
+index 5550906486d8..27a0b9dfe22d 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -53,6 +53,7 @@ struct arm_spe {
- 	u8				sample_tlb;
- 	u8				sample_branch;
- 	u8				sample_remote_access;
-+	u8				sample_memory;
- 
- 	u64				l1d_miss_id;
- 	u64				l1d_access_id;
-@@ -62,6 +63,7 @@ struct arm_spe {
- 	u64				tlb_access_id;
- 	u64				branch_miss_id;
- 	u64				remote_access_id;
-+	u64				memory_id;
- 
- 	u64				kernel_start;
- 
-@@ -293,6 +295,18 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+@@ -261,7 +261,7 @@ arm_spe_deliver_synth_event(struct arm_spe *spe,
  }
  
-+#define SPE_MEM_TYPE	(ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS | \
-+			 ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS | \
-+			 ARM_SPE_REMOTE_ACCESS)
-+
-+static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
+ static int arm_spe__synth_mem_sample(struct arm_spe_queue *speq,
+-				     u64 spe_events_id)
++				     u64 spe_events_id, u64 data_src)
+ {
+ 	struct arm_spe *spe = speq->spe;
+ 	struct arm_spe_record *record = &speq->decoder->record;
+@@ -274,6 +274,7 @@ static int arm_spe__synth_mem_sample(struct arm_spe_queue *speq,
+ 	sample.stream_id = spe_events_id;
+ 	sample.addr = record->virt_addr;
+ 	sample.phys_addr = record->phys_addr;
++	sample.data_src = data_src;
+ 
+ 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
+ }
+@@ -307,21 +308,66 @@ static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
+ 	return false;
+ }
+ 
++static u64 arm_spe__synth_data_source(const struct arm_spe_record *record)
 +{
-+	if (type & SPE_MEM_TYPE)
-+		return true;
++	union perf_mem_data_src	data_src = { 0 };
 +
-+	return false;
++	if (record->op == ARM_SPE_LD)
++		data_src.mem_op = PERF_MEM_OP_LOAD;
++	else
++		data_src.mem_op = PERF_MEM_OP_STORE;
++
++	if (record->type & (ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS)) {
++		data_src.mem_lvl = PERF_MEM_LVL_L3;
++
++		if (record->type & ARM_SPE_LLC_MISS)
++			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
++		else
++			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
++	} else if (record->type & (ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS)) {
++		data_src.mem_lvl = PERF_MEM_LVL_L1;
++
++		if (record->type & ARM_SPE_L1D_MISS)
++			data_src.mem_lvl |= PERF_MEM_LVL_MISS;
++		else
++			data_src.mem_lvl |= PERF_MEM_LVL_HIT;
++	}
++
++	if (record->type & ARM_SPE_REMOTE_ACCESS)
++		data_src.mem_lvl |= PERF_MEM_LVL_REM_CCE1;
++
++	if (record->type & (ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS)) {
++		data_src.mem_dtlb = PERF_MEM_TLB_WK;
++
++		if (record->type & ARM_SPE_TLB_MISS)
++			data_src.mem_dtlb |= PERF_MEM_TLB_MISS;
++		else
++			data_src.mem_dtlb |= PERF_MEM_TLB_HIT;
++	}
++
++	return data_src.val;
 +}
 +
  static int arm_spe_sample(struct arm_spe_queue *speq)
  {
  	const struct arm_spe_record *record = &speq->decoder->record;
-@@ -354,6 +368,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 	struct arm_spe *spe = speq->spe;
++	u64 data_src;
+ 	int err;
+ 
++	data_src = arm_spe__synth_data_source(record);
++
+ 	if (spe->sample_flc) {
+ 		if (record->type & ARM_SPE_L1D_MISS) {
+-			err = arm_spe__synth_mem_sample(speq, spe->l1d_miss_id);
++			err = arm_spe__synth_mem_sample(speq, spe->l1d_miss_id,
++							data_src);
+ 			if (err)
+ 				return err;
+ 		}
+ 
+ 		if (record->type & ARM_SPE_L1D_ACCESS) {
+-			err = arm_spe__synth_mem_sample(speq, spe->l1d_access_id);
++			err = arm_spe__synth_mem_sample(speq, spe->l1d_access_id,
++							data_src);
+ 			if (err)
+ 				return err;
+ 		}
+@@ -329,13 +375,15 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 
+ 	if (spe->sample_llc) {
+ 		if (record->type & ARM_SPE_LLC_MISS) {
+-			err = arm_spe__synth_mem_sample(speq, spe->llc_miss_id);
++			err = arm_spe__synth_mem_sample(speq, spe->llc_miss_id,
++							data_src);
+ 			if (err)
+ 				return err;
+ 		}
+ 
+ 		if (record->type & ARM_SPE_LLC_ACCESS) {
+-			err = arm_spe__synth_mem_sample(speq, spe->llc_access_id);
++			err = arm_spe__synth_mem_sample(speq, spe->llc_access_id,
++							data_src);
+ 			if (err)
+ 				return err;
+ 		}
+@@ -343,13 +391,15 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 
+ 	if (spe->sample_tlb) {
+ 		if (record->type & ARM_SPE_TLB_MISS) {
+-			err = arm_spe__synth_mem_sample(speq, spe->tlb_miss_id);
++			err = arm_spe__synth_mem_sample(speq, spe->tlb_miss_id,
++							data_src);
+ 			if (err)
+ 				return err;
+ 		}
+ 
+ 		if (record->type & ARM_SPE_TLB_ACCESS) {
+-			err = arm_spe__synth_mem_sample(speq, spe->tlb_access_id);
++			err = arm_spe__synth_mem_sample(speq, spe->tlb_access_id,
++							data_src);
+ 			if (err)
+ 				return err;
+ 		}
+@@ -363,13 +413,14 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
+ 
+ 	if (spe->sample_remote_access &&
+ 	    (record->type & ARM_SPE_REMOTE_ACCESS)) {
+-		err = arm_spe__synth_mem_sample(speq, spe->remote_access_id);
++		err = arm_spe__synth_mem_sample(speq, spe->remote_access_id,
++						data_src);
+ 		if (err)
  			return err;
  	}
  
-+	if (spe->sample_memory && arm_spe__is_memory_event(record->type)) {
-+		err = arm_spe__synth_mem_sample(speq, spe->memory_id);
-+		if (err)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
-@@ -917,6 +937,16 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 		id += 1;
+ 	if (spe->sample_memory && arm_spe__is_memory_event(record->type)) {
+-		err = arm_spe__synth_mem_sample(speq, spe->memory_id);
++		err = arm_spe__synth_mem_sample(speq, spe->memory_id, data_src);
+ 		if (err)
+ 			return err;
  	}
- 
-+	if (spe->synth_opts.mem) {
-+		spe->sample_memory = true;
-+
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->memory_id = id;
-+		arm_spe_set_event_name(evlist, id, "memory");
-+	}
-+
- 	return 0;
- }
- 
 -- 
 2.28.0
 
