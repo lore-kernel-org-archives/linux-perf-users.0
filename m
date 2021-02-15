@@ -2,99 +2,261 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A49C433E0
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Feb 2021 07:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E5BC433DB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Feb 2021 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D492B64E64
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 Feb 2021 07:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 291D164E32
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Feb 2021 12:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbhBMHJY (ORCPT
+        id S229652AbhBOMfP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 13 Feb 2021 02:09:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbhBMHJV (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 13 Feb 2021 02:09:21 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF7DC0613D6
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Feb 2021 23:08:41 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id m2so1108301pgq.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Feb 2021 23:08:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zDy6QKCa+RVR/NM5Rdt2ekYrIEZ99lrar03e/i4SbqA=;
-        b=Xq7vjH+Yt5HnZXuBWqLOOeedf34oL8xeI9GRwj5m6nNVLD2kwORCGCY99o8t3wXd4s
-         KF2JVb4UQJvSqZkeoHLAEQL85gbAqEdWb9Bg4B7K9VwhXxGFilPL8bLk4g78ZmAtkj4q
-         b3FrK4U5k4eSMvz3A4HHzmhZwPebQryrSR+CM8S5/FlfUnGZMP5I4dRVK/Pn02QsV3Tm
-         GKLC9o92EKrLzEedvrR2HYbaA2C1DcGtxdjgMjFYMm7DJpgQ1O7YAtpRr0wXCmKcd65h
-         ZNa8e5e7BoKasumvgDv1RVI2NW/hVBw96c4zpoMVTTEkYOgPdBSdJ9JiQL/dwUv3x6mL
-         Jg6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zDy6QKCa+RVR/NM5Rdt2ekYrIEZ99lrar03e/i4SbqA=;
-        b=kB5EO//88UA8hloZuslISSa56nZGhWQ2OXy0NtYUhuf28LcZboCGpNsrOAWMU/MLvu
-         Ryga0Kbs2EQMF/75HJjGJfbpGb2X/41TTb2TCblDr0lBImqB4jKRk46YpdGdQ0ZZnHBu
-         ZuJjAZaf63V/4+G/Zn3wJGP4zpntGl4y8Nfq2Bo6hIiAfvD6TVNfCd2wDjxlb7hVBW8f
-         Imlp6qKPD2fV/4my5iBKczGtZAPMyOL7hg4b8hrLrF144k3mdp8HPmLHcuMyxFV/MQHB
-         KoikyekYD3wuTfgHpepp1UYGeMAN/2TOq/mLMmQNkte1XzPNenW/QunFmTb+3iR2pV8Y
-         Vwsw==
-X-Gm-Message-State: AOAM530qAPcVRBJ8qsY/v1d0Mk4zaudRLFqXZSS4Pcv1Stf6AGOmc9RP
-        DdaMJqg7Gln1oHVaVZPre4NR26kMjpfRSei3
-X-Google-Smtp-Source: ABdhPJwdMhcWHD+R5/QzHkgpKUru9dGEyiejH4XYb5cR9CaQqAs1Gq8PjReSj6usoBeFpGIu5Sp64w==
-X-Received: by 2002:a63:e0c:: with SMTP id d12mr6686959pgl.67.1613200121047;
-        Fri, 12 Feb 2021 23:08:41 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id t21sm10710009pfe.174.2021.02.12.23.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Feb 2021 23:08:40 -0800 (PST)
-Date:   Sat, 13 Feb 2021 15:08:35 +0800
-From:   Leo Yan <leo.yan@linaro.org>
+        Mon, 15 Feb 2021 07:35:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35860 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230014AbhBOMfM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 15 Feb 2021 07:35:12 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id BA734AC32;
+        Mon, 15 Feb 2021 12:34:29 +0000 (UTC)
+Subject: Re: [PATCH][RFC] perf annotate: show full line locations with 'k' in
+ UI
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Al Grant <al.grant@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 1/6] perf arm-spe: Enable sample type
- PERF_SAMPLE_DATA_SRC
-Message-ID: <20210213070825.GD103221@leoy-ThinkPad-X240s>
-References: <20210211133856.2137-1-james.clark@arm.com>
- <20210212204340.GJ1398414@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <9acb63e0-af38-eeeb-157e-32f6177da557@suse.cz>
+ <20210212203408.GH1398414@kernel.org>
+From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+Message-ID: <5b59c46e-4907-7ab9-a68d-dd234e988dc7@suse.cz>
+Date:   Mon, 15 Feb 2021 13:34:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210212204340.GJ1398414@kernel.org>
+In-Reply-To: <20210212203408.GH1398414@kernel.org>
+Content-Type: multipart/mixed;
+ boundary="------------C6EF3B088A119A782A97FA9F"
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 12, 2021 at 05:43:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Feb 11, 2021 at 03:38:51PM +0200, James Clark escreveu:
-> > From: Leo Yan <leo.yan@linaro.org>
-> > 
-> > This patch is to enable sample type PERF_SAMPLE_DATA_SRC for Arm SPE in
-> > the perf data, when output the tracing data, it tells tools that it
-> > contains data source in the memory event.
-> 
-> Thanks, series applied.
+This is a multi-part message in MIME format.
+--------------C6EF3B088A119A782A97FA9F
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thanks a lot, James and Arnaldo.
+On 2/12/21 9:34 PM, Arnaldo Carvalho de Melo wrote:
+> Another idea is to, when requested, reserve one line at the bottom to
+> show what is the source codefile:line  for where the TUI cursor is, i.e.
+> you press down/up and the line under the cursor has its sourcefile:line
+> shown at the second (from bottom to top) line in the screen.
+
+Hello.
+
+I decided to use the footer bar and a full location is displayed when 'l'
+hokey is pressed. I think it's quite rare feature, so on demand footer
+line usage should be an appropriate place.
+
+Thoughts?
+Thanks,
+Martin
+
+--------------C6EF3B088A119A782A97FA9F
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-perf-annotate-show-full-source-location-with-l-hotke.patch"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment;
+ filename*0="0001-perf-annotate-show-full-source-location-with-l-hotke.pa";
+ filename*1="tch"
+
+From f85a5d7e66c3437b62622ebdb1cd690722d05c53 Mon Sep 17 00:00:00 2001
+From: Martin Liska <mliska@suse.cz>
+Date: Mon, 15 Feb 2021 12:34:46 +0100
+Subject: [PATCH] perf annotate: show full source location with 'l' hotkey
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Right now, when Line numbers are displayed, one can't easily
+find a source file that the line corresponds to.
+
+When a source line is selected and 'l' is pressed, full source file
+location is displayed in perf UI footer line.
+
+Signed-off-by: Martin Liška <mliska@suse.cz>
+---
+ tools/perf/ui/browsers/annotate.c | 23 +++++++++++++++++++++--
+ tools/perf/util/annotate.c        | 12 ++++++++++--
+ tools/perf/util/annotate.h        |  2 ++
+ 3 files changed, 33 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index bd77825fd5a1..adf5ce513438 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -381,6 +381,23 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
+ 	return true;
+ }
+ 
++#define SYM_TITLE_MAX_SIZE (PATH_MAX + 64)
++
++static void annotate_browser__show_full_location(struct ui_browser *browser)
++{
++	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
++	struct disasm_line *cursor = disasm_line(ab->selection);
++	struct annotation_line *al = &cursor->al;
++
++	if (al->offset != -1 || al->fileloc == NULL) {
++		ui_helpline__puts("No source file location.");
++	} else {
++		char help_line[SYM_TITLE_MAX_SIZE];
++		sprintf (help_line, "Source file location: %s", al->fileloc);
++		ui_helpline__puts(help_line);
++	}
++}
++
+ static void ui_browser__init_asm_mode(struct ui_browser *browser)
+ {
+ 	struct annotation *notes = browser__annotation(browser);
+@@ -388,8 +405,6 @@ static void ui_browser__init_asm_mode(struct ui_browser *browser)
+ 	browser->nr_entries = notes->nr_asm_entries;
+ }
+ 
+-#define SYM_TITLE_MAX_SIZE (PATH_MAX + 64)
+-
+ static int sym_title(struct symbol *sym, struct map *map, char *title,
+ 		     size_t sz, int percent_type)
+ {
+@@ -747,6 +762,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 		"c             Show min/max cycle\n"
+ 		"/             Search string\n"
+ 		"k             Toggle line numbers\n"
++		"l             Show full source file location\n"
+ 		"P             Print to [symbol_name].annotation file.\n"
+ 		"r             Run available scripts\n"
+ 		"p             Toggle percent type [local/global]\n"
+@@ -760,6 +776,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 		case 'k':
+ 			notes->options->show_linenr = !notes->options->show_linenr;
+ 			break;
++		case 'l':
++			annotate_browser__show_full_location (&browser->b);
++			continue;
+ 		case 'H':
+ 			nd = browser->curr_hot;
+ 			break;
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index e3eae646be3e..e4b0c21362d8 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1159,6 +1159,7 @@ struct annotate_args {
+ 	s64			  offset;
+ 	char			  *line;
+ 	int			  line_nr;
++	char			  *fileloc;
+ };
+ 
+ static void annotation_line__init(struct annotation_line *al,
+@@ -1168,6 +1169,7 @@ static void annotation_line__init(struct annotation_line *al,
+ 	al->offset = args->offset;
+ 	al->line = strdup(args->line);
+ 	al->line_nr = args->line_nr;
++	al->fileloc = args->fileloc;
+ 	al->data_nr = nr;
+ }
+ 
+@@ -1480,7 +1482,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+  */
+ static int symbol__parse_objdump_line(struct symbol *sym,
+ 				      struct annotate_args *args,
+-				      char *parsed_line, int *line_nr)
++				      char *parsed_line, int *line_nr, char **fileloc)
+ {
+ 	struct map *map = args->ms.map;
+ 	struct annotation *notes = symbol__annotation(sym);
+@@ -1492,6 +1494,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
+ 	/* /filename:linenr ? Save line number and ignore. */
+ 	if (regexec(&file_lineno, parsed_line, 2, match, 0) == 0) {
+ 		*line_nr = atoi(parsed_line + match[1].rm_so);
++		*fileloc = strdup(parsed_line);
+ 		return 0;
+ 	}
+ 
+@@ -1511,6 +1514,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
+ 	args->offset  = offset;
+ 	args->line    = parsed_line;
+ 	args->line_nr = *line_nr;
++	args->fileloc = *fileloc;
+ 	args->ms.sym  = sym;
+ 
+ 	dl = disasm_line__new(args);
+@@ -1805,6 +1809,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+ 			args->offset = -1;
+ 			args->line = strdup(srcline);
+ 			args->line_nr = 0;
++			args->fileloc = NULL;
+ 			args->ms.sym  = sym;
+ 			dl = disasm_line__new(args);
+ 			if (dl) {
+@@ -1816,6 +1821,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
+ 		args->offset = pc;
+ 		args->line = buf + prev_buf_size;
+ 		args->line_nr = 0;
++		args->fileloc = NULL;
+ 		args->ms.sym  = sym;
+ 		dl = disasm_line__new(args);
+ 		if (dl)
+@@ -1850,6 +1856,7 @@ symbol__disassemble_bpf_image(struct symbol *sym,
+ 	args->offset = -1;
+ 	args->line = strdup("to be implemented");
+ 	args->line_nr = 0;
++	args->fileloc = NULL;
+ 	dl = disasm_line__new(args);
+ 	if (dl)
+ 		annotation_line__add(&dl->al, &notes->src->source);
+@@ -1931,6 +1938,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 	bool delete_extract = false;
+ 	bool decomp = false;
+ 	int lineno = 0;
++	char *fileloc = NULL;
+ 	int nline;
+ 	char *line;
+ 	size_t line_len;
+@@ -2058,7 +2066,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		 * See disasm_line__new() and struct disasm_line::line_nr.
+ 		 */
+ 		if (symbol__parse_objdump_line(sym, args, expanded_line,
+-					       &lineno) < 0)
++					       &lineno, &fileloc) < 0)
+ 			break;
+ 		nline++;
+ 	}
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 096cdaf21b01..3757416bcf46 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -84,6 +84,7 @@ struct annotation_options {
+ 	     print_lines,
+ 	     full_path,
+ 	     show_linenr,
++	     show_fileloc,
+ 	     show_nr_jumps,
+ 	     show_minmax_cycle,
+ 	     show_asm_raw,
+@@ -136,6 +137,7 @@ struct annotation_line {
+ 	s64			 offset;
+ 	char			*line;
+ 	int			 line_nr;
++	char			*fileloc;
+ 	int			 jump_sources;
+ 	float			 ipc;
+ 	u64			 cycles;
+-- 
+2.30.0
+
+
+--------------C6EF3B088A119A782A97FA9F--
