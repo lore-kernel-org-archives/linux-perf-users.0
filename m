@@ -2,77 +2,56 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D91C433E6
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Feb 2021 22:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8288C433DB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Feb 2021 22:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A01E64E25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Feb 2021 22:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7383B64F87
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 Feb 2021 22:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231706AbhBVWLk (ORCPT
+        id S230345AbhBVWkD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 Feb 2021 17:11:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbhBVWLf (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 Feb 2021 17:11:35 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F58C06174A
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Feb 2021 14:10:54 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id u4so8336395lfs.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Feb 2021 14:10:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BBkjWiCKDwxxyhkLkU0CXVeC0iCvJ041DtGGGn17nrk=;
-        b=Q+vHXymAuG0dmicU7e8Sv9nKyrbu3R1a5j7rcu8wI/vlsV07t3962X9ArHRNmm3Ny9
-         8YDpq8h1Fwgc7iqpjMeC2DwLWKLApEpisfWe2e1mQzfO83B5ZTgDZ0iRiOTMScLLhcSA
-         4t/I8p1eh/zpEr/RbKweUg0vSrEipqwu8t4Bg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BBkjWiCKDwxxyhkLkU0CXVeC0iCvJ041DtGGGn17nrk=;
-        b=tRSbuahoyOTCx7zbCqf6Y4YYkoeVBhCJ/+znVj1rFnmnHhMRLqL/hceXHUIRk/k1Go
-         t48Ulf7F/kjF4DXPU20w/Tq3AjhPAy39u1iqlRPwST3OlP+p1n3CFJovmLszZjqNl4Dh
-         QeP0GPVj3xP2xqv9pDntDXSXiJgmyIVBvkqe6MVlXjAUf+BecpJF+Jf/8QksqR1qsKH4
-         reP0HSy3ZOdZA0Fd66CXt1Go6q6zqREhG3ygm95whTxTvgahE8MSSKXbzzvja5zB1wjz
-         +OXznzS7oK8/MA3bYimvPqG7P/o7z8n8nwZF4MoYG++jWSNOO7cQdNhWaYmboeQLQTHk
-         3f8w==
-X-Gm-Message-State: AOAM5327CiTNgrd4j32IbnezowZ/k6IZIVuOU3blpUz4A/nEDrwy5c0a
-        YR8AFRxZdW3qFcRqEtLAD6cwcFYGkXNB2g==
-X-Google-Smtp-Source: ABdhPJwfgTIU9jKgkxahwIQugDRJg1+/mDpeGIw4Y6DXGi9IDYcaBXm9/cZ9OqJZ5Bffp9CAgeA9Qw==
-X-Received: by 2002:a05:6512:3442:: with SMTP id j2mr15394336lfr.73.1614031851402;
-        Mon, 22 Feb 2021 14:10:51 -0800 (PST)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id u25sm2382219ljo.98.2021.02.22.14.10.50
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Feb 2021 14:10:50 -0800 (PST)
-Received: by mail-lf1-f47.google.com with SMTP id d3so8175227lfg.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Feb 2021 14:10:50 -0800 (PST)
-X-Received: by 2002:a19:8186:: with SMTP id c128mr14681033lfd.377.1614031465521;
- Mon, 22 Feb 2021 14:04:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20210219194619.1780437-1-acme@kernel.org>
-In-Reply-To: <20210219194619.1780437-1-acme@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 22 Feb 2021 14:04:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whgmx7FLSoYu0+6TnFjex_uYMN9=15m=6BkZn0HyREisA@mail.gmail.com>
-Message-ID: <CAHk-=whgmx7FLSoYu0+6TnFjex_uYMN9=15m=6BkZn0HyREisA@mail.gmail.com>
+        Mon, 22 Feb 2021 17:40:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230166AbhBVWj6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 22 Feb 2021 17:39:58 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPS id 9CCE664E31;
+        Mon, 22 Feb 2021 22:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1614033557;
+        bh=FpuZ12EzRhnr/TUcuH8bjTCRQEIhkdOozLVZpvb46wE=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=PsRWz8KTo9ydRy/E8Bk0ar9+uZ4wg25rc1XOwIhVlffd1PIRQRtt3BnR8iTQvjFR7
+         6y2uLa5bS5RY7sqYH6GlLCzG9wnb1U+yDfvrA4iVicucD92g/ZD5dp9A5gzFuB3YwN
+         I1hPH9TyQfytSSYwavbGKVETM/MkG1uROX2mSe742qbAlXqGcKTcnUeaPxN5fh64wk
+         Wr+V+lNg4mZT5fp3oKo3YUYoRk68oFOsAS3HiNnvsXvPo3Jb2i1/OVf6rJDjpVJ82z
+         OrUDAcdQ1ZlLVqHtaJpCJjDpU9R8Vcr2pFiWQkY2Vy+mfu4VWd6x8Iq/3xWiEe4kpV
+         PGof+4+1Jax9g==
 Subject: Re: [GIT PULL] perf tools changes for v5.12
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210219194619.1780437-1-acme@kernel.org>
+References: <20210219194619.1780437-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210219194619.1780437-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.12-2020-02-19
+X-PR-Tracked-Commit-Id: 3027ce36ccbae74f2e7c1afbfc3f69fee0c2a996
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3a36281a17199737b468befb826d4a23eb774445
+Message-Id: <161403355757.914.3841151125844310818.pr-tracker-bot@kernel.org>
+Date:   Mon, 22 Feb 2021 22:39:17 +0000
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Abaci Robot <abaci@linux.alibaba.com>,
         Alexei Budankov <abudankov@huawei.com>,
         Athira Jajeev <atrajeev@linux.vnet.ibm.com>,
@@ -86,7 +65,7 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Kees Kook <keescook@chromium.org>,
         Leo Yan <leo.yan@linaro.org>,
-        =?UTF-8?Q?Martin_Li=C5=A1ka?= <mliska@suse.cz>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
         Mike Leach <mike.leach@linaro.org>,
         Paul Cercueil <paul@crapouillou.net>,
         Song Liu <songliubraving@fb.com>,
@@ -94,16 +73,19 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Yang Li <yang.lee@linux.alibaba.com>,
         Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Feb 19, 2021 at 11:46 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Test results at the end of this message.
+The pull request you sent on Fri, 19 Feb 2021 16:46:19 -0300:
 
-Thanks, I appreciate the changed format,
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.12-2020-02-19
 
-              Linus
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3a36281a17199737b468befb826d4a23eb774445
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
