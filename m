@@ -2,268 +2,270 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B596AC433DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Feb 2021 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AB1C433E0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Feb 2021 05:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FD764EDB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Feb 2021 16:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A5464E60
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 Feb 2021 05:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233580AbhBYQxX (ORCPT
+        id S229498AbhBZFeX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 Feb 2021 11:53:23 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231160AbhBYQvK (ORCPT
+        Fri, 26 Feb 2021 00:34:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27306 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229482AbhBZFeI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 Feb 2021 11:51:10 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11PGi8ZV091934;
-        Thu, 25 Feb 2021 11:50:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=tvQlYMW626CVGrNIfQdRMSvmVjTXwJOzrDsJ7QDBYDc=;
- b=ls+USaX0HzbOomVzKoxd6zcTHcARgvTJ+bhnApIRI4x3Lxu08jiXgnmzHoxhZE247+KE
- zGZqOuLGqfqZ+GHdvsHm2nN+WnUKJaYa78PYy7ens0e5EWulReudAXhDR8Wpl+GRL+iE
- V+TUvKTj6mGmhkUGKKXevG9p34NPyhFIZHKGeO108Yb/k5flWVyWggP4W6xxMHSdmorL
- 9KvH7colGdL+F41xgY8GSfe0en3XCiithHxqsMYXwDRJDgFhZUUWcGaWmXoFoiuHsfN8
- PSyAbDpMe6P1YAkR3lCdTRblxrObYes42M33WYaBVhEpOE2xMt+KHFkG0k42wTKftr5x HQ== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 36x8dwrdr2-1
+        Fri, 26 Feb 2021 00:34:08 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 11Q5Wtbt042701;
+        Fri, 26 Feb 2021 00:33:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=bO1anYwVvQVltDafqeTvliRLVSy+FmejRj0vltLJCyU=;
+ b=XIP8WcR1K1r+sLDDEozJzWoFA6uoLnnFvltk8unRns0VrN7S29zD35uKfO9gDo38NehN
+ htRXH/aUQVk6UDup52eHt75sK6nwq1JQq0NBoHfz3okUL9jV04l1xDz4lndRTXa18hc1
+ T8xhM9kLhCjdzs3sUE78BEz1Zo6YYAY89J8p3cNWfKCJIvQvFjIHYmtXAg4nmu8Eh3Bh
+ sIxjyG+PV6o/40RdxQz8N8C6Lo7N2gdI01nrAWFRRz850Wk5kTAl0EjUZbBlLnjh0Dby
+ PfcfJdvNggmYla2BEaTuqtRTQzer9kuxC4DbMDb4BWnr2Dbbk/2uYbxSHY8TlmJPMdF0 mw== 
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 36xtfy8ky8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Feb 2021 11:50:12 -0500
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 11PGh5mM024872;
-        Thu, 25 Feb 2021 16:50:10 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma02fra.de.ibm.com with ESMTP id 36tt28ae7h-1
+        Fri, 26 Feb 2021 00:33:17 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 11Q5XAoC007358;
+        Fri, 26 Feb 2021 05:33:16 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 36tt2aq7na-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Feb 2021 16:50:09 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 11PGo7R451315064
+        Fri, 26 Feb 2021 05:33:16 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 11Q5XFfU17039700
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Feb 2021 16:50:07 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 163CC4C040;
-        Thu, 25 Feb 2021 16:50:06 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EA744C046;
-        Thu, 25 Feb 2021 16:50:03 +0000 (GMT)
-Received: from localhost.localdomain.localdomain (unknown [9.195.39.192])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Feb 2021 16:50:03 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mpe@ellerman.id.au,
-        acme@kernel.org, jolsa@kernel.org
-Cc:     maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        srikar@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        kan.liang@linux.intel.com, peterz@infradead.org
-Subject: [PATCH] perf bench numa: Fix the condition checks for max number of numa nodes
-Date:   Thu, 25 Feb 2021 11:50:02 -0500
-Message-Id: <1614271802-1503-1-git-send-email-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 26 Feb 2021 05:33:15 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 653E1AC05E;
+        Fri, 26 Feb 2021 05:33:15 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85738AC05B;
+        Fri, 26 Feb 2021 05:33:12 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.102.16.158])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 26 Feb 2021 05:33:12 +0000 (GMT)
+Subject: Re: [PATCH] [perf] powerpc: Remove unsupported metrics
+To:     "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, acme@kernel.org
+Cc:     mpe@ellerman.id.au, ananth@linux.vnet.ibm.com,
+        maddy@linux.vnet.ibm.com, naveen.n.rao@linux.vnet.ibm.com,
+        sukadev@linux.ibm.com
+References: <20210224181436.782091-1-pc@us.ibm.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <262409c9-11e2-3327-e645-604c9d300a2d@linux.ibm.com>
+Date:   Fri, 26 Feb 2021 11:03:11 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
+MIME-Version: 1.0
+In-Reply-To: <20210224181436.782091-1-pc@us.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-02-25_10:2021-02-24,2021-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 spamscore=0 clxscore=1011 phishscore=0
- suspectscore=0 malwarescore=0 bulkscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2102250128
+ definitions=2021-02-26_01:2021-02-24,2021-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
+ mlxscore=0 clxscore=1011 impostorscore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2102260042
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In systems having higher node numbers available like node
-255, perf numa bench will fail with SIGABORT.
 
-<<>>
-perf: bench/numa.c:1416: init: Assertion `!(g->p.nr_nodes > 64 || g->p.nr_nodes < 0)' failed.
-Aborted (core dumped)
-<<>>
 
-Snippet from 'numactl -H' below on a powerpc system where the highest
-node number available is 255.
+On 2/24/21 11:44 PM, Paul A. Clarke wrote:
+> Several metrics are defined based on unsupported / non-existent
+> events, and silently discarded.  Remove them for good code hygiene
+> and to avoid confusion.
+> 
 
-available: 6 nodes (0,8,252-255)
-node 0 cpus: <cpu-list>
-node 0 size: 519587 MB
-node 0 free: 516659 MB
-node 8 cpus: <cpu-list>
-node 8 size: 523607 MB
-node 8 free: 486757 MB
-node 252 cpus:
-node 252 size: 0 MB
-node 252 free: 0 MB
-node 253 cpus:
-node 253 size: 0 MB
-node 253 free: 0 MB
-node 254 cpus:
-node 254 size: 0 MB
-node 254 free: 0 MB
-node 255 cpus:
-node 255 size: 0 MB
-node 255 free: 0 MB
-node distances:
-node   0   8  252  253  254  255
+Hi Paul,
+  Thanks for the patch. Changes looks good to me.
 
-Note: <cpu-list> expands to actual cpu list in the original output.
-These nodes 252-255 are to represent the memory on GPUs and are valid
-nodes.
+Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
 
-The perf numa bench init code has a condition check to see if the number
-of numa nodes (nr_nodes) exceeds MAX_NR_NODES. The value of MAX_NR_NODES
-defined in perf code is 64. And the 'nr_nodes' is the value from
-numa_max_node() which represents the highest node number available in the
-system. In some systems where we could have numa node 255, this condition
-check fails and results in SIGABORT.
+Thanks,
+Kajol Jain
 
-The numa benchmark uses static value of MAX_NR_NODES in the code to
-represent size of two numa node arrays and node bitmask used for setting
-memory policy. Patch adds a fix to dynamically allocate size for the
-two arrays and bitmask value based on the node numbers available in the
-system. With the fix, perf numa benchmark will work with node configuration
-on any system and thus removes the static MAX_NR_NODES value.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/bench/numa.c | 42 +++++++++++++++++++++++++++++-------------
- 1 file changed, 29 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 11726ec..20b87e2 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -344,18 +344,22 @@ static void mempol_restore(void)
- 
- static void bind_to_memnode(int node)
- {
--	unsigned long nodemask;
-+	struct bitmask *node_mask;
- 	int ret;
- 
- 	if (node == NUMA_NO_NODE)
- 		return;
- 
--	BUG_ON(g->p.nr_nodes > (int)sizeof(nodemask)*8);
--	nodemask = 1L << node;
-+	node_mask = numa_allocate_nodemask();
-+	BUG_ON(!node_mask);
- 
--	ret = set_mempolicy(MPOL_BIND, &nodemask, sizeof(nodemask)*8);
--	dprintf("binding to node %d, mask: %016lx => %d\n", node, nodemask, ret);
-+	numa_bitmask_clearall(node_mask);
-+	numa_bitmask_setbit(node_mask, node);
- 
-+	ret = set_mempolicy(MPOL_BIND, node_mask->maskp, node_mask->size + 1);
-+	dprintf("binding to node %d, mask: %016lx => %d\n", node, *node_mask->maskp, ret);
-+
-+	numa_bitmask_free(node_mask);
- 	BUG_ON(ret);
- }
- 
-@@ -876,8 +880,6 @@ static void update_curr_cpu(int task_nr, unsigned long bytes_worked)
- 	prctl(0, bytes_worked);
- }
- 
--#define MAX_NR_NODES	64
--
- /*
-  * Count the number of nodes a process's threads
-  * are spread out on.
-@@ -888,10 +890,15 @@ static void update_curr_cpu(int task_nr, unsigned long bytes_worked)
-  */
- static int count_process_nodes(int process_nr)
- {
--	char node_present[MAX_NR_NODES] = { 0, };
-+	char *node_present;
- 	int nodes;
- 	int n, t;
- 
-+	node_present = (char *)malloc(g->p.nr_nodes * sizeof(char));
-+	BUG_ON(!node_present);
-+	for (nodes = 0; nodes < g->p.nr_nodes; nodes++)
-+		node_present[nodes] = 0;
-+
- 	for (t = 0; t < g->p.nr_threads; t++) {
- 		struct thread_data *td;
- 		int task_nr;
-@@ -901,17 +908,20 @@ static int count_process_nodes(int process_nr)
- 		td = g->threads + task_nr;
- 
- 		node = numa_node_of_cpu(td->curr_cpu);
--		if (node < 0) /* curr_cpu was likely still -1 */
-+		if (node < 0) /* curr_cpu was likely still -1 */ {
-+			free(node_present);
- 			return 0;
-+		}
- 
- 		node_present[node] = 1;
- 	}
- 
- 	nodes = 0;
- 
--	for (n = 0; n < MAX_NR_NODES; n++)
-+	for (n = 0; n < g->p.nr_nodes; n++)
- 		nodes += node_present[n];
- 
-+	free(node_present);
- 	return nodes;
- }
- 
-@@ -980,7 +990,7 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- {
- 	unsigned int loops_done_min, loops_done_max;
- 	int process_groups;
--	int nodes[MAX_NR_NODES];
-+	int *nodes;
- 	int distance;
- 	int nr_min;
- 	int nr_max;
-@@ -994,6 +1004,8 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 	if (!g->p.show_convergence && !g->p.measure_convergence)
- 		return;
- 
-+	nodes = (int *)malloc(g->p.nr_nodes * sizeof(int));
-+	BUG_ON(!nodes);
- 	for (node = 0; node < g->p.nr_nodes; node++)
- 		nodes[node] = 0;
- 
-@@ -1035,8 +1047,10 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 
- 	BUG_ON(sum > g->p.nr_tasks);
- 
--	if (0 && (sum < g->p.nr_tasks))
-+	if (0 && (sum < g->p.nr_tasks)) {
-+		free(nodes);
- 		return;
-+	}
- 
- 	/*
- 	 * Count the number of distinct process groups present
-@@ -1088,6 +1102,8 @@ static void calc_convergence(double runtime_ns_max, double *convergence)
- 		}
- 		tprintf("\n");
- 	}
-+
-+	free(nodes);
- }
- 
- static void show_summary(double runtime_ns_max, int l, double *convergence)
-@@ -1413,7 +1429,7 @@ static int init(void)
- 	g->p.nr_nodes = numa_max_node() + 1;
- 
- 	/* char array in count_process_nodes(): */
--	BUG_ON(g->p.nr_nodes > MAX_NR_NODES || g->p.nr_nodes < 0);
-+	BUG_ON(g->p.nr_nodes < 0);
- 
- 	if (g->p.show_quiet && !g->p.show_details)
- 		g->p.show_details = -1;
--- 
-1.8.3.1
-
+> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> ---
+>  .../arch/powerpc/power9/metrics.json          | 132 ------------------
+>  1 file changed, 132 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> index f8784c608479..140402d2855f 100644
+> --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> @@ -1209,156 +1209,24 @@
+>          "MetricGroup": "instruction_stats_percent_per_ref",
+>          "MetricName": "inst_from_rmem_percent"
+>      },
+> -    {
+> -        "BriefDescription": "%L2 Modified CO Cache read Utilization (4 pclks per disp attempt)",
+> -        "MetricExpr": "((PM_L2_CASTOUT_MOD/2)*4)/ PM_RUN_CYC * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_co_m_rd_util"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 dcache invalidates per run inst (per core)",
+> -        "MetricExpr": "(PM_L2_DC_INV / 2) / PM_RUN_INST_CMPL * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_dc_inv_rate_percent"
+> -    },
+>      {
+>          "BriefDescription": "Demand load misses as a % of L2 LD dispatches (per thread)",
+>          "MetricExpr": "PM_L1_DCACHE_RELOAD_VALID / (PM_L2_LD / 2) * 100",
+>          "MetricGroup": "l2_stats",
+>          "MetricName": "l2_dem_ld_disp_percent"
+>      },
+> -    {
+> -        "BriefDescription": "L2 Icache invalidates per run inst (per core)",
+> -        "MetricExpr": "(PM_L2_IC_INV / 2) / PM_RUN_INST_CMPL * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_ic_inv_rate_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 Inst misses as a % of total L2 Inst dispatches (per thread)",
+> -        "MetricExpr": "PM_L2_INST_MISS / PM_L2_INST * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_inst_miss_ratio_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "Average number of cycles between L2 Load hits",
+> -        "MetricExpr": "(PM_L2_LD_HIT / PM_RUN_CYC) / 2",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_ld_hit_frequency"
+> -    },
+> -    {
+> -        "BriefDescription": "Average number of cycles between L2 Load misses",
+> -        "MetricExpr": "(PM_L2_LD_MISS / PM_RUN_CYC) / 2",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_ld_miss_frequency"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 Load misses as a % of total L2 Load dispatches (per thread)",
+> -        "MetricExpr": "PM_L2_LD_MISS / PM_L2_LD * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_ld_miss_ratio_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "% L2 load disp attempts Cache read Utilization (4 pclks per disp attempt)",
+> -        "MetricExpr": "((PM_L2_RCLD_DISP/2)*4)/ PM_RUN_CYC * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_ld_rd_util"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 load misses that require a cache write (4 pclks per disp attempt) % of pclks",
+> -        "MetricExpr": "((( PM_L2_LD_DISP - PM_L2_LD_HIT)/2)*4)/ PM_RUN_CYC * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_ldmiss_wr_util"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 local pump prediction success",
+> -        "MetricExpr": "PM_L2_LOC_GUESS_CORRECT / (PM_L2_LOC_GUESS_CORRECT + PM_L2_LOC_GUESS_WRONG) * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_local_pred_correct_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 COs that were in M,Me,Mu state as a % of all L2 COs",
+> -        "MetricExpr": "PM_L2_CASTOUT_MOD / (PM_L2_CASTOUT_MOD + PM_L2_CASTOUT_SHR) * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_mod_co_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "% of L2 Load RC dispatch atampts that failed because of address collisions and cclass conflicts",
+> -        "MetricExpr": "(PM_L2_RCLD_DISP_FAIL_ADDR )/ PM_L2_RCLD_DISP * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_rc_ld_disp_addr_fail_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "% of L2 Load RC dispatch attempts that failed",
+> -        "MetricExpr": "(PM_L2_RCLD_DISP_FAIL_ADDR + PM_L2_RCLD_DISP_FAIL_OTHER)/ PM_L2_RCLD_DISP * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_rc_ld_disp_fail_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "% of L2 Store RC dispatch atampts that failed because of address collisions and cclass conflicts",
+> -        "MetricExpr": "PM_L2_RCST_DISP_FAIL_ADDR / PM_L2_RCST_DISP * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_rc_st_disp_addr_fail_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "% of L2 Store RC dispatch attempts that failed",
+> -        "MetricExpr": "(PM_L2_RCST_DISP_FAIL_ADDR + PM_L2_RCST_DISP_FAIL_OTHER)/ PM_L2_RCST_DISP * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_rc_st_disp_fail_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 Cache Read Utilization (per core)",
+> -        "MetricExpr": "(((PM_L2_RCLD_DISP/2)*4)/ PM_RUN_CYC * 100) + (((PM_L2_RCST_DISP/2)*4)/PM_RUN_CYC * 100) + (((PM_L2_CASTOUT_MOD/2)*4)/PM_RUN_CYC * 100)",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_rd_util_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "L2 COs that were in T,Te,Si,S state as a % of all L2 COs",
+> -        "MetricExpr": "PM_L2_CASTOUT_SHR / (PM_L2_CASTOUT_MOD + PM_L2_CASTOUT_SHR) * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_shr_co_percent"
+> -    },
+>      {
+>          "BriefDescription": "L2 Store misses as a % of total L2 Store dispatches (per thread)",
+>          "MetricExpr": "PM_L2_ST_MISS / PM_L2_ST * 100",
+>          "MetricGroup": "l2_stats",
+>          "MetricName": "l2_st_miss_ratio_percent"
+>      },
+> -    {
+> -        "BriefDescription": "% L2 store disp attempts Cache read Utilization (4 pclks per disp attempt)",
+> -        "MetricExpr": "((PM_L2_RCST_DISP/2)*4) / PM_RUN_CYC * 100",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_st_rd_util"
+> -    },
+>      {
+>          "BriefDescription": "L2 stores that require a cache write (4 pclks per disp attempt) % of pclks",
+>          "MetricExpr": "((PM_L2_ST_DISP/2)*4) / PM_RUN_CYC * 100",
+>          "MetricGroup": "l2_stats",
+>          "MetricName": "l2_st_wr_util"
+>      },
+> -    {
+> -        "BriefDescription": "L2 Cache Write Utilization (per core)",
+> -        "MetricExpr": "((((PM_L2_LD_DISP - PM_L2_LD_HIT)/2)*4) / PM_RUN_CYC * 100) + (((PM_L2_ST_DISP/2)*4) / PM_RUN_CYC * 100)",
+> -        "MetricGroup": "l2_stats",
+> -        "MetricName": "l2_wr_util_percent"
+> -    },
+> -    {
+> -        "BriefDescription": "Average number of cycles between L3 Load hits",
+> -        "MetricExpr": "(PM_L3_LD_HIT / PM_RUN_CYC) / 2",
+> -        "MetricGroup": "l3_stats",
+> -        "MetricName": "l3_ld_hit_frequency"
+> -    },
+> -    {
+> -        "BriefDescription": "Average number of cycles between L3 Load misses",
+> -        "MetricExpr": "(PM_L3_LD_MISS / PM_RUN_CYC) / 2",
+> -        "MetricGroup": "l3_stats",
+> -        "MetricName": "l3_ld_miss_frequency"
+> -    },
+> -    {
+> -        "BriefDescription": "Average number of Write-in machines used. 1 of 8 WI machines is sampled every L3 cycle",
+> -        "MetricExpr": "(PM_L3_WI_USAGE / PM_RUN_CYC) * 8",
+> -        "MetricGroup": "l3_stats",
+> -        "MetricName": "l3_wi_usage"
+> -    },
+>      {
+>          "BriefDescription": "Average icache miss latency",
+>          "MetricExpr": "PM_IC_DEMAND_CYC / PM_IC_DEMAND_REQ",
+> 
