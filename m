@@ -2,163 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42991C433E0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Mar 2021 05:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0221BC433E0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Mar 2021 05:13:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E320464E90
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Mar 2021 05:13:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92ED64E42
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 Mar 2021 05:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233335AbhCCFDM (ORCPT
+        id S237467AbhCCFE0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 Mar 2021 00:03:12 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5288 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1351150AbhCBNcx (ORCPT
+        Wed, 3 Mar 2021 00:04:26 -0500
+Received: from mga04.intel.com ([192.55.52.120]:29157 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1572938AbhCBOH7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 Mar 2021 08:32:53 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 122D9UEg123988;
-        Tue, 2 Mar 2021 08:31:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=B7QvNdz9JIbVex4ApMnvbHorcJfu+NDYlHxR3nM7NlI=;
- b=N0IeWVEmlc/c1apHBCz8a3RvGVZwhZgncbb0fBECpkJZgqNmHzsPj/9kau0g4KkWHA49
- RozHJz7Ox/o2/GB+zQy9V6X+FynFq19kee4xx+PwYW33d9IdGIibfc8nt0SBO/aQbyNw
- qtYJA10GAfoe2k46I2OOYVARuoR7w5qvJMTEV10ZvmLep9ftNS+tkfhAlF8Mu7vfM3v5
- iMz5GeeSisePg6CD01qXmajuOXmxh4ExCKbZRJQojjp3rK9Sfl1yWwfwTGTIvvEzB02C
- NTT3Z7A7GMH/ramWxpA8Qj3KBMwGA0CH/e4Nm92FZuPVt3UAEiEsjzZ+GLN+O8ZnbtBe 4A== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 371n8v20c2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Mar 2021 08:31:35 -0500
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 122DO1MJ006228;
-        Tue, 2 Mar 2021 13:31:33 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 37150crd14-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Mar 2021 13:31:33 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 122DVUO741812476
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Mar 2021 13:31:30 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7CF0852050;
-        Tue,  2 Mar 2021 13:31:30 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 30D4E52051;
-        Tue,  2 Mar 2021 13:31:30 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Tue, 2 Mar 2021 09:07:59 -0500
+IronPort-SDR: LVYXljfW42nhnXudPvMS3Nuff+1tgQCL+cpNvd/BbX1xsaQSo1leH4WVMeVz0cCtfSZ+YoZ82Z
+ W+l8P8+S2sNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9910"; a="184385851"
+X-IronPort-AV: E=Sophos;i="5.81,216,1610438400"; 
+   d="scan'208";a="184385851"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2021 06:03:55 -0800
+IronPort-SDR: tqclDbE7bWfGn2SDDyTZQeIhvsJeBbIJrCJb/fvB99LHfwSKSLHxxLlA82UM1Fo26iBXbodJbX
+ O3ilsnUoUM8g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.81,216,1610438400"; 
+   d="scan'208";a="517844199"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 02 Mar 2021 06:03:54 -0800
+Received: from [10.252.140.135] (kliang2-MOBL.ccr.corp.intel.com [10.252.140.135])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id CB9725808BA;
+        Tue,  2 Mar 2021 06:03:53 -0800 (PST)
+Subject: Re: [PATCH] perf test: Test case 27 fails on s390 and non-x86
+ platforms
+To:     Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         acme@kernel.org
 Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com, kan.liang@linux.intel.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Test case 27 fails on s390 and non-x86 platforms
-Date:   Tue,  2 Mar 2021 14:31:19 +0100
-Message-Id: <20210302133119.3325530-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
+        heiko.carstens@de.ibm.com,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+References: <20210302133119.3325530-1-tmricht@linux.ibm.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <abcf63c1-8a15-14af-b449-77a943c94121@linux.intel.com>
+Date:   Tue, 2 Mar 2021 09:03:52 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-02_06:2021-03-01,2021-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 malwarescore=0 mlxscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 impostorscore=0 priorityscore=1501 adultscore=0
- suspectscore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2009150000 definitions=main-2103020107
+In-Reply-To: <20210302133119.3325530-1-tmricht@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Executing perf test 27 fails on s390:
- [root@t35lp46 perf]# ./perf test -Fv 27
- 27: Sample parsing
- --- start ---
- ---- end ----
- Sample parsing: FAILED!
- [root@t35lp46 perf]#
 
-The root cause is
-commit c7444297fd3769 ("perf test: Support PERF_SAMPLE_WEIGHT_STRUCT")
-This commit introduced a test case for PERF_SAMPLE_WEIGHT_STRUCT
-but does not adjust non-x86 weak linkage functions.
++ Athira Rajeev
 
-The error is in test__sample_parsing() --> do_test()
-Function do_test() defines two structures of type struct perf_sample named
-sample and sample_out. The first sets member sample.ins_lat = 117
+On 3/2/2021 8:31 AM, Thomas Richter wrote:
+> Executing perf test 27 fails on s390:
+>   [root@t35lp46 perf]# ./perf test -Fv 27
+>   27: Sample parsing
+>   --- start ---
+>   ---- end ----
+>   Sample parsing: FAILED!
+>   [root@t35lp46 perf]#
+> 
+> The root cause is
+> commit c7444297fd3769 ("perf test: Support PERF_SAMPLE_WEIGHT_STRUCT")
+> This commit introduced a test case for PERF_SAMPLE_WEIGHT_STRUCT
+> but does not adjust non-x86 weak linkage functions.
+> 
+> The error is in test__sample_parsing() --> do_test()
+> Function do_test() defines two structures of type struct perf_sample named
+> sample and sample_out. The first sets member sample.ins_lat = 117
+> 
+> Structure sample_out is constructed dynamically using functions
+> perf_event__synthesize_sample() and evsel__parse_sample().
+> Both functions have an x86 specific function version which sets member
+> ins_lat. The weak common functions do not set member ins_lat.
+>
 
-Structure sample_out is constructed dynamically using functions
-perf_event__synthesize_sample() and evsel__parse_sample().
-Both functions have an x86 specific function version which sets member
-ins_lat. The weak common functions do not set member ins_lat.
+I don't think Power supports the instruction latency. As a request from 
+Athira Rajeev, I moved the PERF_SAMPLE_WEIGHT_STRUCT to the X86 specific 
+codes.
+https://lore.kernel.org/lkml/D97FEF4F-DD88-4760-885E-9A6161A9B48B@linux.vnet.ibm.com/
+https://lore.kernel.org/lkml/1612540912-6562-1-git-send-email-kan.liang@linux.intel.com/
 
-Later in function samples_same() both data in variable sample and sample_out
-are compared. The comparison fails because sample.ins_lat is 117
-and samples_out.ins_lat is 0, the weak functions never set member ins_lat.
+I don't think we want to add the ins_lat back in the weak common functions.
 
-Output after:
- [root@t35lp46 perf]# ./perf test -Fv 27
- 27: Sample parsing
- --- start ---
- ---- end ----
- Sample parsing: Ok
-[root@t35lp46 perf]#
+Could you please update the perf test and don't apply the 
+PERF_SAMPLE_WEIGHT_STRUCT for the non-X86 platform?
 
-Fixes:
-commit c7444297fd3769 ("perf test: Support PERF_SAMPLE_WEIGHT_STRUCT")
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/util/evsel.c            | 8 +++++---
- tools/perf/util/synthetic-events.c | 6 +++++-
- 2 files changed, 10 insertions(+), 4 deletions(-)
+> Later in function samples_same() both data in variable sample and sample_out
+> are compared. The comparison fails because sample.ins_lat is 117
+> and samples_out.ins_lat is 0, the weak functions never set member ins_lat.
+> 
+> Output after:
+>   [root@t35lp46 perf]# ./perf test -Fv 27
+>   27: Sample parsing
+>   --- start ---
+>   ---- end ----
+>   Sample parsing: Ok
+> [root@t35lp46 perf]#
+> 
+> Fixes:
+> commit c7444297fd3769 ("perf test: Support PERF_SAMPLE_WEIGHT_STRUCT")
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 1bf76864c4f2..c9efed5c173d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2106,10 +2106,12 @@ perf_event__check_size(union perf_event *event, unsigned int sample_size)
- }
- 
- void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
--					  const __u64 *array,
--					  u64 type __maybe_unused)
-+					  const __u64 *array, u64 type)
- {
--	data->weight = *array;
-+	if (type & PERF_SAMPLE_WEIGHT)
-+		data->weight = *array & 0xffffffff;
-+	if (type & PERF_SAMPLE_WEIGHT_STRUCT)
-+		data->ins_lat = (*array >> 32) & 0xffff;
- }
- 
- int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index b698046ec2db..af7ecbc57cbe 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1507,9 +1507,13 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- }
- 
- void __weak arch_perf_synthesize_sample_weight(const struct perf_sample *data,
--					       __u64 *array, u64 type __maybe_unused)
-+					       __u64 *array, u64 type)
- {
- 	*array = data->weight;
-+	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
-+		*array &= 0xffffffff;
-+		*array |= ((u64)data->ins_lat << 32);
-+	}
- }
- 
- int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format,
--- 
-2.29.2
+I think the regression should start from
+commit fbefe9c2f87f ("perf tools: Support arch specific 
+PERF_SAMPLE_WEIGHT_STRUCT processing")
 
+
+Thanks,
+Kan
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> ---
+>   tools/perf/util/evsel.c            | 8 +++++---
+>   tools/perf/util/synthetic-events.c | 6 +++++-
+>   2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 1bf76864c4f2..c9efed5c173d 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2106,10 +2106,12 @@ perf_event__check_size(union perf_event *event, unsigned int sample_size)
+>   }
+>   
+>   void __weak arch_perf_parse_sample_weight(struct perf_sample *data,
+> -					  const __u64 *array,
+> -					  u64 type __maybe_unused)
+> +					  const __u64 *array, u64 type)
+>   {
+> -	data->weight = *array;
+> +	if (type & PERF_SAMPLE_WEIGHT)
+> +		data->weight = *array & 0xffffffff;
+> +	if (type & PERF_SAMPLE_WEIGHT_STRUCT)
+> +		data->ins_lat = (*array >> 32) & 0xffff;
+>   }
+>   
+>   int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index b698046ec2db..af7ecbc57cbe 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1507,9 +1507,13 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+>   }
+>   
+>   void __weak arch_perf_synthesize_sample_weight(const struct perf_sample *data,
+> -					       __u64 *array, u64 type __maybe_unused)
+> +					       __u64 *array, u64 type)
+>   {
+>   	*array = data->weight;
+> +	if (type & PERF_SAMPLE_WEIGHT_STRUCT) {
+> +		*array &= 0xffffffff;
+> +		*array |= ((u64)data->ins_lat << 32);
+> +	}
+>   }
+>   
+>   int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_format,
+> 
