@@ -2,268 +2,497 @@ Return-Path: <SRS0=rwtg=IE=vger.kernel.org=linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CC9C433DB
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Mar 2021 19:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8424BC433DB
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Mar 2021 19:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E03A164DBA
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Mar 2021 19:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50070650BC
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 Mar 2021 19:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230390AbhCFTC7 (ORCPT
+        id S231211AbhCFTKo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 Mar 2021 14:02:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40078 "EHLO mx2.suse.de"
+        Sat, 6 Mar 2021 14:10:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230346AbhCFTC0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 Mar 2021 14:02:26 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7CE4BAC83;
-        Sat,  6 Mar 2021 19:02:25 +0000 (UTC)
-Subject: Re: [PATCH][RFC] perf annotate: show full line locations with 'k' in
- UI
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <9acb63e0-af38-eeeb-157e-32f6177da557@suse.cz>
- <20210212203408.GH1398414@kernel.org>
- <5b59c46e-4907-7ab9-a68d-dd234e988dc7@suse.cz> <YEOSWxmy1mbe0ucw@kernel.org>
-From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-Message-ID: <25a6384f-d862-5dda-4fec-8f0555599c75@suse.cz>
-Date:   Sat, 6 Mar 2021 20:02:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        id S230449AbhCFTK3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 Mar 2021 14:10:29 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 863EC650BC;
+        Sat,  6 Mar 2021 19:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1615057829;
+        bh=u7mB0VHDpSRdyLOjQTbUszdqWJWEOPwb3lhP9QhE0Qs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fkvOnIpTtMdCZmgtcNmCEJb1Hn05pEbKG87JZ37ybfuGw2ICczwo50casI9UuOKNy
+         jHOj/NPWrBCPHS1XA2Kt3lkYoHtvN4K0F7+bY6gwcdzDprEBYDhAE02fnUii36J/NU
+         Z0Y0SFIXk7YtVR01uv/XrtmQN1m6aQiBXSxZ4f0UvO2jeIsN2Yg+C9B4L1F9fTgKP/
+         48kMuOsdN8wvzhHQHOxxWiDnejSiGlh6G1NMVwBC/YHU992SSoL58S4tLP5n96D1YE
+         3SxC+qYgI4X6+5hoickWxck+uaEWm1hP/iGD/hlixTrJqXxGoTm9DRpX5C6M2I39Qw
+         FkuyDkm72N4HA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F320240647; Sat,  6 Mar 2021 16:10:23 -0300 (-03)
+Date:   Sat, 6 Mar 2021 16:10:23 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Alexandre Truong <alexandre.truong@arm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Al Grant <al.grant@arm.com>,
+        Wilco Dijkstra <wilco.dijkstra@arm.com>
+Subject: Re: [PATCH RESEND WITH CCs v3 4/4] perf tools: determine if LR is
+ the return address
+Message-ID: <YEPTnwXLfwhJN5eT@kernel.org>
+References: <20210304163255.10363-1-alexandre.truong@arm.com>
+ <20210304163255.10363-4-alexandre.truong@arm.com>
+ <57fdc0c9-ea72-5cd0-405a-c7bff0daf9d6@arm.com>
+ <YEN7xFjj7n66A9Xr@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <YEOSWxmy1mbe0ucw@kernel.org>
-Content-Type: multipart/mixed;
- boundary="------------B5377B99AAD6F96118233677"
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YEN7xFjj7n66A9Xr@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------B5377B99AAD6F96118233677
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 3/6/21 3:31 PM, Arnaldo Carvalho de Melo wrote:
-> I see, it works only when pressing on source code lines:
-
-Hey.
-
-Yes, I forgot to explicitly mention that.
-
+Em Sat, Mar 06, 2021 at 09:55:32AM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Mar 05, 2021 at 10:54:03AM +0200, James Clark escreveu:
+> > I've tested this patchset on a few different applications and have seen it significantly improve
+> > quality of frame pointer stacks on aarch64. For example with GDB 10 and default build options,
+> > 'bfd_calc_gnu_debuglink_crc32' is a leaf function, and its caller 'gdb_bfd_crc' is ommitted,
+> > but with the patchset it is included. I've also confirmed that this is correct from looking at
+> > the source code.
+> > 
+> > Before:
+> > 
+> >         # Children      Self  Command          Shared Object               Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+> >         # ........  ........  ...............  ..........................  ...........
+> >         #
+> >             34.55%     0.00%  gdb-100          gdb-100                     [.] _start
+> >                    0.78%
+> >                         _start
+> >                         __libc_start_main
+> >                         main
+> >                         gdb_main
+> >                         captured_command_loop
+> >                         gdb_do_one_event
+> >                         check_async_event_handlers
+> >                         fetch_inferior_event
+> >                         inferior_event_handler
+> >                         do_all_inferior_continuations
+> >                         attach_post_wait
+> >                         post_create_inferior
+> >                         svr4_solib_create_inferior_hook
+> >                         solib_add
+> >                         solib_read_symbols
+> >                         symbol_file_add_with_addrs
+> >                         read_symbols
+> >                         elf_symfile_read
+> >                         find_separate_debug_file_by_debuglink[abi:cxx11]
+> >                         find_separate_debug_file
+> >                         separate_debug_file_exists
+> >                         gdb_bfd_crc
+> >                         bfd_calc_gnu_debuglink_crc32
+> > 
+> > After:
+> > 
+> >         # Children      Self  Command          Shared Object               Symbol                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+> >         # ........  ........  ...............  ..........................  ...........
+> >         #
+> >             34.55%     0.00%  gdb-100          gdb-100                     [.] _start
+> >                    0.78%
+> >                         _start
+> >                         __libc_start_main
+> >                         main
+> >                         gdb_main
+> >                         captured_command_loop
+> >                         gdb_do_one_event
+> >                         check_async_event_handlers
+> >                         fetch_inferior_event
+> >                         inferior_event_handler
+> >                         do_all_inferior_continuations
+> >                         attach_post_wait
+> >                         post_create_inferior
+> >                         svr4_solib_create_inferior_hook
+> >                         solib_add
+> >                         solib_read_symbols
+> >                         symbol_file_add_with_addrs
+> >                         read_symbols
+> >                         elf_symfile_read
+> >                         find_separate_debug_file_by_debuglink[abi:cxx11]
+> >                         find_separate_debug_file
+> >                         separate_debug_file_exists
+> >                         get_file_crc   <--------------------- leaf frame caller added
+> >                         bfd_calc_gnu_debuglink_crc32
+> > 
+> > There is a question about whether the overhead of recording all the registers is acceptable, for
+> > filesize and time. We could make it a manual step, at the cost of not showing better frame pointer
+> > stacks by default.
 > 
-> Source file location: /usr/src/debug/kernel-5.10.fc33/linux-5.10.19-200.fc33.x86_64/./arch/x86/include/asm/msr.h:205
+> Can someone quantify this, i.e. how much space per perf.data for a
+> typical scenario? But anyway, I'm applying it as is now, we can change
+> it if needed, its not like files with the extra registers won't be
+> valid if/when we decide not to collect it by default in the future.
 > 
-> So we better improve that message? I.e. 'press on source code lines', or
-> 'enable showing source code lines to get line number'?
-
-Fixed that in the attached patch. I got inspiration from 's' hotkey which prints the following warning:
-"Only available for assembly lines.".
-
-Thanks,
-Martin
-
---------------B5377B99AAD6F96118233677
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-perf-annotate-show-full-source-location-with-l-hotke.patch"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: attachment;
- filename*0="0001-perf-annotate-show-full-source-location-with-l-hotke.pa";
- filename*1="tch"
-
-From 8fb7db7722c481ee4d1e0de2d2dc884f25aa90a1 Mon Sep 17 00:00:00 2001
-From: Martin Liska <mliska@suse.cz>
-Date: Mon, 15 Feb 2021 12:34:46 +0100
-Subject: [PATCH] perf annotate: show full source location with 'l' hotkey
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-Right now, when Line numbers are displayed, one can't easily
-find a source file that the line corresponds to.
-
-When a source line is selected and 'l' is pressed, full source file
-location is displayed in perf UI footer line. The hotkey works
-only for source code lines.
-
-Signed-off-by: Martin Liška <mliska@suse.cz>
----
- tools/perf/ui/browsers/annotate.c | 25 +++++++++++++++++++++++--
- tools/perf/util/annotate.c        | 12 ++++++++++--
- tools/perf/util/annotate.h        |  2 ++
- 3 files changed, 35 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index bd77825fd5a1..cf60ba59b903 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -381,6 +381,25 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
- 	return true;
- }
- 
-+#define SYM_TITLE_MAX_SIZE (PATH_MAX + 64)
-+
-+static void annotate_browser__show_full_location(struct ui_browser *browser)
-+{
-+	struct annotate_browser *ab = container_of(browser, struct annotate_browser, b);
-+	struct disasm_line *cursor = disasm_line(ab->selection);
-+	struct annotation_line *al = &cursor->al;
-+
-+	if (al->offset != -1)
-+		ui_helpline__puts("Only available for source code lines.");
-+	else if (al->fileloc == NULL)
-+		ui_helpline__puts("No source file location.");
-+	else {
-+		char help_line[SYM_TITLE_MAX_SIZE];
-+		sprintf (help_line, "Source file location: %s", al->fileloc);
-+		ui_helpline__puts(help_line);
-+	}
-+}
-+
- static void ui_browser__init_asm_mode(struct ui_browser *browser)
- {
- 	struct annotation *notes = browser__annotation(browser);
-@@ -388,8 +407,6 @@ static void ui_browser__init_asm_mode(struct ui_browser *browser)
- 	browser->nr_entries = notes->nr_asm_entries;
- }
- 
--#define SYM_TITLE_MAX_SIZE (PATH_MAX + 64)
--
- static int sym_title(struct symbol *sym, struct map *map, char *title,
- 		     size_t sz, int percent_type)
- {
-@@ -747,6 +764,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		"c             Show min/max cycle\n"
- 		"/             Search string\n"
- 		"k             Toggle line numbers\n"
-+		"l             Show full source file location\n"
- 		"P             Print to [symbol_name].annotation file.\n"
- 		"r             Run available scripts\n"
- 		"p             Toggle percent type [local/global]\n"
-@@ -760,6 +778,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		case 'k':
- 			notes->options->show_linenr = !notes->options->show_linenr;
- 			break;
-+		case 'l':
-+			annotate_browser__show_full_location (&browser->b);
-+			continue;
- 		case 'H':
- 			nd = browser->curr_hot;
- 			break;
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index e3eae646be3e..e4b0c21362d8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -1159,6 +1159,7 @@ struct annotate_args {
- 	s64			  offset;
- 	char			  *line;
- 	int			  line_nr;
-+	char			  *fileloc;
- };
- 
- static void annotation_line__init(struct annotation_line *al,
-@@ -1168,6 +1169,7 @@ static void annotation_line__init(struct annotation_line *al,
- 	al->offset = args->offset;
- 	al->line = strdup(args->line);
- 	al->line_nr = args->line_nr;
-+	al->fileloc = args->fileloc;
- 	al->data_nr = nr;
- }
- 
-@@ -1480,7 +1482,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
-  */
- static int symbol__parse_objdump_line(struct symbol *sym,
- 				      struct annotate_args *args,
--				      char *parsed_line, int *line_nr)
-+				      char *parsed_line, int *line_nr, char **fileloc)
- {
- 	struct map *map = args->ms.map;
- 	struct annotation *notes = symbol__annotation(sym);
-@@ -1492,6 +1494,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
- 	/* /filename:linenr ? Save line number and ignore. */
- 	if (regexec(&file_lineno, parsed_line, 2, match, 0) == 0) {
- 		*line_nr = atoi(parsed_line + match[1].rm_so);
-+		*fileloc = strdup(parsed_line);
- 		return 0;
- 	}
- 
-@@ -1511,6 +1514,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
- 	args->offset  = offset;
- 	args->line    = parsed_line;
- 	args->line_nr = *line_nr;
-+	args->fileloc = *fileloc;
- 	args->ms.sym  = sym;
- 
- 	dl = disasm_line__new(args);
-@@ -1805,6 +1809,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 			args->offset = -1;
- 			args->line = strdup(srcline);
- 			args->line_nr = 0;
-+			args->fileloc = NULL;
- 			args->ms.sym  = sym;
- 			dl = disasm_line__new(args);
- 			if (dl) {
-@@ -1816,6 +1821,7 @@ static int symbol__disassemble_bpf(struct symbol *sym,
- 		args->offset = pc;
- 		args->line = buf + prev_buf_size;
- 		args->line_nr = 0;
-+		args->fileloc = NULL;
- 		args->ms.sym  = sym;
- 		dl = disasm_line__new(args);
- 		if (dl)
-@@ -1850,6 +1856,7 @@ symbol__disassemble_bpf_image(struct symbol *sym,
- 	args->offset = -1;
- 	args->line = strdup("to be implemented");
- 	args->line_nr = 0;
-+	args->fileloc = NULL;
- 	dl = disasm_line__new(args);
- 	if (dl)
- 		annotation_line__add(&dl->al, &notes->src->source);
-@@ -1931,6 +1938,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 	bool delete_extract = false;
- 	bool decomp = false;
- 	int lineno = 0;
-+	char *fileloc = NULL;
- 	int nline;
- 	char *line;
- 	size_t line_len;
-@@ -2058,7 +2066,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 		 * See disasm_line__new() and struct disasm_line::line_nr.
- 		 */
- 		if (symbol__parse_objdump_line(sym, args, expanded_line,
--					       &lineno) < 0)
-+					       &lineno, &fileloc) < 0)
- 			break;
- 		nline++;
- 	}
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 096cdaf21b01..3757416bcf46 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -84,6 +84,7 @@ struct annotation_options {
- 	     print_lines,
- 	     full_path,
- 	     show_linenr,
-+	     show_fileloc,
- 	     show_nr_jumps,
- 	     show_minmax_cycle,
- 	     show_asm_raw,
-@@ -136,6 +137,7 @@ struct annotation_line {
- 	s64			 offset;
- 	char			*line;
- 	int			 line_nr;
-+	char			*fileloc;
- 	int			 jump_sources;
- 	float			 ipc;
- 	u64			 cycles;
--- 
-2.30.1
+> If we decide to make this selectable, we should have it as a .perfconfig
+> knob as well, so that one can set it and change the default, etc.
+  
+> > Tested-by: James Clark <james.clark@arm.com>
 
 
---------------B5377B99AAD6F96118233677--
+This is unconditionally asking for asm/perf_regs.h and it is not available
+everywhere, so I think this has to be abstracted away, maybe using a weak
+function that arm provides a replacement for?
+
+A:Humm
+
++++ b/tools/perf/util/Build
+@@ -1,3 +1,4 @@
++perf-y += arm-frame-pointer-unwind-support.o
+
+Is this for doing cross-platform analysis? I.e. record a perf.data file
+on arm64 and then do a perf-report on it on a x86_64 machine? Yeah, that
+is expected to work, but then:
+
++++ b/tools/perf/util/arm-frame-pointer-unwind-support.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "../arch/arm64/include/uapi/asm/perf_regs.h"
++#include "arch/arm64/include/perf_regs.h"
+
+
+[acme@five perf]$ head -25 tools/perf/arch/arm64/include/perf_regs.h
+/* SPDX-License-Identifier: GPL-2.0 */
+#ifndef ARCH_PERF_REGS_H
+#define ARCH_PERF_REGS_H
+
+#include <stdlib.h>
+#include <linux/types.h>
+#include <asm/perf_regs.h>
+
+void perf_regs_load(u64 *regs);
+
+#define PERF_REGS_MASK	((1ULL << PERF_REG_ARM64_MAX) - 1)
+#define PERF_REGS_MAX	PERF_REG_ARM64_MAX
+#define PERF_SAMPLE_REGS_ABI	PERF_SAMPLE_REGS_ABI_64
+
+#define PERF_REG_IP	PERF_REG_ARM64_PC
+#define PERF_REG_SP	PERF_REG_ARM64_SP
+
+static inline const char *__perf_reg_name(int id)
+{
+	switch (id) {
+	case PERF_REG_ARM64_X0:
+		return "x0";
+	case PERF_REG_ARM64_X1:
+		return "x1";
+	case PERF_REG_ARM64_X2:
+[acme@five perf]$
+
+Won't this get the wrong file when cross-building? See below.
+
+- Arnaldo
+
+[perfbuilder@five ~]$ time dm
+Sat Mar  6 12:02:01 PM -03 2021
+# export PERF_TARBALL=http://192.168.86.5/perf/perf-5.11.0.tar.xz
+# dm 
+   1    78.76 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0 , clang version 3.8.0 (tags/RELEASE_380/final)
+   2    79.07 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822 , clang version 3.8.1 (tags/RELEASE_381/final)
+   3    82.68 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0 , clang version 4.0.0 (tags/RELEASE_400/final)
+   4    88.57 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.0 (tags/RELEASE_500/final) (based on LLVM 5.0.0)
+   5    89.47 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.1 (tags/RELEASE_501/final) (based on LLVM 5.0.1)
+   6    93.63 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 5.0.1 (tags/RELEASE_502/final) (based on LLVM 5.0.1)
+   7   125.41 alpine:3.10                   : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 8.0.0 (tags/RELEASE_800/final) (based on LLVM 8.0.0)
+   8   142.89 alpine:3.11                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 9.0.0 (https://git.alpinelinux.org/aports f7f0d2c2b8bcd6a5843401a9a702029556492689) (based on LLVM 9.0.0)
+   9   126.52 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
+  10   135.80 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1 
+  11   134.19 alpine:edge                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1 
+  12    78.12 alt:p8                        : Ok   x86_64-alt-linux-gcc (GCC) 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) , clang version 3.8.0 (tags/RELEASE_380/final)
+  13    92.57 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0 
+  14    93.72 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 10.2.1 20201125 (ALT Sisyphus 10.2.1-alt2) , clang version 10.0.1 
+  15    75.10 amazonlinux:1                 : Ok   gcc (GCC) 7.2.1 20170915 (Red Hat 7.2.1-2) , clang version 3.6.2 (tags/RELEASE_362/final)
+  16   116.14 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-12) , clang version 7.0.1 (Amazon Linux 2 7.0.1-1.amzn2.0.2)
+  17    10.26 android-ndk:r12b-arm          : FAIL gcc version 4.9.x 20150123 (prerelease) (GCC) 
+                     from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: nested redefinition of 'enum perf_event_arm_regs'
+     enum perf_event_arm_regs {
+          ^
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: redeclaration of 'enum perf_event_arm_regs'
+    In file included from util/arm-frame-pointer-unwind-support.c:2:0:
+    /git/linux/tools/include/../arch/arm64/include/uapi/asm/perf_regs.h:5:6: note: originally defined here
+     enum perf_event_arm_regs {
+          ^
+    make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
+  18    10.71 android-ndk:r15c-arm          : FAIL gcc version 4.9.x 20150123 (prerelease) (GCC) 
+                     from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: nested redefinition of 'enum perf_event_arm_regs'
+     enum perf_event_arm_regs {
+          ^
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: redeclaration of 'enum perf_event_arm_regs'
+    In file included from util/arm-frame-pointer-unwind-support.c:2:0:
+    /git/linux/tools/include/../arch/arm64/include/uapi/asm/perf_regs.h:5:6: note: originally defined here
+     enum perf_event_arm_regs {
+          ^
+  19    28.97 centos:6                      : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23) 
+  20    34.56 centos:7                      : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44) 
+  21   110.26 centos:8                      : Ok   gcc (GCC) 8.3.1 20191121 (Red Hat 8.3.1-5) , clang version 10.0.1 (Red Hat 10.0.1-1.module_el8.3.0+467+cb298d5b)
+  22    67.12 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 10.2.1 20201217 releases/gcc-10.2.0-643-g7cbb07d2fc , clang version 10.0.1 
+  23    87.08 debian:8                      : Ok   gcc (Debian 4.9.2-10+deb8u2) 4.9.2 , Debian clang version 3.5.0-10 (tags/RELEASE_350/final) (based on LLVM 3.5.0)
+  24    92.73 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516 , clang version 3.8.1-24 (tags/RELEASE_381/final)
+  25    86.91 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , clang version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
+  26    86.13 debian:experimental           : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
+  27    36.91 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110 
+  28     9.08 debian:experimental-x-mips    : FAIL gcc version 10.2.1 20201224 (Debian 10.2.1-3) 
+                     from builtin-diff.c:12:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+  29    33.76 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 10.2.1-3) 10.2.1 20201224 
+  30    12.74 debian:experimental-x-mipsel  : FAIL gcc version 10.2.1 20201224 (Debian 10.2.1-3) 
+                     from builtin-diff.c:12:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/branch.h:15,
+                     from util/callchain.h:8,
+                     from builtin-record.c:16:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/session.h:6,
+                     from builtin-buildid-list.c:17:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/thread.h:16,
+                     from builtin-sched.c:11:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from builtin-top.c:31:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/session.h:6,
+                     from builtin-evlist.c:16:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/session.h:6,
+                     from builtin-buildid-cache.c:24:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from builtin-stat.c:49:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/branch.h:15,
+                     from builtin-report.c:24:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from builtin-annotate.c:24:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    In file included from util/perf_regs.h:30,
+                     from util/event.h:15,
+                     from util/thread.h:16,
+                     from builtin-timechart.c:24:
+    /git/linux/tools/perf/arch/mips/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+  31    32.64 fedora:20                     : Ok   gcc (GCC) 4.8.3 20140911 (Red Hat 4.8.3-7) 
+  32    35.41 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.5.0 (tags/RELEASE_350/final)
+  33    77.83 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.7.0 (tags/RELEASE_370/final)
+  34    96.28 fedora:24                     : Ok   gcc (GCC) 6.3.1 20161221 (Red Hat 6.3.1-1) , clang version 3.8.1 (tags/RELEASE_381/final)
+  35    10.80 fedora:24-x-ARC-uClibc        : FAIL gcc version 7.1.1 20170710 (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:0:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+     #include <asm/perf_regs.h>
+              ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  36    98.38 fedora:25                     : Ok   gcc (GCC) 6.4.1 20170727 (Red Hat 6.4.1-1) , clang version 3.9.1 (tags/RELEASE_391/final)
+  37   111.11 fedora:26                     : Ok   gcc (GCC) 7.3.1 20180130 (Red Hat 7.3.1-2) , clang version 4.0.1 (tags/RELEASE_401/final)
+  38   111.55 fedora:27                     : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-6) , clang version 5.0.2 (tags/RELEASE_502/final)
+  39   127.99 fedora:28                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2) , clang version 6.0.1 (tags/RELEASE_601/final)
+  40   136.36 fedora:29                     : Ok   gcc (GCC) 8.3.1 20190223 (Red Hat 8.3.1-2) , clang version 7.0.1 (Fedora 7.0.1-6.fc29)
+  41   139.67 fedora:30                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2) , clang version 8.0.0 (Fedora 8.0.0-3.fc30)
+  42    10.57 fedora:30-x-ARC-uClibc        : FAIL gcc version 8.3.1 20190225 (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+     #include <asm/perf_regs.h>
+              ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
+  43   136.09 fedora:31                     : Ok   gcc (GCC) 9.3.1 20200408 (Red Hat 9.3.1-2) , clang version 9.0.1 (Fedora 9.0.1-4.fc31)
+  44   112.14 fedora:32                     : Ok   gcc (GCC) 10.2.1 20201125 (Red Hat 10.2.1-9) , clang version 10.0.1 (Fedora 10.0.1-3.fc32)
+  45   111.28 fedora:33                     : Ok   gcc (GCC) 10.2.1 20201125 (Red Hat 10.2.1-9) , clang version 11.0.0 (Fedora 11.0.0-2.fc33)
+  46   116.62 fedora:34                     : Ok   gcc (GCC) 11.0.0 20210225 (Red Hat 11.0.0-0) , clang version 12.0.0 (Fedora 12.0.0-0.1.rc1.fc34)
+  47   117.53 fedora:rawhide                : Ok   gcc (GCC) 11.0.0 20210210 (Red Hat 11.0.0-0) , clang version 12.0.0 (Fedora 12.0.0-0.1.rc1.fc35)
+  48    38.03 gentoo-stage3-amd64:latest    : Ok   gcc (Gentoo 9.3.0-r1 p3) 9.3.0 
+  49    78.35 mageia:5                      : Ok   gcc (GCC) 4.9.2 , clang version 3.5.2 (tags/RELEASE_352/final)
+  50    97.37 mageia:6                      : Ok   gcc (Mageia 5.5.0-1.mga6) 5.5.0 , clang version 3.9.1 (tags/RELEASE_391/final)
+  51   116.36 manjaro:latest                : Ok   gcc (GCC) 10.2.0 , clang version 10.0.1 
+  52   246.83 openmandriva:cooker           : Ok   gcc (GCC) 10.2.0 20200723 (OpenMandriva) , OpenMandriva 11.0.0-1 clang version 11.0.0 (/builddir/build/BUILD/llvm-project-llvmorg-11.0.0/clang 63e22714ac938c6b537bd958f70680d3331a2030)
+  53   134.08 opensuse:15.0                 : Ok   gcc (SUSE Linux) 7.4.1 20190905 [gcc-7-branch revision 275407] , clang version 5.0.1 (tags/RELEASE_501/final 312548)
+  54   142.32 opensuse:15.1                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 7.0.1 (tags/RELEASE_701/final 349238)
+  55   133.68 opensuse:15.2                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 9.0.1 
+  56   146.85 opensuse:15.3                 : Ok   gcc (SUSE Linux) 7.5.0 , clang version 7.0.1 (tags/RELEASE_701/final 349238)
+  57   136.96 opensuse:42.3                 : Ok   gcc (SUSE Linux) 4.8.5 , clang version 3.8.0 (tags/RELEASE_380/final 262553)
+  58   122.69 opensuse:tumbleweed           : Ok   gcc (SUSE Linux) 10.2.1 20200825 [revision c0746a1beb1ba073c7981eb09f55b3d993b32e5c] , clang version 10.0.1 
+  59    28.36 oraclelinux:6                 : Ok   gcc (GCC) 4.4.7 20120313 (Red Hat 4.4.7-23.0.1) 
+  60    35.22 oraclelinux:7                 : Ok   gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44.0.3) 
+  61   109.60 oraclelinux:8                 : Ok   gcc (GCC) 8.3.1 20191121 (Red Hat 8.3.1-5.0.1) , clang version 10.0.1 (Red Hat 10.0.1-1.0.1.module+el8.3.0+7827+89335dbf)
+  62    29.20 ubuntu:12.04                  : Ok   gcc (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3 , Ubuntu clang version 3.0-6ubuntu3 (tags/RELEASE_30/final) (based on LLVM 3.0)
+  63    33.46 ubuntu:14.04                  : Ok   gcc (Ubuntu 4.8.4-2ubuntu1~14.04.4) 4.8.4 
+  64    93.53 ubuntu:16.04                  : Ok   gcc (Ubuntu 5.4.0-6ubuntu1~16.04.12) 5.4.0 20160609 , clang version 3.8.0-2ubuntu4 (tags/RELEASE_380/final)
+  65    11.70 ubuntu:16.04-x-arm            : FAIL gcc version 5.4.0 20160609 (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 
+                     from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: nested redefinition of 'enum perf_event_arm_regs'
+     enum perf_event_arm_regs {
+          ^
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: redeclaration of 'enum perf_event_arm_regs'
+    In file included from util/arm-frame-pointer-unwind-support.c:2:0:
+    /git/linux/tools/include/../arch/arm64/include/uapi/asm/perf_regs.h:5:6: note: originally defined here
+     enum perf_event_arm_regs {
+          ^
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  66    28.74 ubuntu:16.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
+  67    27.61 ubuntu:16.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
+  68    28.82 ubuntu:16.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
+  69    28.16 ubuntu:16.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu/IBM 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
+  70    27.96 ubuntu:16.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609 
+  71   101.40 ubuntu:18.04                  : Ok   gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 , clang version 6.0.0-1ubuntu2 (tags/RELEASE_600/final)
+  72    11.69 ubuntu:18.04-x-arm            : FAIL gcc version 7.5.0 (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 
+                     from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: nested redefinition of 'enum perf_event_arm_regs'
+     enum perf_event_arm_regs {
+          ^~~~~~~~~~~~~~~~~~~
+    /git/linux/tools/arch/arm/include/uapi/asm/perf_regs.h:5:6: error: redeclaration of 'enum perf_event_arm_regs'
+    In file included from util/arm-frame-pointer-unwind-support.c:2:0:
+    /git/linux/tools/include/../arch/arm64/include/uapi/asm/perf_regs.h:5:6: note: originally defined here
+     enum perf_event_arm_regs {
+          ^~~~~~~~~~~~~~~~~~~
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  73    29.62 ubuntu:18.04-x-arm64          : Ok   aarch64-linux-gnu-gcc (Ubuntu/Linaro 7.5.0-3ubuntu1~18.04) 7.5.0 
+  74    10.74 ubuntu:18.04-x-m68k           : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:0:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+     #include <asm/perf_regs.h>
+              ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  75    29.37 ubuntu:18.04-x-powerpc        : Ok   powerpc-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+  76    32.06 ubuntu:18.04-x-powerpc64      : Ok   powerpc64-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+  77    31.37 ubuntu:18.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+  78    11.66 ubuntu:18.04-x-riscv64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:0:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+     #include <asm/perf_regs.h>
+              ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  79    26.84 ubuntu:18.04-x-s390           : Ok   s390x-linux-gnu-gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0 
+  80    11.50 ubuntu:18.04-x-sh4            : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:0:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+     #include <asm/perf_regs.h>
+              ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  81    10.62 ubuntu:18.04-x-sparc64        : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:0:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+     #include <asm/perf_regs.h>
+              ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    /git/linux/tools/build/Makefile.build:139: recipe for target 'util' failed
+    make[3]: *** [util] Error 2
+  82    80.18 ubuntu:19.10                  : Ok   gcc (Ubuntu 9.2.1-9ubuntu2) 9.2.1 20191008 , clang version 8.0.1-3build1 (tags/RELEASE_801/final)
+  83    11.44 ubuntu:19.10-x-alpha          : FAIL gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu1) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
+  84    11.67 ubuntu:19.10-x-hppa           : FAIL gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu1) 
+    In file included from util/arm-frame-pointer-unwind-support.c:3:
+    /git/linux/tools/perf/arch/arm64/include/perf_regs.h:7:10: fatal error: asm/perf_regs.h: No such file or directory
+        7 | #include <asm/perf_regs.h>
+          |          ^~~~~~~~~~~~~~~~~
+    compilation terminated.
+    make[3]: *** [/git/linux/tools/build/Makefile.build:139: util] Error 2
+  85    83.72 ubuntu:20.04                  : Ok   gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0 , clang version 10.0.0-4ubuntu1 
+  86    34.23 ubuntu:20.04-x-powerpc64el    : Ok   powerpc64le-linux-gnu-gcc (Ubuntu 10.2.0-5ubuntu1~20.04) 10.2.0 
+  87    83.44 ubuntu:20.10                  : Ok   gcc (Ubuntu 10.2.0-13ubuntu1) 10.2.0 , Ubuntu clang version 11.0.0-2
+  88    79.47 ubuntu:21.04                  : Ok   gcc (Ubuntu 10.2.1-6ubuntu1) 10.2.1 20210110 , Ubuntu clang version 11.0.1-2
+89 6489
+
+real	109m25.234s
+user	1m34.076s
+sys	0m55.476s
+[perfbuilder@five ~]$ 
+
+
+
+
