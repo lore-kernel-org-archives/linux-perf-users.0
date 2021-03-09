@@ -1,132 +1,133 @@
-Return-Path: <SRS0=IjAq=IF=vger.kernel.org=linux-perf-users-owner@kernel.org>
+Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527B4C433DB
-	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Mar 2021 19:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5634DC433DB
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Mar 2021 11:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A2A264F1F
-	for <linux-perf-users@archiver.kernel.org>; Sun,  7 Mar 2021 19:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16AB965268
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 Mar 2021 11:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231472AbhCGTXk (ORCPT
+        id S230084AbhCILFt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 7 Mar 2021 14:23:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45470 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231520AbhCGTX2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 Mar 2021 14:23:28 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2747FAF1E;
-        Sun,  7 Mar 2021 19:23:27 +0000 (UTC)
-Subject: Re: [PATCH] perf annotate: add --demangle and --demangle-kernel
-From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <deb2af9e-25dd-ac72-29f4-ab90c2b24237@suse.cz>
- <YDVcZJscuKIgShsm@kernel.org> <a2349b3e-b3e2-f979-6bc5-a2cffbdd2d6a@suse.cz>
-Message-ID: <cad07055-620e-f0ce-9af2-a8a794bc47aa@suse.cz>
-Date:   Sun, 7 Mar 2021 20:23:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Tue, 9 Mar 2021 06:05:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36204 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229875AbhCILFk (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 9 Mar 2021 06:05:40 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 129B2ues063096;
+        Tue, 9 Mar 2021 06:05:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=AW61LqGjnRgXZHHqyRhjGGxS+iHj6ivwsqhDbjECUaI=;
+ b=e93mwpjhV2o+UK1k6MHChkC9tctjDm+cXyNi8rWZiB5W9jMY7bdTqs5YxrfBtL/3xBE/
+ EVOhmh4tQe7EJtztvF/ueruVY7iN0e/iQ3gTsp0K4HVHTOZgtrcA0DViolraE2kbgMAg
+ FWlVF3J4QG7BqOpGUK+bbXpsufE/4a6s6bNHpnV55S/F7akzQLd8uLrfyED1rzEUNiwC
+ E+rCEt9hsTLAkRiTQ+KH8DFdsT0qq9QFSVVQDIVksMFqpomyXiICnh8Xj5ONdoVjqN6B
+ n67Rl+2LVa4nqrBmhMV2UTkuKix2+J48uRqZ/ND+XY9MXUSlFR6tLE6zYjHi/Hpdak+y kg== 
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 375wfspu3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Mar 2021 06:05:38 -0500
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 129Ax1WE004220;
+        Tue, 9 Mar 2021 11:05:36 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 3741c89dd2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 09 Mar 2021 11:05:36 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 129B5Xj048890204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 9 Mar 2021 11:05:33 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93F814C046;
+        Tue,  9 Mar 2021 11:05:33 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 49F224C04A;
+        Tue,  9 Mar 2021 11:05:33 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  9 Mar 2021 11:05:33 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] tool/perf: Perf build fails on 5.12.0rc2 on s390
+Date:   Tue,  9 Mar 2021 12:04:47 +0100
+Message-Id: <20210309110447.834292-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <a2349b3e-b3e2-f979-6bc5-a2cffbdd2d6a@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
+ definitions=2021-03-09_09:2021-03-08,2021-03-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ spamscore=0 mlxscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2009150000
+ definitions=main-2103090053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello.
+perf build fails on 5.12.0rc2 on s390 with this error message:
 
-May I please remind this patch. Apparently, you applied the perf-config
-counterpart of the patch as 804fd30c6bd9aec7859a0503581312834fb197f1
-(in tmp.perf/core branch), but we miss setting the same via options.
+util/synthetic-events.c: In function
+				‘__event__synthesize_thread.part.0.isra’:
+util/synthetic-events.c:787:19: error: ‘kernel_thread’ may be
+    used uninitialized in this function [-Werror=maybe-uninitialized]
+    787 |   if (_pid == pid && !kernel_thread) {
+        |       ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
 
-Thank you,
-Martin
+The build succeeds using command 'make DEBUG=y'.
 
-On 2/26/21 11:01 AM, Martin Liška wrote:
-> On 2/23/21 8:49 PM, Arnaldo Carvalho de Melo wrote:
->> Em Mon, Feb 22, 2021 at 09:29:22AM +0100, Martin Liška escreveu:
->>> Perf annotate supports --symbol but it's impossible to filter
->>> a C++ symbol. With --no-demangle one can filter easily by
->>> mangled function name.
->>>
->>> Signed-off-by: Martin Liška <mliska@suse.cz>
->>> ---
->>>   tools/perf/Documentation/perf-annotate.txt | 7 +++++++
->>>   tools/perf/builtin-annotate.c              | 4 ++++
->>>   2 files changed, 11 insertions(+)
->>>
->>> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
->>> index 1b5042f134a8..80c1be5d566c 100644
->>> --- a/tools/perf/Documentation/perf-annotate.txt
->>> +++ b/tools/perf/Documentation/perf-annotate.txt
->>> @@ -124,6 +124,13 @@ OPTIONS
->>>   --group::
->>>       Show event group information together
->>> +--demangle::
->>> +    Demangle symbol names to human readable form. It's enabled by default,
->>> +    disable with --no-demangle.
->>> +
->>> +--demangle-kernel::
->>> +    Demangle kernel symbol names to human readable form (for C++ kernels).
->>> +
->>>   --percent-type::
->>>       Set annotation percent type from following choices:
->>>         global-period, local-period, global-hits, local-hits
->>> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
->>> index a23ba6bb99b6..ef70a17b9b5b 100644
->>> --- a/tools/perf/builtin-annotate.c
->>> +++ b/tools/perf/builtin-annotate.c
->>> @@ -538,6 +538,10 @@ int cmd_annotate(int argc, const char **argv)
->>>               "Strip first N entries of source file path name in programs (with --prefix)"),
->>>       OPT_STRING(0, "objdump", &annotate.opts.objdump_path, "path",
->>>              "objdump binary to use for disassembly and annotations"),
->>> +    OPT_BOOLEAN(0, "demangle", &symbol_conf.demangle,
->>> +            "Disable symbol demangling"),
->>
->> Nope, this _enables_ demangling, i.e.:
->>
->>     perf annotate --demangle
-> 
-> Oh, yeah, you are right.
-> 
->>
->> Asks for symbol demangling, while:
->>
->>     perf annotate --no-demangle
->>
->> As you correctly wrote in your commit message and on the
->> --demangle-kernel case, enables demangling.
-> 
-> Fixed that in V2.
-> 
-> Martin
-> 
->>
->> Please consider making this configurable (if not already) via
->> ~/.perfconfig, 'perf config', sure in a followup patch.
->>
->> Thanks,
->>
->> - Arnaldo
->>
->>> +    OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
->>> +            "Enable kernel symbol demangling"),
->>>       OPT_BOOLEAN(0, "group", &symbol_conf.event_group,
->>>               "Show event group information together"),
->>>       OPT_BOOLEAN(0, "show-total-period", &symbol_conf.show_total_period,
->>> -- 
->>> 2.30.1
->>>
->>
-> 
+The variable kernel_thread is set by this function sequence:
+
+__event__synthesize_thread()
+|    defines bool kernel_thread; as local variable and calls
++--> perf_event__prepare_comm(..., &kernel_thread)
+     +--> perf_event__get_comm_ids(..., bool *kernel);
+          On return of this function variable kernel is always
+          set to true of false.
+
+To prevent this compile error, assign variable kernel_thread
+a value when it is defined.
+
+Output after:
+[root@m35lp76 perf]# make  util/synthetic-events.o
+....
+ CC       util/synthetic-events.o
+[root@m35lp76 perf]#
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/util/synthetic-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index b698046ec2db..5dd451695f33 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -758,7 +758,7 @@ static int __event__synthesize_thread(union perf_event *comm_event,
+ 	for (i = 0; i < n; i++) {
+ 		char *end;
+ 		pid_t _pid;
+-		bool kernel_thread;
++		bool kernel_thread = false;
+ 
+ 		_pid = strtol(dirent[i]->d_name, &end, 10);
+ 		if (*end)
+-- 
+2.29.2
 
