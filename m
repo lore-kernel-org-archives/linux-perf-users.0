@@ -2,146 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_20,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C43C433DB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Mar 2021 15:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCD7C433E0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Mar 2021 16:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8997F64F33
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Mar 2021 15:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CCD64FCA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 Mar 2021 16:33:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232818AbhCJPUs (ORCPT
+        id S230270AbhCJQcu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 Mar 2021 10:20:48 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19758 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233188AbhCJPUZ (ORCPT
+        Wed, 10 Mar 2021 11:32:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230488AbhCJQci (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 Mar 2021 10:20:25 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12AF7QK5140905;
-        Wed, 10 Mar 2021 10:20:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : from : subject
- : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=7PLLG7wkEJSL5gDT/Zi2hWogyGpgohBrWzV7LNTz6GU=;
- b=sQfLf6yo6KDMHaHi0fATnuA94J0i5g4jw7p35U20C4V5jS6JYxoT0B1Zr4INossr0Gwf
- 9PYMlcFW8FDercl+9ly3U+nguPHjPp33rnwDfG3k7Q/2A8VNNHguhG+HVK5iLiG/uqts
- m+0BETxr8WVCLpiaokXdVlw5/kfgRH1QswS66tV9ibQKqCaIqZ3U7nkcB/h9fYtKULhH
- OTtp6VHMQSbZbvZiQN7Avo8gmuBQzFU1f8oNvmpWrcEtpYZJ/b6Swiyd74ZvYUCXbl8h
- fQxn2Em4Ir3uapUzn/fw4cuuRb2DX3py6Sz6zQHXC4p5/3t0pFQnAZOQEd6WQX84efK/ aQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 376tes3jfe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Mar 2021 10:20:00 -0500
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12AFC9Ws005580;
-        Wed, 10 Mar 2021 15:19:57 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 376mb0rjdh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 Mar 2021 15:19:57 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12AFJtBr42795432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Mar 2021 15:19:55 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 749204C050;
-        Wed, 10 Mar 2021 15:19:55 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4766E4C06E;
-        Wed, 10 Mar 2021 15:19:55 +0000 (GMT)
-Received: from li-e35baacc-2106-11b2-a85c-8f97eb669a6e.ibm.com (unknown [9.145.75.163])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 10 Mar 2021 15:19:55 +0000 (GMT)
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>, wangnan0@huawei.com
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        daniel@iogearbox.net, iii@linux.ibm.com
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Subject: Perf test 42.2 (BPF relocation checker) failure
-Organization: IBM
-Message-ID: <34a79d0b-43ae-fbf8-9510-41930abc1770@linux.ibm.com>
-Date:   Wed, 10 Mar 2021 16:19:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.7.0
+        Wed, 10 Mar 2021 11:32:38 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80119C061760
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Mar 2021 08:32:38 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id w11so24036051wrr.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Mar 2021 08:32:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=M/ohaZ6/LI5P7bkTP7IyY+5vj/YcmWluV9S3+P2LKjQ=;
+        b=hQAN1G64SG8D9rP0SK2fZZTNyfqzk95SxEYPJL3NZPF6C04K03v/Q0SwXUdYjgKbi4
+         1htrY6zl7uPDFFwCAWRuS0CLZiCs7IpkstH5oBufB8RgVjnsLeRuSb5RR7VC+AqrwZ7P
+         KRp3L864Xwxrulqc8Md09/gsjgl5M9S9pWjs7BcLvRUT5pZSpHaN7ShZ5haJxZQII7Hu
+         RK1M6X7+Sa/K5ooJvNws9lzixyz80nOJdjnZrnPVrBKPfxpDEvgRh2MsGPYd5u010KUs
+         BfJB+k7rgqllgzI3MQdvSL/uGGdIaMfHGpzV8i1tbUkB/vsUVsw1hA5hc+3f25FWW2Ia
+         Ptyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=M/ohaZ6/LI5P7bkTP7IyY+5vj/YcmWluV9S3+P2LKjQ=;
+        b=pP/myu7m+iyRjlOtRf18GDQSydOczkR/04TmXeaMrvc6u+6PNH+rwKQbRoZuOslTeL
+         /1clG1+ZxqJqRUyJkkAKH4JUmJyFJBlwdsm4Q69DLDsuUjuWovjkdzBlJ7gdXRfBO9hq
+         tOAVFzUVmo+tPpqeqYgKIKKdHTjaKvI2G9gD1vm+OmMFSJizRvqJFVk4J/pwAcntDtuA
+         Ig0gw7B2V7teJ8sbfQMtyCntwbVkqOE8My0MNu9ikHoAs9f2WUrp12+3cmTYa9skBjNj
+         J7dfkrGTrVI+9s4Nu5qFaZmCzZvL1yfkYJ4MXGRQXfsoqwfgH/OfmZ+voeuUxeUh3H3U
+         3W6Q==
+X-Gm-Message-State: AOAM533CVtinfHzUvyHxw46no+oG199NYm4c1s/zmw3BtSpVXvBupM3h
+        GJYZQYSDoYksFPMeEW29Z+O3LkXBd/VM4ER0uS64qel3IpIB8A==
+X-Google-Smtp-Source: ABdhPJwrEg9bYN1YWjdoDyNXnwFqSh3a23BSWRDB9cabMsDxxnCEkdjOx7Wmiql8HIJk7xZ99oUwG6IeHXBOJrDV/q8=
+X-Received: by 2002:adf:a59a:: with SMTP id g26mr4372252wrc.271.1615393956698;
+ Wed, 10 Mar 2021 08:32:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-10_09:2021-03-10,2021-03-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 phishscore=0 priorityscore=1501 clxscore=1011
- mlxlogscore=999 adultscore=0 impostorscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103100076
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 10 Mar 2021 08:32:25 -0800
+Message-ID: <CAP-5=fXevQSmPPu2d3QixSJH=8Y5cb379angt36mATj96E7ZPw@mail.gmail.com>
+Subject: Linux Foundation accepted for Google Summer-of-Code 2021
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>
+Cc:     Aveek Basu <basu.aveek@gmail.com>, Till Kamppeter <till@linux.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi all
+Hi,
 
+I'm happy to share that the Linux Foundation has been accepted into
+the Google Summer-of-Code 2021 and we are looking for students
+interested in profiling, perf, etc. to apply to do projects.
 
-I observe that the perf test 42.4 (BPF relocation checker)
-fails for quite some time now on s390 and on x86.
-I have not tested other architectures.
+The main details on the Linux foundation application are here:
+https://wiki.linuxfoundation.org/gsoc/google-summer-code-2021
 
-I investigated this and Ilya found a commit in the kernel, released with
-version 5.10:
+Details on potential projects with perf here:
+https://wiki.linuxfoundation.org/gsoc/2021-gsoc-perf
 
-commit d859900c4c56 ("bpf, libbpf: support global data/bss/rodata sections")
+Please help to share, especially to students.
 
-Bpf code relocation with global variables is now supported.
+Additional project ideas, mentors and help is also appreciated.
 
-The test 42.4 returns FAILED, because it assumes in function __test_bpf()
-that the function call to prepare_bpf() returns NULL. But with above
-kernel commit it returns a valid object pointer.
-
-My question is:
-Should we keep this test? It looks like this test is now obsolete, since
-the kernel bpf code now accepts global variables.
-
-Should we make the test work? Then we have to change the bpf code.
-I am no BPF export but Ilya explained it to me:
-
-The BPF-verifier in the kernel rejects the BPF byte code.
-A wrong map pointer is passed to bpf_map_update_elem. Maps should be
-loaded by file descriptors (there is a special opcode for that).
-In this case they just take a global var address as a map.
-
-libbpf: -- BEGIN DUMP LOG ---
-libbpf:
-0: (b7) r1 = 0
-1: (63) *(u32 *)(r10 -4) = r1
-last_idx 1 first_idx 0
-regs=2 stack=0 before 0: (b7) r1 = 0
-2: (63) *(u32 *)(r10 -8) = r1
-3: (bf) r2 = r10
-4: (07) r2 += -4
-5: (bf) r3 = r10
-6: (07) r3 += -8
-7: (18) r1 = 0x3800066e000
-9: (b7) r4 = 0
-10: (85) call bpf_map_update_elem#2
-R1 type=map_value expected=map_ptr  <<<-----------BPF verifier error reason
-processed 10 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
-
-libbpf: -- END LOG --
-libbpf: failed to load program 'bpf_func__ksys_write' --> I changed this to get it to work to that point
-libbpf: failed to load object '[bpf_relocation_test]'
-bpf: load objects failed: err=-4007: (Kernel verifier blocks program loading)
-Failed to add events selected by BPF
-
-
-So what direction should we proceed? Remove the test or make it work somehow?
-
-Thanks a lot.
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+Thanks,
+Ian
