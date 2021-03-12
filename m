@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2052CC433E6
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Mar 2021 12:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AED71C433E0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Mar 2021 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D970764FF5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Mar 2021 12:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F2764FF9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 Mar 2021 12:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbhCLM5J (ORCPT
+        id S231349AbhCLM5l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 Mar 2021 07:57:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56292 "EHLO
+        Fri, 12 Mar 2021 07:57:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29495 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231821AbhCLM5F (ORCPT
+        by vger.kernel.org with ESMTP id S231448AbhCLM5N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 Mar 2021 07:57:05 -0500
+        Fri, 12 Mar 2021 07:57:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615553825;
+        s=mimecast20190719; t=1615553832;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=wgncmMqhr4dHPhdE9BWfq/XyXMHQvttFAM4981INv84=;
-        b=A2EQJM/7+J79JV0nbwUeoXaY/sG6etjC4kAjyEmeuaGbhk/0HmbEiiMdrPDr3oXKRYozDB
-        b3kq1rLAN8Yae3+KoKUpRIhwFBLkHjFTpf8wlofd8gJt15WoB/a8CHXa+Sh/WvrhtTTEoD
-        f2zABTaF5MAVR872Zc4xdwhA4I6of+8=
+        bh=eMDB4smPKXpj13VyYw6JScKxmvyMa7ikPfuNl9CjCjM=;
+        b=OmQDPNOLMLWHzeWUlIV6WvWOOd5CByo4V0V4HAqOsCJyBk+bOVUvfcMCgdP9BHs611hvkM
+        wt5AMYwXFZxV8w2QlUwvCnZZNuWL38rNHgEyQtFzluB7F3iTsmugcYtv78AOcYLAlEbU/o
+        LNBkcaS/6tZpsbRFMxN5b/Dfjpp17D8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-149-IBQGRFjSNOe0qKlVlhp4UQ-1; Fri, 12 Mar 2021 07:57:00 -0500
-X-MC-Unique: IBQGRFjSNOe0qKlVlhp4UQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-78-CYeILR2XPRaZIlLezxAVSA-1; Fri, 12 Mar 2021 07:57:08 -0500
+X-MC-Unique: CYeILR2XPRaZIlLezxAVSA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63BF11015C84;
-        Fri, 12 Mar 2021 12:56:56 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1223E108BD06;
+        Fri, 12 Mar 2021 12:57:07 +0000 (UTC)
 Received: from krava (unknown [10.40.192.54])
-        by smtp.corp.redhat.com (Postfix) with SMTP id DC311197F9;
-        Fri, 12 Mar 2021 12:56:52 +0000 (UTC)
-Date:   Fri, 12 Mar 2021 13:56:51 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5A26410016FB;
+        Fri, 12 Mar 2021 12:57:04 +0000 (UTC)
+Date:   Fri, 12 Mar 2021 13:57:03 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
@@ -50,108 +50,112 @@ Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         acme@kernel.org, jolsa@kernel.org, maddy@linux.ibm.com,
         ravi.bangoria@linux.ibm.com, kjain@linux.ibm.com,
         kan.liang@linux.intel.com, peterz@infradead.org
-Subject: Re: [PATCH 4/4] tools/perf: Support pipeline stage cycles for powerpc
-Message-ID: <YEtlEyb2z33qHhvO@krava>
+Subject: Re: [PATCH 2/4] tools/perf: Add dynamic headers for perf report
+ columns
+Message-ID: <YEtlHzsJ4z19pB/M@krava>
 References: <1615298640-1529-1-git-send-email-atrajeev@linux.vnet.ibm.com>
- <1615298640-1529-5-git-send-email-atrajeev@linux.vnet.ibm.com>
+ <1615298640-1529-3-git-send-email-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1615298640-1529-5-git-send-email-atrajeev@linux.vnet.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <1615298640-1529-3-git-send-email-atrajeev@linux.vnet.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Mar 09, 2021 at 09:04:00AM -0500, Athira Rajeev wrote:
-> The pipeline stage cycles details can be recorded on powerpc from
-> the contents of Performance Monitor Unit (PMU) registers. On
-> ISA v3.1 platform, sampling registers exposes the cycles spent in
-> different pipeline stages. Patch adds perf tools support to present
-> two of the cycle counter information along with memory latency (weight).
+On Tue, Mar 09, 2021 at 09:03:58AM -0500, Athira Rajeev wrote:
+> Currently the header string for different columns in perf report
+> is fixed. Some fields of perf sample could have different meaning
+> for different architectures than the meaning conveyed by the header
+> string. An example is the new field 'var2_w' of perf_sample_weight
+> structure. This is presently captured as 'Local INSTR Latency' in
+> perf mem report. But this could be used to denote a different latency
+> cycle in another architecture.
 > 
-> Re-use the field 'ins_lat' for storing the first pipeline stage cycle.
-> This is stored in 'var2_w' field of 'perf_sample_weight'.
-> 
-> Add a new field 'p_stage_cyc' to store the second pipeline stage cycle
-> which is stored in 'var3_w' field of perf_sample_weight.
-> 
-> Add new sort function 'Pipeline Stage Cycle' and include this in
-> default_mem_sort_order[]. This new sort function may be used to denote
-> some other pipeline stage in another architecture. So add this to
-> list of sort entries that can have dynamic header string.
+> Introduce a weak function arch_perf_header_entry__add() to set
+> the arch specific header string for the fields which can contain dynamic
+> header. If the architecture do not have this function, fall back to the
+> default header string value.
 > 
 > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 > ---
->  tools/perf/Documentation/perf-report.txt |  1 +
->  tools/perf/arch/powerpc/util/event.c     | 18 ++++++++++++++++--
->  tools/perf/util/event.h                  |  1 +
->  tools/perf/util/hist.c                   | 11 ++++++++---
->  tools/perf/util/hist.h                   |  1 +
->  tools/perf/util/session.c                |  4 +++-
->  tools/perf/util/sort.c                   | 24 ++++++++++++++++++++++--
->  tools/perf/util/sort.h                   |  2 ++
->  8 files changed, 54 insertions(+), 8 deletions(-)
+>  tools/perf/util/event.h |  1 +
+>  tools/perf/util/sort.c  | 19 ++++++++++++++++++-
+>  2 files changed, 19 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-> index f546b5e9db05..9691d9c227ba 100644
-> --- a/tools/perf/Documentation/perf-report.txt
-> +++ b/tools/perf/Documentation/perf-report.txt
-> @@ -112,6 +112,7 @@ OPTIONS
->  	- ins_lat: Instruction latency in core cycles. This is the global instruction
->  	  latency
->  	- local_ins_lat: Local instruction latency version
-> +	- p_stage_cyc: Number of cycles spent in a pipeline stage.
-
-please specify in here that it's ppc only
-
-SNIP
-
-> +struct sort_entry sort_p_stage_cyc = {
-> +	.se_header      = "Pipeline Stage Cycle",
-> +	.se_cmp         = sort__global_p_stage_cyc_cmp,
-> +	.se_snprintf	= hist_entry__p_stage_cyc_snprintf,
-> +	.se_width_idx	= HISTC_P_STAGE_CYC,
-> +};
-> +
->  struct sort_entry sort_mem_daddr_sym = {
->  	.se_header	= "Data Symbol",
->  	.se_cmp		= sort__daddr_cmp,
-> @@ -1853,6 +1872,7 @@ static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
->  	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
->  	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
->  	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
-> +	DIM(SORT_P_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
-
-this might be out of scope for this patch, but would it make sense
-to add arch specific sort dimension? so the specific column is
-not even visible on arch that it's not supported on
-
-
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index f603edbbbc6f..89b149e2e70a 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -427,5 +427,6 @@ void  cpu_map_data__synthesize(struct perf_record_cpu_map_data *data, struct per
+>  
+>  void arch_perf_parse_sample_weight(struct perf_sample *data, const __u64 *array, u64 type);
+>  void arch_perf_synthesize_sample_weight(const struct perf_sample *data, __u64 *array, u64 type);
+> +const char *arch_perf_header_entry__add(const char *se_header);
+>  
+>  #endif /* __PERF_RECORD_H */
+> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> index 0d5ad42812b9..741a6df29fa0 100644
+> --- a/tools/perf/util/sort.c
+> +++ b/tools/perf/util/sort.c
+> @@ -25,6 +25,7 @@
+>  #include <traceevent/event-parse.h>
+>  #include "mem-events.h"
+>  #include "annotate.h"
+> +#include "event.h"
+>  #include "time-utils.h"
+>  #include "cgroup.h"
+>  #include "machine.h"
+> @@ -45,6 +46,7 @@
+>  regex_t		ignore_callees_regex;
+>  int		have_ignore_callees = 0;
+>  enum sort_mode	sort__mode = SORT_MODE__NORMAL;
+> +const char	*dynamic_headers[] = {"local_ins_lat"};
+>  
+>  /*
+>   * Replaces all occurrences of a char used with the:
+> @@ -1816,6 +1818,16 @@ struct sort_dimension {
+>  	int			taken;
 >  };
 >  
->  #undef DIM
-> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-> index 63f67a3f3630..23b20cbbc846 100644
-> --- a/tools/perf/util/sort.h
-> +++ b/tools/perf/util/sort.h
-> @@ -51,6 +51,7 @@ struct he_stat {
->  	u64			period_guest_us;
->  	u64			weight;
->  	u64			ins_lat;
-> +	u64			p_stage_cyc;
->  	u32			nr_events;
->  };
->  
-> @@ -234,6 +235,7 @@ enum sort_type {
->  	SORT_CODE_PAGE_SIZE,
->  	SORT_LOCAL_INS_LAT,
->  	SORT_GLOBAL_INS_LAT,
-> +	SORT_P_STAGE_CYC,
+> +const char * __weak arch_perf_header_entry__add(const char *se_header)
 
-we could have the whole 'SORT_PEPELINE_STAGE_CYC',
-so it's more obvious
+no need for the __add suffix in here
 
-thanks,
 jirka
+
+> +{
+> +	return se_header;
+> +}
+> +
+> +static void sort_dimension_add_dynamic_header(struct sort_dimension *sd)
+> +{
+> +	sd->entry->se_header = arch_perf_header_entry__add(sd->entry->se_header);
+> +}
+> +
+>  #define DIM(d, n, func) [d] = { .name = n, .entry = &(func) }
+>  
+>  static struct sort_dimension common_sort_dimensions[] = {
+> @@ -2739,11 +2751,16 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+>  			struct evlist *evlist,
+>  			int level)
+>  {
+> -	unsigned int i;
+> +	unsigned int i, j;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(common_sort_dimensions); i++) {
+>  		struct sort_dimension *sd = &common_sort_dimensions[i];
+>  
+> +		for (j = 0; j < ARRAY_SIZE(dynamic_headers); j++) {
+> +			if (!strcmp(dynamic_headers[j], sd->name))
+> +				sort_dimension_add_dynamic_header(sd);
+> +		}
+> +
+>  		if (strncasecmp(tok, sd->name, strlen(tok)))
+>  			continue;
+>  
+> -- 
+> 1.8.3.1
+> 
 
