@@ -2,362 +2,313 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983F3C433E0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Mar 2021 07:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E0EC433E0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Mar 2021 13:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6370F64E49
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Mar 2021 07:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E84064E31
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 Mar 2021 13:04:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbhCOHwm (ORCPT
+        id S229518AbhCOND3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 Mar 2021 03:52:42 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230226AbhCOHwg (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 Mar 2021 03:52:36 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12F7XsgX089859;
-        Mon, 15 Mar 2021 03:52:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=HcX046qC/tehsLd7N2DVF9Yj77T3WGq0lvIEkaEsFEA=;
- b=cuk3giHKykYPYWGVenYLJC9/n5ekFPbFg97T6zlwInxYFbomwgVAjCgqSKyQc8ReH13p
- ycNRmiB/l8jeF5o+NdG7WHpFw9yUgkTvpn50XHy/KTAXwYEqIBSeNTo7PkhVK14Ki0E9
- ybhqxUa0H8mGuU02mCzdNfcter4t7190wUuWWOevlK6CNL4rm0x7znmYY9i4YREpGjTE
- LK2R8mdYGN/1nlXVsNpopeGzc6B0xYQkJ/aRWPxJA6nyXPy9wWlkUZ++QFOIRI8dYH5+
- 0w66a1kir+v4snaDX4DhITLMgoIj81gyXZEVoXbM0LwkM9neK02YsyS/v1qietQPv+en xQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 379r4a48jn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 03:52:21 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 12F7Xvmt090288;
-        Mon, 15 Mar 2021 03:52:20 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 379r4a48ja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 03:52:20 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12F7nTYJ007557;
-        Mon, 15 Mar 2021 07:52:19 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma04ams.nl.ibm.com with ESMTP id 378n18hkey-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Mar 2021 07:52:19 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12F7qG4d57409972
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Mar 2021 07:52:16 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39CC65204E;
-        Mon, 15 Mar 2021 07:52:16 +0000 (GMT)
-Received: from [9.79.177.97] (unknown [9.79.177.97])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 693AC52050;
-        Mon, 15 Mar 2021 07:52:12 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.4\))
-Subject: Re: [PATCH 4/4] tools/perf: Support pipeline stage cycles for powerpc
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <YEtlEyb2z33qHhvO@krava>
-Date:   Mon, 15 Mar 2021 13:22:09 +0530
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, jolsa@kernel.org,
-        kjain@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        kan.liang@linux.intel.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FD9505E3-8CDE-4073-88A0-BCA4B92F276E@linux.vnet.ibm.com>
-References: <1615298640-1529-1-git-send-email-atrajeev@linux.vnet.ibm.com>
- <1615298640-1529-5-git-send-email-atrajeev@linux.vnet.ibm.com>
- <YEtlEyb2z33qHhvO@krava>
-To:     Jiri Olsa <jolsa@redhat.com>
-X-Mailer: Apple Mail (2.3608.120.23.2.4)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-15_03:2021-03-15,2021-03-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- mlxscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0 bulkscore=0
- adultscore=0 impostorscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103150050
+        Mon, 15 Mar 2021 09:03:29 -0400
+Received: from mail.kdab.com ([176.9.126.58]:46978 "EHLO mail.kdab.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229683AbhCOND0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 15 Mar 2021 09:03:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kdab.com; h=
+ content-type:content-type:mime-version:references:in-reply-to
+ :organization:message-id:date:date:subject:subject:from:from; s=
+ dkim; t=1615813401; x=1616677402; bh=w0unVbgy7aU7aqx9L6bZSuqfvmi
+ RsryT6kUKSER1Uvg=; b=GB3Ees81E8YMBqJbVq/nvWK0O9ig7ci8bj5nNvKBy0w
+ J4wLv6x6oPhHDwCJ8rUcUFcHJt9qyM2PIdMXI9nyiYgSEfk2JPC8embYCkMCCMZv
+ /McHoTPEtBhBlBJMC/2s8HAELe5hrcdRpQvP7TiHzgAGmA10fMsj7fzJNbIjg0bY
+ =
+X-Virus-Scanned: amavisd-new at kdab.com
+From:   Milian Wolff <milian.wolff@kdab.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Aveek Basu <basu.aveek@gmail.com>,
+        Till Kamppeter <till@linux.com>
+Subject: Re: Linux Foundation accepted for Google Summer-of-Code 2021
+Date:   Mon, 15 Mar 2021 14:00:24 +0100
+Message-ID: <2992928.gD54jUj7cO@milian-workstation>
+Organization: KDAB
+In-Reply-To: <CAP-5=fUsFKOj3iN4h7DPAeT-GrEby8T0JJEj1zTBxw5L4q_oBQ@mail.gmail.com>
+References: <CAP-5=fXevQSmPPu2d3QixSJH=8Y5cb379angt36mATj96E7ZPw@mail.gmail.com>
+ <6935438.x6IAOlLzNv@agathebauer>
+ <CAP-5=fUsFKOj3iN4h7DPAeT-GrEby8T0JJEj1zTBxw5L4q_oBQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart6450931.M2pTB9URCE";
+ micalg="sha256"; protocol="application/pkcs7-signature"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+--nextPart6450931.M2pTB9URCE
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-
-> On 12-Mar-2021, at 6:26 PM, Jiri Olsa <jolsa@redhat.com> wrote:
+On Sonntag, 14. M=E4rz 2021 18:29:09 CET Ian Rogers wrote:
+> Hi Milian,
 >=20
-> On Tue, Mar 09, 2021 at 09:04:00AM -0500, Athira Rajeev wrote:
->> The pipeline stage cycles details can be recorded on powerpc from
->> the contents of Performance Monitor Unit (PMU) registers. On
->> ISA v3.1 platform, sampling registers exposes the cycles spent in
->> different pipeline stages. Patch adds perf tools support to present
->> two of the cycle counter information along with memory latency =
-(weight).
->>=20
->> Re-use the field 'ins_lat' for storing the first pipeline stage =
-cycle.
->> This is stored in 'var2_w' field of 'perf_sample_weight'.
->>=20
->> Add a new field 'p_stage_cyc' to store the second pipeline stage =
-cycle
->> which is stored in 'var3_w' field of perf_sample_weight.
->>=20
->> Add new sort function 'Pipeline Stage Cycle' and include this in
->> default_mem_sort_order[]. This new sort function may be used to =
-denote
->> some other pipeline stage in another architecture. So add this to
->> list of sort entries that can have dynamic header string.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/Documentation/perf-report.txt |  1 +
->> tools/perf/arch/powerpc/util/event.c     | 18 ++++++++++++++++--
->> tools/perf/util/event.h                  |  1 +
->> tools/perf/util/hist.c                   | 11 ++++++++---
->> tools/perf/util/hist.h                   |  1 +
->> tools/perf/util/session.c                |  4 +++-
->> tools/perf/util/sort.c                   | 24 =
-++++++++++++++++++++++--
->> tools/perf/util/sort.h                   |  2 ++
->> 8 files changed, 54 insertions(+), 8 deletions(-)
->>=20
->> diff --git a/tools/perf/Documentation/perf-report.txt =
-b/tools/perf/Documentation/perf-report.txt
->> index f546b5e9db05..9691d9c227ba 100644
->> --- a/tools/perf/Documentation/perf-report.txt
->> +++ b/tools/perf/Documentation/perf-report.txt
->> @@ -112,6 +112,7 @@ OPTIONS
->> 	- ins_lat: Instruction latency in core cycles. This is the =
-global instruction
->> 	  latency
->> 	- local_ins_lat: Local instruction latency version
->> +	- p_stage_cyc: Number of cycles spent in a pipeline stage.
+> Thanks for the email and hotspot is a very interesting project!
 >=20
-> please specify in here that it's ppc only
-
-Ok Sure,
-
+> On Sat, Mar 13, 2021 at 8:25 AM Milian Wolff <milian.wolff@kdab.com> wrot=
+e:
+> > On Mittwoch, 10. M=E4rz 2021 17:32:25 CET Ian Rogers wrote:
+> > > Hi,
+> > >=20
+> > > I'm happy to share that the Linux Foundation has been accepted into
+> > > the Google Summer-of-Code 2021 and we are looking for students
+> > > interested in profiling, perf, etc. to apply to do projects.
+> > >=20
+> > > The main details on the Linux foundation application are here:
+> > > https://wiki.linuxfoundation.org/gsoc/google-summer-code-2021
+> > >=20
+> > > Details on potential projects with perf here:
+> > > https://wiki.linuxfoundation.org/gsoc/2021-gsoc-perf
+> > >=20
+> > > Please help to share, especially to students.
+> > >=20
+> > > Additional project ideas, mentors and help is also appreciated.
+> >=20
+> > As the maintainer of hotspot [1], I'd be happy to discuss how we could
+> > reuse the prior art in providing a GUI around `perf report` and more.
+> > Considering that hotspot is already a pretty successfull project, I
+> > wonder why we have to reinvent the wheel to provide a gtk-based GUI - is
+> > it really just the framework choice - Qt vs. GTK? Or are there other
+> > reasons?
 >=20
-> SNIP
->=20
->> +struct sort_entry sort_p_stage_cyc =3D {
->> +	.se_header      =3D "Pipeline Stage Cycle",
->> +	.se_cmp         =3D sort__global_p_stage_cyc_cmp,
->> +	.se_snprintf	=3D hist_entry__p_stage_cyc_snprintf,
->> +	.se_width_idx	=3D HISTC_P_STAGE_CYC,
->> +};
->> +
->> struct sort_entry sort_mem_daddr_sym =3D {
->> 	.se_header	=3D "Data Symbol",
->> 	.se_cmp		=3D sort__daddr_cmp,
->> @@ -1853,6 +1872,7 @@ static void =
-sort_dimension_add_dynamic_header(struct sort_dimension *sd)
->> 	DIM(SORT_CODE_PAGE_SIZE, "code_page_size", sort_code_page_size),
->> 	DIM(SORT_LOCAL_INS_LAT, "local_ins_lat", sort_local_ins_lat),
->> 	DIM(SORT_GLOBAL_INS_LAT, "ins_lat", sort_global_ins_lat),
->> +	DIM(SORT_P_STAGE_CYC, "p_stage_cyc", sort_p_stage_cyc),
->=20
-> this might be out of scope for this patch, but would it make sense
-> to add arch specific sort dimension? so the specific column is
-> not even visible on arch that it's not supported on
->=20
+> There are a few issues:
+>  - there's an observation that the gtk support in perf was bitrotting.
+> Having a student project in this area would hopefully improve this
+> situation.
 
-Hi Jiri,
+Agreed.
 
-Thanks for the suggestions.
+>  - commands like perf report even in text mode are slow, single
+> threaded, etc. Again, an area where a student project can help out.
 
-Below is an approach I came up with for adding dynamic sort key based on =
-architecture support.
-With this patch, perf report for mem mode will display new sort key only =
-in supported archs.=20
-Please help to review if this approach looks good. I have created this =
-on top of my current set. If this looks fine,=20
-I can include this in version2 patch set.
+Again, agreed. That is actually something that I've spent a considerable=20
+amount of time on. So far, I mostly concentrated on better caching - someth=
+ing=20
+which has had very significant effects on the performance of hotspot for so=
+me=20
+perf.data workloads. See e.g.: https://www.kdab.com/hotspot-version-1-3-0-r=
+eleased/
 
-=46rom 8ebbe6ae802d895103335899e4e60dde5e562f33 Mon Sep 17 00:00:00 2001
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Date: Mon, 15 Mar 2021 02:33:28 +0000
-Subject: [PATCH] tools/perf: Add dynamic sort dimensions for mem mode
-
-Add dynamic sort dimensions for mem mode.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/arch/powerpc/util/event.c |  7 +++++
- tools/perf/util/event.h              |  1 +
- tools/perf/util/sort.c               | 43 +++++++++++++++++++++++++++-
- 3 files changed, 50 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/arch/powerpc/util/event.c =
-b/tools/perf/arch/powerpc/util/event.c
-index b80fbee83b6e..fddfc288c415 100644
---- a/tools/perf/arch/powerpc/util/event.c
-+++ b/tools/perf/arch/powerpc/util/event.c
-@@ -44,3 +44,10 @@ const char *arch_perf_header_entry__add(const char =
-*se_header)
- 		return "Dispatch Cyc";
- 	return se_header;
- }
-+
-+int arch_support_dynamic_key(const char *sort_key)
-+{
-+	if (!strcmp(sort_key, "p_stage_cyc"))
-+		return 1;
-+	return 0;
-+}
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 65f89e80916f..6cd4bf54dbdc 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -429,5 +429,6 @@ char *get_page_size_name(u64 size, char *str);
- void arch_perf_parse_sample_weight(struct perf_sample *data, const =
-__u64 *array, u64 type);
- void arch_perf_synthesize_sample_weight(const struct perf_sample *data, =
-__u64 *array, u64 type);
- const char *arch_perf_header_entry__add(const char *se_header);
-+int arch_support_dynamic_key(const char *sort_key);
+Threading wise, in hotspot, we have basically two threads - one in the=20
+background process perfparser which does unwinding and symbolication. Then=
 =20
- #endif /* __PERF_RECORD_H */
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index cbb3899e7eca..e194b1187db8 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -37,7 +37,7 @@ const char	default_parent_pattern[] =3D =
-"^sys_|^do_page_fault";
- const char	*parent_pattern =3D default_parent_pattern;
- const char	*default_sort_order =3D "comm,dso,symbol";
- const char	default_branch_sort_order[] =3D =
-"comm,dso_from,symbol_from,symbol_to,cycles";
--const char	default_mem_sort_order[] =3D =
-"local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,=
-local_ins_lat,p_stage_cyc";
-+const char	default_mem_sort_order[] =3D =
-"local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,=
-local_ins_lat";
- const char	default_top_sort_order[] =3D "dso,symbol";
- const char	default_diff_sort_order[] =3D "dso,symbol";
- const char	default_tracepoint_sort_order[] =3D "trace";
-@@ -47,6 +47,7 @@ regex_t		ignore_callees_regex;
- int		have_ignore_callees =3D 0;
- enum sort_mode	sort__mode =3D SORT_MODE__NORMAL;
- const char	*dynamic_headers[] =3D {"local_ins_lat", "p_stage_cyc"};
-+const char	*dynamic_sort_keys_mem[] =3D {"p_stage_cyc"};
+another one in the hotspot GUI process, which does the data aggregation for=
 =20
- /*
-  * Replaces all occurrences of a char used with the:
-@@ -2997,6 +2998,20 @@ static char *prefix_if_not_in(const char *pre, =
-char *str)
- 	return n;
- }
-=20
-+/*
-+ * Adds 'suff,' suffix into 'str' if 'suff' is
-+ * not already part of 'str'.
-+ */
-+static char *suffix_if_not_in(const char *suff, char *str)
-+{
-+	if (!str || strstr(str, suff))
-+		return str;
-+
-+	if (asprintf(&str, "%s,%s", str, suff) < 0)
-+		str =3D NULL;
-+	return str;
-+}
-+
- static char *setup_overhead(char *keys)
- {
- 	if (sort__mode =3D=3D SORT_MODE__DIFF)
-@@ -3010,6 +3025,26 @@ static char *setup_overhead(char *keys)
- 	return keys;
- }
-=20
-+int __weak arch_support_dynamic_key(const char *sort_key =
-__maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static char *setup_dynamic_sort_keys(char *str)
-+{
-+	unsigned int j;
-+
-+	if (sort__mode =3D=3D SORT_MODE__MEMORY)
-+		for (j =3D 0; j < ARRAY_SIZE(dynamic_sort_keys_mem); =
-j++)
-+			if =
-(arch_support_dynamic_key(dynamic_sort_keys_mem[j])) {
-+				str =3D =
-suffix_if_not_in(dynamic_sort_keys_mem[j], str);
-+				if (str =3D=3D NULL)
-+					return str;
-+			}
-+
-+	return str;
-+}
-+
- static int __setup_sorting(struct evlist *evlist)
- {
- 	char *str;
-@@ -3050,6 +3085,12 @@ static int __setup_sorting(struct evlist *evlist)
- 		}
- 	}
-=20
-+	str =3D setup_dynamic_sort_keys(str);
-+	if (str =3D=3D NULL) {
-+		pr_err("Not enough memory to setup dynamic sort keys");
-+		return -ENOMEM;
-+	}
-+
- 	ret =3D setup_sort_list(&perf_hpp_list, str, evlist);
-=20
- 	free(str);
---=20
-2.26.2
+the various views. So far, I shied away from trying to further parallelize =
+the=20
+former part, as unwinding and symbolication are both heavily dependend on t=
+he=20
+order in which events are processed. I.e. we have to make sure to process m=
+map=20
+events and the like before we process a sampling event. Additionally, makin=
+g=20
+caching efficient is much easier in a singlethreaded context, which was so =
+far=20
+much more important to get right.
 
+>  - wrt UI there is also pprof (https://github.com/google/pprof) which
+> I think a web UI is interesting beyond just Qt, GTK, etc. Having the
+> code be within the perf tool means that testing can be automated, it
+> is easy for shared contributions, the kernel and user APIs aren't
+> separated by projects..
 
-Thanks,
-Athira
+Yes, nowadays there are tons of pretty good UI options out there - esp. in =
+the=20
+web context. I have not used pprof, but heard a lot of praise for the Mozil=
+la=20
+profiler too: https://profiler.firefox.com/
 
+And then there's catapult which is integrated into chromium or Perfetto whi=
+ch=20
+is afaik used for Android? The list probably goes on and on ;-)
+
+But in the end it would be extremely useful if perf could directly create a=
+=20
+pre-processed, compressed and portable result file with some command. That=
+=20
+could in turn use some easy-to-use binary format (CBOR, protobof, whatever)=
+=20
+which could then be parsed by the GUI instead of it having to reinvent the=
+=20
+wheel there.
+
+> > Generally, I would love to see a proper library provided by perf that
+> > could be used to do the `perf report` and/or `perf annotate` data
+> > processing.
+>
+> There is a library interface developing:
+> https://github.com/torvalds/linux/tree/master/tools/lib/perf
+
+Ah, that's very interesting - that didn't exist back when we started=20
+perfparser/hotspot.=20
+=20
+> But it is mainly focussed on say 'perf record' than 'perf report'.
+> Perhaps you could mentor a project to refactor the report APIs, which
+> could be integrated with hotspot? If so, we can update the GSoC wiki.
+
+While I'm honored by the invitation, I'm afraid that I don't have the capac=
+ity=20
+to fulfil this role. I've attended GSOC myself in the past, and even mentor=
+ed=20
+a couple of times, so I know that doing a good job there as a mentor requir=
+es=20
+more time than I can spare currently :(
+
+That said, I am very willing to be available for discussion as an intereste=
+d=20
+party.
+
+> It'd be nice to refactor things like event parsing into a library, in
+> part to make unit and fuzz testing easier. The event sorting is a big
+> source of perf's slowness and something that should be reasonable to
+> parallelize, an issue here is a lack of a thread pool and other
+> abstractions. These dependencies across projects can be something that
+> is tricky.
+
+In our case, sorting isn't the bottleneck at all. But it does make=20
+parallelization harder as I mentioned above. Unwinding and symbolication is=
+=20
+usually what's much much slower compared to just sorting a couple of events=
+=20
+in-memory.
+
+Regarding missing abstractions: I'm a C++ developer myself, and having easy=
+=20
+access to more abstractions like hash maps and more has helped tremendously=
+ in=20
+improving the performance of our perf.data parser too. So yes, I again tota=
+lly=20
+agree with you in that regards.
+
+> > As I said - I'm happy to discuss this topic in more detail with anyone
+> > interested in this topic.
 >=20
->> };
->>=20
->> #undef DIM
->> diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
->> index 63f67a3f3630..23b20cbbc846 100644
->> --- a/tools/perf/util/sort.h
->> +++ b/tools/perf/util/sort.h
->> @@ -51,6 +51,7 @@ struct he_stat {
->> 	u64			period_guest_us;
->> 	u64			weight;
->> 	u64			ins_lat;
->> +	u64			p_stage_cyc;
->> 	u32			nr_events;
->> };
->>=20
->> @@ -234,6 +235,7 @@ enum sort_type {
->> 	SORT_CODE_PAGE_SIZE,
->> 	SORT_LOCAL_INS_LAT,
->> 	SORT_GLOBAL_INS_LAT,
->> +	SORT_P_STAGE_CYC,
->=20
-> we could have the whole 'SORT_PEPELINE_STAGE_CYC',
-> so it's more obvious
+> I'm interested! There is an IRC channel #perf see www.oftc.net, but
+> I'd suggest the mailing list is better for discussion. I know that BPF
+> is doing regular office hours. I could imagine that similar for perf
+> would be useful, but I also know that maintainers are busy folks.
 
-Ok.
+I've joined that channel now.
 
->=20
-> thanks,
-> jirka
+Cheers
+=2D-=20
+Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
+KDAB (Deutschland) GmbH, a KDAB Group company
+Tel: +49-30-521325470
+KDAB - The Qt, C++ and OpenGL Experts
+--nextPart6450931.M2pTB9URCE
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCEekw
+ggWBMIIEaaADAgECAhA5ckQ6+SK3UdfTbBDdMTWVMA0GCSqGSIb3DQEBDAUAMHsxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIDBJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcMB1NhbGZvcmQxGjAYBgNV
+BAoMEUNvbW9kbyBDQSBMaW1pdGVkMSEwHwYDVQQDDBhBQUEgQ2VydGlmaWNhdGUgU2VydmljZXMw
+HhcNMTkwMzEyMDAwMDAwWhcNMjgxMjMxMjM1OTU5WjCBiDELMAkGA1UEBhMCVVMxEzARBgNVBAgT
+Ck5ldyBKZXJzZXkxFDASBgNVBAcTC0plcnNleSBDaXR5MR4wHAYDVQQKExVUaGUgVVNFUlRSVVNU
+IE5ldHdvcmsxLjAsBgNVBAMTJVVTRVJUcnVzdCBSU0EgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkw
+ggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQCAEmUXNg7D2wiz0KxXDXbtzSfTTK1Qg2Hi
+qiBNCS1kCdzOiZ/MPans9s/B3PHTsdZ7NygRK0faOca8Ohm0X6a9fZ2jY0K2dvKpOyuR+OJv0OwW
+IJAJPuLodMkYtJHUYmTbf6MG8YgYapAiPLz+E/CHFHv25B+O1ORRxhFnRghRy4YUVD+8M/5+bJz/
+Fp0YvVGONaanZshyZ9shZrHUm3gDwFA66Mzw3LyeTP6vBZY1H1dat//O+T23LLb2VN3I5xI6Ta5M
+irdcmrS3ID3KfyI0rn47aGYBROcBTkZTmzNg95S+UzeQc0PzMsNT79uq/nROacdrjGCT3sTHDN/h
+Mq7MkztReJVni+49Vv4M0GkPGw/zJSZrM233bkf6c0Plfg6lZrEpfDKEY1WJxA3Bk1QwGROs0303
+p+tdOmw1XNtB1xLaqUkL39iAigmTYo61Zs8liM2EuLE/pDkP2QKe6xJMlXzzawWpXhaDzLhn4ugT
+ncxbgtNMs+1b/97lc6wjOy0AvzVVdAlJ2ElYGn+SNuZRkg7zJn0cTRe8yexDJtC/QV9AqURE9Jnn
+V4eeUB9XVKg+/XRjL7FQZQnmWEIuQxpMtPAlR1n6BB6T1CZGSlCBst6+eLf8ZxXhyVeEHg9j1uli
+utZfVS7qXMYoCAQlObgOK6nyTJccBz8NUvXt7y+CDwIDAQABo4HyMIHvMB8GA1UdIwQYMBaAFKAR
+CiM+lvEH7OKvKe+CpX/QMKS0MB0GA1UdDgQWBBRTeb9aqitKz1SA4dibwJ3ysgNmyzAOBgNVHQ8B
+Af8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zARBgNVHSAECjAIMAYGBFUdIAAwQwYDVR0fBDwwOjA4
+oDagNIYyaHR0cDovL2NybC5jb21vZG9jYS5jb20vQUFBQ2VydGlmaWNhdGVTZXJ2aWNlcy5jcmww
+NAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wDQYJ
+KoZIhvcNAQEMBQADggEBABiHUdx0IT2ciuAntzPQLszs8ObLXhHeIm+bdY6ecv7k1v6qH5yWLe8D
+Sn6u9I1vcjxDO8A/67jfXKqpxq7y/Njuo3tD9oY2fBTgzfT3P/7euLSK8JGW/v1DZH79zNIBoX19
++BkZyUIrE79Yi7qkomYEdoiRTgyJFM6iTckys7roFBq8cfFb8EELmAAKIgMQ5Qyx+c2SNxntO/Hk
+Orb5RRMmda+7qu8/e3c70sQCkT0ZANMXXDnbP3sYDUXNk4WWL13fWRZPP1G91UUYP+1KjugGYXQj
+FrUNUHMnREd/EF2JKmuFMRTE6KlqTIC8anjPuH+OdnKZDJ3+15EIFqGjX5UwggYQMIID+KADAgEC
+AhBNlCwQ1DvglAnFgS06KwZPMA0GCSqGSIb3DQEBDAUAMIGIMQswCQYDVQQGEwJVUzETMBEGA1UE
+CBMKTmV3IEplcnNleTEUMBIGA1UEBxMLSmVyc2V5IENpdHkxHjAcBgNVBAoTFVRoZSBVU0VSVFJV
+U1QgTmV0d29yazEuMCwGA1UEAxMlVVNFUlRydXN0IFJTQSBDZXJ0aWZpY2F0aW9uIEF1dGhvcml0
+eTAeFw0xODExMDIwMDAwMDBaFw0zMDEyMzEyMzU5NTlaMIGWMQswCQYDVQQGEwJHQjEbMBkGA1UE
+CBMSR3JlYXRlciBNYW5jaGVzdGVyMRAwDgYDVQQHEwdTYWxmb3JkMRgwFgYDVQQKEw9TZWN0aWdv
+IExpbWl0ZWQxPjA8BgNVBAMTNVNlY3RpZ28gUlNBIENsaWVudCBBdXRoZW50aWNhdGlvbiBhbmQg
+U2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyjztlApB/975
+Rrno1jvm2pK/KxBOqhq8gr2+JhwpKirSzZxQgT9tlC7zl6hn1fXjSo5MqXUfItMltrMaXqcESJuK
+8dtK56NCSrq4iDKaKq9NxOXFmqXX2zN8HHGjQ2b2Xv0v1L5Nk1MQPKA19xeWQcpGEGFUUd0kN+oH
+ox+L9aV1rjfNiCj3bJk6kJaOPabPi2503nn/ITX5e8WfPnGw4VuZ79Khj1YBrf24k5Ee1sLTHsLt
+piK9OjG4iQRBdq6Z/TlVx/hGAez5h36bBJMxqdHLpdwIUkTqT8se3ed0PewDch/8kHPo5fZl5u1B
+0ecpq/sDN/5sCG52Ds+QU5O5EwIDAQABo4IBZDCCAWAwHwYDVR0jBBgwFoAUU3m/WqorSs9UgOHY
+m8Cd8rIDZsswHQYDVR0OBBYEFAnA8vwL2pTbX/4r36iZQs/J4K0AMA4GA1UdDwEB/wQEAwIBhjAS
+BgNVHRMBAf8ECDAGAQH/AgEAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDARBgNVHSAE
+CjAIMAYGBFUdIAAwUAYDVR0fBEkwRzBFoEOgQYY/aHR0cDovL2NybC51c2VydHJ1c3QuY29tL1VT
+RVJUcnVzdFJTQUNlcnRpZmljYXRpb25BdXRob3JpdHkuY3JsMHYGCCsGAQUFBwEBBGowaDA/Bggr
+BgEFBQcwAoYzaHR0cDovL2NydC51c2VydHJ1c3QuY29tL1VTRVJUcnVzdFJTQUFkZFRydXN0Q0Eu
+Y3J0MCUGCCsGAQUFBzABhhlodHRwOi8vb2NzcC51c2VydHJ1c3QuY29tMA0GCSqGSIb3DQEBDAUA
+A4ICAQBBRHUAqznCFfXejpVtMnFojADdF9d6HBA4kMjjsb0XMZHztuOCtKF+xswhh2GqkW5JQrM8
+zVlU+A2VP72Ky2nlRA1GwmIPgou74TZ/XTarHG8zdMSgaDrkVYzz1g3nIVO9IHk96VwsacIvBF8J
+fqIs+8aWH2PfSUrNxP6Ys7U0sZYx4rXD6+cqFq/ZW5BUfClN/rhk2ddQXyn7kkmka2RQb9d90nmN
+HdgKrwfQ49mQ2hWQNDkJJIXwKjYA6VUR/fZUFeCUisdDe/0ABLTI+jheXUV1eoYV7lNwNBKpeHdN
+uO6Aacb533JlfeUHxvBz9OfYWUiXu09sMAviM11Q0DuMZ5760CdO2VnpsXP4KxaYIhvqPqUMWqRd
+Wyn7crItNkZeroXaecG03i3mM7dkiPaCkgocBg0EBYsbZDZ8bsG3a08LwEsL1Ygz3SBsyECa0waq
+4hOf/Z85F2w2ZpXfP+w8q4ifwO90SGZZV+HR/Jh6rEaVPDRF/CEGVqR1hiuQOZ1YL5ezMTX0ZSLw
+rymUE0pwi/KDaiYB15uswgeIAcA6JzPFf9pLkAFFWs1QNyN++niFhsM47qodx/PL+5jR87myx5uY
+dBEQkkDc+lKB1Wct6ucXqm2EmsaQ0M95QjTmy+rDWjkDYdw3Ms6mSWE3Bn7i5ZgtwCLXgAIe5W8m
+ybM2JzCCBkwwggU0oAMCAQICEHR8gsPqhWo7MMOepQh9ypIwDQYJKoZIhvcNAQELBQAwgZYxCzAJ
+BgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQx
+GDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1
+dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMjAwNTEyMDAwMDAwWhcNMjMwNTEy
+MjM1OTU5WjCCAVkxCzAJBgNVBAYTAlNFMQ8wDQYDVQQREwY2ODMgMzExEjAQBgNVBAgTCVZhZXJt
+bGFuZDEQMA4GA1UEBxMHSGFnZm9yczEYMBYGA1UECRMPTm9ycmluZ3MgdmFlZyAyMQ8wDQYDVQQS
+EwZCb3ggMzAxJjAkBgNVBAoMHUtsYXLDpGx2ZGFsZW5zIERhdGFrb25zdWx0IEFCMR0wGwYDVQQL
+ExRBIEtEQUIgR3JvdXAgQ29tcGFueTFDMEEGA1UECww6SXNzdWVkIHRocm91Z2ggS2xhcsOkbHZk
+YWxlbnMgRGF0YWtvbnN1bHQgQUIgRS1QS0kgTWFuYWdlcjEfMB0GA1UECxMWQ29ycG9yYXRlIFNl
+Y3VyZSBFbWFpbDEVMBMGA1UEAxMMTWlsaWFuIFdvbGZmMSQwIgYJKoZIhvcNAQkBFhVtaWxpYW4u
+d29sZmZAa2RhYi5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8vdk66W4eo0O1
+1Dh3zPXW/zrkwzzxRR0Air/VRxAIG5q/klE9mF2gsGBPXQpCtDMvkuvSLQ+5mR50Cb+V+4Y9n0W6
+98JoyQHYAo6uswLyTchcF6IVckkkZrm1RD1DXnlIHpCsacO7PDDxMslzFs5XZfRkH4F1SKkiVwup
+/Nsn0z12SGRzxSUUxr4VHZgIqgRGqVSbVJfjtTRigAu+fmXUXHs0bMRv8TonzrDRlN61m1UakrFu
+qvKAgXYfZULZ52IKNK/jq8nPHJDD9oOr5pVi4Yx9GyVeMM0qNPC74fJnGh7lOpJiAcqYBEis73lm
+U+RtH3Bj85Qdqvwxo3bf7s1zAgMBAAGjggHOMIIByjAfBgNVHSMEGDAWgBQJwPL8C9qU21/+K9+o
+mULPyeCtADAdBgNVHQ4EFgQUMc6p+s2l6xbyh8jLYeP7fQrRiW4wDgYDVR0PAQH/BAQDAgWgMAwG
+A1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMEAGA1UdIAQ5MDcwNQYM
+KwYBBAGyMQECAQEBMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMFoGA1Ud
+HwRTMFEwT6BNoEuGSWh0dHA6Ly9jcmwuc2VjdGlnby5jb20vU2VjdGlnb1JTQUNsaWVudEF1dGhl
+bnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcmwwgYoGCCsGAQUFBwEBBH4wfDBVBggrBgEFBQcw
+AoZJaHR0cDovL2NydC5zZWN0aWdvLmNvbS9TZWN0aWdvUlNBQ2xpZW50QXV0aGVudGljYXRpb25h
+bmRTZWN1cmVFbWFpbENBLmNydDAjBggrBgEFBQcwAYYXaHR0cDovL29jc3Auc2VjdGlnby5jb20w
+IAYDVR0RBBkwF4EVbWlsaWFuLndvbGZmQGtkYWIuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQBW3rFX
+47Cnu8JMNm8row/96V8xGwPzir9lEpnasNxi+GhvQjGzvoP5oxMoBJ+hgD8fMk5X15IDuKa9KVHb
+BzBG9kOPGB4h/89voWpzWIVy7Q3k+dPByfghbufR+83TvN20lV9VqXYjPeYypHlD/vJ4Z8iWn3s3
+0iUfYr1CCr8zoje1hijPM9A0wN7K8iCtIc4OAfJpwKsXMCNAv1SdxD196vCKrTnWiEmAw0g8FpDM
+GWIww0+2Qq+Peeoe53+34GetRPIbS5jPlCEy7xgC8c7qoJTNzhCyVENRByoA5dsLzK+Nv0IT1h2C
+gu2w5VxHo0DjlCmYddu46uwpWjKpNuhaMYICbTCCAmkCAQEwgaswgZYxCzAJBgNVBAYTAkdCMRsw
+GQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1Nl
+Y3RpZ28gTGltaXRlZDE+MDwGA1UEAxM1U2VjdGlnbyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9u
+IGFuZCBTZWN1cmUgRW1haWwgQ0ECEHR8gsPqhWo7MMOepQh9ypIwDQYJYIZIAWUDBAIBBQCggZMw
+GAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjEwMzE1MTMwMDI0WjAo
+BgkqhkiG9w0BCQ8xGzAZMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAvBgkqhkiG9w0BCQQxIgQg
+PIe02r+r0aIzxWaNjDJUY99fIdqimcngrOLT1JC0I+wwDQYJKoZIhvcNAQEBBQAEggEAgBn36Jdi
+sBfzAJCBa57C6/joOs9F6gsf2vChOhEgh2iJaowNE3g0NBt6IrVL6tNOuiG2sh9xYq4eqmk/X/tF
+tSAyaEPlDiv9J7Hag0LhrTxoG4OXHJLUzb6MX6eMVq2upp/jISvgQkqw8gWc7wvTeusYVAHiUOsO
+pBPXr71kXs3fgwWH3UUF+sg5Vr/zU1uCQ3XNqTZZExLhaYwEsagYON8+jaDgHwvlhxgDIUdI1mWe
+AS6y/FGqbB3+rfqmQoR7sJ9IAyOV6WdVt3S0wKIe2hnMgIzibaFHUELAbqmbL6PYR6T0HGMwLT1Z
+Y0LtHmSTIiloBl8M32BrM+nm5vewLAAAAAAAAA==
+
+
+--nextPart6450931.M2pTB9URCE--
+
 
