@@ -2,214 +2,220 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E2EC433DB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Mar 2021 12:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C924FC433DB
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Mar 2021 09:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB9E64F72
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 Mar 2021 12:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BAB64F68
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 Mar 2021 09:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbhCQMQp (ORCPT
+        id S229805AbhCSJjA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 Mar 2021 08:16:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43521 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229460AbhCQMQN (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 Mar 2021 08:16:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1615983372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FszNgVMbQS63a+s1/yYr/sdKQFD0RdKs3g1thIm7GaM=;
-        b=X+Ebhe6V4E+l3HdiO7N5ps9ELkuXGNeCZCMy7uBgOWn9V1DQGm8cLIEaoPBYlfuamm2Y63
-        wkuK80nxBBJ+9LRwUhplbmJLhTUBXoMzSVRJhncblZYpoKkR2aghn8CNIH3VV0O+nkbI4H
-        FXG3SxuTpEyxbNQVfOQZGXf2WAgb5Ck=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-103-aznJxc56OhGAFbe8fIvmWQ-1; Wed, 17 Mar 2021 08:16:09 -0400
-X-MC-Unique: aznJxc56OhGAFbe8fIvmWQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CAFA98189D3;
-        Wed, 17 Mar 2021 12:16:07 +0000 (UTC)
-Received: from krava (unknown [10.40.194.149])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4778C5D9D3;
-        Wed, 17 Mar 2021 12:16:02 +0000 (UTC)
-Date:   Wed, 17 Mar 2021 13:16:01 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kajol Jain <kjain@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        acme@kernel.org, linux-perf-users@vger.kernel.org,
-        jolsa@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kan.liang@linux.intel.com
-Subject: Re: [PATCH 4/4] tools/perf: Support pipeline stage cycles for powerpc
-Message-ID: <YFHzAZjE1f8nq0l8@krava>
-References: <1615298640-1529-1-git-send-email-atrajeev@linux.vnet.ibm.com>
- <1615298640-1529-5-git-send-email-atrajeev@linux.vnet.ibm.com>
- <YEtlEyb2z33qHhvO@krava>
- <FD9505E3-8CDE-4073-88A0-BCA4B92F276E@linux.vnet.ibm.com>
- <YE/rS5jZLA0RHYZG@krava>
- <CA827A39-FA2A-4B0C-BF8F-9DB428CD58B8@linux.vnet.ibm.com>
+        Fri, 19 Mar 2021 05:39:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33598 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229745AbhCSJi2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 19 Mar 2021 05:38:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id EA494AC2E;
+        Fri, 19 Mar 2021 09:38:26 +0000 (UTC)
+Subject: Re: [PATCH] perf annotate: improve --stdio mode
+From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <a0d53f31-f633-5013-c386-a4452391b081@suse.cz>
+ <YDVb4KS/ARbtfoAw@kernel.org> <fedc723d-1c8f-fcd7-accb-421707b3a09f@suse.cz>
+Message-ID: <bac6b366-c324-dea8-1cc2-5977fb6e0af5@suse.cz>
+Date:   Fri, 19 Mar 2021 10:38:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CA827A39-FA2A-4B0C-BF8F-9DB428CD58B8@linux.vnet.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <fedc723d-1c8f-fcd7-accb-421707b3a09f@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 17, 2021 at 05:01:27PM +0530, Athira Rajeev wrote:
-> <html><head></head><body dir=3D"auto" style=3D"word-wrap: break-word; -we=
-bkit-nbsp-mode: space; line-break: after-white-space;" class=3D"ApplePlainT=
-extBody"><div class=3D"ApplePlainTextBody"><br><br><blockquote type=3D"cite=
-">On 16-Mar-2021, at 4:48 AM, Jiri Olsa &lt;jolsa@redhat.com&gt; wrote:<br>=
-<br>On Mon, Mar 15, 2021 at 01:22:09PM +0530, Athira Rajeev wrote:<br><br>S=
-NIP<br><br><blockquote type=3D"cite">+<br>+static char *setup_dynamic_sort_=
-keys(char *str)<br>+{<br>+<span class=3D"Apple-tab-span" style=3D"white-spa=
-ce:pre">	</span>unsigned int j;<br>+<br>+<span class=3D"Apple-tab-span" sty=
-le=3D"white-space:pre">	</span>if (sort__mode =3D=3D SORT_MODE__MEMORY)<br>=
-+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span cla=
-ss=3D"Apple-tab-span" style=3D"white-space:pre">	</span>for (j =3D 0; j &lt=
-; ARRAY_SIZE(dynamic_sort_keys_mem); j++)<br>+<span class=3D"Apple-tab-span=
-" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" style=3D=
-"white-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-spa=
-ce:pre">	</span>if (arch_support_dynamic_key(dynamic_sort_keys_mem[j])) {<b=
-r>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span c=
-lass=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Ap=
-ple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-sp=
-an" style=3D"white-space:pre">	</span>str =3D suffix_if_not_in(dynamic_sort=
-_keys_mem[j], str);<br>+<span class=3D"Apple-tab-span" style=3D"white-space=
-:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	</s=
-pan><span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span =
-class=3D"Apple-tab-span" style=3D"white-space:pre">	</span>if (str =3D=3D N=
-ULL)<br>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><=
-span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-=
-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" =
-style=3D"white-space:pre">	</span>return str;<br>+<span class=3D"Apple-tab-=
-span" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" styl=
-e=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white=
--space:pre">	</span>}<br>+<br>+<span class=3D"Apple-tab-span" style=3D"whit=
-e-space:pre">	</span>return str;<br>+}<br>+<br>static int __setup_sorting(s=
-truct evlist *evlist)<br>{<br><span class=3D"Apple-tab-span" style=3D"white=
--space:pre">	</span>char *str;<br>@@ -3050,6 +3085,12 @@ static int __setup=
-_sorting(struct evlist *evlist)<br><span class=3D"Apple-tab-span" style=3D"=
-white-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-spac=
-e:pre">	</span>}<br><span class=3D"Apple-tab-span" style=3D"white-space:pre=
-">	</span>}<br><br>+<span class=3D"Apple-tab-span" style=3D"white-space:pre=
-">	</span>str =3D setup_dynamic_sort_keys(str);<br>+<span class=3D"Apple-ta=
-b-span" style=3D"white-space:pre">	</span>if (str =3D=3D NULL) {<br>+<span =
-class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=3D"A=
-pple-tab-span" style=3D"white-space:pre">	</span>pr_err("Not enough memory =
-to setup dynamic sort keys");<br>+<span class=3D"Apple-tab-span" style=3D"w=
-hite-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-space=
-:pre">	</span>return -ENOMEM;<br>+<span class=3D"Apple-tab-span" style=3D"w=
-hite-space:pre">	</span>}<br></blockquote><br>hum, so this is basicaly over=
-loading the default_mem_sort_order for<br>architecture, right?<br><br>then =
-I think it'd be easier just overload default_mem_sort_order directly<br><br=
->I was thinking more about adding extra (arch specific) loop to<br>sort_dim=
-ension__add or somehow add arch's specific stuff to<br>memory_sort_dimensio=
-ns<br></blockquote><br>Hi Jiri,<br><br>Above patch was to append additional=
- sort keys to sort order based on<br>sort mode and architecture support. I =
-had initially thought of defining two<br>orders ( say default_mem_sort_orde=
-r plus mem_sort_order_pstage ). But if<br>new sort keys gets added for mem =
-mode in future, we will need to keep<br>updating both orders. So preferred =
-the approach of "appending" supported sort<br>keys to default order.<br><br=
->Following your thought on using "sort_dimension__add", I tried below appro=
-ach<br>which is easier. The new sort dimension "p_stage_cyc" is presently o=
-nly supported<br>on powerpc. For unsupported platforms, we don't want to di=
-splay it<br>in the perf report output columns. Hence added check in sort_di=
-mension__add()<br>and skip the sort key incase its not applicable for parti=
-cular arch.<br><br>Please help to check if below approach looks fine.<br><b=
-r><br>diff --git a/tools/perf/arch/powerpc/util/event.c b/tools/perf/arch/p=
-owerpc/util/event.c<br>index b80fbee83b6e..7205767d75eb 100644<br>--- a/too=
-ls/perf/arch/powerpc/util/event.c<br>+++ b/tools/perf/arch/powerpc/util/eve=
-nt.c<br>@@ -44,3 +44,10 @@ const char *arch_perf_header_entry__add(const ch=
-ar *se_header)<br> <span class=3D"Apple-tab-span" style=3D"white-space:pre"=
->	</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span>r=
-eturn "Dispatch Cyc";<br> <span class=3D"Apple-tab-span" style=3D"white-spa=
-ce:pre">	</span>return se_header;<br> }<br>+<br>+int arch_support_sort_key(=
-const char *sort_key)<br>+{<br>+<span class=3D"Apple-tab-span" style=3D"whi=
-te-space:pre">	</span>if (!strcmp(sort_key, "p_stage_cyc"))<br>+<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-=
-tab-span" style=3D"white-space:pre">	</span>return 1;<br>+<span class=3D"Ap=
-ple-tab-span" style=3D"white-space:pre">	</span>return 0;<br>+}<br>diff --g=
-it a/tools/perf/util/event.h b/tools/perf/util/event.h<br>index 65f89e80916=
-f..612a92aaaefb 100644<br>--- a/tools/perf/util/event.h<br>+++ b/tools/perf=
-/util/event.h<br>@@ -429,5 +429,6 @@ char *get_page_size_name(u64 size, cha=
-r *str);<br> void arch_perf_parse_sample_weight(struct perf_sample *data, c=
-onst __u64 *array, u64 type);<br> void arch_perf_synthesize_sample_weight(c=
-onst struct perf_sample *data, __u64 *array, u64 type);<br> const char *arc=
-h_perf_header_entry__add(const char *se_header);<br>+int arch_support_sort_=
-key(const char *sort_key);<br><br> #endif /* __PERF_RECORD_H */<br>diff --g=
-it a/tools/perf/util/sort.c b/tools/perf/util/sort.c<br>index cbb3899e7eca.=
-=2Ed8b0b0b43a81 100644<br>--- a/tools/perf/util/sort.c<br>+++ b/tools/perf/=
-util/sort.c<br>@@ -47,6 +47,7 @@ regex_t<span class=3D"Apple-tab-span" styl=
-e=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white=
--space:pre">	</span>ignore_callees_regex;<br> int<span class=3D"Apple-tab-s=
-pan" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" style=
-=3D"white-space:pre">	</span>have_ignore_callees =3D 0;<br> enum sort_mode<=
-span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span>sort__mode =
-=3D SORT_MODE__NORMAL;<br> const char<span class=3D"Apple-tab-span" style=
-=3D"white-space:pre">	</span>*dynamic_headers[] =3D {"local_ins_lat", "p_st=
-age_cyc"};<br>+const char<span class=3D"Apple-tab-span" style=3D"white-spac=
-e:pre">	</span>*arch_specific_sort_keys[] =3D {"p_stage_cyc"};<br><br> /*<b=
-r> &nbsp;* Replaces all occurrences of a char used with the:<br>@@ -1837,6 =
-+1838,11 @@ struct sort_dimension {<br> <span class=3D"Apple-tab-span" styl=
-e=3D"white-space:pre">	</span>int<span class=3D"Apple-tab-span" style=3D"wh=
-ite-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-space:=
-pre">	</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	</sp=
-an>taken;<br> };<br><br>+int __weak arch_support_sort_key(const char *sort_=
-key __maybe_unused)<br>+{<br>+<span class=3D"Apple-tab-span" style=3D"white=
--space:pre">	</span>return 0;<br>+}<br>+<br> const char * __weak arch_perf_=
-header_entry__add(const char *se_header)<br> {<br> <span class=3D"Apple-tab=
--span" style=3D"white-space:pre">	</span>return se_header;<br>@@ -2773,6 +2=
-779,18 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *t=
-ok,<br> {<br> <span class=3D"Apple-tab-span" style=3D"white-space:pre">	</s=
-pan>unsigned int i, j;<br><br>+<span class=3D"Apple-tab-span" style=3D"whit=
-e-space:pre">	</span>/* Check to see if there are any arch specific<br>+<sp=
-an class=3D"Apple-tab-span" style=3D"white-space:pre">	</span> * sort dimen=
-sions not applicable for the current<br>+<span class=3D"Apple-tab-span" sty=
-le=3D"white-space:pre">	</span> * architecture. If so, Skip that sort key s=
-ince<br>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span> =
-* we don't want to display it in the output fields.<br>+<span class=3D"Appl=
-e-tab-span" style=3D"white-space:pre">	</span> */<br>+<span class=3D"Apple-=
-tab-span" style=3D"white-space:pre">	</span>for (j =3D 0; j &lt; ARRAY_SIZE=
-(arch_specific_sort_keys); j++) {<br>+<span class=3D"Apple-tab-span" style=
-=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-=
-space:pre">	</span>if (!strcmp(arch_specific_sort_keys[j], tok) &amp;&amp;<=
-br>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span =
-class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=3D"A=
-pple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-s=
-pan" style=3D"white-space:pre">	</span>!arch_support_sort_key(tok)) {<br>+<=
-span class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-=
-tab-span" style=3D"white-space:pre">	</span>return 0;<br>+<span class=3D"Ap=
-ple-tab-span" style=3D"white-space:pre">	</span><span class=3D"Apple-tab-sp=
-an" style=3D"white-space:pre">	</span>}<br>+<span class=3D"Apple-tab-span" =
-style=3D"white-space:pre">	</span>}<br>+<br> <span class=3D"Apple-tab-span"=
- style=3D"white-space:pre">	</span>for (i =3D 0; i &lt; ARRAY_SIZE(common_s=
-ort_dimensions); i++) {<br> <span class=3D"Apple-tab-span" style=3D"white-s=
-pace:pre">	</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">=
-	</span>struct sort_dimension *sd =3D &amp;common_sort_dimensions[i];<br><b=
-r>=E2=80=94 <br>2.26.2<br><br>Thanks<br>Athira<br><br><blockquote type=3D"c=
-ite"><br>jirka<br><br></blockquote><br></div></body></html>
->=20
+PING
 
-apart from the html content, looks ok ;-)
-
-jirka
+On 2/26/21 10:24 AM, Martin Liška wrote:
+> On 2/23/21 8:47 PM, Arnaldo Carvalho de Melo wrote:
+>> Em Sun, Feb 21, 2021 at 01:46:36PM +0100, Martin Liška escreveu:
+>>> The patch changes the output format in 2 ways:
+>>> - line number is displayed for all source lines (matching TUI mode)
+>>
+>> Are you aware of 'perf annotate --stdio2' ? If the goal is to make the
+>> stdio mode better, doing it in that mode would be best, as it was done
+>> to share as much code as possible, not just the looks, with the TUI
+>> mode.
+> 
+> Yes, I'm aware of it. My motivation is to generate a HTML perf annotate report
+> and I see the following parts of --stdio2 not ideal:
+> 
+> - coloring is not available (--stdio-color=always does not work)
+> - 'Sorted summary for file ' is missing so one can't easily search for
+>    hot spots in browser
+> - source line number are displayed, but not the source files
+> - there's a missing option for 'Toggle disassembler output/simplified view' which
+>    is available in TUI mode
+> 
+> That said, the stdio2 annotation report is quite different and so handy for my use case.
+> 
+>>
+>> I kept --stdio around because changing the output in that way could
+>> annoy people used to that format.
+> 
+> Sure. But I think the current format provides quite broken visual layout:
+> 
+>        0.00 :   405ef1: inc    %r15
+>        0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
+>     eff.c:1811    0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8>
+>            :            TA + tmpsd * (TB +
+> 
+> vs.
+> 
+>        0.00 :   405ef1: inc    %r15
+>        0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
+>        0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8> // eff.c:1811
+>             : 1810   TA + tmpsd * (TB +
+> 
+> I bet also the current users of --stdio mode would benefit from it.
+> What do you think?
+> 
+> Thanks,
+> Martin
+> 
+>>
+>> Please take a look at 'man perf-config' and see what can be configured
+>> for both 'perf annotate --tui' and 'perf annotate --stdio2'.
+>>
+>> Perhaps we can do something like:
+>>
+>> perf config annotate.stdio=tui_like
+>>
+>> And, for completeness have:
+>>
+>> perf config annotate.stdio=classical
+>>
+>> wdyt?
+>>
+>> Looking at the other patches now.
+>>
+>> - Arnaldo
+>>
+>>> - source locations for the hottest lines are printed
+>>>    at the line end in order to preserve layout
+>>>
+>>> Before:
+>>>
+>>>      0.00 :   405ef1: inc    %r15
+>>>           :            tmpsd * (TD + tmpsd * TDD)));
+>>>      0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
+>>>           :            tmpsd * (TC +
+>>>   eff.c:1811    0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8>
+>>>           :            TA + tmpsd * (TB +
+>>>      0.35 :   405f06: vfmadd213sd 0x2b9b1(%rip),%xmm0,%xmm3        # 4318c0 <_IO_stdin_used+0x8c0>
+>>>           :            dumbo =
+>>>   eff.c:1809    1.41 :   405f0f: vfmadd213sd 0x2b9b0(%rip),%xmm0,%xmm3        # 4318c8 <_IO_stdin_used+0x8c8>
+>>>           :            sumi -= sj * tmpsd * dij2i * dumbo;
+>>>   eff.c:1813    2.58 :   405f18: vmulsd %xmm3,%xmm0,%xmm0
+>>>      2.81 :   405f1c: vfnmadd213sd 0x30(%rsp),%xmm1,%xmm0
+>>>      3.78 :   405f23: vmovsd %xmm0,0x30(%rsp)
+>>>           :            for (k = 0; k < lpears[i] + upears[i]; k++) {
+>>>   eff.c:1761    0.90 :   405f29: cmp    %r15d,%r12d
+>>>
+>>> After:
+>>>
+>>>      0.00 :   405ef1: inc    %r15
+>>>           : 1812   tmpsd * (TD + tmpsd * TDD)));
+>>>      0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
+>>>           : 1811   tmpsd * (TC +
+>>>      0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8> // eff.c:1811
+>>>           : 1810   TA + tmpsd * (TB +
+>>>      0.35 :   405f06: vfmadd213sd 0x2b9b1(%rip),%xmm0,%xmm3        # 4318c0 <_IO_stdin_used+0x8c0>
+>>>           : 1809   dumbo =
+>>>      1.41 :   405f0f: vfmadd213sd 0x2b9b0(%rip),%xmm0,%xmm3        # 4318c8 <_IO_stdin_used+0x8c8> // eff.c:1809
+>>>           : 1813   sumi -= sj * tmpsd * dij2i * dumbo;
+>>>      2.58 :   405f18: vmulsd %xmm3,%xmm0,%xmm0 // eff.c:1813
+>>>      2.81 :   405f1c: vfnmadd213sd 0x30(%rsp),%xmm1,%xmm0
+>>>      3.78 :   405f23: vmovsd %xmm0,0x30(%rsp)
+>>>           : 1761   for (k = 0; k < lpears[i] + upears[i]; k++) {
+>>>
+>>> Where e.g. '// eff.c:1811' shares the same color as the percentantage
+>>> at the line beginning.
+>>>
+>>> Signed-off-by: Martin Liška <mliska@suse.cz>
+>>> ---
+>>>   tools/perf/util/annotate.c | 30 ++++++++++++++----------------
+>>>   1 file changed, 14 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+>>> index e60841b86d27..80542012ec1b 100644
+>>> --- a/tools/perf/util/annotate.c
+>>> +++ b/tools/perf/util/annotate.c
+>>> @@ -1366,7 +1366,6 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+>>>   {
+>>>       struct disasm_line *dl = container_of(al, struct disasm_line, al);
+>>>       static const char *prev_line;
+>>> -    static const char *prev_color;
+>>>       if (al->offset != -1) {
+>>>           double max_percent = 0.0;
+>>> @@ -1405,20 +1404,6 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+>>>           color = get_percent_color(max_percent);
+>>> -        /*
+>>> -         * Also color the filename and line if needed, with
+>>> -         * the same color than the percentage. Don't print it
+>>> -         * twice for close colored addr with the same filename:line
+>>> -         */
+>>> -        if (al->path) {
+>>> -            if (!prev_line || strcmp(prev_line, al->path)
+>>> -                       || color != prev_color) {
+>>> -                color_fprintf(stdout, color, " %s", al->path);
+>>> -                prev_line = al->path;
+>>> -                prev_color = color;
+>>> -            }
+>>> -        }
+>>> -
+>>>           for (i = 0; i < nr_percent; i++) {
+>>>               struct annotation_data *data = &al->data[i];
+>>>               double percent;
+>>> @@ -1439,6 +1424,19 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+>>>           printf(" : ");
+>>>           disasm_line__print(dl, start, addr_fmt_width);
+>>> +
+>>> +        /*
+>>> +         * Also color the filename and line if needed, with
+>>> +         * the same color than the percentage. Don't print it
+>>> +         * twice for close colored addr with the same filename:line
+>>> +         */
+>>> +        if (al->path) {
+>>> +            if (!prev_line || strcmp(prev_line, al->path)) {
+>>> +                color_fprintf(stdout, color, " // %s", al->path);
+>>> +                prev_line = al->path;
+>>> +            }
+>>> +        }
+>>> +
+>>>           printf("\n");
+>>>       } else if (max_lines && printed >= max_lines)
+>>>           return 1;
+>>> @@ -1454,7 +1452,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
+>>>           if (!*al->line)
+>>>               printf(" %*s:\n", width, " ");
+>>>           else
+>>> -            printf(" %*s:     %*s %s\n", width, " ", addr_fmt_width, " ", al->line);
+>>> +            printf(" %*s: %-*d %s\n", width, " ", addr_fmt_width, al->line_nr, al->line);
+>>>       }
+>>>       return 0;
+>>> -- 
+>>> 2.30.1
+>>>
+>>
+> 
 
