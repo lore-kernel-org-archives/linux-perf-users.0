@@ -5,225 +5,221 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CADC433DB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Mar 2021 04:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E76C433E0
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Mar 2021 07:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2E80619E8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Mar 2021 04:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97C3F619F6
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Mar 2021 07:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbhCXEgU (ORCPT
+        id S232734AbhCXHSs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Mar 2021 00:36:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232647AbhCXEfy (ORCPT
+        Wed, 24 Mar 2021 03:18:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232230AbhCXHSm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Mar 2021 00:35:54 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12O4XMue159255;
-        Wed, 24 Mar 2021 00:35:35 -0400
+        Wed, 24 Mar 2021 03:18:42 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 12O77jia013236;
+        Wed, 24 Mar 2021 03:18:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=pp1;
- bh=/gfana0Qw6+sAD3/4uWgMwI02MnOBsacp7vI78wfbyo=;
- b=j/ViPQY+9X9ECIl9ER4iu3HDWGqB+9U0S/jDT4EJ3n473x2lbLHlj/PpVpy2BHUYDUXe
- oPCdRMU2lMkdCpYKh3MhcqwCcXM/liMgvOAcRg5CcuMpaQD10eQ3cyGAf1Ui0fa7ATMg
- PWPBavXwH56eyrly2hlwe6w3OSSRQp28YVgk3ngEXQlXSjG18wwAMYg5cFU0tXO9Pr5H
- 6H0JjqeROsDf07v6uzgIGbGLHjBlXMrj5TkGoxx1A4T5ZW81Opo1bCBrjZ8GwdmETIgV
- vrMc6cTF8S/O3bE2feCmbM908/ZnRXURkMcHVbbozKxERadoTpT0NNOe3JxwePIYDqAe Uw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 37fsm0dxh8-1
+ bh=hOPWf5uLYS8MSJmd5l/SPND9xclp5e9VTd1t0JEFVsw=;
+ b=Lvvo3SnBA2hIxh+uqQpdQ5IjsKtcIYsMJ+NZ7DweNOTmqV209v1tJVvefdrlbiveAIDf
+ xFL3vzCO6j7PFeG9f8pHONkeSvnPHGMNgQtIkHch+HGsCg1TUJv7jB9xVF+hv0Lm98AP
+ duKvvPTbzt7TZJFkqedFP3LH77ETyHnxM9ToAFuas7NWXycsNIJTWhbqU7RbcDbAKTbj
+ FacEXV9NSwvhDNM8xcqE8USDAh3zq+lgLQmqMHZ5xxxKw/gp2epZj6AvnKan5falO+aV
+ 8sFtlAEeBoN5nXD94rw34kNuvGETUuvmTKK+WmphrZIi5aGkg1obgSE4QJSVaTlwcCKk ug== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 37fsm0h90a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Mar 2021 00:35:35 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12O4R7A7010917;
-        Wed, 24 Mar 2021 04:35:33 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06ams.nl.ibm.com with ESMTP id 37d9bmky1g-1
+        Wed, 24 Mar 2021 03:18:39 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 12O7Hi1g023981;
+        Wed, 24 Mar 2021 07:18:38 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma01fra.de.ibm.com with ESMTP id 37d99xj4nv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 Mar 2021 04:35:32 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12O4ZTZe26607988
+        Wed, 24 Mar 2021 07:18:38 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 12O7IZeN22872360
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 Mar 2021 04:35:29 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B530C4C044;
-        Wed, 24 Mar 2021 04:35:29 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E8C74C040;
-        Wed, 24 Mar 2021 04:35:26 +0000 (GMT)
-Received: from Madhavan.PrimaryTP (unknown [9.80.207.190])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 24 Mar 2021 04:35:25 +0000 (GMT)
-Subject: Re: [PATCH V2 1/5] powerpc/perf: Expose processor pipeline stage
- cycles using PERF_SAMPLE_WEIGHT_STRUCT
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mpe@ellerman.id.au,
-        acme@kernel.org, jolsa@kernel.org
-Cc:     ravi.bangoria@linux.ibm.com, kjain@linux.ibm.com,
-        kan.liang@linux.intel.com, peterz@infradead.org
-References: <1616425047-1666-1-git-send-email-atrajeev@linux.vnet.ibm.com>
- <1616425047-1666-2-git-send-email-atrajeev@linux.vnet.ibm.com>
-From:   Madhavan Srinivasan <maddy@linux.ibm.com>
-Message-ID: <d7dd633b-e28a-155a-a8e2-0e5a83b4eead@linux.ibm.com>
-Date:   Wed, 24 Mar 2021 10:05:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 24 Mar 2021 07:18:35 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 23AF54204B;
+        Wed, 24 Mar 2021 07:18:35 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0A7342045;
+        Wed, 24 Mar 2021 07:18:34 +0000 (GMT)
+Received: from li-e35baacc-2106-11b2-a85c-8f97eb669a6e.ibm.com (unknown [9.145.88.230])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 24 Mar 2021 07:18:34 +0000 (GMT)
+Subject: Re: [PATCH] perf test: Fix perf test 42
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+References: <20210322125339.1384351-1-tmricht@linux.ibm.com>
+ <YFouKGT7oS1T/oMS@kernel.org>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+Message-ID: <e4b0b5a6-8e7f-1915-0e10-843ec00bc403@linux.ibm.com>
+Date:   Wed, 24 Mar 2021 08:18:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.0
 MIME-Version: 1.0
-In-Reply-To: <1616425047-1666-2-git-send-email-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <YFouKGT7oS1T/oMS@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.369,18.0.761
- definitions=2021-03-24_03:2021-03-23,2021-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- suspectscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2103240034
+ definitions=2021-03-24_04:2021-03-23,2021-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 suspectscore=0
+ malwarescore=0 mlxscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2103240053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 3/23/21 7:06 PM, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Mar 22, 2021 at 01:53:39PM +0100, Thomas Richter escreveu:
+>> For some time now the perf test 42: BPF filter returns an error
+>> on bpf relocation subtest, at least on x86 and s390. This is caused by
+>>
+>> commit d859900c4c56 ("bpf, libbpf: support global data/bss/rodata sections")
+>>
+>> which introduces support for global variables in eBPF programs. At least
+>> for global variables defined static.
+>>
+>> Perf test 42 checks that the eBPF relocation fails when the eBPF program
+>> contains a global variable. It returns OK when the eBPF program
+>> could not be loaded and FAILED otherwise.
+>>
+>> With above commit the test logic for the eBPF relocation need to change:
+>> 1. The function prepare_bpf() now always succeeds, the eBPF program
+>>    compiled without errors and returns a valid object pointer instead of
+>>    NULL.
+>> 2. There is no kprobe named sys_write, it now named ksys_write.
+>> 3. The function do_test() now returns TEST_FAIL because function
+>>    parse_events_load_bpf_obj() can not execute the eBPF program. The
+>>    eBPF verifier complains on an invalid map pointer:
+>>       libbpf: load bpf program failed: Permission denied
+>>       libbpf: -- BEGIN DUMP LOG ---
+>>       libbpf:
+>>       0: (b7) r1 = 0
+>>       1: (63) *(u32 *)(r10 -4) = r1
+>>       last_idx 1 first_idx 0
+>>       regs=2 stack=0 before 0: (b7) r1 = 0
+>>       2: (63) *(u32 *)(r10 -8) = r1
+>>       3: (bf) r2 = r10
+>>       4: (07) r2 += -4
+>>       5: (bf) r3 = r10
+>>       6: (07) r3 += -8
+>>       7: (18) r1 = 0x380006ce000
+>>       9: (b7) r4 = 0
+>>       10: (85) call bpf_map_update_elem#2
+>>       R1 type=map_value expected=map_ptr
+>>
+>> Fix this by added logic to handle the kernel verifier return code:
+>> 1. Add function myksys_write() to cope with successful compile.
+>> 2. Use kprobe ksys_write
+>> 3. Handle eBPF verifier error.
+>>
+>> Output after:
+>>  42: BPF filter                          :
+>>  42.1: Basic BPF filtering               : Ok
+>>  42.2: BPF pinning                       : Ok
+>>  42.3: BPF prologue generation           : Ok
+>>  42.4: BPF relocation checker            : Failed
+>>  #
+>>
+>> Output after:
+>>  # ./perf test -F 42
+>>  42: BPF filter                          :
+>>  42.1: Basic BPF filtering               : Ok
+>>  42.2: BPF pinning                       : Ok
+>>  42.3: BPF prologue generation           : Ok
+>>  42.4: BPF relocation checker            : Ok
+>>  #
+>>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> ---
+>>  tools/perf/tests/bpf-script-test-relocation.c |  4 ++--
+>>  tools/perf/tests/bpf.c                        | 11 +++++++++++
+>>  2 files changed, 13 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/bpf-script-test-relocation.c b/tools/perf/tests/bpf-script-test-relocation.c
+>> index 74006e4b2d24..f8f8176ad4d1 100644
+>> --- a/tools/perf/tests/bpf-script-test-relocation.c
+>> +++ b/tools/perf/tests/bpf-script-test-relocation.c
+>> @@ -34,8 +34,8 @@ struct bpf_map_def SEC("maps") my_table = {
+>>  
+>>  int this_is_a_global_val;
+>>  
+>> -SEC("func=sys_write")
+>> -int bpf_func__sys_write(void *ctx)
+>> +SEC("func=ksys_write")
+>> +int bpf_func__ksys_write(void *ctx)
+>>  {
+>>  	int key = 0;
+>>  	int value = 0;
+>> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+>> index f57e075b0ed2..d60ef9472d3d 100644
+>> --- a/tools/perf/tests/bpf.c
+>> +++ b/tools/perf/tests/bpf.c
+>> @@ -59,6 +59,11 @@ static int llseek_loop(void)
+>>  
+>>  #endif
+>>  
+>> +static int myksys_write(void)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>>  static struct {
+>>  	enum test_llvm__testcase prog_id;
+>>  	const char *desc;
+>> @@ -105,6 +110,7 @@ static struct {
+>>  		.name		  = "[bpf_relocation_test]",
+>>  		.msg_compile_fail = "fix 'perf test LLVM' first",
+>>  		.msg_load_fail	  = "libbpf error when dealing with relocation",
+>> +		.target_func	  = &myksys_write,
+>>  	},
+>>  };
+>>  
+>> @@ -258,6 +264,11 @@ static int __test__bpf(int idx)
+>>  		ret = do_test(obj,
+>>  			      bpf_testcase_table[idx].target_func,
+>>  			      bpf_testcase_table[idx].expect_result);
+>> +		if (bpf_testcase_table[idx].prog_id == LLVM_TESTCASE_BPF_RELOCATION
+>> +		    && ret == TEST_FAIL) {
+>> +			ret = TEST_OK;
+>> +			goto out;
+>> +		}
+> 
+> At this point, if it doesn't matter if it fails or succeeds, just drop
+> this test case?
+> 
+> - Arnaldo
+> 
 
-On 3/22/21 8:27 PM, Athira Rajeev wrote:
-> Performance Monitoring Unit (PMU) registers in powerpc provides
-> information on cycles elapsed between different stages in the
-> pipeline. This can be used for application tuning. On ISA v3.1
-> platform, this information is exposed by sampling registers.
-> Patch adds kernel support to capture two of the cycle counters
-> as part of perf sample using the sample type:
-> PERF_SAMPLE_WEIGHT_STRUCT.
->
-> The power PMU function 'get_mem_weight' currently uses 64 bit weight
-> field of perf_sample_data to capture memory latency. But following the
-> introduction of PERF_SAMPLE_WEIGHT_TYPE, weight field could contain
-> 64-bit or 32-bit value depending on the architexture support for
-> PERF_SAMPLE_WEIGHT_STRUCT. Patches uses WEIGHT_STRUCT to expose the
-> pipeline stage cycles info. Hence update the ppmu functions to work for
-> 64-bit and 32-bit weight values.
->
-> If the sample type is PERF_SAMPLE_WEIGHT, use the 64-bit weight field.
-> if the sample type is PERF_SAMPLE_WEIGHT_STRUCT, memory subsystem
-> latency is stored in the low 32bits of perf_sample_weight structure.
-> Also for CPU_FTR_ARCH_31, capture the two cycle counter information in
-> two 16 bit fields of perf_sample_weight structure.
+Arnaldo,
 
-Changes looks fine to me.
+dropping this test case is fine with me. Support for eBPF global variables is now
+part of the linux kernel and there are test programs in the 
+.../testing/selftests/bpf directory. File prog_tests/global_data.c for example.
 
-Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+If you agree, I will provide a patch to remove the test case 42.4.
 
-
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->   arch/powerpc/include/asm/perf_event_server.h |  2 +-
->   arch/powerpc/perf/core-book3s.c              |  4 ++--
->   arch/powerpc/perf/isa207-common.c            | 29 +++++++++++++++++++++++++---
->   arch/powerpc/perf/isa207-common.h            |  6 +++++-
->   4 files changed, 34 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/perf_event_server.h b/arch/powerpc/include/asm/perf_event_server.h
-> index 00e7e671bb4b..112cf092d7b3 100644
-> --- a/arch/powerpc/include/asm/perf_event_server.h
-> +++ b/arch/powerpc/include/asm/perf_event_server.h
-> @@ -43,7 +43,7 @@ struct power_pmu {
->   				u64 alt[]);
->   	void		(*get_mem_data_src)(union perf_mem_data_src *dsrc,
->   				u32 flags, struct pt_regs *regs);
-> -	void		(*get_mem_weight)(u64 *weight);
-> +	void		(*get_mem_weight)(u64 *weight, u64 type);
->   	unsigned long	group_constraint_mask;
->   	unsigned long	group_constraint_val;
->   	u64             (*bhrb_filter_map)(u64 branch_sample_type);
-> diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-> index 766f064f00fb..6936763246bd 100644
-> --- a/arch/powerpc/perf/core-book3s.c
-> +++ b/arch/powerpc/perf/core-book3s.c
-> @@ -2206,9 +2206,9 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
->   						ppmu->get_mem_data_src)
->   			ppmu->get_mem_data_src(&data.data_src, ppmu->flags, regs);
->   
-> -		if (event->attr.sample_type & PERF_SAMPLE_WEIGHT &&
-> +		if (event->attr.sample_type & PERF_SAMPLE_WEIGHT_TYPE &&
->   						ppmu->get_mem_weight)
-> -			ppmu->get_mem_weight(&data.weight.full);
-> +			ppmu->get_mem_weight(&data.weight.full, event->attr.sample_type);
->   
->   		if (perf_event_overflow(event, &data, regs))
->   			power_pmu_stop(event, 0);
-> diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
-> index e4f577da33d8..5dcbdbd54598 100644
-> --- a/arch/powerpc/perf/isa207-common.c
-> +++ b/arch/powerpc/perf/isa207-common.c
-> @@ -284,8 +284,10 @@ void isa207_get_mem_data_src(union perf_mem_data_src *dsrc, u32 flags,
->   	}
->   }
->   
-> -void isa207_get_mem_weight(u64 *weight)
-> +void isa207_get_mem_weight(u64 *weight, u64 type)
->   {
-> +	union perf_sample_weight *weight_fields;
-> +	u64 weight_lat;
->   	u64 mmcra = mfspr(SPRN_MMCRA);
->   	u64 exp = MMCRA_THR_CTR_EXP(mmcra);
->   	u64 mantissa = MMCRA_THR_CTR_MANT(mmcra);
-> @@ -296,9 +298,30 @@ void isa207_get_mem_weight(u64 *weight)
->   		mantissa = P10_MMCRA_THR_CTR_MANT(mmcra);
->   
->   	if (val == 0 || val == 7)
-> -		*weight = 0;
-> +		weight_lat = 0;
->   	else
-> -		*weight = mantissa << (2 * exp);
-> +		weight_lat = mantissa << (2 * exp);
-> +
-> +	/*
-> +	 * Use 64 bit weight field (full) if sample type is
-> +	 * WEIGHT.
-> +	 *
-> +	 * if sample type is WEIGHT_STRUCT:
-> +	 * - store memory latency in the lower 32 bits.
-> +	 * - For ISA v3.1, use remaining two 16 bit fields of
-> +	 *   perf_sample_weight to store cycle counter values
-> +	 *   from sier2.
-> +	 */
-> +	weight_fields = (union perf_sample_weight *)weight;
-> +	if (type & PERF_SAMPLE_WEIGHT)
-> +		weight_fields->full = weight_lat;
-> +	else {
-> +		weight_fields->var1_dw = (u32)weight_lat;
-> +		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
-> +			weight_fields->var2_w = P10_SIER2_FINISH_CYC(mfspr(SPRN_SIER2));
-> +			weight_fields->var3_w = P10_SIER2_DISPATCH_CYC(mfspr(SPRN_SIER2));
-> +		}
-> +	}
->   }
->   
->   int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp, u64 event_config1)
-> diff --git a/arch/powerpc/perf/isa207-common.h b/arch/powerpc/perf/isa207-common.h
-> index 1af0e8c97ac7..fc30d43c4d0c 100644
-> --- a/arch/powerpc/perf/isa207-common.h
-> +++ b/arch/powerpc/perf/isa207-common.h
-> @@ -265,6 +265,10 @@
->   #define ISA207_SIER_DATA_SRC_SHIFT	53
->   #define ISA207_SIER_DATA_SRC_MASK	(0x7ull << ISA207_SIER_DATA_SRC_SHIFT)
->   
-> +/* Bits in SIER2/SIER3 for Power10 */
-> +#define P10_SIER2_FINISH_CYC(sier2)	(((sier2) >> (63 - 37)) & 0x7fful)
-> +#define P10_SIER2_DISPATCH_CYC(sier2)	(((sier2) >> (63 - 13)) & 0x7fful)
-> +
->   #define P(a, b)				PERF_MEM_S(a, b)
->   #define PH(a, b)			(P(LVL, HIT) | P(a, b))
->   #define PM(a, b)			(P(LVL, MISS) | P(a, b))
-> @@ -278,6 +282,6 @@ int isa207_get_alternatives(u64 event, u64 alt[], int size, unsigned int flags,
->   					const unsigned int ev_alt[][MAX_ALT]);
->   void isa207_get_mem_data_src(union perf_mem_data_src *dsrc, u32 flags,
->   							struct pt_regs *regs);
-> -void isa207_get_mem_weight(u64 *weight);
-> +void isa207_get_mem_weight(u64 *weight, u64 type);
->   
->   #endif
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
