@@ -2,176 +2,200 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756CFC433DB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Mar 2021 23:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7B3C433C1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Mar 2021 13:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 314C161A1D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 Mar 2021 23:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201C961A11
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 Mar 2021 13:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230261AbhCXXR6 (ORCPT
+        id S230096AbhCYNBk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 Mar 2021 19:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239022AbhCXXRd (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 Mar 2021 19:17:33 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C5CFC06174A;
-        Wed, 24 Mar 2021 16:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-        :In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=B9IH6Bm0/kSsdrM6qZIGkSgskCeTe3eOs2ebC18G4xk=; b=I9pvyFT7SGaMOckWRDIUkuRQ6h
-        zc9X56fajLFpQqlSCiB3ZkBNvDVyaeR08XJg97C/thMELzmLH/afH/EN+2hpwWOWvhJxH5WiPVsjr
-        xd+2GezB6NY1Rj60GB2vCqorV5iLk4iovY2DBYaLHvAM7f3w6rCUQQsbaED2vKmgo3VMDTBHtIu1V
-        d5qq7tIbqGDkN1VugJczq49BKfYcS+VvK0RRiVr0B45mo1GJC2zWbrTLhlXMAD+IuQ9IzxLnCW+X8
-        YxEdf2hqRijO2qfKUF3YpJlWYTGl7I22v7PNDzn7+wRSBb3uUFzLOpYn+HX867WFmtVvq7A2a6Fcp
-        fakzrhmg==;
-Received: from [2601:1c0:6280:3f0::3ba4]
-        by desiato.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lPCkj-000LE1-DV; Wed, 24 Mar 2021 23:17:29 +0000
-Subject: Re: [PATCH, -v2] perf tools: Fix various typos in comments
-To:     Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-References: <20210321113734.GA248990@gmail.com>
- <20210323160915.GA61903@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <543bd87e-5059-002b-4cc4-a262fe5eb1ff@infradead.org>
-Date:   Wed, 24 Mar 2021 16:17:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.0
+        Thu, 25 Mar 2021 09:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229963AbhCYNBi (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 25 Mar 2021 09:01:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C087961A11;
+        Thu, 25 Mar 2021 13:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1616677298;
+        bh=VVzdacZ5WDveyzy7D1c2EKGI2GCUWsmL2zx+5NzF7+w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ju/qHmlr9oR4lpvM/NzvZFrmuzz3uVjdkKZWi5R31vC8OJbG8FAiNU2GIWtx3KKSx
+         R48ajxWLNWLzqyIZzu5s6gNlae9LD+BC4PNLZsUA+sWoMhGpW839bLqoXQ8gwdSJ45
+         2nA1gYQSG7LEfdi5yO80kSNL9pTbyuR6xdyCGBkQRe0Lx48FOonJYWFjLppY72kJi/
+         rtg4CUIzPigSDE/oBZ3/IpnwffM/cV73cd+u3JsOvCGJhXraOsFWAoodBOnGn65G6f
+         AQsNtDonMCyIMvNguvwqBxeP58Rqdd2rVN+jgCQAgZDSqoaR6OhujeOR3gZRdKNAfQ
+         W+0XHVJnnTVBA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CA3D740647; Thu, 25 Mar 2021 10:01:35 -0300 (-03)
+Date:   Thu, 25 Mar 2021 10:01:35 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mpe@ellerman.id.au,
+        jolsa@kernel.org, ravi.bangoria@linux.ibm.com, kjain@linux.ibm.com,
+        kan.liang@linux.intel.com, peterz@infradead.org
+Subject: Re: [PATCH V2 1/5] powerpc/perf: Expose processor pipeline stage
+ cycles using PERF_SAMPLE_WEIGHT_STRUCT
+Message-ID: <YFyJr+R24TlrMNrC@kernel.org>
+References: <1616425047-1666-1-git-send-email-atrajeev@linux.vnet.ibm.com>
+ <1616425047-1666-2-git-send-email-atrajeev@linux.vnet.ibm.com>
+ <d7dd633b-e28a-155a-a8e2-0e5a83b4eead@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20210323160915.GA61903@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7dd633b-e28a-155a-a8e2-0e5a83b4eead@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 3/23/21 9:09 AM, Ingo Molnar wrote:
+Em Wed, Mar 24, 2021 at 10:05:23AM +0530, Madhavan Srinivasan escreveu:
 > 
-> * Ingo Molnar <mingo@kernel.org> wrote:
+> On 3/22/21 8:27 PM, Athira Rajeev wrote:
+> > Performance Monitoring Unit (PMU) registers in powerpc provides
+> > information on cycles elapsed between different stages in the
+> > pipeline. This can be used for application tuning. On ISA v3.1
+> > platform, this information is exposed by sampling registers.
+> > Patch adds kernel support to capture two of the cycle counters
+> > as part of perf sample using the sample type:
+> > PERF_SAMPLE_WEIGHT_STRUCT.
+> > 
+> > The power PMU function 'get_mem_weight' currently uses 64 bit weight
+> > field of perf_sample_data to capture memory latency. But following the
+> > introduction of PERF_SAMPLE_WEIGHT_TYPE, weight field could contain
+> > 64-bit or 32-bit value depending on the architexture support for
+> > PERF_SAMPLE_WEIGHT_STRUCT. Patches uses WEIGHT_STRUCT to expose the
+> > pipeline stage cycles info. Hence update the ppmu functions to work for
+> > 64-bit and 32-bit weight values.
+> > 
+> > If the sample type is PERF_SAMPLE_WEIGHT, use the 64-bit weight field.
+> > if the sample type is PERF_SAMPLE_WEIGHT_STRUCT, memory subsystem
+> > latency is stored in the low 32bits of perf_sample_weight structure.
+> > Also for CPU_FTR_ARCH_31, capture the two cycle counter information in
+> > two 16 bit fields of perf_sample_weight structure.
 > 
->> Fix ~81 single-word typos in the perf tooling code - accumulated over the years.
+> Changes looks fine to me.
 > 
-> Found a few more:
-> 
-> =============>
-> From: Ingo Molnar <mingo@kernel.org>
-> Date: Sun, 21 Mar 2021 12:37:34 +0100
-> Subject: [PATCH] perf tools: Fix various typos in comments
-> 
-> Fix ~124 single-word typos and a few spelling errors in the perf tooling code,
-> accumulated over the years.
-> 
-> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> Link: https://lore.kernel.org/r/20210321113734.GA248990@gmail.com
-> ---
->  tools/perf/Documentation/perf-buildid-cache.txt        |  2 +-
->  tools/perf/Documentation/perf-report.txt               |  2 +-
->  tools/perf/Documentation/perf-top.txt                  |  2 +-
->  tools/perf/arch/arm/util/cs-etm.c                      |  2 +-
->  tools/perf/arch/arm64/util/machine.c                   |  8 ++++----
->  tools/perf/arch/arm64/util/perf_regs.c                 |  2 +-
->  tools/perf/arch/powerpc/util/kvm-stat.c                |  2 +-
->  tools/perf/arch/powerpc/util/utils_header.h            |  2 +-
->  tools/perf/arch/x86/tests/bp-modify.c                  |  2 +-
->  tools/perf/arch/x86/util/perf_regs.c                   |  4 ++--
->  tools/perf/bench/epoll-wait.c                          |  4 ++--
->  tools/perf/bench/numa.c                                |  2 +-
->  tools/perf/builtin-annotate.c                          |  2 +-
->  tools/perf/builtin-diff.c                              |  2 +-
->  tools/perf/builtin-lock.c                              |  2 +-
->  tools/perf/builtin-sched.c                             |  2 +-
->  tools/perf/builtin-script.c                            |  4 ++--
->  tools/perf/builtin-stat.c                              |  4 ++--
->  tools/perf/builtin-top.c                               |  2 +-
->  tools/perf/examples/bpf/augmented_raw_syscalls.c       |  4 ++--
->  tools/perf/jvmti/jvmti_agent.c                         |  4 ++--
->  tools/perf/pmu-events/arch/powerpc/power8/metrics.json | 12 ++++++------
->  tools/perf/pmu-events/arch/powerpc/power9/metrics.json |  2 +-
->  tools/perf/pmu-events/jevents.c                        |  2 +-
->  tools/perf/scripts/python/netdev-times.py              |  2 +-
->  tools/perf/tests/bp_signal.c                           |  6 +++---
->  tools/perf/tests/code-reading.c                        |  2 +-
->  tools/perf/tests/hists_cumulate.c                      |  4 ++--
->  tools/perf/tests/parse-events.c                        |  2 +-
->  tools/perf/tests/parse-metric.c                        |  2 +-
->  tools/perf/tests/topology.c                            |  2 +-
->  tools/perf/trace/beauty/include/linux/socket.h         |  2 +-
->  tools/perf/ui/browsers/annotate.c                      |  2 +-
->  tools/perf/ui/browsers/hists.c                         |  2 +-
->  tools/perf/util/bpf-loader.c                           |  2 +-
->  tools/perf/util/call-path.h                            |  2 +-
->  tools/perf/util/callchain.c                            |  2 +-
->  tools/perf/util/config.c                               |  2 +-
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c        |  2 +-
->  tools/perf/util/cs-etm.c                               |  8 ++++----
->  tools/perf/util/cs-etm.h                               |  5 +++--
->  tools/perf/util/data-convert-bt.c                      |  2 +-
->  tools/perf/util/demangle-java.c                        |  4 ++--
->  tools/perf/util/dso.h                                  |  2 +-
->  tools/perf/util/dwarf-aux.c                            |  6 +++---
->  tools/perf/util/dwarf-aux.h                            |  2 +-
->  tools/perf/util/events_stats.h                         |  2 +-
->  tools/perf/util/evlist.c                               |  2 +-
->  tools/perf/util/evsel.c                                |  4 ++--
->  tools/perf/util/expr.h                                 |  2 +-
->  tools/perf/util/header.c                               | 18 +++++++++---------
->  tools/perf/util/intel-pt.c                             |  2 +-
->  tools/perf/util/levenshtein.c                          |  2 +-
->  tools/perf/util/libunwind/arm64.c                      |  2 +-
->  tools/perf/util/libunwind/x86_32.c                     |  2 +-
->  tools/perf/util/llvm-utils.c                           |  2 +-
->  tools/perf/util/machine.c                              |  8 ++++----
->  tools/perf/util/map.h                                  |  4 ++--
->  tools/perf/util/mem-events.h                           |  2 +-
->  tools/perf/util/metricgroup.c                          |  2 +-
->  tools/perf/util/parse-events.c                         | 10 +++++-----
->  tools/perf/util/pmu.c                                  |  4 ++--
->  tools/perf/util/probe-event.c                          |  4 ++--
->  tools/perf/util/probe-finder.c                         |  6 +++---
->  tools/perf/util/s390-cpumsf.c                          | 10 +++++-----
->  tools/perf/util/scripting-engines/trace-event-python.c |  2 +-
->  tools/perf/util/session.c                              |  4 ++--
->  tools/perf/util/strbuf.h                               |  2 +-
->  tools/perf/util/strfilter.h                            |  4 ++--
->  tools/perf/util/symbol-elf.c                           |  2 +-
->  tools/perf/util/synthetic-events.c                     |  4 ++--
->  tools/perf/util/unwind-libunwind-local.c               |  2 +-
->  72 files changed, 125 insertions(+), 124 deletions(-)
-> 
+> Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
 
-> diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-> index 40c5e0b5bda8..acdf8dc1189b 100644
-> --- a/tools/perf/arch/arm64/util/machine.c
-> +++ b/tools/perf/arch/arm64/util/machine.c
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> +/ SPDX-License-Identifier: GPL-2.0
+So who will process the kernel bits? I'm merging the tooling parts,
 
-That is the only problem that I found, and I see that found
-that one.
+Thanks,
 
->  #include <inttypes.h>
->  #include <stdio.h>
-
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-(yeah, I'm late)
+- Arnaldo
+ 
+> 
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > ---
+> >   arch/powerpc/include/asm/perf_event_server.h |  2 +-
+> >   arch/powerpc/perf/core-book3s.c              |  4 ++--
+> >   arch/powerpc/perf/isa207-common.c            | 29 +++++++++++++++++++++++++---
+> >   arch/powerpc/perf/isa207-common.h            |  6 +++++-
+> >   4 files changed, 34 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/include/asm/perf_event_server.h b/arch/powerpc/include/asm/perf_event_server.h
+> > index 00e7e671bb4b..112cf092d7b3 100644
+> > --- a/arch/powerpc/include/asm/perf_event_server.h
+> > +++ b/arch/powerpc/include/asm/perf_event_server.h
+> > @@ -43,7 +43,7 @@ struct power_pmu {
+> >   				u64 alt[]);
+> >   	void		(*get_mem_data_src)(union perf_mem_data_src *dsrc,
+> >   				u32 flags, struct pt_regs *regs);
+> > -	void		(*get_mem_weight)(u64 *weight);
+> > +	void		(*get_mem_weight)(u64 *weight, u64 type);
+> >   	unsigned long	group_constraint_mask;
+> >   	unsigned long	group_constraint_val;
+> >   	u64             (*bhrb_filter_map)(u64 branch_sample_type);
+> > diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+> > index 766f064f00fb..6936763246bd 100644
+> > --- a/arch/powerpc/perf/core-book3s.c
+> > +++ b/arch/powerpc/perf/core-book3s.c
+> > @@ -2206,9 +2206,9 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+> >   						ppmu->get_mem_data_src)
+> >   			ppmu->get_mem_data_src(&data.data_src, ppmu->flags, regs);
+> > -		if (event->attr.sample_type & PERF_SAMPLE_WEIGHT &&
+> > +		if (event->attr.sample_type & PERF_SAMPLE_WEIGHT_TYPE &&
+> >   						ppmu->get_mem_weight)
+> > -			ppmu->get_mem_weight(&data.weight.full);
+> > +			ppmu->get_mem_weight(&data.weight.full, event->attr.sample_type);
+> >   		if (perf_event_overflow(event, &data, regs))
+> >   			power_pmu_stop(event, 0);
+> > diff --git a/arch/powerpc/perf/isa207-common.c b/arch/powerpc/perf/isa207-common.c
+> > index e4f577da33d8..5dcbdbd54598 100644
+> > --- a/arch/powerpc/perf/isa207-common.c
+> > +++ b/arch/powerpc/perf/isa207-common.c
+> > @@ -284,8 +284,10 @@ void isa207_get_mem_data_src(union perf_mem_data_src *dsrc, u32 flags,
+> >   	}
+> >   }
+> > -void isa207_get_mem_weight(u64 *weight)
+> > +void isa207_get_mem_weight(u64 *weight, u64 type)
+> >   {
+> > +	union perf_sample_weight *weight_fields;
+> > +	u64 weight_lat;
+> >   	u64 mmcra = mfspr(SPRN_MMCRA);
+> >   	u64 exp = MMCRA_THR_CTR_EXP(mmcra);
+> >   	u64 mantissa = MMCRA_THR_CTR_MANT(mmcra);
+> > @@ -296,9 +298,30 @@ void isa207_get_mem_weight(u64 *weight)
+> >   		mantissa = P10_MMCRA_THR_CTR_MANT(mmcra);
+> >   	if (val == 0 || val == 7)
+> > -		*weight = 0;
+> > +		weight_lat = 0;
+> >   	else
+> > -		*weight = mantissa << (2 * exp);
+> > +		weight_lat = mantissa << (2 * exp);
+> > +
+> > +	/*
+> > +	 * Use 64 bit weight field (full) if sample type is
+> > +	 * WEIGHT.
+> > +	 *
+> > +	 * if sample type is WEIGHT_STRUCT:
+> > +	 * - store memory latency in the lower 32 bits.
+> > +	 * - For ISA v3.1, use remaining two 16 bit fields of
+> > +	 *   perf_sample_weight to store cycle counter values
+> > +	 *   from sier2.
+> > +	 */
+> > +	weight_fields = (union perf_sample_weight *)weight;
+> > +	if (type & PERF_SAMPLE_WEIGHT)
+> > +		weight_fields->full = weight_lat;
+> > +	else {
+> > +		weight_fields->var1_dw = (u32)weight_lat;
+> > +		if (cpu_has_feature(CPU_FTR_ARCH_31)) {
+> > +			weight_fields->var2_w = P10_SIER2_FINISH_CYC(mfspr(SPRN_SIER2));
+> > +			weight_fields->var3_w = P10_SIER2_DISPATCH_CYC(mfspr(SPRN_SIER2));
+> > +		}
+> > +	}
+> >   }
+> >   int isa207_get_constraint(u64 event, unsigned long *maskp, unsigned long *valp, u64 event_config1)
+> > diff --git a/arch/powerpc/perf/isa207-common.h b/arch/powerpc/perf/isa207-common.h
+> > index 1af0e8c97ac7..fc30d43c4d0c 100644
+> > --- a/arch/powerpc/perf/isa207-common.h
+> > +++ b/arch/powerpc/perf/isa207-common.h
+> > @@ -265,6 +265,10 @@
+> >   #define ISA207_SIER_DATA_SRC_SHIFT	53
+> >   #define ISA207_SIER_DATA_SRC_MASK	(0x7ull << ISA207_SIER_DATA_SRC_SHIFT)
+> > +/* Bits in SIER2/SIER3 for Power10 */
+> > +#define P10_SIER2_FINISH_CYC(sier2)	(((sier2) >> (63 - 37)) & 0x7fful)
+> > +#define P10_SIER2_DISPATCH_CYC(sier2)	(((sier2) >> (63 - 13)) & 0x7fful)
+> > +
+> >   #define P(a, b)				PERF_MEM_S(a, b)
+> >   #define PH(a, b)			(P(LVL, HIT) | P(a, b))
+> >   #define PM(a, b)			(P(LVL, MISS) | P(a, b))
+> > @@ -278,6 +282,6 @@ int isa207_get_alternatives(u64 event, u64 alt[], int size, unsigned int flags,
+> >   					const unsigned int ev_alt[][MAX_ALT]);
+> >   void isa207_get_mem_data_src(union perf_mem_data_src *dsrc, u32 flags,
+> >   							struct pt_regs *regs);
+> > -void isa207_get_mem_weight(u64 *weight);
+> > +void isa207_get_mem_weight(u64 *weight, u64 type);
+> >   #endif
 
 -- 
-~Randy
 
+- Arnaldo
