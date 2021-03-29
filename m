@@ -2,77 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47CFC433C1
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Mar 2021 20:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43243C433C1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Mar 2021 18:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89A4761951
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 Mar 2021 20:26:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037B46191F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 Mar 2021 18:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231633AbhC1UZf (ORCPT
+        id S231578AbhC2SXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 Mar 2021 16:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231489AbhC1UZY (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 Mar 2021 16:25:24 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id D26A66186A;
-        Sun, 28 Mar 2021 20:25:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1616963123;
-        bh=B86lE1aCWFd2fQbiCl+iMxNQ1SIRLjYfWsfMed+CHhc=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=l2WSgzVm0Rfxezq9TQrwIaRI7i9QluLwPf9XOVkMjg9Ta1BjIm7T+o1lmL3+sLOnL
-         qmUrPbt+pmyEQd5nCSmRcRHNrCIllauUdmx7ZeEmBUraikYuFCbp7H7XdOprN+PpqS
-         NHZgWhdvs6eH6/C9rs9SCtUlvL2FxxvDwe96Jn3riOWtfa4Bk71QLMjwdNkFbf7/Ls
-         oCtCE1i/tm78nCeyhPG3vNo4RTFvC29I65vn/BQ6387CN6xQkLHZaKKFQsZCGfdeh8
-         X92FGLxNs1XZKG6NFU02YsAWxfsmQTFD/EQwv7mFOkDn04H886Sz0f/UnAMnp/6q4V
-         IVcQy7BtMp8UA==
-Subject: Re: [GIT PULL] perf tools changes for v5.12: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210328183838.1529920-1-acme@kernel.org>
-References: <20210328183838.1529920-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210328183838.1529920-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.12-2020-03-28
-X-PR-Tracked-Commit-Id: 1dc481c0b0cf18d3952d93a73c4ece90dec277f0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f9e2bb42cf0db3a624d295122db3475aa3e7ad18
-Message-Id: <161696312380.20511.11522597886520743848.pr-tracker-bot@kernel.org>
-Date:   Sun, 28 Mar 2021 20:25:23 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Jackie Liu <liuyun01@kylinos.cn>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mon, 29 Mar 2021 14:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231561AbhC2SXX (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 29 Mar 2021 14:23:23 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5436C061574
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Mar 2021 11:23:22 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id g25so7114222wmh.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Mar 2021 11:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=O8XUSkDZ19dxLREQWZkVVz+bxF/N6TKoOh1ws335Y/s=;
+        b=oYraa0Pd0BiKDacdstcZ+26hLscyUJh7+f8Inn2c9SLcLf5MFQbOqWHKx894BrAp0f
+         G4cqrV8pW1mBzkzRw2oAFbIcW5sR/C5Znb3BkRghCcILGaZ/nQuqktwdkAiBdYhcZYTP
+         Xnx+92A+1h3hAXyzjOOLyHBqinSFycmZnN0vNe460hT95u1khvWbGNOsYsNJZ9Cm/au/
+         y8/n/xjuBkk7KYLWZ95fPcfgec6g+fJWSwsnj7FxmplkulvWC5ib3lnqZCKVMouQ8SJZ
+         93En1UPlvFW9xxTXTCOO7RqBP0gu7+zUfiNJObnvOzxegol1moqM4gzJFZEcCjkNGga6
+         GV7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O8XUSkDZ19dxLREQWZkVVz+bxF/N6TKoOh1ws335Y/s=;
+        b=jSclJphOWEdub3RFhfpMC+z1KOQ4uO+iDl+qwX/IYL212NO0c1WNsZEaIvp1fxCwe+
+         DjxQUwGrMiN3J/Fs2Nm3JYoGy4tf1xBwsp+XdVMFEAdF+pzSdcylwNdcG4qVumZphu6i
+         ZLyqOHtAckE8qIDyUxlAmEuCDDYFvQ4fTxdsZgML3CAqoqxkcxnJ/5qhQt4gH1RSJS2M
+         YqEnB2wE1uMFwDlRVHnLoThWkeMqqoxPfLORKStuT1bo1VmVedEGbM29YsaA5Ik+nP6U
+         ncce+eBOGoqWLIs8d5dyaj6wtkFZI2LWoWmqiWGxh22Nt4D3cslVXxFiENQFzrmI3oyA
+         gjNg==
+X-Gm-Message-State: AOAM53349LGv3dIirZqGyHJf4vEnn6NQFYJXAFlghsN/R2UCNAWp74Sj
+        IH6BjndBL1hCmoRrML0OtPBZprydj7BsUPFNRRpCjA==
+X-Google-Smtp-Source: ABdhPJxYhDYsQa3LcRFKl5cchR7LtX5mKzFRRyFZJIznwp+YRaFuQexGChGrdXCtVQkqeQQOu+GVe6TmA3nguT9QAoM=
+X-Received: by 2002:a05:600c:acf:: with SMTP id c15mr358489wmr.124.1617042201368;
+ Mon, 29 Mar 2021 11:23:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHb-xauBfO+Ted+0e-rGQaz-Tq3hqbbrFUCdSpOkWBvrWkZdXQ@mail.gmail.com>
+In-Reply-To: <CAHb-xauBfO+Ted+0e-rGQaz-Tq3hqbbrFUCdSpOkWBvrWkZdXQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 29 Mar 2021 11:23:10 -0700
+Message-ID: <CAP-5=fU6Nxy+O65xGgG6z43AdfJCK5nrzPspnDRj0rJmzbi48w@mail.gmail.com>
+Subject: Re: [Question] Cannot sample lbr callchain on qemu-kvm guest machine
+To:     rainkin <rainkin1993@gmail.com>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sun, 28 Mar 2021 15:38:38 -0300:
+On Wed, Mar 10, 2021 at 12:39 AM rainkin <rainkin1993@gmail.com> wrote:
+>
+> Hello~
+>
+> My config:
+> ===============
+> Host:
+> CPU: i7-10700
+> Kernel (5.8.0-41-generic)
+> Ubuntu (20.10)
+> Qemu (5.0.0, Debian 1:5.0-5ubuntu9.6)
+> ===============
+> Guest:
+> CPU: host-passthrough (qemu -cpu host,migratable=on)
+> Kernel: 5.4.0-66-generic
+> Ubuntu: 18.04
+> perf: 5.4.86
+> ===============
+>
+> I try to collect lbr callchain on a virtual machine.
+> Thus I execute the following commands on the virtual machine:
+> "sudo perf record -e cycles --call-graph lbr"
+> and get the following errors:
+> " cycles: PMU Hardware doesn't support sampling/overflow-interrupts.
+> Try 'perf stat' "
+>
+> Does anyone know the reason?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.12-2020-03-28
+There needs to be kernel support and it looks this hasn't landed yet.
+From reading:
+https://lore.kernel.org/lkml/f5847034-e720-b8ce-905b-04e2cfb7661b@intel.com/
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f9e2bb42cf0db3a624d295122db3475aa3e7ad18
+Thanks,
+Ian
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> Thanks
+> Rainkin
