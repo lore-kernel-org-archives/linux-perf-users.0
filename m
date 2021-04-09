@@ -2,149 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ED3C433B4
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Apr 2021 10:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B29FC433B4
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Apr 2021 08:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EBCC61158
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Apr 2021 10:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230D9611AE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Apr 2021 08:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230424AbhDHKIn (ORCPT
+        id S229829AbhDIIJn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Apr 2021 06:08:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48272 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229686AbhDHKIm (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Apr 2021 06:08:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E1194AF9E;
-        Thu,  8 Apr 2021 10:08:30 +0000 (UTC)
-Subject: Re: [PATCH] perf annotate: improve --stdio mode
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <a0d53f31-f633-5013-c386-a4452391b081@suse.cz>
- <YDVb4KS/ARbtfoAw@kernel.org> <fedc723d-1c8f-fcd7-accb-421707b3a09f@suse.cz>
- <YG4IZhfYiE+2tyw7@kernel.org> <YG4VTsqJ9V3/hbOG@kernel.org>
-From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-Message-ID: <4816a983-9d3c-2813-e9eb-1901b524e241@suse.cz>
-Date:   Thu, 8 Apr 2021 12:08:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Fri, 9 Apr 2021 04:09:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37904 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229621AbhDIIJm (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 9 Apr 2021 04:09:42 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 139834f7048406;
+        Fri, 9 Apr 2021 04:09:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=oMQnkpNydPuwHeLwOwD6pr0oIYbZT0IE6tD5wSdcxaQ=;
+ b=S9K/fQ+s+mwT3phk7AQUQJ6EHTUBZ62L/o+KBgazilF/BcNUDky2aXHRi9y8fzgjO2Ry
+ fl/A+AIvXpeGrAaPsM28QqSvBbNtZ/XN17y+jiNCyT6adcEBB2UeJ8x663oR+d0PhOhU
+ mGyTlFC4kvav+TcdyjD5pEhlxoBBg7CJzh65bEVHKzUm8hR1QIg/OPDT6TEj2HFG83WW
+ DWlAqp7qsGW+TrYcNPUtNj0ZFeFhg6tr9Vksjr3bmbQs4b8zn9kQWQHAlrngiy6OS/22
+ DAG6H+eYVuFDP/aCq5JRUFOiKLuwP2RWfqMbfbaB+lkSlk1VIB9ni+aM7dumKyhKMBkm Vg== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37rvpw5j1k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Apr 2021 04:09:29 -0400
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13983Ce6017354;
+        Fri, 9 Apr 2021 08:09:27 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma01fra.de.ibm.com with ESMTP id 37rvmq97bn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Apr 2021 08:09:26 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13989NC848628088
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 9 Apr 2021 08:09:24 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB3D742041;
+        Fri,  9 Apr 2021 08:09:23 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D65B4203F;
+        Fri,  9 Apr 2021 08:09:23 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  9 Apr 2021 08:09:23 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf ftrace: Command fails on s390
+Date:   Fri,  9 Apr 2021 10:09:12 +0200
+Message-Id: <20210409080912.2960595-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YG4VTsqJ9V3/hbOG@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: sTKAVn5_S4EkFvKp8EGEFBoeb9Zes4bc
+X-Proofpoint-GUID: sTKAVn5_S4EkFvKp8EGEFBoeb9Zes4bc
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-09_04:2021-04-08,2021-04-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104090059
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/7/21 10:25 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Apr 07, 2021 at 04:30:46PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Fri, Feb 26, 2021 at 10:24:00AM +0100, Martin Liška escreveu:
->>> On 2/23/21 8:47 PM, Arnaldo Carvalho de Melo wrote:
->>> Sure. But I think the current format provides quite broken visual layout:
->>>
->>>       0.00 :   405ef1: inc    %r15
->>>       0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
->>>    eff.c:1811    0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8>
->>>           :            TA + tmpsd * (TB +
->>>
->>> vs.
->>>
->>>       0.00 :   405ef1: inc    %r15
->>>       0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
->>>       0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8> // eff.c:1811
->>>            : 1810   TA + tmpsd * (TB +
->>>
->>> I bet also the current users of --stdio mode would benefit from it.
->>> What do you think?
->  
->> Agreed, I tried applying but it bitrotted, it seems :-\
-> 
-> I refreshed it, please check.
+Command 'perf ftrace -v -- ls' fails in s390 (at least 5.12.0rc6).
 
-Thanks! I've just tested the patch on top of acme/perf/core and it works as was planned.
-I'm attaching 2 perf annotate snippets (perf annotate --stdio -l --stdio-color=always) before
-and after the revision:
+The root cause is a missing pointer dereference which causes an
+array element address to be used as PID.
 
-https://splichal.eu/tmp/perf-before.html
-https://splichal.eu/tmp/perf-after.html
+Fix this by extracting the PID.
 
-I hope it nicely describes that it's an improvement.
+Output before:
+  # ./perf ftrace -v -- ls
+  function_graph tracer is used
+  write '-263732416' to tracing/set_ftrace_pid failed: Invalid argument
+  failed to set ftrace pid
+  #
 
-Cheers,
-Martin
+Output after:
+   ./perf ftrace -v -- ls
+   function_graph tracer is used
+   # tracer: function_graph
+   #
+   # CPU  DURATION                  FUNCTION CALLS
+   # |     |   |                     |   |   |   |
+   4)               |  rcu_read_lock_sched_held() {
+   4)   0.552 us    |    rcu_lockdep_current_cpu_online();
+   4)   6.124 us    |  }
 
-> 
-> - Arnaldo
-> 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 18eee25b4976bea8..abe1499a91645375 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -1368,7 +1368,6 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->  {
->  	struct disasm_line *dl = container_of(al, struct disasm_line, al);
->  	static const char *prev_line;
-> -	static const char *prev_color;
->  
->  	if (al->offset != -1) {
->  		double max_percent = 0.0;
-> @@ -1407,20 +1406,6 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->  
->  		color = get_percent_color(max_percent);
->  
-> -		/*
-> -		 * Also color the filename and line if needed, with
-> -		 * the same color than the percentage. Don't print it
-> -		 * twice for close colored addr with the same filename:line
-> -		 */
-> -		if (al->path) {
-> -			if (!prev_line || strcmp(prev_line, al->path)
-> -				       || color != prev_color) {
-> -				color_fprintf(stdout, color, " %s", al->path);
-> -				prev_line = al->path;
-> -				prev_color = color;
-> -			}
-> -		}
-> -
->  		for (i = 0; i < nr_percent; i++) {
->  			struct annotation_data *data = &al->data[i];
->  			double percent;
-> @@ -1441,6 +1426,19 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->  		printf(" : ");
->  
->  		disasm_line__print(dl, start, addr_fmt_width);
-> +
-> +		/*
-> +		 * Also color the filename and line if needed, with
-> +		 * the same color than the percentage. Don't print it
-> +		 * twice for close colored addr with the same filename:line
-> +		 */
-> +		if (al->path) {
-> +			if (!prev_line || strcmp(prev_line, al->path)) {
-> +				color_fprintf(stdout, color, " // %s", al->path);
-> +				prev_line = al->path;
-> +			}
-> +		}
-> +
->  		printf("\n");
->  	} else if (max_lines && printed >= max_lines)
->  		return 1;
-> @@ -1456,7 +1454,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->  		if (!*al->line)
->  			printf(" %*s:\n", width, " ");
->  		else
-> -			printf(" %*s:     %*s %s\n", width, " ", addr_fmt_width, " ", al->line);
-> +			printf(" %*s: %-*d %s\n", width, " ", addr_fmt_width, al->line_nr, al->line);
->  	}
->  
->  	return 0;
-> 
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/builtin-ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index d49448a1060c..87cb11a7a3ee 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -289,7 +289,7 @@ static int set_tracing_pid(struct perf_ftrace *ftrace)
+ 
+ 	for (i = 0; i < perf_thread_map__nr(ftrace->evlist->core.threads); i++) {
+ 		scnprintf(buf, sizeof(buf), "%d",
+-			  ftrace->evlist->core.threads->map[i]);
++			  perf_thread_map__pid(ftrace->evlist->core.threads, i));
+ 		if (append_tracing_file("set_ftrace_pid", buf) < 0)
+ 			return -1;
+ 	}
+-- 
+2.30.2
 
