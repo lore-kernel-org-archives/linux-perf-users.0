@@ -2,73 +2,82 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C160EC433ED
-	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Apr 2021 00:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046D4C433B4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Apr 2021 14:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8836B61178
-	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Apr 2021 00:16:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2FB61353
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Apr 2021 14:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235232AbhDJAQk (ORCPT
+        id S240862AbhDLO3f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Apr 2021 20:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235231AbhDJAQj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Apr 2021 20:16:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 1EECD61105;
-        Sat, 10 Apr 2021 00:16:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1618013786;
-        bh=6iGxlUKMXyqgsleuRifv0ybB3/9CfwefX2uJdip9540=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=hXso8hSUVPGt3qVpMwfjAyynRqTFH4xu1H8YRLaTLw/O0C2bslI4Ez/OK6ZO/Um3U
-         obMF19RnkzTqemEB4Qd/JYpZOl9GsVIvjtZ+apewLjOkNOmAzDaODD3G7LNuquRicq
-         7I935MjbOZ8VtVAv8FK5owXm6L/Rd2/pFXfghNunHvhlMP5dBneGHshnM0qtncgwaZ
-         cazm8cA7F6B4wNyLbfA0qgCJMySHVwgvQdfgo6ba1jy3MI01/C8E2Dqhc3KbIVCy4n
-         wt036nxtlxFSIppBaZzabAHlnqIHijQQRcEW7u4jPWJ6LZydHSZghBmkByPVHFzj9l
-         cBrBENbwXonUQ==
-Subject: Re: [GIT PULL] perf tools fixes for v5.12: 3rd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210409183744.1932507-1-acme@kernel.org>
-References: <20210409183744.1932507-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210409183744.1932507-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.12-2020-04-09
-X-PR-Tracked-Commit-Id: 92f1e8adf7db2ef9b90e5662182810c0cf8ac22e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 9288e1f7d396b7702649d78f2c711c3e0020c71d
-Message-Id: <161801378594.21932.6673758935828189002.pr-tracker-bot@kernel.org>
-Date:   Sat, 10 Apr 2021 00:16:25 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mon, 12 Apr 2021 10:29:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240002AbhDLO3f (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 12 Apr 2021 10:29:35 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8B0C061574
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Apr 2021 07:29:17 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id h10so15307111edt.13
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Apr 2021 07:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition;
+        bh=0P5czINXRSmWUgVMy5hfECS3abHGtTdsAjIIm1UbVF8=;
+        b=tihgRsGp00+tTlKCLZNB4FmVBtZapHn8VBUlJNQ/Y4kP+9kTsqYE+J4oi4r7KyKqSF
+         Q0Iy67q2fgFBxDdsX60zuHJukxfGR15tyBPeSGJVU+qNMVFs2S2iUSWbDhD5+kUjyRyg
+         OeREK4f5TsWexOQnMGL/Dqbynr2ebhJ1wpbKoqvcCZ/extNjuFjXlPPNEwH00SDBn1VB
+         3unVnZCRKSLi59oKTvG5F8eCNlAhHlTFH2I78ygaV7HyixIff9ANSgfbp+ES0YGFY4o7
+         MEnLeQFphAwvJNGD6q1AoM4xfOQHFaORbL2i9qP0qJGaVVaz6Pb3PT3778gxdzVUpc+U
+         Ms7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition;
+        bh=0P5czINXRSmWUgVMy5hfECS3abHGtTdsAjIIm1UbVF8=;
+        b=Hi6zfp/qdElgdCJybZijCJjR8as7lHQUyVT8lfqg+JUj0MXzNJD/GGU0rgEMW7ylMm
+         S7zhmcxvchJDJ2tfIo6Mszp+yc3OfajxWLPj4eDYwpkiCQsskisOWJg62Nzj8HHqA5Qo
+         z+1DB+xooaw/pxARwkwd1J4oT/KuNIDAD9zvtqzZfGIbEMbdobhhJNQPDK6EH7ogirvx
+         /pP/5RkxqWofOf3EDvWntvSzUBYSSFvnQG5VceQ+7aJWTGPkw3G5FxZdnRUm5QHZamrU
+         EIyU74rCQCcVHJ+00nLqM+bmSfwY7zZQGTPCdULp2g4ixcXjwR52YkooJk9dFkJ7nlnT
+         fg7g==
+X-Gm-Message-State: AOAM532VvCwwjTr3nHDDu0lkn9nlatLnVwZwKxj681AXmWc5NQQE9e2q
+        32F4yeyW7Wq5Sn1r/uBNlcGLSkvJqw==
+X-Google-Smtp-Source: ABdhPJxzCcgjO5CfgUf6Kn2nUDiipBu0UW5V2mXJ2D1yqMzIGyIFv/hkJ2ADGTVP71iFO4DZK0dBNA==
+X-Received: by 2002:a05:6402:1d3a:: with SMTP id dh26mr21669957edb.359.1618237756056;
+        Mon, 12 Apr 2021 07:29:16 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.249.61])
+        by smtp.gmail.com with ESMTPSA id bu26sm1919636ejb.30.2021.04.12.07.29.15
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Apr 2021 07:29:15 -0700 (PDT)
+Date:   Mon, 12 Apr 2021 17:29:13 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     linux-perf-users@vger.kernel.org
+Subject: Double sys_exit_pread64 tracepoint event
+Message-ID: <YHRZOQbTNm75Ojm1@localhost.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri,  9 Apr 2021 15:37:44 -0300:
+I was tracing trivial fio workload which does pread in 4 threads
+on 4 different CPUs and got double exit event:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.12-2020-04-09
+fio  7371 [000]  5670.259136: syscalls:sys_enter_pread64: fd: 0x00000007, buf: 0x7f2c4c001000, count: 0x00001000, pos: 0x075c1000
+fio  7371 [000]  5670.259167:  syscalls:sys_exit_pread64: 0x1000
+fio  7371 [000]  5670.259167:  syscalls:sys_exit_pread64: 0x1000   *****
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/9288e1f7d396b7702649d78f2c711c3e0020c71d
+fio  7371 [000]  5670.259169: syscalls:sys_enter_pread64: fd: 0x00000007, buf: 0x7f2c4c001000, count: 0x00001000, pos: 0x075c2000
+fio  7371 [000]  5670.259199:  syscalls:sys_exit_pread64: 0x1000
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Is this supposed to happen every once in a while?
