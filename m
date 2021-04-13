@@ -2,82 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046D4C433B4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Apr 2021 14:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47247C433ED
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Apr 2021 15:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF2FB61353
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Apr 2021 14:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A04B61353
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Apr 2021 15:41:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240862AbhDLO3f (ORCPT
+        id S231795AbhDMPl2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Apr 2021 10:29:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240002AbhDLO3f (ORCPT
+        Tue, 13 Apr 2021 11:41:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63768 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230322AbhDMPl1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Apr 2021 10:29:35 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B8B0C061574
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Apr 2021 07:29:17 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id h10so15307111edt.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Apr 2021 07:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=0P5czINXRSmWUgVMy5hfECS3abHGtTdsAjIIm1UbVF8=;
-        b=tihgRsGp00+tTlKCLZNB4FmVBtZapHn8VBUlJNQ/Y4kP+9kTsqYE+J4oi4r7KyKqSF
-         Q0Iy67q2fgFBxDdsX60zuHJukxfGR15tyBPeSGJVU+qNMVFs2S2iUSWbDhD5+kUjyRyg
-         OeREK4f5TsWexOQnMGL/Dqbynr2ebhJ1wpbKoqvcCZ/extNjuFjXlPPNEwH00SDBn1VB
-         3unVnZCRKSLi59oKTvG5F8eCNlAhHlTFH2I78ygaV7HyixIff9ANSgfbp+ES0YGFY4o7
-         MEnLeQFphAwvJNGD6q1AoM4xfOQHFaORbL2i9qP0qJGaVVaz6Pb3PT3778gxdzVUpc+U
-         Ms7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=0P5czINXRSmWUgVMy5hfECS3abHGtTdsAjIIm1UbVF8=;
-        b=Hi6zfp/qdElgdCJybZijCJjR8as7lHQUyVT8lfqg+JUj0MXzNJD/GGU0rgEMW7ylMm
-         S7zhmcxvchJDJ2tfIo6Mszp+yc3OfajxWLPj4eDYwpkiCQsskisOWJg62Nzj8HHqA5Qo
-         z+1DB+xooaw/pxARwkwd1J4oT/KuNIDAD9zvtqzZfGIbEMbdobhhJNQPDK6EH7ogirvx
-         /pP/5RkxqWofOf3EDvWntvSzUBYSSFvnQG5VceQ+7aJWTGPkw3G5FxZdnRUm5QHZamrU
-         EIyU74rCQCcVHJ+00nLqM+bmSfwY7zZQGTPCdULp2g4ixcXjwR52YkooJk9dFkJ7nlnT
-         fg7g==
-X-Gm-Message-State: AOAM532VvCwwjTr3nHDDu0lkn9nlatLnVwZwKxj681AXmWc5NQQE9e2q
-        32F4yeyW7Wq5Sn1r/uBNlcGLSkvJqw==
-X-Google-Smtp-Source: ABdhPJxzCcgjO5CfgUf6Kn2nUDiipBu0UW5V2mXJ2D1yqMzIGyIFv/hkJ2ADGTVP71iFO4DZK0dBNA==
-X-Received: by 2002:a05:6402:1d3a:: with SMTP id dh26mr21669957edb.359.1618237756056;
-        Mon, 12 Apr 2021 07:29:16 -0700 (PDT)
-Received: from localhost.localdomain ([46.53.249.61])
-        by smtp.gmail.com with ESMTPSA id bu26sm1919636ejb.30.2021.04.12.07.29.15
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Apr 2021 07:29:15 -0700 (PDT)
-Date:   Mon, 12 Apr 2021 17:29:13 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
+        Tue, 13 Apr 2021 11:41:27 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13DFYEGN058669
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Apr 2021 11:41:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=T9NxUcQeX9cWyi14gRbLH6yWrW8jk9WYoVE4Yo7CR3s=;
+ b=qq2ij34e8cbBsVmnOKdEcjAJXY2D1gt+0QYii4Jxq/jMqLxdjWvlX/VFrLQ9O2MBZ5oT
+ Yjf5XBi+PxM6bSlMUNHvAw9GgpIY+oJPbm7/b81fA8oRKZBUx8enZj3KQhqbzMatASES
+ 5vdlBtJ1hxX9lMSYTfKkLz/clLsEcqMX/tUIdpGYPJcCQk2eiGgdXCDBoPT6nF1J50te
+ 4FO8pdZ7F/Nn0cmgjFtiuBERld49Bl1Y/OmuIOwCRzuJxVxjBulpXGpW5EWfyrWkNyC/
+ kh1fatdxv+3SJXq1WOdI/wwZ34Bt//iOSQNHxk2p/arQhK8LfpZOKyICHQQ5No39+l0n FQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 37wdws0f9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Apr 2021 11:41:07 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13DFT9Ej023164
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Apr 2021 15:41:04 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 37u3n8tsm4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Apr 2021 15:41:04 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13DFexAA38011194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Apr 2021 15:40:59 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 25B7AAE055;
+        Tue, 13 Apr 2021 15:40:59 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0DAAAE056;
+        Tue, 13 Apr 2021 15:40:58 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Apr 2021 15:40:58 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
 To:     linux-perf-users@vger.kernel.org
-Subject: Double sys_exit_pread64 tracepoint event
-Message-ID: <YHRZOQbTNm75Ojm1@localhost.localdomain>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Alexander Schmidt <alexschm@de.ibm.com>
+Subject: [PATCH] perf ftrace: Command fails on s390
+Date:   Tue, 13 Apr 2021 17:40:52 +0200
+Message-Id: <20210413154052.84457-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0rI_HVd1NE74hoxDKD6vgXp6W47jnH85
+X-Proofpoint-GUID: 0rI_HVd1NE74hoxDKD6vgXp6W47jnH85
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-13_09:2021-04-13,2021-04-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=999 lowpriorityscore=0 clxscore=1015 phishscore=0
+ priorityscore=1501 suspectscore=0 spamscore=0 adultscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104130108
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I was tracing trivial fio workload which does pread in 4 threads
-on 4 different CPUs and got double exit event:
+Command 'perf ftrace -v -- ls' fails in s390 (at least 5.12.0rc6).
 
-fio  7371 [000]  5670.259136: syscalls:sys_enter_pread64: fd: 0x00000007, buf: 0x7f2c4c001000, count: 0x00001000, pos: 0x075c1000
-fio  7371 [000]  5670.259167:  syscalls:sys_exit_pread64: 0x1000
-fio  7371 [000]  5670.259167:  syscalls:sys_exit_pread64: 0x1000   *****
+The root cause is a missing pointer dereference which causes an
+array element address to be used as PID.
 
-fio  7371 [000]  5670.259169: syscalls:sys_enter_pread64: fd: 0x00000007, buf: 0x7f2c4c001000, count: 0x00001000, pos: 0x075c2000
-fio  7371 [000]  5670.259199:  syscalls:sys_exit_pread64: 0x1000
+Fix this by extracting the PID.
 
+Output before:
+  # ./perf ftrace -v -- ls
+  function_graph tracer is used
+  write '-263732416' to tracing/set_ftrace_pid failed: Invalid argument
+  failed to set ftrace pid
+  #
 
-Is this supposed to happen every once in a while?
+Output after:
+   ./perf ftrace -v -- ls
+   function_graph tracer is used
+   # tracer: function_graph
+   #
+   # CPU  DURATION                  FUNCTION CALLS
+   # |     |   |                     |   |   |   |
+   4)               |  rcu_read_lock_sched_held() {
+   4)   0.552 us    |    rcu_lockdep_current_cpu_online();
+   4)   6.124 us    |  }
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reported-by: Alexander Schmidt <alexschm@de.ibm.com>
+---
+ tools/perf/builtin-ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index d49448a1060c..87cb11a7a3ee 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -289,7 +289,7 @@ static int set_tracing_pid(struct perf_ftrace *ftrace)
+ 
+ 	for (i = 0; i < perf_thread_map__nr(ftrace->evlist->core.threads); i++) {
+ 		scnprintf(buf, sizeof(buf), "%d",
+-			  ftrace->evlist->core.threads->map[i]);
++			  perf_thread_map__pid(ftrace->evlist->core.threads, i));
+ 		if (append_tracing_file("set_ftrace_pid", buf) < 0)
+ 			return -1;
+ 	}
+-- 
+2.30.2
+
