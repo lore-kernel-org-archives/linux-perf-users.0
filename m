@@ -2,174 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA713C433B4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Apr 2021 15:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C97A8C433B4
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Apr 2021 05:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F986124B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Apr 2021 15:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1A66115C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Apr 2021 05:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350898AbhDNPza (ORCPT
+        id S229503AbhDOFeP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Apr 2021 11:55:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:58278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1352498AbhDNPzV (ORCPT
+        Thu, 15 Apr 2021 01:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230048AbhDOFeP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Apr 2021 11:55:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97E4A11B3;
-        Wed, 14 Apr 2021 08:54:59 -0700 (PDT)
-Received: from [10.57.27.217] (unknown [10.57.27.217])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12BFB3F73B;
-        Wed, 14 Apr 2021 08:54:56 -0700 (PDT)
-Subject: Re: [PATCH 2/2] perf cs-etm: Set time on synthesised samples to
- preserve ordering
-To:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org
-Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210414143919.12605-1-james.clark@arm.com>
- <20210414143919.12605-2-james.clark@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <d6b39eca-4f19-bace-ca3d-f36549caa51c@arm.com>
-Date:   Wed, 14 Apr 2021 16:54:55 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.9.1
+        Thu, 15 Apr 2021 01:34:15 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FCC6C061756
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Apr 2021 22:33:52 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id g9so5971229wrx.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Apr 2021 22:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AcxipN5cxSd0VM+cEvQ6NWIOLmc57Nk1DsdNT+GW7KA=;
+        b=e0QLLuXiL/4lCdt6iFXdA71OTjsHKMqML07QdxGi37fdb0xY2T0TJ/+nFDlQfV/0G3
+         SVspNpOpWJvTCS3LdwIGhbaJAbuid29eogP4KwFR/haLC2IFdpJ9nr5KjuSA+vd4AKqK
+         9Gg6HuSFhqFUKjFTj94VZH2oiqeiefCksJ1SIaxhdreCEGRYXRqyr/U9rQKYKGDODf3O
+         GsXIIr7898lvGKOXkgLoZ5M62Bb0snj6gwAMqc6+UrrIj011Fud7QSOxXJLIyOXoe1Cp
+         /fszAHSmxQ/xXq4aHqDaGGvs2aWY6EMnTjxNI0ilNnt0pNbv7RHrwwKeKhwmcwqseeEs
+         r17A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AcxipN5cxSd0VM+cEvQ6NWIOLmc57Nk1DsdNT+GW7KA=;
+        b=Ikrrikngs+onPpLMsqy7SmwRA0MCymJFI4cjAnStUoq4P68KrBmf5H606rmVci8uHp
+         pBw2Buw5gVmGqVNmOLXfRH6B1/6Koll20vrxqPq5X5nv9nEKSp0UUGgyHhX2GGEdTxH4
+         ZH2niC9QIGm1Kv0zkLoXK96UJwApSDvb8jPmTdoWYw3VNPJUdgGgH2oiW+Mu0NBH9Qd2
+         zt9zXympgJHJ3jHDqAqo4P3PrXLNmUdPgcybSFPj6gTtMWfYV9JuMiXPDjCm5/WbE8DB
+         Q3ZjmSbE2XHwPsGe7Hd7H+WoZ4ZUzcPjUbVVov0WrnVV7XADAfx2ZQYNZjtOz88aXc0Y
+         sIUg==
+X-Gm-Message-State: AOAM530oQENXmn4pV1auBZi+BzBhzigFkC2ZnZMX18l0Yd5iMnUr4PwC
+        WP67WpC5T1e7KVPNHObrzzLiEq8RX0hyFCfylHII6w==
+X-Google-Smtp-Source: ABdhPJwr7DViLtLjzXCMiLGgHdvYPmNn6emVUmWM5evE07PXfyadzlYTCSsmY72xkVEO0wkdFINhS4zFc1TVm6x0Fwk=
+X-Received: by 2002:a5d:524e:: with SMTP id k14mr1397309wrc.282.1618464831026;
+ Wed, 14 Apr 2021 22:33:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210414143919.12605-2-james.clark@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20210414131628.2064862-1-acme@kernel.org>
+In-Reply-To: <20210414131628.2064862-1-acme@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 14 Apr 2021 22:33:38 -0700
+Message-ID: <CAP-5=fVRFKnTJb4m6bzSQhC8sndSLFTom8Hak9PZQ=W75CK4Yg@mail.gmail.com>
+Subject: Re: [RFC] Improve workload error in 'perf record'
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 14/04/2021 15:39, James Clark wrote:
-> The following attribute is set when synthesising samples in
-> timed decoding mode:
-> 
->      attr.sample_type |= PERF_SAMPLE_TIME;
-> 
-> This results in new samples that appear to have timestamps but
-> because we don't assign any timestamps to the samples, when the
-> resulting inject file is opened again, the synthesised samples
-> will be on the wrong side of the MMAP or COMM events.
-> 
-> For example this results in the samples being associated with
-> the perf binary, rather than the target of the record:
-> 
->      perf record -e cs_etm/@tmc_etr0/u top
->      perf inject -i perf.data -o perf.inject --itrace=i100il
->      perf report -i perf.inject
-> 
-> Where 'Command' == perf should show as 'top':
-> 
->      # Overhead  Command  Source Shared Object  Source Symbol           Target Symbol           Basic Block Cycles
->      # ........  .......  ....................  ......................  ......................  ..................
->      #
->          31.08%  perf     [unknown]             [.] 0x000000000040c3f8  [.] 0x000000000040c3e8  -
-> 
-> If the perf.data file is opened directly with perf, without the
-> inject step, then this already works correctly because the
-> events are synthesised after the COMM and MMAP events and
-> no second sorting happens. Re-sorting only happens when opening
-> the perf.inject file for the second time so timestamps are
-> needed.
-> 
-> Using the timestamp from the AUX record mirrors the current
-> behaviour when opening directly with perf, because the events
-> are generated on the call to cs_etm__process_queues().
+On Wed, Apr 14, 2021 at 6:16 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Hi,
+>
+>         Please take a look,
+>
+> Best regards,
 
-I would add the following here to clarify the situation :
+Acked-by: Ian Rogers <irogers@google.com>
 
-"The ETM trace could optionally contain time stamps, but there is
-no way to correlate this with the kernel time. So, the best available
-time value is that of the AUX_RECORD header. This patch uses
-the timestamp from the header for all the samples. The ordering of the
-samples are implicit in the trace and thus is fine with respect to
-relative ordering."
+Having been confused by this for a case in the past, thanks! It'd be
+nice for code coverage's sake to have a shell test on this.
 
+Thanks,
+Ian
 
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Co-developed-by: Al Grant <al.grant@arm.com>
-> Signed-off-by: Al Grant <al.grant@arm.com>
-
-nit: The preferred order is your S-o-B at the end (i.e of the sender)
-
-> ---
->   tools/perf/util/cs-etm.c | 10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index c25da2ffa8f3..d0fa9dce47f1 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -54,6 +54,7 @@ struct cs_etm_auxtrace {
->   	u8 sample_instructions;
->   
->   	int num_cpu;
-> +	u64 latest_kernel_timestamp;
->   	u32 auxtrace_type;
->   	u64 branches_sample_type;
->   	u64 branches_id;
-> @@ -1192,6 +1193,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->   	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr);
->   	event->sample.header.size = sizeof(struct perf_event_header);
->   
-> +	if (!etm->timeless_decoding)
-> +		sample.time = etm->latest_kernel_timestamp;
->   	sample.ip = addr;
->   	sample.pid = tidq->pid;
->   	sample.tid = tidq->tid;
-> @@ -1248,6 +1251,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->   	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip);
->   	event->sample.header.size = sizeof(struct perf_event_header);
->   
-> +	if (!etm->timeless_decoding)
-> +		sample.time = etm->latest_kernel_timestamp;
->   	sample.ip = ip;
->   	sample.pid = tidq->pid;
->   	sample.tid = tidq->tid;
-> @@ -2412,9 +2417,10 @@ static int cs_etm__process_event(struct perf_session *session,
->   	else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
->   		return cs_etm__process_switch_cpu_wide(etm, event);
->   
-> -	if (!etm->timeless_decoding &&
-> -	    event->header.type == PERF_RECORD_AUX)
-
-Might want to add a comment here ,
-
-	/*
-	 * Record the latest kernel timestamp available in the header
-	 * for samples.
-	 */
-
-> +	if (!etm->timeless_decoding && event->header.type == PERF_RECORD_AUX) {
-> +		etm->latest_kernel_timestamp = sample_kernel_timestamp;
->   		return cs_etm__process_queues(etm);
-> +	}
->   
->   	return 0;
->   }
-> 
-
-This is the best effort thing we could do to get things working.
-
-With the comments addressed:
-
-Acked-by: Suzuki K Poulos <suzuki.poulose@arm.com>
+> - Arnaldo
+>
+> Arnaldo Carvalho de Melo (2):
+>   perf evlist: Add a method to return the list of evsels as a string
+>   perf record: Improve 'Workload failed' message printing events + what
+>     was exec'ed
+>
+>  tools/perf/builtin-record.c |  8 ++++++--
+>  tools/perf/util/evlist.c    | 19 +++++++++++++++++++
+>  tools/perf/util/evlist.h    |  2 ++
+>  3 files changed, 27 insertions(+), 2 deletions(-)
+>
+> --
+> 2.26.2
+>
