@@ -2,188 +2,156 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AD8C433B4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Apr 2021 19:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8681EC433B4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Apr 2021 08:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3FFE6109D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Apr 2021 19:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E806115B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Apr 2021 08:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235030AbhDOTyo (ORCPT
+        id S233959AbhDPIT5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Apr 2021 15:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234949AbhDOTyn (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Apr 2021 15:54:43 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521ACC061756
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Apr 2021 12:54:20 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id b17so17637828pgh.7
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Apr 2021 12:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ij4LykCj/Hdbgw3UoGr4uR4CU6tTNOA2JBdD93B4Vhg=;
-        b=mNNHqFpw6Q5WBUl3HalbanadWH0VG5i3svHssyBSgbYV4s+bf13OcziE4QxwumM/pK
-         Q96+ltcCmAiZuozf5MWOOccAFQlEpYUYvbY35KS2LhkllDwBOcYFXypOy/rl6lzdqD4X
-         srZsxXvVuOBgs9Tk2kkGslZ7syTXvLNc9UmIXiil6HOJxsfnxIThyjrBgQRuvqvXjdl/
-         hTlwyBfA2JWEAyyXECAhurQvP5hoayZYnyh61t+yIxc+54W3KL7yJle9CogIaQM+ReQE
-         Ak3tkghuot/qxiVdKZSf2zP9MLMYrzJ8fY4fMbwObJK0zRqHgcSJBZGbQ7ZKYLYw+SQ5
-         khHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ij4LykCj/Hdbgw3UoGr4uR4CU6tTNOA2JBdD93B4Vhg=;
-        b=O0H6JRdgNPCKlX5hXFNLArEbX7HZaE+Ind/Idwxnajm5ABIJ0rjscc+23rTd5hBfQf
-         yTkiy7y83hrosjUnMjbJNUtglTLGQRSAQao4cl5RfRLeE573r9J7ABje1kmzkysQp+2F
-         Inq8qsIpsVp87HE9T24Ar3NR/bZ/QgGlaS1DrHJo5ijCa8siT/DdnhA+gTgJqXZl9v7f
-         1pvplTOQyCiKLb8cwkmzAGG/DM/5MD9Wa/W+jks9jWDBEOpS9e+j37zhTCUzUU0BC8Wz
-         JU3vRY3t3pT+uCLh+sl0ZIsBOmbyUTu/h1oZsQWV3zOUqlv9vOdBDn/q8azAZVEhhfAT
-         arHA==
-X-Gm-Message-State: AOAM530Mj72sUmvxpNGQLsSYsImhQcIbm6NCBVDEcC9sdPygmtDotqHP
-        tTSkGK3nZXKKUYJj282F/dY7/w==
-X-Google-Smtp-Source: ABdhPJzViyaV5qxofFa2dUKQ4VsMWPme8ePOriFDTuMDh8Ji/pPihe30gP3m8Kj2emLOVPwxrZv/7A==
-X-Received: by 2002:a62:4e96:0:b029:248:effc:9a4d with SMTP id c144-20020a624e960000b0290248effc9a4dmr4659860pfb.71.1618516459693;
-        Thu, 15 Apr 2021 12:54:19 -0700 (PDT)
-Received: from xps15 (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id d6sm2778016pfn.197.2021.04.15.12.54.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Apr 2021 12:54:18 -0700 (PDT)
-Date:   Thu, 15 Apr 2021 13:54:16 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     coresight@lists.linaro.org, al.grant@arm.com,
-        branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf cs-etm: Set time on synthesised samples to
- preserve ordering
-Message-ID: <20210415195416.GB937505@xps15>
-References: <20210414143919.12605-1-james.clark@arm.com>
- <20210414143919.12605-2-james.clark@arm.com>
+        Fri, 16 Apr 2021 04:19:57 -0400
+Received: from mail-eopbgr140059.outbound.protection.outlook.com ([40.107.14.59]:39406
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229706AbhDPIT4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 16 Apr 2021 04:19:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RDvrVxg2VbxXbQc2NsMMRLUKFvkL1F86Dbtl8PHxKpLYtFlEareTLKVWNzNhQ+bHN7NJ9xmY0JE5x6qtRqFiTR581duGN/MA1+u2v6HNac+SetKprHyzUsIdyWMOmPGBSi/a82OmxKC+BG0kj7KFS7oLsuRzRJoE3GdOSH+9uau9WP0rkaMJ9lr1z46aEXEuXcgGA/dfKThtK8vUlo3NKZCIwvhoAR2bAV+lwl0x/eIA8DRdPUBm9wJZeZtCEBMef0m2w/F0MRRlE7zbJV+bnYTtIaoHApORVFn/K5AVLIq+HDRO5dyTMXA+Ez51/ykoVb9LY1yFvgF6CRXtTKQk2w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zEmwfRMN7Z5Vvtl3j6GWTkV2ZVuHIiqUZkISeAFjLDo=;
+ b=OLciDWqO2e00t98far5x4SnJf6+eBvfOXmQBGdrQM+lDoez15Yn01Nkq9EZkAUfgg6hEjmeH1dFEJoLGeLyq1nASqACA37yuOuYHEYE94qH+X+1k+AAnIwldXuN+I52mw338kgagsBVy+CDYmfzyxS0pVKg8hbppPoOJdAxlD1RDTg8wylbOFOr5KSOtFLEJj8brqA6mbh8cfOTAEOtchMZz4S2MvGDiVQDHEr5Ra456pUETsX91b303lWTJ2KUpOAdUqQX/Gn4nmFIqsMzBka69l2w/kDXWAhEWQZb748fpVpbGv4Wk9o9Nvdms1eHe4Yk9NG3FJo8a/bUJR6HGCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.203) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zEmwfRMN7Z5Vvtl3j6GWTkV2ZVuHIiqUZkISeAFjLDo=;
+ b=PIJeVV0Y2ZWFBxILYdb7P34FzMnO82osNZBETmd0lPRYe8vrZWifOy3eUiiKfuH/NbD5oiKmxLHkeDRPJhrAZY+aIlAbuMNPcc1PZ9aYS4mUR9IkjrRjHxV4nAgap3peI3xOjWNW/qS2ycCYKmbsqI0LsbVIRzJPpKZt6db4kuM=
+Received: from DU2PR04CA0318.eurprd04.prod.outlook.com (2603:10a6:10:2b5::23)
+ by AM7PR10MB3809.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:173::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4020.18; Fri, 16 Apr
+ 2021 08:19:30 +0000
+Received: from DB5EUR03FT024.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:2b5:cafe::af) by DU2PR04CA0318.outlook.office365.com
+ (2603:10a6:10:2b5::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend
+ Transport; Fri, 16 Apr 2021 08:19:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.203)
+ smtp.mailfrom=de.bosch.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=pass action=none
+ header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.203 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.203; helo=eop.bosch-org.com;
+Received: from eop.bosch-org.com (139.15.153.203) by
+ DB5EUR03FT024.mail.protection.outlook.com (10.152.20.67) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4042.16 via Frontend Transport; Fri, 16 Apr 2021 08:19:30 +0000
+Received: from SI-EXCAS2000.de.bosch.com (10.139.217.201) by eop.bosch-org.com
+ (139.15.153.203) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2176.2; Fri, 16 Apr
+ 2021 10:19:09 +0200
+Received: from SI-MBX2070.de.bosch.com (10.3.230.175) by
+ SI-EXCAS2000.de.bosch.com (10.139.217.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2176.2; Fri, 16 Apr 2021 10:19:09 +0200
+Received: from SI-MBX2071.de.bosch.com (10.3.230.176) by
+ SI-MBX2070.de.bosch.com (10.3.230.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2176.2; Fri, 16 Apr 2021 10:19:08 +0200
+Received: from SI-MBX2071.de.bosch.com ([fe80::f414:70fb:ddd0:ec15]) by
+ SI-MBX2071.de.bosch.com ([fe80::f414:70fb:ddd0:ec15%4]) with mapi id
+ 15.01.2176.009; Fri, 16 Apr 2021 10:19:08 +0200
+From:   "Fontius Sebastian (XC-DA/ESV9)" <Sebastian.Fontius@de.bosch.com>
+To:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: RE: Perf call graphs on ARM
+Thread-Topic: Perf call graphs on ARM
+Thread-Index: AdcxML9pspPNbggzT5KWFDKe/60W3///49+A//0TrlA=
+Date:   Fri, 16 Apr 2021 08:19:08 +0000
+Message-ID: <483117050be94fe89841a5cb74b66150@de.bosch.com>
+References: <e083221298cc4bd09c4d77a85a33c2a1@de.bosch.com>
+ <YHbwU1mCp+Mslx6a@kernel.org>
+In-Reply-To: <YHbwU1mCp+Mslx6a@kernel.org>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.142.157.181]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210414143919.12605-2-james.clark@arm.com>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 07fb703b-44be-48af-fffb-08d900b05bf1
+X-MS-TrafficTypeDiagnostic: AM7PR10MB3809:
+X-Microsoft-Antispam-PRVS: <AM7PR10MB38096B66B2F6A7599D27C513C94C9@AM7PR10MB3809.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UQVTe7W8WvFucwAsRelBo/jRDWouF9qvvgPIqFz3wEMSxASllIsg83eCEey/O6p1mBpshK7HMhw5iXpCO2nffCrghG/R93O9ZdxqDV8qcZWPmly5Y7mkYuT6necFo3+Zcy2gQGAxT3w6/LAGhnrrlLFUrCP2/I8GrI/CeHwJgdQ6PX/1jmBMdILIRh2SaEsb9ChMaI7cEObffYhPs5H0E4AOf+pEMcVhvAvk10LjtwZ+Kv8LzSKYKiqz/3MS81oOiMdDwCrb692X94GpzKD602CtRcBOQWFfvfoNur2aADawcdFG6NIJ7ZjonsrAqkQDKSb0W1IE9zzjCDPakDcEEI34CyNeGVU3yh+p6TMO1vftjfQ+odFfM4U7GAYrHlN0c0KPhAAnh4JCQ1L6iKhQJe1Ih27g/wm9M3vGLRn9PhqozfhAYf5rTrMhAB9Y/soyXdvqOPQ5NP5A9CcB+BznivZRAIRPpgEtHzqoG8KUbc/DSVA16YJHIRBtzG5cGP7Rw34JY+N9x1G3sX+CbKtWENY24InjnyOCLAb5O8WueFY/WarjwHbN/ndERsXU889an3x8F177mN5ZD7t8qnyY5cYAQdaLYWnJPIq8niWHFYi0ZsC8J0Ks8HgTfWpGGWQR66bvbD1ViGuZ/be6LDY2VF+NeQJAbgXnnAmE/zU642JGRmKZnNY6/DKdi7glESxp4pxJpe+YexbBCDRV0eVitfCB48K9rcgatzPxD+gihbrDQcjMinSy8lqHu6ilKEzg+7vthRVKWlQtmHuZAfVB4A==
+X-Forefront-Antispam-Report: CIP:139.15.153.203;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(346002)(396003)(46966006)(36840700001)(26005)(426003)(2616005)(8936002)(966005)(5660300002)(478600001)(336012)(186003)(82310400003)(316002)(2906002)(8676002)(81166007)(82740400003)(6916009)(7696005)(70586007)(4326008)(86362001)(24736004)(70206006)(47076005)(36860700001)(108616005)(356005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Apr 2021 08:19:30.5286
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07fb703b-44be-48af-fffb-08d900b05bf1
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.203];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT024.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR10MB3809
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 14, 2021 at 05:39:19PM +0300, James Clark wrote:
-> The following attribute is set when synthesising samples in
-> timed decoding mode:
-> 
->     attr.sample_type |= PERF_SAMPLE_TIME;
-> 
-> This results in new samples that appear to have timestamps but
-> because we don't assign any timestamps to the samples, when the
-> resulting inject file is opened again, the synthesised samples
-> will be on the wrong side of the MMAP or COMM events.
->
-
-I understand the problem.  Once again an issue caused by CS and the kernel
-having a different view of time. 
-
-> For example this results in the samples being associated with
-> the perf binary, rather than the target of the record:
-> 
->     perf record -e cs_etm/@tmc_etr0/u top
->     perf inject -i perf.data -o perf.inject --itrace=i100il
->     perf report -i perf.inject
-> 
-> Where 'Command' == perf should show as 'top':
-> 
->     # Overhead  Command  Source Shared Object  Source Symbol           Target Symbol           Basic Block Cycles
->     # ........  .......  ....................  ......................  ......................  ..................
->     #
->         31.08%  perf     [unknown]             [.] 0x000000000040c3f8  [.] 0x000000000040c3e8  -
-> 
-> If the perf.data file is opened directly with perf, without the
-> inject step, then this already works correctly because the
-> events are synthesised after the COMM and MMAP events and
-> no second sorting happens. Re-sorting only happens when opening
-> the perf.inject file for the second time so timestamps are
-> needed.
-> 
-> Using the timestamp from the AUX record mirrors the current
-> behaviour when opening directly with perf, because the events
-> are generated on the call to cs_etm__process_queues().
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Co-developed-by: Al Grant <al.grant@arm.com>
-> Signed-off-by: Al Grant <al.grant@arm.com>
-
-Suzuki is correct, your name has to appear after Al's.
-
-> ---
->  tools/perf/util/cs-etm.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index c25da2ffa8f3..d0fa9dce47f1 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -54,6 +54,7 @@ struct cs_etm_auxtrace {
->  	u8 sample_instructions;
->  
->  	int num_cpu;
-> +	u64 latest_kernel_timestamp;
->  	u32 auxtrace_type;
->  	u64 branches_sample_type;
->  	u64 branches_id;
-> @@ -1192,6 +1193,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr);
->  	event->sample.header.size = sizeof(struct perf_event_header);
->  
-> +	if (!etm->timeless_decoding)
-> +		sample.time = etm->latest_kernel_timestamp;
->  	sample.ip = addr;
->  	sample.pid = tidq->pid;
->  	sample.tid = tidq->tid;
-> @@ -1248,6 +1251,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->  	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip);
->  	event->sample.header.size = sizeof(struct perf_event_header);
->  
-> +	if (!etm->timeless_decoding)
-> +		sample.time = etm->latest_kernel_timestamp;
->  	sample.ip = ip;
->  	sample.pid = tidq->pid;
->  	sample.tid = tidq->tid;
-> @@ -2412,9 +2417,10 @@ static int cs_etm__process_event(struct perf_session *session,
->  	else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
->  		return cs_etm__process_switch_cpu_wide(etm, event);
->  
-> -	if (!etm->timeless_decoding &&
-> -	    event->header.type == PERF_RECORD_AUX)
-> +	if (!etm->timeless_decoding && event->header.type == PERF_RECORD_AUX) {
-> +		etm->latest_kernel_timestamp = sample_kernel_timestamp;
-
-It will be fun to fix this when 8.4 comes out but for now it's the best we've
-got.
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
->  		return cs_etm__process_queues(etm);
-> +	}
->  
->  	return 0;
->  }
-> -- 
-> 2.28.0
-> 
+RW0gV2VkLCBBcHIgMTQsIDIwMjEgYXQgMDE6MjI6MzJQTSArMDAwMCwgRm9udGl1cyBTZWJhc3Rp
+YW4gKFhDLURBL0VTVjkpIGVzY3JldmV1Og0KPiA+IHdlIGFyZSBoYXZpbmcgdHJvdWJsZSB0byBn
+ZXQgcGVyZiB0byBvdXRwdXQgYSBjYWxsIGdyYXBoIHVzaW5nIGZyYW1lDQo+ID4gcG9pbnRlcnMg
+b24gYSBSYXNwYmVycnkgUGkgMiBNb2RlbCBCIFJldmlzaW9uIDEuMSAoQVJNIENvcnRleC1BNykN
+Cj4gPiBydW5uaW5nIFJhc3BiaWFuIG9uIGl0cyBvZmZpY2lhbCBLZXJuZWwgdmVyc2lvbnMgNC45
+IGFuZCA1LjEwLg0KPiA+IA0KPiA+IExldCBtZSBpbGx1c3RyYXRlIHRoZSBwcm9ibGVtIHdlJ3Jl
+IGhhdmluZyB1c2luZyBhIHNtYWxsIHRlc3QgcHJvZ3JhbQ0KPiA+IHdlIHdpbGwgY2FsbCBhYWEu
+Y3BwOg0KDQo+IEZpcnN0IHF1ZXN0aW9uIGlzIHdoYXQgcGVyZiB2ZXJzaW9uIGFyZSB5b3UgdXNp
+bmc/IFRoZSBvbmUgdGhhdCBjb21lcw0KPiB3aXRoIHRoZSBkaXN0cm8geW91J3JlIHVzaW5nPw0K
+DQpXZSB0cmllZCB0aGUgZm9sbG93aW5nIGNvbWJpbmF0aW9uczoNCg0KKiBLZXJuZWwgNC45ICh0
+aGUgY3VycmVudCB2ZXJzaW9uIHdoZW4gd2Ugd2VyZSBpbnN0YWxsaW5nIFJhc3BiaWFuKSB3aXRo
+DQogIHRoZSBwZXJmIGJpbmFyeSBhcyBzdXBwbGllZCBieSB0aGUgJ2xpbnV4LXBlcmYtNC45JyBS
+YXNwYmlhbiBwYWNrYWdlLg0KDQoqIEtlcm5lbCA1LjEwIHdpdGggaXRzIGFjY29tcGFueWluZyBw
+ZXJmIHZlcnNpb24gY29tcGlsZWQgZnJvbSBzb3VyY2Ugb24NCiAgdGhlIFJhc3BiZXJyeSBQaSAy
+IGRpcmVjdGx5Lg0KDQo+IElmIHNvIGNhbiB5b3UgcGxlYXNlIHRyeSBmb2xsb3dpbmcgdGhlIGlu
+c3RydWN0aW9ucyBhdDoNCj4NCj4gaHR0cHM6Ly9taXJyb3JzLmVkZ2Uua2VybmVsLm9yZy9wdWIv
+bGludXgva2VybmVsL3Rvb2xzL3BlcmYvSE9XVE8uYnVpbGQucGVyZg0KPg0KPiBBbmQgdHJ5IHdp
+dGggdGhlIGxhdGVzdCByZWxlYXNlZCBwZXJmLCBpLmUuOg0KPg0KPiBodHRwczovL21pcnJvcnMu
+ZWRnZS5rZXJuZWwub3JnL3B1Yi9saW51eC9rZXJuZWwvdG9vbHMvcGVyZi92NS4xLjAvcGVyZi01
+LjEuMC50YXIueHoNCg0KSSBjb21waWxlZCB0aGlzIHZlcnNpb24gYXMgcGVyIHlvdXIgc3VnZ2Vz
+dGlvbi4gIFRoZSByZXN1bHRzIHdlcmUgZXhhY3RseQ0KdGhlIHNhbWUgYXMgd2l0aCB0aGUgdmVy
+c2lvbnMgbWVudGlvbmVkIGFib3ZlLg0KDQo+IExlbW1lIHRyeSB0aGlzIG9uIGEgeDg2XzY0LCB1
+c2luZyB0aGUgLS1uby1jaGlsZHJlbiBvcHRpb246DQoNCk9uIHg4Nl82NCB3ZSBhbHNvIGRvIG5v
+dCBoYXZlIGFueSBwcm9ibGVtcy4gIFRoZSBwcm9ibGVtcyB3ZSBmYWNlIGFyZQ0Kc29sZWx5IG9u
+IEFSTSwgYW5kIHRoZXJlIG9ubHkgb24gdGhlIFJhc3BiZXJyeSBQaSAyIE1vZGVsIEIgcmV2aXNp
+b24gMS4xDQphbmQgMS4yLiAgV2UgaGF2ZSB0cmllZCB0aGUgc2FtZSB0aGluZyBvbiBhIGRldmlj
+ZSBmcm9tIGEgZGlmZmVyZW50DQp2ZW5kb3Igd2hpY2ggZmVhdHVyZXMgYW4gQVJNIEE1MyBwcm9j
+ZXNzb3IgbGlrZSB0aGUgUGkyQiByMS4yLCBidXQgbm90IGENCkJyb2FkY29tIFNvQy4gIFRoZSBP
+UyBvbiB0aGUgb3RoZXIgZGV2aWNlIGlzIGEgWW9jdG8tYmFzZWQgT1MgZmVhdHVyaW5nDQprZXJu
+ZWwgNC4xNCBidWlsdCBzcGVjaWZpY2FsbHkgZm9yIHRoaXMgZGV2aWNlLCBpbiBjYXNlIHRoYXQg
+bWF0dGVycy4NCg0KPiBbYWNtZUBmaXZlIGMrK10kIHBlcmYgcmVwb3J0IC0tbm8tY2hpbGRyZW4g
+LS1zdGRpbw0KPg0KPiBbLi4uXQ0KDQpBcyBmYXIgYXMgd2UgY2FuIHRlbGwgdGhlIHBlcmYgcmVj
+b3JkIG9wdGlvbiB1c2luZyBmcmFtZSBwb2ludGVycyBhbHJlYWR5DQpkb2VzIHByb2R1Y2UgaW5j
+b21wbGV0ZSBvdXRwdXQsIHdoaWNoIGNhbm5vdCBiZSB1c2VkIHRvIGNyZWF0ZSBjYWxsDQpncmFw
+aHMuICBBbGwgdGhlIHBlcmYgcmVwb3J0IG9wdGlvbnMgd2UgdHJpZWQgZGlkIG5vdCBtYWtlIGFu
+eQ0KZGlmZmVyZW5jZSBXUlQgY2FsbCBncmFwaHMuDQoNCj4gVGhhdCBmaXJzdCAweDQ5NTY0MTAw
+MDAyYWViM2QgcmVtYWlucyBhIG1pc3RlcnksIGJ1dCBJIHJhbiBvdXQgb2YgdGltZSwNCj4gaGF2
+ZSB0byBnbyBkcml2ZSB0byBwaWNrIHVwIG15IDV5byBraWQgOi0pDQoNClRoYW5rcyBmb3IgeW91
+ciBpbnB1dCA6KS4NCg0KUmVnYXJkcywNCg0KU2ViYXN0aWFuDQo=
