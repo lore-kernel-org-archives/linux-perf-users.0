@@ -2,296 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 386F7C433ED
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Apr 2021 10:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3C3C433B4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Apr 2021 11:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3FE61184
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Apr 2021 10:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75128610F7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Apr 2021 11:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242600AbhDPK5O (ORCPT
+        id S235252AbhDPLRX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Apr 2021 06:57:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:38782 "EHLO foss.arm.com"
+        Fri, 16 Apr 2021 07:17:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:39192 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242565AbhDPK5L (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Apr 2021 06:57:11 -0400
+        id S235011AbhDPLRW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 16 Apr 2021 07:17:22 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1E9C106F;
-        Fri, 16 Apr 2021 03:56:46 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.57.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 40A0E3F85F;
-        Fri, 16 Apr 2021 03:56:44 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0373A31B;
+        Fri, 16 Apr 2021 04:16:58 -0700 (PDT)
+Received: from [10.57.57.112] (unknown [10.57.57.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 980503F85F;
+        Fri, 16 Apr 2021 04:16:57 -0700 (PDT)
+Subject: Re: Perf call graphs on ARM
+To:     "Fontius Sebastian (XC-DA/ESV9)" <Sebastian.Fontius@de.bosch.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+References: <e083221298cc4bd09c4d77a85a33c2a1@de.bosch.com>
 From:   James Clark <james.clark@arm.com>
-To:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
-        acme@kernel.org
-Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] perf cs-etm: Refactor timestamp variable names
-Date:   Fri, 16 Apr 2021 13:56:32 +0300
-Message-Id: <20210416105632.8771-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210416105632.8771-1-james.clark@arm.com>
-References: <20210416105632.8771-1-james.clark@arm.com>
+Message-ID: <25a2fd6c-05ca-3ccc-11a3-41249323fbd2@arm.com>
+Date:   Fri, 16 Apr 2021 14:16:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <e083221298cc4bd09c4d77a85a33c2a1@de.bosch.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove ambiguity in variable names relating to timestamps.
-A later commit will save the sample kernel timestamp in one
-of the etm structs, so name all elements appropriately to
-avoid confusion.
 
-This is also removes some ambiguity arising from the fact
-that the --timestamp argument to perf record refers to
-sample kernel timestamps, and the /timestamp/ event modifier
-refers to CS timestamps, so the term is overloaded.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 18 ++++----
- tools/perf/util/cs-etm.c                      | 42 +++++++++----------
- tools/perf/util/cs-etm.h                      |  4 +-
- 3 files changed, 31 insertions(+), 33 deletions(-)
+On 14/04/2021 16:22, Fontius Sebastian (XC-DA/ESV9) wrote:
+> Hi everyone,
+> 
+> we are having trouble to get perf to output a call graph using frame pointers on a Raspberry Pi 2 Model B Revision 1.1 (ARM Cortex-A7) running Raspbian on its official Kernel versions 4.9 and 5.10.
+> 
+> Let me illustrate the problem we're having using a small test program we will call aaa.cpp:
+> 
+> #include <iostream>
+> #include <cmath>
+> __attribute__((noinline)) double G(double aaa) {
+>   return sqrt(aaa);
+> }
+> __attribute__((noinline)) double doit(double aaa) {
+>   for(int i=0; i<1000; i++)
+>     aaa=G(aaa);
+>   return aaa;
+> }
+> int main() {
+>   double aaa = 12;
+>   for(int i=0; i<10000; i++){
+>     aaa = doit(aaa);
+>     for(int j=0; j<1000; j++)
+>       aaa++;
+>     }
+>   std::cout << aaa << std::endl;
+> }
+> 
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 059bcec3f651..b01d363b9301 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -276,13 +276,13 @@ cs_etm_decoder__do_soft_timestamp(struct cs_etm_queue *etmq,
- 				  const uint8_t trace_chan_id)
- {
- 	/* No timestamp packet has been received, nothing to do */
--	if (!packet_queue->timestamp)
-+	if (!packet_queue->cs_timestamp)
- 		return OCSD_RESP_CONT;
- 
--	packet_queue->timestamp = packet_queue->next_timestamp;
-+	packet_queue->cs_timestamp = packet_queue->next_cs_timestamp;
- 
- 	/* Estimate the timestamp for the next range packet */
--	packet_queue->next_timestamp += packet_queue->instr_count;
-+	packet_queue->next_cs_timestamp += packet_queue->instr_count;
- 	packet_queue->instr_count = 0;
- 
- 	/* Tell the front end which traceid_queue needs attention */
-@@ -308,8 +308,8 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- 	 * Function do_soft_timestamp() will report the value to the front end,
- 	 * hence asking the decoder to keep decoding rather than stopping.
- 	 */
--	if (packet_queue->timestamp) {
--		packet_queue->next_timestamp = elem->timestamp;
-+	if (packet_queue->cs_timestamp) {
-+		packet_queue->next_cs_timestamp = elem->timestamp;
- 		return OCSD_RESP_CONT;
- 	}
- 
-@@ -320,8 +320,8 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- 	 * which instructions started by subtracting the number of instructions
- 	 * executed to the timestamp.
- 	 */
--	packet_queue->timestamp = elem->timestamp - packet_queue->instr_count;
--	packet_queue->next_timestamp = elem->timestamp;
-+	packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
-+	packet_queue->next_cs_timestamp = elem->timestamp;
- 	packet_queue->instr_count = 0;
- 
- 	/* Tell the front end which traceid_queue needs attention */
-@@ -334,8 +334,8 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- static void
- cs_etm_decoder__reset_timestamp(struct cs_etm_packet_queue *packet_queue)
- {
--	packet_queue->timestamp = 0;
--	packet_queue->next_timestamp = 0;
-+	packet_queue->cs_timestamp = 0;
-+	packet_queue->next_cs_timestamp = 0;
- 	packet_queue->instr_count = 0;
- }
- 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 7e63e7dedc33..533f6f2f0685 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -38,8 +38,6 @@
- #include <tools/libc_compat.h>
- #include "util/synthetic-events.h"
- 
--#define MAX_TIMESTAMP (~0ULL)
--
- struct cs_etm_auxtrace {
- 	struct auxtrace auxtrace;
- 	struct auxtrace_queues queues;
-@@ -86,7 +84,7 @@ struct cs_etm_queue {
- 	struct cs_etm_decoder *decoder;
- 	struct auxtrace_buffer *buffer;
- 	unsigned int queue_nr;
--	u8 pending_timestamp;
-+	u8 pending_timestamp_chan_id;
- 	u64 offset;
- 	const unsigned char *buf;
- 	size_t buf_len, buf_used;
-@@ -208,7 +206,7 @@ void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
- 	 * be more than one channel per cs_etm_queue, we need to specify
- 	 * what traceID queue needs servicing.
- 	 */
--	etmq->pending_timestamp = trace_chan_id;
-+	etmq->pending_timestamp_chan_id = trace_chan_id;
- }
- 
- static u64 cs_etm__etmq_get_timestamp(struct cs_etm_queue *etmq,
-@@ -216,22 +214,22 @@ static u64 cs_etm__etmq_get_timestamp(struct cs_etm_queue *etmq,
- {
- 	struct cs_etm_packet_queue *packet_queue;
- 
--	if (!etmq->pending_timestamp)
-+	if (!etmq->pending_timestamp_chan_id)
- 		return 0;
- 
- 	if (trace_chan_id)
--		*trace_chan_id = etmq->pending_timestamp;
-+		*trace_chan_id = etmq->pending_timestamp_chan_id;
- 
- 	packet_queue = cs_etm__etmq_get_packet_queue(etmq,
--						     etmq->pending_timestamp);
-+						     etmq->pending_timestamp_chan_id);
- 	if (!packet_queue)
- 		return 0;
- 
- 	/* Acknowledge pending status */
--	etmq->pending_timestamp = 0;
-+	etmq->pending_timestamp_chan_id = 0;
- 
- 	/* See function cs_etm_decoder__do_{hard|soft}_timestamp() */
--	return packet_queue->timestamp;
-+	return packet_queue->cs_timestamp;
- }
- 
- static void cs_etm__clear_packet_queue(struct cs_etm_packet_queue *queue)
-@@ -814,7 +812,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	int ret = 0;
- 	unsigned int cs_queue_nr;
- 	u8 trace_chan_id;
--	u64 timestamp;
-+	u64 cs_timestamp;
- 	struct cs_etm_queue *etmq = queue->priv;
- 
- 	if (list_empty(&queue->head) || etmq)
-@@ -854,7 +852,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 
- 		/*
- 		 * Run decoder on the trace block.  The decoder will stop when
--		 * encountering a timestamp, a full packet queue or the end of
-+		 * encountering a CS timestamp, a full packet queue or the end of
- 		 * trace for that block.
- 		 */
- 		ret = cs_etm__decode_data_block(etmq);
-@@ -865,10 +863,10 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 		 * Function cs_etm_decoder__do_{hard|soft}_timestamp() does all
- 		 * the timestamp calculation for us.
- 		 */
--		timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
-+		cs_timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
- 
- 		/* We found a timestamp, no need to continue. */
--		if (timestamp)
-+		if (cs_timestamp)
- 			break;
- 
- 		/*
-@@ -892,7 +890,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	 * queue and will be processed in cs_etm__process_queues().
- 	 */
- 	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
--	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, timestamp);
-+	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
- out:
- 	return ret;
- }
-@@ -2221,7 +2219,7 @@ static int cs_etm__process_queues(struct cs_etm_auxtrace *etm)
- 	int ret = 0;
- 	unsigned int cs_queue_nr, queue_nr;
- 	u8 trace_chan_id;
--	u64 timestamp;
-+	u64 cs_timestamp;
- 	struct auxtrace_queue *queue;
- 	struct cs_etm_queue *etmq;
- 	struct cs_etm_traceid_queue *tidq;
-@@ -2283,9 +2281,9 @@ static int cs_etm__process_queues(struct cs_etm_auxtrace *etm)
- 		if (ret)
- 			goto out;
- 
--		timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
-+		cs_timestamp = cs_etm__etmq_get_timestamp(etmq, &trace_chan_id);
- 
--		if (!timestamp) {
-+		if (!cs_timestamp) {
- 			/*
- 			 * Function cs_etm__decode_data_block() returns when
- 			 * there is no more traces to decode in the current
-@@ -2308,7 +2306,7 @@ static int cs_etm__process_queues(struct cs_etm_auxtrace *etm)
- 		 * this queue/traceID.
- 		 */
- 		cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
--		ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, timestamp);
-+		ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
- 	}
- 
- out:
-@@ -2380,7 +2378,7 @@ static int cs_etm__process_event(struct perf_session *session,
- 				 struct perf_tool *tool)
- {
- 	int err = 0;
--	u64 timestamp;
-+	u64 sample_kernel_timestamp;
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
- 						   struct cs_etm_auxtrace,
- 						   auxtrace);
-@@ -2394,11 +2392,11 @@ static int cs_etm__process_event(struct perf_session *session,
- 	}
- 
- 	if (sample->time && (sample->time != (u64) -1))
--		timestamp = sample->time;
-+		sample_kernel_timestamp = sample->time;
- 	else
--		timestamp = 0;
-+		sample_kernel_timestamp = 0;
- 
--	if (timestamp || etm->timeless_decoding) {
-+	if (sample_kernel_timestamp || etm->timeless_decoding) {
- 		err = cs_etm__update_queues(etm);
- 		if (err)
- 			return err;
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 36428918411e..d65c7b19407d 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -171,8 +171,8 @@ struct cs_etm_packet_queue {
- 	u32 head;
- 	u32 tail;
- 	u32 instr_count;
--	u64 timestamp;
--	u64 next_timestamp;
-+	u64 cs_timestamp;
-+	u64 next_cs_timestamp;
- 	struct cs_etm_packet packet_buffer[CS_ETM_PACKET_MAX_BUFFER];
- };
- 
--- 
-2.28.0
+Hi Sebastian,
 
+Is it possible to simplify the example and hold the process in G(), with some
+kind of while loop for example (as long as the compiler still produces frame
+records for each function).
+
+I tried this on 64bit Arm and got a sensible stack and the kernel's frame pointer
+unwind for 64 bit is pretty much the same as the 32 bit one. Could it be that
+samples are being taken in the function prologues before the frame pointer is
+fully setup which is causing some unexpected results?
+
+Here is my stack which looks mostly the same with --call-graph=fp and --call-graph=dwarf:
+
+-   99.73%    99.73%  unwind-simple.o  unwind-simple.out    [.] G                                                                                                                     
+     0xfffff67decfd                                                                                                                                                                   
+     _start                                                                                                                                                                           
+     __libc_start_main                                                                                                                                                                
+     main                                                                                                                                                                             
+     doit                                                                                                                                                                             
+     G   
+
+Thanks
+James
+
+> This program gets compiled like this using GCC Raspbian 8.3.0-6+rpi1:
+> 
+> g++ -O2 -fno-omit-frame-pointer aaa.cpp
+> 
+> Then we run perf on it like this:
+> 
+> perf record -e cycles --call-graph fp -- ./a.out
+> perf report
+> 
+> In the output of perf there should be a tree like the following:
+> 
+> main
+>   + doit
+>     + G
+> 
+> Instead what we are getting is all of those functions attached to a.out (but we _do_ get the runtimes correctly).
+> 
+> It seems the frame pointers are written to the binary, but do not work. We can see the frame pointers in a disassembly output created by compiling with -save-temps like this:
+> 
+> g++ -O2 -fno-omit-frame-pointer -save-temps aaa.cpp
+> 
+> This gives the following output for the doit() function:
+> 
+> _Z4doitd:
+> .fnstart
+> .LFB1758:
+> @ args = 0, pretend = 0, frame = 0
+> @ frame_needed = 1, uses_anonymous_args = 0
+> vmov.f64 d7, d0
+> push {r4, r5, fp, lr}
+> mov r4, #1000
+> add fp, sp, #12
+> .L7:
+> vmov.f64 d0, d7
+> bl _Z1Gd
+> subs r4, r4, #1
+> vmov.f64 d7, d0
+> bne .L7
+> pop {r4, r5, fp, pc}
+> .cantunwind
+> .fnend
+> 
+> One thing we did try in addition to using frame pointers is to use the DWARF format, but that has some disadvantages like e.g. using roughly 20x the space of the FP format and being much slower to record. Also the recording itself seems unstable and can simply hang the whole Raspberry Pi completely requiring a hard reset. Using Kernel 5.10 the DWARF format also did exhibit the same 'disconnectedness' of the call stack (i.e. all function directly below a.out).
+> 
+> We also tried running Ubuntu 20.04 using its Kernel 5.4, but there both FP and DWARF were 'disconnected' again.
+> 
+> We're at a loss what is going wrong here. Does someone here have an idea what we could try to further debug or even understand the problem?
+> 
+> Mit freundlichen Grüßen / Best regards
+> 
+> Sebastian Fontius
+> 
+> Chassis Systems Control, Image Processing 9 (XC-DA/ESV9)
+> Robert Bosch GmbH | Postfach 16 61 | 71226 Leonberg | GERMANY | www.bosch.com
+> 
+> Sitz: Stuttgart, Registergericht: Amtsgericht Stuttgart, HRB 14000;
+> Aufsichtsratsvorsitzender: Franz Fehrenbach; Geschäftsführung: Dr. Volkmar Denner, 
+> Prof. Dr. Stefan Asenkerschbaumer, Filiz Albrecht, Dr. Michael Bolle, Dr. Christian Fischer, 
+> Dr. Stefan Hartung, Dr. Markus Heyn, Harald Kröger, Rolf Najork, Uwe Raschke
+> 
