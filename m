@@ -2,105 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE55C433ED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 08:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8705C433ED
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 10:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5601B6101C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 08:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF55B61157
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 10:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237717AbhDSITD (ORCPT
+        id S231637AbhDSK0i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Apr 2021 04:19:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:37620 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237632AbhDSITC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Apr 2021 04:19:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 533D61FB;
-        Mon, 19 Apr 2021 01:18:33 -0700 (PDT)
-Received: from [10.57.57.205] (unknown [10.57.57.205])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5BEF3F85F;
-        Mon, 19 Apr 2021 01:18:29 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] perf cs-etm: Set time on synthesised samples to
- preserve ordering
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     coresight@lists.linaro.org, al.grant@arm.com,
-        branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210416105632.8771-1-james.clark@arm.com>
- <20210416150709.GA1046932@xps15> <YHmqZKGMFydbsvEy@kernel.org>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <c3a75731-15b4-e052-1840-a881b05862df@arm.com>
-Date:   Mon, 19 Apr 2021 11:18:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 19 Apr 2021 06:26:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2756 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230272AbhDSK0h (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 19 Apr 2021 06:26:37 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 13JA5WE3128267;
+        Mon, 19 Apr 2021 06:26:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=/Q/z9CmIU0bc14oP77ckvkImt3QVaQuoxewGw0EqTWM=;
+ b=Ci3v8RAv3cTeQ71JjVZv7fCXmw6dVqRtCJRtiBS0YuFZWgSCJ05UHnk0hpll/5Jj2aaB
+ 5YpQhzn31HOt95rG08JKcKXff3+Ym4yQ/GdJ6qEc3xgsQUC20B4tOHc3g6yJ0mO/d/lj
+ e+LNryu+ZS/umTfzD2JBtrVXI8k1OeGiCnvb0r5SP4+OcSvmIYHu7t66meZLixfhgkUl
+ A6cqxwSBjYmTHEfNVCTOMsBY1XHdIF74D5F9z/6bHSQYvC2iLhevUsQ2ALhSgr34aD/O
+ S1Hd0YJl3djiee3wM9esp2gnRXHtFhsy4VhAyn3MX36T+880/ljcDzURuOtf3t9sOq0M dw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 380cramc05-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Apr 2021 06:26:00 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 13JA5XFG128312;
+        Mon, 19 Apr 2021 06:25:59 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 380crambyt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Apr 2021 06:25:59 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 13JAM6U7000940;
+        Mon, 19 Apr 2021 10:25:58 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 37yqa8h4u5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Apr 2021 10:25:58 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 13JAPwA627394500
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Apr 2021 10:25:58 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B2ACAE05C;
+        Mon, 19 Apr 2021 10:25:58 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 12F1EAE05F;
+        Mon, 19 Apr 2021 10:25:55 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.38.52])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Apr 2021 10:25:54 +0000 (GMT)
+Subject: Re: [PATCH] perf vendor events: Initial json/events list for power10
+ platform
+To:     "Paul A. Clarke" <pc@us.ibm.com>
+Cc:     acme@kernel.org, maddy@linux.vnet.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, mpe@ellerman.id.au, ravi.bangoria@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20210417091850.596023-1-kjain@linux.ibm.com>
+ <20210418210838.GA1845018@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <130f4181-a5ba-a24a-5d1f-7694999c324a@linux.ibm.com>
+Date:   Mon, 19 Apr 2021 15:55:53 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <YHmqZKGMFydbsvEy@kernel.org>
+In-Reply-To: <20210418210838.GA1845018@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: jRQIvlOWSQIoGOZd15OC992mM78ZyOeH
+X-Proofpoint-GUID: otI7imAesBe4e_OgYg6xLLBfZi7Eco3r
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-04-19_07:2021-04-16,2021-04-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 suspectscore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104060000 definitions=main-2104190069
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 16/04/2021 18:16, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Apr 16, 2021 at 09:07:09AM -0600, Mathieu Poirier escreveu:
->> Hi James,
->>
->> On Fri, Apr 16, 2021 at 01:56:30PM +0300, James Clark wrote:
->>> Changes since v1:
->>>  * Improved variable name from etm_timestamp -> cs_timestamp
->>>  * Fixed ordering of Signed-off-by
->>>
->>
->> You forgot to add the RB and AB you received.  Since Arnaldo is responsible for
->> the perf tools subsystem, please send another revision.
->  
+On 4/19/21 2:38 AM, Paul A. Clarke wrote:
+> On Sat, Apr 17, 2021 at 02:48:50PM +0530, Kajol Jain wrote:
+>> Patch adds initial json/events for POWER10.
 > 
+> I was able to apply, build, and run perf with these changes,
+> and every new event at least ran successfully with
+> `perf stat`.
 > 
-> Yep, please collect Reported-by and Acked-by as you go sending new
-> versions of a patchset, the last one I don't have a problem collecting
-> myself, but if you have to resend, please collect the feedback tags.
-> 
-> - Arnaldo
-> 
+> Pedantically, there is a lot of inconsistency as to whether
+> the `BriefDescription` ends with a period or not, and whether
+> there is an extra space at the end.
 
-Ok thanks, I will keep that in mind for the future. I wasn't sure if they still
-applied or not as it was a new version.
+Hi Paul,
+Thanks for reviewing the patch. Sure I will remove this inconsistency
+and send v2 patch for the same, with your Tested-by and Reviewed-by tag.
 
-Thanks
-James
+Thanks,
+Kajol Jain
 
->> Thanks,
->> Mathieu
->>
->>> James Clark (2):
->>>   perf cs-etm: Refactor timestamp variable names
->>>   perf cs-etm: Set time on synthesised samples to preserve ordering
->>>
->>>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 18 +++----
->>>  tools/perf/util/cs-etm.c                      | 52 ++++++++++---------
->>>  tools/perf/util/cs-etm.h                      |  4 +-
->>>  3 files changed, 39 insertions(+), 35 deletions(-)
->>>
->>> -- 
->>> 2.28.0
->>>
+> 
+> Regardless, LGTM.
+> 
+> Tested-by: Paul A. Clarke <pc@us.ibm.com>
+> Reviewed-by: Paul A. Clarke <pc@us.ibm.com>
+> 
+> PC
 > 
