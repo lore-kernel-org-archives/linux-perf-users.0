@@ -4,155 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77868C433ED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 07:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE55C433ED
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 08:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D186113C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 07:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5601B6101C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Apr 2021 08:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237788AbhDSHkI (ORCPT
+        id S237717AbhDSITD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Apr 2021 03:40:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54294 "EHLO mx2.suse.de"
+        Mon, 19 Apr 2021 04:19:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:37620 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237745AbhDSHkI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Apr 2021 03:40:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D8E70AEB3;
-        Mon, 19 Apr 2021 07:39:37 +0000 (UTC)
-Subject: Re: [PATCH] perf annotate: improve --stdio mode
-From:   =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <a0d53f31-f633-5013-c386-a4452391b081@suse.cz>
- <YDVb4KS/ARbtfoAw@kernel.org> <fedc723d-1c8f-fcd7-accb-421707b3a09f@suse.cz>
- <YG4IZhfYiE+2tyw7@kernel.org> <YG4VTsqJ9V3/hbOG@kernel.org>
- <4816a983-9d3c-2813-e9eb-1901b524e241@suse.cz>
-Message-ID: <bdccc648-41e4-2719-cfbb-a9f44ff3b489@suse.cz>
-Date:   Mon, 19 Apr 2021 09:39:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.1
+        id S237632AbhDSITC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 19 Apr 2021 04:19:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 533D61FB;
+        Mon, 19 Apr 2021 01:18:33 -0700 (PDT)
+Received: from [10.57.57.205] (unknown [10.57.57.205])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E5BEF3F85F;
+        Mon, 19 Apr 2021 01:18:29 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] perf cs-etm: Set time on synthesised samples to
+ preserve ordering
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210416105632.8771-1-james.clark@arm.com>
+ <20210416150709.GA1046932@xps15> <YHmqZKGMFydbsvEy@kernel.org>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <c3a75731-15b4-e052-1840-a881b05862df@arm.com>
+Date:   Mon, 19 Apr 2021 11:18:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <4816a983-9d3c-2813-e9eb-1901b524e241@suse.cz>
+In-Reply-To: <YHmqZKGMFydbsvEy@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-@Arnaldo: May I please ping this?
 
-Thanks,
-Martin
 
-On 4/8/21 12:08 PM, Martin Liška wrote:
-> On 4/7/21 10:25 PM, Arnaldo Carvalho de Melo wrote:
->> Em Wed, Apr 07, 2021 at 04:30:46PM -0300, Arnaldo Carvalho de Melo escreveu:
->>> Em Fri, Feb 26, 2021 at 10:24:00AM +0100, Martin Liška escreveu:
->>>> On 2/23/21 8:47 PM, Arnaldo Carvalho de Melo wrote:
->>>> Sure. But I think the current format provides quite broken visual layout:
->>>>
->>>>       0.00 :   405ef1: inc    %r15
->>>>       0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
->>>>    eff.c:1811    0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8>
->>>>           :            TA + tmpsd * (TB +
->>>>
->>>> vs.
->>>>
->>>>       0.00 :   405ef1: inc    %r15
->>>>       0.01 :   405ef4: vfmadd213sd 0x2b9b3(%rip),%xmm0,%xmm3        # 4318b0 <_IO_stdin_used+0x8b0>
->>>>       0.67 :   405efd: vfmadd213sd 0x2b9b2(%rip),%xmm0,%xmm3        # 4318b8 <_IO_stdin_used+0x8b8> // eff.c:1811
->>>>            : 1810   TA + tmpsd * (TB +
->>>>
->>>> I bet also the current users of --stdio mode would benefit from it.
->>>> What do you think?
->>  
->>> Agreed, I tried applying but it bitrotted, it seems :-\
+On 16/04/2021 18:16, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Apr 16, 2021 at 09:07:09AM -0600, Mathieu Poirier escreveu:
+>> Hi James,
 >>
->> I refreshed it, please check.
-> 
-> Thanks! I've just tested the patch on top of acme/perf/core and it works as was planned.
-> I'm attaching 2 perf annotate snippets (perf annotate --stdio -l --stdio-color=always) before
-> and after the revision:
-> 
-> https://splichal.eu/tmp/perf-before.html
-> https://splichal.eu/tmp/perf-after.html
-> 
-> I hope it nicely describes that it's an improvement.
-> 
-> Cheers,
-> Martin
-> 
+>> On Fri, Apr 16, 2021 at 01:56:30PM +0300, James Clark wrote:
+>>> Changes since v1:
+>>>  * Improved variable name from etm_timestamp -> cs_timestamp
+>>>  * Fixed ordering of Signed-off-by
+>>>
 >>
->> - Arnaldo
->>
->> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
->> index 18eee25b4976bea8..abe1499a91645375 100644
->> --- a/tools/perf/util/annotate.c
->> +++ b/tools/perf/util/annotate.c
->> @@ -1368,7 +1368,6 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->>  {
->>  	struct disasm_line *dl = container_of(al, struct disasm_line, al);
->>  	static const char *prev_line;
->> -	static const char *prev_color;
->>  
->>  	if (al->offset != -1) {
->>  		double max_percent = 0.0;
->> @@ -1407,20 +1406,6 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->>  
->>  		color = get_percent_color(max_percent);
->>  
->> -		/*
->> -		 * Also color the filename and line if needed, with
->> -		 * the same color than the percentage. Don't print it
->> -		 * twice for close colored addr with the same filename:line
->> -		 */
->> -		if (al->path) {
->> -			if (!prev_line || strcmp(prev_line, al->path)
->> -				       || color != prev_color) {
->> -				color_fprintf(stdout, color, " %s", al->path);
->> -				prev_line = al->path;
->> -				prev_color = color;
->> -			}
->> -		}
->> -
->>  		for (i = 0; i < nr_percent; i++) {
->>  			struct annotation_data *data = &al->data[i];
->>  			double percent;
->> @@ -1441,6 +1426,19 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->>  		printf(" : ");
->>  
->>  		disasm_line__print(dl, start, addr_fmt_width);
->> +
->> +		/*
->> +		 * Also color the filename and line if needed, with
->> +		 * the same color than the percentage. Don't print it
->> +		 * twice for close colored addr with the same filename:line
->> +		 */
->> +		if (al->path) {
->> +			if (!prev_line || strcmp(prev_line, al->path)) {
->> +				color_fprintf(stdout, color, " // %s", al->path);
->> +				prev_line = al->path;
->> +			}
->> +		}
->> +
->>  		printf("\n");
->>  	} else if (max_lines && printed >= max_lines)
->>  		return 1;
->> @@ -1456,7 +1454,7 @@ annotation_line__print(struct annotation_line *al, struct symbol *sym, u64 start
->>  		if (!*al->line)
->>  			printf(" %*s:\n", width, " ");
->>  		else
->> -			printf(" %*s:     %*s %s\n", width, " ", addr_fmt_width, " ", al->line);
->> +			printf(" %*s: %-*d %s\n", width, " ", addr_fmt_width, al->line_nr, al->line);
->>  	}
->>  
->>  	return 0;
->>
+>> You forgot to add the RB and AB you received.  Since Arnaldo is responsible for
+>> the perf tools subsystem, please send another revision.
+>  
+> 
+> 
+> Yep, please collect Reported-by and Acked-by as you go sending new
+> versions of a patchset, the last one I don't have a problem collecting
+> myself, but if you have to resend, please collect the feedback tags.
+> 
+> - Arnaldo
 > 
 
+Ok thanks, I will keep that in mind for the future. I wasn't sure if they still
+applied or not as it was a new version.
+
+Thanks
+James
+
+>> Thanks,
+>> Mathieu
+>>
+>>> James Clark (2):
+>>>   perf cs-etm: Refactor timestamp variable names
+>>>   perf cs-etm: Set time on synthesised samples to preserve ordering
+>>>
+>>>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 18 +++----
+>>>  tools/perf/util/cs-etm.c                      | 52 ++++++++++---------
+>>>  tools/perf/util/cs-etm.h                      |  4 +-
+>>>  3 files changed, 39 insertions(+), 35 deletions(-)
+>>>
+>>> -- 
+>>> 2.28.0
+>>>
+> 
