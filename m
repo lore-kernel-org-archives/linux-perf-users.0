@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE7C433ED
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Apr 2021 13:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8E1C433B4
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Apr 2021 19:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F90961458
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Apr 2021 13:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD22C611ED
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Apr 2021 19:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbhDWNlO (ORCPT
+        id S232291AbhDWTCg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Apr 2021 09:41:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Fri, 23 Apr 2021 15:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229479AbhDWNlM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Apr 2021 09:41:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B76D361352;
-        Fri, 23 Apr 2021 13:40:35 +0000 (UTC)
+        id S232212AbhDWTCg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 23 Apr 2021 15:02:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E14A96023E;
+        Fri, 23 Apr 2021 19:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1619185236;
-        bh=wO7XEt5yo8xj6mXlT5bhC3QSmJWtxF0ejIkJ/7vvnHE=;
+        s=k20201202; t=1619204519;
+        bh=epcsoljHvi9gYrkPaYroz7lAJfkykNkXVTsL93os0ks=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b9IApsIprIJfDv3jCRT0S7MopYzRdhARsJQJmd1w4sRz0u63G/GBHGyHDIiEQHkr4
-         J0txO/rYYArxeig1yG6Z1m0pVRmhgkYlpEi1TB1HY+q30+D+vojyd95he57RkLacxd
-         qQtoadS6uvQCAUyAEG0g5+kl8fhzegpkMmf2ypKrAEMbBN3PxL0QLfBfR46iEHAtHJ
-         3Vdr17tdzTvPQJGa44K40dXAn44Nvd/YCb4rZGhvhemMyt/z0lRSvZbGgz7Kb5OyeH
-         1FGl9FwY2318dDoQOJabmTVrKGQ7J6wic5STp6fcVKM34Wlxe34jhtYtb6WU9hcClD
-         eWRSCHJ4cfE9Q==
+        b=rZkx44d41/yEe47pLGE2G3jPry1b03Wq2tvpDSSl0iLEMIISYiYMzu+xf7nPWt1si
+         EQu6ifWgVO8ob/0t9ig92J6sb1++e92ISWpRhB1OjvVaR3jmcUkdqZVdsRHnxOKyVy
+         qSg3fiLucdbVd+/VvirCpJUE+oBVDbMmmGbL0GpQRbY0Lz/T3ug6hiF/qyTfoGG7xW
+         MzBphd0AoycNx1aBQMEUTSJcdnAEZwQZ/Wjyukio+KMw+yBvhrn3HFBK7uLyPuD6XB
+         WrCwjt6lWmqQ5NfiKHjLGAwlxlFEN6ob/jaoJBaGOPL95gKJ6jEe/iyHN+YROZjsJA
+         w3kM664iQpdqg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3D53C40647; Fri, 23 Apr 2021 10:40:32 -0300 (-03)
-Date:   Fri, 23 Apr 2021 10:40:32 -0300
+        id 45B9340647; Fri, 23 Apr 2021 15:59:55 -0300 (-03)
+Date:   Fri, 23 Apr 2021 15:59:55 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
         hca@linux.ibm.com, Alexander Schmidt <alexschm@de.ibm.com>
 Subject: Re: [PATCH] [PING] perf ftrace: Command fails on s390
-Message-ID: <YILOUOd2bHxuopJv@kernel.org>
+Message-ID: <YIMZK3dARqXXsR76@kernel.org>
 References: <20210421120400.2126433-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -57,14 +57,26 @@ Em Wed, Apr 21, 2021 at 02:04:00PM +0200, Thomas Richter escreveu:
 > 
 > The root cause is a missing pointer dereference which causes an
 > array element address to be used as PID.
-> 
-> Fix this by extracting the PID.
 
-Thanks, applied.
+Since you pinged on this one, and rightly so, please CC:
+
+From the MAINTAINERS file:
+
+PERFORMANCE EVENTS SUBSYSTEM
+R:      Jiri Olsa <jolsa@redhat.com>
+R:      Namhyung Kim <namhyung@kernel.org>
+
+These reviewers that help me into getting patches processed.
+
+Patch is processed now, good catch, I collected Namhyung's Acked-by.
+
+Thanks,
 
 - Arnaldo
 
  
+> Fix this by extracting the PID.
+> 
 > Output before:
 >   # ./perf ftrace -v -- ls
 >   function_graph tracer is used
