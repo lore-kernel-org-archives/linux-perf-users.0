@@ -2,185 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED7CC433ED
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Apr 2021 09:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC64C433B4
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Apr 2021 11:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9DE61424
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Apr 2021 09:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A550C610F7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Apr 2021 11:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237841AbhD1JV0 (ORCPT
+        id S230382AbhD1L65 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Apr 2021 05:21:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46633 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230113AbhD1JV0 (ORCPT
+        Wed, 28 Apr 2021 07:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230283AbhD1L65 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Apr 2021 05:21:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1619601641;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc; bh=A3TsiNBEJNISBAJovT0xbNWwctM6FA0Dxzplw/nnkfw=;
-        b=eR2msKkPpoiUr5n1JfHwtIONaEF5sQ8IRY1DormLuQLX8UJJ+H8G4uIgLGOJnPte9qeKsX
-        y1ja3sBEmURu14jSwiEnXzjb2CcP7TMKjDCzbhQWFnGc5jAH/hbKej4Xr0//+PaGq0dgSX
-        U524AoBUQnvjFr+Z2ZfB07qKeE/JwMk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-485-J_qAmENXNeeLdknvviApoA-1; Wed, 28 Apr 2021 05:20:38 -0400
-X-MC-Unique: J_qAmENXNeeLdknvviApoA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1901CC625
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Apr 2021 09:20:37 +0000 (UTC)
-Received: from Diego.redhat.com (unknown [10.40.208.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0101410023AB;
-        Wed, 28 Apr 2021 09:20:25 +0000 (UTC)
-From:   Michael Petlan <mpetlan@redhat.com>
-To:     acme@redhat.com, jolsa@redhat.com, linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf: enable libtraceevent dynamic linking
-Date:   Wed, 28 Apr 2021 11:20:23 +0200
-Message-Id: <20210428092023.4009-1-mpetlan@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Wed, 28 Apr 2021 07:58:57 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE88C061574
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Apr 2021 04:58:12 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id z16so3620651pga.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Apr 2021 04:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mkMbPMNc8FrnP1KGwkLDeuVNNhulyW7sGFTZ5AZrIsI=;
+        b=ZLckhhCpN9pyq4UEm0Ez/r/KXh8xRLpXup/VBIVgEsRqD98hdgMxzWzr7olhSXOp2E
+         po1SKCue0Fd2QRSyGk1k7r1aA1C7kVwAHPRvQL+H909rxysQmmbzGlHh3RpN9D3cGURT
+         HfROCIylDpoxmuDlQYO7MSfWYW6jDJ0UomFFEYhubHFMcqmzo5/4xx9MJPjmvWdG07zw
+         lb2ohJugNDyEZ7fBrjWTylpHkT4QtdTlctkqp1dUYM8cfjxykog0kNLQ6CQgpzlsBi4F
+         TLtauOtH2Nc2gjyn522V5o6uQH95rToghX421exiZJ8vdKggAxp7ZJnNm4owgUQMeoYe
+         kvCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mkMbPMNc8FrnP1KGwkLDeuVNNhulyW7sGFTZ5AZrIsI=;
+        b=gz5Uu4JPcv0GCK8pmNDIj9xdQM0johuYI3MBETA8FkhtrIFz4ghxCKRaaMGtWxSJSZ
+         X79qzKT9xj9sL/3irWkw0VlpEz2J26dfDoz+KVsHQL7zi5Gd5wnKTVMWVLm/TBuXy6MQ
+         mdEkBcSAE+VM4QONtbNb3m0JaG1e6HMpvnA7kxUmyOy9Qcs181Wq5ybFp4iKe85D6XfS
+         byeePQ1X4UtLWVADMVoHSOQ/AtXqXUyhRDwrI9RSTeg6eeFFpa4p2eXbSFqV3RC2J701
+         6f1lN9UkLmo3aFn5KkrofNPMh2EMjp/1Mr/5C369QWbEAbSkmBjV5LwqTGkKMwmnv0sd
+         bQow==
+X-Gm-Message-State: AOAM530mjU/a2X7yfT3zbsniZvabkOV1rDP62Rtux6k7QXCd/lhjZtSv
+        W2POzQN5bvGvHmjqsic+/v4ixSeqbopYQxLD
+X-Google-Smtp-Source: ABdhPJzjKP3SaW1skFaXQk2w6oVlp46c3Ap84jbXg1gAv9zIf11TRLHkDu14Qi6IKiq+sVnBPAIPqw==
+X-Received: by 2002:a05:6a00:2283:b029:261:abae:917e with SMTP id f3-20020a056a002283b0290261abae917emr27308366pfe.78.1619611092089;
+        Wed, 28 Apr 2021 04:58:12 -0700 (PDT)
+Received: from localhost (ec2-18-166-74-158.ap-east-1.compute.amazonaws.com. [18.166.74.158])
+        by smtp.gmail.com with ESMTPSA id pc17sm5010138pjb.19.2021.04.28.04.58.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Apr 2021 04:58:11 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Yonatan Goldschmidt <yonatan.goldschmidt@granulate.io>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/4] perf: Allow TIME_CONV to be backwards-compatible and dump it
+Date:   Wed, 28 Apr 2021 19:57:45 +0800
+Message-Id: <20210428115749.5229-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently we support only static linking with kernel's libtraceevent
-(tools/lib/traceevent). This patch adds libtraceevent package detection
-and support to link perf with it dynamically.
+The event PERF_RECORD_TIME_CONV was extended for clock parameters, but
+the tool fails to be backwards-compatible for the old event format.
 
-The libtraceevent package status is displayed with:
-$ make VF=1 LIBTRACEEVENT_DYNAMIC=1
-...
-...                 libtraceevent: [ on  ]
+Based on checking the event size, this patch series can decide if the
+extended clock parameters are contained in the perf event or not.  This
+allows the event PERF_RECORD_TIME_CONV to be backwards-compatible.
 
-Default behavior remains the same (static linking).
+The last patch also is introduced for dumping the event, for both the
+old and latest event formats.
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
----
- tools/build/Makefile.feature             |  1 +
- tools/build/feature/Makefile             |  4 ++++
- tools/build/feature/test-libtraceevent.c | 12 ++++++++++++
- tools/perf/Makefile.config               |  9 +++++++++
- tools/perf/Makefile.perf                 |  8 ++++++--
- 5 files changed, 32 insertions(+), 2 deletions(-)
- create mode 100644 tools/build/feature/test-libtraceevent.c
+The patch set has been rebased on perf/core branch with:
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 74e255d58d8d..b3221a43fa65 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -52,6 +52,7 @@ FEATURE_TESTS_BASIC :=                  \
-         libpython-version               \
-         libslang                        \
-         libslang-include-subdir         \
-+        libtraceevent                   \
-         libcrypto                       \
-         libunwind                       \
-         pthread-attr-setaffinity-np     \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 3e55edb3ea54..ec203e28407f 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -36,6 +36,7 @@ FILES=                                          \
-          test-libpython-version.bin             \
-          test-libslang.bin                      \
-          test-libslang-include-subdir.bin       \
-+         test-libtraceevent.bin                 \
-          test-libcrypto.bin                     \
-          test-libunwind.bin                     \
-          test-libunwind-debug-frame.bin         \
-@@ -196,6 +197,9 @@ $(OUTPUT)test-libslang.bin:
- $(OUTPUT)test-libslang-include-subdir.bin:
- 	$(BUILD) -lslang
- 
-+$(OUTPUT)test-libtraceevent.bin:
-+	$(BUILD) -ltraceevent
-+
- $(OUTPUT)test-libcrypto.bin:
- 	$(BUILD) -lcrypto
- 
-diff --git a/tools/build/feature/test-libtraceevent.c b/tools/build/feature/test-libtraceevent.c
-new file mode 100644
-index 000000000000..416b11ffd4b4
---- /dev/null
-+++ b/tools/build/feature/test-libtraceevent.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <traceevent/trace-seq.h>
-+
-+int main(void)
-+{
-+	int rv = 0;
-+	struct trace_seq s;
-+	trace_seq_init(&s);
-+	rv += !(s.state == TRACE_SEQ__GOOD);
-+	trace_seq_destroy(&s);
-+	return rv;
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 3514fe956ed1..99c73a7b6a26 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1079,6 +1079,15 @@ ifdef LIBPFM4
-   endif
- endif
- 
-+ifdef LIBTRACEEVENT_DYNAMIC
-+  $(call feature_check,libtraceevent)
-+  ifeq ($(feature-libtraceevent), 1)
-+    EXTLIBS += -ltraceevent
-+  else
-+    dummy := $(error Error: No libtraceevent devel library found, please install libtraceevent-devel);
-+  endif
-+endif
-+
- # Among the variables below, these:
- #   perfexecdir
- #   perf_include_dir
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 090fb9d62665..fde8ca22d117 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -128,6 +128,8 @@ include ../scripts/utilities.mak
- #
- # Define BUILD_BPF_SKEL to enable BPF skeletons
- #
-+# Define LIBTRACEEVENT_DYNAMIC to enable libtraceevent dynamic linking
-+#
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-@@ -309,7 +311,6 @@ endif
- 
- LIBTRACEEVENT = $(TE_PATH)libtraceevent.a
- export LIBTRACEEVENT
--
- LIBTRACEEVENT_DYNAMIC_LIST = $(PLUGINS_PATH)libtraceevent-dynamic-list
- 
- #
-@@ -374,12 +375,15 @@ endif
- 
- export PERL_PATH
- 
--PERFLIBS = $(LIBAPI) $(LIBTRACEEVENT) $(LIBSUBCMD) $(LIBPERF)
-+PERFLIBS = $(LIBAPI) $(LIBSUBCMD) $(LIBPERF)
- ifndef NO_LIBBPF
-   ifndef LIBBPF_DYNAMIC
-     PERFLIBS += $(LIBBPF)
-   endif
- endif
-+ifndef LIBTRACEEVENT_DYNAMIC
-+  PERFLIBS += $(LIBTRACEEVENT)
-+endif
- 
- # We choose to avoid "if .. else if .. else .. endif endif"
- # because maintaining the nesting to match is a pain.  If
+  commit 4c391ea001cb ("perf beauty: Fix fsconfig generator")
+
+And the patches have been tested on Arm64 HiSilicon D06 platform.
+
+Changes from v1:
+* Changed from bool to __u8 for perf_record_time_conv (Adrain);
+* Added helper event_contains() and used it (Adrian).
+
+
+Leo Yan (4):
+  perf tool: Change fields type in cap_user_time_short
+  perf jit: Let convert_timestamp() to be backwards-compatible
+  perf session: Add swap operation for event TIME_CONV
+  perf session: Dump PERF_RECORD_TIME_CONV event
+
+ tools/lib/perf/include/perf/event.h |  7 +++++--
+ tools/perf/util/jitdump.c           | 30 +++++++++++++++++++----------
+ tools/perf/util/session.c           | 28 +++++++++++++++++++++++++--
+ tools/perf/util/tsc.c               | 30 +++++++++++++++++++++++++++++
+ tools/perf/util/tsc.h               |  4 ++++
+ 5 files changed, 85 insertions(+), 14 deletions(-)
+
 -- 
-2.18.4
+2.25.1
 
