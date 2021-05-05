@@ -2,166 +2,132 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A63C433B4
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 May 2021 06:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F158C433B4
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 May 2021 10:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26218610D2
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 May 2021 06:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5A361222
+	for <linux-perf-users@archiver.kernel.org>; Wed,  5 May 2021 10:24:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbhEEGtd (ORCPT
+        id S229606AbhEEKZi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 May 2021 02:49:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28914 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229599AbhEEGtc (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 May 2021 02:49:32 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1456WhR3017367;
-        Wed, 5 May 2021 02:48:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=rt3W2HKMBPDQcxJ3R9r2MqsbsKBgJoy7YfOrjxwAgz0=;
- b=dOeJ4Cg6fgLXk4WH99iLA9tvMvEToADiS5Xa9kwhCxd40WMlGdTG1XFwJ57rWGCbQNNg
- JDCNvrvNbrV8kGmZfLYE5ok0c8MZd4UIah17SWKZrtfLCNq6hg0Y2ULpOqzxyUNk3w4d
- JtnNGryxRYFRsarj/tZgtM98Ps/YBS/CjZ+9Z2cdZF7lYJf/1zL6xHsXLU7VHzR/yq1I
- PSfCnMC18plA9tV1cGYKjia3sJ1kdLgsDDWQuxda/u9IVa5nIEL9rjvhLvDAtAgreCZb
- 5ITkQ4iM6x7qePEjOdg9dgNnzdPqqQuEihXTDCXAIwuxuZZ94ezS/Dp7oWWJBZiz8PWy UQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38bn6u9kd3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 May 2021 02:48:34 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1456XCqC018232;
-        Wed, 5 May 2021 02:48:34 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38bn6u9kcp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 May 2021 02:48:34 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 1456mWjM012051;
-        Wed, 5 May 2021 06:48:32 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 38beea82n3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 05 May 2021 06:48:32 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1456mTKs28180942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 5 May 2021 06:48:29 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DFAEA4055;
-        Wed,  5 May 2021 06:48:29 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B7BA1A4057;
-        Wed,  5 May 2021 06:48:28 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  5 May 2021 06:48:28 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, eranian@google.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: Test perf_event_attr fails on s390 when built with make LIBPFM4=1
-Date:   Wed,  5 May 2021 08:48:18 +0200
-Message-Id: <20210505064818.1169840-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 5 May 2021 06:25:38 -0400
+Received: from mail-db8eur05olkn2097.outbound.protection.outlook.com ([40.92.89.97]:21217
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S229559AbhEEKZg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 5 May 2021 06:25:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dRrnTleIikd159Vps3ignAGDoxvyb/KhJm/DE4FnQBNwfkkjh13tgZFAHHAHWlZhKZA8C3+x9/802Rlb8KCL0SlTCaYtk37aTm/Zll4MvYh6odfhu3WICTqjsSLDYLcnB/unA1jSZ8SGrZK+jXHyAtkHfUUt8aH2VM6VSmKK7hjGRTUh+KGXLBxmjuXMSkhACTE3Xm6THVr+Nswv0DGsORYrjLQ+mx9PS4hYf5DCdiLbe2DAuthbRX9Rd9SZVTMPKktU9KI3/doN8O2LIe0zBI6hKGomLurejaMANx+1D9/UbsCup5eEhXyXuA7Dtl+2t8I9v7aQzP5x3MLsBeYkAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AJxal/I82YEHUsPiZ4N/zcBXcIDnH8o7zxeY+I4EIv8=;
+ b=XqZ6p3yJAxw9/5GA239oX5xdk/08RVWDqCIORb9yRBkCKXkJaD9XUBGpdrTYTcpPe43rcWZ3S8ggds38Iw2+khUWGG5em/yy1RKfKfp3OO1qUmr16W2FjyEmIPN0mmId4rpa41gWNljnOJJYBnxgtAmCMrds3yfG5NFFymAdA6gtzMXhtd6/FCPgdOQA+2cOMJ+tanc73zN3XnJlYM/YVBikuHQM4ef/RjKD1DyshH0KF7LyavU/IGkH0QZeoieAn1xlIQFYTRHiMHOcPEugUR4xKH9mw1vLOjSYQARHnIPNfn1mCCz3tbUsNJwUJRf/lvW95kvwQ/2Xqs5ppadRMg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from VI1EUR05FT026.eop-eur05.prod.protection.outlook.com
+ (2a01:111:e400:fc12::51) by
+ VI1EUR05HT102.eop-eur05.prod.protection.outlook.com (2a01:111:e400:fc12::100)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4087.27; Wed, 5 May
+ 2021 10:24:38 +0000
+Received: from VI1PR09MB2638.eurprd09.prod.outlook.com
+ (2a01:111:e400:fc12::43) by VI1EUR05FT026.mail.protection.outlook.com
+ (2a01:111:e400:fc12::175) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
+ Transport; Wed, 5 May 2021 10:24:38 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:BAB6BFFCAAE460C1EE0FD966D77287A495829F440E411E8C645E032C861A5CB4;UpperCasedChecksum:94CC6709E6C45DA1520E427D8938459DA01BEC556173663949FE737565F3EAB4;SizeAsReceived:8933;Count:48
+Received: from VI1PR09MB2638.eurprd09.prod.outlook.com
+ ([fe80::948b:987c:566b:198e]) by VI1PR09MB2638.eurprd09.prod.outlook.com
+ ([fe80::948b:987c:566b:198e%5]) with mapi id 15.20.4087.044; Wed, 5 May 2021
+ 10:24:38 +0000
+Subject: Re: [PATCH] x86/events/amd/iommu: Fix invalid Perf result due to
+ IOMMU PMC power-gating
+To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Cc:     peterz@infradead.org, mingo@redhat.com, joro@8bytes.org,
+        Jon.Grimm@amd.com, amonakov@ispras.ru
+References: <20210504065236.4415-1-suravee.suthikulpanit@amd.com>
+From:   David Coe <david.coe@live.co.uk>
+Message-ID: <VI1PR09MB2638BB0FCE2E312B3471BC7FC7599@VI1PR09MB2638.eurprd09.prod.outlook.com>
+Date:   Wed, 5 May 2021 11:24:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.9.0
+In-Reply-To: <20210504065236.4415-1-suravee.suthikulpanit@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-TMN:  [1iV9f5vNuyVtcVzve2HaL8LVwxHRlOOc]
+X-ClientProxiedBy: LO4P123CA0072.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:153::23) To VI1PR09MB2638.eurprd09.prod.outlook.com
+ (2603:10a6:803:7b::27)
+X-Microsoft-Original-Message-ID: <ed3237f2-e682-5f08-8c94-3c14a462c42e@live.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: xPUtMkLJXm8N4x4QIYcaxCMbDnRW2Djs
-X-Proofpoint-GUID: 8ndenka8ClbkcKIWml9cs12FNEmc2q78
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-05-05_02:2021-05-04,2021-05-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 phishscore=0 priorityscore=1501 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104060000 definitions=main-2105050046
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.6] (90.246.218.100) by LO4P123CA0072.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:153::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24 via Frontend Transport; Wed, 5 May 2021 10:24:37 +0000
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: e2625db7-4d68-41ba-9abc-08d90faffc74
+X-MS-TrafficTypeDiagnostic: VI1EUR05HT102:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CAaOuzW05Ck8IUJoBfmldTL3PFAOiwEt8MO1Bm+vMTmanCuvde7hRabnCmH8qF/l1t1641OnU3rfhReckwsftQgJgU+fCogiTzyTqI8xPHSxQ1OMIAmOZzHUwErxgfaHDdrgkUJ1hAa9alHmp7xVJszKRZXHBiQxXmizk4aB+9/Xsjp0e05BDB+uanrBP+IyRbDWIDuPTEiITvKgcfptxfRo7zWe8XZ+S0ZdlmSnIXkg9pmzwaaPFhLhPE4pWucmAz8MKJrD9XEH2Jve28A4kp+ingxkBqo6HMDgJq3NrE00TZA8kTYr/gCfeOV2t4E+W3tCQah9gT208p7XTQBd1OIYO4W1Q4N9u1/A0Kt51ZjReQt5IUK3iwgkJn/dFpBEOHWO1fnBK2YHnDUa4csgcQ==
+X-MS-Exchange-AntiSpam-MessageData: h3ASWrdWl/LKUIJAHEj1d+v2LH+1iICfyXK8a/ZcdGeTDmFSAgK4XsEucNZtKZ9zbx7Cs9cfWYmihPMBE+5BbzMtXF1WcJlktDqkh4zumqtqK5VCDc45G6MKTTH5Qb5ORfoaz1iSWFaHQOHRhneraQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e2625db7-4d68-41ba-9abc-08d90faffc74
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2021 10:24:38.1358
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-AuthSource: VI1EUR05FT026.eop-eur05.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1EUR05HT102
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Using make LIBPFM4=1 builds the perf tool with support for libpfm
-event notation. The command line flag --pfm-events is valid:
- # ./perf record --pfm-events cycles -- true
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.001 MB perf.data (2 samples) ]
- #
+Hi, once more!
 
-However the command 'perf test -Fv 17' fails on s390 with LIBPFM4=1:
-  # perf test -Fv 17
-  17: Setup struct perf_event_attr                                    :
-  --- start ---
-  .....
-  running './tests/attr/test-record-group2'
-  unsupp  './tests/attr/test-record-group2'
-  running './tests/attr/test-record-pfm-period'
-  expected exclude_hv=0, got 1
- FAILED './tests/attr/test-record-pfm-period' - match failure
- ---- end ----
- Setup struct perf_event_attr: FAILED!
+On 04/05/2021 07:52, Suravee Suthikulpanit wrote:
+> On certain AMD platforms, when the IOMMU performance counter source
+> (csource) field is zero, power-gating for the counter is enabled, which
+> prevents write access and returns zero for read access.
+> 
+> This can cause invalid perf result especially when event multiplexing
+> is needed (i.e. more number of events than available counters) since
+> the current logic keeps track of the previously read counter value,
+> and subsequently re-program the counter to continue counting the event.
+> With power-gating enabled, we cannot gurantee successful re-programming
+> of the counter.
+> 
+> Workaround this issue by :
+> 
+> 1. Modifying the ordering of setting/reading counters and enabing/
+>     disabling csources to only access the counter when the csource
+>     is set to non-zero.
+> 
+> 2. Since AMD IOMMU PMU does not support interrupt mode, the logic
+>     can be simplified to always start counting with value zero,
+>     and accumulate the counter value when stopping without the need
+>     to keep track and reprogram the counter with the previously read
+>     counter value.
+> 
+> This has been tested on systems with and without power-gating.
+> 
 
-When --pfm-event system is not supported, the test returns unsupported
-and continues. Here is an example using a virtual machine on x86 and
-Fedora 34:
- [root@f33 perf]# perf test -Fv 17
- 17: Setup struct perf_event_attr                                    :
- --- start ---
- .....
- running './tests/attr/test-record-group2'
- unsupp  './tests/attr/test-record-group2'
- running './tests/attr/test-record-pfm-period'
- unsupp  './tests/attr/test-record-pfm-period'
- ....
+Just as a final, sanity check I've loaded the same patched kernel 
+5.11.0-16 on to an old AMD Athlon FX8350. So far, all seems in order: it 
+loads IOMMUv1 and runs Ubuntu 21.04 without incident!
 
-The issue is file ./tests/attr/test-record-pfm-period
-which requires perf event attribute member exclude_hv to be zero.
-This is not the case on s390 where the value of exclude_hv is one.
+Much appreciate all your efforts, Suravee, Alex et al. Best regards.
 
-Fix this by allowing value exlucde_hv to be zero or one.
-
-Output before:
- # /usr/bin/python ./tests/attr.py -d ./tests/attr/ -t \
-	test-record-pfm-period -p ./perf  -vvv 2>&1| fgrep match
-    matching [event:base-record]
-    match: [event:base-record] matches []
- FAILED './tests/attr//test-record-pfm-period' - match failure
- #
-
-Output after:
- # /usr/bin/python ./tests/attr.py -d ./tests/attr/ -t \
-	test-record-pfm-period -p ./perf  -vvv 2>&1| fgrep match
-    matching [event:base-record]
-    match: [event:base-record] matches ['event-1-0-6', 'event-1-0-5']
-  matched
-    matching [event-1-0-6]
-    match: [event-1-0-6] matches ['event:base-record']
-    matching [event-1-0-5]
-    match: [event-1-0-5] matches ['event:base-record']
-  matched
- #
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
----
- tools/perf/tests/attr/test-record-pfm-period | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/tests/attr/test-record-pfm-period b/tools/perf/tests/attr/test-record-pfm-period
-index 368f5b814094..b962d6d11ee2 100644
---- a/tools/perf/tests/attr/test-record-pfm-period
-+++ b/tools/perf/tests/attr/test-record-pfm-period
-@@ -7,3 +7,4 @@ ret     = 1
- sample_period=77777
- sample_type=7
- freq=0
-+exclude_hv=0|1
 -- 
-2.30.2
-
+David
