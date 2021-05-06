@@ -2,104 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF7AC433ED
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 May 2021 13:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C297CC433ED
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 May 2021 13:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B2961078
-	for <linux-perf-users@archiver.kernel.org>; Wed,  5 May 2021 13:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83EC761104
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 May 2021 13:14:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233218AbhEENHi (ORCPT
+        id S233118AbhEFNPD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 5 May 2021 09:07:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47676 "EHLO
+        Thu, 6 May 2021 09:15:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233040AbhEENHi (ORCPT
+        with ESMTP id S229946AbhEFNPC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 5 May 2021 09:07:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBEDC061574;
-        Wed,  5 May 2021 06:06:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kj3lk+MzppwZnR4pyZdWYqNDn2L5VLUwXkqm3e6rR9s=; b=IcRzhmy3e3QVV24Wb/38lgZKdv
-        sToVrmEzizW7NxLWDO+fD+mh0CDfrQSBuQ13qVXeOpcizNeTdVuacmPo3XrSw81+31tkcQFXH1Al0
-        i/ueRj/Poi8z1POz6VbBtkD7hdQsg47KGMcDS8quFo4FwvjYLwnjA6Up2Ve8w1c12jrkrCmTj6AMs
-        snNqpQIQ1qgDkc6OQV24oyvU6eqsD0ySV0fKp5X/ZtjDRRCcnzqJS5J4j1sHotocr8EhU8CmIBHrM
-        dVGzUkcR6HxsPMjxN092z6w3Nthn4EOizVNcET3qjdH4FgEsTizIhA3X0ZG1cEZvozuAMqNzGnsCi
-        TDpZTrdw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1leHDA-000LSn-UF; Wed, 05 May 2021 13:05:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2CD993001CD;
-        Wed,  5 May 2021 15:05:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2E32A203E67C5; Wed,  5 May 2021 15:05:06 +0200 (CEST)
-Date:   Wed, 5 May 2021 15:05:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Suthikulpanit, Suravee" <suravee.suthikulpanit@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        iommu@lists.linux-foundation.org, mingo@redhat.com,
-        joro@8bytes.org, Jon.Grimm@amd.com, amonakov@ispras.ru,
-        David Coe <david.coe@live.co.uk>
-Subject: Re: [PATCH] x86/events/amd/iommu: Fix invalid Perf result due to
- IOMMU PMC power-gating
-Message-ID: <YJKYAiC8GiiFPrWk@hirez.programming.kicks-ass.net>
-References: <20210504065236.4415-1-suravee.suthikulpanit@amd.com>
- <YJEWWbEeDm0rUyC+@hirez.programming.kicks-ass.net>
- <e9769da5-3d2a-6e86-8ebd-feb00b567bba@amd.com>
- <YJE6eCyHtIONCJet@hirez.programming.kicks-ass.net>
- <ad67d625-9e59-2216-0f2a-88635a212595@amd.com>
+        Thu, 6 May 2021 09:15:02 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D17C061574;
+        Thu,  6 May 2021 06:14:03 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 124so7733104lff.5;
+        Thu, 06 May 2021 06:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BIQmySH5rKYkaTCMdU5HD5HriPXQiPhjgd9Q3vz0FwQ=;
+        b=iwwdl9SJ9MXhgLtAr3AL0yPOQSixzfVczE8lcM3b2WqWvzIZIIu86Kt9HJi+05YU9R
+         rVAwfYk05XNIFyIIhl3fBAhn/FjLpXs+n8tOqw3vWZwxpsERZAxJalPMS03QDwIHrUW3
+         ktIdd+qUIoQoY6UXl9JcqQOacmNOoI5N7nOW7VkxXeK+Oqi8RXnklDUqrSojF2TdzhJl
+         QI1LaPgMu9zijBhmIao0LyfvnAOphpQyh/hUtIQEayIZEXuXb6XJwPXX0s7FPdiRu0jM
+         lgS5PeZ1Iit96KZfpw4oGzTOKtr5ib4zyssMXsQ3zVUptLpu9PfUJR5R0FE9AZIhZnpU
+         im7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BIQmySH5rKYkaTCMdU5HD5HriPXQiPhjgd9Q3vz0FwQ=;
+        b=VyVx5x4SpD67g7zroG/hJMuYtZ3rVD8TybzvX1UWK63GK5IU0BY4xzexWFYMBs/LdR
+         mHAGrl2ME2msFqroWGpM4QSQl2E951Eip0uKp4pVa621Ru41WVTr6eS88OrjcGY+RpHO
+         BHn4lEi7CWjq74Oab9tGaagPLtU3iAuV7S3q+L05PYrw68GTu27egVpVq1iVGYvAjzXW
+         1M6iphBwl5DCylZRhX1/hizdCuNFl8+fff83/U2HIWH1j2mdL8Ig1l+xAjDFJStXITA6
+         c6cuB6iW/fgzREcQyKjE5uO/4EjDgp94Tv1zrnA+gUXmQ+pR/dmvSzaMr5Q1Jm5HoF5O
+         z6VA==
+X-Gm-Message-State: AOAM533TxOZhI3Cb0dkhgYYh6m7f2QRaqVM9QFpLECOsoRcIkyrT/ipb
+        yp17S0zYGl8XM5x+zwBQH8Hb+C/tqfpuvtyu
+X-Google-Smtp-Source: ABdhPJzRDF2BBtmUtOrZOOvY9BImc9I/xrh2tEMvP4C+fQKZ43Hb9abMvWsRMPNd8DNISQR8RQENgQ==
+X-Received: by 2002:ac2:5feb:: with SMTP id s11mr2742580lfg.99.1620306841532;
+        Thu, 06 May 2021 06:14:01 -0700 (PDT)
+Received: from localhost.localdomain ([185.30.229.161])
+        by smtp.googlemail.com with ESMTPSA id v21sm867332ljv.80.2021.05.06.06.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 May 2021 06:14:01 -0700 (PDT)
+From:   Dmitry Koshelev <karaghiozis@gmail.com>
+Cc:     Dmitry Koshelev <karaghiozis@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: Fix swapping of cpu_map and stat_config records
+Date:   Thu,  6 May 2021 13:11:49 +0000
+Message-Id: <20210506131244.13328-1-karaghiozis@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ad67d625-9e59-2216-0f2a-88635a212595@amd.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 05, 2021 at 07:39:14PM +0700, Suthikulpanit, Suravee wrote:
-> Peter,
-> 
-> On 5/4/2021 7:13 PM, Peter Zijlstra wrote:
-> > On Tue, May 04, 2021 at 06:58:29PM +0700, Suthikulpanit, Suravee wrote:
-> > > Peter,
-> > > 
-> > > On 5/4/2021 4:39 PM, Peter Zijlstra wrote:
-> > > > On Tue, May 04, 2021 at 01:52:36AM -0500, Suravee Suthikulpanit wrote:
-> > > > 
-> > > > > 2. Since AMD IOMMU PMU does not support interrupt mode, the logic
-> > > > >      can be simplified to always start counting with value zero,
-> > > > >      and accumulate the counter value when stopping without the need
-> > > > >      to keep track and reprogram the counter with the previously read
-> > > > >      counter value.
-> > > > 
-> > > > This relies on the hardware counter being the full 64bit wide, is it?
-> > > > 
-> > > 
-> > > The HW counter value is 48-bit. Not sure why it needs to be 64-bit?
-> > > I might be missing some points here? Could you please describe?
-> > 
-> > How do you deal with the 48bit overflow if you don't use the interrupt?
-> 
-> The IOMMU Perf driver does not currently handle counter overflow since the overflow
-> notification mechanism (i.e. IOMMU creates an EVENT_COUNTER_ZERO event in the IOMMU event log,
-> and generate an IOMMU MSI interrupt to signal IOMMU driver to process the event.) is not
-> currently supported. When counter overflows, the counter becomes zero, and Perf
-> reports value zero for the event.
-> 
-> Alternatively, to detect overflow, we might start counting with value 1 so that
-> we can detect overflow when the value becomes zero in which case the Perf driver
-> could generate error message.
+'data' field in perf_record_cpu_map_data struct is 16-bit
+wide and so should be swapped using bswap_16().
 
-Urgh.. the intel uncore driver programs an hrtimer to periodically fold
-deltas. That way the counter will never be short.
+'nr' field in perf_record_stat_config struct should be
+swapped before being used for size calculation.
+
+Signed-off-by: Dmitry Koshelev <karaghiozis@gmail.com>
+---
+ tools/perf/util/session.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index a12cf4f0e97a..106b3d60881a 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -904,7 +904,7 @@ static void perf_event__cpu_map_swap(union perf_event *event,
+ 	struct perf_record_record_cpu_map *mask;
+ 	unsigned i;
+ 
+-	data->type = bswap_64(data->type);
++	data->type = bswap_16(data->type);
+ 
+ 	switch (data->type) {
+ 	case PERF_CPU_MAP__CPUS:
+@@ -937,7 +937,7 @@ static void perf_event__stat_config_swap(union perf_event *event,
+ {
+ 	u64 size;
+ 
+-	size  = event->stat_config.nr * sizeof(event->stat_config.data[0]);
++	size  = bswap_64(event->stat_config.nr) * sizeof(event->stat_config.data[0]);
+ 	size += 1; /* nr item itself */
+ 	mem_bswap_64(&event->stat_config.nr, size);
+ }
+-- 
+2.25.1
+
