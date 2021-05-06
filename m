@@ -2,112 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0326CC43460
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 May 2021 13:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0995C433B4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 May 2021 22:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3CFD61106
-	for <linux-perf-users@archiver.kernel.org>; Thu,  6 May 2021 13:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E934600D4
+	for <linux-perf-users@archiver.kernel.org>; Thu,  6 May 2021 22:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233461AbhEFNdR (ORCPT
+        id S230486AbhEFW5p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 6 May 2021 09:33:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49135 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234106AbhEFNdR (ORCPT
+        Thu, 6 May 2021 18:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230462AbhEFW5o (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 6 May 2021 09:33:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1620307938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QR+VFmQanOLc8acTpLhJwPk0qO2xnMjuAmazbsWfrfM=;
-        b=T5vm+RD0wyqS1jIBtIvV8ATg6dukK2ag6CD0D1shQceGpSxJ3A6XNMfk26zDgkpjA0mVQT
-        fjsDURUVvIPSbUgtz3IoB4BkeQ/nbDmjLLPL7+Hl/swGAy0FFFB88G6AXGSjUT/8aCNJtS
-        fbCvZJCYDfAOl+ZvBsObKUNRRSJl51Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-488-IolX54RbOXWn1jr5JnHCtg-1; Thu, 06 May 2021 09:32:15 -0400
-X-MC-Unique: IolX54RbOXWn1jr5JnHCtg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 829B41926DA6;
-        Thu,  6 May 2021 13:32:13 +0000 (UTC)
-Received: from krava (unknown [10.40.193.227])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1EFB861F55;
-        Thu,  6 May 2021 13:32:10 +0000 (UTC)
-Date:   Thu, 6 May 2021 15:32:10 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Dmitry Koshelev <karaghiozis@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 6 May 2021 18:57:44 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88972C061761
+        for <linux-perf-users@vger.kernel.org>; Thu,  6 May 2021 15:56:45 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id k13-20020ac8140d0000b02901bad0e39d8fso4533052qtj.6
+        for <linux-perf-users@vger.kernel.org>; Thu, 06 May 2021 15:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9qAE3ylGIgIN6z2XX1IF/s7yDr0HR2DijcyVu3luS2o=;
+        b=LvBA82++LFbBBQHWRIMTP7rmFgicJqfMG3jSxbkB7T5QcBm7BJ0ko3KZrvnZcJdtnm
+         Kcny3KUZawdrREvwexS0ova/q8laLz80mZrE5SungnHflsqQf14pO5ZRBw63MoJ3LD3T
+         SwV6vIQDNfVqA2EpxLzV+Di6SWndWkDUTXgoKWozhL0gpXGW4h0KtizpTJ64Fy19m6GK
+         o55wJfViNi7uF+xX6DVG5qCieptHr+mkJQEzQXPaGA3u+mgZcPeXhjuVkZKYc6sCYNs+
+         ZM30VgUj78UB/5yGW+sq4RL5yrFLfERC959kBb/1zm1L8cXv6IwS+VxR/IigKjsUst5B
+         Uciw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9qAE3ylGIgIN6z2XX1IF/s7yDr0HR2DijcyVu3luS2o=;
+        b=I/FPSH16Xxvkn0OWTjvL2bNesLc0j8h4GiF6IcGV1wJfXbjikpzpwZ0u4EQbLjJbC9
+         Qg3LukLobc9qrK7tALGlfFu6PEn2uQEpj2W9nvCHvW4Yss1M8W1HfOns19UTTj3bHgin
+         lpvv+GLiOGoCcIQ87TkmJ/6qseFyZSxOGNkKWrFvxkMc3C6rflETykvmKWOeRmAVKkea
+         eYG9BBHnH3v+m+0txyfTffUE8jh+RfG23LAzKKPFSeu5+lP6rLtsDhO459G1kcp3vOd0
+         WpRHuUHtxcD29N+3rkfEgaaJ57gBQ7GkMKZVP2yRC/2F/VsHPZpUjIuw5goAffD2Pi8I
+         wOrQ==
+X-Gm-Message-State: AOAM5309OQGhPgY1Z2k0gIIFkm0WyBGT8JBZMxxXDHWFp+j9RI03ENHZ
+        MWmDsz2jPU+mLNo7ok8TwImXmdX0Zd4R
+X-Google-Smtp-Source: ABdhPJxrLR+FGblybNHDE6jvh8Ihl3/eLAPTzEmh/u5wOptAg8BXKztPxYiW9C3O4KAEBdbKjuY1WBRM4tm9
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:e9b2:d505:ffb2:fde1])
+ (user=irogers job=sendgmr) by 2002:a0c:e486:: with SMTP id
+ n6mr6918259qvl.21.1620341804683; Thu, 06 May 2021 15:56:44 -0700 (PDT)
+Date:   Thu,  6 May 2021 15:56:40 -0700
+Message-Id: <20210506225640.1461000-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.1.607.g51e8a6a459-goog
+Subject: [PATCH] perf jevents: Silence warning for ArchStd files
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: Fix swapping of cpu_map and stat_config records
-Message-ID: <YJPv2u6NBuYX9FUX@krava>
-References: <20210506131244.13328-1-karaghiozis@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210506131244.13328-1-karaghiozis@gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        John Garry <john.garry@huawei.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 06, 2021 at 01:11:49PM +0000, Dmitry Koshelev wrote:
-> 'data' field in perf_record_cpu_map_data struct is 16-bit
-> wide and so should be swapped using bswap_16().
-> 
-> 'nr' field in perf_record_stat_config struct should be
-> swapped before being used for size calculation.
-> 
-> Signed-off-by: Dmitry Koshelev <karaghiozis@gmail.com>
+json files in the level 1 directory are used for ArchStd events (see
+preprocess_arch_std_files), as such they shouldn't be warned about.
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/jevents.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-thanks,
-jirka
-
-> ---
->  tools/perf/util/session.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index a12cf4f0e97a..106b3d60881a 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -904,7 +904,7 @@ static void perf_event__cpu_map_swap(union perf_event *event,
->  	struct perf_record_record_cpu_map *mask;
->  	unsigned i;
->  
-> -	data->type = bswap_64(data->type);
-> +	data->type = bswap_16(data->type);
->  
->  	switch (data->type) {
->  	case PERF_CPU_MAP__CPUS:
-> @@ -937,7 +937,7 @@ static void perf_event__stat_config_swap(union perf_event *event,
->  {
->  	u64 size;
->  
-> -	size  = event->stat_config.nr * sizeof(event->stat_config.data[0]);
-> +	size  = bswap_64(event->stat_config.nr) * sizeof(event->stat_config.data[0]);
->  	size += 1; /* nr item itself */
->  	mem_bswap_64(&event->stat_config.nr, size);
->  }
-> -- 
-> 2.25.1
-> 
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index ed4f0bd72e5a..7422b0ea8790 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -1123,8 +1123,10 @@ static int process_one_file(const char *fpath, const struct stat *sb,
+ 			mapfile = strdup(fpath);
+ 			return 0;
+ 		}
+-
+-		pr_info("%s: Ignoring file %s\n", prog, fpath);
++		if (is_json_file(bname))
++			pr_debug("%s: ArchStd json is preprocessed %s\n", prog, fpath);
++		else
++			pr_info("%s: Ignoring file %s\n", prog, fpath);
+ 		return 0;
+ 	}
+ 
+-- 
+2.31.1.607.g51e8a6a459-goog
 
