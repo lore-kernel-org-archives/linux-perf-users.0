@@ -2,177 +2,154 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6704C433ED
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 May 2021 02:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF15C433B4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 May 2021 05:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 889826128A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 May 2021 02:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BCA613EE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 May 2021 05:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbhEJCQL (ORCPT
+        id S230059AbhEJFkR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 May 2021 22:16:11 -0400
-Received: from mail-bn7nam10on2065.outbound.protection.outlook.com ([40.107.92.65]:20833
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230078AbhEJCQK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 May 2021 22:16:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FA0LOeSyb0AZGMnGs+F2mTIlofZhGor9wVKNfzzdy9Zd8XU109/w0z8j2/DdB1Kday6NTIEq8HhXY2munvQvJCHLHxOyNQgtNCZsml4ZNwfTh3nBIdDNNFIedmoVW28muhIKEcuniBkVAqbmZxgvvcPQ6nd5cLheNOHxFoQTpfnc+q9X9PN/eZ+1RdMx0dlT/7Li1+jU0LqybpgwSqhdv94RGZZzhenBFHxS9+Na6bSBjWOqZvMNNs1rUqy4//py1NnGCtmrbGdr7N7d5InVIdrNqt7tPRdxF+QmZAJzZrTSipxdcqgW3h609gy0B0H3KrTducfEqQdYOwiy7XyNfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HMFTCxwarX2uPLoLJ/MmbG1RxtNFbMoR476de9YSlnA=;
- b=fq+unMuvF66HE5cZqYJ1EJdIRLdQiGvC1dPMIdjAKx/lDu7R3d9mk/j39hqEd5c0RX5gXesolWqPO7bMGUWTwJWJtDHijdODrqjhd4KBGd0Shgkm/R9rEHa3jT/xScHU/IQStuqLt5d+0DgqQhIh2vmckc/w/gJOLuVoign9AkUDqfBxxzMHh4MfXHsmIC3OcGppt6sbZvckgLovIt2yjIgVZbmErm4pyfvxnL13SwuWVSgif5H+B7aYwK2SX1P6gjo16ZiW+FQo7ShhnIpPEIi9HCJfviVcs3lLmuFtyy9qpiGej4kGB1ApPn87qaszmIVz2O0/AET3rMPa/tuXJw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HMFTCxwarX2uPLoLJ/MmbG1RxtNFbMoR476de9YSlnA=;
- b=rdYnyrsYth27oiNWF/woqGEnKeSYHfVrTSVGr9s84zcDaz+eDNSt9+vytbo/90nn2GRaT8LwNzDUlbNU/rTC5CIwfFzGJnJc+FGv9Nd4DWRzjygHE9EbL2CgMIeVuK6Xwc/kgriTdgZPtyAXsCkSwGSb8YWYZFyE+k85kjXkyGA=
-Authentication-Results: live.co.uk; dkim=none (message not signed)
- header.d=none;live.co.uk; dmarc=none action=none header.from=amd.com;
-Received: from DM8PR12MB5445.namprd12.prod.outlook.com (2603:10b6:8:24::7) by
- DM4PR12MB5327.namprd12.prod.outlook.com (2603:10b6:5:39e::21) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4108.30; Mon, 10 May 2021 02:15:04 +0000
-Received: from DM8PR12MB5445.namprd12.prod.outlook.com
- ([fe80::7de5:b531:897d:5e75]) by DM8PR12MB5445.namprd12.prod.outlook.com
- ([fe80::7de5:b531:897d:5e75%7]) with mapi id 15.20.4108.031; Mon, 10 May 2021
- 02:15:04 +0000
-Subject: Re: [PATCH] x86/events/amd/iommu: Fix invalid Perf result due to
- IOMMU PMC power-gating
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        iommu@lists.linux-foundation.org, mingo@redhat.com,
-        joro@8bytes.org, Jon.Grimm@amd.com, amonakov@ispras.ru,
-        David Coe <david.coe@live.co.uk>
-References: <20210504065236.4415-1-suravee.suthikulpanit@amd.com>
- <YJEWWbEeDm0rUyC+@hirez.programming.kicks-ass.net>
- <e9769da5-3d2a-6e86-8ebd-feb00b567bba@amd.com>
- <YJE6eCyHtIONCJet@hirez.programming.kicks-ass.net>
- <ad67d625-9e59-2216-0f2a-88635a212595@amd.com>
- <YJKYAiC8GiiFPrWk@hirez.programming.kicks-ass.net>
-From:   "Suthikulpanit, Suravee" <suravee.suthikulpanit@amd.com>
-Message-ID: <f9ccf3b8-5ce2-53f5-e8c7-0ab7dc0a4ae0@amd.com>
-Date:   Mon, 10 May 2021 09:08:04 +0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
-In-Reply-To: <YJKYAiC8GiiFPrWk@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [183.89.247.160]
-X-ClientProxiedBy: SG2PR01CA0180.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::36) To DM8PR12MB5445.namprd12.prod.outlook.com
- (2603:10b6:8:24::7)
+        Mon, 10 May 2021 01:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230009AbhEJFkR (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 10 May 2021 01:40:17 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A642C061573
+        for <linux-perf-users@vger.kernel.org>; Sun,  9 May 2021 22:39:12 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id i5so7744591pgm.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 May 2021 22:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9QjThyFdbfEEV7YSdHD2NDT9j0pnbAN4OFRmYnpNSIo=;
+        b=DKMxWczXLRPdyDMhH+2pAoS1NdrO047RvAa8WncZUx2FUyJuMKjct6U1MGuwcKf7cr
+         VauDMDqhf9NmEQWm/wEECCvM0nJ6eWzC4eQW/JCOEbe/5z9wPzf8O4tpoHyNqS77XW3Q
+         SXK2fmtlAJP9gZ1PSj6n9xgvxdJNy3ZQGBPpP9CP9kfFaLvIloQlrCviSCBR303IlpSb
+         KAuQZpfBuBLzPQQ3zhW9s9gN9NzVcC767e8xv4kOG9Ef56xbU6cFnmznaN3GQ2H1IJJv
+         GDDtlOxpsWr8tfspvWLM25f2JO2oi0KTKfnNvTZrRCaPBOKt1m7J4+bZ6sWs/MwkAGPn
+         i6sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9QjThyFdbfEEV7YSdHD2NDT9j0pnbAN4OFRmYnpNSIo=;
+        b=g08hCmUjPauflsk7Mjnpic4npGUZ40YzqPwAe04DpObNm4fMQK+btPueZqiP9nfqlJ
+         eLfRhgrnC2b0Mt2I/+s5y+JUUO4G/e3IcyFPy03rKib2uyLk5VacCc2W44mDQCwmcMIH
+         GEVFIvGk2+65zfegQgK+22WfFy1MXZtacb98vTpBdqvEMqrEsoCZVCdc7WZPPSqHDaty
+         ovVoUkJMcsodutx2EL3klC6YerFICgdJQIsdezMOL11ZFrg9m3UJFAbjnfV9SuSpXDt8
+         rvb/dr1WuEtAfegrcBZkz64I/2ZptoOTZHyRbWircxS/0HANADIbaAvYOYOg6wDM2lFs
+         aJWg==
+X-Gm-Message-State: AOAM533BoE2J6fn0jIBaTv7b6ZRBhPwGzUt0U97ShmjQ7N/8LxVPhS5R
+        EQippHqSlAMb/fqi34bbfjQTVw==
+X-Google-Smtp-Source: ABdhPJxL55uYLzlLBONLZRKY3c1FonDeJ3FtOdbAxVYVL+2eHBP7EPjqAldCxGZF7Kptg6CqOMgSAA==
+X-Received: by 2002:a63:175e:: with SMTP id 30mr23397809pgx.48.1620625151365;
+        Sun, 09 May 2021 22:39:11 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([103.207.71.35])
+        by smtp.gmail.com with ESMTPSA id gw7sm10270030pjb.57.2021.05.09.22.39.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 May 2021 22:39:10 -0700 (PDT)
+Date:   Mon, 10 May 2021 13:39:04 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, mathieu.poirier@linaro.org,
+        al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] perf cs-etm: Handle valid-but-zero timestamps
+Message-ID: <20210510053904.GB4835@leoy-ThinkPad-X240s>
+References: <20210507095814.17933-1-james.clark@arm.com>
+ <3926c523-3fdb-66de-8b9c-b68290a5053e@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.10.3.158] (183.89.247.160) by SG2PR01CA0180.apcprd01.prod.exchangelabs.com (2603:1096:4:28::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend Transport; Mon, 10 May 2021 02:15:01 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c7453297-8b4b-4cb9-ba2e-08d913596c86
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5327:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5327F9ACD0C54DECC4E36293F3549@DM4PR12MB5327.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: vGuZXuioWlKcDsXtth3n36O0/vkOAvaG3YkLjklvS6St4tf/mc3JaJxq0Sm4h3fGJs5wbGj5FmXpN+JeUXt8SiCSZCys2BZcitxycg15iuAkku72bhKkBVZMSYaXXO0xnP8ad663mETnzRtwkCT28ibUC8IcZL52m06G+DGfS7js6YziE83Oeab4Z/gvkthjtbsvFEb6NUiVPAKFbz6q1yTJoVM7UltCF4rFjr7EIwXgNqGSPi8hcgZLQBsRdjvCc+L1/WFomDI8ofn14j/un4kZ86MY27pU/0hfLTqqrGli4FG/riSVmqf4Zq2xlxz2raulDqMvKhp59oV0ih+9j8BELS6+5cXNF+ql1m+LeibNeaw4qxRNoQ6mLsCblYFYXXiD18N/XZIhoZv/RVL22BEx30d+aDippqh+NgRy32BJN/Xzb6JddnYn8VjsWw/2o+J4uUHq9LS2hunb6WqXVE7WdxDeBKC3HK4WwQbBJKN0WZQA6v+Qmh1KyYWOVpSRTuR7o5Z0/z8MP0WwRcVzWa7lelEe/dtqsnIn+ifK6/+AwdeAoG3BNfprhP9V0ByQurE7OjuBOODJHr1iDdL5lkb9O59WFcfemNt5V7HSdWjIQQS5J+uAgb5O22cr1w9s1xNwgYgSzB4xKv0SpkmLlLV6xK/zvpbm0UDmKETvG6Z0EenH+x4FZfH5/IhRl+ou423Y5F3OKxHJMJUfOXnoGVYomwL9dIqXNYCBTsfca/I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5445.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(366004)(346002)(136003)(83380400001)(6486002)(4326008)(478600001)(66556008)(34580700001)(66946007)(66476007)(31696002)(16576012)(956004)(38350700002)(38100700002)(2616005)(316002)(36756003)(186003)(8936002)(26005)(8676002)(52116002)(16526019)(53546011)(2906002)(5660300002)(6916009)(86362001)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?utf-8?B?eGM5SWpHcFhpRHhkaXJFSFpFZGhvZlVLZDJwdVQ0R2U4NWNmdWtGWURrWkJk?=
- =?utf-8?B?QVUrT0RSeEFSU3FacmJHVnd0NjNPdFZHRDhSVmh6UkxiQitTelVEd2VQQXFp?=
- =?utf-8?B?WGc3SldHZVM0YVZtVzl1cmFWUXZVaU55K2RIWkl6UXpkNEsrdlQ2cXNhL0Nj?=
- =?utf-8?B?NGRKaGlHSHdLcWdRTjlrbkgrSXdGUmQrVmhOYzQ3UEw1cVd1a0I2bVp3c29v?=
- =?utf-8?B?ckJhRnAyTC8rYmpYTHZoVld6TEp0SytVZUJySys5VWJ1M0lYbGpmNHBGcjVo?=
- =?utf-8?B?UVJlUE9kVW5xMkxVVDRoY2VZYUZOaDY5ZU9BamNZMmFwM0EycU8rV3ErS2ly?=
- =?utf-8?B?NUNJWWZTWXlieHBBZEhuVEE1OWNveTZ4VTJ0eDMwLzFqSWpaK2UwKys0M0I2?=
- =?utf-8?B?OUtwcWQ2MFFNKyttdXhXOFNYdXYvZ2dqUnc0U3NDWkVxZEE4UjFtak1NL2hX?=
- =?utf-8?B?Lzk3R0REanJ3aDN0THJJaGo3Z1ZvTHRieUl5eDg2N3UwQTBndWJUUjd5OGt3?=
- =?utf-8?B?MXBDQlhnM0lxSkFwTDZ0RDUrQWJYNlRLSlRud1QvTktEYUdnYk1kR0FrL1B0?=
- =?utf-8?B?eTJob3FjU0kybEFkYk1qTmJHYVNlK0xQUC9tMHRaTEVFYmZiVUxmZS9uNm04?=
- =?utf-8?B?NzNFSllSYUU4cCtNdFhYOFpzckYzL1dsWG9YRnBaQWN0b0Y5ckQzZDNncmpp?=
- =?utf-8?B?d24xSVF1M1VzSno3UGNUa2Fqc2I1OEgzVS85dGtvUldvQTBjRkJWTkVVTXQ0?=
- =?utf-8?B?eFYvc1E3WmNONjQwMVlDbEwxTFBRTVdrNG9MbklyMFVHT1N1bnZJRWpYY09y?=
- =?utf-8?B?Zm53ekFLaFQ2V3VKSHFTN3ZPNUJIUk1JK2ovNHp0ZGt3OGtocnhXU0tPTzlT?=
- =?utf-8?B?WGx2NVpuWHNKQkxnVkVpTEkrQ2E2Yko2S1FtdVllVE9KS2QxMzZPMm1hVVR6?=
- =?utf-8?B?M2EwMkxIalJQQXk1RmY2SjZqOXZTZ2FiM0hBU3Y5ZGVQL2tEeXlOaXkyQml2?=
- =?utf-8?B?d0kwdERDa2Z2WENCM2MzdUF0MlN2Und1bmd1QUUxMDlzSC84OTdDWDRubjVi?=
- =?utf-8?B?SjFKRU5tWkt3Y1BrVFJOYnVNN1RqNjFVTnFyLzVleFRWVllzdjRTbm1taUgz?=
- =?utf-8?B?S2NYb1JqdHF0YXpselVRN0JjKzJ4VnRKNDFFMERTUjN2WjBZa2lmWHhDMEJn?=
- =?utf-8?B?NU5wVWVDMVc3WDcvRGY5aWVMOHVZSk43dU56S21XaEdVTGlLbE1lSHhqQVlm?=
- =?utf-8?B?TXp6UEFUOHVHeERmZW9IS0tOMnRNSE1xVnJzVlRyQk5ZaDBTK2lUT1N1c0JN?=
- =?utf-8?B?RWZMZk9xT2FRMmdTazdKU201V3hnQVcwSFhQN1J3S0N1aHB0bG0weFI0UjVN?=
- =?utf-8?B?ZGVqQ2hUQW55ZVZkY0UvYzF3ZEljK2xSWHZHSnlyMGgzejE1dFZ6MkZVdjZ0?=
- =?utf-8?B?UFhJYW0yZlhpdWdiWGR3YXhCRXlUaUtKM0V0WEpvR3VNSG1RaW9qMWJ5MnlU?=
- =?utf-8?B?Q0hPZjcrWGxTeDJLNnN0V0F1dWRJTGF3YWJCRHpmZHVNMVdxbzNsU2x2NWEv?=
- =?utf-8?B?U0xoaDMxcHpXdlVobVErZ2Jub0kyWklXZk1LMzlUaXI1a3BYa1BybGZoOW11?=
- =?utf-8?B?STgwNXU4bXR0VjM2NVZ0WUN6b2MzaEgxYzNoZm1OTWJDRGZuUG9KS3NTT3cw?=
- =?utf-8?B?V2owbCt4NkptTE9DR0RjOEhuUXhVMnlGUnliVXpycUFrdzZYTVNBV21wVllQ?=
- =?utf-8?Q?sXiQVBHmpqrJvAwRUADxa1fffyqsB24lADf1BqZ?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7453297-8b4b-4cb9-ba2e-08d913596c86
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5445.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2021 02:15:04.4795
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2qe32OQMJyjaLxcMzpKzeH9o1CkKBR306uUxrLYviGwbwwSUiRGy7d/gEnUnoqwZgJTVBMrqVrxxVkNr/8TZOg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5327
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3926c523-3fdb-66de-8b9c-b68290a5053e@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi James,
 
-
-On 5/5/2021 8:05 PM, Peter Zijlstra wrote:
-> On Wed, May 05, 2021 at 07:39:14PM +0700, Suthikulpanit, Suravee wrote:
->> Peter,
->>
->> On 5/4/2021 7:13 PM, Peter Zijlstra wrote:
->>> On Tue, May 04, 2021 at 06:58:29PM +0700, Suthikulpanit, Suravee wrote:
->>>> Peter,
->>>>
->>>> On 5/4/2021 4:39 PM, Peter Zijlstra wrote:
->>>>> On Tue, May 04, 2021 at 01:52:36AM -0500, Suravee Suthikulpanit wrote:
->>>>>
->>>>>> 2. Since AMD IOMMU PMU does not support interrupt mode, the logic
->>>>>>       can be simplified to always start counting with value zero,
->>>>>>       and accumulate the counter value when stopping without the need
->>>>>>       to keep track and reprogram the counter with the previously read
->>>>>>       counter value.
->>>>>
->>>>> This relies on the hardware counter being the full 64bit wide, is it?
->>>>>
->>>>
->>>> The HW counter value is 48-bit. Not sure why it needs to be 64-bit?
->>>> I might be missing some points here? Could you please describe?
->>>
->>> How do you deal with the 48bit overflow if you don't use the interrupt?
->>
->> The IOMMU Perf driver does not currently handle counter overflow since the overflow
->> notification mechanism (i.e. IOMMU creates an EVENT_COUNTER_ZERO event in the IOMMU event log,
->> and generate an IOMMU MSI interrupt to signal IOMMU driver to process the event.) is not
->> currently supported. When counter overflows, the counter becomes zero, and Perf
->> reports value zero for the event.
->>
->> Alternatively, to detect overflow, we might start counting with value 1 so that
->> we can detect overflow when the value becomes zero in which case the Perf driver
->> could generate error message.
+On Fri, May 07, 2021 at 01:02:35PM +0300, James Clark wrote:
 > 
-> Urgh.. the intel uncore driver programs an hrtimer to periodically fold
-> deltas. That way the counter will never be short.
 > 
+> On 07/05/2021 12:58, James Clark wrote:
+> > There is an intermittent issue on Trogdor devices that
+> > results in all Coresight timestamps having a value of zero.
+> 
+> I've attached a file here that has the issue. From the dump you 
+> can see the zero timestamps:
+> 
+>         Idx:69; ID:10;  I_TIMESTAMP : Timestamp.; Updated val = 0x0
+>         Idx:71; ID:10;  I_ATOM_F1 : Atom format 1.; E
+>         Idx:72; ID:10;  I_ADDR_S_IS0 : Address, Short, IS0.; Addr=0xFFFFFFE723C65824 ~[0x5824]
+> 
+> This doesn't have an impact on decoding as they end up being
+> decoded in file order as in with timeless mode.
 
-Thanks for the info. I'll look into ways to detect and handle counter overflow for this.
-So far, with the current power-gating, it has several restrictions regarding when
-the HW counter can be accessed, which makes it more difficult to handle this.
+Just remind, as Mike has mentioned that if the timestamp is zero, it
+means the hardware setting for timestamp is not enabled properly.  So
+for system wide or per CPU mode tracing, it's better to double check
+what's the reason the timestamp is not enabled properly.
+
+IIUC, this patch breaks the existed rational in the code.  Let's think
+about there have 4 CPUs, every CPU has its own AUX trace buffer, and
+when decode the trace data, it will use 4 queues to track the packets
+and every queue has its timestamp.
+
+  CPU0: cs_etm_queue -> ... -> packet_queue->timestamp
+  CPU1: cs_etm_queue -> ... -> packet_queue->timestamp
+  CPU2: cs_etm_queue -> ... -> packet_queue->timestamp
+  CPU3: cs_etm_queue -> ... -> packet_queue->timestamp
+
+The issue is if all CPUs' timestamp are zero, it's impossible to find
+a way to synthesize samples in the right time order.
+
+[...]
+
+> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > index b01d363b9301..947e44413c6e 100644
+> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > @@ -320,7 +320,10 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
+> >  	 * which instructions started by subtracting the number of instructions
+> >  	 * executed to the timestamp.
+> >  	 */
+> > -	packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
+> > +	if (packet_queue->instr_count >= elem->timestamp)
+> > +		packet_queue->cs_timestamp = 0;
+> > +	else
+> > +		packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
+
+Actually here have two situations: one case is "elem->timestamp" is zero,
+another case is the overflow for "elem->timestamp".
+
+So the change should be like:
+
+   if (!elem->timestamp)
+       packet_queue->cs_timestamp = 0;
+   else if (packet_queue->instr_count >= elem->timestamp)
+       /* handle overflow? */
+   else
+      packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
+
+It's better to think about how to handle the overflow in this case.
 
 Thanks,
-Suravee
+Leo
