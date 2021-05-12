@@ -2,110 +2,223 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B78C43611
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD75C43618
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3738E611AC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE3261285
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237673AbhELQi4 (ORCPT
+        id S233230AbhELQm5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 May 2021 12:38:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239320AbhELQHv (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 May 2021 12:07:51 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0EAC03542E
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 May 2021 08:37:22 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id s22so18441327pgk.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 May 2021 08:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LkdhH7+c0e5NenvwnpF1EhNTDLZfHKCyQtBoZSCgUv8=;
-        b=xnvFRFE5P1SW4ArsaTq+9WNn2bn2wGD9xTssrTIMjyiBm+C2ERsRYlf2SnIFZG+k8K
-         Tj1ckCqdvlHIpsfu+BVfIMg02Iy+0ZnfOCfxdi/OwXiR6d4d50UB1022V1tT/hRO3Cr6
-         /LMiSeisBQ4e1rjGTr+7nQwuifQFPSi1ttJ8wyzlj3Ccwc6GD6q1CpgWo8Cqt9dTsKPb
-         YGXkd3FXSp6uSc1HqkQLZPCJDJjDajT1zYbxISEAW+InbE2gJLw8ehZMfSJCHziE91iW
-         7DeqcYp+A9DJG0vs0Zw/8ELzTDnaxJAIv9M2ucyBMvJxwUOBtsy1p/rWffBRuVMzdP2O
-         PGKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LkdhH7+c0e5NenvwnpF1EhNTDLZfHKCyQtBoZSCgUv8=;
-        b=TlSk4hSLfMP14nPtAUE5DFCIwCHlndYIqW5pLYqxM6k/qe07YuJUjJ2J6W92grgGNs
-         Mq3pQt+UvnCx6ngJPSAfSiArFw7EVibaU5QEe3+2+tsgpSOkM5ILd5Hp8d+S+3w84qMq
-         HHnWDaYJYZ6ACys3faqZhiMXtlCIdnWEId839uQiqoqimbD5C8841yz63FLVQ1xO8D2Y
-         7mFmkYtP3uZwKT0CqCYWUxKqhpq9jpxwoUR0MhbZumIHiwT+HAFXFbYWauPsK35zwuUK
-         JSbjcNoISYzUNe60EefCWQ+0H/sIm1ME9WqJIy5nk+3MyGAArVXOkC2PGM5FWm3JOqYC
-         PhbA==
-X-Gm-Message-State: AOAM530M0G4iEpRVNz4+HG9nFGc0pxSs4aOXcCfvOENHZmyuUy8jqwp1
-        7s3z9XV3i9jpHRLz0D8k6Y6i0Q==
-X-Google-Smtp-Source: ABdhPJzvw/VDOYAkw+NRfNrYJKyNkre0LOhS6gsLFbEQ+4M57hSp6rr3i/18rPTDUXzrIxloxKgJOg==
-X-Received: by 2002:a65:6a07:: with SMTP id m7mr36630365pgu.136.1620833841785;
-        Wed, 12 May 2021 08:37:21 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (li1207-178.members.linode.com. [45.79.108.178])
-        by smtp.gmail.com with ESMTPSA id r22sm258836pgr.1.2021.05.12.08.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 May 2021 08:37:21 -0700 (PDT)
-Date:   Wed, 12 May 2021 23:37:14 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 12 May 2021 12:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240333AbhELQRy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 12 May 2021 12:17:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2353061D6E;
+        Wed, 12 May 2021 15:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1620834221;
+        bh=hm7zlPd3i6DhNWvRiqLjzlRdTb94Y6hFcTU5uPnT8Ww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uT9rc0ZOvRohCJC2lHAO/5C74MyHCyeRFXSXKxVPO8gD/3OAYWxiWDCsA5V+oNSuS
+         Y3/gF6qNgSD/7w+E6a21uUMphGYW9tEkl1kX7i0iCjemSZ47D26AMbiwM64YtnRmr2
+         qITy2uTQZwMZIuHRT9uDyJV8r/j+5vXjgW7b5V/w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Robert Richter <rrichter@amd.com>,
+        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Kim Phillips <kim.phillips@amd.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Al Grant <Al.Grant@arm.com>
-Subject: Re: [PATCH v1 2/3] perf arm-spe: Correct sample flags for dummy event
-Message-ID: <20210512153714.GC121227@leoy-ThinkPad-X240s>
-References: <20210429150100.282180-1-leo.yan@linaro.org>
- <20210429150100.282180-3-leo.yan@linaro.org>
- <f4e483ae-acbb-7afa-c215-cb4244c2e820@arm.com>
- <95d93dcb-e930-a1c7-08e1-be8885d19f64@arm.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Vijay Thakkar <vijaythakkar@me.com>,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCH 5.11 458/601] perf vendor events amd: Fix broken L2 Cache Hits from L2 HWPF metric
+Date:   Wed, 12 May 2021 16:48:55 +0200
+Message-Id: <20210512144842.917574789@linuxfoundation.org>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210512144827.811958675@linuxfoundation.org>
+References: <20210512144827.811958675@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <95d93dcb-e930-a1c7-08e1-be8885d19f64@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+From: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
 
-On Wed, May 12, 2021 at 06:17:03PM +0300, James Clark wrote:
+[ Upstream commit 86c2bc3da769124e3e856b6e9457be3667c30919 ]
 
-[...]
+Commit 08ed77e414ab2342 ("perf vendor events amd: Add recommended events")
+added the hits event "L2 Cache Hits from L2 HWPF" with the same metric
+expression as the accesses event "L2 Cache Accesses from L2 HWPF":
 
-> Apart from this issue above, I've tested the full patchset with various combinations
-> of --per-thread, -a and --timestamp and don't see any issues like missing command names
-> or decode issues. (Apart from -a where Command is reported as '-1', but this issue is
-> present before and after this patchset so is unrelated.)
+$ perf list --details
+...
+  l2_cache_accesses_from_l2_hwpf
+     [L2 Cache Accesses from L2 HWPF]
+     [l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3]
+  l2_cache_hits_from_l2_hwpf
+     [L2 Cache Hits from L2 HWPF]
+     [l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3]
+...
 
-Good finding!  Will take a look for the failure issue with option '-a'.
+This was wrong and led to counting hits the same as accesses. Section
+2.1.15.2 "Performance Measurement" of "PPR for AMD Family 17h Model 31h
+B0 - 55803 Rev 0.54 - Sep 12, 2019", documents the hits event with
+EventCode 0x70 which is the same as l2_pf_hit_l2.
 
-> I think it makes sense to unify the behaviour to make it more like Coresight and others
-> so this is a good change.
-> 
-> Reviewed-by: James Clark <james.clark@arm.com>
-> Tested-by: James Clark <james.clark@arm.com>
+Fix this, and massage the description for l2_pf_hit_l2 as the hits event
+is now the duplicate of l2_pf_hit_l2. AMD recommends using the recommended
+event over other events if the duplicate exists and maintain both for
+consistency. Hence, l2_cache_hits_from_l2_hwpf should override
+l2_pf_hit_l2.
 
-Thanks a lot for the testing,
+Before:
 
-Leo
+ # perf stat -M l2_cache_accesses_from_l2_hwpf,l2_cache_hits_from_l2_hwpf sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+             1,436      l2_pf_miss_l2_l3          # 11114.00 l2_cache_accesses_from_l2_hwpf
+                                                  # 11114.00 l2_cache_hits_from_l2_hwpf
+             4,482      l2_pf_hit_l2
+             5,196      l2_pf_miss_l2_hit_l3
+
+       1.001765339 seconds time elapsed
+
+After:
+
+ # perf stat -M l2_cache_accesses_from_l2_hwpf sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+             1,477      l2_pf_miss_l2_l3          # 10442.00 l2_cache_accesses_from_l2_hwpf
+             3,978      l2_pf_hit_l2
+             4,987      l2_pf_miss_l2_hit_l3
+
+       1.001491186 seconds time elapsed
+
+ # perf stat -e l2_cache_hits_from_l2_hwpf sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+             3,983      l2_cache_hits_from_l2_hwpf
+
+       1.001329970 seconds time elapsed
+
+Note the difference in performance counter values for the accesses
+versus the hits after the fix, and the hits event now counting the same
+as l2_pf_hit_l2.
+
+Fixes: 08ed77e414ab ("perf vendor events amd: Add recommended events")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+Reviewed-by: Robert Richter <rrichter@amd.com>
+Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org> # On a 3900X
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Kim Phillips <kim.phillips@amd.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vijay Thakkar <vijaythakkar@me.com>
+Cc: linux-perf-users@vger.kernel.org
+Link: https://lore.kernel.org/r/20210406215944.113332-2-Smita.KoralahalliChannabasappa@amd.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/pmu-events/arch/x86/amdzen1/cache.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/amdzen1/recommended.json | 6 +++---
+ tools/perf/pmu-events/arch/x86/amdzen2/cache.json       | 2 +-
+ tools/perf/pmu-events/arch/x86/amdzen2/recommended.json | 6 +++---
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+index 4ea7ec4f496e..008f1683e540 100644
+--- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
++++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
+@@ -275,7 +275,7 @@
+   {
+     "EventName": "l2_pf_hit_l2",
+     "EventCode": "0x70",
+-    "BriefDescription": "L2 prefetch hit in L2.",
++    "BriefDescription": "L2 prefetch hit in L2. Use l2_cache_hits_from_l2_hwpf instead.",
+     "UMask": "0xff"
+   },
+   {
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
+index 2cfe2d2f3bfd..3c954543d1ae 100644
+--- a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
++++ b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
+@@ -79,10 +79,10 @@
+     "UMask": "0x70"
+   },
+   {
+-    "MetricName": "l2_cache_hits_from_l2_hwpf",
++    "EventName": "l2_cache_hits_from_l2_hwpf",
++    "EventCode": "0x70",
+     "BriefDescription": "L2 Cache Hits from L2 HWPF",
+-    "MetricExpr": "l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
+-    "MetricGroup": "l2_cache"
++    "UMask": "0xff"
+   },
+   {
+     "EventName": "l3_accesses",
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/cache.json b/tools/perf/pmu-events/arch/x86/amdzen2/cache.json
+index f61b982f83ca..8ba84a48188d 100644
+--- a/tools/perf/pmu-events/arch/x86/amdzen2/cache.json
++++ b/tools/perf/pmu-events/arch/x86/amdzen2/cache.json
+@@ -205,7 +205,7 @@
+   {
+     "EventName": "l2_pf_hit_l2",
+     "EventCode": "0x70",
+-    "BriefDescription": "L2 prefetch hit in L2.",
++    "BriefDescription": "L2 prefetch hit in L2. Use l2_cache_hits_from_l2_hwpf instead.",
+     "UMask": "0xff"
+   },
+   {
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
+index 2ef91e25e661..1c624cee9ef4 100644
+--- a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
++++ b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
+@@ -79,10 +79,10 @@
+     "UMask": "0x70"
+   },
+   {
+-    "MetricName": "l2_cache_hits_from_l2_hwpf",
++    "EventName": "l2_cache_hits_from_l2_hwpf",
++    "EventCode": "0x70",
+     "BriefDescription": "L2 Cache Hits from L2 HWPF",
+-    "MetricExpr": "l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
+-    "MetricGroup": "l2_cache"
++    "UMask": "0xff"
+   },
+   {
+     "EventName": "l3_accesses",
+-- 
+2.30.2
+
+
+
