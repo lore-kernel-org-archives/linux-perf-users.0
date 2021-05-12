@@ -2,126 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B964C43611
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 15:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE78BC43617
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C40BA61C20
+	by mail.kernel.org (Postfix) with ESMTP id 9FCDC61439
 	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 15:57:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234652AbhELP6V (ORCPT
+        id S234714AbhELP61 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 May 2021 11:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236952AbhELPre (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 May 2021 11:47:34 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B35CB615FF;
-        Wed, 12 May 2021 15:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1620833046;
-        bh=jjJSg1UkQ1lgP0jWjsn1+KaxdffEcxoj3ORUXacOc+M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qFV2oicgTFhsw+OD15BogcbG2+RpacUV7JYmYZhsSOrokhtXiWISAIMlpV0wxEC08
-         wJzrgqgm/kyw8TefEg/gww+jNx/MPaoqlr8JPOSYpaVLv6MAoltXLNj6w0nYbQRDvf
-         y5BJABiNAio7i4gJ4yRv87FU+pGK59exPNiQCXJRmwMU8syHmcnkGxYnh/li/OALgb
-         BhOJPBRj4LYnFebICxpSnkq6V09trHJM6deqN14LXfMGbV1rWjA7/VSutA9Nezw5lJ
-         /bN4kh6Z48raCKLSFJGA5lgkarBBZBe3ycL7bgJhgtjFRWH0IoSH8L2LDMYUnQWA/y
-         gc/ryxWSQuPng==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5E3424034C; Wed, 12 May 2021 12:24:03 -0300 (-03)
-Date:   Wed, 12 May 2021 12:24:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Milian Wolff <milian.wolff@kdab.com>
-Cc:     acme@redhat.com, alexey.budankov@linux.intel.com,
+        Wed, 12 May 2021 11:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232053AbhELPvG (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 12 May 2021 11:51:06 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F23BC0610F1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 May 2021 08:23:38 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id k15so5663985pgb.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 May 2021 08:23:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+WmCdrS1TMn2hGqp3nbYKTeNACXqD6MvKMsrI4Gekn0=;
+        b=ByPtxvKS8saS9qVWc0y5uY71My/u0HVJpMZCgL608n9bGPKRUYdqAbwEkPBzAc7uwM
+         fBi0WhHoWYUwqA/au/wpGSRUtAhP1jQtA8bu8YFZg5D/OUWsbZQtYZ/uvmpSIut+WDLb
+         bv1/OWBmIlGFZAFLXnxwkdLQ+uxtVnSGBvaF4x5UwgIbL7npedNrw39k+qTJxPXu0I5J
+         gvS+f3WD2j3/ko6dWje+/9NNLpWRWrRnaKiCVip0yXo6f3l4dVoptqbOlzxRcZH6OK0J
+         S5T8nNXXKurgnm38yzt6GCCs6gMGFkFuxsx9j5r+A06BjrCgPjRubBUU+SlJhSincUMu
+         vozw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+WmCdrS1TMn2hGqp3nbYKTeNACXqD6MvKMsrI4Gekn0=;
+        b=cGLRJ/z82ZxrNabjnsUNoUVWUDcbz0b3byOHArHluNqNPUBwCdlVkiGr3CQtZ3y0/1
+         g4jHcP7J7BlDUiTx7NukX1dM/KP2oNwVCt0XWWTW27IqOL5DiigLsbgtpscUiGZvubDY
+         atuh+0nzZeIxqgwTxN9RSeZ9V/D7Etv/8ralnDXA0aM+YuFs/RDD/HbEbQV/m2NO+ff0
+         5+OzR5d8jSWLgfRXgCneu8XGcUcFI9j6QCWCISiBm+hnhSIBNK3pH3G3kjNIQdSJjlcc
+         FsDMqmuDaRTEc9KaZZFXCoDKfEP6sCjTn5GYglW5z0Vr4ho11ikp3VjAMlm30DjR5ETs
+         a82w==
+X-Gm-Message-State: AOAM5335zap2B4bQe+LqUJd/xtqxADveadeh6dGKLsnARPlEB+lUG0ys
+        PAW7h5s3cCfSJCy1uuR9fRIUWjZOhfqqVJpr
+X-Google-Smtp-Source: ABdhPJwLY9XaqFKgJYjrtqEiHAdJ+BCmFC6M2x0Zd5NgpwhcCAVsHQlmHoBmG8QVDwp0HmaHYuKyyA==
+X-Received: by 2002:a63:8f15:: with SMTP id n21mr35823079pgd.366.1620833017838;
+        Wed, 12 May 2021 08:23:37 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1207-178.members.linode.com. [45.79.108.178])
+        by smtp.gmail.com with ESMTPSA id u15sm4893693pju.44.2021.05.12.08.23.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 May 2021 08:23:37 -0700 (PDT)
+Date:   Wed, 12 May 2021 23:23:30 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@kenel.org
-Subject: Re: [PATCH] perf buildid-list: Initialize zstd_data
-Message-ID: <YJvzE1fE7WRDzw57@kernel.org>
-References: <20210429185759.59870-1-milian.wolff@kdab.com>
- <3144693.egzistUG4v@milian-workstation>
+        Al Grant <Al.Grant@arm.com>
+Subject: Re: [PATCH v1 2/3] perf arm-spe: Correct sample flags for dummy event
+Message-ID: <20210512152330.GA121227@leoy-ThinkPad-X240s>
+References: <20210429150100.282180-1-leo.yan@linaro.org>
+ <20210429150100.282180-3-leo.yan@linaro.org>
+ <f4e483ae-acbb-7afa-c215-cb4244c2e820@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3144693.egzistUG4v@milian-workstation>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <f4e483ae-acbb-7afa-c215-cb4244c2e820@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 12, 2021 at 05:14:29PM +0200, Milian Wolff escreveu:
-> On Donnerstag, 29. April 2021 20:57:59 CEST Milian Wolff wrote:
-> > Fixes segmentation fault when trying to obtain buildid list (e.g. via
-> > perf-archive) from a zstd-compressed `perf.data` file:
+On Wed, May 12, 2021 at 05:39:56PM +0300, James Clark wrote:
 > 
-> Ping, can someone please review and push this upstream? It's such a trivial 
-> fix, I would like to see it fixed upstream.
-
-Fell thru the cracks, processing it now.
-
-- Arnaldo
- 
-> Thanks
 > 
-> > ```
-> >     $ perf record -z ls
-> >     ...
-> >     [ perf record: Captured and wrote 0,010 MB perf.data, compressed
-> > (original 0,001 MB, ratio is 2,190) ] $ memcheck perf buildid-list
-> >     ...
-> >     ==57268== Invalid read of size 4
-> >     ==57268==    at 0x5260D88: ZSTD_decompressStream (in
-> > /usr/lib/libzstd.so.1.4.9) ==57268==    by 0x4BB51B: zstd_decompress_stream
-> > (zstd.c:100)
-> >     ==57268==    by 0x425C6C: perf_session__process_compressed_event
-> > (session.c:73) ==57268==    by 0x427450: perf_session__process_user_event
-> > (session.c:1631) ==57268==    by 0x42A609: reader__process_events
-> > (session.c:2207) ==57268==    by 0x42A609: __perf_session__process_events
-> > (session.c:2264) ==57268==    by 0x42A609: perf_session__process_events
-> > (session.c:2297) ==57268==    by 0x343A62: perf_session__list_build_ids
-> > (builtin-buildid-list.c:88) ==57268==    by 0x343A62: cmd_buildid_list
-> > (builtin-buildid-list.c:120) ==57268==    by 0x3C7732: run_builtin
-> > (perf.c:313)
-> >     ==57268==    by 0x331157: handle_internal_command (perf.c:365)
-> >     ==57268==    by 0x331157: run_argv (perf.c:409)
-> >     ==57268==    by 0x331157: main (perf.c:539)
-> >     ==57268==  Address 0x7470 is not stack'd, malloc'd or (recently) free'd
-> > ```
+> On 29/04/2021 18:00, Leo Yan wrote:
+> > The dummy event is mainly used for mmap, the TIME sample is only needed
+> > for per-cpu case so that the perf tool can rely on the correct timing
+> > for parsing symbols.  And the CPU sample is useless for mmap.
 > > 
-> > Signed-off-by: Milian Wolff <milian.wolff@kdab.com>
+> > This patch enables TIME sample for per-cpu mmap and doesn't enable CPU
+> > sample.  For later extension (e.g. support multiple AUX events), it sets
+> > the dummy event when the condition "opts->full_auxtrace" is true.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > > ---
-> >  tools/perf/builtin-buildid-list.c | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  tools/perf/arch/arm64/util/arm-spe.c | 30 ++++++++++++++++------------
+> >  1 file changed, 17 insertions(+), 13 deletions(-)
 > > 
-> > diff --git a/tools/perf/builtin-buildid-list.c
-> > b/tools/perf/builtin-buildid-list.c index 87f5b1a4a7fa..833405c27dae 100644
-> > --- a/tools/perf/builtin-buildid-list.c
-> > +++ b/tools/perf/builtin-buildid-list.c
-> > @@ -80,6 +80,9 @@ static int perf_session__list_build_ids(bool force, bool
-> > with_hits) if (!perf_header__has_feat(&session->header, HEADER_BUILD_ID))
-> >  		with_hits = true;
-> > 
-> > +	if (zstd_init(&(session->zstd_data), 0) < 0)
-> > +		pr_warning("Decompression initialization failed. Reported data 
-> may be
-> > incomplete.\n"); +
-> >  	/*
-> >  	 * in pipe-mode, the only way to get the buildids is to parse
-> >  	 * the record stream. Buildids are stored as RECORD_HEADER_BUILD_ID
+> > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> > index 902e73a64184..f6eec0900604 100644
+> > --- a/tools/perf/arch/arm64/util/arm-spe.c
+> > +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> > @@ -70,7 +70,6 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+> >  	struct evsel *evsel, *arm_spe_evsel = NULL;
+> >  	struct perf_cpu_map *cpus = evlist->core.cpus;
+> >  	bool privileged = perf_event_paranoid_check(-1);
+> > -	struct evsel *tracking_evsel;
+> >  	int err;
+> >  
+> >  	sper->evlist = evlist;
+> > @@ -126,18 +125,23 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+> >  		evsel__set_sample_bit(arm_spe_evsel, CPU);
+> >  
+> >  	/* Add dummy event to keep tracking */
+> > -	err = parse_events(evlist, "dummy:u", NULL);
+> > -	if (err)
+> > -		return err;
+> > -
+> > -	tracking_evsel = evlist__last(evlist);
+> > -	evlist__set_tracking_event(evlist, tracking_evsel);
+> > -
+> > -	tracking_evsel->core.attr.freq = 0;
+> > -	tracking_evsel->core.attr.sample_period = 1;
+> > -	evsel__set_sample_bit(tracking_evsel, TIME);
+> > -	evsel__set_sample_bit(tracking_evsel, CPU);
+> > -	evsel__reset_sample_bit(tracking_evsel, BRANCH_STACK);
+> > +	if (opts->full_auxtrace) {
+> > +		struct evsel *tracking_evsel;
 > 
+> Hi Leo,
 > 
-> -- 
-> Milian Wolff | milian.wolff@kdab.com | Senior Software Engineer
-> KDAB (Deutschland) GmbH, a KDAB Group company
-> Tel: +49-30-521325470
-> KDAB - The Qt, C++ and OpenGL Experts
+> I know the "if (opts->full_auxtrace)" pattern is copied from other auxtrace
+> files, but I don't think it does anything because there is this at the top
+> of the function:
+> 
+>    	if (!opts->full_auxtrace)
+> 		return 0;
+> 
+> The same applies for other usages of "full_auxtrace" in the same function.
+> They are all always true. I'm also not sure if it's ever defined what
+> full_auxtrace means.
 
+Good pointing.  TBH, I also stuggled for handling "opts->full_auxtrace"
+when wrote the patch; IIUC, "opts->full_auxtrace" is also used in
+builtin-record.c to indicate if the recording contains AUX tracing.
 
+Will follow your suggestion to respin the patch (and refine the code)
+to remove the redundant condition checking for "opts->full_auxtrace".
 
--- 
-
-- Arnaldo
+Thanks,
+Leo
