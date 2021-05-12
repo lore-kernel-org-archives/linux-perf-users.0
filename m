@@ -5,30 +5,30 @@ X-Spam-Level:
 X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD75C43618
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC5AC43140
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE3261285
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669DA61040
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 May 2021 16:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233230AbhELQm5 (ORCPT
+        id S237872AbhELQnN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 May 2021 12:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59022 "EHLO mail.kernel.org"
+        Wed, 12 May 2021 12:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240333AbhELQRy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 May 2021 12:17:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2353061D6E;
-        Wed, 12 May 2021 15:43:41 +0000 (UTC)
+        id S244122AbhELQmg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 12 May 2021 12:42:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3F7BD61D18;
+        Wed, 12 May 2021 16:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1620834221;
+        s=korg; t=1620835856;
         bh=hm7zlPd3i6DhNWvRiqLjzlRdTb94Y6hFcTU5uPnT8Ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uT9rc0ZOvRohCJC2lHAO/5C74MyHCyeRFXSXKxVPO8gD/3OAYWxiWDCsA5V+oNSuS
-         Y3/gF6qNgSD/7w+E6a21uUMphGYW9tEkl1kX7i0iCjemSZ47D26AMbiwM64YtnRmr2
-         qITy2uTQZwMZIuHRT9uDyJV8r/j+5vXjgW7b5V/w=
+        b=WbrSnsOdwck/ONlKe8Lg7V7QsEL0PfFpN4OJb1pSkIyWp44kokB524algYbSNIwcY
+         r3Sb07vQCeY33qt3ZH4BVckLBSUW68fcMN8/xqN/j7z17G7fFgje141BqZwIrDbbSk
+         uy4Oauk6Jwe1T3ZmsFv6ZoWXDkz80Zh9dVAJKJyw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,12 +48,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5.11 458/601] perf vendor events amd: Fix broken L2 Cache Hits from L2 HWPF metric
-Date:   Wed, 12 May 2021 16:48:55 +0200
-Message-Id: <20210512144842.917574789@linuxfoundation.org>
+Subject: [PATCH 5.12 512/677] perf vendor events amd: Fix broken L2 Cache Hits from L2 HWPF metric
+Date:   Wed, 12 May 2021 16:49:18 +0200
+Message-Id: <20210512144854.398935382@linuxfoundation.org>
 X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210512144827.811958675@linuxfoundation.org>
-References: <20210512144827.811958675@linuxfoundation.org>
+In-Reply-To: <20210512144837.204217980@linuxfoundation.org>
+References: <20210512144837.204217980@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
