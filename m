@@ -2,128 +2,211 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52046C433B4
-	for <linux-perf-users@archiver.kernel.org>; Sun, 16 May 2021 08:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E870EC433B4
+	for <linux-perf-users@archiver.kernel.org>; Sun, 16 May 2021 08:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 191AD61104
-	for <linux-perf-users@archiver.kernel.org>; Sun, 16 May 2021 08:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DDD61006
+	for <linux-perf-users@archiver.kernel.org>; Sun, 16 May 2021 08:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234076AbhEPIKk (ORCPT
+        id S234218AbhEPIxf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 16 May 2021 04:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
+        Sun, 16 May 2021 04:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234072AbhEPIKk (ORCPT
+        with ESMTP id S230248AbhEPIxf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 16 May 2021 04:10:40 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA7CC061573;
-        Sun, 16 May 2021 01:09:24 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id a2so4281867lfc.9;
-        Sun, 16 May 2021 01:09:24 -0700 (PDT)
+        Sun, 16 May 2021 04:53:35 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AD2C06174A
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 May 2021 01:52:21 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id g18so1281308pfr.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 May 2021 01:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=vLdi6RJTuoNrFStZDPaeBxFOgBJE/iOLGsGfKwwiURo=;
-        b=fMHLkODsg3TGJisYfnSYl8iZQY8t33pCohE+muLfxWvmzWDEU5f1bHCXKHtnxhLdph
-         OsRYqLXjbVldY1u+gcJ3/2vLFwQtit1h4BvXXXQDZypdDJHoHRbLHx2JYIgxB9C5686i
-         8HoiJXRgTtoScOPrbR0FT9a8rjVfSWRx4ISD4rsO8lSMDwsoN34BjXsufssadQ8vjlCo
-         3W3a90zVrvUdgWvar8gQPqrICUIm1UGTqGhfY8AVoyso7D9HMJ0qrw0IksaCrf74aaEt
-         MLvyhZbkxD7YkkSTyc0+mckDue2SCkkQpZuk7irpbVK+qAFhP2XiC5AzAtV3KcyYXXoY
-         cSOQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=my1Uzq63smYlq0aZ5BNjTy0z1PVgGz1T+UWNunjYlIE=;
+        b=ywZY4TFxPyyEYUw8Wf3TDHpGejYR3Q1+B0teMp/m5zIX+Sugy5E/MSAgvfewp0mxyp
+         bXlQeI2bVz+Qv240bm0vRAnAVIKRDbTU3MEfNiGBuUPjw/FJZUs/IsQ5f+wWiYHXK8j0
+         1B/nvGP56clQHGt/kRlGikLNfL7W85RStvquI3z3HoPS5GKrI7OyibHp02FT/s5XF9GX
+         /nlAXWRt2G3d/ior7+YG6C/sMtcsJKF0ZeqmTh0SI9xhZbt9pybgX/Y1y59bB7G/fgTa
+         TYTa1OFzH1RKeq2Cy/kUmpMS/6r+Skp+NuROf7W6liDFDnhElODVR6qRrwgPL0k0cPPQ
+         6Sow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=vLdi6RJTuoNrFStZDPaeBxFOgBJE/iOLGsGfKwwiURo=;
-        b=ioEsUfd2xexYKtFz21vhNJrZYzbq9887MwN5S2tr/4pZs0KYVENwC8O8n1rn+qcig0
-         xlj43K79YTwl6VT8CWCYnVTAZDHP10N9RRJQ4MqBcZarHKX98YaWDkP8CoTpnMd/ncyR
-         GsSfX2h5LFr4ZTWr6Qwb5WYJ0P+Z5p3iKTPWv9Dt/uVCX3sO/2vmIuoRAyuNGJ7PGruv
-         aEmdk4ZuhbdFMyNahqLFOa8aBx3QYD/T/uMsHk2zqQ79AQhHoNgcPOF7hzt5nHCYs8ff
-         m6r52/FzAzwvURLrGhhLBJp2NYhuiincYjQ94E75Dju4gFhmOKcjkKJ3mKYGZgdF+srd
-         dP0w==
-X-Gm-Message-State: AOAM532FJfb8blGGH9lvY8JsAvH1jZhgqNiFGNMJmqpZGyL5lGDDqrLX
-        XVmjPAFArmvWaRyX4PKqALM=
-X-Google-Smtp-Source: ABdhPJwIO3r51PnUQg6Y+hcj+CR9r/NLqDCDiv88zAp9Gd1/ypjsKfESNoWUTTeI/J9aScKSnWciiQ==
-X-Received: by 2002:a05:6512:34d3:: with SMTP id w19mr3926154lfr.295.1621152562205;
-        Sun, 16 May 2021 01:09:22 -0700 (PDT)
-Received: from [0.0.0.0] ([2a00:b700:2::4:1d2])
-        by smtp.gmail.com with ESMTPSA id j195sm1617373lfj.120.2021.05.16.01.09.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 May 2021 01:09:21 -0700 (PDT)
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        src.res.211@gmail.com
-From:   Haowen Hu <src.res.211@gmail.com>
-Subject: [PATCH] perf/x86: Improve code format
-Message-ID: <523745bf-c399-dc2e-ac57-1d580254802a@gmail.com>
-Date:   Sun, 16 May 2021 16:08:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=my1Uzq63smYlq0aZ5BNjTy0z1PVgGz1T+UWNunjYlIE=;
+        b=ko9ibp1m8e78FaGh8KWULCZaajvwpyltM1WYy/GQPhjSONqLKW3bU7GE4rqrek7iFt
+         cdn/1F4GsrB8EoeuGXrYfLAs91xsHQteJB7cOV/vNzeFmd4xPsSabZERBwu/qh+MoO6J
+         N0/cH00mdlqPhaVL3GEdnKMsJ4D6jDvd3EzuCmNn1oQq/H05HlIbahLTV0rCOMgdUiRD
+         MjwT4hGoZbl/4vIuyCTlhcH89/Kk5v+gbAKLadfZNfgtmXsKfwp0bvFwlaZZvqpgudf4
+         D/mbNlfTa+8zVfeiFGs61WBMEvquCQpNJx5sU2VIKsxnZOrPdmzLl3Fehcwckk6QdwkJ
+         xrOA==
+X-Gm-Message-State: AOAM533zWpMTTl8EtA+Til1k8MSO0jKVmjphqInpbKpi+FsUeUxi50Fi
+        TMcm7YhSzfcdzaWYyGrcsN1N1Q==
+X-Google-Smtp-Source: ABdhPJyA+L+EygDbRxFYR7HmPlyf5t3xdo5Q7O0XJeOn23ry6h/2jqknueCzh/krFIRlQRo1HxIWGA==
+X-Received: by 2002:a63:4706:: with SMTP id u6mr55272506pga.152.1621155140537;
+        Sun, 16 May 2021 01:52:20 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([204.124.180.30])
+        by smtp.gmail.com with ESMTPSA id c71sm1007536pfc.148.2021.05.16.01.52.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 May 2021 01:52:19 -0700 (PDT)
+Date:   Sun, 16 May 2021 16:52:12 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] perf cs-etm: Prevent and warn on underflows
+ during timestamp calculation.
+Message-ID: <20210516085212.GA942578@leoy-ThinkPad-X240s>
+References: <20210513143520.22694-1-james.clark@arm.com>
+ <20210513143520.22694-4-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210513143520.22694-4-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Reformatted several lines of code, in order to satisfy the kernel code
-format.
+On Thu, May 13, 2021 at 05:35:20PM +0300, James Clark wrote:
+> When a zero timestamp is encountered, warn once. This is to make
+> hardware or configuration issues visible. Also suggest that the issue
+> can be worked around with the --itrace=Z option.
+> 
+> When an underflow with a non-zero timestamp occurrs, warn every time.
 
-Signed-off-by: Haowen Hu <src.res.211@gmail.com>
----
-  arch/x86/events/core.c | 2 +-
-  arch/x86/events/rapl.c | 4 ++--
-  2 files changed, 3 insertions(+), 3 deletions(-)
+s/occurrs/occurs
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 8e509325c2c3..8cd61beb97e7 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2829,7 +2829,7 @@ perf_callchain_user32(struct pt_regs *regs, struct 
-perf_callchain_entry_ctx *ent
-  static inline int
-  perf_callchain_user32(struct pt_regs *regs, struct 
-perf_callchain_entry_ctx *entry)
-  {
--    return 0;
-+    return 0;
-  }
-  #endif
+> This is an unexpected scenario, and with increasing timestamps, it's
+> unlikely that it would occur more than once, therefore it should be
+> ok to warn every time.
+> 
+> Only try to calculate the timestamp by subtracting the instruction
+> count if neither of the above cases are true. This makes attempting
+> to decode files with zero timestamps in non-timeless mode
+> more consistent. Currently it can half work if the timestamp wraps
+> around and becomes non-zero, although the behavior is undefined and
+> unpredictable.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 84a1042c3b01..da43975d9929 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -131,7 +131,7 @@ struct rapl_model {
-      enum rapl_unit_quirk    unit_quirk;
-  };
+All three patches look good to me:
 
-- /* 1/2^hw_unit Joule */
-+/* 1/2^hw_unit Joule */
-  static int rapl_hw_unit[NR_RAPL_DOMAINS] __read_mostly;
-  static struct rapl_pmus *rapl_pmus;
-  static cpumask_t rapl_cpu_mask;
-@@ -209,7 +209,7 @@ static u64 rapl_event_update(struct perf_event *event)
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-  static void rapl_start_hrtimer(struct rapl_pmu *pmu)
-  {
--       hrtimer_start(&pmu->hrtimer, pmu->timer_interval,
-+    hrtimer_start(&pmu->hrtimer, pmu->timer_interval,
-               HRTIMER_MODE_REL_PINNED);
-  }
-
--- 
-2.25.1
-
+> ---
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 45 ++++++++++++++-----
+>  1 file changed, 34 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> index b01d363b9301..3e1a05bc82cc 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> @@ -6,6 +6,7 @@
+>   * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
+>   */
+>  
+> +#include <asm/bug.h>
+>  #include <linux/coresight-pmu.h>
+>  #include <linux/err.h>
+>  #include <linux/list.h>
+> @@ -17,6 +18,7 @@
+>  
+>  #include "cs-etm.h"
+>  #include "cs-etm-decoder.h"
+> +#include "debug.h"
+>  #include "intlist.h"
+>  
+>  /* use raw logging */
+> @@ -294,7 +296,8 @@ cs_etm_decoder__do_soft_timestamp(struct cs_etm_queue *etmq,
+>  static ocsd_datapath_resp_t
+>  cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
+>  				  const ocsd_generic_trace_elem *elem,
+> -				  const uint8_t trace_chan_id)
+> +				  const uint8_t trace_chan_id,
+> +				  const ocsd_trc_index_t indx)
+>  {
+>  	struct cs_etm_packet_queue *packet_queue;
+>  
+> @@ -313,14 +316,33 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
+>  		return OCSD_RESP_CONT;
+>  	}
+>  
+> -	/*
+> -	 * This is the first timestamp we've seen since the beginning of traces
+> -	 * or a discontinuity.  Since timestamps packets are generated *after*
+> -	 * range packets have been generated, we need to estimate the time at
+> -	 * which instructions started by subtracting the number of instructions
+> -	 * executed to the timestamp.
+> -	 */
+> -	packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
+> +
+> +	if (!elem->timestamp) {
+> +		/*
+> +		 * Zero timestamps can be seen due to misconfiguration or hardware bugs.
+> +		 * Warn once, and don't try to subtract instr_count as it would result in an
+> +		 * underflow.
+> +		 */
+> +		packet_queue->cs_timestamp = 0;
+> +		WARN_ONCE(true, "Zero Coresight timestamp found at Idx:%" OCSD_TRC_IDX_STR
+> +				". Decoding may be improved with --itrace=Z...\n", indx);
+> +	} else if (packet_queue->instr_count > elem->timestamp) {
+> +		/*
+> +		 * Sanity check that the elem->timestamp - packet_queue->instr_count would not
+> +		 * result in an underflow. Warn and clamp at 0 if it would.
+> +		 */
+> +		packet_queue->cs_timestamp = 0;
+> +		pr_err("Timestamp calculation underflow at Idx:%" OCSD_TRC_IDX_STR "\n", indx);
+> +	} else {
+> +		/*
+> +		 * This is the first timestamp we've seen since the beginning of traces
+> +		 * or a discontinuity.  Since timestamps packets are generated *after*
+> +		 * range packets have been generated, we need to estimate the time at
+> +		 * which instructions started by subtracting the number of instructions
+> +		 * executed to the timestamp.
+> +		 */
+> +		packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
+> +	}
+>  	packet_queue->next_cs_timestamp = elem->timestamp;
+>  	packet_queue->instr_count = 0;
+>  
+> @@ -542,7 +564,7 @@ cs_etm_decoder__set_tid(struct cs_etm_queue *etmq,
+>  
+>  static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+>  				const void *context,
+> -				const ocsd_trc_index_t indx __maybe_unused,
+> +				const ocsd_trc_index_t indx,
+>  				const u8 trace_chan_id __maybe_unused,
+>  				const ocsd_generic_trace_elem *elem)
+>  {
+> @@ -579,7 +601,8 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
+>  		break;
+>  	case OCSD_GEN_TRC_ELEM_TIMESTAMP:
+>  		resp = cs_etm_decoder__do_hard_timestamp(etmq, elem,
+> -							 trace_chan_id);
+> +							 trace_chan_id,
+> +							 indx);
+>  		break;
+>  	case OCSD_GEN_TRC_ELEM_PE_CONTEXT:
+>  		resp = cs_etm_decoder__set_tid(etmq, packet_queue,
+> -- 
+> 2.28.0
+> 
