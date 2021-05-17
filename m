@@ -2,170 +2,204 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25645C433B4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 May 2021 13:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 153B7C433ED
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 May 2021 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE2A610E9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 May 2021 13:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E99E661454
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 May 2021 14:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237334AbhEQNTX (ORCPT
+        id S236354AbhEQOMm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 May 2021 09:19:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:51208 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237341AbhEQNTW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 May 2021 09:19:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D24A1424;
-        Mon, 17 May 2021 06:18:06 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.3.96])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7D96B3F73B;
-        Mon, 17 May 2021 06:18:03 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, leo.yan@linaro.org
-Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] perf cs-etm: Prevent and warn on underflows during timestamp calculation.
-Date:   Mon, 17 May 2021 16:17:41 +0300
-Message-Id: <20210517131741.3027-4-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210517131741.3027-1-james.clark@arm.com>
-References: <20210517131741.3027-1-james.clark@arm.com>
+        Mon, 17 May 2021 10:12:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10376 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238523AbhEQOLD (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 17 May 2021 10:11:03 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14HE4BCL055678;
+        Mon, 17 May 2021 10:09:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=Q0TO+kcuIjMe7MQJjWxd00opYUXpbEKIDdLPIWA61EE=;
+ b=fR+CdIhZTjfDOPqqpqM9jVfj7hk/PTic6+23oGbYH65Fk0mHmoN1izaCE/WLO+knV6zl
+ ghe3sgUEZMmYAtJK/6UIXsRkaWn/YYuMrX3W9G1Cr2isWWVsB/aWQtPPvgvvraHQRrai
+ jZNTdn808JEKGbeCgLmTUJh3GhlQ9jVHtQt9lJuGmvaVsCqv8QcF6BYTrwhEisayRaLC
+ 4R0XzMYNRBvDNXDZnD0+NB9nzAyWv7MhSgsGKLLkCawN8kFbTC80UyFzjnYwu37lL66H
+ 2BmsrG4Y62lhOzwSAIiQr4KCkfcfDofW8cEwKr75rJ+iwPBQh/9St2dpWKAlyzazMGKp ZQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38ksefs9um-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 May 2021 10:09:45 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14HE4HEV056134;
+        Mon, 17 May 2021 10:09:45 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 38ksefs9su-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 May 2021 10:09:45 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.43/8.16.0.43) with SMTP id 14HDw38e026118;
+        Mon, 17 May 2021 14:09:43 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma05fra.de.ibm.com with ESMTP id 38j5x8gfft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 May 2021 14:09:43 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14HE9e4j35848492
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 May 2021 14:09:40 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 161835204E;
+        Mon, 17 May 2021 14:09:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BE9D952052;
+        Mon, 17 May 2021 14:09:39 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, eranian@google.com
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf test: Test libpfm4 support (63) reports error
+Date:   Mon, 17 May 2021 16:09:31 +0200
+Message-Id: <20210517140931.2559364-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: px00ve8kV28Y_SWxZdlxTC5a_hl8PJ__
+X-Proofpoint-GUID: WTUrRuid7QW42ruRZYtS0fNkviNr83Lt
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-05-17_05:2021-05-17,2021-05-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 spamscore=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2105170100
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When a zero timestamp is encountered, warn once. This is to make
-hardware or configuration issues visible. Also suggest that the issue
-can be worked around with the --itrace=Z option.
+Compiling perf with make LIBPFM4=1 includes libpfm support and
+enables test case 63 'Test libpfm4 support'. This test reports an error
+on all platforms for subtest 63.2 'test groups of --pfm-events'.
+The reported error message is 'nested event groups not supported'
 
-When an underflow with a non-zero timestamp occurs, warn every time.
-This is an unexpected scenario, and with increasing timestamps, it's
-unlikely that it would occur more than once, therefore it should be
-ok to warn every time.
+ # ./perf test -F 63
+ 63: Test libpfm4 support                                            :
+ 63.1: test of individual --pfm-events                               :
+ Error:
+ failed to parse event stereolab : event not found
+ Error:
+ failed to parse event stereolab,instructions : event not found
+ Error:
+ failed to parse event instructions,stereolab : event not found
+  Ok
+ 63.2: test groups of --pfm-events                                   :
+ Error:
+ nested event groups not supported    <------ Error message here
+ Error:
+ failed to parse event {stereolab} : event not found
+ Error:
+ failed to parse event {instructions,cycles},{instructions,stereolab} :\
+	 event not found
+ Ok
+ #
 
-Only try to calculate the timestamp by subtracting the instruction
-count if neither of the above cases are true. This makes attempting
-to decode files with zero timestamps in non-timeless mode
-more consistent. Currently it can half work if the timestamp wraps
-around and becomes non-zero, although the behavior is undefined and
-unpredictable.
+This patch addresses the error message 'nested event groups not supported'.
+The root cause is function parse_libpfm_events_option() which parses the
+event string '{},{instructions}' and can not handle a leading empty
+group notation '{},...'.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: James Clark <james.clark@arm.com>
+The code detects the first (empty) group indicator '{' but does not
+terminate group processing on the following group closing character '}'.
+So when the second group indicator '{' is detected, the code assumes
+a nested group and returns an error.
+
+With the error message fixed, also change the expected event number to
+one for the test case to succeed.
+
+While at it also fix a memory leak. In good case the function does not
+free the duplicated string given as first parameter.
+
+Output after:
+ # ./perf test -F 63
+ 63: Test libpfm4 support                                            :
+ 63.1: test of individual --pfm-events                               :
+ Error:
+ failed to parse event stereolab : event not found
+ Error:
+ failed to parse event stereolab,instructions : event not found
+ Error:
+ failed to parse event instructions,stereolab : event not found
+  Ok
+ 63.2: test groups of --pfm-events                                   :
+ Error:
+ failed to parse event {stereolab} : event not found
+ Error:
+ failed to parse event {instructions,cycles},{instructions,stereolab} : \
+	 event not found
+  Ok
+ #
+Error message 'nested event groups not supported' is gone.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
 ---
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 45 ++++++++++++++-----
- 1 file changed, 34 insertions(+), 11 deletions(-)
+ tools/perf/tests/pfm.c |  4 ++--
+ tools/perf/util/pfm.c  | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index b01d363b9301..3e1a05bc82cc 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -6,6 +6,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
+diff --git a/tools/perf/tests/pfm.c b/tools/perf/tests/pfm.c
+index 76a53126efdf..d4b0ef74defc 100644
+--- a/tools/perf/tests/pfm.c
++++ b/tools/perf/tests/pfm.c
+@@ -131,8 +131,8 @@ static int test__pfm_group(void)
+ 		},
+ 		{
+ 			.events = "{},{instructions}",
+-			.nr_events = 0,
+-			.nr_groups = 0,
++			.nr_events = 1,
++			.nr_groups = 1,
+ 		},
+ 		{
+ 			.events = "{instructions},{instructions}",
+diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+index d735acb6c29c..6eef6dfeaa57 100644
+--- a/tools/perf/util/pfm.c
++++ b/tools/perf/util/pfm.c
+@@ -62,8 +62,16 @@ int parse_libpfm_events_option(const struct option *opt, const char *str,
+ 		}
  
-+#include <asm/bug.h>
- #include <linux/coresight-pmu.h>
- #include <linux/err.h>
- #include <linux/list.h>
-@@ -17,6 +18,7 @@
+ 		/* no event */
+-		if (*q == '\0')
++		if (*q == '\0') {
++			if (*sep == '}') {
++				if (grp_evt < 0) {
++					ui__error("cannot close a non-existing event group\n");
++					goto error;
++				}
++				grp_evt--;
++			}
+ 			continue;
++		}
  
- #include "cs-etm.h"
- #include "cs-etm-decoder.h"
-+#include "debug.h"
- #include "intlist.h"
- 
- /* use raw logging */
-@@ -294,7 +296,8 @@ cs_etm_decoder__do_soft_timestamp(struct cs_etm_queue *etmq,
- static ocsd_datapath_resp_t
- cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- 				  const ocsd_generic_trace_elem *elem,
--				  const uint8_t trace_chan_id)
-+				  const uint8_t trace_chan_id,
-+				  const ocsd_trc_index_t indx)
- {
- 	struct cs_etm_packet_queue *packet_queue;
- 
-@@ -313,14 +316,33 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
- 		return OCSD_RESP_CONT;
+ 		memset(&attr, 0, sizeof(attr));
+ 		event_attr_init(&attr);
+@@ -107,6 +115,7 @@ int parse_libpfm_events_option(const struct option *opt, const char *str,
+ 			grp_evt = -1;
+ 		}
  	}
- 
--	/*
--	 * This is the first timestamp we've seen since the beginning of traces
--	 * or a discontinuity.  Since timestamps packets are generated *after*
--	 * range packets have been generated, we need to estimate the time at
--	 * which instructions started by subtracting the number of instructions
--	 * executed to the timestamp.
--	 */
--	packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
-+
-+	if (!elem->timestamp) {
-+		/*
-+		 * Zero timestamps can be seen due to misconfiguration or hardware bugs.
-+		 * Warn once, and don't try to subtract instr_count as it would result in an
-+		 * underflow.
-+		 */
-+		packet_queue->cs_timestamp = 0;
-+		WARN_ONCE(true, "Zero Coresight timestamp found at Idx:%" OCSD_TRC_IDX_STR
-+				". Decoding may be improved with --itrace=Z...\n", indx);
-+	} else if (packet_queue->instr_count > elem->timestamp) {
-+		/*
-+		 * Sanity check that the elem->timestamp - packet_queue->instr_count would not
-+		 * result in an underflow. Warn and clamp at 0 if it would.
-+		 */
-+		packet_queue->cs_timestamp = 0;
-+		pr_err("Timestamp calculation underflow at Idx:%" OCSD_TRC_IDX_STR "\n", indx);
-+	} else {
-+		/*
-+		 * This is the first timestamp we've seen since the beginning of traces
-+		 * or a discontinuity.  Since timestamps packets are generated *after*
-+		 * range packets have been generated, we need to estimate the time at
-+		 * which instructions started by subtracting the number of instructions
-+		 * executed to the timestamp.
-+		 */
-+		packet_queue->cs_timestamp = elem->timestamp - packet_queue->instr_count;
-+	}
- 	packet_queue->next_cs_timestamp = elem->timestamp;
- 	packet_queue->instr_count = 0;
- 
-@@ -542,7 +564,7 @@ cs_etm_decoder__set_tid(struct cs_etm_queue *etmq,
- 
- static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
- 				const void *context,
--				const ocsd_trc_index_t indx __maybe_unused,
-+				const ocsd_trc_index_t indx,
- 				const u8 trace_chan_id __maybe_unused,
- 				const ocsd_generic_trace_elem *elem)
- {
-@@ -579,7 +601,8 @@ static ocsd_datapath_resp_t cs_etm_decoder__gen_trace_elem_printer(
- 		break;
- 	case OCSD_GEN_TRC_ELEM_TIMESTAMP:
- 		resp = cs_etm_decoder__do_hard_timestamp(etmq, elem,
--							 trace_chan_id);
-+							 trace_chan_id,
-+							 indx);
- 		break;
- 	case OCSD_GEN_TRC_ELEM_PE_CONTEXT:
- 		resp = cs_etm_decoder__set_tid(etmq, packet_queue,
++	free(p_orig);
+ 	return 0;
+ error:
+ 	free(p_orig);
 -- 
-2.28.0
+2.31.1
 
