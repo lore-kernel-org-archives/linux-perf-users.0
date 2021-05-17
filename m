@@ -2,73 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4344FC433ED
-	for <linux-perf-users@archiver.kernel.org>; Sun, 16 May 2021 12:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9155C43461
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 May 2021 08:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C78D61075
-	for <linux-perf-users@archiver.kernel.org>; Sun, 16 May 2021 12:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CC16121F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 May 2021 08:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232458AbhEPMRN (ORCPT
+        id S232924AbhEQIGr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 16 May 2021 08:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbhEPMRN (ORCPT
+        Mon, 17 May 2021 04:06:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:3777 "EHLO
+        szxga04-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232195AbhEQIGq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 16 May 2021 08:17:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD2AC061573;
-        Sun, 16 May 2021 05:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dHP6r2DtDtGoZZly7AA5EZIa9h/com+KPWget/NtC9c=; b=nK6c1qsjUtKQ6MPUYDQu4o/VEG
-        Z3TnfGwyhlqFQTOsSq13h80W8pfDiFGf1SkYDxw7j4SuPqRcPzUeSnZWni1s+QxbmqjTy+lZIwcLo
-        JlIyaGVS7Qyz/BG8+Z003fVMfaqtT1Txg/uraPK27sKJeL3J/7BV3IGTr706xObaxqjGhF7zwdCib
-        SLVn75KZsEzRhwKTXWTAkzRngNi7yYHlkhmuKSgjMcG3GvXCQ1C9GxcXW3ubje96C6tmS0PjrySkN
-        s9l6TxIZu7kZdJMICpCyBmlFqP5x0PCRuKeZMFxxIgbgfv2vh3GPZT3camgGgzxPGmIfIPdg0vOMF
-        63a1ydRw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1liFg2-00C04c-47; Sun, 16 May 2021 12:15:24 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C158F30021B;
-        Sun, 16 May 2021 14:15:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 68FD6312D6791; Sun, 16 May 2021 14:15:18 +0200 (CEST)
-Date:   Sun, 16 May 2021 14:15:18 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Haowen Hu <src.res.211@gmail.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de, bp@alien8.de,
-        x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86: Improve code format
-Message-ID: <YKEM1qrJ5nhdWXHj@hirez.programming.kicks-ass.net>
-References: <523745bf-c399-dc2e-ac57-1d580254802a@gmail.com>
+        Mon, 17 May 2021 04:06:46 -0400
+Received: from dggems701-chm.china.huawei.com (unknown [172.30.72.60])
+        by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4FkBRr13V7zmjFf;
+        Mon, 17 May 2021 16:02:00 +0800 (CST)
+Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
+ dggems701-chm.china.huawei.com (10.3.19.178) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Mon, 17 May 2021 16:05:27 +0800
+Received: from huawei.com (10.175.127.227) by dggema762-chm.china.huawei.com
+ (10.1.198.204) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.2; Mon, 17
+ May 2021 16:05:26 +0800
+From:   Yu Kuai <yukuai3@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>
+Subject: [PATCH] perf stat: Fix error return code in bperf__load()
+Date:   Mon, 17 May 2021 16:12:54 +0800
+Message-ID: <20210517081254.1561564-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <523745bf-c399-dc2e-ac57-1d580254802a@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.127.227]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggema762-chm.china.huawei.com (10.1.198.204)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, May 16, 2021 at 04:08:54PM +0800, Haowen Hu wrote:
-> Reformatted several lines of code, in order to satisfy the kernel code
-> format.
-> 
-> Signed-off-by: Haowen Hu <src.res.211@gmail.com>
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-Your patch is whitespace damaged, also please take your efforts
-elsewhere, I don't much care for random nothing changes like this.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ tools/perf/util/bpf_counter.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index ddb52f748c8e..843b20aa6688 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -522,6 +522,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+ 	evsel->bperf_leader_link_fd = bpf_link_get_fd_by_id(entry.link_id);
+ 	if (evsel->bperf_leader_link_fd < 0 &&
+ 	    bperf_reload_leader_program(evsel, attr_map_fd, &entry))
++		err = -1;
+ 		goto out;
+ 
+ 	/*
+@@ -550,6 +551,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+ 	/* Step 2: load the follower skeleton */
+ 	evsel->follower_skel = bperf_follower_bpf__open();
+ 	if (!evsel->follower_skel) {
++		err = -1;
+ 		pr_err("Failed to open follower skeleton\n");
+ 		goto out;
+ 	}
+-- 
+2.25.4
+
