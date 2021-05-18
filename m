@@ -2,179 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91093C433ED
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 May 2021 02:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B77EC433ED
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 May 2021 12:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 660F261185
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 May 2021 02:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6370D6124C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 May 2021 12:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239534AbhERCtF (ORCPT
+        id S1349372AbhERMzY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 May 2021 22:49:05 -0400
-Received: from mga09.intel.com ([134.134.136.24]:2437 "EHLO mga09.intel.com"
+        Tue, 18 May 2021 08:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240178AbhERCtF (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 May 2021 22:49:05 -0400
-IronPort-SDR: wbxYwm6rViC8tGLCD5KxqxGIrpZl3GGSA8o34PnPUjmFT35xwtMF1bX6qS9IZgbYzM99AEK8zl
- u2m1pFcW9ibg==
-X-IronPort-AV: E=McAfee;i="6200,9189,9987"; a="200661003"
-X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
-   d="scan'208";a="200661003"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2021 19:47:47 -0700
-IronPort-SDR: 0ETGkgJO6ZwGEzJiT1rne0huIai9APDVHRq6ADjhpKfqUbLGpgbJsbDddDUxWZW7PM+YDgDqZ8
- AE5rQ/dG4GAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.82,307,1613462400"; 
-   d="scan'208";a="472709826"
-Received: from clx-ap-likexu.sh.intel.com ([10.239.48.108])
-  by orsmga001.jf.intel.com with ESMTP; 17 May 2021 19:47:44 -0700
-From:   Like Xu <like.xu@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        id S233502AbhERMzY (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 18 May 2021 08:55:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C5DC8611CE;
+        Tue, 18 May 2021 12:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621342446;
+        bh=9lenmshXeiU9okb7x8EkrhziX5DvkNFHZglZh7iyXh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=egpyDl4iUgrv2k9SFO6wiHiM/2OrxIisPsq+vXi7qXou6Y+v69xqzKI/01hNz9h8m
+         RzIDqHAjWtdIOzCj0CNZ+aoZhvxZrS5bYUC4e0ay8R+Oymjq41InC9yUU/g4ZsFupI
+         UIPaOLRXfaOWmR8FarVNHLvAas8SDJE2Xw8iOqdj33YyItotVb1W16DPzr1fxmYsCe
+         bToqkAWhyBYF1LJD88nLHvN/WFaasieqIN+W+lY8aVPUjyzz64m/TW7OMgisxA8pn6
+         7jZiE/pduJdUMvuaZdaIU1CjEx60nnqTjBRCUBUfOs5hKCpma7QEA9kmEHvpyCBIoY
+         aaUKHr3zM3Bnw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 84B864034C; Tue, 18 May 2021 09:54:02 -0300 (-03)
+Date:   Tue, 18 May 2021 09:54:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Clark <james.clark@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Like Xu <like.xu@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf/x86/intel: Fix PEBS-via-PT reload base value for Extended PEBS
-Date:   Tue, 18 May 2021 10:46:29 +0800
-Message-Id: <20210518024629.1112867-1-like.xu@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
+        Al Grant <Al.Grant@arm.com>
+Subject: Re: [PATCH v1 2/3] perf arm-spe: Correct sample flags for dummy event
+Message-ID: <YKO46nX17/GjqJjV@kernel.org>
+References: <20210429150100.282180-1-leo.yan@linaro.org>
+ <20210429150100.282180-3-leo.yan@linaro.org>
+ <f4e483ae-acbb-7afa-c215-cb4244c2e820@arm.com>
+ <20210512152330.GA121227@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210512152330.GA121227@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If we use the "PEBS-via-PT" feature on a platform that supports
-extended PBES, like this:
+Em Wed, May 12, 2021 at 11:23:30PM +0800, Leo Yan escreveu:
+> On Wed, May 12, 2021 at 05:39:56PM +0300, James Clark wrote:
+> > 
+> > 
+> > On 29/04/2021 18:00, Leo Yan wrote:
+> > > The dummy event is mainly used for mmap, the TIME sample is only needed
+> > > for per-cpu case so that the perf tool can rely on the correct timing
+> > > for parsing symbols.  And the CPU sample is useless for mmap.
+> > > 
+> > > This patch enables TIME sample for per-cpu mmap and doesn't enable CPU
+> > > sample.  For later extension (e.g. support multiple AUX events), it sets
+> > > the dummy event when the condition "opts->full_auxtrace" is true.
+> > > 
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  tools/perf/arch/arm64/util/arm-spe.c | 30 ++++++++++++++++------------
+> > >  1 file changed, 17 insertions(+), 13 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+> > > index 902e73a64184..f6eec0900604 100644
+> > > --- a/tools/perf/arch/arm64/util/arm-spe.c
+> > > +++ b/tools/perf/arch/arm64/util/arm-spe.c
+> > > @@ -70,7 +70,6 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+> > >  	struct evsel *evsel, *arm_spe_evsel = NULL;
+> > >  	struct perf_cpu_map *cpus = evlist->core.cpus;
+> > >  	bool privileged = perf_event_paranoid_check(-1);
+> > > -	struct evsel *tracking_evsel;
+> > >  	int err;
+> > >  
+> > >  	sper->evlist = evlist;
+> > > @@ -126,18 +125,23 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+> > >  		evsel__set_sample_bit(arm_spe_evsel, CPU);
+> > >  
+> > >  	/* Add dummy event to keep tracking */
+> > > -	err = parse_events(evlist, "dummy:u", NULL);
+> > > -	if (err)
+> > > -		return err;
+> > > -
+> > > -	tracking_evsel = evlist__last(evlist);
+> > > -	evlist__set_tracking_event(evlist, tracking_evsel);
+> > > -
+> > > -	tracking_evsel->core.attr.freq = 0;
+> > > -	tracking_evsel->core.attr.sample_period = 1;
+> > > -	evsel__set_sample_bit(tracking_evsel, TIME);
+> > > -	evsel__set_sample_bit(tracking_evsel, CPU);
+> > > -	evsel__reset_sample_bit(tracking_evsel, BRANCH_STACK);
+> > > +	if (opts->full_auxtrace) {
+> > > +		struct evsel *tracking_evsel;
+> > 
+> > Hi Leo,
+> > 
+> > I know the "if (opts->full_auxtrace)" pattern is copied from other auxtrace
+> > files, but I don't think it does anything because there is this at the top
+> > of the function:
+> > 
+> >    	if (!opts->full_auxtrace)
+> > 		return 0;
+> > 
+> > The same applies for other usages of "full_auxtrace" in the same function.
+> > They are all always true. I'm also not sure if it's ever defined what
+> > full_auxtrace means.
+> 
+> Good pointing.  TBH, I also stuggled for handling "opts->full_auxtrace"
+> when wrote the patch; IIUC, "opts->full_auxtrace" is also used in
+> builtin-record.c to indicate if the recording contains AUX tracing.
+> 
+> Will follow your suggestion to respin the patch (and refine the code)
+> to remove the redundant condition checking for "opts->full_auxtrace".
 
-    perf record -c 10000 \
-    -e '{intel_pt/branch=0/,branch-instructions/aux-output/p}' uname
+Ok, so please collect his Tested-by and Reviewed-by and I'll wait for v2
+then,
 
-we will encounter the following call trace:
-
-[  250.906542] unchecked MSR access error: WRMSR to 0x14e1 (tried to write
-0x0000000000000000) at rIP: 0xffffffff88073624 (native_write_msr+0x4/0x20)
-[  250.920779] Call Trace:
-[  250.923508]  intel_pmu_pebs_enable+0x12c/0x190
-[  250.928359]  intel_pmu_enable_event+0x346/0x390
-[  250.933300]  x86_pmu_start+0x64/0x80
-[  250.937231]  x86_pmu_enable+0x16a/0x2f0
-[  250.941434]  perf_event_exec+0x144/0x4c0
-[  250.945731]  begin_new_exec+0x650/0xbf0
-[  250.949933]  load_elf_binary+0x13e/0x1700
-[  250.954321]  ? lock_acquire+0xc2/0x390
-[  250.958430]  ? bprm_execve+0x34f/0x8a0
-[  250.962544]  ? lock_is_held_type+0xa7/0x120
-[  250.967118]  ? find_held_lock+0x32/0x90
-[  250.971321]  ? sched_clock_cpu+0xc/0xb0
-[  250.975527]  bprm_execve+0x33d/0x8a0
-[  250.979452]  do_execveat_common.isra.0+0x161/0x1d0
-[  250.984673]  __x64_sys_execve+0x33/0x40
-[  250.988877]  do_syscall_64+0x3d/0x80
-[  250.992806]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-[  250.998302] RIP: 0033:0x7fbc971d82fb
-[  251.002235] Code: Unable to access opcode bytes at RIP 0x7fbc971d82d1.
-[  251.009303] RSP: 002b:00007fffb8aed808 EFLAGS: 00000202 ORIG_RAX: 000000000000003b
-[  251.017478] RAX: ffffffffffffffda RBX: 00007fffb8af2f00 RCX: 00007fbc971d82fb
-[  251.025187] RDX: 00005574792aac50 RSI: 00007fffb8af2f00 RDI: 00007fffb8aed810
-[  251.032901] RBP: 00007fffb8aed970 R08: 0000000000000020 R09: 00007fbc9725c8b0
-[  251.040613] R10: 6d6c61632f6d6f63 R11: 0000000000000202 R12: 00005574792aac50
-[  251.048327] R13: 00007fffb8af35f0 R14: 00005574792aafdf R15: 00005574792aafe7
-
-This is because the target reload msr address is calculated
-based on the wrong base msr and the target reload msr value
-is accessed from ds->pebs_event_reset[] with the wrong offset.
-
-According to Intel SDM Table 2-14, for extended PBES feature,
-the reload msr for MSR_IA32_FIXED_CTRx should be based on
-MSR_RELOAD_FIXED_CTRx.
-
-For fixed counters, let's fix it by overriding the reload msr
-address and its value, thus avoiding out-of-bounds access.
-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Fix: 42880f726c("perf/x86/intel: Support PEBS output to PT")
-Signed-off-by: Like Xu <like.xu@linux.intel.com>
----
- arch/x86/events/intel/ds.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 1ec8fd311f38..8647713276a7 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1187,6 +1187,9 @@ static void intel_pmu_pebs_via_pt_enable(struct perf_event *event)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct debug_store *ds = cpuc->ds;
-+	u64 value = ds->pebs_event_reset[hwc->idx];
-+	u32 base = MSR_RELOAD_PMC0;
-+	unsigned int idx = hwc->idx;
- 
- 	if (!is_pebs_pt(event))
- 		return;
-@@ -1196,7 +1199,12 @@ static void intel_pmu_pebs_via_pt_enable(struct perf_event *event)
- 
- 	cpuc->pebs_enabled |= PEBS_OUTPUT_PT;
- 
--	wrmsrl(MSR_RELOAD_PMC0 + hwc->idx, ds->pebs_event_reset[hwc->idx]);
-+	if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
-+		base = MSR_RELOAD_FIXED_CTR0;
-+		idx = hwc->idx - INTEL_PMC_IDX_FIXED;
-+		value = ds->pebs_event_reset[MAX_PEBS_EVENTS + idx];
-+	}
-+	wrmsrl(base + idx, value);
- }
- 
- void intel_pmu_pebs_enable(struct perf_event *event)
-@@ -1204,6 +1212,7 @@ void intel_pmu_pebs_enable(struct perf_event *event)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct debug_store *ds = cpuc->ds;
-+	unsigned int idx = hwc->idx;
- 
- 	hwc->config &= ~ARCH_PERFMON_EVENTSEL_INT;
- 
-@@ -1222,19 +1231,18 @@ void intel_pmu_pebs_enable(struct perf_event *event)
- 		}
- 	}
- 
-+	if (idx >= INTEL_PMC_IDX_FIXED)
-+		idx = MAX_PEBS_EVENTS + (idx - INTEL_PMC_IDX_FIXED);
-+
- 	/*
- 	 * Use auto-reload if possible to save a MSR write in the PMI.
- 	 * This must be done in pmu::start(), because PERF_EVENT_IOC_PERIOD.
- 	 */
- 	if (hwc->flags & PERF_X86_EVENT_AUTO_RELOAD) {
--		unsigned int idx = hwc->idx;
--
--		if (idx >= INTEL_PMC_IDX_FIXED)
--			idx = MAX_PEBS_EVENTS + (idx - INTEL_PMC_IDX_FIXED);
- 		ds->pebs_event_reset[idx] =
- 			(u64)(-hwc->sample_period) & x86_pmu.cntval_mask;
- 	} else {
--		ds->pebs_event_reset[hwc->idx] = 0;
-+		ds->pebs_event_reset[idx] = 0;
- 	}
- 
- 	intel_pmu_pebs_via_pt_enable(event);
--- 
-2.31.1
-
+- Arnaldo
