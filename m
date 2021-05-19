@@ -2,139 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B54C433ED
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 16:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE01C433ED
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 16:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D39D61244
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 16:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22FDD60E0B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 16:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347418AbhESQ2y (ORCPT
+        id S1344924AbhESQqS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 May 2021 12:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40724 "EHLO
+        Wed, 19 May 2021 12:46:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355328AbhESQ2s (ORCPT
+        with ESMTP id S1344799AbhESQqR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 May 2021 12:28:48 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEA1C061760
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 May 2021 09:27:28 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id h3-20020a05600c3503b0290176f13c7715so3662502wmq.5
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 May 2021 09:27:28 -0700 (PDT)
+        Wed, 19 May 2021 12:46:17 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01F1C06175F
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 May 2021 09:44:55 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 129-20020a2504870000b0290513326cc5e0so5948327ybe.10
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 May 2021 09:44:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8wZnk7rxOWgKUoVplPXyNkY2T76FEhFaLIyKCx+xj2c=;
-        b=EokFC/6CQWYr5SDA9kEnxTtraZIKVGwvwKZM8NCKqM3tq6WYAo8AfSAChW7msw/d0Q
-         F/AVoiT8QMftQ9ajuNjuqjiBX31/CRuJWLLSdcVgSeXtJUwe2pGgJWWdTyVBvVQiQq3w
-         r54OyALxWra/fMmi1pO7iMyM4VvjRdIpBsb0shSNCbkEs/ow7AjN7v8ONpC0GPAW55GU
-         q6LQ77qUqOebnW/lsSKQQBgQGfE6iH9zJfPQMw9IS/vujS9EftngZ+bZSeixVmjti0Wt
-         ezT5V3LRxAwaavuGwM7WiADPdVjp2SSVMdNDP/ZyRLCQJqwgaV+htRnt1wLOy07VKMsz
-         Wx1A==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9GW1oyTjD/RMsVNdKnza5MLgPiZ/BeX1RWS+tpjbiYw=;
+        b=BDVB0nUCyWHhJG9O9W1D40kV8iKtFjoFdYa+ougq5w9evBqq/0NdxqL5lC5WbNcCa9
+         CN0IM2jshODOAUP9aON/jRZGz7z8OXqxPmRE4CFjU61ofgtLQJ4upO64S4EMICFPrZ9p
+         ub+SWWPSKbOo2P0EffglejiaT5xtoLrFhNla5FW2SCXLdG7MiIj2aHaHiSXczfCxhvQh
+         i7QJBDu8h87OxtBfQ8LxPYGcAFRu2Tw3fkuIQtMKvXrnvYnDkGCDFiPSNrUKuhExiRIY
+         xVOFdhm4gX8BF6fqXqYmDiJWlPPxx075/bql3xJO+YBj3qPGTJyMhDHJdWAKqV0h4fSQ
+         bZQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8wZnk7rxOWgKUoVplPXyNkY2T76FEhFaLIyKCx+xj2c=;
-        b=Gvu4LrIRLTHgjR3jwtURXNMQaE0FI4P8NoaHeUxfvwMtD8vkQ2P3P9hqRYBHMBbaqO
-         Beem4H5nhnC0NY1dNijot4niHY3NzkiYugwM7QPJbs1aKZH9n0FIN80br2P7zZurv6er
-         XPo7U3C1zM97MMKo3/mb+8eEklmC5bgPmTYDfiCkjOX9dW+EJxOnWX4QukI+eEZvQt4d
-         V3HUftllLEa9s1bmB8ZB9xXZBB76enyzfA7EEwuygs/kye/m15u5Z6EBsXh2KV+ga/TT
-         w3/2tVioe112uP0x0oGfinP+Cz0CMXW+P5wSs43Mgk/+jfj/MfExIa2MM+ET5RtX9Rby
-         sljw==
-X-Gm-Message-State: AOAM533wwHqF1jsU74HP5w+SVNYeGroUZ06lEeDJ6gNSK/ZqBI4f66Z8
-        LuhGetbolXGPakB9E0oPfTNCgziN01BVwXOvzwpMmw==
-X-Google-Smtp-Source: ABdhPJxzLXEWmEw3JJjPSYhsNIBn/wlnznEQ7mpgq6LZ+Lg+/SUEGfx4lH5aaWA3Vv1J5UwJj9dy6O8inX9ac2ALrsI=
-X-Received: by 2002:a1c:114:: with SMTP id 20mr159509wmb.124.1621441646648;
- Wed, 19 May 2021 09:27:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <555b92bd-1884-58a7-76fd-7dd197978436@linux.ibm.com>
-In-Reply-To: <555b92bd-1884-58a7-76fd-7dd197978436@linux.ibm.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9GW1oyTjD/RMsVNdKnza5MLgPiZ/BeX1RWS+tpjbiYw=;
+        b=dtlSFP1IsWH+7/FbTbWN8Y7NfoOc+wG+5b9vzg6GuBBhlxholvthXR60gvXblB/JPn
+         /swmcaiT7cC0vAG8uMsKf/EutsKOIlje7TJIp+m1KBsBTDPufYMbt9E3Quk9CLzwhjAC
+         HNMBjan5Duy1rX9EkOSXcOOODDcXnjSjveuCmHSC1DllE75eceWkKiPcmt8yRxiWqEIA
+         23/P0gntQUSEXCeeMtIJCqIGP0ySttd/eDAOwPtOEiN/oJrVnwEvoSkQCYkcSBtbFXV4
+         fE7zM/YaXgkbP27NAMnM/RQTSxLoU7RRtyCVBZndcyXgIA9aPSSy5ORiajKfxHgwPukP
+         cTkA==
+X-Gm-Message-State: AOAM5320vsz3QNnIQt/d+fb5ad2EWed66gsCgwnWZIPRlWD8bg2amcKH
+        gfFurKxMj0y9f6FXy9xv6dpR0lVV9G6M
+X-Google-Smtp-Source: ABdhPJwmU4oMGnaEsx1vLCYzXTBNQfNfjtpdk2+BGRRV0KGZodP/MA1hPvc7645uVpfpJQcwOWc/S+Ruk8na
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:636:a116:b1fd:c4e8])
+ (user=irogers job=sendgmr) by 2002:a25:c646:: with SMTP id
+ k67mr597071ybf.137.1621442694952; Wed, 19 May 2021 09:44:54 -0700 (PDT)
+Date:   Wed, 19 May 2021 09:44:47 -0700
+Message-Id: <20210519164447.2672030-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.31.1.751.gd2f1c929bd-goog
+Subject: [PATCH] perf: Move debug initialization earlier
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 May 2021 09:27:14 -0700
-Message-ID: <CAP-5=fX_+GY38s0imLNDzq9_xjn3qiGC0pFEpSV1U-TzF_UoMg@mail.gmail.com>
-Subject: Re: perf list dumps core using 5.13.0.rc2
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 19, 2021 at 7:57 AM Thomas Richter <tmricht@linux.ibm.com> wrot=
-e:
->
-> Using kernel 5.13.0.rc2 command perf list dumps core on my x86
-> virtual machine:
->
-> [root@f34 perf]# ./perf list
-> Segmentation fault (core dumped)
-> ^C
-> [root@f34 perf]#
->
-> The root case this this change in file ../include/uapi/linux/perf_event.h=
-:
-> enum perf_sw_ids {
->         PERF_COUNT_SW_CPU_CLOCK                 =3D 0,
->         ...
->  --->   PERF_COUNT_SW_CGROUP_SWITCHES           =3D 11,
->
->         PERF_COUNT_SW_MAX,                      /* non-ABI */
-> };
->
-> This change increases PERF_COUNT_SW_MAX to 12. However this
-> change is not reflected in file util/parse-events.c where data structure
->
-> struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] =3D {
->         ....
-> }
->
-> is defined and it misses the symbol name and alias for this new software
-> event. So when command 'perf list' is called, the call chain sequence
-> is
->   cmd_list()
->     print_events()
->       print_symbol_events(event_glob, PERF_TYPE_SOFTWARE,
->                           event_symbols_sw, PERF_COUNT_SW_MAX, name_only)=
-;
->
-> where PERF_COUNT_SW_MAX is 12 and  structure event_symbols_sw[] contains
-> only 11 elements. This ends up with the last element of the array being
-> all zeroes and the line:
->
->     if (!name_only && strlen(syms->alias))
->
-> dumps core because syms->alias is a NULL pointer.
->
-> Is this dummy event PERF_COUNT_SW_CGROUP_SWITCHES simply missing in the
-> event_symbols_sw[] array or is there more to it (which I am missing).
->
-> Thanks.
->
-> PS: I can sent a patch if needed....
+This avoids segfaults during option handlers that use pr_err. For
+example, "perf --debug nopager list" segfaults before this change.
 
-I believe Namhyung's pending change will fix this:
-https://lore.kernel.org/lkml/20210210083327.22726-3-namhyung@kernel.org/
+Fixes: 8abceacff87d (perf debug: Add debug_set_file function)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/perf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index 20cb91ef06ff..2f6b67189b42 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -443,6 +443,8 @@ int main(int argc, const char **argv)
+ 	const char *cmd;
+ 	char sbuf[STRERR_BUFSIZE];
+ 
++	perf_debug_setup();
++
+ 	/* libsubcmd init */
+ 	exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
+ 	pager_init(PERF_PAGER_ENVIRONMENT);
+@@ -531,8 +533,6 @@ int main(int argc, const char **argv)
+ 	 */
+ 	pthread__block_sigwinch();
+ 
+-	perf_debug_setup();
+-
+ 	while (1) {
+ 		static int done_help;
+ 
+-- 
+2.31.1.751.gd2f1c929bd-goog
 
-> --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Gesch=C3=A4ftsf=C3=BChrung: Dirk Wittkopp
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
