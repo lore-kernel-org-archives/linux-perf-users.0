@@ -2,118 +2,219 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03115C433ED
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 07:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DC21C433ED
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 13:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9CA961353
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 07:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E372161363
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 May 2021 13:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239677AbhESHVd (ORCPT
+        id S1353637AbhESNao (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 May 2021 03:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239977AbhESHVY (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 May 2021 03:21:24 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 320AAC06138A
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 May 2021 00:20:05 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id q15so8797146pgg.12
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 May 2021 00:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Chi1IofC1LVT5Y+rvN1rFC7UBLdb7aCrIZYrC4aASeE=;
-        b=yddoojxF7uDWUZxGOObcD+IlaNc0Vem+McpvUNJ2n8STiIA4foAtRSyH8S9KUwPZoL
-         1gUIlCXqAMOix/+Y7tC0ugzNucy0olkHIEBWFGXlw+Gl5Q7NiR4BuEmpjJYXixc6BjWX
-         5EhXx6M4e+0i16NhYRfgN1IxfjFwZL9KZyUpVqE9/Zk4btLAPhZ7/C/87x3MwhznE4jX
-         +1uZgRKHYei6bbA+TZZs5FQJ7fguXPlmy5XeiDhy6BLEXMcG3/Z5EAshSElmYfDpFqed
-         mXj5BwK86pxLbJGCUcvexKME+VMwvAuoCtrA7uiYy2a6xCs5s3Hxzm0701ZniCICa7BF
-         /qug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Chi1IofC1LVT5Y+rvN1rFC7UBLdb7aCrIZYrC4aASeE=;
-        b=YbYofM5yqi3b3KRtuTRgSTDGqeHbCEi04Ub8IPsZ/4/LjJIvi90fUInsLTyvkt/0Ew
-         jacGfeFViE5fKolBqC3dyQOZz50CQWfPbYYJbsvBnGdewd4l6usK5NSZ0UXcH9hXN6rY
-         L68mcm4DwuiSldZiGJXhjYcKX+ASpuVAZA1uf1x+MKWbIWHi05O5qPogw/AnEsEKD7r2
-         yZCIvCVLuHFhc67RR+jUZFgNmFfrZ8SyVOGc1HlmbW11jyakw85WyST7uTElhcBxp8Lg
-         wm0AzwYLp2gsDOcYiOKr6FX/leUfK7MeMsqRzgxDSGCd2StQiuvqtBG9XQrnZVdg/ZqJ
-         XPGg==
-X-Gm-Message-State: AOAM530MNQUHN4bcWgOTNNh93ra3/PtXwqD3J2aH8TyQgKgZ3XBtZjrb
-        SxLzDfD/mIAyk59zh5qUTjPR0LwA1w2QayFq+YE=
-X-Google-Smtp-Source: ABdhPJyTH2gc1bFlj5R2BhX7fJGAX8sT+U1KvjUgM9c8MPmMkLckOB8aCI0UxWShd2iT49crzw0oyA==
-X-Received: by 2002:a63:4648:: with SMTP id v8mr9458082pgk.34.1621408804623;
-        Wed, 19 May 2021 00:20:04 -0700 (PDT)
-Received: from localhost ([103.207.71.35])
-        by smtp.gmail.com with ESMTPSA id y14sm12448747pgl.21.2021.05.19.00.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 May 2021 00:20:04 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>, Al Grant <Al.Grant@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 5/5] perf arm-spe: Don't wait for PERF_RECORD_EXIT event
-Date:   Wed, 19 May 2021 15:19:39 +0800
-Message-Id: <20210519071939.1598923-6-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210519071939.1598923-1-leo.yan@linaro.org>
-References: <20210519071939.1598923-1-leo.yan@linaro.org>
+        Wed, 19 May 2021 09:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239739AbhESNao (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 19 May 2021 09:30:44 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4B1F160FF2;
+        Wed, 19 May 2021 13:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1621430964;
+        bh=JQuIFikX2LB0ssFXoz9KKfQObi9t6NSh4izYf1JqYPo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ROx8QG94DaNgkkz8Ej/A++v7hVd9fcUYHXMfqjcfmL0wZ+alrDZ2yB3+yPMw2V53z
+         4PTXuiiCzu0waWHptWKfgdrYUkGVXyQ3bH44wJgFyUYE/eMT9vZJrsoQesQw5ltCC4
+         tZunPFXdVZgq4upcW2Lf3h5X5SpVRz5C7XvrvOIN45vvhoZ6vDZfZGuVe1xJK9U9Ev
+         6JE6WottHC9Bu6XV7RK1vvBLAq7F3Wlh9STltRH80TvNZMoxOu2Tx2o+Fk85Gc73y+
+         uC1oHJpo12pyN4u19Iu0gZ9xTDafk79NuIErmU2e/shAkfmSRiUICD0D3AoK9e0x3v
+         Rwq8bstTBnL5Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3655240DC6; Wed, 19 May 2021 10:29:21 -0300 (-03)
+Date:   Wed, 19 May 2021 10:29:21 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>, svens@linux.ibm.com,
+        Vasily Gorbik <gor@linux.ibm.com>, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com
+Subject: Re: [PATCH] perf test: Test libpfm4 support (63) reports error
+Message-ID: <YKUSseBM+IW4tphS@kernel.org>
+References: <20210517140931.2559364-1-tmricht@linux.ibm.com>
+ <CAP-5=fV-2J1rxHAaGv_GwFzY-mAKKogEvQf1A87PUvZxT7wzUQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fV-2J1rxHAaGv_GwFzY-mAKKogEvQf1A87PUvZxT7wzUQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When decode Arm SPE trace, it waits for PERF_RECORD_EXIT event (the last
-perf event) for processing trace data, which is needless and even might
-cause logic error, e.g. it might fail to correlate perf events with Arm
-SPE events correctly.
+Em Tue, May 18, 2021 at 04:30:35PM -0700, Ian Rogers escreveu:
+> On Mon, May 17, 2021 at 7:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> >
+> > Compiling perf with make LIBPFM4=1 includes libpfm support and
+> > enables test case 63 'Test libpfm4 support'. This test reports an error
+> > on all platforms for subtest 63.2 'test groups of --pfm-events'.
+> > The reported error message is 'nested event groups not supported'
+> 
+> The parsing test checks broken and working strings and so errors are
+> always going to be reported, but agreed this error is wrong.
+> 
+> >  # ./perf test -F 63
+> >  63: Test libpfm4 support                                            :
+> >  63.1: test of individual --pfm-events                               :
+> >  Error:
+> >  failed to parse event stereolab : event not found
+> >  Error:
+> >  failed to parse event stereolab,instructions : event not found
+> >  Error:
+> >  failed to parse event instructions,stereolab : event not found
+> >   Ok
+> >  63.2: test groups of --pfm-events                                   :
+> >  Error:
+> >  nested event groups not supported    <------ Error message here
+> >  Error:
+> >  failed to parse event {stereolab} : event not found
+> >  Error:
+> >  failed to parse event {instructions,cycles},{instructions,stereolab} :\
+> >          event not found
+> >  Ok
+> >  #
+> >
+> > This patch addresses the error message 'nested event groups not supported'.
+> > The root cause is function parse_libpfm_events_option() which parses the
+> > event string '{},{instructions}' and can not handle a leading empty
+> > group notation '{},...'.
+> >
+> > The code detects the first (empty) group indicator '{' but does not
+> > terminate group processing on the following group closing character '}'.
+> > So when the second group indicator '{' is detected, the code assumes
+> > a nested group and returns an error.
+> >
+> > With the error message fixed, also change the expected event number to
+> > one for the test case to succeed.
+> >
+> > While at it also fix a memory leak. In good case the function does not
+> > free the duplicated string given as first parameter.
+> >
+> > Output after:
+> >  # ./perf test -F 63
+> >  63: Test libpfm4 support                                            :
+> >  63.1: test of individual --pfm-events                               :
+> >  Error:
+> >  failed to parse event stereolab : event not found
+> >  Error:
+> >  failed to parse event stereolab,instructions : event not found
+> >  Error:
+> >  failed to parse event instructions,stereolab : event not found
+> >   Ok
+> >  63.2: test groups of --pfm-events                                   :
+> >  Error:
+> >  failed to parse event {stereolab} : event not found
+> >  Error:
+> >  failed to parse event {instructions,cycles},{instructions,stereolab} : \
+> >          event not found
+> >   Ok
+> >  #
+> > Error message 'nested event groups not supported' is gone.
+> 
+> Acked-By: Ian Rogers <irogers@google.com>
+> 
+> I wonder if we should add some coverage for the error cases to the pfm
+> test with something like the following.
 
-So this patch removes the condition checking for PERF_RECORD_EXIT event.
+Yeah, agreed, please consider sending a patch for that.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/util/arm-spe.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+Thanks, applied.
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 5c5b438584c4..58b7069c5a5f 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -717,11 +717,7 @@ static int arm_spe_process_event(struct perf_session *session,
- 					sample->time);
- 		}
- 	} else if (timestamp) {
--		if (event->header.type == PERF_RECORD_EXIT) {
--			err = arm_spe_process_queues(spe, timestamp);
--			if (err)
--				return err;
--		}
-+		err = arm_spe_process_queues(spe, timestamp);
- 	}
+- Arnaldo
  
- 	return err;
--- 
-2.25.1
+> Thanks,
+> Ian
+> 
+> --- a/tools/perf/tests/pfm.c
+> +++ b/tools/perf/tests/pfm.c
+> @@ -155,6 +155,16 @@ static int test__pfm_group(void)
+>                         .nr_events = 3,
+>                         .nr_groups = 1,
+>                 },
+> +               {
+> +                       .events = "instructions}",
+> +                       .nr_events = 1,
+> +                       .nr_groups = 0,
+> +               },
+> +               {
+> +                       .events = "{{instructions}}",
+> +                       .nr_events = 0,
+> +                       .nr_groups = 0,
+> +               },
+>         };
+> 
+>         for (i = 0; i < ARRAY_SIZE(table); i++) {
+> 
+> > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> > Acked-By: Sumanth Korikkar <sumanthk@linux.ibm.com>
+> > ---
+> >  tools/perf/tests/pfm.c |  4 ++--
+> >  tools/perf/util/pfm.c  | 11 ++++++++++-
+> >  2 files changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/tests/pfm.c b/tools/perf/tests/pfm.c
+> > index 76a53126efdf..d4b0ef74defc 100644
+> > --- a/tools/perf/tests/pfm.c
+> > +++ b/tools/perf/tests/pfm.c
+> > @@ -131,8 +131,8 @@ static int test__pfm_group(void)
+> >                 },
+> >                 {
+> >                         .events = "{},{instructions}",
+> > -                       .nr_events = 0,
+> > -                       .nr_groups = 0,
+> > +                       .nr_events = 1,
+> > +                       .nr_groups = 1,
+> >                 },
+> >                 {
+> >                         .events = "{instructions},{instructions}",
+> > diff --git a/tools/perf/util/pfm.c b/tools/perf/util/pfm.c
+> > index d735acb6c29c..6eef6dfeaa57 100644
+> > --- a/tools/perf/util/pfm.c
+> > +++ b/tools/perf/util/pfm.c
+> > @@ -62,8 +62,16 @@ int parse_libpfm_events_option(const struct option *opt, const char *str,
+> >                 }
+> >
+> >                 /* no event */
+> > -               if (*q == '\0')
+> > +               if (*q == '\0') {
+> > +                       if (*sep == '}') {
+> > +                               if (grp_evt < 0) {
+> > +                                       ui__error("cannot close a non-existing event group\n");
+> > +                                       goto error;
+> > +                               }
+> > +                               grp_evt--;
+> > +                       }
+> >                         continue;
+> > +               }
+> >
+> >                 memset(&attr, 0, sizeof(attr));
+> >                 event_attr_init(&attr);
+> > @@ -107,6 +115,7 @@ int parse_libpfm_events_option(const struct option *opt, const char *str,
+> >                         grp_evt = -1;
+> >                 }
+> >         }
+> > +       free(p_orig);
+> >         return 0;
+> >  error:
+> >         free(p_orig);
+> > --
+> > 2.31.1
+> >
 
+-- 
+
+- Arnaldo
