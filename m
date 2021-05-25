@@ -2,109 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1830C2B9F8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 May 2021 14:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21B4C2B9F8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 May 2021 15:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A4561417
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 May 2021 14:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBA461249
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 May 2021 15:04:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234050AbhEYOn6 (ORCPT
+        id S229907AbhEYPGA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 May 2021 10:43:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11934 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233982AbhEYOn5 (ORCPT
+        Tue, 25 May 2021 11:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229554AbhEYPF7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 May 2021 10:43:57 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14PEb9BX103437;
-        Tue, 25 May 2021 10:42:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=o7F+Sp6lJ2xB4IakTrZySBRmGFa97r7bU8BtCYkJT1U=;
- b=IVXjeAHjMGCAlkOGLynosC9TH5cFlvKE79Jg436TThPkgulBkG2O918m1Gl25IUs8zjh
- B2L50n05X62XuYPG6xhQOT+jqKyNFY+w5//OLv+mJNkYJDh5drn6rKTJiYhQ3nJHNzKP
- FpsDuY9IW/0VfSAAITZ0kS0Zzg9ZeXAZj8dBgUbE/dF8sMnBmJMs7UEDWf0wyXhLsA6G
- yWhkajQGXXiiGtj2GnOnsutA+rTeYIrIouCLRwIt4HLK3is2ZQe01Z8w7yfjnF4G9Y0F
- xuvhSUANy9jGl3pv4vJGJ+OXTJNZKD44CXycFKxJU8q00KH4KXQTD+1im3rs+/xTR4LM GQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38s1h5v4ew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 10:42:20 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14PEbC6k103729;
-        Tue, 25 May 2021 10:42:19 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38s1h5v4e8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 10:42:19 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 14PEWV2X030723;
-        Tue, 25 May 2021 14:42:18 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma04wdc.us.ibm.com with ESMTP id 38s1gw0xmw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 May 2021 14:42:18 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14PEgI1a37683556
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 May 2021 14:42:18 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A5CB28058;
-        Tue, 25 May 2021 14:42:18 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6044528059;
-        Tue, 25 May 2021 14:42:17 +0000 (GMT)
-Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.85.178.250])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 25 May 2021 14:42:17 +0000 (GMT)
-Date:   Tue, 25 May 2021 09:42:15 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, maddy@linux.vnet.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, mpe@ellerman.id.au, ravi.bangoria@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        rnsastry@linux.ibm.com
-Subject: Re: [PATCH] perf vendor events: Fix eventcode of power10 json events
-Message-ID: <20210525144215.GA2135213@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-References: <20210525063723.1191514-1-kjain@linux.ibm.com>
+        Tue, 25 May 2021 11:05:59 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05484C061574
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 May 2021 08:04:28 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id o27so30673662qkj.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 May 2021 08:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=khU4iaS6Na4W6atMcRo3OSUoU5Ql5/4Uc8V3esaLajE=;
+        b=OqdPD+NJhqXnoKqA7hSUAo3PdNuzcL0D4dt1kUgJEuQVdRImBlucQc6j82hepLgpUV
+         o93/WXB/0xkORZdyJrSR5kp01ZXg2nLptjIPm9dpvc49jwqJwx0GdOV2CT1g17rFcjAa
+         r8t4Tp0jkIrEnsY4rAoK9Q8Gx8Rxz6vhM1FDE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=khU4iaS6Na4W6atMcRo3OSUoU5Ql5/4Uc8V3esaLajE=;
+        b=Uxs+khClMtOD28FF8DOxE9tSehJQsxAC5SqNggRu29znrGK7fhiZ43Fs9ShH7pMlPi
+         b45YxxoVRUAGrcGA2WHkjtkRYQiGTDGBUWc3Bi1ShPlTR5evzpKr958P4uBi4lbn1ORu
+         Rdg2ksoganchR6ieZIGhfa573YNW8kG8jaNc6t0StX1zGUIJSNDZxoGELdl/HRukJoqE
+         JR34ANaSODoDfWC9HcP4UTGEt+N0Ip7d2a4+fuSfBdyCYkLpMCXvLWpio44vvB0Vp2ez
+         ga/wXVjUWO0zgYxNCqqUCEBNlDEoXKdFL1HW5pxQnKHnt6x0bfGSjiZGVtuHCJ7m6VM2
+         SxoQ==
+X-Gm-Message-State: AOAM530zPZSWFh+k9Ur/YHCYXtOCAk5pTBV4+5AyX0TmWqAVal0fXxSZ
+        nUswnwgTqm2p/iWG2dUO6nDiNiCh05T2dQ==
+X-Google-Smtp-Source: ABdhPJxB6MBbylgFl2Oj87AeOAV/qArO3Xt9JwrM4oQQNcbPYXDRW/QxOly1ecTJBlfklYaFyoMJ+g==
+X-Received: by 2002:a37:ae86:: with SMTP id x128mr36355995qke.427.1621955066707;
+        Tue, 25 May 2021 08:04:26 -0700 (PDT)
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
+        by smtp.gmail.com with ESMTPSA id t17sm12018810qto.92.2021.05.25.08.04.25
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 May 2021 08:04:25 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id w1so32159475ybt.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 May 2021 08:04:25 -0700 (PDT)
+X-Received: by 2002:a5b:54a:: with SMTP id r10mr43342321ybp.476.1621955065162;
+ Tue, 25 May 2021 08:04:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210525063723.1191514-1-kjain@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9CI8T5O3JgyyXU8psLmowTOOe5SP3-YQ
-X-Proofpoint-GUID: v0tTdXDK-VZlqHG6TCJTcyG6cNFNo5WT
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-05-25_07:2021-05-25,2021-05-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 spamscore=0 mlxscore=0 bulkscore=0 adultscore=0
- lowpriorityscore=0 phishscore=0 mlxlogscore=999 impostorscore=0
- clxscore=1011 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2104190000 definitions=main-2105250090
+References: <20210507205513.640780-1-dianders@chromium.org>
+In-Reply-To: <20210507205513.640780-1-dianders@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 25 May 2021 08:04:12 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VwhMQ3wV0AsB1cbb3j6q3WzJS=DftUc0MRbTKi8uBs6g@mail.gmail.com>
+Message-ID: <CAD=FV=VwhMQ3wV0AsB1cbb3j6q3WzJS=DftUc0MRbTKi8uBs6g@mail.gmail.com>
+Subject: Re: [PATCH 0/3] arm64: perf: Make compat tracing better
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Seth LaForge <sethml@google.com>,
+        Ricky Liang <jcliang@chromium.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 25, 2021 at 12:07:23PM +0530, Kajol Jain wrote:
-> Fixed the eventcode values in the power10 json event files to append
-> "0x" since these are hexadecimal values.
-> Patch also changes event description of PM_EXEC_STALL_LOAD_FINISH and
-> PM_EXEC_STALL_NTC_FLUSH event and move some events to correct files.
-> 
-> Fixes: 32daa5d7899e ("perf vendor events: Initial JSON/events list for power10 platform")
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+Catalin / Will,
 
-I checked that everything that was "removed" was actually just moved
-somewhere else, that all the added EventCodes indeed had '0x', the
-number of EventCodes added matched the number removed, and that the
-additional text added seemed reasonable.  LGTM.
+On Fri, May 7, 2021 at 1:55 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> The goal for this series is to improve "perf" behavior when 32-bit
+> userspace code is involved. This turns out to be fairly important for
+> Chrome OS which still runs 32-bit userspace for the time being (long
+> story there).
+>
+> I won't repeat everything said in the individual patches since since
+> they are wordy enough as it is.
+>
+> Please enjoy and I hope this isn't too ugly/hacky for inclusion in
+> mainline.
+>
+> Thanks to Nick Desaulniers for his early review of these patches and
+> to Ricky for the super early prototype that some of this is based on.
+>
+>
+> Douglas Anderson (3):
+>   arm64: perf: perf_callchain_user() compat support for
+>     clang/non-APCS-gcc-arm
+>   arm64: perf: Improve compat perf_callchain_user() for clang leaf
+>     functions
+>   arm64: perf: Add a config option saying 32-bit thumb code uses R11 for
+>     FP
+>
+>  arch/arm64/Kconfig                 |  12 ++
+>  arch/arm64/kernel/perf_callchain.c | 329 +++++++++++++++++++++++++----
+>  2 files changed, 305 insertions(+), 36 deletions(-)
 
-Reviewed-by: Paul A. Clarke <pc@us.ibm.com>
+While this isn't massively urgent, I'd like to confirm that this is on
+your plate to eventually review and/or land. If it's not, do you have
+any suggestions for how I should proceed?
+
+Thanks!
+
+-Doug
