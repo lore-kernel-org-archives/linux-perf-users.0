@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF10C47082
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 13:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52C5C47089
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 13:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E80A5613CD
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 13:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE96613E6
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 13:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232213AbhEZN6t (ORCPT
+        id S231911AbhEZOAU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 May 2021 09:58:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58416 "EHLO mail.kernel.org"
+        Wed, 26 May 2021 10:00:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233150AbhEZN6r (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 May 2021 09:58:47 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 98A356101E;
-        Wed, 26 May 2021 13:57:15 +0000 (UTC)
+        id S231319AbhEZOAT (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 26 May 2021 10:00:19 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 108CE6101E;
+        Wed, 26 May 2021 13:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622037436;
-        bh=QENGfI6HKpOS5bgsGQh7uA6R+0d3pUQyD/vtiM1BHiQ=;
+        s=k20201202; t=1622037528;
+        bh=TuPjYm63AEIX3xKPK7LaeAgYr240A8QnqaHp5LUvUDs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Tl3PhS2Hm8gCLBlr4m+UDYiSAN8u5Usx0lEZbTkPRJTdUhsxTYf3bDedb1sl3tPSo
-         r2DSwdWJS6mWm7r1hnapLi/KRa4vHNGwqa00g1Kcc4fcLZUa/eO/ybGfC70zbsEWww
-         OWRsTA0M4rB0KpfbxoboA/cTwBRJQQkbDCbnlqHAXyfDwf/z3v4HTSIzyn4hUINBMC
-         DtCisHBuvTO0tI4sthE7MI9Y/j2CEL88d7ZhqFEldXbBI6KAYY8zUsCdvID7zCzPAQ
-         EjnH8KMYKwf5D9CRpB2wsssHLZ5jygOG6fXOKJKRfSOuLctIhY+foFy7FE+wcP72xZ
-         IEucrlGCJgQNA==
+        b=CTGGYN+DAshEM8KkRCLuqifVp0nz/Ax0mkUa301X8W44+37x6M151ruaWV15yK7KK
+         hk4Nk0ofAtXH8vag8n9cgnNPAxErab+LISere42byVsqlL2c2j/ZVxTGYnmQtygyjz
+         tGpQ9ubNjZ9Nq6NX1W0p09fgKjUSESkGbpn/zZVcuVVZNBHpi3BaVTVvXs3/jtmtv6
+         m1/G29XkjCcw4SE1bQnEbI2RHeOJbM3k/LLiGAm18s/xHZ67N19m+1NCubyJSVLzMX
+         Nnulo8FX1jZqLiXvbZH+lpFkIX2cF+Hh2gNv7pQEh15oUZe6hlVMz5QXSoArhI1AsN
+         rxOWd4uRJUC1A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id F00674011C; Wed, 26 May 2021 10:57:11 -0300 (-03)
-Date:   Wed, 26 May 2021 10:57:11 -0300
+        id 5116B4011C; Wed, 26 May 2021 10:58:45 -0300 (-03)
+Date:   Wed, 26 May 2021 10:58:45 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Riccardo Mancini <rickyman7@gmail.com>,
@@ -50,7 +50,7 @@ Cc:     Riccardo Mancini <rickyman7@gmail.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] perf test: iterate over shell tests in alphabetical order
-Message-ID: <YK5Ttyhuls2ajzuc@kernel.org>
+Message-ID: <YK5UFUH2FnNHr1Vk@kernel.org>
 References: <20210525230521.244553-1-rickyman7@gmail.com>
  <CAP-5=fUMeTC8za5wMy4syb4e_Kng9KMm2xUahm=zYkR4vb6Dfw@mail.gmail.com>
 MIME-Version: 1.0
@@ -81,7 +81,14 @@ Em Tue, May 25, 2021 at 04:25:48PM -0700, Ian Rogers escreveu:
 > > Cc: Ian Rogers <irogers@google.com>
 > 
 > Acked-by: Ian Rogers <irogers@google.com>
-> 
+
+Thanks, applied and also added this, which I think it appropriate in
+this case, no?
+
+Reported-by: Ian Rogers <irogers@google.com>
+
+- Arnaldo
+ 
 > > ---
 > >  tools/perf/tests/builtin-test.c | 38 ++++++++++++++++++---------------
 > >  1 file changed, 21 insertions(+), 17 deletions(-)
@@ -96,42 +103,12 @@ Em Tue, May 25, 2021 at 04:25:48PM -0700, Ian Rogers escreveu:
 > >
 > > -#define for_each_shell_test(dir, base, ent)    \
 > > -       while ((ent = readdir(dir)) != NULL)    \
-
-[acme@five perf]$ grep '(int i =' */*/*.c
-tools/perf/builtin-diff.c:	for (int i = 0; i < num; i++)
-tools/perf/builtin-diff.c:		for (int i = 0; i < pair->block_info->num; i++) {
-tools/perf/builtin-stat.c:	for (int i = 0; i < a->core.cpus->nr; i++) {
-[acme@five perf]$ grep '(int i =' */*/*/*.c
-tools/lib/subcmd/parse-options.c:		for (int i = 0; subcommands[i]; i++) {
-tools/lib/subcmd/parse-options.c:			for (int i = 0; subcommands[i]; i++)
-tools/perf/util/block-info.c:	for (int i = 0; i < nr_hpps; i++)
-tools/perf/util/block-info.c:	for (int i = 0; i < nr_hpps; i++) {
-tools/perf/util/block-info.c:	for (int i = 0; i < nr_reps; i++)
-tools/perf/util/header.c:	for (int i = 0; i < ff->ph->env.nr_hybrid_cpc_nodes; i++) {
-tools/perf/util/stat-display.c:	for (int i = 0; i < evsel__nr_cpus(counter); i++) {
-tools/perf/util/stream.c:	for (int i = 0; i < nr_evsel; i++)
-tools/perf/util/stream.c:	for (int i = 0; i < nr_evsel; i++) {
-tools/perf/util/stream.c:	for (int i = 0; i < els->nr_evsel; i++) {
-tools/perf/util/stream.c:	for (int i = 0; i < es_pair->nr_streams; i++) {
-tools/perf/util/stream.c:	for (int i = 0; i < es_base->nr_streams; i++) {
-[acme@five perf]$ > > +#define for_each_shell_test(entlist, nr, base, ent)                    \
-
-And this has been building OK since forever, it seems, in all the test
-build containers, with tons of gcc and clang versions, so I don't think
-this is a problem.
-
-- Arnaldo
-
-
+> > +#define for_each_shell_test(entlist, nr, base, ent)                    \
 > > +       for (int __i = 0; __i < nr && (ent = entlist[__i]); __i++)      \
 > 
 > I think this declaration of __i is okay as C99 allows declarations
 > here, but generally I don't see this style in the kernel.
-
-Yeah, but there is precendence in.. tools/perf/:
-
-
- 
+> 
 > Thanks,
 > Ian
 > 
