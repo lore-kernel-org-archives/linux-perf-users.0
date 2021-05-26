@@ -2,119 +2,100 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7ECC2B9F7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 06:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B13AC2B9F7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 07:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE95613F4
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 06:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62469613EC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 07:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbhEZGOt (ORCPT
+        id S232336AbhEZHHA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 May 2021 02:14:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18300 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232734AbhEZGOs (ORCPT
+        Wed, 26 May 2021 03:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232968AbhEZHG6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 May 2021 02:14:48 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 14Q64EUF013326;
-        Wed, 26 May 2021 02:13:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to; s=pp1;
- bh=HEh6jiRhEKHTKOcKijy1XwvxEAL7bFyMz0AfMl/HghQ=;
- b=Q4sB5iHU40TBoxxVec8MTMi7eaRf9uTzUK9+j4thgxQpVB6bKGJPtBRXdEkSU5j7HSUH
- ShcJiulF5cllD858yclxwzG7R8dltgP/N2uJZe9O/Klogr2z4nclL2v6H0BkhabEiiZ8
- fSb2XWv1Fyb2b5+o6wr5RCim+osN2wThsatx3k9H83wOXPzJ7cSo94OkxovQJGl0HiJ9
- iUpL7I1b3pUnlQdpDjdZrqU5rtNs6ANgvlHqBkuwlyYGnl1y4VhYQ8QkG/CTQHKLTxva
- r+bu7ClkB7PE3MDAu8jTwZgXhKUKt/+vlY0gYWlfV8JDBVawdBqQJ68nGfaFRxcSHXxA 3A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38sgev0mcn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 May 2021 02:13:09 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 14Q64HAk013582;
-        Wed, 26 May 2021 02:13:08 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 38sgev0mbj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 May 2021 02:13:08 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 14Q6CQJC002713;
-        Wed, 26 May 2021 06:13:06 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma04fra.de.ibm.com with ESMTP id 38s1ht06dx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 May 2021 06:13:06 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 14Q6D2Zk26607958
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 May 2021 06:13:03 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D94BBA405C;
-        Wed, 26 May 2021 06:13:02 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0FEBBA4064;
-        Wed, 26 May 2021 06:13:01 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.85.126.125])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 26 May 2021 06:13:00 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.80.0.2.43\))
-Subject: Re: [PATCH] perf vendor events: Fix eventcode of power10 json events
-From:   Nageswara Sastry <rnsastry@linux.ibm.com>
-In-Reply-To: <20210525152736.GB2135213@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-Date:   Wed, 26 May 2021 11:42:58 +0530
-Cc:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
-        maddy@linux.vnet.ibm.com,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, jolsa@redhat.com, mpe@ellerman.id.au,
-        ravi.bangoria@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5960AF7C-64BD-4E57-BA6D-08AA9932B063@linux.ibm.com>
-References: <20210525063723.1191514-1-kjain@linux.ibm.com>
- <20210525144215.GA2135213@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
- <20210525152736.GB2135213@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-To:     "Paul A. Clarke" <pc@us.ibm.com>
-X-Mailer: Apple Mail (2.3654.80.0.2.43)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: koH-ecw_P2N0alB5FHKm8Ve0RZ14XCAX
-X-Proofpoint-ORIG-GUID: rhyOl8TBPd5YISrdFAxBctYknR2qzSfT
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
- definitions=2021-05-26_04:2021-05-25,2021-05-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 clxscore=1015 lowpriorityscore=0 spamscore=0 malwarescore=0
- phishscore=0 mlxlogscore=999 mlxscore=0 suspectscore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2105260040
+        Wed, 26 May 2021 03:06:58 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9724C061574;
+        Wed, 26 May 2021 00:05:03 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id p7so30952671wru.10;
+        Wed, 26 May 2021 00:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eGAqNQ4+oIfeyWH34ul2O0oaopqnEZsSkjATZeXV824=;
+        b=ivQ6EuNXRiKIUyIUgGs7x2SRgNkPbqOET6KdIuHLjbT9zv8teYOirGiz1+g5oDaDWc
+         AtyKEZOCrORGb/fn+AdQPW1JXJg4spBf8DRq+fhcDt4Ay3S3wC+LSwfRRQ3sSbddbfnr
+         6C6e0965XZzUSwSu7oRB+MWcBHD+Vhd2KmUbxdL11rOb8f5k0cV7DmawAJxIqImS96nS
+         gMlXX+EeUr/Bd7wA4QtMgAfi3jxtxYMwI+9IfmRQNczK9ViOdfNIVG7oaaKLkhN1OSMM
+         P4GuEF3E8iTSOzBG2wasx2QeE/GCHxhMd6ei4A/6sTWIFgzO8Ia1FipSVQ3Hg7kO9i5O
+         bB7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=eGAqNQ4+oIfeyWH34ul2O0oaopqnEZsSkjATZeXV824=;
+        b=hSeLHNAeV8pHX9/LJAaJhDvkyzIRvGrfmv5wweLzaP6b5mkQRf4oFxm956+0TQTgGf
+         Ve/uBeYxZFLhRChWlTXI8DYO6wNXd7Stw6J6UfGV0iJpxHw+EQenT8V0XuLXUOKarSDK
+         yzerbtEd5HIutifZ8beIqZjdsr5sa7Gz98yNKqLBhiIdL/QMKGSGgk5Y04UO61gZ83MR
+         Bg7VlMLeBUqVuXdVrYTbYGvYiGg+brcBFLYgytRhE9ArQ7OWA7J6J27G9O6cbsE7Dc2s
+         EzsISr0s2wFEJpUSGBDxqUGPqCArHAXTOwyV9s86koHi3lDXYqnlpQhcsRvH1QdSe2ku
+         fCpQ==
+X-Gm-Message-State: AOAM533GLDfn25jfREdmFmwINuxH8MDvCOM3rl8A2L1CBVMVV7Art5dP
+        25JFH0iYV0kQ1No0GUETqtg=
+X-Google-Smtp-Source: ABdhPJz2bvhrP1qZ/Qxypuy8WGX+eMj+o0ceWII92tzUzM21wcztnfU0hXr3vza4NJSuLUtHQcRxsg==
+X-Received: by 2002:a5d:688c:: with SMTP id h12mr31853645wru.348.1622012702431;
+        Wed, 26 May 2021 00:05:02 -0700 (PDT)
+Received: from gmail.com (0526ECF1.unconfigured.pool.telekom.hu. [5.38.236.241])
+        by smtp.gmail.com with ESMTPSA id r5sm18709791wrw.96.2021.05.26.00.05.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 May 2021 00:05:02 -0700 (PDT)
+Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
+Date:   Wed, 26 May 2021 09:05:00 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Haocheng Xie <xiehaocheng.cn@gmail.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf core: Fix some kernel-doc warnings.
+Message-ID: <YK3zHAdIQZ9GPhfg@gmail.com>
+References: <20210526033438.23640-1-xiehaocheng.cn@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210526033438.23640-1-xiehaocheng.cn@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+* Haocheng Xie <xiehaocheng.cn@gmail.com> wrote:
 
-> On 25-May-2021, at 8:57 PM, Paul A. Clarke <pc@us.ibm.com> wrote:
->>=20
-> I lost the original message, but Nageswara Sastry said:
->> 1. Extracted all the 244 events from the patch.
->> 2. Check them in 'perf list' - all 244 events found
->> 3. Ran all the events with 'perf stat -e "event name" sleep 1', all =
-ran fine.
->>    No errors were seen in 'dmesg'
->=20
-> I count 255 events.
->=20
-> PC
+> Fix the following W=1 kernel build warning(s):
+> kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
+> kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
+> kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
+> kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
+> 
+> Signed-off-by: Haocheng Xie <xiehaocheng.cn@gmail.com>
 
-Seems while extracting I filtered out newly added ones, so I got =
-244(255-11).=20
-Now checked with all 255 events. Thanks for pointing out.
+Even with your two patches there's still W=1 warnings remaining in 
+kernel/events/:
 
-Thanks!!
-R.Nageswara Sastry=
+  kernel/events/hw_breakpoint.c:461: warning: Function parameter or member 'context' not described in 'register_user_hw_breakpoint'
+  kernel/events/hw_breakpoint.c:560: warning: Function parameter or member 'context' not described in 'register_wide_hw_breakpoint'
+
+Could you please fix all of them, and send them as a 3-patch series? 
+
+Doesn't make much sense to just partially fix W=1 warnings in a subsystem.
+
+Thanks,
+
+	Ingo
