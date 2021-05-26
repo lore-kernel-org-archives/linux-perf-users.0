@@ -2,100 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B13AC2B9F7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 07:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6D2C47088
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 09:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62469613EC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 07:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FDD061437
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 09:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232336AbhEZHHA (ORCPT
+        id S233685AbhEZJs1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 May 2021 03:07:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        Wed, 26 May 2021 05:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232968AbhEZHG6 (ORCPT
+        with ESMTP id S233669AbhEZJs0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 May 2021 03:06:58 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9724C061574;
-        Wed, 26 May 2021 00:05:03 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id p7so30952671wru.10;
-        Wed, 26 May 2021 00:05:03 -0700 (PDT)
+        Wed, 26 May 2021 05:48:26 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304A9C06138A;
+        Wed, 26 May 2021 02:46:54 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id e15so347371plh.1;
+        Wed, 26 May 2021 02:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eGAqNQ4+oIfeyWH34ul2O0oaopqnEZsSkjATZeXV824=;
-        b=ivQ6EuNXRiKIUyIUgGs7x2SRgNkPbqOET6KdIuHLjbT9zv8teYOirGiz1+g5oDaDWc
-         AtyKEZOCrORGb/fn+AdQPW1JXJg4spBf8DRq+fhcDt4Ay3S3wC+LSwfRRQ3sSbddbfnr
-         6C6e0965XZzUSwSu7oRB+MWcBHD+Vhd2KmUbxdL11rOb8f5k0cV7DmawAJxIqImS96nS
-         gMlXX+EeUr/Bd7wA4QtMgAfi3jxtxYMwI+9IfmRQNczK9ViOdfNIVG7oaaKLkhN1OSMM
-         P4GuEF3E8iTSOzBG2wasx2QeE/GCHxhMd6ei4A/6sTWIFgzO8Ia1FipSVQ3Hg7kO9i5O
-         bB7g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zDvvvwoqfQvYWmKc028Jp9K1qZ09FScRwPlW+6bVp/o=;
+        b=A0ygh7lvV2Ydcn8B1xGJgcOzAJpbASE5IpheAVAIrPYALaZIT+VTUne9U9SFZbGvwv
+         mbsHQqQuFhT7sEEGg1fAe0qi7sUIFLKWBnEwnZDUWlfvqpT+cqkephAo09NSnaqzhBKw
+         ngApBasi1JRzrKX0DRiqmOr+zZcxQU8YKYxp3NQxemG+nT84bDCIMv2hqL+2bU1HMrVe
+         xvUQUbn+c8+7EG9WcDCujeOokFbYh2GiWVj+/Sf+WBulJw9xD6fTGT4A9M/Izl4Bcxvp
+         sreJUOtqa3/0bHgXTjchSoguJDhmNyGzCett3c5U+86F3wJo1+1Jr0OLjbe5rsk3BGug
+         KLjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=eGAqNQ4+oIfeyWH34ul2O0oaopqnEZsSkjATZeXV824=;
-        b=hSeLHNAeV8pHX9/LJAaJhDvkyzIRvGrfmv5wweLzaP6b5mkQRf4oFxm956+0TQTgGf
-         Ve/uBeYxZFLhRChWlTXI8DYO6wNXd7Stw6J6UfGV0iJpxHw+EQenT8V0XuLXUOKarSDK
-         yzerbtEd5HIutifZ8beIqZjdsr5sa7Gz98yNKqLBhiIdL/QMKGSGgk5Y04UO61gZ83MR
-         Bg7VlMLeBUqVuXdVrYTbYGvYiGg+brcBFLYgytRhE9ArQ7OWA7J6J27G9O6cbsE7Dc2s
-         EzsISr0s2wFEJpUSGBDxqUGPqCArHAXTOwyV9s86koHi3lDXYqnlpQhcsRvH1QdSe2ku
-         fCpQ==
-X-Gm-Message-State: AOAM533GLDfn25jfREdmFmwINuxH8MDvCOM3rl8A2L1CBVMVV7Art5dP
-        25JFH0iYV0kQ1No0GUETqtg=
-X-Google-Smtp-Source: ABdhPJz2bvhrP1qZ/Qxypuy8WGX+eMj+o0ceWII92tzUzM21wcztnfU0hXr3vza4NJSuLUtHQcRxsg==
-X-Received: by 2002:a5d:688c:: with SMTP id h12mr31853645wru.348.1622012702431;
-        Wed, 26 May 2021 00:05:02 -0700 (PDT)
-Received: from gmail.com (0526ECF1.unconfigured.pool.telekom.hu. [5.38.236.241])
-        by smtp.gmail.com with ESMTPSA id r5sm18709791wrw.96.2021.05.26.00.05.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 May 2021 00:05:02 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Wed, 26 May 2021 09:05:00 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Haocheng Xie <xiehaocheng.cn@gmail.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf core: Fix some kernel-doc warnings.
-Message-ID: <YK3zHAdIQZ9GPhfg@gmail.com>
-References: <20210526033438.23640-1-xiehaocheng.cn@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zDvvvwoqfQvYWmKc028Jp9K1qZ09FScRwPlW+6bVp/o=;
+        b=YXgYpVLOhvQ2beN1tZy8cCWPfcEOC/AO+tr/jsDZhT4nt1D8Ptjn3AdpkBxJNbtL3T
+         rczgorV9oiQMk+pUNbIwdsUg6rbCJiuvzX/BTG0VYz0vTQ7p8mADlvV1cisDF/OuKtOP
+         5wvjYILXo0dHgu3BaGtMlKJsxWRmybudBzS+WUOD8KJcleN2Ogzbi9xAvvnZULqldFL3
+         9Jr7D3d/e3CXY4wgxiyNY5Ny5vcympCO16dSdYpbzSviYeMOJBk7Jx3CDPfOF/26foeC
+         MN4n1tQjnChF2qdKN3Ctu2k2z43S2puCuvtgNFVMiUfxaR2erQvt9dLc5a3EykgXtX4J
+         6Hew==
+X-Gm-Message-State: AOAM533bgZWAinncu8PEd+7BTFRdDO8XyCA1OLjd3g6/qN/4mwjuxNan
+        CT5XoCKYtxPryYOggwQnX5M4TPqRstM1AQ==
+X-Google-Smtp-Source: ABdhPJxiBe7vms+t7rGUo8i6E7Wmw0BcpiZszBF1p+7mQ1P/7X2Bw6Ujmy6UzveU0gUB/v0UGt8p4Q==
+X-Received: by 2002:a17:90a:5b17:: with SMTP id o23mr20634260pji.14.1622022413669;
+        Wed, 26 May 2021 02:46:53 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id b1sm18248708pgf.84.2021.05.26.02.46.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 May 2021 02:46:53 -0700 (PDT)
+From:   Haocheng Xie <xiehaocheng.cn@gmail.com>
+To:     mingo@kernel.org
+Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        xiehaocheng.cn@gmail.com
+Subject: Re:[PATCH] perf core: Fix some kernel-doc warnings.
+Date:   Wed, 26 May 2021 17:46:42 +0800
+Message-Id: <20210526094642.16119-1-xiehaocheng.cn@gmail.com>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <YK3zHAdIQZ9GPhfg@gmail.com>
+References: <YK3zHAdIQZ9GPhfg@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210526033438.23640-1-xiehaocheng.cn@gmail.com>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Ingo Molnar <mingo@kernel.org> wrote：
+>
+>
+> * Haocheng Xie <xiehaocheng.cn@gmail.com> wrote:
+>
+> > Fix the following W=1 kernel build warning(s):
+> > kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
+> > kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
+> > kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
+> > kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
+> >
+> > Signed-off-by: Haocheng Xie <xiehaocheng.cn@gmail.com>
+>
+> Even with your two patches there's still W=1 warnings remaining in
+> kernel/events/:
+>
+>   kernel/events/hw_breakpoint.c:461: warning: Function parameter or member 'context' not described in 'register_user_hw_breakpoint'
+>   kernel/events/hw_breakpoint.c:560: warning: Function parameter or member 'context' not described in 'register_wide_hw_breakpoint'
+>
+> Could you please fix all of them, and send them as a 3-patch series?
 
-* Haocheng Xie <xiehaocheng.cn@gmail.com> wrote:
+OK, I will fix these warnings and resend the 3-patch series later.
 
-> Fix the following W=1 kernel build warning(s):
-> kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
-> kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
-> kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
-> kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
-> 
-> Signed-off-by: Haocheng Xie <xiehaocheng.cn@gmail.com>
+>
+> Doesn't make much sense to just partially fix W=1 warnings in a subsystem.
+>
+> Thanks,
+>
+>         Ingo
 
-Even with your two patches there's still W=1 warnings remaining in 
-kernel/events/:
+Thanks for your kind advice.
 
-  kernel/events/hw_breakpoint.c:461: warning: Function parameter or member 'context' not described in 'register_user_hw_breakpoint'
-  kernel/events/hw_breakpoint.c:560: warning: Function parameter or member 'context' not described in 'register_wide_hw_breakpoint'
+Best regards,
 
-Could you please fix all of them, and send them as a 3-patch series? 
-
-Doesn't make much sense to just partially fix W=1 warnings in a subsystem.
-
-Thanks,
-
-	Ingo
+Haocheng Xie
