@@ -4,112 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6D2C47088
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 09:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07718C47082
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 11:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FDD061437
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 09:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEA661360
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 May 2021 11:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233685AbhEZJs1 (ORCPT
+        id S234244AbhEZL4Y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 May 2021 05:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53184 "EHLO
+        Wed, 26 May 2021 07:56:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233669AbhEZJs0 (ORCPT
+        with ESMTP id S234172AbhEZL4M (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 May 2021 05:48:26 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304A9C06138A;
-        Wed, 26 May 2021 02:46:54 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id e15so347371plh.1;
-        Wed, 26 May 2021 02:46:54 -0700 (PDT)
+        Wed, 26 May 2021 07:56:12 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CFFC0612A3;
+        Wed, 26 May 2021 04:52:37 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id g24so640585pji.4;
+        Wed, 26 May 2021 04:52:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zDvvvwoqfQvYWmKc028Jp9K1qZ09FScRwPlW+6bVp/o=;
-        b=A0ygh7lvV2Ydcn8B1xGJgcOzAJpbASE5IpheAVAIrPYALaZIT+VTUne9U9SFZbGvwv
-         mbsHQqQuFhT7sEEGg1fAe0qi7sUIFLKWBnEwnZDUWlfvqpT+cqkephAo09NSnaqzhBKw
-         ngApBasi1JRzrKX0DRiqmOr+zZcxQU8YKYxp3NQxemG+nT84bDCIMv2hqL+2bU1HMrVe
-         xvUQUbn+c8+7EG9WcDCujeOokFbYh2GiWVj+/Sf+WBulJw9xD6fTGT4A9M/Izl4Bcxvp
-         sreJUOtqa3/0bHgXTjchSoguJDhmNyGzCett3c5U+86F3wJo1+1Jr0OLjbe5rsk3BGug
-         KLjA==
+        h=from:to:cc:subject:date:message-id;
+        bh=i729nvpoejgH5we6w7xS3AV1jor9J8GyOV0EJU3jiD4=;
+        b=VPWKEccBupTFWslwHxLiFI9gwfqebaQ8M/J1wTkCKuO9P8+WMYg4frl/s3ackUPkMf
+         yf5B6E2cAODYsTEyQnEjQl7ks4e1QRgKIFb6mLaibSs4xswmQPQHp3fjL2+o+pJdIGFQ
+         lpeco+2Goc4Rbhg/SoRtftMbnQ3qna66ltJ5KNS1/p+scS4c+/xAeYlhErjp5Fq8HMNQ
+         U9Niq5swRDi2jz0+SrH2ZFl270OXALO8RJJ+JgGkoogMDeFvo9woRaQMugVIevYlQ1iS
+         zZmKtmHUe8jWc+hh50y4+duOaFZ5FOi+XQe2blcYVrJ1gs8vV72s7Mp8JQYyhHJ5pnG3
+         C8MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zDvvvwoqfQvYWmKc028Jp9K1qZ09FScRwPlW+6bVp/o=;
-        b=YXgYpVLOhvQ2beN1tZy8cCWPfcEOC/AO+tr/jsDZhT4nt1D8Ptjn3AdpkBxJNbtL3T
-         rczgorV9oiQMk+pUNbIwdsUg6rbCJiuvzX/BTG0VYz0vTQ7p8mADlvV1cisDF/OuKtOP
-         5wvjYILXo0dHgu3BaGtMlKJsxWRmybudBzS+WUOD8KJcleN2Ogzbi9xAvvnZULqldFL3
-         9Jr7D3d/e3CXY4wgxiyNY5Ny5vcympCO16dSdYpbzSviYeMOJBk7Jx3CDPfOF/26foeC
-         MN4n1tQjnChF2qdKN3Ctu2k2z43S2puCuvtgNFVMiUfxaR2erQvt9dLc5a3EykgXtX4J
-         6Hew==
-X-Gm-Message-State: AOAM533bgZWAinncu8PEd+7BTFRdDO8XyCA1OLjd3g6/qN/4mwjuxNan
-        CT5XoCKYtxPryYOggwQnX5M4TPqRstM1AQ==
-X-Google-Smtp-Source: ABdhPJxiBe7vms+t7rGUo8i6E7Wmw0BcpiZszBF1p+7mQ1P/7X2Bw6Ujmy6UzveU0gUB/v0UGt8p4Q==
-X-Received: by 2002:a17:90a:5b17:: with SMTP id o23mr20634260pji.14.1622022413669;
-        Wed, 26 May 2021 02:46:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=i729nvpoejgH5we6w7xS3AV1jor9J8GyOV0EJU3jiD4=;
+        b=Ns8Cv/QtMfPXxmjhHXsvTDwSyj+v7GC6WVp8sbpUeJrGIppvMlkFp8pVCgntS3eab2
+         cKXwX0vaGS2hGrqithDEY7tnZFIcXIEhA3OsC+60bMYACvSI+qHPIbm2vmhj9xcvhxbH
+         F9ItYdE5T6QMCJ9qaOTR83P/5K70yT2BAl+ruk8ej4b0w3K0yHRnQe8VMTs5VyN+mQIW
+         aHJ1FzhS+lsPQLjLlucuElmTpcM6FHZzIsHyvKo1mv3PHJfKergi4ZW9lCWSf8pCDu5K
+         x1IpIHUh0C9WS/bs5y7KV8UzGiR3OCWq/8qxQIS3gPfJaEg+OMCOCrp6XXkp22CJfdDF
+         7qbw==
+X-Gm-Message-State: AOAM531SKXboeUdf2NpY3GuAD0aJRqWVz/DP8xi8ayzccGVMfSf7D4q0
+        uTEWnLTAlZf4phpkfEblLu4=
+X-Google-Smtp-Source: ABdhPJwL8ArjPwktMSW5odm65pZIrmMKwRfAR2UCdSx2qb+FbONaZSQKiBm7ynXoViRjFvST/qHqkw==
+X-Received: by 2002:a17:90a:7f85:: with SMTP id m5mr36078482pjl.128.1622029957262;
+        Wed, 26 May 2021 04:52:37 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id b1sm18248708pgf.84.2021.05.26.02.46.51
+        by smtp.gmail.com with ESMTPSA id s48sm15328843pfw.205.2021.05.26.04.52.34
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 May 2021 02:46:53 -0700 (PDT)
+        Wed, 26 May 2021 04:52:36 -0700 (PDT)
 From:   Haocheng Xie <xiehaocheng.cn@gmail.com>
-To:     mingo@kernel.org
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
-        xiehaocheng.cn@gmail.com
-Subject: Re:[PATCH] perf core: Fix some kernel-doc warnings.
-Date:   Wed, 26 May 2021 17:46:42 +0800
-Message-Id: <20210526094642.16119-1-xiehaocheng.cn@gmail.com>
+To:     mingo@kernel.org, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Haocheng Xie <xiehaocheng.cn@gmail.com>
+Subject: [PATCH 0/3] Fix some build warnings in perf/events subsystem.
+Date:   Wed, 26 May 2021 19:52:17 +0800
+Message-Id: <20210526115220.19134-1-xiehaocheng.cn@gmail.com>
 X-Mailer: git-send-email 2.9.5
-In-Reply-To: <YK3zHAdIQZ9GPhfg@gmail.com>
-References: <YK3zHAdIQZ9GPhfg@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ingo Molnar <mingo@kernel.org> wrote：
->
->
-> * Haocheng Xie <xiehaocheng.cn@gmail.com> wrote:
->
-> > Fix the following W=1 kernel build warning(s):
-> > kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
-> > kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
-> > kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
-> > kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
-> >
-> > Signed-off-by: Haocheng Xie <xiehaocheng.cn@gmail.com>
->
-> Even with your two patches there's still W=1 warnings remaining in
-> kernel/events/:
->
->   kernel/events/hw_breakpoint.c:461: warning: Function parameter or member 'context' not described in 'register_user_hw_breakpoint'
->   kernel/events/hw_breakpoint.c:560: warning: Function parameter or member 'context' not described in 'register_wide_hw_breakpoint'
->
-> Could you please fix all of them, and send them as a 3-patch series?
+I have got these warnings when building kernel with  'W=1' options:
 
-OK, I will fix these warnings and resend the 3-patch series later.
+kernel/events/core.c:6670:6: warning: no previous prototype for 'perf_pmu_snapshot_aux' [-Wmissing-prototypes]
+kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
+kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
+kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
+kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
+kernel/events/hw_breakpoint.c:461: warning: Function parameter or member 'context' not described in 'register_user_hw_breakpoint'
+kernel/events/hw_breakpoint.c:560: warning: Function parameter or member 'context' not described in 'register_wide_hw_breakpoint'
 
->
-> Doesn't make much sense to just partially fix W=1 warnings in a subsystem.
->
-> Thanks,
->
->         Ingo
+The 3-patch series will fix these warnings.
 
-Thanks for your kind advice.
+Haocheng Xie (3):
+  perf core:  Make local function perf_pmu_snapshot_aux() static
+  perf core: Fix some kernel-doc warnings.
+  perf/hw_breakpoint: Fix kernel-doc warnings in perf hw_breakpoint
 
-Best regards,
+ kernel/events/core.c          | 6 +++++-
+ kernel/events/hw_breakpoint.c | 2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-Haocheng Xie
+-- 
+2.9.5
+
