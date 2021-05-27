@@ -2,59 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 062ACC47089
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDADC4707F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F60613B9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFD2613DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232773AbhE0DVq (ORCPT
+        id S234534AbhE0DVs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 May 2021 23:21:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
+        Wed, 26 May 2021 23:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231843AbhE0DVp (ORCPT
+        with ESMTP id S234423AbhE0DVr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 May 2021 23:21:45 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02D4C061574;
-        Wed, 26 May 2021 20:20:11 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id q6so1940813pjj.2;
-        Wed, 26 May 2021 20:20:11 -0700 (PDT)
+        Wed, 26 May 2021 23:21:47 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D4FC061574;
+        Wed, 26 May 2021 20:20:14 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id n6-20020a17090ac686b029015d2f7aeea8so1511692pjt.1;
+        Wed, 26 May 2021 20:20:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=R7HKUgolZlXbPFqSrogXo/GPxcpvCMNR1c+E1WFALmk=;
-        b=VIOsnDpr1Zu1Jz55aBnwNdIgDcB4U2CpVLJPQdsXR4mEP8PEnVzaQ2txOcggmJrRLT
-         1yOhPvX7YWwoMMOuYzw3D2PFivXN9eeXPZWRUqOjr4p3VjAk3vdH0Gzkh7UZf7BiVrTf
-         8n7R2adMnnHPNymgk5uWOlGWgnffDNiEhldkZ9F8Wx3JQ8Ehwu9I40ox/mVibS48KTLO
-         hKTzVwyJUMXsy0n8ZBHDlpytuyakQn0Li2HeIQ7akN1NkFGUQsYFpokyuL5kVBO3eHpx
-         PJcgtryC72ul5aBzcGAgrC2Q2GC1k7s6k3/Ehtl/PROunnbqdXg44GCuh9ruWBBwsyTp
-         EiDQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=SgrK0Rp+6uI7UXrVdr3LXkgGvvUlF/qXSVzV7pcp+dQ=;
+        b=m+G4xSsgL4jGqmdti4+nulAb9NJwATCnxtZD3fa2GDfApX/qhbiZQnmY45fwNX6pIY
+         kyxYkSZ0xMxMyfis4i8glVrAQLHU4swf4ILoUXgwxZj0bWbX/i09ZqWTwbB5G5qT84Ie
+         o1G5EzRVa4Rfy4VcSVGUYP8K6xwCFJ9Zz11FL/hRWRObzCnmRtVrKcKw4IGFz9I6uOZg
+         TTQ3evA6prBlD2T1dvJL0z0PaPtLU+YXUbX63b6Ih4y5OYo46+5CLafxvdZZihAxv153
+         JdrDX0HuDxMsJlH+gHBJ3Nmnpz7N1Ti97eqgLqA/DiIL+FLiHWWHRRYFXkf6/Ptjhf96
+         JgRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=R7HKUgolZlXbPFqSrogXo/GPxcpvCMNR1c+E1WFALmk=;
-        b=dAPKfUi+6yymUFel1CuUlVRrbb48AKJ3yEwmfOmix4O8tG6LugJzQa4yB4To3HlYOi
-         g8FxzVzIu+BXS7v3e8uCBV/fpWt0Qu4oCXsc52EgtPdhZmrNWKqHHY03FrImscRDsy1i
-         JKBDz4AouQV0AOD33EQn4m0zmP4pXI5fFF7EosZ3mqU6yojiREtq/K4sgktEeNge9gtt
-         sYHReAw3esr1Z3uWogU1fRDGgEwIbxKZwgU1CGLjsU+9gd1/AzWet8iWT1yGSMq0dk2a
-         SnengbSJYhyUdzTHC1tyduaAeAfNpjiq3xkEAP6jREhCxJ1MSiJEP/71CkMV3I36Wle4
-         /TAg==
-X-Gm-Message-State: AOAM533PWxKZJ9WMmATrl/6p2nEHV4606/d0livrTuquPUUbgSNTPS07
-        FyhL1CxiDVgGVijTZtEj8MA=
-X-Google-Smtp-Source: ABdhPJxbz5+mVf8/WlwEPTlkYsyIDPjxNAnfqWeLBsfaA3pT0Jeae0Oef1kCcCs9Lu2x7TFFC59u6w==
-X-Received: by 2002:a17:90b:4d85:: with SMTP id oj5mr7236447pjb.178.1622085611138;
-        Wed, 26 May 2021 20:20:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=SgrK0Rp+6uI7UXrVdr3LXkgGvvUlF/qXSVzV7pcp+dQ=;
+        b=SHrKAgBhnmZY1FSI86NrfRoTkPMT6boUxFXvedgKXwx67vmzajIRp2Yt9Qx7KhC47G
+         wSGsi5BSyPEu9QtMoxK/JEsh/11eR5PP6GfOf+Kz3EaFO2fj9CBK+sD2tT+9AyrCsYno
+         p8znv9yiU3/rc5miu4GX0vV7dTWHRhnFJpzoGiHfX7nc5rGP+K5RsND0JYw234U/seXo
+         WHXryT+s+82Tq0qNLNRkh3MgoXYk5mxfpKQUw4ly1AAJRJp/un+8Dk6YCJKrEQNWuWWF
+         XBygqYCLGxl/9Z9Ks/iU24wWPsltpvf7I+V+YIqpCRilO8/Xc4FKQHZxMWwb4bhJTUyj
+         NNUw==
+X-Gm-Message-State: AOAM533OiMIoSvdb+XvDxtnsocQSaUjE+PvLcKqyXgfmhq/f0Ks3jHFN
+        nGwLCPNmUGTxew4kXcA1pjo=
+X-Google-Smtp-Source: ABdhPJwgDcbx1nJqHEPdDVcuj4ZVsumMTPfLV45SpffxECp5DHnBlCQl9LPR7TLAOdBmDp2fz0nKQw==
+X-Received: by 2002:a17:902:d643:b029:ef:62cd:eeed with SMTP id y3-20020a170902d643b02900ef62cdeeedmr1328780plh.42.1622085614021;
+        Wed, 26 May 2021 20:20:14 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id l6sm554716pjf.28.2021.05.26.20.20.07
+        by smtp.gmail.com with ESMTPSA id l6sm554716pjf.28.2021.05.26.20.20.11
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 May 2021 20:20:10 -0700 (PDT)
+        Wed, 26 May 2021 20:20:13 -0700 (PDT)
 From:   Haocheng Xie <xiehaocheng.cn@gmail.com>
 To:     mingo@kernel.org, acme@kernel.org,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
@@ -62,40 +64,44 @@ To:     mingo@kernel.org, acme@kernel.org,
         peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Haocheng Xie <xiehaocheng.cn@gmail.com>
-Subject: [PATCH v2 0/3] perf/events: Fix some build warnings in perf/events subsystem.
-Date:   Thu, 27 May 2021 11:19:44 +0800
-Message-Id: <20210527031947.1801-1-xiehaocheng.cn@gmail.com>
+Subject: [PATCH v2 1/3] perf core: Make local function perf_pmu_snapshot_aux() static
+Date:   Thu, 27 May 2021 11:19:45 +0800
+Message-Id: <20210527031947.1801-2-xiehaocheng.cn@gmail.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20210527031947.1801-1-xiehaocheng.cn@gmail.com>
+References: <20210527031947.1801-1-xiehaocheng.cn@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I have got these warnings when building kernel with  'W=1' options:
+Fixes the following W=1 kernel build warning:
 
   kernel/events/core.c:6670:6: warning: no previous prototype for 'perf_pmu_snapshot_aux' [-Wmissing-prototypes]
-  kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
-  kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
-  kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
-  kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
-  kernel/events/hw_breakpoint.c:461: warning: Function parameter or member 'context' not described in 'register_user_hw_breakpoint'
-  kernel/events/hw_breakpoint.c:560: warning: Function parameter or member 'context' not described in 'register_wide_hw_breakpoint'
 
-The 3-patch series will fix these warnings.
+Signed-off-by: Haocheng Xie <xiehaocheng.cn@gmail.com>
+---
+ kernel/events/core.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes from v1:
-  - optimize the commit message format.
-  - remove superfluous whitespace in the subject.
-  - align the arguments of modified function.
-
-Haocheng Xie (3):
-  perf core: Make local function perf_pmu_snapshot_aux() static
-  perf core: Fix some kernel-doc warnings.
-  perf/hw_breakpoint: Fix kernel-doc warnings in perf hw_breakpoint
-
- kernel/events/core.c          | 12 ++++++++----
- kernel/events/hw_breakpoint.c |  2 ++
- 2 files changed, 10 insertions(+), 4 deletions(-)
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6fee4a7..e1a80e1 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6667,10 +6667,10 @@ static unsigned long perf_prepare_sample_aux(struct perf_event *event,
+ 	return data->aux_size;
+ }
+ 
+-long perf_pmu_snapshot_aux(struct perf_buffer *rb,
+-			   struct perf_event *event,
+-			   struct perf_output_handle *handle,
+-			   unsigned long size)
++static long perf_pmu_snapshot_aux(struct perf_buffer *rb,
++                                 struct perf_event *event,
++                                 struct perf_output_handle *handle,
++                                 unsigned long size)
+ {
+ 	unsigned long flags;
+ 	long ret;
 -- 
 2.9.5
 
