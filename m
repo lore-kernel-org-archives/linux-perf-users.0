@@ -2,93 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6268C47089
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 10:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA71C4708B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 13:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85F03613D1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 10:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B039F61358
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 13:46:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236221AbhE0K7T (ORCPT
+        id S236596AbhE0NsU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 May 2021 06:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236217AbhE0K7T (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 May 2021 06:59:19 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 572FCC061574;
-        Thu, 27 May 2021 03:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=pYhSL9rZ5yWbPh3GEPzpn/Iur2XiYh2pZd2OnaDaVY8=; b=UVTh0DJM7OAuJs3Xx5rXD/FTtX
-        IG8416uNRIsQ+bGsxyo5HGyHszG5vqnGpQ48HiZutLTmJNXqE8kVognzcZxu7ibt6Wr2lOtimLqNQ
-        rNBHtLHIDOXtK4GYT4OqrY14zGILhXJn8grYJqSJhIHBU5Zd+PNo5Q85MpEIkTcweE2qwlj2fW91L
-        XrjP/cVQ9xUPwb6rf8yyXtawjtBh4pLvHSVPMBKugy25bKWm2SUzsYUKXKBiEInamRwPICuwfKHp6
-        NIVhYNjwp3BQKz0AQvPFAfqht3up0AJJV9qqUiRSeVUL38CtAWoJ5kNZ03V2/FQUP0csuzYQjACkU
-        f6zM978A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lmDhX-005Rlg-15; Thu, 27 May 2021 10:57:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 68E1C30022C;
-        Thu, 27 May 2021 12:57:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 42BBA2C80046A; Thu, 27 May 2021 12:57:17 +0200 (CEST)
-Date:   Thu, 27 May 2021 12:57:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        dvyukov@google.com,
-        syzbot+142c9018f5962db69c7e@syzkaller.appspotmail.com
-Subject: Re: [PATCH] perf: Fix data race between pin_count increment/decrement
-Message-ID: <YK97DXkDbhH5BMdI@hirez.programming.kicks-ass.net>
-References: <20210527104711.2671610-1-elver@google.com>
+        Thu, 27 May 2021 09:48:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:58036 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236593AbhE0NsT (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 27 May 2021 09:48:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2601614FF;
+        Thu, 27 May 2021 06:46:46 -0700 (PDT)
+Received: from [10.57.0.246] (unknown [10.57.0.246])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EA183F73D;
+        Thu, 27 May 2021 06:46:43 -0700 (PDT)
+Subject: Re: [RFC PATCH v3] perf cs-etm: Split Coresight decode by aux records
+To:     acme@kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, leo.yan@linaro.org
+Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210527104234.24313-1-james.clark@arm.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <11822824-7486-2333-f039-bfd801b86922@arm.com>
+Date:   Thu, 27 May 2021 16:46:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210527104711.2671610-1-elver@google.com>
+In-Reply-To: <20210527104234.24313-1-james.clark@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 27, 2021 at 12:47:11PM +0200, Marco Elver wrote:
-> KCSAN reports a data race between increment and decrement of pin_count:
+
+
+On 27/05/2021 13:42, James Clark wrote:
+> Populate the auxtrace queues using AUX records rather than whole
+> auxtrace buffers.
 > 
->   write to 0xffff888237c2d4e0 of 4 bytes by task 15740 on cpu 1:
->    find_get_context		kernel/events/core.c:4617
->    __do_sys_perf_event_open	kernel/events/core.c:12097 [inline]
->    __se_sys_perf_event_open	kernel/events/core.c:11933
->    ...
->   read to 0xffff888237c2d4e0 of 4 bytes by task 15743 on cpu 0:
->    perf_unpin_context		kernel/events/core.c:1525 [inline]
->    __do_sys_perf_event_open	kernel/events/core.c:12328 [inline]
->    __se_sys_perf_event_open	kernel/events/core.c:11933
->    ...
-> 
-> Because neither read-modify-write here is atomic, this can lead to one of the
-> operations being lost, resulting in an inconsistent pin_count. Fix it by adding
-> the missing locking in the CPU-event case.
+...
+> Snapshot mode still needs to be tested.
 > 
 
-Indeed so!
+Snapshot mode is also working, but needs the following patch applied to reverse aux_offset
+from the end of the buffer to the beginning:
 
-Fixes: fe4b04fa31a6 ("perf: Cure task_oncpu_function_call() races")
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 5d6c03488187..9db556e14dfa 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -2700,6 +2700,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session,
+ 	struct perf_record_auxtrace *auxtrace_event;
+ 	union perf_event auxtrace_fragment;
+ 	bool matchesCpuPid;
++	__u64 aux_offset;
+ 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+ 						   struct cs_etm_auxtrace,
+ 						   auxtrace);
+@@ -2730,19 +2731,26 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session,
+ 	else
+ 		matchesCpuPid = auxtrace_event->cpu == sample->cpu;
+ 
++	/*
++	 * In snapshot/overwrite mode, the head points to the end of the buffer so aux_offset needs
++	 * to have the size subtracted so it points to the beginning as in normal mode.
++	 */
++	if (aux_event->flags && PERF_AUX_FLAG_OVERWRITE)
++		aux_offset = aux_event->aux_offset - aux_event->aux_size;
++	else
++		aux_offset = aux_event->aux_offset;
++
+ 	if (matchesCpuPid &&
+-	    aux_event->aux_offset >= auxtrace_event->offset &&
+-	    aux_event->aux_offset + aux_event->aux_size <=
+-			auxtrace_event->offset + auxtrace_event->size) {
++	    aux_offset >= auxtrace_event->offset &&
++	    aux_offset + aux_event->aux_size <= auxtrace_event->offset + auxtrace_event->size) {
+ 		/*
+ 		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+ 		 * based on the sizes of the aux event, and queue that fragment.
+ 		 */
+ 		auxtrace_fragment.auxtrace = *auxtrace_event;
+ 		auxtrace_fragment.auxtrace.size = aux_event->aux_size;
+-		auxtrace_fragment.auxtrace.offset = aux_event->aux_offset;
+-		file_offset += aux_event->aux_offset - auxtrace_event->offset +
+-				auxtrace_event->header.size;
++		auxtrace_fragment.auxtrace.offset = aux_offset;
++		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
+ 		return auxtrace_queues__add_event(&etm->queues,
+ 					       session,
+ 					       &auxtrace_fragment,
 
-> Reported-by: syzbot+142c9018f5962db69c7e@syzkaller.appspotmail.com
-> Signed-off-by: Marco Elver <elver@google.com>
 
-Thanks!
