@@ -2,149 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2053EC4707F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 15:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A349C4707F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 15:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF07A613BA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 15:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30337610FC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 15:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234586AbhE0Pjl (ORCPT
+        id S233906AbhE0Pxa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 May 2021 11:39:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36352 "EHLO
+        Thu, 27 May 2021 11:53:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233226AbhE0Pjk (ORCPT
+        with ESMTP id S229846AbhE0Pxa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 May 2021 11:39:40 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9398C061760
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 May 2021 08:38:06 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id k4so649029ili.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 May 2021 08:38:06 -0700 (PDT)
+        Thu, 27 May 2021 11:53:30 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98028C061763
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 May 2021 08:51:55 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id n5-20020a1c72050000b0290192e1f9a7e1so774152wmc.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 May 2021 08:51:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2crjK0WkoLk1yIKgn4T+sf7fuQ4+lslYOkCkxigqz6k=;
-        b=HZqATLPbPzHq6IDZSeyW6yH3VLhnhrOp5bu1V+jQffAojleUQIGYzRCLBTyyAF7nTw
-         QZdn6q3lNQvvH94cVuMX6+YSeETwJjiUqVI3hHgZEWGje65RasGlKI9IU2/Qb6W5IpLp
-         6aUq14d4eX44abInTxfQRMnCoTlWzntjphX6fjdlh9f5UrKWtoqdgrFS6068t/uofmQE
-         C+Had2Qt+I5/EBQaI2YQq1uvB7x5OhaH1Ts6Q1Yg9zqyx1Dj6uD8LBdBx7+tmCU2Kqik
-         QBO9GxjTTyNCd7BpIvdFDrbKyasY2MWTur57x6ZjClfx+FC85KZkhYHcxjjx58ISBnfL
-         m8aw==
+        bh=RGM578SjTx4HPSAuDayxd66VlRx8pMIDrOm8Ebr5U4U=;
+        b=cznRe/KbSwD4IKSBRhpDdAA3gr55mz4bVGiRHmEOhd+VXY2noIzcwDIN8KVpRNab0s
+         nNmAEgJP5V45qsvqJlkcj0eWxMAAMpkCy+r1l9Y0NP0GvnQY7OV2gMrsBXK7EY37bIXB
+         InUfP3Vt6XWH2PxXqeOHgC5Smseg6N4oXnvSRq1miEpcVYL0ka0TRiehugi5UU3YAAKx
+         A+ydECqCFTS3JsTmSlDp7KS1lieu/iAdSiWya/k2uyskIxRnB1v1+fMzMCUb/m6HaS7k
+         N4pOf6yK/Tf3NmNKEqyXRmOxwG+1PKz8qnEFZ+PSCqdIfgcylU3wBGEt30kLnNki5Frl
+         4/uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2crjK0WkoLk1yIKgn4T+sf7fuQ4+lslYOkCkxigqz6k=;
-        b=TqQ6Vhfl41bj7uaPCGlR+ezMZdmZgk2o7QM9oHEQGayFJAiLl89yKK/DfHkdF1KUge
-         bJFWks4+Ay015OGCA6ujM5SZDQjCr15c1R8x11Znv+evjV+Jdt6I5kQ+/LhNo9c8zjNu
-         3F/g0zHiABmMDYLd+Eog3kwcog/BfKaiEUuIod1xO9QNvLMrmbVIr6YGL/Q8Ws8v7xaI
-         r61Zgc27TzTsMJm5phE7ec4zW6YRcYwqsb0r7tIT/+Fz4i2n5PuafnWx7Z1Ma5hpM0kI
-         ox1AF26KbKhZgXkPvJTE0VP6bMfRRL4nMgkwOonKu4bzfKjSd68jgd3F9Rwg8xJbFfae
-         2rqQ==
-X-Gm-Message-State: AOAM531tgL94K+ibbGQ1OMWGGjm7QlvuUI98vlF6eVU11+mRGg47kOqJ
-        Mau9DFeBjUZj845lLyDUzbshWMf2piwvHS9S1CiV0Q==
-X-Google-Smtp-Source: ABdhPJwEeY2zSrutI4aF0G0bm/TwO5xOgq5IIyL9IMRKy/P97LQ/FPMd1WBfxtwT4wPgD2diYeMeoKv6gQKs6NAZbeM=
-X-Received: by 2002:a92:c54a:: with SMTP id a10mr3421574ilj.140.1622129885983;
- Thu, 27 May 2021 08:38:05 -0700 (PDT)
+        bh=RGM578SjTx4HPSAuDayxd66VlRx8pMIDrOm8Ebr5U4U=;
+        b=lH2jZR9OFWpcD/JFbucBlz/mHDvC+g0LhkQeEekv4OcW/lJnmxLTwuo2QgQ0M/YPv3
+         P++fd5y0UX2ZQ6aoBrJ6kYSxottRY/l0e7mG2TUsep4IxutKHrDvmt5H7MaQHrTZTA/3
+         bD5q4lmMVeU1rCvkDhbNzY8VnDcttgn9zehDiVVkfYvaRhK9LOpYtc6bXFClJjf2Jf3S
+         H0A3tzJEWdbO7/zA9wS7d08NcYcLSk++rdZoHtkuFuxL291uDD7pJypr6uxe7vr6410a
+         PdDUx+ZfVVlCsQemA6ITgSySq2I5/APzB9Q2q9i4ZDblLENa5vTFx37VFP8nmlYcUGjI
+         8TAQ==
+X-Gm-Message-State: AOAM533YpfouMAsKllqVZEmUxCPE8fjYq1tbWgyvS0i6Sqrr2bAYDrCZ
+        GwjncZ+AlIZn8hX/piBsgxZVqqXGCfgKMa59d8FujA==
+X-Google-Smtp-Source: ABdhPJwx7qe8Y0mZV7gVdyHoTXhTi2y03ykKGYwRQyBeGlbNF1psf9XSsN2gpRnhJtd3uI0x5VZ2QVY/Dm3HlggI4mQ=
+X-Received: by 2002:a1c:4006:: with SMTP id n6mr6898753wma.58.1622130714011;
+ Thu, 27 May 2021 08:51:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210527104234.24313-1-james.clark@arm.com> <11822824-7486-2333-f039-bfd801b86922@arm.com>
-In-Reply-To: <11822824-7486-2333-f039-bfd801b86922@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 27 May 2021 09:37:54 -0600
-Message-ID: <CANLsYkynQbGRhOmyramX+nSHvVnH_nSJb=t03Dp-2WeXP3ZYAw@mail.gmail.com>
-Subject: Re: [RFC PATCH v3] perf cs-etm: Split Coresight decode by aux records
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Al Grant <al.grant@arm.com>,
-        branislav.rankov@arm.com, Denis Nikitin <denik@chromium.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+References: <20210519164447.2672030-1-irogers@google.com>
+In-Reply-To: <20210519164447.2672030-1-irogers@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 May 2021 08:51:41 -0700
+Message-ID: <CAP-5=fWRAbkd8MVAxdGf0YGE1oFPT40rZC3eb3OKjqWmBVq_BA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Move debug initialization earlier
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 27 May 2021 at 07:46, James Clark <james.clark@arm.com> wrote:
+On Wed, May 19, 2021 at 9:44 AM Ian Rogers <irogers@google.com> wrote:
 >
+> This avoids segfaults during option handlers that use pr_err. For
+> example, "perf --debug nopager list" segfaults before this change.
 >
->
-> On 27/05/2021 13:42, James Clark wrote:
-> > Populate the auxtrace queues using AUX records rather than whole
-> > auxtrace buffers.
-> >
-> ...
-> > Snapshot mode still needs to be tested.
-> >
->
-> Snapshot mode is also working, but needs the following patch applied to reverse aux_offset
-> from the end of the buffer to the beginning:
+> Fixes: 8abceacff87d (perf debug: Add debug_set_file function)
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-It might be better to send another revision with this patch included
-in to make sure everyone is looking at (and testing) the same thing.
+Ping.
 
+Thanks!
+Ian
+
+> ---
+>  tools/perf/perf.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 5d6c03488187..9db556e14dfa 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -2700,6 +2700,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session,
->         struct perf_record_auxtrace *auxtrace_event;
->         union perf_event auxtrace_fragment;
->         bool matchesCpuPid;
-> +       __u64 aux_offset;
->         struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
->                                                    struct cs_etm_auxtrace,
->                                                    auxtrace);
-> @@ -2730,19 +2731,26 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session,
->         else
->                 matchesCpuPid = auxtrace_event->cpu == sample->cpu;
+> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> index 20cb91ef06ff..2f6b67189b42 100644
+> --- a/tools/perf/perf.c
+> +++ b/tools/perf/perf.c
+> @@ -443,6 +443,8 @@ int main(int argc, const char **argv)
+>         const char *cmd;
+>         char sbuf[STRERR_BUFSIZE];
 >
-> +       /*
-> +        * In snapshot/overwrite mode, the head points to the end of the buffer so aux_offset needs
-> +        * to have the size subtracted so it points to the beginning as in normal mode.
-> +        */
-> +       if (aux_event->flags && PERF_AUX_FLAG_OVERWRITE)
-> +               aux_offset = aux_event->aux_offset - aux_event->aux_size;
-> +       else
-> +               aux_offset = aux_event->aux_offset;
+> +       perf_debug_setup();
 > +
->         if (matchesCpuPid &&
-> -           aux_event->aux_offset >= auxtrace_event->offset &&
-> -           aux_event->aux_offset + aux_event->aux_size <=
-> -                       auxtrace_event->offset + auxtrace_event->size) {
-> +           aux_offset >= auxtrace_event->offset &&
-> +           aux_offset + aux_event->aux_size <= auxtrace_event->offset + auxtrace_event->size) {
->                 /*
->                  * If this AUX event was inside this buffer somewhere, create a new auxtrace event
->                  * based on the sizes of the aux event, and queue that fragment.
->                  */
->                 auxtrace_fragment.auxtrace = *auxtrace_event;
->                 auxtrace_fragment.auxtrace.size = aux_event->aux_size;
-> -               auxtrace_fragment.auxtrace.offset = aux_event->aux_offset;
-> -               file_offset += aux_event->aux_offset - auxtrace_event->offset +
-> -                               auxtrace_event->header.size;
-> +               auxtrace_fragment.auxtrace.offset = aux_offset;
-> +               file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
->                 return auxtrace_queues__add_event(&etm->queues,
->                                                session,
->                                                &auxtrace_fragment,
+>         /* libsubcmd init */
+>         exec_cmd_init("perf", PREFIX, PERF_EXEC_PATH, EXEC_PATH_ENVIRONMENT);
+>         pager_init(PERF_PAGER_ENVIRONMENT);
+> @@ -531,8 +533,6 @@ int main(int argc, const char **argv)
+>          */
+>         pthread__block_sigwinch();
 >
+> -       perf_debug_setup();
+> -
+>         while (1) {
+>                 static int done_help;
+>
+> --
+> 2.31.1.751.gd2f1c929bd-goog
 >
