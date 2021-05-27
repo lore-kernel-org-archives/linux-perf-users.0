@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDADC4707F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA767C47089
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AFD2613DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5A8A613C1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 May 2021 03:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234534AbhE0DVs (ORCPT
+        id S234647AbhE0DVw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 May 2021 23:21:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
+        Wed, 26 May 2021 23:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234423AbhE0DVr (ORCPT
+        with ESMTP id S234577AbhE0DVu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 May 2021 23:21:47 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74D4FC061574;
-        Wed, 26 May 2021 20:20:14 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id n6-20020a17090ac686b029015d2f7aeea8so1511692pjt.1;
-        Wed, 26 May 2021 20:20:14 -0700 (PDT)
+        Wed, 26 May 2021 23:21:50 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E00DC061763;
+        Wed, 26 May 2021 20:20:17 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id lr4-20020a17090b4b84b02901600455effdso371637pjb.5;
+        Wed, 26 May 2021 20:20:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SgrK0Rp+6uI7UXrVdr3LXkgGvvUlF/qXSVzV7pcp+dQ=;
-        b=m+G4xSsgL4jGqmdti4+nulAb9NJwATCnxtZD3fa2GDfApX/qhbiZQnmY45fwNX6pIY
-         kyxYkSZ0xMxMyfis4i8glVrAQLHU4swf4ILoUXgwxZj0bWbX/i09ZqWTwbB5G5qT84Ie
-         o1G5EzRVa4Rfy4VcSVGUYP8K6xwCFJ9Zz11FL/hRWRObzCnmRtVrKcKw4IGFz9I6uOZg
-         TTQ3evA6prBlD2T1dvJL0z0PaPtLU+YXUbX63b6Ih4y5OYo46+5CLafxvdZZihAxv153
-         JdrDX0HuDxMsJlH+gHBJ3Nmnpz7N1Ti97eqgLqA/DiIL+FLiHWWHRRYFXkf6/Ptjhf96
-         JgRw==
+        bh=sONGP+MuZvr2rIV5XDT1+R28NlOPicY3nXSExBdaw0o=;
+        b=Hkv/NmoQvKQWtlenHmBV9JoQCiqyo9aOsCJRHbKEV0nu5goUOGkrQCcruSjFZQ2JCJ
+         p5Ty6dBju/kHGXaoPO1ImqgI0tGLgh5OgC6HUxwFpQYoxp8J8EysD3qPc5Y+fncn5FXn
+         xrvWyWvus+wvhhOcmUU3muIf+YR3qHnUK3caOKFzVJ5+r5HHECG5+eF8ApVcRY+4/8jy
+         YQsDtjvXzaZXzhW+a93arZdupX8T2AtdaL/N01winQKS+oizddxXNkGlWLHXepPVZg3z
+         OypP3Txnc6ZuWyDU44BV1HIh44SUxUvSMrQkEPgifEsYrYClboAPDeHc2CFoj2MmoMB0
+         wnSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=SgrK0Rp+6uI7UXrVdr3LXkgGvvUlF/qXSVzV7pcp+dQ=;
-        b=SHrKAgBhnmZY1FSI86NrfRoTkPMT6boUxFXvedgKXwx67vmzajIRp2Yt9Qx7KhC47G
-         wSGsi5BSyPEu9QtMoxK/JEsh/11eR5PP6GfOf+Kz3EaFO2fj9CBK+sD2tT+9AyrCsYno
-         p8znv9yiU3/rc5miu4GX0vV7dTWHRhnFJpzoGiHfX7nc5rGP+K5RsND0JYw234U/seXo
-         WHXryT+s+82Tq0qNLNRkh3MgoXYk5mxfpKQUw4ly1AAJRJp/un+8Dk6YCJKrEQNWuWWF
-         XBygqYCLGxl/9Z9Ks/iU24wWPsltpvf7I+V+YIqpCRilO8/Xc4FKQHZxMWwb4bhJTUyj
-         NNUw==
-X-Gm-Message-State: AOAM533OiMIoSvdb+XvDxtnsocQSaUjE+PvLcKqyXgfmhq/f0Ks3jHFN
-        nGwLCPNmUGTxew4kXcA1pjo=
-X-Google-Smtp-Source: ABdhPJwgDcbx1nJqHEPdDVcuj4ZVsumMTPfLV45SpffxECp5DHnBlCQl9LPR7TLAOdBmDp2fz0nKQw==
-X-Received: by 2002:a17:902:d643:b029:ef:62cd:eeed with SMTP id y3-20020a170902d643b02900ef62cdeeedmr1328780plh.42.1622085614021;
-        Wed, 26 May 2021 20:20:14 -0700 (PDT)
+        bh=sONGP+MuZvr2rIV5XDT1+R28NlOPicY3nXSExBdaw0o=;
+        b=BfpDAdzTkIW3VmVG4nWmGsWx45xgQrCdAC+hPUzT7i0druEG32F5bp5y/O6Q6tMhHz
+         8gkCzfxQpQLrNTmIXafoi0qGWi84Mv4LVpNqSLs7M4BIiVrUOR7tBRlFVl95CLFe+PYm
+         8NgKxRHWjWwEm+oKPwEAvk3GDvdwaqb3g8pgXwhj1rs7P1UZVwzguiTjShG6MRwRILqB
+         /LhvrpDrRJzJTFJMnxRcsPiZnwVT0p+sWxcQ3jTfZ51ZyxNavnPypNSVBNFnmD05SlwY
+         ujf+zIDGJ8kY6smVgI4Nfn6Dm5IjHzEU8nqXyBVTqaJ6PjVuc9J4mQml2TWEz5bJJw0V
+         32+w==
+X-Gm-Message-State: AOAM532r293LY9/msJeDsgmNpA0ubq2FczzlwW9rj5Sg1utFPzMQFdtP
+        ybWxcRaNOMsiDVFCYLbdLZM=
+X-Google-Smtp-Source: ABdhPJylZ/zELefoVndPoXgreNohKxqMS5IENlbc3AUitj0GRxEtx/wlWzyopdobWf/TrPvX+pOgFQ==
+X-Received: by 2002:a17:90a:2a02:: with SMTP id i2mr6974798pjd.148.1622085617148;
+        Wed, 26 May 2021 20:20:17 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id l6sm554716pjf.28.2021.05.26.20.20.11
+        by smtp.gmail.com with ESMTPSA id l6sm554716pjf.28.2021.05.26.20.20.14
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 May 2021 20:20:13 -0700 (PDT)
+        Wed, 26 May 2021 20:20:16 -0700 (PDT)
 From:   Haocheng Xie <xiehaocheng.cn@gmail.com>
 To:     mingo@kernel.org, acme@kernel.org,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
@@ -64,9 +64,9 @@ To:     mingo@kernel.org, acme@kernel.org,
         peterz@infradead.org
 Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Haocheng Xie <xiehaocheng.cn@gmail.com>
-Subject: [PATCH v2 1/3] perf core: Make local function perf_pmu_snapshot_aux() static
-Date:   Thu, 27 May 2021 11:19:45 +0800
-Message-Id: <20210527031947.1801-2-xiehaocheng.cn@gmail.com>
+Subject: [PATCH v2 2/3] perf core: Fix some kernel-doc warnings.
+Date:   Thu, 27 May 2021 11:19:46 +0800
+Message-Id: <20210527031947.1801-3-xiehaocheng.cn@gmail.com>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20210527031947.1801-1-xiehaocheng.cn@gmail.com>
 References: <20210527031947.1801-1-xiehaocheng.cn@gmail.com>
@@ -74,34 +74,47 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Fixes the following W=1 kernel build warning:
+Fix the following W=1 kernel build warning(s):
 
-  kernel/events/core.c:6670:6: warning: no previous prototype for 'perf_pmu_snapshot_aux' [-Wmissing-prototypes]
+  kernel/events/core.c:143: warning: Function parameter or member 'cpu' not described in 'cpu_function_call'
+  kernel/events/core.c:11924: warning: Function parameter or member 'flags' not described in 'sys_perf_event_open'
+  kernel/events/core.c:12382: warning: Function parameter or member 'overflow_handler' not described in 'perf_event_create_kernel_counter'
+  kernel/events/core.c:12382: warning: Function parameter or member 'context' not described in 'perf_event_create_kernel_counter'
 
 Signed-off-by: Haocheng Xie <xiehaocheng.cn@gmail.com>
 ---
- kernel/events/core.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/events/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 6fee4a7..e1a80e1 100644
+index e1a80e1..acfd0b4 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -6667,10 +6667,10 @@ static unsigned long perf_prepare_sample_aux(struct perf_event *event,
- 	return data->aux_size;
- }
+@@ -132,6 +132,7 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
  
--long perf_pmu_snapshot_aux(struct perf_buffer *rb,
--			   struct perf_event *event,
--			   struct perf_output_handle *handle,
--			   unsigned long size)
-+static long perf_pmu_snapshot_aux(struct perf_buffer *rb,
-+                                 struct perf_event *event,
-+                                 struct perf_output_handle *handle,
-+                                 unsigned long size)
- {
- 	unsigned long flags;
- 	long ret;
+ /**
+  * cpu_function_call - call a function on the cpu
++ * @cpu:	target cpu to queue this function
+  * @func:	the function to be called
+  * @info:	the function call argument
+  *
+@@ -11917,6 +11918,7 @@ __perf_event_ctx_lock_double(struct perf_event *group_leader,
+  * @pid:		target pid
+  * @cpu:		target cpu
+  * @group_fd:		group leader event fd
++ * @flags:		perf event open flags
+  */
+ SYSCALL_DEFINE5(perf_event_open,
+ 		struct perf_event_attr __user *, attr_uptr,
+@@ -12373,6 +12375,8 @@ SYSCALL_DEFINE5(perf_event_open,
+  * @attr: attributes of the counter to create
+  * @cpu: cpu in which the counter is bound
+  * @task: task to profile (NULL for percpu)
++ * @overflow_handler: callback to trigger when we hit the event
++ * @context: context data could be used in overflow_handler callback
+  */
+ struct perf_event *
+ perf_event_create_kernel_counter(struct perf_event_attr *attr, int cpu,
 -- 
 2.9.5
 
