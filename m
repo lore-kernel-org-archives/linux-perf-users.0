@@ -2,188 +2,184 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AF3C2B9F7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 18:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A70FC47087
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 18:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB961613C9
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 18:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 321D661400
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 18:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbhE1SfN (ORCPT
+        id S229547AbhE1SqA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 May 2021 14:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbhE1SfM (ORCPT
+        Fri, 28 May 2021 14:46:00 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:48386 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229488AbhE1Sp7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 May 2021 14:35:12 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2656C06174A
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 May 2021 11:33:37 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id r10so4144384wrj.11
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 May 2021 11:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AXu/cY1gGv2Wn1ajEnYj9SqMQ0t/TGuBi8LefYvM9Os=;
-        b=TFy/0qHR56Mqoi4QCYcIUqRrFcC4OfaZIl8pJnIaQ1D9n86aOiHpWvVa9tlcY5DQo4
-         OyGAd/aL9E+w8rc6+xUlr2zej0kzx7Ih3/DQKBZ2BAf6VsMjIluRkrCpPPoCMJJy4HZE
-         rBRlPNzyyHWLPDMEsHiYLNJm4OmW4+wUbtfRC6DGRBuw/FDJAaC+QL77kHI9QnH7TCBZ
-         zXTHoT9Kg1QHjRvQMc/SHsb6HW1JhyYA+0c7tAUWmvdFDqG9aatruxmhKvauyCRG+ljc
-         wBd9yWR+Xn5tv5Mv/XSD+qZtaEi/oN2MafMWBFBA8bh9Atb8e6pvtAy6Vte6/oobQp37
-         i9uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AXu/cY1gGv2Wn1ajEnYj9SqMQ0t/TGuBi8LefYvM9Os=;
-        b=KhFwAUFzWGuBI3S4FHXrEh+ZOAc6d3Ua5Bsg70eysxIdk5JegyJqbUBN2Fk9qPS/p0
-         JCxVYCH7jEkUoSLjHgIChiQeS0lZEuQgn/vFUrGCuDuWFaGKAloK67HMIwcRQik5XniO
-         E1VGeU8xwuepr86YaxrFK9Mv/5m/PHHm0cjVclj4nJKehJkBC1epLHm3wEkyqhg7EjgB
-         cdW6yU9cggvGyFCtBwkOsLa6MNFUIUADWDE40+AXvGgaNZeuaZ7vVWCAsF/0tySSNl8i
-         D0gemTD+ghwKIQ9i12sUlo+V6rLBI/DHP0y35bEdyf2s67YV5/QRf05eCg8SiguTUFHO
-         9ZVQ==
-X-Gm-Message-State: AOAM531bm90UMtOxuU4A6FuLlDDcDweqsOZ7GLTZTj45wUuvL9mmiftl
-        yzB3vEa9UJuHnkBwV0yzh8Prk8plzbML685NsoJEsnOnb1A=
-X-Google-Smtp-Source: ABdhPJycLMNeDS6cKxpYu+G9ucBc5+PBrKMdT8a1Q/Hf2nzK6IL3Ya5BLn7h8BuDOviUGjmQkCK3lxhH0U8FYvnffiY=
-X-Received: by 2002:a05:6000:1b8f:: with SMTP id r15mr9837463wru.119.1622226816011;
- Fri, 28 May 2021 11:33:36 -0700 (PDT)
+        Fri, 28 May 2021 14:45:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1622227464; x=1653763464;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YRFcB3Ij8slOZSzscA4hGt4gAmSSrJb4B7MzBb4wlnI=;
+  b=dxPZNN7rLlo7CkpsPv43OraTNLGICiFvcVaNCYN4LU5nuRMB2KWqONG1
+   AtkZybjZn7fh1gdU/6MKl1/GqoekYAMBXDzJFD/xoE+grZbbGpk1x19bO
+   6CDDQjCVRWdC+FmGKP4MdiavFQaqWS6GF0G6MnHiH1iD0L+c7xc0Yu/gI
+   cnvyxHB1QNpGCx0iKA6nKbE4odpMil6SCI4W+H+dZNRzqpV1QgqEqgdPc
+   ATvZUPsXNW+IvrpjewxnYPrzyjURMpN3ABCnM1SCho+xPl8WZXX2Kgjgr
+   pvQRQ6lDJDP3r1byCq6FqKR2qCiA9qYZcGFLUN+lOEgIzECSk3WsYIXXA
+   A==;
+IronPort-SDR: AUs4YQZZgsY6JWczDaCqDEGi27UA2JuTXaCvwkfR4/qCWsofCphGN+EyUfnZKxmAMfucZiRAij
+ e36zoMWGkc+PIAQXnAxBoh+1DI9Mx2KWEBFzl1K/VM37dO2XOfVVlDxmRI0WYSFNjg/Uwwl/3h
+ 0ng3wgClslkqZMkjN2aNiGp0x2BFk+b56ZN4eO9ogAgfjQ+SqMbiVLhbSyFTUO3Ij0OteQD3ca
+ NnFBsKjljLAuKlCXiyMxVTgty+YumVxuZvHZFrGSnn90hoYX9OXcl4fx7P6WW/2quZYdM8FqlC
+ FAE=
+X-IronPort-AV: E=Sophos;i="5.83,230,1616428800"; 
+   d="scan'208";a="174577163"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 May 2021 02:44:24 +0800
+IronPort-SDR: tlvp2iQELHDArBON81tyPcXnqnIsFo+ZxvD5793jOJsRa3q9W5X/4gyhNGdFIihR0Coa0+jYVi
+ S5dP9hMfIUn3nee7sUVXg9fHidvDSI6oki3nviMPX/JEppl3zMuCqoUFJ0NAaOJF/stlo1NouZ
+ sB3QFkwXV5LfpnmDaAiwnn1JWyMj2H18GLFe/n9MZes9S2HLMWKugpoja/Ouw2slRYeRAqs5Gh
+ 992PEHb9YSrqz/f425HMzvm8FzunCMk30WsUS+qiast++Os8r/qRD1mJNyMQawsSiyeJ5haAJX
+ VCFsyLekCDGLqrBEadW8N7si
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 May 2021 11:23:47 -0700
+IronPort-SDR: FwKkID0ZyCmK4yldsD9bwlpL7YKTj+dqrsIMrw8blAmx7w/E+zaal8/Z9fwFDVreYWz1Zw5xAj
+ dNv/yCesVUBhLzSeTOIqpaNOfaagRIyl1d63bJBP/ePXQICOeqrBJf5NqenQQ20vVDYw+1Btlv
+ eBHyQ4U5szKVvPpLJy8+F9pXQ3r3vi5tpDdVjPDB2FwEafE5SjXuFJ7f14Q0T5JJAn8KgZfp8W
+ 1+52WvFzs8eWA/5kFc51FOaKND3DPqIroVgnXbGqgHX7Yzz9jJHrdFO5TBamt5k0YdcLtFpU8x
+ pF8=
+WDCIronportException: Internal
+Received: from unknown (HELO jedi-01.wdc.com) ([10.225.163.91])
+  by uls-op-cesaip02.wdc.com with ESMTP; 28 May 2021 11:44:20 -0700
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>, Anup Patel <anup.patel@wdc.com>,
+        bpf@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Alan Kao <alankao@andestech.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Vincent Chen <vincent.chen@sifive.com>
+Subject: [RFC v2 0/7] Improve RISC-V Perf support using SBI PMU extension
+Date:   Fri, 28 May 2021 11:43:58 -0700
+Message-Id: <20210528184405.1793783-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210528091050.245838-1-tmricht@linux.ibm.com>
-In-Reply-To: <20210528091050.245838-1-tmricht@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 28 May 2021 11:33:23 -0700
-Message-ID: <CAP-5=fVv--BXLcSpfenfOG=sEPNGqWhBisNmpUkEO29d_Q7uTw@mail.gmail.com>
-Subject: Re: [PATCH V2][Ping] perf test: Test 17 fails with make LIBPFM4=1 on
- s390 z/VM
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        svens@linux.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 28, 2021 at 2:11 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->
-> Version 2:
->    As suggested by Ian Rogers make perf_event_attribute member
->    exclude_hv more robust and accept value 0 or 1 to handle more
->    test cases which might fail on s390 virtual machine z/VM.
->
-> This test case fails on s390 virtual machine z/VM which has no PMU support
-> when the perf tool is built with LIBPFM4=1.
->
-> Using make LIBPFM4=1 builds the perf tool with support for libpfm
-> event notation. The command line flag --pfm-events is valid:
->  # ./perf record --pfm-events cycles -- true
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.001 MB perf.data (2 samples) ]
->  #
->
-> However the command 'perf test -Fv 17' fails on s390 z/VM virtual machine
-> with LIBPFM4=1:
->   # perf test -Fv 17
->   17: Setup struct perf_event_attr                                    :
->   --- start ---
->   .....
->   running './tests/attr/test-record-group2'
->   unsupp  './tests/attr/test-record-group2'
->   running './tests/attr/test-record-pfm-period'
->   expected exclude_hv=0, got 1
->  FAILED './tests/attr/test-record-pfm-period' - match failure
->  ---- end ----
->  Setup struct perf_event_attr: FAILED!
->
-> When --pfm-event system is not supported, the test returns unsupported
-> and continues. Here is an example using a virtual machine on x86 and
-> Fedora 34:
->  [root@f33 perf]# perf test -Fv 17
->  17: Setup struct perf_event_attr                                    :
->  --- start ---
->  .....
->  running './tests/attr/test-record-group2'
->  unsupp  './tests/attr/test-record-group2'
->  running './tests/attr/test-record-pfm-period'
->  unsupp  './tests/attr/test-record-pfm-period'
->  ....
->
-> The issue is file ./tests/attr/test-record-pfm-period
-> which requires perf event attribute member exclude_hv to be zero.
-> This is not the case on s390 where the value of exclude_hv is one when
-> executing on a z/VM virtual machine without PMU hardware support.
->
-> Fix this by allowing value exlucde_hv to be zero or one.
->
-> Output before:
->  # /usr/bin/python ./tests/attr.py -d ./tests/attr/ -t \
->         test-record-pfm-period -p ./perf  -vvv 2>&1| fgrep match
->     matching [event:base-record]
->     match: [event:base-record] matches []
->  FAILED './tests/attr//test-record-pfm-period' - match failure
->  #
->
-> Output after:
->  # /usr/bin/python ./tests/attr.py -d ./tests/attr/ -t \
->         test-record-pfm-period -p ./perf  -vvv 2>&1| fgrep match
->     matching [event:base-record]
->     match: [event:base-record] matches ['event-1-0-6', 'event-1-0-5']
->   matched
->
-> Background:
-> Using libpfm library ends up in this function call sequence
->
-> pfm_get_perf_event_encoding()
-> +-- pfm_get_os_event_encoding()
->     +-- pfmlib_perf_event_encode()
->
-> is called when no hardware specific PMU unit can be detected
-> as in the s390 z/VM virtual machine case. This uses the
-> "perf_events generic PMU" data structure which sets exclude_hv
-> to 1 per default.  Using this PMU that test case always fails.
->
-> That is the reason why exclude_hv attribute setting varies.
->
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Suggested-by: Ian Rogers <irogers@google.com>
+This series adds improved perf support for RISC-V based system using
+SBI PMU extension[1]. It is based on a platform driver instead of a existing
+arch specific implementation. The new perf implementation has adopted a modular
+approach where most of the generic event handling is done in the core library
+while individual PMUs need to only implement necessary features specific to
+the PMU. This is easily extensible and any future RISC-V PMU implementation
+can leverage this. Currently, SBI PMU driver & legacy PMU driver are implemented
+as a part of this series.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The SBI based driver provides more advanced features such as event configure
+start/stop. This version does not implement counter overflow
+& filtering yet. That will implemented in the future on top of this series
+using "Sscofpmf" extension. 
 
-Tested on x86 with and without hypervisor and test still passes. This
-would be expected as the change is making a flag more permissive. As
-we don't care about this flag in existing tests I believe there's no
-impact to this change other than fixing the tests on s390.
+The legacy driver tries to reimplement the existing minimal perf under a new
+config to maintain backward compatibility. This implementation only allows
+monitoring of always running cycle/instruction counters. Moreover, they can
+not be started or stopped. In general, this is very limited and not very useful.
+That's why, I am not very keen to carry the support into the new driver.
+However, I don't want to break perf for any existing hardware platforms.
+If nobody really uses perf currently, I will be happy to drop PATCH 4.
 
-Thanks,
-Ian
+This series has been tested in Qemu on RV64 only. Qemu[2] & OpenSBI [3] patches
+are required to test it. Qemu changes are not backward compatible. That means,
+you can not use perf anymore on older Qemu versions with latest OpenSBI
+and/or Kernel. However, newer kernel will just use legacy pmu driver if
+old OpenSBI is detected or hardware doesn't implement mcountinhibit.
 
-> ---
->  tools/perf/tests/attr/base-record | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/attr/base-record b/tools/perf/tests/attr/base-record
-> index 4a7b8deef3fd..8c10955eff93 100644
-> --- a/tools/perf/tests/attr/base-record
-> +++ b/tools/perf/tests/attr/base-record
-> @@ -16,7 +16,7 @@ pinned=0
->  exclusive=0
->  exclude_user=0
->  exclude_kernel=0|1
-> -exclude_hv=0
-> +exclude_hv=0|1
->  exclude_idle=0
->  mmap=1
->  comm=1
-> --
-> 2.31.1
->
+Here is an output of perf stat while running hackbench.
+
+[root@fedora-riscv riscv]# perf stat -e r8000000000000007 -e r8000000000000006 \
+-e r0000000000000002 -e r0000000000000004 -e branch-misses -e cache-misses \
+-e cycles -e instructions ./hackbench -pipe 15 process 15
+
+Running with 15*40 (== 600) tasks.
+Time: 1.548
+
+ Performance counter stats for './hackbench -pipe 15 process 15':
+
+             7,103      r8000000000000007     (62.56%) --> SBI_PMU_FW_IPI_RECVD
+             7,767      r8000000000000006     (12.19%) --> SBI_PMU_FW_IPI_SENT
+                 0      r0000000000000002     (24.79%) --> a custom raw event described in DT
+     <not counted>      r0000000000000004     (0.00%)  --> non-supported raw event described in DT
+                 0      branch-misses         (12.65%) 
+                 0      cache-misses          (25.36%)
+    27,978,868,702      cycles                (38.12%)
+    27,849,527,556      instructions          # 1.00  insn per cycle  (50.46%)
+
+       2.431195184 seconds time elapsed
+
+       1.553153000 seconds user
+      13.615924000 seconds sys
+
+The patches can also be found in the github[4].
+
+[1] https://lists.riscv.org/g/tech-unixplatformspec/message/950
+[2] https://github.com/atishp04/qemu/tree/riscv_pmu_v1
+[3] https://github.com/atishp04/opensbi/tree/riscv_pmu_v2
+[4] https://github.com/atishp04/linux/tree/riscv_pmu_v2
+
+Changes from v1->v2
+1. Implemented the latest SBI PMU extension specification.
+2. The core platform driver was changed to operate as a library while only
+   sbi based PMU is built as a driver. The legacy one is just a fallback if
+   SBI PMU extension is not available.
+
+Atish Patra (7):
+RISC-V: Remove the current perf implementation
+RISC-V: Add CSR encodings for all HPMCOUNTERS
+RISC-V: Add a perf core library for pmu drivers
+RISC-V: Add a simple platform driver for RISC-V legacy perf
+RISC-V: Add RISC-V SBI PMU extension definitions
+RISC-V: Add perf platform driver based on SBI PMU extension
+Documentation: riscv: Remove the old documentation
+
+Documentation/riscv/pmu.rst         | 255 -------------
+arch/riscv/Kconfig                  |  13 -
+arch/riscv/include/asm/csr.h        |  58 +++
+arch/riscv/include/asm/perf_event.h |  72 ----
+arch/riscv/include/asm/sbi.h        |  94 +++++
+arch/riscv/kernel/Makefile          |   1 -
+arch/riscv/kernel/perf_event.c      | 485 -------------------------
+drivers/perf/Kconfig                |  25 ++
+drivers/perf/Makefile               |   5 +
+drivers/perf/riscv_pmu.c            | 328 +++++++++++++++++
+drivers/perf/riscv_pmu_legacy.c     |  92 +++++
+drivers/perf/riscv_pmu_sbi.c        | 537 ++++++++++++++++++++++++++++
+include/linux/cpuhotplug.h          |   1 +
+include/linux/perf/riscv_pmu.h      |  61 ++++
+14 files changed, 1201 insertions(+), 826 deletions(-)
+delete mode 100644 Documentation/riscv/pmu.rst
+delete mode 100644 arch/riscv/kernel/perf_event.c
+create mode 100644 drivers/perf/riscv_pmu.c
+create mode 100644 drivers/perf/riscv_pmu_legacy.c
+create mode 100644 drivers/perf/riscv_pmu_sbi.c
+create mode 100644 include/linux/perf/riscv_pmu.h
+
+--
+2.25.1
+
