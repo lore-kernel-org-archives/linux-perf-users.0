@@ -2,145 +2,118 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0349BC4708D
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 13:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8CAC2B9F7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 16:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3CA261378
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 13:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B5C613DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 May 2021 16:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234618AbhE1ND2 (ORCPT
+        id S235422AbhE1QRi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 May 2021 09:03:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230080AbhE1ND0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 May 2021 09:03:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CF09761001;
-        Fri, 28 May 2021 13:01:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622206912;
-        bh=FNx7PuKOW6IqJOgQcEMKBCcMzoBUxAFP70kRxG5nUgk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BtQCL3mEOsr3bzTNeYB0hmSZ2K2oOXmVgRFfj3P89ZhmG0J0Ww4/h9vBc6YKmgJYs
-         +YmcOhk7WRYTqH5UohfZCDH0lEMt+Ss+srVImaFJ82AFSmrokBCf6M8yv/Z7Y5hNpD
-         OSrA5Ac0MTrnZuVFr4QDKDl/EgyFSwwA4PiOnkBU0CMnlvXozG9Iki53DVywZixyAh
-         0b6Cx1GrCwSjAwfDvoxZt+5N7LcrynM0scJqlRzRaY0YEYHvc/bbphkWCZ5gMe/91V
-         KyfgebpBBJ7cq98WLpIMD4Gp2JfcQOssZxnt+Bj451M8YvA8x15qUCT4njZQL1A1Xq
-         gvBM9NcOCZtfQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B47634011C; Fri, 28 May 2021 10:01:48 -0300 (-03)
-Date:   Fri, 28 May 2021 10:01:48 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        bpf@vger.kernel.org
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: Re: perf test 40 Basic BPF llvm compile dumps core (x86 and s390)
-Message-ID: <YLDpvKCAJibAhU1S@kernel.org>
-References: <f2308775-2a07-ea63-c741-50ab98eafc2c@linux.ibm.com>
+        Fri, 28 May 2021 12:17:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235271AbhE1QRi (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 28 May 2021 12:17:38 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68253C06174A
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 May 2021 09:16:02 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id f3-20020a17090a4a83b02901619627235bso656571pjh.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 May 2021 09:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LmzoCJf4YAFPMLbMFaDyVjzU4iVcJhDZdLSLwXHbWZk=;
+        b=oM9RJaxUoVmpzobf0ygLoYq4B+VP2wfYxqPxmE55Pjb9KwHdxe1RUTmM2wygin375H
+         DuRL2ALbaqWfPBAH78BOZRkrfUi0KxrgD3OeqNbT1MgRUbO4yoXUe17krf2lEeHMIwyQ
+         wM6M7Pa1D/mU60F22Qnd3fJsw4gg6PA/T3CoJi4rNasRo466GQgjeq2z/xqnJpGJ0jld
+         4lbGFpJTS+FGcfBvRqWaSnCRXrjshfeBvKlc+Ub9na8kOT3gSzYpuynj1E9DtnAy1dJl
+         kZzn/zJh1MYeNNXv+yZ3vm6tGjRSXGXH2nE0tDQzC3bex8V9jgveEwbaEn83pAUA+x2s
+         rmfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LmzoCJf4YAFPMLbMFaDyVjzU4iVcJhDZdLSLwXHbWZk=;
+        b=s/OtCf5+8TqrlWoeXnGnKKBSSif8G8VGBdh74fiDDhvA+iTVR9MR4ZYlO5xfLJ0CXM
+         OUx0WN79If+s+2Uw7Ws5eYl7v9bICUK7awHK4Ffi+MGhu1naWdkqpKxQ2R/hn067R6E9
+         IlFbz3rAEylYttAv4EzZ1xPCU1mDSUq6xjUrTEAHuXppw9oXMU84FByCC6koFB9Wuy7A
+         3BMBB30jEfEJeXr+pWUHMyY3Kw3vDtFkDsFnsLAk/yDVpkSoT4iTLw44A04tJ8dZAptj
+         zgIOzfgNZVK3THk3EuedWhU+6iy+aYA+9IUBCKUJqSOkASjxMSPJTjGWCh3jdGMzyQFb
+         +lWA==
+X-Gm-Message-State: AOAM531FhEuzvyX91ZcP0HJ7UKNEzAlmuzXhPSj9SelEPu+1CgHhoqVX
+        yfLEDGTnVcLp+MeTypIPob2CKw==
+X-Google-Smtp-Source: ABdhPJxLpioen06LQ4X2LW+DpaHIPaW74TwQtyghkALt9YuqOH0l67rzIcFiS9+prlQr3OhHDe2UCQ==
+X-Received: by 2002:a17:902:9004:b029:f0:b40d:38d with SMTP id a4-20020a1709029004b02900f0b40d038dmr8786668plp.85.1622218561662;
+        Fri, 28 May 2021 09:16:01 -0700 (PDT)
+Received: from localhost ([103.207.71.35])
+        by smtp.gmail.com with ESMTPSA id o10sm4667028pfh.67.2021.05.28.09.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 May 2021 09:16:01 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Denis Nikitin <denik@google.com>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v1 0/3] coresight: Fix for snapshot mode
+Date:   Sat, 29 May 2021 00:15:49 +0800
+Message-Id: <20210528161552.654907-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f2308775-2a07-ea63-c741-50ab98eafc2c@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 28, 2021 at 12:48:56PM +0200, Thomas Richter escreveu:
-> I noticed perf test 40.1 dumps core on 5.13.0rc2 and rc3:
-> 
-> [root@f34 perf]# ./perf test -F 40
-> 40: LLVM search and compile                                         :
-> 40.1: Basic BPF llvm compile                                        :
-> libbpf: elf: skipping unrecognized data section(8) .eh_frame
-> libbpf: elf: skipping relo section(9) .rel.eh_frame for section(8) .eh_frame
-> Segmentation fault (core dumped)
-> [root@f34 perf]#
+This patch series is to correct the pointer usages for the snapshot
+mode.
 
-> The root cause is a NULL pointer reference in function btf__get_nr_types()
-> as can be seen with gdb:
+Patch 01 allows the AUX trace in the free run mode and only syncs the
+AUX ring buffer when taking snapshot.
 
-This looks like a bug in libbpf:
+Patch 02 is to polish code, it removes the redundant header maintained
+in tmc-etr driver and directly uses pointer perf_output_handle::head.
 
-static int bpf_object__collect_externs(struct bpf_object *obj)
-{
-        struct btf_type *sec, *kcfg_sec = NULL, *ksym_sec = NULL;
-        const struct btf_type *t;
-        struct extern_desc *ext;
-        int i, n, off, dummy_var_btf_id;
-        const char *ext_name, *sec_name;
-        Elf_Scn *scn;
-        GElf_Shdr sh;
+Patch 03 removes the callback cs_etm_find_snapshot() which wrongly
+calculates the buffer headers; we can simply use the perf's common
+function __auxtrace_mmap__read() for headers calculation.
 
-        if (!obj->efile.symbols)
-                return 0;
+This patch can be cleanly applied on the mainline kernel with:
 
-        scn = elf_sec_by_idx(obj, obj->efile.symbols_shndx);
-        if (elf_sec_hdr(obj, scn, &sh))
-                return -LIBBPF_ERRNO__FORMAT;
+  commit 97e5bf604b7a ("Merge branch 'for-5.13-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu")
 
-        dummy_var_btf_id = add_dummy_ksym_var(obj->btf);
-        if (dummy_var_btf_id < 0)
-                return dummy_var_btf_id;
+And it has been tested on Arm64 Juno board.
 
 
-obj->btf is NULL, so probably btf__find_by_name_kind() should check that
-and return an error, Andrii?
+Leo Yan (3):
+  coresight: etm-perf: Correct buffer syncing for snapshot
+  coresight: tmc-etr: Use perf_output_handle::head for AUX ring buffer
+  perf cs-etm: Remove callback cs_etm_find_snapshot()
 
-- Arnaldo
- 
-> Breakpoint 1, 0x000000000065f4b1 in btf__get_nr_types
->      (btf=btf@entry=0x0) at btf.c:425
-> 425		return btf->start_id + btf->nr_types - 1;
-> 
-> This is the same function and reason why test case 42.1 Basic BPF filtering
-> fails and dumps core too.
-> 
-> The call chain is:
-> (gdb) where
->  #0  0x000000000065f4b1 in btf__get_nr_types (btf=btf@entry=0x0) at btf.c:425
->  #1  btf__find_by_name_kind (btf=btf@entry=0x0,
-> 		type_name=type_name@entry=0x928ab2 ".ksyms",
-> 		kind=kind@entry=15) at btf.c:696
->  #2  0x00000000006527fe in add_dummy_ksym_var (btf=0x0) at libbpf.c:3219
->  #3  bpf_object__collect_externs (obj=0xd0ea20) at libbpf.c:3266
->  #4  __bpf_object__open (path=<optimized out>, path@entry=0x0,
-> 		obj_buf=obj_buf@entry=0xd12fa0,
-> 		obj_buf_sz=obj_buf_sz@entry=1520,
->     		opts=opts@entry=0x7fffffffdb30) at libbpf.c:7372
->  #5  0x0000000000655415 in __bpf_object__open (opts=0x7fffffffdb30,
-> 		obj_buf_sz=1520, obj_buf=0xd12fa0, path=0x0) at libbpf.c:7337
->  #6  bpf_object__open_mem (opts=0x7fffffffdb30, obj_buf_sz=1520,
-> 		obj_buf=0xd12fa0) at libbpf.c:7454
->  #7  bpf_object__open_mem (opts=0x7fffffffdb30, obj_buf_sz=1520,
-> 		obj_buf=0xd12fa0) at libbpf.c:7448
->  #8  bpf_object__open_buffer (obj_buf=0xd12fa0, obj_buf_sz=1520,
-> 		name=<optimized out>) at libbpf.c:7471
->  #9  0x00000000004c8c6e in test__bpf_parsing (obj_buf=0xd12fa0,
-> 		obj_buf_sz=1520) at tests/llvm.c:16
->  #10 0x00000000004c8fe2 in test__llvm (test=0xac7d20 <generic_tests+2496>,
-> 		subtest=0) at tests/llvm.c:142
-> ...
-> 
-> I have no knowledge about BPF and why the core dump happens. Before
-> I start digging into this has anybody some hints on where to look?
-> 
-> Thanks a lot.
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+ .../hwtracing/coresight/coresight-etm-perf.c  |  30 +++-
+ .../hwtracing/coresight/coresight-etm-perf.h  |   2 +
+ .../hwtracing/coresight/coresight-tmc-etr.c   |  10 +-
+ tools/perf/arch/arm/util/cs-etm.c             | 133 ------------------
+ 4 files changed, 32 insertions(+), 143 deletions(-)
 
 -- 
+2.25.1
 
-- Arnaldo
