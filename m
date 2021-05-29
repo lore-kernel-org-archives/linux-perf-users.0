@@ -2,73 +2,90 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5358AC4708E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 May 2021 00:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5893CC4708F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 May 2021 09:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28257613ED
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 May 2021 00:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26F93611BD
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 May 2021 09:10:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229575AbhE2Awg (ORCPT
+        id S229602AbhE2JMQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 May 2021 20:52:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229559AbhE2Awg (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 May 2021 20:52:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 223DE613EB;
-        Sat, 29 May 2021 00:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622249461;
-        bh=zp26Vj2SlecmqK2KnSI/qQy0LK60wbK7LLbary+EemQ=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=HrwkcG4JYauHHBxLFZyZOWC7uvOVm4HsefuEU31gCYK+xkD4TUsVKAXYHI+47ZShy
-         4GP8z6ML6P3Gw47ZibWpTUip4cP9Xd9ikGPqBp9w9oLBFZqJG8lLg6vbZKsBZbVmnd
-         Y2Z6B2efKdfziCVW1eaJXyYdxh4SwfwaMgG3Kv6eL5/eHzqNsS7ra1CIAknelaSCks
-         XoPVI+6EvGcdecPfmnwPaJFDGvPvHknYCFlpEhLTWMqsFi3T3XcLoVWRUo8sf4DJev
-         cP2HbJ9Hpp9rd2y6bhv/40BvDzNYR1+01TvIHbvpo4OHoZV2jelgpMIJQgXoXVuLMv
-         hG5A8rycxW+eQ==
-Subject: Re: [GIT PULL] perf tools fixes for v5.13: 3rd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210528202720.281688-1-acme@kernel.org>
-References: <20210528202720.281688-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210528202720.281688-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-05-28
-X-PR-Tracked-Commit-Id: 8fc4e4aa2bfca8d32e8bc2a01526ea2da450e6cb
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f289d990450cfa16869b9ff670e611e5df51f1d9
-Message-Id: <162224946108.17808.9305731889815715348.pr-tracker-bot@kernel.org>
-Date:   Sat, 29 May 2021 00:51:01 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>, Ian Rogers <irogers@google.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Nageswara R Sastry <rnsastry@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Sat, 29 May 2021 05:12:16 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2404 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229559AbhE2JMP (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 29 May 2021 05:12:15 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4FsbKD48Gmz65XN;
+        Sat, 29 May 2021 17:06:56 +0800 (CST)
+Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Sat, 29 May 2021 17:10:36 +0800
+Received: from [10.174.179.129] (10.174.179.129) by
+ dggema762-chm.china.huawei.com (10.1.198.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Sat, 29 May 2021 17:10:35 +0800
+Subject: Re: [PATCH] perf stat: Fix error return code in bperf__load()
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <yi.zhang@huawei.com>
+References: <20210517081254.1561564-1-yukuai3@huawei.com>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <2b377d87-1356-7422-326d-4d1b4132e75c@huawei.com>
+Date:   Sat, 29 May 2021 17:10:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20210517081254.1561564-1-yukuai3@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.129]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggema762-chm.china.huawei.com (10.1.198.204)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri, 28 May 2021 17:27:20 -0300:
+ping ...
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-05-28
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f289d990450cfa16869b9ff670e611e5df51f1d9
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+On 2021/05/17 16:12, Yu Kuai wrote:
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> ---
+>   tools/perf/util/bpf_counter.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+> index ddb52f748c8e..843b20aa6688 100644
+> --- a/tools/perf/util/bpf_counter.c
+> +++ b/tools/perf/util/bpf_counter.c
+> @@ -522,6 +522,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>   	evsel->bperf_leader_link_fd = bpf_link_get_fd_by_id(entry.link_id);
+>   	if (evsel->bperf_leader_link_fd < 0 &&
+>   	    bperf_reload_leader_program(evsel, attr_map_fd, &entry))
+> +		err = -1;
+>   		goto out;
+>   
+>   	/*
+> @@ -550,6 +551,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>   	/* Step 2: load the follower skeleton */
+>   	evsel->follower_skel = bperf_follower_bpf__open();
+>   	if (!evsel->follower_skel) {
+> +		err = -1;
+>   		pr_err("Failed to open follower skeleton\n");
+>   		goto out;
+>   	}
+> 
