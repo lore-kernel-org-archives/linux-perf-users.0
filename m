@@ -2,88 +2,80 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD77C47080
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 17:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 065B1C47080
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 19:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA0F561108
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 17:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB66660FDB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 19:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232211AbhEaRZh (ORCPT
+        id S231151AbhEaTE4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 May 2021 13:25:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232591AbhEaRZ1 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 May 2021 13:25:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469BFC0610EC;
-        Mon, 31 May 2021 08:56:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fLx9o42NgDmYQ9T0R4vm13NnGiIWmnmmUmKH29M1lgE=; b=uQUmUueCLEMAe52ML3MgGtPMvJ
-        MtUD3E2fFFeyXxBtpEMB3qZI2giE9fVtPHprgVt6AP7OfJ6efWrE0xP0BGqbEsKVEKruNpkILZ8+I
-        ozj/EnPtdEVXoQoKFiadDs0TPrRNzXacDMsYwyQJTWFRQSnsJ5ma23GkePYUucrkbELWpa06zle40
-        5LhbrMMAnPy/X3dDnaa/w1TX/kWe7bbSmal27sMrJxiloJt9iuFkFkuxUL6xjBvdG1GYMuvMJRGQc
-        KjYbLZ98ptBsEqgVI0O5OX09x4ZnUcBigfqCI8ZCCJZ2190k94XWgJOnsVeLg33T0HI3EkBQnoVlT
-        y+p32p8A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lnkGD-009Ak1-Tn; Mon, 31 May 2021 15:55:31 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 57396300223;
-        Mon, 31 May 2021 17:55:25 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 18A392011CA24; Mon, 31 May 2021 17:55:25 +0200 (CEST)
-Date:   Mon, 31 May 2021 17:55:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Mon, 31 May 2021 15:04:56 -0400
+Received: from mga01.intel.com ([192.55.52.88]:55930 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230174AbhEaTEz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 31 May 2021 15:04:55 -0400
+IronPort-SDR: 22NywMRwqklgNuss5x55CUUJgTGH8a3Cr15zyqo0rH32OgFDQ1yNK5cjS2qJJSNJ9V/REvK03+
+ nfzlpnUN1cEw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10001"; a="224675447"
+X-IronPort-AV: E=Sophos;i="5.83,238,1616482800"; 
+   d="scan'208";a="224675447"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2021 12:03:14 -0700
+IronPort-SDR: T9VUXeMKnve3B5d3pzUtgVROMI93SP8hU0DR9ON6SyBl67y+iVKYkH8r9hozmo1aGPhHmcnvHI
+ dQJdLxNQDx4g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,238,1616482800"; 
+   d="scan'208";a="482195243"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.174]) ([10.237.72.174])
+  by fmsmga002.fm.intel.com with ESMTP; 31 May 2021 12:03:12 -0700
+Subject: Re: [PATCH v1 2/2] perf auxtrace: Optimize barriers with load-acquire
+ and store-release
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf auxtrace: Optimize barriers with
- load-acquire and store-release
-Message-ID: <YLUG7f3D4deX0/BF@hirez.programming.kicks-ass.net>
 References: <20210519140319.1673043-1-leo.yan@linaro.org>
  <20210519140319.1673043-2-leo.yan@linaro.org>
  <20210531151049.GE9324@leoy-ThinkPad-X240s>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <cc3810cd-5edc-26d3-9c77-8bb6479152c1@intel.com>
+Date:   Mon, 31 May 2021 22:03:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20210531151049.GE9324@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 31, 2021 at 11:10:49PM +0800, Leo Yan wrote:
+On 31/05/21 6:10 pm, Leo Yan wrote:
 > Hi Peter, Adrian,
 > 
 > On Wed, May 19, 2021 at 10:03:19PM +0800, Leo Yan wrote:
-> > Load-acquire and store-release are one-way permeable barriers, which can
-> > be used to guarantee the memory ordering between accessing the buffer
-> > data and the buffer's head / tail.
-> > 
-> > This patch optimizes the memory ordering with the load-acquire and
-> > store-release barriers.
+>> Load-acquire and store-release are one-way permeable barriers, which can
+>> be used to guarantee the memory ordering between accessing the buffer
+>> data and the buffer's head / tail.
+>>
+>> This patch optimizes the memory ordering with the load-acquire and
+>> store-release barriers.
 > 
 > Is this patch okay for you?
-
-Not without actual numbers; that's some terrible ifdef soup.
-
+> 
 > Besides this patch, I have an extra question.  You could see for
 > accessing the AUX buffer's head and tail, it also support to use
 > compiler build-in functions for atomicity accessing:
@@ -93,6 +85,10 @@ Not without actual numbers; that's some terrible ifdef soup.
 > 
 > Since now we have READ_ONCE()/WRITE_ONCE(), do you think we still need
 > to support __sync_xxx_compare_and_swap() atomicity?
+
+I don't remember, but it seems to me atomicity is needed only
+for a 32-bit perf running with a 64-bit kernel.
+
 > 
 > I checked the code for updating head and tail for the perf ring buffer
 > (see ring_buffer_read_head() and ring_buffer_write_tail() in the file
@@ -100,8 +96,8 @@ Not without actual numbers; that's some terrible ifdef soup.
 > __sync_xxx_compare_and_swap() anymore.  This is why I wander if should
 > drop __sync_xxx_compare_and_swap() atomicity for AUX ring buffer as
 > well.
-
-I'm not sure wth that code is even trying to do, that's some seriously
-dodgy code.
-
+> 
+> Thanks,
+> Leo
+> 
 
