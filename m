@@ -2,181 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CBDC47090
-	for <linux-perf-users@archiver.kernel.org>; Sun, 30 May 2021 00:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B11C47080
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 16:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFD606112F
-	for <linux-perf-users@archiver.kernel.org>; Sun, 30 May 2021 00:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAFF61370
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 16:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbhE3Apn (ORCPT
+        id S232100AbhEaQZW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 May 2021 20:45:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56690 "EHLO
+        Mon, 31 May 2021 12:25:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbhE3Apn (ORCPT
+        with ESMTP id S232394AbhEaQXN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 May 2021 20:45:43 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245C7C061574;
-        Sat, 29 May 2021 17:44:06 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id b9so3292522ybg.10;
-        Sat, 29 May 2021 17:44:06 -0700 (PDT)
+        Mon, 31 May 2021 12:23:13 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676E8C07E5F4
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 May 2021 07:53:08 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id e15so5358539plh.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 31 May 2021 07:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=G/tsG7bSPifg8l0vxnMKIRn4DZczc9OXPGOZRBnB9Gg=;
-        b=J8djhMZUi5OPDVVE4uQLkTl/LnB2caKU6xB98d8RI8q0RdeUDLid4ruPgbd6Hw9hcd
-         2hnIeIikSy5KWm9k3PSQeLtncjpVLHlNa8xePBcfPXAbKZcBQrniFyZeyYVWWDsSb+UP
-         JIJhUFGW53q3lgTuhwTm39psLBJF+HcAzfsX/YPg1rE875KJ2Peso7t8q3eGuxGB2Dfx
-         6y8yOOQ5SCxhHeT4WblatvWaK8rIpb92+SUy5sSlQckf9I17U1BDUhKUFEj+CC5/d7lA
-         Lv1gi4xj6l1Rci1ekvzGGRxaNLzFzBbzCxD8SPq8SY2TKePWglPY3rRziwjEFJfeoM+N
-         X0CA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wIAKONQD0AzlFwHcL/Yws7RQlIzhCQy0inG8VqEz6s4=;
+        b=pm6mKaQjthX6s1X+0eAP26KjoxeCZHKj0MP4l+RcQ7IuzzGOOiWpzbIgO5f60jqaH/
+         Cy30hBiK62VHDPVyNsQn8/ebv47NQ5XZLCraA9vZqIX4IpsDAYmMJO1J7xYcdT4OfT8L
+         UBgffcjBFM/BvfHf3LIqZ92TviRhL2/fE8nJTb8ZsZ42LTUV4TWavac4n3tNhwxyjmf9
+         pcm6zyevZnIsF909GktpTJ2zEPAUDFCGghC+erj+rCFfCRvaNO7RIayTRDYchBuajPJb
+         ucSR3pg6/9Fn362+9tb7y9v9MXhd6vfFBnEgj0pxIqxKQP0habimPNnCwhecd+Uc5+r/
+         lKIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=G/tsG7bSPifg8l0vxnMKIRn4DZczc9OXPGOZRBnB9Gg=;
-        b=qVZODVEDIoVVNwYUuJE4w84a2PoJtvbuWYnQVw1nQRhZBFSvBfG2Sf+WxwagwqfMhr
-         N2AvfscOCgIEoCIQywtSml6KH6fDnfF2UHsB1ZK/OnrlDXQdfZiulJeJfO/OPHprcFmp
-         6o7dqpM+Y4WEJyW4zKQ+iZY6GJws9P6KwigCArd80o5jccBvG2J677m068agc2GEmn8q
-         5acO7CDckoMSpR6FHqfVMAqangCOw/mmUMNqcRZXwF8Y6JtYYhYqSz+vido9lV8iV4MP
-         JiGoXXcaOf7sDWgvSi70cc9qRU9RZuk8isPcsogfgUw/Vjr7oHZlvteo2DmMYhxFnjP2
-         Mhog==
-X-Gm-Message-State: AOAM530B6CJ4A+BH6iWZD02FXbD/hduxuS7RmZOfYTpCxiMmp++BTYyk
-        HTOvrYi3JjxvC4tZncytn70Y04hanY8qnaK1s0s=
-X-Google-Smtp-Source: ABdhPJxALDTktYBwD25CxGGOCsDhchYDNOsKwZEgS9PBYXjPePemtUQ0brvZlZhtRsWzQofK3Zz4YrsVfTot2uX7Oik=
-X-Received: by 2002:a25:9942:: with SMTP id n2mr23274093ybo.230.1622335445286;
- Sat, 29 May 2021 17:44:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wIAKONQD0AzlFwHcL/Yws7RQlIzhCQy0inG8VqEz6s4=;
+        b=IYPmxC8iTJHlA8n2yjlhmHDUyuFbNfvN0EFMuH97T8ISbulTLs684UBIcQzh03LtnX
+         5wlszXKQacuv9CyQ0s3uZBWvDGF5rDqb2E197Hsc/LJnBmPO+qFD0KFMKANGgrmlszPt
+         L57C0anNfEiacdvmmGzdqa9SvrCAKSOZTT3H/sqdQw8EHfZJ2P7l+cMKZSflg34UA1kc
+         1EhY3geVxKgIOB3k7EU77pqXL032yeOLrB8UsrrRICzWeDjaFXVNDV4BnzH80Feadcsa
+         pCVzBDIPnDLRsWQVC3VA8QEONsYCeGHDQQS+4xUi1nlHYvyYs9lxKIdEyYxGIfmfs3MG
+         LFrw==
+X-Gm-Message-State: AOAM533luHbzKlBe9tCQ8g/RFc1fCLd0nLMSW4lBUcGHq2BHMQZ28n01
+        sm0qrI6ap/CD9ns+GWYCh+Lk3g==
+X-Google-Smtp-Source: ABdhPJwFsQ+XrtpARwX9UkPJDpXWwZYa4Vmim475x0KQSs/9QytzjFq3MCoXuRZcDPzMVLIaObUgwQ==
+X-Received: by 2002:a17:90b:38c4:: with SMTP id nn4mr5685864pjb.166.1622472787838;
+        Mon, 31 May 2021 07:53:07 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
+        by smtp.gmail.com with ESMTPSA id n8sm11001911pff.167.2021.05.31.07.53.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 May 2021 07:53:07 -0700 (PDT)
+Date:   Mon, 31 May 2021 22:53:02 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] perf auxtrace: Change to use SMP memory barriers
+Message-ID: <20210531145302.GC9324@leoy-ThinkPad-X240s>
+References: <20210519140319.1673043-1-leo.yan@linaro.org>
+ <d1fc3dd3-e79a-4e93-1083-6b08e0cabe59@intel.com>
+ <YK9UFl7Grv/mwmVc@hirez.programming.kicks-ass.net>
+ <3c7dcd5d-fddd-5d3b-81ac-cb7b615b0338@intel.com>
+ <7cdc3578-a50e-89ef-477a-3dc1f84f96bb@intel.com>
+ <YK9tEQmk4Q+M5yJh@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <f2308775-2a07-ea63-c741-50ab98eafc2c@linux.ibm.com> <YLDpvKCAJibAhU1S@kernel.org>
-In-Reply-To: <YLDpvKCAJibAhU1S@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Sat, 29 May 2021 17:43:54 -0700
-Message-ID: <CAEf4BzZ0b3V9ivEOn5UC1xOG79aYPSA8o-yv63+pxykVb+EMWg@mail.gmail.com>
-Subject: Re: perf test 40 Basic BPF llvm compile dumps core (x86 and s390)
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>, bpf <bpf@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YK9tEQmk4Q+M5yJh@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 28, 2021 at 6:01 AM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Fri, May 28, 2021 at 12:48:56PM +0200, Thomas Richter escreveu:
-> > I noticed perf test 40.1 dumps core on 5.13.0rc2 and rc3:
-> >
-> > [root@f34 perf]# ./perf test -F 40
-> > 40: LLVM search and compile                                         :
-> > 40.1: Basic BPF llvm compile                                        :
-> > libbpf: elf: skipping unrecognized data section(8) .eh_frame
-> > libbpf: elf: skipping relo section(9) .rel.eh_frame for section(8) .eh_=
-frame
-> > Segmentation fault (core dumped)
-> > [root@f34 perf]#
->
-> > The root cause is a NULL pointer reference in function btf__get_nr_type=
-s()
-> > as can be seen with gdb:
->
-> This looks like a bug in libbpf:
->
-> static int bpf_object__collect_externs(struct bpf_object *obj)
-> {
->         struct btf_type *sec, *kcfg_sec =3D NULL, *ksym_sec =3D NULL;
->         const struct btf_type *t;
->         struct extern_desc *ext;
->         int i, n, off, dummy_var_btf_id;
->         const char *ext_name, *sec_name;
->         Elf_Scn *scn;
->         GElf_Shdr sh;
->
->         if (!obj->efile.symbols)
->                 return 0;
->
->         scn =3D elf_sec_by_idx(obj, obj->efile.symbols_shndx);
->         if (elf_sec_hdr(obj, scn, &sh))
->                 return -LIBBPF_ERRNO__FORMAT;
->
->         dummy_var_btf_id =3D add_dummy_ksym_var(obj->btf);
->         if (dummy_var_btf_id < 0)
->                 return dummy_var_btf_id;
->
->
-> obj->btf is NULL, so probably btf__find_by_name_kind() should check that
-> and return an error, Andrii?
->
+Hi Peter, Adrian,
 
-This is already fixed in libbpf v0.4 ([0]). Can you please update
-pahole's libbpf submodule sha?
+On Thu, May 27, 2021 at 11:57:37AM +0200, Peter Zijlstra wrote:
+> On Thu, May 27, 2021 at 12:24:15PM +0300, Adrian Hunter wrote:
+> 
+> > > If all we want is a compiler barrier, then shouldn't that be what we use?
+> > > i.e. barrier()
 
-  [0] https://github.com/libbpf/libbpf/commit/a58b8ca93e39285a2852ca3d60e69=
-8598bf7265b
+Sorry for a bit late.  Just bring up one question before I respin
+this patch set.
 
-> - Arnaldo
->
-> > Breakpoint 1, 0x000000000065f4b1 in btf__get_nr_types
-> >      (btf=3Dbtf@entry=3D0x0) at btf.c:425
-> > 425           return btf->start_id + btf->nr_types - 1;
-> >
-> > This is the same function and reason why test case 42.1 Basic BPF filte=
-ring
-> > fails and dumps core too.
-> >
-> > The call chain is:
-> > (gdb) where
-> >  #0  0x000000000065f4b1 in btf__get_nr_types (btf=3Dbtf@entry=3D0x0) at=
- btf.c:425
-> >  #1  btf__find_by_name_kind (btf=3Dbtf@entry=3D0x0,
-> >               type_name=3Dtype_name@entry=3D0x928ab2 ".ksyms",
-> >               kind=3Dkind@entry=3D15) at btf.c:696
-> >  #2  0x00000000006527fe in add_dummy_ksym_var (btf=3D0x0) at libbpf.c:3=
-219
-> >  #3  bpf_object__collect_externs (obj=3D0xd0ea20) at libbpf.c:3266
-> >  #4  __bpf_object__open (path=3D<optimized out>, path@entry=3D0x0,
-> >               obj_buf=3Dobj_buf@entry=3D0xd12fa0,
-> >               obj_buf_sz=3Dobj_buf_sz@entry=3D1520,
-> >               opts=3Dopts@entry=3D0x7fffffffdb30) at libbpf.c:7372
-> >  #5  0x0000000000655415 in __bpf_object__open (opts=3D0x7fffffffdb30,
-> >               obj_buf_sz=3D1520, obj_buf=3D0xd12fa0, path=3D0x0) at lib=
-bpf.c:7337
-> >  #6  bpf_object__open_mem (opts=3D0x7fffffffdb30, obj_buf_sz=3D1520,
-> >               obj_buf=3D0xd12fa0) at libbpf.c:7454
-> >  #7  bpf_object__open_mem (opts=3D0x7fffffffdb30, obj_buf_sz=3D1520,
-> >               obj_buf=3D0xd12fa0) at libbpf.c:7448
-> >  #8  bpf_object__open_buffer (obj_buf=3D0xd12fa0, obj_buf_sz=3D1520,
-> >               name=3D<optimized out>) at libbpf.c:7471
-> >  #9  0x00000000004c8c6e in test__bpf_parsing (obj_buf=3D0xd12fa0,
-> >               obj_buf_sz=3D1520) at tests/llvm.c:16
-> >  #10 0x00000000004c8fe2 in test__llvm (test=3D0xac7d20 <generic_tests+2=
-496>,
-> >               subtest=3D0) at tests/llvm.c:142
-> > ...
-> >
-> > I have no knowledge about BPF and why the core dump happens. Before
-> > I start digging into this has anybody some hints on where to look?
-> >
-> > Thanks a lot.
-> >
-> > --
-> > Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germ=
-any
-> > --
-> > Vorsitzender des Aufsichtsrats: Gregor Pillen
-> > Gesch=C3=A4ftsf=C3=BChrung: Dirk Wittkopp
-> > Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht St=
-uttgart, HRB 243294
->
-> --
->
-> - Arnaldo
+> > I guess you are saying we still need to stop potential re-ordering across
+> > CPUs, so please ignore my comments.
+> 
+> Right; so the ordering issue is real, consider:
+> 
+> 	CPU0 (kernel)		CPU1 (user)
+> 
+> 	write data		read head
+> 	smp_wmb()		smp_rmb()
+> 	write head		read data
+
+One thing should be mentioned is the Linux kernel has _not_ used an
+explict "smb_wmb()" between writing AUX trace data and updating header
+"aux_head".  Please see the function perf_aux_output_end():
+
+void perf_aux_output_end(..., size)
+{
+        ...
+
+	if (size || (handle->aux_flags & ~(u64)PERF_AUX_FLAG_OVERWRITE))
+		perf_event_aux_event(handle->event, aux_head, size,
+				     handle->aux_flags);
+
+	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
+
+        ...
+}
+
+But I think it's needless to add "smb_wmb()" prior to WRITE_ONCE()
+sentence.  This is because:
+
+Before updating the "aux_head", it calls perf_event_aux_event(), so
+event PERF_RECORD_AUX is filled into the perf ring buffer, and executes
+smb_wmb() + updates the header "user_page->data_head"; so the flow is
+like blow:
+
+  Fill AUX trace data to AUX ring buffer
+  Fill RECORD_AUX event into perf ring buffer
+  smb_wmb()
+  update "user_page->data_head"  -> See perf_event_aux_event()/perf_output_end()
+  update "user_page->aux_head"
+
+This is a bit weird for two ring buffers (AUX and perf generic ring
+buffers) share the same memory barrier between the write data and
+write headers.
+
+Do you think I understand correctly?  Or should add an explict
+"smb_wmb()" before WRITE_ONCE(rb->user_page->aux_head, ...)?
+
+Thanks,
+Leo
+
+> Without explicit ordering (on either side), we might either read data
+> that isn't written yet:
+> 
+> 			     ,--(read data)
+> 	write data	     |
+> 	smp_wmb()	     |
+> 	write head ---.	     |
+> 		      `-->   |	read head
+> 			     `- read data
+> 
+> Where the head load observes the new head writte, but the data load is
+> speculated and loads data before it is written.
+> 
+> Or, we can write the head before the data write is visible:
+> 
+>     ,--	write data
+>     |	write head
+>     |				read head
+>     |				smp_rmb()
+>     |				read data
+>     `-> (data visible)
+> 
+> Where we read the head head, but still observe stale data because the
+> stores got committed out of order.
+> 
+> x86 is TSO, so neither reordering is actually possible, hence both
+> barriers being a compiler barrier (to ensure the compiler doesn't
+> reorder them for us). But weaker hardware *will* allow those orderings
+> and we very much need actual barriers there.
+> 
+> Welcome to the magical world of memory ordering and weak architectures.
