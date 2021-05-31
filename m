@@ -6,101 +6,102 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B98C47082
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 17:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD77C47080
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 17:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E10610A8
-	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 17:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA0F561108
+	for <linux-perf-users@archiver.kernel.org>; Mon, 31 May 2021 17:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233256AbhEaRXg (ORCPT
+        id S232211AbhEaRZh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 31 May 2021 13:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52818 "EHLO
+        Mon, 31 May 2021 13:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231483AbhEaRXa (ORCPT
+        with ESMTP id S232591AbhEaRZ1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 31 May 2021 13:23:30 -0400
+        Mon, 31 May 2021 13:25:27 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C15EC06F0FB;
-        Mon, 31 May 2021 08:48:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469BFC0610EC;
+        Mon, 31 May 2021 08:56:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lE1hDy09j0KTbLLoUxbq+EnHpIMPD9qqZ9pibZXYJSo=; b=cdbrjCofYVR4z6XzntlRc1H8if
-        KOb7UEPFcTKzI0bvgdDUPGOygzYUWpZ9wmdZUVCXXW04uerqFjYiXw+3J5oQpSaJ2bmryxZvHkp3D
-        /9i8qnXS29fU8M7Pvep/rFS1rvOEeATQYowxNjzdcsXZhYimlo5VKHSVH5qzjeIvULUy/XEIVDtAc
-        DU0OO7O0OrTZBfrkXTlwGd4DJjLRqHHYTOoj4+TBMFaWHK1CAIfun6U0MgefBpbNVxfSwn7UDGKU2
-        l4l5V1MknQl1W+DfrK/cI04fPOZnh5nq6wQTH6V7s36kFZZq0cLznduB6fbRJOftWhS/txBYDHnGh
-        K4PSRk3g==;
+        bh=fLx9o42NgDmYQ9T0R4vm13NnGiIWmnmmUmKH29M1lgE=; b=uQUmUueCLEMAe52ML3MgGtPMvJ
+        MtUD3E2fFFeyXxBtpEMB3qZI2giE9fVtPHprgVt6AP7OfJ6efWrE0xP0BGqbEsKVEKruNpkILZ8+I
+        ozj/EnPtdEVXoQoKFiadDs0TPrRNzXacDMsYwyQJTWFRQSnsJ5ma23GkePYUucrkbELWpa06zle40
+        5LhbrMMAnPy/X3dDnaa/w1TX/kWe7bbSmal27sMrJxiloJt9iuFkFkuxUL6xjBvdG1GYMuvMJRGQc
+        KjYbLZ98ptBsEqgVI0O5OX09x4ZnUcBigfqCI8ZCCJZ2190k94XWgJOnsVeLg33T0HI3EkBQnoVlT
+        y+p32p8A==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1lnk97-009AEz-22; Mon, 31 May 2021 15:48:07 +0000
+        id 1lnkGD-009Ak1-Tn; Mon, 31 May 2021 15:55:31 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9581A300223;
-        Mon, 31 May 2021 17:48:03 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 57396300223;
+        Mon, 31 May 2021 17:55:25 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 742B020126D07; Mon, 31 May 2021 17:48:03 +0200 (CEST)
-Date:   Mon, 31 May 2021 17:48:03 +0200
+        id 18A392011CA24; Mon, 31 May 2021 17:55:25 +0200 (CEST)
+Date:   Mon, 31 May 2021 17:55:25 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf auxtrace: Change to use SMP memory barriers
-Message-ID: <YLUFMzxin1PpgIdZ@hirez.programming.kicks-ass.net>
+Subject: Re: [PATCH v1 2/2] perf auxtrace: Optimize barriers with
+ load-acquire and store-release
+Message-ID: <YLUG7f3D4deX0/BF@hirez.programming.kicks-ass.net>
 References: <20210519140319.1673043-1-leo.yan@linaro.org>
- <d1fc3dd3-e79a-4e93-1083-6b08e0cabe59@intel.com>
- <YK9UFl7Grv/mwmVc@hirez.programming.kicks-ass.net>
- <3c7dcd5d-fddd-5d3b-81ac-cb7b615b0338@intel.com>
- <7cdc3578-a50e-89ef-477a-3dc1f84f96bb@intel.com>
- <YK9tEQmk4Q+M5yJh@hirez.programming.kicks-ass.net>
- <20210531145302.GC9324@leoy-ThinkPad-X240s>
+ <20210519140319.1673043-2-leo.yan@linaro.org>
+ <20210531151049.GE9324@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210531145302.GC9324@leoy-ThinkPad-X240s>
+In-Reply-To: <20210531151049.GE9324@leoy-ThinkPad-X240s>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 31, 2021 at 10:53:02PM +0800, Leo Yan wrote:
+On Mon, May 31, 2021 at 11:10:49PM +0800, Leo Yan wrote:
 > Hi Peter, Adrian,
 > 
-> On Thu, May 27, 2021 at 11:57:37AM +0200, Peter Zijlstra wrote:
-> > On Thu, May 27, 2021 at 12:24:15PM +0300, Adrian Hunter wrote:
+> On Wed, May 19, 2021 at 10:03:19PM +0800, Leo Yan wrote:
+> > Load-acquire and store-release are one-way permeable barriers, which can
+> > be used to guarantee the memory ordering between accessing the buffer
+> > data and the buffer's head / tail.
 > > 
-> > > > If all we want is a compiler barrier, then shouldn't that be what we use?
-> > > > i.e. barrier()
+> > This patch optimizes the memory ordering with the load-acquire and
+> > store-release barriers.
 > 
-> Sorry for a bit late.  Just bring up one question before I respin
-> this patch set.
-> 
-> > > I guess you are saying we still need to stop potential re-ordering across
-> > > CPUs, so please ignore my comments.
-> > 
-> > Right; so the ordering issue is real, consider:
-> > 
-> > 	CPU0 (kernel)		CPU1 (user)
-> > 
-> > 	write data		read head
-> > 	smp_wmb()		smp_rmb()
-> > 	write head		read data
-> 
-> One thing should be mentioned is the Linux kernel has _not_ used an
-> explict "smb_wmb()" between writing AUX trace data and updating header
-> "aux_head".  Please see the function perf_aux_output_end():
+> Is this patch okay for you?
 
-I think we pushed that into the driver. There is nothing the generic
-code can do here.
+Not without actual numbers; that's some terrible ifdef soup.
 
-It is the drivers responsibility of ensuring the data is stable before
-calling perf_aux_output_end() or something along those lines.
+> Besides this patch, I have an extra question.  You could see for
+> accessing the AUX buffer's head and tail, it also support to use
+> compiler build-in functions for atomicity accessing:
+> 
+>   __sync_val_compare_and_swap()
+>   __sync_bool_compare_and_swap()
+> 
+> Since now we have READ_ONCE()/WRITE_ONCE(), do you think we still need
+> to support __sync_xxx_compare_and_swap() atomicity?
+> 
+> I checked the code for updating head and tail for the perf ring buffer
+> (see ring_buffer_read_head() and ring_buffer_write_tail() in the file
+> tools/include/linux/ring_buffer.h), which doesn't support
+> __sync_xxx_compare_and_swap() anymore.  This is why I wander if should
+> drop __sync_xxx_compare_and_swap() atomicity for AUX ring buffer as
+> well.
+
+I'm not sure wth that code is even trying to do, that's some seriously
+dodgy code.
+
+
