@@ -6,61 +6,49 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 936AEC47080
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 06:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3D05C4708F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 06:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D636139A
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 06:33:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FAE8613AB
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 06:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232894AbhFAGfa (ORCPT
+        id S232789AbhFAGua (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Jun 2021 02:35:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
+        Tue, 1 Jun 2021 02:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232770AbhFAGf3 (ORCPT
+        with ESMTP id S230326AbhFAGu3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Jun 2021 02:35:29 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8284C06174A
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 May 2021 23:33:48 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id c13so1400857plz.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 31 May 2021 23:33:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gzoyNfI33rDasUSzvHTR4JxSN7Yi8Ec1jO1hc1RieLc=;
-        b=GszxXFRLfHQ/fLCRyYVZc1z6y1FVSkRujtpGcbprBDB3syL/7VPkzoK696UtQyCFMn
-         +vBb1gZE89f/2kSVruS0syoUQEZueGNbOXIqyUufi/USGl0NlkMwmj+z2v0ZwcDVqln5
-         XfV8PBn+j5HYgH90eQShWC40mfrnaZB8T2ECc6vBRfK3O7DcmGv5p1k5DgGrWFC74jGL
-         xlwrOPZupVM9ErKinJ9wJXqR1G6g2Y4sIuEdaR1iZeQyUWY7Q5Z/1yc5oKr/N4qAfF6E
-         KJZpDDB7T3QFl4tz3eiyzIeREgBPCvo5sjWPjbIq1WtNrPsJl4TMe3Z6Kbp95d9w11OJ
-         pQdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gzoyNfI33rDasUSzvHTR4JxSN7Yi8Ec1jO1hc1RieLc=;
-        b=qKjjp7+hI9A5nxhp4Cx9FYT8jioQ9zIpCKVo+X/Cf/EXcbzS1t+1nzFP/rpp/C6Mcl
-         vS9un3jdUwpH3nWs280qSRBb5/9kvpCB3X4Bwodz+Ap2VYy2OMeofMj7qeHeXF98LJPH
-         mlAzWppHit8ktW2C1HP2+88FHAxYaDFPHXRfAwVSuxH2QWaExERe/N/758TOCJCoN7Rw
-         9wkzFSRgmCxgSOtBc2FYDGNjpN9p68bG5aIjf6vNuGVkLtGkDfA87qvVRuTiB8iPlcT6
-         hXYmcWunRs4tqdX2AH9W15ig5DQKZwcQIx2KAt0VDnNxpVas/GAgbyaKOkmtyGP3G1rU
-         SoVg==
-X-Gm-Message-State: AOAM531v6objacSC/hRNgw8d9/NQUZOtMdOz51Rd0H4LkPamq0rqTDro
-        /HQ8y4eLD8Mpt3MArH7r5d2W3Q==
-X-Google-Smtp-Source: ABdhPJxND31+qWMs2rp1ZsFFHjjp42w48iqG0/aEummHz26IdKwOHGQIyXj8Fvm7nTVLapW3glXv9A==
-X-Received: by 2002:a17:90b:689:: with SMTP id m9mr3268826pjz.102.1622529228241;
-        Mon, 31 May 2021 23:33:48 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
-        by smtp.gmail.com with ESMTPSA id h6sm12562224pjs.15.2021.05.31.23.33.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 May 2021 23:33:47 -0700 (PDT)
-Date:   Tue, 1 Jun 2021 14:33:42 +0800
-From:   Leo Yan <leo.yan@linaro.org>
+        Tue, 1 Jun 2021 02:50:29 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C2BBC061574;
+        Mon, 31 May 2021 23:48:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=yXjIfNK9DTEjPITQUTzdT9Agi20asksGOpSTeydpPF0=; b=gWm1S+y0yiAyN4/XlzX0WwT10p
+        HvahNPxySUtvGHvom0TwDSeXBpeovUwIqiwUb9LYzxb/9gJGda4gjgrBu2Z1CYn9g9xFoFrDCn9mR
+        IkbvG8TWJ/fgn0o2APSnx1bty7UzQ9Br+TwGUOzbdk2YdGyIPOWwm+fCxN29c729kinLum63aKTlG
+        Ne7ttAu/ahfn8jF/b0XL51TwqSpSTq29gcyHjEtLUP6xbZekeEFk7onpEtE9ng+IAclQcmhQju37l
+        JeQM2t9n3Qjee53+4hAGQWvthaFhdsN5gfznox/EP6sG0LyZiqOfTi6b4lHCB3L8Pvh4tIE+4KpTu
+        oRwHiZ6g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1lnyCP-002TSS-T5; Tue, 01 Jun 2021 06:48:32 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC46A300269;
+        Tue,  1 Jun 2021 08:48:29 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5E92D2011CA24; Tue,  1 Jun 2021 08:48:29 +0200 (CEST)
+Date:   Tue, 1 Jun 2021 08:48:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -69,7 +57,7 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v1 2/2] perf auxtrace: Optimize barriers with
  load-acquire and store-release
-Message-ID: <20210601063342.GB10026@leoy-ThinkPad-X240s>
+Message-ID: <YLXYPWeLB8wjo4lQ@hirez.programming.kicks-ass.net>
 References: <20210519140319.1673043-1-leo.yan@linaro.org>
  <20210519140319.1673043-2-leo.yan@linaro.org>
  <20210531151049.GE9324@leoy-ThinkPad-X240s>
@@ -109,61 +97,18 @@ On Mon, May 31, 2021 at 10:03:33PM +0300, Adrian Hunter wrote:
 > I don't remember, but it seems to me atomicity is needed only
 > for a 32-bit perf running with a 64-bit kernel.
 
-32-bit perf wants to access 64-bit value atomically, I think it tries to
-avoid the issue caused by scenario:
+But that:
 
-        CPU0 (64-bit kernel)           CPU1 (32-bit user)
+	do {
+		old_tail = __sync_val_compare_and_swap(&pc->aux_tail, 0, 0);
+	} while (!__sync_bool_compare_and_swap(&pc->aux_tail, old_tail, tail));
 
-                                         read head_lo
-        WRITE_ONCE(head)
-                                         read head_hi
+doesn't want to make sense to me. It appears to do a cmpxchg with 0
+values to load old_tail, and then a further cmpxchg with old_tail to
+write the new tail.
 
+That's some really crazy code. That makes absolutely no sense what so
+ever and needs to just be deleted.
 
-I dumped the disassembly for reading 64-bit value for perf Arm32 and get
-below results:
-
-  perf Arm32 for READ_ONCE():
-
-	case 8: *(__u64_alias_t *) res = *(volatile __u64_alias_t *) p; break;
-     84a:	68fb      	ldr	r3, [r7, #12]
-     84c:	e9d3 2300 	ldrd	r2, r3, [r3]
-     850:	6939      	ldr	r1, [r7, #16]
-     852:	e9c1 2300 	strd	r2, r3, [r1]
-     856:	e007      	b.n	868 <auxtrace_mmap__read_head+0xb0>
-
-It uses the instruction ldrd which is "Load Register Dual (register)",
-but this doesn't mean the instruction is atomic, especially based on
-the comment in the kernel header include/asm-generic/rwonce.h, I think
-the instruction ldrd/strd will be "atomic in some cases (namely Armv7 +
-LPAE), but for others we rely on the access being split into 2x32-bit
-accesses".
-
-
-  perf Arm32 for __sync_val_compare_and_swap():
-
-	u64 head = __sync_val_compare_and_swap(&pc->aux_head, 0, 0);
-     7d6:	68fb      	ldr	r3, [r7, #12]
-     7d8:	f503 6484 	add.w	r4, r3, #1056	; 0x420
-     7dc:	f04f 0000 	mov.w	r0, #0
-     7e0:	f04f 0100 	mov.w	r1, #0
-     7e4:	f3bf 8f5b 	dmb	ish
-     7e8:	e8d4 237f 	ldrexd	r2, r3, [r4]
-     7ec:	ea52 0c03 	orrs.w	ip, r2, r3
-     7f0:	d106      	bne.n	800 <auxtrace_mmap__read_head+0x48>
-     7f2:	e8c4 017c 	strexd	ip, r0, r1, [r4]
-     7f6:	f1bc 0f00 	cmp.w	ip, #0
-     7fa:	f1bc 0f00 	cmp.w	ip, #0
-     7fe:	d1f3      	bne.n	7e8 <auxtrace_mmap__read_head+0x30>
-     800:	f3bf 8f5b 	dmb	ish
-     804:	e9c7 2304 	strd	r2, r3, [r7, #16]
-
-For __sync_val_compare_and_swap(), it uses the instructions
-ldrexd/ldrexd, these two instructions rely on the exclusive monitor
-for accessing 64-bit value, so seems to me this is more reliable way
-for accessing 64-bit value in CPU's 32-bit mode.
-
-Conclusion: seems to me __sync_xxx_compare_and_swap() should be kept
-in this case rather than using READ_ONCE() for 32-bit building.  Or
-any other suggestions?  Thanks!
-
-Leo
+On top of that, it uses atomic instrincs for a u64, which is not
+something that'll actually work on a whole bunch of 32bit platforms.
