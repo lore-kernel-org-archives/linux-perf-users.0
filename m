@@ -2,167 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51344C4708F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 13:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EBDC4708F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 13:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B4B613B4
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 13:08:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE48613B1
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 13:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233823AbhFANKW (ORCPT
+        id S233758AbhFANKz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Jun 2021 09:10:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        Tue, 1 Jun 2021 09:10:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:49652 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233409AbhFANKV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Jun 2021 09:10:21 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D83B6136E;
-        Tue,  1 Jun 2021 13:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622552920;
-        bh=F5l3pFKtESBtIzN5XEefSEsjZDV84ZcGAOVvlKQ6dD4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M2yGYPumXx1S7rpQuwiaxT4yo/Q4hMAa39ejN1WjdV07gw2vU+i2/5fYsEZiBOvzU
-         vEypnZigDti/wBgL29ASBANLjfb/eOUT8vTV3Eub3WAnQoI0E7NBExhcEdLNhdUrWW
-         hyJ/UQrl+0vdhpRWBUKYj/xMc380s5pT6CeuyzmLC+0JL6WrVqzXwDyM/7MUgMF1bG
-         3jDuvwGZX0/5DxhjOAJGGm37ZZrrWMtyT6xLrN+KfWjNieL7vbafmjbnTXvj5cTU1W
-         9GG7dQafz4rWNFir/Ho4Jf+5VE6k2iTCXP0LFAf8vr2t8P0Z77ji5xKhbVHiCUzl/O
-         aZ8IZ6Dw5/6ZA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 37C3D4011C; Tue,  1 Jun 2021 10:08:37 -0300 (-03)
-Date:   Tue, 1 Jun 2021 10:08:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        id S233409AbhFANKy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 1 Jun 2021 09:10:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16C2F6D;
+        Tue,  1 Jun 2021 06:09:13 -0700 (PDT)
+Received: from [10.57.9.215] (unknown [10.57.9.215])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44B683F719;
+        Tue,  1 Jun 2021 06:09:09 -0700 (PDT)
+Subject: Re: [RFC PATCH v3] perf cs-etm: Split Coresight decode by aux records
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Al Grant <al.grant@arm.com>,
+        branislav.rankov@arm.com, Denis Nikitin <denik@chromium.org>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] perf tools: Copy uapi/asm/perf_regs.h from the kernel
- for MIPS
-Message-ID: <YLYxVXevS2kL4EVK@kernel.org>
-References: <1622548436-12472-1-git-send-email-yangtiezhu@loongson.cn>
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20210527104234.24313-1-james.clark@arm.com>
+ <11822824-7486-2333-f039-bfd801b86922@arm.com>
+ <CANLsYkynQbGRhOmyramX+nSHvVnH_nSJb=t03Dp-2WeXP3ZYAw@mail.gmail.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <dcf7cbe3-2d97-bf99-7025-3f62e2f09be1@arm.com>
+Date:   Tue, 1 Jun 2021 16:09:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1622548436-12472-1-git-send-email-yangtiezhu@loongson.cn>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CANLsYkynQbGRhOmyramX+nSHvVnH_nSJb=t03Dp-2WeXP3ZYAw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 01, 2021 at 07:53:56PM +0800, Tiezhu Yang escreveu:
-> To allow the build to complete on older systems, where those files are
-> either not uptodate, lacking some recent additions or not present at
-> all.
-> 
-> And check if the copy drifts from the kernel.
-> 
-> This commit is similar with
-> commit 12f020338a2c ("tools: Copy uapi/asm/perf_regs.h from the kernel")
-> 
-> With this commit, we can avoid the following build error in any case:
-> 
-> tools/perf/arch/mips/include/perf_regs.h:7:10:
-> fatal error: asm/perf_regs.h: No such file or directory
->  #include <asm/perf_regs.h>
->           ^~~~~~~~~~~~~~~~~
-> compilation terminated.
 
-Thanks, applied.
 
-- Arnaldo
-
- 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  tools/arch/mips/include/uapi/asm/perf_regs.h | 40 ++++++++++++++++++++++++++++
->  tools/perf/Makefile.config                   |  1 -
->  tools/perf/check-headers.sh                  |  1 +
->  3 files changed, 41 insertions(+), 1 deletion(-)
->  create mode 100644 tools/arch/mips/include/uapi/asm/perf_regs.h
+On 27/05/2021 18:37, Mathieu Poirier wrote:
+> On Thu, 27 May 2021 at 07:46, James Clark <james.clark@arm.com> wrote:
+>>
+>>
+>>
+>> On 27/05/2021 13:42, James Clark wrote:
+>>> Populate the auxtrace queues using AUX records rather than whole
+>>> auxtrace buffers.
+>>>
+>> ...
+>>> Snapshot mode still needs to be tested.
+>>>
+>>
+>> Snapshot mode is also working, but needs the following patch applied to reverse aux_offset
+>> from the end of the buffer to the beginning:
 > 
-> diff --git a/tools/arch/mips/include/uapi/asm/perf_regs.h b/tools/arch/mips/include/uapi/asm/perf_regs.h
-> new file mode 100644
-> index 0000000..d0f4ecd
-> --- /dev/null
-> +++ b/tools/arch/mips/include/uapi/asm/perf_regs.h
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +#ifndef _ASM_MIPS_PERF_REGS_H
-> +#define _ASM_MIPS_PERF_REGS_H
-> +
-> +enum perf_event_mips_regs {
-> +	PERF_REG_MIPS_PC,
-> +	PERF_REG_MIPS_R1,
-> +	PERF_REG_MIPS_R2,
-> +	PERF_REG_MIPS_R3,
-> +	PERF_REG_MIPS_R4,
-> +	PERF_REG_MIPS_R5,
-> +	PERF_REG_MIPS_R6,
-> +	PERF_REG_MIPS_R7,
-> +	PERF_REG_MIPS_R8,
-> +	PERF_REG_MIPS_R9,
-> +	PERF_REG_MIPS_R10,
-> +	PERF_REG_MIPS_R11,
-> +	PERF_REG_MIPS_R12,
-> +	PERF_REG_MIPS_R13,
-> +	PERF_REG_MIPS_R14,
-> +	PERF_REG_MIPS_R15,
-> +	PERF_REG_MIPS_R16,
-> +	PERF_REG_MIPS_R17,
-> +	PERF_REG_MIPS_R18,
-> +	PERF_REG_MIPS_R19,
-> +	PERF_REG_MIPS_R20,
-> +	PERF_REG_MIPS_R21,
-> +	PERF_REG_MIPS_R22,
-> +	PERF_REG_MIPS_R23,
-> +	PERF_REG_MIPS_R24,
-> +	PERF_REG_MIPS_R25,
-> +	PERF_REG_MIPS_R26,
-> +	PERF_REG_MIPS_R27,
-> +	PERF_REG_MIPS_R28,
-> +	PERF_REG_MIPS_R29,
-> +	PERF_REG_MIPS_R30,
-> +	PERF_REG_MIPS_R31,
-> +	PERF_REG_MIPS_MAX = PERF_REG_MIPS_R31 + 1,
-> +};
-> +#endif /* _ASM_MIPS_PERF_REGS_H */
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 406a951..73df23d 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -90,7 +90,6 @@ endif
->  ifeq ($(ARCH),mips)
->    NO_PERF_REGS := 0
->    CFLAGS += -I$(OUTPUT)arch/mips/include/generated
-> -  CFLAGS += -I../../arch/mips/include/uapi -I../../arch/mips/include/generated/uapi
->    LIBUNWIND_LIBS = -lunwind -lunwind-mips
->  endif
->  
-> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> index dd8ff28..c783558 100755
-> --- a/tools/perf/check-headers.sh
-> +++ b/tools/perf/check-headers.sh
-> @@ -39,6 +39,7 @@ arch/x86/lib/x86-opcode-map.txt
->  arch/x86/tools/gen-insn-attr-x86.awk
->  arch/arm/include/uapi/asm/perf_regs.h
->  arch/arm64/include/uapi/asm/perf_regs.h
-> +arch/mips/include/uapi/asm/perf_regs.h
->  arch/powerpc/include/uapi/asm/perf_regs.h
->  arch/s390/include/uapi/asm/perf_regs.h
->  arch/x86/include/uapi/asm/perf_regs.h
-> -- 
-> 2.1.0
+> It might be better to send another revision with this patch included
+> in to make sure everyone is looking at (and testing) the same thing.
+
+I've sent v4 with it applied. There was actually a mistake which broke the normal mode,
+so it was a good idea to apply it.
+
 > 
-
--- 
-
-- Arnaldo
+>>
+>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>> index 5d6c03488187..9db556e14dfa 100644
+>> --- a/tools/perf/util/cs-etm.c
+>> +++ b/tools/perf/util/cs-etm.c
+>> @@ -2700,6 +2700,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session,
+>>         struct perf_record_auxtrace *auxtrace_event;
+>>         union perf_event auxtrace_fragment;
+>>         bool matchesCpuPid;
+>> +       __u64 aux_offset;
+>>         struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+>>                                                    struct cs_etm_auxtrace,
+>>                                                    auxtrace);
+>> @@ -2730,19 +2731,26 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session,
+>>         else
+>>                 matchesCpuPid = auxtrace_event->cpu == sample->cpu;
+>>
+>> +       /*
+>> +        * In snapshot/overwrite mode, the head points to the end of the buffer so aux_offset needs
+>> +        * to have the size subtracted so it points to the beginning as in normal mode.
+>> +        */
+>> +       if (aux_event->flags && PERF_AUX_FLAG_OVERWRITE)
+>> +               aux_offset = aux_event->aux_offset - aux_event->aux_size;
+>> +       else
+>> +               aux_offset = aux_event->aux_offset;
+>> +
+>>         if (matchesCpuPid &&
+>> -           aux_event->aux_offset >= auxtrace_event->offset &&
+>> -           aux_event->aux_offset + aux_event->aux_size <=
+>> -                       auxtrace_event->offset + auxtrace_event->size) {
+>> +           aux_offset >= auxtrace_event->offset &&
+>> +           aux_offset + aux_event->aux_size <= auxtrace_event->offset + auxtrace_event->size) {
+>>                 /*
+>>                  * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+>>                  * based on the sizes of the aux event, and queue that fragment.
+>>                  */
+>>                 auxtrace_fragment.auxtrace = *auxtrace_event;
+>>                 auxtrace_fragment.auxtrace.size = aux_event->aux_size;
+>> -               auxtrace_fragment.auxtrace.offset = aux_event->aux_offset;
+>> -               file_offset += aux_event->aux_offset - auxtrace_event->offset +
+>> -                               auxtrace_event->header.size;
+>> +               auxtrace_fragment.auxtrace.offset = aux_offset;
+>> +               file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
+>>                 return auxtrace_queues__add_event(&etm->queues,
+>>                                                session,
+>>                                                &auxtrace_fragment,
+>>
+>>
