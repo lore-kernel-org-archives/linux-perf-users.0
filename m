@@ -2,90 +2,160 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873C1C4708F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 09:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F03FC4708F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 09:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3FE6138C
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 09:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE15560233
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 09:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233096AbhFAJTn (ORCPT
+        id S233193AbhFAJ2z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Jun 2021 05:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232869AbhFAJTn (ORCPT
+        Tue, 1 Jun 2021 05:28:55 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2820 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233182AbhFAJ2y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Jun 2021 05:19:43 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8746DC061574;
-        Tue,  1 Jun 2021 02:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5rmhQAIMRhc0/LXllKDO9MjTjuKbppvLAxt/fqIeNe0=; b=bP1CJz4s1PkNBLaGcX+yW6zHu/
-        1XXqpeUi1pFJ0EhIDBh9vZT/LxvjJbWeut6it+HG1Ryxaugdn1PbwdYhctNtsD4068Vc+LBMIdO6r
-        l/7VFWM/DF4rMUG3x2GD552/ujSDdEcCmkFG0H0wgMJehmEDhXUNtjgANz9frQyFzYshxfljS2HuU
-        HfYKbYV8vHjIECJwueJKKTGv2jLJMbvqjIuy7pm9xjpSiknQmLlHgbzKYlon/ThFzaG1b80fbK3SO
-        sLZZhS1e7UdMvvJDCPIM3qDhm4lzWxeWjjhIw3C8rpWRAvU+a2Cenn/trEKvjEb7Rybhq5sbBUUKQ
-        qof1GGTA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1lo0Wr-002W26-SI; Tue, 01 Jun 2021 09:17:48 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F3E8E30019C;
-        Tue,  1 Jun 2021 11:17:46 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D72032011CA24; Tue,  1 Jun 2021 11:17:46 +0200 (CEST)
-Date:   Tue, 1 Jun 2021 11:17:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf auxtrace: Optimize barriers with
- load-acquire and store-release
-Message-ID: <YLX7OhK37QmfeOwu@hirez.programming.kicks-ass.net>
-References: <20210519140319.1673043-1-leo.yan@linaro.org>
- <20210519140319.1673043-2-leo.yan@linaro.org>
- <20210531151049.GE9324@leoy-ThinkPad-X240s>
- <cc3810cd-5edc-26d3-9c77-8bb6479152c1@intel.com>
- <20210601063342.GB10026@leoy-ThinkPad-X240s>
- <71b0e395-0e20-fdd1-b105-0ca1706c8ed1@intel.com>
+        Tue, 1 Jun 2021 05:28:54 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FvRWn6zJjzWqSW;
+        Tue,  1 Jun 2021 17:22:29 +0800 (CST)
+Received: from dggema753-chm.china.huawei.com (10.1.198.195) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Tue, 1 Jun 2021 17:27:10 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.174) by
+ dggema753-chm.china.huawei.com (10.1.198.195) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Tue, 1 Jun 2021 17:27:09 +0800
+From:   Li Huafei <lihuafei1@huawei.com>
+To:     <acme@kernel.org>, <mhiramat@kernel.org>
+CC:     <namhyung@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <srikar@linux.vnet.ibm.com>, <fche@redhat.com>,
+        <Jianlin.Lv@arm.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yangjihong1@huawei.com>,
+        <zhangjinhao2@huawei.com>, <lihuafei1@huawei.com>
+Subject: [PATCH] perf probe: Fix null pointer dereference in convert_variable_location()
+Date:   Tue, 1 Jun 2021 17:27:50 +0800
+Message-ID: <20210601092750.169601-1-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71b0e395-0e20-fdd1-b105-0ca1706c8ed1@intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.174]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggema753-chm.china.huawei.com (10.1.198.195)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 01, 2021 at 12:07:31PM +0300, Adrian Hunter wrote:
-> __sync_xxx_compare_and_swap is out-of-date now. This page:
-> 
-> https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html#g_t_005f_005fsync-Builtins
-> 
-> recommends '__atomic' builtins instead.
+If we just check whether the variable can be converted, 'tvar' should be
+a null pointer. However, the null pointer check is missing in the
+'Constant value' execution path.
 
-perf doesn't seem to use that.
+The following cases can trigger this problem:
 
-> Since atomics are needed only for the "compat" case (i.e. 32-bit perf with 64-bit kernel)
-> you could try to find an elegant way to check for a 64-bit kernel, and avoid the atomics
-> for a 32-bit perf with 32-bit kernel.
+	$ cat test.c
+	#include <stdio.h>
 
-Most 32bit archs cannot do 64bit atomics. I suppose the only reason this
-doesn't explode is because the aux stuff isn't supported on many
-architectures?
+	void main(void)
+	{
+	        int a;
+	        const int b = 1;
+
+	        asm volatile("mov %1, %0" : "=r"(a): "i"(b));
+	        printf("a: %d\n", a);
+	}
+
+	$ gcc test.c -o test -O -g
+	$ sudo ./perf probe -x ./test -L "main"
+	<main@/home/lhf/test.c:0>
+	      0  void main(void)
+	         {
+	      2          int a;
+	                 const int b = 1;
+
+	                 asm volatile("mov %1, %0" : "=r"(a): "i"(b));
+	      6          printf("a: %d\n", a);
+	         }
+
+	$ sudo ./perf probe -x ./test -V "main:6"
+	Segmentation fault
+
+The check on 'tvar' is added. If 'tavr' is a null pointer, we return 0
+to indicate that the variable can be converted. Now, we can successfully
+show the variables that can be accessed.
+
+	$ sudo ./perf probe -x ./test -V "main:6"
+	Available variables at main:6
+	        @<main+13>
+	                char*   __fmt
+	                int     a
+	                int     b
+
+However, the variable 'b' cannot be tracked.
+
+	$ sudo ./perf probe -x ./test -D "main:6 b"
+	Failed to find the location of the 'b' variable at this address.
+	 Perhaps it has been optimized out.
+	 Use -V with the --range option to show 'b' location range.
+	  Error: Failed to add events.
+
+This is because __die_find_variable_cb() did not successfully match
+variable 'b', which has the DW_AT_const_value attribute instead of
+DW_AT_location. We added support for DW_AT_const_value in
+__die_find_variable_cb(). With this modification, we can successfully
+track the variable 'b'.
+
+	$ sudo ./perf probe -x ./test -D "main:6 b"
+	p:probe_test/main_L6 /home/lhf/test:0x1156 b=\1:s32
+
+Fixes: 66f69b219716 ("perf probe: Support DW_AT_const_value constant value")
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+---
+ tools/perf/util/dwarf-aux.c    | 8 ++++++--
+ tools/perf/util/probe-finder.c | 3 +++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index b2f4920e19a6..7d2ba8419b0c 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -975,9 +975,13 @@ static int __die_find_variable_cb(Dwarf_Die *die_mem, void *data)
+ 	if ((tag == DW_TAG_formal_parameter ||
+ 	     tag == DW_TAG_variable) &&
+ 	    die_compare_name(die_mem, fvp->name) &&
+-	/* Does the DIE have location information or external instance? */
++	/*
++	 * Does the DIE have location information or const value
++	 * or external instance?
++	 */
+ 	    (dwarf_attr(die_mem, DW_AT_external, &attr) ||
+-	     dwarf_attr(die_mem, DW_AT_location, &attr)))
++	     dwarf_attr(die_mem, DW_AT_location, &attr) ||
++	     dwarf_attr(die_mem, DW_AT_const_value, &attr)))
+ 		return DIE_FIND_CB_END;
+ 	if (dwarf_haspc(die_mem, fvp->addr))
+ 		return DIE_FIND_CB_CONTINUE;
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 866f2d514d72..b029c29ce227 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -190,6 +190,9 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
+ 	    immediate_value_is_supported()) {
+ 		Dwarf_Sword snum;
+ 
++		if (!tvar)
++			return 0;
++
+ 		dwarf_formsdata(&attr, &snum);
+ 		ret = asprintf(&tvar->value, "\\%ld", (long)snum);
+ 
+-- 
+2.17.1
 
