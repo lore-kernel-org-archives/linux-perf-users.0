@@ -2,124 +2,131 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B37DC47080
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 13:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A0BC47093
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 14:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51E45613B1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 13:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBA1613AB
+	for <linux-perf-users@archiver.kernel.org>; Tue,  1 Jun 2021 14:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234117AbhFAN5h (ORCPT
+        id S234330AbhFAO6p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Jun 2021 09:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234119AbhFAN5g (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Jun 2021 09:57:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0B324613AE;
-        Tue,  1 Jun 2021 13:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622555755;
-        bh=uDkz4YoEHcgBW7m92lJvZYICBqyo72YlqEVTWUbMiRg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZVkzo27Mj0F/+XVAb7Pw2B8W97FekTZBXxYswPbWs2QxuOu4AejG/xzX1XCBYpQie
-         vAVhvyi23fC2KHpFCB5mke3sxNhZ86Lr6Wt8zrbIR1MalzoGxQkEOGBzjKyMIIYU67
-         CJHo3AXVtRTpQGpG+gCpYxgOKAwXIkebXYJzuQtZmxYVYFoBjQv1taJ6J2IVmG/stN
-         mRrZNhYDdG7NMjiVLzjHV+7JkGpb7+Kwzbw/5rmhz4DQFPF67M/Pm9GQiVlClNoNXZ
-         YTsyvSbH9aBCKtIRlsNAV72XvP6kskT1LRbF6YdanDvszeBt0K8MQjEPL4e0S/NCT7
-         PRRI3pa8/xoFA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 78FB34011C; Tue,  1 Jun 2021 10:55:52 -0300 (-03)
-Date:   Tue, 1 Jun 2021 10:55:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yu Kuai <yukuai3@huawei.com>, Song Liu <songliubraving@fb.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org, yi.zhang@huawei.com
-Subject: Re: [PATCH] perf stat: Fix error return code in bperf__load()
-Message-ID: <YLY8aKsMvBG+DB1W@kernel.org>
-References: <20210517081254.1561564-1-yukuai3@huawei.com>
- <YLY7qozcJcj8RVe+@kernel.org>
+        Tue, 1 Jun 2021 10:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234314AbhFAO6o (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 1 Jun 2021 10:58:44 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81D2FC061574
+        for <linux-perf-users@vger.kernel.org>; Tue,  1 Jun 2021 07:57:02 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id l10-20020a17090a150ab0290162974722f2so2101589pja.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 01 Jun 2021 07:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y8hG5FSgqiGMOcVqCqEOwlereqNOwwJAqT4WXbiJqD8=;
+        b=ToW2mEKPjYpiZ3coTlBAjElAf10TJWzS9mC/KmCix5X+8HGKBUEu4wIbcmN5hyIoF8
+         ZCn9vvKkg8fWHfLHDQSSGEYaNvIMEJQqngy1b65Rqfiy8oGt5+qQ/RkepfU74nv+KDEk
+         XMhYTfL7LcUs+0TSMtxfEN+cYV3AyjtE4wAGM8p0skVLXDXbQylOcXpG4P0a/zfI2nCO
+         LMghx66Zf2mOXE+9R57kzRutGJ8cJLm/Mx+q5YQsybLep2QaZDSFXhxJhEEavb5yyj1l
+         +i1RVx4oAd6tIAjZpQaXu3AMafQaAgMQ/XTeZTBwmHR5urpQA/WndKJY+oKA/j93Z+Xn
+         /VDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y8hG5FSgqiGMOcVqCqEOwlereqNOwwJAqT4WXbiJqD8=;
+        b=UfFw8jaHW/0eKMtLUIKTFQrJ3RmDLpEDQ+yppOyvOJwgjFdXzgv7x67aYGdGg3pXi3
+         t1/uVppuCq3j6o/ZbjkDyH+w/BhZLGX8MvHWVvq0Y4qmfOJuvr+nwHucNXs26gjTglHk
+         H/HkwfMkrle1saYeFDbDcvPd7Y4W8rSA/fXK0QI5Wxvi4iw3x/J+rBTQbrz6ZIRHQ55N
+         TP8hU3lVHtAk1xK8cddBeqY91nzef/iI58aBRpbPzkYhD66yTs31Xucn4Mn7K6aOWi2P
+         ktNqg4oUTdBtKY9zmskgnrHtEKTeK0qpQIXQjBk7Xd//DtoQ5uK41eZOblMkPbsn9jir
+         GvmA==
+X-Gm-Message-State: AOAM530nZvEFzq/FWqJfHSK8jKD5GV2s9MokAAQck3dpuYtbhIPX2FRe
+        kvtY4oTUyf4qIYdsRpKiTnqzrw==
+X-Google-Smtp-Source: ABdhPJzEts9R19AI12770iw1ZWLp3GZjZ4fVGrjEqOXk0XpTzXmgtGdhSpoCzDGd8+XRSTh19Jrqkg==
+X-Received: by 2002:a17:902:be0d:b029:f9:c913:821f with SMTP id r13-20020a170902be0db02900f9c913821fmr26473481pls.2.1622559421899;
+        Tue, 01 Jun 2021 07:57:01 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
+        by smtp.gmail.com with ESMTPSA id p1sm13354049pfp.137.2021.06.01.07.56.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Jun 2021 07:57:01 -0700 (PDT)
+Date:   Tue, 1 Jun 2021 22:56:56 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] perf auxtrace: Optimize barriers with
+ load-acquire and store-release
+Message-ID: <20210601145656.GA10272@leoy-ThinkPad-X240s>
+References: <20210519140319.1673043-1-leo.yan@linaro.org>
+ <20210519140319.1673043-2-leo.yan@linaro.org>
+ <20210531151049.GE9324@leoy-ThinkPad-X240s>
+ <cc3810cd-5edc-26d3-9c77-8bb6479152c1@intel.com>
+ <20210601063342.GB10026@leoy-ThinkPad-X240s>
+ <71b0e395-0e20-fdd1-b105-0ca1706c8ed1@intel.com>
+ <YLX7OhK37QmfeOwu@hirez.programming.kicks-ass.net>
+ <4af1a96d-e03c-f1b4-ebce-ca869318c8cf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YLY7qozcJcj8RVe+@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <4af1a96d-e03c-f1b4-ebce-ca869318c8cf@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 01, 2021 at 10:52:42AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, May 17, 2021 at 04:12:54PM +0800, Yu Kuai escreveu:
-> > Fix to return a negative error code from the error handling
-> > case instead of 0, as done elsewhere in this function.
+On Tue, Jun 01, 2021 at 12:45:16PM +0300, Adrian Hunter wrote:
+> On 1/06/21 12:17 pm, Peter Zijlstra wrote:
+> > On Tue, Jun 01, 2021 at 12:07:31PM +0300, Adrian Hunter wrote:
+> >> __sync_xxx_compare_and_swap is out-of-date now. This page:
+> >>
+> >> https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html#g_t_005f_005fsync-Builtins
+> >>
+> >> recommends '__atomic' builtins instead.
 > > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+> > perf doesn't seem to use that.
 > 
-> Applied, but I had to add Song to the CC list and also add this line:
+> I guess we could drop support for the compat case; add validation:
 > 
-> Fixes: 7fac83aaf2eecc9e ("perf stat: Introduce 'bperf' to share hardware PMCs with BPF")
-> 
-> So that the stable@kernel.org folks can get this auto-collected.
-> 
-> Perhaps you guys can make Hulk do that as well? :-)
-> 
-> Thanks,
+> "Error, 32-bit perf cannot record AUX area traces from a 64-bit kernel.
+> Please use a 64-bit version of perf instead."
 
-Something else to teach Hulk:
+Not sure what's a good method to detect the compat case.  I can think
+out to use below conditions to check the compat case:
 
-util/bpf_counter.c: In function ‘bperf__load’:
-util/bpf_counter.c:523:9: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
-  523 |         if (evsel->bperf_leader_link_fd < 0 &&
-      |         ^~
-util/bpf_counter.c:526:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
-  526 |                 goto out;
-      |                 ^~~~
-cc1: all warnings being treated as errors
+  if ((sizeof(unsigned long) == 4) &&
+      (machine__is(machine, "x86_64") || machine__is(machine, "arm64") ||
+       machine__is(machine, "aarch64")))  {
 
-I'm adding the missing {} for the now multiline if block.
+       pr_warn("Error, 32-bit perf cannot record from a 64-bit kernel.\n"
+               "Please use a 64-bit version of perf instead.\n");
+       return -ENOTSUP;
+  }
 
-- Arnaldo
-> 
-> > ---
-> >  tools/perf/util/bpf_counter.c | 2 ++
-> >  1 file changed, 2 insertions(+)
+Just want to check if any better to detect compat case in perf?
+
+Thanks for suggestions,
+Leo
+
+> >> Since atomics are needed only for the "compat" case (i.e. 32-bit perf with 64-bit kernel)
+> >> you could try to find an elegant way to check for a 64-bit kernel, and avoid the atomics
+> >> for a 32-bit perf with 32-bit kernel.
 > > 
-> > diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-> > index ddb52f748c8e..843b20aa6688 100644
-> > --- a/tools/perf/util/bpf_counter.c
-> > +++ b/tools/perf/util/bpf_counter.c
-> > @@ -522,6 +522,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
-> >  	evsel->bperf_leader_link_fd = bpf_link_get_fd_by_id(entry.link_id);
-> >  	if (evsel->bperf_leader_link_fd < 0 &&
-> >  	    bperf_reload_leader_program(evsel, attr_map_fd, &entry))
-> > +		err = -1;
-> >  		goto out;
-> >  
-> >  	/*
-> > @@ -550,6 +551,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
-> >  	/* Step 2: load the follower skeleton */
-> >  	evsel->follower_skel = bperf_follower_bpf__open();
-> >  	if (!evsel->follower_skel) {
-> > +		err = -1;
-> >  		pr_err("Failed to open follower skeleton\n");
-> >  		goto out;
-> >  	}
-> > -- 
-> > 2.25.4
+> > Most 32bit archs cannot do 64bit atomics. I suppose the only reason this
+> > doesn't explode is because the aux stuff isn't supported on many
+> > architectures?
 > > 
 > 
-> -- 
+> Yes but presumably the race itself is unlikely since the upper byte changes only once every 4GiB.
 > 
-> - Arnaldo
-
--- 
-
-- Arnaldo
