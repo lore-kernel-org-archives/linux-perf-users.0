@@ -2,62 +2,59 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB48C47083
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 12:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D961FC4708F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 13:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02A3613D3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 12:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2532613DC
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 13:02:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbhFBMki (ORCPT
+        id S229738AbhFBNEg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Jun 2021 08:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbhFBMki (ORCPT
+        Wed, 2 Jun 2021 09:04:36 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:46827 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229665AbhFBNEf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Jun 2021 08:40:38 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4AA1C061574
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Jun 2021 05:38:55 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id n12so2093826pgs.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jun 2021 05:38:55 -0700 (PDT)
+        Wed, 2 Jun 2021 09:04:35 -0400
+Received: by mail-pf1-f181.google.com with SMTP id y15so2090093pfn.13
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jun 2021 06:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=tkfGbFk7RbowFQb2pdJ2DiNSH2Hl1PMpHr94hmyAtqs=;
-        b=lxTZN5WbWFKLKZay+tdzygwECcBcBFtb83iQAMQ8lte/ef8eggQE+S6BXoanfnJ/4I
-         dEl0mlNV6UDIdqkQHC32HZwJ89hL6aWyh2WgB3pOoIe9D/z8kfIjRpvSZIH8pmiPlNGS
-         IpFZWdj+7gWvUjS9SyFwBbBo8H1aSB76NwmjvgtpvFHQToHJ+Kuddzdd+0tm+VMTcgg5
-         7H7ew14q/bvkc2Lod182B23azGQ9B9P9FlPuvJk8Dzix8zksKnZ+vJGK2e0WeuzXv25I
-         UkIy8wL7PVXNQ9j6HkPq9Undf92t2TZKM4M2WVAfzXaMeScb3NFjSK/mH/UmRz9bdIUs
-         v5tg==
+        bh=YI37M6WTB9tOz3HBK6mip6CCX60bhaIRlELFRiHmBo8=;
+        b=WPntc7Kz0gCfuC7el9Vy999j5F05xUwLTaT76ZzqgCUhdhbALv1Fh8zus1SEofEzDn
+         gVUwQN3efdDCF8Ekt2wDxM+L0oZAWBwZ96YaYFmFKwxVA+hpWkd3bxiypQgfSjAoVV/Z
+         9SSKEuuvAublQXCeAyg0+QLtxoIQBBzQ+s5ZjJdpYdoP5ZOGg6i64ilxFsqQdP4fHjrE
+         tmGx/oZjGny/ayR/SoYqLGLflzs6apQk2vO8kmaYYlrQpSJyQEh0s83LCgWNUjCDqIy/
+         c7/yrojLy+4smIAEz+4j5FmCz9nIgqAZHREzOhVD+ySv9d2kMEjzFpReAfSUIpc9Ask2
+         CR7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=tkfGbFk7RbowFQb2pdJ2DiNSH2Hl1PMpHr94hmyAtqs=;
-        b=W28dK9PY5XYtFqy/XKYoweIiCtDm1gGRWUwBQaO25Mo0U9LU0KuweesQA9YU5slLpY
-         42oKfICxHjezHCq1iketqFavvZEioVXfx25SyrNRzW64sg+y6NhMJyR/b6iijSOUgUUi
-         soUXM2l5OSiU+XgIAXbkE7/lHHvgLJl3gOFn5F9bLLIKCjQLK+5WyomQPU7Ma2C5u4+t
-         8thNrjVgTgIknoU/1E2PcMfYnpISDbO9/6v5+aDAtQzP7fmpbKTmSGUEMZq3YUzr3tWK
-         +yFRXePoDnVmZ59EaWbEkyd9XqzHmCf6txVFsSevW13qzWeneU6kkE4XlGJAPU1e4b5E
-         ry7w==
-X-Gm-Message-State: AOAM530PmtpW+4MwpqPEI9cW91M97pPEm+fzhI9HsepqHjU67v0TX3yZ
-        LefmG0NGnDOgDKgvHG1q3Y6X1w==
-X-Google-Smtp-Source: ABdhPJwZLYHDPPn1a+5bpf3u9GEz+y0iz9ZUQ2qJzz1MLRRwbyl6UAlRYCEn1EZr8YCrCxvzgqY3OA==
-X-Received: by 2002:a63:5c5d:: with SMTP id n29mr33235732pgm.131.1622637534524;
-        Wed, 02 Jun 2021 05:38:54 -0700 (PDT)
+        bh=YI37M6WTB9tOz3HBK6mip6CCX60bhaIRlELFRiHmBo8=;
+        b=CDXv6mvU0JOOvDz/LCaIpitkZV8NSruEwAa9svPRa0CWNzs1LZWHNgec1dgWOw/mCU
+         gQyitVFRO/QzJAoxwIvsBgU9bYlpU8/N8jld+1OiT5EDjhOAbYErLWLHQlOajGsvjWb0
+         V/EMTOrP0FP3uxK1nVviSAnwsSdhKc66yRUK/N4l+kOfwBoFEcCzZjD/rz6TxDqLcp1d
+         8L6ESwHe/cGMILNVU7Me3SxceTqqzSFeiWFqu+ji5du/nbdXvWmr6iuXC1IDGAY12ghd
+         BAPHQZsZA4U3v9nahnlsrcYRimVdoK++YBhSAT49kLgqPxcAVADwgZ7UwjypBv7ITEb+
+         wCCA==
+X-Gm-Message-State: AOAM5331ZWLJNPnW4/eeEEW9cFB4CozEt9syfP9qh5U7hJv++ae2RzoT
+        ZzoJzgha9Bz+UvMFqrwW/J40Sg==
+X-Google-Smtp-Source: ABdhPJxNI77ZxyMoAz4JSba4wJsZgj88a5H7K2T0ZSPsUpwuJZZDEBhk50O02tQ/AXokHZ1pjXXqYQ==
+X-Received: by 2002:a63:ff22:: with SMTP id k34mr33546970pgi.336.1622638899656;
+        Wed, 02 Jun 2021 06:01:39 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
-        by smtp.gmail.com with ESMTPSA id m2sm17340941pgu.85.2021.06.02.05.38.49
+        by smtp.gmail.com with ESMTPSA id h13sm10991973pfv.213.2021.06.02.06.01.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 05:38:53 -0700 (PDT)
-Date:   Wed, 2 Jun 2021 20:38:47 +0800
+        Wed, 02 Jun 2021 06:01:38 -0700 (PDT)
+Date:   Wed, 2 Jun 2021 21:01:32 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -75,60 +72,46 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 8/8] perf record: Directly bail out for compat case
-Message-ID: <20210602123847.GE10272@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH v2 6/8] perf auxtrace: Drop legacy __sync functions
+Message-ID: <20210602130132.GF10272@leoy-ThinkPad-X240s>
 References: <20210602103007.184993-1-leo.yan@linaro.org>
- <20210602103007.184993-9-leo.yan@linaro.org>
- <c321e998-6fd2-86e9-7876-7250a9b23c25@intel.com>
+ <20210602103007.184993-7-leo.yan@linaro.org>
+ <fc7bfa25-d96e-ea6d-2756-f94653dc4771@intel.com>
+ <20210602111620.GD10272@leoy-ThinkPad-X240s>
+ <d179137e-4bbc-0026-3273-622f6dedb002@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c321e998-6fd2-86e9-7876-7250a9b23c25@intel.com>
+In-Reply-To: <d179137e-4bbc-0026-3273-622f6dedb002@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrain,
-
-On Wed, Jun 02, 2021 at 02:18:47PM +0300, Adrian Hunter wrote:
-> On 2/06/21 1:30 pm, Leo Yan wrote:
-> > Since the 64-bit atomicity is not promised in 32-bit perf, directly
-> > report the error and bail out for this case.
+On Wed, Jun 02, 2021 at 02:21:05PM +0300, Adrian Hunter wrote:
+> On 2/06/21 2:16 pm, Leo Yan wrote:
+> > Hi Adrian,
 > > 
-> > Now only applies on x86_64 and Arm64 platforms.
+> > On Wed, Jun 02, 2021 at 01:47:42PM +0300, Adrian Hunter wrote:
 > > 
-> > Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> > [...]
+> > 
+> >>> @@ -451,11 +445,7 @@ static inline u64 auxtrace_mmap__read_snapshot_head(struct auxtrace_mmap *mm)
+> >>>  static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
+> >>>  {
+> >>>  	struct perf_event_mmap_page *pc = mm->userpg;
+> >>> -#if BITS_PER_LONG == 64 || !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
+> >>
+> >> The test and setup for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT is not needed anymore either.
+> > 
+> > Yes, I think there have two files should be cleaned:
+> > 
+> >   Makefile.config
+> >   util/auxtrace.c
+> > 
+> > If still miss anything, please let me know (I remembered there have a
+> > test case for __sync_xxx_compare_and_swap, but I cannot find it now,
+> > so this is why I am concern if I miss anything not).
 > 
-> Maybe we can do better for the compat case.
-> 
-> We can assume the upper 32-bits change very seldom,
-> and always increase. So for the 'read' case:
-> 
-> 	u64 first, second, last;
-> 	u64 mask = (u64)((u32)-1) << 32;
-> 
-> 	do {
-> 		first = READ_ONCE(pc->aux_head);
-> 		rmb();
-> 		second = READ_ONCE(pc->aux_head);
-> 		rmb();
-> 		last = READ_ONCE(pc->aux_head);
-> 	} while ((first & mask) != (last & mask));
-> 	return second;
-> 
-> For the write case, we can cause a fatal error only if the new
-> tail has non-zero upper 32-bits.  That gives up to 4GiB of data
-> before aborting:
-> 
-> 	if (tail & mask)
-> 		return -1;
-> 	smp_mb();
-> 	WRITE_ONCE(pc->aux_tail, tail);
+> tools/build/feature/test-sync-compare-and-swap.c
 
-Seems to me, it's pointless to only support aux_head for 64-bit and
-support aux_tail for 32-bit.  I understand this can be helpful for the
-snapshot mode which only uses aux_head, but it still fails to support
-the normal case for AUX ring buffer using 64-bit head/tail.
-
-Thanks,
-Leo
+Thanks a lot!
