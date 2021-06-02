@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C205C4708F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 10:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF28C4708F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 10:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48FB3613BF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 10:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45B8613D0
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 10:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232288AbhFBKcL (ORCPT
+        id S232615AbhFBKcO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Jun 2021 06:32:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40826 "EHLO
+        Wed, 2 Jun 2021 06:32:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232532AbhFBKcH (ORCPT
+        with ESMTP id S232600AbhFBKcK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Jun 2021 06:32:07 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45590C06138B
-        for <linux-perf-users@vger.kernel.org>; Wed,  2 Jun 2021 03:30:23 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id q25so1823928pfh.7
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jun 2021 03:30:23 -0700 (PDT)
+        Wed, 2 Jun 2021 06:32:10 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB63C06174A
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Jun 2021 03:30:26 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id x73so1817374pfc.8
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jun 2021 03:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tvAJvuDnRJDe9YMY5R2L+q2C0nSKQeIr4jFz4M7hp0E=;
-        b=POWzSZ5TRT+9dr74+V15dGxhepckGw99Xtw70LETQ2z3VMGYTXTOwtdm6cl33wbAff
-         LEsF+BxxrTAxWeVcYdCHSgWl+4xjHatzqqb84TDjSjM4cps1Xi43q0gRKuKehIGj6QQJ
-         SMVld7CJ3kXmvcclqESa7CHe5OF5x/O7GIgLU8gTKMtOQmTEf73RqTyPY91NLA5ARmu5
-         SF9IjG4Qhswx34IcxQZO+wWSocV3XUptIOGGHQl2UZyQvH901whvw+yf+Aawpxuak0+n
-         UN8gron1YQzhcgYefKP7eI2zgGQoqzJCrDn84BJ71sbk1565GIGlKdAfNJOku6vlyGgQ
-         7bWg==
+        bh=MxgwZHP/NxGkiYvHiVeQZZDAd7piMTreovHUTu3tJE4=;
+        b=jHRKX5cUkNuQqA6FcVDelOyL6rHw3QdZHN9QJqi0thrX/s2qZM6IGuYS7Rky09KG9R
+         VysMh5AauTe0QUSWhu57mujRxBqQhFwPOPxuOGNTRUHYw+tM923NayUvs0WwJCYHAmeE
+         33CPzv15Gz9UninMPEYLTgUnVU5aU2ovg6d1qH8teYiA9Byx8VZ5VuF1k4BaTHj9dnON
+         JaFgb6ugdkBDuOmK1GCKfnElu1QeFzgJuaV/WHZpfuWD9i6Jh6QMuSDmyMW2glUF9KuH
+         HKuOeo6t7CO1A5YwvZeYygPIec0p6GWo105Oq5oi27FJK8FZRWDNZYBkoz+BJtrr5dGm
+         +dqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tvAJvuDnRJDe9YMY5R2L+q2C0nSKQeIr4jFz4M7hp0E=;
-        b=Ouw3ZlMYSKyvOjUqQ+btyMLIV3Y4ihTi2JgbkZ9uKhwdneVFtHRKLCSx09gaguJj49
-         O1acQcjb7svTqK12UcwLeGQXdl5WlqF4X6F6lIOJ+PIrffgcuCjssx8YOhARY58H0gQ3
-         SCBkcp90xeUuwQaOOgByTbRJxYiBIpTsgeDXSJ8EBmfutFxRp+i129CIycYnd+xuleaR
-         v6zkNUeEJYCgZmK79i/vkqY0RtkPqtwCQZ+odWF3bhqphWBTDDrp6Puxu4ztEu6DjhuB
-         c/87N1HHqysY47+y0lyX4Q6YWk24dewzCqJbO7U5IXRVw+ui/BpPXsHuoCCKAbLdXelI
-         aIFw==
-X-Gm-Message-State: AOAM531YLP4Z9M2RrVLW9TfkamciIAeLAixna1CuYdSra3DvCCdM9Chm
-        Zo3lR6jujq+zsO+xetRlyGnmIQ==
-X-Google-Smtp-Source: ABdhPJy5pG1LjUfP91QAtl2t0ow2iEBMIl7BJdK1RWAS4sEnHwBJ5KdESYaC3yr/wQPQz544PM/Bvg==
-X-Received: by 2002:a63:5a19:: with SMTP id o25mr32747476pgb.122.1622629822770;
-        Wed, 02 Jun 2021 03:30:22 -0700 (PDT)
+        bh=MxgwZHP/NxGkiYvHiVeQZZDAd7piMTreovHUTu3tJE4=;
+        b=nkHPqw2nj7Tnkg+/ZGuug0svkXsbyxfHsat/FNVP5RP1sJHK2Dy74rrKJO+wAJtdL4
+         jowEzBFmxyrRzyeuujg9omhfG7ftXgyRryYRcYkpfvgjzvu6y65oPkYLd6Iq8YsfXbio
+         2hhY8wLDzveYAohc2xSacTJeIpYeL9ccAhQuAI7uIeS1LtYAIdOYSplDXQ5AdAJXj+fa
+         ug6Gy9p71ctrWFRpWVdf9ZnUrENvA7DfX4Y0wZ7+UAHYYu1PYKLNJ6+g/dUchZQFBYer
+         VJhnmmrSEef9oTJJ8+ONfyF6pxXtuwcisOglTSEOqMvLq8CBZMjZn7j77m0Meql4vsHC
+         2PcQ==
+X-Gm-Message-State: AOAM530TcaQ6HoTb6iOnJaTh7lHOxe4GeCjmjxY6S6mvclFvU2+4Bznc
+        X6+OqWf7qV8NwK3zp4xvOJr3tg==
+X-Google-Smtp-Source: ABdhPJzyW6EPkT5gkkT06ZlfTQHfLmc+dwW6YIn3U8DB25Ciy7gNcrlSKpY5YK/BNT72rLsFD/In1Q==
+X-Received: by 2002:a62:ea03:0:b029:2e7:8445:243c with SMTP id t3-20020a62ea030000b02902e78445243cmr26382005pfh.54.1622629825762;
+        Wed, 02 Jun 2021 03:30:25 -0700 (PDT)
 Received: from localhost (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
-        by smtp.gmail.com with ESMTPSA id g141sm15568758pfb.210.2021.06.02.03.30.21
+        by smtp.gmail.com with ESMTPSA id t13sm8756126pfh.97.2021.06.02.03.30.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 03:30:22 -0700 (PDT)
+        Wed, 02 Jun 2021 03:30:25 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -75,9 +75,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 2/8] coresight: tmc-etr: Add barrier after updating AUX ring buffer
-Date:   Wed,  2 Jun 2021 18:30:01 +0800
-Message-Id: <20210602103007.184993-3-leo.yan@linaro.org>
+Subject: [PATCH v2 3/8] coresight: tmc-etf: Add comment for store ordering
+Date:   Wed,  2 Jun 2021 18:30:02 +0800
+Message-Id: <20210602103007.184993-4-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210602103007.184993-1-leo.yan@linaro.org>
 References: <20210602103007.184993-1-leo.yan@linaro.org>
@@ -87,35 +87,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since a memory barrier is required between AUX trace data store and
-aux_head store, and the AUX trace data is filled with memcpy(), it's
-sufficient to use smp_wmb() so can ensure the trace data is visible
-prior to updating aux_head.
+AUX ring buffer is required to separate the data store and aux_head
+store, since the function CS_LOCK() has contained memory barrier mb(),
+mb() is a more conservative barrier than smp_wmb() on Arm32/Arm64, thus
+it's needless to add any explicit barrier anymore.
+
+Add comment to make clear for the barrier usage for ETF.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-index acdb59e0e661..713205db15a1 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-@@ -1563,6 +1563,14 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
- 	 */
- 	if (etr_perf->snapshot)
- 		handle->head += size;
-+
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 45b85edfc690..9a42ee689921 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -553,6 +553,12 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
+ 	if (buf->snapshot)
+ 		handle->head += to_read;
+ 
 +	/*
-+	 * It requires the ordering between the AUX trace data and aux_head
-+	 * store, below smp_wmb() ensures the AUX trace data is visible prior
-+	 * to updating aux_head.
++	 * AUX ring buffer requires to use memory barrier to separate the trace
++	 * data store and aux_head store, because CS_LOCK() contains mb() which
++	 * gives more heavy barrier than smp_wmb(), it's not necessary to
++	 * explicitly invoke any barrier.
 +	 */
-+	smp_wmb();
-+
+ 	CS_LOCK(drvdata->base);
  out:
- 	/*
- 	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
+ 	spin_unlock_irqrestore(&drvdata->spinlock, flags);
 -- 
 2.25.1
 
