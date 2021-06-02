@@ -2,149 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8BAC47083
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 19:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D828EC47083
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 22:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 850EB613EC
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 19:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EAD613DE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 22:12:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbhFBT5D (ORCPT
+        id S229775AbhFBWO2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Jun 2021 15:57:03 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:50408 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbhFBT5C (ORCPT
+        Wed, 2 Jun 2021 18:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229552AbhFBWO1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Jun 2021 15:57:02 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id EFB4D1FD3C;
-        Wed,  2 Jun 2021 19:55:15 +0000 (UTC)
-Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id CF189118DD;
-        Wed,  2 Jun 2021 19:55:03 +0000 (UTC)
-Received: from director2.suse.de ([192.168.254.72])
-        by imap3-int with ESMTPSA
-        id 3FtyJhfit2AuEAAALh3uQQ
-        (envelope-from <dave@stgolabs.net>); Wed, 02 Jun 2021 19:55:03 +0000
-Date:   Wed, 2 Jun 2021 12:54:58 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Wed, 2 Jun 2021 18:14:27 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495A8C06174A;
+        Wed,  2 Jun 2021 15:12:30 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id p13-20020a05600c358db029019f44afc845so2503673wmq.3;
+        Wed, 02 Jun 2021 15:12:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PDHp86QEN5vhB4RtZpZVG/Zl2JnNrckM7sNyGAPWl3Y=;
+        b=KtO94BoemKgkuUNbAKcBQ8dPqLqhhhPmPEup1lJQ+iZdQsuo7jM3HnG4AqrGS5+zzd
+         MpUM1bSFtLm/XEqEIA8q/6ZppvV3yIX12m2gYVMYeFN8FbXbO/DgjJ9P8W+sPY96SUeV
+         X55OPFH7aXJ+m6+I0itAHnPS5sNk2yCEL866CnvcXujPfrGA7426iRNImm162EWcVLfg
+         3ECmbJ5UDkpTdyfzAqywfHV75cT3ptCaAqiIwubtki0xV+I9BQYGTYQsbLLe/WzR9kd0
+         r19DijyuMiIx2BEPoyiY0cULO7WhvwvTd4oyd89VGtQBPLUAOmwGFr8yNM+OgOMIZt23
+         nx/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PDHp86QEN5vhB4RtZpZVG/Zl2JnNrckM7sNyGAPWl3Y=;
+        b=rtGB0sxrvpUcFsszEW964+OFRKhz95m31qIFRTe/iWetk/6gwkIdLt+VBS+OLmimpS
+         6Vkzf/WrmDtzKtZZRZL69BdHDpzdp+5Tj3lsZxZf0ywkZdZpy0rp8vNouRl5fx/2WFc0
+         ut4ydcTLDRwG8PKWFQPvhtMJYe0KrY0YCwvtMZcTFELwsIvlFesm84Ve92jS9cOEqUpa
+         i2Oxv4OUxKqOzyiAeOtzc2mkT+6CzuFQ9/aMckJznfC9No12CNpTlh/h7i4ep0Ih8P2f
+         DFK8kckITZf/CV6pLnGy8BhCUeFYkJBcCV5kKFgOSAKG13kXFBa8TPupvDwHNuiTq0cI
+         cjaA==
+X-Gm-Message-State: AOAM531QRaIVqxNHm65FMi3G1BZi1HztamNx1yGRpyQRIaB/EG0lT65j
+        XLcA+/5ndjErsE+LMvm5jz8=
+X-Google-Smtp-Source: ABdhPJzE/xf3GJENaMAxBll256r5dzEDoSfJHp+fY8DSIWe+8UjwfffWcwHzwzzN2BbuAGp/VDz6fQ==
+X-Received: by 2002:a7b:c005:: with SMTP id c5mr34410627wmb.113.1622671948880;
+        Wed, 02 Jun 2021 15:12:28 -0700 (PDT)
+Received: from honeypot.epfl.ch ([151.29.82.133])
+        by smtp.googlemail.com with ESMTPSA id j1sm875775wmi.44.2021.06.02.15.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jun 2021 15:12:28 -0700 (PDT)
+From:   Riccardo Mancini <rickyman7@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched,timer: Use __set_current_state()
-Message-ID: <20210602195458.uj3rsci4suz4mufj@offworld>
-Mail-Followup-To: Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>,
-        dm-devel@redhat.com, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     Riccardo Mancini <rickyman7@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cgroups@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
-References: <20210602131225.336600299@infradead.org>
- <20210602133040.524487671@infradead.org>
+        Jiri Olsa <jolsa@redhat.com>, Fabian Hemmer <copy@copy.sh>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf symbol-elf: fix memory leak: free sdt_note.args
+Date:   Thu,  3 Jun 2021 00:08:33 +0200
+Message-Id: <20210602220833.285226-1-rickyman7@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20210602133040.524487671@infradead.org>
-User-Agent: NeoMutt/20201120
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 02 Jun 2021, Peter Zijlstra wrote:
+Reported by ASan.
 
--ENOCHANGELONG
+Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+---
+ tools/perf/util/symbol-elf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-But yeah, I thought we had gotten rid of all these.
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 4c56aa8374344..a73345730ba90 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -2412,6 +2412,7 @@ int cleanup_sdt_note_list(struct list_head *sdt_notes)
+ 
+ 	list_for_each_entry_safe(pos, tmp, sdt_notes, note_list) {
+ 		list_del_init(&pos->note_list);
++		zfree(&pos->args);
+ 		zfree(&pos->name);
+ 		zfree(&pos->provider);
+ 		free(pos);
+-- 
+2.31.1
 
->
->Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
