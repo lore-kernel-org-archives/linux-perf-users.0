@@ -2,116 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D961FC4708F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 13:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2071BC47093
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 13:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2532613DC
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 13:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A78C613F1
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 13:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbhFBNEg (ORCPT
+        id S229927AbhFBNc5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Jun 2021 09:04:36 -0400
-Received: from mail-pf1-f181.google.com ([209.85.210.181]:46827 "EHLO
-        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbhFBNEf (ORCPT
+        Wed, 2 Jun 2021 09:32:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229746AbhFBNc4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Jun 2021 09:04:35 -0400
-Received: by mail-pf1-f181.google.com with SMTP id y15so2090093pfn.13
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jun 2021 06:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YI37M6WTB9tOz3HBK6mip6CCX60bhaIRlELFRiHmBo8=;
-        b=WPntc7Kz0gCfuC7el9Vy999j5F05xUwLTaT76ZzqgCUhdhbALv1Fh8zus1SEofEzDn
-         gVUwQN3efdDCF8Ekt2wDxM+L0oZAWBwZ96YaYFmFKwxVA+hpWkd3bxiypQgfSjAoVV/Z
-         9SSKEuuvAublQXCeAyg0+QLtxoIQBBzQ+s5ZjJdpYdoP5ZOGg6i64ilxFsqQdP4fHjrE
-         tmGx/oZjGny/ayR/SoYqLGLflzs6apQk2vO8kmaYYlrQpSJyQEh0s83LCgWNUjCDqIy/
-         c7/yrojLy+4smIAEz+4j5FmCz9nIgqAZHREzOhVD+ySv9d2kMEjzFpReAfSUIpc9Ask2
-         CR7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YI37M6WTB9tOz3HBK6mip6CCX60bhaIRlELFRiHmBo8=;
-        b=CDXv6mvU0JOOvDz/LCaIpitkZV8NSruEwAa9svPRa0CWNzs1LZWHNgec1dgWOw/mCU
-         gQyitVFRO/QzJAoxwIvsBgU9bYlpU8/N8jld+1OiT5EDjhOAbYErLWLHQlOajGsvjWb0
-         V/EMTOrP0FP3uxK1nVviSAnwsSdhKc66yRUK/N4l+kOfwBoFEcCzZjD/rz6TxDqLcp1d
-         8L6ESwHe/cGMILNVU7Me3SxceTqqzSFeiWFqu+ji5du/nbdXvWmr6iuXC1IDGAY12ghd
-         BAPHQZsZA4U3v9nahnlsrcYRimVdoK++YBhSAT49kLgqPxcAVADwgZ7UwjypBv7ITEb+
-         wCCA==
-X-Gm-Message-State: AOAM5331ZWLJNPnW4/eeEEW9cFB4CozEt9syfP9qh5U7hJv++ae2RzoT
-        ZzoJzgha9Bz+UvMFqrwW/J40Sg==
-X-Google-Smtp-Source: ABdhPJxNI77ZxyMoAz4JSba4wJsZgj88a5H7K2T0ZSPsUpwuJZZDEBhk50O02tQ/AXokHZ1pjXXqYQ==
-X-Received: by 2002:a63:ff22:: with SMTP id k34mr33546970pgi.336.1622638899656;
-        Wed, 02 Jun 2021 06:01:39 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
-        by smtp.gmail.com with ESMTPSA id h13sm10991973pfv.213.2021.06.02.06.01.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 06:01:38 -0700 (PDT)
-Date:   Wed, 2 Jun 2021 21:01:32 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 2 Jun 2021 09:32:56 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC8D3C06174A;
+        Wed,  2 Jun 2021 06:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=ZM/OZzCTna+H0NVHgaZG9RysfqZrZbVctmrXuvKDhRg=; b=Y4KjVcAVs++u5aWG8t3gz7Zmdm
+        2GCCs43oozUZx+EtBSVivOvona+vh800bFDlXP3+vZhGLq9LHKpyLPPoBAn1rRYCCcALnq2iBn3qi
+        MaERsXXM6+x7+/J8899O1kiYvL9TAxD6Zljthg0HfcVxNIohePy8ytwNYVprNkPCZjTMttAfDdM5g
+        5KwiCrJMDzwRbGhdMjmXxhzxS1ITsVDM6G31nZqJOA7KWsEk8nkmFZWwCwuPLepKXuKwII1/UGGIB
+        +DR2n/OyDqazhheBKOtqI7M+p0fenDjIhPGAkcT4D/YDi1MNXCIEjbsoIuoh4Bzi5lhHvKvOR/Ja3
+        YhspdwAA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1loQxa-002toe-JV; Wed, 02 Jun 2021 13:31:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 57FAA300513;
+        Wed,  2 Jun 2021 15:31:05 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id A55642C1AB5EA; Wed,  2 Jun 2021 15:31:04 +0200 (CEST)
+Message-ID: <20210602133040.524487671@infradead.org>
+User-Agent: quilt/0.66
+Date:   Wed, 02 Jun 2021 15:12:30 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 6/8] perf auxtrace: Drop legacy __sync functions
-Message-ID: <20210602130132.GF10272@leoy-ThinkPad-X240s>
-References: <20210602103007.184993-1-leo.yan@linaro.org>
- <20210602103007.184993-7-leo.yan@linaro.org>
- <fc7bfa25-d96e-ea6d-2756-f94653dc4771@intel.com>
- <20210602111620.GD10272@leoy-ThinkPad-X240s>
- <d179137e-4bbc-0026-3273-622f6dedb002@intel.com>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
+Subject: [PATCH 5/6] sched,timer: Use __set_current_state()
+References: <20210602131225.336600299@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d179137e-4bbc-0026-3273-622f6dedb002@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 02:21:05PM +0300, Adrian Hunter wrote:
-> On 2/06/21 2:16 pm, Leo Yan wrote:
-> > Hi Adrian,
-> > 
-> > On Wed, Jun 02, 2021 at 01:47:42PM +0300, Adrian Hunter wrote:
-> > 
-> > [...]
-> > 
-> >>> @@ -451,11 +445,7 @@ static inline u64 auxtrace_mmap__read_snapshot_head(struct auxtrace_mmap *mm)
-> >>>  static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
-> >>>  {
-> >>>  	struct perf_event_mmap_page *pc = mm->userpg;
-> >>> -#if BITS_PER_LONG == 64 || !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
-> >>
-> >> The test and setup for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT is not needed anymore either.
-> > 
-> > Yes, I think there have two files should be cleaned:
-> > 
-> >   Makefile.config
-> >   util/auxtrace.c
-> > 
-> > If still miss anything, please let me know (I remembered there have a
-> > test case for __sync_xxx_compare_and_swap, but I cannot find it now,
-> > so this is why I am concern if I miss anything not).
-> 
-> tools/build/feature/test-sync-compare-and-swap.c
 
-Thanks a lot!
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/time/timer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -1879,7 +1879,7 @@ signed long __sched schedule_timeout(sig
+ 			printk(KERN_ERR "schedule_timeout: wrong timeout "
+ 				"value %lx\n", timeout);
+ 			dump_stack();
+-			current->state = TASK_RUNNING;
++			__set_current_state(TASK_RUNNING);
+ 			goto out;
+ 		}
+ 	}
+
+
