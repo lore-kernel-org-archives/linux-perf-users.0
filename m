@@ -2,130 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E052C47080
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 01:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3222FC47092
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 10:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82A17613C1
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 01:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BF71613B8
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 10:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbhFBBGs (ORCPT
+        id S232227AbhFBKcG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 1 Jun 2021 21:06:48 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2833 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbhFBBGr (ORCPT
+        Wed, 2 Jun 2021 06:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231978AbhFBKcD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 1 Jun 2021 21:06:47 -0400
-Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4FvrKw4VlfzWqsw;
-        Wed,  2 Jun 2021 09:00:20 +0800 (CST)
-Received: from dggema762-chm.china.huawei.com (10.1.198.204) by
- dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Wed, 2 Jun 2021 09:05:01 +0800
-Received: from [10.174.179.129] (10.174.179.129) by
- dggema762-chm.china.huawei.com (10.1.198.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Wed, 2 Jun 2021 09:05:01 +0800
-Subject: Re: [PATCH] perf stat: Fix error return code in bperf__load()
+        Wed, 2 Jun 2021 06:32:03 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E4C06174A
+        for <linux-perf-users@vger.kernel.org>; Wed,  2 Jun 2021 03:30:16 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id u9so803932plr.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Jun 2021 03:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orFPAiLjT/TAscUeulOFNpz0N4+/FzjmvGEiheJyemc=;
+        b=CfSl7oh/E89fzWzOWN6rxS7VywjKuPgxegQFL/6aij7rHSk3GnslJv9+GgMZdvNiVO
+         J8+S5CwfdSox/zeoLFWzo75pgfWY0Sfl9/OIMxMInHnf8laWqv+X3mGWQIgQPE8TMpMW
+         CIGU2Vmh57hR0/NlbOG0P+rmvWZ1YrEaJK8nAlX5T35lgzvnkhcKnp4VPVciWTRLMxD3
+         H2hgzLpUBj0wooLg0aPzr1wlSO6R1Mx3MubPJlA2SNLbqDc9b6jTpwEF1aHZA67LME6p
+         xOcgbAC9feDCfj1NdaDao4k5y9o35PEJtqqyk+OPcEpBRaQTHVDa2dAx3w7WXsw0DEGD
+         lNGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=orFPAiLjT/TAscUeulOFNpz0N4+/FzjmvGEiheJyemc=;
+        b=LQUHT2hk9KKWuW86r/YQCJGFvVczvyP0ElPk8F7R7anMuGl9CltCzrC0w4MrerWx0+
+         m6KpqqnRbF2+a7xJ9N40MFb8cRYW1tQdfHRSqoZDw7Gjv3PY0bUhyIl7k2xmWLQl53BL
+         h2Ofo4mFjXdnNAhvXYzfsc5cXe3zUJthPNpTV3usW/UT9+TLOeFH2ViDEOo6J+7F+Nuo
+         axI/tkJJLHJRkQCnWIKK56l35lZpc8sjisXYldFe/N2ZekOXAjopTCK8rUyWXY6WAhNl
+         /VneNukGnZb1cpzntDcaQP9/q50TXA3S3UzHGupzbC1JOzNOrvplHwnQ+eBPjyGhEaSI
+         DQVg==
+X-Gm-Message-State: AOAM530Fk+0BfpfBGMiPZbJMkJ6O+VPiJsgO+E8aEwEMFc6KfrNYCGFR
+        KXd8wDYO4xb6yhQ+TBkHziRcBDvAOuhh7wun
+X-Google-Smtp-Source: ABdhPJz+UfKUHNBsKrx5b1awAHIiQVkHkRyYDEPH3BFTFogJWWjo/G6fYkl4CNcHTzlQU2fiU7lkhg==
+X-Received: by 2002:a17:902:b10a:b029:f9:a0d:14a5 with SMTP id q10-20020a170902b10ab02900f90a0d14a5mr30455865plr.44.1622629815343;
+        Wed, 02 Jun 2021 03:30:15 -0700 (PDT)
+Received: from localhost (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
+        by smtp.gmail.com with ESMTPSA id gg22sm4521060pjb.17.2021.06.02.03.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jun 2021 03:30:14 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Song Liu <songliubraving@fb.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, <andrii@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <yi.zhang@huawei.com>
-References: <20210517081254.1561564-1-yukuai3@huawei.com>
- <YLY7qozcJcj8RVe+@kernel.org> <YLY8aKsMvBG+DB1W@kernel.org>
-From:   "yukuai (C)" <yukuai3@huawei.com>
-Message-ID: <360aa666-2a78-d2f5-9547-6ebecd57bcb4@huawei.com>
-Date:   Wed, 2 Jun 2021 09:05:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/8] perf: Refine barriers for AUX ring buffer
+Date:   Wed,  2 Jun 2021 18:29:59 +0800
+Message-Id: <20210602103007.184993-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YLY8aKsMvBG+DB1W@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.129]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggema762-chm.china.huawei.com (10.1.198.204)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2021/06/01 21:55, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jun 01, 2021 at 10:52:42AM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Mon, May 17, 2021 at 04:12:54PM +0800, Yu Kuai escreveu:
->>> Fix to return a negative error code from the error handling
->>> case instead of 0, as done elsewhere in this function.
->>>
->>> Reported-by: Hulk Robot <hulkci@huawei.com>
->>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
->>
->> Applied, but I had to add Song to the CC list and also add this line:
->>
->> Fixes: 7fac83aaf2eecc9e ("perf stat: Introduce 'bperf' to share hardware PMCs with BPF")
->>
->> So that the stable@kernel.org folks can get this auto-collected.
->>
->> Perhaps you guys can make Hulk do that as well? :-)
->>
->> Thanks,
-> 
-> Something else to teach Hulk:
-> 
-> util/bpf_counter.c: In function ‘bperf__load’:
-> util/bpf_counter.c:523:9: error: this ‘if’ clause does not guard... [-Werror=misleading-indentation]
->    523 |         if (evsel->bperf_leader_link_fd < 0 &&
->        |         ^~
-> util/bpf_counter.c:526:17: note: ...this statement, but the latter is misleadingly indented as if it were guarded by the ‘if’
->    526 |                 goto out;
->        |                 ^~~~
-> cc1: all warnings being treated as errors
-> 
-> I'm adding the missing {} for the now multiline if block.
-Sorry for the mistake, and similar errors will be checked in the future.
+Based on the discussion [1], this patch series is to refine the memory
+barriers for AUX ring buffer.
 
-Thanks
-Yu Kuai
-> 
-> - Arnaldo
->>
->>> ---
->>>   tools/perf/util/bpf_counter.c | 2 ++
->>>   1 file changed, 2 insertions(+)
->>>
->>> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
->>> index ddb52f748c8e..843b20aa6688 100644
->>> --- a/tools/perf/util/bpf_counter.c
->>> +++ b/tools/perf/util/bpf_counter.c
->>> @@ -522,6 +522,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
->>>   	evsel->bperf_leader_link_fd = bpf_link_get_fd_by_id(entry.link_id);
->>>   	if (evsel->bperf_leader_link_fd < 0 &&
->>>   	    bperf_reload_leader_program(evsel, attr_map_fd, &entry))
->>> +		err = -1;
->>>   		goto out;
->>>   
->>>   	/*
->>> @@ -550,6 +551,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
->>>   	/* Step 2: load the follower skeleton */
->>>   	evsel->follower_skel = bperf_follower_bpf__open();
->>>   	if (!evsel->follower_skel) {
->>> +		err = -1;
->>>   		pr_err("Failed to open follower skeleton\n");
->>>   		goto out;
->>>   	}
->>> -- 
->>> 2.25.4
->>>
->>
->> -- 
->>
->> - Arnaldo
-> 
+Patches 01 ~ 04 to address the barriers usage in the kernel.  The first
+patch is to make clear comment for how to use the barriers between the
+data store and aux_head store, this asks the driver to make sure the
+data is visible.  Patches 02 ~ 04 is to refine the drivers for barriers
+after the data store.
+
+Patches 05 ~ 07 is to fix and clean up the memory barries in perf tool
+for AUX ring buffer.
+
+Since the 64-bit value's atomicity is not promised on 32-bit perf, the
+last patch is to report error and let perf to directly exit for this
+case.
+
+Have testes the patches on Arm64 Juno platform.
+
+[1] https://lore.kernel.org/patchwork/patch/1431867/
+
+
+Leo Yan (8):
+  perf/ring_buffer: Add comment for barriers on AUX ring buffer
+  coresight: tmc-etr: Add barrier after updating AUX ring buffer
+  coresight: tmc-etf: Add comment for store ordering
+  perf/x86: Add barrier after updating bts
+  perf auxtrace: Change to use SMP memory barriers
+  perf auxtrace: Drop legacy __sync functions
+  perf auxtrace: Use WRITE_ONCE() for updating aux_tail
+  perf record: Directly bail out for compat case
+
+ arch/x86/events/intel/bts.c                   |  3 +++
+ .../hwtracing/coresight/coresight-tmc-etf.c   |  6 +++++
+ .../hwtracing/coresight/coresight-tmc-etr.c   |  8 ++++++
+ kernel/events/ring_buffer.c                   |  9 +++++++
+ tools/perf/builtin-record.c                   | 17 ++++++++++++
+ tools/perf/util/auxtrace.h                    | 27 +++----------------
+ 6 files changed, 47 insertions(+), 23 deletions(-)
+
+-- 
+2.25.1
+
