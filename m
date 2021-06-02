@@ -2,135 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D6AC47083
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 22:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BBFC47083
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 23:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D72E613BF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 22:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD18613EE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 23:16:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbhFBWnW (ORCPT
+        id S229907AbhFBXRq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Jun 2021 18:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35420 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbhFBWnW (ORCPT
+        Wed, 2 Jun 2021 19:17:46 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:38376 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229828AbhFBXRp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Jun 2021 18:43:22 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 589ECC06174A;
-        Wed,  2 Jun 2021 15:41:22 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id t4-20020a1c77040000b029019d22d84ebdso4683857wmi.3;
-        Wed, 02 Jun 2021 15:41:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7SMLKgtfzFTtNrhbiL6cD20E7gNbNd4sAIT8l+acqgE=;
-        b=b6/s6tFIRIft9gCYchObMSOTJ02+08GMwVOVkZlGerz4Sj/HODJGkVnRhWfSh52dXx
-         hWdeUV9x0a22x8J+7BROrn9EjDO5MfavRFS0w/PvRbruokRotdXnMwIxvMeOye78vK2I
-         qyrPmQ0BKeZCMTjw0KYTxjKmRPVf0cq9MawSzrWVip8EoiKIsnXIZdV7MKHRPHfJJEPn
-         AcSEwLcXb9Ns8b6DueMJLuQoX2HyJ6+bBryvsyROM41mLqrl1sJEJ9xz8GXoA6bCcEbH
-         oVf0hDbnkpADv7cBTCBzLFowOi+qYb8QsnnFcjTNfQ55kuE4AdYuLZHO5HW8c/TGZYCb
-         jMcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7SMLKgtfzFTtNrhbiL6cD20E7gNbNd4sAIT8l+acqgE=;
-        b=exsomPgJl99ntlMPO1PB9qTsnOxBVa/NMzG1zWcsAPhG78JLaZ54gbl+qb6VP+PfCu
-         KABl+lAd/XKfnwOHkhIpgxATrTUwNaS7amDmlx+ETR9KvL8iXw4drJguluBOKQPbf5sK
-         j315xzobHGdc2q7SEWAgykiX0HMv2c2o5FqFdX+Q4C4bHj7oUjyqlTv+640mw8WFarME
-         SeWDOm2IpsUbmJB0GqTSPZ9zAMyGHwuo1bM7WoVwcIrFtR4aEu1pxYwmh0gZ+rAbN5DA
-         rKzJnKzkKCMwhepqJEINZGetO26vHbx6FYjkzEJ00PqaOGOKeJvPw4qC/lvDlbqNALWx
-         /pPw==
-X-Gm-Message-State: AOAM532S0H1bySRiuty8btXL07GUJoq41Azx0dFEvBezfNsVUbBrTBtp
-        SNKhDowY+97tEnWVmSo7Xxw=
-X-Google-Smtp-Source: ABdhPJx68oQrhXRFKI2BC5VsXcE66i95OnCh99GSXYS8dNm9F0OWAXIyaAozg1vda20ltNHMcAAUMA==
-X-Received: by 2002:a1c:1d14:: with SMTP id d20mr7160755wmd.177.1622673679238;
-        Wed, 02 Jun 2021 15:41:19 -0700 (PDT)
-Received: from honeypot.epfl.ch ([151.29.82.133])
-        by smtp.googlemail.com with ESMTPSA id 11sm957010wmo.24.2021.06.02.15.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Jun 2021 15:41:18 -0700 (PDT)
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Riccardo Mancini <rickyman7@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 2 Jun 2021 19:17:45 -0400
+Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 466A4219DB;
+        Wed,  2 Jun 2021 23:16:00 +0000 (UTC)
+Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
+        by imap.suse.de (Postfix) with ESMTP id 4AECA118DD;
+        Wed,  2 Jun 2021 23:15:48 +0000 (UTC)
+Received: from director2.suse.de ([192.168.254.72])
+        by imap3-int with ESMTPSA
+        id VMCuCCQRuGAfYQAALh3uQQ
+        (envelope-from <dave@stgolabs.net>); Wed, 02 Jun 2021 23:15:48 +0000
+Date:   Wed, 2 Jun 2021 16:15:42 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] perf env: fix memory leak: free bpf_prog_info_linear
-Date:   Thu,  3 Jun 2021 00:40:23 +0200
-Message-Id: <20210602224024.300485-1-rickyman7@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        Namhyung Kim <namhyung@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 2/6] sched: Introduce task_is_running()
+Message-ID: <20210602231542.ejrjbilfggq4whg7@offworld>
+Mail-Followup-To: Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>,
+        dm-devel@redhat.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        cgroups@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
+References: <20210602131225.336600299@infradead.org>
+ <20210602133040.334970485@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20210602133040.334970485@infradead.org>
+User-Agent: NeoMutt/20201120
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reported a memory leak caused by info_linear not being
-deallocated. The info_linear was allocated during
-perf_event__synthesize_one_bpf_prog.
-This patch adds the corresponding free() when bpf_prog_info_node
-is freed in perf_env__purge_bpf.
+On Wed, 02 Jun 2021, Peter Zijlstra wrote:
 
-$ sudo ./perf record -- sleep 5
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.025 MB perf.data (8 samples) ]
+>Replace a bunch of 'p->state == TASK_RUNNING' with a new helper:
+>task_is_running(p).
+>
+>Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-=================================================================
-==297735==ERROR: LeakSanitizer: detected memory leaks
+Acked-by: Davidlohr Bueso
 
-Direct leak of 7688 byte(s) in 19 object(s) allocated from:
-    #0 0x4f420f in malloc (/home/user/linux/tools/perf/perf+0x4f420f)
-    #1 0xc06a74 in bpf_program__get_prog_info_linear /home/user/linux/tools/lib/bpf/libbpf.c:11113:16
-    #2 0xb426fe in perf_event__synthesize_one_bpf_prog /home/user/linux/tools/perf/util/bpf-event.c:191:16
-    #3 0xb42008 in perf_event__synthesize_bpf_events /home/user/linux/tools/perf/util/bpf-event.c:410:9
-    #4 0x594596 in record__synthesize /home/user/linux/tools/perf/builtin-record.c:1490:8
-    #5 0x58c9ac in __cmd_record /home/user/linux/tools/perf/builtin-record.c:1798:8
-    #6 0x58990b in cmd_record /home/user/linux/tools/perf/builtin-record.c:2901:8
-    #7 0x7b2a20 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #8 0x7b12ff in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #9 0x7b2583 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #10 0x7b0d79 in main /home/user/linux/tools/perf/perf.c:539:3
-    #11 0x7fa357ef6b74 in __libc_start_main /usr/src/debug/glibc-2.33-8.fc34.x86_64/csu/../csu/libc-start.c:332:16
+But afaict ....
 
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
----
- tools/perf/util/env.c | 1 +
- 1 file changed, 1 insertion(+)
+>---
+> arch/x86/kernel/process.c |    4 ++--
+> block/blk-mq.c            |    2 +-
+> include/linux/sched.h     |    2 ++
+> kernel/locking/lockdep.c  |    2 +-
+> kernel/rcu/tree_plugin.h  |    2 +-
+> kernel/sched/core.c       |    6 +++---
+> kernel/sched/stats.h      |    2 +-
+> kernel/signal.c           |    2 +-
+> kernel/softirq.c          |    3 +--
+> mm/compaction.c           |    2 +-
+> 10 files changed, 14 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 9130f6fad8d54..bc5e4f294e9e9 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -144,6 +144,7 @@ static void perf_env__purge_bpf(struct perf_env *env)
- 		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
- 		next = rb_next(&node->rb_node);
- 		rb_erase(&node->rb_node, root);
-+		free(node->info_linear);
- 		free(node);
- 	}
- 
--- 
-2.31.1
+there are also (on top of the already mentioned arch/):
 
+kernel/kcsan/report.c:  const bool is_running = current->state == TASK_RUNNING;
+kernel/locking/lockdep.c:       if (p->state == TASK_RUNNING && p != current)
