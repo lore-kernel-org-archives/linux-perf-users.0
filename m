@@ -2,167 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BBFC47083
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 23:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 351F8C47083
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 23:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD18613EE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 23:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E62A61028
+	for <linux-perf-users@archiver.kernel.org>; Wed,  2 Jun 2021 23:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbhFBXRq (ORCPT
+        id S229972AbhFBXSd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 2 Jun 2021 19:17:46 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:38376 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229828AbhFBXRp (ORCPT
+        Wed, 2 Jun 2021 19:18:33 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:37470 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229744AbhFBXSd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 2 Jun 2021 19:17:45 -0400
-Received: from imap.suse.de (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        (using TLSv1.2 with cipher ECDHE-ECDSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 466A4219DB;
-        Wed,  2 Jun 2021 23:16:00 +0000 (UTC)
-Received: from imap3-int (imap-alt.suse-dmz.suse.de [192.168.254.47])
-        by imap.suse.de (Postfix) with ESMTP id 4AECA118DD;
-        Wed,  2 Jun 2021 23:15:48 +0000 (UTC)
-Received: from director2.suse.de ([192.168.254.72])
-        by imap3-int with ESMTPSA
-        id VMCuCCQRuGAfYQAALh3uQQ
-        (envelope-from <dave@stgolabs.net>); Wed, 02 Jun 2021 23:15:48 +0000
-Date:   Wed, 2 Jun 2021 16:15:42 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Wed, 2 Jun 2021 19:18:33 -0400
+Received: by mail-wr1-f52.google.com with SMTP id q5so3896516wrs.4;
+        Wed, 02 Jun 2021 16:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ay5J1mNVMWdSXPcS6ozTjgGPNhxiZyf4nSKZIJf7/Gc=;
+        b=Rqn/Os4bo2xRtUqE+nNbNLxsFLDKW4R+xHpbMAx9K/pVJg8kB1mb4Rx3p4+jGGou9R
+         C+hUdqTfwZv2sD/LhTCxQE4SFmUidoREJ2ZZqTLv7p6ILcFytS2culx+G/k0E3WoAVRT
+         rAVQQx3B/GZXVVJdRkXR8wGNgzFT+FurSm3ksYh7CW0HMZz18PtSS0taJr+8Ntrol8Ch
+         VVPlNIGjGwH3U136taxKkatHEGPRi6xA/HvdjvL1jK8LhCo/nKT/RdMV2bMzrNUFsKA4
+         WipmOIz2/RkR1lfUhyH3HyF5MiIEhfOTExu6tvJRuVbivNyefWLasUj9XhW7CjBZGWLZ
+         CTlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ay5J1mNVMWdSXPcS6ozTjgGPNhxiZyf4nSKZIJf7/Gc=;
+        b=NRtehC3juborSE+Z4SImAm8YinLRm+pkTwDZGe2Ojdf1+Yn4aJ1v22Yfq3CPs9vf3C
+         nlLY0vvYA4xysKxRZWB74hwCKaiBn1V26ej88BUwUFcRFErxI+VVKPKJ2KTWLHJ31FHP
+         voi27cpy880ehmXnN4LCmC4eUYEkS3/qe6lfgiEo35SUsgx1bm9QzpZINuoW0MxnL0ru
+         F0xTa0Uu0J1/YDh8SOWEFLXRwaTOgkWMDB/LbtgkVblU37SbrS/3UXmPdDE1QrBqtpaq
+         yH367XYi5DnY34aFf3/NiAFdmyKL4gIn9dOJscqL9H5OlJLTtXYw97zBuuWKevhZveQn
+         Snww==
+X-Gm-Message-State: AOAM531m4DT7k1Y3PDHJyylQV3HmaRUnoTFbHL/PI/78WiMErc9phEtf
+        RLGBkoA4Fo5sbuTYcdVcpEs=
+X-Google-Smtp-Source: ABdhPJzv0zV4uNTPFtCgCeWdcbkovxAGzd2+y0v3nxxGGeHXjL7CzLNnJjZvGfrfXcKWy7Smtf8G+g==
+X-Received: by 2002:adf:ee50:: with SMTP id w16mr8784387wro.187.1622675732865;
+        Wed, 02 Jun 2021 16:15:32 -0700 (PDT)
+Received: from honeypot.epfl.ch ([151.29.82.133])
+        by smtp.googlemail.com with ESMTPSA id i2sm929057wmo.40.2021.06.02.16.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Jun 2021 16:15:32 -0700 (PDT)
+From:   Riccardo Mancini <rickyman7@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>
+Cc:     Riccardo Mancini <rickyman7@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 2/6] sched: Introduce task_is_running()
-Message-ID: <20210602231542.ejrjbilfggq4whg7@offworld>
-Mail-Followup-To: Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@redhat.com>,
-        dm-devel@redhat.com, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>, Tejun Heo <tj@kernel.org>,
-        Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        cgroups@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
-References: <20210602131225.336600299@infradead.org>
- <20210602133040.334970485@infradead.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map and dso
+Date:   Thu,  3 Jun 2021 01:10:53 +0200
+Message-Id: <20210602231052.317048-1-rickyman7@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20210602133040.334970485@infradead.org>
-User-Agent: NeoMutt/20201120
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 02 Jun 2021, Peter Zijlstra wrote:
+ASan reported a memory leak of BPF-related ksymbols map and dso. 
+The leak is caused by refcount never reaching 0, due to missing 
+__put calls in the function machine__process_ksymbol_register.
+Once the dso is inserted in map, dso__put should be called, 
+since map__new2 has increased its refcount to 2.
+The same thing applies for the map when it's inserted into the 
+rb-tree in maps (maps__insert increases the refcount to 2).
 
->Replace a bunch of 'p->state == TASK_RUNNING' with a new helper:
->task_is_running(p).
->
->Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+$ sudo ./perf record -- sleep 5
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.025 MB perf.data (8 samples) ]
 
-Acked-by: Davidlohr Bueso
+=================================================================
+==297735==ERROR: LeakSanitizer: detected memory leaks
 
-But afaict ....
+Direct leak of 6992 byte(s) in 19 object(s) allocated from:
+    #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+    #1 0x8e4e53 in map__new2 /home/user/linux/tools/perf/util/map.c:216:20
+    #2 0x8cf68c in machine__process_ksymbol_register /home/user/linux/tools/perf/util/machine.c:778:10
+    [...]
 
->---
-> arch/x86/kernel/process.c |    4 ++--
-> block/blk-mq.c            |    2 +-
-> include/linux/sched.h     |    2 ++
-> kernel/locking/lockdep.c  |    2 +-
-> kernel/rcu/tree_plugin.h  |    2 +-
-> kernel/sched/core.c       |    6 +++---
-> kernel/sched/stats.h      |    2 +-
-> kernel/signal.c           |    2 +-
-> kernel/softirq.c          |    3 +--
-> mm/compaction.c           |    2 +-
-> 10 files changed, 14 insertions(+), 13 deletions(-)
+Indirect leak of 8702 byte(s) in 19 object(s) allocated from:
+    #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+    #1 0x8728d7 in dso__new_id /home/user/linux/tools/perf/util/dso.c:1256:20
+    #2 0x872015 in dso__new /home/user/linux/tools/perf/util/dso.c:1295:9
+    #3 0x8cf623 in machine__process_ksymbol_register /home/user/linux/tools/perf/util/machine.c:774:21
+    [...]
 
-there are also (on top of the already mentioned arch/):
+Indirect leak of 1520 byte(s) in 19 object(s) allocated from:
+    #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+    #1 0x87b3da in symbol__new /home/user/linux/tools/perf/util/symbol.c:269:23
+    #2 0x888954 in map__process_kallsym_symbol /home/user/linux/tools/perf/util/symbol.c:710:8
+    [...]
 
-kernel/kcsan/report.c:  const bool is_running = current->state == TASK_RUNNING;
-kernel/locking/lockdep.c:       if (p->state == TASK_RUNNING && p != current)
+Indirect leak of 1406 byte(s) in 19 object(s) allocated from:
+    #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+    #1 0x87b3da in symbol__new /home/user/linux/tools/perf/util/symbol.c:269:23
+    #2 0x8cfbd8 in machine__process_ksymbol_register /home/user/linux/tools/perf/util/machine.c:803:8
+    [...]
+
+Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+---
+ tools/perf/util/machine.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 3ff4936a15a42..d5937778875e1 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -776,6 +776,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 		if (dso) {
+ 			dso->kernel = DSO_SPACE__KERNEL;
+ 			map = map__new2(0, dso);
++			dso__put(dso);
+ 		}
+ 
+ 		if (!dso || !map) {
+@@ -792,6 +793,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 		map->start = event->ksymbol.addr;
+ 		map->end = map->start + event->ksymbol.len;
+ 		maps__insert(&machine->kmaps, map);
++		map__put(map);
+ 		dso__set_loaded(dso);
+ 
+ 		if (is_bpf_image(event->ksymbol.name)) {
+-- 
+2.31.1
+
