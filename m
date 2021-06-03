@@ -2,65 +2,65 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BF2C47096
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 23:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95260C47096
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 23:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB9A613AE
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 23:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75AAD6140F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 23:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbhFCXYJ (ORCPT
+        id S229675AbhFCXaU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Jun 2021 19:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47866 "EHLO
+        Thu, 3 Jun 2021 19:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbhFCXYJ (ORCPT
+        with ESMTP id S229576AbhFCXaU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Jun 2021 19:24:09 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12AAC06174A;
-        Thu,  3 Jun 2021 16:22:07 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id jt22so11673276ejb.7;
-        Thu, 03 Jun 2021 16:22:07 -0700 (PDT)
+        Thu, 3 Jun 2021 19:30:20 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE78C061756;
+        Thu,  3 Jun 2021 16:28:20 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id s6so8999157edu.10;
+        Thu, 03 Jun 2021 16:28:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=cr/W34PCQ0jRykdhfg80VXv5W+pmG+k6UQUukwu1AKM=;
-        b=rMzBmoS0a8UrOPfPp2DWc30WeIA4v2R5A8u86TA6B3W0K1LZtXURReMUUga0DBrw4S
-         DuWbUtup1Aiem/4pRbmdvbWITrjBmifjxtUfQ7OuQLLqpv8dC+JM5w12S3wDF6bkZe43
-         3xmcl2y+brCEWOSoGpr5eAg9oiv1/qcKLNb1HQJsAw5INZK1STGrGiwoE7uBwmEU2qox
-         gLDFO3r0HxsWgOsnbHjmHlIyk1BbX3h+s0Sb9JOlgRzQ2wm0cz1UJoWSijV71UMPETfm
-         bSqODbZpzpvR7GD5+4xJ7KkARH6DFkDfFVcHSRguqh60o3qBF++QwN6ia8qsPUyuHQbf
-         C73A==
+        bh=xfUY0TX7tuXJEEdu4nINq9m/FRxe8qkPqXyMt/FVDPo=;
+        b=S/xTZKg3ARoLNKJrpj4PAaD/NKSurt9tsbgEjJSPtWkk60cEM1KYxnKGAlhygJz3Lk
+         qdPbl6Z0UTO7UoSlkdhAjx4bFqJ3BPagC2U+u+RFp5VcGaG56pK1lWsxnPZzJKm8PG9e
+         KZ0f4OQBNZGmjh8/1AHRSld8Sm0+pgIMvZS/foKu9J9G3QuscalAoj3a8EoFVzGqZHM+
+         kPl0wHgnT1wn4KNLrRlEdH83OGodCrZXL482W+cQK65sJeByqMpYq/oqBw3i1eQcsE6M
+         1cz545UZiIrQVI+oVKXw4bv5sp2tpqCHH7748g0Du7vFq59NFh1mJbX/MV2a3dlKVBIa
+         N+ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=cr/W34PCQ0jRykdhfg80VXv5W+pmG+k6UQUukwu1AKM=;
-        b=cVW84gkKR5bjRIXV4eSjcCv++hI/M60jspwM814Oqb62aNdfl1SsLa7RZqpDRFpTni
-         FUeLzRNCsshaWs3pswbvfcT34b/sjOsFNaOuZvkAWJW5iqYx+Xu6n1iUVXmd4n9H1t62
-         IM2TQGGnEHTlQL0xXn2M0eaDIxAUMvf6gaCFZmWj9cXIJ7sOZpG4FHtvMTD9edtlERun
-         DnAmygoTlF9gRKT5+JYpV1HrONMcsSA/4AzOZR/Siaa8LA45EppJO5ZbYYFshdUIeshC
-         AktBg+7wLfZM/gulT9w9DM5PiT7pJSLiT69/Vai55o6xoXKuZYQnlap2VjfjdW4IWRsg
-         ekjg==
-X-Gm-Message-State: AOAM533q/0pMOH7/uWAbO52UbCCzSQUl0QA7JaJjrcJP8VNdeyFrJLoa
-        laQ+WWtXI92x/r2Ft5OjlxI=
-X-Google-Smtp-Source: ABdhPJzGcHenR9d4YZ16zyRdJS6roMhpYMMFVYh3FlokWW3Z58CKH67neiguQV8QDLK0wl1TYubIGg==
-X-Received: by 2002:a17:906:c1d3:: with SMTP id bw19mr1480400ejb.145.1622762524381;
-        Thu, 03 Jun 2021 16:22:04 -0700 (PDT)
+        bh=xfUY0TX7tuXJEEdu4nINq9m/FRxe8qkPqXyMt/FVDPo=;
+        b=Fsy3Vzv8V0I+5aElFODPtpjbLXDq3cT5bFUL4x3TPYJMQ2gD2pwrsT/x5oIuGueQfF
+         7I/zrweb3T3rr1wl7gfUaGWM88wiYr2CVw4bzHgDEJBt9DJYVqqj/RgbK+6LFhl7Rn6I
+         eTK/7xU5L9SDVNG9kA+uvCf6JTX1IrH7aVI+m51rS2jw9fD3B8BzAPJEUTnc44LKJJ3L
+         0+exxuZLQlSZoLK5bI7bEMvbIfR+ELMB9evyG92571B1SkaykkoGFqc7KBwjUjYaFohI
+         1pH6pcf1n5NCdM3ydLYQK7MmvPaGGyAG9DmJeBL8D1D31wkaZVDSp1rDOjOq2MhVFQ2Q
+         S+zg==
+X-Gm-Message-State: AOAM533/ftTl4ubssI3oQY7tQxWNxwayBJVKak7FCM29nOeDZ36A5onD
+        PSY89s0xt8F3F71idD5xb6U=
+X-Google-Smtp-Source: ABdhPJzgBMMxuetZGn38RWYmHESgf/uKRAWdE3OsttNAtX5gpr0WTvIPnk4EWrerNZypqNyTCveMLA==
+X-Received: by 2002:a05:6402:4316:: with SMTP id m22mr1742860edc.316.1622762899369;
+        Thu, 03 Jun 2021 16:28:19 -0700 (PDT)
 Received: from [192.168.1.15] ([151.29.179.73])
-        by smtp.gmail.com with ESMTPSA id h22sm2405074edv.0.2021.06.03.16.22.03
+        by smtp.gmail.com with ESMTPSA id j22sm2131542ejt.11.2021.06.03.16.28.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Jun 2021 16:22:04 -0700 (PDT)
-Message-ID: <b82ed13f7d907f548fde2fc1982a108cc8ca69ac.camel@gmail.com>
-Subject: Re: [PATCH v6 16/20] perf session: Introduce decompressor into
- trace reader object
+        Thu, 03 Jun 2021 16:28:18 -0700 (PDT)
+Message-ID: <c3f5c4ecfc86ec1de29f6db681b2e5fce7ef23a3.camel@gmail.com>
+Subject: Re: [PATCH v6 20/20] perf session: Load data directory files for
+ analysis
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
@@ -74,10 +74,10 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Alexei Budankov <abudankov@huawei.com>,
         linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
-Date:   Fri, 04 Jun 2021 01:22:02 +0200
-In-Reply-To: <ec370117b49575be493add488a07450517c78aaf.1622025774.git.alexey.v.bayduraev@linux.intel.com>
+Date:   Fri, 04 Jun 2021 01:28:17 +0200
+In-Reply-To: <be40346cdb384e0721f79d918067ff9026743845.1622025774.git.alexey.v.bayduraev@linux.intel.com>
 References: <cover.1622025774.git.alexey.v.bayduraev@linux.intel.com>
-         <ec370117b49575be493add488a07450517c78aaf.1622025774.git.alexey.v.bayduraev@linux.intel.com>
+         <be40346cdb384e0721f79d918067ff9026743845.1622025774.git.alexey.v.bayduraev@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
 MIME-Version: 1.0
@@ -89,192 +89,196 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 Hi,
 
 On Wed, 2021-05-26 at 13:53 +0300, Alexey Bayduraev wrote:
-> Introduce decompressor into trace reader object so that decompression
-> could be executed on per data file basis separately for every data
-> file located in data directory.
+> Load data directory files and provide basic raw dump and aggregated
+> analysis support of data directories in report mode, still with no
+> memory consumption optimizations.
 > 
+> Design and implementation are based on the prototype [1], [2].
+> 
+> [1] git clone https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git -
+> b perf/record_threads
+> [2] https://lore.kernel.org/lkml/20180913125450.21342-1-jolsa@kernel.org/
+> 
+> Suggested-by: Jiri Olsa <jolsa@kernel.org>
 > Signed-off-by: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
 > ---
->  tools/perf/util/session.c | 51 +++++++++++++++++++++++++++++----------
->  tools/perf/util/session.h |  1 +
->  2 files changed, 39 insertions(+), 13 deletions(-)
+>  tools/perf/util/session.c | 129 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 129 insertions(+)
 > 
 > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 335c073bae87..6c9a682eb291 100644
+> index 041601810b85..dd4ef9749cd0 100644
 > --- a/tools/perf/util/session.c
 > +++ b/tools/perf/util/session.c
-> @@ -73,6 +73,9 @@ struct reader {
->         u64              data_offset;
->         reader_cb_t      process;
->         bool             in_place_update;
-> +       struct zstd_data zstd_data;
-> +       struct decomp    *decomp;
-> +       struct decomp    *decomp_last;
->         struct reader_state state;
+> @@ -65,6 +65,7 @@ struct reader_state {
+>         u64      data_size;
+>         u64      head;
+>         bool     eof;
+> +       u64      size;
 >  };
 >  
-> @@ -85,7 +88,10 @@ static int perf_session__process_compressed_event(struct
+>  enum {
+> @@ -2319,6 +2320,7 @@ reader__read_event(struct reader *rd, struct
 > perf_session *session,
->         size_t decomp_size, src_size;
->         u64 decomp_last_rem = 0;
->         size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
-> -       struct decomp *decomp, *decomp_last = session->decomp_last;
-> +       struct decomp *decomp, *decomp_last = session->active_reader ?
-> +               session->active_reader->decomp_last : session->decomp_last;
-> +       struct zstd_data *zstd_data = session->active_reader ?
-> +               &session->active_reader->zstd_data : &session->zstd_data;
+>         if (skip)
+>                 size += skip;
 >  
->         if (decomp_last) {
->                 decomp_last_rem = decomp_last->size - decomp_last->head;
-> @@ -113,7 +119,7 @@ static int perf_session__process_compressed_event(struct
-> perf_session *session,
->         src = (void *)event + sizeof(struct perf_record_compressed);
->         src_size = event->pack.header.size - sizeof(struct
-> perf_record_compressed);
+> +       st->size += size;
+>         st->head += size;
+>         st->file_pos += size;
 >  
-> -       decomp_size = zstd_decompress_stream(&(session->zstd_data), src,
-> src_size,
-> +       decomp_size = zstd_decompress_stream(zstd_data, src, src_size,
->                                 &(decomp->data[decomp_last_rem]), decomp_len -
-> decomp_last_rem);
->         if (!decomp_size) {
->                 munmap(decomp, mmap_len);
-> @@ -123,12 +129,22 @@ static int perf_session__process_compressed_event(struct
-> perf_session *session,
->  
->         decomp->size += decomp_size;
->  
-> -       if (session->decomp == NULL) {
-> -               session->decomp = decomp;
-> -               session->decomp_last = decomp;
-> +       if (session->active_reader) {
-> +               if (session->active_reader->decomp == NULL) {
-> +                       session->active_reader->decomp = decomp;
-> +                       session->active_reader->decomp_last = decomp;
-> +               } else {
-> +                       session->active_reader->decomp_last->next = decomp;
-> +                       session->active_reader->decomp_last = decomp;
-> +               }
->         } else {
-> -               session->decomp_last->next = decomp;
-> -               session->decomp_last = decomp;
-> +               if (session->decomp == NULL) {
-> +                       session->decomp = decomp;
-> +                       session->decomp_last = decomp;
-> +               } else {
-> +                       session->decomp_last->next = decomp;
-> +                       session->decomp_last = decomp;
-> +               }
->         }
->  
->         pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
-> @@ -319,11 +335,10 @@ static void perf_session__delete_threads(struct
+> @@ -2418,6 +2420,130 @@ static int __perf_session__process_events(struct
 > perf_session *session)
->         machine__delete_threads(&session->machines.host);
+>         return err;
 >  }
 >  
-> -static void perf_session__release_decomp_events(struct perf_session *session)
-> +static void perf_decomp__release_events(struct decomp *next)
->  {
-> -       struct decomp *next, *decomp;
-> +       struct decomp *decomp;
->         size_t mmap_len;
-> -       next = session->decomp;
->         do {
->                 decomp = next;
->                 if (decomp == NULL)
-> @@ -336,6 +351,8 @@ static void perf_session__release_decomp_events(struct
-> perf_session *session)
->  
->  void perf_session__delete(struct perf_session *session)
->  {
-> +       int r;
+> +/*
+> + * This function reads, merge and process directory data.
+> + * It assumens the version 1 of directory data, where each
+> + * data file holds per-cpu data, already sorted by kernel.
+> + */
+> +static int __perf_session__process_dir_events(struct perf_session *session)
+> +{
+> +       struct perf_data *data = session->data;
+> +       struct perf_tool *tool = session->tool;
+> +       int i, ret = 0, readers = 1;
+> +       struct ui_progress prog;
+> +       u64 total_size = perf_data__size(session->data);
+> +       struct reader *rd;
 > +
->         if (session == NULL)
->                 return;
->         auxtrace__free(session);
-> @@ -343,10 +360,12 @@ void perf_session__delete(struct perf_session *session)
->         perf_session__destroy_kernel_maps(session);
->         perf_session__delete_threads(session);
->         if (session->readers) {
-> +               for (r = 0; r < session->nr_readers; r++)
-> +                       perf_decomp__release_events(session-
-> >readers[r].decomp);
->                 zfree(&session->readers);
->                 session->nr_readers = 0;
->         }
-> -       perf_session__release_decomp_events(session);
-> +       perf_decomp__release_events(session->decomp);
->         perf_env__exit(&session->header.env);
->         machines__exit(&session->machines);
->         if (session->data)
-> @@ -2157,7 +2176,8 @@ static int __perf_session__process_decomp_events(struct
-> perf_session *session)
->  {
->         s64 skip;
->         u64 size;
-> -       struct decomp *decomp = session->decomp_last;
-> +       struct decomp *decomp = session->active_reader ?
-> +               session->active_reader->decomp_last : session->decomp_last;
->  
->         if (!decomp)
->                 return 0;
-> @@ -2214,6 +2234,9 @@ reader__process_events(struct reader *rd, struct
-> perf_session *session,
->  
->         memset(mmaps, 0, sizeof(st->mmaps));
->  
-> +       if (zstd_init(&rd->zstd_data, 0))
-> +               return -1;
+> +       perf_tool__fill_defaults(tool);
 > +
->         mmap_prot  = PROT_READ;
->         mmap_flags = MAP_SHARED;
+> +       ui_progress__init_size(&prog, total_size, "Sorting events...");
+> +
+> +       for (i = 0; i < data->dir.nr; i++) {
+> +               if (data->dir.files[i].size)
+> +                       readers++;
+> +       }
+> +
+> +       rd = session->readers = zalloc(readers * sizeof(struct reader));
+> +       if (!rd)
+> +               return -ENOMEM;
+> +       session->nr_readers = readers;
+> +       readers = 0;
+> +
+> +       rd[readers] = (struct reader) {
+> +               .fd              = perf_data__fd(session->data),
+> +               .path            = session->data->file.path,
+> +               .data_size       = session->header.data_size,
+> +               .data_offset     = session->header.data_offset,
+> +               .in_place_update = session->data->in_place_update,
+> +       };
+> +       ret = reader__init(&rd[readers], NULL);
+> +       if (ret)
+> +               goto out_err;
+> +       ret = reader__mmap(&rd[readers], session);
+> +       if (ret != READER_OK) {
+> +               if (ret == READER_EOF)
+> +                       ret = -EINVAL;
+> +               goto out_err;
+> +       }
+> +       readers++;
+> +
+> +       for (i = 0; i < data->dir.nr; i++) {
+> +               if (data->dir.files[i].size) {
+> +                       rd[readers] = (struct reader) {
+> +                               .fd              = data->dir.files[i].fd,
+> +                               .path            = data->dir.files[i].path,
+> +                               .data_size       = data->dir.files[i].size,
+> +                               .data_offset     = 0,
+> +                               .in_place_update = session->data-
+> >in_place_update,
+> +                       };
+> +                       ret = reader__init(&rd[readers], NULL);
 
-zstd_fini is never called on zstd_data.
+zstd_fini is never called on rd[readers].zstd_data
+Maybe it can be done in perf_session__delete. For example, we could add a new
+reader__fini function to do the cleanup of zstd data and
+perf_decomp__release_events.
 
 Thanks,
 Riccardo
 
-> @@ -2257,12 +2280,13 @@ reader__process_events(struct reader *rd, struct
-> perf_session *session,
->                 goto remap;
->         }
+> +                       if (ret)
+> +                               goto out_err;
+> +                       ret = reader__mmap(&rd[readers], session);
+> +                       if (ret != READER_OK) {
+> +                               if (ret == READER_EOF)
+> +                                       ret = -EINVAL;
+> +                               goto out_err;
+> +                       }
+> +                       readers++;
+> +               }
+> +       }
+> +
+> +       i = 0;
+> +
+> +       while ((ret >= 0) && readers) {
+> +               if (session_done())
+> +                       return 0;
+> +
+> +               if (rd[i].state.eof) {
+> +                       i = (i + 1) % session->nr_readers;
+> +                       continue;
+> +               }
+> +
+> +               ret = reader__read_event(&rd[i], session, &prog);
+> +               if (ret < 0)
+> +                       break;
+> +               if (ret == READER_EOF) {
+> +                       ret = reader__mmap(&rd[i], session);
+> +                       if (ret < 0)
+> +                               goto out_err;
+> +                       if (ret == READER_EOF)
+> +                               readers--;
+> +               }
+> +
+> +               /*
+> +                * Processing 10MBs of data from each reader in sequence,
+> +                * because that's the way the ordered events sorting works
+> +                * most efficiently.
+> +                */
+> +               if (rd[i].state.size >= 10*1024*1024) {
+> +                       rd[i].state.size = 0;
+> +                       i = (i + 1) % session->nr_readers;
+> +               }
+> +       }
+> +
+> +       ret = ordered_events__flush(&session->ordered_events,
+> OE_FLUSH__FINAL);
+> +       if (ret)
+> +               goto out_err;
+> +
+> +       ret = perf_session__flush_thread_stacks(session);
+> +out_err:
+> +       ui_progress__finish();
+> +
+> +       if (!tool->no_warn)
+> +               perf_session__warn_about_errors(session);
+> +
+> +       /*
+> +        * We may switching perf.data output, make ordered_events
+> +        * reusable.
+> +        */
+> +       ordered_events__reinit(&session->ordered_events);
+> +
+> +       session->one_mmap = false;
+> +
+> +       return ret;
+> +}
+> +
+>  int perf_session__process_events(struct perf_session *session)
+>  {
+>         if (perf_session__register_idle_thread(session) < 0)
+> @@ -2426,6 +2552,9 @@ int perf_session__process_events(struct perf_session
+> *session)
+>         if (perf_data__is_pipe(session->data))
+>                 return __perf_session__process_pipe_events(session);
 >  
-> +       session->active_reader = rd;
->         size = event->header.size;
->  
->         skip = -EINVAL;
->  
->         if (size < sizeof(struct perf_event_header) ||
-> -           (skip = rd->process(session, event, st->file_pos, rd->path)) < 0)
-> {
-> +           (skip = perf_session__process_event(session, event, st->file_pos,
-> rd->path)) < 0) {
->                 pr_err("%#" PRIx64 " [%s] [%#x]: failed to process type: %d
-> [%s]\n",
->                        st->file_offset + st->head, rd->path, event-
-> >header.size,
->                        event->header.type, strerror(-skip));
-> @@ -2289,6 +2313,7 @@ reader__process_events(struct reader *rd, struct
-> perf_session *session,
->                 goto more;
->  
->  out:
-> +       session->active_reader = NULL;
->         return err;
+> +       if (perf_data__is_dir(session->data))
+> +               return __perf_session__process_dir_events(session);
+> +
+>         return __perf_session__process_events(session);
 >  }
 >  
-> diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-> index 2815d00b5467..e0a8712f8770 100644
-> --- a/tools/perf/util/session.h
-> +++ b/tools/perf/util/session.h
-> @@ -44,6 +44,7 @@ struct perf_session {
->         struct decomp           *decomp_last;
->         struct reader           *readers;
->         int                     nr_readers;
-> +       struct reader           *active_reader;
->  };
->  
->  struct decomp {
 
 
