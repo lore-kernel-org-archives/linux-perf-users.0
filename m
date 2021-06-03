@@ -2,118 +2,145 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43541C47082
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 06:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406F2C47096
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 22:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFB6613D8
-	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 06:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9696140A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  3 Jun 2021 22:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbhFCGlK (ORCPT
+        id S229697AbhFCW7g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 3 Jun 2021 02:41:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbhFCGlK (ORCPT
+        Thu, 3 Jun 2021 18:59:36 -0400
+Received: from mail-ej1-f49.google.com ([209.85.218.49]:44547 "EHLO
+        mail-ej1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229629AbhFCW7g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 3 Jun 2021 02:41:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD3CC06174A;
-        Wed,  2 Jun 2021 23:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kX55QmPWFxDII3Sge2GJJeSnbWWFYdnRducRMGOGHKQ=; b=hARedGyAr0sDE+BtvdYhtLLhqT
-        xBRJL5OHbgF/0VaAM6QvlBJXr83HT5NVS7V8DRpuXyYFELaqdsUVDKE7xdQXCUsOoQxD+ZryBn0Lj
-        TQUUpF9nIf+OhCYb2DCINiYA10TI8AImzzNG9gBDI61JDK4y9IyT9HC7swn3WceMAMX+pproGTr+z
-        euH2oJmi+z8yDYk4o986bBSmMqnp2oduWzGnBnR6zXjKvIqpkjAsnYAK7TaquLehFRzRkMRw2LFzB
-        sQkU84q2RHe9CpB6m2+QJnfPaODcV/HKj6IpiHproIA95ZpBeuavpXhNkqQKbgxpRXe24aJvU2Taj
-        vd1R75YA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94 #2 (Red Hat Linux))
-        id 1loh0U-00Bsr6-Sl; Thu, 03 Jun 2021 06:39:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ACAEA30029C;
-        Thu,  3 Jun 2021 08:39:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8DD1F20223DB5; Thu,  3 Jun 2021 08:39:05 +0200 (CEST)
-Date:   Thu, 3 Jun 2021 08:39:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 3 Jun 2021 18:59:36 -0400
+Received: by mail-ej1-f49.google.com with SMTP id c10so11557533eja.11;
+        Thu, 03 Jun 2021 15:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=d0FPSnKWKgyYbiM8cigMcHZW9uwmiUJWHnRMyIytsDY=;
+        b=Zg72/ybcmMgZubOk5F1MC5rjdQD7HkORmiTwrToSzNILlOwM6xwmwTKfeW3QTdW9MO
+         UqpdbfTxaqXOvJdplo9wua3LC4lk6pShQ/lG3KcfjTxsD/PhpnA8d1KcgcfaBEwvDhVj
+         EFp50ejbyws7Ufql1owugAuPyj7UwoJ7Bv1ENT42Nforc/u+daOJnjMKsCOhV4CTc6c9
+         ZrUt2YonCrB66Z7bBKfwU0xEhydOcD4iiqpxFM83RYIcC07Jp2RfHKX98dG/6naWZnY0
+         qmJh4CGr9zcrG3kgC36YyKqNgyaxeTEK5UA54kPw9Y/uedQW8pDyfRxEp5eFowO5iSQG
+         nHWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=d0FPSnKWKgyYbiM8cigMcHZW9uwmiUJWHnRMyIytsDY=;
+        b=AGg1xR9+NgSCIrf9b5aIjYIPX5C13drwmC4SlVlcA47ufpIX21Dli8b5kdPqA0jQpl
+         dMgxNEcx0f1pswDP+DAbFnQZJc5Uk008cDa/Umya9ckYUuydsC/4YI4x/3GJrO6IGElm
+         Wcki45RQfFHw0FXBGGL6aoZvXdFehOB84dUuu/5eMG0rnv7ZlodZ59jgvtt6ntiCPGc3
+         ckBofPTxMSLQJ8wZoJoonGRZquVo9Jp4GX2Gfa3pO3cgFdrTCHOlEkljvj5O0SitWxBJ
+         Z5HZJk9fEeRKEpqbGct5lTAtvcdJ8fAFZt8Fl8LorE3YJgTQ2OYSJvlD/aHpDKv1KqBT
+         TDIg==
+X-Gm-Message-State: AOAM533wD4hV4pK44M+Ky1zoK5bVTGc0QyjS+d0wIOWUyiie5If8bq7m
+        Y2JDz6IJXmLnsrDab4BasaWnCBYjuUkzfZQE1AY=
+X-Google-Smtp-Source: ABdhPJy8AreRDvIuBKD6CO2n0Z5xuE7xdGJAAqdVO0212AH+iFsrqnTrzEsdB9z58RTqpIXB6FiyWw==
+X-Received: by 2002:a17:907:7713:: with SMTP id kw19mr1335113ejc.249.1622761010060;
+        Thu, 03 Jun 2021 15:56:50 -0700 (PDT)
+Received: from [192.168.1.15] ([151.29.179.73])
+        by smtp.gmail.com with ESMTPSA id d22sm2055397ejj.47.2021.06.03.15.56.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Jun 2021 15:56:49 -0700 (PDT)
+Message-ID: <3b297a17f935d2a00bfa74afbbf064b01fe83607.camel@gmail.com>
+Subject: Re: [PATCH v6 03/20] perf record: Introduce thread local variable
+From:   Riccardo Mancini <rickyman7@gmail.com>
+To:     Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched,timer: Use __set_current_state()
-Message-ID: <YLh5CaqPHBhBhfVu@hirez.programming.kicks-ass.net>
-References: <20210602131225.336600299@infradead.org>
- <20210602133040.524487671@infradead.org>
- <20210602195458.uj3rsci4suz4mufj@offworld>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Antonov <alexander.antonov@linux.intel.com>,
+        Alexei Budankov <abudankov@huawei.com>,
+        linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Date:   Fri, 04 Jun 2021 00:56:48 +0200
+In-Reply-To: <c5a046f8bed989e4ede98f1fcdaa9d0b6bf78cac.1622025774.git.alexey.v.bayduraev@linux.intel.com>
+References: <cover.1622025774.git.alexey.v.bayduraev@linux.intel.com>
+         <c5a046f8bed989e4ede98f1fcdaa9d0b6bf78cac.1622025774.git.alexey.v.bayduraev@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210602195458.uj3rsci4suz4mufj@offworld>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 02, 2021 at 12:54:58PM -0700, Davidlohr Bueso wrote:
-> On Wed, 02 Jun 2021, Peter Zijlstra wrote:
-> 
-> -ENOCHANGELONG
+Hi,
 
-I completely failed to come up with something useful, still do. Subject
-says it all.
+thank you very much for your work for adding threading capabilites to perf
+record. 
+I did some testing on your entire patchset, especially checking for memory
+issues using ASan. This is just the first of a couple of emails to point out
+some issues I found.
+I will also do additional tests in the future.
 
-> But yeah, I thought we had gotten rid of all these.
+On Wed, 2021-05-26 at 13:52 +0300, Alexey Bayduraev wrote:
+SNIP
+> @@ -2220,18 +2275,20 @@ static int __cmd_record(struct record *rec, int argc,
+> const char **argv)
+>                 goto out_child;
+>         }
+>  
+> -       if (!quiet)
+> -               fprintf(stderr, "[ perf record: Woken up %ld times to write data
+> ]\n", waking);
+> -
+>         if (target__none(&rec->opts.target))
+>                 record__synthesize_workload(rec, true);
+>  
+>  out_child:
+> +       record__stop_threads(rec, &waking);
+> +out_free_threads:
+>         record__free_thread_data(rec);
+>         evlist__finalize_ctlfd(rec->evlist);
+>         record__mmap_read_all(rec, true);
+>         record__aio_mmap_read_sync(rec);
 
-I too was surprised to find it :-)
+record__mmap_read_all should be moved before record__free_thread_data since it
+uses the thread_data that's just been freed.
+Furthermore, record__mmap_read_all should also be moved before the
+out_free_threads label, since it cannot be called unless record__start_threads
+succeeded, otherwise thread would be NULL and will cause a segfault (it happens
+if there is an error somewhere else in perf, for example).
+
+In my tests the following order works, but it should be double checked for
+possible side-effects of this order change.
+
+out_child:
+        record__stop_threads(rec, &waking);
+        record__mmap_read_all(rec, true);
+out_free_threads:
+        record__free_thread_data(rec);
+        evlist__finalize_ctlfd(rec->evlist);
+        record__aio_mmap_read_sync(rec);
+
+Thanks,
+Riccardo
+
+> +       if (!quiet)
+> +               fprintf(stderr, "[ perf record: Woken up %ld times to write data
+> ]\n", waking);
+> +
+>         if (rec->session->bytes_transferred && rec->session->bytes_compressed) {
+>                 ratio = (float)rec->session->bytes_transferred/(float)rec-
+> >session->bytes_compressed;
+>                 session->header.env.comp_ratio = ratio + 0.5;
+SNIP
+
+
