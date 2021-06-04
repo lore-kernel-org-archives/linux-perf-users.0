@@ -5,61 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB3CC47083
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 04:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473E2C47083
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 04:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B635C613E4
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 04:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4A46140C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 04:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbhFDERc (ORCPT
+        id S229917AbhFDE3y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 00:17:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229474AbhFDERc (ORCPT
+        Fri, 4 Jun 2021 00:29:54 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:38865 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229527AbhFDE3y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 00:17:32 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB52DC06174A
-        for <linux-perf-users@vger.kernel.org>; Thu,  3 Jun 2021 21:15:46 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id h12-20020a05600c350cb029019fae7a26cdso4801632wmq.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 03 Jun 2021 21:15:46 -0700 (PDT)
+        Fri, 4 Jun 2021 00:29:54 -0400
+Received: by mail-wr1-f51.google.com with SMTP id j14so7890377wrq.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 03 Jun 2021 21:27:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gt5r+lBwCuoOA7rfQIlaZBhTcz5xyY6ZuYMcbufKUos=;
-        b=pXfVS0SZxq556lEc4rP04GJ+qgvT/OfgZ6GWjum1lWJGmFlLn0UIhfcmvLozoTMPl6
-         dFTZer+0saAoVGELO7+tFHPmONEOIFsP/2B24YoqJOSbVT1Qbp8MhvrOythK2lI8ZcSK
-         lfYFhogf0BkpuuMQ2vgzYsV8SBe/Z3umeGLXeDHcPOzyosYXZtapt4idJ2Vgt79tiV9A
-         AcbR/UUZJt4JO0HYV6GSl49RUNE1HAZ2Z0kxIct7cR2hyhnysXQ8LN/yGMV/3gz1E023
-         MEqggsPvjm0V4piYAYa5Td9JqYxf4aWJnqMAdcuRpsoKH9W/EmMQmuiHJ3kT+W4xV1Va
-         zFFA==
+        bh=7UWd9c23gbJeqKN+x05xqP4SMfjB2/ClR1agz1P2O+o=;
+        b=TiAICjH6rsZIbGZ0XdCOAiZXNFUhWsTiGyyMuob+l8IGv9uNIN+jjSUy2wya5b37kH
+         8Lhl3dCFLzyC7SUYg1zjfdUrvJAI/mNDqguToa/NpRNQJMI4RNs1CQ/rWwXGeuXyDVuM
+         bnV8VaIKZX0l6jxDyxlSiis1p/SqkDDAhXdFsadWl/iiw/AvvSWBMv0+MjTkO69rL8hS
+         +cuN2Q3ULZWR3j02VXRXEh9N36nKVI69dkNYKY4qT0Vo91S6QDwXe9ZoRLI0LQHQZUQl
+         rTFbUgivH8wU6CECRAVmwg8JdygB/aBXkIrTukFKkqYcM3uiqolcaQ6wQhVVWDh9z7At
+         dM0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gt5r+lBwCuoOA7rfQIlaZBhTcz5xyY6ZuYMcbufKUos=;
-        b=Nsz0HTbQv8QUEMFRhqEyV6uFqKBUR6HHJJ02p9evr/ohcMQamkOdSQq9Vqy0QH1aDd
-         jcdB6CT8CS/hB1JuDtQU/qnwsRvIMrAXS1YvxHabF370uTgvag6FZqNvtrib/rL/grKt
-         GzY0Mibl9i+udpARXK64tV+MHuMvvqOs8q/g/9rkfmNasoPG5/rlmSiFgaIjhvFOgFIt
-         ZC9iAKhn/VyMEVYmH1hoqHmi2e1QZjSfFSmP1WAf2iGWAPTwar65C3X/j2Yw5Fa3Bph7
-         qgcarwcSfjpNLJVwyKdAzKwS2T6BE4qaUcyYCM0exse7SFOCrE5b6vK8d4g/zJ7vgLed
-         E8Iw==
-X-Gm-Message-State: AOAM532S3Ufld2777XOSYujpe8YhOyZo7UbO0uTPvH9Iz0jb+XZgMoFj
-        6astk9y34U5hov1nPWnfovmV8D25KdbuTYEhZDxjZA==
-X-Google-Smtp-Source: ABdhPJx2vWndMsU19H1kNaO6+JL/13qRYUi8/RATBdr+TJtyTLGIJgpuoWpiH5i1lF4ag++WCkz/IclGw42XD007YWQ=
-X-Received: by 2002:a1c:b603:: with SMTP id g3mr1451928wmf.58.1622780145144;
- Thu, 03 Jun 2021 21:15:45 -0700 (PDT)
+        bh=7UWd9c23gbJeqKN+x05xqP4SMfjB2/ClR1agz1P2O+o=;
+        b=l08OS0R/mZUbU/QHyMWjRc5ILvLCU07u6E+NsuxFpe3qu5wNLJ+fTPOYzV9h7sd77f
+         lU5IIrJNzdDsy4m8EH+OmaW5Ss5PVWVx/2KXahRYIu9l7HXd6IJX4MMEwuvJTQawQ/5A
+         IRuFvBSMpvbnD+XqUI4BiORGx3PMP47JQxAMpC9w0KlBl8FBwX7LXYiZn1KGwQCAClpS
+         xDnKZDSB2MB6eLl6pJxn4Ye7eEKG1dYUtP4t3Ow2XXy91GugmxbxMSfALddcEEbGf3t2
+         0SBwAxHiiYB8Ab7PpWepCJI4v2+r7qcDOQYxLyR/upYtNCesW5j+YH7EcGCrHQt/JbzF
+         D6xA==
+X-Gm-Message-State: AOAM531xLPJPbOYWUzc9d5GVIHKf3hf8LKtf8G4o2cibpTlqQEoSxoZP
+        bfjr9EDkPXztDgOUNzY2DXzpC4tdDILC6w5BJnOasXEiyhmU2rf8
+X-Google-Smtp-Source: ABdhPJxpoHQxaUxpi3FcOjDlpn8+51W8yCO8DE/Kx7g9qyHOmNa1n7quM25+dXoWEvHIBzJ3zdEYP/LPDc0Ffk5e1A8=
+X-Received: by 2002:a5d:4903:: with SMTP id x3mr1531894wrq.376.1622780812951;
+ Thu, 03 Jun 2021 21:26:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210602224024.300485-1-rickyman7@gmail.com>
-In-Reply-To: <20210602224024.300485-1-rickyman7@gmail.com>
+References: <20210602231052.317048-1-rickyman7@gmail.com>
+In-Reply-To: <20210602231052.317048-1-rickyman7@gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 3 Jun 2021 21:15:32 -0700
-Message-ID: <CAP-5=fW5btkb9izxcUy+XgAQPCTRZAUMa4uQMUR_+N_d=17Mfg@mail.gmail.com>
-Subject: Re: [PATCH] perf env: fix memory leak: free bpf_prog_info_linear
+Date:   Thu, 3 Jun 2021 21:26:40 -0700
+Message-ID: <CAP-5=fVxHUnwGoRypMjCsPSh_yo5PB8Hzbkx5ArA5b0=7S-67g@mail.gmail.com>
+Subject: Re: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map
+ and dso
 To:     Riccardo Mancini <rickyman7@gmail.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -68,28 +66,25 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 2, 2021 at 3:41 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
+On Wed, Jun 2, 2021 at 4:15 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
 >
-> ASan reported a memory leak caused by info_linear not being
-> deallocated. The info_linear was allocated during
-> perf_event__synthesize_one_bpf_prog.
-> This patch adds the corresponding free() when bpf_prog_info_node
-> is freed in perf_env__purge_bpf.
+> ASan reported a memory leak of BPF-related ksymbols map and dso.
+> The leak is caused by refcount never reaching 0, due to missing
+> __put calls in the function machine__process_ksymbol_register.
+> Once the dso is inserted in map, dso__put should be called,
+> since map__new2 has increased its refcount to 2.
+> The same thing applies for the map when it's inserted into the
+> rb-tree in maps (maps__insert increases the refcount to 2).
 >
 > $ sudo ./perf record -- sleep 5
 > [ perf record: Woken up 1 times to write data ]
@@ -98,43 +93,63 @@ On Wed, Jun 2, 2021 at 3:41 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
 > =================================================================
 > ==297735==ERROR: LeakSanitizer: detected memory leaks
 >
-> Direct leak of 7688 byte(s) in 19 object(s) allocated from:
->     #0 0x4f420f in malloc (/home/user/linux/tools/perf/perf+0x4f420f)
->     #1 0xc06a74 in bpf_program__get_prog_info_linear /home/user/linux/tools/lib/bpf/libbpf.c:11113:16
->     #2 0xb426fe in perf_event__synthesize_one_bpf_prog /home/user/linux/tools/perf/util/bpf-event.c:191:16
->     #3 0xb42008 in perf_event__synthesize_bpf_events /home/user/linux/tools/perf/util/bpf-event.c:410:9
->     #4 0x594596 in record__synthesize /home/user/linux/tools/perf/builtin-record.c:1490:8
->     #5 0x58c9ac in __cmd_record /home/user/linux/tools/perf/builtin-record.c:1798:8
->     #6 0x58990b in cmd_record /home/user/linux/tools/perf/builtin-record.c:2901:8
->     #7 0x7b2a20 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
->     #8 0x7b12ff in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
->     #9 0x7b2583 in run_argv /home/user/linux/tools/perf/perf.c:409:2
->     #10 0x7b0d79 in main /home/user/linux/tools/perf/perf.c:539:3
->     #11 0x7fa357ef6b74 in __libc_start_main /usr/src/debug/glibc-2.33-8.fc34.x86_64/csu/../csu/libc-start.c:332:16
+> Direct leak of 6992 byte(s) in 19 object(s) allocated from:
+>     #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+>     #1 0x8e4e53 in map__new2 /home/user/linux/tools/perf/util/map.c:216:20
+>     #2 0x8cf68c in machine__process_ksymbol_register /home/user/linux/tools/perf/util/machine.c:778:10
+>     [...]
+>
+> Indirect leak of 8702 byte(s) in 19 object(s) allocated from:
+>     #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+>     #1 0x8728d7 in dso__new_id /home/user/linux/tools/perf/util/dso.c:1256:20
+>     #2 0x872015 in dso__new /home/user/linux/tools/perf/util/dso.c:1295:9
+>     #3 0x8cf623 in machine__process_ksymbol_register /home/user/linux/tools/perf/util/machine.c:774:21
+>     [...]
+>
+> Indirect leak of 1520 byte(s) in 19 object(s) allocated from:
+>     #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+>     #1 0x87b3da in symbol__new /home/user/linux/tools/perf/util/symbol.c:269:23
+>     #2 0x888954 in map__process_kallsym_symbol /home/user/linux/tools/perf/util/symbol.c:710:8
+>     [...]
+>
+> Indirect leak of 1406 byte(s) in 19 object(s) allocated from:
+>     #0 0x4f43c7 in calloc (/home/user/linux/tools/perf/perf+0x4f43c7)
+>     #1 0x87b3da in symbol__new /home/user/linux/tools/perf/util/symbol.c:269:23
+>     #2 0x8cfbd8 in machine__process_ksymbol_register /home/user/linux/tools/perf/util/machine.c:803:8
+>     [...]
 >
 > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> ---
+>  tools/perf/util/machine.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 3ff4936a15a42..d5937778875e1 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -776,6 +776,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+>                 if (dso) {
+>                         dso->kernel = DSO_SPACE__KERNEL;
+>                         map = map__new2(0, dso);
+> +                       dso__put(dso);
 
-Acked-by: Ian Rogers <irogers@google.com>
+Will this cause 2 puts if the map allocation fails? Perhaps this
+should be "if (map) dso__put(dso);".
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/env.c | 1 +
->  1 file changed, 1 insertion(+)
+>                 }
 >
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 9130f6fad8d54..bc5e4f294e9e9 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -144,6 +144,7 @@ static void perf_env__purge_bpf(struct perf_env *env)
->                 node = rb_entry(next, struct bpf_prog_info_node, rb_node);
->                 next = rb_next(&node->rb_node);
->                 rb_erase(&node->rb_node, root);
-> +               free(node->info_linear);
->                 free(node);
->         }
+>                 if (!dso || !map) {
+> @@ -792,6 +793,7 @@ static int machine__process_ksymbol_register(struct machine *machine,
+>                 map->start = event->ksymbol.addr;
+>                 map->end = map->start + event->ksymbol.len;
+>                 maps__insert(&machine->kmaps, map);
+> +               map__put(map);
+>                 dso__set_loaded(dso);
 >
+>                 if (is_bpf_image(event->ksymbol.name)) {
 > --
 > 2.31.1
 >
