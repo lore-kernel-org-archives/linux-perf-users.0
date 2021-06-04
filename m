@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4AFC47424
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 16:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE0DC47425
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 16:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629F86140B
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 16:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2463361406
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 16:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230048AbhFDQaO (ORCPT
+        id S229690AbhFDQaY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 12:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47348 "EHLO mail.kernel.org"
+        Fri, 4 Jun 2021 12:30:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229690AbhFDQaO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 12:30:14 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BBC29613FF;
-        Fri,  4 Jun 2021 16:28:25 +0000 (UTC)
+        id S230201AbhFDQaY (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 4 Jun 2021 12:30:24 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 098F5613BF;
+        Fri,  4 Jun 2021 16:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622824108;
-        bh=5w7g/bUb7eOwdfJb6PV3UCSCV/RrnNbcODEpMBBPUfE=;
+        s=k20201202; t=1622824118;
+        bh=xldhAYvpNp7T8FsAXTGCg2xSMIM8K9z2JZUDsEUwjbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhfLcJW0o7ww5kGyM6ZKT2zv3KRcNYUQvCSY5cRqCVen2Dz/gSVZ3bnFanW4nvL89
-         83HeoCS77dJgLagdY1xbvEqUOlOeUiP9YXQKd1Y8GefLwG6s1zDu0zwgVMnj0u7OiJ
-         1nXoo5nZsQDcONg6jAddsnl8cBPDJBOwolTUipeENFIyH+sPvDM7hpCRqBFiOhBY0a
-         6LGgoTMusJYQKFIvcDyzv+yQzuEpcrKhchK7GYQl3jfPofP38m5/AyTTQS4j64IyE9
-         xO6h2Wko8qWjn5c1pX+Uh45MFhSU8NdeBfJGTRf0hUfGfMnUBPPEDEnHy5ejxYIYEr
-         ec/YO9bs3rxow==
+        b=e50JvrtLsBBAfKHT60mJyI2pm8y7bz/fTaGwHewrxpI9UK0we/Sba5kPaUsyG6Vfg
+         urbvZZPhy0LafZ6kIEhietVmY4qVgOONLoJ9aw3CSHb8rDKBmF66/6ueCSUvCnp7lD
+         YiWy8mxyRqscii/sFFbPwek6ai+N6VbGK9Ud0qFXs/2T3JF+0Bsttrek6t6sxT5+W6
+         EAsrnIoFPZcdmWmcxese+oCSZt9BY7BG7Wstir+NQlriucF9w3E/evt9ouVX9lpBhy
+         VAWffM/OZ6Gvb7ZkQnb/+2RWIswhniNFE9nVuzfQCKylGnT/r5V6RqbN7VCugQ6Z0Q
+         HvGY3Zm4qpvYg==
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -43,9 +43,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/3] perf/probe: Support probes on init functions for offline kernel
-Date:   Sat,  5 Jun 2021 01:28:23 +0900
-Message-Id: <162282410293.452340.13347006295826431632.stgit@devnote2>
+Subject: [PATCH 2/3] perf/probe: Cleanup synthesize_probe_trace_command
+Date:   Sat,  5 Jun 2021 01:28:33 +0900
+Message-Id: <162282411361.452340.16886399333622147122.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <162282409255.452340.4645118932261585719.stgit@devnote2>
 References: <162282409255.452340.4645118932261585719.stgit@devnote2>
@@ -57,49 +57,135 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf probe internally checks the probe target is in the text area
-in post-process (after analyzing debuginfo). But it fails if the
-probe target is in the "inittext".
-This is a good limitation for the online kernel because such
-functions have gone after booting. However, for using it for
-boot-time tracing, user may want to put a probe on init functions.
-
-This skips the post checking process if the target is offline kenrel
-so that user can get the probe definition on the init functions.
-
-Without this patch:
-  $ perf probe -k ./build-x86_64/vmlinux -D do_mount_root:10
-  Probe point 'do_mount_root:10' not found.
-    Error: Failed to add events.
-
-With this patch:
-  $ perf probe -k ./build-x86_64/vmlinux -D do_mount_root:10
-  p:probe/do_mount_root_L10 mount_block_root+300
-
+Cleanup the synthesize_probe_trace_command() to simplify
+code path.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- tools/perf/util/probe-event.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-event.c |   86 +++++++++++++++++++++++------------------
+ 1 file changed, 49 insertions(+), 37 deletions(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 8fe179d671c3..a6e121afb651 100644
+index a6e121afb651..505c0702dbe2 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -682,8 +682,13 @@ static int post_process_probe_trace_point(struct probe_trace_point *tp,
- 	u64 addr = tp->address - offs;
+@@ -2127,19 +2127,55 @@ static int synthesize_probe_trace_arg(struct probe_trace_arg *arg,
+ }
  
- 	sym = map__find_symbol(map, addr);
--	if (!sym)
--		return -ENOENT;
-+	if (!sym) {
-+		/*
-+		 * If the address is in the inittext section, map can not
-+		 * find it. Ignore it if we are probing offline kernel.
-+		 */
-+		return (symbol_conf.ignore_vmlinux_buildid) ? 0 : -ENOENT;
+ static int
+-synthesize_uprobe_trace_def(struct probe_trace_event *tev, struct strbuf *buf)
++synthesize_probe_trace_args(struct probe_trace_event *tev, struct strbuf *buf)
++{
++	int i, ret = 0;
++
++	for (i = 0; i < tev->nargs && ret >= 0; i++)
++		ret = synthesize_probe_trace_arg(&tev->args[i], buf);
++
++	return ret;
++}
++
++static int
++synthesize_uprobe_trace_def(struct probe_trace_point *tp, struct strbuf *buf)
+ {
+-	struct probe_trace_point *tp = &tev->point;
+ 	int err;
+ 
++	/* Uprobes must have tp->module */
++	if (!tp->module)
++		return -EINVAL;
++	/*
++	 * If tp->address == 0, then this point must be a
++	 * absolute address uprobe.
++	 * try_to_find_absolute_address() should have made
++	 * tp->symbol to "0x0".
++	 */
++	if (!tp->address && (!tp->symbol || strcmp(tp->symbol, "0x0")))
++		return -EINVAL;
++
++	/* Use the tp->address for uprobes */
+ 	err = strbuf_addf(buf, "%s:0x%lx", tp->module, tp->address);
+ 
+ 	if (err >= 0 && tp->ref_ctr_offset) {
+ 		if (!uprobe_ref_ctr_is_supported())
+-			return -1;
++			return -EINVAL;
+ 		err = strbuf_addf(buf, "(0x%lx)", tp->ref_ctr_offset);
+ 	}
+-	return err >= 0 ? 0 : -1;
++	return err >= 0 ? 0 : err;
++}
++
++static int
++synthesize_kprobe_trace_def(struct probe_trace_point *tp, struct strbuf *buf)
++{
++	if (!strncmp(tp->symbol, "0x", 2)) {
++		/* Absolute address. See try_to_find_absolute_address() */
++		return strbuf_addf(buf, "%s%s0x%lx", tp->module ?: "",
++				  tp->module ? ":" : "", tp->address);
++	} else {
++		return strbuf_addf(buf, "%s%s%s+%lu", tp->module ?: "",
++				tp->module ? ":" : "", tp->symbol, tp->offset);
 +	}
+ }
  
- 	if (strcmp(sym->name, tp->symbol)) {
- 		/* If we have no realname, use symbol for it */
+ char *synthesize_probe_trace_command(struct probe_trace_event *tev)
+@@ -2147,11 +2183,7 @@ char *synthesize_probe_trace_command(struct probe_trace_event *tev)
+ 	struct probe_trace_point *tp = &tev->point;
+ 	struct strbuf buf;
+ 	char *ret = NULL;
+-	int i, err;
+-
+-	/* Uprobes must have tp->module */
+-	if (tev->uprobes && !tp->module)
+-		return NULL;
++	int err;
+ 
+ 	if (strbuf_init(&buf, 32) < 0)
+ 		return NULL;
+@@ -2159,37 +2191,17 @@ char *synthesize_probe_trace_command(struct probe_trace_event *tev)
+ 	if (strbuf_addf(&buf, "%c:%s/%s ", tp->retprobe ? 'r' : 'p',
+ 			tev->group, tev->event) < 0)
+ 		goto error;
+-	/*
+-	 * If tp->address == 0, then this point must be a
+-	 * absolute address uprobe.
+-	 * try_to_find_absolute_address() should have made
+-	 * tp->symbol to "0x0".
+-	 */
+-	if (tev->uprobes && !tp->address) {
+-		if (!tp->symbol || strcmp(tp->symbol, "0x0"))
+-			goto error;
+-	}
+ 
+-	/* Use the tp->address for uprobes */
+-	if (tev->uprobes) {
+-		err = synthesize_uprobe_trace_def(tev, &buf);
+-	} else if (!strncmp(tp->symbol, "0x", 2)) {
+-		/* Absolute address. See try_to_find_absolute_address() */
+-		err = strbuf_addf(&buf, "%s%s0x%lx", tp->module ?: "",
+-				  tp->module ? ":" : "", tp->address);
+-	} else {
+-		err = strbuf_addf(&buf, "%s%s%s+%lu", tp->module ?: "",
+-				tp->module ? ":" : "", tp->symbol, tp->offset);
+-	}
+-
+-	if (err)
+-		goto error;
++	if (tev->uprobes)
++		err = synthesize_uprobe_trace_def(tp, &buf);
++	else
++		err = synthesize_kprobe_trace_def(tp, &buf);
+ 
+-	for (i = 0; i < tev->nargs; i++)
+-		if (synthesize_probe_trace_arg(&tev->args[i], &buf) < 0)
+-			goto error;
++	if (err >= 0)
++		err = synthesize_probe_trace_args(tev, &buf);
+ 
+-	ret = strbuf_detach(&buf, NULL);
++	if (err >= 0)
++		ret = strbuf_detach(&buf, NULL);
+ error:
+ 	strbuf_release(&buf);
+ 	return ret;
 
