@@ -2,64 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6FDC07E94
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 15:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3002CC07E94
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 15:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06940613AC
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 15:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145DC61402
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 15:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbhFDPSb (ORCPT
+        id S230333AbhFDP0W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 11:18:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbhFDPSa (ORCPT
+        Fri, 4 Jun 2021 11:26:22 -0400
+Received: from mail-ed1-f48.google.com ([209.85.208.48]:46637 "EHLO
+        mail-ed1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230289AbhFDP0W (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 11:18:30 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3364DC061766;
-        Fri,  4 Jun 2021 08:16:44 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id i13so11583055edb.9;
-        Fri, 04 Jun 2021 08:16:44 -0700 (PDT)
+        Fri, 4 Jun 2021 11:26:22 -0400
+Received: by mail-ed1-f48.google.com with SMTP id r11so11562248edt.13;
+        Fri, 04 Jun 2021 08:24:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=5INap2zzP9s4qR7EyrIKGSEeGROkQc8vXzeQAKJYVgg=;
-        b=VezwnZdZDzyEBaJUjcW2YQnMa3HOaOGc5wcJ7xFdf8/3ST7ZjCoCApYvcqDdaVJEhy
-         ckYzvwW7ZmcFFJGez2VKzhgjM9oOuOn7dD/Rrp3O1JkQoKwW1s4bINbvHsYk6t9XZjXb
-         pWqP2BSZLQKK19JxHK5oBaB36q/dR6axpWjtnBYMnGWGkYpCvurr2XmOv1mQN4n/GJt8
-         fJVNc8P4i5RqKsbCMbIkOgaQVB2SFgk637z24VsLKSulhISLO2vpY7M7G41rqR5ddh3q
-         VpZ9kyVmhYGoqKLRDpdivtOpKbdwesxUjP8NqVPhxvBKGpD24sNeI0lG6S1jSTpqBDM3
-         8wdQ==
+        bh=wGPasXoYywrXGg/ef9droojodHfnwVODBHNGyzr6cPQ=;
+        b=lCxg46amv/7bUXOXqNXkN0JNoN3MlGdXw9kOK8N3ciKtK1i+webFZfGVCYH03zRi+K
+         tRkxETxQjtKlwbrxpx/tNaxdqN+nsPJPiuxJWlOg+6qhrzJqZii69/3s3GcDg0iN3APO
+         q4OPk1G28/AWwBzlvhRMp+wlUe/bJB2fKKkCnqraEvbYeMwAM10Lr5tJwlKoHWTKMx82
+         9WHbSTlrN1nrSq+G5o8suW29A7cr2YDokNBGshZewVqBfqYkBNH/Ga3+UR3t7aybS58w
+         ns+Ul1q/2oP1j76sCupx9XUPfGAQtRJEJ+IBuQJarNNzEywLs/k1U0YEwfbhyB6ts9xr
+         2hcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=5INap2zzP9s4qR7EyrIKGSEeGROkQc8vXzeQAKJYVgg=;
-        b=sJdljyg2Wuuxtm+c4eO1YmsTC5beOXx+xFXu2ub094PUiQx83Fc3egq7p9bvIik9kV
-         FsaTZL0/PsFa79Kt18MKR1D55hTxIn0YKIkxVx52gV7JWyLA8/XQxplXLWXG++TN+DP7
-         lrkdHbgyzuFOJd0WSrPiv6pyU4FbDXPll+LnhKdsGXmTiYqPI1Xt1yn7RBQASnQ6lhLe
-         Sx6F346nikWGqJYxJtrslm1WtkYmkLmisA19YAW8d1eg2KUPNN23ZhA2nKRvxszX/q79
-         FtMsx8ggHbI4MrH/kvkFjkwqPtrdIEoAXQQYkKBpsaDSbXw6pf6wOvY3zVCzS0iJ+Iq3
-         suxg==
-X-Gm-Message-State: AOAM530TfvkiOLtFi3jZW7fufGxbtHITQllLzVEvy6QEuCnrhRz/et+8
-        5dVgdjpnBpDUjv/+Mm8tT0w=
-X-Google-Smtp-Source: ABdhPJynYpoT3gWvjQ7I7dsrOJg2RYthDMHp+mnoqLaGCib1yGeskAqEh2ZYn7Y9tTBfO1bBasX5lQ==
-X-Received: by 2002:a50:afa3:: with SMTP id h32mr5197925edd.202.1622819802650;
-        Fri, 04 Jun 2021 08:16:42 -0700 (PDT)
+        bh=wGPasXoYywrXGg/ef9droojodHfnwVODBHNGyzr6cPQ=;
+        b=faD5ugX//gRXTQWqQwOuxEnc4u5ks9+xbv5eFGhuqps34WREnc2ZPLWQoqYsRZnysQ
+         pHqPKcjPk8xZGrMr6FezZbHBWloZsDvSVvfTUC07cihAM+WWLvf99Gd/Xr9aAx4tit/l
+         HQkqHM/N/tSUMZWuIEym/cT61VHrTIwAvWmUPJxYrayVVitLEAvjAL8hGTXLGqyOWZOg
+         DUqjJg4owq8zTxksJQFoMMDOgUVBF9xe3KJH6QV8y9seDWZ+qbc2ZwUm8ycNzhJfM1SA
+         lNqvYsJ/pgRBlZ2a01mo/8RYShvhCUfgf2yPuFSawgl9SaYUBICTIC+7gtFiiFxjYwRu
+         SgXQ==
+X-Gm-Message-State: AOAM531VTID2/uaABtSV1WWSLmpwFAqy7yPZJ5ueA8ZkANrwRMjihlnZ
+        75GnMUeoWouQ9nKABDifBBo=
+X-Google-Smtp-Source: ABdhPJzLQFbMoaD99xPELT1NpZp87JjnFZU5iz+fpVDfsQTf0L+qcrUY7HlgqQyS18TkeG91n/oXCg==
+X-Received: by 2002:a05:6402:51ce:: with SMTP id r14mr5461482edd.138.1622820201630;
+        Fri, 04 Jun 2021 08:23:21 -0700 (PDT)
 Received: from [192.168.1.15] ([151.29.179.73])
-        by smtp.gmail.com with ESMTPSA id u15sm3484268edy.29.2021.06.04.08.16.40
+        by smtp.gmail.com with ESMTPSA id g22sm1456986edv.74.2021.06.04.08.23.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 08:16:41 -0700 (PDT)
-Message-ID: <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
-Subject: Re: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map
- and dso
+        Fri, 04 Jun 2021 08:23:21 -0700 (PDT)
+Message-ID: <3e31a3f86487b31cd5161f57648798a129f13b0a.camel@gmail.com>
+Subject: Re: [PATCH] perf symbol-elf: fix memory leak: free sdt_note.args
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
         Ian Rogers <irogers@google.com>
@@ -68,17 +65,16 @@ Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        Jiri Olsa <jolsa@redhat.com>, Fabian Hemmer <copy@copy.sh>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 04 Jun 2021 17:16:39 +0200
-In-Reply-To: <YLopMBgLWysdJbkm@kernel.org>
-References: <20210602231052.317048-1-rickyman7@gmail.com>
-         <CAP-5=fVxHUnwGoRypMjCsPSh_yo5PB8Hzbkx5ArA5b0=7S-67g@mail.gmail.com>
-         <YLopMBgLWysdJbkm@kernel.org>
+Date:   Fri, 04 Jun 2021 17:23:19 +0200
+In-Reply-To: <YLokBBmh2+vd9E9d@kernel.org>
+References: <20210602220833.285226-1-rickyman7@gmail.com>
+         <CAP-5=fVp4xGd8wxLc1eFfTUPn3Urp23RmHBha2kgiJGvfysgZg@mail.gmail.com>
+         <YLokBBmh2+vd9E9d@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.1 (3.40.1-1.fc34) 
 MIME-Version: 1.0
@@ -89,102 +85,88 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Fri, 2021-06-04 at 10:22 -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jun 03, 2021 at 09:26:40PM -0700, Ian Rogers escreveu:
-> > On Wed, Jun 2, 2021 at 4:15 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
-> > > +++ b/tools/perf/util/machine.c
-> > > @@ -776,6 +776,7 @@ static int machine__process_ksymbol_register(struct
-> > > machine *machine,
-> > >                 if (dso) {
-> > >                         dso->kernel = DSO_SPACE__KERNEL;
-> > >                         map = map__new2(0, dso);
-> > > +                       dso__put(dso);
-> 
-> > Will this cause 2 puts if the map allocation fails? Perhaps this
-> > should be "if (map) dso__put(dso);".
-> 
-> I think its just a matter of removing the put in the error path, i.e.
-> the patch becomes what is at the end of this message.
-> 
-> I.e. if map__new2() fails, we want to drop the dso reference, and if it
-> works, we already have a reference to it, obtained in map__new2().
+On Fri, 2021-06-04 at 10:00 -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Jun 03, 2021 at 09:08:46PM -0700, Ian Rogers escreveu:
+> > On Wed, Jun 2, 2021 at 3:12 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
+> > > 
+> > > Reported by ASan.
+> > 
+> > Did you have a reproducer for getting this to fail?
 
-Agree.
-I'm sorry for this stupid oversight.
-Should we make it a series including the fix to the issue you pointed out below,
-or should I send you a v2 and fix the other issue in a subsequent patch?
+In case you'd like to add it to the commit message.
 
-> But looking at this code now I realize that maps__find() should grab a
-> refcount for the map it returns, because in this
-> machine__process_ksymbol_register() function we use reference that 'map'
-> after the if block, i.e. we use it if it came from maps__find() or if we
-> created it machine__process_ksymbol_register, so there is a possible
-> race where other thread removes it from the list and map__put()s it
-> ending up in map__delete() while we still use it in
-> machine__process_ksymbol_register(), right?
+$ sudo ./perf record -- sleep 5
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.025 MB perf.data (15 samples) ]
 
-Agree. It should be placed before up_read to avoid races, right?
-Then we would need to see where it's called and add the appropriate map__put.
+=================================================================
+==79402==ERROR: LeakSanitizer: detected memory leaks
 
-In addition, having a look at other possible concurrency issues in map.c:
- - maps__for_each_entry should always be called with either read or write lock,
-am I right? It looks like this is not done in certain parts of the code. If such
-lock is taken, then grabbing the refcount on the looping variable is not needed
-unless we need to return it, right?
- - maps__first and map__next do not grab a refcount and neither a lock. If
-they're used through a lock-protected loop, it's not a problem, but maybe it's
-worth making explicit that they are not to be used directly (through either a
-comment or adding some underscores in their names).
- - maps__empty: should probably take a reader lock.
- - maps__find_symbol: the returned symbol is not protected (the caller does not
-receive a refcount to neither map or dso, so if dso is deleted, his reference to
-the symbol gets invalidated). Depending on how it's being used it might not be a
-problem, but in the general scenario I think it's not thread-safe.
+[...]
 
+Direct leak of 999 byte(s) in 47 object(s) allocated from:
+    #0 0x4b7cc7 in strdup (/home/user/linux/source/tools/perf/perf+0x4b7cc7)
+    #1 0xac69db in populate_sdt_note /home/user/linux/source/tools/perf/util/symbol-elf.c:2256:15
+    #2 0xac2b57 in construct_sdt_notes_list /home/user/linux/source/tools/perf/util/symbol-elf.c:2359:10
+    #3 0xac2502 in get_sdt_note_list /home/user/linux/source/tools/perf/util/symbol-elf.c:2394:8
+    #4 0xacc6ac in probe_cache__scan_sdt /home/user/linux/source/tools/perf/util/probe-file.c:882:8
+    #5 0x7e2949 in build_id_cache__add_sdt_cache /home/user/linux/source/tools/perf/util/build-id.c:619:8
+    #6 0x7e233c in build_id_cache__add /home/user/linux/source/tools/perf/util/build-id.c:779:6
+    #7 0x7e2b37 in build_id_cache__add_s /home/user/linux/source/tools/perf/util/build-id.c:805:8
+    #8 0x7e3e99 in build_id_cache__add_b /home/user/linux/source/tools/perf/util/build-id.c:821:9
+    #9 0x7e3166 in dso__cache_build_id /home/user/linux/source/tools/perf/util/build-id.c:889:9
+    #10 0x8da7bc in machine__for_each_dso /home/user/linux/source/tools/perf/util/machine.c:3167:7
+    #11 0x7e2ec1 in machines__for_each_dso /home/user/linux/source/tools/perf/util/build-id.c:896:12
+    #12 0x7e2e46 in __perf_session__cache_build_ids /home/user/linux/source/tools/perf/util/build-id.c:917:9
+    #13 0x7e2faa in perf_session__cache_build_ids /home/user/linux/source/tools/perf/util/build-id.c:922:9
+    #14 0x8996c8 in write_build_id /home/user/linux/source/tools/perf/util/header.c:327:2
+    #15 0x8b76e9 in do_write_feat /home/user/linux/source/tools/perf/util/header.c:3216:9
+    #16 0x8ac70d in perf_header__adds_write /home/user/linux/source/tools/perf/util/header.c:3261:7
+    #17 0x8abe52 in perf_session__write_header /home/user/linux/source/tools/perf/util/header.c:3353:9
+    #18 0x5961ed in record__finish_output /home/user/linux/source/tools/perf/builtin-record.c:1241:2
+    #19 0x58e6ca in __cmd_record /home/user/linux/source/tools/perf/builtin-record.c:2060:4
+    #20 0x58990b in cmd_record /home/user/linux/source/tools/perf/builtin-record.c:2901:8
+    #21 0x7b2a20 in run_builtin /home/user/linux/source/tools/perf/perf.c:313:11
+    #22 0x7b12ff in handle_internal_command /home/user/linux/source/tools/perf/perf.c:365:8
+    #23 0x7b2583 in run_argv /home/user/linux/source/tools/perf/perf.c:409:2
+    #24 0x7b0d79 in main /home/user/linux/source/tools/perf/perf.c:539:3
+    #25 0x7effc1a65b74 in __libc_start_main /usr/src/debug/glibc-2.33-8.fc34.x86_64/csu/../csu/libc-start.c:332:16
+
+Thanks,
 Riccardo
 
-
+> > 
+> > > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> > 
+> > Acked-by: Ian Rogers <irogers@google.com>
+> 
+> Thanks, applied.
 > 
 > - Arnaldo
 > 
-> > >                 }
-> 
-> > >                 if (!dso || !map) {
-> > > @@ -792,6 +793,7 @@ static int machine__process_ksymbol_register(struct
-> > > machine *machine,
-> > >                 map->start = event->ksymbol.addr;
-> > >                 map->end = map->start + event->ksymbol.len;
-> > >                 maps__insert(&machine->kmaps, map);
-> > > +               map__put(map);
-> > >                 dso__set_loaded(dso);
-> 
-> > >                 if (is_bpf_image(event->ksymbol.name)) {
-> 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 3ff4936a15a42f74..da19be7da284c250 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -776,10 +776,10 @@ static int machine__process_ksymbol_register(struct
-> machine *machine,
->                 if (dso) {
->                         dso->kernel = DSO_SPACE__KERNEL;
->                         map = map__new2(0, dso);
-> +                       dso__put(dso);
->                 }
 >  
->                 if (!dso || !map) {
-> -                       dso__put(dso);
->                         return -ENOMEM;
->                 }
->  
-> @@ -792,6 +792,7 @@ static int machine__process_ksymbol_register(struct
-> machine *machine,
->                 map->start = event->ksymbol.addr;
->                 map->end = map->start + event->ksymbol.len;
->                 maps__insert(&machine->kmaps, map);
-> +               map__put(map);
->                 dso__set_loaded(dso);
->  
->                 if (is_bpf_image(event->ksymbol.name)) {
+> > Thanks,
+> > Ian
+> > 
+> > > ---
+> > >  tools/perf/util/symbol-elf.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > > index 4c56aa8374344..a73345730ba90 100644
+> > > --- a/tools/perf/util/symbol-elf.c
+> > > +++ b/tools/perf/util/symbol-elf.c
+> > > @@ -2412,6 +2412,7 @@ int cleanup_sdt_note_list(struct list_head *sdt_notes)
+> > > 
+> > >         list_for_each_entry_safe(pos, tmp, sdt_notes, note_list) {
+> > >                 list_del_init(&pos->note_list);
+> > > +               zfree(&pos->args);
+> > >                 zfree(&pos->name);
+> > >                 zfree(&pos->provider);
+> > >                 free(pos);
+> > > --
+> > > 2.31.1
+> > > 
+> 
 
 
