@@ -2,124 +2,158 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8E4C4743C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 16:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC926C4743D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 18:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 888AD61287
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 16:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D217613FE
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 18:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230292AbhFDQuF (ORCPT
+        id S229791AbhFDSbX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 12:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbhFDQuF (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 12:50:05 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D75C061766
-        for <linux-perf-users@vger.kernel.org>; Fri,  4 Jun 2021 09:48:04 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id y15so7863957pfl.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Jun 2021 09:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=m+tuHAocWcuJzWvdGVhmtAZ0L2xQ0dgC0EsdO1uJTuM=;
-        b=SIVwRFswGc3aP5BmxCJ9AJkwql7geJWoxL/UsCiOtJXDElaoaJWjeqrWbx6yJ9HpPM
-         dZNdy17ufEhVvcggpv4j/W9KWphcJ2l+8cnlLN7rkolTsqWNWyoi/KuIko664ng3KsKV
-         yvMHnTbmzBA2izsnK60sgOfus+dXfWn9hMc+1N+0bT4YnO7YXM2ZeHCnUj2UFXqt8P0e
-         flYw1BBbY+H74McenLyNRs4KpaT+Tym8BpTbhhWmyE/roHEb6s9unFp1KusVs5c3zEI1
-         a9wXPi3Zve+Vq3yDOWXCxJbk1n3araRoz38eCV7mdjPER9ZxoeGPIiRChZVfWtOZpKxP
-         Zf1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m+tuHAocWcuJzWvdGVhmtAZ0L2xQ0dgC0EsdO1uJTuM=;
-        b=tX08cEgwIC9xDJKF+p0lSkVxHZtymEd/EWAzCDyokKvGsE4GdfA45AAfX6GFieIo3k
-         lWpylMx17wp+e209YtAL3yH2jIehno8DUxsT6FZpNFBnG5N0TSQaXAcDDdO0QFHB0wv8
-         /dB1s6waoTMVeJAH6T283dWY86J74V1gkqwgqua2VgqJ+4r2dQBJBFFgYDedEz7VyMxH
-         26zxpKfWJJ7BWPyiPz+FsoOK66QGFJOrVeffGq53p6Qq47MhW7Lr/JPWtoWxxSPKE0is
-         99h5Fkkf//ISJRhpw6ACzUr3TjMtt2sq0TKtMV2PGYxAG6f0XJoVHXDIFVur1sR4Puw4
-         IbGw==
-X-Gm-Message-State: AOAM532Y9+4pusUddiWEFf6EvQmt0VAPE4QOVJ4vAdioBkAhIrlcP4s1
-        rMieB5gLN1FwubAsoEJoC+ViVA==
-X-Google-Smtp-Source: ABdhPJwS+NF5wOICqnE9LegS9iGp0BzPSMBdNC32VA/zsnCuucM35oC7HboBdGOjqD0wqutybRuElA==
-X-Received: by 2002:a63:f5c:: with SMTP id 28mr6075538pgp.84.1622825284222;
-        Fri, 04 Jun 2021 09:48:04 -0700 (PDT)
-Received: from google.com (240.111.247.35.bc.googleusercontent.com. [35.247.111.240])
-        by smtp.gmail.com with ESMTPSA id n6sm2520661pgm.79.2021.06.04.09.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Jun 2021 09:48:03 -0700 (PDT)
-Date:   Fri, 4 Jun 2021 16:48:00 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Cody Yao-oc <CodyYao-oc@zhaoxin.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/perf: Fixed obtaining address error about
- performance monitor MSR on old Inel CPU.
-Message-ID: <YLpZQCyZWjnD/1ZP@google.com>
-References: <20210604055438.17705-1-CodyYao-oc@zhaoxin.com>
+        Fri, 4 Jun 2021 14:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229769AbhFDSbW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 4 Jun 2021 14:31:22 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F2062613FA;
+        Fri,  4 Jun 2021 18:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622831376;
+        bh=we8fWgEe67FojIj+5WfjBTSZXani/RwjERkgUbkEnUc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dro/RhMQZfJqTIL+HEOt8f6OiP0EXrDy8ltcTxAjjF/O9Zyb2o2vTH6McAuSC9ElA
+         XGWyoIvQ/88CFlGSSlN7ru8xplzmCxTTbJe7WVAPoJlsZY+hX0/ov7Y/LrgaE2AJYl
+         qCmwsS6nIKSrbQnwkf/ajYRbZEFX1vdAHaDmTBw57FljfjHxHoHxtVyiQFQbHXEnjh
+         8StwHHdizgNCjmqi+SIPu7c4rWWLzhZz8COrRVMjo6UeAUfJYRwBS/lDvqlwCF/IJi
+         3mcCh6PkmzAam5rdHandzD5eaBIN5sJkExhukIMNGeLcomY5sObe8kTZG9xq2Clybi
+         e4x7maplQy0Sg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0F1F540EFC; Fri,  4 Jun 2021 15:29:33 -0300 (-03)
+Date:   Fri, 4 Jun 2021 15:29:33 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map
+ and dso
+Message-ID: <YLpxDf6+YOxYI5z3@kernel.org>
+References: <20210602231052.317048-1-rickyman7@gmail.com>
+ <CAP-5=fVxHUnwGoRypMjCsPSh_yo5PB8Hzbkx5ArA5b0=7S-67g@mail.gmail.com>
+ <YLopMBgLWysdJbkm@kernel.org>
+ <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210604055438.17705-1-CodyYao-oc@zhaoxin.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 04, 2021, Cody Yao-oc wrote:
-> From: CodyYao-oc <CodyYao-oc@zhaoxin.com>
+Em Fri, Jun 04, 2021 at 05:16:39PM +0200, Riccardo Mancini escreveu:
+> Hi,
 > 
-> Fix "obtain wrong msr address" bug in function nmi_perfctr_msr_to_bit
-> and nmi_eventsel_msr_to_bit. In X86_VENDOR_INTEL switch branch, if all
-> of the check conditions are not met, code flow will slip to
-> X86_VENDOR_ZHAOXIN branch which may lead to incorrect information.
+> On Fri, 2021-06-04 at 10:22 -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Jun 03, 2021 at 09:26:40PM -0700, Ian Rogers escreveu:
+> > > On Wed, Jun 2, 2021 at 4:15 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
+> > > > +++ b/tools/perf/util/machine.c
+> > > > @@ -776,6 +776,7 @@ static int machine__process_ksymbol_register(struct
+> > > > machine *machine,
+> > > >                 if (dso) {
+> > > >                         dso->kernel = DSO_SPACE__KERNEL;
+> > > >                         map = map__new2(0, dso);
+> > > > +                       dso__put(dso);
+> > 
+> > > Will this cause 2 puts if the map allocation fails? Perhaps this
+> > > should be "if (map) dso__put(dso);".
+> > 
+> > I think its just a matter of removing the put in the error path, i.e.
+> > the patch becomes what is at the end of this message.
+> > 
+> > I.e. if map__new2() fails, we want to drop the dso reference, and if it
+> > works, we already have a reference to it, obtained in map__new2().
 > 
-> Therefore, "fallthrough" should be changed to "break" to avoid it.
+> Agree.
+> I'm sorry for this stupid oversight.
+> Should we make it a series including the fix to the issue you pointed out below,
+> or should I send you a v2 and fix the other issue in a subsequent patch?
 
-This should explicitly state that using fallthrough instead of break was
-completely unintentional, assuming that's indeed the case.
-
-Fixes: 3a4ac121c2ca ("x86/perf: Add hardware performance events support for Zhaoxin CPU.")
-
-> Signed-off-by: CodyYao-oc <CodyYao-oc@zhaoxin.com>
-> ---
->  arch/x86/kernel/cpu/perfctr-watchdog.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Please send a v2 patch, and then consider starting a new series with the
+issues below.
+ 
+> > But looking at this code now I realize that maps__find() should grab a
+> > refcount for the map it returns, because in this
+> > machine__process_ksymbol_register() function we use reference that 'map'
+> > after the if block, i.e. we use it if it came from maps__find() or if we
+> > created it machine__process_ksymbol_register, so there is a possible
+> > race where other thread removes it from the list and map__put()s it
+> > ending up in map__delete() while we still use it in
+> > machine__process_ksymbol_register(), right?
 > 
-> diff --git a/arch/x86/kernel/cpu/perfctr-watchdog.c b/arch/x86/kernel/cpu/perfctr-watchdog.c
-> index 3ef5868ac588..7aecb2fc3186 100644
-> --- a/arch/x86/kernel/cpu/perfctr-watchdog.c
-> +++ b/arch/x86/kernel/cpu/perfctr-watchdog.c
-> @@ -63,7 +63,7 @@ static inline unsigned int nmi_perfctr_msr_to_bit(unsigned int msr)
->  		case 15:
->  			return msr - MSR_P4_BPU_PERFCTR0;
->  		}
-> -		fallthrough;
-> +		break;
->  	case X86_VENDOR_ZHAOXIN:
->  	case X86_VENDOR_CENTAUR:
->  		return msr - MSR_ARCH_PERFMON_PERFCTR0;
-> @@ -96,7 +96,7 @@ static inline unsigned int nmi_evntsel_msr_to_bit(unsigned int msr)
->  		case 15:
->  			return msr - MSR_P4_BSU_ESCR0;
->  		}
-> -		fallthrough;
-> +		break;
->  	case X86_VENDOR_ZHAOXIN:
->  	case X86_VENDOR_CENTAUR:
->  		return msr - MSR_ARCH_PERFMON_EVENTSEL0;
-> -- 
-> 2.17.1
-> 
+> Agree. It should be placed before up_read to avoid races, right?
+
+Yes, we have to grab a refcount while we are sure its not going away,
+then return that as the lookup result, whoever receives that refcounted
+entry should use it and then drop the refcount.
+
+> Then we would need to see where it's called and add the appropriate map__put.
+
+yes
+ 
+> In addition, having a look at other possible concurrency issues in map.c:
+
+Its good to have new eyes looking at this, exactly at a time we're
+discussing further parallelizing perf :-)
+
+>  - maps__for_each_entry should always be called with either read or write lock,
+> am I right? It looks like this is not done in certain parts of the code. If such
+
+Right.
+
+> lock is taken, then grabbing the refcount on the looping variable is not needed
+> unless we need to return it, right?
+
+Right, returning an entry needs to take a refcount.
+
+>  - maps__first and map__next do not grab a refcount and neither a lock. If
+> they're used through a lock-protected loop, it's not a problem, but maybe it's
+
+yes
+
+> worth making explicit that they are not to be used directly (through either a
+> comment or adding some underscores in their names).
+
+yes, __ in front means, in kernel style, that it does less than the non
+__ prefixed, same name, function.
+
+>  - maps__empty: should probably take a reader lock.
+
+Indeed.
+
+>  - maps__find_symbol: the returned symbol is not protected (the caller does not
+> receive a refcount to neither map or dso, so if dso is deleted, his reference to
+> the symbol gets invalidated). Depending on how it's being used it might not be a
+> problem, but in the general scenario I think it's not thread-safe.
+
+Yes, that function is also problematic.
+
+Thanks for looking into this, please consider sending patches for these
+issues,
+
+- Arnaldo
