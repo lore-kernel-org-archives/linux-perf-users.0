@@ -2,158 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC926C4743D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 18:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE32C4743C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 19:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D217613FE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 18:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508116140C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  4 Jun 2021 19:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbhFDSbX (ORCPT
+        id S229501AbhFDT1g (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 14:31:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229769AbhFDSbW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 14:31:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F2062613FA;
-        Fri,  4 Jun 2021 18:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622831376;
-        bh=we8fWgEe67FojIj+5WfjBTSZXani/RwjERkgUbkEnUc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dro/RhMQZfJqTIL+HEOt8f6OiP0EXrDy8ltcTxAjjF/O9Zyb2o2vTH6McAuSC9ElA
-         XGWyoIvQ/88CFlGSSlN7ru8xplzmCxTTbJe7WVAPoJlsZY+hX0/ov7Y/LrgaE2AJYl
-         qCmwsS6nIKSrbQnwkf/ajYRbZEFX1vdAHaDmTBw57FljfjHxHoHxtVyiQFQbHXEnjh
-         8StwHHdizgNCjmqi+SIPu7c4rWWLzhZz8COrRVMjo6UeAUfJYRwBS/lDvqlwCF/IJi
-         3mcCh6PkmzAam5rdHandzD5eaBIN5sJkExhukIMNGeLcomY5sObe8kTZG9xq2Clybi
-         e4x7maplQy0Sg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0F1F540EFC; Fri,  4 Jun 2021 15:29:33 -0300 (-03)
-Date:   Fri, 4 Jun 2021 15:29:33 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map
- and dso
-Message-ID: <YLpxDf6+YOxYI5z3@kernel.org>
-References: <20210602231052.317048-1-rickyman7@gmail.com>
- <CAP-5=fVxHUnwGoRypMjCsPSh_yo5PB8Hzbkx5ArA5b0=7S-67g@mail.gmail.com>
- <YLopMBgLWysdJbkm@kernel.org>
- <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
+        Fri, 4 Jun 2021 15:27:36 -0400
+Received: from mail-il1-f177.google.com ([209.85.166.177]:43689 "EHLO
+        mail-il1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230207AbhFDT1f (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 4 Jun 2021 15:27:35 -0400
+Received: by mail-il1-f177.google.com with SMTP id x18so9874729ila.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Jun 2021 12:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P3arXY3Iq0Fx3qKjwqpP6enbStCHFC2viArbJLk+gG4=;
+        b=KL8HzrlALh6cM6GjOSSchK4iJtooFOlCyIW+t+cN/hfUCT3crtKc5d+nn+U4oJ85C7
+         6cPt8MdIJgVcdCbheM2RstyYaQRazt0+1HBK5krcnQ3JXz1qjZlKvc3InCwq8ewndo7H
+         Ju0fm9u9B97rgmc3e3b6XO5DT0kLdyIXwFGpk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P3arXY3Iq0Fx3qKjwqpP6enbStCHFC2viArbJLk+gG4=;
+        b=B7VMxaOeog+3wgGe1q6fHz4WW8TnzhjPlBuLOUsxgDU8XPDvI4aYD2cx6bIKiYwRRW
+         2DaiHjGGjswxV3I68S6pdJzlBLKKkwEo6w6tnZVLwAkPTIKNRHvNnZgD2vjYR+QywF3y
+         WMNXRGlwr59r+7WdfxcVDtrtCSC/mNYHg1GgxOxkH2qRLviA4gWwdvPGput6YwjjNXku
+         e5QWiYBEhPh1bNWLtGz0UKTP6GBSuFhoUyeyzaghp84Maga048jxPi+7uJOMbSoTMMGw
+         xxh9qcBAruEJnX2RPNvAEdsD/ijDpJpJI8erQ7u8Y4GYsB53YQDN9dhbaLPgmHZj/Vpu
+         FOtA==
+X-Gm-Message-State: AOAM531FATPa0K+ZlD9uoM9eXLv0N5+6whjN9kLXpWMw7l6c8kQ+/agm
+        Iiz7P2tlvHB/DIX2XRsyptbnbXjKCaX2dw==
+X-Google-Smtp-Source: ABdhPJy+Et4P47+hOI7X1OX1JkQgbEiVe0VtHtT9vnPgaMpct1qZSh3gH0vjMNDiqw+DDjJHBuPvSg==
+X-Received: by 2002:a92:50b:: with SMTP id q11mr5356000ile.119.1622834675138;
+        Fri, 04 Jun 2021 12:24:35 -0700 (PDT)
+Received: from mail-il1-f177.google.com (mail-il1-f177.google.com. [209.85.166.177])
+        by smtp.gmail.com with ESMTPSA id q11sm3893663ilj.80.2021.06.04.12.24.34
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Jun 2021 12:24:34 -0700 (PDT)
+Received: by mail-il1-f177.google.com with SMTP id v13so9844939ilh.13
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Jun 2021 12:24:34 -0700 (PDT)
+X-Received: by 2002:a05:6e02:de9:: with SMTP id m9mr5380481ilj.89.1622834673935;
+ Fri, 04 Jun 2021 12:24:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20210604092638.985694-1-ribalda@chromium.org> <YLn0D+1R2QHZYRVV@hirez.programming.kicks-ass.net>
+In-Reply-To: <YLn0D+1R2QHZYRVV@hirez.programming.kicks-ass.net>
+From:   Ricardo Ribalda <ribalda@chromium.org>
+Date:   Fri, 4 Jun 2021 21:24:23 +0200
+X-Gmail-Original-Message-ID: <CANiDSCu4Brz7FZX5oa57kNLG9h_1EASX=bdQij4+apg0ZwW8QA@mail.gmail.com>
+Message-ID: <CANiDSCu4Brz7FZX5oa57kNLG9h_1EASX=bdQij4+apg0ZwW8QA@mail.gmail.com>
+Subject: Re: [PATCH] tools/perf: Do not set a variable unless it will be used
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 04, 2021 at 05:16:39PM +0200, Riccardo Mancini escreveu:
-> Hi,
-> 
-> On Fri, 2021-06-04 at 10:22 -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Jun 03, 2021 at 09:26:40PM -0700, Ian Rogers escreveu:
-> > > On Wed, Jun 2, 2021 at 4:15 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
-> > > > +++ b/tools/perf/util/machine.c
-> > > > @@ -776,6 +776,7 @@ static int machine__process_ksymbol_register(struct
-> > > > machine *machine,
-> > > >                 if (dso) {
-> > > >                         dso->kernel = DSO_SPACE__KERNEL;
-> > > >                         map = map__new2(0, dso);
-> > > > +                       dso__put(dso);
-> > 
-> > > Will this cause 2 puts if the map allocation fails? Perhaps this
-> > > should be "if (map) dso__put(dso);".
-> > 
-> > I think its just a matter of removing the put in the error path, i.e.
-> > the patch becomes what is at the end of this message.
-> > 
-> > I.e. if map__new2() fails, we want to drop the dso reference, and if it
-> > works, we already have a reference to it, obtained in map__new2().
-> 
-> Agree.
-> I'm sorry for this stupid oversight.
-> Should we make it a series including the fix to the issue you pointed out below,
-> or should I send you a v2 and fix the other issue in a subsequent patch?
+Hi Peter
 
-Please send a v2 patch, and then consider starting a new series with the
-issues below.
- 
-> > But looking at this code now I realize that maps__find() should grab a
-> > refcount for the map it returns, because in this
-> > machine__process_ksymbol_register() function we use reference that 'map'
-> > after the if block, i.e. we use it if it came from maps__find() or if we
-> > created it machine__process_ksymbol_register, so there is a possible
-> > race where other thread removes it from the list and map__put()s it
-> > ending up in map__delete() while we still use it in
-> > machine__process_ksymbol_register(), right?
-> 
-> Agree. It should be placed before up_read to avoid races, right?
+On Fri, 4 Jun 2021 at 11:36, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Jun 04, 2021 at 11:26:38AM +0200, Ricardo Ribalda wrote:
+> > clang-13 triggers the following warning:
+> >
+> > bench/inject-buildid.c:351:6: error: variable 'len' set but not used [-Werror,-Wunused-but-set-variable]
+> >         u64 len = 0;
+> >
+> > This patch sets the value to len only if it will be used afterwards.
+>
+> My vote would be to kill that warning, what absolute shite.
 
-Yes, we have to grab a refcount while we are sure its not going away,
-then return that as the lookup result, whoever receives that refcounted
-entry should use it and then drop the refcount.
+My knowledge of llvm codebase is close to NULL, so it is much easier
+for me to "fix" the code.
 
-> Then we would need to see where it's called and add the appropriate map__put.
+I would assume that the static analyser has found a magic condition
+where the previous if always returns false, and has managed to
+"optimize" the code.
 
-yes
- 
-> In addition, having a look at other possible concurrency issues in map.c:
 
-Its good to have new eyes looking at this, exactly at a time we're
-discussing further parallelizing perf :-)
 
->  - maps__for_each_entry should always be called with either read or write lock,
-> am I right? It looks like this is not done in certain parts of the code. If such
 
-Right.
 
-> lock is taken, then grabbing the refcount on the looping variable is not needed
-> unless we need to return it, right?
-
-Right, returning an entry needs to take a refcount.
-
->  - maps__first and map__next do not grab a refcount and neither a lock. If
-> they're used through a lock-protected loop, it's not a problem, but maybe it's
-
-yes
-
-> worth making explicit that they are not to be used directly (through either a
-> comment or adding some underscores in their names).
-
-yes, __ in front means, in kernel style, that it does less than the non
-__ prefixed, same name, function.
-
->  - maps__empty: should probably take a reader lock.
-
-Indeed.
-
->  - maps__find_symbol: the returned symbol is not protected (the caller does not
-> receive a refcount to neither map or dso, so if dso is deleted, his reference to
-> the symbol gets invalidated). Depending on how it's being used it might not be a
-> problem, but in the general scenario I think it's not thread-safe.
-
-Yes, that function is also problematic.
-
-Thanks for looking into this, please consider sending patches for these
-issues,
-
-- Arnaldo
+-- 
+Ricardo Ribalda
