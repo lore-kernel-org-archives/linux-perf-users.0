@@ -2,76 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB4EC4743E
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 01:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086EEC4743E
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 05:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7BF613BF
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 01:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0A2613E7
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 05:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231438AbhFEBht (ORCPT
+        id S230110AbhFEFdN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 21:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231424AbhFEBhs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 21:37:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 2E2FA613AC;
-        Sat,  5 Jun 2021 01:36:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1622856961;
-        bh=XSkfsV7/WtaBLG+bsTNHCt2zHpDBIPZJLjRxdk43DKs=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Ww3etRyv+rddjrCxfdrZ9av4SdM+EfYsp6H/TC0Nqt7oLuC/4pQ1MsT2D4QdvtzQ9
-         V4IzA3vllUzREH5K5BeCPNeRQU+d0BYPPfbpy2a8Mt/jzAokUpKJq6I+Qxi/Wro6mh
-         thzgNIV3P8hrua0zcVmxV4aTQbjq0SBO17VIhZDkU8A7c/rXUaRvAga5Iw3ihaj1Cz
-         AtwwPIYsyrs1sDHFwqJAL0jCYbcF98R+/aLIBne7/ZV6AFL9//7hOBWTDb2FEo/I/+
-         MV/+LHJ+MY2iZhRMR5VGxFG4s6ZwI+Px7AscI61N61gTQcslDeyyI0FVR10xJT0CQg
-         6S55DbDdx7nTQ==
-Subject: Re: [GIT PULL] perf tools fixes for v5.13: 4th batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210604195827.517650-1-acme@kernel.org>
-References: <20210604195827.517650-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210604195827.517650-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-04
-X-PR-Tracked-Commit-Id: 67069a1f0fe5f9eeca86d954fff2087f5542a008
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2cb26c15a247a2b2bc9de653773cf21d969bf570
-Message-Id: <162285696115.3539.17398265731408584788.pr-tracker-bot@kernel.org>
-Date:   Sat, 05 Jun 2021 01:36:01 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Sat, 5 Jun 2021 01:33:13 -0400
+Received: from mail-pj1-f44.google.com ([209.85.216.44]:50863 "EHLO
+        mail-pj1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229660AbhFEFdN (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 5 Jun 2021 01:33:13 -0400
+Received: by mail-pj1-f44.google.com with SMTP id i22so6701380pju.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Jun 2021 22:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GEO+x6vBBqdP2GXyAGjmfIuQfAZkfCm84x8m+/E82go=;
+        b=X1YlFNR+PNVzSzYabNe/Gw9QYGH4jrovVEkC7Ac5Rpb4yLOzURcf42x5762w+Qa3L9
+         mrvzXEMiAVu30S3IZspee38ncBKBH7/ec0mtGLqqsGbV1b6/xbxEuR71OaJC6M7FwU7v
+         o4InsRzh5ajKyCnlB6vsnEag5jTMKhA84cmw9v5cIUN1T6+8iYbR1gK6G+HiAUfQ/VY6
+         FCMC+BVaG0p+aUNfSlZzY8Gm6PVQo6S/7PpZbcwa3Kxfa9/FPmxyB2jX/0SjfYmdhGWA
+         kQ1i/9dY71t0Q7h8FZSPotaBN6v1mQ/lrH/ImEUZjYFQNz/q4TXNmk6RRC0H0WjNpUuY
+         xSfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GEO+x6vBBqdP2GXyAGjmfIuQfAZkfCm84x8m+/E82go=;
+        b=IhvTuWuWX8oPNlX3SR5At/2FmbsxjW7R2pTlSE3bKPPkxfof2zzuf99yVbKm/ZvOOn
+         ka1i0PEbxOt1Brs6Y5QXZILFrHLhceR9+4L/e/IMfcwtaN82Dv6u8W8JD3K8If7D9njT
+         CMLgwkaQ+FvFfVlhO2fvaCTDtH/tdX2DoGE44nqTxLGhdjwadP4O9b02TU9oZaPfSq69
+         Ampw7g3w7ZXVSHYckjlWp7BVCsqKLoGRaxSl9wadRCk58OrGfEy1IkhfjG9eEJEy1wHN
+         QUtOpHVL5j2bkKt0J6VdglfW/L6Nso0pZi07buaMew3BJdbRPIgqlccVNC+XhDeTYp4a
+         3Y+A==
+X-Gm-Message-State: AOAM532G0nlDyPCo5HLE4t416OzPX1sfUTvOo9VY75KhTGrtnH8nBNNC
+        4vPAVsiFZSf3zgr7qpmgp6XTe82hV6Ce1dfD
+X-Google-Smtp-Source: ABdhPJzF5let5ONamUDEHHdvvfExJiXL2z2R01r6n9esJvrHTl/qrjkw774LNA0Wr4X3x5SGiLFAig==
+X-Received: by 2002:a17:902:bb8e:b029:f4:58d1:5170 with SMTP id m14-20020a170902bb8eb02900f458d15170mr7697725pls.84.1622871011016;
+        Fri, 04 Jun 2021 22:30:11 -0700 (PDT)
+Received: from localhost (ec2-18-167-84-74.ap-east-1.compute.amazonaws.com. [18.167.84.74])
+        by smtp.gmail.com with ESMTPSA id t12sm3278697pfc.133.2021.06.04.22.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Jun 2021 22:30:10 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Li Huafei <lihuafei1@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yu Kuai <yukuai3@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH] perf session: Correct buffer copying when peek event
+Date:   Sat,  5 Jun 2021 13:29:57 +0800
+Message-Id: <20210605052957.1070720-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Fri,  4 Jun 2021 16:58:27 -0300:
+When peek an event, it has a short path and a long path.  The short path
+uses the session pointer "one_mmap_addr" to directly fetch event; and
+the long path needs to read out the event header and the followed event
+data from file and fill into the buffer pointer passed through the
+argument "buf".
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-04
+The issue is in the long path that it copies the event header and event
+data into the same destination address which pointer "buf", this means
+the event header is overwritten.  We are just lucky to run into the
+short path in most cases, so we don't hit the issue in the long path.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2cb26c15a247a2b2bc9de653773cf21d969bf570
+This patch adds the offset "hdr_sz" to the pointer "buf" when copying
+the event data, so that it can reserve the event header which can be
+used properly by its caller.
 
-Thank you!
+Fixes: 5a52f33adf02 ("perf session: Add perf_session__peek_event()")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/session.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 106b3d60881a..e59242c361ce 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1723,6 +1723,7 @@ int perf_session__peek_event(struct perf_session *session, off_t file_offset,
+ 	if (event->header.size < hdr_sz || event->header.size > buf_sz)
+ 		return -1;
+ 
++	buf += hdr_sz;
+ 	rest = event->header.size - hdr_sz;
+ 
+ 	if (readn(fd, buf, rest) != (ssize_t)rest)
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.25.1
+
