@@ -2,131 +2,76 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C56C4743C
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 00:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB4EC4743E
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 01:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529F4613DE
-	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 00:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F7BF613BF
+	for <linux-perf-users@archiver.kernel.org>; Sat,  5 Jun 2021 01:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbhFEAfR (ORCPT
+        id S231438AbhFEBht (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 4 Jun 2021 20:35:17 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:4475 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229867AbhFEAfQ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 4 Jun 2021 20:35:16 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4FxgXH6WHczYmBc;
-        Sat,  5 Jun 2021 08:30:39 +0800 (CST)
-Received: from dggpemm000003.china.huawei.com (7.185.36.128) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sat, 5 Jun 2021 08:33:26 +0800
-Received: from [10.67.102.248] (10.67.102.248) by
- dggpemm000003.china.huawei.com (7.185.36.128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sat, 5 Jun 2021 08:33:26 +0800
-Subject: Re: [PATCH] perf annotate: Add itrace options support
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20210527015510.5719-1-yangjihong1@huawei.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <2193a839-076a-3b5e-8ded-395531310d96@huawei.com>
-Date:   Sat, 5 Jun 2021 08:33:13 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <20210527015510.5719-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.248]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm000003.china.huawei.com (7.185.36.128)
-X-CFilter-Loop: Reflected
+        Fri, 4 Jun 2021 21:37:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231424AbhFEBhs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 4 Jun 2021 21:37:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 2E2FA613AC;
+        Sat,  5 Jun 2021 01:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1622856961;
+        bh=XSkfsV7/WtaBLG+bsTNHCt2zHpDBIPZJLjRxdk43DKs=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Ww3etRyv+rddjrCxfdrZ9av4SdM+EfYsp6H/TC0Nqt7oLuC/4pQ1MsT2D4QdvtzQ9
+         V4IzA3vllUzREH5K5BeCPNeRQU+d0BYPPfbpy2a8Mt/jzAokUpKJq6I+Qxi/Wro6mh
+         thzgNIV3P8hrua0zcVmxV4aTQbjq0SBO17VIhZDkU8A7c/rXUaRvAga5Iw3ihaj1Cz
+         AtwwPIYsyrs1sDHFwqJAL0jCYbcF98R+/aLIBne7/ZV6AFL9//7hOBWTDb2FEo/I/+
+         MV/+LHJ+MY2iZhRMR5VGxFG4s6ZwI+Px7AscI61N61gTQcslDeyyI0FVR10xJT0CQg
+         6S55DbDdx7nTQ==
+Subject: Re: [GIT PULL] perf tools fixes for v5.13: 4th batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210604195827.517650-1-acme@kernel.org>
+References: <20210604195827.517650-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210604195827.517650-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-04
+X-PR-Tracked-Commit-Id: 67069a1f0fe5f9eeca86d954fff2087f5542a008
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2cb26c15a247a2b2bc9de653773cf21d969bf570
+Message-Id: <162285696115.3539.17398265731408584788.pr-tracker-bot@kernel.org>
+Date:   Sat, 05 Jun 2021 01:36:01 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Li Huafei <lihuafei1@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yu Kuai <yukuai3@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+The pull request you sent on Fri,  4 Jun 2021 16:58:27 -0300:
 
-ping :)
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-04
 
-Please take time to review this patch.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2cb26c15a247a2b2bc9de653773cf21d969bf570
 
-Thanks,
-Yang
+Thank you!
 
-On 2021/5/27 9:55, Yang Jihong wrote:
-> The "auxtrace_info" and "auxtrace" functions are not set in "tool" member of
-> "annotate". As a result, perf annotate does not support parsing itrace data.
-> 
-> A simple example is as follows:
-> 
->    # perf record -e arm_spe_0/branch_filter=1/ -a sleep 1
->    [ perf record: Woken up 9 times to write data ]
->    [ perf record: Captured and wrote 20.874 MB perf.data ]
->    # perf annotate --stdio
->    Error:
->    The perf.data data has no samples!
-> 
-> Solution:
-> 1.Add itrace options in help,
-> 2.Set hook functions of "auxtrace_info" and "auxtrace" in perf_tool.
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->   tools/perf/builtin-annotate.c | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 49627a7bed7c..84ef52177d63 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -474,6 +474,8 @@ int cmd_annotate(int argc, const char **argv)
->   			.attr	= perf_event__process_attr,
->   			.build_id = perf_event__process_build_id,
->   			.tracing_data   = perf_event__process_tracing_data,
-> +			.auxtrace_info	 = perf_event__process_auxtrace_info,
-> +			.auxtrace	 = perf_event__process_auxtrace,
->   			.feature	= process_feature_event,
->   			.ordered_events = true,
->   			.ordering_requires_timestamps = true,
-> @@ -483,6 +485,9 @@ int cmd_annotate(int argc, const char **argv)
->   	struct perf_data data = {
->   		.mode  = PERF_DATA_MODE_READ,
->   	};
-> +	struct itrace_synth_opts itrace_synth_opts = {
-> +		.set = 0,
-> +	};
->   	struct option options[] = {
->   	OPT_STRING('i', "input", &input_name, "file",
->   		    "input file name"),
-> @@ -547,6 +552,9 @@ int cmd_annotate(int argc, const char **argv)
->   	OPT_CALLBACK(0, "percent-type", &annotate.opts, "local-period",
->   		     "Set percent type local/global-period/hits",
->   		     annotate_parse_percent_type),
-> +	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
-> +			    "Instruction Tracing options\n" ITRACE_HELP,
-> +			    itrace_parse_synth_opts),
->   
->   	OPT_END()
->   	};
-> @@ -591,6 +599,8 @@ int cmd_annotate(int argc, const char **argv)
->   	if (IS_ERR(annotate.session))
->   		return PTR_ERR(annotate.session);
->   
-> +	annotate.session->itrace_synth_opts = &itrace_synth_opts;
-> +
->   	annotate.has_br_stack = perf_header__has_feat(&annotate.session->header,
->   						      HEADER_BRANCH_STACK);
->   
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
