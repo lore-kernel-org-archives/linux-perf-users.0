@@ -2,73 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B4EC47082
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 20:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6536EC47082
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 20:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0691C61153
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 20:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 444916100B
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 20:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231236AbhFGUhC (ORCPT
+        id S230345AbhFGVAZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Jun 2021 16:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbhFGUhC (ORCPT
+        Mon, 7 Jun 2021 17:00:25 -0400
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:38428 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230333AbhFGVAZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Jun 2021 16:37:02 -0400
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD151C061574
-        for <linux-perf-users@vger.kernel.org>; Mon,  7 Jun 2021 13:35:10 -0700 (PDT)
-Received: by mail-qv1-xf33.google.com with SMTP id u14so6724497qvq.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Jun 2021 13:35:10 -0700 (PDT)
+        Mon, 7 Jun 2021 17:00:25 -0400
+Received: by mail-qt1-f174.google.com with SMTP id l7so13708009qtk.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Jun 2021 13:58:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZMWLwrT3tzkNROjejSZHkSJGqtLsxOXJijLmp+N+WUA=;
-        b=UAeMsV9yT+XI9c0oZrU2PdwjsPV8qukzfoBfkKTnSO101uHR1/4EyiiyPkXZtUErQM
-         3rWNQux76ijI9+CBDFUEfG5VMI0VnM5IxE3ZwutiGpuhujp4iZHBHDd4LKpU3jDi/VFo
-         UEpjKLKfNzzk0hew56IaTQl3XJwkffgoMu1+M=
+        bh=GGBwGm5k7PB2hnUFXG4AgmxjBeqKouZKlwO2MjG0pQI=;
+        b=QaSDr6Dqf9UTx0mkv7jDK1pIQDcF3Lgpq2R6rZYy0Qc+1vWZSCgM+333YPozjm6lAH
+         0IBg3tWQNOk/y9QxLKi3Kzp41L0RlnH4qT86HhEnOiFSYJ4cSrMfPHUNkAHo18P9fiRO
+         WnVgpuSaqLCSYqfL088NMaUcrcAviza1ciqqU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZMWLwrT3tzkNROjejSZHkSJGqtLsxOXJijLmp+N+WUA=;
-        b=HKqFwgBqMsBYw6dWjfJIoq27mq6RQOoBMMnxp9u3FYHcWe0vDms7013lDoYnth4HFs
-         2MXta7pC+7fR+OAYM69gOIOqPBZba/G1oByKVx0Np89cnnJVeaGf14QzCCPux/bVWCht
-         jWvBNdKIDUpHlDy6peBww7JqDwRvdVxCHICL2d5LU0iYxCKgHIgPjlPLTApHqydfCDQw
-         aDfXFIvBhD9uQz4g3+tJr7QIaQ4m4gM13VX1FqSOSwjfDVWMt+PZgPklO6g3r1XRjZBP
-         Ix5MySVVc3SBDAk/2dPWM7XbfqwmLEHI6FXZ7mS1mFX7pSlhHpnz8WZnK3tmAwyfajbX
-         sWQQ==
-X-Gm-Message-State: AOAM533/eI/n4KTGoZMU8BNgGd1qRvlfBY/9systj+u/9//R2Ah4MvDn
-        TVXvMM2NiG2sKB+yzNfjReXc/bWFT7ucxw==
-X-Google-Smtp-Source: ABdhPJzQQVMmui70IC7Nkg3ztMXQ5vcHyx1hty4E4/5QO4lN09yj3PPquGbPXOhTekd/NQwtP1vmxg==
-X-Received: by 2002:ad4:4dcb:: with SMTP id cw11mr19475551qvb.54.1623098109435;
-        Mon, 07 Jun 2021 13:35:09 -0700 (PDT)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id l25sm6250698qtr.32.2021.06.07.13.35.08
+        bh=GGBwGm5k7PB2hnUFXG4AgmxjBeqKouZKlwO2MjG0pQI=;
+        b=NhaG7tcE1a03T8R49SnXMvU8QotmWfrIOo2dmxovfD1zcom8/ApOOrznXmusMiLK0c
+         2PkfJbvaGC4SLYz3Urn/6Fdhjj9lKWPH/24CYgWTOYfzMkvVLd0QKtLcmHjubHY3OK3F
+         NUew4QElTxLIjqxzKIuUIUWqqrt95/t+8tTuOYEwRGE1FQPT3j73DwUmkjwAumjmZBuj
+         dqjbIPI5aVO9V4zOkMsV0mcqgFdM9wNa7erfdNDyn7IomhtXRcsfL925n5EGhoAJP+PW
+         Sjrbomm5N5+LpzshVqr/r91pCEPYt5j6sfoUmuHI/+mVTtsHN+7smeAYJMIjeVyq6GLi
+         x6lQ==
+X-Gm-Message-State: AOAM5339LJuq+IeSQ/veS0TdDQutlz+56Zo0fPTVM+Ec94uvxC0Z5yQy
+        nHa+8tJXrmSkRqYaoag5/Lrw+qbq1nHAWQ==
+X-Google-Smtp-Source: ABdhPJwQpEOTu4YX1KvBC6IDjm3GXuaZ902rZl7FrvbUuAHbh7olnZBdd8021GzvxACaQQb/nZqq6A==
+X-Received: by 2002:ac8:1095:: with SMTP id a21mr17914519qtj.55.1623099453025;
+        Mon, 07 Jun 2021 13:57:33 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id v19sm7438304qkf.113.2021.06.07.13.57.31
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Jun 2021 13:35:08 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id y2so26826559ybq.13
-        for <linux-perf-users@vger.kernel.org>; Mon, 07 Jun 2021 13:35:08 -0700 (PDT)
-X-Received: by 2002:a5b:54a:: with SMTP id r10mr26455324ybp.476.1623098107901;
- Mon, 07 Jun 2021 13:35:07 -0700 (PDT)
+        Mon, 07 Jun 2021 13:57:31 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id i4so27029657ybe.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Jun 2021 13:57:31 -0700 (PDT)
+X-Received: by 2002:a25:b801:: with SMTP id v1mr28601197ybj.32.1623099450508;
+ Mon, 07 Jun 2021 13:57:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210507205513.640780-1-dianders@chromium.org> <20210602175559.GC31957@willie-the-truck>
-In-Reply-To: <20210602175559.GC31957@willie-the-truck>
+References: <20210507205513.640780-1-dianders@chromium.org>
+ <20210507135509.2.Ib54050e4091679cc31b04d52d7ef200f99faaae5@changeid> <47a95789-ca75-70a5-9d65-a2d3e9c651bc@arm.com>
+In-Reply-To: <47a95789-ca75-70a5-9d65-a2d3e9c651bc@arm.com>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 7 Jun 2021 13:34:56 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X1XjyfEG5H+OsCBZb_Acf1Z3PsSTUvO8sKcSD4BWsNbw@mail.gmail.com>
-Message-ID: <CAD=FV=X1XjyfEG5H+OsCBZb_Acf1Z3PsSTUvO8sKcSD4BWsNbw@mail.gmail.com>
-Subject: Re: [PATCH 0/3] arm64: perf: Make compat tracing better
-To:     Will Deacon <will@kernel.org>
+Date:   Mon, 7 Jun 2021 13:57:19 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U1ChMU5dT4kBSTcsoePo7VUEQuoYtRUJuHBdVcgbS0XA@mail.gmail.com>
+Message-ID: <CAD=FV=U1ChMU5dT4kBSTcsoePo7VUEQuoYtRUJuHBdVcgbS0XA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: perf: Improve compat perf_callchain_user() for
+ clang leaf functions
+To:     James Clark <james.clark@arm.com>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Seth LaForge <sethml@google.com>,
         Ricky Liang <jcliang@chromium.org>,
@@ -82,7 +82,10 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         clang-built-linux <clang-built-linux@googlegroups.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+        linux-perf-users@vger.kernel.org,
+        Alexandre Truong <alexandre.truong@arm.com>,
+        Wilco Dijkstra <wilco.dijkstra@arm.com>,
+        Al Grant <Al.Grant@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -90,86 +93,58 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Wed, Jun 2, 2021 at 10:56 AM Will Deacon <will@kernel.org> wrote:
+On Mon, Jun 7, 2021 at 2:14 AM James Clark <james.clark@arm.com> wrote:
 >
-> Hi Doug,
 >
-> Thanks for posting this, and sorry for the delay in getting to it.
 >
-> On Fri, May 07, 2021 at 01:55:10PM -0700, Douglas Anderson wrote:
-> > The goal for this series is to improve "perf" behavior when 32-bit
-> > userspace code is involved. This turns out to be fairly important for
-> > Chrome OS which still runs 32-bit userspace for the time being (long
-> > story there).
->
-> Watch out, your days are numbered! See [1].
-
-Yeah, folks on the Chrome OS team are aware and we're trying our
-darndest to move away. It's been an unfortunate set of circumstances
-that has kept us on 32-bit this long. :( BTW: I like your suggestion
-of "retirement" as a solution to dealing with this problem, but I'm
-not quite ready to retire yet.
-
-
-> > I won't repeat everything said in the individual patches since since
-> > they are wordy enough as it is.
+> On 07/05/2021 23:55, Douglas Anderson wrote:
+> > It turns out that even when you compile code with clang with
+> > "-fno-omit-frame-pointer" that it won't generate a frame pointer for
+> > leaf functions (those that don't call any sub-functions). Presumably
+> > clang does this to reduce the overhead of frame pointers. In a leaf
+> > function you don't really need frame pointers since the Link Register
+> > (LR) is guaranteed to always point to the caller>
+> [...]
 > >
-> > Please enjoy and I hope this isn't too ugly/hacky for inclusion in
-> > mainline.
+> >  arch/arm64/kernel/perf_callchain.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
 > >
-> > Thanks to Nick Desaulniers for his early review of these patches and
-> > to Ricky for the super early prototype that some of this is based on.
+> > diff --git a/arch/arm64/kernel/perf_callchain.c b/arch/arm64/kernel/perf_callchain.c
+> > index e5ce5f7965d1..b3cd9f371469 100644
+> > --- a/arch/arm64/kernel/perf_callchain.c
+> > +++ b/arch/arm64/kernel/perf_callchain.c
+> > @@ -326,6 +326,20 @@ static void compat_perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+> >       while ((entry->nr < entry->max_stack) && fp && !(fp & 0x3)) {
+> >               err = compat_perf_trace_1(&fp, &pc, leaf_lr);
+> >
+> > +             /*
+> > +              * If this is the first trace and it didn't find the LR then
+> > +              * let's throw it in the trace first. This isn't perfect but
+> > +              * is the best we can do for handling clang leaf functions (or
+> > +              * the case where we're right at the start of the function
+> > +              * before the new frame has been pushed). In the worst case
+> > +              * this can cause us to throw an extra entry that will be some
+> > +              * location in the same function as the PC. That's not
+> > +              * amazing but shouldn't really hurt. It seems better than
+> > +              * throwing away the LR.
+> > +              */
 >
-> I can see that you've put a lot of effort into this, but I'm not thrilled
-> with the prospect of maintaining these heuristics in the kernel. The
-> callchain behaviour is directly visible to userspace, and all we'll be able
-> to do is throw more heuristics at it if faced with any regression reports.
-> Every assumption made about userspace behaviour results in diminishing
-> returns where some set of programs no longer fall into the "supported"
-> bucket and, on balance, I don't think the trade-off is worth it.
+> Hi Douglas,
 >
-> If we were to do this in the kernel, then I'd like to see a spec for how
-> frame-pointer based unwinding should work for Thumb and have it agreed
-> upon and implemented by both GCC and LLVM. That way, we can implement
-> the unwinder according to that spec and file bug reports against the
-> compiler if it goes wrong.
+> I think the behaviour with GCC is also similar. We were working on this change
+> (https://lore.kernel.org/lkml/20210304163255.10363-4-alexandre.truong@arm.com/)
+> in userspace Perf which addresses the same issue.
+>
+> The basic concept of our version is to record only the link register
+> (as in --user-regs=lr). Then use the existing dwarf based unwind
+> to determine if the link register is valid for that frame, and then if
+> it is and it doesn't already exist on the stack then insert it.
+>
+> You mention that your version isn't perfect, do you think that saving the
+> LR and using something like libunwind in a post process could be better?
 
-Given how long this has been going on, I'd somewhat guess that getting
-this implemented in GCC and LLVM is 1+ year out. Presumably Chrome OS
-will be transitioned off 32-bit ARM by then.
-
-
-> In lieu of that, I think we must defer to userspace to unwind using DWARF.
-> Perf supports this via PERF_SAMPLE_STACK_USER and PERF_SAMPLE_REGS_USER,
-> which allows libunwind to be used to create the callchain. You haven't
-> mentioned that here, so I'd be interested to know why not.
-
-Good point. So I guess I didn't mention it because:
-
-a) I really know very little about perf. I got roped in this because I
-understand stack unwinding, not because I know how to use perf well.
-:-P So I personally have no idea how to set this up.
-
-b) In the little bit of reading I did about this, people seemed to say
-that using libunwind for perf sampling was just too slow / too much
-overhead.
-
-
-> Finally, you've probably noticed that our unwinding code for compat tasks
-> is basically identical to the code in arch/arm/. If the functionality is
-> going to be extended, it should be done there first and then we will follow
-> to be compatible.
-
-That's fair. I doubt that submitting patches to this area of code for
-arm32 would be enjoyable, so I'll pass if it's all the same.
-
-Given your feedback, I think it's fair to consider ${SUBJECT} patch
-abandoned then. I'll see if people want to land it as a private patch
-in the Chrome OS tree for the time being until we can more fully
-abandon arm32 support or until the ARM teams working on gcc and clang
-come up with a standard that we can support more properly.
-
-In the meantime, if anyone cares to pick this patch up and move
-forward, feel free to do so with my blessing.
+Using post processing atop a patch to always save the LR is definitely
+the right solution IMO and (I think) you can fully overcome the "no
+frame pointers in leaf functions" with the post processing.
 
 -Doug
