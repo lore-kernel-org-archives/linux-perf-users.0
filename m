@@ -2,126 +2,175 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9566FC47082
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 10:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F8C4743F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 10:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDEC611C0
-	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 10:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3DB1611C0
+	for <linux-perf-users@archiver.kernel.org>; Mon,  7 Jun 2021 10:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230396AbhFGKZX (ORCPT
+        id S230468AbhFGKsJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 7 Jun 2021 06:25:23 -0400
-Received: from mga06.intel.com ([134.134.136.31]:1083 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230355AbhFGKZW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 7 Jun 2021 06:25:22 -0400
-IronPort-SDR: 2zjjMgRhiUzi/VvT3pcdxuW4VTv/NCsVMBYMb8Zb++SupHjsnnoRhMXlN8RFtDHjTOuFvb9ubA
- WmQWv/TEN2Uw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10007"; a="265750749"
-X-IronPort-AV: E=Sophos;i="5.83,254,1616482800"; 
-   d="scan'208";a="265750749"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2021 03:23:30 -0700
-IronPort-SDR: 6KMKnIbtqCdKX6P8IKQCGifSJPd27S+5hs7Sg2E/hDInGVq3EvHkHIlOxuDoyPdh33ib2f0jAL
- Tl6R3qQTFOqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,254,1616482800"; 
-   d="scan'208";a="484727860"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.174]) ([10.237.72.174])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Jun 2021 03:23:25 -0700
-Subject: Re: [PATCH v2 8/8] perf record: Directly bail out for compat case
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 7 Jun 2021 06:48:09 -0400
+Received: from mail-wr1-f54.google.com ([209.85.221.54]:38643 "EHLO
+        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230454AbhFGKsJ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 7 Jun 2021 06:48:09 -0400
+Received: by mail-wr1-f54.google.com with SMTP id c9so8348048wrt.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 07 Jun 2021 03:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aqlB3nweefXMBd+1n3TfVg5Imk7mqG7GGko5Cn1Ypjk=;
+        b=fokBrG+2G1fkq/XmZlW8Qn8gNsGVee/kxIBq16SYHHcihUEHhxAiLiYioDzjZCKPWV
+         9QEZOxcXx7fkFSqzCPab9ejYwiSWHFrBFKIvS4T83XVPbmSdXZpWw/7QLttpVgGupn7M
+         FoWs2xbakjWUMbWyKY9toPvBiRJY2NSMoomhdLwJgft1TVJGXI1KGV/tNqHpK+0t4K/c
+         ssThtjIQ5Gd6U2Vgt07NOm/v5UajEDZu6QDpCKD4dz0UaryRPm6OwVwk+zBYdDwhZepP
+         9jCgvqxA0rUhD0TtVGl/Sk+NMb0qRwm6JS3LOkQ+swNNoK5wt0XeTzNUgGulkw29L99w
+         ZQaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aqlB3nweefXMBd+1n3TfVg5Imk7mqG7GGko5Cn1Ypjk=;
+        b=SGdsr9TeTzB/Wk5PpSMyaxTUN7pd1xxTbit2UQGVb7KnFfNiL1UrW2Dnx0mJIcjRwN
+         +UkJ12E0f9Sv1kGbRWHbz9S/tYBA66Qx9Ad9qWygDs70HZg9njvgCOwurwe3p/fhhz+2
+         NaZnqXQsUT70aqjq/XZuvh7Hq1phIOt5XUBBx1dmdz1JERQxANhDHyzlKqrCbZS+bwui
+         D1mVhJh3oafJMvPDTBy84ApCPCmd3Fu6XSx3qZWQpJozwxScwZY7ksNcEgFawThWTRIJ
+         TGE2vAc8vkD+UTcdEM2pAcFLLUDCQB1hooMRmM63LdCykR5g9ixUnZ05HTTjKyu4Sbc+
+         RhbA==
+X-Gm-Message-State: AOAM5338ibjO+jly9ZjQIIF43dZeXhwfZBX/11DUk2osWMsJAY2hQrl2
+        c2ufrgJRKyE/fI+l4/ReAcS/sA==
+X-Google-Smtp-Source: ABdhPJwqNBSGH0k0cJir/i3kAe7gRK7bFBO/b5hmcAfd7Z+SvyV8tZwYe+ey/npaVItqY9949tYt3w==
+X-Received: by 2002:a05:6000:1563:: with SMTP id 3mr16068224wrz.59.1623062703694;
+        Mon, 07 Jun 2021 03:45:03 -0700 (PDT)
+Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
+        by smtp.gmail.com with ESMTPSA id p16sm16000678wrs.52.2021.06.07.03.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jun 2021 03:45:03 -0700 (PDT)
+Date:   Mon, 7 Jun 2021 11:45:00 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-References: <20210602103007.184993-1-leo.yan@linaro.org>
- <20210602103007.184993-9-leo.yan@linaro.org>
- <c321e998-6fd2-86e9-7876-7250a9b23c25@intel.com>
- <20210602123847.GE10272@leoy-ThinkPad-X240s>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <96e5fac6-17a2-ea03-9b15-338b84321ecf@intel.com>
-Date:   Mon, 7 Jun 2021 13:23:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
+        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 6/6] sched: Change task_struct::state
+Message-ID: <20210607104500.sopvslejuoxwzhrs@maple.lan>
+References: <20210602131225.336600299@infradead.org>
+ <20210602133040.587042016@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20210602123847.GE10272@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210602133040.587042016@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2/06/21 3:38 pm, Leo Yan wrote:
-> Hi Adrain,
+On Wed, Jun 02, 2021 at 03:12:31PM +0200, Peter Zijlstra wrote:
+> Change the type and name of task_struct::state. Drop the volatile and
+> shrink it to an 'unsigned int'. Rename it in order to find all uses
+> such that we can use READ_ONCE/WRITE_ONCE as appropriate.
 > 
-> On Wed, Jun 02, 2021 at 02:18:47PM +0300, Adrian Hunter wrote:
->> On 2/06/21 1:30 pm, Leo Yan wrote:
->>> Since the 64-bit atomicity is not promised in 32-bit perf, directly
->>> report the error and bail out for this case.
->>>
->>> Now only applies on x86_64 and Arm64 platforms.
->>>
->>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
->>
->> Maybe we can do better for the compat case.
->>
->> We can assume the upper 32-bits change very seldom,
->> and always increase. So for the 'read' case:
->>
->> 	u64 first, second, last;
->> 	u64 mask = (u64)((u32)-1) << 32;
->>
->> 	do {
->> 		first = READ_ONCE(pc->aux_head);
->> 		rmb();
->> 		second = READ_ONCE(pc->aux_head);
->> 		rmb();
->> 		last = READ_ONCE(pc->aux_head);
->> 	} while ((first & mask) != (last & mask));
->> 	return second;
->>
->> For the write case, we can cause a fatal error only if the new
->> tail has non-zero upper 32-bits.  That gives up to 4GiB of data
->> before aborting:
->>
->> 	if (tail & mask)
->> 		return -1;
->> 	smp_mb();
->> 	WRITE_ONCE(pc->aux_tail, tail);
-> 
-> Seems to me, it's pointless to only support aux_head for 64-bit and
-> support aux_tail for 32-bit.  I understand this can be helpful for the
-> snapshot mode which only uses aux_head, but it still fails to support
-> the normal case for AUX ring buffer using 64-bit head/tail.
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  ...
+>  kernel/debug/kdb/kdb_support.c |   18 +++++++------
+>  ...
+> --- a/kernel/debug/kdb/kdb_support.c
+> +++ b/kernel/debug/kdb/kdb_support.c
+> @@ -609,23 +609,25 @@ unsigned long kdb_task_state_string(cons
+>   */
+>  char kdb_task_state_char (const struct task_struct *p)
+>  {
+> -	int cpu;
+> -	char state;
+> +	unsigned int p_state;
+>  	unsigned long tmp;
+> +	char state;
+> +	int cpu;
+>  
+>  	if (!p ||
+>  	    copy_from_kernel_nofault(&tmp, (char *)p, sizeof(unsigned long)))
+>  		return 'E';
+>  
+>  	cpu = kdb_process_cpu(p);
+> -	state = (p->state == 0) ? 'R' :
+> -		(p->state < 0) ? 'U' :
+> -		(p->state & TASK_UNINTERRUPTIBLE) ? 'D' :
+> -		(p->state & TASK_STOPPED) ? 'T' :
+> -		(p->state & TASK_TRACED) ? 'C' :
+> +	p_state = READ_ONCE(p->__state);
+> +	state = (p_state == 0) ? 'R' :
+> +		(p_state < 0) ? 'U' :
 
-I am not sure why you say it is pointless.  'perf record' would still be
-able to capture up to 4GiB of data. Do you mean you usually capture more
-than 4GiB of data?
+Looks like the U here stands for Unreachable since this patch makes it
+more obvious that this clause is (and previously was) exactly that!
 
-I was thinking we would separate out the compat case:
+Dropping the U state would be good since I guess this will show up as a
+"new" warning in some tools. However it was a preexisting problem so with
+or without this cleaned up:
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-#if BITS_PER_LONG == 32
-	if (kernel_is_64_bit)
-		return compat_auxtrace_mmap__[read_head/write_tail]()
-#endif
 
-So the non-compat cases would not be affected.
+Daniel.
+
+> +		(p_state & TASK_UNINTERRUPTIBLE) ? 'D' :
+> +		(p_state & TASK_STOPPED) ? 'T' :
+> +		(p_state & TASK_TRACED) ? 'C' :
+>  		(p->exit_state & EXIT_ZOMBIE) ? 'Z' :
+>  		(p->exit_state & EXIT_DEAD) ? 'E' :
+> -		(p->state & TASK_INTERRUPTIBLE) ? 'S' : '?';
+> +		(p_state & TASK_INTERRUPTIBLE) ? 'S' : '?';
+>  	if (is_idle_task(p)) {
+>  		/* Idle task.  Is it really idle, apart from the kdb
+>  		 * interrupt? */
