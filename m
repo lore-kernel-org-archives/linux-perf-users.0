@@ -2,293 +2,238 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC88AC47095
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Jun 2021 06:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938C4C47095
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Jun 2021 08:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBBC610A2
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Jun 2021 06:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9436136D
+	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Jun 2021 08:23:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236584AbhFIGSp (ORCPT
+        id S237329AbhFIIZF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Jun 2021 02:18:45 -0400
-Received: from mail-wm1-f48.google.com ([209.85.128.48]:52893 "EHLO
-        mail-wm1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232001AbhFIGSp (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Jun 2021 02:18:45 -0400
-Received: by mail-wm1-f48.google.com with SMTP id f17so3257614wmf.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Jun 2021 23:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+TUXdESrfWsLAB7ujMtiaWOI2wfBx49V15E9i1S/Dz4=;
-        b=Box34dRXLbv4PwyoR/kYUCsIQsPyADF7ThRntyYkuOlB/4vg0VOlFp1bhTa/GFU/QX
-         GmflTLqJDPbaEpoK7COWWuQaXadBmffOUud31umyLrC/6KNCdXw2B97d6gmCT3VG4PMf
-         WOnSmLDGYTwBgX9mH4GM4DlXqck2lQeqpdybR+CKHNuUDdGEZD7009zD0wm8+u68AS3f
-         21XtzESOb4M/Xcn/AfQzAq1x6NZaYzydbtgmUsh7b3B9Ibtz1LGPk3wWnFo8sMQqia72
-         9SHw0wSf1jcI12jUHIIY8ucWKmT5rlzkGAgYmNTKJ65/EY0BZctQcb/+ua8kl/SkVszX
-         I5cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+TUXdESrfWsLAB7ujMtiaWOI2wfBx49V15E9i1S/Dz4=;
-        b=dobow3/DjaJgNbY2OOnERgR7PZwQJRnq/fHdXFl/eaEK7ge/7UGFpvBOwdjV4V/JyF
-         5YF9BjysJ1ejWGY+Mk1uxN9c5MGqcw0BW67kMqbVt8SarCyCOrivd6Yo5gjEoyY7VxHF
-         Gw+vmfHdALtgYc7Q0vCGKMPYoXDrDaM8it7bKTZJ9uz+/nUkvKSr6tAmumo5MSWUSvdQ
-         csq9Iqw3Q3En/PExngbetlOqe56u1Uqb/kdQRjEs+fjpAG799ZaoHfrzBjDl/YCVrqGF
-         TxW+y0FXOZsuG9RtEMlYP0K7QXjifFfZW7C/JMICotNFj3LYtZY0kdz4qXxswMty+tcP
-         5b9w==
-X-Gm-Message-State: AOAM532K7YHInSY0GWagFL250AfpYN3t+BrSiFAWwlYUZkPjIiGyK8dR
-        TevKs//CM+u7gKQR3BqjjYsMdC0+aL0DMoCvYmNBvAm8SouW3yZbaVIRV5f95FCLyudF7iTSigo
-        AadAAqWJtGhK4AlCF6plxVuwLXy+fA4O88/4g
-X-Google-Smtp-Source: ABdhPJzHu53sGzAywCiiReHaa7F7vmfkhLb+t3Zc+RonSZw5/gfmIIKP4SIyqob+6seSN3KBc1OwxSsl0UHk4ynY4OE=
-X-Received: by 2002:a1c:2015:: with SMTP id g21mr7984981wmg.87.1623219350466;
- Tue, 08 Jun 2021 23:15:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <ac8b10b5-820a-9542-51ab-3fcc51cb91ef@huawei.com>
-In-Reply-To: <ac8b10b5-820a-9542-51ab-3fcc51cb91ef@huawei.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 8 Jun 2021 23:15:38 -0700
-Message-ID: <CAP-5=fVERioMuK=JgKr1QWXKvU0Y31efQjxh7hX32ifL9V+_EA@mail.gmail.com>
-Subject: Re: perf tool: Issues with metricgroups
-To:     John Garry <john.garry@huawei.com>
+        Wed, 9 Jun 2021 04:25:05 -0400
+Received: from mga01.intel.com ([192.55.52.88]:7219 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236161AbhFIIZC (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 9 Jun 2021 04:25:02 -0400
+IronPort-SDR: npEVE186Hlzc8j6uSYt+hBaEPhWWnzZ+YTkyfMWbnX0/GAD9f9meAKZnxpLbbrq7qpHlEMJ9Jn
+ MtIoLOzh/Yvw==
+X-IronPort-AV: E=McAfee;i="6200,9189,10009"; a="226395376"
+X-IronPort-AV: E=Sophos;i="5.83,260,1616482800"; 
+   d="scan'208";a="226395376"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2021 01:23:00 -0700
+IronPort-SDR: 7PEud1cuUSnZaaYrwPItsgM29nX57AV8UOQZF+rIBpJ1HMHahxHxx4pGAdJBq15m7Pker0o5nl
+ bzOIPse5OozQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,260,1616482800"; 
+   d="scan'208";a="482294965"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.79]) ([10.237.72.79])
+  by orsmga001.jf.intel.com with ESMTP; 09 Jun 2021 01:22:56 -0700
+Subject: Re: [PATCH v2 8/8] perf record: Directly bail out for compat case
+To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-ccpol: medium
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+References: <20210602103007.184993-1-leo.yan@linaro.org>
+ <20210602103007.184993-9-leo.yan@linaro.org>
+ <c321e998-6fd2-86e9-7876-7250a9b23c25@intel.com>
+ <20210602123847.GE10272@leoy-ThinkPad-X240s>
+ <96e5fac6-17a2-ea03-9b15-338b84321ecf@intel.com>
+ <20210607150903.GC1071897@leoy-ThinkPad-X240s>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <d87d8fd8-c6f1-9d9b-5c2e-629588123a9c@intel.com>
+Date:   Wed, 9 Jun 2021 11:23:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <20210607150903.GC1071897@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 7, 2021 at 10:21 AM John Garry <john.garry@huawei.com> wrote:
->
-> Hi guys,
->
-> I am finding a couple of issues in metricgroup support. Firstly I have
-> found a segfault (which I caused with my "fix" in commit 9c880c24cb0d),
-> and a fix for that is at the bottom.
->
-> Another issue is that the ordering of the metrics we supply for stat
-> command causes an issue.
->
-> On my broadwell, this works ok:
->
-> sudo  ./perf stat -vv -M backend_bound,retiring sleep 1
-> Using CPUID GenuineIntel-6-3D-4
-> metric expr 1 - ( (idq_uops_not_delivered.core / (4 * cycles)) + ((
-> uops_issued.any - uops_retired.retire_slots + 4 *
-> int_misc.recovery_cycles ) / (4 * cycles)) + (uops_retired.retire_slots
-> / (4 * cycles)) ) for Backend_Bound
-> found event uops_issued.any
-> found event cycles
-> found event idq_uops_not_delivered.core
-> found event int_misc.recovery_cycles
-> found event uops_retired.retire_slots
-> metric expr uops_retired.retire_slots / (4 * cycles) for Retiring
-> found event cycles
-> found event uops_retired.retire_slots
-> adding
-> {uops_issued.any,cycles,idq_uops_not_delivered.core,int_misc.recovery_cycles,uops_retired.retire_slots}:W,{cycles,uops_retired.retire_slots}:W
-> uops_issued.any -> cpu/umask=0x1,(null)=0x1e8483,event=0xe/
-> idq_uops_not_delivered.core -> cpu/umask=0x1,(null)=0x1e8483,event=0x9c/
-> int_misc.recovery_cycles ->
-> cpu/umask=0x3,(null)=0x1e8483,cmask=0x1,event=0xd/
-> uops_retired.retire_slots -> cpu/umask=0x2,(null)=0x1e8483,event=0xc2/
-> uops_retired.retire_slots -> cpu/umask=0x2,(null)=0x1e8483,event=0xc2/
-> Control descriptor is not initialized
-> uops_issued.any: 1655376 547221 547221
-> cycles: 1665343 547221 547221
-> idq_uops_not_delivered.core: 1983394 547221 547221
-> int_misc.recovery_cycles: 69571 547221 547221
-> uops_retired.retire_slots: 1311124 547221 547221
->
->   Performance counter stats for 'sleep 1':
->
->           1,655,376      uops_issued.any           #     0.41
-> Backend_Bound
->           1,665,343      cycles
->
->                                                    #     0.20 Retiring
->
->           1,983,394      idq_uops_not_delivered.core
->
->              69,571      int_misc.recovery_cycles
->
->           1,311,124      uops_retired.retire_slots
->
->
->         1.000992470 seconds time elapsed
->
->         0.001031000 seconds user
->         0.000000000 seconds sys
-> ----/---
->
-> But when I reorder the metrics, it fails:
->
->   sudo  ./perf stat -v -M retiring,backend_bound sleep 1
-> Using CPUID GenuineIntel-6-3D-4
-> metric expr uops_retired.retire_slots / (4 * cycles) for Retiring
-> found event cycles
-> found event uops_retired.retire_slots
-> metric expr 1 - ( (idq_uops_not_delivered.core / (4 * cycles)) + ((
-> uops_issued.any - uops_retired.retire_slots + 4 *
-> int_misc.recovery_cycles ) / (4 * cycles)) + (uops_retired.retire_slots
-> / (4 * cycles)) ) for Backend_Bound
-> found event uops_issued.any
-> found event cycles
-> found event idq_uops_not_delivered.core
-> found event int_misc.recovery_cycles
-> found event uops_retired.retire_slots
-> adding
-> {cycles,uops_retired.retire_slots}:W,{uops_issued.any,cycles,idq_uops_not_delivered.core,int_misc.recovery_cycles,uops_retired.retire_slots}:W
-> uops_retired.retire_slots -> cpu/umask=0x2,(null)=0x1e8483,event=0xc2/
-> uops_issued.any -> cpu/umask=0x1,(null)=0x1e8483,event=0xe/
-> idq_uops_not_delivered.core -> cpu/umask=0x1,(null)=0x1e8483,event=0x9c/
-> int_misc.recovery_cycles ->
-> cpu/umask=0x3,(null)=0x1e8483,cmask=0x1,event=0xd/
-> uops_retired.retire_slots -> cpu/umask=0x2,(null)=0x1e8483,event=0xc2/
-> Control descriptor is not initialized
-> cycles: 1695223 563189 563189
-> uops_retired.retire_slots: 1343463 563189 563189
-> uops_issued.any: 0 563189 0
-> cycles: 0 563189 0
-> idq_uops_not_delivered.core: 0 563189 0
-> int_misc.recovery_cycles: 0 563189 0
-> uops_retired.retire_slots: 0 563189 0
->
->   Performance counter stats for 'sleep 1':
->
->           1,695,223      cycles
->
->                                                    #     0.20 Retiring
->
->           1,343,463      uops_retired.retire_slots
->
->       <not counted>      uops_issued.any
->                (0.00%)
->       <not counted>      cycles
->                (0.00%)
->       <not counted>      idq_uops_not_delivered.core
->                  (0.00%)
->       <not counted>      int_misc.recovery_cycles
->                (0.00%)
->       <not counted>      uops_retired.retire_slots
->                (0.00%)
->
->         1.000980001 seconds time elapsed
->
->         0.001028000 seconds user
->         0.000000000 seconds sys
->
-> ----/---
->
-> I think that it may be related to changes when introducing hashmap for
-> evsel (that's before I started fiddling with metricgroups).
-> Specifically, it looks to be in metricgroup__setup_events() ->
-> find_evsel_group(). We seem to be enabling wrong evsels.
->
-> I'll continue to look at this, but any help would be appreciated.
->
+On 7/06/21 6:09 pm, Leo Yan wrote:
+> On Mon, Jun 07, 2021 at 01:23:43PM +0300, Adrian Hunter wrote:
+>> On 2/06/21 3:38 pm, Leo Yan wrote:
+>>> Hi Adrain,
+>>>
+>>> On Wed, Jun 02, 2021 at 02:18:47PM +0300, Adrian Hunter wrote:
+>>>> On 2/06/21 1:30 pm, Leo Yan wrote:
+>>>>> Since the 64-bit atomicity is not promised in 32-bit perf, directly
+>>>>> report the error and bail out for this case.
+>>>>>
+>>>>> Now only applies on x86_64 and Arm64 platforms.
+>>>>>
+>>>>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+>>>>
+>>>> Maybe we can do better for the compat case.
+>>>>
+>>>> We can assume the upper 32-bits change very seldom,
+>>>> and always increase. So for the 'read' case:
+>>>>
+>>>> 	u64 first, second, last;
+>>>> 	u64 mask = (u64)((u32)-1) << 32;
+>>>>
+>>>> 	do {
+>>>> 		first = READ_ONCE(pc->aux_head);
+>>>> 		rmb();
+>>>> 		second = READ_ONCE(pc->aux_head);
+>>>> 		rmb();
+>>>> 		last = READ_ONCE(pc->aux_head);
+>>>> 	} while ((first & mask) != (last & mask));
+>>>> 	return second;
+>>>>
+>>>> For the write case, we can cause a fatal error only if the new
+>>>> tail has non-zero upper 32-bits.  That gives up to 4GiB of data
+>>>> before aborting:
+>>>>
+>>>> 	if (tail & mask)
+>>>> 		return -1;
+>>>> 	smp_mb();
+>>>> 	WRITE_ONCE(pc->aux_tail, tail);
+>>>
+>>> Seems to me, it's pointless to only support aux_head for 64-bit and
+>>> support aux_tail for 32-bit.  I understand this can be helpful for the
+>>> snapshot mode which only uses aux_head, but it still fails to support
+>>> the normal case for AUX ring buffer using 64-bit head/tail.
+>>
+>> I am not sure why you say it is pointless.  'perf record' would still be
+>> able to capture up to 4GiB of data. Do you mean you usually capture more
+>> than 4GiB of data?
+> 
+> Okay, understand.  We can support 32-bit perf for compat mode when the
+> trace data is less than 4GiB.
+> 
+>> I was thinking we would separate out the compat case:
+>>
+>> #if BITS_PER_LONG == 32
+>> 	if (kernel_is_64_bit)
+>> 		return compat_auxtrace_mmap__[read_head/write_tail]()
+>> #endif
+>>
+>> So the non-compat cases would not be affected.
+> 
+> Because I don't want to introduce the complexity for read/write head
+> and tail, and we also need to handle the same issue for the perf ring
+> buffer.  So how about below change?
+> 
+> The main idea for below change is it allows the perf to run normally
+> on the compat mode and exitly if detects the buffer head is close to
+> the low 32-bit's overflow: when detect the low 32-bit value is bigger
+> than 0xf0000000 (so we have 256MiB margin to the overflow), it reports
+> error and exit.
+> 
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 1b4091a3b508..2a9965bfeab4 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -1693,6 +1693,14 @@ static int __auxtrace_mmap__read(struct mmap *map,
+>  	pr_debug3("auxtrace idx %d old %#"PRIx64" head %#"PRIx64" diff %#"PRIx64"\n",
+>  		  mm->idx, old, head, head - old);
+>  
+> +#ifdef BITS_PER_LONG == 32
+> +	if (kernel_is_64bit() && head >= 0xf0000000) {
+
+You are assuming the head never increases by more than 256MiB which
+means you should limit the buffer size to 256MiB maximum.
+
+To me this seems a bit too far from an ideal solution.
+
+I would have thought separating out the compat case makes things
+simpler to understand.
+
+> +		pr_err("32-bit perf cannot read 64-bit value atomically;\n");
+> +		pr_err("exit to avoid the 4GB (32-bit) AUX buffer overflow on compat mode.\n");
+> +		return -ENOMEM;
+> +	}
+> +#endif
+> +
+>  	if (mm->mask) {
+>  		head_off = head & mm->mask;
+>  		old_off = old & mm->mask;
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index 9130f6fad8d5..823b69895b85 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -405,3 +405,20 @@ int perf_env__numa_node(struct perf_env *env, int cpu)
+>  
+>  	return cpu >= 0 && cpu < env->nr_numa_map ? env->numa_map[cpu] : -1;
+>  }
+> +
+> +int perf_kernel_is_64bit(void)
+> +{
+> +	struct utsname uts;
+> +	int ret;
+> +
+> +	ret = uname(&uts);
+> +	if (ret < 0)
+> +		return 0;
+> +
+> +	if (!strncmp(uts.machine, "x86_64", 6) ||
+> +	    !strncmp(uts.machine, "aarch64", 7) ||
+> +	    !strncmp(uts.machine, "arm64", 5))
+> +		return 1;
+> +
+> +	return 0;
+> +}
+
+Obviously, we don't need to keep checking uname. It could be a global variable
+that is always set up early.
+
+
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index ca249bf5e984..c6c034fc08f6 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -147,4 +147,6 @@ void perf_env__insert_btf(struct perf_env *env, struct btf_node *btf_node);
+>  struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id);
+>  
+>  int perf_env__numa_node(struct perf_env *env, int cpu);
+> +
+> +int perf_kernel_is_64bit(void);
+>  #endif /* __PERF_ENV_H */
+> diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+> index ab7108d22428..f1d3725d599a 100644
+> --- a/tools/perf/util/mmap.c
+> +++ b/tools/perf/util/mmap.c
+> @@ -323,6 +323,14 @@ int perf_mmap__push(struct mmap *md, void *to,
+>  	if (rc < 0)
+>  		return (rc == -EAGAIN) ? 1 : -1;
+>  
+> +#ifdef BITS_PER_LONG == 32
+> +	if (kernel_is_64bit() && head >= 0xf0000000) {
+> +		pr_err("32-bit perf cannot read 64-bit value atomically;\n");
+> +		pr_err("exit to avoid the 4GB (32-bit) buffer overflow on compat mode.\n");
+> +		return -ENOMEM;
+> +	}
+> +#endif
+> +
+>  	size = md->core.end - md->core.start;
+>  
+>  	if ((md->core.start & md->core.mask) + size != (md->core.end & md->core.mask)) {
+> 
 > Thanks,
-> John
+> Leo
+> 
 
-Hi John,
-
-The fix to avoid uncore_ events being deduplicated against each other
-added complexity to the code and means that metric-no-group doesn't
-really work any more. I have it on my list of things to look at. It
-relates to what you are looking at as the deduplication afterward is
-tricky given the funny invariants on evsel names. I think it would be
-easier to deduplicate events before doing the event parse. It may also
-be good to change evsels so that they own the string for their name
-(this would mean uncore_imc events could have unique names and not get
-deduplicated against each other). The invariants around cycles in your
-change look weird, but I can see how it might workaround an issue. My
-attempts to reproduce the issue weren't successful on a SkylakeX.
-
-Thanks for reporting the issues. I planned to look at this logic to
-fix metric-no-group, it'd be nice to land:
-https://lore.kernel.org/lkml/20210112230434.2631593-1-irogers@google.com/
-just so that I'm not making patch sets that conflict with myself.
-
-Ian
-
-
-> perf metricgroup: Fix find_evsel_group()
->
-> The following command segfaults on my x86 broadwell:
->
-> $ ./perf stat  -M frontend_bound,retiring,backend_bound,bad_speculation
-> sleep 1
->      WARNING: grouped events cpus do not match, disabling group:
->        anon group { raw 0x10e }
->        anon group { raw 0x10e }
-> perf: util/evsel.c:1596: get_group_fd: Assertion `!(!leader->core.fd)'
-> failed.
-> Aborted (core dumped)
->
-> The issue shows itself as a use-after-free in evlist__check_cpu_maps(),
-> whereby the leader of an event selector (evsel) has been deleted (yet we
-> still attempt to verify for an evsel).
->
-> Fundamentally the problem comes from metricgroup__setup_events() ->
-> find_evsel_group(), and has developed from the previous fix attempt in
-> commit 9c880c24cb0d ("perf metricgroup: Fix for metrics containing
-> duration_time").
->
-> The problem now is that the logic in checking if an evsel is in the same
-> group is subtly broken for "cycles" event. For "cycles" event, the
-> pmu_name is NULL; however the logic in find_evsel_group() may set an
-> event matched against "cycles" as used, when it should not be.
->
-> This leads to a condition where an evsel is set, yet its leader is not.
->
-> Fix the check for evsel pmu_name by not matching evsels when either has
-> a NULL pmu_name.
->
-> Fixes: 9c880c24cb0d ("perf metricgroup: Fix for metrics containing
-> duration_time")
-> Signed-off-by: John Garry <john.garry@huawei.com>
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 8336dd8e8098..c456fdeae06a 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -162,10 +162,10 @@ static bool contains_event(struct evsel
-> **metric_events, int num_events,
->          return false;
->   }
->
-> -static bool evsel_same_pmu(struct evsel *ev1, struct evsel *ev2)
-> +static bool evsel_same_pmu_or_none(struct evsel *ev1, struct evsel *ev2)
->   {
->          if (!ev1->pmu_name || !ev2->pmu_name)
-> -               return false;
-> +               return true;
->
->          return !strcmp(ev1->pmu_name, ev2->pmu_name);
->   }
-> @@ -288,7 +288,7 @@ static struct evsel *find_evsel_group(struct evlist
-> *perf_evlist,
->                           */
->                          if (!has_constraint &&
->                              ev->leader != metric_events[i]->leader &&
-> -                           evsel_same_pmu(ev->leader,
-> metric_events[i]->leader))
-> +                           evsel_same_pmu_or_none(ev->leader,
-> metric_events[i]->leader))
->                                  break;
->                          if (!strcmp(metric_events[i]->name, ev->name)) {
->                                  set_bit(ev->idx, evlist_used);
-> lines 25-63/63 (END)
->
->
