@@ -2,66 +2,62 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC382C48BDF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 18:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18AC3C48BD1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 18:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94E4A613DF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 18:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDE8613DF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 18:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230188AbhFJSrc (ORCPT
+        id S230113AbhFJSxK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 14:47:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230272AbhFJSrb (ORCPT
+        Thu, 10 Jun 2021 14:53:10 -0400
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:55215 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230080AbhFJSxK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 14:47:31 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA29C061574
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 11:45:34 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id f2so3390096wri.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 11:45:34 -0700 (PDT)
+        Thu, 10 Jun 2021 14:53:10 -0400
+Received: by mail-wm1-f41.google.com with SMTP id m3so1534139wms.4
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 11:51:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=grq5x0Cjb5fTifNMwhlvZcwKbZ6wbhg2QeSMuRahiO4=;
-        b=ONBH+mqR9A5FJwmWT2iKn8qnh2Wu4ZvAnlTunGMtohdER4jO4LC5C+ryc85Tn9bdwK
-         DVuCHks9wPUkblNJ9Z/Dmr2F1PRVMkIEX4kWrDAc+essGekQYXVAMNr7Ser7m3u6jqPb
-         iL9araxfutkLj3yCrvjfEzc3qzLnefi+BvwKkX0lnDkKtVF8hCLRJqv/0uJBwedg+Hxs
-         Iqm0WDxw1XqaJglgWwxb8+zhRMJTytiac2GlbNwELGU351yrJM1KGIggMCEU4JHS1P2q
-         XLXN+fUh6Vzu1owN7iIQYLMSl9yF9uQYYcBvr5iOw3mFtDMp8MELlxevHl1nld90Ivc1
-         AgzQ==
+        bh=J21h3J8NVq3CdoGsD791C/g3nKNn/C1NFZAumTjol6w=;
+        b=Y/Dc+vtX0dMNI2J1k+8fWMwRKoND/FZhtD9xDRSycyTrbFDvJND+xMM58qM2pvkp5E
+         Ee8MMWjbDdYTiRqGQPmkkmZQ4vewdM9GwTqDdCLZzXXMbKs05zHSpU0YhCKpP9lBCdaQ
+         mhFcSqBH2OvI2N3zDAXAvmhkQKBSd2wHzsgzLa3eM+cNzVF+9uzEwSLOHmwo6JR+Tlds
+         Y9ZlXr9X8ebKE1aC/mdyd6OU54ydQvHaVLq4whjaO+Ee/TZHy1GaSTIsYFq4Mz8ejS6m
+         Uh94HXhKle7/1cMx2/Eecuc28gxbh76KImlTsmSrRFrDBifW1M4S/ZoGFEhe5Mj1joVO
+         MpMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=grq5x0Cjb5fTifNMwhlvZcwKbZ6wbhg2QeSMuRahiO4=;
-        b=Cizbcvh6k24cSuXAhswzB1OhEtjOggaXaF+0zG6uWUjWGnMF4tR54Af3n0n9rwjo/J
-         Xonf0OG1OQj3mO4jUfp6Bkz4gcGt8PW7aHklpkUvaa1mNTPLektJ2qo0eG6LPF3XSHN1
-         YDA5TytgGZtj0GEH5IBjAvR/6u6rpdOp2fn2ei70qNH4GJb7nfYFlsF4eM/6lBV6clbJ
-         6LjRpa+MqIbJ+UVaMJr1ILkiMILB5shHSC1MORptRDwvMLUTqxTFFeHU1jM9ShVZSuRA
-         YTZox7P06h5FyMiE7wcfgFZmiZIfwVLG9fdSxoSs5m8ks4g11sMF8785CIp/HAktieDY
-         HdSQ==
-X-Gm-Message-State: AOAM5328LR1r52UF6FSncIyIrVnirbtVkQESkReyYia3dq6Nj/tXSBXS
-        3icu6ZL26vVnUGxtfq+Qng/Mj+5x3jwIYZNoxeiBUA==
-X-Google-Smtp-Source: ABdhPJz1UJiNuR1E46pRJGEcgdtmieLH0ZI/DZwAAcDJD0IJEvDN4P9BQYd+HCG+XODhQgkHKizz9lduOtIbMX9MuZY=
-X-Received: by 2002:a5d:4903:: with SMTP id x3mr6693454wrq.376.1623350729533;
- Thu, 10 Jun 2021 11:45:29 -0700 (PDT)
+        bh=J21h3J8NVq3CdoGsD791C/g3nKNn/C1NFZAumTjol6w=;
+        b=K2r8gULRlGauY25ScfBf7cwhmSZP/gLfexcHiYVdNSazbNdJrteNktbUNsoVmZhUsW
+         eM8+V/mpagtuDVimB1wawBPJZ2LpaqBqA56AiXMiVcU+FBO/6Hom1MiOAwWmXhyNHFvv
+         0yFPCO6i6GMAqGL+s8HkQPUabXvPkjMU7ykfgOjf05gjIauYQQuaDO/B5RyT/PFbyah/
+         tphzua79eUy0LvdAu0Hyb1ehbEMywoMoULoqNMt6nVFGkcqB0/Ewdbpd9w//xQmf6jA/
+         YNZbYCKx6mnSdqe08JOr/6RYaj1s+EVaHWdyPGb1IZJlpIDuR0wUhiT4+y3Up4LQCVcj
+         JtkQ==
+X-Gm-Message-State: AOAM531e3Pt5X+77l34maHA0b4tbTTXT91QQo/DE50liW7PWFGA7m+pE
+        RmGVnGowxWPHRbZbTlqFxNI/b9ahlsV3Uhv14bqP8w==
+X-Google-Smtp-Source: ABdhPJwN6VUAoyeKBEXSZ7+YssMTmMPGp62MKEVGpKypso05r3nUnm3gJlrUmQgll/Tcrrzwth4Wa0qM7YTc+6x92lI=
+X-Received: by 2002:a1c:b603:: with SMTP id g3mr16392963wmf.58.1623351012835;
+ Thu, 10 Jun 2021 11:50:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <1623335580-187317-1-git-send-email-john.garry@huawei.com> <1623335580-187317-3-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1623335580-187317-3-git-send-email-john.garry@huawei.com>
+References: <20210610060643.595673-1-irogers@google.com> <20210610103927.44462e35@oasis.local.home>
+In-Reply-To: <20210610103927.44462e35@oasis.local.home>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 10 Jun 2021 11:45:17 -0700
-Message-ID: <CAP-5=fV3L5HoJrXry5fvjedJG1dksJ7JJfy54YOQcgfPQMn4Og@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf metricgroup: Return error code from metricgroup__add_metric_sys_event_iter()
-To:     John Garry <john.garry@huawei.com>
+Date:   Thu, 10 Jun 2021 11:50:00 -0700
+Message-ID: <CAP-5=fVWCpuC98O=Y3HWCEJspSMWmLwAjhBChStT4APkNboDeQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] libtraceevent: Increase libtraceevent logging when verbose
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -69,68 +65,58 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        kajoljain <kjain@linux.ibm.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-trace Users <linux-trace-users@vger.kernel.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 7:37 AM John Garry <john.garry@huawei.com> wrote:
+On Thu, Jun 10, 2021 at 7:39 AM Steven Rostedt <rostedt@goodmis.org> wrote:
 >
-> The error code is not set at all in the sys event iter function.
+> On Wed,  9 Jun 2021 23:06:43 -0700
+> Ian Rogers <irogers@google.com> wrote:
 >
-> This may lead to an uninitialized value of "ret" in
-> metricgroup__add_metric() when no CPU metric is added.
+> > libtraceevent has added more levels of debug printout and with changes
+> > like:
+> > https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
+> > previously generated output like "registering plugin" is no longer
+> > displayed. This change makes it so that if perf's verbose debug output
+> > is enabled then the debug and info libtraceevent messages can be
+> > displayed.
+> > As this API isn't present in the deprecated tools version of
+> > libtracevent I'm uploading this as an RFC.
 >
-> Fix by properly setting the error code.
+> Thanks Ian,
 >
-> It is not necessary to init "ret" to 0 in metricgroup__add_metric(), as
-> if we have no CPU or sys event metric matching, then "has_match" should
-> be 0 and "ret" is set to -EINVAL.
+> We need to start porting perf to using the upstream libtraceevent
+> library. I think the best way to do that is what we did with trace-cmd.
+> That is to have the make files check if the minimum version of
+> libtraceevent is installed, and if so, use that instead of the local
+> version. If it is not installed, produce a message encouraging the
+> developer to install the upstream libtraceevent and warn that it will
+> be using a deprecated older versino, then build the deprecated local
+> version. After some time, we could simply remove it and make it a
+> dependency, but I want to do that when all the main distros being used
+> have it.
 >
-> However gcc cannot detect that it may not have been set after the
-> map_for_each_metric() loop for CPU metrics, which is strange.
+> Currently its in the latest Debian, Ubuntu, and Fedora. I also believe
+> its in SUSE but have not checked. It's in Fedora 34, but it doesn't
+> appear to be in Fedora 33. As that's not too old, I don't think we
+> should make it a dependency as of yet.
 >
-> Fixes: be335ec28efa8 ("perf metricgroup: Support adding metrics for system PMUs")
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> -- Steve
 
-Acked-by: Ian Rogers <irogers@google.com>
+Thanks! Is there a way to do something like:
 
-Thanks,
+#if LIBTRACE_EVENT_API > 123
+...
+#endif
+
+so that we can make sure perf is taking advantage of the improvements
+in the libtraceevent API?
+
 Ian
-
-> ---
->  tools/perf/util/metricgroup.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index c456fdeae06a..d3cf2dee36c8 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1073,16 +1073,18 @@ static int metricgroup__add_metric_sys_event_iter(struct pmu_event *pe,
->
->         ret = add_metric(d->metric_list, pe, d->metric_no_group, &m, NULL, d->ids);
->         if (ret)
-> -               return ret;
-> +               goto out;
->
->         ret = resolve_metric(d->metric_no_group,
->                                      d->metric_list, NULL, d->ids);
->         if (ret)
-> -               return ret;
-> +               goto out;
->
->         *(d->has_match) = true;
->
-> -       return *d->ret;
-> +out:
-> +       *(d->ret) = ret;
-> +       return ret;
->  }
->
->  static int metricgroup__add_metric(const char *metric, bool metric_no_group,
-> --
-> 2.26.2
->
