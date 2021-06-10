@@ -2,108 +2,93 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF06C47094
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 15:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1822BC47094
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 16:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0A4A613D0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 15:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E9660FEA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 16:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231365AbhFJPy0 (ORCPT
+        id S229823AbhFJQGl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 11:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230280AbhFJPyZ (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 11:54:25 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987B1C061574
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 08:52:29 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id ei4so3916278pjb.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 08:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KX8l2w0IMtRC5c6qHNvl0KgU7tvOhrSsL7RNXq9bR+4=;
-        b=xlK80h3lCnAZasvGDJUY/22RvUNUYrnQIILihwWn1jtnVzkFjdirmA1C2IX0aBZUur
-         QYzyZ6sahO6KYHSSVu5oUKyGhNxIDm11Xkcmtd+RHYFQmbw+Su+q/fFbP61HigCus8GR
-         aGV2g125VmsYTBRXgqwHMdUOs2AtnSZlq8QWMc7hDweLvEDBRCWouCbot+Pd6/4Kg5Zq
-         OgaWas7x7iPk/N3sK/U9so2cgt0mY5eAjW2+HqaYpnKms9NerMwg9xD/dl+iRyOJs6/g
-         3+k+0b1elDas4zCXZjg0VWsXyPFU9ExIfkiOYhYmFOMMWzZj9seZvFT9i5nr4T+teElt
-         Q3Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KX8l2w0IMtRC5c6qHNvl0KgU7tvOhrSsL7RNXq9bR+4=;
-        b=sf/CrOsvH3UPrpMEK9+AxGK6SS/NkiTAkT0y0qPksr+mSsCKzEAgAvmvslNxVVFIRc
-         pe+zT4ZlE2lIbfi5onWwB6JlLR+ArVVy0yMnVWZ483IEvgW7HWdcR9UsKuf6iFYPIkEH
-         hQhPJxWr26PxZCni+jGPXth1xsnYP+gdUmc4Y3YIrwwYMFg8a6B5uhaiM04vGlFWQEIj
-         CiITFTKwJPdSuYQ7hWbZPc4TIBJgiqLVq1lIjyofT78jj/W5/p3I87gC8SJIQFZmQzL9
-         VuVMLrd7e7pLR93524VWn0b66AsS7GW+6N72FyG8CdLRVkhCBu5i2RuTl0Hqf5M6/s7r
-         MkZw==
-X-Gm-Message-State: AOAM531nJ8cN4loX/Mczxhv0aL2yBTU7WkJDMp5eakKNiLNNuyTcjulx
-        TzGX9S57o9RIud0Yai+++mes0w==
-X-Google-Smtp-Source: ABdhPJyYXLEX++QpbNBN6pTxAJDenevuet6zyqh/LlCGRu22lr5FnmL6Dy8Mn7kk/ZRFzA+tId9r7g==
-X-Received: by 2002:a17:902:db0b:b029:111:7dac:2789 with SMTP id m11-20020a170902db0bb02901117dac2789mr5373146plx.45.1623340349069;
-        Thu, 10 Jun 2021 08:52:29 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id q2sm3038962pje.50.2021.06.10.08.52.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jun 2021 08:52:28 -0700 (PDT)
-Date:   Thu, 10 Jun 2021 09:52:25 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, coresight@lists.linaro.org, leo.yan@linaro.org,
-        al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        Thu, 10 Jun 2021 12:06:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:35554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229802AbhFJQGl (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 10 Jun 2021 12:06:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91672ED1;
+        Thu, 10 Jun 2021 09:04:44 -0700 (PDT)
+Received: from [10.57.74.218] (unknown [10.57.74.218])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A0CB3F719;
+        Thu, 10 Jun 2021 09:04:41 -0700 (PDT)
+Subject: Re: [PATCH v1 0/3] coresight: Fix for snapshot mode
+To:     Denis Nikitin <denik@google.com>, Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] perf cs-etm: Split Coresight decode by aux records
-Message-ID: <20210610155225.GA34238@p14s>
-References: <20210610103647.7038-1-james.clark@arm.com>
- <20210610103647.7038-2-james.clark@arm.com>
- <f92553c4-fe72-1a95-3f7c-f7a8481a0538@arm.com>
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20210528161552.654907-1-leo.yan@linaro.org>
+ <CAOYpmdEvkSZaei-_SWrUC4YJ7rOUOoOaxM7+qc6dw=P+b_ivgA@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <5cf3effb-fccc-9385-6328-6d1e2e5ccdf3@arm.com>
+Date:   Thu, 10 Jun 2021 17:04:40 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f92553c4-fe72-1a95-3f7c-f7a8481a0538@arm.com>
+In-Reply-To: <CAOYpmdEvkSZaei-_SWrUC4YJ7rOUOoOaxM7+qc6dw=P+b_ivgA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 10, 2021 at 04:55:27PM +0300, James Clark wrote:
+Hi Denis
+
+On 10/06/2021 07:43, Denis Nikitin wrote:
+> Hi Leo,
 > 
+> On Fri, May 28, 2021 at 9:16 AM Leo Yan <leo.yan@linaro.org> wrote:
+>>
+>> This patch series is to correct the pointer usages for the snapshot
+>> mode.
+>>
+>> Patch 01 allows the AUX trace in the free run mode and only syncs the
+>> AUX ring buffer when taking snapshot.
+>>
+>> Patch 02 is to polish code, it removes the redundant header maintained
+>> in tmc-etr driver and directly uses pointer perf_output_handle::head.
+>>
+>> Patch 03 removes the callback cs_etm_find_snapshot() which wrongly
+>> calculates the buffer headers; we can simply use the perf's common
+>> function __auxtrace_mmap__read() for headers calculation.
+>>
+>> This patch can be cleanly applied on the mainline kernel with:
+>>
+>>    commit 97e5bf604b7a ("Merge branch 'for-5.13-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu")
+>>
+>> And it has been tested on Arm64 Juno board.
 > 
-> On 10/06/2021 13:36, James Clark wrote:
-> > +		return auxtrace_queues__add_event(&etm->queues,
-> > +					       session,
-> > +					       &auxtrace_fragment,
-> > +					       file_offset,
-> > +					       NULL);
-> 
-> There's one more indentation error here that I will fix in the next set.
+> I have verified the patches on Chrome OS Trogdor device.
+> They fixed the problem discussed in
+> https://lists.linaro.org/pipermail/coresight/2021-May/006411.html.
 
-Yes, this one needs fixing and while at it you probably want to fix the stacking
-as well:
+Are you able to confirm if the patch 3 alone fixes the above issue ?
+I am not convinced that Patch 1 is necessary.
 
-                return auxtrace_queues__add_event(&etm->queues, session,
-                                                  &auxtrace_fragment,
-                                                  file_offset, NULL);
-
-Also look for "deccoding" at the end of the second paragraph in the changelog.
-
-Thanks,
-Mathieu
+Suzuki
