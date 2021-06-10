@@ -2,143 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C3C47094
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 15:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF06C47094
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 15:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEE8613D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 15:39:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A4A613D0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 15:52:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231691AbhFJPlD (ORCPT
+        id S231365AbhFJPy0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 11:41:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:34812 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231658AbhFJPk6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 11:40:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B7BF106F;
-        Thu, 10 Jun 2021 08:39:01 -0700 (PDT)
-Received: from [10.57.74.218] (unknown [10.57.74.218])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C4FB3F719;
-        Thu, 10 Jun 2021 08:38:58 -0700 (PDT)
-Subject: Re: [PATCH v1 2/3] coresight: tmc-etr: Use perf_output_handle::head
- for AUX ring buffer
-To:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Thu, 10 Jun 2021 11:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36070 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230280AbhFJPyZ (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 10 Jun 2021 11:54:25 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987B1C061574
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 08:52:29 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id ei4so3916278pjb.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Jun 2021 08:52:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KX8l2w0IMtRC5c6qHNvl0KgU7tvOhrSsL7RNXq9bR+4=;
+        b=xlK80h3lCnAZasvGDJUY/22RvUNUYrnQIILihwWn1jtnVzkFjdirmA1C2IX0aBZUur
+         QYzyZ6sahO6KYHSSVu5oUKyGhNxIDm11Xkcmtd+RHYFQmbw+Su+q/fFbP61HigCus8GR
+         aGV2g125VmsYTBRXgqwHMdUOs2AtnSZlq8QWMc7hDweLvEDBRCWouCbot+Pd6/4Kg5Zq
+         OgaWas7x7iPk/N3sK/U9so2cgt0mY5eAjW2+HqaYpnKms9NerMwg9xD/dl+iRyOJs6/g
+         3+k+0b1elDas4zCXZjg0VWsXyPFU9ExIfkiOYhYmFOMMWzZj9seZvFT9i5nr4T+teElt
+         Q3Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KX8l2w0IMtRC5c6qHNvl0KgU7tvOhrSsL7RNXq9bR+4=;
+        b=sf/CrOsvH3UPrpMEK9+AxGK6SS/NkiTAkT0y0qPksr+mSsCKzEAgAvmvslNxVVFIRc
+         pe+zT4ZlE2lIbfi5onWwB6JlLR+ArVVy0yMnVWZ483IEvgW7HWdcR9UsKuf6iFYPIkEH
+         hQhPJxWr26PxZCni+jGPXth1xsnYP+gdUmc4Y3YIrwwYMFg8a6B5uhaiM04vGlFWQEIj
+         CiITFTKwJPdSuYQ7hWbZPc4TIBJgiqLVq1lIjyofT78jj/W5/p3I87gC8SJIQFZmQzL9
+         VuVMLrd7e7pLR93524VWn0b66AsS7GW+6N72FyG8CdLRVkhCBu5i2RuTl0Hqf5M6/s7r
+         MkZw==
+X-Gm-Message-State: AOAM531nJ8cN4loX/Mczxhv0aL2yBTU7WkJDMp5eakKNiLNNuyTcjulx
+        TzGX9S57o9RIud0Yai+++mes0w==
+X-Google-Smtp-Source: ABdhPJyYXLEX++QpbNBN6pTxAJDenevuet6zyqh/LlCGRu22lr5FnmL6Dy8Mn7kk/ZRFzA+tId9r7g==
+X-Received: by 2002:a17:902:db0b:b029:111:7dac:2789 with SMTP id m11-20020a170902db0bb02901117dac2789mr5373146plx.45.1623340349069;
+        Thu, 10 Jun 2021 08:52:29 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id q2sm3038962pje.50.2021.06.10.08.52.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jun 2021 08:52:28 -0700 (PDT)
+Date:   Thu, 10 Jun 2021 09:52:25 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, coresight@lists.linaro.org, leo.yan@linaro.org,
+        al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
         Mike Leach <mike.leach@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Denis Nikitin <denik@google.com>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20210528161552.654907-1-leo.yan@linaro.org>
- <20210528161552.654907-3-leo.yan@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <68f0fb5e-6f91-66c3-855a-9473bee7de15@arm.com>
-Date:   Thu, 10 Jun 2021 16:38:57 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.11.0
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/1] perf cs-etm: Split Coresight decode by aux records
+Message-ID: <20210610155225.GA34238@p14s>
+References: <20210610103647.7038-1-james.clark@arm.com>
+ <20210610103647.7038-2-james.clark@arm.com>
+ <f92553c4-fe72-1a95-3f7c-f7a8481a0538@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20210528161552.654907-3-leo.yan@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f92553c4-fe72-1a95-3f7c-f7a8481a0538@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Leo
+On Thu, Jun 10, 2021 at 04:55:27PM +0300, James Clark wrote:
+> 
+> 
+> On 10/06/2021 13:36, James Clark wrote:
+> > +		return auxtrace_queues__add_event(&etm->queues,
+> > +					       session,
+> > +					       &auxtrace_fragment,
+> > +					       file_offset,
+> > +					       NULL);
+> 
+> There's one more indentation error here that I will fix in the next set.
 
-On 28/05/2021 17:15, Leo Yan wrote:
-> When enable the Arm CoreSight PMU event, the context for AUX ring buffer
-> is prepared in the structure perf_output_handle, and its field "head"
-> points the head of the AUX ring buffer and it is updated after filling
-> AUX trace data into buffer.
-> 
-> Current code uses an extra field etr_perf_buffer::head to maintain the
-> header for the AUX ring buffer, thus it's not necessary and it's better
-> to directly perf_output_handle::head.
-> 
-> This patch removes the header etr_perf_buffer::head and directly used
-> perf_output_handle::head as the header for AUX ring buffer.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->   drivers/hwtracing/coresight/coresight-tmc-etr.c | 10 +++-------
->   1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> index acdb59e0e661..b22823d67680 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> @@ -32,7 +32,6 @@ struct etr_flat_buf {
->    * @etr_buf		- Actual buffer used by the ETR
->    * @pid			- The PID this etr_perf_buffer belongs to.
->    * @snaphost		- Perf session mode
-> - * @head		- handle->head at the beginning of the session.
->    * @nr_pages		- Number of pages in the ring buffer.
->    * @pages		- Array of Pages in the ring buffer.
->    */
-> @@ -41,7 +40,6 @@ struct etr_perf_buffer {
->   	struct etr_buf		*etr_buf;
->   	pid_t			pid;
->   	bool			snapshot;
-> -	unsigned long		head;
->   	int			nr_pages;
->   	void			**pages;
->   };
-> @@ -1437,16 +1435,16 @@ static void tmc_free_etr_buffer(void *config)
->    * buffer to the perf ring buffer.
->    */
->   static void tmc_etr_sync_perf_buffer(struct etr_perf_buffer *etr_perf,
-> +				     unsigned long head,
->   				     unsigned long src_offset,
->   				     unsigned long to_copy)
->   {
->   	long bytes;
->   	long pg_idx, pg_offset;
-> -	unsigned long head = etr_perf->head;
->   	char **dst_pages, *src_buf;
->   	struct etr_buf *etr_buf = etr_perf->etr_buf;
->   
-> -	head = etr_perf->head;
-> +	head = PERF_IDX2OFF(head, etr_perf);
->   	pg_idx = head >> PAGE_SHIFT;
->   	pg_offset = head & (PAGE_SIZE - 1);
->   	dst_pages = (char **)etr_perf->pages;
-> @@ -1553,7 +1551,7 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
->   	/* Insert barrier packets at the beginning, if there was an overflow */
->   	if (lost)
->   		tmc_etr_buf_insert_barrier_packet(etr_buf, offset);
-> -	tmc_etr_sync_perf_buffer(etr_perf, offset, size);
-> +	tmc_etr_sync_perf_buffer(etr_perf, handle->head, offset, size);
->   
->   	/*
->   	 * In snapshot mode we simply increment the head by the number of byte
-> @@ -1605,8 +1603,6 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
->   		goto unlock_out;
->   	}
->   
-> -	etr_perf->head = PERF_IDX2OFF(handle->head, etr_perf);
-> -
->   	/*
->   	 * No HW configuration is needed if the sink is already in
->   	 * use for this session.
-> 
+Yes, this one needs fixing and while at it you probably want to fix the stacking
+as well:
 
-This looks good to me and could avoid any potential issues
-with stale offset cached in the etr_perf_buffer.
+                return auxtrace_queues__add_event(&etm->queues, session,
+                                                  &auxtrace_fragment,
+                                                  file_offset, NULL);
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Also look for "deccoding" at the end of the second paragraph in the changelog.
 
+Thanks,
+Mathieu
