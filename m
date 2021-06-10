@@ -2,125 +2,322 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC8EC48BCF
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Jun 2021 22:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AA4C48BD1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 02:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24A28613E3
-	for <linux-perf-users@archiver.kernel.org>; Wed,  9 Jun 2021 22:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B08613BC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 02:02:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbhFIW4s (ORCPT
+        id S229655AbhFJCET (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 9 Jun 2021 18:56:48 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:46791 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbhFIW4s (ORCPT
+        Wed, 9 Jun 2021 22:04:19 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:9054 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229507AbhFJCET (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 9 Jun 2021 18:56:48 -0400
-Received: by mail-lj1-f172.google.com with SMTP id e11so1910581ljn.13;
-        Wed, 09 Jun 2021 15:54:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8MSqYylR/ClWK2tbw4XHVsBk6QIun8xemFhmgATk+Yg=;
-        b=BBQL9gxmTGJqQjKfmTK3PafZOR1HfYIC+x+vOgU2W4/eg8QAQvwD3Dm0GJfb37jcuo
-         rpSjFfy55u/KCAJOfNmpryqWnNGptqCVAp/zPTTuXrBJ05uCIdTJZFwN+F/F3jjzSHGE
-         ghfxGx9b3dNGzExGReNW6/BiNc0yaAmZK40goT9eg7l+BuQPAi14hvNxDqnszrp1i2JF
-         HI7oeOs+pH1tOWp8UWWvS2TDuF3LWQIMYs083nHm90trlCNB8kQPdGiW1Cl561IMD1cQ
-         6L5CvYJc68F5pXUC6sNvEOsHq3niZRUv7Di4MiXzZY4PbZkGvd30muf79m9A1tgXUh3e
-         lE3g==
-X-Gm-Message-State: AOAM530RLvXl6D/AEAcsIFF/692HqcEWlub8h3V4Daa9TPShR5zKW/p5
-        lDzuLyCLab7lQNF9a1y/xfxg2wYOI9ZK6kRH8dI=
-X-Google-Smtp-Source: ABdhPJwHzWXOfySif2iX8OiOTYOHDkpXBPM3E96KNt+65PBThPRZxhJFHWYfB2+DMgv2KIRUM59Cq4ME1atOu7wMUJk=
-X-Received: by 2002:a2e:a795:: with SMTP id c21mr1501932ljf.26.1623279275739;
- Wed, 09 Jun 2021 15:54:35 -0700 (PDT)
+        Wed, 9 Jun 2021 22:04:19 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4G0nGS5byxzYrPZ;
+        Thu, 10 Jun 2021 09:59:28 +0800 (CST)
+Received: from dggpemm000003.china.huawei.com (7.185.36.128) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 10 Jun 2021 10:02:12 +0800
+Received: from [10.67.102.248] (10.67.102.248) by
+ dggpemm000003.china.huawei.com (7.185.36.128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 10 Jun 2021 10:02:11 +0800
+Subject: Re: [PATCH v2] perf annotate: Add itrace options support
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20210607025918.118603-1-yangjihong1@huawei.com>
+ <YL+kovO5jK1zlR1j@kernel.org>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <8e33080d-d2a1-cc57-3ec7-179ea7af1577@huawei.com>
+Date:   Thu, 10 Jun 2021 10:02:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <cover.1622025774.git.alexey.v.bayduraev@linux.intel.com>
- <c5a046f8bed989e4ede98f1fcdaa9d0b6bf78cac.1622025774.git.alexey.v.bayduraev@linux.intel.com>
- <3b297a17f935d2a00bfa74afbbf064b01fe83607.camel@gmail.com>
-In-Reply-To: <3b297a17f935d2a00bfa74afbbf064b01fe83607.camel@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 9 Jun 2021 15:54:23 -0700
-Message-ID: <CAM9d7cjJKDoMrKTzuCK=zDZivTdT-o30JKPt=97D2JEnXaHr0w@mail.gmail.com>
-Subject: Re: [PATCH v6 03/20] perf record: Introduce thread local variable
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Alexei Budankov <abudankov@huawei.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YL+kovO5jK1zlR1j@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.248]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm000003.china.huawei.com (7.185.36.128)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Riccardo,
+Hell Arnaldo,
 
-On Thu, Jun 3, 2021 at 3:56 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
->
-> Hi,
->
-> thank you very much for your work for adding threading capabilites to perf
-> record.
-> I did some testing on your entire patchset, especially checking for memory
-> issues using ASan. This is just the first of a couple of emails to point out
-> some issues I found.
-> I will also do additional tests in the future.
->
-> On Wed, 2021-05-26 at 13:52 +0300, Alexey Bayduraev wrote:
-> SNIP
-> > @@ -2220,18 +2275,20 @@ static int __cmd_record(struct record *rec, int argc,
-> > const char **argv)
-> >                 goto out_child;
-> >         }
-> >
-> > -       if (!quiet)
-> > -               fprintf(stderr, "[ perf record: Woken up %ld times to write data
-> > ]\n", waking);
-> > -
-> >         if (target__none(&rec->opts.target))
-> >                 record__synthesize_workload(rec, true);
-> >
-> >  out_child:
-> > +       record__stop_threads(rec, &waking);
-> > +out_free_threads:
-> >         record__free_thread_data(rec);
-> >         evlist__finalize_ctlfd(rec->evlist);
-> >         record__mmap_read_all(rec, true);
-> >         record__aio_mmap_read_sync(rec);
->
-> record__mmap_read_all should be moved before record__free_thread_data since it
-> uses the thread_data that's just been freed.
-> Furthermore, record__mmap_read_all should also be moved before the
-> out_free_threads label, since it cannot be called unless record__start_threads
-> succeeded, otherwise thread would be NULL and will cause a segfault (it happens
-> if there is an error somewhere else in perf, for example).
->
-> In my tests the following order works, but it should be double checked for
-> possible side-effects of this order change.
->
-> out_child:
->         record__stop_threads(rec, &waking);
->         record__mmap_read_all(rec, true);
-> out_free_threads:
->         record__free_thread_data(rec);
->         evlist__finalize_ctlfd(rec->evlist);
->         record__aio_mmap_read_sync(rec);
+On 2021/6/9 1:10, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jun 07, 2021 at 10:59:18AM +0800, Yang Jihong escreveu:
+>> The "auxtrace_info" and "auxtrace" functions are not set in "tool" member of
+>> "annotate". As a result, perf annotate does not support parsing itrace data.
+>>
+>> A simple example is as follows:
+>>
+>>    # perf record -e arm_spe_0/branch_filter=1/ -a sleep 1
+>>    [ perf record: Woken up 9 times to write data ]
+>>    [ perf record: Captured and wrote 20.874 MB perf.data ]
+>>    # perf annotate --stdio
+>>    Error:
+>>    The perf.data data has no samples!
+> 
+> Can I get an Acked-by/Reviewed-by for this? I don't have a machine where
+> I can test this.
+> 
 
-I wonder how it worked before.. maybe we should place
-record__free_thread_data() far below.
+I have tested the patch on a machine that supports ARM SPE.
+The test result is as follows:
+# perf annotate --stdio
+# perf record --all-user -e arm_spe_0/branch_filter=1/ ls
+Couldn't synthesize bpf events.
+perf.data  perf.data.old
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.010 MB perf.data ]
+# perf annotate --stdio
+  Percent |      Source code & Disassembly of libc-2.28.so for 
+branch-miss (1 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------
+          :
+          :
+          :
+          :           Disassembly of section .text:
+          :
+          :           0000000000066180 <__getdelim@@GLIBC_2.17>:
+     0.00 :   66180:  stp     x29, x30, [sp, #-96]!
+     0.00 :   66184:  cmp     x0, #0x0
+     0.00 :   66188:  ccmp    x1, #0x0, #0x4, ne  // ne = any
+     0.00 :   6618c:  mov     x29, sp
+     0.00 :   66190:  stp     x24, x25, [sp, #56]
+     0.00 :   66194:  stp     x26, x27, [sp, #72]
+     0.00 :   66198:  str     x28, [sp, #88]
+     0.00 :   6619c:  b.eq    66450 <__getdelim@@GLIBC_2.17+0x2d0>  // 
+b.none
+     0.00 :   661a0:  stp     x22, x23, [x29, #40]
+     0.00 :   661a4:  mov     x22, x1
+     0.00 :   661a8:  ldr     w1, [x3]
+     0.00 :   661ac:  mov     w23, w2
+     0.00 :   661b0:  stp     x20, x21, [x29, #24]
+     0.00 :   661b4:  mov     x20, x3
+     0.00 :   661b8:  mov     x21, x0
+     0.00 :   661bc:  tbnz    w1, #15, 66360 <__getdelim@@GLIBC_2.17+0x1e0>
+     0.00 :   661c0:  ldr     x0, [x3, #136]
+     0.00 :   661c4:  ldr     x2, [x0, #8]
+     0.00 :   661c8:  str     x19, [x29, #16]
+     0.00 :   661cc:  mrs     x19, tpidr_el0
+     0.00 :   661d0:  sub     x19, x19, #0x700
+     0.00 :   661d4:  cmp     x2, x19
+     0.00 :   661d8:  b.eq    663f0 <__getdelim@@GLIBC_2.17+0x270>  // 
+b.none
+     0.00 :   661dc:  mov     w1, #0x1                        // #1
+     0.00 :   661e0:  ldaxr   w2, [x0]
+     0.00 :   661e4:  cmp     w2, #0x0
+     0.00 :   661e8:  b.ne    661f4 <__getdelim@@GLIBC_2.17+0x74>  // b.any
+     0.00 :   661ec:  stxr    w3, w1, [x0]
+     0.00 :   661f0:  cbnz    w3, 661e0 <__getdelim@@GLIBC_2.17+0x60>
+     0.00 :   661f4:  b.ne    66448 <__getdelim@@GLIBC_2.17+0x2c8>  // b.any
+     0.00 :   661f8:  ldr     x0, [x20, #136]
+     0.00 :   661fc:  ldr     w1, [x20]
+     0.00 :   66200:  ldr     w2, [x0, #4]
+     0.00 :   66204:  str     x19, [x0, #8]
+     0.00 :   66208:  add     w2, w2, #0x1
+     0.00 :   6620c:  str     w2, [x0, #4]
+     0.00 :   66210:  tbnz    w1, #5, 66388 <__getdelim@@GLIBC_2.17+0x208>
+     0.00 :   66214:  ldr     x19, [x29, #16]
+     0.00 :   66218:  ldr     x0, [x21]
+     0.00 :   6621c:  cbz     x0, 66228 <__getdelim@@GLIBC_2.17+0xa8>
+     0.00 :   66220:  ldr     x0, [x22]
+     0.00 :   66224:  cbnz    x0, 6623c <__getdelim@@GLIBC_2.17+0xbc>
+     0.00 :   66228:  mov     x0, #0x78                       // #120
+     0.00 :   6622c:  str     x0, [x22]
+     0.00 :   66230:  bl      20710 <malloc@plt>
+     0.00 :   66234:  str     x0, [x21]
+     0.00 :   66238:  cbz     x0, 66428 <__getdelim@@GLIBC_2.17+0x2a8>
+     0.00 :   6623c:  ldr     x27, [x20, #8]
+     0.00 :   66240:  str     x19, [x29, #16]
+     0.00 :   66244:  ldr     x19, [x20, #16]
+     0.00 :   66248:  sub     x19, x19, x27
+     0.00 :   6624c:  cmp     x19, #0x0
+     0.00 :   66250:  b.le    66398 <__getdelim@@GLIBC_2.17+0x218>
+     0.00 :   66254:  mov     x25, #0x0                       // #0
+     0.00 :   66258:  b       662d8 <__getdelim@@GLIBC_2.17+0x158>
+     0.00 :   6625c:  nop
+     0.00 :   66260:  add     x24, x19, x25
+     0.00 :   66264:  ldr     x3, [x22]
+     0.00 :   66268:  add     x26, x24, #0x1
+     0.00 :   6626c:  ldr     x0, [x21]
+     0.00 :   66270:  cmp     x3, x26
+     0.00 :   66274:  b.cs    6629c <__getdelim@@GLIBC_2.17+0x11c>  // 
+b.hs, b.nlast
+     0.00 :   66278:  lsl     x3, x3, #1
+     0.00 :   6627c:  cmp     x3, x26
+     0.00 :   66280:  csel    x26, x3, x26, cs  // cs = hs, nlast
+     0.00 :   66284:  mov     x1, x26
+     0.00 :   66288:  bl      206f0 <realloc@plt>
+     0.00 :   6628c:  cbz     x0, 66438 <__getdelim@@GLIBC_2.17+0x2b8>
+     0.00 :   66290:  str     x0, [x21]
+     0.00 :   66294:  ldr     x27, [x20, #8]
+     0.00 :   66298:  str     x26, [x22]
+     0.00 :   6629c:  mov     x2, x19
+     0.00 :   662a0:  mov     x1, x27
+     0.00 :   662a4:  add     x0, x0, x25
+     0.00 :   662a8:  bl      87390 <explicit_bzero@@GLIBC_2.25+0x50>
+     0.00 :   662ac:  ldr     x0, [x20, #8]
+     0.00 :   662b0:  add     x19, x0, x19
+     0.00 :   662b4:  str     x19, [x20, #8]
+     0.00 :   662b8:  cbnz    x28, 66410 <__getdelim@@GLIBC_2.17+0x290>
+     0.00 :   662bc:  mov     x0, x20
+     0.00 :   662c0:  bl      73b80 <__underflow@@GLIBC_2.17>
+     0.00 :   662c4:  cmn     w0, #0x1
+     0.00 :   662c8:  b.eq    66410 <__getdelim@@GLIBC_2.17+0x290>  // 
+b.none
+     0.00 :   662cc:  ldp     x27, x19, [x20, #8]
+     0.00 :   662d0:  mov     x25, x24
+     0.00 :   662d4:  sub     x19, x19, x27
+     0.00 :   662d8:  mov     x2, x19
+     0.00 :   662dc:  mov     w1, w23
+     0.00 :   662e0:  mov     x0, x27
+     0.00 :   662e4:  bl      807b0 <memchr@@GLIBC_2.17>
+     0.00 :   662e8:  cmp     x0, #0x0
+     0.00 :   662ec:  mov     x28, x0
+     0.00 :   662f0:  sub     x0, x0, x27
+     0.00 :   662f4:  csinc   x19, x19, x0, eq  // eq = none
+     0.00 :   662f8:  mov     x0, #0x7fffffffffffffff         // 
+#9223372036854775807
+     0.00 :   662fc:  sub     x0, x0, x25
+     0.00 :   66300:  cmp     x19, x0
+     0.00 :   66304:  b.lt    66260 <__getdelim@@GLIBC_2.17+0xe0>  // 
+b.tstop
+     0.00 :   66308:  adrp    x0, 17f000 <sys_sigabbrev@@GLIBC_2.17+0x320>
+     0.00 :   6630c:  ldr     x0, [x0, #3624]
+     0.00 :   66310:  mrs     x2, tpidr_el0
+     0.00 :   66314:  ldr     x19, [x29, #16]
+     0.00 :   66318:  mov     w3, #0x4b                       // #75
+     0.00 :   6631c:  ldr     w1, [x20]
+     0.00 :   66320:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   66324:  str     w3, [x2, x0]
+     0.00 :   66328:  tbnz    w1, #15, 66340 <__getdelim@@GLIBC_2.17+0x1c0>
+     0.00 :   6632c:  ldr     x0, [x20, #136]
+     0.00 :   66330:  ldr     w1, [x0, #4]
+     0.00 :   66334:  sub     w1, w1, #0x1
+     0.00 :   66338:  str     w1, [x0, #4]
+     0.00 :   6633c:  cbz     w1, 663b8 <__getdelim@@GLIBC_2.17+0x238>
+     0.00 :   66340:  mov     x0, x24
+     0.00 :   66344:  ldr     x28, [sp, #88]
+     0.00 :   66348:  ldp     x20, x21, [x29, #24]
+     0.00 :   6634c:  ldp     x22, x23, [x29, #40]
+     0.00 :   66350:  ldp     x24, x25, [sp, #56]
+     0.00 :   66354:  ldp     x26, x27, [sp, #72]
+     0.00 :   66358:  ldp     x29, x30, [sp], #96
+     0.00 :   6635c:  ret
+   100.00 :   66360:  tbz     w1, #5, 66218 <__getdelim@@GLIBC_2.17+0x98>
+     0.00 :   66364:  ldp     x20, x21, [x29, #24]
+     0.00 :   66368:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   6636c:  ldp     x22, x23, [x29, #40]
+     0.00 :   66370:  mov     x0, x24
+     0.00 :   66374:  ldp     x24, x25, [sp, #56]
+     0.00 :   66378:  ldp     x26, x27, [sp, #72]
+     0.00 :   6637c:  ldr     x28, [sp, #88]
+     0.00 :   66380:  ldp     x29, x30, [sp], #96
+     0.00 :   66384:  ret
+     0.00 :   66388:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   6638c:  ldr     x19, [x29, #16]
+     0.00 :   66390:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+     0.00 :   66394:  nop
+     0.00 :   66398:  mov     x0, x20
+     0.00 :   6639c:  bl      73b80 <__underflow@@GLIBC_2.17>
+     0.00 :   663a0:  cmn     w0, #0x1
+     0.00 :   663a4:  b.eq    66438 <__getdelim@@GLIBC_2.17+0x2b8>  // 
+b.none
+     0.00 :   663a8:  ldp     x27, x19, [x20, #8]
+     0.00 :   663ac:  sub     x19, x19, x27
+     0.00 :   663b0:  b       66254 <__getdelim@@GLIBC_2.17+0xd4>
+     0.00 :   663b4:  nop
+     0.00 :   663b8:  str     xzr, [x0, #8]
+     0.00 :   663bc:  ldxr    w2, [x0]
+     0.00 :   663c0:  stlxr   w3, w1, [x0]
+     0.00 :   663c4:  cbnz    w3, 663bc <__getdelim@@GLIBC_2.17+0x23c>
+     0.00 :   663c8:  cmp     w2, #0x1
+     0.00 :   663cc:  b.le    66340 <__getdelim@@GLIBC_2.17+0x1c0>
+     0.00 :   663d0:  mov     x1, #0x81                       // #129
+     0.00 :   663d4:  mov     x2, #0x1                        // #1
+     0.00 :   663d8:  mov     x3, #0x0                        // #0
+     0.00 :   663dc:  mov     x8, #0x62                       // #98
+     0.00 :   663e0:  svc     #0x0
+     0.00 :   663e4:  ldp     x20, x21, [x29, #24]
+     0.00 :   663e8:  ldp     x22, x23, [x29, #40]
+     0.00 :   663ec:  b       66370 <__getdelim@@GLIBC_2.17+0x1f0>
+     0.00 :   663f0:  ldr     w2, [x0, #4]
+     0.00 :   663f4:  add     w2, w2, #0x1
+     0.00 :   663f8:  str     w2, [x0, #4]
+     0.00 :   663fc:  tbz     w1, #5, 66214 <__getdelim@@GLIBC_2.17+0x94>
+     0.00 :   66400:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   66404:  ldr     x19, [x29, #16]
+     0.00 :   66408:  b       66330 <__getdelim@@GLIBC_2.17+0x1b0>
+     0.00 :   6640c:  nop
+     0.00 :   66410:  ldr     x0, [x21]
+     0.00 :   66414:  strb    wzr, [x0, x24]
+     0.00 :   66418:  ldr     w1, [x20]
+     0.00 :   6641c:  ldr     x19, [x29, #16]
+     0.00 :   66420:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+     0.00 :   66424:  nop
+     0.00 :   66428:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   6642c:  ldr     w1, [x20]
+     0.00 :   66430:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+     0.00 :   66434:  nop
+     0.00 :   66438:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   6643c:  ldr     w1, [x20]
+     0.00 :   66440:  ldr     x19, [x29, #16]
+     0.00 :   66444:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+     0.00 :   66448:  bl      e3ba0 <pthread_setcanceltype@@GLIBC_2.17+0x30>
+     0.00 :   6644c:  b       661f8 <__getdelim@@GLIBC_2.17+0x78>
+     0.00 :   66450:  adrp    x0, 17f000 <sys_sigabbrev@@GLIBC_2.17+0x320>
+     0.00 :   66454:  ldr     x0, [x0, #3624]
+     0.00 :   66458:  mrs     x1, tpidr_el0
+     0.00 :   6645c:  mov     w2, #0x16                       // #22
+     0.00 :   66460:  mov     x24, #0xffffffffffffffff        // #-1
+     0.00 :   66464:  str     w2, [x1, x0]
+     0.00 :   66468:  b       66370 <__getdelim@@GLIBC_2.17+0x1f0>
+     0.00 :   6646c:  ldr     w1, [x20]
+     0.00 :   66470:  mov     x4, x0
+     0.00 :   66474:  tbnz    w1, #15, 6648c <__getdelim@@GLIBC_2.17+0x30c>
+     0.00 :   66478:  ldr     x0, [x20, #136]
+     0.00 :   6647c:  ldr     w1, [x0, #4]
+     0.00 :   66480:  sub     w1, w1, #0x1
+     0.00 :   66484:  str     w1, [x0, #4]
+     0.00 :   66488:  cbz     w1, 66494 <__getdelim@@GLIBC_2.17+0x314>
+     0.00 :   6648c:  mov     x0, x4
+     0.00 :   66490:  bl      20e40 <gnu_get_libc_version@@GLIBC_2.17+0x130>
+     0.00 :   66494:  str     xzr, [x0, #8]
+     0.00 :   66498:  ldxr    w2, [x0]
+     0.00 :   6649c:  stlxr   w3, w1, [x0]
+     0.00 :   664a0:  cbnz    w3, 66498 <__getdelim@@GLIBC_2.17+0x318>
+     0.00 :   664a4:  cmp     w2, #0x1
+     0.00 :   664a8:  b.le    6648c <__getdelim@@GLIBC_2.17+0x30c>
+     0.00 :   664ac:  mov     x1, #0x81                       // #129
+     0.00 :   664b0:  mov     x2, #0x1                        // #1
+     0.00 :   664b4:  mov     x3, #0x0                        // #0
+     0.00 :   664b8:  mov     x8, #0x62                       // #98
+     0.00 :   664bc:  svc     #0x0
+     0.00 :   664c0:  b       6648c <__getdelim@@GLIBC_2.17+0x30c>
+
+Intel PT and ARM SPE share auxtrace functions of itrace framework. 
+Therefore, this patch can be verified on computers that support Intel PT.
+
+Because I do not have a machine that supports Intel PT, I cannot verify 
+the Intel PT scenario. :)
 
 Thanks,
-Namhyung
+Yang
