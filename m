@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67E1C48BDF
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CBDC48BE0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEE461410
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A682061403
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbhFJTeV (ORCPT
+        id S230236AbhFJTt7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 15:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
+        Thu, 10 Jun 2021 15:49:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229941AbhFJTeU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 15:34:20 -0400
+        id S229823AbhFJTt6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 10 Jun 2021 15:49:58 -0400
 Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30B71613F1;
-        Thu, 10 Jun 2021 19:32:23 +0000 (UTC)
-Date:   Thu, 10 Jun 2021 15:32:21 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id CD9AE613FF;
+        Thu, 10 Jun 2021 19:48:00 +0000 (UTC)
+Date:   Thu, 10 Jun 2021 15:47:59 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-trace Users <linux-trace-users@vger.kernel.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Stephane Eranian <eranian@google.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-users@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, eranian@google.com,
+        Michael Petlan <mpetlan@redhat.com>
 Subject: Re: [RFC PATCH] libtraceevent: Increase libtraceevent logging when
  verbose
-Message-ID: <20210610153221.476063dc@oasis.local.home>
-In-Reply-To: <CAP-5=fVWCpuC98O=Y3HWCEJspSMWmLwAjhBChStT4APkNboDeQ@mail.gmail.com>
+Message-ID: <20210610154759.1ef958f0@oasis.local.home>
+In-Reply-To: <YMJjMPDKo2IdCC6G@krava>
 References: <20210610060643.595673-1-irogers@google.com>
         <20210610103927.44462e35@oasis.local.home>
-        <CAP-5=fVWCpuC98O=Y3HWCEJspSMWmLwAjhBChStT4APkNboDeQ@mail.gmail.com>
+        <YMJjMPDKo2IdCC6G@krava>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,33 +53,23 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 10 Jun 2021 11:50:00 -0700
-Ian Rogers <irogers@google.com> wrote:
+On Thu, 10 Jun 2021 21:08:32 +0200
+Jiri Olsa <jolsa@redhat.com> wrote:
 
-> #if LIBTRACE_EVENT_API > 123
-> ...
-> #endif
+> Michael did the libtraceevent detection and dynamic linking support:
+>   https://lore.kernel.org/linux-perf-users/20210428092023.4009-1-mpetlan@redhat.com/
+
+Oh cool! I missed this.
+
 > 
-> so that we can make sure perf is taking advantage of the improvements
-> in the libtraceevent API?
+> I think we should have that in Fedora/RHEL rpms already, or it's on the way.
+> 
+> The detection code could be change to contain things we need.
 
-Yes, and trace-cmd did that.
+Sounds great!
 
-In the Makefile:
-
-LIBTRACEEVENT_MIN_VERSION = 1.2.3
-TEST_LIBTRACEEVENT = $(shell sh -c "$(PKG_CONFIG) --atleast-version $(LIBTRACEEVENT_MIN_VERSION) libtraceevent > /dev/null 2>&1 && echo y")
-
-ifeq ("$(TEST_LIBTRACEEVENT)", "y")
-CFLAGS += -DHAVE_TRACEVEVENT_API
-endif
-
-Then you can use in perf
-
-#ifdef HAVE_TRACEEVENT_API
-...
-#endif
-
-That's just one example of what you could do.
+But the next thing we should use is libtracefs, to simplify some of the
+other logic, like finding the event files, and even reading the
+error_log file when a kprobe_event fails.
 
 -- Steve
