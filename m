@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CBDC48BE0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DABC48BDF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A682061403
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:48:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21D06140F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 19:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbhFJTt7 (ORCPT
+        id S230299AbhFJUBP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 15:49:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51534 "EHLO mail.kernel.org"
+        Thu, 10 Jun 2021 16:01:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229823AbhFJTt6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 15:49:58 -0400
+        id S229823AbhFJUBP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 10 Jun 2021 16:01:15 -0400
 Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD9AE613FF;
-        Thu, 10 Jun 2021 19:48:00 +0000 (UTC)
-Date:   Thu, 10 Jun 2021 15:47:59 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 4449161359;
+        Thu, 10 Jun 2021 19:59:17 +0000 (UTC)
+Date:   Thu, 10 Jun 2021 15:59:15 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -40,7 +40,7 @@ Cc:     Ian Rogers <irogers@google.com>,
         Michael Petlan <mpetlan@redhat.com>
 Subject: Re: [RFC PATCH] libtraceevent: Increase libtraceevent logging when
  verbose
-Message-ID: <20210610154759.1ef958f0@oasis.local.home>
+Message-ID: <20210610155915.20a252d3@oasis.local.home>
 In-Reply-To: <YMJjMPDKo2IdCC6G@krava>
 References: <20210610060643.595673-1-irogers@google.com>
         <20210610103927.44462e35@oasis.local.home>
@@ -58,18 +58,23 @@ Jiri Olsa <jolsa@redhat.com> wrote:
 
 > Michael did the libtraceevent detection and dynamic linking support:
 >   https://lore.kernel.org/linux-perf-users/20210428092023.4009-1-mpetlan@redhat.com/
-
-Oh cool! I missed this.
-
 > 
 > I think we should have that in Fedora/RHEL rpms already, or it's on the way.
 > 
 > The detection code could be change to contain things we need.
 
-Sounds great!
+Or it can also be changed to export the version too?
 
-But the next thing we should use is libtracefs, to simplify some of the
-other logic, like finding the event files, and even reading the
-error_log file when a kprobe_event fails.
+LIBTRACEEVENT_VERSION = $(shell pkg-config --modversion libtraceevent | perl -e '$ver=<>; @v=split /,/,$ver; printf "%d\n", $v[0] * 255 * 255 | $v[1] * 255 | $v[2];')
+
+-DLIBTRACEFS_VERSION=$(LIBTRACEEVENT_VERSION)
+
+Then in C have:
+
+#define VERSION(a,b,c) ((a)*255*255|(b)*255|(c))
+
+#if LIBTRACEEVENT_VERSION >= VERSION(1,2,3)
+
+To test if the libtraceevent feature is available?
 
 -- Steve
