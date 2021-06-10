@@ -2,105 +2,83 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FE3C48BD1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 14:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD31C48BD1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 14:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9915613F1
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 14:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71950613FE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 14:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbhFJOjj (ORCPT
+        id S231324AbhFJOl0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 10:39:39 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3201 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231523AbhFJOji (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 10:39:38 -0400
-Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G15tV42XHz6H6gv;
-        Thu, 10 Jun 2021 22:28:18 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 10 Jun 2021 16:37:40 +0200
-Received: from localhost.localdomain (10.69.192.58) by
- lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Thu, 10 Jun 2021 15:37:37 +0100
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
-        <kjain@linux.ibm.com>
-CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "John Garry" <john.garry@huawei.com>
-Subject: [PATCH 2/2] perf metricgroup: Return error code from metricgroup__add_metric_sys_event_iter()
-Date:   Thu, 10 Jun 2021 22:33:00 +0800
-Message-ID: <1623335580-187317-3-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1623335580-187317-1-git-send-email-john.garry@huawei.com>
-References: <1623335580-187317-1-git-send-email-john.garry@huawei.com>
+        Thu, 10 Jun 2021 10:41:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231213AbhFJOl0 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 10 Jun 2021 10:41:26 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B510613E3;
+        Thu, 10 Jun 2021 14:39:29 +0000 (UTC)
+Date:   Thu, 10 Jun 2021 10:39:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-users@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>, eranian@google.com
+Subject: Re: [RFC PATCH] libtraceevent: Increase libtraceevent logging when
+ verbose
+Message-ID: <20210610103927.44462e35@oasis.local.home>
+In-Reply-To: <20210610060643.595673-1-irogers@google.com>
+References: <20210610060643.595673-1-irogers@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The error code is not set at all in the sys event iter function.
+On Wed,  9 Jun 2021 23:06:43 -0700
+Ian Rogers <irogers@google.com> wrote:
 
-This may lead to an uninitialized value of "ret" in
-metricgroup__add_metric() when no CPU metric is added.
+> libtraceevent has added more levels of debug printout and with changes
+> like:
+> https://lore.kernel.org/linux-trace-devel/20210507095022.1079364-3-tz.stoyanov@gmail.com
+> previously generated output like "registering plugin" is no longer
+> displayed. This change makes it so that if perf's verbose debug output
+> is enabled then the debug and info libtraceevent messages can be
+> displayed.
+> As this API isn't present in the deprecated tools version of
+> libtracevent I'm uploading this as an RFC.
 
-Fix by properly setting the error code.
+Thanks Ian,
 
-It is not necessary to init "ret" to 0 in metricgroup__add_metric(), as
-if we have no CPU or sys event metric matching, then "has_match" should
-be 0 and "ret" is set to -EINVAL.
+We need to start porting perf to using the upstream libtraceevent
+library. I think the best way to do that is what we did with trace-cmd.
+That is to have the make files check if the minimum version of
+libtraceevent is installed, and if so, use that instead of the local
+version. If it is not installed, produce a message encouraging the
+developer to install the upstream libtraceevent and warn that it will
+be using a deprecated older versino, then build the deprecated local
+version. After some time, we could simply remove it and make it a
+dependency, but I want to do that when all the main distros being used
+have it.
 
-However gcc cannot detect that it may not have been set after the
-map_for_each_metric() loop for CPU metrics, which is strange.
+Currently its in the latest Debian, Ubuntu, and Fedora. I also believe
+its in SUSE but have not checked. It's in Fedora 34, but it doesn't
+appear to be in Fedora 33. As that's not too old, I don't think we
+should make it a dependency as of yet.
 
-Fixes: be335ec28efa8 ("perf metricgroup: Support adding metrics for system PMUs")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- tools/perf/util/metricgroup.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index c456fdeae06a..d3cf2dee36c8 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1073,16 +1073,18 @@ static int metricgroup__add_metric_sys_event_iter(struct pmu_event *pe,
- 
- 	ret = add_metric(d->metric_list, pe, d->metric_no_group, &m, NULL, d->ids);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	ret = resolve_metric(d->metric_no_group,
- 				     d->metric_list, NULL, d->ids);
- 	if (ret)
--		return ret;
-+		goto out;
- 
- 	*(d->has_match) = true;
- 
--	return *d->ret;
-+out:
-+	*(d->ret) = ret;
-+	return ret;
- }
- 
- static int metricgroup__add_metric(const char *metric, bool metric_no_group,
--- 
-2.26.2
-
+-- Steve
