@@ -2,66 +2,78 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BE1C47094
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 13:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07D8C47094
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 14:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F41D3613E9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 13:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4304613E3
+	for <linux-perf-users@archiver.kernel.org>; Thu, 10 Jun 2021 14:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbhFJN52 (ORCPT
+        id S230492AbhFJOje (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 10 Jun 2021 09:57:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:60682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230035AbhFJN51 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 10 Jun 2021 09:57:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28C9A106F;
-        Thu, 10 Jun 2021 06:55:31 -0700 (PDT)
-Received: from [10.57.5.44] (unknown [10.57.5.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98EFF3F73D;
-        Thu, 10 Jun 2021 06:55:28 -0700 (PDT)
-Subject: Re: [PATCH v5 1/1] perf cs-etm: Split Coresight decode by aux records
-To:     acme@kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, leo.yan@linaro.org
-Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210610103647.7038-1-james.clark@arm.com>
- <20210610103647.7038-2-james.clark@arm.com>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <f92553c4-fe72-1a95-3f7c-f7a8481a0538@arm.com>
-Date:   Thu, 10 Jun 2021 16:55:27 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
+        Thu, 10 Jun 2021 10:39:34 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3199 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230153AbhFJOjb (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 10 Jun 2021 10:39:31 -0400
+Received: from fraeml737-chm.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4G15pM4wt3z6894j;
+        Thu, 10 Jun 2021 22:24:43 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml737-chm.china.huawei.com (10.206.15.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 10 Jun 2021 16:37:33 +0200
+Received: from localhost.localdomain (10.69.192.58) by
+ lhreml724-chm.china.huawei.com (10.201.108.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Thu, 10 Jun 2021 15:37:30 +0100
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
+        <kjain@linux.ibm.com>
+CC:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "John Garry" <john.garry@huawei.com>
+Subject: [PATCH 0/2] perf metricgroups: A couple of fixes
+Date:   Thu, 10 Jun 2021 22:32:58 +0800
+Message-ID: <1623335580-187317-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210610103647.7038-2-james.clark@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+This series fixes a couple of subtle issues.
 
+The first fixes a segfault from on my x86 broadwell when running the
+'stat' command with a particular order of metrics.
 
-On 10/06/2021 13:36, James Clark wrote:
-> +		return auxtrace_queues__add_event(&etm->queues,
-> +					       session,
-> +					       &auxtrace_fragment,
-> +					       file_offset,
-> +					       NULL);
+As mentioned at [0], there is a pre-existing issue here which needs fixing
+as this still does not work properly; however I think that is a bigger job,
+and getting rid of the segfault is best I can do for the moment.
 
-There's one more indentation error here that I will fix in the next set.
+The second fixes an issue of an uninitialized variable. As noted in the
+commit message, gcc does not seem to do a good job of picking up on this.
+
+[0] https://lore.kernel.org/lkml/49c6fccb-b716-1bf0-18a6-cace1cdb66b9@huawei.com/
+
+John Garry (2):
+  perf metricgroup: Fix find_evsel_group() event selector
+  perf metricgroup: Return error code from
+    metricgroup__add_metric_sys_event_iter()
+
+ tools/perf/util/metricgroup.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+-- 
+2.26.2
+
