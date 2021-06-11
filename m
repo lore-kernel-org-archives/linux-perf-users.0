@@ -2,40 +2,41 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0776C48BE0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 21:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E45C48BE0
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 22:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEDAB613CC
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 21:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6730613CD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 22:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230028AbhFKVjU (ORCPT
+        id S229777AbhFKWDR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Jun 2021 17:39:20 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25488 "EHLO mga11.intel.com"
+        Fri, 11 Jun 2021 18:03:17 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:35764 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229685AbhFKVjU (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Jun 2021 17:39:20 -0400
-IronPort-SDR: idi5OjpwaChbrxSejeuAXluS3XRoQ7TxMESJCdOOZix/rcebJ0Zkiamg+iZAZkUietKUQyvxaB
- f+6qp1hAa79A==
-X-IronPort-AV: E=McAfee;i="6200,9189,10012"; a="202590366"
-X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
-   d="scan'208";a="202590366"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 14:37:21 -0700
-IronPort-SDR: hdKBHocW4cw+bhpRa3+aukcMxVuVu4cR1A0degMe8prXywHn0vswyAprdKpmN2AzgF2DsA2YRq
- hjrBXjSYvIgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
-   d="scan'208";a="449242177"
-Received: from gupta-dev2.jf.intel.com (HELO gupta-dev2.localdomain) ([10.54.74.119])
-  by orsmga008.jf.intel.com with ESMTP; 11 Jun 2021 14:37:21 -0700
-Date:   Fri, 11 Jun 2021 14:37:32 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
+        id S229622AbhFKWDR (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 11 Jun 2021 18:03:17 -0400
+Received: from zn.tnic (p200300ec2f0aec00c039d52956c712fd.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:ec00:c039:d529:56c7:12fd])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 80F171EC01B7;
+        Sat, 12 Jun 2021 00:01:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623448877;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=EEwR5/b08FCIuHBcZmeu6ocrkwRpJQ7CMwf2+fRzK8o=;
+        b=GXNqJE8MkSjDShDvC9yDZluu+iiqX7qHocrZi39M8iu9Y3Hvvbna0BEKsTJxmnqjWjzXWy
+        7B+XsSxLOFsPiXh7DU24EW46RT8m74XjyZ7OOkaxJbQxOQrLEi8/Lq2n9Ef2uTJMyyYjr2
+        IbswmaC7ikaNbpCrgNyR6DmChWDT4FY=
+Date:   Sat, 12 Jun 2021 00:01:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -74,32 +75,81 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/tsx: Add cmdline tsx=fake to not clear CPUID
- bits RTM and HLE
-Message-ID: <20210611213732.wdriyvmrkcu32fv7@gupta-dev2.localdomain>
+Subject: Re: [PATCH 2/4] perf/x86/intel: Do not deploy workaround when TSX is
+ deprecated
+Message-ID: <YMPdJkLJkQBJdIEL@zn.tnic>
 References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <de6b97a567e273adff1f5268998692bad548aa10.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <YMM1wUjg/REXCkQQ@zn.tnic>
+ <4926973a8b0b2ed78217add01b5c459a92f0d511.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
+ <YMMVvq9ZZCu9zZom@zn.tnic>
+ <20210611213443.ira5gc65jlafz7pu@gupta-dev2.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YMM1wUjg/REXCkQQ@zn.tnic>
+In-Reply-To: <20210611213443.ira5gc65jlafz7pu@gupta-dev2.localdomain>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11.06.2021 12:06, Borislav Petkov wrote:
->On Wed, Jun 09, 2021 at 02:14:39PM -0700, Pawan Gupta wrote:
->> On CPUs that deprecated TSX, clearing the enumeration bits CPUID.RTM and
->> CPUID.HLE may not be desirable in some corner cases. Like a saved guest
->> would refuse to resume if it was saved before the microcode update
->> that deprecated TSX.
->
->That corner case needs a lot more justification. Otherwise this is just
->silly.
+On Fri, Jun 11, 2021 at 02:34:43PM -0700, Pawan Gupta wrote:
+> > > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > > index e28892270c58..b5953e1e59a2 100644
+> > > --- a/arch/x86/events/intel/core.c
+> > > +++ b/arch/x86/events/intel/core.c
+> > > @@ -6016,10 +6016,24 @@ __init int intel_pmu_init(void)
+> > >  		intel_pmu_pebs_data_source_skl(pmem);
+> > > 
+> > >  		if (boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
+> > > -			x86_pmu.flags |= PMU_FL_TFA;
+> > > -			x86_pmu.get_event_constraints = tfa_get_event_constraints;
+> > > -			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
+> > > -			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
+> > > +			u64 msr;
+> > > +
+> > > +			rdmsrl(MSR_TSX_FORCE_ABORT, msr);
+> > > +			/* Systems that enumerate CPUID.RTM_ALWAYS_ABORT or
+> > > +			 * support MSR_TSX_FORCE_ABORT[SDV_ENABLE_RTM] bit have
+> > > +			 * TSX deprecated by default. TSX force abort hooks are
+> > > +			 * not required on these systems.
+> > 
+> > So if they're not required, why aren't you simply disabling the force
+> > abort "workaround" by clearing the feature flag?
+> 
+> Feature flag also enumerates MSR_TSX_FORCE_ABORT, which is still present
+> after the microcode update. Patch 3/4 in this series clears the TSX
+> CPUID bits using MSR_TSX_FORCE_ABORT. So we do need the feature flag
+> X86_FEATURE_TSX_FORCE_ABORT.
 
-Agree, chances of hitting the save/resume guest condition described
-above is low. I am okay with dropping this patch.
+So it seems to me then, the if test above should be changed to:
 
-Thanks,
-Pawan
+	if (boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT) && 
+	   !boot_cpu_has(X86_FEATURE_RTM_ALWAYS_ABORT)) {
+	   ...
+
+and no need for the MSR read.
+
+Please don't tell me there are configurations
+where CPUID.RTM_ALWAYS_ABORT is clear but the
+MSR_TSX_FORCE_ABORT[SDV_ENABLE_RTM] is there?!
+
+This
+
+"A new CPUID bit CPUID.RTM_ALWAYS_ABORT (CPUID 7.EDX[11]) is added to
+indicate the status of always abort behavior."
+
+tells me that the CPUID bit is always set by the microcode so we should
+be ok.
+
+If not, you should read that MSR early and do
+
+	setup_force_cpu_cap(X86_FEATURE_RTM_ALWAYS_ABORT)
+
+so that this "always abort" flag is always set when TSX transactions are
+always aborted.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
