@@ -2,237 +2,142 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AFEC48BD1
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 20:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF6BC48BD1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 21:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 304FD611B0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 20:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882C1613CC
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 21:31:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbhFKUyq (ORCPT
+        id S230298AbhFKVdV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Jun 2021 16:54:46 -0400
-Received: from mail-lf1-f47.google.com ([209.85.167.47]:45721 "EHLO
-        mail-lf1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230251AbhFKUyq (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Jun 2021 16:54:46 -0400
-Received: by mail-lf1-f47.google.com with SMTP id a1so10370792lfr.12;
-        Fri, 11 Jun 2021 13:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FJMRTqSs/Kom7t2BcrRbR29IGY5GYuNHPeYqcdCiO/o=;
-        b=L2aywsZ0O2WLQ5CHKfBkqvxwx2weLRbArBkc4yCz+XJQhLNMPj27K3KnDEua3+DxTS
-         N50CwMcDi/AsWeEThjvMdvjIJP3IZ7ynmD3zs7rs8+l1Cbra/Qat7t6s5+n27GCDhsVN
-         3S1lwQovVjQxJP5oqrFxCZ09AD+yAhuNSTnWSX6/WB2dhmBW1QBDuKdWonVDvaVLSj3W
-         3CcXu40RuYLes5gdSrPTe82D2yRGvyKLgzePy0qcQzQZve/u1G5knnQpwsGVyTkuwnL6
-         nk3kFMXSef6jeSGb20miOOZjnklzShGgUn8tn1z3iwV72LBNMtbyNQ6EJdK/5fPSXB+2
-         DYtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FJMRTqSs/Kom7t2BcrRbR29IGY5GYuNHPeYqcdCiO/o=;
-        b=FSN59VcnUKDl9MwNMAZJLmYTzB0NPNCJs7oGHGg+iyCUv9BX8zbVCqIUUdZ8TOlaEk
-         QtK497+2yuGdtUHpUZtBMxvu6IQW/H3TgFeH5P7XRUFB0YeIF9WGxrCn3NDm1nTJj4Yq
-         LBJI/+eOiX6XyXvgkY+EthtSoVWh9RMCHK/MC6W0vFCwKAZYU4hzRjSyu7XI6QHpEYl3
-         qji2xip6w5ryuD6WQvy140snokrBAHE7UlzFlqi6RAxiUD3YQ7Dq3VEvItH03jyiy5he
-         Q+8+7VDQx3U5yz8oWaKAGmJAZR6lfwoGTUBnZcBwBS9a7hdyGMA40FGYKCxhPU6FmEom
-         J8VA==
-X-Gm-Message-State: AOAM531z/SGivnDS+tLD8TED0FpazVG1jnGgdTW+bXJGxh5aNNJIl9ZF
-        wDAWD14rfhQIHjzP3kPBhEw=
-X-Google-Smtp-Source: ABdhPJyB1/0irCI1T0Hrvja4Za5wi91MbIFasLoDCP0rZKkjVPgITsMPFuKDKV0VckcQatveeGxCbg==
-X-Received: by 2002:ac2:548e:: with SMTP id t14mr3675650lfk.141.1623444690707;
-        Fri, 11 Jun 2021 13:51:30 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-228-193.NA.cust.bahnhof.se. [98.128.228.193])
-        by smtp.gmail.com with ESMTPSA id r7sm687118lfr.242.2021.06.11.13.51.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jun 2021 13:51:30 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Fri, 11 Jun 2021 17:33:21 -0400
+Received: from mga14.intel.com ([192.55.52.115]:12921 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230028AbhFKVdV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 11 Jun 2021 17:33:21 -0400
+IronPort-SDR: XU/5NqtnvivbSXRPlqEgYCigli5GgRc/bhSSx0NpSuxIeeMze42dLaTtoi1uvf12R0mw42e66Q
+ bJFJlcwjB89w==
+X-IronPort-AV: E=McAfee;i="6200,9189,10012"; a="205433117"
+X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
+   d="scan'208";a="205433117"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2021 14:31:21 -0700
+IronPort-SDR: qYaDt4miFhmPz+227d6FoxbgaUH3brrBV7XvB5DJaP/u4G7HgdDHiM3d47awuR09r/hzadm1aw
+ nZnwKNsY9+2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,267,1616482800"; 
+   d="scan'208";a="553535554"
+Received: from gupta-dev2.jf.intel.com (HELO gupta-dev2.localdomain) ([10.54.74.119])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Jun 2021 14:31:18 -0700
+Date:   Fri, 11 Jun 2021 14:31:29 -0700
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Alexander Antonov <alexander.antonov@linux.intel.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH V2 2/4] perf/x86/intel: Constify static attribute_group structs
-Date:   Fri, 11 Jun 2021 22:51:10 +0200
-Message-Id: <20210611205112.27225-3-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20210611205112.27225-1-rikard.falkeborn@gmail.com>
-References: <20210611205112.27225-1-rikard.falkeborn@gmail.com>
+        Joerg Roedel <jroedel@suse.de>,
+        Victor Ding <victording@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Anand K Mistry <amistry@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/4] x86/msr: Define new bits in TSX_FORCE_ABORT MSR
+Message-ID: <20210611213129.py2jyfzy37czegkm@gupta-dev2.localdomain>
+References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
+ <4a258368e1797d592d4b16f124bd88cf9c21ac35.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
+ <YMMhTwR7lJvA/9nu@zn.tnic>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <YMMhTwR7lJvA/9nu@zn.tnic>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-These either have their address put in an array of pointers to const
-attribute structs, or (in uncore_snb.c and uncore_snbep.c) have their
-address assigned to at pointer to const field in the intel_uncore_type
-struct.
+On 11.06.2021 10:39, Borislav Petkov wrote:
+>On Wed, Jun 09, 2021 at 01:58:02PM -0700, Pawan Gupta wrote:
+>> Intel client processors that support IA32_TSX_FORCE_ABORT MSR related to
+>> perf counter interaction [1] received a microcode update that deprecates
+>> Transactional Synchronization Extension (TSX) feature. MSR
+>> IA32_TSX_FORCE_ABORT bit FORCE_ABORT_RTM now defaults to 1, writes to
+>> this bit are ignored. A new bit TSX_CPUID_CLEAR clears the TSX related
+>> CPUID bits.
+>>
+>> Below is the summary of changes to IA32_TSX_FORCE_ABORT MSR:
+>>
+>>   Bit 0: FORCE_ABORT_RTM (legacy bit, new default=1) Status bit that
+>>   indicates if RTM transactions are always aborted. This bit is
+>>   essentially !SDV_ENABLE_RTM(Bit 2). Writes to this bit are ignored.
+>>
+>>   Bit 1: TSX_CPUID_CLEAR (new bit, default=0) When set, CPUID.HLE = 0
+>>   and CPUID.RTM = 0.
+>>
+>>   Bit 2: SDV_ENABLE_RTM (new bit, default=0) When clear, XBEGIN will
+>>   always abort with EAX code 0. When set, XBEGIN will not be forced to
+>>   abort (but will always abort in SGX enclaves). This bit is intended to
+>>   be SDV-only. If this bit is set transactional atomicity correctness is
+>
+>SDV?
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
-Changes since v1:
-- None
+Sorry should have expanded this. It stands for Software Development
+Vehicle (SDV), i.e. developer systems.
 
- arch/x86/events/intel/core.c         |  8 ++++----
- arch/x86/events/intel/cstate.c       | 10 +++++-----
- arch/x86/events/intel/pt.c           |  4 ++--
- arch/x86/events/intel/uncore_snb.c   |  2 +-
- arch/x86/events/intel/uncore_snbep.c |  2 +-
- 5 files changed, 13 insertions(+), 13 deletions(-)
+>>   not certain.
+>>
+>> Performance monitoring counter 3 is usable in all cases, regardless of
+>> the value of above bits.
+>>
+>> A new CPUID bit CPUID.RTM_ALWAYS_ABORT (CPUID 7.EDX[11]) is added to
+>> indicate the status of always abort behavior.
+>>
+>> Define these new CPUID and MSR bits.
+>>
+>> [1] Performance Monitoring Impact of Intel® Transactional Synchronization Extension Memory
+>>     http://cdrdv2.intel.com/v1/dl/getContent/604224
+>
+>That link does not look stable enough to put in commit messages.
+>Besides, you've said it all in the commit message already.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index e28892270c58..b07d832f304e 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -5164,12 +5164,12 @@ static struct attribute_group group_events_tsx = {
- 	.is_visible = tsx_is_visible,
- };
- 
--static struct attribute_group group_caps_gen = {
-+static const struct attribute_group group_caps_gen = {
- 	.name  = "caps",
- 	.attrs = intel_pmu_caps_attrs,
- };
- 
--static struct attribute_group group_caps_lbr = {
-+static const struct attribute_group group_caps_lbr = {
- 	.name       = "caps",
- 	.attrs	    = lbr_attrs,
- 	.is_visible = lbr_is_visible,
-@@ -5185,7 +5185,7 @@ static struct attribute_group group_format_extra_skl = {
- 	.is_visible = exra_is_visible,
- };
- 
--static struct attribute_group group_default = {
-+static const struct attribute_group group_default = {
- 	.attrs      = intel_pmu_attrs,
- 	.is_visible = default_is_visible,
- };
-@@ -5364,7 +5364,7 @@ static struct attribute *intel_hybrid_cpus_attrs[] = {
- 	NULL,
- };
- 
--static struct attribute_group hybrid_group_cpus = {
-+static const struct attribute_group hybrid_group_cpus = {
- 	.attrs		= intel_hybrid_cpus_attrs,
- };
- 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 433399069e27..089f71ac83f5 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -187,7 +187,7 @@ static struct attribute *attrs_empty[] = {
-  * "events" group (with empty attrs) before updating
-  * it with detected events.
-  */
--static struct attribute_group core_events_attr_group = {
-+static const struct attribute_group core_events_attr_group = {
- 	.name = "events",
- 	.attrs = attrs_empty,
- };
-@@ -198,7 +198,7 @@ static struct attribute *core_format_attrs[] = {
- 	NULL,
- };
- 
--static struct attribute_group core_format_attr_group = {
-+static const struct attribute_group core_format_attr_group = {
- 	.name = "format",
- 	.attrs = core_format_attrs,
- };
-@@ -211,7 +211,7 @@ static struct attribute *cstate_cpumask_attrs[] = {
- 	NULL,
- };
- 
--static struct attribute_group cpumask_attr_group = {
-+static const struct attribute_group cpumask_attr_group = {
- 	.attrs = cstate_cpumask_attrs,
- };
- 
-@@ -266,7 +266,7 @@ static struct perf_msr pkg_msr[] = {
- 	[PERF_CSTATE_PKG_C10_RES] = { MSR_PKG_C10_RESIDENCY,	&group_cstate_pkg_c10,	test_msr },
- };
- 
--static struct attribute_group pkg_events_attr_group = {
-+static const struct attribute_group pkg_events_attr_group = {
- 	.name = "events",
- 	.attrs = attrs_empty,
- };
-@@ -276,7 +276,7 @@ static struct attribute *pkg_format_attrs[] = {
- 	&format_attr_pkg_event.attr,
- 	NULL,
- };
--static struct attribute_group pkg_format_attr_group = {
-+static const struct attribute_group pkg_format_attr_group = {
- 	.name = "format",
- 	.attrs = pkg_format_attrs,
- };
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index 915847655c06..83ccf106ed13 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -128,7 +128,7 @@ static struct attribute *pt_formats_attr[] = {
- 	NULL,
- };
- 
--static struct attribute_group pt_format_group = {
-+static const struct attribute_group pt_format_group = {
- 	.name	= "format",
- 	.attrs	= pt_formats_attr,
- };
-@@ -165,7 +165,7 @@ static struct attribute *pt_timing_attr[] = {
- 	NULL,
- };
- 
--static struct attribute_group pt_timing_group = {
-+static const struct attribute_group pt_timing_group = {
- 	.attrs	= pt_timing_attr,
- };
- 
-diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
-index 2938679f0002..e30b69fba939 100644
---- a/arch/x86/events/intel/uncore_snb.c
-+++ b/arch/x86/events/intel/uncore_snb.c
-@@ -369,7 +369,7 @@ static struct attribute *icl_uncore_clock_formats_attr[] = {
- 	NULL,
- };
- 
--static struct attribute_group icl_uncore_clock_format_group = {
-+static const struct attribute_group icl_uncore_clock_format_group = {
- 	.name = "format",
- 	.attrs = icl_uncore_clock_formats_attr,
- };
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 43eabe8d37dc..b5b22fe473d8 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -4001,7 +4001,7 @@ static struct attribute *skx_uncore_pcu_formats_attr[] = {
- 	NULL,
- };
- 
--static struct attribute_group skx_uncore_pcu_format_group = {
-+static const struct attribute_group skx_uncore_pcu_format_group = {
- 	.name = "format",
- 	.attrs = skx_uncore_pcu_formats_attr,
- };
--- 
-2.32.0
+The important part is the Document ID 604224. I can remove the link
+completely, or add the document ID to it, whatever you suggest:
 
+	[1] Performance Monitoring Impact of Intel® Transactional Synchronization Extension Memory
+	    http://cdrdv2.intel.com/v1/dl/getContent/604224 (Document ID 604224).
+							     ^^^^^^^^^^^^^^^^^^
+
+Thanks,
+Pawan
