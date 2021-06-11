@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DBD1C48BD1
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 20:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A2C48BD1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 20:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFA061278
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 20:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555A661182
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 20:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230298AbhFKUxk (ORCPT
+        id S230478AbhFKUxp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Jun 2021 16:53:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54576 "EHLO
+        Fri, 11 Jun 2021 16:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbhFKUxk (ORCPT
+        with ESMTP id S230382AbhFKUxp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Jun 2021 16:53:40 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3497CC0613A2;
-        Fri, 11 Jun 2021 13:51:34 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id p17so10420908lfc.6;
-        Fri, 11 Jun 2021 13:51:34 -0700 (PDT)
+        Fri, 11 Jun 2021 16:53:45 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36E28C0617AF;
+        Fri, 11 Jun 2021 13:51:33 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id n17so11368464ljg.2;
+        Fri, 11 Jun 2021 13:51:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Qp6lxg9EERP3PQXD0xjPQqg+lbx3ZNQq2ocPFT5ueOw=;
-        b=bsu3sCwjR29vmzo9EWlM6MYBXc21bVBae9hjP+Y25Yw45pNXNFfuOCzl7JI0zGTuuq
-         VUnQ24kota3X7XXvP5/Rv6wxwAkhyD7+KuDkMOekQyf8IAG+rGbIrJcn0XnZIPjJ3PuI
-         mth1V5LjiYRDsAKgbMOEO6yzoLG29edIxjQrDyLw0VWtkFDk2pQMmCcSxlLwh4kgW4nn
-         W6o5WhePT9DliMjt6msEEcPRzbL8juUepTFFxxsemVdf2w5vOD2WqUmShL2aFtLxPMNx
-         PFeHmN0T/jKNyjD5XVJ90iNM6RGql2lxTkR+Q5VyN/WGb/TxYvwsP9YuyOT+dO2+fNoR
-         TenQ==
+        bh=J0KQ333VmXMh9WkmLlAfo8ONJKiYjxWClfdlf5KolZ0=;
+        b=S1H5+K1OuSLbpurapwR3Cmk/hPmg99rWIdp6GG32kCGnIKiUVuXwn0S1Kn3eF+GWuI
+         fLw7pbo8uDy/HI8cg+WvLWgUA7FqmUQy15ni2s5U1wpSGgimLUfPKInedWiRzr39Tuqq
+         JxTnSkhEDFyABfD6cmMm0CHJwiJxtRsw6q4dLWWW0QtyXoT7IA2mY+IE4D79qh6UfcO4
+         Rws71hWYjvriZviShx+hIvHehPwsNlngAIk6ljk0nk60lceaXZ05CwKanGJn4qtWMS40
+         hWeYpIkOUN+Lyb1XUbmtt2H2X9l9mrMSV3F25D2AzYk01XrreGePDpcCDcEyxA7Yi4Vn
+         moYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Qp6lxg9EERP3PQXD0xjPQqg+lbx3ZNQq2ocPFT5ueOw=;
-        b=E8PjYKSTgf2soPN0NQO9eEogmUfPIfADgNZo03VrhWL07M0g3Fkg7/NBTiW7F+4IPn
-         yt+elMbNL9haTwrmic+5PKGn64NPbLcCV9I+sWUmJDsdyT9nhrx0povb3RdYBLaLagrE
-         6V6i3JA762z8yAmEkzQ1BWTpgucew3TRZ+tYtw1pN4aSrPvKHeYZXkkzoG7w+FFfnWHX
-         yfTidvf5UP+3yJ7gFVnFfnjGqkqZjCb6I0URfV2Y5JjZM1aU07GGoOeidve+B+8AL5SA
-         uK1c1LPk1tDL5KiNiz5/Exnn64DI88IXggJcDitCRSqp26wNsZ3S4GfnwNnf6opAyNUv
-         iJpA==
-X-Gm-Message-State: AOAM531y5hoRQ5u2ePvuuX5T+MMa7Hby3kYch6g8p9a5+YUGdgHpeJQd
-        Hh35Nng06EgBABuWYOT9vM4=
-X-Google-Smtp-Source: ABdhPJwjJI4EoOvDqnBWZHRAZv3TSYnJNRD2xYLOjT/VkER2BqdyzCztRN5PmdWU5Muanp2hJSssog==
-X-Received: by 2002:ac2:5479:: with SMTP id e25mr3773385lfn.632.1623444692563;
-        Fri, 11 Jun 2021 13:51:32 -0700 (PDT)
+        bh=J0KQ333VmXMh9WkmLlAfo8ONJKiYjxWClfdlf5KolZ0=;
+        b=rT+KfStl6t5XQbTTbd3qnaRcMqQLcXL26vPMR5SV9dLohrJxD55q6njaETMpt7c0BL
+         NMLRGKHiscYTzK2NM95H+gipih2s1A2O6xPlxytfUctGxywhDhcFZLylrytn+IEfFl7/
+         ZaE/TlaiM2I/l90/DUy+AjDYFaij2BdOCHCYnrbq2nrgQMP/R85SWtC3EDlFrhAuw4Mq
+         lV3MYGlTYwoR8Bo0/Nqm5hZLShLTuQFtyFtuZdtAp9+8ZfIDGxH5JPxWZ5v7E06FNLr7
+         OlCuUPuzb2BWQQF16stB4fQpAx3ZwNFBJSNCXUt/F3kscvdAuOmeVuPvrcGMv6hg7g0T
+         kmPQ==
+X-Gm-Message-State: AOAM533jIsAvjN5GDKu4cveVzXFQPxTAUcFMtEsuSkOZ+pwxgusSTuLs
+        u0+SmqOmCi7xxh5N41U7Tqg=
+X-Google-Smtp-Source: ABdhPJwQn6SDbfxnaN1xsaDGqJuGjSrsJz/QWNF8bg4XEViptmbyNV6U6+kigFmk1wu4LuOcxll6Ow==
+X-Received: by 2002:a2e:8816:: with SMTP id x22mr4507760ljh.181.1623444691562;
+        Fri, 11 Jun 2021 13:51:31 -0700 (PDT)
 Received: from localhost.localdomain (h-98-128-228-193.NA.cust.bahnhof.se. [98.128.228.193])
-        by smtp.gmail.com with ESMTPSA id r7sm687118lfr.242.2021.06.11.13.51.31
+        by smtp.gmail.com with ESMTPSA id r7sm687118lfr.242.2021.06.11.13.51.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jun 2021 13:51:32 -0700 (PDT)
+        Fri, 11 Jun 2021 13:51:31 -0700 (PDT)
 From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
@@ -73,9 +73,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Alexander Antonov <alexander.antonov@linux.intel.com>,
         Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH V2 4/4] perf/x86/intel/uncore: Constify unmodified static extra_reg structs
-Date:   Fri, 11 Jun 2021 22:51:12 +0200
-Message-Id: <20210611205112.27225-5-rikard.falkeborn@gmail.com>
+Subject: [PATCH V2 3/4] perf/x86/intel/uncore: Constify freerunning_counters
+Date:   Fri, 11 Jun 2021 22:51:11 +0200
+Message-Id: <20210611205112.27225-4-rikard.falkeborn@gmail.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <20210611205112.27225-1-rikard.falkeborn@gmail.com>
 References: <20210611205112.27225-1-rikard.falkeborn@gmail.com>
@@ -93,135 +93,121 @@ Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 Changes since v1:
 - None
 
- arch/x86/events/intel/uncore_nhmex.c |  6 +++---
- arch/x86/events/intel/uncore_snbep.c | 20 ++++++++++----------
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ arch/x86/events/intel/uncore.h       |  4 ++--
+ arch/x86/events/intel/uncore_snb.c   |  6 +++---
+ arch/x86/events/intel/uncore_snbep.c | 14 +++++++-------
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/events/intel/uncore_nhmex.c b/arch/x86/events/intel/uncore_nhmex.c
-index 5f7c27d7f428..b4567489580d 100644
---- a/arch/x86/events/intel/uncore_nhmex.c
-+++ b/arch/x86/events/intel/uncore_nhmex.c
-@@ -525,7 +525,7 @@ enum {
- 	EXTRA_REG_NHMEX_M_ZDP_CTL_FVC,
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 83b25a7b8c27..6a7f0104bb38 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -79,7 +79,7 @@ struct intel_uncore_type {
+ 	struct intel_uncore_pmu *pmus;
+ 	const struct intel_uncore_ops *ops;
+ 	struct uncore_event_desc *event_descs;
+-	struct freerunning_counters *freerunning;
++	const struct freerunning_counters *freerunning;
+ 	const struct attribute_group *attr_groups[4];
+ 	const struct attribute_group **attr_update;
+ 	struct pmu *pmu; /* for custom pmu ops */
+@@ -175,7 +175,7 @@ struct freerunning_counters {
+ 	unsigned int box_offset;
+ 	unsigned int num_counters;
+ 	unsigned int bits;
+-	unsigned *box_offsets;
++	const unsigned *box_offsets;
  };
  
--static struct extra_reg nhmex_uncore_mbox_extra_regs[] = {
-+static const struct extra_reg nhmex_uncore_mbox_extra_regs[] = {
- 	MBOX_INC_SEL_EXTAR_REG(0x0, DSP),
- 	MBOX_INC_SEL_EXTAR_REG(0x4, MSC_THR),
- 	MBOX_INC_SEL_EXTAR_REG(0x5, MSC_THR),
-@@ -755,7 +755,7 @@ static void nhmex_mbox_put_constraint(struct intel_uncore_box *box, struct perf_
- 	}
- }
+ struct intel_uncore_topology {
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index e30b69fba939..d9542943cdbe 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -611,7 +611,7 @@ enum perf_snb_uncore_imc_freerunning_types {
+ 	SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
+ };
  
--static int nhmex_mbox_extra_reg_idx(struct extra_reg *er)
-+static int nhmex_mbox_extra_reg_idx(const struct extra_reg *er)
- {
- 	if (er->idx < EXTRA_REG_NHMEX_M_ZDP_CTL_FVC)
- 		return er->idx;
-@@ -767,7 +767,7 @@ static int nhmex_mbox_hw_config(struct intel_uncore_box *box, struct perf_event
- 	struct intel_uncore_type *type = box->pmu->type;
- 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
- 	struct hw_perf_event_extra *reg2 = &event->hw.branch_reg;
--	struct extra_reg *er;
-+	const struct extra_reg *er;
- 	unsigned msr;
- 	int reg_idx = 0;
- 	/*
+-static struct freerunning_counters snb_uncore_imc_freerunning[] = {
++static const struct freerunning_counters snb_uncore_imc_freerunning[] = {
+ 	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_READS_BASE,
+ 							0x0, 0x0, 1, 32 },
+ 	[SNB_PCI_UNCORE_IMC_DATA_WRITES]	= { SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE,
+@@ -1352,13 +1352,13 @@ enum perf_tgl_uncore_imc_freerunning_types {
+ 	TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
+ };
+ 
+-static struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
++static const struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
+ 	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x5040, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x5058, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0x50A0, 0x0, 0x0, 1, 64 },
+ };
+ 
+-static struct freerunning_counters tgl_uncore_imc_freerunning[] = {
++static const struct freerunning_counters tgl_uncore_imc_freerunning[] = {
+ 	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0xd840, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0xd858, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xd8A0, 0x0, 0x0, 1, 64 },
 diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index 507bb83e1463..77b342637688 100644
+index b5b22fe473d8..507bb83e1463 100644
 --- a/arch/x86/events/intel/uncore_snbep.c
 +++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -882,7 +882,7 @@ static struct intel_uncore_type snbep_uncore_ubox = {
- 	.format_group	= &snbep_uncore_ubox_format_group,
+@@ -3885,7 +3885,7 @@ enum perf_uncore_iio_freerunning_type_id {
  };
  
--static struct extra_reg snbep_uncore_cbox_extra_regs[] = {
-+static const struct extra_reg snbep_uncore_cbox_extra_regs[] = {
- 	SNBEP_CBO_EVENT_EXTRA_REG(SNBEP_CBO_PMON_CTL_TID_EN,
- 				  SNBEP_CBO_PMON_CTL_TID_EN, 0x1),
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x0334, 0xffff, 0x4),
-@@ -999,7 +999,7 @@ snbep_cbox_get_constraint(struct intel_uncore_box *box, struct perf_event *event
- static int snbep_cbox_hw_config(struct intel_uncore_box *box, struct perf_event *event)
- {
- 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
--	struct extra_reg *er;
-+	const struct extra_reg *er;
- 	int idx = 0;
  
- 	for (er = snbep_uncore_cbox_extra_regs; er->msr; er++) {
-@@ -1653,7 +1653,7 @@ static struct intel_uncore_type ivbep_uncore_ubox = {
- 	.format_group	= &ivbep_uncore_ubox_format_group,
+-static struct freerunning_counters skx_iio_freerunning[] = {
++static const struct freerunning_counters skx_iio_freerunning[] = {
+ 	[SKX_IIO_MSR_IOCLK]	= { 0xa45, 0x1, 0x20, 1, 36 },
+ 	[SKX_IIO_MSR_BW]	= { 0xb00, 0x1, 0x10, 8, 36 },
+ 	[SKX_IIO_MSR_UTIL]	= { 0xb08, 0x1, 0x10, 8, 36 },
+@@ -4588,7 +4588,7 @@ enum perf_uncore_snr_iio_freerunning_type_id {
+ 	SNR_IIO_FREERUNNING_TYPE_MAX,
  };
  
--static struct extra_reg ivbep_uncore_cbox_extra_regs[] = {
-+static const struct extra_reg ivbep_uncore_cbox_extra_regs[] = {
- 	SNBEP_CBO_EVENT_EXTRA_REG(SNBEP_CBO_PMON_CTL_TID_EN,
- 				  SNBEP_CBO_PMON_CTL_TID_EN, 0x1),
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x1031, 0x10ff, 0x2),
-@@ -1725,7 +1725,7 @@ ivbep_cbox_get_constraint(struct intel_uncore_box *box, struct perf_event *event
- static int ivbep_cbox_hw_config(struct intel_uncore_box *box, struct perf_event *event)
- {
- 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
--	struct extra_reg *er;
-+	const struct extra_reg *er;
- 	int idx = 0;
- 
- 	for (er = ivbep_uncore_cbox_extra_regs; er->msr; er++) {
-@@ -2121,7 +2121,7 @@ static struct event_constraint knl_uncore_cha_constraints[] = {
- 	EVENT_CONSTRAINT_END
+-static struct freerunning_counters snr_iio_freerunning[] = {
++static const struct freerunning_counters snr_iio_freerunning[] = {
+ 	[SNR_IIO_MSR_IOCLK]	= { 0x1eac, 0x1, 0x10, 1, 48 },
+ 	[SNR_IIO_MSR_BW_IN]	= { 0x1f00, 0x1, 0x10, 8, 48 },
+ };
+@@ -4931,7 +4931,7 @@ enum perf_uncore_snr_imc_freerunning_type_id {
+ 	SNR_IMC_FREERUNNING_TYPE_MAX,
  };
  
--static struct extra_reg knl_uncore_cha_extra_regs[] = {
-+static const struct extra_reg knl_uncore_cha_extra_regs[] = {
- 	SNBEP_CBO_EVENT_EXTRA_REG(SNBEP_CBO_PMON_CTL_TID_EN,
- 				  SNBEP_CBO_PMON_CTL_TID_EN, 0x1),
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x3d, 0xff, 0x2),
-@@ -2153,7 +2153,7 @@ static int knl_cha_hw_config(struct intel_uncore_box *box,
- 			     struct perf_event *event)
- {
- 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
--	struct extra_reg *er;
-+	const struct extra_reg *er;
- 	int idx = 0;
- 
- 	for (er = knl_uncore_cha_extra_regs; er->msr; er++) {
-@@ -2637,7 +2637,7 @@ static struct event_constraint hswep_uncore_cbox_constraints[] = {
- 	EVENT_CONSTRAINT_END
+-static struct freerunning_counters snr_imc_freerunning[] = {
++static const struct freerunning_counters snr_imc_freerunning[] = {
+ 	[SNR_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
+ 	[SNR_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
+ };
+@@ -5153,15 +5153,15 @@ enum perf_uncore_icx_iio_freerunning_type_id {
+ 	ICX_IIO_FREERUNNING_TYPE_MAX,
  };
  
--static struct extra_reg hswep_uncore_cbox_extra_regs[] = {
-+static const struct extra_reg hswep_uncore_cbox_extra_regs[] = {
- 	SNBEP_CBO_EVENT_EXTRA_REG(SNBEP_CBO_PMON_CTL_TID_EN,
- 				  SNBEP_CBO_PMON_CTL_TID_EN, 0x1),
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x0334, 0xffff, 0x4),
-@@ -2708,7 +2708,7 @@ hswep_cbox_get_constraint(struct intel_uncore_box *box, struct perf_event *event
- static int hswep_cbox_hw_config(struct intel_uncore_box *box, struct perf_event *event)
- {
- 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
--	struct extra_reg *er;
-+	const struct extra_reg *er;
- 	int idx = 0;
- 
- 	for (er = hswep_uncore_cbox_extra_regs; er->msr; er++) {
-@@ -3547,7 +3547,7 @@ static struct event_constraint skx_uncore_chabox_constraints[] = {
- 	EVENT_CONSTRAINT_END
+-static unsigned icx_iio_clk_freerunning_box_offsets[] = {
++static const unsigned icx_iio_clk_freerunning_box_offsets[] = {
+ 	0x0, 0x20, 0x40, 0x90, 0xb0, 0xd0,
  };
  
--static struct extra_reg skx_uncore_cha_extra_regs[] = {
-+static const struct extra_reg skx_uncore_cha_extra_regs[] = {
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x0334, 0xffff, 0x4),
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x0534, 0xffff, 0x4),
- 	SNBEP_CBO_EVENT_EXTRA_REG(0x0934, 0xffff, 0x4),
-@@ -3593,7 +3593,7 @@ skx_cha_get_constraint(struct intel_uncore_box *box, struct perf_event *event)
- static int skx_cha_hw_config(struct intel_uncore_box *box, struct perf_event *event)
- {
- 	struct hw_perf_event_extra *reg1 = &event->hw.extra_reg;
--	struct extra_reg *er;
-+	const struct extra_reg *er;
- 	int idx = 0;
+-static unsigned icx_iio_bw_freerunning_box_offsets[] = {
++static const unsigned icx_iio_bw_freerunning_box_offsets[] = {
+ 	0x0, 0x10, 0x20, 0x90, 0xa0, 0xb0,
+ };
  
- 	for (er = skx_uncore_cha_extra_regs; er->msr; er++) {
+-static struct freerunning_counters icx_iio_freerunning[] = {
++static const struct freerunning_counters icx_iio_freerunning[] = {
+ 	[ICX_IIO_MSR_IOCLK]	= { 0xa55, 0x1, 0x20, 1, 48, icx_iio_clk_freerunning_box_offsets },
+ 	[ICX_IIO_MSR_BW_IN]	= { 0xaa0, 0x1, 0x10, 8, 48, icx_iio_bw_freerunning_box_offsets },
+ };
+@@ -5443,7 +5443,7 @@ enum perf_uncore_icx_imc_freerunning_type_id {
+ 	ICX_IMC_FREERUNNING_TYPE_MAX,
+ };
+ 
+-static struct freerunning_counters icx_imc_freerunning[] = {
++static const struct freerunning_counters icx_imc_freerunning[] = {
+ 	[ICX_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
+ 	[ICX_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
+ 	[ICX_IMC_DDRT]	= { 0x22a0, 0x8, 0, 2, 48 },
 -- 
 2.32.0
 
