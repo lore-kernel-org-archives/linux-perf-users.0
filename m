@@ -2,308 +2,123 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36445C48BE0
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 09:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06D6C48BD1
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 10:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC0C613C8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 09:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B99613D9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 11 Jun 2021 10:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231454AbhFKJCs (ORCPT
+        id S230034AbhFKKIA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 11 Jun 2021 05:02:48 -0400
-Received: from foss.arm.com ([217.140.110.172]:52322 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231440AbhFKJCs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 11 Jun 2021 05:02:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D897513D5;
-        Fri, 11 Jun 2021 02:00:50 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.8.45])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 074C03F719;
-        Fri, 11 Jun 2021 02:00:47 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, leo.yan@linaro.org
-Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
+        Fri, 11 Jun 2021 06:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229480AbhFKKH5 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 11 Jun 2021 06:07:57 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CAF3C061574;
+        Fri, 11 Jun 2021 03:05:59 -0700 (PDT)
+Received: from zn.tnic (p2e584d18.dip0.t-ipconnect.de [46.88.77.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 94D5D1EC03D2;
+        Fri, 11 Jun 2021 12:05:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1623405957;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=F/G61vuOPAm8qEIwPwffMg7wC8m21HUrHgj+I72io2c=;
+        b=L5CyWlfaAQYt6BTFsy5ePtaPuYJWiEz5x4+CgT5BygvRfA/OWmfIPJiYTcY/tq07Jgol/f
+        iKUkdMvLFz2hpohDS2nuEGyMJmps/D4ZMXZOZQY6vUF6LtBmNlLvpYVMnjDUtdpEqa/sL+
+        BYxaHz38csij7zXeGmUQBEIjzb1SnJw=
+Date:   Fri, 11 Jun 2021 12:03:41 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 1/1] perf cs-etm: Split Coresight decode by aux records
-Date:   Fri, 11 Jun 2021 12:00:38 +0300
-Message-Id: <20210611090039.22450-2-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210611090039.22450-1-james.clark@arm.com>
-References: <20210611090039.22450-1-james.clark@arm.com>
+        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Victor Ding <victording@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Anand K Mistry <amistry@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@gooogle.com>,
+        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/4] x86/tsx: Clear CPUID bits when TSX always force
+ aborts
+Message-ID: <YMM0/SARv62uo41r@zn.tnic>
+References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
+ <aaf129dab23878913bf6f370894c336fc45388a2.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aaf129dab23878913bf6f370894c336fc45388a2.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Populate the auxtrace queues using AUX records rather than whole
-auxtrace buffers so that the decoder is reset between each aux record.
+On Wed, Jun 09, 2021 at 02:13:38PM -0700, Pawan Gupta wrote:
+> @@ -114,6 +127,26 @@ void __init tsx_init(void)
+>  			tsx_ctrl_state = TSX_CTRL_ENABLE;
+>  	}
+>  
+> +	/*
+> +	 * Hardware will always abort a TSX transaction if both CPUID bits
+> +	 * RTM_ALWAYS_ABORT and TSX_FORCE_ABORT are enumerated.  In this case it
+> +	 * is better not to enumerate CPUID.RTM and CPUID.HLE bits. Clear them
+> +	 * here.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_RTM_ALWAYS_ABORT) &&
+> +	    boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
+> +		tsx_ctrl_state = TSX_CTRL_RTM_ALWAYS_ABORT;
+> +		tsx_clear_cpuid();
+> +		setup_clear_cpu_cap(X86_FEATURE_RTM);
+> +		setup_clear_cpu_cap(X86_FEATURE_HLE);
+> +		return;
+> +	}
 
-This is similar to the auxtrace_queues__process_index() ->
-auxtrace_queues__add_indexed_event() flow where
-perf_session__peek_event() is used to read AUXTRACE events out of
-random positions in the file based on the auxtrace index. But now we
-loop over all PERF_RECORD_AUX events instead of AUXTRACE buffers. For
-each PERF_RECORD_AUX event, we find the corresponding AUXTRACE buffer
-using the index, and add a fragment of that buffer to the auxtrace
-queues. No other changes to decoding were made, apart from populating
-the auxtrace queues. The result of decoding is identical to before,
-except in cases where decoding failed completely, due to not resetting
-the decoder.
+Why isn't this happening as the first thing on entry in that tsx_init()
+function? IOW, there's no point to noodle through cmdline options etc if
+the hardware will always abort transactions.
 
-The reason for this change is because AUX records are emitted any time
-tracing is disabled, for example when the process is scheduled out.
-Because ETM was disabled and enabled again, the decoder also needs to
-be reset to force the search for a sync packet. Otherwise there would
-be fatal decoding errors.
-
-Testing
-=======
-
-Testing was done with the following script, to diff the decoding results
-between the patched and un-patched versions of perf:
-
-	#!/bin/bash
-	set -ex
-
-	$1 script -i $3 $4 > split.script
-	$2 script -i $3 $4 > default.script
-
-	diff split.script default.script | head -n 20
-
-And it was run like this, with various itrace options depending on the
-quantity of synthesised events:
-
-	compare.sh ./perf-patched ./perf-default perf-per-cpu-2-threads.data --itrace=i100000ns
-
-No changes in output were observed in the following scenarios:
-
-* Simple per-cpu
-	perf record -e cs_etm/@tmc_etr0/u top
-
-* Per-thread, single thread
-	perf record -e cs_etm/@tmc_etr0/u --per-thread ./threads_C
-
-* Per-thread multiple threads (but only one thread collected data):
-	perf record -e cs_etm/@tmc_etr0/u --per-thread --pid 4596,4597
-
-* Per-thread multiple threads (both threads collected data):
-	perf record -e cs_etm/@tmc_etr0/u --per-thread --pid 4596,4597
-
-* Per-cpu explicit threads:
-	perf record -e cs_etm/@tmc_etr0/u --pid 853,854
-
-* System-wide (per-cpu):
-    perf record -e cs_etm/@tmc_etr0/u -a
-
-* No data collected (no aux buffers)
-	Can happen with any command when run for a short period
-
-* Containing truncated records
-	Can happen with any command
-
-* Containing aux records with 0 size
-	Can happen with any command
-
-* Snapshot mode
-	perf record -e cs_etm/@tmc_etr0/u -a --snapshot
-
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/cs-etm.c | 156 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 155 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 64536a6ed10a..2e764f140d5e 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -2679,6 +2679,160 @@ static u64 *cs_etm__create_meta_blk(u64 *buff_in, int *buff_in_offset,
- 	return metadata;
- }
- 
-+/**
-+ * Puts a fragment of an auxtrace buffer into the auxtrace queues based
-+ * on the bounds of aux_event, if it matches with the buffer that's at
-+ * file_offset.
-+ *
-+ * Normally, whole auxtrace buffers would be added to the queue. But we
-+ * want to reset the decoder for every PERF_RECORD_AUX event, and the decoder
-+ * is reset across each buffer, so splitting the buffers up in advance has
-+ * the same effect.
-+ */
-+static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_offset, size_t sz,
-+				      struct perf_record_aux *aux_event, struct perf_sample *sample)
-+{
-+	int err;
-+	char buf[PERF_SAMPLE_MAX_SIZE];
-+	union perf_event *auxtrace_event_union;
-+	struct perf_record_auxtrace *auxtrace_event;
-+	union perf_event auxtrace_fragment;
-+	__u64 aux_offset;
-+	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
-+						   struct cs_etm_auxtrace,
-+						   auxtrace);
-+
-+	/*
-+	 * There should be a PERF_RECORD_AUXTRACE event at the file_offset that we got
-+	 * from looping through the auxtrace index.
-+	 */
-+	err = perf_session__peek_event(session, file_offset, buf,
-+				       PERF_SAMPLE_MAX_SIZE, &auxtrace_event_union, NULL);
-+	if (err)
-+		return err;
-+	auxtrace_event = &auxtrace_event_union->auxtrace;
-+	if (auxtrace_event->header.type != PERF_RECORD_AUXTRACE)
-+		return -EINVAL;
-+
-+	if (auxtrace_event->header.size < sizeof(struct perf_record_auxtrace) ||
-+		auxtrace_event->header.size != sz) {
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * In per-thread mode, CPU is set to -1, but TID will be set instead. See
-+	 * auxtrace_mmap_params__set_idx(). Return 'not found' if neither CPU nor TID match.
-+	 */
-+	if ((auxtrace_event->cpu == (__u32) -1 && auxtrace_event->tid != sample->tid) ||
-+			auxtrace_event->cpu != sample->cpu)
-+		return 1;
-+
-+	/*
-+	 * In snapshot/overwrite mode, the head points to the end of the buffer so aux_offset needs
-+	 * to have the size subtracted so it points to the beginning as in normal mode.
-+	 */
-+	if (aux_event->flags & PERF_AUX_FLAG_OVERWRITE)
-+		aux_offset = aux_event->aux_offset - aux_event->aux_size;
-+	else
-+		aux_offset = aux_event->aux_offset;
-+
-+	if (aux_offset >= auxtrace_event->offset &&
-+	    aux_offset + aux_event->aux_size <= auxtrace_event->offset + auxtrace_event->size) {
-+		/*
-+		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
-+		 * based on the sizes of the aux event, and queue that fragment.
-+		 */
-+		auxtrace_fragment.auxtrace = *auxtrace_event;
-+		auxtrace_fragment.auxtrace.size = aux_event->aux_size;
-+		auxtrace_fragment.auxtrace.offset = aux_offset;
-+		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
-+		return auxtrace_queues__add_event(&etm->queues, session,
-+						  &auxtrace_fragment,
-+						  file_offset, NULL);
-+	}
-+
-+	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
-+	return 1;
-+}
-+
-+static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf_event *event,
-+					u64 offset __maybe_unused, void *data __maybe_unused)
-+{
-+	struct perf_sample sample;
-+	int ret;
-+	struct auxtrace_index_entry *ent;
-+	struct auxtrace_index *auxtrace_index;
-+	struct evsel *evsel;
-+	size_t i;
-+
-+	/* Don't care about any other events, we're only queuing buffers for AUX events */
-+	if (event->header.type != PERF_RECORD_AUX)
-+		return 0;
-+
-+	if (event->header.size < sizeof(struct perf_record_aux))
-+		return -EINVAL;
-+
-+	/* Truncated Aux records can have 0 size and shouldn't result in anything being queued. */
-+	if (!event->aux.aux_size)
-+		return 0;
-+
-+	/*
-+	 * Parse the sample, we need the sample_id_all data that comes after the event so that the
-+	 * CPU or PID can be matched to an AUXTRACE buffer's CPU or PID.
-+	 */
-+	evsel = evlist__event2evsel(session->evlist, event);
-+	if (!evsel)
-+		return -EINVAL;
-+	ret = evsel__parse_sample(evsel, event, &sample);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Loop throuch the auxtrace index to find the buffer that matches up with this aux event.
-+	 */
-+	list_for_each_entry(auxtrace_index, &session->auxtrace_index, list) {
-+		for (i = 0; i < auxtrace_index->nr; i++) {
-+			ent = &auxtrace_index->entries[i];
-+			ret = cs_etm__queue_aux_fragment(session, ent->file_offset,
-+							 ent->sz, &event->aux, &sample);
-+			/*
-+			 * Stop search on error or successful values. Continue search on
-+			 * 1 ('not found')
-+			 */
-+			if (ret != 1)
-+				return ret;
-+		}
-+	}
-+
-+	/*
-+	 * Couldn't find the buffer corresponding to this aux record, something went wrong. Warn but
-+	 * don't exit with an error because it will still be possible to decode other aux records.
-+	 */
-+	pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset %"PRI_lx64"\n",
-+	       event->aux.aux_offset);
-+	return 0;
-+}
-+
-+static int cs_etm__queue_aux_records(struct perf_session *session)
-+{
-+	struct auxtrace_index *index = list_first_entry_or_null(&session->auxtrace_index,
-+								struct auxtrace_index, list);
-+	if (index && index->nr > 0)
-+		return perf_session__peek_events(session, session->header.data_offset,
-+						 session->header.data_size,
-+						 cs_etm__queue_aux_records_cb, NULL);
-+
-+	/*
-+	 * We would get here if there are no entries in the index (either no auxtrace
-+	 * buffers or no index at all). Fail silently as there is the possibility of
-+	 * queueing them in cs_etm__process_auxtrace_event() if etm->data_queued is still
-+	 * false.
-+	 *
-+	 * In that scenario, buffers will not be split by AUX records.
-+	 */
-+	return 0;
-+}
-+
- int cs_etm__process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session)
- {
-@@ -2879,7 +3033,7 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
- 	if (err)
- 		goto err_delete_thread;
- 
--	err = auxtrace_queues__process_index(&etm->queues, session);
-+	err = cs_etm__queue_aux_records(session);
- 	if (err)
- 		goto err_delete_thread;
- 
 -- 
-2.28.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
