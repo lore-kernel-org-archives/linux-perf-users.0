@@ -2,220 +2,140 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6819BC2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Jun 2021 15:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E55A4C48BE6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Jun 2021 21:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D8561185
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Jun 2021 15:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B897F613AC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Jun 2021 21:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233222AbhFNP5u (ORCPT
+        id S234476AbhFNVNO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Jun 2021 11:57:50 -0400
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:46037 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234429AbhFNP5t (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Jun 2021 11:57:49 -0400
-Received: by mail-pg1-f173.google.com with SMTP id q15so8965925pgg.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Jun 2021 08:55:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VWErpTJxzMRFn2QeTG0X/x/80fDoYwvDY+Mmk8DdwAQ=;
-        b=movwI48x43uY5uFArwmULpSPdVlpXOwd4i+zx9Ju0Cncgy+UYIWuEEuYCzaZ51JyA1
-         6HYyPz5ahxiI1JE2ZiIzc7kd8LoBK+ZbNecFaw3DV5PhxzZYs7eAIwagR8TdAvJ65XMf
-         utXUSkGXAj03uw7R8AgX0M0AcZib+ZRgVTpbZ/2Mx70wnzQsyWoweCkhVRrT6Oxq7DqF
-         T5MWIFUPZs3bGIqZY2sFEUQeEkj9qmb1gJ9vqayvRiwFcE0n2FHRXIhS27jW1suaWm2U
-         WptrJWhJLvl/nNEM2aie0ravhzblK3rGzw7cIV7CJNuIavUMbmEAEIzuSfSBwRU5l/nx
-         jLXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VWErpTJxzMRFn2QeTG0X/x/80fDoYwvDY+Mmk8DdwAQ=;
-        b=aPj9RsgAMwMPGT7oU3XAJ8pa2Sm1w/pFqwurHbCWR0YbdQj6y7tCwcmgsFr3hW50hv
-         RcjJ1g/p9xwiE5RGt+h4pET6434VMT8q6qwFeE75OTft9PJb0Mc4cOoNj35tl/9dTJmt
-         5+9rIjt07Vc4Hy7dqMmCiMZh4MJczIlVZRctC8A7uQgcfOcitTZqjE3Ib3qr7sUWy3rr
-         N+kvImxXzTfF+LJNay6sqO6PQNqTSy+uyzciE6xQuKtZmFUwivBKeoZs4XT9HCcfN8Cz
-         qen5r1jYtc67wtSz9Vho/uaXpbpwpd1dTUHpt8IRgNvB+4u2Y/1pEtkm4iQxoML5pJxr
-         fePQ==
-X-Gm-Message-State: AOAM533amF7o5ewm9KeeAcEQn7V76qgQD/OcItXTJee8Cn+4UJVItKDw
-        F37isUJT9vkTIRwAC0DQUhkGBw==
-X-Google-Smtp-Source: ABdhPJwuNiqVyfBnnu6WtfKFulnKLBtvNZERij61uO5wfoLYVnuvCR/o3RpdwIV7ND0ZWpTk881CNg==
-X-Received: by 2002:a05:6a00:23d0:b029:2de:c1a2:f1e with SMTP id g16-20020a056a0023d0b02902dec1a20f1emr22375648pfc.60.1623686085763;
-        Mon, 14 Jun 2021 08:54:45 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id 11sm13470314pge.57.2021.06.14.08.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 08:54:44 -0700 (PDT)
-Date:   Mon, 14 Jun 2021 09:54:42 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, coresight@lists.linaro.org, leo.yan@linaro.org,
-        al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        Mon, 14 Jun 2021 17:13:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:25529 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233920AbhFNVNN (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 14 Jun 2021 17:13:13 -0400
+IronPort-SDR: 0AXDrIy49w2eJvugQexQoMvt0FyiGPjR/Ws7rEaXGBerGGUqZquKHC40P0Yb74fxAPkhFWlqO1
+ KjYfiay9VmtA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10015"; a="205912953"
+X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
+   d="scan'208";a="205912953"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 14:11:08 -0700
+IronPort-SDR: sAqXJHJZlKjI+aulJ9ns1ke13lR6LlBdA3eSWPXWSl9zh2sUb1QEyrH+uaS+L/hGeVaT1M9mIz
+ tueBnYyRw8pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
+   d="scan'208";a="451719735"
+Received: from gupta-dev2.jf.intel.com (HELO gupta-dev2.localdomain) ([10.54.74.119])
+  by fmsmga008.fm.intel.com with ESMTP; 14 Jun 2021 14:11:07 -0700
+Date:   Mon, 14 Jun 2021 14:11:21 -0700
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf cs-etm: Delay decode of non-timeless data until
- cs_etm__flush_events()
-Message-ID: <20210614155442.GA396617@p14s>
-References: <20210609130421.13934-1-james.clark@arm.com>
+        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Victor Ding <victording@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Anand K Mistry <amistry@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH v2 0/3] TSX force abort
+Message-ID: <cover.b592910a3829c87c83cf5605718c415c80c0c4a9.1623704845.git-series.pawan.kumar.gupta@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210609130421.13934-1-james.clark@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 09, 2021 at 04:04:20PM +0300, James Clark wrote:
-> Currently, timeless mode starts the decode on PERF_RECORD_EXIT, and
-> non-timeless mode starts decoding on the fist PERF_RECORD_AUX record.
-> 
-> This can cause the "data has no samples!" error if the first
-> PERF_RECORD_AUX record comes before the first (or any relevant)
-> PERF_RECORD_MMAP2 record because the mmaps are required by the decoder
-> to access the binary data.
-> 
-> This change pushes the start of non-timeless decoding to the very end of
-> parsing the file. The PERF_RECORD_EXIT event can't be used because it
-> might not exist in system-wide or snapshot modes.
-> 
-> I have not been able to find the exact cause for the events to be
-> intermittently in the wrong order in the basic scenario:
-> 
-> 	perf record -e cs_etm/@tmc_etr0/u top
-> 
-> But it can be made to happen every time with the --delay option. This is
-> because "enable_on_exec" is disabled, which causes tracing to start
-> before the process to be launched is exec'd. For example:
-> 
-> 	perf record -e cs_etm/@tmc_etr0/u --delay=1 top
-> 	perf report -D | grep 'AUX\|MAP'
-> 
-> 	0 16714475632740 0x520 [0x40]: PERF_RECORD_AUX offset: 0 size: 0x30 flags: 0 []
-> 	0 16714476494960 0x5d0 [0x40]: PERF_RECORD_AUX offset: 0x30 size: 0x30 flags: 0 []
-> 	0 16714478208900 0x660 [0x40]: PERF_RECORD_AUX offset: 0x60 size: 0x30 flags: 0 []
-> 	4294967295 16714478293340 0x700 [0x70]: PERF_RECORD_MMAP2 8712/8712: [0x557a460000(0x54000) @ 0 00:17 5329258 0]: r-xp /usr/bin/top
-> 	4294967295 16714478353020 0x770 [0x88]: PERF_RECORD_MMAP2 8712/8712: [0x7f86f72000(0x34000) @ 0 00:17 5214354 0]: r-xp /usr/lib/aarch64-linux-gnu/ld-2.31.so
-> 
-> Another scenario in which decoding from the first aux record fails is a
-> workload that forks. Although the aux record comes after 'bash', it
-> comes before 'top', which is what we are interested in. For example:
-> 
-> 	perf record -e cs_etm/@tmc_etr0/u -- bash -c top
-> 	perf report -D | grep 'AUX\|MAP'
-> 
-> 	4294967295 16853946421300 0x510 [0x70]: PERF_RECORD_MMAP2 8723/8723: [0x558f280000(0x142000) @ 0 00:17 5213953 0]: r-xp /usr/bin/bash
-> 	4294967295 16853946543560 0x580 [0x88]: PERF_RECORD_MMAP2 8723/8723: [0x7fbba6e000(0x34000) @ 0 00:17 5214354 0]: r-xp /usr/lib/aarch64-linux-gnu/ld-2.31.so
-> 	4294967295 16853946628420 0x608 [0x68]: PERF_RECORD_MMAP2 8723/8723: [0x7fbba9e000(0x1000) @ 0 00:00 0 0]: r-xp [vdso]
-> 	0 16853947067300 0x690 [0x40]: PERF_RECORD_AUX offset: 0 size: 0x3a60 flags: 0 []
-> 	...
-> 	0 16853966602580 0x1758 [0x40]: PERF_RECORD_AUX offset: 0xc2470 size: 0x30 flags: 0 []
-> 	4294967295 16853967119860 0x1818 [0x70]: PERF_RECORD_MMAP2 8723/8723: [0x5559e70000(0x54000) @ 0 00:17 5329258 0]: r-xp /usr/bin/top
-> 	4294967295 16853967181620 0x1888 [0x88]: PERF_RECORD_MMAP2 8723/8723: [0x7f9ed06000(0x34000) @ 0 00:17 5214354 0]: r-xp /usr/lib/aarch64-linux-gnu/ld-2.31.so
-> 	4294967295 16853967237180 0x1910 [0x68]: PERF_RECORD_MMAP2 8723/8723: [0x7f9ed36000(0x1000) @ 0 00:00 0 0]: r-xp [vdso]
-> 
-> A third scenario is when the majority of time is spent in a shared
-> library that is not loaded at startup. For example a dynamically loaded
-> plugin.
-> 
-> Testing
-> =======
-> 
-> Testing was done by checking if any samples that are present in the
-> old output are missing from the new output. Timestamps must be
-> stripped out with awk because now they are set to the last AUX sample,
-> rather than the first:
-> 
-> 	./perf script $4 | awk '!($4="")' > new.script
-> 	./perf-default script $4 | awk '!($4="")' > default.script
-> 	comm -13 <(sort -u new.script) <(sort -u default.script)
-> 
-> Testing showed that the new output is a superset of the old. When lines
-> appear in the comm output, it is not because they are missing but
-> because [unknown] is now resolved to sensible locations. For example
-> last putp branch here now resolves to libtinfo, so it's not missing
-> from the output, but is actually improved:
-> 
-> Old:
-> 	top 305 [001]  1 branches:uH: 402830 _init+0x30 (/usr/bin/top.procps) => 404a1c [unknown] (/usr/bin/top.procps)
-> 	top 305 [001]  1 branches:uH: 404a20 [unknown] (/usr/bin/top.procps) => 402970 putp@plt+0x0 (/usr/bin/top.procps)
-> 	top 305 [001]  1 branches:uH: 40297c putp@plt+0xc (/usr/bin/top.procps) => 0 [unknown] ([unknown])
-> New:
-> 	top 305 [001]  1 branches:uH: 402830 _init+0x30 (/usr/bin/top.procps) => 404a1c [unknown] (/usr/bin/top.procps)
-> 	top 305 [001]  1 branches:uH: 404a20 [unknown] (/usr/bin/top.procps) => 402970 putp@plt+0x0 (/usr/bin/top.procps)
-> 	top 305 [001]  1 branches:uH: 40297c putp@plt+0xc (/usr/bin/top.procps) => 7f8ab39208 putp+0x0 (/lib/libtinfo.so.5.9)
-> 
-> In the following two modes, decoding now works and the "data has no
-> samples!" error is not displayed any more:
-> 
-> 	perf record -e cs_etm/@tmc_etr0/u -- bash -c top
-> 	perf record -e cs_etm/@tmc_etr0/u --delay=1 top
-> 
-> In snapshot mode, there is also an improvement to decoding. Previously
-> samples for the 'kill' process that was used to send SIGUSR2 were
-> completely missing, because the process hadn't started yet. But now
-> there are additional samples present:
-> 
-> 	perf record -e cs_etm/@tmc_etr0/u --snapshot -a
-> 	perf script
-> 
-> 		stress 19380 [003] 161627.938153:    1000000    instructions:uH:      aaaabb612fb4 [unknown] (/usr/bin/stress)
-> 		  kill 19644 [000] 161627.938153:    1000000    instructions:uH:      ffffae0ef210 [unknown] (/lib/aarch64-linux-gnu/ld-2.27.so)
-> 		stress 19380 [003] 161627.938153:    1000000    instructions:uH:      ffff9e754d40 random_r+0x20 (/lib/aarch64-linux-gnu/libc-2.27.so)
-> 
-> Also tested was the round trip of 'perf inject' followed by 'perf
-> report' which has the same differences and improvements.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/cs-etm.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 57aea2c7fc77..ceed0b038796 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -2407,6 +2407,11 @@ static int cs_etm__process_event(struct perf_session *session,
->  			return err;
->  	}
->  
-> +	/*
-> +	 * Don't wait for cs_etm__flush_events() in per-thread/timeless mode to start the decode. We
-> +	 * need the tid of the PERF_RECORD_EXIT event to assign to the synthesised samples because
-> +	 * ETM_OPT_CTXTID is not enabled.
-> +	 */
->  	if (etm->timeless_decoding &&
->  	    event->header.type == PERF_RECORD_EXIT)
->  		return cs_etm__process_timeless_queues(etm,
-> @@ -2424,7 +2429,6 @@ static int cs_etm__process_event(struct perf_session *session,
->  		 * onwards.
->  		 */
->  		etm->latest_kernel_timestamp = sample_kernel_timestamp;
-> -		return cs_etm__process_queues(etm);
+v1->v2:
+- Avoid Reading TSX_FORCE_ABORT MSR for detecting new microcode.
+- In tsx_init() move force abort detection before cmdline parsing.
+- Drop tsx=fake patch, not enough use cases to justify the patch.
+- Rebase to v5.13-rc6.
 
-This looks good to me but I'd like to have other people testing it.
+Introduction
+============
+On some Intel processors [1] a microcode update will always abort
+Transactional Synchronization Extensions (TSX) transactions by default. These
+CPUs were previously affected by the TSX memory ordering issue [2]. A
+workaround was earlier added to perf related to memory ordering which is no
+longer required(because TSX is defeatured on these systems). This series adds
+support for new bits added to TSX_FORCE_ABORT MSR and CPUID to enumerate new
+abort behavior and to bypass the workaround.
+
+Roadmap to this series
+======================
+
+0001:	Define new CPUID and MSR bits that are added by the microcode update.
+	(The new CPUID.RTM_ALWAYS_ABORT is not shown in /proc/cpuinfo)
+
+0002:	When new microcode is enumerated bypass perf counter workaround for [1].
+	Perf workaround is no longer required after the microcode update.
+
+0003:	Clear CPUID.RTM and CPUID.HLE when TSX is defeatured, so that software
+	does not enumerate and try to use TSX.
 
 Thanks,
-Mathieu
+Pawan
 
->  	}
->  
->  	return 0;
-> -- 
-> 2.28.0
-> 
+[1] Intel® TSX Memory and Performance Monitoring Update for Intel® Processors
+    https://www.intel.com/content/www/us/en/support/articles/000059422/processors.html
+
+[2] Performance Monitoring Impact of Intel® Transactional Synchronization Extension Memory
+    http://cdrdv2.intel.com/v1/dl/getContent/604224 (Document ID 604224)
+
+Pawan Gupta (3):
+  x86/msr: Define new bits in TSX_FORCE_ABORT MSR
+  perf/x86/intel: Do not deploy workaround when TSX is deprecated
+  x86/tsx: Clear CPUID bits when TSX always force aborts
+
+ arch/x86/events/intel/core.c       | 10 +++++++-
+ arch/x86/include/asm/cpufeatures.h |  1 +-
+ arch/x86/include/asm/msr-index.h   |  4 +++-
+ arch/x86/kernel/cpu/cpu.h          |  2 ++-
+ arch/x86/kernel/cpu/intel.c        |  4 ++-
+ arch/x86/kernel/cpu/tsx.c          | 37 +++++++++++++++++++++++++++++--
+ 6 files changed, 54 insertions(+), 4 deletions(-)
+
+base-commit: 009c9aa5be652675a06d5211e1640e02bbb1c33d
+-- 
+git-series 0.9.1
+
