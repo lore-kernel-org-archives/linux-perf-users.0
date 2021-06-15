@@ -2,204 +2,373 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD355C2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Jun 2021 21:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D407C2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Jun 2021 02:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9241C61378
-	for <linux-perf-users@archiver.kernel.org>; Mon, 14 Jun 2021 21:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEE9613F5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 15 Jun 2021 02:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234042AbhFNVQQ (ORCPT
+        id S229811AbhFODCB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 14 Jun 2021 17:16:16 -0400
-Received: from mga04.intel.com ([192.55.52.120]:8972 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230081AbhFNVQQ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 14 Jun 2021 17:16:16 -0400
-IronPort-SDR: jYHdijB1pxm3717zC9F5Xs2MOugIatvU4FVzsK/E6D5ww/rjGf+KFf7N5gGVaKWZv1/pYkGZq0
- jsCt+bA4JfTg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10015"; a="204050250"
-X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
-   d="scan'208";a="204050250"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2021 14:14:12 -0700
-IronPort-SDR: NFW8qtjUYqYWseSbnCoCikGqjRvUznLEb1OFBCCTBYwzAqw/46Q7e2lY1LGM+JdEg5vTgQ/hdt
- XXSys/Tg0YUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,273,1616482800"; 
-   d="scan'208";a="487534730"
-Received: from gupta-dev2.jf.intel.com (HELO gupta-dev2.localdomain) ([10.54.74.119])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Jun 2021 14:14:11 -0700
-Date:   Mon, 14 Jun 2021 14:14:25 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Victor Ding <victording@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Anand K Mistry <amistry@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miguel Ojeda <ojeda@kernel.org>, Joe Perches <joe@perches.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 3/3] x86/tsx: Clear CPUID bits when TSX always force aborts
-Message-ID: <5209b3d72ffe5bd3cafdcc803f5b883f785329c3.1623704845.git-series.pawan.kumar.gupta@linux.intel.com>
-References: <cover.b592910a3829c87c83cf5605718c415c80c0c4a9.1623704845.git-series.pawan.kumar.gupta@linux.intel.com>
+        Mon, 14 Jun 2021 23:02:01 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:6495 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229809AbhFODCA (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 14 Jun 2021 23:02:00 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4G3ssJ47r9zZhKJ;
+        Tue, 15 Jun 2021 10:36:52 +0800 (CST)
+Received: from dggpemm000003.china.huawei.com (7.185.36.128) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 15 Jun 2021 10:39:47 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ dggpemm000003.china.huawei.com (7.185.36.128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 15 Jun 2021 10:39:46 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v3] perf annotate: Add itrace options support
+Date:   Tue, 15 Jun 2021 10:40:36 +0800
+Message-ID: <20210615024036.181427-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cover.b592910a3829c87c83cf5605718c415c80c0c4a9.1623704845.git-series.pawan.kumar.gupta@linux.intel.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm000003.china.huawei.com (7.185.36.128)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As a result of TSX deprecation some processors always aborts TSX
-transactions by default.
+The "auxtrace_info" and "auxtrace" functions are not set in "tool" member of
+"annotate". As a result, perf annotate does not support parsing itrace data.
 
-When TSX feature cannot be used it is better to hide it. Clear CPUID.RTM
-and CPUID.HLE bits when TSX transactions always aborts.
+Before:
 
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+  # perf record -e arm_spe_0/branch_filter=1/ -a sleep 1
+  [ perf record: Woken up 9 times to write data ]
+  [ perf record: Captured and wrote 20.874 MB perf.data ]
+  # perf annotate --stdio
+  Error:
+  The perf.data data has no samples!
+
+Solution:
+1.Add itrace options in help,
+2.Set hook functions of "auxtrace_info" and "auxtrace" in perf_tool.
+
+After:
+
+  # perf record --all-user -e arm_spe_0/branch_filter=1/ ls
+  Couldn't synthesize bpf events.
+  perf.data
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.010 MB perf.data ]
+  # perf annotate --stdio
+   Percent |      Source code & Disassembly of libc-2.28.so for branch-miss (1 samples, percent: local period)
+  ------------------------------------------------------------------------------------------------------------
+           :
+           :
+           :
+           :           Disassembly of section .text:
+           :
+           :           0000000000066180 <__getdelim@@GLIBC_2.17>:
+      0.00 :   66180:  stp     x29, x30, [sp, #-96]!
+      0.00 :   66184:  cmp     x0, #0x0
+      0.00 :   66188:  ccmp    x1, #0x0, #0x4, ne  // ne = any
+      0.00 :   6618c:  mov     x29, sp
+      0.00 :   66190:  stp     x24, x25, [sp, #56]
+      0.00 :   66194:  stp     x26, x27, [sp, #72]
+      0.00 :   66198:  str     x28, [sp, #88]
+      0.00 :   6619c:  b.eq    66450 <__getdelim@@GLIBC_2.17+0x2d0>  // b.none
+      0.00 :   661a0:  stp     x22, x23, [x29, #40]
+      0.00 :   661a4:  mov     x22, x1
+      0.00 :   661a8:  ldr     w1, [x3]
+      0.00 :   661ac:  mov     w23, w2
+      0.00 :   661b0:  stp     x20, x21, [x29, #24]
+      0.00 :   661b4:  mov     x20, x3
+      0.00 :   661b8:  mov     x21, x0
+      0.00 :   661bc:  tbnz    w1, #15, 66360 <__getdelim@@GLIBC_2.17+0x1e0>
+      0.00 :   661c0:  ldr     x0, [x3, #136]
+      0.00 :   661c4:  ldr     x2, [x0, #8]
+      0.00 :   661c8:  str     x19, [x29, #16]
+      0.00 :   661cc:  mrs     x19, tpidr_el0
+      0.00 :   661d0:  sub     x19, x19, #0x700
+      0.00 :   661d4:  cmp     x2, x19
+      0.00 :   661d8:  b.eq    663f0 <__getdelim@@GLIBC_2.17+0x270>  // b.none
+      0.00 :   661dc:  mov     w1, #0x1                        // #1
+      0.00 :   661e0:  ldaxr   w2, [x0]
+      0.00 :   661e4:  cmp     w2, #0x0
+      0.00 :   661e8:  b.ne    661f4 <__getdelim@@GLIBC_2.17+0x74>  // b.any
+      0.00 :   661ec:  stxr    w3, w1, [x0]
+      0.00 :   661f0:  cbnz    w3, 661e0 <__getdelim@@GLIBC_2.17+0x60>
+      0.00 :   661f4:  b.ne    66448 <__getdelim@@GLIBC_2.17+0x2c8>  // b.any
+      0.00 :   661f8:  ldr     x0, [x20, #136]
+      0.00 :   661fc:  ldr     w1, [x20]
+      0.00 :   66200:  ldr     w2, [x0, #4]
+      0.00 :   66204:  str     x19, [x0, #8]
+      0.00 :   66208:  add     w2, w2, #0x1
+      0.00 :   6620c:  str     w2, [x0, #4]
+      0.00 :   66210:  tbnz    w1, #5, 66388 <__getdelim@@GLIBC_2.17+0x208>
+      0.00 :   66214:  ldr     x19, [x29, #16]
+      0.00 :   66218:  ldr     x0, [x21]
+      0.00 :   6621c:  cbz     x0, 66228 <__getdelim@@GLIBC_2.17+0xa8>
+      0.00 :   66220:  ldr     x0, [x22]
+      0.00 :   66224:  cbnz    x0, 6623c <__getdelim@@GLIBC_2.17+0xbc>
+      0.00 :   66228:  mov     x0, #0x78                       // #120
+      0.00 :   6622c:  str     x0, [x22]
+      0.00 :   66230:  bl      20710 <malloc@plt>
+      0.00 :   66234:  str     x0, [x21]
+      0.00 :   66238:  cbz     x0, 66428 <__getdelim@@GLIBC_2.17+0x2a8>
+      0.00 :   6623c:  ldr     x27, [x20, #8]
+      0.00 :   66240:  str     x19, [x29, #16]
+      0.00 :   66244:  ldr     x19, [x20, #16]
+      0.00 :   66248:  sub     x19, x19, x27
+      0.00 :   6624c:  cmp     x19, #0x0
+      0.00 :   66250:  b.le    66398 <__getdelim@@GLIBC_2.17+0x218>
+      0.00 :   66254:  mov     x25, #0x0                       // #0
+      0.00 :   66258:  b       662d8 <__getdelim@@GLIBC_2.17+0x158>
+      0.00 :   6625c:  nop
+      0.00 :   66260:  add     x24, x19, x25
+      0.00 :   66264:  ldr     x3, [x22]
+      0.00 :   66268:  add     x26, x24, #0x1
+      0.00 :   6626c:  ldr     x0, [x21]
+      0.00 :   66270:  cmp     x3, x26
+      0.00 :   66274:  b.cs    6629c <__getdelim@@GLIBC_2.17+0x11c>  // b.hs, b.nlast
+      0.00 :   66278:  lsl     x3, x3, #1
+      0.00 :   6627c:  cmp     x3, x26
+      0.00 :   66280:  csel    x26, x3, x26, cs  // cs = hs, nlast
+      0.00 :   66284:  mov     x1, x26
+      0.00 :   66288:  bl      206f0 <realloc@plt>
+      0.00 :   6628c:  cbz     x0, 66438 <__getdelim@@GLIBC_2.17+0x2b8>
+      0.00 :   66290:  str     x0, [x21]
+      0.00 :   66294:  ldr     x27, [x20, #8]
+      0.00 :   66298:  str     x26, [x22]
+      0.00 :   6629c:  mov     x2, x19
+      0.00 :   662a0:  mov     x1, x27
+      0.00 :   662a4:  add     x0, x0, x25
+      0.00 :   662a8:  bl      87390 <explicit_bzero@@GLIBC_2.25+0x50>
+      0.00 :   662ac:  ldr     x0, [x20, #8]
+      0.00 :   662b0:  add     x19, x0, x19
+      0.00 :   662b4:  str     x19, [x20, #8]
+      0.00 :   662b8:  cbnz    x28, 66410 <__getdelim@@GLIBC_2.17+0x290>
+      0.00 :   662bc:  mov     x0, x20
+      0.00 :   662c0:  bl      73b80 <__underflow@@GLIBC_2.17>
+      0.00 :   662c4:  cmn     w0, #0x1
+      0.00 :   662c8:  b.eq    66410 <__getdelim@@GLIBC_2.17+0x290>  // b.none
+      0.00 :   662cc:  ldp     x27, x19, [x20, #8]
+      0.00 :   662d0:  mov     x25, x24
+      0.00 :   662d4:  sub     x19, x19, x27
+      0.00 :   662d8:  mov     x2, x19
+      0.00 :   662dc:  mov     w1, w23
+      0.00 :   662e0:  mov     x0, x27
+      0.00 :   662e4:  bl      807b0 <memchr@@GLIBC_2.17>
+      0.00 :   662e8:  cmp     x0, #0x0
+      0.00 :   662ec:  mov     x28, x0
+      0.00 :   662f0:  sub     x0, x0, x27
+      0.00 :   662f4:  csinc   x19, x19, x0, eq  // eq = none
+      0.00 :   662f8:  mov     x0, #0x7fffffffffffffff         // #9223372036854775807
+      0.00 :   662fc:  sub     x0, x0, x25
+      0.00 :   66300:  cmp     x19, x0
+      0.00 :   66304:  b.lt    66260 <__getdelim@@GLIBC_2.17+0xe0>  // b.tstop
+      0.00 :   66308:  adrp    x0, 17f000 <sys_sigabbrev@@GLIBC_2.17+0x320>
+      0.00 :   6630c:  ldr     x0, [x0, #3624]
+      0.00 :   66310:  mrs     x2, tpidr_el0
+      0.00 :   66314:  ldr     x19, [x29, #16]
+      0.00 :   66318:  mov     w3, #0x4b                       // #75
+      0.00 :   6631c:  ldr     w1, [x20]
+      0.00 :   66320:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   66324:  str     w3, [x2, x0]
+      0.00 :   66328:  tbnz    w1, #15, 66340 <__getdelim@@GLIBC_2.17+0x1c0>
+      0.00 :   6632c:  ldr     x0, [x20, #136]
+      0.00 :   66330:  ldr     w1, [x0, #4]
+      0.00 :   66334:  sub     w1, w1, #0x1
+      0.00 :   66338:  str     w1, [x0, #4]
+      0.00 :   6633c:  cbz     w1, 663b8 <__getdelim@@GLIBC_2.17+0x238>
+      0.00 :   66340:  mov     x0, x24
+      0.00 :   66344:  ldr     x28, [sp, #88]
+      0.00 :   66348:  ldp     x20, x21, [x29, #24]
+      0.00 :   6634c:  ldp     x22, x23, [x29, #40]
+      0.00 :   66350:  ldp     x24, x25, [sp, #56]
+      0.00 :   66354:  ldp     x26, x27, [sp, #72]
+      0.00 :   66358:  ldp     x29, x30, [sp], #96
+      0.00 :   6635c:  ret
+    100.00 :   66360:  tbz     w1, #5, 66218 <__getdelim@@GLIBC_2.17+0x98>
+      0.00 :   66364:  ldp     x20, x21, [x29, #24]
+      0.00 :   66368:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   6636c:  ldp     x22, x23, [x29, #40]
+      0.00 :   66370:  mov     x0, x24
+      0.00 :   66374:  ldp     x24, x25, [sp, #56]
+      0.00 :   66378:  ldp     x26, x27, [sp, #72]
+      0.00 :   6637c:  ldr     x28, [sp, #88]
+      0.00 :   66380:  ldp     x29, x30, [sp], #96
+      0.00 :   66384:  ret
+      0.00 :   66388:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   6638c:  ldr     x19, [x29, #16]
+      0.00 :   66390:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+      0.00 :   66394:  nop
+      0.00 :   66398:  mov     x0, x20
+      0.00 :   6639c:  bl      73b80 <__underflow@@GLIBC_2.17>
+      0.00 :   663a0:  cmn     w0, #0x1
+      0.00 :   663a4:  b.eq    66438 <__getdelim@@GLIBC_2.17+0x2b8>  // b.none
+      0.00 :   663a8:  ldp     x27, x19, [x20, #8]
+      0.00 :   663ac:  sub     x19, x19, x27
+      0.00 :   663b0:  b       66254 <__getdelim@@GLIBC_2.17+0xd4>
+      0.00 :   663b4:  nop
+      0.00 :   663b8:  str     xzr, [x0, #8]
+      0.00 :   663bc:  ldxr    w2, [x0]
+      0.00 :   663c0:  stlxr   w3, w1, [x0]
+      0.00 :   663c4:  cbnz    w3, 663bc <__getdelim@@GLIBC_2.17+0x23c>
+      0.00 :   663c8:  cmp     w2, #0x1
+      0.00 :   663cc:  b.le    66340 <__getdelim@@GLIBC_2.17+0x1c0>
+      0.00 :   663d0:  mov     x1, #0x81                       // #129
+      0.00 :   663d4:  mov     x2, #0x1                        // #1
+      0.00 :   663d8:  mov     x3, #0x0                        // #0
+      0.00 :   663dc:  mov     x8, #0x62                       // #98
+      0.00 :   663e0:  svc     #0x0
+      0.00 :   663e4:  ldp     x20, x21, [x29, #24]
+      0.00 :   663e8:  ldp     x22, x23, [x29, #40]
+      0.00 :   663ec:  b       66370 <__getdelim@@GLIBC_2.17+0x1f0>
+      0.00 :   663f0:  ldr     w2, [x0, #4]
+      0.00 :   663f4:  add     w2, w2, #0x1
+      0.00 :   663f8:  str     w2, [x0, #4]
+      0.00 :   663fc:  tbz     w1, #5, 66214 <__getdelim@@GLIBC_2.17+0x94>
+      0.00 :   66400:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   66404:  ldr     x19, [x29, #16]
+      0.00 :   66408:  b       66330 <__getdelim@@GLIBC_2.17+0x1b0>
+      0.00 :   6640c:  nop
+      0.00 :   66410:  ldr     x0, [x21]
+      0.00 :   66414:  strb    wzr, [x0, x24]
+      0.00 :   66418:  ldr     w1, [x20]
+      0.00 :   6641c:  ldr     x19, [x29, #16]
+      0.00 :   66420:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+      0.00 :   66424:  nop
+      0.00 :   66428:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   6642c:  ldr     w1, [x20]
+      0.00 :   66430:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+      0.00 :   66434:  nop
+      0.00 :   66438:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   6643c:  ldr     w1, [x20]
+      0.00 :   66440:  ldr     x19, [x29, #16]
+      0.00 :   66444:  b       66328 <__getdelim@@GLIBC_2.17+0x1a8>
+      0.00 :   66448:  bl      e3ba0 <pthread_setcanceltype@@GLIBC_2.17+0x30>
+      0.00 :   6644c:  b       661f8 <__getdelim@@GLIBC_2.17+0x78>
+      0.00 :   66450:  adrp    x0, 17f000 <sys_sigabbrev@@GLIBC_2.17+0x320>
+      0.00 :   66454:  ldr     x0, [x0, #3624]
+      0.00 :   66458:  mrs     x1, tpidr_el0
+      0.00 :   6645c:  mov     w2, #0x16                       // #22
+      0.00 :   66460:  mov     x24, #0xffffffffffffffff        // #-1
+      0.00 :   66464:  str     w2, [x1, x0]
+      0.00 :   66468:  b       66370 <__getdelim@@GLIBC_2.17+0x1f0>
+      0.00 :   6646c:  ldr     w1, [x20]
+      0.00 :   66470:  mov     x4, x0
+      0.00 :   66474:  tbnz    w1, #15, 6648c <__getdelim@@GLIBC_2.17+0x30c>
+      0.00 :   66478:  ldr     x0, [x20, #136]
+      0.00 :   6647c:  ldr     w1, [x0, #4]
+      0.00 :   66480:  sub     w1, w1, #0x1
+      0.00 :   66484:  str     w1, [x0, #4]
+      0.00 :   66488:  cbz     w1, 66494 <__getdelim@@GLIBC_2.17+0x314>
+      0.00 :   6648c:  mov     x0, x4
+      0.00 :   66490:  bl      20e40 <gnu_get_libc_version@@GLIBC_2.17+0x130>
+      0.00 :   66494:  str     xzr, [x0, #8]
+      0.00 :   66498:  ldxr    w2, [x0]
+      0.00 :   6649c:  stlxr   w3, w1, [x0]
+      0.00 :   664a0:  cbnz    w3, 66498 <__getdelim@@GLIBC_2.17+0x318>
+      0.00 :   664a4:  cmp     w2, #0x1
+      0.00 :   664a8:  b.le    6648c <__getdelim@@GLIBC_2.17+0x30c>
+      0.00 :   664ac:  mov     x1, #0x81                       // #129
+      0.00 :   664b0:  mov     x2, #0x1                        // #1
+      0.00 :   664b4:  mov     x3, #0x0                        // #0
+      0.00 :   664b8:  mov     x8, #0x62                       // #98
+      0.00 :   664bc:  svc     #0x0
+      0.00 :   664c0:  b       6648c <__getdelim@@GLIBC_2.17+0x30c>
+
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- arch/x86/kernel/cpu/cpu.h   |  2 ++
- arch/x86/kernel/cpu/intel.c |  4 +++-
- arch/x86/kernel/cpu/tsx.c   | 37 +++++++++++++++++++++++++++++++++++--
- 3 files changed, 40 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-index 67944128876d..95521302630d 100644
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -48,6 +48,7 @@ extern const struct cpu_dev *const __x86_cpu_dev_start[],
- enum tsx_ctrl_states {
- 	TSX_CTRL_ENABLE,
- 	TSX_CTRL_DISABLE,
-+	TSX_CTRL_RTM_ALWAYS_ABORT,
- 	TSX_CTRL_NOT_SUPPORTED,
- };
+Changes since v2:
+ - Updating tools/perf/Documentation/perf-annotate.txt.
+ - Add test result to commit message.
+
+Changes since v1:
+ - Adjust spaces to maintain alignment in "tool".
+
+ tools/perf/Documentation/perf-annotate.txt |  7 +++++++
+ tools/perf/builtin-annotate.c              | 10 ++++++++++
+ 2 files changed, 17 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
+index 80c1be5d566c..33c2521cba4a 100644
+--- a/tools/perf/Documentation/perf-annotate.txt
++++ b/tools/perf/Documentation/perf-annotate.txt
+@@ -58,6 +58,13 @@ OPTIONS
+ --ignore-vmlinux::
+ 	Ignore vmlinux files.
  
-@@ -56,6 +57,7 @@ extern __ro_after_init enum tsx_ctrl_states tsx_ctrl_state;
- extern void __init tsx_init(void);
- extern void tsx_enable(void);
- extern void tsx_disable(void);
-+extern void tsx_clear_cpuid(void);
- #else
- static inline void tsx_init(void) { }
- #endif /* CONFIG_CPU_SUP_INTEL */
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 8adffc17fa8b..861e919eba9a 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -717,8 +717,10 @@ static void init_intel(struct cpuinfo_x86 *c)
- 
- 	if (tsx_ctrl_state == TSX_CTRL_ENABLE)
- 		tsx_enable();
--	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
-+	else if (tsx_ctrl_state == TSX_CTRL_DISABLE)
- 		tsx_disable();
-+	else if (tsx_ctrl_state == TSX_CTRL_RTM_ALWAYS_ABORT)
-+		tsx_clear_cpuid();
- 
- 	split_lock_init();
- 	bus_lock_init();
-diff --git a/arch/x86/kernel/cpu/tsx.c b/arch/x86/kernel/cpu/tsx.c
-index e2ad30e474f8..fd258a383bfc 100644
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -2,7 +2,7 @@
- /*
-  * Intel Transactional Synchronization Extensions (TSX) control.
-  *
-- * Copyright (C) 2019 Intel Corporation
-+ * Copyright (C) 2019-2021 Intel Corporation
-  *
-  * Author:
-  *	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-@@ -84,13 +84,46 @@ static enum tsx_ctrl_states x86_get_tsx_auto_mode(void)
- 	return TSX_CTRL_ENABLE;
- }
- 
-+void tsx_clear_cpuid(void)
-+{
-+	u64 msr;
++--itrace::
++	Options for decoding instruction tracing data. The options are:
 +
-+	/*
-+	 * MSR_TFA_TSX_CPUID_CLEAR bit is only present when both CPUID bits
-+	 * RTM_ALWAYS_ABORT and TSX_FORCE_ABORT are present.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_RTM_ALWAYS_ABORT) &&
-+	    boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
-+		rdmsrl(MSR_TSX_FORCE_ABORT, msr);
-+		msr |= MSR_TFA_TSX_CPUID_CLEAR;
-+		wrmsrl(MSR_TSX_FORCE_ABORT, msr);
-+	}
-+}
++include::itrace.txt[]
 +
- void __init tsx_init(void)
- {
- 	char arg[5] = {};
- 	int ret;
- 
--	if (!tsx_ctrl_is_supported())
-+	/*
-+	 * Hardware will always abort a TSX transaction if both CPUID bits
-+	 * RTM_ALWAYS_ABORT and TSX_FORCE_ABORT are set.  In this case it is
-+	 * better not to enumerate CPUID.RTM and CPUID.HLE bits. Clear them
-+	 * here.
-+	 */
-+	if (boot_cpu_has(X86_FEATURE_RTM_ALWAYS_ABORT) &&
-+	    boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
-+		tsx_ctrl_state = TSX_CTRL_RTM_ALWAYS_ABORT;
-+		tsx_clear_cpuid();
-+		setup_clear_cpu_cap(X86_FEATURE_RTM);
-+		setup_clear_cpu_cap(X86_FEATURE_HLE);
- 		return;
-+	}
++	To disable decoding entirely, use --no-itrace.
 +
-+	if (!tsx_ctrl_is_supported()) {
-+		tsx_ctrl_state = TSX_CTRL_NOT_SUPPORTED;
-+		return;
-+	}
+ -m::
+ --modules::
+         Load module symbols. WARNING: use only with -k and LIVE kernel.
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 49627a7bed7c..8f87658eff31 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -474,6 +474,8 @@ int cmd_annotate(int argc, const char **argv)
+ 			.attr	= perf_event__process_attr,
+ 			.build_id = perf_event__process_build_id,
+ 			.tracing_data   = perf_event__process_tracing_data,
++			.auxtrace_info	= perf_event__process_auxtrace_info,
++			.auxtrace	= perf_event__process_auxtrace,
+ 			.feature	= process_feature_event,
+ 			.ordered_events = true,
+ 			.ordering_requires_timestamps = true,
+@@ -483,6 +485,9 @@ int cmd_annotate(int argc, const char **argv)
+ 	struct perf_data data = {
+ 		.mode  = PERF_DATA_MODE_READ,
+ 	};
++	struct itrace_synth_opts itrace_synth_opts = {
++		.set = 0,
++	};
+ 	struct option options[] = {
+ 	OPT_STRING('i', "input", &input_name, "file",
+ 		    "input file name"),
+@@ -547,6 +552,9 @@ int cmd_annotate(int argc, const char **argv)
+ 	OPT_CALLBACK(0, "percent-type", &annotate.opts, "local-period",
+ 		     "Set percent type local/global-period/hits",
+ 		     annotate_parse_percent_type),
++	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
++			    "Instruction Tracing options\n" ITRACE_HELP,
++			    itrace_parse_synth_opts),
  
- 	ret = cmdline_find_option(boot_command_line, "tsx", arg, sizeof(arg));
- 	if (ret >= 0) {
+ 	OPT_END()
+ 	};
+@@ -591,6 +599,8 @@ int cmd_annotate(int argc, const char **argv)
+ 	if (IS_ERR(annotate.session))
+ 		return PTR_ERR(annotate.session);
+ 
++	annotate.session->itrace_synth_opts = &itrace_synth_opts;
++
+ 	annotate.has_br_stack = perf_header__has_feat(&annotate.session->header,
+ 						      HEADER_BRANCH_STACK);
+ 
 -- 
-git-series 0.9.1
+2.30.GIT
 
