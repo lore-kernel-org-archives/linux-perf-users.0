@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38804C2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Jun 2021 05:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B785C48BE5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Jun 2021 18:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1EB1613E9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Jun 2021 05:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8116140F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 17 Jun 2021 18:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbhFQF6G (ORCPT
+        id S231350AbhFQSoj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 17 Jun 2021 01:58:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33304 "EHLO
+        Thu, 17 Jun 2021 14:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbhFQF6G (ORCPT
+        with ESMTP id S232270AbhFQSoi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 17 Jun 2021 01:58:06 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 719CAC061574
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Jun 2021 22:55:59 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id l132-20020a25258a0000b029054fc079d46eso4406873ybl.20
-        for <linux-perf-users@vger.kernel.org>; Wed, 16 Jun 2021 22:55:59 -0700 (PDT)
+        Thu, 17 Jun 2021 14:44:38 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60663C061574
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Jun 2021 11:42:29 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id y5-20020a37af050000b02903a9c3f8b89fso2873833qke.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 17 Jun 2021 11:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5AKRc/Tyl7/UWLGnci1bpGmI6p8IqmaAxP2aPTqH0hQ=;
-        b=AaZVjgDLLLHop7LLCrszEFvWruoGRBTtwkcJ06RU4YAZ6z5enhXgjIhksmLhY0H8wT
-         BLtCZ5jzjQ6n1iJdaXRHEEy58y9aiHjevV8wBtmfgz367K1Bhn2h9iLehvtfwBE3W697
-         PM0H94MWQOfjrhv/szi5BG0zBp2dp6fW5Kc/BVkVvLhsNI4eBnSq3XP2Sria27OwbKRY
-         BFRW6Xg7VjADyYFyg5uNAs25KARBJ0Ki+rbEsQdKmJpTullgHVEJ2dISStX3w4fkMrtX
-         kA3FJ+KKFafBjXePKWD0VRFx/vjBTepJ1b5axf+dTOLbgZDmzHAmQKth9n1MzxFY3tP6
-         TFTw==
+        bh=ZlXcWG52LpPBNrp8iFYVpN63n0II1sNMyDIazVtXK6g=;
+        b=WqCCDit+fwpG7RHerB83fx97SNuOWrBI92BhNuoDyIQiJqzVSqTV3pt0kQ07mP3Rwz
+         NtGndorgHcF1qcgrnbzf/QK1bKl9karIOVU/Zpy1FCTNSiBk6gbbCdkmzGi07JpQVMHO
+         xR0Lwf6XbXHCWulBVj1WCmH05CoTvHL8gNdpBya6SByiF6jAr4Omvo/G5rYeUBENj7Pz
+         ifageJWCezrnSGf1aQbUhaIiWhfJRkqG74iYxj5RMBTzgg0oAMkONhYU1ZrK+7XMUokT
+         91x2i3fCwAnPnu7rHCH8ypV3QPfvtOfntuzcsFg83jcg5PgGPocbCq1XakU6Tm6tUskA
+         eszw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5AKRc/Tyl7/UWLGnci1bpGmI6p8IqmaAxP2aPTqH0hQ=;
-        b=Q3vIawR20tzsSHrMBQMdVa7/2rU7OCuSJiXO7PKsEUJy8dPzRWGrFRjCRwIS8X6Nb+
-         4FIKlwVLdQRPBa9GKIYkms0+LpcTmyYRQ3rErBnziVIoiAEbvLDgOW7jVKTbB2gzV6I3
-         zkuz5nnStMinBMqBdjONk8g9G0+1mHO0JYR6FNFVCsgp/UpZay0kKr+eQy6mCHscgCiy
-         voR5Y+qOTt6KH2fDMTfCNUkKzzZ9tmzZIghUMIKuqdje3yM+LmGrkww0roChXy1yzvQm
-         zyQxYnicPj2kFnvUOgE9HOY4+80q+sutR3LDHq8IGE6xcQxNuDFTK8dbkkyrboJwX1+W
-         OUAg==
-X-Gm-Message-State: AOAM53208q09beCiw9A2j9WcmPEXSU9Fn5MwvgGWHa+9wuZPcbIybV6B
-        OeVPatDD7Ip5cGhoTVkyTC72dE1AfdHo
-X-Google-Smtp-Source: ABdhPJzSYNbTKM5jaqik1OKzD0OTGqTVbJhv+gfqO2D38kZGM9jxPlCtkOOQjvOWGk5hDVY2i2yhM7pUcsuL
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:6cac:20e4:fbbd:d6e8])
- (user=irogers job=sendgmr) by 2002:a05:6902:100e:: with SMTP id
- w14mr3902788ybt.232.1623909358554; Wed, 16 Jun 2021 22:55:58 -0700 (PDT)
-Date:   Wed, 16 Jun 2021 22:55:54 -0700
-Message-Id: <20210617055554.1917997-1-irogers@google.com>
+        bh=ZlXcWG52LpPBNrp8iFYVpN63n0II1sNMyDIazVtXK6g=;
+        b=mdIdvlBwruhD1jarG+m1ANKaynHY9rQ9jHeSDnG5USeWcAvknr+Jpjv3NqElS+tvNG
+         wlwuLwg0MPbPCmb5/7fEHcxjhQqe/iXvyEdmKzkY0OY8WVOVzc1yiGuM9DZoLUcoSGoV
+         B7G1nY8KYx/DG++JYG4fdRvt1Mi/+RspP0tq5kWtCVHWjF41ccyrpog/Jv64sSNiGpaw
+         8McdlYcCnBdx217cmJnmkycyjpjTjLdO/lkT5a0rzPSNBM0c/pkBPp4jame/FBUgn0nZ
+         58OwMIe00GwRIyQJGIrkEIm6ET9++tH06xVwAiFEldJt6MX32aNGuWdTbjmQbU4NCEwo
+         5C7w==
+X-Gm-Message-State: AOAM531wCFqjaiL2hlp3b3odtL+pWvo0GuqgKRclAm3/ONya8wTLKHKq
+        Azp43A7lmq5DRmCs9Bcv/GQmR41Dr/6J
+X-Google-Smtp-Source: ABdhPJwew74OmEVaWxaFf7DCKZvVPSy8SzWjiBZiMsqU3WWiBEam74KB2f3Je5RJeGnqbDXadOITpsveRIHJ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:ef90:beff:e92f:7ce0])
+ (user=irogers job=sendgmr) by 2002:a25:ca45:: with SMTP id
+ a66mr7969252ybg.10.1623955348375; Thu, 17 Jun 2021 11:42:28 -0700 (PDT)
+Date:   Thu, 17 Jun 2021 11:42:13 -0700
+Message-Id: <20210617184216.2075588-1-irogers@google.com>
 Mime-Version: 1.0
-X-Mailer: git-send-email 2.32.0.272.g935e593368-goog
-Subject: [PATCH] perf daemon: Avoid msan warnings on send_cmd
+X-Mailer: git-send-email 2.32.0.288.g62a8d224e6-goog
+Subject: [PATCH 1/4] perf test: Fix non-bash issue with stat bpf counters
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -66,98 +66,39 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Song Liu <songliubraving@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
 Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-As a full union is always sent, ensure all bytes of the union are
-initialized with memset to avoid msan warnings of use of uninitialized
-memory.
-
-An example warning from the daemon test:
-
-Uninitialized bytes in __interceptor_write at offset 71 inside [0x7ffd98da6280, 72)
-==11602==WARNING: MemorySanitizer: use-of-uninitialized-value
-    #0 0x5597edccdbe4 in ion tools/lib/perf/lib.c:18:6
-    #1 0x5597edccdbe4 in writen tools/lib/perf/lib.c:47:9
-    #2 0x5597ed221d30 in send_cmd tools/perf/builtin-daemon.c:1376:22
-    #3 0x5597ed21b48c in cmd_daemon tools/perf/builtin-daemon.c
-    #4 0x5597ed1d6b67 in run_builtin tools/perf/perf.c:313:11
-    #5 0x5597ed1d6036 in handle_internal_command tools/perf/perf.c:365:8
-    #6 0x5597ed1d6036 in run_argv tools/perf/perf.c:409:2
-    #7 0x5597ed1d6036 in main tools/perf/perf.c:539:3
-
-SUMMARY: MemorySanitizer: use-of-uninitialized-value tools/lib/perf/lib.c:18:6 in ion
-Exiting
+$(( .. )) is a bash feature but the test's interpreter is !/bin/sh,
+switch the code to use expr.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-daemon.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/stat_bpf_counters.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 61929f63a047..c13201fb09c3 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -1403,8 +1403,10 @@ static int send_cmd(struct daemon *daemon, union cmd *cmd)
+diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+index 22eb31e48ca7..2f9948b3d943 100755
+--- a/tools/perf/tests/shell/stat_bpf_counters.sh
++++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+@@ -11,9 +11,9 @@ compare_number()
+        second_num=$2
  
- static int send_cmd_list(struct daemon *daemon)
- {
--	union cmd cmd = { .cmd = CMD_LIST, };
-+	union cmd cmd;
+        # upper bound is first_num * 110%
+-       upper=$(( $first_num + $first_num / 10 ))
++       upper=$(expr $first_num + $first_num / 10 )
+        # lower bound is first_num * 90%
+-       lower=$(( $first_num - $first_num / 10 ))
++       lower=$(expr $first_num - $first_num / 10 )
  
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.list.cmd = CMD_LIST;
- 	cmd.list.verbose = verbose;
- 	cmd.list.csv_sep = daemon->csv_sep ? *daemon->csv_sep : 0;
- 
-@@ -1432,6 +1434,7 @@ static int __cmd_signal(struct daemon *daemon, struct option parent_options[],
- 		return -1;
- 	}
- 
-+	memset(&cmd, 0, sizeof(cmd));
- 	cmd.signal.cmd = CMD_SIGNAL,
- 	cmd.signal.sig = SIGUSR2;
- 	strncpy(cmd.signal.name, name, sizeof(cmd.signal.name) - 1);
-@@ -1446,7 +1449,7 @@ static int __cmd_stop(struct daemon *daemon, struct option parent_options[],
- 		OPT_PARENT(parent_options),
- 		OPT_END()
- 	};
--	union cmd cmd = { .cmd = CMD_STOP, };
-+	union cmd cmd;
- 
- 	argc = parse_options(argc, argv, start_options, daemon_usage, 0);
- 	if (argc)
-@@ -1457,6 +1460,8 @@ static int __cmd_stop(struct daemon *daemon, struct option parent_options[],
- 		return -1;
- 	}
- 
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.cmd = CMD_STOP;
- 	return send_cmd(daemon, &cmd);
- }
- 
-@@ -1470,7 +1475,7 @@ static int __cmd_ping(struct daemon *daemon, struct option parent_options[],
- 		OPT_PARENT(parent_options),
- 		OPT_END()
- 	};
--	union cmd cmd = { .cmd = CMD_PING, };
-+	union cmd cmd;
- 
- 	argc = parse_options(argc, argv, ping_options, daemon_usage, 0);
- 	if (argc)
-@@ -1481,6 +1486,8 @@ static int __cmd_ping(struct daemon *daemon, struct option parent_options[],
- 		return -1;
- 	}
- 
-+	memset(&cmd, 0, sizeof(cmd));
-+	cmd.cmd = CMD_PING;
- 	scnprintf(cmd.ping.name, sizeof(cmd.ping.name), "%s", name);
- 	return send_cmd(daemon, &cmd);
- }
+        if [ $second_num -gt $upper ] || [ $second_num -lt $lower ]; then
+                echo "The difference between $first_num and $second_num are greater than 10%."
 -- 
-2.32.0.272.g935e593368-goog
+2.32.0.288.g62a8d224e6-goog
 
