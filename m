@@ -2,69 +2,85 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B609BC48BE8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 09:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A11AC48BE8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 10:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 929DC61184
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 09:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D8F610CD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 10:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231224AbhFRJTt (ORCPT
+        id S231635AbhFRKDx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Jun 2021 05:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59596 "EHLO
+        Fri, 18 Jun 2021 06:03:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbhFRJTs (ORCPT
+        with ESMTP id S232792AbhFRKDq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Jun 2021 05:19:48 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C18E9C061574
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jun 2021 02:17:38 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id t3so7682891edc.7
-        for <linux-perf-users@vger.kernel.org>; Fri, 18 Jun 2021 02:17:38 -0700 (PDT)
+        Fri, 18 Jun 2021 06:03:46 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651D8C061574;
+        Fri, 18 Jun 2021 03:01:32 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id i13so7834773edb.9;
+        Fri, 18 Jun 2021 03:01:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=qjbuZgVXwT7IkwXCEv44XfBZdQ8COcdDJTzBxor57Uw=;
-        b=WdS2+sj1Bk/yFjeXlKT3esLdTeTVJ6Q65R8kjcuWgYpPmxWF7Lyz6KdzCS4bp6W+FB
-         A+JHPUDT0hfHR/P4/JXw9zLtgw3+DIMiGdqDvgLdFiQ4e5wwYtrUEicBJRV/tTU/QOT/
-         r5f9lrP6k+6FqXbXdAahi4XvQSAmWa0cZgHwZSlOs4dbc5X61m2FjZQJ1Uhz1m1Z7Meu
-         JMeq4wlTRv/TAomMQvctHXF8u1odCLrTM+av9xbmNIS3CQeCEMhLKvSthVK9lAnIIM1A
-         G478YQuqXBN7QUv8WAGA2T/L2W6GgzyYd6a4Dzbbv4EfKhYN8B4QutwVSSkMmoPwqJrE
-         j72Q==
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ZWdhnm5vDGxSTwGrEAnS5oQkzBaIx+HjqYEBbEhXdB4=;
+        b=GuJplkfChAmI3RkGHuxkbjYR20jdrmahoJ7VjXV556/0O16AEz1DwguHfzTbsSi58+
+         cA81CxgEWsohbp8gx8jPNpI8eXmvvx2MgZl3SxiKl1XbIjyeXgEVqHvKPVVI+MCzMAut
+         Bnx1qUT/Uf582+qR3+HZGfRE8fsiEylLdgXLTLMi/sxzre9EJP8ofeL1UvForHvpmc12
+         o+FwxS7BGyZmAMT3Pe5reI/HgyDlNmRua/NpzEPUmaWWE5bwaWe4xgFGE3xMyLDqdVOm
+         HUSum0i/yLrCs2e0bdZA5zrrHKDpE60LRXPJiEMtv7BM+avYr9J8HqZdqVra61I1DqB9
+         SljQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=qjbuZgVXwT7IkwXCEv44XfBZdQ8COcdDJTzBxor57Uw=;
-        b=CtzgVVm9VRDB0icw1Azi37pnmvq7qlReC8jsjMJ9dLs38wI49M6IOh7qSDQ53MeNMg
-         LwZGO7jDbEdtiH0vRM1pa4OZymgdMcnH3zqTIkOOtRGYsJUkHvxZ1HiP/wwenQl3BCs4
-         7sOClZ7slw6pF+UByTFqYdUiJyHh5DWsckA7s8V9Lzk7Sb5oC+8W7iG+n08JmOSFxfY4
-         yBGLCRKrRqM6WNjoM93kSU10de213lPF+gq/HDYyZdCOpMg58uGUsHb5Si17UCZtsvpP
-         X1emtOiLX9P8UH3d1aY1XlBBlZlz1SRR7MNc/TYRd/r8PVxQobKBj2XZdJY7j4bLZOGC
-         isZA==
-X-Gm-Message-State: AOAM533qdt3E5MaOX1oUIksZUQSecZUq1LVZ4LBz9rwKTX5JMLnN14nx
-        hbp31Pno3emx1pqY2K3BNPQ=
-X-Google-Smtp-Source: ABdhPJyDRbh1lGxjbk9wG5/O+Ba000O+HOYYpam78C6AvCVEZRZ5E7Yo1gHsUBVQnfR5FLlL/VbyDw==
-X-Received: by 2002:aa7:c845:: with SMTP id g5mr3677273edt.306.1624007857249;
-        Fri, 18 Jun 2021 02:17:37 -0700 (PDT)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=ZWdhnm5vDGxSTwGrEAnS5oQkzBaIx+HjqYEBbEhXdB4=;
+        b=Zi3b3fLI6qknlXEw8Ni7YJiolfZa3kMC9Nil1fiFcgeMPKupbnzsjlXiOuZWAzhmuq
+         iWexJxu1qe5W7CInXf8Tk+s2v5CKiD6cnTaypba32j576o3S/6MnabHRvyeLryIuBTQz
+         Z+K9JqIzyEToFfMUUPdGRlu6isnYkV85Bs71prROUu03ekNFmyKH+mFx0GE3P62NAKPD
+         CzKwQeW0ESDUI1z77Ib+zDnbFoCuiIDDnIH83wsE7Rn4vid4kkFbpUJWYmqq6LrbSLlP
+         iSIsGre2usgXpu11rYUukNFxSoHJz0wI6ziy+S2j2w1/UF9H/FzuNt2F4y8hFylX0jG0
+         P1ew==
+X-Gm-Message-State: AOAM53281YldytoKlWX1Hi2ZpwJgWmpocPQuLGa5yjgKCz4+H91G7Od1
+        tdpGiu3Sqt6Prjkeog3cAXw=
+X-Google-Smtp-Source: ABdhPJx5w1d1Yt+WgE6AqpaQ4JGs3nec/nsqxrUq/WDa/1qVhCe0xYRUPJ/2VlgP61+QbnLc5IwoUg==
+X-Received: by 2002:a05:6402:22a1:: with SMTP id cx1mr1399725edb.338.1624010490862;
+        Fri, 18 Jun 2021 03:01:30 -0700 (PDT)
 Received: from [192.168.1.15] ([151.29.187.239])
-        by smtp.gmail.com with ESMTPSA id g15sm774636ejb.103.2021.06.18.02.17.36
+        by smtp.gmail.com with ESMTPSA id m18sm842797ejx.56.2021.06.18.03.01.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jun 2021 02:17:36 -0700 (PDT)
-Message-ID: <e883163b0c0295bfb8a56dcc82f6cae4cbbdc84a.camel@gmail.com>
-Subject: perf-top: heap-buffer-overflow in elf_sec__is_text reported from
- ASan
+        Fri, 18 Jun 2021 03:01:30 -0700 (PDT)
+Message-ID: <da5b052d2c94db91c0bf8cb794c5cad299f19e57.camel@gmail.com>
+Subject: Re: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map
+ and dso
 From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     jirislaby@kernel.org, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        acme@kernel.org
-Date:   Fri, 18 Jun 2021 11:17:35 +0200
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 18 Jun 2021 12:01:28 +0200
+In-Reply-To: <YLpxDf6+YOxYI5z3@kernel.org>
+References: <20210602231052.317048-1-rickyman7@gmail.com>
+         <CAP-5=fVxHUnwGoRypMjCsPSh_yo5PB8Hzbkx5ArA5b0=7S-67g@mail.gmail.com>
+         <YLopMBgLWysdJbkm@kernel.org>
+         <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
+         <YLpxDf6+YOxYI5z3@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.2 (3.40.2-1.fc34) 
 MIME-Version: 1.0
@@ -73,181 +89,123 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi, 
 
-ASan reports a heap-buffer-overflow in elf_sec__is_text when using perf-top.
-The bug is introduced by commit 6833e0b: "perf symbols: Resolve symbols against
-debug file first" from Jiri Slaby. 
+On Fri, 2021-06-04 at 15:29 -0300, Arnaldo Carvalho de Melo wrote:
+<SNIP> 
+> > > But looking at this code now I realize that maps__find() should grab a
+> > > refcount for the map it returns, because in this
+> > > machine__process_ksymbol_register() function we use reference that 'map'
+> > > after the if block, i.e. we use it if it came from maps__find() or if we
+> > > created it machine__process_ksymbol_register, so there is a possible
+> > > race where other thread removes it from the list and map__put()s it
+> > > ending up in map__delete() while we still use it in
+> > > machine__process_ksymbol_register(), right?
+> > 
+> > Agree. It should be placed before up_read to avoid races, right?
+> 
+> Yes, we have to grab a refcount while we are sure its not going away,
+> then return that as the lookup result, whoever receives that refcounted
+> entry should use it and then drop the refcount.
+> 
+> > Then we would need to see where it's called and add the appropriate
+> > map__put.
+> 
+> yes
 
-This is the ASan output (with the source at perf/urgent).
+This function has quite a number of callers (direct and indirect) so the the
+patch is becoming huge. 
 
-$ make CC=clang CXX=clang++ EXTRA_CFLAGS="-g -O0 -fsanitize=address -fno-omit-frame-pointer" WERROR=0 NO_LIBPYTHON=1 DEBUG=1 NO_LIBPERL=1
-[...]
-# ASAN_OPTIONS=abort_on_error=1:disable_coredump=0:unmap_shadow_on_exit=1 ./perf top
-=================================================================
-==363148==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x61300009add6 at pc 0x00000049875c bp 0x7f4f56446440 sp 0x7f4f56445bf0
-READ of size 1 at 0x61300009add6 thread T6
-    #0 0x49875b in StrstrCheck(void*, char*, char const*, char const*) (/home/user/linux/tools/perf/perf+0x49875b)
-    #1 0x4d13a2 in strstr (/home/user/linux/tools/perf/perf+0x4d13a2)
-    #2 0xacae36 in elf_sec__is_text /home/user/linux/tools/perf/util/symbol-elf.c:176:9
-    #3 0xac3ec9 in elf_sec__filter /home/user/linux/tools/perf/util/symbol-elf.c:187:9
-    #4 0xac2c3d in dso__load_sym /home/user/linux/tools/perf/util/symbol-elf.c:1254:20
-    #5 0x883981 in dso__load /home/user/linux/tools/perf/util/symbol.c:1897:9
-    #6 0x8e6248 in map__load /home/user/linux/tools/perf/util/map.c:332:7
-    #7 0x8e66e5 in map__find_symbol /home/user/linux/tools/perf/util/map.c:366:6
-    #8 0x7f8278 in machine__resolve /home/user/linux/tools/perf/util/event.c:707:13
-    #9 0x5f3d1a in perf_event__process_sample /home/user/linux/tools/perf/builtin-top.c:773:6
-    #10 0x5f30e4 in deliver_event /home/user/linux/tools/perf/builtin-top.c:1197:3
-    #11 0x908a72 in do_flush /home/user/linux/tools/perf/util/ordered-events.c:244:9
-    #12 0x905fae in __ordered_events__flush /home/user/linux/tools/perf/util/ordered-events.c:323:8
-    #13 0x9058db in ordered_events__flush /home/user/linux/tools/perf/util/ordered-events.c:341:9
-    #14 0x5f19b1 in process_thread /home/user/linux/tools/perf/builtin-top.c:1109:7
-    #15 0x7f4f6a21a298 in start_thread /usr/src/debug/glibc-2.33-16.fc34.x86_64/nptl/pthread_create.c:481:8
-    #16 0x7f4f697d0352 in clone ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+One of these callers is thread__find_map, which returns an addr_location
+(actually it's an output argument). This addr_location holds references to map,
+maps and thread without getting any refcnt (actually in one function it gets it
+on the thread and a comment tells to put it once done). If I'm not wrong, this
+addr_location is never malloced (always a local variable) and, is should be
+present in parts of the code where there should be a refcnt on the thread.
+Therefore, maybe it does not get the refcnts since it assumes that thread (upon
+which depends maps and as a consequence map) is always refcnted in its context.
+However, I think that it should get all refcnts anyways for clarity and to
+prevent possible misuses (if I understood correctly, Ian is of the same
+opinion).
 
-0x61300009add6 is located 10 bytes to the right of 332-byte region [0x61300009ac80,0x61300009adcc)
-allocated by thread T6 here:
-    #0 0x4f3f7f in malloc (/home/user/linux/tools/perf/perf+0x4f3f7f)
-    #1 0x7f4f6a0a88d9  (/lib64/libelf.so.1+0xa8d9)
+My solution would be to add the refcnt grabbing for map, maps and thread in
+thread__find_map, releasing them in addr_location__put, and then making sure all
+callers call it when no longer in use.
 
-Thread T6 created by T0 here:
-    #0 0x464856 in pthread_create (/home/user/linux/tools/perf/perf+0x464856)
-    #1 0x5f06e0 in __cmd_top /home/user/linux/tools/perf/builtin-top.c:1309:6
-    #2 0x5ef19f in cmd_top /home/user/linux/tools/perf/builtin-top.c:1762:11
-    #3 0x7b28c0 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #4 0x7b119f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #5 0x7b2423 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #6 0x7b0c19 in main /home/user/linux/tools/perf/perf.c:539:3
-    #7 0x7f4f696f7b74 in __libc_start_main /usr/src/debug/glibc-2.33-16.fc34.x86_64/csu/../csu/libc-start.c:332:16
+Following the same reasoning, I added refcnt grabbing also to mem_info,
+branch_info (map was already refcnted, I added it also to maps for coherency),
+map_symbol (as in branch_info, I added it to maps), and in other places in which
+I saw a pointer was passed without refcounting.
 
-SUMMARY: AddressSanitizer: heap-buffer-overflow (/home/user/linux/tools/perf/perf+0x49875b) in StrstrCheck(void*, char*, char const*, char const*)
-Shadow bytes around the buggy address:
-  0x0c268000b560: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b570: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b580: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x0c268000b5a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=>0x0c268000b5b0: 00 00 00 00 00 00 00 00 00 04[fa]fa fa fa fa fa
-  0x0c268000b5c0: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
-  0x0c268000b5d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x0c268000b5e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x0c268000b5f0: 07 fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07 
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-  Shadow gap:              cc
-==363148==ABORTING
+Most changes are quite trivial, however, the changelog is huge:
+48 files changed, 472 insertions(+), 157 deletions(-)
+Most of them are just returns converted to goto for calling the __put functions.
 
+Doing so, I managed to remove memory leaks caused by refcounting also in perf-
+report (I wanted to try also perf top but I encountered another memory-related
+issue). However, the changelog is huge and testing all of it is challenging
+(especially since I can test missing puts only with ASan's LeakSanitizer and its
+reports are usually full of leaks, which I am trying to fix along the way, I
+will send some patches in the following days). How would you go about it? Do you
+have any suggestions?
 
-Here is some more information from the coredump:
+>  
+> > In addition, having a look at other possible concurrency issues in map.c:
+> 
+> Its good to have new eyes looking at this, exactly at a time we're
+> discussing further parallelizing perf :-)
+> 
+> >  - maps__for_each_entry should always be called with either read or write
+> > lock,
+> > am I right? It looks like this is not done in certain parts of the code. If
+> > such
+> 
+> Right.
+> 
+> > lock is taken, then grabbing the refcount on the looping variable is not
+> > needed
+> > unless we need to return it, right?
+> 
+> Right, returning an entry needs to take a refcount.
+> 
+> >  - maps__first and map__next do not grab a refcount and neither a lock. If
+> > they're used through a lock-protected loop, it's not a problem, but maybe
+> > it's
+> 
+> yes
+> 
+> > worth making explicit that they are not to be used directly (through either
+> > a
+> > comment or adding some underscores in their names).
+> 
+> yes, __ in front means, in kernel style, that it does less than the non
+> __ prefixed, same name, function.
+> 
+> >  - maps__empty: should probably take a reader lock.
+> 
+> Indeed.
+> 
+> >  - maps__find_symbol: the returned symbol is not protected (the caller does
+> > not
+> > receive a refcount to neither map or dso, so if dso is deleted, his
+> > reference to
+> > the symbol gets invalidated). Depending on how it's being used it might not
+> > be a
+> > problem, but in the general scenario I think it's not thread-safe.
+> 
+> Yes, that function is also problematic.
 
-pwndbg> p *shdr
-$1 = {
-  sh_name = 342,
-  sh_type = 1,
-  sh_flags = 0,
-  sh_addr = 0,
-  sh_offset = 8472,
-  sh_size = 1140436,
-  sh_link = 0,
-  sh_info = 0,
-  sh_addralign = 1,
-  sh_entsize = 0
-}
-pwndbg> p *secstrs
-$2 = {
-  d_buf = 0x6130001836c0,
-  d_type = ELF_T_BYTE,
-  d_version = 1,
-  d_size = 332,
-  d_off = 0,
-  d_align = 1
-}
-pwndbg> p syms_ss->name
-$4 = 0x607000018f90 "/usr/lib/debug/usr/lib64/libglib-2.0.so.0.6800.2-2.68.2-1.fc34.x86_64.debug"
-pwndbg> p runtime_ss->name
-$5 = 0x6070000190e0 "/root/.debug/.build-id/37/475e3b392fb3971c8ad0d9ac0a4d7e1b93c521/elf"
-
-Furthermore, the branch in line symbol-elf.c:1241 (the one added in the referred
-patch) is not taken.
-
-As you can see, sh_name is out-of-range (342 > 332).
-I can also provide a coredump, if it can be useful.
-
-I have no idea of how the ELF stuff works, but I thought this may be caused by
-the fact that secstrs is built from runtime_ss, while shdr is built from syms_ss
-(since it is the change of the commit). I tried to test this theory with the
-following change:
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index a73345730ba9..8d2b692f11a2 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1146,7 +1146,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	if (symstrs == NULL)
- 		goto out_elf_end;
- 
--	sec_strndx = elf_getscn(runtime_ss->elf, runtime_ss->ehdr.e_shstrndx);
-+	sec_strndx = elf_getscn(elf, ehdr.e_shstrndx);
- 	if (sec_strndx == NULL)
- 		goto out_elf_end;
- 
-@@ -1244,6 +1244,14 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 		 * values for syms (invalid) and runtime (valid).
- 		 */
- 		if (shdr.sh_type == SHT_NOBITS) {
-+			sec_strndx = elf_getscn(runtime_ss->elf, runtime_ss->ehdr.e_shstrndx);
-+			if (sec_strndx == NULL)
-+				goto out_elf_end;
-+
-+			secstrs = elf_getdata(sec_strndx, NULL);
-+			if (secstrs == NULL)
-+				goto out_elf_end;
-+
- 			sec = elf_getscn(runtime_ss->elf, sym.st_shndx);
- 			if (!sec)
- 				goto out_elf_end;
-
-However, it still overflows, but oddly the branch is not taken before the
-overflow. Is there some kind of state that gets changed in the ELF structs?
-
-I also tried to just change line 1146 as in the diff below:
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index a73345730ba9..27c7e1d39323 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1146,7 +1146,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	if (symstrs == NULL)
- 		goto out_elf_end;
- 
--	sec_strndx = elf_getscn(runtime_ss->elf, runtime_ss->ehdr.e_shstrndx);
-+	sec_strndx = elf_getscn(elf, ehdr.e_shstrndx);
- 	if (sec_strndx == NULL)
- 		goto out_elf_end;
-
-In this case, ASan reports no overflows. So, it looks like it kinda solves the
-problem, but I don't know if it's correct. 
-
-What do you think?
+This issue is easier to solve than expected since the map is returned as **mapp,
+so it's just a matter of making sure that the caller always passes it and then
+puts the refcnt.
 
 Thanks,
 Riccardo
+
+> 
+> Thanks for looking into this, please consider sending patches for these
+> issues,
+> 
+> - Arnaldo
+
 
