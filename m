@@ -2,107 +2,109 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1D1C49EA5
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 20:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E412C48BE8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 21:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40788613E2
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 20:42:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B66F6128C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 21:37:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233908AbhFRUov (ORCPT
+        id S234473AbhFRVjd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Jun 2021 16:44:51 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:58948 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233702AbhFRUou (ORCPT
+        Fri, 18 Jun 2021 17:39:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233617AbhFRVjc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Jun 2021 16:44:50 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1624048959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=viaF2+vzF8yGuceHiGdcXmR+KhaApSpPdBORO7fsb08=;
-        b=ezsxCMn96b+2rHdzRATVpDVBpAYMddpcAvBC98rFOdITrLchNFKuyjWGTqiD/peJdjfyZo
-        9uA2SACZ7MDy7RW/rBDSPjsl2GGYfeESMBAKGPmDMR4ZLxDMQmS9JRSgoiTdHgKzEYCA7D
-        0fAwkVCTrOBU59v1jzl5McNQQNJ3p/rhehvTGnWJEzlHBUzdoN7aS303gjP3spWP7G5SWh
-        ok/HPjFbxtVYnv1cMLG8UEqBdXEujEWCyqYYoB7pWpTPWqBlc8VdE/cR1EqGjaCBnteb3s
-        iVmZgxZGlmKicLxoqfVSOyzZNaJs/Rs1Ug91LJmtPT/PUyTsAQAPvUaoSq+7Vw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1624048959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=viaF2+vzF8yGuceHiGdcXmR+KhaApSpPdBORO7fsb08=;
-        b=vMq4tRHu7ixDGl3mtG0JpRgtNMAsZHXhoKJUnNyvBYVWnj1SLFxNFsZoD5kQMCDWRCTerB
-        6JPjgWDDW4WzKbBQ==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 18 Jun 2021 17:39:32 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F1EC061574;
+        Fri, 18 Jun 2021 14:37:22 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id h12so8754248pfe.2;
+        Fri, 18 Jun 2021 14:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5F0/o83rPn6kF1SWIHORQRDoAw20SA/iZS1LAUQxvto=;
+        b=e1TuHTIi91aVzlQxa54+NMMojBj3bHrti5EbzZ2htrtS2SdCleDjpi9LQ1qjPMURp1
+         trsZXQdDdJEsShqcokOI+7xzBJgmrEHEoIlBTyEPhm6i16Cg/WhNPstTBMIlMW6NC3rk
+         D3xEIUOe72C89Mlc2Z+Q461rQPLfrh2v0claYeiR1qaGQIaEgnRtlT3O6sgmkOZPBJFk
+         9l1UVEg+zlbTQWfLXUSLAsZo9sUP6Tup9TJW2MESA0ogsFiZ6nydsX4NTtSmTKazIj3r
+         0q7a1kY1UwizmVrlzoI5xo37fX5gMQZUfincvWoqf5YAeBpdJ6A6gBLmkGRgudNJVsYy
+         1z2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5F0/o83rPn6kF1SWIHORQRDoAw20SA/iZS1LAUQxvto=;
+        b=I4lJMjq6h+nhvnUNv7rmA2zCj1a9MqiT6+e5MtJi4IqLh4jiUpThkCFRCPPdcy/yge
+         1Dmw0C/3GJ4HPGwaZcWdNYg4oyFHEdjTqbVcCdJNv4HbUBwG58rmE8IEWONQt4hG5+/D
+         lfj/6QL3anq0/cYiGQBSYw8i2/NvNbR/wuQ8qYuu0tfPxAoKgocSxytECCXMA88OErzA
+         HipPHR6yci8NHb9M4JVIWpHMb0ufU5ACQZYTbiFo4fHWJjdwZrvovzJRXyTIKsH/jEMz
+         2BCYXqGY5/AYbZSSWWCDVXFFXA1fS0hWEgChtMwfLiujFNNOQIw+gmr9KqrTRZQTXqq6
+         Q46g==
+X-Gm-Message-State: AOAM530FCa8UL+YfyYJlvt6YIsVBAQ6ylspZSkTTVSKMaxKHWadrCslu
+        kT/Oe6ER1PfsEbzb9eqFh/Hjk1mu7kbuAqAWnjk=
+X-Google-Smtp-Source: ABdhPJzgINR5Oh3qoN1vLBU6Th3toYjPFxtFBsXuIsw5EDHoYPGLW5qODh63bC9YBhL5jv8xT7nPgu6ZI8HoDswqovU=
+X-Received: by 2002:a63:b00d:: with SMTP id h13mr11949770pgf.74.1624052241679;
+ Fri, 18 Jun 2021 14:37:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210618143854.62967-1-andriy.shevchenko@linux.intel.com> <YMz80O2mkEWyl2Xx@yury-ThinkPad>
+In-Reply-To: <YMz80O2mkEWyl2Xx@yury-ThinkPad>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 19 Jun 2021 00:36:44 +0300
+Message-ID: <CAHp75Veti-7h=BoH9ZXXPMS1e8gq3rb19QS4TAB1J33GTdLKRg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] tools: Rename bitmap_alloc() to bitmap_zalloc()
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Gardon <bgardon@google.com>, Peter Xu <peterx@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        netdev@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, cgroups@vger.kernel.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        rcu@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 5/6] sched,timer: Use __set_current_state()
-In-Reply-To: <20210602133040.524487671@infradead.org>
-References: <20210602131225.336600299@infradead.org> <20210602133040.524487671@infradead.org>
-Date:   Fri, 18 Jun 2021 22:42:38 +0200
-Message-ID: <87sg1eewg1.ffs@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Shuah Khan <shuah@kernel.org>,
+        Yury Norov <ynorov@caviumnetworks.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 02 2021 at 15:12, Peter Zijlstra wrote:
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Fri, Jun 18, 2021 at 11:11 PM Yury Norov <yury.norov@gmail.com> wrote:
+>
+> On Fri, Jun 18, 2021 at 05:38:54PM +0300, Andy Shevchenko wrote:
+> > Rename bitmap_alloc() to bitmap_zalloc() in tools to follow new coming
+> > bitmap API extension in kernel.
+>
+> Can you please tell more about the new coming extensions?
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Ah, this is outdated text. It was about the time when bitmap_*alloc()
+was introduced in the kernel.
 
+> Anyways,
+> Acked-by: Yury Norov <ynorov@caviumnetworks.com>
+>
+> All bitmap patches together can be found here:
+> https://github.com/norov/linux/commits/bm-f1
+
+Should I resend with that fixed (I have also noticed that your address
+in Suggested-by is outdated)?
+
+-- 
+With Best Regards,
+Andy Shevchenko
