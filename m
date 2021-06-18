@@ -2,145 +2,305 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92414C48BDF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 13:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B07EC48BDF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 14:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70CCF613EC
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 13:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084C661351
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 14:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232164AbhFRN2C (ORCPT
+        id S234597AbhFROl7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Jun 2021 09:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33950 "EHLO mail.kernel.org"
+        Fri, 18 Jun 2021 10:41:59 -0400
+Received: from mga11.intel.com ([192.55.52.93]:40747 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229877AbhFRN2C (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Jun 2021 09:28:02 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9EF24613EB;
-        Fri, 18 Jun 2021 13:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624022752;
-        bh=Y1EXxYzR8V40448QkyPRUDs0dTVxn9wLZsNU8QqYQA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J6EUeCDDd5HoynS1rgyePkpn7anNR+xHc/kDkt7GuMlDcLa100JA1wSs26B00vCmn
-         GEAQEFxrOvCSX+W12KXDY049EkCrG4vcwFHvwdnk/EXKe+M6aqOqOKxyyf2eELwr9R
-         gw2q1EoWwulw/EPABdsss9RDbqn7wSSsTIwnV2mGEN8w7nR/ykZ3XK4AK0RfA7tEM7
-         gIG8JuLUsG5Wjs4qhE+O58fj7CoQN/VbXnTtfBU5m0MtY21ewyX6IcdAdmOjZ/nm6f
-         ofPbMqzKJzR1FghDlb6M0BBA800WeUqzIG6aKDmMekxLSBsldpUvnk6Chr0ns/kOu0
-         28L5/iSsKO1Xw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D6AF740B1A; Fri, 18 Jun 2021 10:25:49 -0300 (-03)
-Date:   Fri, 18 Jun 2021 10:25:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        id S234592AbhFROl6 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 18 Jun 2021 10:41:58 -0400
+IronPort-SDR: KcuG6gQN43LXPm4GdYSg+rbUPUgE8tT1aIwCIvZXf9XLXhuSFPYx49kLoDe29APBwAsnes/P+Q
+ CVfORbaseawA==
+X-IronPort-AV: E=McAfee;i="6200,9189,10019"; a="203538993"
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="203538993"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2021 07:39:47 -0700
+IronPort-SDR: DimTAerlVzGU6PTA0wYmkjzg/IsTKLrGrZOpeU1BLw27jw5tlL2d+4Vjmn6VGjl1S7pMxddc9G
+ bTPAxQRThB9A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,284,1616482800"; 
+   d="scan'208";a="443592038"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 18 Jun 2021 07:39:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9AE32431; Fri, 18 Jun 2021 17:40:06 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Leo Yan <leo.yan@linaro.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Gardon <bgardon@google.com>, Peter Xu <peterx@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf ksymbol: fix memory leak: decrease refcount of map
- and dso
-Message-ID: <YMye3UVZWRh30L2a@kernel.org>
-References: <20210602231052.317048-1-rickyman7@gmail.com>
- <CAP-5=fVxHUnwGoRypMjCsPSh_yo5PB8Hzbkx5ArA5b0=7S-67g@mail.gmail.com>
- <YLopMBgLWysdJbkm@kernel.org>
- <3b8c7c2c5de492c7fbf86df73c43cdb0fbb453df.camel@gmail.com>
- <YLpxDf6+YOxYI5z3@kernel.org>
- <da5b052d2c94db91c0bf8cb794c5cad299f19e57.camel@gmail.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Yury Norov <ynorov@caviumnetworks.com>
+Subject: [PATCH v1 1/1] tools: Rename bitmap_alloc() to bitmap_zalloc()
+Date:   Fri, 18 Jun 2021 17:38:54 +0300
+Message-Id: <20210618143854.62967-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <da5b052d2c94db91c0bf8cb794c5cad299f19e57.camel@gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 18, 2021 at 12:01:28PM +0200, Riccardo Mancini escreveu:
-> Hi, 
-> 
-> On Fri, 2021-06-04 at 15:29 -0300, Arnaldo Carvalho de Melo wrote:
-> <SNIP> 
-> > > > But looking at this code now I realize that maps__find() should grab a
-> > > > refcount for the map it returns, because in this
-> > > > machine__process_ksymbol_register() function we use reference that 'map'
-> > > > after the if block, i.e. we use it if it came from maps__find() or if we
-> > > > created it machine__process_ksymbol_register, so there is a possible
-> > > > race where other thread removes it from the list and map__put()s it
-> > > > ending up in map__delete() while we still use it in
-> > > > machine__process_ksymbol_register(), right?
-> > > 
-> > > Agree. It should be placed before up_read to avoid races, right?
-> > 
-> > Yes, we have to grab a refcount while we are sure its not going away,
-> > then return that as the lookup result, whoever receives that refcounted
-> > entry should use it and then drop the refcount.
-> > 
-> > > Then we would need to see where it's called and add the appropriate
-> > > map__put.
-> > 
-> > yes
-> 
-> This function has quite a number of callers (direct and indirect) so the the
-> patch is becoming huge. 
-> 
-> One of these callers is thread__find_map, which returns an addr_location
-> (actually it's an output argument). This addr_location holds references to map,
-> maps and thread without getting any refcnt (actually in one function it gets it
-> on the thread and a comment tells to put it once done). If I'm not wrong, this
-> addr_location is never malloced (always a local variable) and, is should be
-> present in parts of the code where there should be a refcnt on the thread.
-> Therefore, maybe it does not get the refcnts since it assumes that thread (upon
-> which depends maps and as a consequence map) is always refcnted in its context.
-> However, I think that it should get all refcnts anyways for clarity and to
-> prevent possible misuses (if I understood correctly, Ian is of the same
-> opinion).
+Rename bitmap_alloc() to bitmap_zalloc() in tools to follow new coming
+bitmap API extension in kernel.
 
-agreed, but this will incur extra costs, we should perhaos use perf to
-measure how much it costs. :-)
+No functional changes intended.
 
-> My solution would be to add the refcnt grabbing for map, maps and thread in
-> thread__find_map, releasing them in addr_location__put, and then making sure all
-> callers call it when no longer in use.
+Suggested-by: Yury Norov <ynorov@caviumnetworks.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ tools/include/linux/bitmap.h                            | 4 ++--
+ tools/perf/bench/find-bit-bench.c                       | 2 +-
+ tools/perf/builtin-c2c.c                                | 6 +++---
+ tools/perf/builtin-record.c                             | 2 +-
+ tools/perf/tests/bitmap.c                               | 2 +-
+ tools/perf/tests/mem2node.c                             | 2 +-
+ tools/perf/util/affinity.c                              | 4 ++--
+ tools/perf/util/header.c                                | 4 ++--
+ tools/perf/util/metricgroup.c                           | 2 +-
+ tools/perf/util/mmap.c                                  | 4 ++--
+ tools/testing/selftests/kvm/dirty_log_perf_test.c       | 2 +-
+ tools/testing/selftests/kvm/dirty_log_test.c            | 4 ++--
+ tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c | 2 +-
+ 13 files changed, 20 insertions(+), 20 deletions(-)
 
-Ok
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index 330dbf7509cc..7eae64eb5c80 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -109,10 +109,10 @@ static inline int test_and_clear_bit(int nr, unsigned long *addr)
+ }
  
-> Following the same reasoning, I added refcnt grabbing also to mem_info,
-> branch_info (map was already refcnted, I added it also to maps for coherency),
-> map_symbol (as in branch_info, I added it to maps), and in other places in which
-> I saw a pointer was passed without refcounting.
-> 
-> Most changes are quite trivial, however, the changelog is huge:
-> 48 files changed, 472 insertions(+), 157 deletions(-)
-> Most of them are just returns converted to goto for calling the __put functions.
-
-So you could first do a prep patch converting functions to have gotos,
-which would be a no-logic change, and then do the rest?
+ /**
+- * bitmap_alloc - Allocate bitmap
++ * bitmap_zalloc - Allocate bitmap
+  * @nbits: Number of bits
+  */
+-static inline unsigned long *bitmap_alloc(int nbits)
++static inline unsigned long *bitmap_zalloc(int nbits)
+ {
+ 	return calloc(1, BITS_TO_LONGS(nbits) * sizeof(unsigned long));
+ }
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index 73b5bcc5946a..22b5cfe97023 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -54,7 +54,7 @@ static bool asm_test_bit(long nr, const unsigned long *addr)
  
-> Doing so, I managed to remove memory leaks caused by refcounting also in perf-
-> report (I wanted to try also perf top but I encountered another memory-related
-> issue). However, the changelog is huge and testing all of it is challenging
+ static int do_for_each_set_bit(unsigned int num_bits)
+ {
+-	unsigned long *to_test = bitmap_alloc(num_bits);
++	unsigned long *to_test = bitmap_zalloc(num_bits);
+ 	struct timeval start, end, diff;
+ 	u64 runtime_us;
+ 	struct stats fb_time_stats, tb_time_stats;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index e3b9d63077ef..a17726ff85a9 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -137,11 +137,11 @@ static void *c2c_he_zalloc(size_t size)
+ 	if (!c2c_he)
+ 		return NULL;
+ 
+-	c2c_he->cpuset = bitmap_alloc(c2c.cpus_cnt);
++	c2c_he->cpuset = bitmap_zalloc(c2c.cpus_cnt);
+ 	if (!c2c_he->cpuset)
+ 		return NULL;
+ 
+-	c2c_he->nodeset = bitmap_alloc(c2c.nodes_cnt);
++	c2c_he->nodeset = bitmap_zalloc(c2c.nodes_cnt);
+ 	if (!c2c_he->nodeset)
+ 		return NULL;
+ 
+@@ -2045,7 +2045,7 @@ static int setup_nodes(struct perf_session *session)
+ 		struct perf_cpu_map *map = n[node].map;
+ 		unsigned long *set;
+ 
+-		set = bitmap_alloc(c2c.cpus_cnt);
++		set = bitmap_zalloc(c2c.cpus_cnt);
+ 		if (!set)
+ 			return -ENOMEM;
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 84803abeb942..978b6bbd06e4 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2766,7 +2766,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	if (rec->opts.affinity != PERF_AFFINITY_SYS) {
+ 		rec->affinity_mask.nbits = cpu__max_cpu();
+-		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
++		rec->affinity_mask.bits = bitmap_zalloc(rec->affinity_mask.nbits);
+ 		if (!rec->affinity_mask.bits) {
+ 			pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
+ 			err = -ENOMEM;
+diff --git a/tools/perf/tests/bitmap.c b/tools/perf/tests/bitmap.c
+index 96c137360918..12b805efdca0 100644
+--- a/tools/perf/tests/bitmap.c
++++ b/tools/perf/tests/bitmap.c
+@@ -14,7 +14,7 @@ static unsigned long *get_bitmap(const char *str, int nbits)
+ 	unsigned long *bm = NULL;
+ 	int i;
+ 
+-	bm = bitmap_alloc(nbits);
++	bm = bitmap_zalloc(nbits);
+ 
+ 	if (map && bm) {
+ 		for (i = 0; i < map->nr; i++)
+diff --git a/tools/perf/tests/mem2node.c b/tools/perf/tests/mem2node.c
+index a258bd51f1a4..e4d0d58b97f8 100644
+--- a/tools/perf/tests/mem2node.c
++++ b/tools/perf/tests/mem2node.c
+@@ -27,7 +27,7 @@ static unsigned long *get_bitmap(const char *str, int nbits)
+ 	unsigned long *bm = NULL;
+ 	int i;
+ 
+-	bm = bitmap_alloc(nbits);
++	bm = bitmap_zalloc(nbits);
+ 
+ 	if (map && bm) {
+ 		for (i = 0; i < map->nr; i++) {
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+index a5e31f826828..7b12bd7a3080 100644
+--- a/tools/perf/util/affinity.c
++++ b/tools/perf/util/affinity.c
+@@ -25,11 +25,11 @@ int affinity__setup(struct affinity *a)
+ {
+ 	int cpu_set_size = get_cpu_set_size();
+ 
+-	a->orig_cpus = bitmap_alloc(cpu_set_size * 8);
++	a->orig_cpus = bitmap_zalloc(cpu_set_size * 8);
+ 	if (!a->orig_cpus)
+ 		return -1;
+ 	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
+-	a->sched_cpus = bitmap_alloc(cpu_set_size * 8);
++	a->sched_cpus = bitmap_zalloc(cpu_set_size * 8);
+ 	if (!a->sched_cpus) {
+ 		zfree(&a->orig_cpus);
+ 		return -1;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index aa1e42518d37..c67c03dd3db2 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -277,7 +277,7 @@ static int do_read_bitmap(struct feat_fd *ff, unsigned long **pset, u64 *psize)
+ 	if (ret)
+ 		return ret;
+ 
+-	set = bitmap_alloc(size);
++	set = bitmap_zalloc(size);
+ 	if (!set)
+ 		return -ENOMEM;
+ 
+@@ -1259,7 +1259,7 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+ 
+ 	size++;
+ 
+-	n->set = bitmap_alloc(size);
++	n->set = bitmap_zalloc(size);
+ 	if (!n->set) {
+ 		closedir(dir);
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 8336dd8e8098..f24c6998d26c 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -313,7 +313,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	struct evsel *evsel, *tmp;
+ 	unsigned long *evlist_used;
+ 
+-	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
++	evlist_used = bitmap_zalloc(perf_evlist->core.nr_entries);
+ 	if (!evlist_used)
+ 		return -ENOMEM;
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index ab7108d22428..512dc8b9c168 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -106,7 +106,7 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
+ 		data = map->aio.data[idx];
+ 		mmap_len = mmap__mmap_len(map);
+ 		node_index = cpu__get_node(cpu);
+-		node_mask = bitmap_alloc(node_index + 1);
++		node_mask = bitmap_zalloc(node_index + 1);
+ 		if (!node_mask) {
+ 			pr_err("Failed to allocate node mask for mbind: error %m\n");
+ 			return -1;
+@@ -258,7 +258,7 @@ static void build_node_mask(int node, struct mmap_cpu_mask *mask)
+ static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
+ {
+ 	map->affinity_mask.nbits = cpu__max_cpu();
+-	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
++	map->affinity_mask.bits = bitmap_zalloc(map->affinity_mask.nbits);
+ 	if (!map->affinity_mask.bits)
+ 		return -1;
+ 
+diff --git a/tools/testing/selftests/kvm/dirty_log_perf_test.c b/tools/testing/selftests/kvm/dirty_log_perf_test.c
+index 04a2641261be..fbf0c2c1fbc9 100644
+--- a/tools/testing/selftests/kvm/dirty_log_perf_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_perf_test.c
+@@ -121,7 +121,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+ 	guest_num_pages = (nr_vcpus * guest_percpu_mem_size) >> vm_get_page_shift(vm);
+ 	guest_num_pages = vm_adjust_num_guest_pages(mode, guest_num_pages);
+ 	host_num_pages = vm_num_host_pages(mode, guest_num_pages);
+-	bmap = bitmap_alloc(host_num_pages);
++	bmap = bitmap_zalloc(host_num_pages);
+ 
+ 	if (dirty_log_manual_caps) {
+ 		cap.cap = KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2;
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index 81edbd23d371..ef641b0ff125 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -750,8 +750,8 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+ 
+ 	pr_info("guest physical test memory offset: 0x%lx\n", guest_test_phys_mem);
+ 
+-	bmap = bitmap_alloc(host_num_pages);
+-	host_bmap_track = bitmap_alloc(host_num_pages);
++	bmap = bitmap_zalloc(host_num_pages);
++	host_bmap_track = bitmap_zalloc(host_num_pages);
+ 
+ 	/* Add an extra memory slot for testing dirty logging */
+ 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+index 537de1068554..a2f1bab6c234 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
+ 	nested_map(vmx, vm, NESTED_TEST_MEM1, GUEST_TEST_MEM, 4096, 0);
+ 	nested_map(vmx, vm, NESTED_TEST_MEM2, GUEST_TEST_MEM, 4096, 0);
+ 
+-	bmap = bitmap_alloc(TEST_MEM_PAGES);
++	bmap = bitmap_zalloc(TEST_MEM_PAGES);
+ 	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM);
+ 
+ 	while (!done) {
+-- 
+2.30.2
 
-So we should break it in as many small steps as possible, knowing that
-each step is fixing just one of the problems, i.e. aSAN will continue
-reporting problems, but less problems as you go on adding more fixes.
-
-> (especially since I can test missing puts only with ASan's LeakSanitizer and its
-> reports are usually full of leaks, which I am trying to fix along the way, I
-> will send some patches in the following days). How would you go about it? Do you
-> have any suggestions?
-
-See above, thanks for working on this!
-
-- Arnaldo
