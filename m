@@ -8,60 +8,59 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E412C48BE8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 21:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21589C48BDF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 22:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B66F6128C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 21:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE20161260
+	for <linux-perf-users@archiver.kernel.org>; Fri, 18 Jun 2021 22:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234473AbhFRVjd (ORCPT
+        id S233508AbhFRWdi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 18 Jun 2021 17:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57614 "EHLO
+        Fri, 18 Jun 2021 18:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233617AbhFRVjc (ORCPT
+        with ESMTP id S230268AbhFRWdh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 18 Jun 2021 17:39:32 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F1EC061574;
-        Fri, 18 Jun 2021 14:37:22 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id h12so8754248pfe.2;
-        Fri, 18 Jun 2021 14:37:22 -0700 (PDT)
+        Fri, 18 Jun 2021 18:33:37 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFA6C061574;
+        Fri, 18 Jun 2021 15:31:27 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id g12so8758507qtb.2;
+        Fri, 18 Jun 2021 15:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5F0/o83rPn6kF1SWIHORQRDoAw20SA/iZS1LAUQxvto=;
-        b=e1TuHTIi91aVzlQxa54+NMMojBj3bHrti5EbzZ2htrtS2SdCleDjpi9LQ1qjPMURp1
-         trsZXQdDdJEsShqcokOI+7xzBJgmrEHEoIlBTyEPhm6i16Cg/WhNPstTBMIlMW6NC3rk
-         D3xEIUOe72C89Mlc2Z+Q461rQPLfrh2v0claYeiR1qaGQIaEgnRtlT3O6sgmkOZPBJFk
-         9l1UVEg+zlbTQWfLXUSLAsZo9sUP6Tup9TJW2MESA0ogsFiZ6nydsX4NTtSmTKazIj3r
-         0q7a1kY1UwizmVrlzoI5xo37fX5gMQZUfincvWoqf5YAeBpdJ6A6gBLmkGRgudNJVsYy
-         1z2Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3hKwBiwkFtX8Quhcjsyp4PHnp2ob2D51MYzkaHMQegg=;
+        b=qnGWS66cjqd6rNhCqCBrV8KmXirBAx3VifmQ4MnoxQo4dPVXQEfP9yTZGa1WZHiJpZ
+         91kwPkjVGRSPIuk3F381E3fNTk9ltpGb4et8x8siPTifgy0PJT8/tnlIFdlG0h/1dXOL
+         8DWXya5D92ebT/ThQtygKGSf2SBd8haJGUCTQDw5SEqkiDp6dNYza4bQorCur7FL1maj
+         cewrabaTR3mVAWIGxX1vY3zDkqkWN/IJNOVq7sbR7RlgIGb8f7iR8BVDiIINAKEmrEwL
+         NNWR6rDKMinIgc8OfTWP002DlTcZtuRhAqcAYdu+Ur4UhwLoZhw7hPdIdT73ZdhyNpyx
+         O+Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5F0/o83rPn6kF1SWIHORQRDoAw20SA/iZS1LAUQxvto=;
-        b=I4lJMjq6h+nhvnUNv7rmA2zCj1a9MqiT6+e5MtJi4IqLh4jiUpThkCFRCPPdcy/yge
-         1Dmw0C/3GJ4HPGwaZcWdNYg4oyFHEdjTqbVcCdJNv4HbUBwG58rmE8IEWONQt4hG5+/D
-         lfj/6QL3anq0/cYiGQBSYw8i2/NvNbR/wuQ8qYuu0tfPxAoKgocSxytECCXMA88OErzA
-         HipPHR6yci8NHb9M4JVIWpHMb0ufU5ACQZYTbiFo4fHWJjdwZrvovzJRXyTIKsH/jEMz
-         2BCYXqGY5/AYbZSSWWCDVXFFXA1fS0hWEgChtMwfLiujFNNOQIw+gmr9KqrTRZQTXqq6
-         Q46g==
-X-Gm-Message-State: AOAM530FCa8UL+YfyYJlvt6YIsVBAQ6ylspZSkTTVSKMaxKHWadrCslu
-        kT/Oe6ER1PfsEbzb9eqFh/Hjk1mu7kbuAqAWnjk=
-X-Google-Smtp-Source: ABdhPJzgINR5Oh3qoN1vLBU6Th3toYjPFxtFBsXuIsw5EDHoYPGLW5qODh63bC9YBhL5jv8xT7nPgu6ZI8HoDswqovU=
-X-Received: by 2002:a63:b00d:: with SMTP id h13mr11949770pgf.74.1624052241679;
- Fri, 18 Jun 2021 14:37:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210618143854.62967-1-andriy.shevchenko@linux.intel.com> <YMz80O2mkEWyl2Xx@yury-ThinkPad>
-In-Reply-To: <YMz80O2mkEWyl2Xx@yury-ThinkPad>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 19 Jun 2021 00:36:44 +0300
-Message-ID: <CAHp75Veti-7h=BoH9ZXXPMS1e8gq3rb19QS4TAB1J33GTdLKRg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] tools: Rename bitmap_alloc() to bitmap_zalloc()
-To:     Yury Norov <yury.norov@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3hKwBiwkFtX8Quhcjsyp4PHnp2ob2D51MYzkaHMQegg=;
+        b=F9SqMeIsVkC2kuRLKW7z3d3W8WEpEtzkbPnd9tZyBNStUbPmgYi/XOzEuNz1XJE7m6
+         yqNr/MUV5qqjf8YgzZ11RJkTkm2txmmH1I6QQtZKXebfE3f/0gpcBhQylzu3xVKTbgcx
+         3tZwOTnwzBa/u4bnoj2z9HjRSajgAZMCEmnRH7AtV6kU4gOMRGStbBHnX9Sz4eaG5cnc
+         fv0ZYg3jhWl8OEvkBPsIRleOqZmCKc1tBtSNj74WtjxM3rcsoNZnC+cdjWkHQYo6eEqP
+         o8UCKiknL/71Y5ZuNd6v564MYHrkinMZf92pzedTIFbj4jyVtpa74Babj1zRJtIjh5c2
+         SmeQ==
+X-Gm-Message-State: AOAM530oKYUphT1dsQpknn68PxKYHt6e6UW+Ly+GijsSYe7jlLu3U2lt
+        n39tWDq6AS7fMSAtAGDxav0=
+X-Google-Smtp-Source: ABdhPJypzDrCnYiXRpijNJ6cfKxcSk4IskDJYkDufgt5VSNVdFBJ87VeepJhtqeypZUCvfghlNA1uA==
+X-Received: by 2002:ac8:4e29:: with SMTP id d9mr13230533qtw.136.1624055486314;
+        Fri, 18 Jun 2021 15:31:26 -0700 (PDT)
+Received: from localhost ([207.98.216.60])
+        by smtp.gmail.com with ESMTPSA id o14sm3269929qtx.62.2021.06.18.15.31.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Jun 2021 15:31:25 -0700 (PDT)
+Date:   Fri, 18 Jun 2021 15:31:24 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
@@ -80,31 +79,41 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Shuah Khan <shuah@kernel.org>,
         Yury Norov <ynorov@caviumnetworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v1 1/1] tools: Rename bitmap_alloc() to bitmap_zalloc()
+Message-ID: <YM0evEbGPG9J73sU@yury-ThinkPad>
+References: <20210618143854.62967-1-andriy.shevchenko@linux.intel.com>
+ <YMz80O2mkEWyl2Xx@yury-ThinkPad>
+ <CAHp75Veti-7h=BoH9ZXXPMS1e8gq3rb19QS4TAB1J33GTdLKRg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Veti-7h=BoH9ZXXPMS1e8gq3rb19QS4TAB1J33GTdLKRg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 18, 2021 at 11:11 PM Yury Norov <yury.norov@gmail.com> wrote:
->
-> On Fri, Jun 18, 2021 at 05:38:54PM +0300, Andy Shevchenko wrote:
-> > Rename bitmap_alloc() to bitmap_zalloc() in tools to follow new coming
-> > bitmap API extension in kernel.
->
-> Can you please tell more about the new coming extensions?
+On Sat, Jun 19, 2021 at 12:36:44AM +0300, Andy Shevchenko wrote:
+> On Fri, Jun 18, 2021 at 11:11 PM Yury Norov <yury.norov@gmail.com> wrote:
+> >
+> > On Fri, Jun 18, 2021 at 05:38:54PM +0300, Andy Shevchenko wrote:
+> > > Rename bitmap_alloc() to bitmap_zalloc() in tools to follow new coming
+> > > bitmap API extension in kernel.
+> >
+> > Can you please tell more about the new coming extensions?
+> 
+> Ah, this is outdated text. It was about the time when bitmap_*alloc()
+> was introduced in the kernel.
+> 
+> > Anyways,
+> > Acked-by: Yury Norov <ynorov@caviumnetworks.com>
+> >
+> > All bitmap patches together can be found here:
+> > https://github.com/norov/linux/commits/bm-f1
+> 
+> Should I resend with that fixed (I have also noticed that your address
+> in Suggested-by is outdated)?
 
-Ah, this is outdated text. It was about the time when bitmap_*alloc()
-was introduced in the kernel.
+Yes. Please use
 
-> Anyways,
-> Acked-by: Yury Norov <ynorov@caviumnetworks.com>
->
-> All bitmap patches together can be found here:
-> https://github.com/norov/linux/commits/bm-f1
-
-Should I resend with that fixed (I have also noticed that your address
-in Suggested-by is outdated)?
-
--- 
-With Best Regards,
-Andy Shevchenko
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Acked-by: Yury Norov <yury.norov@gmail.com>
