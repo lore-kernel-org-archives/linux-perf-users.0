@@ -2,132 +2,114 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-29.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CEBC2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Jun 2021 13:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBE6C2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Jun 2021 16:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62DC6128C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Jun 2021 13:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1BE8610A2
+	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Jun 2021 16:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234249AbhFSNFu (ORCPT
+        id S234843AbhFSQ4k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 19 Jun 2021 09:05:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        Sat, 19 Jun 2021 12:56:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234109AbhFSNFt (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 19 Jun 2021 09:05:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AC2246113E;
-        Sat, 19 Jun 2021 13:03:38 +0000 (UTC)
+        id S234800AbhFSQ4i (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 19 Jun 2021 12:56:38 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 156FD61002;
+        Sat, 19 Jun 2021 16:54:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624107818;
-        bh=J8klIOdPb0WTMekTmGTxcTeRn/X5c92RaU/rKD0XqbU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A9vyQWxQPOxU2M4dKfPRDgqrUwGgEHxC68MErMaIrYWhkzGnZ7P2KDkXsFFsgtGj4
-         074LjSMOdmpMTM3hCuhokgYgQ+RPT6HsLC7bQOd2kTyKT/7EJ3oLViU9oKVOcUrfRY
-         1xz08bbjqXEDDWojvfDAjdOHBVHgufhfTAZaO0pyOEAlQLAvgN4Nih3dDqtdUArPQy
-         2eK7C8/C1cIry2kYM0sAlNjfRZ6HziO2fCfZSefRVmuwljLeLxI/mnLakzt2j0QSK8
-         n8ivNE7VTIq4CyrMxdjOrrSb8cghNWoV5hMQQIgshYel4ftvHKujOT+xU4DM9YfLN/
-         tyeejiLLZ2V/A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3616740B1A; Sat, 19 Jun 2021 10:03:36 -0300 (-03)
-Date:   Sat, 19 Jun 2021 10:03:36 -0300
+        s=k20201202; t=1624121667;
+        bh=/c0MjA9qCgiipSBFS+d1fptRbka4uIyU5IAVrlf53V4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Rp3AeNW1qYtYwdt6cZi+FX0bpTucS4R3Ex6XjzdGn18De/29P8h/rTCTnzTqbg5cW
+         yrCwybJT35RuqBaP8Lxk5VJ9Jr8cbWY/C8/+5o37nfY48g+ek5qrC0SPhzXGjV9R6U
+         4FkJV8dEw4R+oPpCmfgNPGUpk+d+rND/o2qShSDHGpvczkxcE3187+lYONvmMl6Eis
+         l2bmH8nu/abn217FyBEKHcPA92bOxqa8w9vnIHQjuRXEGNMOK4aSvB38tkiQ5iP5Qc
+         P6Kplrh6l7ZBFt+W/NTj/iGM5/hjpKSNmvWNCYTKog2OO+p7mJgNRz32MBTmqC/Imi
+         bF1Myeku3QDew==
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf test: Pass the verbose option to shell tests
-Message-ID: <YM3rKOlh0reN3Uaw@kernel.org>
-References: <20210617184216.2075588-1-irogers@google.com>
- <20210617184216.2075588-2-irogers@google.com>
- <YMugKlkH7lTWxTQ/@kernel.org>
- <YMzOpgZPJeC2jGKf@kernel.org>
- <CAP-5=fXFgOz5V3_yCHEENtRsQdgCDEK=fWMri84FPD1ivC2w+A@mail.gmail.com>
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v5.13: 6th batch
+Date:   Sat, 19 Jun 2021 13:54:17 -0300
+Message-Id: <20210619165417.871997-1-acme@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXFgOz5V3_yCHEENtRsQdgCDEK=fWMri84FPD1ivC2w+A@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 18, 2021 at 09:45:05PM -0700, Ian Rogers escreveu:
-> On Fri, Jun 18, 2021 at 9:49 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > Em Thu, Jun 17, 2021 at 04:19:06PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Thu, Jun 17, 2021 at 11:42:14AM -0700, Ian Rogers escreveu:
-> > > > Having a verbose option will allow shell tests to provide extra failure
-> > > > details when the fail or skip.
-> > >
-> > >
-> > > Thanks, applied to perf/core.
-> > >
-> > > - Arnaldo
-> > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/tests/builtin-test.c | 5 ++++-
-> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > > > index cbbfe48ab802..a8160b1684de 100644
-> > > > --- a/tools/perf/tests/builtin-test.c
-> > > > +++ b/tools/perf/tests/builtin-test.c
-> > > > @@ -577,11 +577,14 @@ struct shell_test {
-> > > >  static int shell_test__run(struct test *test, int subdir __maybe_unused)
-> > > >  {
-> > > >     int err;
-> > > > -   char script[PATH_MAX];
-> > > > +   char script[PATH_MAX + 3];
-> > > >     struct shell_test *st = test->priv;
-> > > >
-> > > >     path__join(script, sizeof(script), st->dir, st->file);
-> >
-> > probably you need to add a  '- 3' after the sizeof above, right?
-> 
-> Either way is fine, but -3 is ok with me.
-> 
-> > > >
-> > > > +   if (verbose)
-> > > > +           strncat(script, " -v", sizeof(script));
-> > > > +
-> >
-> > Seemed simple enough, but gcc knows better, I'm removing this one:
-> >
-> >     tests/builtin-test.c:586:26: error: the value of the size argument in 'strncat' is too large, might lead to a buffer overflow [-Werror,-Wstrncat-size]
-> >                     strncat(script, " -v", sizeof(script));
-> >                                            ^~~~~~~~~~~~~~
-> >     tests/builtin-test.c:586:26: note: change the argument to be the free space in the destination buffer minus the terminating null byte
-> >                     strncat(script, " -v", sizeof(script));
-> >                                            ^~~~~~~~~~~~~~
-> >                                            sizeof(script) - strlen(script) - 1
-> >     1 error generated.
-> >     make[3]: *** [/git/perf-5.13.0-rc4/tools/build/Makefile.build:139: tests] Error 2
-> >   77    31.98 ubuntu:21.04                  : FAIL gcc version 10.3.0 (Ubuntu 10.3.0-1ubuntu1)
-> >     tests/builtin-test.c:586:26: error: the value of the size argument in 'strncat' is too large, might lead to a buffer overflow [-Werror,-Wstrncat-size]
-> >                     strncat(script, " -v", sizeof(script));
-> >                                            ^~~~~~~~~~~~~~
-> >     tests/builtin-test.c:586:26: note: change the argument to be the free space in the destination buffer minus the terminating null byte
-> >                     strncat(script, " -v", sizeof(script));
-> >                                            ^~~~~~~~~~~~~~
-> >                                            sizeof(script) - strlen(script) - 1
-> >     1 error generated.
-> >     make[3]: *** [/git/perf-5.13.0-rc4/tools/build/Makefile.build:139: tests] Error 2
-> 
-> Thanks gcc :-) Do you want me to resend the patch?
+Hi Linus,
 
-In such cases please do,
+	Please consider pulling,
+
+Best regards,
 
 - Arnaldo
+
+
+The following changes since commit 9ed13a17e38e0537e24d9b507645002bf8d0201f:
+
+  Merge tag 'net-5.13-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2021-06-18 18:55:29 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-19
+
+for you to fetch changes up to 1792a59eab9593de2eae36c40c5a22d70f52c026:
+
+  tools headers UAPI: Sync linux/in.h copy with the kernel sources (2021-06-19 10:15:22 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v5.13: 6th batch
+
+- Fix refcount usage when processing PERF_RECORD_KSYMBOL.
+
+- 'perf stat' metric group fixes.
+
+- Fix 'perf test' non-bash issue with stat bpf counters.
+
+- Update unistd, in.h and socket.h with the kernel sources, silencing
+  perf build warnings.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (3):
+      perf beauty: Update copy of linux/socket.h with the kernel sources
+      tools headers UAPI: Sync asm-generic/unistd.h with the kernel original
+      tools headers UAPI: Sync linux/in.h copy with the kernel sources
+
+Ian Rogers (1):
+      perf test: Fix non-bash issue with stat bpf counters
+
+John Garry (2):
+      perf metricgroup: Fix find_evsel_group() event selector
+      perf metricgroup: Return error code from metricgroup__add_metric_sys_event_iter()
+
+Riccardo Mancini (1):
+      perf machine: Fix refcount usage when processing PERF_RECORD_KSYMBOL
+
+ tools/include/uapi/asm-generic/unistd.h        |  3 +--
+ tools/include/uapi/linux/in.h                  |  3 +++
+ tools/perf/tests/shell/stat_bpf_counters.sh    |  4 ++--
+ tools/perf/trace/beauty/include/linux/socket.h |  2 --
+ tools/perf/util/machine.c                      |  3 ++-
+ tools/perf/util/metricgroup.c                  | 14 ++++++++------
+ 6 files changed, 16 insertions(+), 13 deletions(-)
