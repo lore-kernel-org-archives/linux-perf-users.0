@@ -2,73 +2,99 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B254FC2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Jun 2021 22:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF2DC48BDF
+	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Jun 2021 21:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858BB611AC
-	for <linux-perf-users@archiver.kernel.org>; Sat, 19 Jun 2021 22:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B3C60238
+	for <linux-perf-users@archiver.kernel.org>; Sun, 20 Jun 2021 21:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229851AbhFSWCi (ORCPT
+        id S229875AbhFTV5r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 19 Jun 2021 18:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33888 "EHLO mail.kernel.org"
+        Sun, 20 Jun 2021 17:57:47 -0400
+Received: from ozlabs.org ([203.11.71.1]:48519 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229477AbhFSWCh (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 19 Jun 2021 18:02:37 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 8C13561154;
-        Sat, 19 Jun 2021 22:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624140025;
-        bh=k3eDDPEgvmkuSZ6YOxFh8Tyiry1Nm3Fr7wLOq5A6tY0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=LViSjAtNkHInriBadjOdk33uMoTCAcjk+rKJYBxvhN5DA7cp1jOvNv2lipPs2z8VA
-         Sr18BOcXQAmVnaLaqs9GunGbWgrhFn08tP9wMP5RhtxkD4vpjwyGFU8ZN/0sGsaKy+
-         T3PTtSJ5cxJeZSFlt8t8QijKBVgol43x+bV7qbKKqscQOjIKhHEeoFQU973pmYuTP+
-         X33KyLwTmEVQFoo/66ox7DH9CDSWG92w4pwt3l4pIva3VOKGytGuSFhQrfW4D/xJSh
-         2sDNcBcN/mbZf+RZJlktm31AH4iBsb1cOY8YSgHjFCX61BW20kfh/FgVQdIQ7gS3xS
-         1fokoh/6U8sIw==
-Subject: Re: [GIT PULL] perf tools fixes for v5.13: 6th batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210619165417.871997-1-acme@kernel.org>
-References: <20210619165417.871997-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210619165417.871997-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-19
-X-PR-Tracked-Commit-Id: 1792a59eab9593de2eae36c40c5a22d70f52c026
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 913ec3c22ef425d63dd0bc81fb008ce7f9bcb07b
-Message-Id: <162414002543.7314.2421544741704852907.pr-tracker-bot@kernel.org>
-Date:   Sat, 19 Jun 2021 22:00:25 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        id S229708AbhFTV5r (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 20 Jun 2021 17:57:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4G7RKq57Bwz9sVp;
+        Mon, 21 Jun 2021 07:55:27 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1624226132;
+        bh=tdHZKt3n8QMhM7P+AhMaV6aoHvRWZ3MqYrGNEHyCAWg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JCEjcAiOxAMTbXM3XkS29q1DyvKDerVqg4nI7N1AOLBLHKUIRm4/PQGtuUhqvSRQJ
+         Btr/+YTsFdO8GkLTjIJXDxxP2BKFkoqL56S0NOgxr6TyxIQ0c/eyoYaiYorm1wT5j3
+         lfQWjF+A8gnKzXfl2bnNb8Rv2ceZ3vw8pVoXD06hkthj0vc7EERNBdZy7yb+5XLXk/
+         r9sWFQJqRMD+LuPEveUqLqSk8X6wJ4vNffP5wV5zANN5kH9EV3b3H9XY64+fVw7iqm
+         sWKT0E4ya1DOgIEznXNTUTClG+C0z95amzrBtJKENkgE9NzkCteGRUY0Hj3ek+jGTo
+         X8DNFNOqF6WuA==
+Date:   Mon, 21 Jun 2021 07:55:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        John Garry <john.garry@huawei.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH 1/4] perf test: Fix non-bash issue with stat bpf
+ counters
+Message-ID: <20210621075525.128b476f@canb.auug.org.au>
+In-Reply-To: <20210617184216.2075588-1-irogers@google.com>
+References: <20210617184216.2075588-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/zoZrJw/m85R1sYwgf=Mbt_b";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Sat, 19 Jun 2021 13:54:17 -0300:
+--Sig_/zoZrJw/m85R1sYwgf=Mbt_b
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.13-2021-06-19
+Hi Ian,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/913ec3c22ef425d63dd0bc81fb008ce7f9bcb07b
+On Thu, 17 Jun 2021 11:42:13 -0700 Ian Rogers <irogers@google.com> wrote:
+>
+> $(( .. )) is a bash feature but the test's interpreter is !/bin/sh,
+> switch the code to use expr.
 
-Thank you!
+The $(( .. )) syntax is specified in POSIX (see
+https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#t=
+ag_18_06_04),
+so unless this caused an actual problem, this change is unnecessary.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/zoZrJw/m85R1sYwgf=Mbt_b
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmDPuU0ACgkQAVBC80lX
+0Gz49wgAmStmGqWpOagN6Ov5tTwdPk1XiTOzF7QnzPkIrSsrlb14wdiartR9A9Yi
+L/xFGhRz7nlGZu2Rgsq1CVKA9maLkFpUJN5qjGVRlmBi1o6xDNhfvSoenHY6J4sI
++yUEboS8gH3C3OpSlVSj6HhGlfUFrXDjCHSaoZVZZ+S7cwP8PnaN02IkXouYbGES
+fJuBjgzbxxIChC6YFa4Ws9YGlQfNAJsqok9W+mUuT2dfIj3Ymns7GzNqnxmtUTXk
++pttH+/Y1kwPca3MljuMfBxQaKWD+ogdJwOVOWnIL4DLellxoMamJ9Yg2oOBQPZe
+DjM7fviURinAyv98w8kmMniXyIrZCA==
+=0kaQ
+-----END PGP SIGNATURE-----
+
+--Sig_/zoZrJw/m85R1sYwgf=Mbt_b--
