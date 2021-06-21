@@ -8,73 +8,71 @@ X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B45CEC4743C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 22:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DEAC4743C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 23:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950E560720
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 22:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6C460FE6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 23:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231744AbhFUWZH (ORCPT
+        id S230130AbhFUXFO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Jun 2021 18:25:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53026 "EHLO
+        Mon, 21 Jun 2021 19:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbhFUWZG (ORCPT
+        with ESMTP id S229940AbhFUXFN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Jun 2021 18:25:06 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB47C061574;
-        Mon, 21 Jun 2021 15:22:51 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id b3so11075582wrm.6;
-        Mon, 21 Jun 2021 15:22:51 -0700 (PDT)
+        Mon, 21 Jun 2021 19:05:13 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFFBC061574;
+        Mon, 21 Jun 2021 16:02:57 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id d11so19035632wrm.0;
+        Mon, 21 Jun 2021 16:02:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LYaZ+b8NJ+/BUcNW71lTDH1EznpA/+87PIfC9PBqpI0=;
-        b=AYpCBItpYllNc4vPjzGAOBkuAqXtDRQvwkaF25IVLWrmUn7GSRSuiIDRKZFRzBiL8N
-         xnlcEYU6tkpoJFMMqczrxkHHWI3zEMG2D4IfyQWeahNU3RWp8swl+26C6rI+bsHaBrA4
-         Ue+qnSZcnvTNL87Dhk8OlKDaoVi67U7foJNpX18bYw214/3VdYc9shbf23Nj0hele5ak
-         8WNxTnZbvxL58UAqqIchR3Pp7DqOS+HZlQaj9nUQtuZMfzK7HM2TQbl4nrPZGX4JcP3W
-         nJGIc5d1VzwLdWV2IQboTH6ye7v9CS2vrk+6pKVhxp2Ze5BuiKZ6FvM5q4ilHcWXHOX0
-         TLrA==
+        bh=gCG6H7GuL0YCs68rOtAhGiPNk+jNUbnfrlm8YFS4cH0=;
+        b=B2895UjxZZOVMW3o6YZas7ftFhr5xzWNp34dcyqq3kFi6XVfz61XS/hs2m45T1Nnos
+         NlCAqZfyn5u0ARpo7iVa6O6JsdkI1ZFDqsvNITqT+z9G8cBq8OTCfI5mi1wXMIM+hU/u
+         H4UMNzUJv12ZUKw/b4b1XXEQHaI2zUDt4cxwub/oNts22FEbAH/XxwniwMmZAg0nl13v
+         VVScN17r5Axdl8w8afP0DV6bG0URQlUOQMtScN4E61aAkhfPWuQoHZ4IrFYGCzhmf1+s
+         ZaR9UWBH5tsr7To85gJMzno3CZiR6sNf/78DgKSg5vzYHdbQns8mDXyJyMZvu4sCtWfR
+         IDcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=LYaZ+b8NJ+/BUcNW71lTDH1EznpA/+87PIfC9PBqpI0=;
-        b=G4W0plAUZ804iswYAVGL8R22jRzr/sHJn0lEVSSy9kebblOS384dugLHyERgCV1lYQ
-         HNrX28bDLTNDpaY0yVwp1sVgr4sNiFJ6gZGQtiOjwcJd5KZtzzF4oASXY+UPzUncZS/y
-         pB3/TzxJ8veCvgCxPRLyMYigMpUZbpoqbybSfsrqvj6pdr5TPzCYyXzP/qTeUH3282Xv
-         WgrGn3jNiwwsVP3BXxjrsZbhqCPTiYkzceQQN7FT965dHXXzXKLVsZvKrQ0y03GHWgw6
-         vtoAoLruppfqbl4U1M9Gckw/E7QBNR0Fvy/eiCNg3zLiy5LcPBr/IZXSRTNmVO8PAPY9
-         pYRQ==
-X-Gm-Message-State: AOAM532kYQ1jU6LCs2lR2gQuCYnpkwgFzprknS+7KU8BKS7VbuxNq3VJ
-        6rY6E7d37RM9t72smbDE1s0=
-X-Google-Smtp-Source: ABdhPJz361sag9DJGJdNFJZ1+23wFp5IMXZkRy0UsVz1Vj1eRiWQZFJNJ+9i/m7GwZi29PniVRGiQw==
-X-Received: by 2002:adf:a1c8:: with SMTP id v8mr780453wrv.300.1624314170236;
-        Mon, 21 Jun 2021 15:22:50 -0700 (PDT)
+        bh=gCG6H7GuL0YCs68rOtAhGiPNk+jNUbnfrlm8YFS4cH0=;
+        b=NMzpSV5S4DqKbOy6JRsoGrnjEZRdK9qKEwaB2UAPdIorfZrpdnHGGx/H039cJcBnbw
+         BGWfuN4lIhglHtusf/8OMGpMy4IYqclS5ghcX68YoqIMhl64CHBZOx73r0dAmB8u8nBl
+         lX5Swk/vI+YApiGOqWT+b1Z4IAOvXHlm5xREIdEjatbk/HrJpDznsWej6vPsRI0ItZP3
+         iBoCEBzd+dzNcT1LXjvW7MwzyXzfRqCHIJWZ1DZEJ6ljEsUu2xI2L+Kh74n0TJc0azAI
+         grlt4c6mLysFE5KOgdQh2UIaTFMT/FXdrjiuxwzwtnWxmjkHsbnL12uI+cKObq/aUeAd
+         Xl8Q==
+X-Gm-Message-State: AOAM532V8V7C9AER4cwEPCQsa+2+RUfUMEu3H8PGieaI6mERReoootM6
+        7uljA/siPDiFYP6ZM9ug6VM=
+X-Google-Smtp-Source: ABdhPJwmcYtNHdapPFg+UvGZ7Q8yBaYQidWv2LToZq0EwmH4Kpl/+Wt+Ds/u4E2q7MBpCkRQ3eX+2g==
+X-Received: by 2002:a5d:5987:: with SMTP id n7mr903268wri.293.1624316576571;
+        Mon, 21 Jun 2021 16:02:56 -0700 (PDT)
 Received: from honeypot.. ([151.29.45.200])
-        by smtp.googlemail.com with ESMTPSA id m23sm584830wms.2.2021.06.21.15.22.49
+        by smtp.googlemail.com with ESMTPSA id r4sm20179517wre.84.2021.06.21.16.02.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 15:22:49 -0700 (PDT)
+        Mon, 21 Jun 2021 16:02:56 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Fabian Hemmer <copy@copy.sh>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf top: fix overflow in elf_sec__is_text
-Date:   Tue, 22 Jun 2021 00:21:08 +0200
-Message-Id: <20210621222108.196219-1-rickyman7@gmail.com>
+        Jiri Olsa <jolsa@redhat.com>, Martin Liska <mliska@suse.cz>,
+        Jason Yan <yanaijie@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf annotate: allow 's' on source code lines
+Date:   Tue, 22 Jun 2021 01:00:47 +0200
+Message-Id: <20210621230047.211430-1-rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,141 +80,64 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reports a heap-buffer-overflow in elf_sec__is_text when using perf-top.
-The bug is caused by the fact that secstrs is built from runtime_ss, while
-shdr is built from syms_ss if shdr.sh_type != SHT_NOBITS. Therefore, they
-point to two different ELF files.
-
-This patch renames secstrs to secstrs_run and adds secstrs_sym, so that
-the correct secstrs is chosen depending on shdr.sh_type.
-
-$ ASAN_OPTIONS=abort_on_error=1:disable_coredump=0:unmap_shadow_on_exit=1 ./perf top
-=================================================================
-==363148==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x61300009add6 at pc 0x00000049875c bp 0x7f4f56446440 sp 0x7f4f56445bf0
-READ of size 1 at 0x61300009add6 thread T6
-    #0 0x49875b in StrstrCheck(void*, char*, char const*, char const*) (/home/user/linux/tools/perf/perf+0x49875b)
-    #1 0x4d13a2 in strstr (/home/user/linux/tools/perf/perf+0x4d13a2)
-    #2 0xacae36 in elf_sec__is_text /home/user/linux/tools/perf/util/symbol-elf.c:176:9
-    #3 0xac3ec9 in elf_sec__filter /home/user/linux/tools/perf/util/symbol-elf.c:187:9
-    #4 0xac2c3d in dso__load_sym /home/user/linux/tools/perf/util/symbol-elf.c:1254:20
-    #5 0x883981 in dso__load /home/user/linux/tools/perf/util/symbol.c:1897:9
-    #6 0x8e6248 in map__load /home/user/linux/tools/perf/util/map.c:332:7
-    #7 0x8e66e5 in map__find_symbol /home/user/linux/tools/perf/util/map.c:366:6
-    #8 0x7f8278 in machine__resolve /home/user/linux/tools/perf/util/event.c:707:13
-    #9 0x5f3d1a in perf_event__process_sample /home/user/linux/tools/perf/builtin-top.c:773:6
-    #10 0x5f30e4 in deliver_event /home/user/linux/tools/perf/builtin-top.c:1197:3
-    #11 0x908a72 in do_flush /home/user/linux/tools/perf/util/ordered-events.c:244:9
-    #12 0x905fae in __ordered_events__flush /home/user/linux/tools/perf/util/ordered-events.c:323:8
-    #13 0x9058db in ordered_events__flush /home/user/linux/tools/perf/util/ordered-events.c:341:9
-    #14 0x5f19b1 in process_thread /home/user/linux/tools/perf/builtin-top.c:1109:7
-    #15 0x7f4f6a21a298 in start_thread /usr/src/debug/glibc-2.33-16.fc34.x86_64/nptl/pthread_create.c:481:8
-    #16 0x7f4f697d0352 in clone ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
-
-0x61300009add6 is located 10 bytes to the right of 332-byte region [0x61300009ac80,0x61300009adcc)
-allocated by thread T6 here:
-    #0 0x4f3f7f in malloc (/home/user/linux/tools/perf/perf+0x4f3f7f)
-    #1 0x7f4f6a0a88d9  (/lib64/libelf.so.1+0xa8d9)
-
-Thread T6 created by T0 here:
-    #0 0x464856 in pthread_create (/home/user/linux/tools/perf/perf+0x464856)
-    #1 0x5f06e0 in __cmd_top /home/user/linux/tools/perf/builtin-top.c:1309:6
-    #2 0x5ef19f in cmd_top /home/user/linux/tools/perf/builtin-top.c:1762:11
-    #3 0x7b28c0 in run_builtin /home/user/linux/tools/perf/perf.c:313:11
-    #4 0x7b119f in handle_internal_command /home/user/linux/tools/perf/perf.c:365:8
-    #5 0x7b2423 in run_argv /home/user/linux/tools/perf/perf.c:409:2
-    #6 0x7b0c19 in main /home/user/linux/tools/perf/perf.c:539:3
-    #7 0x7f4f696f7b74 in __libc_start_main /usr/src/debug/glibc-2.33-16.fc34.x86_64/csu/../csu/libc-start.c:332:16
-
-SUMMARY: AddressSanitizer: heap-buffer-overflow (/home/user/linux/tools/perf/perf+0x49875b) in StrstrCheck(void*, char*, char const*, char const*)
-Shadow bytes around the buggy address:
-  0x0c268000b560: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b570: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b580: fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b590: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x0c268000b5a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=>0x0c268000b5b0: 00 00 00 00 00 00 00 00 00 04[fa]fa fa fa fa fa
-  0x0c268000b5c0: fa fa fa fa fa fa fa fa 00 00 00 00 00 00 00 00
-  0x0c268000b5d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x0c268000b5e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x0c268000b5f0: 07 fa fa fa fa fa fa fa fa fa fa fa fa fa fa fa
-  0x0c268000b600: fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd fd
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-  Shadow gap:              cc
-==363148==ABORTING
+In perf annotate, when 's' is pressed on a line containing
+source code, it shows the message "Only available for assembly
+lines".
+This patch gets rid of the error, moving the cursr to the next
+available asm line (or the closest previous one if no asm line
+is found moving forwards), before hiding source code lines.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-Suggested-by: Jiri Slaby <jirislaby@kernel.org>
 ---
- tools/perf/util/symbol-elf.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/ui/browsers/annotate.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 4c56aa837434..7a6e38bf87b0 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1081,7 +1081,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
- 	struct map *curr_map = map;
- 	struct dso *curr_dso = dso;
--	Elf_Data *symstrs, *secstrs;
-+	Elf_Data *symstrs, *secstrs, *secstrs_run, *secstrs_sym;
- 	uint32_t nr_syms;
- 	int err = -1;
- 	uint32_t idx;
-@@ -1150,8 +1150,16 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 	if (sec_strndx == NULL)
- 		goto out_elf_end;
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index ad0a70f0edaf..eb94d20d0d13 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -343,6 +343,29 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+ 	browser->curr_hot = rb_last(&browser->entries);
+ }
  
--	secstrs = elf_getdata(sec_strndx, NULL);
--	if (secstrs == NULL)
-+	secstrs_run = elf_getdata(sec_strndx, NULL);
-+	if (secstrs_run == NULL)
-+		goto out_elf_end;
++static struct annotation_line *annotate_browser__find_next_asm_line(
++					struct annotate_browser *browser,
++					struct annotation_line *al)
++{
++	struct annotation_line *it = al;
 +
-+	sec_strndx = elf_getscn(elf, ehdr.e_shstrndx);
-+	if (sec_strndx == NULL)
-+		goto out_elf_end;
++	/* find next asm line */
++	list_for_each_entry_continue(it, browser->b.top, node) {
++		if (it->idx_asm >= 0)
++			return it;
++	}
 +
-+	secstrs_sym = elf_getdata(sec_strndx, NULL);
-+	if (secstrs_sym == NULL)
- 		goto out_elf_end;
- 
- 	nr_syms = shdr.sh_size / shdr.sh_entsize;
-@@ -1237,6 +1245,8 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 
- 		gelf_getshdr(sec, &shdr);
- 
-+		secstrs = secstrs_sym;
++	/* no asm line found forwards, try backwards */
++	it = al;
++	list_for_each_entry_continue_reverse(it, browser->b.top, node) {
++		if (it->idx_asm >= 0)
++			return it;
++	}
 +
- 		/*
- 		 * We have to fallback to runtime when syms' section header has
- 		 * NOBITS set. NOBITS results in file offset (sh_offset) not
-@@ -1249,6 +1259,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 				goto out_elf_end;
- 
- 			gelf_getshdr(sec, &shdr);
-+			secstrs = secstrs_run;
++	/* There are no asm lines */
++	return al;
++}
++
+ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
+ {
+ 	struct annotation *notes = browser__annotation(&browser->b);
+@@ -363,9 +386,8 @@ static bool annotate_browser__toggle_source(struct annotate_browser *browser)
+ 		browser->b.index = al->idx;
+ 	} else {
+ 		if (al->idx_asm < 0) {
+-			ui_helpline__puts("Only available for assembly lines.");
+-			browser->b.seek(&browser->b, -offset, SEEK_CUR);
+-			return false;
++			/* move cursor to next asm line */
++			al = annotate_browser__find_next_asm_line(browser, al);
  		}
  
- 		if (is_label && !elf_sec__filter(&shdr, secstrs))
+ 		if (al->idx_asm < offset)
 -- 
-2.23.0
+2.31.1
 
