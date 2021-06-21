@@ -2,186 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE8CC48BE5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 06:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F4C49EA2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 08:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6A16115A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 06:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C706B611B0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 08:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbhFUG4e (ORCPT
+        id S230268AbhFUIYa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Jun 2021 02:56:34 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:45677 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229576AbhFUG4e (ORCPT
+        Mon, 21 Jun 2021 04:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229618AbhFUIY3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Jun 2021 02:56:34 -0400
-Received: by mail-wr1-f42.google.com with SMTP id j2so7733109wrs.12
-        for <linux-perf-users@vger.kernel.org>; Sun, 20 Jun 2021 23:54:20 -0700 (PDT)
+        Mon, 21 Jun 2021 04:24:29 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48DF1C06175F
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 01:22:15 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id bb20so5315552pjb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 01:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gqd3O4ne1dNUetj8IOBDVEDjIC1vEw62dq7UiJ0rgTM=;
+        b=P5DIJiYcaFv2PfJZNbczzivYyCCQ9u7w3i/vH90+0mTyRL8r0HLL2Pd7w/RbaVUAZG
+         ucSIEnU4YgKWml+P3z4z4Gc3qujHL7jSo/JfLdH1jGjlMXfQuZNoWbPF8gWWqly7PDSa
+         aFaROk04qJwKB56IRCweNyqXZCaqIPlAP9CI0u2tm3mxZNnw6exFVtzEOvUvaBXwBqxb
+         wu+hLeum0CH3GVeEAtUJ81WGcSMx8vXl7oEL3V1+mrQEaS/JtjL/5vYj5T+BtAzizdL4
+         toDaLFGkRDYIHX8yL7Dfdm7yUra6/gzzVOpQGabfKhy1gGKPie9uDp3UxOKTmuJIgiby
+         d1vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KOqjWuiEmsaDgXUUs9/6P0dJlnpkcqi4+pWcP7ilHFk=;
-        b=NPKXUwUrhlZIKSoUmkfjQ6Q4xfDP7eSSzazCp2uw7xT3wKP7iEiWtF4wuj4fXNBYBW
-         tl59g+aJiJ90MCphMpDplMQCOAR9xcq9eXftJ1cklMs2q7AK+8e2yXLa0gMPULHaYEAP
-         Ktps5tyWJhsdqnyLsgAbgp8dG9hTG7PmNLFMXXG80zaxsZm0dJx3zANVuTLwjhfRaYVM
-         +orlpkSvOewumYW+RrcapntlvzfjuZaGbmodPsuHxRl7x36W4yE5DngcuOnEpbOjQe01
-         I5kN/h8Ir4SqPIp5NqyNp5ESxVVrSvsgYsZjqsDtAXNjUDficd29sWSKjerZ2XNux58P
-         SP5Q==
-X-Gm-Message-State: AOAM532A0SH5JQfx/ukBfSthp4jCvkZ/awY8NB4Sr+md3qWVHhlaEwol
-        CQZJZzRkUpftkBIZwRiXNNE=
-X-Google-Smtp-Source: ABdhPJwXegQN9Dj31s+JjAAgnHw+EZh1sOCyRMeIBQ8kXwVxbCWNudsHP9IEwJ98cF4bkKaehd9m9Q==
-X-Received: by 2002:adf:db41:: with SMTP id f1mr12156966wrj.394.1624258459342;
-        Sun, 20 Jun 2021 23:54:19 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id t16sm16682481wmi.2.2021.06.20.23.54.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Jun 2021 23:54:18 -0700 (PDT)
-From:   Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: perf-top: heap-buffer-overflow in elf_sec__is_text reported from
- ASan
-To:     Riccardo Mancini <rickyman7@gmail.com>, namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        acme@kernel.org
-References: <e883163b0c0295bfb8a56dcc82f6cae4cbbdc84a.camel@gmail.com>
-Message-ID: <c0f82ef2-e87b-8ede-3525-429fcb9f645c@kernel.org>
-Date:   Mon, 21 Jun 2021 08:54:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gqd3O4ne1dNUetj8IOBDVEDjIC1vEw62dq7UiJ0rgTM=;
+        b=NdyRGolF5YHvSgSUanRBWVddcJkoHVW3mCWHRzTstn04CNesdg2CelsWMexYB/ohV5
+         6O6+HeBhkcGGU8Kszr2IimxjS0NqIQXGjJpmhXquXg95BfbPqCTg9mTYT0ToSN9WX6a3
+         pnDcJSLow5QJTtTF2tmmA3rzGOqnMI3Yiv3oZfbivsTQqwLywcOw2HvNJ00eFJvz3e5m
+         n4hLi7YSgYR8KCCqqlDWVA88Z1C1jX/cNJM5b8+QB96vGH0OLeQ+Ju1X5+wOuuStKAHJ
+         XveZsSHNPZhrzMdfQrIL/yUzIIRNB7MfZWOHbhUVA2ujXUgyBGpseibB1Z7TdRkTsJeu
+         H4YQ==
+X-Gm-Message-State: AOAM530ezPV/CwoONINW/GiaDgr1znV1WUpVjWXBcYa3FksUPCqfBzlt
+        F74NHC9QNgzJs1TnkMTApn+sxehgvHofnH0Ah6XFqg==
+X-Google-Smtp-Source: ABdhPJwm9dF6HvcKy6dVJDn+aQMg1MuHWfIcw7Np2YEgLInhtBmcV4IDOEML8eNuAt0mxQzlgpuCNXuEVLpBe/VG5ww=
+X-Received: by 2002:a17:90b:300c:: with SMTP id hg12mr28711402pjb.46.1624263734484;
+ Mon, 21 Jun 2021 01:22:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <e883163b0c0295bfb8a56dcc82f6cae4cbbdc84a.camel@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20210528161552.654907-1-leo.yan@linaro.org> <CAOYpmdEvkSZaei-_SWrUC4YJ7rOUOoOaxM7+qc6dw=P+b_ivgA@mail.gmail.com>
+ <5cf3effb-fccc-9385-6328-6d1e2e5ccdf3@arm.com> <CAOYpmdE=pSaDGOm+4iCh611DXVD766eCr5dACQ+TgOnSO=4EOA@mail.gmail.com>
+ <20210612032721.GB36748@leoy-ThinkPad-X240s>
+In-Reply-To: <20210612032721.GB36748@leoy-ThinkPad-X240s>
+From:   Denis Nikitin <denik@google.com>
+Date:   Sun, 20 Jun 2021 22:21:57 -1000
+Message-ID: <CAOYpmdGW0U9u7zW3G6jyhZA23Uk1kd5gT00e9+g4O=k=WybDGA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] coresight: Fix for snapshot mode
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Leo,
 
-On 18. 06. 21, 11:17, Riccardo Mancini wrote:
-> ASan reports a heap-buffer-overflow in elf_sec__is_text when using perf-top.
-> The bug is introduced by commit 6833e0b: "perf symbols: Resolve symbols against
-> debug file first" from Jiri Slaby.
-...
-> pwndbg> p syms_ss->name
-> $4 = 0x607000018f90 "/usr/lib/debug/usr/lib64/libglib-2.0.so.0.6800.2-2.68.2-1.fc34.x86_64.debug"
-> pwndbg> p runtime_ss->name
-> $5 = 0x6070000190e0 "/root/.debug/.build-id/37/475e3b392fb3971c8ad0d9ac0a4d7e1b93c521/elf"
-
-Out of curiosity, could you post output of 'readelf -S' on both of them?
-
-> Furthermore, the branch in line symbol-elf.c:1241 (the one added in the referred
-> patch) is not taken.
-> 
-> As you can see, sh_name is out-of-range (342 > 332).
-> I can also provide a coredump, if it can be useful.
-> 
-> I have no idea of how the ELF stuff works, but I thought this may be caused by
-> the fact that secstrs is built from runtime_ss, while shdr is built from syms_ss
-> (since it is the change of the commit). I tried to test this theory with the
-> following change:
-> 
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index a73345730ba9..8d2b692f11a2 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1146,7 +1146,7 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->   	if (symstrs == NULL)
->   		goto out_elf_end;
->   
-> -	sec_strndx = elf_getscn(runtime_ss->elf, runtime_ss->ehdr.e_shstrndx);
-> +	sec_strndx = elf_getscn(elf, ehdr.e_shstrndx);
->   	if (sec_strndx == NULL)
->   		goto out_elf_end;
->   
-> @@ -1244,6 +1244,14 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
->   		 * values for syms (invalid) and runtime (valid).
->   		 */
->   		if (shdr.sh_type == SHT_NOBITS) {
-> +			sec_strndx = elf_getscn(runtime_ss->elf, runtime_ss->ehdr.e_shstrndx);
-> +			if (sec_strndx == NULL)
-> +				goto out_elf_end;
-> +
-> +			secstrs = elf_getdata(sec_strndx, NULL);
-> +			if (secstrs == NULL)
-> +				goto out_elf_end;
-> +
->   			sec = elf_getscn(runtime_ss->elf, sym.st_shndx);
->   			if (!sec)
->   				goto out_elf_end;
-> 
-> However, it still overflows, but oddly the branch is not taken before the
-> overflow. Is there some kind of state that gets changed in the ELF structs?
-
-Something like that should work. But you should reset sec_strndx also in 
-the else branch, IMO. So what about this?
-
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1081,7 +1081,7 @@ int dso__load_sym(struct dso *dso, struct map 
-*map, struct symsrc *syms_ss,
-         struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
-         struct map *curr_map = map;
-         struct dso *curr_dso = dso;
--       Elf_Data *symstrs, *secstrs;
-+       Elf_Data *symstrs, *secstrs, *secstrs_run, *secstrs_sym;
-         uint32_t nr_syms;
-         int err = -1;
-         uint32_t idx;
-@@ -1150,8 +1150,16 @@ int dso__load_sym(struct dso *dso, struct map 
-*map, struct symsrc *syms_ss,
-         if (sec_strndx == NULL)
-                 goto out_elf_end;
-
--       secstrs = elf_getdata(sec_strndx, NULL);
--       if (secstrs == NULL)
-+       secstrs_run = elf_getdata(sec_strndx, NULL);
-+       if (secstrs_run == NULL)
-+               goto out_elf_end;
-+
-+       sec_strndx = elf_getscn(elf, ehdr.e_shstrndx);
-+       if (sec_strndx == NULL)
-+               goto out_elf_end;
-+
-+       secstrs_sym = elf_getdata(sec_strndx, NULL);
-+       if (secstrs_sym == NULL)
-                 goto out_elf_end;
-
-         nr_syms = shdr.sh_size / shdr.sh_entsize;
-@@ -1237,6 +1245,8 @@ int dso__load_sym(struct dso *dso, struct map 
-*map, struct symsrc *syms_ss,
-
-                 gelf_getshdr(sec, &shdr);
-
-+               secstrs = secstrs_sym;
-+
-                 /*
-                  * We have to fallback to runtime when syms' section 
-header has
-                  * NOBITS set. NOBITS results in file offset 
-(sh_offset) not
-@@ -1249,6 +1259,7 @@ int dso__load_sym(struct dso *dso, struct map 
-*map, struct symsrc *syms_ss,
-                                 goto out_elf_end;
-
-                         gelf_getshdr(sec, &shdr);
-+                       secstrs = secstrs_run;
-                 }
-
-                 if (is_label && !elf_sec__filter(&shdr, secstrs))
+On Fri, Jun 11, 2021 at 5:27 PM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Fri, Jun 11, 2021 at 01:31:41AM -0700, Denis Nikitin wrote:
+> > Hi Suzuki,
+> >
+> > On Thu, Jun 10, 2021 at 9:04 AM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+> > >
+> > [...]
+> > >
+> > > Are you able to confirm if the patch 3 alone fixes the above issue ?
+> > > I am not convinced that Patch 1 is necessary.
+> > >
+> >
+> > Yes. "perf cs-etm: Remove callback cs_etm_find_snapshot()" alone fixes
+> > the issue.
+>
+> Based on current testing result, we should give high priority for
+> patches 2 and 3.
+>
+> The patch 1 is controversial for how to handle the trace data kept
+> in multiple AUX buffers; essentially it's up to how we understand the
+> snapshot definition.  I confirmed Intel-PT and CoreSight have the same
+> behaviour for capturing trace data from multiple AUX ring buffers when
+> snapshot occurs.
+>
+> I'd like to leave patch 1/3 out, and resend it if we get conclusion.
+> At the meantime, @Denis, if you have observed any profiling result
+> (or profiling quality) difference caused by patch 1, the feedback would
+> be very valuable.
 
 
-thanks,
--- 
-js
+I evaluated AutoFDO profiles with benchmarks but I was only focused
+on the system-wide mode. And as I understood patch 1 fixes the issue
+in non system-wide mode.
+Currently I'm OoO so I won't be able to do further evaluation.
 
--- 
-js
-suse labs
+- Denis
+
+>
+>
+> Thanks a lot for Denis' testing and insight review from Suzuki!
+>
+> Leo
