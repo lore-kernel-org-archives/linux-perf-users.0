@@ -2,159 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A6CC48BE5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 15:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE36C48BE5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 21:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87D3C610C7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 15:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E6161245
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 21:31:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbhFUPIA (ORCPT
+        id S231218AbhFUVdU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Jun 2021 11:08:00 -0400
-Received: from mga02.intel.com ([134.134.136.20]:58587 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230423AbhFUPHu (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Jun 2021 11:07:50 -0400
-IronPort-SDR: SFbLS8GZk1Uixoy9u2Q181FgIGYmcajngkMVJBaEioVh7h2swALeHpflUhc3pVbergg0Kp2tvr
- 8wfHyChrALyg==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="193998987"
-X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
-   d="scan'208";a="193998987"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 08:05:34 -0700
-IronPort-SDR: P0a/YXa1/SzlVpAEpaN+PV4sj9FANBqevN2482jk2KoRV9v83PQ/79h+OxS+iFKiqL/Hu5TbZs
- 5tlVf6Z/5JdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
-   d="scan'208";a="486519627"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.79])
-  by orsmga001.jf.intel.com with ESMTP; 21 Jun 2021 08:05:31 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 21 Jun 2021 17:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230052AbhFUVdU (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 21 Jun 2021 17:33:20 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02D9C06175F
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 14:31:05 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id y7so21134656wrh.7
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 14:31:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=THl/cfEqtiF8bpjYHQsI8F0jcqmB+ceOTFq/vSn409U=;
+        b=JIArUMB/41VU5fe54U9ul6f6d/bvkUmB5dvPIC/oBkwF/qJJ7jLjsshY52MmMmV0cP
+         4hQYxdfx9H5t2clz8/Rpq+p3koezpWk00PirVK7oKeWeOwjVxGwzUZAzme0CxKolMemo
+         Qz9Qo9QRjMy1cCLjYn2z54HkZoHe2BuN+/RbjXCkrIXVoIEpHj/kvcTp1D0OJN/5UZgi
+         NbyR+NPsy13zY/ghu94jxECNDtjP7iFI6z8f6ZY7uGqafux3cXvggShlMh2H/7Fw9eHS
+         TfZynOeOxukgAfItfX6V7Guj2xRsIRRwuO/aJfQqOj0r8zQMwfDFFYHWKuM+TGGFlqOj
+         fxUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=THl/cfEqtiF8bpjYHQsI8F0jcqmB+ceOTFq/vSn409U=;
+        b=knAFGTIPb7okeK263n4ujYibBGr5lTyQ2FOGU9mmamAjPu882q6i9at0wJE/VgEuQT
+         1kU2EMMX/yqJMo1h9Xo5PNdimxmlm/k0ZmlsrglAqAInvF3H/8BGK/fHQcqysDHbQVtx
+         fIgj8rTw0DU74fjuGAWSuP3s6Nnyj4jWc6UW3B6mTATQrEwxyY+7JSNBANIwoOsMwHHp
+         eAoHBrAwbZiW4vWEudt5IemfH6aNi9XCP4JwulR8nNkL5TNFeR2CzxBKGlVDz5KddbnF
+         KBh5q1ff5j7enSsxlFXgVrLoP3lAufXI5kk1so8NFs4G0Fi3wxP2NTIzdctw/SoAEWsI
+         CVjQ==
+X-Gm-Message-State: AOAM530TX3kQ277Xoqo9eCs53oSWxk2IIDy2ZcvdjIxqsQXeR0DWGc5C
+        549HNPGNt/dVBeMAXB+5NHVHBa8SvVL66X1N2BN3Wtzf6AQGdb0Y
+X-Google-Smtp-Source: ABdhPJzZa6mY8h9+/DaGpxq4qInMWB2iX+FC8oHrztFc+KztQPVgXbt+vWv67DZfCPEWQTneivyVYbeiw9eU7Vi68dw=
+X-Received: by 2002:adf:f30d:: with SMTP id i13mr536208wro.119.1624311064037;
+ Mon, 21 Jun 2021 14:31:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210617184216.2075588-1-irogers@google.com> <20210621075525.128b476f@canb.auug.org.au>
+In-Reply-To: <20210621075525.128b476f@canb.auug.org.au>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 21 Jun 2021 14:30:52 -0700
+Message-ID: <CAP-5=fXXomqjVv4bvqhCOGPD3Q4gfCh2eya07NyBksGbkNjxMQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf test: Fix non-bash issue with stat bpf counters
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 11/11] perf dlfilter: Add object_code() to perf_dlfilter_fns
-Date:   Mon, 21 Jun 2021 18:05:14 +0300
-Message-Id: <20210621150514.32159-12-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210621150514.32159-1-adrian.hunter@intel.com>
-References: <20210621150514.32159-1-adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Song Liu <songliubraving@fb.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a function, for use by dlfilters, to read object code.
+On Sun, Jun 20, 2021 at 2:55 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Ian,
+>
+> On Thu, 17 Jun 2021 11:42:13 -0700 Ian Rogers <irogers@google.com> wrote:
+> >
+> > $(( .. )) is a bash feature but the test's interpreter is !/bin/sh,
+> > switch the code to use expr.
+>
+> The $(( .. )) syntax is specified in POSIX (see
+> https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_04),
+> so unless this caused an actual problem, this change is unnecessary.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/Documentation/perf-dlfilter.txt |  5 +++-
- tools/perf/util/dlfilter.c                 | 34 ++++++++++++++++++++++
- tools/perf/util/perf_dlfilter.h            |  4 ++-
- 3 files changed, 41 insertions(+), 2 deletions(-)
+Agreed. The issue I was seeing was:
 
-diff --git a/tools/perf/Documentation/perf-dlfilter.txt b/tools/perf/Documentation/perf-dlfilter.txt
-index d37913343449..8a6d21e30fc5 100644
---- a/tools/perf/Documentation/perf-dlfilter.txt
-+++ b/tools/perf/Documentation/perf-dlfilter.txt
-@@ -113,7 +113,8 @@ struct perf_dlfilter_fns {
- 	const __u8 *(*insn)(void *ctx, __u32 *length);
- 	const char *(*srcline)(void *ctx, __u32 *line_number);
- 	struct perf_event_attr *(*attr)(void *ctx);
--	void *(*reserved[122])(void *);
-+	__s32 (*object_code)(void *ctx, __u64 ip, void *buf, __u32 len);
-+	void *(*reserved[121])(void *);
- };
- ----
- 
-@@ -130,6 +131,8 @@ before calling. Returns 0 on success, -1 otherwise.
- 
- 'attr' returns perf_event_attr, refer <linux/perf_event.h>.
- 
-+'object_code' reads object code and returns the number of bytes read.
-+
- The perf_dlfilter_al structure
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
-diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
-index 2e89f322ff60..fa087422baa1 100644
---- a/tools/perf/util/dlfilter.c
-+++ b/tools/perf/util/dlfilter.c
-@@ -227,6 +227,39 @@ static struct perf_event_attr *dlfilter__attr(void *ctx)
- 	return &d->evsel->core.attr;
- }
- 
-+static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32 len)
-+{
-+	struct dlfilter *d = (struct dlfilter *)ctx;
-+	struct addr_location *al;
-+	struct addr_location a;
-+	struct map *map;
-+	u64 offset;
-+
-+	if (!d->ctx_valid)
-+		return -1;
-+
-+	al = get_al(d);
-+	if (!al)
-+		return -1;
-+
-+	map = al->map;
-+
-+	if (map && ip >= map->start && ip < map->end &&
-+	    machine__kernel_ip(d->machine, ip) == machine__kernel_ip(d->machine, d->sample->ip))
-+		goto have_map;
-+
-+	thread__find_map_fb(al->thread, d->sample->cpumode, ip, &a);
-+	if (!a.map)
-+		return -1;
-+
-+	map = a.map;
-+have_map:
-+	offset = map->map_ip(map, ip);
-+	if (ip + len >= map->end)
-+		len = map->end - ip;
-+	return dso__data_read_offset(map->dso, d->machine, offset, buf, len);
-+}
-+
- static const struct perf_dlfilter_fns perf_dlfilter_fns = {
- 	.resolve_ip      = dlfilter__resolve_ip,
- 	.resolve_addr    = dlfilter__resolve_addr,
-@@ -234,6 +267,7 @@ static const struct perf_dlfilter_fns perf_dlfilter_fns = {
- 	.insn            = dlfilter__insn,
- 	.srcline         = dlfilter__srcline,
- 	.attr            = dlfilter__attr,
-+	.object_code     = dlfilter__object_code,
- };
- 
- #define CHECK_FLAG(x) BUILD_BUG_ON((u64)PERF_DLFILTER_FLAG_ ## x != (u64)PERF_IP_FLAG_ ## x)
-diff --git a/tools/perf/util/perf_dlfilter.h b/tools/perf/util/perf_dlfilter.h
-index e2cdf416b22e..4429f3836fa7 100644
---- a/tools/perf/util/perf_dlfilter.h
-+++ b/tools/perf/util/perf_dlfilter.h
-@@ -101,8 +101,10 @@ struct perf_dlfilter_fns {
- 	const char *(*srcline)(void *ctx, __u32 *line_number);
- 	/* Return perf_event_attr, refer <linux/perf_event.h> */
- 	struct perf_event_attr *(*attr)(void *ctx);
-+	/* Read object code, return numbers of bytes read */
-+	__s32 (*object_code)(void *ctx, __u64 ip, void *buf, __u32 len);
- 	/* Reserved */
--	void *(*reserved[122])(void *);
-+	void *(*reserved[121])(void *);
- };
- 
- /*
--- 
-2.17.1
+./tests/shell/stat_bpf_counters.sh: line 14: <not + <not / 10 : syntax
+error: operand expected (error token is "<not + <not / 10 ")
 
+but that syntax error is caused by running the test within a
+hypervisor. I'll resend the patch set with this one dropped.
+
+Thanks,
+Ian
+
+> --
+> Cheers,
+> Stephen Rothwell
