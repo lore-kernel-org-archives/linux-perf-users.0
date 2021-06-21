@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38B2C48BC2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 15:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303BAC4743C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 15:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04E26023F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 15:05:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EF06023F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 15:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230381AbhFUPHj (ORCPT
+        id S230343AbhFUPHl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Jun 2021 11:07:39 -0400
-Received: from mga02.intel.com ([134.134.136.20]:58545 "EHLO mga02.intel.com"
+        Mon, 21 Jun 2021 11:07:41 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58558 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230299AbhFUPHb (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Jun 2021 11:07:31 -0400
-IronPort-SDR: HJf8CT8QenQAWVuXbeQvJ48jKLpfxtv8jLwc6Kw0x/ZUQhrD2mKv2JXE8Xc+d55QC4pwc46l+Q
- l5DVCO8q5vcA==
-X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="193998902"
+        id S230346AbhFUPHf (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 21 Jun 2021 11:07:35 -0400
+IronPort-SDR: cTjTX1G1Vt7XDRH5ggAYHZq0MB3Q8ZRmEE9AaDLCpIbV9mtq5GCpbWdUMtDBsamq64A7egdzLh
+ vENBXrTTkPag==
+X-IronPort-AV: E=McAfee;i="6200,9189,10022"; a="193998920"
 X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
-   d="scan'208";a="193998902"
+   d="scan'208";a="193998920"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 08:05:17 -0700
-IronPort-SDR: lYJvoZFOJF9sR6mMgD3hSTTTuxEO8pHWIzWNBSpayv48gt6DgAKhuGRkgiKGdjArdua7geNw6f
- JLVpxIXE4r1Q==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2021 08:05:20 -0700
+IronPort-SDR: yMPZVJk31ykv1uny18fTrdT6G3bS5gscPLO8nDss2ss0rZmJQUSOHOyZxDhOlRaPGtg4G/pqv4
+ HUdEIYj6PkOA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.83,289,1616482800"; 
-   d="scan'208";a="486519546"
+   d="scan'208";a="486519566"
 Received: from ahunter-desktop.fi.intel.com ([10.237.72.79])
-  by orsmga001.jf.intel.com with ESMTP; 21 Jun 2021 08:05:14 -0700
+  by orsmga001.jf.intel.com with ESMTP; 21 Jun 2021 08:05:17 -0700
 From:   Adrian Hunter <adrian.hunter@intel.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
@@ -44,9 +44,9 @@ Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
         Leo Yan <leo.yan@linaro.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 06/11] perf build: Install perf_dlfilter.h
-Date:   Mon, 21 Jun 2021 18:05:09 +0300
-Message-Id: <20210621150514.32159-7-adrian.hunter@intel.com>
+Subject: [PATCH RFC 07/11] perf dlfilter: Add resolve_address() to perf_dlfilter_fns
+Date:   Mon, 21 Jun 2021 18:05:10 +0300
+Message-Id: <20210621150514.32159-8-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210621150514.32159-1-adrian.hunter@intel.com>
 References: <20210621150514.32159-1-adrian.hunter@intel.com>
@@ -55,51 +55,102 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Users of the --dlfilter option need to include perf_dlfilter.h
-in their filters. Install it to the include path.
+Add a function, for use by dlfilters, to resolve addresses from branch
+stacks or callchains.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/Makefile.config | 3 +++
- tools/perf/Makefile.perf   | 4 +++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-dlfilter.txt |  6 ++++-
+ tools/perf/util/dlfilter.c                 | 29 ++++++++++++++++++++++
+ tools/perf/util/perf_dlfilter.h            |  7 +++++-
+ 3 files changed, 40 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a62d09808fef..87f9a139a89c 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1118,6 +1118,8 @@ prefix ?= $(HOME)
- endif
- bindir_relative = bin
- bindir = $(abspath $(prefix)/$(bindir_relative))
-+includedir_relative = include
-+includedir = $(abspath $(prefix)/$(includedir_relative))
- mandir = share/man
- infodir = share/info
- perfexecdir = libexec/perf-core
-@@ -1150,6 +1152,7 @@ ETC_PERFCONFIG_SQ = $(subst ','\'',$(ETC_PERFCONFIG))
- STRACE_GROUPS_DIR_SQ = $(subst ','\'',$(STRACE_GROUPS_DIR))
- DESTDIR_SQ = $(subst ','\'',$(DESTDIR))
- bindir_SQ = $(subst ','\'',$(bindir))
-+includedir_SQ = $(subst ','\'',$(includedir))
- mandir_SQ = $(subst ','\'',$(mandir))
- infodir_SQ = $(subst ','\'',$(infodir))
- perfexecdir_SQ = $(subst ','\'',$(perfexecdir))
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index e47f04e5b51e..c9e0de5b00c1 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -923,7 +923,9 @@ install-tools: all install-gtk
- 	$(call QUIET_INSTALL, binaries) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(bindir_SQ)'; \
- 		$(INSTALL) $(OUTPUT)perf '$(DESTDIR_SQ)$(bindir_SQ)'; \
--		$(LN) '$(DESTDIR_SQ)$(bindir_SQ)/perf' '$(DESTDIR_SQ)$(bindir_SQ)/trace'
-+		$(LN) '$(DESTDIR_SQ)$(bindir_SQ)/perf' '$(DESTDIR_SQ)$(dir_SQ)/trace'; \
-+		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(includedir_SQ)/perf'; \
-+		$(INSTALL) util/perf_dlfilter.h -t '$(DESTDIR_SQ)$(includedir_SQ)/perf'
- ifndef NO_PERF_READ_VDSO32
- 	$(call QUIET_INSTALL, perf-read-vdso32) \
- 		$(INSTALL) $(OUTPUT)perf-read-vdso32 '$(DESTDIR_SQ)$(bindir_SQ)';
+diff --git a/tools/perf/Documentation/perf-dlfilter.txt b/tools/perf/Documentation/perf-dlfilter.txt
+index 8eada542330a..c3fe3bc02819 100644
+--- a/tools/perf/Documentation/perf-dlfilter.txt
++++ b/tools/perf/Documentation/perf-dlfilter.txt
+@@ -109,7 +109,8 @@ file is loaded. The functions can be called by 'filter_event' or
+ struct perf_dlfilter_fns {
+ 	const struct perf_dlfilter_al *(*resolve_ip)(void *ctx);
+ 	const struct perf_dlfilter_al *(*resolve_addr)(void *ctx);
+-	void *(*reserved[126])(void *);
++	__s32 (*resolve_address)(void *ctx, __u64 address, struct perf_dlfilter_al *al);
++	void *(*reserved[125])(void *);
+ };
+ ----
+ 
+@@ -117,6 +118,9 @@ struct perf_dlfilter_fns {
+ 
+ 'resolve_addr' returns information about addr (if addr_correlates_sym).
+ 
++'resolve_address' provides information about 'address'. al->size must be set
++before calling. Returns 0 on success, -1 otherwise.
++
+ The perf_dlfilter_al structure
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+index 8a2b196f07a7..3b29bf9f2bd3 100644
+--- a/tools/perf/util/dlfilter.c
++++ b/tools/perf/util/dlfilter.c
+@@ -131,9 +131,38 @@ static const struct perf_dlfilter_al *dlfilter__resolve_addr(void *ctx)
+ 	return d_addr_al;
+ }
+ 
++static __s32 dlfilter__resolve_address(void *ctx, __u64 address, struct perf_dlfilter_al *d_al_p)
++{
++	struct dlfilter *d = (struct dlfilter *)ctx;
++	struct perf_dlfilter_al d_al;
++	struct addr_location al;
++	struct thread *thread;
++	__u32 sz;
++
++	if (!d->ctx_valid || !d_al_p)
++		return -1;
++
++	thread = get_thread(d);
++	if (!thread)
++		return -1;
++
++	thread__find_symbol_fb(thread, d->sample->cpumode, address, &al);
++
++	al_to_d_al(&al, &d_al);
++
++	d_al.is_kernel_ip = machine__kernel_ip(d->machine, address);
++
++	sz = d_al_p->size;
++	memcpy(d_al_p, &d_al, min((size_t)sz, sizeof(d_al)));
++	d_al_p->size = sz;
++
++	return 0;
++}
++
+ static const struct perf_dlfilter_fns perf_dlfilter_fns = {
+ 	.resolve_ip      = dlfilter__resolve_ip,
+ 	.resolve_addr    = dlfilter__resolve_addr,
++	.resolve_address = dlfilter__resolve_address,
+ };
+ 
+ #define CHECK_FLAG(x) BUILD_BUG_ON((u64)PERF_DLFILTER_FLAG_ ## x != (u64)PERF_IP_FLAG_ ## x)
+diff --git a/tools/perf/util/perf_dlfilter.h b/tools/perf/util/perf_dlfilter.h
+index d24c3e2a8407..97bceb625b54 100644
+--- a/tools/perf/util/perf_dlfilter.h
++++ b/tools/perf/util/perf_dlfilter.h
+@@ -90,8 +90,13 @@ struct perf_dlfilter_fns {
+ 	const struct perf_dlfilter_al *(*resolve_ip)(void *ctx);
+ 	/* Return information about addr (if addr_correlates_sym) */
+ 	const struct perf_dlfilter_al *(*resolve_addr)(void *ctx);
++	/*
++	 * Return information about address (al->size must be set before
++	 * calling). Returns 0 on success, -1 otherwise.
++	 */
++	__s32 (*resolve_address)(void *ctx, __u64 address, struct perf_dlfilter_al *al);
+ 	/* Reserved */
+-	void *(*reserved[126])(void *);
++	void *(*reserved[125])(void *);
+ };
+ 
+ /*
 -- 
 2.17.1
 
