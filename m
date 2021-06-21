@@ -2,104 +2,106 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE36C48BE5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 21:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 444BFC4743C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 21:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E6161245
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 21:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F8261164
+	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 21:42:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231218AbhFUVdU (ORCPT
+        id S230331AbhFUVow (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Jun 2021 17:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41196 "EHLO
+        Mon, 21 Jun 2021 17:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbhFUVdU (ORCPT
+        with ESMTP id S230006AbhFUVow (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Jun 2021 17:33:20 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02D9C06175F
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 14:31:05 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id y7so21134656wrh.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 14:31:05 -0700 (PDT)
+        Mon, 21 Jun 2021 17:44:52 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E40F7C061574;
+        Mon, 21 Jun 2021 14:42:37 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id d11so18876746wrm.0;
+        Mon, 21 Jun 2021 14:42:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=THl/cfEqtiF8bpjYHQsI8F0jcqmB+ceOTFq/vSn409U=;
-        b=JIArUMB/41VU5fe54U9ul6f6d/bvkUmB5dvPIC/oBkwF/qJJ7jLjsshY52MmMmV0cP
-         4hQYxdfx9H5t2clz8/Rpq+p3koezpWk00PirVK7oKeWeOwjVxGwzUZAzme0CxKolMemo
-         Qz9Qo9QRjMy1cCLjYn2z54HkZoHe2BuN+/RbjXCkrIXVoIEpHj/kvcTp1D0OJN/5UZgi
-         NbyR+NPsy13zY/ghu94jxECNDtjP7iFI6z8f6ZY7uGqafux3cXvggShlMh2H/7Fw9eHS
-         TfZynOeOxukgAfItfX6V7Guj2xRsIRRwuO/aJfQqOj0r8zQMwfDFFYHWKuM+TGGFlqOj
-         fxUA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2kIxbJ5p1hWp8t+v1VsmjQyHEIPMSprKSEwd932/Pb8=;
+        b=uCeZNaem5Z5JlwRjX6SdVoD45e5/KbyFz/G47OchLMlN0pH6tZEIqvm9mumYHztAID
+         lMLz1cZLtHD5MaIYaj0bAxvkNBtnkLgdB/CcWaljfw0qOezWWUU9OGmjVulkGSsWWtPY
+         MqIkdTQmq6ca7n5Tx5/EIV5ryfNBNnYkxHFMUCcE6Pv9Ie8cjEfoNASEZbUqT1KL++8X
+         +4hykG+zmQ0ZVVU6XldDf1gMedIqWxuODS347eXHILnPo1E5pNeVfethhTF5ad7ZgFHW
+         P7tuC67EtD3hmK1TgScC3XmXWGZqWOF3Cah+jTBYbqKs8jzi5raUdUslApyV1VT3mzeb
+         5UoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=THl/cfEqtiF8bpjYHQsI8F0jcqmB+ceOTFq/vSn409U=;
-        b=knAFGTIPb7okeK263n4ujYibBGr5lTyQ2FOGU9mmamAjPu882q6i9at0wJE/VgEuQT
-         1kU2EMMX/yqJMo1h9Xo5PNdimxmlm/k0ZmlsrglAqAInvF3H/8BGK/fHQcqysDHbQVtx
-         fIgj8rTw0DU74fjuGAWSuP3s6Nnyj4jWc6UW3B6mTATQrEwxyY+7JSNBANIwoOsMwHHp
-         eAoHBrAwbZiW4vWEudt5IemfH6aNi9XCP4JwulR8nNkL5TNFeR2CzxBKGlVDz5KddbnF
-         KBh5q1ff5j7enSsxlFXgVrLoP3lAufXI5kk1so8NFs4G0Fi3wxP2NTIzdctw/SoAEWsI
-         CVjQ==
-X-Gm-Message-State: AOAM530TX3kQ277Xoqo9eCs53oSWxk2IIDy2ZcvdjIxqsQXeR0DWGc5C
-        549HNPGNt/dVBeMAXB+5NHVHBa8SvVL66X1N2BN3Wtzf6AQGdb0Y
-X-Google-Smtp-Source: ABdhPJzZa6mY8h9+/DaGpxq4qInMWB2iX+FC8oHrztFc+KztQPVgXbt+vWv67DZfCPEWQTneivyVYbeiw9eU7Vi68dw=
-X-Received: by 2002:adf:f30d:: with SMTP id i13mr536208wro.119.1624311064037;
- Mon, 21 Jun 2021 14:31:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210617184216.2075588-1-irogers@google.com> <20210621075525.128b476f@canb.auug.org.au>
-In-Reply-To: <20210621075525.128b476f@canb.auug.org.au>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 21 Jun 2021 14:30:52 -0700
-Message-ID: <CAP-5=fXXomqjVv4bvqhCOGPD3Q4gfCh2eya07NyBksGbkNjxMQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] perf test: Fix non-bash issue with stat bpf counters
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2kIxbJ5p1hWp8t+v1VsmjQyHEIPMSprKSEwd932/Pb8=;
+        b=BcTvEpaVIIbx0OTsLbCop13i7deQ1dxHMbMDeKoV8SN0aNn8kpAF92Ay6HUCIFq/+7
+         xhpIGMbj1fGxMt0uKDg4LY4zxttGH6b/hVw10R7PFj8O8sg8IRMG8HGygB46QVhOMY0D
+         BRtyJtADhA6e/NdETPDRjQhTqUf4GtNRcu6mJYtv94kkl5c4YbhYv6V9wIaqtdxpbM4i
+         ef87SqTLj/OUG3LgJH4tHp+px62ekfxPahWxcasBUPH2h1Dy3TdiJXPy7Vwko7QfmdQE
+         aO9cCv9uVV7cEPRh2AhWs0aWTmB8ZwxUJdhV6p+PoQkF6NW0ilOS2bCd6Dp/6gPbhIo3
+         O58w==
+X-Gm-Message-State: AOAM5311NoBsLQ3qI/uJnXji1FqhCciPSWc+LL5UULjx+29znhAZwZhK
+        952svqJiwKnx2vmbQu5JvKU=
+X-Google-Smtp-Source: ABdhPJwCUTb9mch7bOyLRl56DvcyA06rZ0zKQvPxWWyoCsDlroTrH2fkGRp8k21mKrW2GspuV9KCcw==
+X-Received: by 2002:a5d:6091:: with SMTP id w17mr583693wrt.241.1624311756322;
+        Mon, 21 Jun 2021 14:42:36 -0700 (PDT)
+Received: from honeypot.. ([151.29.45.200])
+        by smtp.googlemail.com with ESMTPSA id y16sm15316045wrp.51.2021.06.21.14.42.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jun 2021 14:42:35 -0700 (PDT)
+From:   Riccardo Mancini <rickyman7@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf data: close all files in close_dir
+Date:   Mon, 21 Jun 2021 23:42:19 +0200
+Message-Id: <20210621214220.167927-1-rickyman7@gmail.com>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jun 20, 2021 at 2:55 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Ian,
->
-> On Thu, 17 Jun 2021 11:42:13 -0700 Ian Rogers <irogers@google.com> wrote:
-> >
-> > $(( .. )) is a bash feature but the test's interpreter is !/bin/sh,
-> > switch the code to use expr.
->
-> The $(( .. )) syntax is specified in POSIX (see
-> https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_04),
-> so unless this caused an actual problem, this change is unnecessary.
+When using perf report in directory mode, the first file is not closed on
+exit, causing a memory leak.
+The problem is caused by the iterating variable never reaching 0.
 
-Agreed. The issue I was seeing was:
+Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+---
+ tools/perf/util/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-./tests/shell/stat_bpf_counters.sh: line 14: <not + <not / 10 : syntax
-error: operand expected (error token is "<not + <not / 10 ")
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 8fca4779ae6a..70b91ce35178 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -20,7 +20,7 @@
+ 
+ static void close_dir(struct perf_data_file *files, int nr)
+ {
+-	while (--nr >= 1) {
++	while (--nr >= 0) {
+ 		close(files[nr].fd);
+ 		zfree(&files[nr].path);
+ 	}
+-- 
+2.23.0
 
-but that syntax error is caused by running the test within a
-hypervisor. I'll resend the patch set with this one dropped.
-
-Thanks,
-Ian
-
-> --
-> Cheers,
-> Stephen Rothwell
