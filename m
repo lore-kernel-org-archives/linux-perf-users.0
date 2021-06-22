@@ -2,223 +2,207 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-28.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1109C48BE5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 18:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31DBC2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 18:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC6261289
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 18:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B061B60249
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 18:28:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbhFVSYJ (ORCPT
+        id S232021AbhFVSay (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Jun 2021 14:24:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232371AbhFVSYI (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Jun 2021 14:24:08 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id BD57A61076;
-        Tue, 22 Jun 2021 18:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624386112;
-        bh=nqaGJKQEtPIDNmBRv7DTB1VwYps0osDX25ORTNP4V6M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qDgiYgtmegu6yOUOujhzEC+ohrUTSFYB7e+861sQkNLfj+ty3zHMQzuFift6YJ4Zd
-         7g2pRFOhE9SQHcvZihsMXtTcPeo+H7naHOcQXelGM/reYBYNxNy40Rb4qNgi/UUo/9
-         7x4siQbIljWSCuJTuF+9EYZ3RQJjTOkoT41Ml00nx3Whn9yIPbO8nw9TYZwByuj75Z
-         TNjtY5kZSnnE/Zjf02vTiVCN1MNfcu8oBlyH66D2pKhQt0PnAhncqWiKR1L8SmEBjr
-         QrXPwoTf5Y58E9jO+84iH4GENlb7SwLxpVeybflUpiD3qROKmlDYr2oP/0bHjwvUJ7
-         7NuJ1QR552HHw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0C93A40B1A; Tue, 22 Jun 2021 15:21:49 -0300 (-03)
-Date:   Tue, 22 Jun 2021 15:21:48 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Tue, 22 Jun 2021 14:30:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44574 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230338AbhFVSax (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 22 Jun 2021 14:30:53 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70842C061574
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Jun 2021 11:28:33 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id l18-20020a1ced120000b029014c1adff1edso2383633wmh.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 22 Jun 2021 11:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ZRESarJDPkY6qjYc9HPNqJRL29Tb0Y5iNDm2R43Wwg=;
+        b=vpYah1ZnJP4oxpRimY85t1NwjzRpYYu413Kk5vt8w+ZsIJV+ejZxFfo2eEdKTDf6M3
+         /meOClvKBeJfcCsndJz6CqHNBk8K3pi9aXjkmBzr+CnnRPORR2QTHqxlHMt98fAH0vAI
+         cXh7BmZVQ51L3nAFemhS4EOxezqNlNRn2Z/S0Ng+3DpHCfd5voNw3VmxMInGTPpWR1o7
+         l6IIeK3XgOtfQ1caEznQyFNxSCzkZQY5mpcreiHFXr9wQwaH5VVkoxgJel7wYJ9srWxh
+         xAPGrR3lNd9kDvcXjEsY5HzSQcLgrUsDM6e8vSQ/yXMjpBeCjDfRQ0fv2RBMFA1LAuSq
+         Iaiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ZRESarJDPkY6qjYc9HPNqJRL29Tb0Y5iNDm2R43Wwg=;
+        b=nlDAi0uUl9s2OSU6+Uwa2P20HZUgZqoQP9eeI9RRNUOCX13r59RZ7qYMbZEElLRUKz
+         ohrdUS0uCjnI+P2w4KRLwu7PuayPBpa8qG0XysjS39tgak31F5NdSHkhqjBPwGwCcghS
+         3V1IOMfLRQyEI4kBg2jEZRBW2D9HWg/THzdB0OElG+FowrCOZP6/dnnaY4+c6k/EOED0
+         xV0zrPYoZpw+4ZwazXhQGJWkv3sna8hqdcKc6yQ0YeXQ08Jj3XsljXQMm+G5RsQUr5/q
+         PBxfiso25othqo3aY6Cx08TkR8UGCVjrjeX7sydZN/AqONgyGmwV4xHrYbwf4D7tN9tJ
+         VXlQ==
+X-Gm-Message-State: AOAM533h6oKUN8Mnl1NKBBa9XTt3D5CkhVUmYBFethFvkq9oP0UXgDal
+        nEC+bYvtRpYcGicIT+vwp7xOpblKo+zxGIfkkenB4A==
+X-Google-Smtp-Source: ABdhPJzc5ns+c8Q3EBPkdLtHF1+6Hv9Ihb1JsjRwhsaWyw7KtWoS90LX3gH6PdqM641Yr6DJDRqUO1gudjGEUgdlq1k=
+X-Received: by 2002:a05:600c:a01:: with SMTP id z1mr6203292wmp.77.1624386511920;
+ Tue, 22 Jun 2021 11:28:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210621234317.235545-1-rickyman7@gmail.com> <20210621234317.235545-3-rickyman7@gmail.com>
+ <CAP-5=fUGRdj=G6=srwoATWMimK5tB4X2Sxa64tTVk_JRwMJdWg@mail.gmail.com>
+ <d4921abf8dcff02245ccf7ad8edfd8048e926936.camel@gmail.com>
+ <CAP-5=fXGJXmpddPVEjmCCv9oC7bmum3p+1m1m6rem8Pdy+XaXA@mail.gmail.com> <YNIg7OkPi7YgsBZ3@kernel.org>
+In-Reply-To: <YNIg7OkPi7YgsBZ3@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 22 Jun 2021 11:28:19 -0700
+Message-ID: <CAP-5=fUp9tAHSW6xp5G9kRu=V+qVnqxnMySPCCAMWfpmgpi4wA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf script: delete evlist when deleting session
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Riccardo Mancini <rickyman7@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 03/11] perf script: Share addr_al between functions
-Message-ID: <YNIqPIIKqmWrfl5n@kernel.org>
-References: <20210621150514.32159-1-adrian.hunter@intel.com>
- <20210621150514.32159-4-adrian.hunter@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210621150514.32159-4-adrian.hunter@intel.com>
-X-Url:  http://acmel.wordpress.com
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 21, 2021 at 06:05:06PM +0300, Adrian Hunter escreveu:
-> Share the addr_location of 'addr' so that it need not be resolved more than
-> once.
+On Tue, Jun 22, 2021 at 10:42 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Tue, Jun 22, 2021 at 09:33:23AM -0700, Ian Rogers escreveu:
+> > On Tue, Jun 22, 2021 at 12:44 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
+> > >
+> > > Hi,
+> > >
+> > > thanks for your comments.
+> > >
+> > > On Mon, 2021-06-21 at 22:14 -0700, Ian Rogers wrote:
+> > > > On Mon, Jun 21, 2021 at 4:44 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
+> > > > >
+> > > > > ASan reports a memory leak related to session->evlist never being deleted.
+> > > > > The evlist member is not deleted in perf_session__delete, so it should be
+> > > > > deleted separately.
+> > > > > This patch adds the missing deletion in perf-script.
+> > > > >
+> > > > > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> > > > > ---
+> > > > >  tools/perf/builtin-script.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > > > index 1280cbfad4db..635a1d9cfc88 100644
+> > > > > --- a/tools/perf/builtin-script.c
+> > > > > +++ b/tools/perf/builtin-script.c
+> > > > > @@ -3991,7 +3991,7 @@ int cmd_script(int argc, const char **argv)
+> > > > >                 zfree(&script.ptime_range);
+> > > > >         }
+> > > > >
+> > > > > -       evlist__free_stats(session->evlist);
+> > > >
+> > > > Should this be removed?
+> > >
+> > > Probably not. I originally thought this was already taken care of by
+> > > evlist__delete, but it's not.
+> > > Oddly, this issue is not causing a memory leak in my simple test.
+> > >
+> > > >
+> > > > > +       evlist__delete(session->evlist);
+>
+> This looks like a bug, if it is a 'session' member, its a session method
+> that should delete it, probably perf_session__delete().
+>
+> > > > If the perf session "owns" the evlist, would it be cleaner to add this
+> > > > to perf_session__delete?
+> > >
+> > > I thought about that too, but that's not always true.
+> > > E.g., in perf-record, __cmd_record calls perf_session__delete,then cmd_record
+> > > calls evlist__delete on rec->evlist, which points to the same location to which
+> > > session->evlist pointed.
+> >
+> > Agreed. I find it hard to understand the ownership properties in the
+> > perf code. The missing delete is an example of the owner of the evlist
+> > (the caller) not "knowing" it needed cleaning up. I'd like it if we
+> > documented things like perf_sessions' evlist to say not owned, user
+> > must clean up. The makes it unambiguous who has to take
+> > responsibility. Having things clean up after themselves is of course
+> > easiest, hence wanting this to be in perf_session__delete.
+>
+> This specific case, from just reading the description on this message,
+> looks just like a bug/thinko.
 
-Another nice patch, i.e. don't resolve it unconditionally, let the first
-function that needs it under a callchain to do it, then reuse if another
-needs it.
+Ack. Definitely worth merging the change. I think this is about the
+7th address sanitizer bug Riccardo has fixed. Namhyung, Numfor, Luke
+and myself have also contributed similar fixes. We set up some fuzz
+testing on libtraceevent and there are currently 12 issues we've found
+there. The nice thing with sparse compared to address sanitizer is the
+compiler will point at the problem, you don't need to trigger an issue
+in a test. There are some complicated ownership rules in session and
+also in the reference counting issues that Riccardo has raised, so
+perhaps there's scope for some more comments or other tidy ups.
 
-Looks ok, applied.
-
-- Arnaldo
- 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/builtin-script.c | 38 +++++++++++++++++++++++--------------
->  1 file changed, 24 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index ff7b43899f2e..d2771a997e26 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -1337,17 +1337,18 @@ static const char *resolve_branch_sym(struct perf_sample *sample,
->  				      struct evsel *evsel,
->  				      struct thread *thread,
->  				      struct addr_location *al,
-> +				      struct addr_location *addr_al,
->  				      u64 *ip)
->  {
-> -	struct addr_location addr_al;
->  	struct perf_event_attr *attr = &evsel->core.attr;
->  	const char *name = NULL;
->  
->  	if (sample->flags & (PERF_IP_FLAG_CALL | PERF_IP_FLAG_TRACE_BEGIN)) {
->  		if (sample_addr_correlates_sym(attr)) {
-> -			thread__resolve(thread, &addr_al, sample);
-> -			if (addr_al.sym)
-> -				name = addr_al.sym->name;
-> +			if (!addr_al->thread)
-> +				thread__resolve(thread, addr_al, sample);
-> +			if (addr_al->sym)
-> +				name = addr_al->sym->name;
->  			else
->  				*ip = sample->addr;
->  		} else {
-> @@ -1365,7 +1366,9 @@ static const char *resolve_branch_sym(struct perf_sample *sample,
->  static int perf_sample__fprintf_callindent(struct perf_sample *sample,
->  					   struct evsel *evsel,
->  					   struct thread *thread,
-> -					   struct addr_location *al, FILE *fp)
-> +					   struct addr_location *al,
-> +					   struct addr_location *addr_al,
-> +					   FILE *fp)
->  {
->  	struct perf_event_attr *attr = &evsel->core.attr;
->  	size_t depth = thread_stack__depth(thread, sample->cpu);
-> @@ -1382,7 +1385,7 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
->  	if (thread->ts && sample->flags & PERF_IP_FLAG_RETURN)
->  		depth += 1;
->  
-> -	name = resolve_branch_sym(sample, evsel, thread, al, &ip);
-> +	name = resolve_branch_sym(sample, evsel, thread, al, addr_al, &ip);
->  
->  	if (PRINT_FIELD(DSO) && !(PRINT_FIELD(IP) || PRINT_FIELD(ADDR))) {
->  		dlen += fprintf(fp, "(");
-> @@ -1466,6 +1469,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
->  				    struct evsel *evsel,
->  				    struct thread *thread,
->  				    struct addr_location *al,
-> +				    struct addr_location *addr_al,
->  				    struct machine *machine, FILE *fp)
->  {
->  	struct perf_event_attr *attr = &evsel->core.attr;
-> @@ -1474,7 +1478,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
->  	int printed = 0;
->  
->  	if (PRINT_FIELD(CALLINDENT))
-> -		printed += perf_sample__fprintf_callindent(sample, evsel, thread, al, fp);
-> +		printed += perf_sample__fprintf_callindent(sample, evsel, thread, al, addr_al, fp);
->  
->  	/* print branch_from information */
->  	if (PRINT_FIELD(IP)) {
-> @@ -1931,7 +1935,8 @@ static void perf_sample__fprint_metric(struct perf_script *script,
->  static bool show_event(struct perf_sample *sample,
->  		       struct evsel *evsel,
->  		       struct thread *thread,
-> -		       struct addr_location *al)
-> +		       struct addr_location *al,
-> +		       struct addr_location *addr_al)
->  {
->  	int depth = thread_stack__depth(thread, sample->cpu);
->  
-> @@ -1947,7 +1952,7 @@ static bool show_event(struct perf_sample *sample,
->  	} else {
->  		const char *s = symbol_conf.graph_function;
->  		u64 ip;
-> -		const char *name = resolve_branch_sym(sample, evsel, thread, al,
-> +		const char *name = resolve_branch_sym(sample, evsel, thread, al, addr_al,
->  				&ip);
->  		unsigned nlen;
->  
-> @@ -1972,6 +1977,7 @@ static bool show_event(struct perf_sample *sample,
->  static void process_event(struct perf_script *script,
->  			  struct perf_sample *sample, struct evsel *evsel,
->  			  struct addr_location *al,
-> +			  struct addr_location *addr_al,
->  			  struct machine *machine)
->  {
->  	struct thread *thread = al->thread;
-> @@ -2005,7 +2011,7 @@ static void process_event(struct perf_script *script,
->  		perf_sample__fprintf_flags(sample->flags, fp);
->  
->  	if (is_bts_event(attr)) {
-> -		perf_sample__fprintf_bts(sample, evsel, thread, al, machine, fp);
-> +		perf_sample__fprintf_bts(sample, evsel, thread, al, addr_al, machine, fp);
->  		return;
->  	}
->  
-> @@ -2168,6 +2174,7 @@ static int process_sample_event(struct perf_tool *tool,
->  {
->  	struct perf_script *scr = container_of(tool, struct perf_script, tool);
->  	struct addr_location al;
-> +	struct addr_location addr_al;
->  
->  	if (perf_time__ranges_skip_sample(scr->ptime_range, scr->range_num,
->  					  sample->time)) {
-> @@ -2197,7 +2204,10 @@ static int process_sample_event(struct perf_tool *tool,
->  	if (al.filtered)
->  		goto out_put;
->  
-> -	if (!show_event(sample, evsel, al.thread, &al))
-> +	/* Set thread to NULL to indicate addr_al is not initialized */
-> +	addr_al.thread = NULL;
-> +
-> +	if (!show_event(sample, evsel, al.thread, &al, &addr_al))
->  		goto out_put;
->  
->  	if (evswitch__discard(&scr->evswitch, evsel))
-> @@ -2205,16 +2215,16 @@ static int process_sample_event(struct perf_tool *tool,
->  
->  	if (scripting_ops) {
->  		struct addr_location *addr_al_ptr = NULL;
-> -		struct addr_location addr_al;
->  
->  		if ((evsel->core.attr.sample_type & PERF_SAMPLE_ADDR) &&
->  		    sample_addr_correlates_sym(&evsel->core.attr)) {
-> -			thread__resolve(al.thread, &addr_al, sample);
-> +			if (!addr_al.thread)
-> +				thread__resolve(al.thread, &addr_al, sample);
->  			addr_al_ptr = &addr_al;
->  		}
->  		scripting_ops->process_event(event, sample, evsel, &al, addr_al_ptr);
->  	} else {
-> -		process_event(scr, sample, evsel, &al, machine);
-> +		process_event(scr, sample, evsel, &al, &addr_al, machine);
->  	}
->  
->  out_put:
-> -- 
-> 2.17.1
-> 
-
--- 
-
-- Arnaldo
+Thanks,
+Ian
+> > Fwiw, I've been reading around things like sparse [1, 2] and Clang's
+> > similar analysis [3] that people have looked to use like sparse [4]. I
+> > don't see anything that handles memory allocation lifetimes, but
+> > perhaps something will feed into C's standards by way of C++ [5].
+> > Perhaps people have ideas to rewrite in checked C or Rust :-)
+> >
+> > Some thoughts:
+> > 1) we can't have C++ as we're trying to follow kernel conventions [6]
+> > 2) we can't annotate code for things like sparse or thread safety
+> > analysis, as checking for memory errors is out of scope for them, the
+> > annotations don't exist, etc.
+> > 3) we can add comments, document the rules around pointers, perhaps
+> > even invent empty annotations that may one day help with automated
+> > checking.
+> > 4) we can try to clean up the ownership model to make bugs less likely.
+> >
+> > I've heard concerns on non-kernel projects about annotation litter and
+> > comments adding to complexity. I think your patch is good, it follows
+> > the existing conventions. I wonder if we can learn something from the
+> > fact the code was wrong to make it less likely we have wrong code in
+> > the future. I'd be interested to hear what others think.
+> >
+> > Thanks,
+> > Ian
+> >
+> > [1] https://lore.kernel.org/lkml/Pine.LNX.4.58.0410302005270.28839@ppc970.osdl.org/
+> > [2] https://lwn.net/Articles/689907/
+> > [3] https://clang.llvm.org/docs/ThreadSafetyAnalysis.html
+> > [4] https://www.openwall.com/lists/kernel-hardening/2019/05/20/3
+> > [5] https://github.com/isocpp/CppCoreGuidelines/blob/master/docs/Lifetime.pdf
+> > [6] even concatenating a string is error prone in C :-(
+> > https://lore.kernel.org/lkml/YMzOpgZPJeC2jGKf@kernel.org/
+> >
+> > > Thanks,
+> > > Riccardo
+> > >
+> > > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > >         perf_session__delete(session);
+> > > > >
+> > > > >         if (script_started)
+> > > > > --
+> > > > > 2.31.1
+> > > > >
+> > >
+> > >
+>
+> --
+>
+> - Arnaldo
