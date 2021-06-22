@@ -2,108 +2,164 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40564C4743C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 23:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 399F7C48BE5
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 04:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29ABA60FF2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 21 Jun 2021 23:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ABE9600D1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 04:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232057AbhFUXqk (ORCPT
+        id S229761AbhFVEkk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 21 Jun 2021 19:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
+        Tue, 22 Jun 2021 00:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231722AbhFUXqk (ORCPT
+        with ESMTP id S229628AbhFVEkj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 21 Jun 2021 19:46:40 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37EF3C061574;
-        Mon, 21 Jun 2021 16:44:24 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id h21-20020a1ccc150000b02901d4d33c5ca0so1066775wmb.3;
-        Mon, 21 Jun 2021 16:44:24 -0700 (PDT)
+        Tue, 22 Jun 2021 00:40:39 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7836C061756
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 21:38:24 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id 12-20020a05621420ecb02902766cc25115so3085633qvk.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 21 Jun 2021 21:38:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LGzFw4/zhJJykqlsIMyi5pwwSFK7n1uyNpDxg53rdIE=;
-        b=QiICc3PCdJ+5oWewpbZFf7jOEh9wFeo4QoRSGaVHW5ykY3CtdoTOrCVJ0IaxxzKZkL
-         I1SI5YsVZIBrylNRE679LJr7oex7iMfyh6kM8QVGnLRkIl4sj8UaEB7ebdXtTstlII5g
-         LPZgyXDYMaMgNIE37mOBu7TqnJBIuKi1h5kBF0di5ysM8Tj7L6K6Re0WEQBWaTgQZP56
-         U4418aOu/Zx+ceAZG0ZuPEl8fw87Pl8pwtp3jvsP/20Cpg6GKiFuozMbD2xbgbkr/41C
-         TYAM+BqFwEafecnlAhE0InsCKX5AMnFfk/f1ke3enwth7E5Yx6xbxOxXqKwZgAcEpWL9
-         llAA==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=xjwwJU2DWInl98UuzSucz8mPGJZAy/tZZF05M3ACx4g=;
+        b=SxBmB9zwpriFS+ea7DTHPna7ObAx1Cbp+mOw1qXB+g4ea7l5TOmE7zYhrd7srwZDoB
+         maJ1PbCbyKa/mt2QsXSGsAHPRGej7A5HBveqrdnmn9gjth4JtCNBZghET/YSwF6gTOGK
+         R6Ms7Q+LNea+msHOO5SUpbmZmCBYBa46v83hcIxioi2cfRL2mDJaiplJAOiIpilKD0qx
+         s1PMWgszH2bH3ZqrAfiSKYeFZ7u5tsRbx66eFSo/4Sat9aQkR2DlDvJIB76wuh0Zbe7d
+         aMkT3wuMBYNeB2j/KtBYf9+AL/Lev5K/N55O4BnWG4n4ZnPg2Ks6xYY35ljMHHwmXNyB
+         9HvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LGzFw4/zhJJykqlsIMyi5pwwSFK7n1uyNpDxg53rdIE=;
-        b=fNkgElk53Gq3jXrW6kfurI9Ryg3dL1afdAcfovVn+u/L6Td1LjcyCh8D0ubD1QT0LX
-         esaK7zINeVK65FA85n9PmAfz7WT1pK5d4dK+Nr9yovSLVgkrmQGgxDEjcx15Q74ffCnV
-         TExliyyV32w9eLQ+hyFZHjYhy6HvFKZK8PHqvKiw5K0v9VgyyjCw9rjiwKeIJRFPtxjr
-         IxWkB1ZTX4XC0G8GD0kALr0kqgvAJqGViRl0PUSw5rYUZdsLqCnZHYmBVdz6YMxFc+Yl
-         wSwAbn4fGWkREELFfas5/h6nKHNHMMcRDN71aisnpAZ0XsMKskFt2+41ILHNiXN04rnm
-         1WOg==
-X-Gm-Message-State: AOAM531nVfIhw4+sPGScq4Xh2FTcxTOpRgazjK/r6QVrla6HGArAk99N
-        7UdG6aJUWwlBa84KmYkBsJ8=
-X-Google-Smtp-Source: ABdhPJxPTA+JLP9zNqgLc6MwO9gn6BvOjo1AsOTB4OJWsp8bWTOHYJ0spYPkxDqqpoaVPwm07gDoYQ==
-X-Received: by 2002:a05:600c:35cb:: with SMTP id r11mr921312wmq.187.1624319062838;
-        Mon, 21 Jun 2021 16:44:22 -0700 (PDT)
-Received: from honeypot.. ([151.29.45.200])
-        by smtp.googlemail.com with ESMTPSA id n18sm473130wmq.41.2021.06.21.16.44.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Jun 2021 16:44:22 -0700 (PDT)
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=xjwwJU2DWInl98UuzSucz8mPGJZAy/tZZF05M3ACx4g=;
+        b=Hw/leBVIm+of6W5OoxJ8ZxQVvqHS/Rz2dtlCBPlH3KB8wcRzA6V1GXnrAixP73RrAV
+         ejYbmtH2ECw9iSwBAKaRYRQtK9FSK4WAytIyFmPIWrCHkTjxMEFTFLjpBIjECOqWka4Y
+         o08HJhOdARx6cW8RJ3YiKKUaFBH5ro+KBonkJ4bX4roGGZ9gLl+QpSaZTDUj9I0wynZp
+         H5G7quKSTaVAf7cMOOcwsQTmAFXaWOxbGz2itWlC5JMzW+ovkeeeBrQei7yCEplroQ42
+         kVACCBOmkuxXeW9PrwXsPN68ifTM1r1na9HkzTCK0+bOU8KvMHYL9iC1PtUug25oCDAR
+         cKNg==
+X-Gm-Message-State: AOAM531u7UsGzNKwdEhOMYTu3f0q/P/EXBF+fclsnWoVRXn9CfrHbWzt
+        HyecuneEWfZpjj+n4D91FcJ6VUtqvCJv
+X-Google-Smtp-Source: ABdhPJw4zp2WT6JLXLxngSGapcryB06Lr0NnqU3In77xsNtieZm2+cdkweostg0xo1GRduLuGfoAhdbmMAwd
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:ffd6:b7f5:87ee:7be2])
+ (user=irogers job=sendgmr) by 2002:a25:b70c:: with SMTP id
+ t12mr2273490ybj.90.1624336703769; Mon, 21 Jun 2021 21:38:23 -0700 (PDT)
+Date:   Mon, 21 Jun 2021 21:38:08 -0700
+Message-Id: <20210622043811.3108564-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.32.0.288.g62a8d224e6-goog
+Subject: [PATCH 1/4] perf: Enable libtracefs dynamic linking
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf script: delete evlist when deleting session
-Date:   Tue, 22 Jun 2021 01:43:19 +0200
-Message-Id: <20210621234317.235545-3-rickyman7@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210621234317.235545-1-rickyman7@gmail.com>
-References: <20210621234317.235545-1-rickyman7@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-users@vger.kernel.org,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Claire Jensen <cjense@google.com>
+Cc:     eranian@google.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reports a memory leak related to session->evlist never being deleted.
-The evlist member is not deleted in perf_session__delete, so it should be
-deleted separately.
-This patch adds the missing deletion in perf-script.
+Currently libtracefs isn't used by perf, but there are potential
+improvements by using it as identified Steven Rostedt's e-mail:
+https://lore.kernel.org/lkml/20210610154759.1ef958f0@oasis.local.home/
 
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+This change is modelled on the dynamic libtraceevent patch by Michael
+Petlan:
+https://lore.kernel.org/linux-perf-users/20210428092023.4009-1-mpetlan@redhat.com/
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/build/Makefile.feature | 1 +
+ tools/build/feature/Makefile | 4 ++++
+ tools/perf/Makefile.config   | 9 +++++++++
+ tools/perf/Makefile.perf     | 2 ++
+ 4 files changed, 16 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 1280cbfad4db..635a1d9cfc88 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3991,7 +3991,7 @@ int cmd_script(int argc, const char **argv)
- 		zfree(&script.ptime_range);
- 	}
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 04a8e3db8a54..c87e876b6dd7 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -53,6 +53,7 @@ FEATURE_TESTS_BASIC :=                  \
+         libslang                        \
+         libslang-include-subdir         \
+         libtraceevent                   \
++        libtracefs                      \
+         libcrypto                       \
+         libunwind                       \
+         pthread-attr-setaffinity-np     \
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index ec203e28407f..9488c4b4026e 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -37,6 +37,7 @@ FILES=                                          \
+          test-libslang.bin                      \
+          test-libslang-include-subdir.bin       \
+          test-libtraceevent.bin                 \
++         test-libtracefs.bin                    \
+          test-libcrypto.bin                     \
+          test-libunwind.bin                     \
+          test-libunwind-debug-frame.bin         \
+@@ -200,6 +201,9 @@ $(OUTPUT)test-libslang-include-subdir.bin:
+ $(OUTPUT)test-libtraceevent.bin:
+ 	$(BUILD) -ltraceevent
  
--	evlist__free_stats(session->evlist);
-+	evlist__delete(session->evlist);
- 	perf_session__delete(session);
++$(OUTPUT)test-libtracefs.bin:
++	$(BUILD) -ltracefs
++
+ $(OUTPUT)test-libcrypto.bin:
+ 	$(BUILD) -lcrypto
  
- 	if (script_started)
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index a62d09808fef..3a8a54b71654 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1098,6 +1098,15 @@ ifdef LIBTRACEEVENT_DYNAMIC
+   endif
+ endif
+ 
++ifdef LIBTRACEFS_DYNAMIC
++  $(call feature_check,libtracefs)
++  ifeq ($(feature-libtracefs), 1)
++    EXTLIBS += -ltracefs
++  else
++    dummy := $(error Error: No libtracefs devel library found, please install libtracefs-dev);
++  endif
++endif
++
+ # Among the variables below, these:
+ #   perfexecdir
+ #   perf_include_dir
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index e47f04e5b51e..b56e26b703ff 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -130,6 +130,8 @@ include ../scripts/utilities.mak
+ #
+ # Define LIBTRACEEVENT_DYNAMIC to enable libtraceevent dynamic linking
+ #
++# Define LIBTRACEFS_DYNAMIC to enable libtracefs dynamic linking
++#
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
 -- 
-2.31.1
+2.32.0.288.g62a8d224e6-goog
 
