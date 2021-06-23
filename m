@@ -2,100 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEF4C2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 21:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33FFC4743C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Jun 2021 05:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2AA601FE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 22 Jun 2021 21:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC6661166
+	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Jun 2021 05:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbhFVVJJ (ORCPT
+        id S229660AbhFWFVg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 22 Jun 2021 17:09:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23317 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229675AbhFVVJI (ORCPT
+        Wed, 23 Jun 2021 01:21:36 -0400
+Received: from zg8tmty1ljiyny4xntqumjca.icoremail.net ([165.227.154.27]:59493
+        "HELO zg8tmty1ljiyny4xntqumjca.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S229758AbhFWFVf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 22 Jun 2021 17:09:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624396012;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iwNIivw7ND0ogSAYON5f+dYUQ2aKcYsMFanvNB5fm5o=;
-        b=EXodn/p+PjDjStl3orbkRnsZeDaD+HwbIFRBdz0fcScYpR55o05T9owsYu+P4CyaLq9ILh
-        ndovWOdOqfq2NUeI5F+THjq2EjEhOhjMEhdLxvkBVgRrXwyGkWtfZD92yy3Su+iMMXaDBl
-        H8bA407imdJV5L1nY+nOxf5rxuWXBmk=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-RbiAQC_YNqGn7I4Le11f2g-1; Tue, 22 Jun 2021 17:06:50 -0400
-X-MC-Unique: RbiAQC_YNqGn7I4Le11f2g-1
-Received: by mail-wr1-f70.google.com with SMTP id i70-20020adf90cc0000b029011a8a299a4dso53279wri.17
-        for <linux-perf-users@vger.kernel.org>; Tue, 22 Jun 2021 14:06:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iwNIivw7ND0ogSAYON5f+dYUQ2aKcYsMFanvNB5fm5o=;
-        b=Jf3r37mMOtCuA/DWj4ezJgGHtC46S/0/3GTXDzl6j7COwQveRWH13DOH7gAChsW/0H
-         VBBhdTwpkFHtOx0CPpHAuBa4clLPrQPcojAPXqir/hxtpf0GfnRPRHv/kNKY28alahHG
-         Cc5dsrYDUyjIHCfobxEDcNQI8wYmdQ63qu881UgK4+7DPH3dsp713bV5686J7/duyn0s
-         bci2EUNq33jm6kCWDYK7Ll9HKx2oVBBb+6Re/B04Azzt4Eax3vP/6rGRC6e09dLryALb
-         15vLWPbxrfRhgFKfKCVbroGLG/khdIZ76rFcqWn5JUStA6EEcqTNW7NuepeK8n97ws1Z
-         j8cA==
-X-Gm-Message-State: AOAM533LEfyM1hGeMqgFiKsZyE3vYG1SHlB2Pxf9xrJdcZVVTeB09LlR
-        hWn9cnNEN/CGK9N0M5ZmvQ3kFNVDcpYBeERDlCd+pAvn8fVonC+tH1Wz+/XlbO0mXuZ20sXq+jS
-        oC6FesU+k4uNutyM1s0evFNr7dq2PCw==
-X-Received: by 2002:a1c:2601:: with SMTP id m1mr6867458wmm.185.1624396009091;
-        Tue, 22 Jun 2021 14:06:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxwA5evujCVmb41YGb1m83sZnYPN7g9tyPdWnf8NtEzUikjTHKJvyfO0OIMVr5bOTFLyikgVQ==
-X-Received: by 2002:a1c:2601:: with SMTP id m1mr6867441wmm.185.1624396008898;
-        Tue, 22 Jun 2021 14:06:48 -0700 (PDT)
-Received: from krava ([5.171.245.189])
-        by smtp.gmail.com with ESMTPSA id e11sm504551wrs.64.2021.06.22.14.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Jun 2021 14:06:47 -0700 (PDT)
-Date:   Tue, 22 Jun 2021 23:06:44 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: libperf : Can not create event group
-Message-ID: <YNJQ5P3jgOcL7sMD@krava>
-References: <OSBPR01MB46005B38568E90509946ECA9F7319@OSBPR01MB4600.jpnprd01.prod.outlook.com>
- <YMc6tBoIQiUQkRbq@krava>
- <OSBPR01MB4600B6FCE4D95F6B84E7E17CF7099@OSBPR01MB4600.jpnprd01.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB4600B6FCE4D95F6B84E7E17CF7099@OSBPR01MB4600.jpnprd01.prod.outlook.com>
+        Wed, 23 Jun 2021 01:21:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=23r9F1TgqkTLVqbFFEF4jfmzbMnL/seddS+4OeomPiM=; b=V
+        R3aMTtsvLnmL5xiw4aO0uUAJU2f9glWPLRjHbvNKjbalZftxsuJxeaxfbrRSa8Fv
+        fH4cqSnxzozK7igilybKQ+7AxH6004Ro0mFQ0fgABsSS0gceTd/Wz859pa7H8Q6e
+        5ieDO4z66oSva42k4mCn0s751j860FLcSV2TXDco6w=
+Received: from ubuntu (unknown [10.177.89.109])
+        by app1 (Coremail) with SMTP id XAUFCgCXeCUZxNJgKlIbAA--.7071S3;
+        Wed, 23 Jun 2021 13:18:17 +0800 (CST)
+From:   Jiajun Cao <jjcao20@fudan.edu.cn>
+Cc:     yuanxzhang@fudan.edu.cn, Jiajun Cao <jjcao20@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arch: nds32: Add IRQ check for platform_get_irq()
+Date:   Wed, 23 Jun 2021 13:17:10 +0800
+Message-Id: <20210623051711.104410-1-jjcao20@fudan.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: XAUFCgCXeCUZxNJgKlIbAA--.7071S3
+X-Coremail-Antispam: 1UD129KBjvJXoWrtr4UJr4UXr13KF1xJr4Dtwb_yoW8JrWUpr
+        4Dur9YyFy8WFy8t3s2y3ykZr1UuF1kursrJr40q3yfArs0qrWDtFZ0yr12gr1xAry8Xa47
+        Ja1YgrZ2gFyUua7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+        648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK6svPMxAIw28IcxkI7VAKI48JMx
+        C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
+        wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwC2zVAIFx02awCIc40Y0x0EwIxGrwCI42
+        IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+        6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRAl1kUUUUU
+X-CM-SenderInfo: isqsiiasuqikmw6i3vldqovvfxof0/
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 22, 2021 at 07:57:56AM +0000, nakamura.shun@fujitsu.com wrote:
-> Hi, jirka
-> 
-> > there'no leader link on this level yet (in struct evsel)
-> > so this is not implemented at the moment
-> 
-> Thanks for the info.
-> 
-> Do you have any plans to support the event group in libperf?
+The function cpu_pmu_request_irq() neglects to check the return
+value of platform_get_irq().
 
-hi,
-not until now I guess ;-) what's your use case?
+The error code (a negative number) of platform_get_irq(), i.e.,
+irq, will be passed to request_irq(), which will cause the function
+cpu_pmu_request_irq() to fail with -EINVAL, overriding the original
+error code irq.
 
-jirka
+Fix it by adding a IRQ check before calling request_irq().
+
+Signed-off-by: Jiajun Cao <jjcao20@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+---
+ arch/nds32/kernel/perf_event_cpu.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/nds32/kernel/perf_event_cpu.c b/arch/nds32/kernel/perf_event_cpu.c
+index 0ce6f9f307e6..6a6cbebaf5aa 100644
+--- a/arch/nds32/kernel/perf_event_cpu.c
++++ b/arch/nds32/kernel/perf_event_cpu.c
+@@ -1083,6 +1083,9 @@ static int cpu_pmu_request_irq(struct nds32_pmu *cpu_pmu, irq_handler_t handler)
+ 	}
+ 
+ 	irq = platform_get_irq(pmu_device, 0);
++	if (irq < 0)
++		return irq;
++
+ 	err = request_irq(irq, handler, IRQF_NOBALANCING, "nds32-pfm",
+ 			  cpu_pmu);
+ 	if (err) {
+-- 
+2.17.1
+
+Please check whether it's meaningful to propagate the error code of platform_get_irq() or stop calling request_irq() early when irq is invalid. Thanks!
 
