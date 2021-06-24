@@ -2,73 +2,77 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA285C49EA7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Jun 2021 07:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46063C49EA5
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Jun 2021 16:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4C76100A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Jun 2021 07:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CC7613D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Jun 2021 16:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231495AbhFXH1M (ORCPT
+        id S232163AbhFXQpc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 24 Jun 2021 03:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230402AbhFXH1L (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 24 Jun 2021 03:27:11 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8EFC061574;
-        Thu, 24 Jun 2021 00:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=rQbfn9TBdWl2iF98I/1RqeTRSgzel5XcaOzVBzuMaig=; b=WODazNOEu+2VZoMeZLWkHyjW06
-        7IWuwWFueTulkOi7RSxso+QvYmwac+ZpwRoc4POzTe2VgQH++cFYWLfddVnasrIoDBejdVhTlFF5b
-        ZJ0c8tVxmn/nE22W14kFXP4t8mchEm2w8/aPukqhCnf+0s3RYpoBBdw233qO3fAFp34SKer4cP0Lm
-        IHScGIQzu7ogYmqbwjPBAJCOK+0tmJ/qyaiAIh4oDeinIyp8yaidzBkQvXg0Wyw8vGbAXUclwjmWt
-        JZMESokmoNcujjRvLJVGKd7v/lxpRP+WFpfZV1BLjsaSlnEuxyJm3/w63zdXqoNTvhE5Id4jlWpQt
-        x4M0W6xA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1lwJih-00BA62-MM; Thu, 24 Jun 2021 07:24:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 562E330021A;
-        Thu, 24 Jun 2021 09:24:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E76852C8CABB7; Thu, 24 Jun 2021 09:24:20 +0200 (CEST)
-Date:   Thu, 24 Jun 2021 09:24:20 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     13145886936@163.com
-Cc:     tglx@linutronix.de, bp@alien8.de, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gushengxian <gushengxian@yulong.com>,
-        "Liang, Kan" <kan.liang@intel.com>
-Subject: Re: [PATCH] x86: eas should not be NULL when it is referenced
-Message-ID: <YNQzJIvBGnChxdou@hirez.programming.kicks-ass.net>
-References: <20210624070442.34291-1-13145886936@163.com>
+        Thu, 24 Jun 2021 12:45:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:33952 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229525AbhFXQpb (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 24 Jun 2021 12:45:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41003ED1;
+        Thu, 24 Jun 2021 09:43:12 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.13.86])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5A7203F719;
+        Thu, 24 Jun 2021 09:43:09 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     acme@kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, leo.yan@linaro.org
+Cc:     al.grant@arm.com, branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/2] perf cs-etm: Split Coresight decode by aux records
+Date:   Thu, 24 Jun 2021 17:43:01 +0100
+Message-Id: <20210624164303.28632-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210624070442.34291-1-13145886936@163.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 24, 2021 at 12:04:42AM -0700, 13145886936@163.com wrote:
-> From: gushengxian <gushengxian@yulong.com>
+Change applies to perf/core (45237f9898fc)
 
-Is ^^^ that you? That is, 13145886936@163.com is a bit of a dodgy email
-address and i've no way of verifying you are the person responsible for
-the patch.
+Changes since v6:
+ * Fix for snapshot mode where buffers are wrapped. This fix was done by clamping the aux record
+   size to the size of the buffer (see comment).
+ * Added an extra debugging printout.
+ * Typo/formatting fixes.
+ * Add the change for --dump-raw-trace as a second commit. I planned to do this later, but have now
+   finished it so I'll submit it at the same time.
+ * Did some more thorough testing around the different snapshot scenarios.
 
-Could you, if at all possible, please send patches from your yulong.com
-account such that we have at least a coherent chain of custody?
+Decoding snapshot files with duplicate data is improved by this patchset because of the reason
+mentioned at the end of the testing section. Coincidentally, the same issue is also fixed in
+"[PATCH v1 0/3] coresight: Fix for snapshot mode" but by not saving duplicates, rather than not
+decoding them.
+
+James Clark (2):
+  perf cs-etm: Split Coresight decode by aux records
+  perf cs-etm: Split --dump-raw-trace by AUX records
+
+ tools/perf/util/cs-etm.c | 188 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 185 insertions(+), 3 deletions(-)
+
+-- 
+2.28.0
+
