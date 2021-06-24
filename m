@@ -2,177 +2,173 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E019DC4743C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Jun 2021 14:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF00C48BDF
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Jun 2021 05:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6BC16112D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 23 Jun 2021 14:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE1C613AE
+	for <linux-perf-users@archiver.kernel.org>; Thu, 24 Jun 2021 05:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbhFWOXn (ORCPT
+        id S230299AbhFXF6s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 23 Jun 2021 10:23:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9089 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S231318AbhFWOXm (ORCPT
+        Thu, 24 Jun 2021 01:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230252AbhFXF6r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 23 Jun 2021 10:23:42 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15NE3eXe024502;
-        Wed, 23 Jun 2021 10:21:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=to : cc : from : subject
- : message-id : date : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=rRtJqAwGl7ngRa6U9YNbeiVnCpZHBx4ug6KaIdc2shU=;
- b=qj9/plU5sDt+YQCNur5+8RMpkLb8DQXkAOsBs90vMf32I9Lfxj8u/aAbBwcovdULvchD
- PsU0qphbR6B+hhrFE6HrgEt48V7CqkETnESoHPj34sMrIaMvDZQM98JJCFP4gglynSNm
- hxwidls1A948zbJryDQccqVBKBiIDq70/8cSd+ktDPm0y/bF+HtBdJzu/m3nl7EuA0m4
- QZxZbpDEi8tB8gEy+qvSNGyCE/uDwsX+4GqEJYdXogtaUvrnzPBKtj2fo/BY5FCSTMSU
- LFoY8AXXdaRC/I7G/BNxSB+uOGhY1cWh4hLDYju9dAeApZ6g888C+8ZDupHAFAsnP4EO lg== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 39c5g2ax0v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Jun 2021 10:21:23 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15NEDDnn005017;
-        Wed, 23 Jun 2021 14:21:21 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma05fra.de.ibm.com with ESMTP id 39987894k2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 23 Jun 2021 14:21:21 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15NEJtpj22806824
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 23 Jun 2021 14:19:55 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5181AA4060;
-        Wed, 23 Jun 2021 14:21:18 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20C97A405C;
-        Wed, 23 Jun 2021 14:21:18 +0000 (GMT)
-Received: from li-e35baacc-2106-11b2-a85c-8f97eb669a6e.ibm.com (unknown [9.145.74.209])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 23 Jun 2021 14:21:18 +0000 (GMT)
-To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Subject: perf test case probe libc fails with latest Fedora34 glibc update
-Organization: IBM
-Message-ID: <cae863a4-bf83-f87b-6e71-b6a544678cae@linux.ibm.com>
-Date:   Wed, 23 Jun 2021 16:21:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.0
+        Thu, 24 Jun 2021 01:58:47 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B252C061574
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jun 2021 22:56:28 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id t11-20020a1cc30b0000b02901cec841b6a0so4240291wmf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 23 Jun 2021 22:56:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qv9qpreZYcIMl3HaN2mUlk2QXXvwXhDkchZSDNlFpQk=;
+        b=rGgc8NfQ+i41/Rcwz4fakxy+SEa1YSJGBJEW/v18eTuHgv+f8u5lZDeGpwYuSlF5Xf
+         M21tgvNwLEYxB6SsyYLNCP7IzucPwNGMN2dTpN0dt81KUSR2vY43bFMu0iXgeD8ZlZXT
+         hRBRpRACenfI+Ut0wQpIFyP5jFm8CZiX3HPZU0WROcAQNaAppncQgPgZv8hpd/I14tga
+         yEKbCmhN91cUwBOZdNfo9qvswoKcjUDYVLid51FCUadyd+gxPiatAIZG34Lmj7yeJkbT
+         zc1b8j7uJVIaDigk6VFqZzgVH+sRofz40GSIeuSeOqzyJ6To4dRn6v2XJ+JzUc55iCuc
+         ghPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qv9qpreZYcIMl3HaN2mUlk2QXXvwXhDkchZSDNlFpQk=;
+        b=qN3PeNDgfs75T5HLb3IuGR7tOGdVtAioZWi7b3BN8YukFyIFEj5WL1RKkyry8X00uL
+         OYNM8q7axz1VJCgrXdG58D5YQpAFppSl3jI8q7HHs0fodiD3bN7yUuvjaOUnJNibuIdP
+         UDlYxun53BcKHhjxuZ6aYx6OvWnLB+EuzwsWx8EW1pUh3znO6baQ7zhjAltw1l+2FdDl
+         rMst7jOKXN9ERdQFhg7D9B2E4L2pMOf0yjZl+LcpDIox/tByCJv+tU/vpFEz4JGIk8LH
+         NanaaaWNIpg+NHhnyHQBTNR/yF9gKQMtnrL6YJR3x9iuSOwC69HlhL/x1Do2K/9Bs1xG
+         y8/Q==
+X-Gm-Message-State: AOAM53013G4EjG9xr5b8sEvrhrR5avmlGTs1tVsVKFFgTZ6YdztVju6H
+        WTOsVyvCDnux6wXiQRZWmmP5mApNRfFKnXRLg/ai3g==
+X-Google-Smtp-Source: ABdhPJwiIo/IYvBiU7seSCQMKKgoauubM/SbdHVF0R4G8Kts+IGTt1cLyOiBz9YAVLrvsXG4I7+3w8jBjhVoYUpHGAQ=
+X-Received: by 2002:a05:600c:4105:: with SMTP id j5mr2183608wmi.58.1624514186644;
+ Wed, 23 Jun 2021 22:56:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8QH4d75QFj8u5glHIgAQk9vzEkgEf4cv
-X-Proofpoint-ORIG-GUID: 8QH4d75QFj8u5glHIgAQk9vzEkgEf4cv
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-23_09:2021-06-23,2021-06-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 priorityscore=1501 phishscore=0
- mlxlogscore=999 clxscore=1015 impostorscore=0 spamscore=0 mlxscore=0
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106230082
+References: <20210616231829.3735671-1-joshuamart@google.com>
+In-Reply-To: <20210616231829.3735671-1-joshuamart@google.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 23 Jun 2021 22:56:15 -0700
+Message-ID: <CAP-5=fVmCQHFEHVbzYp_CbO1phhzTB84=2dg-EM1VmDf8NNxWw@mail.gmail.com>
+Subject: Re: [PATCH] perf top: Add cgroup support for perf top (-G)
+To:     Joshua Martinez <joshuamart@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I just updated Fedora34 to the latest level and discovered that perf test 78 fails:
-[root@m46lp22 perf]# ./perf test 78
-78: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-[root@m46lp22 perf]#
+On Wed, Jun 16, 2021 at 4:18 PM Joshua Martinez <joshuamart@google.com> wrote:
+>
+> Added callback option (-G) to support cgroups for perf top.
+> Added condition to make sure -cgroup and --all-cgroups aren't both enabled.
+>
+> Example:
+> $perf top -e cycles -G system.slice/docker-6b95a5eb649c0d671eba3835f0d93973d05a088f3ae8602246bde37affb1ba3e.scope -a --stdio
+>
+>    PerfTop:    3330 irqs/sec  kernel:68.2%  exact:  0.0% lost: 0/0 drop: 0/11075 [4000Hz cpu-clock],  (all, 4 CPUs)
+> ----------------------------------------------------------------------------------------------------------------------------------------------------------
+>
+>     27.32%  [unknown]         [.] 0x00007f8ab7b69352
+>     11.44%  [kernel]          [k] 0xffffffff968cd657
+>      3.12%  [kernel]          [k] 0xffffffff96160e96
+>      2.63%  [kernel]          [k] 0xffffffff96160eb0
+>      1.96%  [kernel]          [k] 0xffffffff9615fcf6
+>      1.42%  [kernel]          [k] 0xffffffff964ddfc7
+>      1.09%  [kernel]          [k] 0xffffffff96160e90
+>      0.81%  [kernel]          [k] 0xffffffff96160eb3
+>      0.67%  [kernel]          [k] 0xffffffff9615fec1
+>      0.57%  [kernel]          [k] 0xffffffff961ee1d0
+>      0.53%  [unknown]         [.] 0x00007f8ab7b6666c
+>      0.53%  [kernel]          [k] 0xffffffff96160e64
+>      0.52%  [kernel]          [k] 0xffffffff9616c303
+>      0.51%  [kernel]          [k] 0xffffffffc08e7d50
+>      ...
+>
+> Signed-off-by: Joshua Martinez <joshuamart@google.com>
 
-It boils down to this command and happens after glibc is update to level 2.33-18.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-[root@f34 ~]# perf probe -f -x /usr/lib64/libc-2.33.so -a inet_pton
-Probe point 'inet_pton' not found.
-  Error: Failed to add events.
-[root@f34 ~]# rpm -qa | fgrep glibc
-glibc-all-langpacks-2.33-18.fc34.x86_64
-glibc-common-2.33-18.fc34.x86_64
-glibc-langpack-en-2.33-18.fc34.x86_64
-glibc-2.33-18.fc34.x86_64
-glibc-doc-2.33-18.fc34.noarch
-glibc-headers-x86-2.33-18.fc34.noarch
-glibc-devel-2.33-18.fc34.x86_64
-glibc-debugsource-2.33-18.fc34.x86_64
-glibc-debuginfo-2.33-18.fc34.x86_64
-[root@f34 ~]# 
+Thanks!
+Ian
 
-The symbol inet_pton is now in the .dynsym section of glibc:
-[root@f34 ~]# readelf -sW /usr/lib64/libc-2.33.so | egrep '(dynsym|symtab|inet_pton)'
-Symbol table '.dynsym' contains 2419 entries:
-   628: 000000000011ea00   108 FUNC    WEAK   DEFAULT   15 inet_pton@@GLIBC_2.2.5
-  2251: 000000000011e9b0    76 FUNC    GLOBAL DEFAULT   15 __inet_pton_length@@GLIBC_PRIVATE
-Symbol table '.symtab' contains 104 entries:
-[root@f34 ~]#
-
-The .symtab section does not contain symbol inet_pton. It contains very few symbols
-compared to previous versions.
-
-Now perf does not find it. In the older version of the library the
-symbol inet_pton was listed in the .symtab section. Here is the output from version 2.32-4:
-
-
-[root@m35lp76 ~]# rpm -qa | fgrep glibc
-glibc-common-2.32-4.fc33.s390x
-glibc-langpack-en-2.32-4.fc33.s390x
-glibc-2.32-4.fc33.s390x
-glibc-headers-s390-2.32-4.fc33.noarch
-glibc-devel-2.32-4.fc33.s390x
-glibc-debuginfo-common-2.32-4.fc33.s390x
-glibc-debuginfo-2.32-4.fc33.s390x
-[root@m35lp76 ~]# 
-
-
-readelf -sW /usr/lib64/libc-2.32.so | egrep '(dynsym|symtab|inet_pton)'
-Symbol table '.dynsym' contains 2604 entries:
-   668: 00000000001444b0   788 FUNC    WEAK   DEFAULT   13 inet_pton@@GLIBC_2.2
-  2418: 00000000001441b0   764 FUNC    GLOBAL DEFAULT   13 __inet_pton_length@@GLIBC_PRIVATE
-Symbol table '.symtab' contains 28858 entries:
- 20655: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS inet_pton.c
- 20656: 00000000001440b0     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c
- 20657: 00000000001447c4     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end
- 20658: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.hot
- 20659: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.hot
- 20660: 000000000002b938     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.unlikely
- 20661: 000000000002b938     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.unlikely
- 20662: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.startup
- 20663: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.startup
- 20664: 000000000002b968     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.exit
- 20665: 000000000002b968     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.exit
- 20666: 00000000001440b0     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton4.start
- 20667: 00000000001441aa     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton4.end
- 20668: 00000000001440b0   250 FUNC    LOCAL  DEFAULT   13 inet_pton4
- 20669: 00000000001441aa     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton_length.start
- 20670: 00000000001444ac     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton_length.end
- 20671: 00000000001444ac     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton.start
- 20672: 00000000001447c4     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton.end
- 23591: 00000000001441b0   764 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton_length
- 23871: 00000000001444b0   788 FUNC    LOCAL  DEFAULT   13 __inet_pton
- 24506: 00000000001444b0   788 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton
- 25831: 00000000001444b0   788 FUNC    LOCAL  DEFAULT   13 __GI_inet_pton
- 26410: 00000000001441b0   764 FUNC    GLOBAL DEFAULT   13 __inet_pton_length
- 27288: 00000000001444b0   788 FUNC    WEAK   DEFAULT   13 inet_pton
-[root@m35lp76 ~]#
-
-And perf could find the symbol, extract its address and install a probe
-on that address.
-So is this a bug related to the perf tool because it can not handle .dynsym section?
-Or is it releated to glibc's rework?
-
-Thanks for your help.
--- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+> ---
+>  tools/perf/Documentation/perf-top.txt | 12 ++++++++++++
+>  tools/perf/builtin-top.c              |  8 ++++++++
+>  2 files changed, 20 insertions(+)
+>
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+> index bba5ffb05463..9898a32b8d9c 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -277,6 +277,18 @@ Default is to monitor all CPUS.
+>         Record events of type PERF_RECORD_NAMESPACES and display it with the
+>         'cgroup_id' sort key.
+>
+> +-G name::
+> +--cgroup name::
+> +monitor only in the container (cgroup) called "name". This option is available only
+> +in per-cpu mode. The cgroup filesystem must be mounted. All threads belonging to
+> +container "name" are monitored when they run on the monitored CPUs. Multiple cgroups
+> +can be provided. Each cgroup is applied to the corresponding event, i.e., first cgroup
+> +to first event, second cgroup to second event and so on. It is possible to provide
+> +an empty cgroup (monitor all the time) using, e.g., -G foo,,bar. Cgroups must have
+> +corresponding events, i.e., they always refer to events defined earlier on the command
+> +line. If the user wants to track multiple events for a specific cgroup, the user can
+> +use '-e e1 -e e2 -G foo,foo' or just use '-e e1 -e e2 -G foo'.
+> +
+>  --all-cgroups::
+>         Record events of type PERF_RECORD_CGROUP and display it with the
+>         'cgroup' sort key.
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 69cb3635f5ef..2d570bfe7a56 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -22,6 +22,7 @@
+>
+>  #include "util/annotate.h"
+>  #include "util/bpf-event.h"
+> +#include "util/cgroup.h"
+>  #include "util/config.h"
+>  #include "util/color.h"
+>  #include "util/dso.h"
+> @@ -1558,6 +1559,8 @@ int cmd_top(int argc, const char **argv)
+>         OPT_BOOLEAN(0, "force", &symbol_conf.force, "don't complain, do it"),
+>         OPT_UINTEGER(0, "num-thread-synthesize", &top.nr_threads_synthesize,
+>                         "number of thread to run event synthesize"),
+> +       OPT_CALLBACK('G', "cgroup", &top.evlist, "name",
+> +                    "monitor event in cgroup name only", parse_cgroups),
+>         OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
+>                     "Record namespaces events"),
+>         OPT_BOOLEAN(0, "all-cgroups", &opts->record_cgroup,
+> @@ -1646,6 +1649,11 @@ int cmd_top(int argc, const char **argv)
+>                 goto out_delete_evlist;
+>         }
+>
+> +       if (nr_cgroups > 0 && opts->record_cgroup) {
+> +               pr_err("--cgroup and --all-cgroups cannot be used together\n");
+> +               goto out_delete_evlist;
+> +       }
+> +
+>         if (opts->branch_stack && callchain_param.enabled)
+>                 symbol_conf.show_branchflag_count = true;
+>
+> --
+> 2.32.0.272.g935e593368-goog
+>
