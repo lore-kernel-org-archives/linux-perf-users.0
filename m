@@ -2,599 +2,86 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F038C2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 12:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F995C48BC2
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 12:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D53361623
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 12:00:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F956162B
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 12:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbhFYMC1 (ORCPT
+        id S230359AbhFYMJ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Jun 2021 08:02:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23080 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229586AbhFYMC0 (ORCPT
+        Fri, 25 Jun 2021 08:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230328AbhFYMJ3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Jun 2021 08:02:26 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15PBYK9W125458;
-        Fri, 25 Jun 2021 08:00:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=nyNpYSBdSEZ5aQq85x/2GnmZ69Crp7CAsGxbkZmLNZk=;
- b=sfhXW8pjL3wtEi43fsWp4OfmwoJgdBhyWsZpaniyb00F2Orrlnkt0ju2VXDD7rB/XC8U
- TMYqqreFhVLfpCXrS71MC+/NT6JVUKMzmglszse3gigOpXeRT0Gubj3+WUs67qPLtOce
- W6z60o7kVTdsR8g1aRvc2aguLGiurIGhAbfPD4+ujgAlH7/+NlKUKeYcXobQ/593cwlX
- S8RomlHVnvhpNg2gKh2ut1qsNpcFKinjO5LPe+6i9aGdyn0x/vq/2SGfIlAbX+vfnwpe
- 4YOVUXM/UiHC2xrGI+yYKpixouNpl5wk29kTFJx5WFHve78ZiP5dw4SHErBPaRq/Nkoz 6w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39dd7hbdv2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Jun 2021 08:00:01 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15PBZRZn130805;
-        Fri, 25 Jun 2021 08:00:01 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39dd7hbdt7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Jun 2021 08:00:00 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15PBwBTO019549;
-        Fri, 25 Jun 2021 11:59:58 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06fra.de.ibm.com with ESMTP id 3997uhhp7q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 25 Jun 2021 11:59:57 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15PBxsHx14352742
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Jun 2021 11:59:55 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDA6CAE056;
-        Fri, 25 Jun 2021 11:59:54 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E012EAE045;
-        Fri, 25 Jun 2021 11:59:51 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.34.49])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 25 Jun 2021 11:59:51 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     maddy@linux.vnet.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, pc@us.ibm.com, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, ravi.bangoria@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        rnsastry@linux.ibm.com
-Subject: [PATCH] perf vendor events power10: Adds 24x7 nest metric events for power10 platform
-Date:   Fri, 25 Jun 2021 17:29:48 +0530
-Message-Id: <20210625115948.99579-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
+        Fri, 25 Jun 2021 08:09:29 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A06C061574;
+        Fri, 25 Jun 2021 05:07:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=CTtko/L51BmcqdwFpZLsEm07UAuI6Le1yXyls1OwuUk=; b=pWSj5BQzzo+iuxVYR7z/14sJ4T
+        mj3lwCXd+TV7lxRDuKhKK9ptBZ2XBvBoPqTvNLRFy4ksKY3e7hrdpsyXmOSZ/qR0+R8quu8YM0Nl0
+        /V0bbPywlSlVaeTZt/3ujWwDy6wkfnxkRcx48ANLYQLWQu+MqKCddaT94iv8icAiXKK2KNQrt3/DZ
+        RjxnOag0WnTgzGvpk35KT22Tk5Vy3onlEmJ+WT4rxxUHYs/nAYWIK7tcjnjMGKCeSqEgP4BRnTZE8
+        kTbogoQ0Hqory5Idt1I1bdMWQbONOQOGMqEJiOFU62ZGNXVTpcm74Vf2JCQS/Oh9n7bH8IPZiRQQn
+        IsAFCT3A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1lwkbW-0003ZS-Nl; Fri, 25 Jun 2021 12:06:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4732A300233;
+        Fri, 25 Jun 2021 14:06:37 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1CBB2211C6618; Fri, 25 Jun 2021 14:06:37 +0200 (CEST)
+Date:   Fri, 25 Jun 2021 14:06:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf/x86: Add new event for AUX output counter index
+Message-ID: <YNXGzWDUb2rbUhEr@hirez.programming.kicks-ass.net>
+References: <20210609142055.32226-1-adrian.hunter@intel.com>
+ <20210609142055.32226-2-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 6TKaL054wzVUOYB3FSs6y3qwbZ7_PXqc
-X-Proofpoint-GUID: 2Hn2uV8r_gMtvTvEg8zRa6KNS1PaFzfr
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-25_04:2021-06-25,2021-06-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 spamscore=0 bulkscore=0 adultscore=0 mlxscore=0
- phishscore=0 clxscore=1011 malwarescore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2104190000 definitions=main-2106250063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210609142055.32226-2-adrian.hunter@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Patch adds 24x7 nest metric events for POWER10.
+On Wed, Jun 09, 2021 at 05:20:53PM +0300, Adrian Hunter wrote:
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index f5a6a2f069ed..18bfa05537ab 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -141,6 +141,7 @@ struct hw_perf_event {
+>  			unsigned long	event_base;
+>  			int		event_base_rdpmc;
+>  			int		idx;
+> +			int		idx_reported;
+>  			int		last_cpu;
+>  			int		flags;
+>  
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../arch/powerpc/power10/nest_metrics.json    | 491 ++++++++++++++++++
- 1 file changed, 491 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
+This is sad, it blows up the largest element in that union from 96 to
+104 bytes.
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
-new file mode 100644
-index 000000000000..b79046cd8b09
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
-@@ -0,0 +1,491 @@
-+[
-+    {
-+      "MetricName": "VEC_GROUP_PUMP_RETRY_RATIO_P01",
-+      "BriefDescription": "VEC_GROUP_PUMP_RETRY_RATIO_P01",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_VG_PUMP01\\,chip\\=?@ / hv_24x7@PM_PB_VG_PUMP01\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "VEC_GROUP_PUMP_RETRY_RATIO_P23",
-+      "BriefDescription": "VEC_GROUP_PUMP_RETRY_RATIO_P23",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_VG_PUMP23\\,chip\\=?@ / hv_24x7@PM_PB_VG_PUMP23\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "LOCAL_NODE_PUMP_RETRY_RATIO_P01",
-+      "BriefDescription": "LOCAL_NODE_PUMP_RETRY_RATIO_P01",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_LNS_PUMP01\\,chip\\=?@ / hv_24x7@PM_PB_LNS_PUMP01\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "LOCAL_NODE_PUMP_RETRY_RATIO_P23",
-+      "BriefDescription": "LOCAL_NODE_PUMP_RETRY_RATIO_P23",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_LNS_PUMP23\\,chip\\=?@ / hv_24x7@PM_PB_LNS_PUMP23\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "GROUP_PUMP_RETRY_RATIO_P01",
-+      "BriefDescription": "GROUP_PUMP_RETRY_RATIO_P01",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_GROUP_PUMP01\\,chip\\=?@ / hv_24x7@PM_PB_GROUP_PUMP01\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "GROUP_PUMP_RETRY_RATIO_P23",
-+      "BriefDescription": "GROUP_PUMP_RETRY_RATIO_P23",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_GROUP_PUMP23\\,chip\\=?@ / hv_24x7@PM_PB_GROUP_PUMP23\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_GROUP_PUMPS_P01",
-+      "BriefDescription": "TOTAL_GROUP_PUMPS_P01(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_GROUP_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_GROUP_PUMPS_P23",
-+      "BriefDescription": "TOTAL_GROUP_PUMPS_P23(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_GROUP_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_GROUP_PUMPS_RETRIES_P01",
-+      "BriefDescription": "TOTAL_GROUP_PUMPS_RETRIES_P01(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_GROUP_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_GROUP_PUMPS_RETRIES_P23",
-+      "BriefDescription": "TOTAL_GROUP_PUMPS_RETRIES_P23(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_GROUP_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "REMOTE_NODE_PUMPS_RETRIES_RATIO_P01",
-+      "BriefDescription": "REMOTE_NODE_PUMPS_RETRIES_RATIO_P01",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_RNS_PUMP01\\,chip\\=?@ / hv_24x7@PM_PB_RNS_PUMP01\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "REMOTE_NODE_PUMPS_RETRIES_RATIO_P23",
-+      "BriefDescription": "REMOTE_NODE_PUMPS_RETRIES_RATIO_P23",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_RNS_PUMP23\\,chip\\=?@ / hv_24x7@PM_PB_RNS_PUMP23\\,chip\\=?@) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_VECTOR_GROUP_PUMPS_P01",
-+      "BriefDescription": "TOTAL_VECTOR_GROUP_PUMPS_P01(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_VG_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_VECTOR_GROUP_PUMPS_P23",
-+      "BriefDescription": "TOTAL_VECTOR_GROUP_PUMPS_P23(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_VG_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_LOCAL_NODE_PUMPS_P01",
-+      "BriefDescription": "TOTAL_LOCAL_NODE_PUMPS_P01(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_LNS_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_LOCAL_NODE_PUMPS_P23",
-+      "BriefDescription": "TOTAL_LOCAL_NODE_PUMPS_P23(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_LNS_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_VECTOR_GROUP_PUMPS_RETRIES_P01",
-+      "BriefDescription": "TOTAL_VECTOR_GROUP_PUMPS_RETRIES_P01(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_VG_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_VECTOR_GROUP_PUMPS_RETRIES_P23",
-+      "BriefDescription": "TOTAL_VECTOR_GROUP_PUMPS_RETRIES_P23(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_VG_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01",
-+      "BriefDescription": "TOTAL_LOCAL_NODE_PUMPS_RETRIES_P01(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_LNS_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_LOCAL_NODE_PUMPS_RETRIES_P23",
-+      "BriefDescription": "TOTAL_LOCAL_NODE_PUMPS_RETRIES_P23(PER-CYC)",
-+      "MetricExpr": "(hv_24x7@PM_PB_RTY_LNS_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_REMOTE_NODE_PUMPS_P01",
-+      "BriefDescription": "TOTAL_REMOTE_NODE_PUMPS_P01",
-+      "MetricExpr": "(hv_24x7@PM_PB_RNS_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_REMOTE_NODE_PUMPS_P23",
-+      "BriefDescription": "TOTAL_REMOTE_NODE_PUMPS_P23",
-+      "MetricExpr": "(hv_24x7@PM_PB_RNS_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_NEAR_NODE_PUMPS_P01",
-+      "BriefDescription": "TOTAL_NEAR_NODE_PUMPS_P01",
-+      "MetricExpr": "(hv_24x7@PM_PB_NNS_PUMP01\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_NEAR_NODE_PUMPS_P23",
-+      "BriefDescription": "TOTAL_NEAR_NODE_PUMPS_P23",
-+      "MetricExpr": "(hv_24x7@PM_PB_NNS_PUMP23\\,chip\\=?@ / hv_24x7@PM_PAU_CYC\\,chip\\=?@)",
-+      "ScaleUnit": "4",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_INT_PB_BW",
-+      "BriefDescription": "TOTAL_INT_PB_BW",
-+      "MetricExpr": "(hv_24x7@PM_PB_INT_DATA_XFER\\,chip\\=?@)",
-+      "ScaleUnit": "2.09MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK0_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK0_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK0_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK0_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK0_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK0_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK1_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK1_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK1_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK1_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK1_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK1_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK2_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK2_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK2_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK2_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK2_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK2_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK3_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK3_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK3_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK3_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK3_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK3_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK4_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK4_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK4_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK4_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK4_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK4_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK5_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK5_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK5_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK5_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK5_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK5_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK6_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK6_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK6_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK6_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK6_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK6_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK7_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "XLINK7_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK7_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_XLINK7_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_XLINK7_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK7_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK0_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK0_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK0_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK0_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK0_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK0_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK1_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK1_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK1_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK1_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK1_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK1_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK2_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK2_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK2_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK2_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK2_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK2_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK3_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK3_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK3_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK3_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK3_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK3_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK4_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK4_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK4_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK4_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK4_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK4_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK5_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK5_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK5_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK5_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK5_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK5_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK6_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK6_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK6_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK6_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK6_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK6_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "XLINK7_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "XLINK7_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_XLINK7_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_XLINK7_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_XLINK7_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_XLINK7_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK0_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK0_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK0_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK0_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK0_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK0_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK1_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK1_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK1_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK1_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK1_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK1_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK2_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK2_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK2_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK2_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK2_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK2_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK3_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK3_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK3_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK3_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK3_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK3_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK4_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK4_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK4_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK4_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK4_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK4_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK5_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK5_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK5_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK5_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK5_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK5_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK6_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK6_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK6_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK6_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK6_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK6_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK7_OUT_TOTAL_UTILIZATION",
-+      "BriefDescription": "ALINK7_OUT_TOTAL_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK7_OUT_ODD_TOTAL_UTIL\\,chip\\=?@ + hv_24x7@PM_ALINK7_OUT_EVEN_TOTAL_UTIL\\,chip\\=?@) / (hv_24x7@PM_ALINK7_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK7_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK0_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK0_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK0_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK0_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK0_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK0_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK1_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK1_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK1_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK1_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK1_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK1_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK2_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK2_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK2_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK2_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK2_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK2_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK3_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK3_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK3_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK3_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK3_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK3_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK4_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK4_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK4_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK4_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK4_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK4_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK5_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK5_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK5_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK5_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK5_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK5_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK6_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK6_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK6_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK6_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK6_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK6_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "ALINK7_OUT_DATA_UTILIZATION",
-+      "BriefDescription": "ALINK7_OUT_DATA_UTILIZATION",
-+      "MetricExpr": "((hv_24x7@PM_ALINK7_OUT_ODD_DATA\\,chip\\=?@ + hv_24x7@PM_ALINK7_OUT_EVEN_DATA\\,chip\\=?@) / (hv_24x7@PM_ALINK7_OUT_ODD_AVLBL_CYCLES\\,chip\\=?@ + hv_24x7@PM_ALINK7_OUT_EVEN_AVLBL_CYCLES\\,chip\\=?@)) * 100",
-+      "ScaleUnit": "1.063%",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_DATA_BANDWIDTH_TRANSFERRED_OVER_PB_PCI1",
-+      "BriefDescription": "TOTAL_DATA_BANDWIDTH_TRANSFERRED_OVER_PB_PCI1",
-+      "MetricExpr": "(hv_24x7@PM_PCI1_32B_INOUT\\,chip\\=?@)",
-+      "ScaleUnit": "3.28e-2MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_DATA_BANDWIDTH_TRANSFERRED_OVER_PB_PCI0",
-+      "BriefDescription": "TOTAL_DATA_BANDWIDTH_TRANSFERRED_OVER_PB_PCI0",
-+      "MetricExpr": "(hv_24x7@PM_PCI0_32B_INOUT\\,chip\\=?@)",
-+      "ScaleUnit": "3.28e-2MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_READ_BW_MC0_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_READ_BW_MC0_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC0_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "5.24e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_READ_BW_MC1_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_READ_BW_MC1_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC1_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "5.24e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_READ_BW_MC2_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_READ_BW_MC2_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC2_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "5.24e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_READ_BW_MC3_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_READ_BW_MC3_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC3_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "5.24e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_WRITE_BW_MC0_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_WRITE_BW_MC0_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC0_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "2.6e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_WRITE_BW_MC1_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_WRITE_BW_MC1_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC1_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "2.6e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_WRITE_BW_MC2_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_WRITE_BW_MC2_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC2_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "2.6e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricName": "TOTAL_MCS_WRITE_BW_MC3_CHAN01",
-+      "BriefDescription": "TOTAL_MCS_WRITE_BW_MC3_CHAN01",
-+      "MetricExpr": "(hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC3_CHAN01\\,chip\\=?@)",
-+      "ScaleUnit": "2.6e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricExpr": "(hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC0_CHAN01\\,chip\\=?@ + hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC1_CHAN01\\,chip\\=?@ + hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC2_CHAN01\\,chip\\=?@ + hv_24x7@PM_MCS_128B_RD_DATA_BLOCKS_MC3_CHAN01\\,chip\\=?@)",
-+      "MetricName": "Memory_RD_BW_Chip",
-+      "MetricGroup": "Memory_BW",
-+      "ScaleUnit": "5.24e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricExpr": "(hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC0_CHAN01\\,chip\\=?@ + hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC1_CHAN01\\,chip\\=?@ + hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC2_CHAN01\\,chip\\=?@ + hv_24x7@PM_MCS_64B_WR_DATA_BLOCKS_MC3_CHAN01\\,chip\\=?@ )",
-+      "MetricName": "Memory_WR_BW_Chip",
-+      "MetricGroup": "Memory_BW",
-+      "ScaleUnit": "2.6e-1MB",
-+      "AggregationMode": "PerChip"
-+    },
-+    {
-+      "MetricExpr": "(hv_24x7@PM_PAU_CYC\\,chip\\=?@ )",
-+      "MetricName": "PowerBUS_Frequency",
-+      "ScaleUnit": "2.56e-7GHz",
-+      "AggregationMode": "PerChip"
-+    }
-+]
--- 
-2.27.0
-
+Is there really no better place for this?
