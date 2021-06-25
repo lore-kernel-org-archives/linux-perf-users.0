@@ -2,137 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E30C2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 13:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D831C49EA7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 13:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD26C61978
-	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 13:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E767A61962
+	for <linux-perf-users@archiver.kernel.org>; Fri, 25 Jun 2021 13:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231580AbhFYNZV (ORCPT
+        id S231375AbhFYN1k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Jun 2021 09:25:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:29960 "EHLO mga17.intel.com"
+        Fri, 25 Jun 2021 09:27:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:55846 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229934AbhFYNZV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Jun 2021 09:25:21 -0400
-IronPort-SDR: SBPUssSgBn7AqLpF1n4ZnreRNg338ib0q3MebuV6Sz70Y5lEQjA/aq1z5CJW/TvswJdoJ4Ekt+
- egmyJI72Y5vw==
-X-IronPort-AV: E=McAfee;i="6200,9189,10025"; a="188049032"
-X-IronPort-AV: E=Sophos;i="5.83,298,1616482800"; 
-   d="scan'208";a="188049032"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2021 06:23:00 -0700
-IronPort-SDR: WcCEDs7T5MDLqldArOI8vBIn6j77DXTeYXuCm4HX2xuaQ27L7EzTT03605wks50jEJjKlAVRLD
- McRQOeYohFxQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,298,1616482800"; 
-   d="scan'208";a="455443468"
-Received: from power-sh.sh.intel.com ([10.239.48.130])
-  by fmsmga008.fm.intel.com with ESMTP; 25 Jun 2021 06:22:57 -0700
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org
-Cc:     mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com, artem.bityutskiy@linux.intel.com,
-        ak@linux.intel.com, yao.jin@intel.com, rui.zhang@intel.com
-Subject: [PATCH RESEND] perf/x86/cstate: Add ICELAKE_X and ICELAKE_D support
-Date:   Fri, 25 Jun 2021 21:32:47 +0800
-Message-Id: <20210625133247.2813-1-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S229934AbhFYN1k (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 25 Jun 2021 09:27:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A5B031B;
+        Fri, 25 Jun 2021 06:25:19 -0700 (PDT)
+Received: from [10.57.8.165] (unknown [10.57.8.165])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 391E73F694;
+        Fri, 25 Jun 2021 06:25:17 -0700 (PDT)
+Subject: Re: [PATCH v5 5/5] perf arm-spe: Don't wait for PERF_RECORD_EXIT
+ event
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>, Al Grant <Al.Grant@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210519071939.1598923-1-leo.yan@linaro.org>
+ <20210519071939.1598923-6-leo.yan@linaro.org>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <369fd454-d94d-daa1-ead4-b42645ec4282@arm.com>
+Date:   Fri, 25 Jun 2021 14:25:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
+MIME-Version: 1.0
+In-Reply-To: <20210519071939.1598923-6-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Introduce icx_cstates for ICELAKE_X and ICELAKE_D, and also update the
-comments.
 
-On ICELAKE_X and ICELAKE_D, Core C1, Core C6, Package C2 and Package C6
-Residency MSRs are supported.
 
-This patch has been tested on real hardware.
+On 19/05/2021 08:19, Leo Yan wrote:
+> When decode Arm SPE trace, it waits for PERF_RECORD_EXIT event (the last
+> perf event) for processing trace data, which is needless and even might
+> cause logic error, e.g. it might fail to correlate perf events with Arm
+> SPE events correctly.
+> 
+> So this patch removes the condition checking for PERF_RECORD_EXIT event.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/util/arm-spe.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 5c5b438584c4..58b7069c5a5f 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -717,11 +717,7 @@ static int arm_spe_process_event(struct perf_session *session,
+>  					sample->time);
+>  		}
+>  	} else if (timestamp) {
+> -		if (event->header.type == PERF_RECORD_EXIT) {
+> -			err = arm_spe_process_queues(spe, timestamp);
+> -			if (err)
+> -				return err;
+> -		}
+> +		err = arm_spe_process_queues(spe, timestamp);
+>  	}
+>  
+>  	return err;
+> 
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Acked-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/cstate.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+For the whole set:
+Reviewed-by: James Clark <james.clark@arm.com>
+Tested-by: James Clark <james.clark@arm.com>
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 433399069e27..c6262b154c3a 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -40,7 +40,7 @@
-  * Model specific counters:
-  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
-  *			 perf code: 0x00
-- *			 Available model: SLM,AMT,GLM,CNL,TNT,ADL
-+ *			 Available model: SLM,AMT,GLM,CNL,ICX,TNT,ADL
-  *			 Scope: Core (each processor core has a MSR)
-  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
-  *			       perf code: 0x01
-@@ -50,8 +50,8 @@
-  *	MSR_CORE_C6_RESIDENCY: CORE C6 Residency Counter
-  *			       perf code: 0x02
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-- *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL,
-- *						TNT,RKL,ADL
-+ *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-+ *						TGL,TNT,RKL,ADL
-  *			       Scope: Core
-  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
-  *			       perf code: 0x03
-@@ -61,7 +61,7 @@
-  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-- *						KBL,CML,ICL,TGL,TNT,RKL,ADL
-+ *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-@@ -72,8 +72,8 @@
-  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
-  *			       perf code: 0x02
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-- *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL,
-- *						TNT,RKL,ADL
-+ *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-+ *						TGL,TNT,RKL,ADL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
-  *			       perf code: 0x03
-@@ -566,6 +566,14 @@ static const struct cstate_model icl_cstates __initconst = {
- 				  BIT(PERF_CSTATE_PKG_C10_RES),
- };
- 
-+static const struct cstate_model icx_cstates __initconst = {
-+	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
-+				  BIT(PERF_CSTATE_CORE_C6_RES),
-+
-+	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
-+				  BIT(PERF_CSTATE_PKG_C6_RES),
-+};
-+
- static const struct cstate_model adl_cstates __initconst = {
- 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
- 				  BIT(PERF_CSTATE_CORE_C6_RES) |
-@@ -664,6 +672,9 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_cstates),
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&icl_cstates),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&icx_cstates),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&icx_cstates),
-+
- 	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&icl_cstates),
- 	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&icl_cstates),
- 	X86_MATCH_INTEL_FAM6_MODEL(ROCKETLAKE,		&icl_cstates),
--- 
-2.17.1
+I see a big improvement in decoding involving multiple processes because the timestamps are now
+correlated with the comm and mmap events.
+
+For example perf-exec samples are visible right before the exec is done, and on an
+application that forks, samples are visible from all processes. For example:
+
+   perf record -e arm_spe// -- bash -c "stress -c 1"
+   perf script
+
+   perf-exec  4502 [003] 259755.050409:          1    l1d-access:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
+   perf-exec  4502 [003] 259755.050409:          1    tlb-access:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
+   perf-exec  4502 [003] 259755.050409:          1        memory:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
+   perf-exec  4502 [003] 259755.050411:          1    tlb-access:  ffff800010120fb8 __rcu_read_lock+0x0 ([kernel.kallsyms])
+   bash  4502 [003] 259755.050411:          1   branch-miss:  ffff8000105b2a40 memcpy+0x80 ([kernel.kallsyms])
+   bash  4502 [003] 259755.050411:          1    tlb-access:                 0 [unknown] ([unknown])
+   ...
+   stress  4502 [003] 259755.051468:          1    l1d-access:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
+   stress  4502 [003] 259755.051468:          1    tlb-access:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
+   stress  4502 [003] 259755.051468:          1        memory:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
+
+Previously samples were only attributed to 'stress', which was obviously wrong.
+
+James
 
