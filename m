@@ -2,147 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-21.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63358C48BC2
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Jun 2021 17:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4082DC48BC2
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Jun 2021 17:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 370D96008E
-	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Jun 2021 17:19:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182796197D
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Jun 2021 17:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbhF0RVY (ORCPT
+        id S231335AbhF0Rb7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Jun 2021 13:21:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46596 "EHLO
+        Sun, 27 Jun 2021 13:31:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:48530 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230321AbhF0RVY (ORCPT
+        by vger.kernel.org with ESMTP id S230523AbhF0Rb6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Jun 2021 13:21:24 -0400
+        Sun, 27 Jun 2021 13:31:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1624814339;
+        s=mimecast20190719; t=1624814974;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=nO1HYtUGepaP54RHNLOYpWbEr/WXtbWrhjQVbsu7bwY=;
-        b=Cf16ikJgVDDoFemthT9xvdmut9DwCRjpV7Ri3nti7h5aR2c4EXLaGw8KKrlbkCm1Vs2Akw
-        8xRIQutJKC9V1TJ9rCfcnN4KW1X36UyB2ed9SYP5OS6NltlxBlIPK4jspC1/q0VIETlcyz
-        /XYKydOQq0+Av66RvH3Vva8gJshAUT0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-239-owbuNkRaPHu16AehJbcEpA-1; Sun, 27 Jun 2021 13:18:57 -0400
-X-MC-Unique: owbuNkRaPHu16AehJbcEpA-1
-Received: by mail-ed1-f69.google.com with SMTP id t11-20020a056402524bb029038ffacf1cafso8082907edd.5
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 10:18:57 -0700 (PDT)
+        bh=6yKxLMKBG+NPE2J5wfdFrFJq5rwPKVdeNp6vqQqN9Cs=;
+        b=Zw2WLrekXgmUD9znrS9KVVRWIPZ8yVLystBLkL1reHx4k0dK6djEvF50xe4de8+STgpA1x
+        1tniLLpPftNVWUqLb5HOWbtiWdsV8Q2ruXwmS99JJ64RPAc7eu8l29BjhOUIJogb9Dlba1
+        JYNkVtTtvLD53ADDgc4f7Db67FDZbg8=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-146-gOpSM784OFup0gp4spe64g-1; Sun, 27 Jun 2021 13:29:31 -0400
+X-MC-Unique: gOpSM784OFup0gp4spe64g-1
+Received: by mail-ed1-f71.google.com with SMTP id y18-20020a0564022712b029038ffac1995eso8162960edd.12
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 10:29:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nO1HYtUGepaP54RHNLOYpWbEr/WXtbWrhjQVbsu7bwY=;
-        b=qGNGCuWnYFnTu6efLp2b37xha4bNE3SwAUqmCnOAI5WBiuUpRr8NQ2dX1uDbkWV9wM
-         oG6VqUEqEKkVxVx8X3ldT14o+O/gEYkU4j68aPbnVfkG7KDb18fp19rrj4rnyydstrDf
-         NQwgo1ul912nJovUhEYyJu7aiX/laS9Zinv/450wqO59l4Jjy+07w6mhohwmdBrJMpMP
-         22jUfJW91/bH4WAa7oAG8vtI9sOHMCK/aTEDFSI+w+I17N3rMhtkHIO1Bw4tv9ZMhyxy
-         xKTwZjnXIK1l3bLEbwQJ7PeVz3wHHHwU1V+4lYvzFwjWrhnT0tMKsN7s3HPGT2xhzKxr
-         36fA==
-X-Gm-Message-State: AOAM533CBmxggSmNcFyQtUG8zrDUlUjkRvoBPpO3m4bssVsANO4RQX/1
-        5pEA9fbeNRV5Zr5FrbHCCQM5uIYceNvpZxsPSEQpwYwDoKLe4Yn1BXZkas4Viz7hHVixqassmGX
-        W08Yy2BIB9mdEewxr29413Y0K4nIH1A==
-X-Received: by 2002:a05:6402:849:: with SMTP id b9mr19940325edz.270.1624814334977;
-        Sun, 27 Jun 2021 10:18:54 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy5xbSlYE2H+MlqNjRgjX+573f7yhaT6i5TZnhF0wBUpzGsjvyIkx9wF5Wa016IbJXJMu/P1A==
-X-Received: by 2002:a05:6402:849:: with SMTP id b9mr19940309edz.270.1624814334803;
-        Sun, 27 Jun 2021 10:18:54 -0700 (PDT)
+        bh=6yKxLMKBG+NPE2J5wfdFrFJq5rwPKVdeNp6vqQqN9Cs=;
+        b=rpvygAYiCpUm+LuLd727Zid1uVDLOtDUZrgDi6zUTDZ8WJzW1C0d/QFQGw27+ZsE0E
+         TPW8//0sAKajZqFwiF1YY6xMFz3KREWimf4B7iSqavAmEW7qrJSb2yp9x6GJH05yKrK2
+         kMam5DH5RE2T0yt4qTRGiH9JXTQofO3RAdRolQjNbgvwbrCz5IupZnfYi3kjXMwkTtDp
+         wr+I3fwuc993LnnXxyngwhDq2Pf/J34uSBoh/nfemR+pRqEIQOFwPSWUQ1RR2b7dhDDL
+         K6BjFvdGlji06DXLb2f0UtdZ0PZ41XyqE2oZ4XzudhcN5aqV/jeh1SSEnuxAPD0f1HgA
+         JXhw==
+X-Gm-Message-State: AOAM531Y6NVhsOCAagiroC9RtiPLV0kL16je05ik5uX8XSMRfIJ+Vul3
+        Hj+262rjWEbADUW6sbRYkgACUfd+9vlcTyccgZ/Xt+LUwUrdm+2CecBtZ0ZwD7aVuRE15cM3T9O
+        veN+0JXeP+p95jtdba5vy7ljEVXkQ5w==
+X-Received: by 2002:a17:907:9841:: with SMTP id jj1mr20621587ejc.94.1624814970498;
+        Sun, 27 Jun 2021 10:29:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyz2HuIcVtEVr7kTNorvqVIrr9WUeJp2+b3JayF/IOvAaPPz+/ZgGJ674+nrRgjVPwAldx6nQ==
+X-Received: by 2002:a17:907:9841:: with SMTP id jj1mr20621568ejc.94.1624814970373;
+        Sun, 27 Jun 2021 10:29:30 -0700 (PDT)
 Received: from krava ([5.171.209.125])
-        by smtp.gmail.com with ESMTPSA id d25sm8400554edu.83.2021.06.27.10.18.53
+        by smtp.gmail.com with ESMTPSA id f5sm5703703ejj.45.2021.06.27.10.29.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Jun 2021 10:18:54 -0700 (PDT)
-Date:   Sun, 27 Jun 2021 19:18:51 +0200
+        Sun, 27 Jun 2021 10:29:29 -0700 (PDT)
+Date:   Sun, 27 Jun 2021 19:29:26 +0200
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Eirik Fuller <efuller@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
-        mpetlan@redhat.com
-Subject: Re: [PATCH] perf test: Handle fd gaps in test__dso_data_reopen
-Message-ID: <YNiy+4fXtB/YAHBU@krava>
-References: <20210626023825.1398547-1-efuller@redhat.com>
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf session: add missing evlist__delete when
+ deleting a session
+Message-ID: <YNi1dspuN/cdNAKr@krava>
+References: <20210624231926.212208-1-rickyman7@gmail.com>
+ <CAP-5=fVbGZbV3qp27DPD_7r0z-v9hr2m34H294angaEsssKB0Q@mail.gmail.com>
+ <YNXD2xN2wrZgdbwO@krava>
+ <4725ef2249540b6876daea3714a38a6be59223e6.camel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210626023825.1398547-1-efuller@redhat.com>
+In-Reply-To: <4725ef2249540b6876daea3714a38a6be59223e6.camel@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 10:38:25PM -0400, Eirik Fuller wrote:
-> https://github.com/beaker-project/restraint/issues/215 describes a file
-> descriptor leak which revealed the test failure described here.
+On Fri, Jun 25, 2021 at 05:45:59PM +0200, Riccardo Mancini wrote:
+> Hi,
 > 
-> The 'DSO data reopen' perf test assumes that RLIMIT_NOFILE limits the
-> number of open file descriptors, but it actually limits newly opened
-> file descriptors. When the file descriptor limit is reduced, file
-> descriptors already open remain open regardless of the new limit. This
-> test failure does not occur if open file descriptors are contiguous,
-> beginning at zero.
+> thank you both for your comments.
 > 
-> The following command triggers this perf test failure.
+> On Fri, 2021-06-25 at 13:54 +0200, Jiri Olsa wrote:
+> > On Thu, Jun 24, 2021 at 10:39:34PM -0700, Ian Rogers wrote:
+> > > On Thu, Jun 24, 2021 at 4:20 PM Riccardo Mancini <rickyman7@gmail.com>
+> > > wrote:
+> > > > 
+> > > > ASan reports a memory leak caused by evlist not being deleted on exit in
+> > > > perf-report, perf-script and perf-data.
+> > > > The problem is caused by evlist->session not being deleted, which is
+> > > > allocated in perf_session__read_header, called in perf_session__new if
+> > > > perf_data is in read mode.
+> > > > In case of write mode, the session->evlist is filled by the caller.
+> > > > This patch solves the problem by calling evlist__delete in
+> > > > perf_session__delete if perf_data is in read mode.
+> > 
+> > ugh, I'm surprised we did not free that.. and can't find
+> > in git log we ever did ;-) I briefly check commands using
+> > sessions and looks like it's correct
+> > 
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > 
+> > > 
+> > > Acked-by: Ian Rogers <irogers@google.com>
+> > > 
+> > > It is messy that in read mode the session owns the evlist, but
+> > > otherwise not. Imo, it'd be nice to make the ownership unconditional.
+> > 
+> > yep, would be nice
 > 
-> perf test 'DSO data reopen' 3>/dev/null 8>/dev/null
-> 
-> This patch determines the file descriptor limit by opening four files
-> and then closing them. The limit is set to the fourth file descriptor,
-> leaving only the first three available because any newly opened file
-> descriptor must be less than the limit.
-> 
-> Signed-off-by: Eirik Fuller <efuller@redhat.com>
-> ---
->  tools/perf/tests/dso-data.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-> index 627c1aaf1c9e..43e1b01e5afc 100644
-> --- a/tools/perf/tests/dso-data.c
-> +++ b/tools/perf/tests/dso-data.c
-> @@ -308,10 +308,20 @@ int test__dso_data_cache(struct test *test __maybe_unused, int subtest __maybe_u
->  	return 0;
->  }
->  
-> +static long new_limit(int count)
-> +{
-> +	int fd = open("/dev/null", O_RDONLY);
-> +	long ret = fd;
-> +	if (count > 0)
-> +		ret = new_limit(--count);
-> +	close(fd);
-> +	return ret;
-> +}
+> I think the root problem is that perf_session__new has different behaviours
+> depending on perf_data and perf_tool and that it probably does too many things
+> for a __new function.
+> If we split it into multiple functions and then, say, we create two helpers
+> perf_session__init_read and perf_session__init_write, with the corresponding
+> perf_session__fini_read and perf_session__fini_write, then the conditional
+> ownership won't be a big problem due to having these two cases clearly
+> separated.
+> What do you think?
 
-nice idea.. thanks
+yes, interesting idea, let's see how the code looks like ;-)
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
+thanks,
 jirka
-
-> +
->  int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_unused)
->  {
->  	struct machine machine;
-> -	long nr_end, nr = open_files_cnt();
-> +	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
->  	int fd, fd_extra;
->  
->  #define dso_0 (dsos[0])
-> @@ -334,7 +344,7 @@ int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_
->  
->  	/* Make sure we are able to open 3 fds anyway */
->  	TEST_ASSERT_VAL("failed to set file limit",
-> -			!set_fd_limit((nr + 3)));
-> +			!set_fd_limit((lim)));
->  
->  	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
->  
-> -- 
-> 2.27.0
-> 
 
