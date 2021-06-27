@@ -2,281 +2,178 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7161EC2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Jun 2021 03:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083C7C48BC2
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Jun 2021 11:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C47F61954
-	for <linux-perf-users@archiver.kernel.org>; Sat, 26 Jun 2021 03:20:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F6261248
+	for <linux-perf-users@archiver.kernel.org>; Sun, 27 Jun 2021 11:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229873AbhFZDWr (ORCPT
+        id S229927AbhF0Lwp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 25 Jun 2021 23:22:47 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:11099 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbhFZDWr (ORCPT
+        Sun, 27 Jun 2021 07:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229820AbhF0Lwp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 25 Jun 2021 23:22:47 -0400
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GBfDq4qCKzZjrY;
-        Sat, 26 Jun 2021 11:17:15 +0800 (CST)
-Received: from dggpemm000003.china.huawei.com (7.185.36.128) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sat, 26 Jun 2021 11:20:18 +0800
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- dggpemm000003.china.huawei.com (7.185.36.128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Sat, 26 Jun 2021 11:20:18 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <john.garry@huawei.com>, <will@kernel.org>,
-        <mathieu.poirier@linaro.org>, <leo.yan@linaro.org>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <james.clark@arm.com>,
-        <andre.przywara@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH] perf arm-spe: Fix incorrect sample timestamp in perf script
-Date:   Sat, 26 Jun 2021 11:21:15 +0800
-Message-ID: <20210626032115.16742-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+        Sun, 27 Jun 2021 07:52:45 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E19C061574
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 04:50:21 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id b3so7269998plg.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 04:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oi1ZJHf6HzEztg5bMRc8K5f9pFEUjpZ9qI75GxG+Cd4=;
+        b=phlbRMlPWuyyZjgGN/uXM4A5fiK8rmg/7kqB/YHbhFhlnqikFUeGJ/iCvcbtECYaAk
+         S95CV4RtpdMG1pbKIeLAtthPLDD77UnZYcFchRXlz28a3hYfZIbGXuaDWMJ47tBQA5o5
+         rF5g5xGID+yjEUimfcrGyCEiykTukUfsYdaHdMydl3CvexuczzkEpr8eiup00JLa7gB2
+         2XAySQWSycec4hS17FgvZqxp0mfiRVe2Ptx17Om4zThmvlw4lNChxFV2cNvxeFuU4Kb3
+         mIxB1gP9e/IzAkX1HqdOGMuqU+xiInd8U+STED0ucJ7lF5n8gIO6bsV0XEV0qNs+Xj+s
+         B2Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oi1ZJHf6HzEztg5bMRc8K5f9pFEUjpZ9qI75GxG+Cd4=;
+        b=Q++qWbBrRLTkTzTN7Ee5aNN00db0/wxODxHMB7E/XSiOQiBnNyvytWJRSI7zlCEcfp
+         97cnYkAU6TY/p+Ma25X4GQU1RrbGHRD4U+LnyJSFbN4IH8wCmgLYspHJ6+XvDpYtszkc
+         F7/DeDzurK/01BZAPHrbigaHpoM0N9JwMiPSwMUxSyL97UbuuekN8gG+wHkKJvVBXCua
+         KYKo/Toi/3i9WuzDKPTTAA5HrtjcBBSKbp+KLKzijcGy/qjRo5N8/Kv3aV71mm/jYclb
+         435kOjYG8hgzHEpKNkbAAyRNc/JODKImhafwoJ8kjILS6AUyjIEfXHVbk4BPHSyTgiiS
+         z9Bg==
+X-Gm-Message-State: AOAM5311Z3TALsZFBzqyBwas5Wzx5IzkAAn3cbWCPWigXP1iwBqV/2ns
+        L2W7ebHKAK0NseXtn4s/IqpI0Q==
+X-Google-Smtp-Source: ABdhPJw6nZ6dHQdYSmOhqb4KAmSQNXOYZv8xcBmy1K69dmF3mzMEVw8z20o26pUj9Hzvp/mWHm5Hww==
+X-Received: by 2002:a17:902:ea10:b029:128:c36f:2dd5 with SMTP id s16-20020a170902ea10b0290128c36f2dd5mr4810874plg.4.1624794620788;
+        Sun, 27 Jun 2021 04:50:20 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([202.155.204.36])
+        by smtp.gmail.com with ESMTPSA id s13sm11311109pgi.36.2021.06.27.04.50.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Jun 2021 04:50:19 -0700 (PDT)
+Date:   Sun, 27 Jun 2021 19:50:13 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     acme@kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/2] perf cs-etm: Split Coresight decode by aux records
+Message-ID: <20210627115013.GA13045@leoy-ThinkPad-X240s>
+References: <20210624164303.28632-1-james.clark@arm.com>
+ <20210624164303.28632-2-james.clark@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm000003.china.huawei.com (7.185.36.128)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210624164303.28632-2-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When use perf script to parse ARM SPE data, sample timestamp does not match
-the timestamp stored in the AUX buffer, arm_spe_prep_sample function set
-"samlpe->time = speq->timestamp", "speq->timestamp" is the timestamp of first
-packet in auxtrace buffer. As a result, the time of all samples in a auxtrace
-buffer uses the same timestamp.
+On Thu, Jun 24, 2021 at 05:43:02PM +0100, James Clark wrote:
+> Populate the auxtrace queues using AUX records rather than whole
+> auxtrace buffers so that the decoder is reset between each aux record.
 
-Before:
+[...]
 
-  # perf record -e arm_spe_0/ts_enable=1,branch_filter=1/ ls
-  perf.data
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.029 MB perf.data ]
-  [ perf record: Captured and wrote 1.429 MB perf.data ]
-  # perf script -D
-  [...]
-  0 0 0x31b0 [0x30]: PERF_RECORD_AUXTRACE size: 0x44f0  offset: 0  ref: 0x3a50d  idx: 5  tid: 107690  cpu: 5
-  .
-  [...]
-  .  00000108:  b0 00 82 f3 29 ee b7 ff c0                      PC 0xffb7ee29f38200 el2 ns=1
-  .  00000111:  99 02 00                                        LAT 2 ISSUE
-  .  00000114:  98 03 00                                        LAT 3 TOT
-  .  00000117:  52 82 00                                        EV RETIRED MISPRED
-  .  0000011a:  4a 01                                           B COND
-  .  0000011c:  b1 24 82 f3 29 ee b7 ff c0                      TGT 0xffb7ee29f38224 el2 ns=1
-  .  00000125:  00 00 00 00 00 00                               PAD
-  .  0000012b:  71 32 a0 d6 78 3f 07 00 00                      TS 7969191665714
-  [...]
-  .  0000018c:  b0 0c e1 20 2a ee b7 ff c0                      PC 0xffb7ee2a20e10c el2 ns=1
-  .  00000195:  99 02 00                                        LAT 2 ISSUE
-  .  00000198:  98 03 00                                        LAT 3 TOT
-  .  0000019b:  52 c2 00                                        EV RETIRED NOT-TAKEN MISPRED
-  .  0000019e:  4a 01                                           B COND
-  .  000001a0:  b1 10 e1 20 2a ee b7 ff c0                      TGT 0xffb7ee2a20e110 el2 ns=1
-  .  000001a9:  00 00 00 00 00 00                               PAD
-  .  000001af:  71 bc a4 d6 78 3f 07 00 00                      TS 7969191666876
-  [...]
-  .  00000ef4:  b0 44 3a fe 29 ee b7 ff c0                      PC 0xffb7ee29fe3a44 el2 ns=1
-  .  00000efd:  99 07 00                                        LAT 7 ISSUE
-  .  00000f00:  98 08 00                                        LAT 8 TOT
-  .  00000f03:  52 82 00                                        EV RETIRED MISPRED
-  .  00000f06:  4a 01                                           B COND
-  .  00000f08:  b1 20 3a fe 29 ee b7 ff c0                      TGT 0xffb7ee29fe3a20 el2 ns=1
-  .  00000f11:  00 00 00 00 00 00                               PAD
-  .  00000f17:  71 1e 06 d7 78 3f 07 00 00                      TS 7969191691806
-  [...]
-  .  00000f20:  b0 fc 87 fc 29 ee b7 ff c0                      PC 0xffb7ee29fc87fc el2 ns=1
-  .  00000f29:  99 06 00                                        LAT 6 ISSUE
-  .  00000f2c:  98 07 00                                        LAT 7 TOT
-  .  00000f2f:  52 82 00                                        EV RETIRED MISPRED
-  .  00000f32:  4a 01                                           B COND
-  .  00000f34:  b1 08 88 fc 29 ee b7 ff c0                      TGT 0xffb7ee29fc8808 el2 ns=1
-  .  00000f3d:  00 00 00 00 00 00                               PAD
-  .  00000f43:  71 e1 07 d7 78 3f 07 00 00                      TS 7969191692257
-  [...]
-  .  00000ffc:  b0 18 24 fd 29 ee b7 ff c0                      PC 0xffb7ee29fd2418 el2 ns=1
-  .  00001005:  99 02 00                                        LAT 2 ISSUE
-  .  00001008:  98 03 00                                        LAT 3 TOT
-  .  0000100b:  52 c2 00                                        EV RETIRED NOT-TAKEN MISPRED
-  .  0000100e:  4a 01                                           B COND
-  .  00001010:  b1 1c 24 fd 29 ee b7 ff c0                      TGT 0xffb7ee29fd241c el2 ns=1
-  .  00001019:  00 00 00 00 00 00                               PAD
-  .  0000101f:  71 e9 11 d7 78 3f 07 00 00                      TS 7969191694825
-  [...]
-  .  00001188:  b0 c0 e0 20 2a ee b7 ff c0                      PC 0xffb7ee2a20e0c0 el2 ns=1
-  .  00001191:  99 02 00                                        LAT 2 ISSUE
-  .  00001194:  98 03 00                                        LAT 3 TOT
-  .  00001197:  52 c2 00                                        EV RETIRED NOT-TAKEN MISPRED
-  .  0000119a:  4a 01                                           B COND
-  .  0000119c:  b1 c4 e0 20 2a ee b7 ff c0                      TGT 0xffb7ee2a20e0c4 el2 ns=1
-  .  000011a5:  00 00 00 00 00 00                               PAD
-  .  000011ab:  71 40 1e d7 78 3f 07 00 00                      TS 7969191697984
-  [...]
-  .  00001c5c:  b0 2c 8c fd 6c fd ff 00 80                      PC 0xfffd6cfd8c2c el0 ns=1
-  .  00001c65:  99 02 00                                        LAT 2 ISSUE
-  .  00001c68:  98 03 00                                        LAT 3 TOT
-  .  00001c6b:  52 c2 00                                        EV RETIRED NOT-TAKEN MISPRED
-  .  00001c6e:  4a 01                                           B COND
-  .  00001c70:  b1 30 8c fd 6c fd ff 00 80                      TGT 0xfffd6cfd8c30 el0 ns=1
-  .  00001c79:  00 00 00 00 00 00                               PAD
-  .  00001c7f:  71 36 03 d8 78 3f 07 00 00                      TS 7969191756598
-  [...]
-  .  00001e40:  b0 00 0b de 6c fd ff 00 80                      PC 0xfffd6cde0b00 el0 ns=1
-  .  00001e49:  99 02 00                                        LAT 2 ISSUE
-  .  00001e4c:  98 03 00                                        LAT 3 TOT
-  .  00001e4f:  52 82 00                                        EV RETIRED MISPRED
-  .  00001e52:  4a 01                                           B COND
-  .  00001e54:  b1 50 0b de 6c fd ff 00 80                      TGT 0xfffd6cde0b50 el0 ns=1
-  .  00001e5d:  00 00 00 00 00 00                               PAD
-  .  00001e63:  71 0f 1d d8 78 3f 07 00 00                      TS 7969191763215
-  [...]
-  .  00002234:  b0 e0 60 f3 29 ee b7 ff c0                      PC 0xffb7ee29f360e0 el2 ns=1
-  .  0000223d:  99 02 00                                        LAT 2 ISSUE
-  .  00002240:  98 03 00                                        LAT 3 TOT
-  .  00002243:  52 82 00                                        EV RETIRED MISPRED
-  .  00002246:  4a 01                                           B COND
-  .  00002248:  b1 68 61 f3 29 ee b7 ff c0                      TGT 0xffb7ee29f36168 el2 ns=1
-  .  00002251:  00 00 00 00 00 00                               PAD
-  .  00002257:  71 7d 27 d8 78 3f 07 00 00                      TS 7969191765885
-  [...]
-  .  0000228c:  b0 60 b0 fd 6c fd ff 00 80                      PC 0xfffd6cfdb060 el0 ns=1
-  .  00002295:  99 0e 00                                        LAT 14 ISSUE
-  .  00002298:  98 0f 00                                        LAT 15 TOT
-  .  0000229b:  52 c2 00                                        EV RETIRED NOT-TAKEN MISPRED
-  .  0000229e:  4a 01                                           B COND
-  .  000022a0:  b1 64 b0 fd 6c fd ff 00 80                      TGT 0xfffd6cfdb064 el0 ns=1
-  .  000022a9:  00 00 00 00 00 00                               PAD
-  .  000022af:  71 af 2b d8 78 3f 07 00 00                      TS 7969191766959
-  [...]
-  .  00002af8:  b0 28 7a fe 6c fd ff 00 80                      PC 0xfffd6cfe7a28 el0 ns=1
-  .  00002b01:  99 03 00                                        LAT 3 ISSUE
-  .  00002b04:  98 04 00                                        LAT 4 TOT
-  .  00002b07:  52 c2 00                                        EV RETIRED NOT-TAKEN MISPRED
-  .  00002b0a:  4a 01                                           B COND
-  .  00002b0c:  b1 2c 7a fe 6c fd ff 00 80                      TGT 0xfffd6cfe7a2c el0 ns=1
-  .  00002b15:  00 00 00 00 00 00                               PAD
-  .  00002b1b:  71 95 50 d8 78 3f 07 00 00                      TS 7969191776405
-  [...]
-  .  00002b50:  b0 28 7a fe 6c fd ff 00 80                      PC 0xfffd6cfe7a28 el0 ns=1
-  .  00002b59:  99 05 00                                        LAT 5 ISSUE
-  .  00002b5c:  98 06 00                                        LAT 6 TOT
-  .  00002b5f:  52 02 00                                        EV RETIRED
-  .  00002b62:  4a 01                                           B COND
-  .  00002b64:  b1 10 7a fe 6c fd ff 00 80                      TGT 0xfffd6cfe7a10 el0 ns=1
-  .  00002b6d:  00 00 00 00 00 00                               PAD
-  .  00002b73:  71 f3 51 d8 78 3f 07 00 00                      TS 7969191776755
-  [...]
-  .  00003498:  b0 30 29 e7 6c fd ff 00 80                      PC 0xfffd6ce72930 el0 ns=1
-  .  000034a1:  99 0b 00                                        LAT 11 ISSUE
-  .  000034a4:  98 0c 00                                        LAT 12 TOT
-  .  000034a7:  52 42 00                                        EV RETIRED NOT-TAKEN
-  .  000034aa:  4a 01                                           B COND
-  .  000034ac:  b1 34 29 e7 6c fd ff 00 80                      TGT 0xfffd6ce72934 el0 ns=1
-  .  000034b5:  00 00 00 00 00 00                               PAD
-  .  000034bb:  71 ea 86 d8 78 3f 07 00 00                      TS 7969191790314
-  [...]
-  .  00003ba4:  b0 78 95 fe 29 ee b7 ff c0                      PC 0xffb7ee29fe9578 el2 ns=1
-  .  00003bad:  99 02 00                                        LAT 2 ISSUE
-  .  00003bb0:  98 03 00                                        LAT 3 TOT
-  .  00003bb3:  52 82 00                                        EV RETIRED MISPRED
-  .  00003bb6:  4a 01                                           B COND
-  .  00003bb8:  b1 2c 95 fe 29 ee b7 ff c0                      TGT 0xffb7ee29fe952c el2 ns=1
-  .  00003bc1:  00 00 00 00 00 00                               PAD
-  .  00003bc7:  71 3a b0 d8 78 3f 07 00 00                      TS 7969191800890
-  [...]
-  .  00003d04:  b0 14 c0 d8 6c fd ff 00 80                      PC 0xfffd6cd8c014 el0 ns=1
-  .  00003d0d:  99 02 00                                        LAT 2 ISSUE
-  .  00003d10:  98 03 00                                        LAT 3 TOT
-  .  00003d13:  52 82 00                                        EV RETIRED MISPRED
-  .  00003d16:  4a 01                                           B COND
-  .  00003d18:  b1 e8 c0 d8 6c fd ff 00 80                      TGT 0xfffd6cd8c0e8 el0 ns=1
-  .  00003d21:  00 00 00 00 00 00                               PAD
-  .  00003d27:  71 51 ba d8 78 3f 07 00 00                      TS 7969191803473
-  [...]
-  .  00003ff0:  b0 60 0e dd 6c fd ff 00 80                      PC 0xfffd6cdd0e60 el0 ns=1
-  .  00003ff9:  99 03 00                                        LAT 3 ISSUE
-  .  00003ffc:  98 04 00                                        LAT 4 TOT
-  .  00003fff:  52 82 00                                        EV RETIRED MISPRED
-  .  00004002:  4a 01                                           B COND
-  .  00004004:  b1 d8 0e dd 6c fd ff 00 80                      TGT 0xfffd6cdd0ed8 el0 ns=1
-  .  0000400d:  00 00 00 00 00 00                               PAD
-  .  00004013:  71 e0 d2 d8 78 3f 07 00 00                      TS 7969191809760
-  [...]
-  # perf script
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee29f38200 do_mmap+0x60 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee2a20e10c __pi_memcpy+0x8c ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee29fe3a44 __d_lookup_rcu+0xe4 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee29fc87fc cp_new_stat+0x11c ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee29fd2418 link_path_walk.part.35+0x198 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee2a20e0c0 __pi_memcpy+0x40 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cfd8c2c [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cde0b00 memset+0x18 (/usr/lib64/libc-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee29f360e0 __split_vma+0x110 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cfdb060 [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cfe7a28 [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cfe7a28 [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6ce72930 _dl_addr+0x110 (/usr/lib64/libc-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:  ffffb7ee29fe9578 atime_needs_update+0x120 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cd8c014 [unknown] (/usr/lib64/libc-2.28.so)
-              ls 107690 [005]  7969.191661:          1                            branch-miss:      fffd6cdd0e60 [unknown] (/usr/lib64/libc-2.28.so)
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Solution:
-  Set "sample->time" to the timestamp corresponding to each packet in auxtrace.
+I tested this patch with kprobe/uprobe events; and confirmed this
+patch works as expected.  So:
 
-After:
+Tested-by: Leo Yan <leo.yan@linaro.org>
 
-  # perf script
-              ls 107690 [005]  7969.191665:          1                            branch-miss:  ffffb7ee29f38200 do_mmap+0x60 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191666:          1                            branch-miss:  ffffb7ee2a20e10c __pi_memcpy+0x8c ([kernel.kallsyms])
-              ls 107690 [005]  7969.191691:          1                            branch-miss:  ffffb7ee29fe3a44 __d_lookup_rcu+0xe4 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191692:          1                            branch-miss:  ffffb7ee29fc87fc cp_new_stat+0x11c ([kernel.kallsyms])
-              ls 107690 [005]  7969.191694:          1                            branch-miss:  ffffb7ee29fd2418 link_path_walk.part.35+0x198 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191697:          1                            branch-miss:  ffffb7ee2a20e0c0 __pi_memcpy+0x40 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191756:          1                            branch-miss:      fffd6cfd8c2c [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191763:          1                            branch-miss:      fffd6cde0b00 memset+0x18 (/usr/lib64/libc-2.28.so)
-              ls 107690 [005]  7969.191765:          1                            branch-miss:  ffffb7ee29f360e0 __split_vma+0x110 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191766:          1                            branch-miss:      fffd6cfdb060 [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191776:          1                            branch-miss:      fffd6cfe7a28 [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191782:          1                            branch-miss:      fffd6cfe7a28 [unknown] (/usr/lib64/ld-2.28.so)
-              ls 107690 [005]  7969.191791:          1                            branch-miss:      fffd6ce72930 _dl_addr+0x110 (/usr/lib64/libc-2.28.so)
-              ls 107690 [005]  7969.191800:          1                            branch-miss:  ffffb7ee29fe9578 atime_needs_update+0x120 ([kernel.kallsyms])
-              ls 107690 [005]  7969.191803:          1                            branch-miss:      fffd6cd8c014 [unknown] (/usr/lib64/libc-2.28.so)
-              ls 107690 [005]  7969.191809:          1                            branch-miss:      fffd6cdd0e60 [unknown] (/usr/lib64/libc-2.28.so)
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- tools/perf/util/arm-spe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Below shares my testing steps.
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 2539d4baec44..c4550cc1b248 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -231,7 +231,7 @@ static void arm_spe_prep_sample(struct arm_spe *spe,
- 	struct arm_spe_record *record = &speq->decoder->record;
- 
- 	if (!spe->timeless_decoding)
--		sample->time = speq->timestamp;
-+		sample->time = record->timestamp;
- 
- 	sample->ip = record->from_ip;
- 	sample->cpumode = arm_spe_cpumode(spe, sample->ip);
--- 
-2.30.GIT
+- The rationale for the testing is to use "perf probe" to add trace
+  points for PERF_RECORD_AUX/PERF_RECORD_AUXTRACE, and add another
+  uprobe event for parsing AUX fragment.  So we can compare the
+  recorded PERF_RECORD_AUX events, and check if AUX fragment can
+  reorganize the perf AUX trace data correctly or not.
 
+- The testing script test_cs_etm_snapshot.sh:
+  http://paste.debian.net/1202563/
+
+- Add kprobe event for perf_event_aux_event() so that it can trace
+  the perf event PERF_RECORD_AUX:
+
+  # perf probe --add "perf_event_aux_event head=head:x64 size=size:x64"
+
+- Add uprobe event for __auxtrace_mmap__read() so that it can trace
+  the perf event PERF_RECORD_AUXTRACE:
+
+  # perf probe -x /mnt/linux-kernel/linux-cs-dev/tools/perf/perf \
+     --add "__auxtrace_mmap__read:58 idx=mm->idx head=head:x64 offset=offset:x64 size=size:x64"
+
+- Add uprobe event for cs_etm__queue_aux_fragment():
+
+  # perf probe -x /mnt/linux-kernel/linux-cs-dev/tools/perf/perf \
+     --add "cs_etm__queue_aux_fragment:63 aux_offset=aux_offset:x64 aux_size=aux_event->aux_size:x64"
+
+- Enable trace events:
+
+  # cd /sys/kernel/debug/tracing
+  # echo 1 > events/probe/enable
+  # echo 1 > events/probe_perf/enable
+
+- Executed the testing script and perf report command:
+
+  # sh test_cs_etm_snapshot.sh
+  [ perf record: Woken up 7 times to write data ]
+  [ perf record: Captured and wrote 19.534 MB /tmp/__perf_test.perf.data.miRDs ]
+  # perf report -i /tmp/__perf_test.perf.data.miRDs
+
+- At the end, I can get the tracing result:
+
+  # cd /sys/kernel/debug/tracing
+  # cat trace
+
+  # entries-in-buffer/entries-written: 21/21   #P:6
+  #
+  #                                _-----=> irqs-off
+  #                               / _----=> need-resched
+  #                              | / _---=> hardirq/softirq
+  #                              || / _--=> preempt-depth
+  #                              ||| /     delay
+  #           TASK-PID     CPU#  ||||   TIMESTAMP  FUNCTION
+  #              | |         |   ||||      |         |
+                dd-2206    [001] d.h3  1395.922396: perf_event_aux_event: (perf_event_aux_event+0x0/0x108) head=0x400000 size=0x400000
+              perf-2204    [002] ....  1395.922565: __auxtrace_mmap__read_L58: (0xaaaaab154394) idx=1 head=0x400000 offset=0x0 size=0x400000
+                dd-2206    [001] d.h3  1395.942658: perf_event_aux_event: (perf_event_aux_event+0x0/0x108) head=0x50b3f0 size=0x10b3f0
+              perf-2204    [002] ....  1395.942739: __auxtrace_mmap__read_L58: (0xaaaaab154394) idx=1 head=0x50b3f0 offset=0x400000 size=0x10b3f0
+                dd-2206    [001] d.h3  1396.000040: perf_event_aux_event: (perf_event_aux_event+0x0/0x108) head=0x90b3f0 size=0x400000
+              perf-2204    [002] ....  1396.000150: __auxtrace_mmap__read_L58: (0xaaaaab154394) idx=1 head=0x90b3f0 offset=0x50b3f0 size=0x400000
+                dd-2206    [001] d.h3  1396.023098: perf_event_aux_event: (perf_event_aux_event+0x0/0x108) head=0xb87ae0 size=0x27c6f0
+              perf-2204    [002] ....  1396.023197: __auxtrace_mmap__read_L58: (0xaaaaab154394) idx=1 head=0xb87ae0 offset=0x90b3f0 size=0x27c6f0
+                dd-2206    [001] d.h3  1396.087722: perf_event_aux_event: (perf_event_aux_event+0x0/0x108) head=0xf87ae0 size=0x400000
+              perf-2204    [002] ....  1396.087838: __auxtrace_mmap__read_L58: (0xaaaaab154394) idx=1 head=0xf87ae0 offset=0xb87ae0 size=0x400000
+                dd-2206    [001] d.h3  1396.131696: perf_event_aux_event: (perf_event_aux_event+0x0/0x108) head=0x1387ae0 size=0x400000
+              perf-2204    [002] ....  1396.131808: __auxtrace_mmap__read_L58: (0xaaaaab154394) idx=1 head=0x1387ae0 offset=0xf87ae0 size=0x400000
+              perf-2217    [003] ....  1439.581363: cs_etm__queue_aux_fragment_L63: (0xaaaac9582ba8) aux_offset=0x0 aux_size=0x400000
+              perf-2217    [003] ....  1439.581467: cs_etm__queue_aux_fragment_L63: (0xaaaac9582ba8) aux_offset=0x400000 aux_size=0x10b3f0
+              perf-2217    [003] ....  1439.581510: cs_etm__queue_aux_fragment_L63: (0xaaaac9582ba8) aux_offset=0x50b3f0 aux_size=0x400000
+              perf-2217    [003] ....  1439.581553: cs_etm__queue_aux_fragment_L63: (0xaaaac9582ba8) aux_offset=0x90b3f0 aux_size=0x27c6f0
+              perf-2217    [003] ....  1439.581595: cs_etm__queue_aux_fragment_L63: (0xaaaac9582ba8) aux_offset=0xb87ae0 aux_size=0x400000
+              perf-2217    [003] ....  1439.581638: cs_etm__queue_aux_fragment_L63: (0xaaaac9582ba8) aux_offset=0xf87ae0 aux_size=0x400000
+
+  We can see the recording AUX trace data in perf_event_aux_event()
+  can be decoded properly in events cs_etm__queue_aux_fragment_L63().
+
+Thanks,
+Leo
