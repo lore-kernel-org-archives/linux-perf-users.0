@@ -2,137 +2,219 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF24C49EB9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 10:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C835C2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 10:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABBC161C7F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 10:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD9761C70
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 10:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232645AbhF1KUU (ORCPT
+        id S232426AbhF1KlE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Jun 2021 06:20:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61792 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232628AbhF1KUT (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Jun 2021 06:20:19 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15SA6FdZ021485;
-        Mon, 28 Jun 2021 06:17:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=sXZdoLvBk+fNTtJpTtUX4MKouU0H3cFHvZFshe/wFbE=;
- b=PNFDmJnhJNIN2yJRpC2Qu8qSGShRLpJ+b8GSq2n4VYloUdnD1DS92FIX4p5G6cUaIffl
- TTCrvWzND8SfjqlEUwfIGDJEOAGK3ep+bBWi5FPhgabiglfRj8XnF9GDHgzMc0Eg8b4i
- QQOEMldUqFb+eGdS0B15M/1wz4RlQJa1vTPR+kLbRVSOw9BvykCwx5XY/L+fRw2n2TcB
- 8PeLMW/Zy1rYM5z0f+rDTnluJj2KxZDzlJ0vvUDQLZsC/H+rIHTkz42JMXvfs6Rpj2be
- fxsfIg0VlvgLJ6oEEcQOgO/ZQC2LJOzwk5z7Wl4krYzFbH6l5Mi3Rq1Gen3Dz4tpK20e yQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39fb6d2acr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 06:17:46 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15SA6ckU023350;
-        Mon, 28 Jun 2021 06:17:46 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39fb6d2ac6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 06:17:46 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15SAHBBd019245;
-        Mon, 28 Jun 2021 10:17:44 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04fra.de.ibm.com with ESMTP id 39duv8gchb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 10:17:44 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15SAGAsA23200056
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Jun 2021 10:16:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 00BBAAE3BC;
-        Mon, 28 Jun 2021 10:17:40 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47AC1AE454;
-        Mon, 28 Jun 2021 10:17:36 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.42.117])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Jun 2021 10:17:36 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     will@kernel.org, hao.wu@intel.com, mark.rutland@arm.com
-Cc:     trix@redhat.com, yilun.xu@intel.com, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        rnsastry@linux.ibm.com, linux-perf-users@vger.kernel.org
-Subject: [PATCH] fpga: dfl: fme: Fix cpu hotplug issue in performance reporting
-Date:   Mon, 28 Jun 2021 15:47:21 +0530
-Message-Id: <20210628101721.188991-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ALhaI1aBKmPv9rGZWQe4h5o1VwraTyfn
-X-Proofpoint-ORIG-GUID: Ll6Af3jtnxqNQDGQEYB0jvWtFaxc-WaF
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 28 Jun 2021 06:41:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:56196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231935AbhF1KlE (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 28 Jun 2021 06:41:04 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9DE28D6E;
+        Mon, 28 Jun 2021 03:38:38 -0700 (PDT)
+Received: from [10.57.8.231] (unknown [10.57.8.231])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 23C2B3F694;
+        Mon, 28 Jun 2021 03:38:36 -0700 (PDT)
+Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     acme@kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210624164303.28632-1-james.clark@arm.com>
+ <20210624164303.28632-3-james.clark@arm.com>
+ <20210628012744.GA158794@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+Date:   Mon, 28 Jun 2021 11:38:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-28_07:2021-06-25,2021-06-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 bulkscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2106280070
+In-Reply-To: <20210628012744.GA158794@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The performance reporting driver added cpu hotplug
-feature but it didn't add pmu migration call in cpu
-offline function.
-This can create an issue incase the current designated
-cpu being used to collect fme pmu data got offline,
-as based on current code we are not migrating fme pmu to
-new target cpu. Because of that perf will still try to
-fetch data from that offline cpu and hence we will not
-get counter data.
 
-Patch fixed this issue by adding pmu_migrate_context call
-in fme_perf_offline_cpu function.
 
-Fixes: 724142f8c42a ("fpga: dfl: fme: add performance reporting support")
-Tested-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- drivers/fpga/dfl-fme-perf.c | 4 ++++
- 1 file changed, 4 insertions(+)
+On 28/06/2021 02:27, Leo Yan wrote:
+> Hi James,
+> 
+> On Thu, Jun 24, 2021 at 05:43:03PM +0100, James Clark wrote:
+>> Currently --dump-raw-trace skips queueing and splitting buffers because
+>> of an early exit condition in cs_etm__process_auxtrace_info(). Once
+>> that is removed we can print the split data by using the queues
+>> and searching for split buffers with the same reference as the
+>> one that is currently being processed.
+>>
+>> This keeps the same behaviour of dumping in file order when an AUXTRACE
+>> event appears, rather than moving trace dump to where AUX records are in
+>> the file.
+>>
+>> There will be a newline and size printout for each fragment. For example
+>> this buffer is comprised of two AUX records, but was printed as one:
+>>
+>>   0 0 0x8098 [0x30]: PERF_RECORD_AUXTRACE size: 0xa0  offset: 0  ref: 0x491a4dfc52fc0e6e  idx: 0  t
+>>
+>>   . ... CoreSight ETM Trace data: size 160 bytes
+>>           Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
+>>           Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
+>>           Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
+>>           Idx:80; ID:10;  I_ASYNC : Alignment Synchronisation.
+>>           Idx:92; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
+>>           Idx:97; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0xFFFFDE2AD3FD76D4;
+>>
+>> But is now printed as two fragments:
+>>
+>>   0 0 0x8098 [0x30]: PERF_RECORD_AUXTRACE size: 0xa0  offset: 0  ref: 0x491a4dfc52fc0e6e  idx: 0  t
+>>
+>>   . ... CoreSight ETM Trace data: size 80 bytes
+>>           Idx:0; ID:10;   I_ASYNC : Alignment Synchronisation.
+>>           Idx:12; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
+>>           Idx:17; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0x0000000000000000;
+>>
+>>   . ... CoreSight ETM Trace data: size 80 bytes
+>>           Idx:80; ID:10;  I_ASYNC : Alignment Synchronisation.
+>>           Idx:92; ID:10;  I_TRACE_INFO : Trace Info.; INFO=0x0 { CC.0 }
+>>           Idx:97; ID:10;  I_ADDR_L_64IS0 : Address, Long, 64 bit, IS0.; Addr=0xFFFFDE2AD3FD76D4;
+>>
+>> Decoding errors that appeared in problematic files are now not present,
+>> for example:
+>>
+>>         Idx:808; ID:1c; I_BAD_SEQUENCE : Invalid Sequence in packet.[I_ASYNC]
+>>         ...
+>>         PKTP_ETMV4I_0016 : 0x0014 (OCSD_ERR_INVALID_PCKT_HDR) [Invalid packet header]; TrcIdx=822
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+> 
+> I tested this patch and the result looks good for me.
+> 
+> I found a side effect introduced by this change is the perf raw dump
+> also synthesizes events PERF_RECORD_ATTR.  This is because function
+> cs_etm__synth_events() will execute after applying this patch and it
+> synthesizes PERF_RECORD_ATTR events.  I don't see any harm for this,
+> so:
+> 
+> Tested-by: Leo Yan <leo.yan@linaro.org>
+> 
 
----
-Changelog:
-- Remove RFC tag
-- Did nits changes on subject and commit message as suggested by Xu Yilun
-- Added Tested-by tag
-- Link to rfc patch: https://lkml.org/lkml/2021/6/28/112
----
-diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
-index 4299145ef347..b9a54583e505 100644
---- a/drivers/fpga/dfl-fme-perf.c
-+++ b/drivers/fpga/dfl-fme-perf.c
-@@ -953,6 +953,10 @@ static int fme_perf_offline_cpu(unsigned int cpu, struct hlist_node *node)
- 		return 0;
- 
- 	priv->cpu = target;
-+
-+	/* Migrate fme_perf pmu events to the new target cpu */
-+	perf_pmu_migrate_context(&priv->pmu, cpu, target);
-+
- 	return 0;
- }
- 
--- 
-2.31.1
+Thanks for the testing!
 
+> Please see an extra comment in below.
+> 
+>> ---
+>>  tools/perf/util/cs-etm.c | 20 ++++++++++++++++++--
+>>  1 file changed, 18 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>> index 88e8122f73c9..ad777c2a342f 100644
+>> --- a/tools/perf/util/cs-etm.c
+>> +++ b/tools/perf/util/cs-etm.c
+>> @@ -2430,6 +2430,22 @@ static int cs_etm__process_event(struct perf_session *session,
+>>  	return 0;
+>>  }
+>>  
+>> +static void dump_queued_data(struct cs_etm_auxtrace *etm,
+>> +			     struct perf_record_auxtrace *event)
+>> +{
+>> +	struct auxtrace_buffer *buf;
+>> +	unsigned int i;
+>> +	/*
+>> +	 * Find all buffers with same reference in the queues and dump them.
+>> +	 * This is because the queues can contain multiple entries of the same
+>> +	 * buffer that were split on aux records.
+>> +	 */
+>> +	for (i = 0; i < etm->queues.nr_queues; ++i)
+>> +		list_for_each_entry(buf, &etm->queues.queue_array[i].head, list)
+>> +			if (buf->reference == event->reference)
+>> +				cs_etm__dump_event(etm, buf);
+>> +}
+>> +
+>>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
+>>  					  union perf_event *event,
+>>  					  struct perf_tool *tool __maybe_unused)
+>> @@ -2462,7 +2478,8 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+>>  				cs_etm__dump_event(etm, buffer);
+>>  				auxtrace_buffer__put_data(buffer);
+>>  			}
+>> -	}
+>> +	} else if (dump_trace)
+>> +		dump_queued_data(etm, &event->auxtrace);
+> 
+> IIUC, in the function cs_etm__process_auxtrace_event(), since
+> "etm->data_queued" is always true, below flow will never run:
+> 
+>     if (!etm->data_queued) {
+>         ......
+> 
+>         if (dump_trace)
+>             if (auxtrace_buffer__get_data(buffer, fd)) {
+>                     cs_etm__dump_event(etm, buffer);
+>                     auxtrace_buffer__put_data(buffer);
+>             }
+>     }
+> 
+> If so, it's better to use a new patch to polish the code.
+> 
+
+Hi Leo,
+
+I think this is not true in piped mode because there is no auxtrace index.
+In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
+is called for each buffer.
+
+You can reproduce this with something like this:
+
+     ./perf record -o - ls > stdio.data
+     cat stdio.data | ./perf report -i -
+
+There are some other Coresight features that don't work as expected in this mode, like
+sorting timestamps between CPUs. The aux split patchset won't work either because random
+access isn't possible. And the TRBE patch that I'm working on now won't work, because it
+also requires the random access to lookup the flags on the AUX record to configure the 
+decoder for unformatted trace.
+
+
+Thanks
+James
+
+> Thanks,
+> Leo
+> 
+>>  
+>>  	return 0;
+>>  }
+>> @@ -3038,7 +3055,6 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>>  
+>>  	if (dump_trace) {
+>>  		cs_etm__print_auxtrace_info(auxtrace_info->priv, num_cpu);
+>> -		return 0;
+>>  	}
+>>  
+>>  	err = cs_etm__synth_events(etm, session);
+>> -- 
+>> 2.28.0
+>>
