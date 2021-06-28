@@ -2,239 +2,115 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED815C48BC2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 03:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84FEC2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 04:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3D36138C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 03:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B452561C35
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 04:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232034AbhF1Drh (ORCPT
+        id S229740AbhF1EJs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Jun 2021 23:47:37 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:8474 "EHLO
-        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232018AbhF1Drh (ORCPT
+        Mon, 28 Jun 2021 00:09:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39006 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229715AbhF1EJs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Jun 2021 23:47:37 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4GCthY1CC9zZnCc;
-        Mon, 28 Jun 2021 11:42:05 +0800 (CST)
-Received: from dggpemm000003.china.huawei.com (7.185.36.128) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 28 Jun 2021 11:45:08 +0800
-Received: from [10.67.102.248] (10.67.102.248) by
- dggpemm000003.china.huawei.com (7.185.36.128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 28 Jun 2021 11:45:08 +0800
+        Mon, 28 Jun 2021 00:09:48 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11D9C061574
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 21:07:22 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id cs1-20020a17090af501b0290170856e1a8aso1435083pjb.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 21:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UPwJ4JFkf9xbmYHm20uOVNE4kSxCHxiSpBWFcMmJsf4=;
+        b=Uok0jT2pxd+MJTrzQzNU+B1Vw/1BMSfeaNwyu3DXXL5ufR2/CLXdtn57aSt/Ij+NyS
+         v1czpL+N/SxMFG/f9g9Y79C1BQL5ZX7wtuO8pqqdNgPgZbasIgwKw9DFwf9Vu/4wDPOq
+         8J7Xk8e3fpcaL8HJYe9orfgkxD6X8HGcNyAV8iIkcx47v6GZZmxtLFMGZTV0baoi/WG7
+         pmeuXXar7yh5VrUItS2vMKrkJPMwZ+Qe/VSUk2V99UlW2GgbuvEK8sGpBhil0klRZEu9
+         8RagdFbFbrPm9DCbQ3lx1sySvMcq1+QCzjXQ1TeApB+Vq/xGZomy5aU2C/TI++3j7khi
+         yaNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UPwJ4JFkf9xbmYHm20uOVNE4kSxCHxiSpBWFcMmJsf4=;
+        b=t6bLUmeGGjhWD/vc7DJZEz+JlCsW39S1NWTKuy9NszdyHL13w+GvXWE6GSB59V9CRj
+         CElWrOvGBchH7+RiDCimDartjbS3cEqUmqAuVcp1VWgDGXxwu5vejvZAY7HcylApy7pf
+         VNuKR6retqfDzDRBdtZtO0do4qug1IZ9lh7edJ00oHfEKR3FXVpP4d/gYjK4Isbi35AD
+         xnjKykiXF1UY35/oFz6kmcpEzX3lZnofpiIJfvkU6QF9ZxqhckGzxzfoT6OszwBWMGID
+         SVEguQwuN/94Uo67vGyEXvMtoACS6YhK9XuesGrnt7AVejQ+GReyVVbC4mdfBKcvhiQv
+         koiA==
+X-Gm-Message-State: AOAM533LxR3zVU3juVgh2x1jgw/doRqWuy0r368NzPDxeGm43vPZYmx8
+        BXbQjN5+tyYNVyryFUTcz8AQVCBR8mqVdiDk
+X-Google-Smtp-Source: ABdhPJzFWo89rXwqJzwPopMzsa0ZNowOikGCxgvea1IDTivUY8d9WCeemuR6SUA/phlV0AwqiLYnHQ==
+X-Received: by 2002:a17:90a:69e2:: with SMTP id s89mr35387821pjj.154.1624853242453;
+        Sun, 27 Jun 2021 21:07:22 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([103.207.71.35])
+        by smtp.gmail.com with ESMTPSA id j3sm12654626pfe.98.2021.06.27.21.07.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Jun 2021 21:07:21 -0700 (PDT)
+Date:   Mon, 28 Jun 2021 12:07:16 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     john.garry@huawei.com, will@kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, james.clark@arm.com,
+        andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] perf arm-spe: Fix incorrect sample timestamp in perf
  script
-To:     Leo Yan <leo.yan@linaro.org>
-CC:     <john.garry@huawei.com>, <will@kernel.org>,
-        <mathieu.poirier@linaro.org>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <james.clark@arm.com>,
-        <andre.przywara@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Message-ID: <20210628040716.GC163942@leoy-ThinkPad-X240s>
 References: <20210626032115.16742-1-yangjihong1@huawei.com>
  <20210628014953.GA163942@leoy-ThinkPad-X240s>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <75dac5f8-9c82-0db1-d362-44289dcaa206@huawei.com>
-Date:   Mon, 28 Jun 2021 11:45:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+ <75dac5f8-9c82-0db1-d362-44289dcaa206@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20210628014953.GA163942@leoy-ThinkPad-X240s>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.248]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm000003.china.huawei.com (7.185.36.128)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75dac5f8-9c82-0db1-d362-44289dcaa206@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Leo,
+On Mon, Jun 28, 2021 at 11:45:07AM +0800, Yang Jihong wrote:
 
-On 2021/6/28 9:49, Leo Yan wrote:
-> Hi Jihong,
-> 
-> On Sat, Jun 26, 2021 at 11:21:15AM +0800, Yang Jihong wrote:
->> When use perf script to parse ARM SPE data, sample timestamp does not match
->> the timestamp stored in the AUX buffer, arm_spe_prep_sample function set
->> "samlpe->time = speq->timestamp", "speq->timestamp" is the timestamp of first
->> packet in auxtrace buffer. As a result, the time of all samples in a auxtrace
->> buffer uses the same timestamp.
-> 
-> Could you confirm if the patch set [1] can fix your issue?
-> 
-After I apply this patch set, and verify it as follows:
-
-# ./perf/perf record -e arm_spe_0/ts_enable=1,branch_filter=1/ ls
-accounting  bootconfig  build   debugging  elf.s     firmware  hv 
-include   kvm     leds  Makefile      objtool  pcmcia  perf.data 
-scripts  testing  time     usb     vm
-arch        bpf         cgroup  edid       firewire  gpio      iio 
-io_uring  laptop  lib   memory-model  pci      perf    power      spi 
-    thermal  tracing  virtio  wmi
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.031 MB perf.data ]
-# ./perf/perf script --ns
-               ls 23104 [030] 314938.859071370:          1 
-               branch-miss:  ffffb7ee2a20e100 __pi_memcpy+0x80 
-([kernel.kallsyms])
-               ls 23104 [030] 314938.859753820:          1 
-               branch-miss:  ffffb7ee29f360e0 __split_vma+0x110 
-([kernel.kallsyms])
-               ls 23104 [030] 314938.859820430:          1 
-               branch-miss:      fffe85dd87e0 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.859941110:          1 
-               branch-miss:      fffe85dd7a28 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.859948890:          1 
-               branch-miss:      fffe85dd7a28 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.859953610:          1 
-               branch-miss:      fffe85dc8f58 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.859955730:          1 
-               branch-miss:  ffffb7ee2a12856c common_mmap.part.23+0x34 
-([kernel.kallsyms])
-               ls 23104 [030] 314938.860059900:          1 
-               branch-miss:      fffe85dc8f58 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.860095470:          1 
-               branch-miss:      fffe85dc8f58 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.860105460:          1 
-               branch-miss:      fffe85dc8f58 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.860111870:          1 
-               branch-miss:      fffe85dd7a20 [unknown] 
-(/usr/lib64/ld-2.28.so)
-               ls 23104 [030] 314938.860237310:          1 
-               branch-miss:      fffe85bc8e00 [unknown] 
-(/usr/lib64/libc-2.28.so)
-               ls 23104 [030] 314938.860419000:          1 
-               branch-miss:      fffe85bd4638 __strcoll_l+0xc58 
-(/usr/lib64/libc-2.28.so)
-               ls 23104 [030] 314938.860455790:          1 
-               branch-miss:  ffffb7ee2a20e10c __pi_memcpy+0x8c 
-([kernel.kallsyms])
-               ls 23104 [030] 314938.860473730:          1 
-               branch-miss:  ffffb7ee29d0af50 __queue_work+0x1a8 
-([kernel.kallsyms])
-               ls 23104 [030] 314938.860485020:          1 
-               branch-miss:  ffffb7ee2a20e0c0 __pi_memcpy+0x40 
-([kernel.kallsyms])
-               ls 23104 [030] 314938.860533380:          1 
-               branch-miss:  ffffb7ee29f39158 tlb_flush+0x30 
-([kernel.kallsyms])
-# ./perf/perf script -D
-[...]
-.  00000a7c:  b0 00 e1 20 2a ee b7 ff c0                      PC 
-0xffb7ee2a20e100 el2 ns=1
-.  00000a85:  99 02 00                                        LAT 2 ISSUE
-.  00000a88:  98 03 00                                        LAT 3 TOT
-.  00000a8b:  52 c2 00                                        EV RETIRED 
-NOT-TAKEN MISPRED
-.  00000a8e:  4a 01                                           B COND
-.  00000a90:  b1 04 e1 20 2a ee b7 ff c0                      TGT 
-0xffb7ee2a20e104 el2 ns=1
-.  00000a99:  00 00 00 00 00 00                               PAD
-.  00000a9f:  71 3f e9 51 b9 a9 1c 00 00                      TS 
-31515284203839
-[...]
-.  000018c0:  b0 e0 60 f3 29 ee b7 ff c0                      PC 
-0xffb7ee29f360e0 el2 ns=1
-.  000018c9:  99 02 00                                        LAT 2 ISSUE
-.  000018cc:  98 03 00                                        LAT 3 TOT
-.  000018cf:  52 82 00                                        EV RETIRED 
-MISPRED
-.  000018d2:  4a 01                                           B COND
-.  000018d4:  b1 68 61 f3 29 ee b7 ff c0                      TGT 
-0xffb7ee29f36168 el2 ns=1
-.  000018dd:  00 00 00 00 00 00                               PAD
-.  000018e3:  71 d4 f3 52 b9 a9 1c 00 00                      TS 
-31515284272084
-[...]
-.  000019f4:  b0 e0 87 dd 85 fe ff 00 80                      PC 
-0xfffe85dd87e0 el0 ns=1
-.  000019fd:  99 02 00                                        LAT 2 ISSUE
-.  00001a00:  98 03 00                                        LAT 3 TOT
-.  00001a03:  52 c2 00                                        EV RETIRED 
-NOT-TAKEN MISPRED
-.  00001a06:  4a 01                                           B COND
-.  00001a08:  b1 e4 87 dd 85 fe ff 00 80                      TGT 
-0xfffe85dd87e4 el0 ns=1
-.  00001a11:  00 00 00 00 00 00                               PAD
-.  00001a17:  71 d9 0d 53 b9 a9 1c 00 00                      TS 
-31515284278745
-[...]
-.  00001f48:  b0 28 7a dd 85 fe ff 00 80                      PC 
-0xfffe85dd7a28 el0 ns=1
-.  00001f51:  99 07 00                                        LAT 7 ISSUE
-.  00001f54:  98 08 00                                        LAT 8 TOT
-.  00001f57:  52 c2 00                                        EV RETIRED 
-NOT-TAKEN MISPRED
-.  00001f5a:  4a 01                                           B COND
-.  00001f5c:  b1 2c 7a dd 85 fe ff 00 80                      TGT 
-0xfffe85dd7a2c el0 ns=1
-.  00001f65:  00 00 00 00 00 00                               PAD
-.  00001f6b:  71 fd 3c 53 b9 a9 1c 00 00                      TS 
-31515284290813
-[...]
-.  00001fcc:  b0 28 7a dd 85 fe ff 00 80                      PC 
-0xfffe85dd7a28 el0 ns=1
-.  00001fd5:  99 08 00                                        LAT 8 ISSUE
-.  00001fd8:  98 09 00                                        LAT 9 TOT
-.  00001fdb:  52 82 00                                        EV RETIRED 
-MISPRED
-.  00001fde:  4a 01                                           B COND
-.  00001fe0:  b1 10 7a dd 85 fe ff 00 80                      TGT 
-0xfffe85dd7a10 el0 ns=1
-.  00001fe9:  00 00 00 00 00 00                               PAD
-.  00001fef:  71 07 40 53 b9 a9 1c 00 00                      TS 
-31515284291591
-[...]
-.  00002050:  b0 58 8f dc 85 fe ff 00 80                      PC 
-0xfffe85dc8f58 el0 ns=1
-.  00002059:  99 22 00                                        LAT 34 ISSUE
-.  0000205c:  98 23 00                                        LAT 35 TOT
-.  0000205f:  52 82 00                                        EV RETIRED 
-MISPRED
-.  00002062:  4a 01                                           B COND
-.  00002064:  b1 40 8f dc 85 fe ff 00 80                      TGT 
-0xfffe85dc8f40 el0 ns=1
-.  0000206d:  00 00 00 00 00 00                               PAD
-.  00002073:  71 df 41 53 b9 a9 1c 00 00                      TS 
-31515284292063
 [...]
 
-The timestamp does not match. Each timestamp has a difference of 
-213.98296702 seconds. Is the command I executed wrong?
+> The timestamp does not match. Each timestamp has a difference of
+> 213.98296702 seconds. Is the command I executed wrong?
 
-|symbol_address|perf script| perf script -D|
-|ffffb7ee2a20e100|314938.859071370|31515284203839|
-|ffffb7ee29f360e0|314938.859753820|31515284272084|
-|fffe85dd87e0|314938.859820430|31515284278745|
-|fffe85dd7a28|314938.859941110|31515284290813|
-|fffe85dd7a28|314938.859948890|31515284291591|
-|fffe85dc8f58|314938.859953610|31515284292063|
+I don't understand what's your meaning "a difference of 213.98296702
+seconds".
 
-Thanks,
-Jihong
-> Thanks,
-> Leo
-> 
-> [1] https://lore.kernel.org/patchwork/cover/1431624/
-> .
-> 
+But let me give an explaination with your below examples.  You could
+the command "perf script" outputs the timestamp 314938.859071370 which
+is the kernel's timestamp, if using the command "perf script -D", it
+outputs the value 31515284203839 which is the Arch timer's raw counter
+value.
+
+In theory, the arch timer's counter is enabled at the very early
+time before kernel's booting (e.g. bootloaders, UEFI, etc...).  So for
+the kernel's timestamp, it should calibrate the timestamp and reduce
+the offset prior to the kernel's booting.  I think this is the reason
+why you observed 213.98296702 seconds difference (if compared with
+your own patch?)
+
+If still see any issue, please let me know.  Thanks a lot for the
+testing!
+
+Leo
+
+> |symbol_address|perf script| perf script -D|
+> |ffffb7ee2a20e100|314938.859071370|31515284203839|
+> |ffffb7ee29f360e0|314938.859753820|31515284272084|
+> |fffe85dd87e0|314938.859820430|31515284278745|
+> |fffe85dd7a28|314938.859941110|31515284290813|
+> |fffe85dd7a28|314938.859948890|31515284291591|
+> |fffe85dc8f58|314938.859953610|31515284292063|
