@@ -2,157 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28FDC2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 12:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F6DC49361
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 14:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C490961477
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 12:12:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521F560C3E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 14:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232900AbhF1MOz (ORCPT
+        id S234783AbhF1Oft (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Jun 2021 08:14:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232833AbhF1MOu (ORCPT
+        Mon, 28 Jun 2021 10:35:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38453 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234386AbhF1Ocn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Jun 2021 08:14:50 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BD6C061574
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 05:12:23 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id kt19so2057188pjb.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 05:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=2xcGOgP/yg1u7n803j0UADdqFly0YaxV+TsFk8YNqGg=;
-        b=q0XtAxQCldYUjMpu+SY9e/g2ItjBE0+iCawDmqpGlnW9tg1QZoxU1EerpByITcNWpo
-         dYYERIGvOrhKWkz68obNn4RVU/T6Vn7ARfiLc9xK8sI+djcHH8LTkBtwf1IuK3ZX9q7m
-         TfVz9UOi881d1rqWEIxZpFFpPdzqknoSGGszEtdO9IDm8V2EjYmJ4EZlHK8WK5EfIbKi
-         HTtzL7Md3RkabxkmtU+Hd5AG+oheb+jkOs+1F+sEO/uncvw8yS53OsiNeDoXMguaZMcB
-         yBGuqzS5L70IluQiN3qJ8EUc75jnbvDeTnDufd3tJ1hKp4lnAXQAxofN2vkO8GRPJwUi
-         gEeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2xcGOgP/yg1u7n803j0UADdqFly0YaxV+TsFk8YNqGg=;
-        b=aWMLCmrlQDc99/6gQUzt98FZXAL088RY3PCvbcrhsasyvuJznDdcnk+8CmFji/7AlB
-         bE6UGKHIrXRekvy7dv5x8yx024h2T3ylnk4EiYKM7M6TAMC1+5vC9SopG9FKi7pfjLcT
-         YJBUyDR9+/cVVfJSWKOMcXad4DJyAuOcjiKwP4RdIWQEfsd6cAyrE/ruIhLjNHm4ywHE
-         FMgQmZvtlGwI4yinyOpGenqvqWqTBatG20YoGu1DVi7jSMFpd3ynXrCVNHA13riEVsF2
-         N4wNQEc3XOPgbt+ADGdwcC0RYSLGyDbUMimGuuDyN1BiCWnde4YaVCNBZRP9uGeg33lB
-         9VKA==
-X-Gm-Message-State: AOAM532CsABjzALVFKKk8+D88n7SjvSYdwsYWGAUF7//JENRadbiFlGV
-        vZvvHUXefDjzEStu+lvH4EPK6w==
-X-Google-Smtp-Source: ABdhPJy3t88iPCr1uRgXPIlJRE1hWIf9EVjMlvHN4QcQ52KFGeWoAA5vxIvilcuwAN6yuVxJVewSOw==
-X-Received: by 2002:a17:902:e04f:b029:eb:66b0:6d08 with SMTP id x15-20020a170902e04fb02900eb66b06d08mr22425677plx.50.1624882343334;
-        Mon, 28 Jun 2021 05:12:23 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id b22sm6140182pfp.20.2021.06.28.05.12.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jun 2021 05:12:22 -0700 (PDT)
-Date:   Mon, 28 Jun 2021 20:12:17 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>, Al Grant <Al.Grant@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/5] perf arm-spe: Don't wait for PERF_RECORD_EXIT
- event
-Message-ID: <20210628121217.GD200044@leoy-ThinkPad-X240s>
-References: <20210519071939.1598923-1-leo.yan@linaro.org>
- <20210519071939.1598923-6-leo.yan@linaro.org>
- <369fd454-d94d-daa1-ead4-b42645ec4282@arm.com>
+        Mon, 28 Jun 2021 10:32:43 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15SDp9KM081350;
+        Mon, 28 Jun 2021 10:30:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=/9bVHpIfqRhpKRu1VhTnXeiUtEfF4HELBXcwaeuu4nk=;
+ b=RcChOn3go4CKiVEzUeFdLopi6FpH1UfrLCbd02hCDNiC2Z2RWzp1U2qKPB3jZ19aFQFb
+ WAtPcoXRpvR+QCZ4GtaPY+zLYJQsmj+B8hR9HGuF9AoGSNH3eteEkNFIGXS4RcSwPnbm
+ Jp773pFA+XVZ9OWetynejHAD1M8gG3m/2NTb0L9Hgfa4GZxXp4jzZ4lFGfbg2E3fklx1
+ cIWcFreHy3GjoZwBB4U8FNG4kwaJPI/ZAATyAhhwptogps2NgFFs14rArqXwmgPhkz28
+ ZgtVwTRNAF0HTJrM4JlDk1I6EOF/lpfs3DDR6LDO9JryOop7xIKWMBxMgCfQ0DZMpcGu 4A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39ffnxh91w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Jun 2021 10:30:12 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15SDrWXY087102;
+        Mon, 28 Jun 2021 10:30:12 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39ffnxh91f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Jun 2021 10:30:12 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15SEPLbH019822;
+        Mon, 28 Jun 2021 14:30:11 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma03wdc.us.ibm.com with ESMTP id 39duvaabu2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 28 Jun 2021 14:30:11 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15SEUA1u7471802
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Jun 2021 14:30:10 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 306A43479B;
+        Mon, 28 Jun 2021 14:30:10 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 701A1347CB;
+        Mon, 28 Jun 2021 14:30:09 +0000 (GMT)
+Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.80.210.16])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 28 Jun 2021 14:30:09 +0000 (GMT)
+Date:   Mon, 28 Jun 2021 09:30:07 -0500
+From:   "Paul A. Clarke" <pc@us.ibm.com>
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     ravi.bangoria@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        rnsastry@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, acme@kernel.org,
+        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
+        jolsa@redhat.com
+Subject: Re: [PATCH] perf vendor events power10: Adds 24x7 nest metric events
+ for power10 platform
+Message-ID: <20210628143007.GD142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+References: <20210625115948.99579-1-kjain@linux.ibm.com>
+ <20210625132151.GC142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+ <d2eaebb6-7cd6-d2e3-0bed-0c054e7d2207@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <369fd454-d94d-daa1-ead4-b42645ec4282@arm.com>
+In-Reply-To: <d2eaebb6-7cd6-d2e3-0bed-0c054e7d2207@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: G6jK1PqeVZer2vy4tZX5rn-DX5iBajN_
+X-Proofpoint-ORIG-GUID: 0MV31-snMGnPUh3aTA2-x2ly5YDJmN--
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-06-28_05:2021-06-25,2021-06-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106280052
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 02:25:15PM +0100, James Clark wrote:
+On Mon, Jun 28, 2021 at 11:58:54AM +0530, kajoljain wrote:
 > 
 > 
-> On 19/05/2021 08:19, Leo Yan wrote:
-> > When decode Arm SPE trace, it waits for PERF_RECORD_EXIT event (the last
-> > perf event) for processing trace data, which is needless and even might
-> > cause logic error, e.g. it might fail to correlate perf events with Arm
-> > SPE events correctly.
+> On 6/25/21 6:51 PM, Paul A. Clarke wrote:
+> > On Fri, Jun 25, 2021 at 05:29:48PM +0530, Kajol Jain wrote:
+> >> Patch adds 24x7 nest metric events for POWER10.
+> >>
+> >> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> >> ---
+> >>  .../arch/powerpc/power10/nest_metrics.json    | 491 ++++++++++++++++++
+> >>  1 file changed, 491 insertions(+)
+> >>  create mode 100644 tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
+> >>
+> >> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
+> >> new file mode 100644
+> >> index 000000000000..b79046cd8b09
+> >> --- /dev/null
+> >> +++ b/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
+> >> @@ -0,0 +1,491 @@
+> >> +[
+> >> +    {
+> >> +      "MetricName": "VEC_GROUP_PUMP_RETRY_RATIO_P01",
+> >> +      "BriefDescription": "VEC_GROUP_PUMP_RETRY_RATIO_P01",
 > > 
-> > So this patch removes the condition checking for PERF_RECORD_EXIT event.
+> > Is it possible to get better descriptions than just a restatement of the
+> > name, or no description at all?
 > > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  tools/perf/util/arm-spe.c | 6 +-----
-> >  1 file changed, 1 insertion(+), 5 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> > index 5c5b438584c4..58b7069c5a5f 100644
-> > --- a/tools/perf/util/arm-spe.c
-> > +++ b/tools/perf/util/arm-spe.c
-> > @@ -717,11 +717,7 @@ static int arm_spe_process_event(struct perf_session *session,
-> >  					sample->time);
-> >  		}
-> >  	} else if (timestamp) {
-> > -		if (event->header.type == PERF_RECORD_EXIT) {
-> > -			err = arm_spe_process_queues(spe, timestamp);
-> > -			if (err)
-> > -				return err;
-> > -		}
-> > +		err = arm_spe_process_queues(spe, timestamp);
-> >  	}
-> >  
-> >  	return err;
-> > 
+> > This comment obviously applies to almost all of the metrics herein.
 > 
-> For the whole set:
-> Reviewed-by: James Clark <james.clark@arm.com>
-> Tested-by: James Clark <james.clark@arm.com>
+> Hi Paul,
+>    Thanks for reviewing the patch. Sure I will remove description part for now.
 
-> I see a big improvement in decoding involving multiple processes because the timestamps are now
-> correlated with the comm and mmap events.
-> 
-> For example perf-exec samples are visible right before the exec is done, and on an
-> application that forks, samples are visible from all processes. For example:
-> 
->    perf record -e arm_spe// -- bash -c "stress -c 1"
->    perf script
-> 
->    perf-exec  4502 [003] 259755.050409:          1    l1d-access:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
->    perf-exec  4502 [003] 259755.050409:          1    tlb-access:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
->    perf-exec  4502 [003] 259755.050409:          1        memory:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
->    perf-exec  4502 [003] 259755.050411:          1    tlb-access:  ffff800010120fb8 __rcu_read_lock+0x0 ([kernel.kallsyms])
->    bash  4502 [003] 259755.050411:          1   branch-miss:  ffff8000105b2a40 memcpy+0x80 ([kernel.kallsyms])
->    bash  4502 [003] 259755.050411:          1    tlb-access:                 0 [unknown] ([unknown])
->    ...
->    stress  4502 [003] 259755.051468:          1    l1d-access:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
->    stress  4502 [003] 259755.051468:          1    tlb-access:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
->    stress  4502 [003] 259755.051468:          1        memory:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
-> 
-> Previously samples were only attributed to 'stress', which was obviously wrong.
+My sentence didn't parse well, sorry...
 
-Thanks a lot for the review and testing, James!
+What I really meant was more like "Is it possible to get better descriptions?
+Having just a restatement of the name (or no description at all in some cases)
+is not helpful."
 
-Hi Arnaldo, I confirmed this patch set can be cleanly applied on
-the latest acme/perf/core branch, so could you pick up this patch
-set?
+So, can we provide better descriptions of the metrics?
 
-Thanks,
-Leo
+PC
