@@ -7,133 +7,151 @@ X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F6DC49361
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 14:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97613C4CC60
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 14:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 521F560C3E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 14:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A5561CA1
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 14:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234783AbhF1Oft (ORCPT
+        id S232975AbhF1O4h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Jun 2021 10:35:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38453 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234386AbhF1Ocn (ORCPT
+        Mon, 28 Jun 2021 10:56:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45070 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S234697AbhF1OwM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Jun 2021 10:32:43 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15SDp9KM081350;
-        Mon, 28 Jun 2021 10:30:13 -0400
+        Mon, 28 Jun 2021 10:52:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15SEWopq101732;
+        Mon, 28 Jun 2021 10:49:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=/9bVHpIfqRhpKRu1VhTnXeiUtEfF4HELBXcwaeuu4nk=;
- b=RcChOn3go4CKiVEzUeFdLopi6FpH1UfrLCbd02hCDNiC2Z2RWzp1U2qKPB3jZ19aFQFb
- WAtPcoXRpvR+QCZ4GtaPY+zLYJQsmj+B8hR9HGuF9AoGSNH3eteEkNFIGXS4RcSwPnbm
- Jp773pFA+XVZ9OWetynejHAD1M8gG3m/2NTb0L9Hgfa4GZxXp4jzZ4lFGfbg2E3fklx1
- cIWcFreHy3GjoZwBB4U8FNG4kwaJPI/ZAATyAhhwptogps2NgFFs14rArqXwmgPhkz28
- ZgtVwTRNAF0HTJrM4JlDk1I6EOF/lpfs3DDR6LDO9JryOop7xIKWMBxMgCfQ0DZMpcGu 4A== 
+ in-reply-to; s=pp1; bh=h03xNSk7ghdjy3NvBWtPVvT1k716FIeYhukht/R8OYI=;
+ b=E/2mKAjK8l1L+ehVCXLoYe+eUNSTmfpMU+G/BXeaR7wMVuwTIPKvYsGpnTHI5hx6shZV
+ g5OG2yVhJBvL2zXpiS+L6nbjp9yz+9s8ifiGUJyWenjfFqMdDy7oKN7GUbGT0XppQ6rW
+ cEkWxfnvhkhlS4EudCgbdnR79gJjvlpeGml6pkysCW6FmSpE2PJYZfw4EbOWHC3onS/1
+ xuRdMwBlazdfDIFjl3yn12uZl3FcoGWb7ZP6Nftqrn7LzUmG2oajiuExlQBa4Iy9nseZ
+ 7feRXq+Lbgdr+I+j0AEZz8fRU/OqAE3+JTK1WBcI3BdkfRW0bulBvYqTXvSy7tcb6b4v 4A== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39ffnxh91w-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 39ffj7t9wh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 10:30:12 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15SDrWXY087102;
-        Mon, 28 Jun 2021 10:30:12 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39ffnxh91f-1
+        Mon, 28 Jun 2021 10:49:41 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15SEXj0O105668;
+        Mon, 28 Jun 2021 10:49:40 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 39ffj7t9w9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 10:30:12 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15SEPLbH019822;
-        Mon, 28 Jun 2021 14:30:11 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma03wdc.us.ibm.com with ESMTP id 39duvaabu2-1
+        Mon, 28 Jun 2021 10:49:40 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15SEgDsL006366;
+        Mon, 28 Jun 2021 14:49:40 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma05wdc.us.ibm.com with ESMTP id 39duvak5d6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 14:30:11 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15SEUA1u7471802
+        Mon, 28 Jun 2021 14:49:40 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15SEndQs37749018
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Jun 2021 14:30:10 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 306A43479B;
-        Mon, 28 Jun 2021 14:30:10 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 701A1347CB;
-        Mon, 28 Jun 2021 14:30:09 +0000 (GMT)
+        Mon, 28 Jun 2021 14:49:39 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3E9FB214C;
+        Mon, 28 Jun 2021 14:49:39 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 022CAB2179;
+        Mon, 28 Jun 2021 14:49:38 +0000 (GMT)
 Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.80.210.16])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Mon, 28 Jun 2021 14:30:09 +0000 (GMT)
-Date:   Mon, 28 Jun 2021 09:30:07 -0500
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 28 Jun 2021 14:49:38 +0000 (GMT)
+Date:   Mon, 28 Jun 2021 09:49:37 -0500
 From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     ravi.bangoria@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        rnsastry@linux.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, acme@kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        jolsa@redhat.com
-Subject: Re: [PATCH] perf vendor events power10: Adds 24x7 nest metric events
- for power10 platform
-Message-ID: <20210628143007.GD142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-References: <20210625115948.99579-1-kjain@linux.ibm.com>
- <20210625132151.GC142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
- <d2eaebb6-7cd6-d2e3-0bed-0c054e7d2207@linux.ibm.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, maddy@linux.vnet.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, ravi.bangoria@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        rnsastry@linux.ibm.com
+Subject: Re: [PATCH] perf script python: Fix buffer size to report iregs in
+ perf script
+Message-ID: <20210628144937.GE142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+References: <20210628062341.155839-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d2eaebb6-7cd6-d2e3-0bed-0c054e7d2207@linux.ibm.com>
+In-Reply-To: <20210628062341.155839-1-kjain@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: G6jK1PqeVZer2vy4tZX5rn-DX5iBajN_
-X-Proofpoint-ORIG-GUID: 0MV31-snMGnPUh3aTA2-x2ly5YDJmN--
+X-Proofpoint-GUID: PQRSfbvHeYeTApyTWRJTRB9tQZl_MKLK
+X-Proofpoint-ORIG-GUID: RPs_xy7izUBK3NhDSmZVxCR39duluPST
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-28_05:2021-06-25,2021-06-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 phishscore=0
- suspectscore=0 priorityscore=1501 clxscore=1015 adultscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106280052
+ definitions=2021-06-28_12:2021-06-25,2021-06-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ mlxscore=0 phishscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106280102
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 11:58:54AM +0530, kajoljain wrote:
+On Mon, Jun 28, 2021 at 11:53:41AM +0530, Kajol Jain wrote:
+> Commit 48a1f565261d ("perf script python: Add more PMU fields
+> to event handler dict") added functionality to report fields like
+> weight, iregs, uregs etc via perf report.
+> That commit predefined buffer size to 512 bytes to print those fields.
 > 
+> But incase of powerpc, since we added extended regs support
+> in commits:
 > 
-> On 6/25/21 6:51 PM, Paul A. Clarke wrote:
-> > On Fri, Jun 25, 2021 at 05:29:48PM +0530, Kajol Jain wrote:
-> >> Patch adds 24x7 nest metric events for POWER10.
-> >>
-> >> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> >> ---
-> >>  .../arch/powerpc/power10/nest_metrics.json    | 491 ++++++++++++++++++
-> >>  1 file changed, 491 insertions(+)
-> >>  create mode 100644 tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
-> >>
-> >> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json b/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
-> >> new file mode 100644
-> >> index 000000000000..b79046cd8b09
-> >> --- /dev/null
-> >> +++ b/tools/perf/pmu-events/arch/powerpc/power10/nest_metrics.json
-> >> @@ -0,0 +1,491 @@
-> >> +[
-> >> +    {
-> >> +      "MetricName": "VEC_GROUP_PUMP_RETRY_RATIO_P01",
-> >> +      "BriefDescription": "VEC_GROUP_PUMP_RETRY_RATIO_P01",
-> > 
-> > Is it possible to get better descriptions than just a restatement of the
-> > name, or no description at all?
-> > 
-> > This comment obviously applies to almost all of the metrics herein.
+> Commit 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
+> Counter SPRs as part of extended regs")
+> Commit d735599a069f ("powerpc/perf: Add extended regs support for
+> power10 platform")
 > 
-> Hi Paul,
->    Thanks for reviewing the patch. Sure I will remove description part for now.
+> Now iregs can carry more bytes of data and this predefined buffer size
+> can result to data loss in perf script output.
+> 
+> Patch resolve this issue by making buffer size dynamic based on number
+> of registers needed to print. It also changed return type for function
+> "regs_map" from int to void, as the return value is not being used by
+> the caller function "set_regs_in_dict".
+> 
+> Fixes: 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
+> Counter SPRs as part of extended regs")
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  .../util/scripting-engines/trace-event-python.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 4e4aa4c97ac5..c8c9706b4643 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+[...]
+> @@ -713,7 +711,16 @@ static void set_regs_in_dict(PyObject *dict,
+>  			     struct evsel *evsel)
+>  {
+>  	struct perf_event_attr *attr = &evsel->core.attr;
+> -	char bf[512];
+> +
+> +	/*
+> +	 * Here value 28 is a constant size which can be used to print
+> +	 * one register value and its corresponds to:
+> +	 * 16 chars is to specify 64 bit register in hexadecimal.
+> +	 * 2 chars is for appending "0x" to the hexadecimal value and
+> +	 * 10 chars is for register name.
+> +	 */
+> +	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+> +	char bf[size];
 
-My sentence didn't parse well, sorry...
+I propose using a template rather than a magic number here. Something like:
+const char reg_name_tmpl[] = "10 chars  ";
+const char reg_value_tmpl[] = "0x0123456789abcdef";
+const int size = __sw_hweight64(attr->sample_regs_intr) +
+                 sizeof reg_name_tmpl + sizeof reg_value_tmpl;
 
-What I really meant was more like "Is it possible to get better descriptions?
-Having just a restatement of the name (or no description at all in some cases)
-is not helpful."
-
-So, can we provide better descriptions of the metrics?
+Pardon my ignorance, but is there no separation/whitespace between the name
+and the value? And is there some significance to 10 characters for the
+register name, or is that a magic number?
 
 PC
