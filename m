@@ -2,186 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ABBC2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 07:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C51C2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 07:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2639361A1D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 07:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643E161C29
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 07:23:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231754AbhF1HSR (ORCPT
+        id S232316AbhF1HZ3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Jun 2021 03:18:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64246 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229998AbhF1HSR (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Jun 2021 03:18:17 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15S744tO116374;
-        Mon, 28 Jun 2021 03:15:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=r/immuZYVE8Caoc6yGkt0MFN06PO3hMxemxPKVsCOXg=;
- b=PULsJ+fCBXwXQpq19YESKYj0NUC1PSmgzSWtwYgrrtUlXkB52ioit+TZ2eR/ACgDEcvH
- QdE60MHlrGWSM0Accw/n6FFe/VKL31exLwfVqcJnXHauLyHJPW8u/xd+PS6O6AAolGnp
- 3+unw+UygJRQbHODn98vnrJkJUPGf4kfKEDtQjPL1VfrvTexV70kIGFnYSRS+pA/OgB1
- zvVI8rQL/FMObBe1IV3uQkBgWZ7q6UHJvHTqCLozkk+7RxVVtkP9AaR/bSA5lO7U+3P0
- yWMQP+jF6FFmQvnC2orEqrJZ5280vlzJ8MwkfOOqoo0j/cJeixSDSCa2/+HNjnbPFLRv eA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 39f77qkfd1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 03:15:46 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15S75M6n124410;
-        Mon, 28 Jun 2021 03:15:46 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 39f77qkfc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 03:15:46 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15S78YCZ030026;
-        Mon, 28 Jun 2021 07:15:44 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 39duv8gmmy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 28 Jun 2021 07:15:44 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15S7EAK835979730
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Jun 2021 07:14:11 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63E09A4166;
-        Mon, 28 Jun 2021 07:15:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8345AA4124;
-        Mon, 28 Jun 2021 07:15:38 +0000 (GMT)
-Received: from Nageswaras-MacBook-Pro-2.local (unknown [9.199.47.223])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 28 Jun 2021 07:15:38 +0000 (GMT)
-Subject: Re: [PATCH] perf script python: Fix buffer size to report iregs in
- perf script
-To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org
-Cc:     maddy@linux.vnet.ibm.com, atrajeev@linux.vnet.ibm.com,
-        pc@us.ibm.com, linux-kernel@vger.kernel.org, jolsa@redhat.com,
-        ravi.bangoria@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-References: <20210628062341.155839-1-kjain@linux.ibm.com>
-From:   Nageswara Sastry <rnsastry@linux.ibm.com>
-Message-ID: <46ddcac9-e115-6b96-11ec-6208bcd1c98a@linux.ibm.com>
-Date:   Mon, 28 Jun 2021 12:45:36 +0530
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.11.0
+        Mon, 28 Jun 2021 03:25:29 -0400
+Received: from mga11.intel.com ([192.55.52.93]:59184 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229998AbhF1HZ3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 28 Jun 2021 03:25:29 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10028"; a="204895212"
+X-IronPort-AV: E=Sophos;i="5.83,305,1616482800"; 
+   d="scan'208";a="204895212"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2021 00:23:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,305,1616482800"; 
+   d="scan'208";a="419069114"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.79]) ([10.237.72.79])
+  by fmsmga007.fm.intel.com with ESMTP; 28 Jun 2021 00:22:59 -0700
+Subject: Re: [PATCH V2 00/10] perf script: Add API for filtering via
+ dynamically loaded shared object
+To:     Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210627131818.810-1-adrian.hunter@intel.com>
+ <e2a57ee8-6489-40d5-04d0-7d985eba961f@linux.intel.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <ea9a04ad-26b2-7072-9f45-9ddbd8f61c10@intel.com>
+Date:   Mon, 28 Jun 2021 10:23:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210628062341.155839-1-kjain@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+In-Reply-To: <e2a57ee8-6489-40d5-04d0-7d985eba961f@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vyCjQThvpV6iZpLIzekUkfEwUnIT5C78
-X-Proofpoint-GUID: -295f2NuuxizaUdLdi4i3_NLvBLXf4i4
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-28_05:2021-06-25,2021-06-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 mlxscore=0 suspectscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106280049
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Tested by creating perf-script.py using perf script
-and priting the iregs. Seen more values with this patch.
+On 27/06/21 7:13 pm, Andi Kleen wrote:
+> 
+> On 6/27/2021 6:18 AM, Adrian Hunter wrote:
+>> Hi In some cases, users want to filter very large amounts of data
+>> (e.g. from AUX area tracing like Intel PT) looking for something
+>> specific. While scripting such as Python can be used, Python is 10
+>> to 20 times slower than C. So define a C API so that custom filters
+>> can be written and loaded.
+> 
+> While I appreciate this for complex cases, in my experience filtering
+> is usually just a simple expression. It would be nice to also have a
+> way to do this reasonably fast without having to write a custom C
+
+I do not agree that writing C filters is a hassle e.g. a minimal do-nothing
+filter is only a few lines:
+
+#include <perf/perf_dlfilter.h>
+
+int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ctx)
+{
+	return 0;
+}
+
+(Actually, the filter program does not have to have any LOC at all, but that
+is not much of an example)
+
+Additionally, a script to do the build is fairly trivial e.g. I use this:
+
+$ cat `which make-dlfilter.sh `
+#!/bin/bash
+
+set -ex
+
+if test -z "${1}" ; then
+        echo "Name required"
+        exit 1
+fi
+
+name="${1%.c}"
+
+if test "${name}" = "${1}" ; then
+        name="${1%.so}"
+fi
+
+gcc -c -I ~/include -fpic "${name}.c"
+
+gcc -shared -o "${name}.so" "${name}.o"
 
 
-Tested-by: Nageswara R Sastry <rnsastry@linux.ibm.com>
+> file.   Is the 10x-20x overhead just the python interpreter, or is it
+> related to perf?
 
-On 28/06/21 11:53 am, Kajol Jain wrote:
-> Commit 48a1f565261d ("perf script python: Add more PMU fields
-> to event handler dict") added functionality to report fields like
-> weight, iregs, uregs etc via perf report.
-> That commit predefined buffer size to 512 bytes to print those fields.
-> 
-> But incase of powerpc, since we added extended regs support
-> in commits:
-> 
-> Commit 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
-> Counter SPRs as part of extended regs")
-> Commit d735599a069f ("powerpc/perf: Add extended regs support for
-> power10 platform")
-> 
-> Now iregs can carry more bytes of data and this predefined buffer size
-> can result to data loss in perf script output.
-> 
-> Patch resolve this issue by making buffer size dynamic based on number
-> of registers needed to print. It also changed return type for function
-> "regs_map" from int to void, as the return value is not being used by
-> the caller function "set_regs_in_dict".
-> 
-> Fixes: 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
-> Counter SPRs as part of extended regs")
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> ---
->   .../util/scripting-engines/trace-event-python.c | 17 ++++++++++++-----
->   1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 4e4aa4c97ac5..c8c9706b4643 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -687,7 +687,7 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
->   			_PyUnicode_FromString(decode));
->   }
->   
-> -static int regs_map(struct regs_dump *regs, uint64_t mask, char *bf, int size)
-> +static void regs_map(struct regs_dump *regs, uint64_t mask, char *bf, int size)
->   {
->   	unsigned int i = 0, r;
->   	int printed = 0;
-> @@ -695,7 +695,7 @@ static int regs_map(struct regs_dump *regs, uint64_t mask, char *bf, int size)
->   	bf[0] = 0;
->   
->   	if (!regs || !regs->regs)
-> -		return 0;
-> +		return;
->   
->   	for_each_set_bit(r, (unsigned long *) &mask, sizeof(mask) * 8) {
->   		u64 val = regs->regs[i++];
-> @@ -704,8 +704,6 @@ static int regs_map(struct regs_dump *regs, uint64_t mask, char *bf, int size)
->   				     "%5s:0x%" PRIx64 " ",
->   				     perf_reg_name(r), val);
->   	}
-> -
-> -	return printed;
->   }
->   
->   static void set_regs_in_dict(PyObject *dict,
-> @@ -713,7 +711,16 @@ static void set_regs_in_dict(PyObject *dict,
->   			     struct evsel *evsel)
->   {
->   	struct perf_event_attr *attr = &evsel->core.attr;
-> -	char bf[512];
-> +
-> +	/*
-> +	 * Here value 28 is a constant size which can be used to print
-> +	 * one register value and its corresponds to:
-> +	 * 16 chars is to specify 64 bit register in hexadecimal.
-> +	 * 2 chars is for appending "0x" to the hexadecimal value and
-> +	 * 10 chars is for register name.
-> +	 */
-> +	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
-> +	char bf[size];
->   
->   	regs_map(&sample->intr_regs, attr->sample_regs_intr, bf, sizeof(bf));
->   
-> 
 
--- 
-Thanks and Regards
-R.Nageswara Sastry
+AFAICT the Python C API used to interface to Python performs fairly similarly
+to the Python interpreter.
+
+>                  Maybe we could have some kind of python fast path
+> just for filters?
+
+I expect there are ways to make it more efficient, but I doubt it would ever
+come close to C.
+
+> just for filters? Or maybe the alternative would be to have a
+> frontend in perf that can automatically generate/compile such a C
+> filter based on a simple expression, but I'm not sure if that would
+> be much simpler.
+
+If gcc is available, perf script could, in fact, build the .so on the fly
+since the compile time is very quick.
+
+Another point is that filters can be used for more than just filtering.
+Here is an example which sums cycles per-cpu and prints them, and the difference
+to the last print, at the beginning of each line.  I think this was something
+you were interested in doing?
+
+
+#include <perf/perf_dlfilter.h>
+#include <stdio.h>
+
+#define MAX_CPU 4096
+
+__u64 cycles[MAX_CPU];
+__u64 cycles_rpt[MAX_CPU];
+
+int filter_event_early(void *data, const struct perf_dlfilter_sample *sample, void *ctx)
+{
+	__s32 cpu = sample->cpu;
+
+	if (cpu >=0 && cpu < MAX_CPU)
+		cycles[cpu] += sample->cyc_cnt;
+	return 0;
+}
+
+int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ctx)
+{
+	__s32 cpu = sample->cpu;
+
+	if (cpu >=0 && cpu < MAX_CPU) {
+		printf("%10llu %10llu ", cycles[cpu], cycles[cpu] - cycles_rpt[cpu]);
+		cycles_rpt[cpu] = cycles[cpu];
+	} else {
+		printf("%22s", "");
+	}
+	return 0;
+}
+
+const char *filter_description(const char **long_description)
+{
+	return "Print the number of cycles at the start of each line";
+}
