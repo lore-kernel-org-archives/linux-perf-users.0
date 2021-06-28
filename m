@@ -2,144 +2,157 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70397C2B9F4
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 12:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28FDC2B9F4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 12:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCFF61C69
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 12:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C490961477
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 12:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232841AbhF1MKg (ORCPT
+        id S232900AbhF1MOz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Jun 2021 08:10:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32810 "EHLO
+        Mon, 28 Jun 2021 08:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232833AbhF1MKf (ORCPT
+        with ESMTP id S232833AbhF1MOu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Jun 2021 08:10:35 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46ADCC061760
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 05:08:10 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id kt19so2049709pjb.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 05:08:10 -0700 (PDT)
+        Mon, 28 Jun 2021 08:14:50 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9BD6C061574
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 05:12:23 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id kt19so2057188pjb.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 05:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=rBkm1+s9hX6PcUjinQ7lSJS/Fgd3FwweZh2+Z8xsqPo=;
-        b=opd6sglrblljFRzHryg/7EDmSJHD5JrcCqUh9qzqAbDVm+/TtkkOtWQygN+1DkWBch
-         AL45nqtkgOjaX1dUubd2kOvovFvWG6daiQBEHt119H2YFRS7/QXcRoKYQdjeBCeJ4s3d
-         wGEzfk0U9N/+p7QxV1uMdyzpYfVi5uc+eqSlAjXvXRbRjUX0cmEYafIjy0gHuWuFhEWv
-         D8a+oK8Nb9SH5DSPZUt/105BpunBxXb8WOPDQDC4roEBeRk7oE8WmqsbH3VRMhBV2vh3
-         a3sEy3r6o49FJDybVNWviCMJ08pewDwPGjT+8pcaLWNLbboO2sQQYx4AcRk1aw7ZUOOs
-         1fJA==
+        bh=2xcGOgP/yg1u7n803j0UADdqFly0YaxV+TsFk8YNqGg=;
+        b=q0XtAxQCldYUjMpu+SY9e/g2ItjBE0+iCawDmqpGlnW9tg1QZoxU1EerpByITcNWpo
+         dYYERIGvOrhKWkz68obNn4RVU/T6Vn7ARfiLc9xK8sI+djcHH8LTkBtwf1IuK3ZX9q7m
+         TfVz9UOi881d1rqWEIxZpFFpPdzqknoSGGszEtdO9IDm8V2EjYmJ4EZlHK8WK5EfIbKi
+         HTtzL7Md3RkabxkmtU+Hd5AG+oheb+jkOs+1F+sEO/uncvw8yS53OsiNeDoXMguaZMcB
+         yBGuqzS5L70IluQiN3qJ8EUc75jnbvDeTnDufd3tJ1hKp4lnAXQAxofN2vkO8GRPJwUi
+         gEeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=rBkm1+s9hX6PcUjinQ7lSJS/Fgd3FwweZh2+Z8xsqPo=;
-        b=cF5zfeaJu5LCZUYKusllYEAolMfb6LGVrzDP/Sa/tBgTUrhMkCQenBrMqfWK/laTC/
-         HR1z6E8fP0cP6DaiU9ST5rN6JnGxZa2pI20THYoZEd3FC+6+WbSeuGzoZRuOttslneah
-         moVVJONa87m3pokp5g6dtf+p7ETxP3T7acQCnpj60O6FV/0SzSoK2cBggjHUnMqwxlc8
-         BxxOmdsHZoX+kVzCo/vw7H9a1bJKECSl07pbFq3uDpeBY9RPXqCrWPsSEKvZMbK/bJmb
-         afoGvcE3QtwHrS6jUjUuQPm0jLqXpp0V1WftGEx9sf14ZFtXDQ+CU4H02lxm1ap/ruBs
-         AJpA==
-X-Gm-Message-State: AOAM533whLZk8e1+59zq6+wpYIOzhjyKXFrZgbf2bGCVa5PMxPz0cUOf
-        X0/aTf3fX1KJkiS0LQf3MvXsqQ==
-X-Google-Smtp-Source: ABdhPJz+wogkKeCNY+BVjSj+kneg8FhgU/tquI+IyEsOosqz0f3FtnnoYWlFAZpKsenFk1uABafnlg==
-X-Received: by 2002:a17:90a:2f66:: with SMTP id s93mr876153pjd.19.1624882089207;
-        Mon, 28 Jun 2021 05:08:09 -0700 (PDT)
+        bh=2xcGOgP/yg1u7n803j0UADdqFly0YaxV+TsFk8YNqGg=;
+        b=aWMLCmrlQDc99/6gQUzt98FZXAL088RY3PCvbcrhsasyvuJznDdcnk+8CmFji/7AlB
+         bE6UGKHIrXRekvy7dv5x8yx024h2T3ylnk4EiYKM7M6TAMC1+5vC9SopG9FKi7pfjLcT
+         YJBUyDR9+/cVVfJSWKOMcXad4DJyAuOcjiKwP4RdIWQEfsd6cAyrE/ruIhLjNHm4ywHE
+         FMgQmZvtlGwI4yinyOpGenqvqWqTBatG20YoGu1DVi7jSMFpd3ynXrCVNHA13riEVsF2
+         N4wNQEc3XOPgbt+ADGdwcC0RYSLGyDbUMimGuuDyN1BiCWnde4YaVCNBZRP9uGeg33lB
+         9VKA==
+X-Gm-Message-State: AOAM532CsABjzALVFKKk8+D88n7SjvSYdwsYWGAUF7//JENRadbiFlGV
+        vZvvHUXefDjzEStu+lvH4EPK6w==
+X-Google-Smtp-Source: ABdhPJy3t88iPCr1uRgXPIlJRE1hWIf9EVjMlvHN4QcQ52KFGeWoAA5vxIvilcuwAN6yuVxJVewSOw==
+X-Received: by 2002:a17:902:e04f:b029:eb:66b0:6d08 with SMTP id x15-20020a170902e04fb02900eb66b06d08mr22425677plx.50.1624882343334;
+        Mon, 28 Jun 2021 05:12:23 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id o1sm14404856pfk.152.2021.06.28.05.08.04
+        by smtp.gmail.com with ESMTPSA id b22sm6140182pfp.20.2021.06.28.05.12.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Jun 2021 05:08:08 -0700 (PDT)
-Date:   Mon, 28 Jun 2021 20:08:02 +0800
+        Mon, 28 Jun 2021 05:12:22 -0700 (PDT)
+Date:   Mon, 28 Jun 2021 20:12:17 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, al.grant@arm.com,
-        branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>, Al Grant <Al.Grant@arm.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
-Message-ID: <20210628120802.GC200044@leoy-ThinkPad-X240s>
-References: <20210624164303.28632-1-james.clark@arm.com>
- <20210624164303.28632-3-james.clark@arm.com>
- <20210628012744.GA158794@leoy-ThinkPad-X240s>
- <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+Subject: Re: [PATCH v5 5/5] perf arm-spe: Don't wait for PERF_RECORD_EXIT
+ event
+Message-ID: <20210628121217.GD200044@leoy-ThinkPad-X240s>
+References: <20210519071939.1598923-1-leo.yan@linaro.org>
+ <20210519071939.1598923-6-leo.yan@linaro.org>
+ <369fd454-d94d-daa1-ead4-b42645ec4282@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+In-Reply-To: <369fd454-d94d-daa1-ead4-b42645ec4282@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 28, 2021 at 11:38:34AM +0100, James Clark wrote:
-
-[...]
-
-> >>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
-> >>  					  union perf_event *event,
-> >>  					  struct perf_tool *tool __maybe_unused)
-> >> @@ -2462,7 +2478,8 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
-> >>  				cs_etm__dump_event(etm, buffer);
-> >>  				auxtrace_buffer__put_data(buffer);
-> >>  			}
-> >> -	}
-> >> +	} else if (dump_trace)
-> >> +		dump_queued_data(etm, &event->auxtrace);
+On Fri, Jun 25, 2021 at 02:25:15PM +0100, James Clark wrote:
+> 
+> 
+> On 19/05/2021 08:19, Leo Yan wrote:
+> > When decode Arm SPE trace, it waits for PERF_RECORD_EXIT event (the last
+> > perf event) for processing trace data, which is needless and even might
+> > cause logic error, e.g. it might fail to correlate perf events with Arm
+> > SPE events correctly.
 > > 
-> > IIUC, in the function cs_etm__process_auxtrace_event(), since
-> > "etm->data_queued" is always true, below flow will never run:
+> > So this patch removes the condition checking for PERF_RECORD_EXIT event.
 > > 
-> >     if (!etm->data_queued) {
-> >         ......
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  tools/perf/util/arm-spe.c | 6 +-----
+> >  1 file changed, 1 insertion(+), 5 deletions(-)
 > > 
-> >         if (dump_trace)
-> >             if (auxtrace_buffer__get_data(buffer, fd)) {
-> >                     cs_etm__dump_event(etm, buffer);
-> >                     auxtrace_buffer__put_data(buffer);
-> >             }
-> >     }
-> > 
-> > If so, it's better to use a new patch to polish the code.
+> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> > index 5c5b438584c4..58b7069c5a5f 100644
+> > --- a/tools/perf/util/arm-spe.c
+> > +++ b/tools/perf/util/arm-spe.c
+> > @@ -717,11 +717,7 @@ static int arm_spe_process_event(struct perf_session *session,
+> >  					sample->time);
+> >  		}
+> >  	} else if (timestamp) {
+> > -		if (event->header.type == PERF_RECORD_EXIT) {
+> > -			err = arm_spe_process_queues(spe, timestamp);
+> > -			if (err)
+> > -				return err;
+> > -		}
+> > +		err = arm_spe_process_queues(spe, timestamp);
+> >  	}
+> >  
+> >  	return err;
 > > 
 > 
-> Hi Leo,
+> For the whole set:
+> Reviewed-by: James Clark <james.clark@arm.com>
+> Tested-by: James Clark <james.clark@arm.com>
+
+> I see a big improvement in decoding involving multiple processes because the timestamps are now
+> correlated with the comm and mmap events.
 > 
-> I think this is not true in piped mode because there is no auxtrace index.
-> In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
-> is called for each buffer.
+> For example perf-exec samples are visible right before the exec is done, and on an
+> application that forks, samples are visible from all processes. For example:
 > 
-> You can reproduce this with something like this:
+>    perf record -e arm_spe// -- bash -c "stress -c 1"
+>    perf script
 > 
->      ./perf record -o - ls > stdio.data
->      cat stdio.data | ./perf report -i -
+>    perf-exec  4502 [003] 259755.050409:          1    l1d-access:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
+>    perf-exec  4502 [003] 259755.050409:          1    tlb-access:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
+>    perf-exec  4502 [003] 259755.050409:          1        memory:  ffff80001014b840 sched_clock+0x40 ([kernel.kallsyms])
+>    perf-exec  4502 [003] 259755.050411:          1    tlb-access:  ffff800010120fb8 __rcu_read_lock+0x0 ([kernel.kallsyms])
+>    bash  4502 [003] 259755.050411:          1   branch-miss:  ffff8000105b2a40 memcpy+0x80 ([kernel.kallsyms])
+>    bash  4502 [003] 259755.050411:          1    tlb-access:                 0 [unknown] ([unknown])
+>    ...
+>    stress  4502 [003] 259755.051468:          1    l1d-access:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
+>    stress  4502 [003] 259755.051468:          1    tlb-access:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
+>    stress  4502 [003] 259755.051468:          1        memory:  ffff800010259a24 __vma_adjust+0x1f4 ([kernel.kallsyms])
+> 
+> Previously samples were only attributed to 'stress', which was obviously wrong.
 
-You are right!  I tried these two commands with cs_etm event, just as
-you said, in this case, the AUX trace data is not queued; so the flow
-for "if (!etm->data_queued)" should be kept.  If so, I am very fine
-for current change.  Thanks for sharing the knowledge.
+Thanks a lot for the review and testing, James!
 
-> There are some other Coresight features that don't work as expected in this mode, like
-> sorting timestamps between CPUs. The aux split patchset won't work either because random
-> access isn't possible. And the TRBE patch that I'm working on now won't work, because it
-> also requires the random access to lookup the flags on the AUX record to configure the 
-> decoder for unformatted trace.
+Hi Arnaldo, I confirmed this patch set can be cleanly applied on
+the latest acme/perf/core branch, so could you pick up this patch
+set?
 
-Cool, looking forward for the patches :)
-
+Thanks,
 Leo
