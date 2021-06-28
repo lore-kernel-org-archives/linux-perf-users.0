@@ -6,118 +6,89 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24767C48BC2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 01:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF25C49EA6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 01:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00DCE61423
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 01:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4CE6198D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 01:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231753AbhF1Bdx (ORCPT
+        id S231706AbhF1BwZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 27 Jun 2021 21:33:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33100 "EHLO
+        Sun, 27 Jun 2021 21:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbhF1Bdx (ORCPT
+        with ESMTP id S231678AbhF1BwZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 27 Jun 2021 21:33:53 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88EE9C061574
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 18:31:27 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id w15so9448139pgk.13
-        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 18:31:27 -0700 (PDT)
+        Sun, 27 Jun 2021 21:52:25 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A737C061766
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 18:50:00 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id a2so14004838pgi.6
+        for <linux-perf-users@vger.kernel.org>; Sun, 27 Jun 2021 18:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=XY1v4wQPZXeUEo4/Ib4mftoEqzCDn6DSUGjjwDuyBRE=;
-        b=FQ9lPlRpChEJNBV1I2n07ASVhvbA4e/+UW2OaF0a95J/WR4CZsFgIHlqTQP7bs1KoP
-         PBBh/9jthXzZvfPY9kmZFR1MwQgvX7JGxRKK0nCqbr0qwUFSglMwTJbbH4BIoCa3BjLV
-         AZEY/vnzjxAID0P7ckWHvJqTXFNW+VLNUbMJ2DaeYRtzsFEiHPq8aXjhO7IVmOkPKMfn
-         7lLf9Ms77XCPQp469oRPKqNzZq/20iNGjjL/7Y75RnQyvum6ARDZD43tFirnYsE/xsLe
-         KJku0ieyxGoSmDxwRWQDu2vQiN0XAOlfStmWwoCcmcVepNhDwA4r+rzOrUmLGHMNIJC5
-         B0aA==
+        bh=8iY2XvGYIEGsPy5ZGZiQi9ADeEM827+ckbpfPdEArIg=;
+        b=HpotKYvpqG61Gpg54HUKhviArjzigfbpU5tFnq0t8nL+1oJI/JDmpDiYEdrBt/6kNc
+         3cnt9SoxgI1NRzO7R7ERaCRg8nGA+dMEsIYD6fzdki7oE2QaLP5L9UnpD1wjtBY1TBRM
+         j9ln8ZzVASY9u8024p6Wo443xXptBdCSDiFoz3G3hl8Urncmc5OlNI9A1YjnMgYISe4H
+         cgl9tsf1Swp28c1xuqHQD07yBDV0rNdyRJ3V1/QB1kbDbtp3Dk7CcMAjXKC7FDRdGdJF
+         s8npiLmjK9oX3q2JqSYHD9vf8dJOkOWq7gwmc1WWF6C0SSxWGQGagp5gsxZf9NmifpWn
+         shCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=XY1v4wQPZXeUEo4/Ib4mftoEqzCDn6DSUGjjwDuyBRE=;
-        b=i3Kl13psAQWQo1AhEAeuwndGn1H/SJ44k9ZkRCz+zLbU1G20NgYX1B+LhdxIfCPp7Z
-         VnLuVQ1CpJ9WJb4xIcGDHJQpDvo4Zf/jhXt0D0FG1oOsbmBawn9l/vRjCAZ801d9hT2v
-         mFWbZwLK4rqAWP9kFmmWYeiGZXC5DGBiAewhrhiSbdn1LR8MaTE4s0qQl2CW40wTSzXI
-         ix64a5tF+FuTh2kBJim3rTTzshe/xb0xxl0xvK5k8uQE3TDNeum3AMjgU1JZjWHqNb45
-         h3Osm7ebLUYDta7U24AxrO0tOEzzlJVjYf344p9FfICAvTWGwaFvGuFN161vUMCEaX1o
-         am0g==
-X-Gm-Message-State: AOAM531IaYyYcZZRxLNQRrPRr8Djeo+dG31Vl13ob+/n/eDZz+57kxIj
-        /Xj9AUye5zCINkq30AyZ3hpFqA==
-X-Google-Smtp-Source: ABdhPJwbluA4O/54AMZ1I1l5jNnR1ZVwqNEM2VriU8rA5cXtdQHddLL5iz3dG/aJx1cdsWqjy/SD9g==
-X-Received: by 2002:a63:d909:: with SMTP id r9mr21255556pgg.285.1624843887047;
-        Sun, 27 Jun 2021 18:31:27 -0700 (PDT)
+        bh=8iY2XvGYIEGsPy5ZGZiQi9ADeEM827+ckbpfPdEArIg=;
+        b=rMjbA30KJyZVmcIiFRvR7cmH7xYxoSl9mR76FVn7rBfmojfPLERjBw8NrcJ2qsMahq
+         nu3JQrRD70qNCKsqJsH3AZ2a83996DO7+KDC29LlTc78k+L9OeeS+jBzg3Go1ZBmd6tK
+         46bCSrjwBDFJ38cvK7ccnekkJinHg5SEEUa/bpsEEyA3qykgAQ7Mwbs5FlgnP7DXCpEj
+         Ov1kBBsn9TDsn8sqLwrzzbGppsGtdsq5eV5vDo3/eD765Ze0UR5f0jDNdHOHkvpADXRt
+         omU1G5iu0be2InfwbPcvYNgDDGK9VzWNvaI3RJ2oyI9/ytMRGpVN8twFym3O+xfziXy0
+         GdZQ==
+X-Gm-Message-State: AOAM531T7nsbrqkpvorBXehdnzDkbD3F1fNvJkluiOSQWBHmK2voSE3O
+        OrIsfsqgh9bYPQLwCljgQcISfA==
+X-Google-Smtp-Source: ABdhPJwVsR2cyfJyFTLxc+oAucQiwJumgusFZrJ4XQp+UursvqAWuCuaYAIp2flT20pbByydH2JfQQ==
+X-Received: by 2002:a63:e205:: with SMTP id q5mr20722318pgh.404.1624844999931;
+        Sun, 27 Jun 2021 18:49:59 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([103.207.71.35])
-        by smtp.gmail.com with ESMTPSA id l12sm11884145pff.105.2021.06.27.18.31.21
+        by smtp.gmail.com with ESMTPSA id t13sm12283459pfq.4.2021.06.27.18.49.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 27 Jun 2021 18:31:26 -0700 (PDT)
-Date:   Mon, 28 Jun 2021 09:31:19 +0800
+        Sun, 27 Jun 2021 18:49:59 -0700 (PDT)
+Date:   Mon, 28 Jun 2021 09:49:53 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Denis Nikitin <denik@google.com>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] perf cs-etm: Remove callback
- cs_etm_find_snapshot()
-Message-ID: <20210628013119.GB158794@leoy-ThinkPad-X240s>
-References: <20210528161552.654907-1-leo.yan@linaro.org>
- <20210528161552.654907-4-leo.yan@linaro.org>
- <05442998-05f6-c41c-5a78-3f6723558825@arm.com>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     john.garry@huawei.com, will@kernel.org, mathieu.poirier@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, james.clark@arm.com,
+        andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf arm-spe: Fix incorrect sample timestamp in perf
+ script
+Message-ID: <20210628014953.GA163942@leoy-ThinkPad-X240s>
+References: <20210626032115.16742-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05442998-05f6-c41c-5a78-3f6723558825@arm.com>
+In-Reply-To: <20210626032115.16742-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+Hi Jihong,
 
-On Tue, Jun 22, 2021 at 03:29:35PM +0100, James Clark wrote:
-> 
-> 
-> On 28/05/2021 17:15, Leo Yan wrote:
-> > The callback cs_etm_find_snapshot() is invoked for snapshot mode, its
-> > main purpose is to find the correct AUX trace data and returns "head"
-> > and "old" (we can call "old" as "old head") to the caller, the caller
-> > __auxtrace_mmap__read() uses these two pointers to decide the AUX trace
-> > data size.
-> > 
-> > cs_etm_find_snapshot() should be removed with below reasons:
-> 
-> Hi Leo,
-> 
-> I came across this other comment in coresight-tmc-etr.c that should probably
-> be fixed up if we remove cs_etm_find_snapshot(). The same is duplicated in a
-> few other files:
-> 
-> 	/*
-> 	 * In snapshot mode we simply increment the head by the number of byte
-> 	 * that were written.  User space function  cs_etm_find_snapshot() will
-> 	 * figure out how many bytes to get from the AUX buffer based on the
-> 	 * position of the head.
-> 	 */
-> 	if (etr_perf->snapshot)
-> 		handle->head += size;
+On Sat, Jun 26, 2021 at 11:21:15AM +0800, Yang Jihong wrote:
+> When use perf script to parse ARM SPE data, sample timestamp does not match
+> the timestamp stored in the AUX buffer, arm_spe_prep_sample function set
+> "samlpe->time = speq->timestamp", "speq->timestamp" is the timestamp of first
+> packet in auxtrace buffer. As a result, the time of all samples in a auxtrace
+> buffer uses the same timestamp.
 
-Good finding!  I will fix the comments in next version.
+Could you confirm if the patch set [1] can fix your issue?
 
-Thanks a lot for the reviewing and testing!
-
+Thanks,
 Leo
+
+[1] https://lore.kernel.org/patchwork/cover/1431624/
