@@ -2,123 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A53C11F66
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 19:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B80C11F64
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 20:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3E661C93
-	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 19:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64AA761C4D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 28 Jun 2021 20:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236559AbhF1Tch (ORCPT
+        id S237207AbhF1UED (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 28 Jun 2021 15:32:37 -0400
-Received: from mga17.intel.com ([192.55.52.151]:1186 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236553AbhF1Tcf (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 28 Jun 2021 15:32:35 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10029"; a="188399721"
-X-IronPort-AV: E=Sophos;i="5.83,306,1616482800"; 
-   d="scan'208";a="188399721"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2021 12:30:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,306,1616482800"; 
-   d="scan'208";a="419287684"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.79]) ([10.237.72.79])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Jun 2021 12:30:05 -0700
-Subject: Re: [PATCH V2 00/10] perf script: Add API for filtering via
- dynamically loaded shared object
-To:     Andi Kleen <ak@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Mon, 28 Jun 2021 16:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237180AbhF1UEC (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 28 Jun 2021 16:04:02 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA13C061760
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 13:01:36 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id l11so10888076pji.5
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 13:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JUCHMqimV26M+N4zD2aR1uV6fMENRzPa10+B4/WZOb4=;
+        b=zAvdAyhu0J8Ne7myACLAgGKe4adrqcNWMRAndZo+oEEhBBEc4Uw+ptB9ktsWEoXmXV
+         6HHAdtIuMz+cOl5H7G2rZ7QOb0WrXtx4R0OD5oLT3ex6vzdTZ5ggHzYbg1qBbvVHgF7A
+         DB8BKopLFYska8Jsy8s+AoxfZUpqXDOoH68rHxPlL4PMfBxEjbUnvAnIzmOgK1xVuIJM
+         tHdjuXNmAMTxhdAk6AgiZCCGs+5rFjrmkkRdgCZzsRdQ7m6HULbk8DA9wMSyYcCn3jd1
+         66xMkA+4QcZQu0Fd5gkWWBO3m3fwkDSnelearFAVLZy+b9U+ANKhFWlbBXxFf5Dd2mo2
+         zuVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JUCHMqimV26M+N4zD2aR1uV6fMENRzPa10+B4/WZOb4=;
+        b=E4KSfOj8lvNG1FyZ3GLPBjkzR+qoZ3mYbaQLzYl0HUQh2uRBNuwmw/KnHnisftED9F
+         /XqDuC37cmBzpZv/U6uhTeURKi/D1esnuh8a1jdBsRXku1v5sUuAs4LQ6YGuH7u42M3e
+         28a5JjPqcIYnTubJK9ZZovj0XabANb7nN1R0HWB/tvMNy4dmn+5asi90bEWBNxBPe5+P
+         TNNS1qPvOCdxUP8ySkNzdabwT9V+GfVlmeMchRBtPrBo4K3er87+PyoqTZ9FGEgvA3c7
+         j0kRYwyPaU2gGB4cox8GAL1dvHpCMhICR4M0H5CEYYqI7XJ45Y6JmoTENGe9JMudc0wb
+         CDcg==
+X-Gm-Message-State: AOAM531olXVWWWckbQmvPnQWkEThLMwvs9RIYjxgy0pJ0MH1hk/WUb50
+        ZKMfzMp9wps71IiEzXVZohuNpg==
+X-Google-Smtp-Source: ABdhPJyCIzhw4fmNkoS6QhjFHkMXV7pgGimaStifjJ/ZNc2iiWyX48Qh+GEnIqmouApNjPRIzxDZ2A==
+X-Received: by 2002:a17:902:bd42:b029:123:1986:d0c3 with SMTP id b2-20020a170902bd42b02901231986d0c3mr24447882plx.74.1624910495372;
+        Mon, 28 Jun 2021 13:01:35 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id c5sm15500289pfn.144.2021.06.28.13.01.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jun 2021 13:01:34 -0700 (PDT)
+Date:   Mon, 28 Jun 2021 14:01:32 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Clark <james.clark@arm.com>, acme@kernel.org,
+        coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210627131818.810-1-adrian.hunter@intel.com>
- <e2a57ee8-6489-40d5-04d0-7d985eba961f@linux.intel.com>
- <ea9a04ad-26b2-7072-9f45-9ddbd8f61c10@intel.com>
- <65fc17a8-cefa-f7a8-8ffc-8ef88b773991@linux.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <4e94511d-858b-bd46-add8-cb525be4875b@intel.com>
-Date:   Mon, 28 Jun 2021 22:30:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
+Message-ID: <20210628200132.GB1200359@p14s>
+References: <20210624164303.28632-1-james.clark@arm.com>
+ <20210624164303.28632-3-james.clark@arm.com>
+ <20210628012744.GA158794@leoy-ThinkPad-X240s>
+ <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+ <20210628120802.GC200044@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
-In-Reply-To: <65fc17a8-cefa-f7a8-8ffc-8ef88b773991@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210628120802.GC200044@leoy-ThinkPad-X240s>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 28/06/21 5:57 pm, Andi Kleen wrote:
+On Mon, Jun 28, 2021 at 08:08:02PM +0800, Leo Yan wrote:
+> On Mon, Jun 28, 2021 at 11:38:34AM +0100, James Clark wrote:
 > 
-> On 6/28/2021 12:23 AM, Adrian Hunter wrote:
->> On 27/06/21 7:13 pm, Andi Kleen wrote:
->>> On 6/27/2021 6:18 AM, Adrian Hunter wrote:
->>>> Hi In some cases, users want to filter very large amounts of data
->>>> (e.g. from AUX area tracing like Intel PT) looking for something
->>>> specific. While scripting such as Python can be used, Python is 10
->>>> to 20 times slower than C. So define a C API so that custom filters
->>>> can be written and loaded.
->>> While I appreciate this for complex cases, in my experience filtering
->>> is usually just a simple expression. It would be nice to also have a
->>> way to do this reasonably fast without having to write a custom C
->> I do not agree that writing C filters is a hassle e.g. a minimal do-nothing
->> filter is only a few lines:
+> [...]
 > 
-> It still doesn't seem user friendly. Maybe it's obvious to you, but I suspect we left behind most of even the sophisticated perf users here.
+> > >>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
+> > >>  					  union perf_event *event,
+> > >>  					  struct perf_tool *tool __maybe_unused)
+> > >> @@ -2462,7 +2478,8 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+> > >>  				cs_etm__dump_event(etm, buffer);
+> > >>  				auxtrace_buffer__put_data(buffer);
+> > >>  			}
+> > >> -	}
+> > >> +	} else if (dump_trace)
+> > >> +		dump_queued_data(etm, &event->auxtrace);
+> > > 
+> > > IIUC, in the function cs_etm__process_auxtrace_event(), since
+> > > "etm->data_queued" is always true, below flow will never run:
+> > > 
+> > >     if (!etm->data_queued) {
+> > >         ......
+> > > 
+> > >         if (dump_trace)
+> > >             if (auxtrace_buffer__get_data(buffer, fd)) {
+> > >                     cs_etm__dump_event(etm, buffer);
+> > >                     auxtrace_buffer__put_data(buffer);
+> > >             }
+> > >     }
+> > > 
+> > > If so, it's better to use a new patch to polish the code.
+> > > 
+> > 
+> > Hi Leo,
+> > 
+> > I think this is not true in piped mode because there is no auxtrace index.
+> > In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
+> > is called for each buffer.
+> > 
+> > You can reproduce this with something like this:
+> > 
+> >      ./perf record -o - ls > stdio.data
+> >      cat stdio.data | ./perf report -i -
 > 
-
-Fair enough.
-
+> You are right!  I tried these two commands with cs_etm event, just as
+> you said, in this case, the AUX trace data is not queued; so the flow
+> for "if (!etm->data_queued)" should be kept.  If so, I am very fine
+> for current change.  Thanks for sharing the knowledge.
 > 
->>
->>>                   Maybe we could have some kind of python fast path
->>> just for filters?
->> I expect there are ways to make it more efficient, but I doubt it would ever
->> come close to C.
+> > There are some other Coresight features that don't work as expected in this mode, like
+> > sorting timestamps between CPUs. The aux split patchset won't work either because random
+> > access isn't possible. And the TRBE patch that I'm working on now won't work, because it
+> > also requires the random access to lookup the flags on the AUX record to configure the 
+> > decoder for unformatted trace.
+>
+
+There is a lot of things happening in this area.  Based on the above should I
+still plan to review this set or should I wait for another revision?
+
+Thanks,
+Mathieu
+
+> Cool, looking forward for the patches :)
 > 
-> If it's within 2-3x I guess it would be ok. For any larger data files we should parallelize anyways, and that works fine with the --time x/y method (although it usually also needs some custom scripting, perhaps need to figure out how to make it more user friendly)
-
-I am not sure Python could do that, maybe something else.
-
-Parallelization is on the list of things to do.  Splitting by time is OK but gets trickier if you want to put the results back together in time order.  Also call chains get broken at the splits in time.
-
-> 
-> 
->>
->>> just for filters? Or maybe the alternative would be to have a
->>> frontend in perf that can automatically generate/compile such a C
->>> filter based on a simple expression, but I'm not sure if that would
->>> be much simpler.
->> If gcc is available, perf script could, in fact, build the .so on the fly
->> since the compile time is very quick.
->>
->> Another point is that filters can be used for more than just filtering.
->> Here is an example which sums cycles per-cpu and prints them, and the difference
->> to the last print, at the beginning of each line.  I think this was something
->> you were interested in doing?
-> 
-> Yes that's great and useful, but I would prefer to not maintain custom plugins for it. Often when I write a script it has to run in all kinds of weird environments that some random person installed, and it's not clear how portable building C will be there. And I doubt I can just copy the .so files around.
-
-That is true.  .so files have limitations.
-
-> 
-> BTW I'm not arguing to not do the plugin (I can imagine extreme cases where such a plugin is the best option), but really for most of these things there should be easier and more portable alternatives, even if they are slightly slower.
-
-Right.  The documentation could definitely point out limitations and more user-friendly alternatives like using Python scripting.
-
-
-
-
+> Leo
