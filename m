@@ -2,186 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A2CC11F67
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 15:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D693DC11F67
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 19:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0C761D9A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 15:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B439061DD1
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 19:08:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234413AbhF2PDO (ORCPT
+        id S235435AbhF2TKt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Jun 2021 11:03:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53024 "EHLO
+        Tue, 29 Jun 2021 15:10:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232521AbhF2PDN (ORCPT
+        with ESMTP id S234903AbhF2TKs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Jun 2021 11:03:13 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DF1C061760
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jun 2021 08:00:45 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id u8so12930376wrq.8
-        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jun 2021 08:00:45 -0700 (PDT)
+        Tue, 29 Jun 2021 15:10:48 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268BAC061766
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jun 2021 12:08:21 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id i189so27812663ioa.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jun 2021 12:08:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IC/0iIQzRxRPo9b+WDc+/ztYr9KoC21F+3neWDOH/5k=;
-        b=rPD6Dl6BfLhn1PHK3MeILaJWiKWEiyI99p+rFwCypedMPTWVpTN7VETYBvZjxWdK3T
-         eZu6YzzPIe2swfmXXb/8gOdmYTYE6A0IYLQ/C6ZyEaqNoRH6x5Ie4rz23NwnneYCdQA3
-         KjfiTRYQctF/axYBt9PhoCyzwVSmc7uU2M92+38hZLIaoWpn02QnYa4p9f5iCW0Sc/6T
-         tgK3dEcF/2yJAKoBtYzwIMpUEWmA/5sjp0l2gvqTOqrMBb1uP0MVQ57RVISB3WwI3nCd
-         GLteK5nS1anLpzIYbjEtlKSILy47ue2+sNknZgLtUqi4C/Q21Bx76JqHC8jB0u2Byo6X
-         Yfaw==
+        bh=IQZ/MG27uCidkTSCI4YoLKoh50so7qSZQ7ja/JlUo2I=;
+        b=Gay8DKwtPNOIcUv3WQZgu6ebp3xm3yjkSUbCgRHh5G5dW/iU/Z4b0YKoNPOY2OoRK3
+         nnMi42TFY99ajD/oOZkRsZgsDDqoIZGjkuA8k4jtbuqCXbHb4i/KoP8cbgZpK2xkFPUM
+         riDcAWG0xttwHPE4eoZh8qy7clDrX6vcLeglrb2TtC0PiBjupAVxAYDRw21H5GUrDEmG
+         doBfxpJzfRtAL5WsekApdYYur75uuHRgOAKP9bqp32kD9NEASskZgOpVj3tr79nMir1G
+         BNqbowXpXlijfsIgMkE41lF/aDfo7SHxNfPAhaWrlwVKPfYG8e9sGElk2is6N1+poaDQ
+         FeHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IC/0iIQzRxRPo9b+WDc+/ztYr9KoC21F+3neWDOH/5k=;
-        b=EK9AaPyV8EhLcT+fSNcmDHm6y+Aa3GFgNpagyD18xkbS6Q2BXzIIG+fy+j1j3oA9cy
-         ruKY2aSoYr77OtCuxtP5/EOQ/q+d1/99SpRBdthl5fXeZc82gwZaY2xWDmDXI8TxR+LK
-         xD9XURLkaEW0cDovNFCgYX+m4uoF52fzMT8STekHeUMukvmZDJuHecAdtzBEF6KkQu9Q
-         hXPtyUqwANs6kac1c6eW35NVd7vNAyzCT1cX2gcdwnedtcItOT3iTWomSp+KdWkHZnMY
-         L1gsUZK3rPUV3VtYehYHKMG22DJZ6BcxAZpJetM3WSiwDb8ci000Qu7GSMwXWZ2TbMyW
-         D2Xg==
-X-Gm-Message-State: AOAM5330yDDi3GKurzcpDyrSgBfAB41VHS6qGKc3ucl7h7JIDMTxkqST
-        6idMvt+fqXOrKiEhm57EAQjstv24BTghPSupVOogQA==
-X-Google-Smtp-Source: ABdhPJxorZzN1lyVyUktLFlE6XPvBceZJlBBNECGTNP4fjShpGZiTR4BBoZE0igpNCrm0E73GuTDpRkcIbfSbAX2bPY=
-X-Received: by 2002:adf:e2cf:: with SMTP id d15mr33472810wrj.48.1624978844017;
- Tue, 29 Jun 2021 08:00:44 -0700 (PDT)
+        bh=IQZ/MG27uCidkTSCI4YoLKoh50so7qSZQ7ja/JlUo2I=;
+        b=mB29PxZmP38uNQUggnq0sKwGrzvmlQFiHp2Hrp3Zpa5xBgVHk28tqg4M0OhymnfWZo
+         ezlfnCkN9uXXjJnwrueeugOVHXQH5tw0DY3d5feZcVNHZs83I7wVHeA4UYPX+oGmT/rj
+         BmemBSRgGvAfd6QZXnWHSFCiVUx3j2hBkof2HW3U6xPO/LHb1SgWtS6+q3dxLuYBd1lW
+         SzVLOHFoLPTT0ExaPVm20CrSzmcLpjfbYN81Yko/Mv+TkaAClo9fatKF48gCo/0EO2oh
+         c9ccxdKbcYg/GAizKuVaLizwozDOqXJSJO3eZ3RzzEXRTQ22rUGVQM0PWE8Gb9QpidXM
+         2/fQ==
+X-Gm-Message-State: AOAM532ZUSfPal9rSA69x6IhXgTW9DjRvPlXBqE1DUMnk6qakbydXGMQ
+        Rix5sA/pe7PIs4kMIWI8xOz6jCgy6oxD2RMkHCdwXQ==
+X-Google-Smtp-Source: ABdhPJwr4eRuStLNOekxh98VR4+O4WuPucXa0Z1PA4EcpEt7hPH4pcEgGfGWcA5PF8295m8rsdosb9z+GbGIvofUCLE=
+X-Received: by 2002:a5d:8d16:: with SMTP id p22mr5123773ioj.90.1624993700558;
+ Tue, 29 Jun 2021 12:08:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210624223423.189550-1-rickyman7@gmail.com> <CAP-5=fXWFvcvNOA+wJMSCp2Qz7EVruufvFBLWEXfdezeEJGUTA@mail.gmail.com>
- <f3bf33bfe2365241fc872ca781109f1b69374840.camel@gmail.com>
-In-Reply-To: <f3bf33bfe2365241fc872ca781109f1b69374840.camel@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 29 Jun 2021 08:00:31 -0700
-Message-ID: <CAP-5=fVxdwOKWN2oOv7+hr2Vr0wD4jzizzK4x4W8jM8bwZ7u-w@mail.gmail.com>
-Subject: Re: [PATCH v2] perf annotate: allow 's' on source code lines
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+References: <20210624164303.28632-1-james.clark@arm.com> <20210624164303.28632-3-james.clark@arm.com>
+ <20210628012744.GA158794@leoy-ThinkPad-X240s> <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+ <20210628120802.GC200044@leoy-ThinkPad-X240s> <20210628200132.GB1200359@p14s> <b9a3ae95-987b-d1de-a242-141e7444aa83@arm.com>
+In-Reply-To: <b9a3ae95-987b-d1de-a242-141e7444aa83@arm.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 29 Jun 2021 13:08:09 -0600
+Message-ID: <CANLsYky4XgfN40O2nYOsFo--XoVUgCDOVqm_r0MG_s8QsN2+LA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
+To:     James Clark <james.clark@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Al Grant <al.grant@arm.com>,
+        Branislav Rankov <branislav.rankov@arm.com>,
+        Denis Nikitin <denik@chromium.org>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Martin Liska <mliska@suse.cz>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-perf-users@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 25, 2021 at 8:53 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
+On Tue, 29 Jun 2021 at 02:52, James Clark <james.clark@arm.com> wrote:
 >
-> Hi Ian,
 >
-> On Thu, 2021-06-24 at 22:37 -0700, Ian Rogers wrote:
-> > On Thu, Jun 24, 2021 at 3:37 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
-> > >
-> > > In perf annotate, when 's' is pressed on a line containing
-> > > source code, it shows the message "Only available for assembly
-> > > lines".
-> > > This patch gets rid of the error, moving the cursr to the next
-> > > available asm line (or the closest previous one if no asm line
-> > > is found moving forwards), before hiding source code lines.
-> > >
-> > > Changes in v2:
-> > >  - handle case of no asm line found in
-> > >    annotate_browser__find_next_asm_line by returning NULL and
-> > >    handling error in caller.
-> > >
-> > > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+>
+> On 28/06/2021 21:01, Mathieu Poirier wrote:
+> > On Mon, Jun 28, 2021 at 08:08:02PM +0800, Leo Yan wrote:
+> >> On Mon, Jun 28, 2021 at 11:38:34AM +0100, James Clark wrote:
+> >>
+> >> [...]
+> >>
+> >>>>>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
+> >>>>>                                     union perf_event *event,
+> >>>>>                                     struct perf_tool *tool __maybe_unused)
+> >>>>> @@ -2462,7 +2478,8 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+> >>>>>                           cs_etm__dump_event(etm, buffer);
+> >>>>>                           auxtrace_buffer__put_data(buffer);
+> >>>>>                   }
+> >>>>> - }
+> >>>>> + } else if (dump_trace)
+> >>>>> +         dump_queued_data(etm, &event->auxtrace);
+> >>>>
+> >>>> IIUC, in the function cs_etm__process_auxtrace_event(), since
+> >>>> "etm->data_queued" is always true, below flow will never run:
+> >>>>
+> >>>>     if (!etm->data_queued) {
+> >>>>         ......
+> >>>>
+> >>>>         if (dump_trace)
+> >>>>             if (auxtrace_buffer__get_data(buffer, fd)) {
+> >>>>                     cs_etm__dump_event(etm, buffer);
+> >>>>                     auxtrace_buffer__put_data(buffer);
+> >>>>             }
+> >>>>     }
+> >>>>
+> >>>> If so, it's better to use a new patch to polish the code.
+> >>>>
+> >>>
+> >>> Hi Leo,
+> >>>
+> >>> I think this is not true in piped mode because there is no auxtrace index.
+> >>> In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
+> >>> is called for each buffer.
+> >>>
+> >>> You can reproduce this with something like this:
+> >>>
+> >>>      ./perf record -o - ls > stdio.data
+> >>>      cat stdio.data | ./perf report -i -
+> >>
+> >> You are right!  I tried these two commands with cs_etm event, just as
+> >> you said, in this case, the AUX trace data is not queued; so the flow
+> >> for "if (!etm->data_queued)" should be kept.  If so, I am very fine
+> >> for current change.  Thanks for sharing the knowledge.
+> >>
+> >>> There are some other Coresight features that don't work as expected in this mode, like
+> >>> sorting timestamps between CPUs. The aux split patchset won't work either because random
+> >>> access isn't possible. And the TRBE patch that I'm working on now won't work, because it
+> >>> also requires the random access to lookup the flags on the AUX record to configure the
+> >>> decoder for unformatted trace.
+> >>
 > >
-> > Acked-by: Ian Rogers <irogers@google.com>
-> >
-> > > ---
-> > >  tools/perf/ui/browsers/annotate.c | 32 ++++++++++++++++++++++++++++---
-> > >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/tools/perf/ui/browsers/annotate.c
-> > > b/tools/perf/ui/browsers/annotate.c
-> > > index ad0a70f0edaf..f5509a958e38 100644
-> > > --- a/tools/perf/ui/browsers/annotate.c
-> > > +++ b/tools/perf/ui/browsers/annotate.c
-> > > @@ -343,6 +343,29 @@ static void annotate_browser__calc_percent(struct
-> > > annotate_browser *browser,
-> > >         browser->curr_hot = rb_last(&browser->entries);
-> > >  }
-> > >
-> > > +static struct annotation_line *annotate_browser__find_next_asm_line(
-> > > +                                       struct annotate_browser *browser,
-> > > +                                       struct annotation_line *al)
-> > > +{
-> > > +       struct annotation_line *it = al;
-> > > +
-> > > +       /* find next asm line */
-> > > +       list_for_each_entry_continue(it, browser->b.top, node) {
-> > > +               if (it->idx_asm >= 0)
-> > > +                       return it;
-> > > +       }
-> > > +
-> > > +       /* no asm line found forwards, try backwards */
-> > > +       it = al;
-> > > +       list_for_each_entry_continue_reverse(it, browser->b.top, node) {
-> > > +               if (it->idx_asm >= 0)
-> > > +                       return it;
-> > > +       }
-> > > +
-> > > +       /* There are no asm lines */
-> > > +       return NULL;
-> > > +}
-> > > +
-> > >  static bool annotate_browser__toggle_source(struct annotate_browser
-> > > *browser)
-> > >  {
-> > >         struct annotation *notes = browser__annotation(&browser->b);
-> > > @@ -363,9 +386,12 @@ static bool annotate_browser__toggle_source(struct
-> > > annotate_browser *browser)
-> > >                 browser->b.index = al->idx;
-> > >         } else {
-> > >                 if (al->idx_asm < 0) {
-> > > -                       ui_helpline__puts("Only available for assembly
-> > > lines.");
-> > > -                       browser->b.seek(&browser->b, -offset, SEEK_CUR);
-> > > -                       return false;
-> > > +                       /* move cursor to next asm line */
-> >
-> > comment nit, perhaps prefer "closest" rather than "next" due to
-> > searching backward.
+> > There is a lot of things happening in this area.  Based on the above should I
+> > still plan to review this set or should I wait for another revision?
 >
-> The backward search is just a fallback in case the forward one finds no asm
-> line, which I believe is unlikely. Maybe it's also impossible, but I don't
-> really know how those lines are generated, so I put a fallback in place.
-> Furthermore, "closest" would imply that a previous asm line could be chosen over
-> a subsequent one if closer, even if the latter is present.
+> From my point of view, this one is final. It looks like both Leo and I have tested
+> it with and without his snapshot changes and it's working as expected in both cases.
 >
-> Thanks,
-> Riccardo
 
-Agreed, thanks for thinking about this.
+Very well - I will start working on it once I'm through with the
+ultrasoc patchset.
 
-Acked-by: Ian Rogers <irogers@google.com>
-
+> Thanks
+> James
+>
 > >
 > > Thanks,
-> > Ian
+> > Mathieu
 > >
-> > > +                       al = annotate_browser__find_next_asm_line(browser,
-> > > al);
-> > > +                       if (!al) {
-> > > +                               browser->b.seek(&browser->b, -offset,
-> > > SEEK_CUR);
-> > > +                               return false;
-> > > +                       }
-> > >                 }
-> > >
-> > >                 if (al->idx_asm < offset)
-> > > --
-> > > 2.31.1
-> > >
->
->
+> >> Cool, looking forward for the patches :)
+> >>
+> >> Leo
