@@ -2,135 +2,119 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA02BC11F66
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 08:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25941C11F66
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 14:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4F5861DD8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 08:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4AA61DC4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 14:01:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232626AbhF2IzA (ORCPT
+        id S229517AbhF2OED (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Jun 2021 04:55:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:46496 "EHLO foss.arm.com"
+        Tue, 29 Jun 2021 10:04:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232621AbhF2Iy7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Jun 2021 04:54:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6049DD6E;
-        Tue, 29 Jun 2021 01:52:32 -0700 (PDT)
-Received: from [10.57.14.107] (unknown [10.57.14.107])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB6EF3F694;
-        Tue, 29 Jun 2021 01:52:29 -0700 (PDT)
-Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>
-Cc:     acme@kernel.org, coresight@lists.linaro.org, al.grant@arm.com,
-        branislav.rankov@arm.com, denik@chromium.org,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210624164303.28632-1-james.clark@arm.com>
- <20210624164303.28632-3-james.clark@arm.com>
- <20210628012744.GA158794@leoy-ThinkPad-X240s>
- <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
- <20210628120802.GC200044@leoy-ThinkPad-X240s> <20210628200132.GB1200359@p14s>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <b9a3ae95-987b-d1de-a242-141e7444aa83@arm.com>
-Date:   Tue, 29 Jun 2021 09:52:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-In-Reply-To: <20210628200132.GB1200359@p14s>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S229510AbhF2OEA (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 29 Jun 2021 10:04:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 6DF7261DBC;
+        Tue, 29 Jun 2021 14:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1624975290;
+        bh=DsD8rMlDKBJPBOFxaSULpJKu2DZLadi+YPehMXrDRsQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=G6XThNsYjfdbCjDQcoSAbFTFEhScUTPCEW3ne68z8m+wxfydjetFSFdWOGKpGpp3v
+         l599KBYLfC4gFH+ipcAbF6a2xGJOQ7KYy3Dfo/tO/4BEdzZTm4QP0tUCqPKlbVf8vu
+         zBR/TxjOwSKnD70trKVWDJl56R9ruLPEOg5WjdSCflg8dwHanXTkiMu1lLEeZNPy5r
+         Ux9vzUnBwHu9fu7J0wsfMwV6HKQuncdmq10KHt9cZXb/gehKMlYyeAaZxJqDY31nAa
+         9z9fXPv86Mcrwb5JXscESqEEjlBt0hb8L7mddh4CihhZYsA4JZwIR/J5h/8IoOj516
+         rBFmJZW51EZ/Q==
+Date:   Tue, 29 Jun 2021 23:01:26 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Stefan Liebler <stli@linux.ibm.com>
+Subject: Re: perf test case probe libc fails with latest Fedora34 glibc
+ update, more info
+Message-Id: <20210629230126.9b8d0d11bafbaa78d68a57ee@kernel.org>
+In-Reply-To: <d689e8e0-64da-e3c6-bc3b-50d4d3a4ee03@linux.ibm.com>
+References: <cae863a4-bf83-f87b-6e71-b6a544678cae@linux.ibm.com>
+        <f6752514-eaf9-371e-f81b-0d9e41ebae0c@linux.ibm.com>
+        <20210629140242.c16d9bf368865025e0ead480@kernel.org>
+        <d689e8e0-64da-e3c6-bc3b-50d4d3a4ee03@linux.ibm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 29 Jun 2021 09:21:19 +0200
+Thomas Richter <tmricht@linux.ibm.com> wrote:
 
-
-On 28/06/2021 21:01, Mathieu Poirier wrote:
-> On Mon, Jun 28, 2021 at 08:08:02PM +0800, Leo Yan wrote:
->> On Mon, Jun 28, 2021 at 11:38:34AM +0100, James Clark wrote:
->>
->> [...]
->>
->>>>>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
->>>>>  					  union perf_event *event,
->>>>>  					  struct perf_tool *tool __maybe_unused)
->>>>> @@ -2462,7 +2478,8 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
->>>>>  				cs_etm__dump_event(etm, buffer);
->>>>>  				auxtrace_buffer__put_data(buffer);
->>>>>  			}
->>>>> -	}
->>>>> +	} else if (dump_trace)
->>>>> +		dump_queued_data(etm, &event->auxtrace);
->>>>
->>>> IIUC, in the function cs_etm__process_auxtrace_event(), since
->>>> "etm->data_queued" is always true, below flow will never run:
->>>>
->>>>     if (!etm->data_queued) {
->>>>         ......
->>>>
->>>>         if (dump_trace)
->>>>             if (auxtrace_buffer__get_data(buffer, fd)) {
->>>>                     cs_etm__dump_event(etm, buffer);
->>>>                     auxtrace_buffer__put_data(buffer);
->>>>             }
->>>>     }
->>>>
->>>> If so, it's better to use a new patch to polish the code.
->>>>
->>>
->>> Hi Leo,
->>>
->>> I think this is not true in piped mode because there is no auxtrace index.
->>> In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
->>> is called for each buffer.
->>>
->>> You can reproduce this with something like this:
->>>
->>>      ./perf record -o - ls > stdio.data
->>>      cat stdio.data | ./perf report -i -
->>
->> You are right!  I tried these two commands with cs_etm event, just as
->> you said, in this case, the AUX trace data is not queued; so the flow
->> for "if (!etm->data_queued)" should be kept.  If so, I am very fine
->> for current change.  Thanks for sharing the knowledge.
->>
->>> There are some other Coresight features that don't work as expected in this mode, like
->>> sorting timestamps between CPUs. The aux split patchset won't work either because random
->>> access isn't possible. And the TRBE patch that I'm working on now won't work, because it
->>> also requires the random access to lookup the flags on the AUX record to configure the 
->>> decoder for unformatted trace.
->>
+> On 6/29/21 7:02 AM, Masami Hiramatsu wrote:
+> > On Fri, 25 Jun 2021 12:43:29 +0200
+> > Thomas Richter <tmricht@linux.ibm.com> wrote:
+> > 
 > 
-> There is a lot of things happening in this area.  Based on the above should I
-> still plan to review this set or should I wait for another revision?
+> Masami,
+> 
+> here is more info on this issue:
+> 
+> # nm /usr/lib64/libc-2.33.so 
+> 00000000000a7f30 t __GI_memchr
+> 00000000000a3730 t __GI_memcmp
+> 00000000000a37e0 t __GI_memcpy
+> 00000000000a39a0 t __GI_memmove
+> 00000000000a37d0 t __GI_mempcpy
+> 00000000000a8000 t __GI___rawmemchr
+> 00000000000a6070 t __GI_stpcpy
+> 000000000009d190 t __GI___strcasecmp_l
+> 00000000000a67a0 t __GI_strcat
+> 00000000000a6ec0 t __GI_strchr
+> 00000000000a6b70 t __GI_strcmp
+> 00000000000a5f70 t __GI_strcpy
+> 00000000000a7c70 t __GI_strcspn
+> 00000000000a5ad0 t __GI_strlen
+> 000000000009d200 t __GI___strncasecmp_l
+> 00000000000a6ce0 t __GI_strncmp
+> 00000000000a62a0 t __GI_strncpy
+> 00000000000a5d30 t __GI_strnlen
+> 00000000000a73e0 t __GI_strrchr
+> 00000000000b8e80 t __GI_wmemchr
+> 0000000000111f60 T __memcpy_chk
+> 0000000000111f80 T __memmove_chk
+> 0000000000112040 T __stpcpy_chk
+> 0000000000112100 T __strcpy_chk
+> # 
+> 
+> These are the entries in the .symtab section and can be used by perf:
+> # ./perf probe -vvv -f -x /usr/lib64/libc-2.33.so -a __strcpy_chk
 
-From my point of view, this one is final. It looks like both Leo and I have tested
-it with and without his snapshot changes and it's working as expected in both cases.
+Are there any output of the perf probe? It may report that the
+event is found by map (symbol) or debuginfo.
 
-Thanks
-James
+> # ./perf probe -l
+>   probe_libc:__strcpy_chk (on __strcpy_chk@debug/strcpy_chk.c in /usr/lib64/libc-2.33.so)
+> [root@t35lp46 perf]# 
+
+Thanks! So at least the symbols in .symtab works.
 
 > 
-> Thanks,
-> Mathieu
-> 
->> Cool, looking forward for the patches :)
->>
->> Leo
+> Hope this helps
+> -- 
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+> --
+> Vorsitzender des Aufsichtsrats: Gregor Pillen
+> Geschäftsführung: Dirk Wittkopp
+> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
