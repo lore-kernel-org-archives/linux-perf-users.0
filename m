@@ -2,217 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FC0C11F66
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 05:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DC9C11F66
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 06:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE7B61DBE
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 05:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549AD61D91
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 06:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbhF2FFL (ORCPT
+        id S232018AbhF2GL7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Jun 2021 01:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229480AbhF2FFL (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Jun 2021 01:05:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id AE4A461DB8;
-        Tue, 29 Jun 2021 05:02:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624942964;
-        bh=5kEpzVu3oLnG5FhYXg0dSCY/VaTnUUhjQKZsXXbQ2RA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=h2rq0C4maJVnE9/c3pbAxgxXxB0/b2SxM9XPvGVFdYdqiI/s9Jb2qbJqf0IWlVTqp
-         ftsxgaOIMhXsImgV8WzvUsIYKGfA+escRLOmgj8N6zOQli7xGx6le4LC+nD3qHVySv
-         05uaZzRlVV76w19XQ3brQxW6O1xaYveOIlHrnRqbn1TRJNPfyzVJSwOsr56lNT5+5V
-         Kcvo5TlSLZYrsYJ334ASFuJvZbmqrm4aobLwYInYeyfyYhqTuEvfXMGMoL2xQmV/wc
-         uHDfgmo5EzByvsoxSv7f8k2QbLLs4vqKkvuzgUQPZYueBWzsA/yugHWIjgYRtWA3+1
-         V/l7zn1hn+64A==
-Date:   Tue, 29 Jun 2021 14:02:42 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Stefan Liebler <stli@linux.ibm.com>
-Subject: Re: Part 2: perf test case probe libc fails with latest Fedora34
- glibc update
-Message-Id: <20210629140242.c16d9bf368865025e0ead480@kernel.org>
-In-Reply-To: <f6752514-eaf9-371e-f81b-0d9e41ebae0c@linux.ibm.com>
-References: <cae863a4-bf83-f87b-6e71-b6a544678cae@linux.ibm.com>
-        <f6752514-eaf9-371e-f81b-0d9e41ebae0c@linux.ibm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 29 Jun 2021 02:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232040AbhF2GL6 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 29 Jun 2021 02:11:58 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076C3C061760
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 23:09:32 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 80so1790786pgg.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 28 Jun 2021 23:09:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yv7EEUQoiKqhop6AB04pLVKMYLWu1sR4zDrGtQgBw+g=;
+        b=aoLs43qrv+77ukkA/Df5zJJwPwO210bGQSahFnhXMqpDL05rKg9TB8NzI1q81snkYP
+         HUsP/n3DeX/hoNBS4hY4b3Ce6gUpSfPbCdjg2+pldPGtVGazXWzY6wN4H0ZFMisLB2/e
+         p4J+LHIJG2MjJZJCFRKSRwFyKHG3qk0Q0U/fXcO8KhZWbt44D1Q/IieeqnTL+ohkTkyi
+         VvCUdWqFDPYAQvRCCYjSWQZ30twGT6lxaSg+yzdxZRRs8pZFM0lNnBJg+m7S4UdxxL8F
+         NqCoAKnIBNFvNME/lnHXvj/TpM3JPoyULNJ8aRora0S9VQPCggXKwUXE4ZyXfThBohzp
+         AUNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yv7EEUQoiKqhop6AB04pLVKMYLWu1sR4zDrGtQgBw+g=;
+        b=eygbDlFjsa12gIb3CYzZU48W3NBQPSXWZc/Em0V9gyB53FwItfGuSrBc7SQpkaUBAW
+         lMbuzWWJVDCvEAaU2ZwMC4z6WYFRZcKpPEVqvYj8OOtkvEupsmhlS7nFcTs7zEhySl2y
+         4hGBPgisTvJ0EfaUAKIfFQa2cR0h19yX9+sRFZTgSXxvIfU5U8oJryGjpaUuRkgjolTG
+         87Jr9wUwdZ42rhwAN4YJRC048u2tbmsw1RAb/XZyIMUTqRejN0m7kTUd4txqtuBcWH+y
+         NTZWw56orqNEktMze6OelKb8ahwtTtzpALX/urfzMJ1P1vdL1SmEukDjCxZqULOHVIkM
+         1Dow==
+X-Gm-Message-State: AOAM531SMem35nV/DjaqrAuWwXh4cmfJS923o+RnmyrOd0ltC6ThrD/E
+        yOvf9M91Luf+2sOah6FRoJqTtw==
+X-Google-Smtp-Source: ABdhPJzsx5q2/A7x8D0k31KuFdMYdLJxqIBjhNKJPqPdRLhItpNrKvUm4MwgWGiy8caPvSMtXQ5Olg==
+X-Received: by 2002:aa7:9252:0:b029:2ae:bde3:621f with SMTP id 18-20020aa792520000b02902aebde3621fmr28464344pfp.18.1624946971463;
+        Mon, 28 Jun 2021 23:09:31 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([103.207.71.35])
+        by smtp.gmail.com with ESMTPSA id 69sm16753945pfz.110.2021.06.28.23.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Jun 2021 23:09:30 -0700 (PDT)
+Date:   Tue, 29 Jun 2021 14:09:24 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     James Clark <james.clark@arm.com>, acme@kernel.org,
+        coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
+Message-ID: <20210629060924.GD163942@leoy-ThinkPad-X240s>
+References: <20210624164303.28632-1-james.clark@arm.com>
+ <20210624164303.28632-3-james.clark@arm.com>
+ <20210628012744.GA158794@leoy-ThinkPad-X240s>
+ <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+ <20210628120802.GC200044@leoy-ThinkPad-X240s>
+ <20210628200132.GB1200359@p14s>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210628200132.GB1200359@p14s>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 25 Jun 2021 12:43:29 +0200
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+Hi Mathieu,
 
-> I think I found one issue:
-> 
-> Fedora 33 named the debug files for glibc 'libc-2.33.so.debug'
-> [root@s8360047 ~]# rpm -ql glibc-debuginfo-2.33-5.fc34.s390x|fgrep libc-2.33.so
-> /usr/lib/debug/lib64/libc-2.33.so.debug
-> [root@s8360047 ~]#
-> 
-> The file was located in
->    /usr/lib/debug/lib64/libc-2.33.so.debug
-> and hard linked to (or vice versa)
->    /usr/lib/debug/usr/lib64/libc-2.33.so.debug
-> 
-> With Fedora 34 the glibc debug file name changed to:
-> /usr/lib/debug/lib64/libc-2.33.so-2.33-18.fc34.s390x.debug
-> and
-> /usr/lib/debug/usr/lib64/libc-2.33.so-2.33-18.fc34.x86_64.debug
+On Mon, Jun 28, 2021 at 02:01:32PM -0600, Mathieu Poirier wrote:
 
-Oh, the naming scheme has been changed.
+[...]
 
+> > > Hi Leo,
+> > > 
+> > > I think this is not true in piped mode because there is no auxtrace index.
+> > > In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
+> > > is called for each buffer.
+> > > 
+> > > You can reproduce this with something like this:
+> > > 
+> > >      ./perf record -o - ls > stdio.data
+> > >      cat stdio.data | ./perf report -i -
+> > 
+> > You are right!  I tried these two commands with cs_etm event, just as
+> > you said, in this case, the AUX trace data is not queued; so the flow
+> > for "if (!etm->data_queued)" should be kept.  If so, I am very fine
+> > for current change.  Thanks for sharing the knowledge.
+> > 
+> > > There are some other Coresight features that don't work as expected in this mode, like
+> > > sorting timestamps between CPUs. The aux split patchset won't work either because random
+> > > access isn't possible. And the TRBE patch that I'm working on now won't work, because it
+> > > also requires the random access to lookup the flags on the AUX record to configure the 
+> > > decoder for unformatted trace.
+> >
 > 
-> This is important. The call chain is
-> 
->  ...
->  try_to_find_probe_trace_events()
->  +-> open_debuginfo()
->      +-> debuginfo__new(/usr/lib64/libc-2.33.so)
->          +-> dso__read_binary_type_filename()
-> 
-> Function dso__read_binary_type_filename() now tries to find the debug file
-> for /usr/lib64/libc-2.33.so for various distros starting with
-> FEDORA_DEBUGINFO. Tt builds the file name by prepending
-> '/usr/lib/debug' and appending '.debug'. This was ok until the Fedora 34
-> name change. Now the debug file is not found anymore and various other
-> distro name schemes are tried. None is found and the /usr/lib64/libc-2.33.so
-> file itself is used.
+> There is a lot of things happening in this area.  Based on the above should I
+> still plan to review this set or should I wait for another revision?
 
-Hmm, we might need a generic way to get such debuginfo path among
-linux distros... are there any good command?
+I think you could continue to review this patch set for AUX data splitting.
 
-> 
-> This even worked for Fedora 34 until the glibc 2.33-18 change, because the
-> /usr/lib/libc-xxx.so file contained the complete symbol table in the
-> .symtab section. The function debuginfo__find_probe_location() found
-> the symbol inet_pton. So it did not matter is the debug file was found or not.
-> 
-> With the glib 2.33-18 change most entries in the .symtab section where
-> moved to the .dynsym section and are not found anymore when the default
-> /usr/lib/lic-xxx.so is used as fallback. So the issue surfaced.
-> 
-> Second issue:
-> The symbol 'inet_pton' is defined as WEAK. Even when the correct
-> debuginfo file is loaded for libc in function dso__read_binary_type_filename(),
-> the perf probe command fails.
-> However it works for GLOBAL and LOCAL symbols, so it would be definitly an 
-> improvement.
-> 
-> I have no clue on dwarf so I put Masami on the addressee list.
-> This second issue is somehow related to dwarf_getfuncs() and
-> the probe_point_search_cb() call back function invoked by dwarf_getfuncs()
-> in the probe_finder.c file. Too far away from my horizon :-)...
-> 
-> On 6/23/21 4:21 PM, Thomas Richter wrote:
-> > I just updated Fedora34 to the latest level and discovered that perf test 78 fails:
-> > [root@m46lp22 perf]# ./perf test 78
-> > 78: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> > [root@m46lp22 perf]#
-> > 
-> > It boils down to this command and happens after glibc is update to level 2.33-18.
-> > 
-> > [root@f34 ~]# perf probe -f -x /usr/lib64/libc-2.33.so -a inet_pton
-> > Probe point 'inet_pton' not found.
-> >   Error: Failed to add events.
+Since we have concern for the AUX data splitting with snapshot mode,
+James and me both have verified the AUX data splitting (this patch
+set) with snapshot mode, and the testing result shows this patch set
+is reliable.
 
-Hmm, what does "nm" say? Also, Does perf correctly open the debuginfo file or only
-open the library without debuginfo?
+Regard another patch set for fixing snapshot mode [1], I will send a new
+version (drop patch 1/3 and refine for patch 3/3), so you could hold
+on for that patch set.
 
-> > [root@f34 ~]# rpm -qa | fgrep glibc
-> > glibc-all-langpacks-2.33-18.fc34.x86_64
-> > glibc-common-2.33-18.fc34.x86_64
-> > glibc-langpack-en-2.33-18.fc34.x86_64
-> > glibc-2.33-18.fc34.x86_64
-> > glibc-doc-2.33-18.fc34.noarch
-> > glibc-headers-x86-2.33-18.fc34.noarch
-> > glibc-devel-2.33-18.fc34.x86_64
-> > glibc-debugsource-2.33-18.fc34.x86_64
-> > glibc-debuginfo-2.33-18.fc34.x86_64
-> > [root@f34 ~]# 
-> > 
-> > The symbol inet_pton is now in the .dynsym section of glibc:
-> > [root@f34 ~]# readelf -sW /usr/lib64/libc-2.33.so | egrep '(dynsym|symtab|inet_pton)'
-> > Symbol table '.dynsym' contains 2419 entries:
-> >    628: 000000000011ea00   108 FUNC    WEAK   DEFAULT   15 inet_pton@@GLIBC_2.2.5
-> >   2251: 000000000011e9b0    76 FUNC    GLOBAL DEFAULT   15 __inet_pton_length@@GLIBC_PRIVATE
-> > Symbol table '.symtab' contains 104 entries:
-> > [root@f34 ~]#
-> > 
-> > The .symtab section does not contain symbol inet_pton. It contains very few symbols
-> > compared to previous versions.
+Thanks,
+Leo
 
-Hmm, if perf probe can not find the debuginfo, it failback to symbol map,
-can you add -vvv option to run the perf probe again?
-
-> > 
-> > Now perf does not find it. In the older version of the library the
-> > symbol inet_pton was listed in the .symtab section. Here is the output from version 2.32-4:
-> > 
-> > 
-> > [root@m35lp76 ~]# rpm -qa | fgrep glibc
-> > glibc-common-2.32-4.fc33.s390x
-> > glibc-langpack-en-2.32-4.fc33.s390x
-> > glibc-2.32-4.fc33.s390x
-> > glibc-headers-s390-2.32-4.fc33.noarch
-> > glibc-devel-2.32-4.fc33.s390x
-> > glibc-debuginfo-common-2.32-4.fc33.s390x
-> > glibc-debuginfo-2.32-4.fc33.s390x
-> > [root@m35lp76 ~]# 
-> > 
-> > 
-> > readelf -sW /usr/lib64/libc-2.32.so | egrep '(dynsym|symtab|inet_pton)'
-> > Symbol table '.dynsym' contains 2604 entries:
-> >    668: 00000000001444b0   788 FUNC    WEAK   DEFAULT   13 inet_pton@@GLIBC_2.2
-> >   2418: 00000000001441b0   764 FUNC    GLOBAL DEFAULT   13 __inet_pton_length@@GLIBC_PRIVATE
-> > Symbol table '.symtab' contains 28858 entries:
-> >  20655: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS inet_pton.c
-> >  20656: 00000000001440b0     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c
-> >  20657: 00000000001447c4     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end
-> >  20658: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.hot
-> >  20659: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.hot
-> >  20660: 000000000002b938     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.unlikely
-> >  20661: 000000000002b938     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.unlikely
-> >  20662: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.startup
-> >  20663: 000000000002ba70     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.startup
-> >  20664: 000000000002b968     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c.exit
-> >  20665: 000000000002b968     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton.c_end.exit
-> >  20666: 00000000001440b0     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton4.start
-> >  20667: 00000000001441aa     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_inet_pton4.end
-> >  20668: 00000000001440b0   250 FUNC    LOCAL  DEFAULT   13 inet_pton4
-> >  20669: 00000000001441aa     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton_length.start
-> >  20670: 00000000001444ac     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton_length.end
-> >  20671: 00000000001444ac     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton.start
-> >  20672: 00000000001447c4     0 NOTYPE  LOCAL  HIDDEN    13 .annobin___GI___inet_pton.end
-> >  23591: 00000000001441b0   764 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton_length
-> >  23871: 00000000001444b0   788 FUNC    LOCAL  DEFAULT   13 __inet_pton
-> >  24506: 00000000001444b0   788 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton
-> >  25831: 00000000001444b0   788 FUNC    LOCAL  DEFAULT   13 __GI_inet_pton
-> >  26410: 00000000001441b0   764 FUNC    GLOBAL DEFAULT   13 __inet_pton_length
-> >  27288: 00000000001444b0   788 FUNC    WEAK   DEFAULT   13 inet_pton
-> > [root@m35lp76 ~]#
-> > 
-> > And perf could find the symbol, extract its address and install a probe
-> > on that address.
-> > So is this a bug related to the perf tool because it can not handle .dynsym section?
-> > Or is it releated to glibc's rework?
-> > 
-> > Thanks for your help.
-> > 
-
-Thank you,
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+[1] https://lore.kernel.org/patchwork/cover/1437696/
