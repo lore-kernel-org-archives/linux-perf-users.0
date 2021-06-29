@@ -2,141 +2,135 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED187C11F68
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 08:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA02BC11F66
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 08:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C930E61DD1
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 08:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4F5861DD8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 08:52:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232285AbhF2ILV (ORCPT
+        id S232626AbhF2IzA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Jun 2021 04:11:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31516 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232272AbhF2ILV (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Jun 2021 04:11:21 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15T84FU4073675;
-        Tue, 29 Jun 2021 04:08:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=RsIMVnamhB6FYa7FfF0w4uQRw+Kcw3nQxnVdRE1/Fv4=;
- b=Lst/v2MLPzGLS81nSf7dPD3ptWkhy65uSDp30t/ejUH4GOrNf3Tvi2It5zcdul33J3TQ
- E+C3TN0yD3uFZfqIiVSqfrxEhhZTP3VS4xRkhxS/XobQeCqvLBx/OBv6KWqwOf0fAH4x
- E+uCcs7Wuqqu/R5RAbeW4fuENENIK29kDOJ4ZjomiTIv1KR3+naE8CFUgxXQItjajUTI
- 3mX5bMkifhOgWjAmS4QEgjJfaWAq8IFYnX3t79wPYbP8PsYVNwDZlfld8gyNKGlH1acY
- yXEnQAQ08LPRi9TGOmx2sxVI9N2xSjTN1x5Ad1UCyY/0WS3bCMnQuccZAfz2OkdMfYkK mA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39fv03wc34-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 04:08:44 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15T869hB084165;
-        Tue, 29 Jun 2021 04:08:43 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39fv03wc2j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 04:08:43 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15T86NDG021853;
-        Tue, 29 Jun 2021 08:08:42 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02dal.us.ibm.com with ESMTP id 39duvbwbpr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 08:08:42 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15T88f1M27263300
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Jun 2021 08:08:41 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 503996E090;
-        Tue, 29 Jun 2021 08:08:41 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 828826E05B;
-        Tue, 29 Jun 2021 08:08:35 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.45.57])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Jun 2021 08:08:35 +0000 (GMT)
-Subject: Re: [PATCH] fpga: dfl: fme: Fix cpu hotplug issue in performance
- reporting
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     will@kernel.org, hao.wu@intel.com, mark.rutland@arm.com,
-        trix@redhat.com, yilun.xu@intel.com, mdf@kernel.org,
-        linux-fpga@vger.kernel.org, maddy@linux.vnet.ibm.com,
-        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, rnsastry@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, stable@vger.kernel.org
-References: <20210628101721.188991-1-kjain@linux.ibm.com>
- <adc3b013-d39b-a183-dfce-86ca857949b8@linux.ibm.com>
- <YNrLRLyyUeDemxTS@kroah.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <8a70f71a-f75c-427b-cf6a-b63bf7682f36@linux.ibm.com>
-Date:   Tue, 29 Jun 2021 13:38:33 +0530
+        Tue, 29 Jun 2021 04:55:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:46496 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232621AbhF2Iy7 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 29 Jun 2021 04:54:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6049DD6E;
+        Tue, 29 Jun 2021 01:52:32 -0700 (PDT)
+Received: from [10.57.14.107] (unknown [10.57.14.107])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB6EF3F694;
+        Tue, 29 Jun 2021 01:52:29 -0700 (PDT)
+Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>
+Cc:     acme@kernel.org, coresight@lists.linaro.org, al.grant@arm.com,
+        branislav.rankov@arm.com, denik@chromium.org,
+        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210624164303.28632-1-james.clark@arm.com>
+ <20210624164303.28632-3-james.clark@arm.com>
+ <20210628012744.GA158794@leoy-ThinkPad-X240s>
+ <c7906b72-e547-da37-c387-23de65831ac4@arm.com>
+ <20210628120802.GC200044@leoy-ThinkPad-X240s> <20210628200132.GB1200359@p14s>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <b9a3ae95-987b-d1de-a242-141e7444aa83@arm.com>
+Date:   Tue, 29 Jun 2021 09:52:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
-In-Reply-To: <YNrLRLyyUeDemxTS@kroah.com>
+ Thunderbird/78.8.1
+MIME-Version: 1.0
+In-Reply-To: <20210628200132.GB1200359@p14s>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hetGeLcYCXc8AdjqHgud-38bTHz1rVQn
-X-Proofpoint-GUID: q5oo3cYrBGcZjkPfLbOJVvffHymg3jFJ
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-29_02:2021-06-25,2021-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 bulkscore=0
- clxscore=1015 phishscore=0 lowpriorityscore=0 mlxlogscore=914 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2104190000 definitions=main-2106290056
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 6/29/21 12:57 PM, Greg KH wrote:
-> On Tue, Jun 29, 2021 at 12:45:20PM +0530, kajoljain wrote:
+On 28/06/2021 21:01, Mathieu Poirier wrote:
+> On Mon, Jun 28, 2021 at 08:08:02PM +0800, Leo Yan wrote:
+>> On Mon, Jun 28, 2021 at 11:38:34AM +0100, James Clark wrote:
 >>
+>> [...]
 >>
->> On 6/28/21 3:47 PM, Kajol Jain wrote:
->>> The performance reporting driver added cpu hotplug
->>> feature but it didn't add pmu migration call in cpu
->>> offline function.
->>> This can create an issue incase the current designated
->>> cpu being used to collect fme pmu data got offline,
->>> as based on current code we are not migrating fme pmu to
->>> new target cpu. Because of that perf will still try to
->>> fetch data from that offline cpu and hence we will not
->>> get counter data.
+>>>>>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
+>>>>>  					  union perf_event *event,
+>>>>>  					  struct perf_tool *tool __maybe_unused)
+>>>>> @@ -2462,7 +2478,8 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+>>>>>  				cs_etm__dump_event(etm, buffer);
+>>>>>  				auxtrace_buffer__put_data(buffer);
+>>>>>  			}
+>>>>> -	}
+>>>>> +	} else if (dump_trace)
+>>>>> +		dump_queued_data(etm, &event->auxtrace);
+>>>>
+>>>> IIUC, in the function cs_etm__process_auxtrace_event(), since
+>>>> "etm->data_queued" is always true, below flow will never run:
+>>>>
+>>>>     if (!etm->data_queued) {
+>>>>         ......
+>>>>
+>>>>         if (dump_trace)
+>>>>             if (auxtrace_buffer__get_data(buffer, fd)) {
+>>>>                     cs_etm__dump_event(etm, buffer);
+>>>>                     auxtrace_buffer__put_data(buffer);
+>>>>             }
+>>>>     }
+>>>>
+>>>> If so, it's better to use a new patch to polish the code.
+>>>>
 >>>
->>> Patch fixed this issue by adding pmu_migrate_context call
->>> in fme_perf_offline_cpu function.
+>>> Hi Leo,
 >>>
+>>> I think this is not true in piped mode because there is no auxtrace index.
+>>> In that mode, events are processed only in file order and cs_etm__process_auxtrace_event()
+>>> is called for each buffer.
+>>>
+>>> You can reproduce this with something like this:
+>>>
+>>>      ./perf record -o - ls > stdio.data
+>>>      cat stdio.data | ./perf report -i -
 >>
->> Adding stable@vger.kernel.org in cc list as suggested by Moritz Fischer.
+>> You are right!  I tried these two commands with cs_etm event, just as
+>> you said, in this case, the AUX trace data is not queued; so the flow
+>> for "if (!etm->data_queued)" should be kept.  If so, I am very fine
+>> for current change.  Thanks for sharing the knowledge.
+>>
+>>> There are some other Coresight features that don't work as expected in this mode, like
+>>> sorting timestamps between CPUs. The aux split patchset won't work either because random
+>>> access isn't possible. And the TRBE patch that I'm working on now won't work, because it
+>>> also requires the random access to lookup the flags on the AUX record to configure the 
+>>> decoder for unformatted trace.
+>>
 > 
-> 
-> <formletter>
-> 
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> for how to do this properly.
+> There is a lot of things happening in this area.  Based on the above should I
+> still plan to review this set or should I wait for another revision?
 
-Thanks Greg for pointing it, I will take care in my next version.
+From my point of view, this one is final. It looks like both Leo and I have tested
+it with and without his snapshot changes and it's working as expected in both cases.
 
-Thanks,
-Kajol Jain
+Thanks
+James
 
 > 
-> </formletter>
+> Thanks,
+> Mathieu
 > 
+>> Cool, looking forward for the patches :)
+>>
+>> Leo
