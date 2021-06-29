@@ -2,288 +2,186 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D8BC11F66
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 14:06:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A2CC11F67
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 15:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA6B461DC8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 14:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0C761D9A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 15:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230267AbhF2OJI (ORCPT
+        id S234413AbhF2PDO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Jun 2021 10:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230100AbhF2OJH (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Jun 2021 10:09:07 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C751E61DC2;
-        Tue, 29 Jun 2021 14:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1624975600;
-        bh=YQYtGlidNiSTZK9AjxQ8sck29HvwZ3qgLWw4Xkuzi2c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=guwWqdST+dKurPqJ2I1PWDzigVDCedeNmNGu2SMP0gXloqsyVhS2vOtf4NW8iRcY+
-         mM48EPlkYr3lq2yYarohiLXfygnGNTcRDWlg2Z1334HX1aamWfa7evvLyYSvRfYGUt
-         WQs4jPdn0idIsVuphLSzv53DvQb2xPCb3M1svIAh5rDRkazS4fk2DJWmSgrRRCb3Tb
-         r4DIhGBwKvF4gwG2ZIpyROKkwqKF46pzCNj7AwkGlgPF0EJ8uBHpOI1oYZn0smKDqr
-         HjHWnN5bVLqMLO2RXkSmtjNgfdMvyseOkhALnLKW+upZGdF/K/4CYxyOjPMLCaDWO6
-         9mPC8vs11pdaQ==
-Date:   Tue, 29 Jun 2021 23:06:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Stefan Liebler <stli@linux.ibm.com>
-Subject: Re: Part 2: perf test case probe libc fails with latest Fedora34
- glibc update
-Message-Id: <20210629230638.ac29fdc4a289c92bbe477f2c@kernel.org>
-In-Reply-To: <a3b3487d-7eb7-cbdb-0bfb-d94cc621da83@linux.ibm.com>
-References: <cae863a4-bf83-f87b-6e71-b6a544678cae@linux.ibm.com>
-        <f6752514-eaf9-371e-f81b-0d9e41ebae0c@linux.ibm.com>
-        <20210629140242.c16d9bf368865025e0ead480@kernel.org>
-        <a3b3487d-7eb7-cbdb-0bfb-d94cc621da83@linux.ibm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 29 Jun 2021 11:03:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232521AbhF2PDN (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 29 Jun 2021 11:03:13 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DF1C061760
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jun 2021 08:00:45 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id u8so12930376wrq.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 29 Jun 2021 08:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IC/0iIQzRxRPo9b+WDc+/ztYr9KoC21F+3neWDOH/5k=;
+        b=rPD6Dl6BfLhn1PHK3MeILaJWiKWEiyI99p+rFwCypedMPTWVpTN7VETYBvZjxWdK3T
+         eZu6YzzPIe2swfmXXb/8gOdmYTYE6A0IYLQ/C6ZyEaqNoRH6x5Ie4rz23NwnneYCdQA3
+         KjfiTRYQctF/axYBt9PhoCyzwVSmc7uU2M92+38hZLIaoWpn02QnYa4p9f5iCW0Sc/6T
+         tgK3dEcF/2yJAKoBtYzwIMpUEWmA/5sjp0l2gvqTOqrMBb1uP0MVQ57RVISB3WwI3nCd
+         GLteK5nS1anLpzIYbjEtlKSILy47ue2+sNknZgLtUqi4C/Q21Bx76JqHC8jB0u2Byo6X
+         Yfaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IC/0iIQzRxRPo9b+WDc+/ztYr9KoC21F+3neWDOH/5k=;
+        b=EK9AaPyV8EhLcT+fSNcmDHm6y+Aa3GFgNpagyD18xkbS6Q2BXzIIG+fy+j1j3oA9cy
+         ruKY2aSoYr77OtCuxtP5/EOQ/q+d1/99SpRBdthl5fXeZc82gwZaY2xWDmDXI8TxR+LK
+         xD9XURLkaEW0cDovNFCgYX+m4uoF52fzMT8STekHeUMukvmZDJuHecAdtzBEF6KkQu9Q
+         hXPtyUqwANs6kac1c6eW35NVd7vNAyzCT1cX2gcdwnedtcItOT3iTWomSp+KdWkHZnMY
+         L1gsUZK3rPUV3VtYehYHKMG22DJZ6BcxAZpJetM3WSiwDb8ci000Qu7GSMwXWZ2TbMyW
+         D2Xg==
+X-Gm-Message-State: AOAM5330yDDi3GKurzcpDyrSgBfAB41VHS6qGKc3ucl7h7JIDMTxkqST
+        6idMvt+fqXOrKiEhm57EAQjstv24BTghPSupVOogQA==
+X-Google-Smtp-Source: ABdhPJxorZzN1lyVyUktLFlE6XPvBceZJlBBNECGTNP4fjShpGZiTR4BBoZE0igpNCrm0E73GuTDpRkcIbfSbAX2bPY=
+X-Received: by 2002:adf:e2cf:: with SMTP id d15mr33472810wrj.48.1624978844017;
+ Tue, 29 Jun 2021 08:00:44 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210624223423.189550-1-rickyman7@gmail.com> <CAP-5=fXWFvcvNOA+wJMSCp2Qz7EVruufvFBLWEXfdezeEJGUTA@mail.gmail.com>
+ <f3bf33bfe2365241fc872ca781109f1b69374840.camel@gmail.com>
+In-Reply-To: <f3bf33bfe2365241fc872ca781109f1b69374840.camel@gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 29 Jun 2021 08:00:31 -0700
+Message-ID: <CAP-5=fVxdwOKWN2oOv7+hr2Vr0wD4jzizzK4x4W8jM8bwZ7u-w@mail.gmail.com>
+Subject: Re: [PATCH v2] perf annotate: allow 's' on source code lines
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Martin Liska <mliska@suse.cz>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 29 Jun 2021 08:42:15 +0200
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+On Fri, Jun 25, 2021 at 8:53 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
+>
+> Hi Ian,
+>
+> On Thu, 2021-06-24 at 22:37 -0700, Ian Rogers wrote:
+> > On Thu, Jun 24, 2021 at 3:37 PM Riccardo Mancini <rickyman7@gmail.com> wrote:
+> > >
+> > > In perf annotate, when 's' is pressed on a line containing
+> > > source code, it shows the message "Only available for assembly
+> > > lines".
+> > > This patch gets rid of the error, moving the cursr to the next
+> > > available asm line (or the closest previous one if no asm line
+> > > is found moving forwards), before hiding source code lines.
+> > >
+> > > Changes in v2:
+> > >  - handle case of no asm line found in
+> > >    annotate_browser__find_next_asm_line by returning NULL and
+> > >    handling error in caller.
+> > >
+> > > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> >
+> > Acked-by: Ian Rogers <irogers@google.com>
+> >
+> > > ---
+> > >  tools/perf/ui/browsers/annotate.c | 32 ++++++++++++++++++++++++++++---
+> > >  1 file changed, 29 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/tools/perf/ui/browsers/annotate.c
+> > > b/tools/perf/ui/browsers/annotate.c
+> > > index ad0a70f0edaf..f5509a958e38 100644
+> > > --- a/tools/perf/ui/browsers/annotate.c
+> > > +++ b/tools/perf/ui/browsers/annotate.c
+> > > @@ -343,6 +343,29 @@ static void annotate_browser__calc_percent(struct
+> > > annotate_browser *browser,
+> > >         browser->curr_hot = rb_last(&browser->entries);
+> > >  }
+> > >
+> > > +static struct annotation_line *annotate_browser__find_next_asm_line(
+> > > +                                       struct annotate_browser *browser,
+> > > +                                       struct annotation_line *al)
+> > > +{
+> > > +       struct annotation_line *it = al;
+> > > +
+> > > +       /* find next asm line */
+> > > +       list_for_each_entry_continue(it, browser->b.top, node) {
+> > > +               if (it->idx_asm >= 0)
+> > > +                       return it;
+> > > +       }
+> > > +
+> > > +       /* no asm line found forwards, try backwards */
+> > > +       it = al;
+> > > +       list_for_each_entry_continue_reverse(it, browser->b.top, node) {
+> > > +               if (it->idx_asm >= 0)
+> > > +                       return it;
+> > > +       }
+> > > +
+> > > +       /* There are no asm lines */
+> > > +       return NULL;
+> > > +}
+> > > +
+> > >  static bool annotate_browser__toggle_source(struct annotate_browser
+> > > *browser)
+> > >  {
+> > >         struct annotation *notes = browser__annotation(&browser->b);
+> > > @@ -363,9 +386,12 @@ static bool annotate_browser__toggle_source(struct
+> > > annotate_browser *browser)
+> > >                 browser->b.index = al->idx;
+> > >         } else {
+> > >                 if (al->idx_asm < 0) {
+> > > -                       ui_helpline__puts("Only available for assembly
+> > > lines.");
+> > > -                       browser->b.seek(&browser->b, -offset, SEEK_CUR);
+> > > -                       return false;
+> > > +                       /* move cursor to next asm line */
+> >
+> > comment nit, perhaps prefer "closest" rather than "next" due to
+> > searching backward.
+>
+> The backward search is just a fallback in case the forward one finds no asm
+> line, which I believe is unlikely. Maybe it's also impossible, but I don't
+> really know how those lines are generated, so I put a fallback in place.
+> Furthermore, "closest" would imply that a previous asm line could be chosen over
+> a subsequent one if closer, even if the latter is present.
+>
+> Thanks,
+> Riccardo
 
-> On 6/29/21 7:02 AM, Masami Hiramatsu wrote:
-> > On Fri, 25 Jun 2021 12:43:29 +0200
-> > Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > 
-> >> I think I found one issue:
-> >>
-> >> Fedora 33 named the debug files for glibc 'libc-2.33.so.debug'
-> >> [root@s8360047 ~]# rpm -ql glibc-debuginfo-2.33-5.fc34.s390x|fgrep libc-2.33.so
-> >> /usr/lib/debug/lib64/libc-2.33.so.debug
-> >> [root@s8360047 ~]#
-> >>
-> >> The file was located in
-> >>    /usr/lib/debug/lib64/libc-2.33.so.debug
-> >> and hard linked to (or vice versa)
-> >>    /usr/lib/debug/usr/lib64/libc-2.33.so.debug
-> >>
-> >> With Fedora 34 the glibc debug file name changed to:
-> >> /usr/lib/debug/lib64/libc-2.33.so-2.33-18.fc34.s390x.debug
-> >> and
-> >> /usr/lib/debug/usr/lib64/libc-2.33.so-2.33-18.fc34.x86_64.debug
-> > 
-> > Oh, the naming scheme has been changed.
-> > 
-> >>
-> >> This is important. The call chain is
-> >>
-> >>  ...
-> >>  try_to_find_probe_trace_events()
-> >>  +-> open_debuginfo()
-> >>      +-> debuginfo__new(/usr/lib64/libc-2.33.so)
-> >>          +-> dso__read_binary_type_filename()
-> >>
-> >> Function dso__read_binary_type_filename() now tries to find the debug file
-> >> for /usr/lib64/libc-2.33.so for various distros starting with
-> >> FEDORA_DEBUGINFO. Tt builds the file name by prepending
-> >> '/usr/lib/debug' and appending '.debug'. This was ok until the Fedora 34
-> >> name change. Now the debug file is not found anymore and various other
-> >> distro name schemes are tried. None is found and the /usr/lib64/libc-2.33.so
-> >> file itself is used.
-> > 
-> > Hmm, we might need a generic way to get such debuginfo path among
-> > linux distros... are there any good command?
-> 
-> IMHO The only option that makes sense is to use the buildid:
-> The s390 compiler team recommended this to me.
-> 
-> [root@t35lp46 perf]# file /usr/lib64/libc-2.33.so
-> /usr/lib64/libc-2.33.so: ELF 64-bit MSB shared object, IBM S/390, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld64.so.1, BuildID[sha1]=15da6d15f3b4d5042dab1246222479e577fe9190, for GNU/Linux 3.2.0, not stripped
-> [root@t35lp46 perf]# ll /root/.debug/.build-id/15/da6d15f3b4d5042dab1246222479e577fe9190/
-> total 7912
-> -rw-r--r-- 2 root root 6372968 Jun 21 09:01 debug
-> -rwxr-xr-x 2 root root 1719672 Jun 21 09:01 elf
-> -rw-r--r-- 1 root root    4754 Jun 23 10:23 probes
-> [root@t35lp46 perf]# readelf -s /root/.debug/.build-id/15/da6d15f3b4d5042dab1246222479e577fe9190/debug | fgrep ' inet_pton'
->  21092: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS inet_pton.c
->  21105: 0000000000123150   250 FUNC    LOCAL  DEFAULT   13 inet_pton4
->  21108: 0000000000123250   524 FUNC    LOCAL  DEFAULT   13 inet_pton6
->  27909: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton
-> [root@t35lp46 perf]# 
+Agreed, thanks for thinking about this.
 
-This debug file is copied by perf, isn't it?
+Acked-by: Ian Rogers <irogers@google.com>
 
-> The bad thing is that only the file part xx/yy/debug seems to be agreed upon
-> between distros. There are multiple/different locations containing .build-id directories.
-> 
-> On the other hand, perf is connected to the kernel, so we could 'convince'
-> the distro's to use their distro specific locations when they build perf.
-
-Hmm, or they can add /etc/perf.conf, to provide their customized debuginfo path
-with a template pattern.
-
-> 
-> [....] 
-> 
-> >>
-> >> Second issue:
-> >> The symbol 'inet_pton' is defined as WEAK. Even when the correct
-> >> debuginfo file is loaded for libc in function dso__read_binary_type_filename(),
-> >> the perf probe command fails.
-> >> However it works for GLOBAL and LOCAL symbols, so it would be definitly an 
-> >> improvement.
-> >>
-> >> I have no clue on dwarf so I put Masami on the addressee list.
-> >> This second issue is somehow related to dwarf_getfuncs() and
-> >> the probe_point_search_cb() call back function invoked by dwarf_getfuncs()
-> >> in the probe_finder.c file. Too far away from my horizon :-)...
-> >>
-> >> On 6/23/21 4:21 PM, Thomas Richter wrote:
-> >>> I just updated Fedora34 to the latest level and discovered that perf test 78 fails:
-> >>> [root@m46lp22 perf]# ./perf test 78
-> >>> 78: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> >>> [root@m46lp22 perf]#
-> >>>
-> >>> It boils down to this command and happens after glibc is update to level 2.33-18.
-> >>>
-> >>> [root@f34 ~]# perf probe -f -x /usr/lib64/libc-2.33.so -a inet_pton
-> >>> Probe point 'inet_pton' not found.
-> >>>   Error: Failed to add events.
-> > 
-> > Hmm, what does "nm" say? Also, Does perf correctly open the debuginfo file or only
-> > open the library without debuginfo?
-> 
-> # nm -D /usr/lib64/libc-2.33.so | fgrep inet_pton
-> 00000000001234c0 W inet_pton@@GLIBC_2.2
-> 0000000000123460 T __inet_pton_length@@GLIBC_PRIVATE
-> # readelf -s /usr/lib64/libc-2.33.so | fgrep inet_pton
->    673: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton@@GLIBC_2.2
-> # nm -D /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/debug | fgrep inet_pton
-> nm: /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/debug: no symbols
-> # readelf -s /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/debug | fgrep inet_pton
->  21092: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS inet_pton.c
->  21105: 0000000000123150   250 FUNC    LOCAL  DEFAULT   13 inet_pton4
->  21108: 0000000000123250   524 FUNC    LOCAL  DEFAULT   13 inet_pton6
->  24179: 0000000000123460    90 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton[...]
->  24463: 00000000001234c0   106 FUNC    LOCAL  DEFAULT   13 __inet_pton
->  25102: 00000000001234c0   106 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton
->  26439: 00000000001234c0   106 FUNC    LOCAL  DEFAULT   13 __GI_inet_pton
->  27023: 0000000000123460    90 FUNC    GLOBAL DEFAULT   13 __inet_pton_length
->  27909: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton
-> # readelf -s /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/elf | fgrep inet_pton
->    673: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton@@GLIBC_2.2
-> #
-> 
-> > 
-> >>> [root@f34 ~]# rpm -qa | fgrep glibc
-> >>> glibc-all-langpacks-2.33-18.fc34.x86_64
-> >>> glibc-common-2.33-18.fc34.x86_64
-> >>> glibc-langpack-en-2.33-18.fc34.x86_64
-> >>> glibc-2.33-18.fc34.x86_64
-> >>> glibc-doc-2.33-18.fc34.noarch
-> >>> glibc-headers-x86-2.33-18.fc34.noarch
-> >>> glibc-devel-2.33-18.fc34.x86_64
-> >>> glibc-debugsource-2.33-18.fc34.x86_64
-> >>> glibc-debuginfo-2.33-18.fc34.x86_64
-> >>> [root@f34 ~]# 
-> >>>
-> >>> The symbol inet_pton is now in the .dynsym section of glibc:
-> >>> [root@f34 ~]# readelf -sW /usr/lib64/libc-2.33.so | egrep '(dynsym|symtab|inet_pton)'
-> >>> Symbol table '.dynsym' contains 2419 entries:
-> >>>    628: 000000000011ea00   108 FUNC    WEAK   DEFAULT   15 inet_pton@@GLIBC_2.2.5
-> >>>   2251: 000000000011e9b0    76 FUNC    GLOBAL DEFAULT   15 __inet_pton_length@@GLIBC_PRIVATE
-> >>> Symbol table '.symtab' contains 104 entries:
-> >>> [root@f34 ~]#
-> >>>
-> >>> The .symtab section does not contain symbol inet_pton. It contains very few symbols
-> >>> compared to previous versions.
-> > 
-> > Hmm, if perf probe can not find the debuginfo, it failback to symbol map,
-> > can you add -vvv option to run the perf probe again?
-> > 
-> 
-> # ./perf probe -vvv -f -x /usr/lib64/libc-2.33.so -a inet_pton 
-
-Ah, OK. This helps me a lot. 
-
-> probe-definition(0): inet_pton
-> symbol:inet_pton file:(null) line:0 offset:0 return:0 lazy:(null)
-> 0 arguments
-> symbol:__v1setjmp file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:longjmp file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:longjmp_target file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:lll_lock_wait_private file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:cond_destroy file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:cond_init file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_arena_max file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_arena_test file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tunable_tcache_max_bytes file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tunable_tcache_count file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tunable_tcache_unsorted_limit file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_trim_threshold file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_top_pad file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_mmap_threshold file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_mmap_max file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_perturb file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_mxfast file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_new file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_sbrk_less file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_free file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tcache_double_free file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_less file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_more file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_sbrk_more file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_reuse_free_list file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_reuse file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_reuse_wait file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_new file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_malloc_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_memalign_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_free_dyn_thresholds file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_realloc_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_calloc_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt file:(null) line:0 offset:0 return:0 lazy:(null)
-> Open Debuginfo file: /usr/lib64/libc-2.33.so
-> Try to find probe point from debuginfo.
-
-Hmm, strange. Does the /usr/lib64/libc-2.33.so have .debuginfo??
-(or, did you copy it?)
-
-> try_to_find_probe_trace_events ntevs 0
-> try_to_find_probe_trace_events ret -2
-> try_to_find_probe_trace_events ntevs2 0
-> Probe point 'inet_pton' not found.
->   Error: Failed to add events. Reason: No such file or directory (Code: -2)
-
-I guess the libc binary may have a partial debuginfo and it has no
-full DIE tree. Thus the try_to_find_probe_trace_events() failed.
-
-I'll try to check on the Fedora34. 
-
-Thank you,
-
-> # 
-> [....]
-> > 
-> > Thank you,
-> > 
-> 
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> >
+> > Thanks,
+> > Ian
+> >
+> > > +                       al = annotate_browser__find_next_asm_line(browser,
+> > > al);
+> > > +                       if (!al) {
+> > > +                               browser->b.seek(&browser->b, -offset,
+> > > SEEK_CUR);
+> > > +                               return false;
+> > > +                       }
+> > >                 }
+> > >
+> > >                 if (al->idx_asm < offset)
+> > > --
+> > > 2.31.1
+> > >
+>
+>
