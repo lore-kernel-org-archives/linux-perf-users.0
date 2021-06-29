@@ -5,94 +5,94 @@ X-Spam-Level:
 X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D159C11F66
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 07:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B158C11F6A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 07:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7116561DC6
-	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 07:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E48D161DD7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 29 Jun 2021 07:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232134AbhF2HMI (ORCPT
+        id S232211AbhF2HSG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 29 Jun 2021 03:12:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45894 "EHLO
+        Tue, 29 Jun 2021 03:18:06 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30168 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232097AbhF2HMH (ORCPT
+        by vger.kernel.org with ESMTP id S232161AbhF2HSG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 29 Jun 2021 03:12:07 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15T72eGQ157361;
-        Tue, 29 Jun 2021 03:09:35 -0400
+        Tue, 29 Jun 2021 03:18:06 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15T74OKE107562;
+        Tue, 29 Jun 2021 03:15:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=VQ+o3KS8isrTC67pG09sfdIU/bD0QsRYOjzDDSvBL18=;
- b=okC2X3HMhl+/fwvde9FCOJNYJ21tdRTlGje+/zOh5onIyepqw435uPj9Zqm8Ld2rNHGo
- oE6efJ1k8Z0IUza0zSunMw5zu4LfGgLeE3ljzIBprm8WTfdLv6K+K4CTSejn6CKhQ1qG
- zo+TUQBmHoCwynvIZoodcvxXtL2nki3t03kpw/8aFsRYrEN7EwO6FD8AfOLB0sPJ6NdY
- V0RgpxNoqVOZjjxNJnmXbxMB8DO/imi8c6dSUWw4/CGnH0R9NZCwTcMModSzljl9+5MV
- 67f5RoTy909QsgK8PIHsBsnzU8wDytJDZemREYrg7j7nnQ0Qwq98serElW5SgoX5DT3Z sg== 
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=Z0tZN5Met1ZSQHDakvJhb1l7iLUwClOskU6tO9m9hTs=;
+ b=YiEqGF2eUbf5Xr7JOd24BSQqPO6R2j2rby1k2o/Dt8IYikzoC0zny2KjfN8v/QRXfKIg
+ ntdaPcWz7zTQCl/OhdWEATRODkGQy3UoyvHm0C18u9by9UWH8wnLnjV/GtZjv/lfIyug
+ wvAVx9ndre0yyAG7EKjeR3xqBlfPCEYPK0Z2drZYKNHOJ8QZF8Of0FCH/QiOaL0bjGFm
+ KmJrSjCxS/+Cp8Aa3bNaZsp7+ge+rp2661UsAbAOtQp4suqvvv7gGkYW1eYZC+kKHDFh
+ NtrkF1g1IW/NNOn3CPYcmJ48AlSj2KEX51huz6F/Jr7K366sCPXHQz2IL+oEn9WO9Ybz Qg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39fx7hrynm-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39fxptrenm-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 03:09:34 -0400
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15T73KOD160494;
-        Tue, 29 Jun 2021 03:09:34 -0400
+        Tue, 29 Jun 2021 03:15:32 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 15T75b0a114264;
+        Tue, 29 Jun 2021 03:15:31 -0400
 Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 39fx7hryn4-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39fxptren8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 03:09:34 -0400
+        Tue, 29 Jun 2021 03:15:31 -0400
 Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15T72V8c029037;
-        Tue, 29 Jun 2021 07:09:33 GMT
+        by ppma04dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15T7CU68029602;
+        Tue, 29 Jun 2021 07:15:30 GMT
 Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma04dal.us.ibm.com with ESMTP id 39ekxb0g5x-1
+        by ppma04dal.us.ibm.com with ESMTP id 39ekxb0pbq-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 29 Jun 2021 07:09:33 +0000
+        Tue, 29 Jun 2021 07:15:30 +0000
 Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15T79WFQ28639652
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15T7FTmE32965020
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Jun 2021 07:09:32 GMT
+        Tue, 29 Jun 2021 07:15:29 GMT
 Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2E4EBE0A9;
-        Tue, 29 Jun 2021 07:09:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B1BB9BE06A;
+        Tue, 29 Jun 2021 07:15:28 +0000 (GMT)
 Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17594BE05B;
-        Tue, 29 Jun 2021 07:09:26 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A4BB9BE05A;
+        Tue, 29 Jun 2021 07:15:22 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.199.45.57])
         by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Jun 2021 07:09:26 +0000 (GMT)
-Subject: Re: [PATCH] perf script python: Fix buffer size to report iregs in
- perf script
-To:     "Paul A. Clarke" <pc@us.ibm.com>
-Cc:     acme@kernel.org, maddy@linux.vnet.ibm.com,
+        Tue, 29 Jun 2021 07:15:22 +0000 (GMT)
+Subject: Re: [PATCH] fpga: dfl: fme: Fix cpu hotplug issue in performance
+ reporting
+To:     will@kernel.org, hao.wu@intel.com, mark.rutland@arm.com
+Cc:     trix@redhat.com, yilun.xu@intel.com, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, maddy@linux.vnet.ibm.com,
         atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, ravi.bangoria@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        rnsastry@linux.ibm.com
-References: <20210628062341.155839-1-kjain@linux.ibm.com>
- <20210628144937.GE142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+        linuxppc-dev@lists.ozlabs.org, rnsastry@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, stable@vger.kernel.org
+References: <20210628101721.188991-1-kjain@linux.ibm.com>
 From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <ee98968a-f343-a68e-9a3e-58e97dc130c8@linux.ibm.com>
-Date:   Tue, 29 Jun 2021 12:39:24 +0530
+Message-ID: <adc3b013-d39b-a183-dfce-86ca857949b8@linux.ibm.com>
+Date:   Tue, 29 Jun 2021 12:45:20 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.10.1
-MIME-Version: 1.0
-In-Reply-To: <20210628144937.GE142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+In-Reply-To: <20210628101721.188991-1-kjain@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: M51rqWXXc1ILHZVa-XH_DEWp1tyX1LjL
-X-Proofpoint-ORIG-GUID: kQCq-T8FhUHS1qIYh-wv44lmr2YUF2il
+X-Proofpoint-ORIG-GUID: MXa6PHQqeRTXZFU0Y06Vj-7XCnRmD6M4
+X-Proofpoint-GUID: 4JWqwjMAm7oDc5zMB0WVtk1e2LwS41GY
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
  definitions=2021-06-29_02:2021-06-25,2021-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 malwarescore=0 spamscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ bulkscore=0 priorityscore=1501 mlxscore=0 clxscore=1011 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2104190000 definitions=main-2106290050
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -100,99 +100,53 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 6/28/21 8:19 PM, Paul A. Clarke wrote:
-> On Mon, Jun 28, 2021 at 11:53:41AM +0530, Kajol Jain wrote:
->> Commit 48a1f565261d ("perf script python: Add more PMU fields
->> to event handler dict") added functionality to report fields like
->> weight, iregs, uregs etc via perf report.
->> That commit predefined buffer size to 512 bytes to print those fields.
->>
->> But incase of powerpc, since we added extended regs support
->> in commits:
->>
->> Commit 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
->> Counter SPRs as part of extended regs")
->> Commit d735599a069f ("powerpc/perf: Add extended regs support for
->> power10 platform")
->>
->> Now iregs can carry more bytes of data and this predefined buffer size
->> can result to data loss in perf script output.
->>
->> Patch resolve this issue by making buffer size dynamic based on number
->> of registers needed to print. It also changed return type for function
->> "regs_map" from int to void, as the return value is not being used by
->> the caller function "set_regs_in_dict".
->>
->> Fixes: 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
->> Counter SPRs as part of extended regs")
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>  .../util/scripting-engines/trace-event-python.c | 17 ++++++++++++-----
->>  1 file changed, 12 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
->> index 4e4aa4c97ac5..c8c9706b4643 100644
->> --- a/tools/perf/util/scripting-engines/trace-event-python.c
->> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> [...]
->> @@ -713,7 +711,16 @@ static void set_regs_in_dict(PyObject *dict,
->>  			     struct evsel *evsel)
->>  {
->>  	struct perf_event_attr *attr = &evsel->core.attr;
->> -	char bf[512];
->> +
->> +	/*
->> +	 * Here value 28 is a constant size which can be used to print
->> +	 * one register value and its corresponds to:
->> +	 * 16 chars is to specify 64 bit register in hexadecimal.
->> +	 * 2 chars is for appending "0x" to the hexadecimal value and
->> +	 * 10 chars is for register name.
->> +	 */
->> +	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
->> +	char bf[size];
+On 6/28/21 3:47 PM, Kajol Jain wrote:
+> The performance reporting driver added cpu hotplug
+> feature but it didn't add pmu migration call in cpu
+> offline function.
+> This can create an issue incase the current designated
+> cpu being used to collect fme pmu data got offline,
+> as based on current code we are not migrating fme pmu to
+> new target cpu. Because of that perf will still try to
+> fetch data from that offline cpu and hence we will not
+> get counter data.
 > 
-> I propose using a template rather than a magic number here. Something like:
-> const char reg_name_tmpl[] = "10 chars  ";
-> const char reg_value_tmpl[] = "0x0123456789abcdef";
-> const int size = __sw_hweight64(attr->sample_regs_intr) +
->                  sizeof reg_name_tmpl + sizeof reg_value_tmpl;
+> Patch fixed this issue by adding pmu_migrate_context call
+> in fme_perf_offline_cpu function.
 > 
 
-Hi Paul,
-   Thanks for reviewing the patch. Yes these are
-some standardization we can do by creating macros for different
-fields.
-The basic idea is, we want to provide significant buffer size
-based on number of registers present in sample_regs_intr to accommodate
-all data.
-
-But before going to optimizing code, Arnaldo/Jiri, is this approach looks good to you?
-
-> Pardon my ignorance, but is there no separation/whitespace between the name
-> and the value?
-
-This is how we will get data via perf script
-
-r0:0xc000000000112008
-r1:0xc000000023b37920
-r2:0xc00000000144c900
-r3:0xc0000000bc566120
-r4:0xc0000000c5600000
-r5:0x2606c6506ca
-r6:0xc000000023b378f8
-r7:0xfffffd9f93a48f0e
-.....
-
- And is there some significance to 10 characters for the
-> register name, or is that a magic number?
-
-Most of the register name are within 10 characters, basically we are giving this
-magic number to make sure we have enough space in buffer to contain all registers
-name with colon.
+Adding stable@vger.kernel.org in cc list as suggested by Moritz Fischer.
 
 Thanks,
 Kajol Jain
- 
+
+> Fixes: 724142f8c42a ("fpga: dfl: fme: add performance reporting support")
+> Tested-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  drivers/fpga/dfl-fme-perf.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> PC
+> ---
+> Changelog:
+> - Remove RFC tag
+> - Did nits changes on subject and commit message as suggested by Xu Yilun
+> - Added Tested-by tag
+> - Link to rfc patch: https://lkml.org/lkml/2021/6/28/112
+> ---
+> diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
+> index 4299145ef347..b9a54583e505 100644
+> --- a/drivers/fpga/dfl-fme-perf.c
+> +++ b/drivers/fpga/dfl-fme-perf.c
+> @@ -953,6 +953,10 @@ static int fme_perf_offline_cpu(unsigned int cpu, struct hlist_node *node)
+>  		return 0;
+>  
+>  	priv->cpu = target;
+> +
+> +	/* Migrate fme_perf pmu events to the new target cpu */
+> +	perf_pmu_migrate_context(&priv->pmu, cpu, target);
+> +
+>  	return 0;
+>  }
+>  
 > 
