@@ -2,145 +2,129 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4A5C11F65
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 09:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D34C11F65
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 11:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267A261CA3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 09:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64236144A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 11:05:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233828AbhF3JkN (ORCPT
+        id S233977AbhF3LHs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Jun 2021 05:40:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45884 "EHLO
+        Wed, 30 Jun 2021 07:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233766AbhF3JkN (ORCPT
+        with ESMTP id S229882AbhF3LHs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Jun 2021 05:40:13 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1604C06175F
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 02:37:43 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id c15-20020a056000184fb0290124a352153cso647686wri.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 02:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=JhgrCS9Vj640V8x1cFNbO5yNaZtMM+Zz5JPkP+NN88k=;
-        b=hOGR+88o6wgh2BS77C9e3IW5lpLeoKlfQpOyo0vBRi0/nOkMjDwyqlhB1sCe+OArkh
-         9qxed+lEX/yr9DODAh2C+/67NHa38Ru3QIfEuTWy+N0mZPdR3yc9FmtU7HR5TSYrw4XR
-         Pnbphx2nxpTq0y3aE6Xf1wIJNFBrQor8dRtXxpwz+UWHJbubCIMHVOdhrDBe7YaQ9KF1
-         N4zqbDnQD4evL1iqNYm8CkXIeoIU8aKeMUq622KMpnRNff716iQW6ahiSRDH2jjddvWf
-         dHcLiyQq9vn9oEC7xE6//J8vX3Onwt2Syz6i/JKPiGuxKlfK/BuNH3TSq8mNnz0JrMNR
-         /Kmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=JhgrCS9Vj640V8x1cFNbO5yNaZtMM+Zz5JPkP+NN88k=;
-        b=Z8+YJqAKmaWuoNpdxdmis8cM54CQ+fqTsrqun3WrAGT3Y43y1qbM9lbpRYinOvf114
-         tN59O6J/eM8lOIfd7wRpS88w29JorwIPnNag03GvtyC9Rc/p9pnHLXvzJCdbkATRTr/2
-         vNdxQO3CPaqWDqTOUVftif6EcJae2PmmSkLqqOrAZo8U6Wk0q3E7iDOq0vqIUhi/gAUz
-         xkUcoaoiFYJvgiG+8lVr6FqwMDun1YA8leebqsqWIo63DqyuT7uTT8RSlZnzm+H1+R3K
-         vexr/9LDRJ8PXw3zeRKKfjE0nszTBiyHLDxJVl2Rs9xLZw5RyOm+t5PBl405g++iMnI6
-         SZiQ==
-X-Gm-Message-State: AOAM5334/XvauhdwrrUqGJufxigs3SeBABLH3X9mkW5tGbXt6jSJAUXM
-        tqTAY4yG2UQ+bZ8uCgOPi4MCtjYOkw==
-X-Google-Smtp-Source: ABdhPJy8vek+rU0qtXlFDtYJdt3+PNfx3+B41Bo8Y+sjctSSWlzprffXwO4wD8JBVvpgXgYl9+b5QOromw==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:d0e2:84e5:6f2a:9752])
- (user=elver job=sendgmr) by 2002:a1c:e486:: with SMTP id b128mr3501221wmh.58.1625045861994;
- Wed, 30 Jun 2021 02:37:41 -0700 (PDT)
-Date:   Wed, 30 Jun 2021 11:37:09 +0200
-Message-Id: <20210630093709.3612997-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
-Subject: [PATCH] perf: Require CAP_KILL if sigtrap is requested
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, peterz@infradead.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, serge@hallyn.com, mingo@redhat.com,
-        acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-security-module@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Eric Biederman <ebiederm@xmission.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 30 Jun 2021 07:07:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DE2C061756;
+        Wed, 30 Jun 2021 04:05:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=D323D401TdCk6w7+sRla9GhM2/NvkKAQNpWP3TaT4EE=; b=ABerm+bQzI7rlXpwm6vCG1tJl6
+        Eas/5ugMF7eFiDEMY1pewlzE36OAVa2/VzI9Dudf1yG5FcvmIa426d8/Vv7DYfZdEm1oJ6VwCwXDf
+        f2VX/n2/M5C2GlQ/RNzYQS0E2ZHUErj6yGnW9OtETybgvh6T9oZsodd/U8du4yyJijuXka+Qr7NOS
+        bRee3FByYg9CNa+MQIugir8PTZWyEEkIJXekpN97GLgw0/4JdZ3wIfjUzDEDYAsf+nFFitqAsi1Q7
+        fLwkV8E/V5tjKD+UhqIwwmAtyfWTdLjf3kwRIQF6KrIjCC6FSSZcGNzIRBYylJPzSA/roQiUqsV1D
+        EtbBupug==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1lyY18-005FbH-3j; Wed, 30 Jun 2021 11:04:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CB23D300242;
+        Wed, 30 Jun 2021 13:04:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8BAE72C306076; Wed, 30 Jun 2021 13:04:28 +0200 (CEST)
+Date:   Wed, 30 Jun 2021 13:04:28 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf/x86: Add new event for AUX output counter index
+Message-ID: <YNxPvIC3gVdy1bp4@hirez.programming.kicks-ass.net>
+References: <20210609142055.32226-1-adrian.hunter@intel.com>
+ <20210609142055.32226-2-adrian.hunter@intel.com>
+ <YNXW4+QqeO1KL4Xq@hirez.programming.kicks-ass.net>
+ <cc79fce0-2c92-dd55-fd50-46b28644f4fc@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc79fce0-2c92-dd55-fd50-46b28644f4fc@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If perf_event_open() is called with another task as target and
-perf_event_attr::sigtrap is set, and the target task's user does not
-match the calling user, also require the CAP_KILL capability.
+On Wed, Jun 30, 2021 at 12:21:07PM +0300, Adrian Hunter wrote:
+> On 25/06/21 4:15 pm, Peter Zijlstra wrote:
+> > On Wed, Jun 09, 2021 at 05:20:53PM +0300, Adrian Hunter wrote:
+> > 
+> >> +static void intel_pmu_report_aux_output_id(struct perf_event *event)
+> >> +{
+> >> +	struct hw_perf_event *hwc = &event->hw;
+> >> +
+> >> +	/*
+> >> +	 * So long as all PEBS-via-PT events for a recording session are
+> >> +	 * scheduled together, then only changes to hwc->idx need be reported.
+> >> +	 */
+> >> +	if (hwc->idx != hwc->idx_reported) {
+> >> +		hwc->idx_reported = hwc->idx;
+> >> +		perf_report_aux_output_id(event, hwc->idx);
+> >> +	}
+> >> +}
+> > 
+> > AFAICT you want a callback in x86_assign_hw_event(), is that so?
+> > 
+> 
+> Yes, or open-coded e.g.
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 8f71dd72ef95..46dac45298d1 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1207,6 +1207,11 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
+>  	return n;
+>  }
+>  
+> +static inline bool report_aux_output_id(struct perf_event *event)
+> +{
+> +	return is_pebs_pt(event);
+> +}
+> +
+>  static inline void x86_assign_hw_event(struct perf_event *event,
+>  				struct cpu_hw_events *cpuc, int i)
+>  {
+> @@ -1217,6 +1222,9 @@ static inline void x86_assign_hw_event(struct perf_event *event,
+>  	hwc->last_cpu = smp_processor_id();
+>  	hwc->last_tag = ++cpuc->tags[i];
+>  
+> +	if (report_aux_output_id(event))
+> +		perf_report_aux_output_id(event, idx);
+> +
+>  	switch (hwc->idx) {
+>  	case INTEL_PMC_IDX_FIXED_BTS:
+>  	case INTEL_PMC_IDX_FIXED_VLBR:
 
-Otherwise, with the CAP_PERFMON capability alone it would be possible
-for a user to send SIGTRAP signals via perf events to another user's
-tasks. This could potentially result in those tasks being terminated if
-they cannot handle SIGTRAP signals.
+Right, bit yuck, but I suppose it works. The alternative is something
+like:
 
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
- include/linux/capability.h |  5 +++++
- kernel/events/core.c       | 13 ++++++++++++-
- 2 files changed, 17 insertions(+), 1 deletion(-)
+	static_call_cond(x86_pmu_assign)(event, idx);
 
-diff --git a/include/linux/capability.h b/include/linux/capability.h
-index 65efb74c3585..1c6be4743dbe 100644
---- a/include/linux/capability.h
-+++ b/include/linux/capability.h
-@@ -264,6 +264,11 @@ static inline bool bpf_capable(void)
- 	return capable(CAP_BPF) || capable(CAP_SYS_ADMIN);
- }
- 
-+static inline bool kill_capable(void)
-+{
-+	return capable(CAP_KILL) || capable(CAP_SYS_ADMIN);
-+}
-+
- static inline bool checkpoint_restore_ns_capable(struct user_namespace *ns)
- {
- 	return ns_capable(ns, CAP_CHECKPOINT_RESTORE) ||
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index fe88d6eea3c2..1ab4bc867531 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12152,10 +12152,21 @@ SYSCALL_DEFINE5(perf_event_open,
- 	}
- 
- 	if (task) {
-+		bool is_capable;
-+
- 		err = down_read_interruptible(&task->signal->exec_update_lock);
- 		if (err)
- 			goto err_file;
- 
-+		is_capable = perfmon_capable();
-+		if (attr.sigtrap) {
-+			/*
-+			 * perf_event_attr::sigtrap sends signals to the other
-+			 * task. Require the current task to have CAP_KILL.
-+			 */
-+			is_capable &= kill_capable();
-+		}
-+
- 		/*
- 		 * Preserve ptrace permission check for backwards compatibility.
- 		 *
-@@ -12165,7 +12176,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 		 * perf_event_exit_task() that could imply).
- 		 */
- 		err = -EACCES;
--		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-+		if (!is_capable && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
- 			goto err_cred;
- 	}
- 
--- 
-2.32.0.93.g670b81a890-goog
+but I'm not sure that's worth it, but it avoids stuffing even more intel
+specific bits into the core.
+
 
