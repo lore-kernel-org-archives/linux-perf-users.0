@@ -2,129 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCBAC11F65
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 08:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1646CC11F65
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 09:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6B361360
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 08:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD4361D0F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 09:20:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233258AbhF3IrB (ORCPT
+        id S233806AbhF3JXX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Jun 2021 04:47:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29288 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232984AbhF3IrB (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Jun 2021 04:47:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625042672;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kZ1u0JkUINREFAlXkqBxYenIQOGi8YsdnQLKuSA4Kig=;
-        b=VHDbvisItbKTKJzruYkuQyWyd1gz/CCe/IdKvvNztmeBvY3eLg6wmup9LBrAOjwENGKtGD
-        AG6OOfubZ9hsn5jVxKSEYMTedb2AvAvxnLSyeKeaAtprVNuC8lqz7Nj5e0boJtEcFboCNI
-        HMQjvvi+a0ctsvapWxXYJ0iT0rubYcE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-2-PW89tBP2C0NAgdXJUelQ-1; Wed, 30 Jun 2021 04:44:30 -0400
-X-MC-Unique: 2-PW89tBP2C0NAgdXJUelQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE5BC5721F
-        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 08:44:29 +0000 (UTC)
-Received: from Diego (unknown [10.36.110.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1795B18AD4;
-        Wed, 30 Jun 2021 08:44:27 +0000 (UTC)
-Date:   Wed, 30 Jun 2021 10:44:20 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     Eirik Fuller <efuller@redhat.com>
-cc:     linux-perf-users@vger.kernel.org, acme@redhat.com, jolsa@redhat.com
-Subject: Re: [PATCH] perf test: Handle fd gaps in test__dso_data_reopen
-In-Reply-To: <20210626023825.1398547-1-efuller@redhat.com>
-Message-ID: <alpine.LRH.2.20.2106301043550.27231@Diego>
-References: <20210626023825.1398547-1-efuller@redhat.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Wed, 30 Jun 2021 05:23:23 -0400
+Received: from mga07.intel.com ([134.134.136.100]:10722 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233653AbhF3JXW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 30 Jun 2021 05:23:22 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10030"; a="272173514"
+X-IronPort-AV: E=Sophos;i="5.83,311,1616482800"; 
+   d="scan'208";a="272173514"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2021 02:20:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.83,311,1616482800"; 
+   d="scan'208";a="419928542"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.79]) ([10.237.72.79])
+  by fmsmga007.fm.intel.com with ESMTP; 30 Jun 2021 02:20:49 -0700
+Subject: Re: [PATCH 1/3] perf/x86: Add new event for AUX output counter index
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210609142055.32226-1-adrian.hunter@intel.com>
+ <20210609142055.32226-2-adrian.hunter@intel.com>
+ <YNXW4+QqeO1KL4Xq@hirez.programming.kicks-ass.net>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <cc79fce0-2c92-dd55-fd50-46b28644f4fc@intel.com>
+Date:   Wed, 30 Jun 2021 12:21:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <YNXW4+QqeO1KL4Xq@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 25 Jun 2021, Eirik Fuller wrote:
-> https://github.com/beaker-project/restraint/issues/215 describes a file
-> descriptor leak which revealed the test failure described here.
+On 25/06/21 4:15 pm, Peter Zijlstra wrote:
+> On Wed, Jun 09, 2021 at 05:20:53PM +0300, Adrian Hunter wrote:
 > 
-> The 'DSO data reopen' perf test assumes that RLIMIT_NOFILE limits the
-> number of open file descriptors, but it actually limits newly opened
-> file descriptors. When the file descriptor limit is reduced, file
-> descriptors already open remain open regardless of the new limit. This
-> test failure does not occur if open file descriptors are contiguous,
-> beginning at zero.
+>> +static void intel_pmu_report_aux_output_id(struct perf_event *event)
+>> +{
+>> +	struct hw_perf_event *hwc = &event->hw;
+>> +
+>> +	/*
+>> +	 * So long as all PEBS-via-PT events for a recording session are
+>> +	 * scheduled together, then only changes to hwc->idx need be reported.
+>> +	 */
+>> +	if (hwc->idx != hwc->idx_reported) {
+>> +		hwc->idx_reported = hwc->idx;
+>> +		perf_report_aux_output_id(event, hwc->idx);
+>> +	}
+>> +}
 > 
-> The following command triggers this perf test failure.
-> 
-> perf test 'DSO data reopen' 3>/dev/null 8>/dev/null
-> 
-> This patch determines the file descriptor limit by opening four files
-> and then closing them. The limit is set to the fourth file descriptor,
-> leaving only the first three available because any newly opened file
-> descriptor must be less than the limit.
-> 
-> Signed-off-by: Eirik Fuller <efuller@redhat.com>
-
-Acked-by: Michael Petlan <mpetlan@redhat.com>
-
-> ---
->  tools/perf/tests/dso-data.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-> index 627c1aaf1c9e..43e1b01e5afc 100644
-> --- a/tools/perf/tests/dso-data.c
-> +++ b/tools/perf/tests/dso-data.c
-> @@ -308,10 +308,20 @@ int test__dso_data_cache(struct test *test __maybe_unused, int subtest __maybe_u
->  	return 0;
->  }
->  
-> +static long new_limit(int count)
-> +{
-> +	int fd = open("/dev/null", O_RDONLY);
-> +	long ret = fd;
-> +	if (count > 0)
-> +		ret = new_limit(--count);
-> +	close(fd);
-> +	return ret;
-> +}
-> +
->  int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_unused)
->  {
->  	struct machine machine;
-> -	long nr_end, nr = open_files_cnt();
-> +	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
->  	int fd, fd_extra;
->  
->  #define dso_0 (dsos[0])
-> @@ -334,7 +344,7 @@ int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_
->  
->  	/* Make sure we are able to open 3 fds anyway */
->  	TEST_ASSERT_VAL("failed to set file limit",
-> -			!set_fd_limit((nr + 3)));
-> +			!set_fd_limit((lim)));
->  
->  	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
->  
-> -- 
-> 2.27.0
-> 
+> AFAICT you want a callback in x86_assign_hw_event(), is that so?
 > 
 
+Yes, or open-coded e.g.
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 8f71dd72ef95..46dac45298d1 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1207,6 +1207,11 @@ static int collect_events(struct cpu_hw_events *cpuc, struct perf_event *leader,
+ 	return n;
+ }
+ 
++static inline bool report_aux_output_id(struct perf_event *event)
++{
++	return is_pebs_pt(event);
++}
++
+ static inline void x86_assign_hw_event(struct perf_event *event,
+ 				struct cpu_hw_events *cpuc, int i)
+ {
+@@ -1217,6 +1222,9 @@ static inline void x86_assign_hw_event(struct perf_event *event,
+ 	hwc->last_cpu = smp_processor_id();
+ 	hwc->last_tag = ++cpuc->tags[i];
+ 
++	if (report_aux_output_id(event))
++		perf_report_aux_output_id(event, idx);
++
+ 	switch (hwc->idx) {
+ 	case INTEL_PMC_IDX_FIXED_BTS:
+ 	case INTEL_PMC_IDX_FIXED_VLBR:
