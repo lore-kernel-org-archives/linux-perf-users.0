@@ -2,284 +2,311 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB17C11F65
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 16:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFA9C11F65
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 17:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E806147D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 16:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F345461474
+	for <linux-perf-users@archiver.kernel.org>; Wed, 30 Jun 2021 17:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235892AbhF3QEj (ORCPT
+        id S229852AbhF3Rbu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 30 Jun 2021 12:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235822AbhF3QEj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 30 Jun 2021 12:04:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E7C4261405;
-        Wed, 30 Jun 2021 16:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625068930;
-        bh=dAVMpwZD3vQwm3KNBeiCc5/n8HGW7y6qHY/zqcgQlDU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mXk9RZOgCDGqjAtNzDS2G9eargkBylRy+f+UxVaLJepr9Bf2wqQWOhJ2Lpl5frqaz
-         PeC+mdzHtescjCLsdQAHCaIIW8lOomRtzml76qIkK+Oy4xTz7BBRoVVdt302ZAFlti
-         eCJTE+0RFeqyz8pCk7iUbJTcgkid1pW/tyUP3CTOMXbr9zSjeBMf4my/O5bOTd5uos
-         WlAe3dDbYslHcBYT8sd0TT5+iepFm1k+XDocinfJEoTUT5EMo8Bt/5et/y8ROPVE7z
-         x7I4vhrcBsTM78RLcQX/a5Rx9ZswZQlAhax0Q/d3RXQsXrgQCtSqPLl019VXPi/ErU
-         WsXmQoJ7x1UxA==
-Date:   Thu, 1 Jul 2021 01:02:08 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Stefan Liebler <stli@linux.ibm.com>
-Subject: Re: Part 2: perf test case probe libc fails with latest Fedora34
- glibc update
-Message-Id: <20210701010208.6c5129241ab490bc6a6b3197@kernel.org>
-In-Reply-To: <a3b3487d-7eb7-cbdb-0bfb-d94cc621da83@linux.ibm.com>
-References: <cae863a4-bf83-f87b-6e71-b6a544678cae@linux.ibm.com>
-        <f6752514-eaf9-371e-f81b-0d9e41ebae0c@linux.ibm.com>
-        <20210629140242.c16d9bf368865025e0ead480@kernel.org>
-        <a3b3487d-7eb7-cbdb-0bfb-d94cc621da83@linux.ibm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 30 Jun 2021 13:31:50 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:63644 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229573AbhF3Rbt (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 30 Jun 2021 13:31:49 -0400
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15UHQCZP014965
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 17:29:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : content-type : mime-version; s=corp-2020-01-29;
+ bh=nuUlYLfrMyWjvnQxpvp7PZAZQvRhhh2J+3Dt2BJ9EF4=;
+ b=BdvFHd0OMGH229xA92gQgJV9KjFWqsL+iG4HXSk7G1pJtjsFATy/UKpHQUxHfXfcSnug
+ Gf5mgq8R5IvwZ8S++mVuoztbOYB43OCcAB/VFzQk9fq/KbfdY69Cst4rDYaP8pl42jLU
+ AcqUyX9YiE7Is2sQfY6vk5H/PCTRlNwgP4sE6djElQ+GfDxFzkF/icM54EqxKQY4VnT+
+ 2C/BPVJ54sL2cEkq8RKLNSCU3z9cfDJj4VJDAuCWK4aaoAq7Brn8JbDhajpKi9ZfncxR
+ SxMidA7HCcJz+AnEnFUKhgNltqZHBzBgvB4dYsKEtrjASWQGS7hSotYl42ihz6GBoV+N cA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 39fpu2mgy1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 17:29:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 15UHPjEP163771
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 17:29:18 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2172.outbound.protection.outlook.com [104.47.55.172])
+        by userp3030.oracle.com with ESMTP id 39dsc1uqne-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-perf-users@vger.kernel.org>; Wed, 30 Jun 2021 17:29:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BW7IPlp28XTf4pO30h1AvknLCKzABT9ZL1ZCGvi0EiJ5ia25yei7C50ace5L+sv5xpgcRiowyh64Cdza+z2L/nssXgwqBvfajLkYXpfYseHVLEE0/EyYpR4BUidgrqcAYBSZlHY06Qkau8KlK5bC+BopYMlq+tPT736ccW9zrd1sSge14X/bXIFOeW5VpPN2BakzThDWqUmMde0gaSVPD2tCA/v9w99W1l4O17RPL4VNLQPocZdA8LumFNVpXFd7gW27AWm32bp2x6fGUJjnNWTE6AMyQ5MswLGFYLYfuOwvjSMusCsz9uxEkhSQp1/nuTCCz7bd+gX9bhmXfNapOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nuUlYLfrMyWjvnQxpvp7PZAZQvRhhh2J+3Dt2BJ9EF4=;
+ b=E1bYgsAJefmTyyvRrCOiBmOdy3kEWa5uFMIBRsnWy3WCux079XEObQjRc5p6oU2AR5kaiU4V9jYaJAYmSqzxTc+FaPi2nkA2+NqWCdatGOfZqbpglKRLkozf9CKnpBrueFEFQRwWBZAJca9MRNqyZNmO94nm49hGcRJ94vA+9kJ09uEFQySMZNnlw2bY/aUdTBTS8iRCotcXV5Im59qskw38NaL+//+/yiJncCiLlErEsRAimaWFjU+ADqFR6Vp9xLE5vIYTV3zYP0CWOahVOrrYQuzluDbATKCnFyPgKQai1p2+8RWyPcIP0XWJ6PwhPGpmkF1+UcIWcOQddQ1KSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nuUlYLfrMyWjvnQxpvp7PZAZQvRhhh2J+3Dt2BJ9EF4=;
+ b=EFkVyu2TRi+acbEzBnHsjM8WkpQuyUY5srrUNT5dxL35n6olXJGjp/CNcLR0Qdlmwn/0dw6bHDEsKnyloH7gb2aP53YvPcsZwQ9yl5Cfr2giYEGADVXbxBnFfG6dSMcTSHMy0N1bMEh0FC++C5bjKwTkS+marKssxVezQeItTqQ=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
+Received: from BYAPR10MB2823.namprd10.prod.outlook.com (2603:10b6:a03:87::15)
+ by SJ0PR10MB4686.namprd10.prod.outlook.com (2603:10b6:a03:2d7::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.19; Wed, 30 Jun
+ 2021 17:29:16 +0000
+Received: from BYAPR10MB2823.namprd10.prod.outlook.com
+ ([fe80::3574:8df7:f5c0:d412]) by BYAPR10MB2823.namprd10.prod.outlook.com
+ ([fe80::3574:8df7:f5c0:d412%4]) with mapi id 15.20.4287.022; Wed, 30 Jun 2021
+ 17:29:15 +0000
+From:   Stephen Brennan <stephen.s.brennan@oracle.com>
+To:     linux-perf-users@vger.kernel.org
+Subject: Perf loses events without reporting
+Date:   Wed, 30 Jun 2021 10:29:13 -0700
+Message-ID: <87lf6rclcm.fsf@stepbren-lnx.us.oracle.com>
+Content-Type: text/plain
+X-Originating-IP: [2606:b400:8004:44::15]
+X-ClientProxiedBy: BY5PR16CA0025.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::38) To BYAPR10MB2823.namprd10.prod.outlook.com
+ (2603:10b6:a03:87::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2606:b400:8004:44::15) by BY5PR16CA0025.namprd16.prod.outlook.com (2603:10b6:a03:1a0::38) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.21 via Frontend Transport; Wed, 30 Jun 2021 17:29:15 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f00d2355-6edd-4f00-131e-08d93bec9577
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4686:
+X-Microsoft-Antispam-PRVS: <SJ0PR10MB468616EC1B11ABB1FAA03D20DB019@SJ0PR10MB4686.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JKGvIoiBeeO6t94Cn7WO+DbsPQ6g0Ajh0EA6Qk4cAX/vxeflYxI/MYEDEFyOlN9YraXw66MTMoPx6DYjg2OgqTU14AFAvyAjWiUCBkWMO8Uc+ync4/Jlv6LpLtkpGV0hdokbrjEn+rnxe5soMp9stfn4IXY4klexDXS96tCl0+LhZptEXj5nWnFKHo7x2iq954w1SAP6x5FnY+c4UszBuA1+eZA5uJQSdXpTiRH6Iof5xL/xk2whyifYM+FN6/RnEpB0cbvnj0zjiYDhnk+JtCYiS8p7GPKpQCb3jVJS+MAKtjqDwIqNuE2W6kuU8XF+0HPl50LkGPudtxz1pfZz2Gw5xP8WsyPK0TJO1l/jVGGXHskwxjFbY1mgb3EBncHXlqLyuZTVCSUeurrA06SzHWsIraMKKSR6UxQXESb9Nq3+7Sytd/ixcKKdDGfM9pLe1TG4c/5nVmW/21nMWyOjuiJEacUtzfa4rdo2jAcDmAaoSlbrU9GZRPfGTCu3Kzpq/mUgsUoIEh0Z6VEIuRFIcwMc0N/a5IzjLt4A4xr6x0RAaTFPFNixKNgC9obj4poQO4//jPqRIw6hQUS1DHVXhrNp6eCiewzRUIw2ZZ/c3SIdZr9ewtLdUBPy35iSlmvh46eIC2Pm/Ld3SsgoFezlOw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR10MB2823.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(136003)(366004)(396003)(346002)(376002)(478600001)(6486002)(38100700002)(83380400001)(86362001)(2906002)(316002)(16526019)(186003)(8936002)(66946007)(8676002)(66476007)(66556008)(5660300002)(6496006)(52116002)(6916009);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Lc6GZZsBo0o3pUOR6v6/uAM7dzjZjYPuH8t7LozYsNxQjBuMYI1oP3OWN708?=
+ =?us-ascii?Q?nvXhxLL9lbdbMf9hD7ehQaP+6gPQkh12/MXZTHyQj+y7pFXpk1raIiXrg7vW?=
+ =?us-ascii?Q?j3+NiXvJ0pdJnN06uGjAorz1dQNT5sJuUsLTJFYuJiAx1JKKUGpsXrBHLvgx?=
+ =?us-ascii?Q?N/IjsKRNEkfhnKgwUNXdqvfTYF6ecl5OL1XbrV2rCdTn2cEo+oAm+PuaYP2f?=
+ =?us-ascii?Q?bbrK/9WO4oYrxSt/VozzerW/zAoZzT66MBdjdPABetnjt9rBfaiiUZA5gBQr?=
+ =?us-ascii?Q?fq9RalIrV1rqGNJue7/xqD2JLy/FuCy+ojr+pqlCw+IjNqSZ0Pse1/IKqa/i?=
+ =?us-ascii?Q?uirptcOqLodmn3bOQ6hy6AMOZVHoK2tpep3eBA9RRr51wxvQ4YJ55RXLfYLW?=
+ =?us-ascii?Q?1fOp2aftXrG597W7lQdtDg6yldijb9HlujkE7sundC8ePGtP6fQrqJZyhZKO?=
+ =?us-ascii?Q?49BeLtQRnXTY1NDpe0Y3yN4r2TT7XT0NtJvpVQkQ17+X08zedM6e9jQaiQQg?=
+ =?us-ascii?Q?jYcTTRPHZ/+vOUzUyFUmVVSO4Qq3LIgXwOSsRc9Ubq8447RKpaZWKbqfJuT1?=
+ =?us-ascii?Q?8S1gqyfmODhQO2j5Ktg/VyvKhAQe3KtcTPU9NGDejmQ0depJSQiA0itkSsid?=
+ =?us-ascii?Q?mdaECYCQFqtN4IDKM/cbD3rhjLO3cUqjUaRP3WJNM5ACsibQ2Bvt49TADMlO?=
+ =?us-ascii?Q?xvwRVBd/zRmr8EtMynv4+zUX+pGp76bdo951hA4Og2cc/ugwNxse/vxYA1ZQ?=
+ =?us-ascii?Q?jgph4OfwsWorWnfqndDxXlH2rpP6rj+QQw4oYRcd1saTcbQ2+M0xhC580KYy?=
+ =?us-ascii?Q?SR7Q6M57ZIlPFoy+CAXWyv7xzU6JoGTefLu4I63DSSCK0VD1aV7Q9LyhRZUK?=
+ =?us-ascii?Q?+G5OwKXoAQyDQdHfRpnUeijPPsONRjmHdfBng2YWzyKsJ1oCR5GH9HAE+Zga?=
+ =?us-ascii?Q?FznoJyz/UooXyteUN2lDnINi+G94+75if0e+l9aBj3anj5yt4EUvuPsDihEd?=
+ =?us-ascii?Q?cAdnmgdzHPtFJLssixY1qUGCmBVVexZDK2HdCDSc5rKsc2+ZQUm+dbTEzFrX?=
+ =?us-ascii?Q?ZRXEUk7cFo44COr+w4HGd14kVP9GTNtCsh8t9Z/QOkxg7wS0eh3vyioCSuAC?=
+ =?us-ascii?Q?m0dqrvc4a61zIRvdQ+EVJKNBOXo5AnDTBgcHvSolUVl3PaFt26zy7QR+WokO?=
+ =?us-ascii?Q?1PVnyopuMq3icKGTOC7Q6NP36HenyQbfrJBalGr4cah6lZQElXc5K0wu1fkE?=
+ =?us-ascii?Q?u6PLl2ZhuHIb2HXypaEzeUo+ZYkhrnSbGcRmzONriPX4ThvvWjkb/K6KIzFp?=
+ =?us-ascii?Q?f43gZetx3qrh/neVfLzaYI7VYqOhDH7aJrkhOq2w8H2ecQ=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f00d2355-6edd-4f00-131e-08d93bec9577
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR10MB2823.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2021 17:29:15.7544
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fyyrzAXSgpvnScO03R6/fDMbPZX2eiumqiZ0lTvi7+grD5FfFye6teWCUzdF8WRMT5nuu6bkGNINLhMdylq+4NkC3tj3oXQ9o9f60NoyroA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4686
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10031 signatures=668682
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 bulkscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106300097
+X-Proofpoint-GUID: 4S_k2M4_5Ya4R_JEIIsc-5uiSjm9ir8w
+X-Proofpoint-ORIG-GUID: 4S_k2M4_5Ya4R_JEIIsc-5uiSjm9ir8w
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Thomas,
+Hi all,
 
-OK, I finally found 2 root causes for this issue.
+I've been trying to understand the behavior of the x86_64 performance
+monitoring interrupt, specifically when IRQ is disabled. Since it's an
+NMI, it should still trigger and record events. However, I've noticed
+that when interrupts are disabled for a long time, events seem to be
+silently dropped, and I'm wondering if this is expected behavior.
 
-1. debuginfo__new() forgot to call dso__load(). Thus, the dso is
-just initialized, but doesn't load the build-id. Then the build-id
-based debuginfo file is not searched. It must use map instead of dso.
+To test this, I created a simple kernel module "irqoff" which creates a
+file /proc/irqoff_sleep_millis. On write, the module uses
+"spin_lock_irq()" to disable interrupts, and then issues an mdelay()
+call for whatever number of milliseconds was written. This allows us to
+busy wait with IRQ disabled. (Source for the module at the end of this
+email).
 
-2. Not sure why, but /usr/lib64/libc-2.33.so is shown as "not stripped"
-binary. Then the elfutils is fooled by the information and open it
-as a debuginfo file. I think probe-finder.c also need to check the
-given file has DIE tree (debuginfo) or not by itself.
+When I use perf to record a write to this file, we see the following:
 
-Thank you,
+$ sudo perf record -e cycles -c 100000 -- sh -c 'echo 2000 > /proc/irqoff_sleep_millis'
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.030 MB perf.data (58 samples) ]
 
+$ sudo perf script
+# ... filtered down:
+              sh 62863 52318.991716:     100000 cycles:  ffffffff8a8237a9 delay_tsc+0x39 ([kernel.kallsyms])
+              sh 62863 52318.991740:     100000 cycles:  ffffffff8a823797 delay_tsc+0x27 ([kernel.kallsyms])
+              sh 62863 52318.991765:     100000 cycles:  ffffffff8a823797 delay_tsc+0x27 ([kernel.kallsyms])
+#                      ^ v   ~2 second gap!
+              sh 62863 52320.963900:     100000 cycles:  ffffffff8ae47417 _raw_spin_lock_irqsave+0x27 ([kernel.kallsyms])
+              sh 62863 52320.963923:     100000 cycles:  ffffffff8ae47417 _raw_spin_lock_irqsave+0x27 ([kernel.kallsyms])
+              sh 62863 52320.963948:     100000 cycles:  ffffffff8ab1db9a handle_tx_event+0x2da ([kernel.kallsyms])
 
-On Tue, 29 Jun 2021 08:42:15 +0200
-Thomas Richter <tmricht@linux.ibm.com> wrote:
+The perf stat shows the following counters over a similar run:
 
-> On 6/29/21 7:02 AM, Masami Hiramatsu wrote:
-> > On Fri, 25 Jun 2021 12:43:29 +0200
-> > Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > 
-> >> I think I found one issue:
-> >>
-> >> Fedora 33 named the debug files for glibc 'libc-2.33.so.debug'
-> >> [root@s8360047 ~]# rpm -ql glibc-debuginfo-2.33-5.fc34.s390x|fgrep libc-2.33.so
-> >> /usr/lib/debug/lib64/libc-2.33.so.debug
-> >> [root@s8360047 ~]#
-> >>
-> >> The file was located in
-> >>    /usr/lib/debug/lib64/libc-2.33.so.debug
-> >> and hard linked to (or vice versa)
-> >>    /usr/lib/debug/usr/lib64/libc-2.33.so.debug
-> >>
-> >> With Fedora 34 the glibc debug file name changed to:
-> >> /usr/lib/debug/lib64/libc-2.33.so-2.33-18.fc34.s390x.debug
-> >> and
-> >> /usr/lib/debug/usr/lib64/libc-2.33.so-2.33-18.fc34.x86_64.debug
-> > 
-> > Oh, the naming scheme has been changed.
-> > 
-> >>
-> >> This is important. The call chain is
-> >>
-> >>  ...
-> >>  try_to_find_probe_trace_events()
-> >>  +-> open_debuginfo()
-> >>      +-> debuginfo__new(/usr/lib64/libc-2.33.so)
-> >>          +-> dso__read_binary_type_filename()
-> >>
-> >> Function dso__read_binary_type_filename() now tries to find the debug file
-> >> for /usr/lib64/libc-2.33.so for various distros starting with
-> >> FEDORA_DEBUGINFO. Tt builds the file name by prepending
-> >> '/usr/lib/debug' and appending '.debug'. This was ok until the Fedora 34
-> >> name change. Now the debug file is not found anymore and various other
-> >> distro name schemes are tried. None is found and the /usr/lib64/libc-2.33.so
-> >> file itself is used.
-> > 
-> > Hmm, we might need a generic way to get such debuginfo path among
-> > linux distros... are there any good command?
-> 
-> IMHO The only option that makes sense is to use the buildid:
-> The s390 compiler team recommended this to me.
-> 
-> [root@t35lp46 perf]# file /usr/lib64/libc-2.33.so
-> /usr/lib64/libc-2.33.so: ELF 64-bit MSB shared object, IBM S/390, version 1 (GNU/Linux), dynamically linked, interpreter /lib/ld64.so.1, BuildID[sha1]=15da6d15f3b4d5042dab1246222479e577fe9190, for GNU/Linux 3.2.0, not stripped
-> [root@t35lp46 perf]# ll /root/.debug/.build-id/15/da6d15f3b4d5042dab1246222479e577fe9190/
-> total 7912
-> -rw-r--r-- 2 root root 6372968 Jun 21 09:01 debug
-> -rwxr-xr-x 2 root root 1719672 Jun 21 09:01 elf
-> -rw-r--r-- 1 root root    4754 Jun 23 10:23 probes
-> [root@t35lp46 perf]# readelf -s /root/.debug/.build-id/15/da6d15f3b4d5042dab1246222479e577fe9190/debug | fgrep ' inet_pton'
->  21092: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS inet_pton.c
->  21105: 0000000000123150   250 FUNC    LOCAL  DEFAULT   13 inet_pton4
->  21108: 0000000000123250   524 FUNC    LOCAL  DEFAULT   13 inet_pton6
->  27909: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton
-> [root@t35lp46 perf]# 
-> 
-> The bad thing is that only the file part xx/yy/debug seems to be agreed upon
-> between distros. There are multiple/different locations containing .build-id directories.
-> 
-> On the other hand, perf is connected to the kernel, so we could 'convince'
-> the distro's to use their distro specific locations when they build perf.
-> 
-> [....] 
-> 
-> >>
-> >> Second issue:
-> >> The symbol 'inet_pton' is defined as WEAK. Even when the correct
-> >> debuginfo file is loaded for libc in function dso__read_binary_type_filename(),
-> >> the perf probe command fails.
-> >> However it works for GLOBAL and LOCAL symbols, so it would be definitly an 
-> >> improvement.
-> >>
-> >> I have no clue on dwarf so I put Masami on the addressee list.
-> >> This second issue is somehow related to dwarf_getfuncs() and
-> >> the probe_point_search_cb() call back function invoked by dwarf_getfuncs()
-> >> in the probe_finder.c file. Too far away from my horizon :-)...
-> >>
-> >> On 6/23/21 4:21 PM, Thomas Richter wrote:
-> >>> I just updated Fedora34 to the latest level and discovered that perf test 78 fails:
-> >>> [root@m46lp22 perf]# ./perf test 78
-> >>> 78: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> >>> [root@m46lp22 perf]#
-> >>>
-> >>> It boils down to this command and happens after glibc is update to level 2.33-18.
-> >>>
-> >>> [root@f34 ~]# perf probe -f -x /usr/lib64/libc-2.33.so -a inet_pton
-> >>> Probe point 'inet_pton' not found.
-> >>>   Error: Failed to add events.
-> > 
-> > Hmm, what does "nm" say? Also, Does perf correctly open the debuginfo file or only
-> > open the library without debuginfo?
-> 
-> # nm -D /usr/lib64/libc-2.33.so | fgrep inet_pton
-> 00000000001234c0 W inet_pton@@GLIBC_2.2
-> 0000000000123460 T __inet_pton_length@@GLIBC_PRIVATE
-> # readelf -s /usr/lib64/libc-2.33.so | fgrep inet_pton
->    673: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton@@GLIBC_2.2
-> # nm -D /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/debug | fgrep inet_pton
-> nm: /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/debug: no symbols
-> # readelf -s /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/debug | fgrep inet_pton
->  21092: 0000000000000000     0 FILE    LOCAL  DEFAULT  ABS inet_pton.c
->  21105: 0000000000123150   250 FUNC    LOCAL  DEFAULT   13 inet_pton4
->  21108: 0000000000123250   524 FUNC    LOCAL  DEFAULT   13 inet_pton6
->  24179: 0000000000123460    90 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton[...]
->  24463: 00000000001234c0   106 FUNC    LOCAL  DEFAULT   13 __inet_pton
->  25102: 00000000001234c0   106 FUNC    LOCAL  DEFAULT   13 __GI___inet_pton
->  26439: 00000000001234c0   106 FUNC    LOCAL  DEFAULT   13 __GI_inet_pton
->  27023: 0000000000123460    90 FUNC    GLOBAL DEFAULT   13 __inet_pton_length
->  27909: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton
-> # readelf -s /root/.debug/usr/lib64/libc-2.33.so/15da6d15f3b4d5042dab1246222479e577fe9190/elf | fgrep inet_pton
->    673: 00000000001234c0   106 FUNC    WEAK   DEFAULT   13 inet_pton@@GLIBC_2.2
-> #
-> 
-> > 
-> >>> [root@f34 ~]# rpm -qa | fgrep glibc
-> >>> glibc-all-langpacks-2.33-18.fc34.x86_64
-> >>> glibc-common-2.33-18.fc34.x86_64
-> >>> glibc-langpack-en-2.33-18.fc34.x86_64
-> >>> glibc-2.33-18.fc34.x86_64
-> >>> glibc-doc-2.33-18.fc34.noarch
-> >>> glibc-headers-x86-2.33-18.fc34.noarch
-> >>> glibc-devel-2.33-18.fc34.x86_64
-> >>> glibc-debugsource-2.33-18.fc34.x86_64
-> >>> glibc-debuginfo-2.33-18.fc34.x86_64
-> >>> [root@f34 ~]# 
-> >>>
-> >>> The symbol inet_pton is now in the .dynsym section of glibc:
-> >>> [root@f34 ~]# readelf -sW /usr/lib64/libc-2.33.so | egrep '(dynsym|symtab|inet_pton)'
-> >>> Symbol table '.dynsym' contains 2419 entries:
-> >>>    628: 000000000011ea00   108 FUNC    WEAK   DEFAULT   15 inet_pton@@GLIBC_2.2.5
-> >>>   2251: 000000000011e9b0    76 FUNC    GLOBAL DEFAULT   15 __inet_pton_length@@GLIBC_PRIVATE
-> >>> Symbol table '.symtab' contains 104 entries:
-> >>> [root@f34 ~]#
-> >>>
-> >>> The .symtab section does not contain symbol inet_pton. It contains very few symbols
-> >>> compared to previous versions.
-> > 
-> > Hmm, if perf probe can not find the debuginfo, it failback to symbol map,
-> > can you add -vvv option to run the perf probe again?
-> > 
-> 
-> # ./perf probe -vvv -f -x /usr/lib64/libc-2.33.so -a inet_pton 
-> probe-definition(0): inet_pton
-> symbol:inet_pton file:(null) line:0 offset:0 return:0 lazy:(null)
-> 0 arguments
-> symbol:__v1setjmp file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:longjmp file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:longjmp_target file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:lll_lock_wait_private file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:cond_destroy file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:cond_init file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_arena_max file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_arena_test file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tunable_tcache_max_bytes file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tunable_tcache_count file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tunable_tcache_unsorted_limit file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_trim_threshold file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_top_pad file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_mmap_threshold file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_mmap_max file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_perturb file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_mxfast file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_new file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_sbrk_less file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_free file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_tcache_double_free file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_less file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_heap_more file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_sbrk_more file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_reuse_free_list file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_reuse file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_reuse_wait file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_new file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_arena_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_malloc_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_memalign_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt_free_dyn_thresholds file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_realloc_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_calloc_retry file:(null) line:0 offset:0 return:0 lazy:(null)
-> symbol:memory_mallopt file:(null) line:0 offset:0 return:0 lazy:(null)
-> Open Debuginfo file: /usr/lib64/libc-2.33.so
-> Try to find probe point from debuginfo.
-> try_to_find_probe_trace_events ntevs 0
-> try_to_find_probe_trace_events ret -2
-> try_to_find_probe_trace_events ntevs2 0
-> Probe point 'inet_pton' not found.
->   Error: Failed to add events. Reason: No such file or directory (Code: -2)
-> # 
-> [....]
-> > 
-> > Thank you,
-> > 
-> 
-> 
-> -- 
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Geschäftsführung: Dirk Wittkopp
-> Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+$ sudo perf stat -- sh -c 'echo 2000 > /proc/irqoff_sleep_millis'
+
+ Performance counter stats for 'sh -c echo 2000 > /proc/irqoff_sleep_millis':
+
+          1,975.55 msec task-clock                #    0.999 CPUs utilized
+                 1      context-switches          #    0.001 K/sec
+                 0      cpu-migrations            #    0.000 K/sec
+                61      page-faults               #    0.031 K/sec
+     7,952,267,470      cycles                    #    4.025 GHz
+       541,904,608      instructions              #    0.07  insn per cycle
+        83,406,021      branches                  #   42.219 M/sec
+            10,365      branch-misses             #    0.01% of all branches
+
+       1.977234595 seconds time elapsed
+
+       0.000000000 seconds user
+       1.977162000 seconds sys
+
+According to this, we should see roughly 79k samples (7.9 billion cycles
+/ 100k sample period), but perf only gets 58. What it "looks like" to
+me, is that the CPU ring buffer might run out of space after several
+events, and the perf process doesn't get scheduled soon enough to read
+the data? But in my experience, perf usually reports that it missed some
+events. So I wonder if anybody is familiar with the factors at play for
+when IRQ is disabled during a PMI? I'd appreciate any pointers to guide
+my exploration.
+
+My test case here ran on Ubuntu distro kernel 5.11.0-22-generic, and I
+have also tested on a 5.4 based kernel. I'm happy to reproduce this on a
+mainline kernel too.
+
+Thanks,
+Stephen
+
+Makefile:
+<<<
+obj-m += irqoff.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
+>>>
+
+irqoff.c:
+<<<
+#include <linux/module.h>
+#include <linux/kernel.h>
+#include <linux/init.h>
+#include <linux/proc_fs.h>
+#include <linux/spinlock.h>
+#include <linux/delay.h>
+#include <linux/version.h>
+#include <linux/uaccess.h>
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("Test module that allows to disable IRQ for configurable time");
+MODULE_AUTHOR("Stephen Brennan <stephen.s.brennan@oracle.com>");
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+// Store the proc dir entry we can use to check status
+struct proc_dir_entry *pde = NULL;
+
+DEFINE_SPINLOCK(irqoff_lock);
+
+
+static noinline void irqsoff_inirq_delay(unsigned long millis)
+{
+	mdelay(millis);
+}
+
+
+static ssize_t irqsoff_write(struct file *f, const char __user *data, size_t amt, loff_t *off)
+{
+	char buf[32];
+	int rv;
+	unsigned long usecs = 0;
+
+	if (amt > sizeof(buf) - 1)
+		return -EFBIG;
+
+	if ((rv = copy_from_user(buf, data, amt)) != 0)
+		return -EFAULT;
+
+	buf[amt] = '\0';
+
+	if (sscanf(buf, "%lu", &usecs) != 1)
+		return -EINVAL;
+
+	/* We read number of milliseconds, but will convert to microseconds.
+	   Threshold it at 5 minutes for safety. */
+	if (usecs > 5 * 60 * 1000)
+		return -EINVAL;
+
+	pr_info("[irqoff] lock for %lu millis\n", usecs);
+	spin_lock_irq(&irqoff_lock);
+	irqsoff_inirq_delay(usecs);
+	spin_unlock_irq(&irqoff_lock);
+
+	return amt;
+}
+
+static ssize_t irqsoff_read(struct file *f, char __user *data, size_t amt, loff_t *off)
+{
+	return 0;
+}
+
+#if LINUX_VERSION_CODE < KERNEL_VERSION(5,6,0)
+static const struct file_operations irqsoff_fops = {
+	.owner                  = THIS_MODULE,
+	.read                   = irqsoff_read,
+	.write                  = irqsoff_write,
+};
+#else
+static const struct proc_ops irqsoff_fops = {
+	.proc_read		= irqsoff_read,
+	.proc_write		= irqsoff_write,
+};
+#endif
+
+static int irqoff_init(void)
+{
+	pde = proc_create("irqoff_sleep_millis", 0644, NULL, &irqsoff_fops);
+	if (!pde)
+		return -ENOENT;
+
+	pr_info("[irqoff] successfully initialized\n");
+	return 0;
+}
+
+static void irqoff_exit(void)
+{
+	proc_remove(pde);
+	pde = NULL;
+}
+
+module_init(irqoff_init);
+module_exit(irqoff_exit);
+>>>
