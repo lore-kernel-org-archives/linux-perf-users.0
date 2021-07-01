@@ -2,144 +2,130 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9250C11F6B
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jul 2021 08:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D882C11F69
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jul 2021 09:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E08615A0
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jul 2021 08:40:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1277A61585
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jul 2021 09:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235235AbhGAInW (ORCPT
+        id S235161AbhGAJiT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jul 2021 04:43:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40256 "EHLO
+        Thu, 1 Jul 2021 05:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235416AbhGAInV (ORCPT
+        with ESMTP id S235428AbhGAJiS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jul 2021 04:43:21 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0ED4C061756
-        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jul 2021 01:40:51 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id m11-20020ad45dcb0000b029027aeaa8ae9dso3359395qvh.12
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jul 2021 01:40:51 -0700 (PDT)
+        Thu, 1 Jul 2021 05:38:18 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAD8C061756
+        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jul 2021 02:35:47 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id 67-20020a17090a0fc9b02901725ed49016so657065pjz.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jul 2021 02:35:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=5iHoNZMOeP6TxsWwP/0krCRRwCbLGs4FQeU+EZRnVpw=;
-        b=FMpj5JxuvGNfBzF6vXgu2ty+hfpspeI/EDm3LJYTsJoaCNE3k6TVARsbPBxXFX4nWm
-         1HoNvamktFRK3begTvvzpfatrEad5S90Acr/VAL1gvywFra+8hYcXivsK0/KDNEQmoL+
-         Vfqp6Ej0zCR4SHWdJKdm0irz/YBGo4kKOJyhXv7XrFMuCtX7xJfrRIGY7RGmQMtl2ifu
-         dm8fMDH76QKCAL5NJBWJXdxOoqNHMBdk5/w03UE3OnrblaMwURXPUro8tyjfXesNsIeB
-         tJIHFJqgIgZzyVsNbxUVFSlBS3fFw7lBxxoX5x3NbOv5OZ4Xm2qPiN7EUtBzyqiN9TXX
-         oSVA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RO+W36IfmCoOF5xjf8ZackNVFoRy6NygyQXZ/WJRofM=;
+        b=amvEoN9eeC+VEBTD1Zaf1gJDs8BfXOLUFzr2bPmh3NDlpAr7wa6izhXSlUg6ufPnPw
+         xpVRznI1jPWm2KBvbsXd7Q7OCmjgO2kQMEDYydzfgeaqkgAtuj7wrZX6yYvE1C2+9Rmh
+         9RuBcA30NcqbRWxeMrLMNgbsyj0U0du6rXT/GeMiiaSKmQpIk/c2/67CV5a227JD6bvp
+         GNYEUUVNDqWr0b+d2E+FkjIjugfw9nDMeSay++s5zJw1Jr//gl/LBJxWfxQqyhaN0Aff
+         GE/aMQfkKNuP1jEmO7fjQBdU2nmgjp2yOMxRwvsfClV6zH1EwrHpsdLbZTeC4m/xXMT1
+         RQng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=5iHoNZMOeP6TxsWwP/0krCRRwCbLGs4FQeU+EZRnVpw=;
-        b=UH2U2XGrmtjv3s2l4xtk9QFmewtaX1PeI+QU5Bs4295xXpvd7VT3WzB1+JBXvJ3LRW
-         IUfEUk7GU1sPd5BvaBW3P+GoHjw/cr1rCqKyrA5GPFmDIO4qIwSjH5VO5PJMyqzyWgV5
-         TB3++JNb64hoM/pRvib+kDxVVoBjB3ubMFSi72ufTVtKpqppCUBDOenoxCxUGG1llFHp
-         RulAreQLEKHVE3BN0Uj89CJCdPyROtSNHjTZ8MLuRd+H6acXctc8tmRuDcZGHgYrQC6S
-         P4coo77sasnw2SDI0evQA1HtBWlCh/7xt2b809WyDzdSY+JYiRFOKxDKjvViVDEt4NHW
-         cRYQ==
-X-Gm-Message-State: AOAM531N4Q+3kZu0mx1kANBGWnqC5+BvnYp4dnXPosS+BCXQ9DXWefny
-        M1DSyC6nYavYZxSjCHyr9IkzOiFOEA==
-X-Google-Smtp-Source: ABdhPJzh0BWd6kKdTshLd8GOa6BvrBKw2SUY1e5kpAyenT4O3KV55wn97GNSQeSm1oacAHDSzUhCAtKGzg==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:8b0e:c57f:ff29:7e4])
- (user=elver job=sendgmr) by 2002:ad4:4ba4:: with SMTP id i4mr34049163qvw.42.1625128850422;
- Thu, 01 Jul 2021 01:40:50 -0700 (PDT)
-Date:   Thu,  1 Jul 2021 10:38:43 +0200
-Message-Id: <20210701083842.580466-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
-Subject: [PATCH v2] perf: Require CAP_KILL if sigtrap is requested
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, peterz@infradead.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, ebiederm@xmission.com,
-        omosnace@redhat.com, serge@hallyn.com,
-        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RO+W36IfmCoOF5xjf8ZackNVFoRy6NygyQXZ/WJRofM=;
+        b=XlH2t7npll4tUgo1hJrJohbPBmaj5wbgDBH75O4L3en3c7dmNmQttsWA1XzZo1PGIr
+         rjuo2KMW9Bc8Pr4e52nQu1GI3hTUGEE6k1gqr8YAeeaFt+cUobNhLya7ZbpeTK6bo1qd
+         Boxip39RyhyoDS+tdfvNvOIdUys+9rwm4mfHWYvYJAs0USmHMlPnGExJrq81tLxRMHWN
+         j57LRFHRqjlLmv7tWUVB9exOYiymzTHK8iMvPPuP778JDo5YkyYj4ctxaB3TR+LUsLyh
+         ikoQDDhykKvKEIAFg9nM0jU/4oil3iVhPNSYUbAsn2qR9PwJa6pjWTLOkqAVOkJ/GkIH
+         9sJw==
+X-Gm-Message-State: AOAM530L+Akl4w5c2X9z5NVB7pxWM4rM5MXL6peTArgO+X/dRLsHEY2O
+        iQ82D9jAgqU5lksNWEnhKmsCug==
+X-Google-Smtp-Source: ABdhPJyE/KA0+duFfM8NqupreWeG8QVd2YC27MOUmBwTeRg6FRzcSGd2EMTkjhDusy27JhzUdVXQpw==
+X-Received: by 2002:a17:902:7446:b029:128:ec77:b41e with SMTP id e6-20020a1709027446b0290128ec77b41emr14929267plt.80.1625132146445;
+        Thu, 01 Jul 2021 02:35:46 -0700 (PDT)
+Received: from localhost ([202.131.71.237])
+        by smtp.gmail.com with ESMTPSA id q21sm9005717pjg.43.2021.07.01.02.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jul 2021 02:35:45 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        James Clark <James.Clark@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Daniel Kiss <daniel.kiss@arm.com>,
+        Denis Nikitin <denik@google.com>
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/3] coresight: Fix for snapshot mode
+Date:   Thu,  1 Jul 2021 17:35:34 +0800
+Message-Id: <20210701093537.90759-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If perf_event_open() is called with another task as target and
-perf_event_attr::sigtrap is set, and the target task's user does not
-match the calling user, also require the CAP_KILL capability.
+This patch series is to correct the pointer usages for the snapshot
+mode.
 
-Otherwise, with the CAP_PERFMON capability alone it would be possible
-for a user to send SIGTRAP signals via perf events to another user's
-tasks. This could potentially result in those tasks being terminated if
-they cannot handle SIGTRAP signals.
+Patch 01 is to polish code, it removes the redundant header maintained
+in tmc-etr driver and directly uses pointer perf_output_handle::head.
 
-Note: The check complements the existing capability check, but is not
-supposed to supersede the ptrace_may_access() check. At a high level we
-now have:
+Patch 02 removes the callback cs_etm_find_snapshot() which wrongly
+calculates the buffer headers; we can simply use the perf's common
+function __auxtrace_mmap__read() for headers calculation.  Patch 03 is
+to update comments in CoreSight drivers to reflect the changes
+introduced by patch 02.
 
-	capable of CAP_PERFMON and (CAP_KILL if sigtrap)
-		OR
-	ptrace_may_access() // also checks for same thread-group and uid
+This patch can be cleanly applied on the mainline kernel with:
 
-Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-Cc: <stable@vger.kernel.org> # 5.13+
-Reported-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
-v2:
-* Drop kill_capable() and just check CAP_KILL (reported by Ondrej Mosnacek).
-* Use ns_capable(__task_cred(task)->user_ns, CAP_KILL) to check for
-  capability in target task's ns (reported by Ondrej Mosnacek).
----
- kernel/events/core.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+  commit dbe69e433722 ("Merge tag 'net-next-5.14' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next")
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index fe88d6eea3c2..43c99695dc3f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12152,10 +12152,23 @@ SYSCALL_DEFINE5(perf_event_open,
- 	}
- 
- 	if (task) {
-+		bool is_capable;
-+
- 		err = down_read_interruptible(&task->signal->exec_update_lock);
- 		if (err)
- 			goto err_file;
- 
-+		is_capable = perfmon_capable();
-+		if (attr.sigtrap) {
-+			/*
-+			 * perf_event_attr::sigtrap sends signals to the other
-+			 * task. Require the current task to have CAP_KILL.
-+			 */
-+			rcu_read_lock();
-+			is_capable &= ns_capable(__task_cred(task)->user_ns, CAP_KILL);
-+			rcu_read_unlock();
-+		}
-+
- 		/*
- 		 * Preserve ptrace permission check for backwards compatibility.
- 		 *
-@@ -12165,7 +12178,7 @@ SYSCALL_DEFINE5(perf_event_open,
- 		 * perf_event_exit_task() that could imply).
- 		 */
- 		err = -EACCES;
--		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-+		if (!is_capable && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
- 			goto err_cred;
- 	}
- 
+And it has been tested on Arm64 Juno board.
+
+Changes from v1:
+- Dropped the patch "coresight: etm-perf: Correct buffer syncing for
+  snapshot", after a long discussion, the patch doesn't really resolve
+  any issues for snapshot mode.  And another reason for unlike this
+  patch is now the CoreSight and Intel-PT have the consistent behaviour
+  (Suzuki/James/Mathieu);
+- Added the patch 03 to updates drivers' comments (James);
+- Added Suzuki's review tag for patch 01;
+- Added James' review and testing tags for patch 02.
+
+
+Leo Yan (3):
+  coresight: tmc-etr: Use perf_output_handle::head for AUX ring buffer
+  perf cs-etm: Remove callback cs_etm_find_snapshot()
+  coresight: Update comments for removing cs_etm_find_snapshot()
+
+ drivers/hwtracing/coresight/coresight-etb10.c |   2 +-
+ .../hwtracing/coresight/coresight-tmc-etf.c   |   2 +-
+ .../hwtracing/coresight/coresight-tmc-etr.c   |  12 +-
+ tools/perf/arch/arm/util/cs-etm.c             | 133 ------------------
+ 4 files changed, 6 insertions(+), 143 deletions(-)
+
 -- 
-2.32.0.93.g670b81a890-goog
+2.25.1
 
