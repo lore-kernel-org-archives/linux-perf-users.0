@@ -2,77 +2,141 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B03C11F67
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 03:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 433BCC11F6B
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 04:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 785AD61407
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 03:01:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2453F61422
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 04:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234719AbhGBDED (ORCPT
+        id S229499AbhGBEMi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jul 2021 23:04:03 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:6033 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234627AbhGBDED (ORCPT
+        Fri, 2 Jul 2021 00:12:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232474AbhGBEMe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jul 2021 23:04:03 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GGKTf5fn4zXmKM;
-        Fri,  2 Jul 2021 10:56:06 +0800 (CST)
-Received: from dggema761-chm.china.huawei.com (10.1.198.203) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2176.2; Fri, 2 Jul 2021 11:01:28 +0800
-Received: from [10.174.178.46] (10.174.178.46) by
- dggema761-chm.china.huawei.com (10.1.198.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2176.2; Fri, 2 Jul 2021 11:01:27 +0800
-Subject: Re: [PATCH] perf llvm: Fix error return code in llvm__compile_bpf()
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <jolsa@redhat.com>,
-        <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-        <nathan@kernel.org>, <ndesaulniers@google.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>, <yukuai3@huawei.com>
-References: <20210609115945.2193194-1-chengzhihao1@huawei.com>
- <YN35TYxboEdM5iHc@kernel.org>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <21406430-56f0-c59b-7ece-7fd387bb47e9@huawei.com>
-Date:   Fri, 2 Jul 2021 11:01:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 2 Jul 2021 00:12:34 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E43C061762;
+        Thu,  1 Jul 2021 21:10:02 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id j24so7845191pfi.12;
+        Thu, 01 Jul 2021 21:10:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Avhze0JY3EGyG+atvGonsZuB3bCR0nJRnR7q8SaTvw4=;
+        b=hhcOw27iixZCfqWzudCtsmYm5jJ06SWUuGjsV4TKVwPF20w3NfITlsMoHDPxgz//66
+         65TTHdQewGL5Z/wJkwqfL6M5yzk6UGdiQkxAUdtR05tGSo222Zseslx2DEW6V+zm66xZ
+         StxXW+lGrBkvTAL/dA/yr/eMKHIHhOsmyJ8nRxEErtVXfTHie8kM4UmfchDyOqj8l9j0
+         lH9edcupGDTaFYNWBhth9eTJYxDv2J9H+WAXcr8je58zPlOh01A9GmCgHaPKWx2FZfa/
+         Dw0y+q2gz2TubS7+Nbj0gEsC8PRYcURWQMSFYOhQLc10D4w8VH1TtHeAdj57wa3dc6MG
+         aIkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Avhze0JY3EGyG+atvGonsZuB3bCR0nJRnR7q8SaTvw4=;
+        b=agtQTD17YnLTpO8DDF4F3DXIgq+/sNzHBDQfghsVs5rytMckp/V/fIefOkqwZwvKfn
+         LyUpXibvjSJsKLP0ut9AU8lx574ry/aANS70U0Hk9H0U2/zHxm+dX9TPRx6jciBsw0zY
+         0HerOi/mJUay+V9jvSgjuo4cr3lthrv1WckK2DZDE9ds/dFAqTIO1n49/azlvVAOHI1H
+         jqN76FZcBiXLNq0oP4/1jyacjdM6mm8/FL6WjKpjFg8ltxtInNeXUGvrlaWjqbH1nN3t
+         nhGue8j1VDGKMeIrlUFZh3ixGxQuqf8zyQOzstSXXSj6wqGKxiykgp06F27mwIyDgcwS
+         uBOQ==
+X-Gm-Message-State: AOAM532/Wn0uz/e9F2VGs31YYgY6nDmN9fC3ivy1ZKlXcYUrJsdY+Kxt
+        Zqm2DfQT4rXg1z5hrsRlSOE=
+X-Google-Smtp-Source: ABdhPJzvuIXVfByf5ziQV4tnLKfeHAnWE5LpBjywZL0Jvsg+uOJlURh+fYq5ZVd9osKhBuKX1ESu9w==
+X-Received: by 2002:a63:1226:: with SMTP id h38mr3075223pgl.376.1625199002287;
+        Thu, 01 Jul 2021 21:10:02 -0700 (PDT)
+Received: from ubuntu.localdomain ([103.220.76.197])
+        by smtp.gmail.com with ESMTPSA id y3sm1634732pga.72.2021.07.01.21.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jul 2021 21:10:01 -0700 (PDT)
+From:   gushengxian <gushengxian507419@gmail.com>
+To:     will@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gushengxian <gushengxian@yulong.com>
+Subject: [PATCH] perf: tests: fix some mmemory leak issues
+Date:   Thu,  1 Jul 2021 21:09:55 -0700
+Message-Id: <20210702040955.631618-1-gushengxian507419@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <YN35TYxboEdM5iHc@kernel.org>
-Content-Type: text/plain; charset="gbk"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.178.46]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggema761-chm.china.huawei.com (10.1.198.203)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ÔÚ 2021/7/2 1:20, Arnaldo Carvalho de Melo Ð´µÀ:
-> Em Wed, Jun 09, 2021 at 07:59:45PM +0800, Zhihao Cheng escreveu:
->> Fix to return a negative error code from the error handling
->> case instead of 0, as done elsewhere in this function.
-> 
-> I checked and llvm__compile_bpf() returns -errno, so I'll change this to
-> instead set err to -ENOMEM just before the if (asprintf)(), ok?
-> 
-> - Arnaldo
->   
-Glad to accept this change.
->> Fixes: cb76371441d098 ("perf llvm: Allow passing options to llc ...")
->> Fixes: 5eab5a7ee032ac ("perf llvm: Display eBPF compiling command ...")
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+From: gushengxian <gushengxian@yulong.com>
 
+Some memory leak issues should be fixed by free().
+Reported by cppcheck.
+
+Signed-off-by: gushengxian <gushengxian@yulong.com>
+---
+ tools/perf/arch/arm/tests/dwarf-unwind.c     | 1 +
+ tools/perf/arch/arm64/tests/dwarf-unwind.c   | 1 +
+ tools/perf/arch/powerpc/tests/dwarf-unwind.c | 1 +
+ tools/perf/arch/x86/tests/dwarf-unwind.c     | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
+index ccfa87055c4a..f2541d1dbb02 100644
+--- a/tools/perf/arch/arm/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
+@@ -39,6 +39,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 	memcpy(buf, (void *) sp, stack_size);
+ 	stack->data = (char *) buf;
+ 	stack->size = stack_size;
++	free(buf);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+index 46147a483049..ecd25c77a71f 100644
+--- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
++++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
+@@ -39,6 +39,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 	memcpy(buf, (void *) sp, stack_size);
+ 	stack->data = (char *) buf;
+ 	stack->size = stack_size;
++	free(buf);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+index 8efd9ed9e9db..e57a8ca52ce7 100644
+--- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
++++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
+@@ -40,6 +40,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 	memcpy(buf, (void *) sp, stack_size);
+ 	stack->data = (char *) buf;
+ 	stack->size = stack_size;
++	free(buf);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
+index 478078fb0f22..da90b33a1e28 100644
+--- a/tools/perf/arch/x86/tests/dwarf-unwind.c
++++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
+@@ -47,6 +47,7 @@ static int sample_ustack(struct perf_sample *sample,
+ #endif
+ 	stack->data = (char *) buf;
+ 	stack->size = stack_size;
++	free(buf);
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
 
