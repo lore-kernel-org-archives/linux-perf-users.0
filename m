@@ -2,135 +2,134 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44481C11F68
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 18:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051F2C07E95
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 20:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217656141D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 18:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB5646140E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 20:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbhGBSDZ (ORCPT
+        id S231145AbhGBUP1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jul 2021 14:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbhGBSDY (ORCPT
+        Fri, 2 Jul 2021 16:15:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53412 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230116AbhGBUP1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jul 2021 14:03:24 -0400
-Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A58C061762
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jul 2021 11:00:51 -0700 (PDT)
-Received: by mail-io1-xd2b.google.com with SMTP id a6so12699113ioe.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 11:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6i4AtMAfxuHj6dUewQkFdeehfEClu3wbewt0ov3ATOQ=;
-        b=JmF+SaQBuRMGQiavh+g7rKja0ZXRGmsTRjsx2EZVCzGcOAmNPv01zOfniiBmTo+5Gk
-         1S5JMwZCbLFTJxRx93vi0kQGuR/Mi3MHyfN1Z6/mSfgKE/5yrvrvPo4oqpLJQuhU4Ei/
-         UCXSUZqd1KBSuSLsu8t1uiOHa0TnHvYrqxNc2QxXWdZsyYwb4Pm5JlASM9JHdtRjuo9C
-         xc1eAYNZUuxtqfr3Ge1//WqpwPBlCzIH8Z8HnuE1ldOcdkjtyhw55leVHdZ8UJ4O/TKW
-         IgLexSu974ENQVnpWnPuVzp1xl+rQjtzy59JuBsHjY8tF4XChUhwssfxIvNuV1X4390U
-         z6Ww==
+        Fri, 2 Jul 2021 16:15:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625256774;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MUH9rGxd7rWFQe3J2f8cM/Bj+wnAFooKCD/isRc7TRs=;
+        b=Eix3OwEABSRvZOzHMl20/ELJMxCQAQMslBoTfP2PdFggIVujxu+MF7hz/JiRAqYT6y3tmx
+        2uo3BD+cJxnEGMxTiOIRVbFcmGZRlpDJQKX2BmD6tbwlTsUPcHVBPnOCqIcL/EZ5niKM6r
+        ipnZ7M+tyXpR/fpWAvHWWc81TETnLfQ=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-nqYAYBF2NVKpTsBbxez1Fw-1; Fri, 02 Jul 2021 16:12:52 -0400
+X-MC-Unique: nqYAYBF2NVKpTsBbxez1Fw-1
+Received: by mail-ej1-f71.google.com with SMTP id de48-20020a1709069bf0b029048ae3ebecabso3911170ejc.16
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 13:12:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6i4AtMAfxuHj6dUewQkFdeehfEClu3wbewt0ov3ATOQ=;
-        b=XRw0PhYXwJCd47TQ3Dspd0WuSVnnKDC0Xo2SdeQ+MycPbWCe4bdMHJVAn4k2uqnf7W
-         Wk31V6FQhWTlAmg4wY9v8lG1eJiQG8BEZWc56Uhr8eONTjM9xwZWvzJHbnrqJajP2qh0
-         FM61X2gOjeK7TDuk4dWmliRmcadKSggh0Z4AIOzFP2UWo3Wi4iSvWkCc15MQ0UKJuI7g
-         DLINc77wqrV9SDTTl5v20eCvvH2THdB0SYOwRom0erCOz7E+wpVWKLKoJb73Ro8ZZnPE
-         443GLQHLD/fJsuSmL7E8/z48RHQ2PhtWKp3z1LMJgUWo2A+ZKftqOstfgTVhuGNEr5VV
-         pF+w==
-X-Gm-Message-State: AOAM53297T0G9IiMCD8WokRfZIR9faj0aggQf7RUKzPl/hIIdunSyDbU
-        1FLe1VfT+AJ26Ahu/UaM/HJM1rB9tO4cktKYOxq3vw==
-X-Google-Smtp-Source: ABdhPJwMMptBIdAVrrH8g2/22L2pwo0JTFXqZiZP4iJ0c00iHWIMewwBWPicbdhGzNzpY0ftz8ej3XK0HzWTsNir7GU=
-X-Received: by 2002:a05:6602:3403:: with SMTP id n3mr889257ioz.165.1625248851051;
- Fri, 02 Jul 2021 11:00:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MUH9rGxd7rWFQe3J2f8cM/Bj+wnAFooKCD/isRc7TRs=;
+        b=SKXEswCx7FWLXi4J1c5dlxXRsjwQR+9/evhZAu2ZFqvThE8vlaASEYoY6nMGMyNz4/
+         5O9CdKQaeRiYfrxWfxw2Bno/+oXHRiSKOs5luVJ4Q2FpToKzgoxfFgwN6WI8vaH65hql
+         vg5BbdUSPYcyIxsHOmGFGDd+rovBXpVgzfDQdXbWhjX5ka1pxzSLJs57D+8N7pxBu3Vp
+         ylKazXvpztAyijksuf2dx6/rrgovj8n5jjIl2xrKWAFKll3fyk60eHRvkZHp9EDICNM/
+         7pXtQmF9uO7gEm1YeWGMXFtb3sbyBebRTmqvE2UM/37k78adYpOcQgB/f0PSJW4js4gI
+         a2zw==
+X-Gm-Message-State: AOAM531fhTXTuXZj1mKB1NaqkFai/lBneTB8dJ6DpxRd417qmh44Y/3C
+        b0miZQdy9coNsp18WluJmjH+G034D0/QH9pAI8z3miMuWKkcl+imtO81dt+M1Bs2Li+sZNS5L8y
+        LpbPeZy4+PmWyxNIGkQa7x9lYHaZcYw==
+X-Received: by 2002:a05:6402:1014:: with SMTP id c20mr1546919edu.380.1625256771684;
+        Fri, 02 Jul 2021 13:12:51 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxlY5iZAyPCoGtFpUZ+dheMJoz1u8zxdv6p5hLL5YYq4rLcmf5eRgcqSrdcjuxSfnKxdwSmyw==
+X-Received: by 2002:a05:6402:1014:: with SMTP id c20mr1546904edu.380.1625256771490;
+        Fri, 02 Jul 2021 13:12:51 -0700 (PDT)
+Received: from krava ([185.153.78.55])
+        by smtp.gmail.com with ESMTPSA id u17sm1700243edt.67.2021.07.02.13.12.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jul 2021 13:12:51 -0700 (PDT)
+Date:   Fri, 2 Jul 2021 22:12:48 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: Perf loses events without reporting
+Message-ID: <YN9zQDghzBj8b4Ki@krava>
+References: <87lf6rclcm.fsf@stepbren-lnx.us.oracle.com>
+ <YN2a3pSvealjK6uR@krava>
+ <87im1uc79i.fsf@stepbren-lnx.us.oracle.com>
+ <87fswyc6cb.fsf@stepbren-lnx.us.oracle.com>
+ <87czs1didj.fsf@stepbren-lnx.us.oracle.com>
+ <YN89LwSzTKc8wBar@krava>
 MIME-Version: 1.0
-References: <20210701093537.90759-1-leo.yan@linaro.org> <20210701093537.90759-3-leo.yan@linaro.org>
- <YN3sas8tWPfWjFqE@kernel.org> <20210702011018.GA251512@leoy-ThinkPad-X240s>
-In-Reply-To: <20210702011018.GA251512@leoy-ThinkPad-X240s>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Fri, 2 Jul 2021 12:00:39 -0600
-Message-ID: <CANLsYkyxaWUCFYWF2LzooYWqeAMq8P4UzxfPWGoYur3LxyD92A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] perf cs-etm: Remove callback cs_etm_find_snapshot()
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        James Clark <James.Clark@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Daniel Kiss <daniel.kiss@arm.com>,
-        Denis Nikitin <denik@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YN89LwSzTKc8wBar@krava>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 1 Jul 2021 at 19:10, Leo Yan <leo.yan@linaro.org> wrote:
->
-> On Thu, Jul 01, 2021 at 01:25:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Jul 01, 2021 at 05:35:36PM +0800, Leo Yan escreveu:
-> > > The callback cs_etm_find_snapshot() is invoked for snapshot mode, its
-> > > main purpose is to find the correct AUX trace data and returns "head"
-> > > and "old" (we can call "old" as "old head") to the caller, the caller
-> > > __auxtrace_mmap__read() uses these two pointers to decide the AUX trace
-> > > data size.
-> > >
-> > > This patch removes cs_etm_find_snapshot() with below reasons:
-> > >
-> > > - The first thing in cs_etm_find_snapshot() is to check if the head has
-> > >   wrapped around, if it is not, directly bails out.  The checking is
-> > >   pointless, this is because the "head" and "old" pointers both are
-> > >   monotonical increasing so they never wrap around.
-> > >
-> > > - cs_etm_find_snapshot() adjusts the "head" and "old" pointers and
-> > >   assumes the AUX ring buffer is fully filled with the hardware trace
-> > >   data, so it always subtracts the difference "mm->len" from "head" to
-> > >   get "old".  Let's imagine the snapshot is taken in very short
-> > >   interval, the tracers only fill a small chunk of the trace data into
-> > >   the AUX ring buffer, in this case, it's wrongly to copy the whole the
-> > >   AUX ring buffer to perf file.
-> > >
-> > > - As the "head" and "old" pointers are monotonically increased, the
-> > >   function __auxtrace_mmap__read() handles these two pointers properly.
-> > >   It calculates the reminders for these two pointers, and the size is
-> > >   clamped to be never more than "snapshot_size".  We can simply reply on
-> > >   the function __auxtrace_mmap__read() to calculate the correct result
-> > >   for data copying, it's not necessary to add Arm CoreSight specific
-> > >   callback.
-> >
-> > Thanks, applied.
->
-> Thanks a lot for picking up the patch, Arnaldo!
->
-> Hi Mathieu, I supposed to get your review before merging; since
-> Arnaldo moves quickly, if you want me to follow up anything relevant
-> to this change, please let me know.  Thanks!
+On Fri, Jul 02, 2021 at 06:22:10PM +0200, Jiri Olsa wrote:
+> On Thu, Jul 01, 2021 at 11:00:24AM -0700, Stephen Brennan wrote:
+> 
+> SNIP
+> 
+> > 
+> > static ssize_t irqsoff_write(struct file *f, const char __user *data, size_t amt, loff_t *off)
+> > {
+> > 	char buf[32];
+> > 	int rv;
+> > 	unsigned long millis = 0;
+> > 
+> > 	if (amt > sizeof(buf) - 1)
+> > 		return -EFBIG;
+> > 
+> > 	if ((rv = copy_from_user(buf, data, amt)) != 0)
+> > 		return -EFAULT;
+> > 
+> > 	buf[amt] = '\0';
+> > 
+> > 	if (sscanf(buf, "%lu", &millis) != 1)
+> > 		return -EINVAL;
+> > 
+> > 	/* Threshold it at 5 minutes for safety. */
+> > 	if (millis > 5 * 60 * 1000)
+> > 		return -EINVAL;
+> > 
+> > 	pr_info("[irqoff] lock for %lu millis\n", millis);
+> > 	spin_lock_irq(&irqoff_lock);
+> > 	irqsoff_inirq_delay(millis);
+> > 	spin_unlock_irq(&irqoff_lock);
+> 
+> yea, I can see that as well.. if I took the spin_lock_irq it works as
+> expected.. will check
 
-I was going to review this set next week.  But it is fine if Arnaldo
-has picked it up since enough people have already looked at and tested
-this code.
+ok, so with disabling irqs you disable task tick which
+kicks the unthrotling
 
-Thanks,
-Mathieu
+throtling is started when you cross the limit of samples
+per tick, which you do real fast with busy waiting
 
->
-> Leo
+then when event is throttled (and no samples are generated),
+the next task tick restores it.. but with disabled irqs,
+there's no task tick, so the event is throttled all the
+time when irqs are disabled
+
+is there any use case you have to have irqs disabled for so long?
+
+cc-ing peterz
+initial email: https://lore.kernel.org/linux-perf-users/YN89LwSzTKc8wBar@krava/T/#m616481aa95da10e17d9b0769717f006b9ff38637
+
+jirka
+
