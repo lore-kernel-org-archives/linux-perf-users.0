@@ -2,134 +2,89 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 051F2C07E95
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 20:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B42CC07E95
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 20:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB5646140E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 20:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1C4761413
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 20:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231145AbhGBUP1 (ORCPT
+        id S231147AbhGBUQM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jul 2021 16:15:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53412 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230116AbhGBUP1 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jul 2021 16:15:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625256774;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MUH9rGxd7rWFQe3J2f8cM/Bj+wnAFooKCD/isRc7TRs=;
-        b=Eix3OwEABSRvZOzHMl20/ELJMxCQAQMslBoTfP2PdFggIVujxu+MF7hz/JiRAqYT6y3tmx
-        2uo3BD+cJxnEGMxTiOIRVbFcmGZRlpDJQKX2BmD6tbwlTsUPcHVBPnOCqIcL/EZ5niKM6r
-        ipnZ7M+tyXpR/fpWAvHWWc81TETnLfQ=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-nqYAYBF2NVKpTsBbxez1Fw-1; Fri, 02 Jul 2021 16:12:52 -0400
-X-MC-Unique: nqYAYBF2NVKpTsBbxez1Fw-1
-Received: by mail-ej1-f71.google.com with SMTP id de48-20020a1709069bf0b029048ae3ebecabso3911170ejc.16
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 13:12:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=MUH9rGxd7rWFQe3J2f8cM/Bj+wnAFooKCD/isRc7TRs=;
-        b=SKXEswCx7FWLXi4J1c5dlxXRsjwQR+9/evhZAu2ZFqvThE8vlaASEYoY6nMGMyNz4/
-         5O9CdKQaeRiYfrxWfxw2Bno/+oXHRiSKOs5luVJ4Q2FpToKzgoxfFgwN6WI8vaH65hql
-         vg5BbdUSPYcyIxsHOmGFGDd+rovBXpVgzfDQdXbWhjX5ka1pxzSLJs57D+8N7pxBu3Vp
-         ylKazXvpztAyijksuf2dx6/rrgovj8n5jjIl2xrKWAFKll3fyk60eHRvkZHp9EDICNM/
-         7pXtQmF9uO7gEm1YeWGMXFtb3sbyBebRTmqvE2UM/37k78adYpOcQgB/f0PSJW4js4gI
-         a2zw==
-X-Gm-Message-State: AOAM531fhTXTuXZj1mKB1NaqkFai/lBneTB8dJ6DpxRd417qmh44Y/3C
-        b0miZQdy9coNsp18WluJmjH+G034D0/QH9pAI8z3miMuWKkcl+imtO81dt+M1Bs2Li+sZNS5L8y
-        LpbPeZy4+PmWyxNIGkQa7x9lYHaZcYw==
-X-Received: by 2002:a05:6402:1014:: with SMTP id c20mr1546919edu.380.1625256771684;
-        Fri, 02 Jul 2021 13:12:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxlY5iZAyPCoGtFpUZ+dheMJoz1u8zxdv6p5hLL5YYq4rLcmf5eRgcqSrdcjuxSfnKxdwSmyw==
-X-Received: by 2002:a05:6402:1014:: with SMTP id c20mr1546904edu.380.1625256771490;
-        Fri, 02 Jul 2021 13:12:51 -0700 (PDT)
-Received: from krava ([185.153.78.55])
-        by smtp.gmail.com with ESMTPSA id u17sm1700243edt.67.2021.07.02.13.12.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 13:12:51 -0700 (PDT)
-Date:   Fri, 2 Jul 2021 22:12:48 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: Perf loses events without reporting
-Message-ID: <YN9zQDghzBj8b4Ki@krava>
-References: <87lf6rclcm.fsf@stepbren-lnx.us.oracle.com>
- <YN2a3pSvealjK6uR@krava>
- <87im1uc79i.fsf@stepbren-lnx.us.oracle.com>
- <87fswyc6cb.fsf@stepbren-lnx.us.oracle.com>
- <87czs1didj.fsf@stepbren-lnx.us.oracle.com>
- <YN89LwSzTKc8wBar@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YN89LwSzTKc8wBar@krava>
+        Fri, 2 Jul 2021 16:16:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230116AbhGBUQM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 2 Jul 2021 16:16:12 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id C2F3461405;
+        Fri,  2 Jul 2021 20:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625256819;
+        bh=d5ZU1/pzMvHwZ05Fx2ITCzOHxaWZZfhdgCRQPjtpC18=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Pt22tI98jKpFMyxpSzg9w0myHcEmXdNcZA0CUl3SD21GdnvuwzPSzHmC1SpO0Tn8Y
+         smo0nf5jLwu0FxNO9PEw3jDde5iO1w7ntWzoDfBGYZvguFYVPedSkvkcOwhTAg1/np
+         YRoyi65q8nP7CNUclduGbU3X7ASDtGolKMPgaTABtpIDww+2OvbQMd2kwVHnim97c7
+         UOintmFBsCll6r1+8voR/6eWeDF7Z6usk9nkMYNyx/a0HAG8u9ndFoVkL2XhfnzmoP
+         P+sX2ZwSejhF6I/sZodT0tb7MH8rxysJk27AnoziITtaBVWvoexe/k044PZuYFZ4kO
+         QArpC9tCBPYgA==
+Subject: Re: [GIT PULL] perf tools changes for v5.14
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20210702000110.1179766-1-acme@kernel.org>
+References: <20210702000110.1179766-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20210702000110.1179766-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.14-2021-07-01
+X-PR-Tracked-Commit-Id: cf96b8e45a9bf74d2a6f1e1f88a41b10e9357c6b
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 406254918b232db198ed60f5bf1f8b84d96bca00
+Message-Id: <162525681964.6172.866147960098734636.pr-tracker-bot@kernel.org>
+Date:   Fri, 02 Jul 2021 20:13:39 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Al Grant <al.grant@arm.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        Denys Zagorui <dzagorui@cisco.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Joshua Martinez <joshuamart@google.com>,
+        Lei Zhao <zhaolei27@baidu.com>, Leo Yan <leo.yan@linaro.org>,
+        Li Huafei <lihuafei1@huawei.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Rob Herring <robh@kernel.org>, Song Liu <song@kernel.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Zou Wei <zou_wei@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jul 02, 2021 at 06:22:10PM +0200, Jiri Olsa wrote:
-> On Thu, Jul 01, 2021 at 11:00:24AM -0700, Stephen Brennan wrote:
-> 
-> SNIP
-> 
-> > 
-> > static ssize_t irqsoff_write(struct file *f, const char __user *data, size_t amt, loff_t *off)
-> > {
-> > 	char buf[32];
-> > 	int rv;
-> > 	unsigned long millis = 0;
-> > 
-> > 	if (amt > sizeof(buf) - 1)
-> > 		return -EFBIG;
-> > 
-> > 	if ((rv = copy_from_user(buf, data, amt)) != 0)
-> > 		return -EFAULT;
-> > 
-> > 	buf[amt] = '\0';
-> > 
-> > 	if (sscanf(buf, "%lu", &millis) != 1)
-> > 		return -EINVAL;
-> > 
-> > 	/* Threshold it at 5 minutes for safety. */
-> > 	if (millis > 5 * 60 * 1000)
-> > 		return -EINVAL;
-> > 
-> > 	pr_info("[irqoff] lock for %lu millis\n", millis);
-> > 	spin_lock_irq(&irqoff_lock);
-> > 	irqsoff_inirq_delay(millis);
-> > 	spin_unlock_irq(&irqoff_lock);
-> 
-> yea, I can see that as well.. if I took the spin_lock_irq it works as
-> expected.. will check
+The pull request you sent on Thu,  1 Jul 2021 21:01:10 -0300:
 
-ok, so with disabling irqs you disable task tick which
-kicks the unthrotling
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v5.14-2021-07-01
 
-throtling is started when you cross the limit of samples
-per tick, which you do real fast with busy waiting
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/406254918b232db198ed60f5bf1f8b84d96bca00
 
-then when event is throttled (and no samples are generated),
-the next task tick restores it.. but with disabled irqs,
-there's no task tick, so the event is throttled all the
-time when irqs are disabled
+Thank you!
 
-is there any use case you have to have irqs disabled for so long?
-
-cc-ing peterz
-initial email: https://lore.kernel.org/linux-perf-users/YN89LwSzTKc8wBar@krava/T/#m616481aa95da10e17d9b0769717f006b9ff38637
-
-jirka
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
