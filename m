@@ -2,120 +2,116 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B305DC11F69
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 13:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2433C11F68
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 16:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95C306143C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 13:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5306141D
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 16:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232636AbhGBN7X (ORCPT
+        id S229817AbhGBQYs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jul 2021 09:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232991AbhGBN7W (ORCPT
+        Fri, 2 Jul 2021 12:24:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46209 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229455AbhGBQYs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jul 2021 09:59:22 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6229EC061762
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jul 2021 06:56:49 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id w15so9581404pgk.13
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 06:56:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=prR9MMxJFXYg7tQTmUSy0zU77pkSRzPHwNGdQsurfnw=;
-        b=jJGc9dbBI79E5l/z1HwBg5pD9bdMDr690Yr/8fEtdU0rp8GXs4gIwfR8JOGiOCFAxY
-         zBCJFA0o7fUuLPLu6aHlt2mLAURxadrVpyKySr7JB39yCT74INAJTuBJBrC9SnW+hmaC
-         7NbGZGuXwIb3F8BKVzAmlw0W1E0NmHtBIwAaa4+meTVZRDJM1ZS1Idjp3/teipQ7K3wC
-         AKkN1cD6EVwQv/If/iEw4CFjpeNJAKrrqTU8vaWmlGOJ9gQcDAv7mg+wjp77jenrV07N
-         KVKhMiYi8e1gCceb6H3zYtN2pScQ2g7y8d92ub6JRXyi1WhVpGuWQB4mWUKfey2AobjT
-         85Nw==
+        Fri, 2 Jul 2021 12:24:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625242935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T+F56iX2HeLnYU5qEBzI7G3YURXhUl6KbnmwROL9d3E=;
+        b=LpyYKja6fWiygORuP6M/0xggOE8ddPdcoJdy4quxUQ1bmNCOFLhYE4di/K73ZN+om5JRaS
+        EHHT8BE78dw5oUU65SAkOUNp1zq9dypnl0oHE3tTz6YBeObfQRPgHO+pnxboZPa+btAxWT
+        Zo+e3rkhz4i1Xge6tt9N9e5GoiHTdEE=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-449-4YE2VCz4N6en_MKdNMfF4g-1; Fri, 02 Jul 2021 12:22:11 -0400
+X-MC-Unique: 4YE2VCz4N6en_MKdNMfF4g-1
+Received: by mail-ed1-f70.google.com with SMTP id i19-20020a05640200d3b02903948b71f25cso5310822edu.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 09:22:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=prR9MMxJFXYg7tQTmUSy0zU77pkSRzPHwNGdQsurfnw=;
-        b=DBrVwq+2wrGt4/3buzW507qlnBEwXydy1ZW6nVxUwLZPywXVmljpts3NwC5cn+TbUQ
-         tW/GLNFFJwq64n/Vhy6W8mGVeIDPRTHbe8lmicH7/I6kAY1EfYcwf3wAD+iPB5ieoCdM
-         sRdmFqFWpqXFpJrLiILLUNqNiOKDfgy+SB3SgerwwSMDDvE+aAUdkn84S7kpF/XYKY4l
-         i7SnNBRqcEqx745+T2QydZv1I/aWtzIfcQdODfSmNlV+iKazB7LmgJrZK5UqvhvzaLtT
-         Wdp7xkJZgZDremIHwAL1CwTxttoxZnwVB4E9djK8ihHmCMUWprHxfkysNI3nFwJtY3Wh
-         bRkQ==
-X-Gm-Message-State: AOAM533+eOf2pX4NLYbcSMhu7HKLohvdHwQNcJ4lLneY3kkSxjvXOi18
-        Nw94h5BzCSnnzZGVP28/oWqn1w==
-X-Google-Smtp-Source: ABdhPJxfsV4JttWkQ7T3rEm/HugUDpjN+Gb23ibpjWkUF7ReB/JxrJk4ZFHrkD5tF+MTf8AKfxjCEQ==
-X-Received: by 2002:a65:6412:: with SMTP id a18mr115669pgv.445.1625234208439;
-        Fri, 02 Jul 2021 06:56:48 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([103.207.71.35])
-        by smtp.gmail.com with ESMTPSA id g2sm3217396pjd.55.2021.07.02.06.56.43
+        bh=T+F56iX2HeLnYU5qEBzI7G3YURXhUl6KbnmwROL9d3E=;
+        b=ozVXje84pgAU/rwxRo7MpiewzXP6OKZLDjvkDGuV/qxbU21kOSdFdzAFmTnocRORda
+         fmZMT09KDc/QsnJf0tPjUm4InO/IVfPNRRkepvDhGpYlp1BBPc1J/zbDkj+5ykTebgt6
+         LW3OZj972fs0SL/J/lC81GfzbXGGR33pkmKAdT/C7AM+aevXgdOR0OO5RtqO5PahKboW
+         sCIIPbQ7WicA4v3ng/ssDADCXv0Bqqu78q+ZCNvRhL2OT9rvV2+oalePlLSm/01EtWhK
+         iwdbxfim+jA+3zWksbkv4EKPNc0kz1tCPlGPmrxOkPxLw1q9Ekx88NfvNJa2DnPG9gZt
+         Aq9Q==
+X-Gm-Message-State: AOAM5314cBb1T0UFSyUN4OJsxCPEdmcdeIi9b9ipqBKqs+bwMJV7WkUr
+        elaXToQPvQdVeexYkO6Wl6JlzHW+es6H+XA5t/6gzpF2kvEFbrutF4g18PvJliDka6MCh+4ePfr
+        CgOKCm3eh4+s60WFNPU8inZ4ipIhoKA==
+X-Received: by 2002:a17:907:7ba3:: with SMTP id ne35mr536705ejc.12.1625242930750;
+        Fri, 02 Jul 2021 09:22:10 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLemUURdGV01cjMVEh7l/pvg+dgjnh+AaM1PMZXwIowFbPz0iFXQPAUYs9mWUf8RGsJ6lCjg==
+X-Received: by 2002:a17:907:7ba3:: with SMTP id ne35mr536686ejc.12.1625242930578;
+        Fri, 02 Jul 2021 09:22:10 -0700 (PDT)
+Received: from krava ([185.153.78.55])
+        by smtp.gmail.com with ESMTPSA id bz27sm1216686ejc.15.2021.07.02.09.22.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 06:56:47 -0700 (PDT)
-Date:   Fri, 2 Jul 2021 21:56:41 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     gushengxian <gushengxian507419@gmail.com>, will@kernel.org,
-        mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gushengxian <gushengxian@yulong.com>
-Subject: Re: [PATCH] perf: tests: fix some mmemory leak issues
-Message-ID: <20210702135641.GA22592@leoy-ThinkPad-X240s>
-References: <20210702040955.631618-1-gushengxian507419@gmail.com>
- <YN8NjJLHoB+wzLXa@kernel.org>
+        Fri, 02 Jul 2021 09:22:10 -0700 (PDT)
+Date:   Fri, 2 Jul 2021 18:22:07 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc:     linux-perf-users@vger.kernel.org
+Subject: Re: Perf loses events without reporting
+Message-ID: <YN89LwSzTKc8wBar@krava>
+References: <87lf6rclcm.fsf@stepbren-lnx.us.oracle.com>
+ <YN2a3pSvealjK6uR@krava>
+ <87im1uc79i.fsf@stepbren-lnx.us.oracle.com>
+ <87fswyc6cb.fsf@stepbren-lnx.us.oracle.com>
+ <87czs1didj.fsf@stepbren-lnx.us.oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YN8NjJLHoB+wzLXa@kernel.org>
+In-Reply-To: <87czs1didj.fsf@stepbren-lnx.us.oracle.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+On Thu, Jul 01, 2021 at 11:00:24AM -0700, Stephen Brennan wrote:
 
-On Fri, Jul 02, 2021 at 09:58:52AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Jul 01, 2021 at 09:09:55PM -0700, gushengxian escreveu:
-> > From: gushengxian <gushengxian@yulong.com>
-> > 
-> > Some memory leak issues should be fixed by free().
-> > Reported by cppcheck.
+SNIP
 
-I don't think this patch does the right thing.  You could see that the
-memory is allocated in arch specific function sample_ustack(), and the
-"buf" pointer is assigned to sample->user_stack.data; and the memory
-actually is released in the caller function test_dwarf_unwind__thread:
+> 
+> static ssize_t irqsoff_write(struct file *f, const char __user *data, size_t amt, loff_t *off)
+> {
+> 	char buf[32];
+> 	int rv;
+> 	unsigned long millis = 0;
+> 
+> 	if (amt > sizeof(buf) - 1)
+> 		return -EFBIG;
+> 
+> 	if ((rv = copy_from_user(buf, data, amt)) != 0)
+> 		return -EFAULT;
+> 
+> 	buf[amt] = '\0';
+> 
+> 	if (sscanf(buf, "%lu", &millis) != 1)
+> 		return -EINVAL;
+> 
+> 	/* Threshold it at 5 minutes for safety. */
+> 	if (millis > 5 * 60 * 1000)
+> 		return -EINVAL;
+> 
+> 	pr_info("[irqoff] lock for %lu millis\n", millis);
+> 	spin_lock_irq(&irqoff_lock);
+> 	irqsoff_inirq_delay(millis);
+> 	spin_unlock_irq(&irqoff_lock);
 
-noinline int test_dwarf_unwind__thread(struct thread *thread)
-{
-        struct perf_sample sample;
-        unsigned long cnt = 0;
-        int err = -1;
+yea, I can see that as well.. if I took the spin_lock_irq it works as
+expected.. will check
 
-        memset(&sample, 0, sizeof(sample));
+thanks,
+jirka
 
-        if (test__arch_unwind_sample(&sample, thread)) {
-                pr_debug("failed to get unwind sample\n");
-                goto out;
-        } 
-
-        [...]
-
- out:
-        zfree(&sample.user_stack.data);
-        zfree(&sample.user_regs.regs);
-        return err;
-}
-
-So this patch will break the testing and doesn't fix any memory leak
-issue.
-
-Thanks,
-Leo
