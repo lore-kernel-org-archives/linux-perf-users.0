@@ -2,141 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433BCC11F6B
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 04:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC1C11F68
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 07:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2453F61422
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 04:10:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E04613F3
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 07:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbhGBEMi (ORCPT
+        id S230094AbhGBHXl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jul 2021 00:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        Fri, 2 Jul 2021 03:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232474AbhGBEMe (ORCPT
+        with ESMTP id S230026AbhGBHXk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jul 2021 00:12:34 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7E43C061762;
-        Thu,  1 Jul 2021 21:10:02 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id j24so7845191pfi.12;
-        Thu, 01 Jul 2021 21:10:02 -0700 (PDT)
+        Fri, 2 Jul 2021 03:23:40 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD1EC061762
+        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jul 2021 00:21:09 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id h9so10314689oih.4
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 00:21:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Avhze0JY3EGyG+atvGonsZuB3bCR0nJRnR7q8SaTvw4=;
-        b=hhcOw27iixZCfqWzudCtsmYm5jJ06SWUuGjsV4TKVwPF20w3NfITlsMoHDPxgz//66
-         65TTHdQewGL5Z/wJkwqfL6M5yzk6UGdiQkxAUdtR05tGSo222Zseslx2DEW6V+zm66xZ
-         StxXW+lGrBkvTAL/dA/yr/eMKHIHhOsmyJ8nRxEErtVXfTHie8kM4UmfchDyOqj8l9j0
-         lH9edcupGDTaFYNWBhth9eTJYxDv2J9H+WAXcr8je58zPlOh01A9GmCgHaPKWx2FZfa/
-         Dw0y+q2gz2TubS7+Nbj0gEsC8PRYcURWQMSFYOhQLc10D4w8VH1TtHeAdj57wa3dc6MG
-         aIkA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=irzywLWlswN5yWOuh85DPqMNyXrjycgbBXoyqQ4WPFg=;
+        b=JC7b7TxAUyZbowqRZZujuFRQ4jMvxzVzW5L18cOjNIWPYWOoRv5VxYWXCyqAACj0I2
+         S78j2TDcTg0MVmGQdnUnfdCT/QWofJjHmNSJZDeAFOGNWS+iLKUmlit0N6Wymj3GCK1e
+         GhKBkdsdL9uGbxPWrKaWNV9lPPJX5Z/KovNiydJIpFa08zhcUZ6utUFwaoc03DI8A0FS
+         5Sek3lMDaaZeViIJujC3baLCO9LrHsZpj5rVWPx7sYuhSQXvgu2rv1hl9tdfhyFFfA4C
+         S/+/wogEltIR1Iuveius1Ov2nCc007UXrmTOSiPFEDXAXjvXZL79ngn6KW4E2hIDBY9z
+         IaCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Avhze0JY3EGyG+atvGonsZuB3bCR0nJRnR7q8SaTvw4=;
-        b=agtQTD17YnLTpO8DDF4F3DXIgq+/sNzHBDQfghsVs5rytMckp/V/fIefOkqwZwvKfn
-         LyUpXibvjSJsKLP0ut9AU8lx574ry/aANS70U0Hk9H0U2/zHxm+dX9TPRx6jciBsw0zY
-         0HerOi/mJUay+V9jvSgjuo4cr3lthrv1WckK2DZDE9ds/dFAqTIO1n49/azlvVAOHI1H
-         jqN76FZcBiXLNq0oP4/1jyacjdM6mm8/FL6WjKpjFg8ltxtInNeXUGvrlaWjqbH1nN3t
-         nhGue8j1VDGKMeIrlUFZh3ixGxQuqf8zyQOzstSXXSj6wqGKxiykgp06F27mwIyDgcwS
-         uBOQ==
-X-Gm-Message-State: AOAM532/Wn0uz/e9F2VGs31YYgY6nDmN9fC3ivy1ZKlXcYUrJsdY+Kxt
-        Zqm2DfQT4rXg1z5hrsRlSOE=
-X-Google-Smtp-Source: ABdhPJzvuIXVfByf5ziQV4tnLKfeHAnWE5LpBjywZL0Jvsg+uOJlURh+fYq5ZVd9osKhBuKX1ESu9w==
-X-Received: by 2002:a63:1226:: with SMTP id h38mr3075223pgl.376.1625199002287;
-        Thu, 01 Jul 2021 21:10:02 -0700 (PDT)
-Received: from ubuntu.localdomain ([103.220.76.197])
-        by smtp.gmail.com with ESMTPSA id y3sm1634732pga.72.2021.07.01.21.09.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jul 2021 21:10:01 -0700 (PDT)
-From:   gushengxian <gushengxian507419@gmail.com>
-To:     will@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gushengxian <gushengxian@yulong.com>
-Subject: [PATCH] perf: tests: fix some mmemory leak issues
-Date:   Thu,  1 Jul 2021 21:09:55 -0700
-Message-Id: <20210702040955.631618-1-gushengxian507419@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=irzywLWlswN5yWOuh85DPqMNyXrjycgbBXoyqQ4WPFg=;
+        b=caFhMtGIJnt8G1Z9wZdPT3D1oUFoKPNHCU9cE/DFGVGFwPGMr/jwEvVaZSwLkUPZP6
+         OhhtX54Ye9Z9Qz0oHoleSDOz0C7ft7shgHBHriH8+K1CzA4QnUp067XXJkGkWoZvC59y
+         v1ffp2pBHlXI2KMobi6vmv8xxQ7KrclMdEsgsDYGEKDuGFq9CvPQDIo2TQ2p9739/D8L
+         MVBX6sxBoPxIjqlt5EJfYu0f7+L0tPx7jkhlqQsdhURjvphFITlR53xaq/XS3nJmkw5B
+         l33LPr88Ud8eKT1Hu48SAzUUDdPFrJO/p2v9iyw8qAW7YyehM1vCLp8GQ4kHC5wyubfw
+         Lh5g==
+X-Gm-Message-State: AOAM5325XJeYEENcIY7cGlHe9BFMx+Jv7EjULEWrw2SOILFaDhukSxnW
+        oGnAxJiocsU8PwKTFdPdfa0YxfyZkxVy3CX6lgqaVg==
+X-Google-Smtp-Source: ABdhPJzx9YkOfmdJBiDYcvhF1GSrrKeq0URo76Fdf7LELK6PY7vxwExXdGkmvivC7wAMZ8sNCkOZvRut+96K0jF6SJo=
+X-Received: by 2002:a05:6808:210e:: with SMTP id r14mr2100654oiw.172.1625210468059;
+ Fri, 02 Jul 2021 00:21:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210701083842.580466-1-elver@google.com> <87h7hdn24k.fsf@disp2133>
+In-Reply-To: <87h7hdn24k.fsf@disp2133>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 2 Jul 2021 09:20:56 +0200
+Message-ID: <CANpmjNMtK53SiZwm0N9VuwGJthY0unZ_1_mZ=gXdMH0_LAFr5A@mail.gmail.com>
+Subject: Re: [PATCH v2] perf: Require CAP_KILL if sigtrap is requested
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        omosnace@redhat.com, serge@hallyn.com,
+        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: gushengxian <gushengxian@yulong.com>
+On Thu, 1 Jul 2021 at 23:41, Eric W. Biederman <ebiederm@xmission.com> wrote:
+>
+> Marco Elver <elver@google.com> writes:
+>
+> > If perf_event_open() is called with another task as target and
+> > perf_event_attr::sigtrap is set, and the target task's user does not
+> > match the calling user, also require the CAP_KILL capability.
+> >
+> > Otherwise, with the CAP_PERFMON capability alone it would be possible
+> > for a user to send SIGTRAP signals via perf events to another user's
+> > tasks. This could potentially result in those tasks being terminated if
+> > they cannot handle SIGTRAP signals.
+> >
+> > Note: The check complements the existing capability check, but is not
+> > supposed to supersede the ptrace_may_access() check. At a high level we
+> > now have:
+> >
+> >       capable of CAP_PERFMON and (CAP_KILL if sigtrap)
+> >               OR
+> >       ptrace_may_access() // also checks for same thread-group and uid
+>
+> Is there anyway we could have a comment that makes the required
+> capability checks clear?
+>
+> Basically I see an inlined version of kill_ok_by_cred being implemented
+> without the comments on why the various pieces make sense.
 
-Some memory leak issues should be fixed by free().
-Reported by cppcheck.
+I'll add more comments. It probably also makes sense to factor the
+code here into its own helper.
 
-Signed-off-by: gushengxian <gushengxian@yulong.com>
----
- tools/perf/arch/arm/tests/dwarf-unwind.c     | 1 +
- tools/perf/arch/arm64/tests/dwarf-unwind.c   | 1 +
- tools/perf/arch/powerpc/tests/dwarf-unwind.c | 1 +
- tools/perf/arch/x86/tests/dwarf-unwind.c     | 1 +
- 4 files changed, 4 insertions(+)
+> Certainly ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS) should not
+> be a check to allow writing/changing a task.  It needs to be
+> PTRACE_MODE_ATTACH_REALCREDS, like /proc/self/mem uses.
 
-diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
-index ccfa87055c4a..f2541d1dbb02 100644
---- a/tools/perf/arch/arm/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
-@@ -39,6 +39,7 @@ static int sample_ustack(struct perf_sample *sample,
- 	memcpy(buf, (void *) sp, stack_size);
- 	stack->data = (char *) buf;
- 	stack->size = stack_size;
-+	free(buf);
- 	return 0;
- }
- 
-diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-index 46147a483049..ecd25c77a71f 100644
---- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-@@ -39,6 +39,7 @@ static int sample_ustack(struct perf_sample *sample,
- 	memcpy(buf, (void *) sp, stack_size);
- 	stack->data = (char *) buf;
- 	stack->size = stack_size;
-+	free(buf);
- 	return 0;
- }
- 
-diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-index 8efd9ed9e9db..e57a8ca52ce7 100644
---- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-@@ -40,6 +40,7 @@ static int sample_ustack(struct perf_sample *sample,
- 	memcpy(buf, (void *) sp, stack_size);
- 	stack->data = (char *) buf;
- 	stack->size = stack_size;
-+	free(buf);
- 	return 0;
- }
- 
-diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
-index 478078fb0f22..da90b33a1e28 100644
---- a/tools/perf/arch/x86/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
-@@ -47,6 +47,7 @@ static int sample_ustack(struct perf_sample *sample,
- #endif
- 	stack->data = (char *) buf;
- 	stack->size = stack_size;
-+	free(buf);
- 	return 0;
- }
- 
--- 
-2.25.1
+So if attr.sigtrap the checked ptrace mode needs to switch to
+PTRACE_MODE_ATTACH_REALCREDS. Otherwise, it is possible to send a
+signal if only read-ptrace permissions are granted.
 
+Is my assumption here correct?
+
+> Now in practice I think your patch probably has the proper checks in
+> place for sending a signal but it is far from clear.
+
+Thanks,
+-- Marco
