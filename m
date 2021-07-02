@@ -2,120 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AC1C11F68
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 07:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DDBC11F68
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 12:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E04613F3
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 07:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4C9613C1
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 12:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbhGBHXl (ORCPT
+        id S232167AbhGBMuv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jul 2021 03:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58772 "EHLO
+        Fri, 2 Jul 2021 08:50:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230026AbhGBHXk (ORCPT
+        with ESMTP id S230207AbhGBMuu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jul 2021 03:23:40 -0400
-Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD1EC061762
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jul 2021 00:21:09 -0700 (PDT)
-Received: by mail-oi1-x235.google.com with SMTP id h9so10314689oih.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 00:21:09 -0700 (PDT)
+        Fri, 2 Jul 2021 08:50:50 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C3AC061762;
+        Fri,  2 Jul 2021 05:48:18 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id 17so8628565pfz.4;
+        Fri, 02 Jul 2021 05:48:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=irzywLWlswN5yWOuh85DPqMNyXrjycgbBXoyqQ4WPFg=;
-        b=JC7b7TxAUyZbowqRZZujuFRQ4jMvxzVzW5L18cOjNIWPYWOoRv5VxYWXCyqAACj0I2
-         S78j2TDcTg0MVmGQdnUnfdCT/QWofJjHmNSJZDeAFOGNWS+iLKUmlit0N6Wymj3GCK1e
-         GhKBkdsdL9uGbxPWrKaWNV9lPPJX5Z/KovNiydJIpFa08zhcUZ6utUFwaoc03DI8A0FS
-         5Sek3lMDaaZeViIJujC3baLCO9LrHsZpj5rVWPx7sYuhSQXvgu2rv1hl9tdfhyFFfA4C
-         S/+/wogEltIR1Iuveius1Ov2nCc007UXrmTOSiPFEDXAXjvXZL79ngn6KW4E2hIDBY9z
-         IaCw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ua7jcnq1KkRupY4R+8sEqCnGnigSamk+j60c3bJxSG8=;
+        b=E0tqI1l3hyH7P5shwM0sDw4GzP0uS/Koipa36gnxRCE/K1lDizFWS6kMmGddqwM7Pe
+         FKtl3I5daTD0KMoc6xmiFSau9925ZRNn8u4UhW+ChOEhyt0dH4jxIewjbm7A8volT4Cu
+         45Fy99lI9rD8qiJ2OjlHY+LkgNE+ddGUFIXBJBTYJTL4bgLa0u5nz6c5hhPJ1wD0hU+m
+         IAyPf8FYCtHXQ3h3ZKQu8AAclCOEDksIG4jXsJVx/9ZGDmqL2sfj776Uy6uAYhbE+Ctn
+         FOiFPYbO97soiykqR8sVW79gNOD/jOEeRN0vvmxu90q2BL4N8xP4S/88ty5tQ2A/PSaG
+         +azw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=irzywLWlswN5yWOuh85DPqMNyXrjycgbBXoyqQ4WPFg=;
-        b=caFhMtGIJnt8G1Z9wZdPT3D1oUFoKPNHCU9cE/DFGVGFwPGMr/jwEvVaZSwLkUPZP6
-         OhhtX54Ye9Z9Qz0oHoleSDOz0C7ft7shgHBHriH8+K1CzA4QnUp067XXJkGkWoZvC59y
-         v1ffp2pBHlXI2KMobi6vmv8xxQ7KrclMdEsgsDYGEKDuGFq9CvPQDIo2TQ2p9739/D8L
-         MVBX6sxBoPxIjqlt5EJfYu0f7+L0tPx7jkhlqQsdhURjvphFITlR53xaq/XS3nJmkw5B
-         l33LPr88Ud8eKT1Hu48SAzUUDdPFrJO/p2v9iyw8qAW7YyehM1vCLp8GQ4kHC5wyubfw
-         Lh5g==
-X-Gm-Message-State: AOAM5325XJeYEENcIY7cGlHe9BFMx+Jv7EjULEWrw2SOILFaDhukSxnW
-        oGnAxJiocsU8PwKTFdPdfa0YxfyZkxVy3CX6lgqaVg==
-X-Google-Smtp-Source: ABdhPJzx9YkOfmdJBiDYcvhF1GSrrKeq0URo76Fdf7LELK6PY7vxwExXdGkmvivC7wAMZ8sNCkOZvRut+96K0jF6SJo=
-X-Received: by 2002:a05:6808:210e:: with SMTP id r14mr2100654oiw.172.1625210468059;
- Fri, 02 Jul 2021 00:21:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ua7jcnq1KkRupY4R+8sEqCnGnigSamk+j60c3bJxSG8=;
+        b=Cn5HL9995cUUjr0QYWk3n17Hh3XzFP/ben6M5lygMFkVDWElxV/uzvA3DFjYuY5v0k
+         /cQVb1ZBXOnZ3uX7liOtUlz1qa5WxYSvWKa5ud17YrzYvWRBxh/sgEsD0gtjBZqCN/vg
+         +z3XFFM2ztfe+1FRjl2qfHi5kgJp9q6PrNSMRC9yflF2oduYJP19es9IpZyATBkpJA2b
+         vBIspKVtNoJhx7pIBu99TWTnhQip6RT5wAlAvTcphBQBzmQzzEiGyaMjE/CAuhnzLop3
+         OwehAwUEgNFxvegteNhR310WOj5reAfMqu1GORbpbGiaUpc19gFfE7LbHUziH66Cl7Mq
+         RFlw==
+X-Gm-Message-State: AOAM532xszlTtHjPvDB86OOi4g9a2A+nHsxgRyNBWUr+BHyD0s5q/lvW
+        XLAre56LM8JPI84zALXX4/w=
+X-Google-Smtp-Source: ABdhPJxWIYKeSkKHDTadc1SNn8u3ln1TDHuCT8uvd2jmDzq0UD9EMIJrEqc/x3+BsAk1HyUEA4MvyA==
+X-Received: by 2002:aa7:8707:0:b029:306:7e78:ee7a with SMTP id b7-20020aa787070000b02903067e78ee7amr5431641pfo.29.1625230098359;
+        Fri, 02 Jul 2021 05:48:18 -0700 (PDT)
+Received: from ubuntu.localdomain ([103.220.76.197])
+        by smtp.gmail.com with ESMTPSA id k10sm3376185pfu.104.2021.07.02.05.48.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jul 2021 05:48:17 -0700 (PDT)
+From:   gushengxian <gushengxian507419@gmail.com>
+To:     rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        gushengxian <gushengxian@yulong.com>
+Subject: [PATCH] arch: alpha: fix spelling mistakes
+Date:   Fri,  2 Jul 2021 05:48:12 -0700
+Message-Id: <20210702124812.639641-1-gushengxian507419@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210701083842.580466-1-elver@google.com> <87h7hdn24k.fsf@disp2133>
-In-Reply-To: <87h7hdn24k.fsf@disp2133>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 2 Jul 2021 09:20:56 +0200
-Message-ID: <CANpmjNMtK53SiZwm0N9VuwGJthY0unZ_1_mZ=gXdMH0_LAFr5A@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Require CAP_KILL if sigtrap is requested
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        omosnace@redhat.com, serge@hallyn.com,
-        linux-security-module@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 1 Jul 2021 at 23:41, Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Marco Elver <elver@google.com> writes:
->
-> > If perf_event_open() is called with another task as target and
-> > perf_event_attr::sigtrap is set, and the target task's user does not
-> > match the calling user, also require the CAP_KILL capability.
-> >
-> > Otherwise, with the CAP_PERFMON capability alone it would be possible
-> > for a user to send SIGTRAP signals via perf events to another user's
-> > tasks. This could potentially result in those tasks being terminated if
-> > they cannot handle SIGTRAP signals.
-> >
-> > Note: The check complements the existing capability check, but is not
-> > supposed to supersede the ptrace_may_access() check. At a high level we
-> > now have:
-> >
-> >       capable of CAP_PERFMON and (CAP_KILL if sigtrap)
-> >               OR
-> >       ptrace_may_access() // also checks for same thread-group and uid
->
-> Is there anyway we could have a comment that makes the required
-> capability checks clear?
->
-> Basically I see an inlined version of kill_ok_by_cred being implemented
-> without the comments on why the various pieces make sense.
+From: gushengxian <gushengxian@yulong.com>
 
-I'll add more comments. It probably also makes sense to factor the
-code here into its own helper.
+Fix some spelling mistakes in comments:
+delarations ==> declarations
+softare ==> software
+suffiently ==> sufficiently
+requred ==> required
+unaliged ==> unaligned
 
-> Certainly ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS) should not
-> be a check to allow writing/changing a task.  It needs to be
-> PTRACE_MODE_ATTACH_REALCREDS, like /proc/self/mem uses.
+Signed-off-by: gushengxian <gushengxian@yulong.com>
+---
+ arch/alpha/boot/misc.c           | 2 +-
+ arch/alpha/kernel/osf_sys.c      | 4 ++--
+ arch/alpha/kernel/perf_event.c   | 2 +-
+ arch/alpha/kernel/sys_nautilus.c | 2 +-
+ arch/alpha/kernel/traps.c        | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-So if attr.sigtrap the checked ptrace mode needs to switch to
-PTRACE_MODE_ATTACH_REALCREDS. Otherwise, it is possible to send a
-signal if only read-ptrace permissions are granted.
+diff --git a/arch/alpha/boot/misc.c b/arch/alpha/boot/misc.c
+index d65192202703..325d4dd4f904 100644
+--- a/arch/alpha/boot/misc.c
++++ b/arch/alpha/boot/misc.c
+@@ -30,7 +30,7 @@ extern long srm_printk(const char *, ...)
+      __attribute__ ((format (printf, 1, 2)));
+ 
+ /*
+- * gzip delarations
++ * gzip declarations
+  */
+ #define OF(args)  args
+ #define STATIC static
+diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
+index d5367a1c6300..d31167e3269c 100644
+--- a/arch/alpha/kernel/osf_sys.c
++++ b/arch/alpha/kernel/osf_sys.c
+@@ -834,7 +834,7 @@ SYSCALL_DEFINE5(osf_setsysinfo, unsigned long, op, void __user *, buffer,
+ 			return -EFAULT;
+ 		state = &current_thread_info()->ieee_state;
+ 
+-		/* Update softare trap enable bits.  */
++		/* Update software trap enable bits.  */
+ 		*state = (*state & ~IEEE_SW_MASK) | (swcr & IEEE_SW_MASK);
+ 
+ 		/* Update the real fpcr.  */
+@@ -854,7 +854,7 @@ SYSCALL_DEFINE5(osf_setsysinfo, unsigned long, op, void __user *, buffer,
+ 		state = &current_thread_info()->ieee_state;
+ 		exc &= IEEE_STATUS_MASK;
+ 
+-		/* Update softare trap enable bits.  */
++		/* Update software trap enable bits.  */
+  		swcr = (*state & IEEE_SW_MASK) | exc;
+ 		*state |= exc;
+ 
+diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_event.c
+index e7a59d927d78..efcf7321701b 100644
+--- a/arch/alpha/kernel/perf_event.c
++++ b/arch/alpha/kernel/perf_event.c
+@@ -574,7 +574,7 @@ static void alpha_pmu_start(struct perf_event *event, int flags)
+  * Check that CPU performance counters are supported.
+  * - currently support EV67 and later CPUs.
+  * - actually some later revisions of the EV6 have the same PMC model as the
+- *     EV67 but we don't do suffiently deep CPU detection to detect them.
++ *     EV67 but we don't do sufficiently deep CPU detection to detect them.
+  *     Bad luck to the very few people who might have one, I guess.
+  */
+ static int supported_cpu(void)
+diff --git a/arch/alpha/kernel/sys_nautilus.c b/arch/alpha/kernel/sys_nautilus.c
+index 53adf43dcd44..96fd6ff3fe81 100644
+--- a/arch/alpha/kernel/sys_nautilus.c
++++ b/arch/alpha/kernel/sys_nautilus.c
+@@ -212,7 +212,7 @@ nautilus_init_pci(void)
+ 
+ 	/* Use default IO. */
+ 	pci_add_resource(&bridge->windows, &ioport_resource);
+-	/* Irongate PCI memory aperture, calculate requred size before
++	/* Irongate PCI memory aperture, calculate required size before
+ 	   setting it up. */
+ 	pci_add_resource(&bridge->windows, &irongate_mem);
+ 
+diff --git a/arch/alpha/kernel/traps.c b/arch/alpha/kernel/traps.c
+index 921d4b6e4d95..5398f982bdd1 100644
+--- a/arch/alpha/kernel/traps.c
++++ b/arch/alpha/kernel/traps.c
+@@ -730,7 +730,7 @@ do_entUnaUser(void __user * va, unsigned long opcode,
+ 	long error;
+ 
+ 	/* Check the UAC bits to decide what the user wants us to do
+-	   with the unaliged access.  */
++	   with the unaligned access.  */
+ 
+ 	if (!(current_thread_info()->status & TS_UAC_NOPRINT)) {
+ 		if (__ratelimit(&ratelimit)) {
+-- 
+2.25.1
 
-Is my assumption here correct?
-
-> Now in practice I think your patch probably has the proper checks in
-> place for sending a signal but it is far from clear.
-
-Thanks,
--- Marco
