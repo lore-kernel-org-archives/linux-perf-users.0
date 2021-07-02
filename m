@@ -2,116 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2433C11F68
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 16:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EA7C11F68
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 17:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5306141D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 16:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C666140E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jul 2021 17:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229817AbhGBQYs (ORCPT
+        id S230137AbhGBSA1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jul 2021 12:24:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46209 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229455AbhGBQYs (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jul 2021 12:24:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625242935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T+F56iX2HeLnYU5qEBzI7G3YURXhUl6KbnmwROL9d3E=;
-        b=LpyYKja6fWiygORuP6M/0xggOE8ddPdcoJdy4quxUQ1bmNCOFLhYE4di/K73ZN+om5JRaS
-        EHHT8BE78dw5oUU65SAkOUNp1zq9dypnl0oHE3tTz6YBeObfQRPgHO+pnxboZPa+btAxWT
-        Zo+e3rkhz4i1Xge6tt9N9e5GoiHTdEE=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-449-4YE2VCz4N6en_MKdNMfF4g-1; Fri, 02 Jul 2021 12:22:11 -0400
-X-MC-Unique: 4YE2VCz4N6en_MKdNMfF4g-1
-Received: by mail-ed1-f70.google.com with SMTP id i19-20020a05640200d3b02903948b71f25cso5310822edu.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jul 2021 09:22:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T+F56iX2HeLnYU5qEBzI7G3YURXhUl6KbnmwROL9d3E=;
-        b=ozVXje84pgAU/rwxRo7MpiewzXP6OKZLDjvkDGuV/qxbU21kOSdFdzAFmTnocRORda
-         fmZMT09KDc/QsnJf0tPjUm4InO/IVfPNRRkepvDhGpYlp1BBPc1J/zbDkj+5ykTebgt6
-         LW3OZj972fs0SL/J/lC81GfzbXGGR33pkmKAdT/C7AM+aevXgdOR0OO5RtqO5PahKboW
-         sCIIPbQ7WicA4v3ng/ssDADCXv0Bqqu78q+ZCNvRhL2OT9rvV2+oalePlLSm/01EtWhK
-         iwdbxfim+jA+3zWksbkv4EKPNc0kz1tCPlGPmrxOkPxLw1q9Ekx88NfvNJa2DnPG9gZt
-         Aq9Q==
-X-Gm-Message-State: AOAM5314cBb1T0UFSyUN4OJsxCPEdmcdeIi9b9ipqBKqs+bwMJV7WkUr
-        elaXToQPvQdVeexYkO6Wl6JlzHW+es6H+XA5t/6gzpF2kvEFbrutF4g18PvJliDka6MCh+4ePfr
-        CgOKCm3eh4+s60WFNPU8inZ4ipIhoKA==
-X-Received: by 2002:a17:907:7ba3:: with SMTP id ne35mr536705ejc.12.1625242930750;
-        Fri, 02 Jul 2021 09:22:10 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyLemUURdGV01cjMVEh7l/pvg+dgjnh+AaM1PMZXwIowFbPz0iFXQPAUYs9mWUf8RGsJ6lCjg==
-X-Received: by 2002:a17:907:7ba3:: with SMTP id ne35mr536686ejc.12.1625242930578;
-        Fri, 02 Jul 2021 09:22:10 -0700 (PDT)
-Received: from krava ([185.153.78.55])
-        by smtp.gmail.com with ESMTPSA id bz27sm1216686ejc.15.2021.07.02.09.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jul 2021 09:22:10 -0700 (PDT)
-Date:   Fri, 2 Jul 2021 18:22:07 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc:     linux-perf-users@vger.kernel.org
-Subject: Re: Perf loses events without reporting
-Message-ID: <YN89LwSzTKc8wBar@krava>
-References: <87lf6rclcm.fsf@stepbren-lnx.us.oracle.com>
- <YN2a3pSvealjK6uR@krava>
- <87im1uc79i.fsf@stepbren-lnx.us.oracle.com>
- <87fswyc6cb.fsf@stepbren-lnx.us.oracle.com>
- <87czs1didj.fsf@stepbren-lnx.us.oracle.com>
+        Fri, 2 Jul 2021 14:00:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54876 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229499AbhGBSA1 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 2 Jul 2021 14:00:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F090760E0C;
+        Fri,  2 Jul 2021 17:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625248675;
+        bh=zM86ilOMJ34NHEAC7D/6ndvhtKKr1f/qz5+h4JAAl7E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jEYTwUdyp7chib8XCkQNNrFL4dqMjx7fwsRLGbVlHK7fqPtpjaxxiYnVoLn7khNDR
+         6ym9aNbGFhKnTefPNC5sPRlYojCJ+W/AdpcoOa6HioI2g8xz+wQXdwS38HZTUirWwk
+         R/TEUumYOKXDo2tyisO4tGNcz9pC+Q8yroxoOH1xQPQdnk89NhX0OJWB2F4KZZRJc1
+         JlqaCA3Enb2Fr8CHNPj8x0+yY6rWKn8L8Nk+I92AhZ0Dsvt0wPV+i4wDHUBFI7kG4G
+         V12c2RSM+E/IHgKfolCGIaixzMGpZj81DEHGIrOfLeUTLNhhgUR6xD3FCrJepF671N
+         uRutPekGpMcpA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 89C8E40B1A; Fri,  2 Jul 2021 14:57:51 -0300 (-03)
+Date:   Fri, 2 Jul 2021 14:57:51 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     gushengxian <gushengxian507419@gmail.com>, will@kernel.org,
+        mathieu.poirier@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gushengxian <gushengxian@yulong.com>
+Subject: Re: [PATCH] perf: tests: fix some mmemory leak issues
+Message-ID: <YN9TnyUMd0VesywP@kernel.org>
+References: <20210702040955.631618-1-gushengxian507419@gmail.com>
+ <YN8NjJLHoB+wzLXa@kernel.org>
+ <20210702135641.GA22592@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87czs1didj.fsf@stepbren-lnx.us.oracle.com>
+In-Reply-To: <20210702135641.GA22592@leoy-ThinkPad-X240s>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 11:00:24AM -0700, Stephen Brennan wrote:
-
-SNIP
-
+Em Fri, Jul 02, 2021 at 09:56:41PM +0800, Leo Yan escreveu:
+> Hi Arnaldo,
 > 
-> static ssize_t irqsoff_write(struct file *f, const char __user *data, size_t amt, loff_t *off)
+> On Fri, Jul 02, 2021 at 09:58:52AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Jul 01, 2021 at 09:09:55PM -0700, gushengxian escreveu:
+> > > From: gushengxian <gushengxian@yulong.com>
+> > > 
+> > > Some memory leak issues should be fixed by free().
+> > > Reported by cppcheck.
+> 
+> I don't think this patch does the right thing.  You could see that the
+> memory is allocated in arch specific function sample_ustack(), and the
+> "buf" pointer is assigned to sample->user_stack.data; and the memory
+> actually is released in the caller function test_dwarf_unwind__thread:
+> 
+> noinline int test_dwarf_unwind__thread(struct thread *thread)
 > {
-> 	char buf[32];
-> 	int rv;
-> 	unsigned long millis = 0;
+>         struct perf_sample sample;
+>         unsigned long cnt = 0;
+>         int err = -1;
 > 
-> 	if (amt > sizeof(buf) - 1)
-> 		return -EFBIG;
+>         memset(&sample, 0, sizeof(sample));
 > 
-> 	if ((rv = copy_from_user(buf, data, amt)) != 0)
-> 		return -EFAULT;
+>         if (test__arch_unwind_sample(&sample, thread)) {
+>                 pr_debug("failed to get unwind sample\n");
+>                 goto out;
+>         } 
 > 
-> 	buf[amt] = '\0';
+>         [...]
 > 
-> 	if (sscanf(buf, "%lu", &millis) != 1)
-> 		return -EINVAL;
+>  out:
+>         zfree(&sample.user_stack.data);
+>         zfree(&sample.user_regs.regs);
+>         return err;
+> }
 > 
-> 	/* Threshold it at 5 minutes for safety. */
-> 	if (millis > 5 * 60 * 1000)
-> 		return -EINVAL;
-> 
-> 	pr_info("[irqoff] lock for %lu millis\n", millis);
-> 	spin_lock_irq(&irqoff_lock);
-> 	irqsoff_inirq_delay(millis);
-> 	spin_unlock_irq(&irqoff_lock);
+> So this patch will break the testing and doesn't fix any memory leak
+> issue.
 
-yea, I can see that as well.. if I took the spin_lock_irq it works as
-expected.. will check
+You are right, those buffers are allocated in those functions and then
+_returned_ via sample->user_stack, the tool (and myself, ugh) got
+fooled, I'll remove that from my local tree.
 
-thanks,
-jirka
+Thanks Leo!
 
+- Arnaldo
