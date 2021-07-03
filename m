@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697C9C07E97
-	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Jul 2021 15:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF262C07E97
+	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Jul 2021 15:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5256D61939
-	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Jul 2021 15:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9EB96161E
+	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Jul 2021 15:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbhGCPh6 (ORCPT
+        id S229991AbhGCPiD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 3 Jul 2021 11:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35966 "EHLO mail.kernel.org"
+        Sat, 3 Jul 2021 11:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229991AbhGCPhz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 3 Jul 2021 11:37:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 477DA6161E;
-        Sat,  3 Jul 2021 15:35:20 +0000 (UTC)
+        id S229924AbhGCPiD (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 3 Jul 2021 11:38:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D8EF6161E;
+        Sat,  3 Jul 2021 15:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625326521;
-        bh=v12eb72egTXGRlWePIt6/447N/jAOeFwRe4l3/n4s4c=;
+        s=k20201202; t=1625326529;
+        bh=tS9//WzT5l76oJrWdPtooZEXhKPrvqWOWetH8EF9ECc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u6Uo402ut0NQfNvNx3Kkb/41rXOyumsg8PmLzOXxidW+RD87QOi2JRkZ/iZjbW4WL
-         KZqwpupmAfS7ymtzKUbyLiwuib5BfBixecE5qapTXxAHrdEgD6ukzwPP1j0zyi44ZN
-         LACa0oW8PPY6Kki6Y7n+T97p0zw4jHzJK4dzAlN0RVuaV7qa7qSICW34xkFt1qd4P9
-         twypupb2S/w76YyaLvlq9Xaa43/1QCHTX8eJHPX66OWV7+woWTahoKfWLO2128S6tM
-         zQZ5cO9f1lXdT6sp5UVvNkyMsaUg/QHMgxXvA3GUJNAzt/be+SmRDkFLz6Qy0+Ga/B
-         STNyM5UPXAlmA==
+        b=cpHKUDThrbCuUMCLNDb18TdLCitqznqCEWjev58affhL+3L6HRJsK4S0JNte6yeDh
+         wNm3SxPsTFwmXYnsMMC2GRiWe5YHNwwEi3cJNahgREclkJpr5h7oxHt5kI4EbQJ0Ea
+         bI2tRfrMial9iBE9gwfm/yY9rIreEAf7SMTANasQdC8ckqfILG97Vsm0sbK2QEuaWp
+         FR4bH5fj+pWHsUvFvwuriHJtV34g1TAIyE2zcZ+Al2Kgr0w6snUNeShrmLOJDH6AIX
+         B7qlgkxOMVDa1hUnfQo+ZR6rkAONVt5uvooz9z3ybusL3E9mVEnZX8iGUqOGqWih9b
+         Ki4HjqVJUFd5w==
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     linux-perf-users@vger.kernel.org,
@@ -41,9 +41,9 @@ Cc:     linux-perf-users@vger.kernel.org,
         Stefan Liebler <stli@linux.ibm.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] perf-probe: Fix debuginfo__new() to enable build-id based debuginfo
-Date:   Sun,  4 Jul 2021 00:35:18 +0900
-Message-Id: <162532651863.393143.11692691321219235810.stgit@devnote2>
+Subject: [PATCH 2/3] perf symbol-elf: Decode dynsym even if symtab exists
+Date:   Sun,  4 Jul 2021 00:35:27 +0900
+Message-Id: <162532652681.393143.10163733179955267999.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <162532651032.393143.4602033845482295575.stgit@devnote2>
 References: <162532651032.393143.4602033845482295575.stgit@devnote2>
@@ -55,45 +55,154 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Masami Hiramatsu <mhriamat@kernel.org>
+In Fedora34, libc-2.33.so has both .dynsym and .symtab sections and
+most of (not all) symbols moved to .dynsym. In this case, perf only
+decode the symbols in .symtab, and perf probe can not list up the
+functions in the library.
 
-Fix debuginfo__new() to set the build-id to dso before
-dso__read_binary_type_filename() so that it can find
-DSO_BINARY_TYPE__BUILDID_DEBUGINFO debuginfo correctly.
-However, this may not change the result, because elfutils
-(libdwfl) has its own debuginfo finder. With/without this patch,
-the perf probe correctly find the debuginfo file.
+To fix this issue, decode both .symtab and .dynsym sections.
 
-This is just a failsafe and keep code's sanity (if you use
-dso__read_binary_type_filename(), you must set the build-id
-to the dso.)
+Without this fix,
+  -----
+  $ ./perf probe -x /usr/lib64/libc-2.33.so -F
+  @plt
+  @plt
+  calloc@plt
+  free@plt
+  malloc@plt
+  memalign@plt
+  realloc@plt
+  -----
+
+With this fix.
+
+  -----
+  $ ./perf probe -x /usr/lib64/libc-2.33.so -F
+  @plt
+  @plt
+  a64l
+  abort
+  abs
+  accept
+  accept4
+  access
+  acct
+  addmntent
+  -----
 
 Reported-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Masami Hiramatsu <mhriamat@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- tools/perf/util/probe-finder.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/util/symbol-elf.c |   82 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 54 insertions(+), 28 deletions(-)
 
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index b029c29ce227..02ef0d78053b 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -118,12 +118,17 @@ struct debuginfo *debuginfo__new(const char *path)
- 	char buf[PATH_MAX], nil = '\0';
- 	struct dso *dso;
- 	struct debuginfo *dinfo = NULL;
-+	struct build_id bid;
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index a73345730ba9..eb10b4e0d888 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1074,8 +1074,9 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 	return 0;
+ }
  
- 	/* Try to open distro debuginfo files */
- 	dso = dso__new(path);
- 	if (!dso)
- 		goto out;
+-int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+-		  struct symsrc *runtime_ss, int kmodule)
++static int
++dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
++		       struct symsrc *runtime_ss, int kmodule, int dynsym)
+ {
+ 	struct kmap *kmap = dso->kernel ? map__kmap(map) : NULL;
+ 	struct maps *kmaps = kmap ? map__kmaps(map) : NULL;
+@@ -1098,34 +1099,15 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 	if (kmap && !kmaps)
+ 		return -1;
  
-+	/* Set the build id for DSO_BINARY_TYPE__BUILDID_DEBUGINFO */
-+	if (is_regular_file(path) && filename__read_build_id(path, &bid) > 0)
-+		dso__set_build_id(dso, &bid);
+-	dso->symtab_type = syms_ss->type;
+-	dso->is_64_bit = syms_ss->is_64_bit;
+-	dso->rel = syms_ss->ehdr.e_type == ET_REL;
+-
+-	/*
+-	 * Modules may already have symbols from kallsyms, but those symbols
+-	 * have the wrong values for the dso maps, so remove them.
+-	 */
+-	if (kmodule && syms_ss->symtab)
+-		symbols__delete(&dso->symbols);
+-
+-	if (!syms_ss->symtab) {
+-		/*
+-		 * If the vmlinux is stripped, fail so we will fall back
+-		 * to using kallsyms. The vmlinux runtime symbols aren't
+-		 * of much use.
+-		 */
+-		if (dso->kernel)
+-			goto out_elf_end;
+-
+-		syms_ss->symtab  = syms_ss->dynsym;
+-		syms_ss->symshdr = syms_ss->dynshdr;
+-	}
+-
+ 	elf = syms_ss->elf;
+ 	ehdr = syms_ss->ehdr;
+-	sec = syms_ss->symtab;
+-	shdr = syms_ss->symshdr;
++	if (dynsym) {
++		sec  = syms_ss->dynsym;
++		shdr = syms_ss->dynshdr;
++	} else {
++		sec =  syms_ss->symtab;
++		shdr = syms_ss->symshdr;
++	}
+ 
+ 	if (elf_section_by_name(runtime_ss->elf, &runtime_ss->ehdr, &tshdr,
+ 				".text", NULL))
+@@ -1312,6 +1294,50 @@ int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 	return err;
+ }
+ 
++int dso__load_sym(struct dso *dso, struct map *map, struct symsrc *syms_ss,
++		  struct symsrc *runtime_ss, int kmodule)
++{
++	int nr = 0;
++	int err = -1;
 +
- 	for (type = distro_dwarf_types;
- 	     !dinfo && *type != DSO_BINARY_TYPE__NOT_FOUND;
- 	     type++) {
++	dso->symtab_type = syms_ss->type;
++	dso->is_64_bit = syms_ss->is_64_bit;
++	dso->rel = syms_ss->ehdr.e_type == ET_REL;
++
++	/*
++	 * Modules may already have symbols from kallsyms, but those symbols
++	 * have the wrong values for the dso maps, so remove them.
++	 */
++	if (kmodule && syms_ss->symtab)
++		symbols__delete(&dso->symbols);
++
++	if (!syms_ss->symtab) {
++		/*
++		 * If the vmlinux is stripped, fail so we will fall back
++		 * to using kallsyms. The vmlinux runtime symbols aren't
++		 * of much use.
++		 */
++		if (dso->kernel)
++			return err;
++	} else  {
++		err = dso__load_sym_internal(dso, map, syms_ss, runtime_ss,
++					     kmodule, 0);
++		if (err < 0)
++			return err;
++		nr = err;
++	}
++
++	if (syms_ss->dynsym) {
++		err = dso__load_sym_internal(dso, map, syms_ss, runtime_ss,
++					     kmodule, 1);
++		if (err < 0)
++			return err;
++		err += nr;
++	}
++
++	return err;
++}
++
+ static int elf_read_maps(Elf *elf, bool exe, mapfn_t mapfn, void *data)
+ {
+ 	GElf_Phdr phdr;
 
