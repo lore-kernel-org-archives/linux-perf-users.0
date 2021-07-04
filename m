@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245FCC07E9D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6BCC07E95
 	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 07:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECCE6188B
+	by mail.kernel.org (Postfix) with ESMTP id 76DAD617C9
 	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 07:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229492AbhGDHUJ (ORCPT
+        id S229829AbhGDHUK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Jul 2021 03:20:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
+        Sun, 4 Jul 2021 03:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbhGDHUD (ORCPT
+        with ESMTP id S229759AbhGDHUK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Jul 2021 03:20:03 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1726C061764
-        for <linux-perf-users@vger.kernel.org>; Sun,  4 Jul 2021 00:17:28 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id p17-20020a17090b0111b02901723ab8d11fso9411162pjz.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Jul 2021 00:17:28 -0700 (PDT)
+        Sun, 4 Jul 2021 03:20:10 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8E4C061762
+        for <linux-perf-users@vger.kernel.org>; Sun,  4 Jul 2021 00:17:34 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id a14so8156863pls.4
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Jul 2021 00:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YkRHt/y85aRyuOITrbWmeb01ZivbHBgtl/nAPj+TUR8=;
-        b=VqLcGl8QRMM/MjvqsraNlWRi+4GDw1LQPmsLJDG4wxwq7VIDTaZbX3jxX6j2TiaLHh
-         kMaAjr4tCheZ7DMiYNj/TfHTUW3J1uUuynVSoSkDRWXsLxR6HstwKSZeviP5EyYv8lwP
-         ZwcpE0hBWWgrDTNzNDPzz8FyBzx5RcM5TXPGShZWL3TEL2kPlaTqYkImabz5LngV/e/n
-         h7A/tt4M7neREizVTiLzQ+NpelDKtbGdhfbEgQX6anFZBIr7N2J/QqWOBazToo9pbLXd
-         ofrRlOAEsaBCtF7M2tkRwm9UWzphdkUnRqwGH4Pc8qNaeXmo8MRAurDwdKUKjwa1js7r
-         mKHQ==
+        bh=brLMJrOwQbG83P71X9VPeuY9tvE7zleojiqdMG48VEY=;
+        b=dAw3luOtdje26JAgPM3asmsdnTkplFoo7KvC7H2I/C61UvF35Nzg2HweTqvr7niy3w
+         ys2DktQwpbPTEFPl0Gr/LGVnnmdjqAiSgtMTBegUSKLAKijAFCJfajwQv+Cd5RGAzHmG
+         2ZW/bq9w3dRLhP013Ef9EVJCV6lTlgAqzoLTcD3ESWEF+uKS4NoXNviD/aH9X6UWQgP4
+         lKlBL6ss0GmwsSwpyv9rWMl+w6krPT1lD+UF+xJGHDeWJoTZ1dDm97Y8zYPIZ48dL6lL
+         I1eIWQPqDSjVmyb1U+uhUS9Ut5csTpmxVqHZDKDqkYDlt9PLsEW4HsM6wfuSYs0J9fbw
+         IQSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YkRHt/y85aRyuOITrbWmeb01ZivbHBgtl/nAPj+TUR8=;
-        b=swPYvl1Uxjpt+oREW6Y8BHfNVqtlQxrheMUzOCuRqSNpey8JJA92Jb3bmRtbVpAzhf
-         koLBoAqkRvWzVsc3KmIz+tVTj5YrFglOaKZ2FbqVGl0+Rv6QRgD0UFN1WxgJEKogSx93
-         Asw/uIt2vllazdGTj1ydQtvJouUSWwO+jwc6IzfxbgjRVx0xq6dKXhK5RvZ2JazDx4EN
-         80sjT4qB/pPLVpoLsTTeMLmiuzs5pYZWOPwAaDXtlei2RUY9Q7PRC1yHRg8rAwMAZ+zv
-         4wvUkjZoeKZe8F6QXUlXOQXQMEUAi3OtHtoaibZy3VmIXXXmixwLRHbow0z8UkbL1xI6
-         Idzw==
-X-Gm-Message-State: AOAM531sPMzRGxwsvGa3JfAM9za/tJYDlLQETclecFD11A3ek24kcZ6N
-        L6dQtGeFBQWLSnUEeoIqnMEvPw==
-X-Google-Smtp-Source: ABdhPJxo7pvqsWUeTkUMmxlymc5HCjtuwR5SLuy5pNg+DlTa+bWG1beuCHQp9yxO4juHyAs2G4tu8Q==
-X-Received: by 2002:a17:90a:5d92:: with SMTP id t18mr8097252pji.221.1625383048279;
-        Sun, 04 Jul 2021 00:17:28 -0700 (PDT)
+        bh=brLMJrOwQbG83P71X9VPeuY9tvE7zleojiqdMG48VEY=;
+        b=TGyYmFphVJqP1aeKNypOUNGti5vRnsPLZ7/nnbScVQ56k2vmshV1bJAntvZkLiuDkL
+         H7D3nM3YjZTx5jiDGYhfNx18rh8ZtcWrDwodEg61jCn5MPWqrsv0VX0Pa7hX0Pnwju70
+         9Yh0QNg5DoE5Q4WuQXHXJFMW9CEdperdDIBc/rm6XgXt5TVBN+nq/44q7UBFmasxy2s7
+         SxN5Ne/8y4PnOEtERSUFf3E3q2q1ST7G9bIep0i6LQuZo7pW3NKW4deYhBhS5uGUYrxw
+         Mf2LYMT6RjOHVGxXUgwbGYpdV9rtj4D4xlcdZwgV3bAwiStF5H7d8LqCQDy1plnPtcm8
+         zJPw==
+X-Gm-Message-State: AOAM533GTBCDsumuIZ/+qxV0CSnVzrM+w8HSWz5NCnUiDgihmiv9NK5c
+        k+bM8XnhPf7p/kGRBhHblFRW8w==
+X-Google-Smtp-Source: ABdhPJzEIeBGPpbSgBBcebonFiiSAj58V7y8TRazuYUDjwzJmrKKnWu6NqjrWvwDYuhHUmwXg3kOVg==
+X-Received: by 2002:a17:902:9006:b029:107:394a:387 with SMTP id a6-20020a1709029006b0290107394a0387mr7069924plp.35.1625383053898;
+        Sun, 04 Jul 2021 00:17:33 -0700 (PDT)
 Received: from localhost ([103.207.71.35])
-        by smtp.gmail.com with ESMTPSA id e4sm8655505pfa.29.2021.07.04.00.17.27
+        by smtp.gmail.com with ESMTPSA id s43sm983678pfw.50.2021.07.04.00.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jul 2021 00:17:27 -0700 (PDT)
+        Sun, 04 Jul 2021 00:17:33 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -75,9 +75,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 07/10] perf: Cleanup for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-Date:   Sun,  4 Jul 2021 15:16:41 +0800
-Message-Id: <20210704071644.107397-8-leo.yan@linaro.org>
+Subject: [PATCH v3 09/10] perf env: Set kernel bit mode
+Date:   Sun,  4 Jul 2021 15:16:43 +0800
+Message-Id: <20210704071644.107397-10-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210704071644.107397-1-leo.yan@linaro.org>
 References: <20210704071644.107397-1-leo.yan@linaro.org>
@@ -87,62 +87,81 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the __sync functions have been dropped, This patch removes unused
-build and checking for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT in perf tool.
+It's useful to know that the kernel is running in 32-bit or 64-bit
+mode.  E.g. We can decide perf tool is running in compat mode when
+detects kernel is running in 64-bit mode and the tool is in 32-bit
+mode with the compiler macro BITS_PER_LONG is 32.
 
-Note, there have a test for SYNC_COMPARE_AND_SWAP and the test file is
-located in build/feature/test-sync-compare-and-swap.c.  Since there
-still has several components using the sync functions, it's deliberately
-to not be removed.
-
-  $ cd linux/tools
-  $ git grep __sync_val_compare_and_swap | awk '{ printf $1"\n" }'
-  build/feature/test-sync-compare-and-swap.c:
-  include/asm-generic/atomic-gcc.h:
-  testing/selftests/bpf/progs/atomics.c:
-  testing/selftests/bpf/progs/atomics.c:
-  testing/selftests/bpf/progs/atomics.c:
-  testing/selftests/bpf/progs/atomics.c:
-  testing/selftests/futex/include/atomic.h:
-  testing/selftests/futex/include/futextest.h:
+This patch adds a global variable "kernel_is_64_bit", during the
+environment initialization for the session, the kernel running mode
+is decided by checking the architecture string.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/Makefile.config | 4 ----
- tools/perf/util/auxtrace.c | 5 -----
- 2 files changed, 9 deletions(-)
+ tools/perf/util/env.c | 17 ++++++++++++++++-
+ tools/perf/util/env.h |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index eb8e487ef90b..4a0d9a6defc7 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -349,10 +349,6 @@ CXXFLAGS += $(INC_FLAGS)
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index ebc5e9ad35db..345635a2e842 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -11,6 +11,7 @@
+ #include <stdlib.h>
+ #include <string.h>
  
- LIBPERF_CFLAGS := $(CORE_CFLAGS) $(EXTRA_CFLAGS)
++int kernel_is_64_bit;
+ struct perf_env perf_env;
  
--ifeq ($(feature-sync-compare-and-swap), 1)
--  CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
--endif
--
- ifeq ($(feature-pthread-attr-setaffinity-np), 1)
-   CFLAGS += -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
- endif
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 44bd04dbb6d6..db6255b55c90 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -130,11 +130,6 @@ int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
- 		return 0;
- 	}
+ #ifdef HAVE_LIBBPF_SUPPORT
+@@ -172,6 +173,19 @@ static void perf_env__purge_bpf(struct perf_env *env __maybe_unused)
+ }
+ #endif // HAVE_LIBBPF_SUPPORT
  
--#if BITS_PER_LONG != 64 && !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
--	pr_err("Cannot use AUX area tracing mmaps\n");
--	return -1;
--#endif
--
- 	pc->aux_offset = mp->offset;
- 	pc->aux_size = mp->len;
++static void perf_env__init_kernel_mode(struct perf_env *env)
++{
++	const char *arch = perf_env__raw_arch(env);
++
++	if (!strncmp(arch, "x86_64", 6) || !strncmp(arch, "aarch64", 7) ||
++	    !strncmp(arch, "arm64", 5) || !strncmp(arch, "mips64", 6) ||
++	    !strncmp(arch, "parisc64", 8) || !strncmp(arch, "riscv64", 7) ||
++	    !strncmp(arch, "s390x", 5) || !strncmp(arch, "sparc64", 7))
++		kernel_is_64_bit = 1;
++	else
++		kernel_is_64_bit = 0;
++}
++
+ void perf_env__exit(struct perf_env *env)
+ {
+ 	int i;
+@@ -217,13 +231,14 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->hybrid_cpc_nodes);
+ }
  
+-void perf_env__init(struct perf_env *env __maybe_unused)
++void perf_env__init(struct perf_env *env)
+ {
+ #ifdef HAVE_LIBBPF_SUPPORT
+ 	env->bpf_progs.infos = RB_ROOT;
+ 	env->bpf_progs.btfs = RB_ROOT;
+ 	init_rwsem(&env->bpf_progs.lock);
+ #endif
++	perf_env__init_kernel_mode(env);
+ }
+ 
+ int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 6824a7423a2d..cc989ff49740 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -139,6 +139,7 @@ enum perf_compress_type {
+ struct bpf_prog_info_node;
+ struct btf_node;
+ 
++extern int kernel_is_64_bit;
+ extern struct perf_env perf_env;
+ 
+ void perf_env__exit(struct perf_env *env);
 -- 
 2.25.1
 
