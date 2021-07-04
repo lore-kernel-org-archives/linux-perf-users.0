@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6662DC07E95
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEB8C07E9A
 	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 07:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2FA617C9
+	by mail.kernel.org (Postfix) with ESMTP id C26756192E
 	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 07:17:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbhGDHUD (ORCPT
+        id S229813AbhGDHUE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Jul 2021 03:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36282 "EHLO
+        Sun, 4 Jul 2021 03:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbhGDHTy (ORCPT
+        with ESMTP id S229809AbhGDHT7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Jul 2021 03:19:54 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A667BC0613DB
-        for <linux-perf-users@vger.kernel.org>; Sun,  4 Jul 2021 00:17:18 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id kt19so9507212pjb.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Jul 2021 00:17:18 -0700 (PDT)
+        Sun, 4 Jul 2021 03:19:59 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 015C2C0613DB
+        for <linux-perf-users@vger.kernel.org>; Sun,  4 Jul 2021 00:17:22 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id f5so5602998pgv.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Jul 2021 00:17:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Q5Wf8ghZ23c6vSvSmNVjb2NVOeSumBPmpt+tM4X+4G0=;
-        b=sPPIAp6bykeHv8kNEiNQSCH3ZxxoXifu1yRZOpcwWPNEr0fyMcMBODJMeCbSdX3rQR
-         wjMbs3m5gsKDPv5lyx/QgE5e2gxb+9Dzh2piLOFCcTLAPDOMc6lo3y1SidC97ncjri4o
-         39iHTnXCslYQiJVFWKaSbc0leC98lBqCqkszir2CJHxzKPpOCX7EAm3Xo99jF5HyZGBZ
-         95CLan0JYfl6yZNUYfl8UaQgFQxYilZgLOZNB4SjbzRYJ5Nt5jcJiXgb1jZLKZDRsk80
-         iatwVhlW8M9/y6n7k8g5bLXC+MUMOGRCNBcy+fsRX4q+lU/H4Zb9fWXiW5tIloDKZd2U
-         Pi6Q==
+        bh=WFlg3CrTgiWrG/82i995qBaU4/AO+LdpNtCrOYN1iqs=;
+        b=QVgopcqfesqC5fY1wcmSf5gnpsauKXSHgKNJZceLPwM1aXq7HJiQqYvyDSoMhLMLeE
+         wxkxqKMR5V+x8xP6vRCukKWI2wGeYOnw6b00FKJ9Y/6IYG/digiEsV7zPgMa12mlmlcC
+         8dch0uuVbojMIaTa0+ydQ15ROgkvOdhcmjayGRwznQaGvKOgvYqZWeuksjGLuRWyK+43
+         jFKSRVQEn17tGhfRo8vFcPYuHECVlzd8xQ5tnF5/W9CHF/gcMTjtv3uel+UYDq/Omz7Y
+         +xWAKfuMfu6D+Bi7lsusb0RTndv7hzCBwtMSqE6UQtfDlgodkMf9XWWQLmtWTqlwgkIQ
+         davg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q5Wf8ghZ23c6vSvSmNVjb2NVOeSumBPmpt+tM4X+4G0=;
-        b=i89NJjIAVsa4zMkwEtm/o3sGLCEyEM5M5lHZ983cqXLbtf4MOEg8n9d1Fe5m4qxysF
-         4PO5aHUobMLDONedF3H7AXd62rJTZM3kQLUU61h7xFHKl8W52TzY7vxHCOsBlA4puCnD
-         vyfGFOkWFutD21kuVnpdU3NvgwgwOrMzmQUBVmEnf9M/6KmNGUl9P/yde20MnEIwnhim
-         2JdT8YmvHe3D/7voaqYiu2OwD8gHDoLLSVebiD0FTOY0pN+vVEYZLCV+tqiRfdfiUDSo
-         6naE5x5J+8eXb3iFpDzmaHoSWxU91iXtFXum60727Zhcn/Kse1zI9N0TrRRWQzneNi+M
-         TbnA==
-X-Gm-Message-State: AOAM533QLcwgc57d9AO+rxReA2k2qUKbwVC2sE+9obkx39BINZmeIdLW
-        1KLTeIIEv8D5n5ihREuvr7DeeQ==
-X-Google-Smtp-Source: ABdhPJzUFCWdKrT5LqvA16eca5FTWrFAEQFxu73CU4ERAiEVgUNZaIdSuqJv3g3yMzx1OBcIywsEvg==
-X-Received: by 2002:a17:90b:1284:: with SMTP id fw4mr8381195pjb.74.1625383038146;
-        Sun, 04 Jul 2021 00:17:18 -0700 (PDT)
+        bh=WFlg3CrTgiWrG/82i995qBaU4/AO+LdpNtCrOYN1iqs=;
+        b=F8LwFUwRx3/Piv/H9eikmK3Cbes2pSiZxNmkFEeUL3tLPOkUt5P9bUpGrsmZn67Osm
+         Phcjq303qVp7DqRT0uB/UToO7Ne+oskgGmcaA5qnCw/fG6zGtmURYAJRHunCIdKrLsA+
+         SeuBrwDHtLViHOhz2talxYsf0m0wq5AiGdjOU0my1/gL4gaausTLotJ2XjQEAurCwjb5
+         K/1O6Nr9EJGTgQtNVmxdJJP3Mbs0HF1gWt3J6X2kyZVStuC6YdYjmsnULTw1SPAfNNzn
+         w2QkY6acCHcDMgLj3Lo/HhLqoKspHg788SP6TeKKMTRWRkAgQ5cG193eozQ5aU93Qh6j
+         +pTg==
+X-Gm-Message-State: AOAM533FDQa0DmTqwj4dg54lWDCNmrBBfzyWI+G4UhZrXPqXG/5Xglss
+        sSpyVJyEWvtiVtQEUPtBmZjAGA==
+X-Google-Smtp-Source: ABdhPJw4Ra53dPv9PE6oo6mR5bJRHgZPZzLtHOc/9HREWmLKUbBaYPlBu4O7ENkyOoZeSjr3VWB4iQ==
+X-Received: by 2002:a63:5513:: with SMTP id j19mr9083313pgb.192.1625383042400;
+        Sun, 04 Jul 2021 00:17:22 -0700 (PDT)
 Received: from localhost ([103.207.71.35])
-        by smtp.gmail.com with ESMTPSA id z7sm8588734pfn.36.2021.07.04.00.17.17
+        by smtp.gmail.com with ESMTPSA id z3sm9823033pgl.77.2021.07.04.00.17.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jul 2021 00:17:17 -0700 (PDT)
+        Sun, 04 Jul 2021 00:17:21 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -75,9 +75,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 04/10] perf/x86: Add barrier after updating bts
-Date:   Sun,  4 Jul 2021 15:16:38 +0800
-Message-Id: <20210704071644.107397-5-leo.yan@linaro.org>
+Subject: [PATCH v3 05/10] perf auxtrace: Drop legacy __sync functions
+Date:   Sun,  4 Jul 2021 15:16:39 +0800
+Message-Id: <20210704071644.107397-6-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210704071644.107397-1-leo.yan@linaro.org>
 References: <20210704071644.107397-1-leo.yan@linaro.org>
@@ -87,27 +87,83 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add barrier wmb() to separate the AUX data store and aux_head store.
+The main purpose for using __sync built-in functions is to support
+compat mode for 32-bit perf with 64-bit kernel.  But using these
+built-in functions might cause couple potential issues.
 
+Firstly, __sync functions originally support Intel Itanium processoer [1]
+but it cannot promise to support all 32-bit archs.  Now these
+functions have become the legacy functions.
+
+As Peter also pointed out the logic issue in the function
+auxtrace_mmap__write_tail(), it does a cmpxchg with 0 values to load
+old_tail, and then executes a further cmpxchg with old_tail to write
+the new tail.  If consider the aux_tail might be assigned to '0' in the
+middle of loops, this can introduce mess for AUX buffer if the kernel
+fetches the temporary value '0'.
+
+Considering __sync functions cannot really fix the 64-bit value
+atomicity on 32-bit archs, thus this patch drops __sync functions.
+
+Credits to Peter for detailed analysis.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/_005f_005fsync-Builtins.html#g_t_005f_005fsync-Builtins
+
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- arch/x86/events/intel/bts.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/auxtrace.h | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 6320d2cfd9d3..4a015d160bc5 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -209,6 +209,9 @@ static void bts_update(struct bts_ctx *bts)
- 	} else {
- 		local_set(&buf->data_size, head);
- 	}
-+
-+	/* The WMB separates data store and aux_head store matches. */
-+	wmb();
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index cc1c1b9cec9c..f489ca159997 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -440,12 +440,6 @@ struct auxtrace_cache;
+ 
+ #ifdef HAVE_AUXTRACE_SUPPORT
+ 
+-/*
+- * In snapshot mode the mmapped page is read-only which makes using
+- * __sync_val_compare_and_swap() problematic.  However, snapshot mode expects
+- * the buffer is not updated while the snapshot is made (e.g. Intel PT disables
+- * the event) so there is not a race anyway.
+- */
+ static inline u64 auxtrace_mmap__read_snapshot_head(struct auxtrace_mmap *mm)
+ {
+ 	struct perf_event_mmap_page *pc = mm->userpg;
+@@ -459,11 +453,7 @@ static inline u64 auxtrace_mmap__read_snapshot_head(struct auxtrace_mmap *mm)
+ static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
+ {
+ 	struct perf_event_mmap_page *pc = mm->userpg;
+-#if BITS_PER_LONG == 64 || !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
+ 	u64 head = READ_ONCE(pc->aux_head);
+-#else
+-	u64 head = __sync_val_compare_and_swap(&pc->aux_head, 0, 0);
+-#endif
+ 
+ 	/* Ensure all reads are done after we read the head */
+ 	smp_rmb();
+@@ -473,19 +463,10 @@ static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
+ static inline void auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail)
+ {
+ 	struct perf_event_mmap_page *pc = mm->userpg;
+-#if BITS_PER_LONG != 64 && defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
+-	u64 old_tail;
+-#endif
+ 
+ 	/* Ensure all reads are done before we write the tail out */
+ 	smp_mb();
+-#if BITS_PER_LONG == 64 || !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
+ 	pc->aux_tail = tail;
+-#else
+-	do {
+-		old_tail = __sync_val_compare_and_swap(&pc->aux_tail, 0, 0);
+-	} while (!__sync_bool_compare_and_swap(&pc->aux_tail, old_tail, tail));
+-#endif
  }
  
- static int
+ int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
 -- 
 2.25.1
 
