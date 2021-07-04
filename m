@@ -5,45 +5,45 @@ X-Spam-Level:
 X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F61BC07E95
-	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 23:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC4BC11F6D
+	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 23:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4C661993
-	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 23:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B766195B
+	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jul 2021 23:10:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231992AbhGDXMm (ORCPT
+        id S232820AbhGDXNT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Jul 2021 19:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48918 "EHLO mail.kernel.org"
+        Sun, 4 Jul 2021 19:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231453AbhGDXJo (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Jul 2021 19:09:44 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 467D46194A;
-        Sun,  4 Jul 2021 23:07:03 +0000 (UTC)
+        id S232376AbhGDXMV (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Sun, 4 Jul 2021 19:12:21 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E45FA61474;
+        Sun,  4 Jul 2021 23:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1625440024;
-        bh=Vys9mD3EkaYftCei4LNcZ76AI27GxMfOdMxo5nT9LRM=;
+        s=k20201202; t=1625440128;
+        bh=kUZsgb8dfS/8kleJfRU5m1xSp/sKoanlCexjaXBYWZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SV/7DI1R/eDzJ8DcGtWXvjwXJPHbbP8T/4dRV8TmgoWyfXiA/9W+UxqHszT5yV2kk
-         p9vDEj/883OkxRD5lw+04E1PGs+LHJQfDvrx2sZFpPDimN5GmriZhVFqFZ0ufSfXCM
-         5eKRWlr8ykC6R7ycQk0cptwAfjV9xm16RUcPaZgpq1d1WTBzI9+01DFzbiO0EQuPba
-         d0mgwnHSDnuJkN27+7WQJJGRMS5UFQD6AWIbG71BAJV0cP4TXsyDM2oxOtYFyNS9dl
-         FGunRFmXv7/Y6qMDKATyPNyJqUC/UISWbHRLPqHorW4cnbbrsti2xZppKZ7dQut/rX
-         S1o+K56YOUh2g==
+        b=AVanrqIi2i2aG3J29D6AQTTczjp7zGzNTNuDkbC8TgpwFL2knfogvqEeMY5nuJv+x
+         yK18kO78ew7s/KYRfnWQONb7hcJE0bGaZsRWjZw5ApZU4GkIzqVJbK64G8HF+rR126
+         sAPTvZMc3hO6DVIR6e36NL4SPuL0KTNINgd73uRLvnhWb6zmoA9fiMGVyhX/j4jNn8
+         I5vMvkxN0/We2tvuc6lhQWgatTAxE9I5kkV7u99SJI43IW1s0EqXpPXVWks8gbasl+
+         ffC1JXLt5kSJGSrPzHsQv1sETHnG/WAoKwIVWTQUTz0bhRaEy3EA16R8BNKOYB8reE
+         hufTV+16BSp0w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Tian Tao <tiantao6@hisilicon.com>, Will Deacon <will@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
         linux-perf-users@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.12 34/80] arm64: perf: Convert snprintf to sysfs_emit
-Date:   Sun,  4 Jul 2021 19:05:30 -0400
-Message-Id: <20210704230616.1489200-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 32/70] arm64: perf: Convert snprintf to sysfs_emit
+Date:   Sun,  4 Jul 2021 19:07:25 -0400
+Message-Id: <20210704230804.1490078-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210704230616.1489200-1-sashal@kernel.org>
-References: <20210704230616.1489200-1-sashal@kernel.org>
+In-Reply-To: <20210704230804.1490078-1-sashal@kernel.org>
+References: <20210704230804.1490078-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 4658fcf88c2b..3baca49fcf6b 100644
+index 11852e05ee32..cdb3d4549b3a 100644
 --- a/arch/arm64/kernel/perf_event.c
 +++ b/arch/arm64/kernel/perf_event.c
 @@ -312,7 +312,7 @@ static ssize_t slots_show(struct device *dev, struct device_attribute *attr,
