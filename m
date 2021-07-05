@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB526C07E9B
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD0BAC07E99
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE30C61978
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFE560FD8
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229783AbhGEX2w (ORCPT
+        id S230150AbhGEX26 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jul 2021 19:28:52 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:57629 "EHLO
+        Mon, 5 Jul 2021 19:28:58 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:58827 "EHLO
         relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbhGEX2u (ORCPT
+        with ESMTP id S229942AbhGEX25 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jul 2021 19:28:50 -0400
+        Mon, 5 Jul 2021 19:28:57 -0400
 Received: (Authenticated sender: edwin@etorok.net)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 08462200004;
-        Mon,  5 Jul 2021 23:26:10 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id F3EAA200009;
+        Mon,  5 Jul 2021 23:26:16 +0000 (UTC)
 From:   =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>
 To:     linux-riscv@lists.infradead.org
 Cc:     =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>,
@@ -35,10 +35,14 @@ Cc:     =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/4] tools/perf/arch/riscv: record registers needed for --call-graph=dwarf
-Date:   Tue,  6 Jul 2021 00:25:21 +0100
-Message-Id: <20210705232524.4024832-2-edwin@etorok.net>
+        Rob Herring <robh@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Fabian Hemmer <copy@copy.sh>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org
+Subject: [PATCH 4/4] tools/perf/arch/riscv: add libdw unwind test
+Date:   Tue,  6 Jul 2021 00:25:24 +0100
+Message-Id: <20210705232524.4024832-5-edwin@etorok.net>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210705232524.4024832-1-edwin@etorok.net>
 References: <20210705232524.4024832-1-edwin@etorok.net>
@@ -49,72 +53,19 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For libdw-based callgraph sampling to work we need to sample registers.
+Based on arm64/tests, adapted to RISC-V
 
-Tested on HiFive Unmatched with a trunk version of OCaml:
+Tested that it passes on HiFive Unmatched:
 ```
- # perf record --user-regs=?
-available registers: pc ra sp gp tp t0 t1 t2 s0 s1 a0 a1 a2 a3 a4 a5 a6 a7
- s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 t3 t4 t5 t6
-
- # sed -e 's/(\*\*//' -e 's/\*\*)//' \
-testsuite/tests/misc-unsafe/almabench.ml >almabench_benchmark.ml
- # ocamlopt almabench_benchmark.ml -unsafe -o almabench_benchmark
- # perf record -e cpu-clock -v --call-graph=dwarf -F 99 \
-./almabench_benchmark
-
-callchain: type DWARF
-callchain: stack dump size 8192
-nr_cblocks: 0
-affinity: SYS
-mmap flush: 1
-comp level: 0
-mmap size 528384B
-mmap size 528384B
-Control descriptor is not initialized
-0 17.00 -26.06
-1 12.34 1.29
-2 6.83 22.95
-3 0.04 -1.26
-4 2.30 12.54
-5 2.93 14.35
-6 21.27 -16.57
-7 20.41 -19.04
-[ perf record: Woken up 65 times to write data ]
-Looking at the vmlinux_path (8 entries long)
-Failed to open /proc/kcore.
-Note /proc/kcore requires CAP_SYS_RAWIO capability to access.
-Using /proc/kallsyms for symbols
-failed to write feature CPUDESC
-failed to write feature CPUID
-failed to write feature NUMA_TOPOLOGY
-failed to write feature MEM_TOPOLOGY
-[ perf record: Captured and wrote 16.265 MB perf.data (1997 samples) ]
-
- # perf script
-...
-almabench_bench  1193 14816.399235:   10101010 cpu-clock:
- 3fbbd63d54 reduce_sincos+0x268 (inlined)
- 3fbbd63d54 __cos+0x268 (/lib/libm-2.33.so)
- 2aac4b261b Almabench_benchmark.planetpv+0x25f
-    (/home/root/ocaml/almabench_benchmark)
- 2aac4b3e03 Almabench_benchmark.entry+0x12bb
-    (/home/root/ocaml/almabench_benchmark)
- 2aac4b0097 caml_program+0x143
-    (/home/root/ocaml/almabench_benchmark)
- 2aac4e4e3d caml_start_program+0x71
-    (/home/root/ocaml/almabench_benchmark)
- 2aac4e5409 caml_startup_common+0x18f
-    (/home/root/ocaml/almabench_benchmark)
- 2aac4e5465 caml_startup_exn+0x9 (inlined)
- 2aac4e5465 caml_startup+0x9 (inlined)
- 2aac4e5465 caml_main+0x9
-    (/home/root/ocaml/almabench_benchmark)
- 2aac4afe89 main+0x9
-    (/home/root/ocaml/almabench_benchmark)
- 3fbbc47b0b __libc_start_main+0x85 (/lib/libc-2.33.so)
- 2aac4afebb _start+0x2b (/home/root/ocaml/almabench_benchmark)
+root@unmatched:~# perf test unwind
+72: DWARF unwind                                                    : Ok
 ```
+
+Depends on commits:
+commit 92f29febffc8 ("perf tests: Consolidate test__arch_unwind_sample
+                      declaration")
+commit ce23ffdfb58d ("tools/perf: add riscv perf_regs.h to
+                      check_headers.sh")
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -124,55 +75,233 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Paul Walmsley <paul.walmsley@sifive.com>
 Cc: Palmer Dabbelt <palmer@dabbelt.com>
 Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Rob Herring <robh@kernel.org>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Fabian Hemmer <copy@copy.sh>
+Cc: Remi Bernon <rbernon@codeweavers.com>
+Cc: Leo Yan <leo.yan@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-riscv@lists.infradead.org
 Signed-off-by: Edwin Török <edwin@etorok.net>
 ---
- tools/perf/arch/riscv/util/perf_regs.c | 32 ++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ tools/perf/arch/riscv/Build                |  1 +
+ tools/perf/arch/riscv/include/arch-tests.h | 12 +++++
+ tools/perf/arch/riscv/include/perf_regs.h  |  2 +
+ tools/perf/arch/riscv/tests/Build          |  4 ++
+ tools/perf/arch/riscv/tests/arch-tests.c   | 16 ++++++
+ tools/perf/arch/riscv/tests/dwarf-unwind.c | 63 ++++++++++++++++++++++
+ tools/perf/arch/riscv/tests/regs_load.S    | 45 ++++++++++++++++
+ tools/perf/tests/Build                     |  2 +-
+ 8 files changed, 144 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/riscv/include/arch-tests.h
+ create mode 100644 tools/perf/arch/riscv/tests/Build
+ create mode 100644 tools/perf/arch/riscv/tests/arch-tests.c
+ create mode 100644 tools/perf/arch/riscv/tests/dwarf-unwind.c
+ create mode 100644 tools/perf/arch/riscv/tests/regs_load.S
 
-diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
-index 2864e2e3776d..8c9f511e8322 100644
---- a/tools/perf/arch/riscv/util/perf_regs.c
-+++ b/tools/perf/arch/riscv/util/perf_regs.c
-@@ -2,5 +2,37 @@
- #include "../../util/perf_regs.h"
+diff --git a/tools/perf/arch/riscv/Build b/tools/perf/arch/riscv/Build
+index e4e5f33c84d8..a7dd46a5b678 100644
+--- a/tools/perf/arch/riscv/Build
++++ b/tools/perf/arch/riscv/Build
+@@ -1 +1,2 @@
+ perf-y += util/
++perf-y += tests/
+diff --git a/tools/perf/arch/riscv/include/arch-tests.h b/tools/perf/arch/riscv/include/arch-tests.h
+new file mode 100644
+index 000000000000..90ec4c8cb880
+--- /dev/null
++++ b/tools/perf/arch/riscv/include/arch-tests.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef ARCH_TESTS_H
++#define ARCH_TESTS_H
++
++#ifdef HAVE_DWARF_UNWIND_SUPPORT
++struct thread;
++struct perf_sample;
++#endif
++
++extern struct test arch_tests[];
++
++#endif
+diff --git a/tools/perf/arch/riscv/include/perf_regs.h b/tools/perf/arch/riscv/include/perf_regs.h
+index 6b02a767c918..e22c51078a59 100644
+--- a/tools/perf/arch/riscv/include/perf_regs.h
++++ b/tools/perf/arch/riscv/include/perf_regs.h
+@@ -8,6 +8,8 @@
+ #include <linux/types.h>
+ #include <asm/perf_regs.h>
  
- const struct sample_reg sample_reg_masks[] = {
-+	SMPL_REG(pc, PERF_REG_RISCV_PC),
-+	SMPL_REG(ra, PERF_REG_RISCV_RA),
-+	SMPL_REG(sp, PERF_REG_RISCV_SP),
-+	SMPL_REG(gp, PERF_REG_RISCV_GP),
-+	SMPL_REG(tp, PERF_REG_RISCV_TP),
-+	SMPL_REG(t0, PERF_REG_RISCV_T0),
-+	SMPL_REG(t1, PERF_REG_RISCV_T1),
-+	SMPL_REG(t2, PERF_REG_RISCV_T2),
-+	SMPL_REG(s0, PERF_REG_RISCV_S0),
-+	SMPL_REG(s1, PERF_REG_RISCV_S1),
-+	SMPL_REG(a0, PERF_REG_RISCV_A0),
-+	SMPL_REG(a1, PERF_REG_RISCV_A1),
-+	SMPL_REG(a2, PERF_REG_RISCV_A2),
-+	SMPL_REG(a3, PERF_REG_RISCV_A3),
-+	SMPL_REG(a4, PERF_REG_RISCV_A4),
-+	SMPL_REG(a5, PERF_REG_RISCV_A5),
-+	SMPL_REG(a6, PERF_REG_RISCV_A6),
-+	SMPL_REG(a7, PERF_REG_RISCV_A7),
-+	SMPL_REG(s2, PERF_REG_RISCV_S2),
-+	SMPL_REG(s3, PERF_REG_RISCV_S3),
-+	SMPL_REG(s4, PERF_REG_RISCV_S4),
-+	SMPL_REG(s5, PERF_REG_RISCV_S5),
-+	SMPL_REG(s6, PERF_REG_RISCV_S6),
-+	SMPL_REG(s7, PERF_REG_RISCV_S7),
-+	SMPL_REG(s8, PERF_REG_RISCV_S8),
-+	SMPL_REG(s9, PERF_REG_RISCV_S9),
-+	SMPL_REG(s10, PERF_REG_RISCV_S10),
-+	SMPL_REG(s11, PERF_REG_RISCV_S11),
-+	SMPL_REG(t3, PERF_REG_RISCV_T3),
-+	SMPL_REG(t4, PERF_REG_RISCV_T4),
-+	SMPL_REG(t5, PERF_REG_RISCV_T5),
-+	SMPL_REG(t6, PERF_REG_RISCV_T6),
- 	SMPL_REG_END
- };
++void perf_regs_load(u64 *regs);
++
+ #define PERF_REGS_MASK	((1ULL << PERF_REG_RISCV_MAX) - 1)
+ #define PERF_REGS_MAX	PERF_REG_RISCV_MAX
+ #if __riscv_xlen == 64
+diff --git a/tools/perf/arch/riscv/tests/Build b/tools/perf/arch/riscv/tests/Build
+new file mode 100644
+index 000000000000..3526ab0af9f9
+--- /dev/null
++++ b/tools/perf/arch/riscv/tests/Build
+@@ -0,0 +1,4 @@
++perf-$(CONFIG_DWARF_UNWIND) += regs_load.o
++perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
++
++perf-y += arch-tests.o
+diff --git a/tools/perf/arch/riscv/tests/arch-tests.c b/tools/perf/arch/riscv/tests/arch-tests.c
+new file mode 100644
+index 000000000000..5b1543c98022
+--- /dev/null
++++ b/tools/perf/arch/riscv/tests/arch-tests.c
+@@ -0,0 +1,16 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <string.h>
++#include "tests/tests.h"
++#include "arch-tests.h"
++
++struct test arch_tests[] = {
++#ifdef HAVE_DWARF_UNWIND_SUPPORT
++	{
++		.desc = "DWARF unwind",
++		.func = test__dwarf_unwind,
++	},
++#endif
++	{
++		.func = NULL,
++	},
++};
+diff --git a/tools/perf/arch/riscv/tests/dwarf-unwind.c b/tools/perf/arch/riscv/tests/dwarf-unwind.c
+new file mode 100644
+index 000000000000..4792ecdb23c3
+--- /dev/null
++++ b/tools/perf/arch/riscv/tests/dwarf-unwind.c
+@@ -0,0 +1,63 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <string.h>
++#include "perf_regs.h"
++#include "thread.h"
++#include "map.h"
++#include "maps.h"
++#include "event.h"
++#include "debug.h"
++#include "tests/tests.h"
++
++#define STACK_SIZE 8192
++
++static int sample_ustack(struct perf_sample *sample,
++			 struct thread *thread, u64 *regs)
++{
++	struct stack_dump *stack = &sample->user_stack;
++	struct map *map;
++	unsigned long sp;
++	u64 stack_size, *buf;
++
++	buf = malloc(STACK_SIZE);
++	if (!buf) {
++		pr_debug("failed to allocate sample uregs data\n");
++		return -1;
++	}
++
++	sp = (unsigned long) regs[PERF_REG_RISCV_SP];
++
++	map = maps__find(thread->maps, (u64)sp);
++	if (!map) {
++		pr_debug("failed to get stack map\n");
++		free(buf);
++		return -1;
++	}
++
++	stack_size = map->end - sp;
++	stack_size = stack_size > STACK_SIZE ? STACK_SIZE : stack_size;
++
++	memcpy(buf, (void *) sp, stack_size);
++	stack->data = (char *) buf;
++	stack->size = stack_size;
++	return 0;
++}
++
++int test__arch_unwind_sample(struct perf_sample *sample,
++		struct thread *thread)
++{
++	struct regs_dump *regs = &sample->user_regs;
++	u64 *buf;
++
++	buf = calloc(1, sizeof(u64) * PERF_REGS_MAX);
++	if (!buf) {
++		pr_debug("failed to allocate sample uregs data\n");
++		return -1;
++	}
++
++	perf_regs_load(buf);
++	regs->abi  = PERF_SAMPLE_REGS_ABI;
++	regs->regs = buf;
++	regs->mask = PERF_REGS_MASK;
++
++	return sample_ustack(sample, thread, buf);
++}
+diff --git a/tools/perf/arch/riscv/tests/regs_load.S b/tools/perf/arch/riscv/tests/regs_load.S
+new file mode 100644
+index 000000000000..a603baa4f0f8
+--- /dev/null
++++ b/tools/perf/arch/riscv/tests/regs_load.S
+@@ -0,0 +1,45 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <linux/linkage.h>
++
++.text
++.type perf_regs_load,%function
++
++#define STR_REG(r)	sd x##r, (__riscv_xlen/8 * r)(a0)
++#define PC	0
++
++/* Must match order in perf_regs.h */
++SYM_FUNC_START(perf_regs_load)
++	sd ra, PC(a0) # skip call to this function
++	STR_REG(1)
++	STR_REG(2)
++	STR_REG(3)
++	STR_REG(4)
++	STR_REG(5)
++	STR_REG(6)
++	STR_REG(7)
++	STR_REG(8)
++	STR_REG(9)
++	STR_REG(10)
++	STR_REG(11)
++	STR_REG(12)
++	STR_REG(13)
++	STR_REG(14)
++	STR_REG(15)
++	STR_REG(16)
++	STR_REG(17)
++	STR_REG(18)
++	STR_REG(19)
++	STR_REG(20)
++	STR_REG(21)
++	STR_REG(22)
++	STR_REG(23)
++	STR_REG(24)
++	STR_REG(25)
++	STR_REG(26)
++	STR_REG(27)
++	STR_REG(28)
++	STR_REG(29)
++	STR_REG(30)
++	STR_REG(31)
++	ret
++SYM_FUNC_END(perf_regs_load)
+diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+index 650aec19d490..77ac9add4ed8 100644
+--- a/tools/perf/tests/Build
++++ b/tools/perf/tests/Build
+@@ -93,7 +93,7 @@ $(OUTPUT)tests/llvm-src-relocation.c: tests/bpf-script-test-relocation.c tests/B
+ 	$(Q)sed -e 's/"/\\"/g' -e 's/\(.*\)/"\1\\n"/g' $< >> $@
+ 	$(Q)echo ';' >> $@
+ 
+-ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc))
++ifeq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc riscv))
+ perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ endif
+ 
 -- 
 2.31.1
 
