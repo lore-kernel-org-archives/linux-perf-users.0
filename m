@@ -2,100 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-26.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9F4C07E98
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 07:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782C5C07E99
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 08:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95291613CB
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 07:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF68613C9
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 08:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230018AbhGEH04 (ORCPT
+        id S230169AbhGEIrn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jul 2021 03:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41392 "EHLO
+        Mon, 5 Jul 2021 04:47:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbhGEH0z (ORCPT
+        with ESMTP id S230101AbhGEIrm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jul 2021 03:26:55 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E35C061574;
-        Mon,  5 Jul 2021 00:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=l4TRaWRlSaYwqKlv2XNWBZV4iLCdRyV4Sdpw7BqXo1k=; b=Mt/xdxwJmlveT1KV/aLVl+gDEK
-        gQOVhj9Q2OxT37O7HkcVjXZd5a/eJ8H09jiEIxz84b/TjOSuvi6/olQMPQoUWNavJDGVtcsHMOXaQ
-        A4AH5wgW2hxd9txVdyy84L6ThrzfWgpRH6PsUjIA2dymtnFOxdztjDGzGtRSAILP1SHyeSs6l3tfv
-        Ss9Tew1HK4LXJ7jqBoTLJs/C//bZ+gLKEcBwBZPR49Gwh9c//p2JKc4suQnFppt2su+BDUyOxZqCa
-        OqX+4Rk+XuqgQufL+32yamqYeYJ6MFMdYgpG9FbGopyE4NZmFrEA0O8rFp8HX61sfEQWfQDDoHoYx
-        NnI7i8Tg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1m0IxW-00EdfM-R9; Mon, 05 Jul 2021 07:24:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0DD47300209;
-        Mon,  5 Jul 2021 09:24:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C95B02B8EDE50; Mon,  5 Jul 2021 09:24:00 +0200 (CEST)
-Date:   Mon, 5 Jul 2021 09:24:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
-        Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/3] perf/x86: Add new event for AUX output counter
- index
-Message-ID: <YOKzkPQ5gAeLUTnY@hirez.programming.kicks-ass.net>
-References: <20210701131732.31602-1-adrian.hunter@intel.com>
- <20210701131732.31602-2-adrian.hunter@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210701131732.31602-2-adrian.hunter@intel.com>
+        Mon, 5 Jul 2021 04:47:42 -0400
+Received: from mail-lj1-x24a.google.com (mail-lj1-x24a.google.com [IPv6:2a00:1450:4864:20::24a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E44C061760
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jul 2021 01:45:06 -0700 (PDT)
+Received: by mail-lj1-x24a.google.com with SMTP id 70-20020a2e09490000b02901827163ceefso1496022ljj.18
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jul 2021 01:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=XT1F6bsaZFgcmmxxyjZZuJTZD371QBzAaF2qKad4ZRA=;
+        b=vN2Y2GrXM9wFYnK8wro/zQ6xDDmrrViyrbnBQ/4RMgPlUiGyKcoYBPaG1wATVX1mUc
+         HLLbWWydLEqq+/RJ8CvpnNaii17d0JfOUVy3Mc9JbwsqeWqH7aKWjt7xHWqLYzdP6USq
+         myjSXPGUDxoAoC8er0ihCXFL4B1umZj8KSlEd2WQOO/OF3SD6fsbJlMNS+levqcWDZtE
+         P717hU7sFwpkOAu26fqpZOF5y9tekPitlEOa4PDHMpZcjdYNS0otmoJBrj16WB4XXwx7
+         yHqFBHAIswo7fFD3lYb5dIXaxP2ZnUxMyfYPPD+auIZzPgWS5+50kXLs82lARyxwGE1o
+         8LOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=XT1F6bsaZFgcmmxxyjZZuJTZD371QBzAaF2qKad4ZRA=;
+        b=RniTORGmk2g1PZfcFMlRv/fc+ofiKFjC/P/hOTy8x0xquXCvYVTIXlxNEdDab3Z/a6
+         8oKHHSGAb3r7VRaa9aRBBRxPEd+bsop9/eUUy7GvvBb84hL7zZ1or1rVb04IbIlCV1hE
+         s+e5HBZzCZf53mK4JGPcc7+OCWC4IvKT3LFq1VsHvr9F2P/JCYjNmZ5wYTFiks6E95s8
+         1+psP0PiW382kGuhXCrkitLKAaqyFuTyGOL7yqC6tgpsoxQnKrp/RipCyxQTR3uuNBSK
+         K+2ps26nTQdkEoGJjijdi2cNg81mxpKlDCAFP0NsSkcL9N9cDmPc3WHS4sI53L3zyQwj
+         6iqg==
+X-Gm-Message-State: AOAM531Hii474nzuJt+ByyYyS8sLHXjJBvUMMXZKLJ5OnPL7YbV2vhXj
+        z/Z2xmOyRStSSw4bI9gRiVwJg32jfg==
+X-Google-Smtp-Source: ABdhPJwJJ8IYO0yfnhbmAMrM9usbbtUz3OfJO2G4Ka8fzvRpGpNhtc7thfb1yiXSp6CO0GpfORq4d5EOjA==
+X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:dddd:647c:7745:e5f7])
+ (user=elver job=sendgmr) by 2002:a19:6d01:: with SMTP id i1mr10104024lfc.422.1625474704103;
+ Mon, 05 Jul 2021 01:45:04 -0700 (PDT)
+Date:   Mon,  5 Jul 2021 10:44:52 +0200
+Message-Id: <20210705084453.2151729-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.32.0.93.g670b81a890-goog
+Subject: [PATCH v3 1/2] perf: Fix required permissions if sigtrap is requested
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com, peterz@infradead.org
+Cc:     tglx@linutronix.de, mingo@kernel.org, dvyukov@google.com,
+        glider@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, ebiederm@xmission.com,
+        omosnace@redhat.com, serge@hallyn.com,
+        linux-security-module@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 01, 2021 at 04:17:30PM +0300, Adrian Hunter wrote:
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index e28892270c58..7a7c3b18acec 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -2400,6 +2400,12 @@ static void intel_pmu_disable_event(struct perf_event *event)
->  		intel_pmu_pebs_disable(event);
->  }
->  
-> +static void intel_pmu_assign_event(struct perf_event *event, int idx)
-> +{
-> +	if (is_pebs_pt(event))
-> +		perf_report_aux_output_id(event, idx);
-> +}
-> +
->  static void intel_pmu_del_event(struct perf_event *event)
->  {
->  	if (needs_branch_stack(event))
-> @@ -4596,6 +4602,7 @@ static __initconst const struct x86_pmu intel_pmu = {
->  	.enable_all		= intel_pmu_enable_all,
->  	.enable			= intel_pmu_enable_event,
->  	.disable		= intel_pmu_disable_event,
-> +	.assign			= intel_pmu_assign_event,
->  	.add			= intel_pmu_add_event,
->  	.del			= intel_pmu_del_event,
->  	.read			= intel_pmu_read_event,
+If perf_event_open() is called with another task as target and
+perf_event_attr::sigtrap is set, and the target task's user does not
+match the calling user, also require the CAP_KILL capability or
+PTRACE_MODE_ATTACH permissions.
 
-How about we only set that method (or clear it again) when
-intel_cap.pebs_output_pt_available ?
+Otherwise, with the CAP_PERFMON capability alone it would be possible
+for a user to send SIGTRAP signals via perf events to another user's
+tasks. This could potentially result in those tasks being terminated if
+they cannot handle SIGTRAP signals.
 
-Other than that, this looks good to me.
+Note: The check complements the existing capability check, but is not
+supposed to supersede the ptrace_may_access() check. At a high level we
+now have:
+
+	capable of CAP_PERFMON and (CAP_KILL if sigtrap)
+		OR
+	ptrace_may_access(...) // also checks for same thread-group and uid
+
+Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
+Cc: <stable@vger.kernel.org> # 5.13+
+Reported-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Marco Elver <elver@google.com>
+---
+v3:
+* Upgrade ptrace mode check to ATTACH if attr.sigtrap, otherwise it's
+  possible to change the target task (send signal) even if only read
+  ptrace permissions were granted (reported by Eric W. Biederman).
+
+v2: https://lkml.kernel.org/r/20210701083842.580466-1-elver@google.com
+* Drop kill_capable() and just check CAP_KILL (reported by Ondrej Mosnacek).
+* Use ns_capable(__task_cred(task)->user_ns, CAP_KILL) to check for
+  capability in target task's ns (reported by Ondrej Mosnacek).
+
+v1: https://lkml.kernel.org/r/20210630093709.3612997-1-elver@google.com
+---
+ kernel/events/core.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index fe88d6eea3c2..f79ee82e644a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12152,10 +12152,33 @@ SYSCALL_DEFINE5(perf_event_open,
+ 	}
+ 
+ 	if (task) {
++		unsigned int ptrace_mode = PTRACE_MODE_READ_REALCREDS;
++		bool is_capable;
++
+ 		err = down_read_interruptible(&task->signal->exec_update_lock);
+ 		if (err)
+ 			goto err_file;
+ 
++		is_capable = perfmon_capable();
++		if (attr.sigtrap) {
++			/*
++			 * perf_event_attr::sigtrap sends signals to the other
++			 * task. Require the current task to also have
++			 * CAP_KILL.
++			 */
++			rcu_read_lock();
++			is_capable &= ns_capable(__task_cred(task)->user_ns, CAP_KILL);
++			rcu_read_unlock();
++
++			/*
++			 * If the required capabilities aren't available, checks
++			 * for ptrace permissions: upgrade to ATTACH, since
++			 * sending signals can effectively change the target
++			 * task.
++			 */
++			ptrace_mode = PTRACE_MODE_ATTACH_REALCREDS;
++		}
++
+ 		/*
+ 		 * Preserve ptrace permission check for backwards compatibility.
+ 		 *
+@@ -12165,7 +12188,7 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		 * perf_event_exit_task() that could imply).
+ 		 */
+ 		err = -EACCES;
+-		if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
++		if (!is_capable && !ptrace_may_access(task, ptrace_mode))
+ 			goto err_cred;
+ 	}
+ 
+-- 
+2.32.0.93.g670b81a890-goog
+
