@@ -2,47 +2,46 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078F7C07E99
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB526C07E9B
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF12661964
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE30C61978
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbhGEX2s (ORCPT
+        id S229783AbhGEX2w (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jul 2021 19:28:48 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:33913 "EHLO
+        Mon, 5 Jul 2021 19:28:52 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:57629 "EHLO
         relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229783AbhGEX2r (ORCPT
+        with ESMTP id S229942AbhGEX2u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jul 2021 19:28:47 -0400
+        Mon, 5 Jul 2021 19:28:50 -0400
 Received: (Authenticated sender: edwin@etorok.net)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6AA45200003;
-        Mon,  5 Jul 2021 23:26:04 +0000 (UTC)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 08462200004;
+        Mon,  5 Jul 2021 23:26:10 +0000 (UTC)
 From:   =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>
 To:     linux-riscv@lists.infradead.org
 Cc:     =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Fabian Hemmer <copy@copy.sh>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Rob Herring <robh@kernel.org>, linux-perf-users@vger.kernel.org
-Subject: [PATCH 0/4] RISC-V: make perf record --call-graph=dwarf work
-Date:   Tue,  6 Jul 2021 00:25:20 +0100
-Message-Id: <20210705232524.4024832-1-edwin@etorok.net>
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/4] tools/perf/arch/riscv: record registers needed for --call-graph=dwarf
+Date:   Tue,  6 Jul 2021 00:25:21 +0100
+Message-Id: <20210705232524.4024832-2-edwin@etorok.net>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20210705232524.4024832-1-edwin@etorok.net>
+References: <20210705232524.4024832-1-edwin@etorok.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -50,13 +49,9 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently perf on RISC-V cannot gather callgraphs when built without frame pointers.
-After this series is applied, and using a trunk version of OCaml (which emits DWARF CFI)
-I can successfully get callgraphs from an OCaml program.
+For libdw-based callgraph sampling to work we need to sample registers.
 
-Note that the default cpu-cycles event doesn't work, but that is unrelated.
-
-Tested on HiFive Unmatched:
+Tested on HiFive Unmatched with a trunk version of OCaml:
 ```
  # perf record --user-regs=?
 available registers: pc ra sp gp tp t0 t1 t2 s0 s1 a0 a1 a2 a3 a4 a5 a6 a7
@@ -121,48 +116,63 @@ almabench_bench  1193 14816.399235:   10101010 cpu-clock:
  2aac4afebb _start+0x2b (/home/root/ocaml/almabench_benchmark)
 ```
 
-Edwin Török (4):
-  tools/perf/arch/riscv: record registers needed for --call-graph=dwarf
-  tools/perf: add riscv perf_regs.h to check_headers.sh
-  MAINTAINERS: add tools/perf/arch/riscv
-  tools/perf/arch/riscv: add libdw unwind test
-
- MAINTAINERS                                |  1 +
- tools/perf/arch/riscv/Build                |  1 +
- tools/perf/arch/riscv/include/arch-tests.h | 12 +++++
- tools/perf/arch/riscv/include/perf_regs.h  |  2 +
- tools/perf/arch/riscv/tests/Build          |  4 ++
- tools/perf/arch/riscv/tests/arch-tests.c   | 16 ++++++
- tools/perf/arch/riscv/tests/dwarf-unwind.c | 63 ++++++++++++++++++++++
- tools/perf/arch/riscv/tests/regs_load.S    | 45 ++++++++++++++++
- tools/perf/arch/riscv/util/perf_regs.c     | 32 +++++++++++
- tools/perf/check-headers.sh                |  1 +
- tools/perf/tests/Build                     |  2 +-
- 11 files changed, 178 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/arch/riscv/include/arch-tests.h
- create mode 100644 tools/perf/arch/riscv/tests/Build
- create mode 100644 tools/perf/arch/riscv/tests/arch-tests.c
- create mode 100644 tools/perf/arch/riscv/tests/dwarf-unwind.c
- create mode 100644 tools/perf/arch/riscv/tests/regs_load.S
-
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Fabian Hemmer <copy@copy.sh>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Remi Bernon <rbernon@codeweavers.com>
-Cc: Rob Herring <robh@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-riscv@lists.infradead.org
-base-commit: c76826a65f50038f050424365dbf3f97203f8710
-prerequisite-patch-id: 7144f880f49c60cdec11fcbae019e764ba37a73d
+Signed-off-by: Edwin Török <edwin@etorok.net>
+---
+ tools/perf/arch/riscv/util/perf_regs.c | 32 ++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+index 2864e2e3776d..8c9f511e8322 100644
+--- a/tools/perf/arch/riscv/util/perf_regs.c
++++ b/tools/perf/arch/riscv/util/perf_regs.c
+@@ -2,5 +2,37 @@
+ #include "../../util/perf_regs.h"
+ 
+ const struct sample_reg sample_reg_masks[] = {
++	SMPL_REG(pc, PERF_REG_RISCV_PC),
++	SMPL_REG(ra, PERF_REG_RISCV_RA),
++	SMPL_REG(sp, PERF_REG_RISCV_SP),
++	SMPL_REG(gp, PERF_REG_RISCV_GP),
++	SMPL_REG(tp, PERF_REG_RISCV_TP),
++	SMPL_REG(t0, PERF_REG_RISCV_T0),
++	SMPL_REG(t1, PERF_REG_RISCV_T1),
++	SMPL_REG(t2, PERF_REG_RISCV_T2),
++	SMPL_REG(s0, PERF_REG_RISCV_S0),
++	SMPL_REG(s1, PERF_REG_RISCV_S1),
++	SMPL_REG(a0, PERF_REG_RISCV_A0),
++	SMPL_REG(a1, PERF_REG_RISCV_A1),
++	SMPL_REG(a2, PERF_REG_RISCV_A2),
++	SMPL_REG(a3, PERF_REG_RISCV_A3),
++	SMPL_REG(a4, PERF_REG_RISCV_A4),
++	SMPL_REG(a5, PERF_REG_RISCV_A5),
++	SMPL_REG(a6, PERF_REG_RISCV_A6),
++	SMPL_REG(a7, PERF_REG_RISCV_A7),
++	SMPL_REG(s2, PERF_REG_RISCV_S2),
++	SMPL_REG(s3, PERF_REG_RISCV_S3),
++	SMPL_REG(s4, PERF_REG_RISCV_S4),
++	SMPL_REG(s5, PERF_REG_RISCV_S5),
++	SMPL_REG(s6, PERF_REG_RISCV_S6),
++	SMPL_REG(s7, PERF_REG_RISCV_S7),
++	SMPL_REG(s8, PERF_REG_RISCV_S8),
++	SMPL_REG(s9, PERF_REG_RISCV_S9),
++	SMPL_REG(s10, PERF_REG_RISCV_S10),
++	SMPL_REG(s11, PERF_REG_RISCV_S11),
++	SMPL_REG(t3, PERF_REG_RISCV_T3),
++	SMPL_REG(t4, PERF_REG_RISCV_T4),
++	SMPL_REG(t5, PERF_REG_RISCV_T5),
++	SMPL_REG(t6, PERF_REG_RISCV_T6),
+ 	SMPL_REG_END
+ };
 -- 
 2.31.1
 
