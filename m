@@ -2,113 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEB6C07E99
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 20:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078F7C07E99
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD0461961
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 20:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF12661964
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jul 2021 23:26:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbhGEUu4 (ORCPT
+        id S229824AbhGEX2s (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jul 2021 16:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbhGEUu4 (ORCPT
+        Mon, 5 Jul 2021 19:28:48 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:33913 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229783AbhGEX2r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jul 2021 16:50:56 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD931C061574;
-        Mon,  5 Jul 2021 13:48:17 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id u25so26117268ljj.11;
-        Mon, 05 Jul 2021 13:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JSiA5dyVn8zv0+eT4D7tVl3QtiwSLMc/3FaTxgI9gME=;
-        b=DK/4yX9kQqxPbVsJUNFEpx/Ad+HeaOjR9kQOdcGoxCP9UqNcruq1+KnMa8xY+VqKov
-         txOweGEupbFn8lqniF6EqC01CGAAPLvlNN7lXn4aeok/lQNQtC//rsZ71SFwwJng6tMo
-         WyD+qXCbEau9wMbtZV1l7YM4HorQeRci65zwYlNv0Yh+dFY/BkvJf3UTWu1XM+L2KV3i
-         xq0/MVLsUMz8atiG78qWEU7mFGRVN3pyUC1U+hJyg27Bi1dqP1qQdtIq761wpILFc5+u
-         QqDiTFZ8NTyFDnMCM45Ems+WPz2JwitIxYQO2+9a7kfd7h2sZhCod+RIHb6x5EMFdR4p
-         eLQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JSiA5dyVn8zv0+eT4D7tVl3QtiwSLMc/3FaTxgI9gME=;
-        b=tGoERNkgCTFIzOxC+rJs1edd64ugL1vMTQ4uSF8ztOMLaoScfZBVs5wIhB/ZdN091N
-         eKFTmsYOQ8wBqUqGMSFT7LsXhCJzL3vAahlYwiA6WgXAnadxAcelZ3eelRasqVb6Fh3g
-         HI7yzKtKFclxyd10yd1Atkja/EMJl8lE+FqU13O6ny++3aWm/QqQiNhBKwqnH13H3qan
-         Ly2QIcBuCLw3T0dlv4yuIGzy3m0OQ+eibOpRVlEAtqtx470GIFKatOwR4p6qg6a1bGIC
-         KA4/ApZQjOf6OpJcq9oPCJf3A+WSVcIieZWeixFjH6tuGjbJoen6kixnigIZZEH+L49i
-         agsA==
-X-Gm-Message-State: AOAM530pie3wGy4sbhh9m6W4c1rQijM+8IjM1MMzEYWQpM6XKPkmuss+
-        s9L4B02tccmOJSzlRdjwhY5uw4L6TMZSk8s9OMUWKrHf
-X-Google-Smtp-Source: ABdhPJwbLlhoav8nYitmyBR+jEf/eZMPDb/uuQ16xtijRvjENbzkRcnREFQnPaAcgQ8V6Khukm5gkdLIVL4WjxKniD0=
-X-Received: by 2002:a2e:8e6d:: with SMTP id t13mr12241177ljk.26.1625518096113;
- Mon, 05 Jul 2021 13:48:16 -0700 (PDT)
+        Mon, 5 Jul 2021 19:28:47 -0400
+Received: (Authenticated sender: edwin@etorok.net)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6AA45200003;
+        Mon,  5 Jul 2021 23:26:04 +0000 (UTC)
+From:   =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>
+To:     linux-riscv@lists.infradead.org
+Cc:     =?UTF-8?q?Edwin=20T=C3=B6r=C3=B6k?= <edwin@etorok.net>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fabian Hemmer <copy@copy.sh>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        John Garry <john.garry@huawei.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Remi Bernon <rbernon@codeweavers.com>,
+        Rob Herring <robh@kernel.org>, linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/4] RISC-V: make perf record --call-graph=dwarf work
+Date:   Tue,  6 Jul 2021 00:25:20 +0100
+Message-Id: <20210705232524.4024832-1-edwin@etorok.net>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <162532651032.393143.4602033845482295575.stgit@devnote2>
-In-Reply-To: <162532651032.393143.4602033845482295575.stgit@devnote2>
-From:   Namhyung Kim <namhyung@gmail.com>
-Date:   Mon, 5 Jul 2021 13:48:04 -0700
-Message-ID: <CAM9d7cj2H75byaNH-n4XeKbMu30j6_P3TAPwpoE9R1LXVTTSwQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] perf: Fix perf probe for Fedora34 glibc update
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Stefan Liebler <stli@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jul 3, 2021 at 8:36 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
->
-> Hi Arnaldo,
->
-> Here is a series of patches to fix the perf-probe error against the
-> Fedora34 glibc update, which moves most of symbols from .symtab to
-> .dynsym. The key is that the "most of" symbols moved, but it still
-> have some PLT symbols in .symtab. Thus the perf symbol-elf failes to
-> decode symbols.
+Currently perf on RISC-V cannot gather callgraphs when built without frame pointers.
+After this series is applied, and using a trunk version of OCaml (which emits DWARF CFI)
+I can successfully get callgraphs from an OCaml program.
 
-Do you know what's the rationale of the move?
-Is it a change from glibc or Fedora?
+Note that the default cpu-cycles event doesn't work, but that is unrelated.
 
-Thanks,
-Namhyung
+Tested on HiFive Unmatched:
+```
+ # perf record --user-regs=?
+available registers: pc ra sp gp tp t0 t1 t2 s0 s1 a0 a1 a2 a3 a4 a5 a6 a7
+ s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 t3 t4 t5 t6
 
+ # sed -e 's/(\*\*//' -e 's/\*\*)//' \
+testsuite/tests/misc-unsafe/almabench.ml >almabench_benchmark.ml
+ # ocamlopt almabench_benchmark.ml -unsafe -o almabench_benchmark
+ # perf record -e cpu-clock -v --call-graph=dwarf -F 99 \
+./almabench_benchmark
 
->
-> Here is the original report from Thomas about this issue.
->
->  https://lore.kernel.org/linux-perf-users/f6752514-eaf9-371e-f81b-0d9e41ebae0c@linux.ibm.com/
->
-> Thank you,
->
-> ---
->
-> Masami Hiramatsu (3):
->       perf-probe: Fix debuginfo__new() to enable build-id based debuginfo
->       perf symbol-elf: Decode dynsym even if symtab exists
->       perf probe: Do not show @plt function by default
->
->
->  tools/perf/builtin-probe.c     |    2 -
->  tools/perf/util/probe-finder.c |    5 ++
->  tools/perf/util/symbol-elf.c   |   82 ++++++++++++++++++++++++++--------------
->  3 files changed, 60 insertions(+), 29 deletions(-)
->
-> --
-> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+callchain: type DWARF
+callchain: stack dump size 8192
+nr_cblocks: 0
+affinity: SYS
+mmap flush: 1
+comp level: 0
+mmap size 528384B
+mmap size 528384B
+Control descriptor is not initialized
+0 17.00 -26.06
+1 12.34 1.29
+2 6.83 22.95
+3 0.04 -1.26
+4 2.30 12.54
+5 2.93 14.35
+6 21.27 -16.57
+7 20.41 -19.04
+[ perf record: Woken up 65 times to write data ]
+Looking at the vmlinux_path (8 entries long)
+Failed to open /proc/kcore.
+Note /proc/kcore requires CAP_SYS_RAWIO capability to access.
+Using /proc/kallsyms for symbols
+failed to write feature CPUDESC
+failed to write feature CPUID
+failed to write feature NUMA_TOPOLOGY
+failed to write feature MEM_TOPOLOGY
+[ perf record: Captured and wrote 16.265 MB perf.data (1997 samples) ]
+
+ # perf script
+...
+almabench_bench  1193 14816.399235:   10101010 cpu-clock:
+ 3fbbd63d54 reduce_sincos+0x268 (inlined)
+ 3fbbd63d54 __cos+0x268 (/lib/libm-2.33.so)
+ 2aac4b261b Almabench_benchmark.planetpv+0x25f
+    (/home/root/ocaml/almabench_benchmark)
+ 2aac4b3e03 Almabench_benchmark.entry+0x12bb
+    (/home/root/ocaml/almabench_benchmark)
+ 2aac4b0097 caml_program+0x143
+    (/home/root/ocaml/almabench_benchmark)
+ 2aac4e4e3d caml_start_program+0x71
+    (/home/root/ocaml/almabench_benchmark)
+ 2aac4e5409 caml_startup_common+0x18f
+    (/home/root/ocaml/almabench_benchmark)
+ 2aac4e5465 caml_startup_exn+0x9 (inlined)
+ 2aac4e5465 caml_startup+0x9 (inlined)
+ 2aac4e5465 caml_main+0x9
+    (/home/root/ocaml/almabench_benchmark)
+ 2aac4afe89 main+0x9
+    (/home/root/ocaml/almabench_benchmark)
+ 3fbbc47b0b __libc_start_main+0x85 (/lib/libc-2.33.so)
+ 2aac4afebb _start+0x2b (/home/root/ocaml/almabench_benchmark)
+```
+
+Edwin Török (4):
+  tools/perf/arch/riscv: record registers needed for --call-graph=dwarf
+  tools/perf: add riscv perf_regs.h to check_headers.sh
+  MAINTAINERS: add tools/perf/arch/riscv
+  tools/perf/arch/riscv: add libdw unwind test
+
+ MAINTAINERS                                |  1 +
+ tools/perf/arch/riscv/Build                |  1 +
+ tools/perf/arch/riscv/include/arch-tests.h | 12 +++++
+ tools/perf/arch/riscv/include/perf_regs.h  |  2 +
+ tools/perf/arch/riscv/tests/Build          |  4 ++
+ tools/perf/arch/riscv/tests/arch-tests.c   | 16 ++++++
+ tools/perf/arch/riscv/tests/dwarf-unwind.c | 63 ++++++++++++++++++++++
+ tools/perf/arch/riscv/tests/regs_load.S    | 45 ++++++++++++++++
+ tools/perf/arch/riscv/util/perf_regs.c     | 32 +++++++++++
+ tools/perf/check-headers.sh                |  1 +
+ tools/perf/tests/Build                     |  2 +-
+ 11 files changed, 178 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/arch/riscv/include/arch-tests.h
+ create mode 100644 tools/perf/arch/riscv/tests/Build
+ create mode 100644 tools/perf/arch/riscv/tests/arch-tests.c
+ create mode 100644 tools/perf/arch/riscv/tests/dwarf-unwind.c
+ create mode 100644 tools/perf/arch/riscv/tests/regs_load.S
+
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Fabian Hemmer <copy@copy.sh>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: John Garry <john.garry@huawei.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Remi Bernon <rbernon@codeweavers.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+base-commit: c76826a65f50038f050424365dbf3f97203f8710
+prerequisite-patch-id: 7144f880f49c60cdec11fcbae019e764ba37a73d
+-- 
+2.31.1
+
