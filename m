@@ -2,186 +2,88 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FA0C07E96
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 06:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E90C11F6D
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 12:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62AE66128E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 06:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1679621FA
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 12:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230111AbhGFGTc (ORCPT
+        id S240923AbhGFMNP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jul 2021 02:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230048AbhGFGTc (ORCPT
+        Tue, 6 Jul 2021 08:13:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:56353 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238318AbhGFLuC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jul 2021 02:19:32 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2C0C061574
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jul 2021 23:16:54 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id i125so7633923qke.12
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jul 2021 23:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RoGi9t0tW2ZKROiX5vNisDNKd+fSc5OvBjzFvq9gYvY=;
-        b=Gzikz/eEBoqeajZIRReKOOFftA9UC4oI3fDNZSYLwbrN7EhOyOoeZZbyAq7/X0gOp/
-         7ZHFoxagwFKR/kNQPsReYVp3UN8qK9Wmq++mMcdbCp3Z+7soiKCdhZjBi3Jdt5HMmaTD
-         ancHpki5hiBvZImHkvRiV/fWyF/dRYbykcoNMcYvE5RuDT41CvD1ZtMMRUcwM1r6PsLf
-         TH86Owk2G9QAGXBUBGHjv6E+xPI+6s8ykNNsYJpb6GEkk5yWJZUasI0+A04RwOHtPTRX
-         g1z5Y2RRQXZsY8Z59zqhUIJNciL3iOeVw/NFnKBOtubTMxsg804Wrn5vu2rzv8oh5XQ6
-         /P6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RoGi9t0tW2ZKROiX5vNisDNKd+fSc5OvBjzFvq9gYvY=;
-        b=LBOk78+xyFzIaEJmHyxeLhagWS9FDzhEPFgcSon/zyDlCHe2FCbkJq2sjdlEGH+Lwp
-         mT106whZALl2Idp8uTmBDNUV37wywhCQmNoUr+90uAIYgDUhsJazmquySVdxcuav72Vy
-         GKcB6RqqE3AkOphfJdmuUG7HgoSImw0QslXgreOZs6vtZPij9FglhfSmaN1o2eHZhI5O
-         2sEjUG4IVOXD/SqzUBH0E1BHRwtv4bzUtrM74+tPA/M1jqxyYs6QOxbbgfyUnMUegx7R
-         XH+cHZypgGJGuX47IwkR+7Kahj51hojwvly5HstBTveGOBr/AQN/GcuMNJy6XlldCYAd
-         1BSA==
-X-Gm-Message-State: AOAM530p4qNzbuLLdOid4s7Jbx3tT8xVu1MDdYioUNLfhKb7a5hwi7ZI
-        EyYD/DyHZI99/FVR6aXgNarfAN8+8h4eXr48ABWpdg==
-X-Google-Smtp-Source: ABdhPJyElgbPmnSLXpF3gDkS9q6qlbT44UUR+C2RdRC7k5GdNuckFsTGeES9VmBRwkAuEmhnnRsNMypzRe7fvelAWWo=
-X-Received: by 2002:a37:6614:: with SMTP id a20mr10617401qkc.501.1625552213306;
- Mon, 05 Jul 2021 23:16:53 -0700 (PDT)
+        Tue, 6 Jul 2021 07:50:02 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <colin.king@canonical.com>)
+        id 1m0jWT-0006JW-8k; Tue, 06 Jul 2021 11:45:53 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] perf/x86/intel/uncore: Fix integer overflow on 23 bit left shift of a u32
+Date:   Tue,  6 Jul 2021 12:45:53 +0100
+Message-Id: <20210706114553.28249-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20210705084453.2151729-1-elver@google.com> <20210705084453.2151729-2-elver@google.com>
-In-Reply-To: <20210705084453.2151729-2-elver@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 6 Jul 2021 08:16:39 +0200
-Message-ID: <CACT4Y+ZjjuW5wZ-QsYj7btZYYyNEiSnGh6JtV3bmSNx9mY_bZw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] perf: Refactor permissions check into perf_check_permission()
-To:     Marco Elver <elver@google.com>
-Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-        glider@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, ebiederm@xmission.com,
-        omosnace@redhat.com, serge@hallyn.com,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jul 5, 2021 at 10:45 AM Marco Elver <elver@google.com> wrote:
->
-> Refactor the permission check in perf_event_open() into a helper
-> perf_check_permission(). This makes the permission check logic more
-> readable (because we no longer have a negated disjunction). Add a
-> comment mentioning the ptrace check also checks the uid.
->
-> No functional change intended.
->
-> Signed-off-by: Marco Elver <elver@google.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+The u32 variable pci_dword is being masked with 0x1fffffff and then left
+shifted 23 places. The shift is a u32 operation,so a value of 0x200 or
+more in pci_dword will overflow the u32 and only the bottow 32 bits
+are assigned to addr. I don't believe this was the original intent.
+Fix this by casting pci_dword to a resource_size_t to ensure no
+overflow occurs.
 
-> ---
-> v3:
-> * Introduce this patch to refactor the permissions checking logic to
->   make it more readable (reported by Eric W. Biederman).
-> ---
->  kernel/events/core.c | 58 ++++++++++++++++++++++++--------------------
->  1 file changed, 32 insertions(+), 26 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f79ee82e644a..3008b986994b 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11912,6 +11912,37 @@ __perf_event_ctx_lock_double(struct perf_event *group_leader,
->         return gctx;
->  }
->
-> +static bool
-> +perf_check_permission(struct perf_event_attr *attr, struct task_struct *task)
-> +{
-> +       unsigned int ptrace_mode = PTRACE_MODE_READ_REALCREDS;
-> +       bool is_capable = perfmon_capable();
-> +
-> +       if (attr->sigtrap) {
-> +               /*
-> +                * perf_event_attr::sigtrap sends signals to the other task.
-> +                * Require the current task to also have CAP_KILL.
-> +                */
-> +               rcu_read_lock();
-> +               is_capable &= ns_capable(__task_cred(task)->user_ns, CAP_KILL);
-> +               rcu_read_unlock();
-> +
-> +               /*
-> +                * If the required capabilities aren't available, checks for
-> +                * ptrace permissions: upgrade to ATTACH, since sending signals
-> +                * can effectively change the target task.
-> +                */
-> +               ptrace_mode = PTRACE_MODE_ATTACH_REALCREDS;
-> +       }
-> +
-> +       /*
-> +        * Preserve ptrace permission check for backwards compatibility. The
-> +        * ptrace check also includes checks that the current task and other
-> +        * task have matching uids, and is therefore not done here explicitly.
-> +        */
-> +       return is_capable || ptrace_may_access(task, ptrace_mode);
-> +}
-> +
->  /**
->   * sys_perf_event_open - open a performance event, associate it to a task/cpu
->   *
-> @@ -12152,43 +12183,18 @@ SYSCALL_DEFINE5(perf_event_open,
->         }
->
->         if (task) {
-> -               unsigned int ptrace_mode = PTRACE_MODE_READ_REALCREDS;
-> -               bool is_capable;
-> -
->                 err = down_read_interruptible(&task->signal->exec_update_lock);
->                 if (err)
->                         goto err_file;
->
-> -               is_capable = perfmon_capable();
-> -               if (attr.sigtrap) {
-> -                       /*
-> -                        * perf_event_attr::sigtrap sends signals to the other
-> -                        * task. Require the current task to also have
-> -                        * CAP_KILL.
-> -                        */
-> -                       rcu_read_lock();
-> -                       is_capable &= ns_capable(__task_cred(task)->user_ns, CAP_KILL);
-> -                       rcu_read_unlock();
-> -
-> -                       /*
-> -                        * If the required capabilities aren't available, checks
-> -                        * for ptrace permissions: upgrade to ATTACH, since
-> -                        * sending signals can effectively change the target
-> -                        * task.
-> -                        */
-> -                       ptrace_mode = PTRACE_MODE_ATTACH_REALCREDS;
-> -               }
-> -
->                 /*
-> -                * Preserve ptrace permission check for backwards compatibility.
-> -                *
->                  * We must hold exec_update_lock across this and any potential
->                  * perf_install_in_context() call for this new event to
->                  * serialize against exec() altering our credentials (and the
->                  * perf_event_exit_task() that could imply).
->                  */
->                 err = -EACCES;
-> -               if (!is_capable && !ptrace_may_access(task, ptrace_mode))
-> +               if (!perf_check_permission(&attr, task))
->                         goto err_cred;
->         }
->
-> --
-> 2.32.0.93.g670b81a890-goog
->
+Note that the mask and 12 bit left shift operation does not need this
+because the mask SNR_IMC_MMIO_MEM0_MASK and shift is always a 32 bit
+value.
+
+Fixes: ee49532b38dd ("perf/x86/intel/uncore: Add IMC uncore support for Snow Ridge")
+Addresses-Coverity: ("Unintentional integer overflow")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ arch/x86/events/intel/uncore_snbep.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 48419dad3b17..7518143850df 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -4827,7 +4827,7 @@ static int snr_uncore_mmio_map(struct intel_uncore_box *box,
+ 		return -ENODEV;
+ 
+ 	pci_read_config_dword(pdev, SNR_IMC_MMIO_BASE_OFFSET, &pci_dword);
+-	addr = (pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
++	addr = ((resource_size_t)pci_dword & SNR_IMC_MMIO_BASE_MASK) << 23;
+ 
+ 	pci_read_config_dword(pdev, mem_offset, &pci_dword);
+ 	addr |= (pci_dword & SNR_IMC_MMIO_MEM0_MASK) << 12;
+-- 
+2.31.1
+
