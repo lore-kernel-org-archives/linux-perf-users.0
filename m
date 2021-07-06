@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE30C07E9B
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 21:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D675C07E9C
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 21:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96DB561CB1
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 21:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046F961005
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 21:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbhGFVWl (ORCPT
+        id S229894AbhGFVgS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jul 2021 17:22:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29214 "EHLO
+        Tue, 6 Jul 2021 17:36:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30302 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229986AbhGFVWl (ORCPT
+        by vger.kernel.org with ESMTP id S229753AbhGFVgR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jul 2021 17:22:41 -0400
+        Tue, 6 Jul 2021 17:36:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625606401;
+        s=mimecast20190719; t=1625607218;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=dmeFiaZKysTgf+CZ3J794gocPBdvCL0/vBhDrnYH448=;
-        b=Qn1H3xRwzPNV0r6tMEwWEUuxkWCJ6hCSq2Ee2XvER7xr/FCVik/PVJZctJtmcmlL+3V5TE
-        8o3ujJJKnkzzq18N/pXY6+ruLnulKBiSt7O1tocX+ELfl/OO0ObkPQ93h6FigmK0AzmwXh
-        4KArJy50sFdMiFeAFeztfv6rvYvYe2E=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-349-x0DmtG5_Pm6bYbYPoMvIYA-1; Tue, 06 Jul 2021 17:20:00 -0400
-X-MC-Unique: x0DmtG5_Pm6bYbYPoMvIYA-1
-Received: by mail-lf1-f72.google.com with SMTP id bu14-20020a056512168eb029031226594940so31978lfb.15
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jul 2021 14:20:00 -0700 (PDT)
+        bh=WYXYXa+th2cYeV7B6S0tgQlmASzmnAP4QbXludRovGE=;
+        b=E9mT4GXO6bHnr2GGo2X3sp9hr7HlWZs/FEF/1+SII9VIQ+EIr4SIxmBsl345rdplj7TGOr
+        yKUcQj8E/lU215/tY4AiAEPwdjgOcReeANbp5hFva2Gg48ZcvoJRNcO2YC8sWRwgWCw5ax
+        GuUrLtwesDMcXJYlMf82Cuc1jakh/g8=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-248-As2sz7G6NRmr-QaRVOXwHQ-1; Tue, 06 Jul 2021 17:33:37 -0400
+X-MC-Unique: As2sz7G6NRmr-QaRVOXwHQ-1
+Received: by mail-lf1-f70.google.com with SMTP id d4-20020a0565123204b029034f05620e9dso41629lfe.20
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jul 2021 14:33:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dmeFiaZKysTgf+CZ3J794gocPBdvCL0/vBhDrnYH448=;
-        b=I0hW1DlHAUFggrd9aZ/gM8Cuqq7j/6kxaNGNzHFg94iXWLAkPCub0rXkedKzFtS30h
-         db6Qxz8nzmkWjdlymDgnIx04RMw04tCMyQcVLFaiHoARUvSpEjfN0LHZ8Dyrq9WED/Bh
-         PLZtyPUknNMNDFJZgyKM287xiBEVwKEsRbzCm/WhJib9K1g6qVL9qwoZGsUAhRVLLwEf
-         gr8eACCFlZBSDZgw97MUjHkeq04tFyCo4CVvv7LZgFOs+Q3m2jAXMquIwtRY+F5Y6xqk
-         yuQBwwaVgnrOdkMgjLmtAt/bazHjnF5YCR/vaDm7cODLtsbTsGk53v3grI9pjcTCXeda
-         syVg==
-X-Gm-Message-State: AOAM533rr7kR24e1Rf8z4ABMm7DjHMefKG04mPMuUKZfXOrXzMv7q0Kx
-        nfLmZzvijAmdopgmTIdnZBYdQW4kfUU24ADRVJz5BCVKLwn7+1zX5Z9lDt0fhVx48GjjI8Y//I2
-        r+eclOHXWg0X0OOJu/AOiab/ZcAVb7HJi2HWzxRkErsM+pQ==
-X-Received: by 2002:a2e:824e:: with SMTP id j14mr16683955ljh.445.1625606398834;
-        Tue, 06 Jul 2021 14:19:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxW1KUFvviqSIX9ybFpfYQB8YCF3zlN9GVqt+Ig/bfFAdV1I2nDVs4KZ3vbqWPOqBB1I015X7N8QOX4EbicEzg=
-X-Received: by 2002:a2e:824e:: with SMTP id j14mr16683903ljh.445.1625606398404;
- Tue, 06 Jul 2021 14:19:58 -0700 (PDT)
+        bh=WYXYXa+th2cYeV7B6S0tgQlmASzmnAP4QbXludRovGE=;
+        b=Z8qUgKU173O9qJVCMTx5C0kDzugH8NBwQEkPF0UsvmnYo0Yf38Jn2OjfNRIC7ofY1W
+         lLa2N6XuALNO9X0vupMvzdLoO0LD6XY8+sPuy6/FUAofYuj8AAWZ5EPVZrocsUXXLK1X
+         sVTrWN0HrW8H8JS23EKWgki/pkvDffGD14oM0WMS+ga2XYQ2VfCG5wrE/BkKV4z7GZLm
+         WlEvEpxztWxz6qTQQ/7rWR+H2CrXNMcH9KNTQ4akt94mhUfLm/9TnSZSx7qqXNZksGNO
+         uGNGcWKI1vOgPqZP2O2c9IXCoaTz08yQ5Qbx/Mxy4vTR0XKH2wHDeqQ6POjeKS3e3Zj0
+         4eMg==
+X-Gm-Message-State: AOAM532eu9N0YpZQVpaVpzd6DXn7XeE8Z0CoPj0UHDYOO9y/LcHh01dd
+        ipm/TXtg+FuvDyLK0NlgNzfnTlsEwU43fFvl/nCkHex7RF3gytxirAgDF2SWwfWbG52LrjufY2C
+        pXIKVOveRzjqNWgWz/xjGxlGR6dkgjhpBDOY3CLEjFg0u7Q==
+X-Received: by 2002:a2e:8001:: with SMTP id j1mr17136814ljg.332.1625607215516;
+        Tue, 06 Jul 2021 14:33:35 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz4lvwBEiKDKHJqTeJvqU552DWCIoa0gwphzHoaDY6oDwfysF/qgeGW16LxF1TghHCckBp9oqxbf93Crjo/a/0=
+X-Received: by 2002:a2e:8001:: with SMTP id j1mr17136776ljg.332.1625607215277;
+ Tue, 06 Jul 2021 14:33:35 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
  <de6b97a567e273adff1f5268998692bad548aa10.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <20210706195233.h6w4cm73oktfqpgz@habkost.net> <20210706211606.ezme3xvwztagbjqy@gupta-dev2.localdomain>
-In-Reply-To: <20210706211606.ezme3xvwztagbjqy@gupta-dev2.localdomain>
+ <20210706195233.h6w4cm73oktfqpgz@habkost.net> <4cc2c5fe-2153-05c5-dedd-8cb650753740@redhat.com>
+In-Reply-To: <4cc2c5fe-2153-05c5-dedd-8cb650753740@redhat.com>
 From:   Eduardo Habkost <ehabkost@redhat.com>
-Date:   Tue, 6 Jul 2021 17:19:42 -0400
-Message-ID: <CAOpTY_pmNah_OCzk3XRyTsgkCPdJD1tp2RxKHMieFQM1s-tQNA@mail.gmail.com>
+Date:   Tue, 6 Jul 2021 17:33:19 -0400
+Message-ID: <CAOpTY_qdbbnauTkbjkz+cZmo8=Hz6qqLNY6i6uamqhcty=Q1sw@mail.gmail.com>
 Subject: Re: [PATCH 4/4] x86/tsx: Add cmdline tsx=fake to not clear CPUID bits
  RTM and HLE
-To:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@alien8.de>,
         Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -84,7 +85,6 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Vlastimil Babka <vbabka@suse.cz>,
         Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
         Sean Christopherson <seanjc@google.com>,
         Kyung Min Park <kyung.min.park@intel.com>,
         Fenghua Yu <fenghua.yu@intel.com>,
@@ -112,26 +112,61 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 6, 2021 at 5:15 PM Pawan Gupta
-<pawan.kumar.gupta@linux.intel.com> wrote:
+On Tue, Jul 6, 2021 at 5:05 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
 >
-> On 06.07.2021 15:52, Eduardo Habkost wrote:
-> >On Wed, Jun 09, 2021 at 02:14:39PM -0700, Pawan Gupta wrote:
+> On 06/07/21 21:52, Eduardo Habkost wrote:
+> > On Wed, Jun 09, 2021 at 02:14:39PM -0700, Pawan Gupta wrote:
 > >> On CPUs that deprecated TSX, clearing the enumeration bits CPUID.RTM and
 > >> CPUID.HLE may not be desirable in some corner cases. Like a saved guest
 > >> would refuse to resume if it was saved before the microcode update
 > >> that deprecated TSX.
-> >
-> >Why is a global option necessary to allow those guests to be
-> >resumed?  Why can't KVM_GET_SUPPORTED_CPUID always return the HLE
-> >and RTM bits as supported when the host CPU has them?
+> > Why is a global option necessary to allow those guests to be
+> > resumed?  Why can't KVM_GET_SUPPORTED_CPUID always return the HLE
+> > and RTM bits as supported when the host CPU has them?
 >
-> Yes, the global option is unnecessary and this patch was dropped in v2.
+> It's a bit tricky, because HLE and RTM won't really behave well.  An old
+> guest that sees RTM=1 might end up retrying and aborting transactions
+> too much.  So I'm not sure that a QEMU "-cpu host" guest should have HLE
+> and RTM enabled.
 
-Was the behaviour this patch originally tried to fix changed in v2 as
-well? Is it going to be possible to resume a HLE=1,RTM=1 VM on a
-TSX_FORCE_ABORT=1 host with no extra kernel command line options
-needed?
+Is the purpose of GET_SUPPORTED_CPUID to return what is supported by
+KVM, or to return what "-cpu host" should enable by default? They are
+conflicting requirements in this case.
+
+>
+> So it makes sense to handle it in userspace, with one of the two
+> following possibilities:
+>
+> - userspace sees TSX_FORCE_ABORT and if so it somehow "discourages"
+> setting HLE/RTM, even though they are shown as supported
+>
+> - userspace sees TSX_FORCE_ABORT and if so it knows HLE/RTM can be set,
+> even though they are discouraged in general
+
+In either case, we can make new userspace behave well. I'm worried
+about existing userspace:
+
+Returning HLE=1,RTM=1 in GET_SUPPORTED_CPUID makes existing userspace
+take bad decisions until it's updated.
+
+Returning HLE=0,RTM=0 in GET_SUPPORTED_CPUID prevents existing
+userspace from resuming existing VMs (despite being technically
+possible).
+
+The first option has an easy workaround that doesn't require a
+software update (disabling HLE/RTM in the VM configuration). The
+second option doesn't have a workaround. I'm inclined towards the
+first option.
+
+
+>
+> In any case, KVM's "supported CPUID" is based on the host features but
+> independent.  KVM can decide to show or hide the hardware HLE and RTM
+> bits independent of the host tsx= setting; it may make sense to hide the
+> bits via a module parameter, but in any case this patch is not needed.
+>
+> Paolo
+>
 
 -- 
 Eduardo
