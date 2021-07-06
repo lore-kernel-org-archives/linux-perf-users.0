@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-20.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB0CC07E96
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 13:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258A2C07E9E
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 13:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046D461C30
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 13:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0351161C2B
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 13:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231609AbhGFNXc (ORCPT
+        id S231540AbhGFNXe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jul 2021 09:23:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:49621 "EHLO
+        Tue, 6 Jul 2021 09:23:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52909 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231248AbhGFNXb (ORCPT
+        by vger.kernel.org with ESMTP id S231736AbhGFNXd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jul 2021 09:23:31 -0400
+        Tue, 6 Jul 2021 09:23:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625577652;
+        s=mimecast20190719; t=1625577654;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OtJX128tv+UNtyzf1HLYJY3jxB5LgvqObhQjAuBIOkU=;
-        b=C0mA2lsL15P+VB/U7VxRnnnrQ6QBEEjIB30ZwWaivy+xv5y2+NY68qVfRyPZ4nosFDZtE6
-        0qJkzTDik8XJNsuV+9KB+6dJIVtbnByuHjmDxD7/ZZdQ3IU5r2UPWzTUNjVppLfhiVX7wV
-        n8bsBbegeTkmk7WSBlhRnaYC50sF+fI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-95-SpdeydndMrGaoCxQhzbObQ-1; Tue, 06 Jul 2021 09:20:51 -0400
-X-MC-Unique: SpdeydndMrGaoCxQhzbObQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 13-20020a1c010d0000b02901eca51685daso1098664wmb.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jul 2021 06:20:51 -0700 (PDT)
+        bh=RX0HfGi27NdDKlJRAO1WQsPCZSI/gUpFkevk2UN48bA=;
+        b=VEwHWc2MRqe3h19fxSgM0oKeGHeg90bo7abAnPtK2PIFgqI50QLKZKKu+u6eZKUnDVeFKz
+        Aiq3IjZUkymT4q9+yEgVzQtafMrxt/gJMyUIpjDv33o3CLkOiXFgWCiBQAdLd409H/36ax
+        o1lwqGJIRPcWL8at4Q8jVE3HTz5SXDU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-558-mrRpdKDtNHuUfDqDj6Pn-Q-1; Tue, 06 Jul 2021 09:20:53 -0400
+X-MC-Unique: mrRpdKDtNHuUfDqDj6Pn-Q-1
+Received: by mail-wm1-f69.google.com with SMTP id j38-20020a05600c1c26b02901dbf7d18ff8so1089072wms.8
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jul 2021 06:20:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OtJX128tv+UNtyzf1HLYJY3jxB5LgvqObhQjAuBIOkU=;
-        b=Vjrx6uhLhCDqazSarXb/Jd8dM9xjF5fFqUyHwYO97e7OahsW2HyfIivK36aPEWMxmf
-         erxeCgsimK1sO4F1vhSu8bWq+Xn0cjeVZdfwcRvKFSc14RRQvO2TeWW6THQ7PbXt1PTB
-         ePgfmkfg8PdotGZp384bMjkVccu28IjzmYYHaB+umNu6Lp3cZHMWhkaI0iq8XyC7drWQ
-         1K3zqPOh/zmc/PflH2qccDYIwtvH4Blrik2bisDJ0oRi9upAYCkB/glP6t/bG/0QAUPL
-         FSkzXitxeJni8+qJg5/JUtkcbqXqZH6iZvRhfoCp9G0O0Tj6ZShjWr7tS6LJfNcsooTg
-         /8tw==
-X-Gm-Message-State: AOAM5301k994rvyyzSE6p8ZLUMJRAd0YCA/8ud47TW4QUR1SepUIoMp5
-        ufMliEQzdni8OxR42Mpyq8YhXcuZHzIPV1QaaPCSkZUW6r1sNmUlfgk0aAUHKnW0EvLjoY1HT77
-        AsXi86ItTOibNRGwfdBuVysvrh8A3Hg==
-X-Received: by 2002:a05:600c:3541:: with SMTP id i1mr675547wmq.135.1625577650219;
-        Tue, 06 Jul 2021 06:20:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyImga9cAVnlM75/yPCPHh8g0C4NvxvA/LG4JAlzDlm/I0ZjmTVqx9CCjrGoDXKK+hUIn0i/A==
-X-Received: by 2002:a05:600c:3541:: with SMTP id i1mr675517wmq.135.1625577650003;
-        Tue, 06 Jul 2021 06:20:50 -0700 (PDT)
+        bh=RX0HfGi27NdDKlJRAO1WQsPCZSI/gUpFkevk2UN48bA=;
+        b=g3qo+5vWWrrGLNHIJBUcF0ByY5laEAFKyN4zE7J5LFfACYI6zAiVuKLlS3iJLZNSJm
+         a/Osh0x4kzapMH22DlyDcPe3b65fr8MdoYRpSz8AMIhrYxuLH3A+H9xXZgsOpYKhnw+B
+         adTRG9ET6aCoXq+gIfa4ZjvjOjV1pheeyYDtPgzK/ZA2djNKDASj3u/b5NyDbB7j6p1x
+         YnjfQzkBrkzlfSDRZ1ZANO6FRg1FPXWrfOCut+Fu6Bvc3NOluwaM4nskacGhu2ps8Bgg
+         Smrfm6nsv7zPRlV7T+RTi9gPaN0Ntg0+xLjbW6jUucNWgH5eCyPmtbasOzuAKM/wRmMk
+         TnoA==
+X-Gm-Message-State: AOAM533Lczk72DKEmqxC5F5n1QEvM4Zf3IHFGIk+JLF6vQKMufsq6L/V
+        fLP7d8RRImA+fUqV2PfGii5ti7B0I7qLDcblhnu49iGRaIMchEBdgVYiW9OGFFRQR5HrtnSLGpE
+        oSs/HrW73poRkrtST0xiSKpitTh6brQ==
+X-Received: by 2002:a1c:1b87:: with SMTP id b129mr20929321wmb.189.1625577652306;
+        Tue, 06 Jul 2021 06:20:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxcwV+gHRZu6O4YLdaKD2W3wwe6m7ei+FgZPZd9FyZQKw7FWHcu28rA3RiNMEV/cFiPEJT0pw==
+X-Received: by 2002:a1c:1b87:: with SMTP id b129mr20929298wmb.189.1625577652012;
+        Tue, 06 Jul 2021 06:20:52 -0700 (PDT)
 Received: from krava.redhat.com ([185.153.78.55])
-        by smtp.gmail.com with ESMTPSA id t11sm17119412wrz.7.2021.07.06.06.20.47
+        by smtp.gmail.com with ESMTPSA id t11sm17119412wrz.7.2021.07.06.06.20.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jul 2021 06:20:49 -0700 (PDT)
+        Tue, 06 Jul 2021 06:20:51 -0700 (PDT)
 From:   Jiri Olsa <jolsa@redhat.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -72,9 +72,9 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Michael Petlan <mpetlan@redhat.com>,
         Ian Rogers <irogers@google.com>, nakamura.shun@fujitsu.com,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/7] libperf: Change tests to single static and shared binaries
-Date:   Tue,  6 Jul 2021 15:20:37 +0200
-Message-Id: <20210706132043.70195-2-jolsa@kernel.org>
+Subject: [PATCH 2/7] libperf: Move idx to perf_evsel::idx
+Date:   Tue,  6 Jul 2021 15:20:38 +0200
+Message-Id: <20210706132043.70195-3-jolsa@kernel.org>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210706132043.70195-1-jolsa@kernel.org>
 References: <20210706132043.70195-1-jolsa@kernel.org>
@@ -84,285 +84,516 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Make tests to be two binaries 'tests_static' and 'tests_shared',
-so the maintenance is easier.
-
-Adding tests under libperf build system, so we define all the
-flags just once.
-
-Adding make-tests tule to just compile tests without running them.
+Moving evsel::idx to perf_evsel::idx, so we can move
+the group interface to libperf.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/lib/perf/Build                    |  2 ++
- tools/lib/perf/Makefile                 | 30 +++++++++++++++----
- tools/lib/perf/include/internal/tests.h |  4 +--
- tools/lib/perf/tests/Build              |  5 ++++
- tools/lib/perf/tests/Makefile           | 40 -------------------------
- tools/lib/perf/tests/main.c             | 15 ++++++++++
- tools/lib/perf/tests/test-cpumap.c      |  3 +-
- tools/lib/perf/tests/test-evlist.c      |  3 +-
- tools/lib/perf/tests/test-evsel.c       |  3 +-
- tools/lib/perf/tests/test-threadmap.c   |  3 +-
- tools/lib/perf/tests/tests.h            | 10 +++++++
- 11 files changed, 67 insertions(+), 51 deletions(-)
- create mode 100644 tools/lib/perf/tests/Build
- delete mode 100644 tools/lib/perf/tests/Makefile
- create mode 100644 tools/lib/perf/tests/main.c
- create mode 100644 tools/lib/perf/tests/tests.h
+ tools/lib/perf/evlist.c                 |  1 +
+ tools/lib/perf/evsel.c                  |  6 ++++--
+ tools/lib/perf/include/internal/evsel.h |  4 +++-
+ tools/perf/arch/x86/util/iostat.c       |  4 ++--
+ tools/perf/builtin-diff.c               |  4 ++--
+ tools/perf/builtin-report.c             |  4 ++--
+ tools/perf/builtin-top.c                |  8 ++++----
+ tools/perf/tests/evsel-roundtrip-name.c |  6 +++---
+ tools/perf/tests/mmap-basic.c           |  8 ++++----
+ tools/perf/ui/browsers/annotate.c       |  2 +-
+ tools/perf/util/annotate.c              |  8 ++++----
+ tools/perf/util/evlist.c                | 10 ++++------
+ tools/perf/util/evsel.c                 |  3 +--
+ tools/perf/util/evsel.h                 |  3 +--
+ tools/perf/util/header.c                | 10 +++++-----
+ tools/perf/util/metricgroup.c           | 14 +++++++-------
+ tools/perf/util/parse-events.c          |  2 +-
+ tools/perf/util/python.c                |  2 +-
+ tools/perf/util/stream.c                |  2 +-
+ 19 files changed, 51 insertions(+), 50 deletions(-)
 
-diff --git a/tools/lib/perf/Build b/tools/lib/perf/Build
-index 2ef9a4ec6d99..e8f5b7fb9973 100644
---- a/tools/lib/perf/Build
-+++ b/tools/lib/perf/Build
-@@ -11,3 +11,5 @@ libperf-y += lib.o
- $(OUTPUT)zalloc.o: ../../lib/zalloc.c FORCE
- 	$(call rule_mkdir)
- 	$(call if_changed_dep,cc_o_c)
-+
-+tests-y += tests/
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3718d65cffac..08fe6e3c4089 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -52,6 +52,8 @@ else
-   Q = @
- endif
- 
-+TEST_ARGS := $(if $(V),-v)
-+
- # Set compile option CFLAGS
- ifdef EXTRA_CFLAGS
-   CFLAGS := $(EXTRA_CFLAGS)
-@@ -136,12 +138,30 @@ all: fixdep
- 
- clean: $(LIBAPI)-clean
- 	$(call QUIET_CLEAN, libperf) $(RM) $(LIBPERF_A) \
--                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd LIBPERF-CFLAGS $(LIBPERF_PC)
--	$(Q)$(MAKE) -C tests clean
-+                *.o *~ *.a *.so *.so.$(VERSION) *.so.$(LIBPERF_VERSION) .*.d .*.cmd tests/*.o LIBPERF-CFLAGS $(LIBPERF_PC) \
-+                $(TESTS_STATIC) $(TESTS_SHARED)
-+
-+TESTS_IN = tests-in.o
-+
-+TESTS_STATIC = $(OUTPUT)tests-static
-+TESTS_SHARED = $(OUTPUT)tests-shared
-+
-+$(TESTS_IN): FORCE
-+	$(Q)$(MAKE) $(build)=tests
-+
-+$(TESTS_STATIC): $(TESTS_IN) $(LIBPERF_A) $(LIBAPI)
-+	$(QUIET_LINK)$(CC) -o $@ $^
-+
-+$(TESTS_SHARED): $(TESTS_IN) $(LIBAPI)
-+	$(QUIET_LINK)$(CC) -o $@ -L$(if $(OUTPUT),$(OUTPUT),.) $^ -lperf
-+
-+make-tests: libs $(TESTS_SHARED) $(TESTS_STATIC)
- 
--tests: libs
--	$(Q)$(MAKE) -C tests
--	$(Q)$(MAKE) -C tests run
-+tests: make-tests
-+	@echo "running static:"
-+	@./$(TESTS_STATIC) $(TEST_ARGS)
-+	@echo "running dynamic:"
-+	@LD_LIBRARY_PATH=. ./$(TESTS_SHARED) $(TEST_ARGS)
- 
- $(LIBPERF_PC):
- 	$(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
-diff --git a/tools/lib/perf/include/internal/tests.h b/tools/lib/perf/include/internal/tests.h
-index 29425c2dabe1..61052099225b 100644
---- a/tools/lib/perf/include/internal/tests.h
-+++ b/tools/lib/perf/include/internal/tests.h
-@@ -5,8 +5,8 @@
- #include <stdio.h>
- #include <unistd.h>
- 
--int tests_failed;
--int tests_verbose;
-+extern int tests_failed;
-+extern int tests_verbose;
- 
- static inline int get_verbose(char **argv, int argc)
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index a0aaf385cbb5..68b90bbf0ffb 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -66,6 +66,7 @@ static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
+ void perf_evlist__add(struct perf_evlist *evlist,
+ 		      struct perf_evsel *evsel)
  {
-diff --git a/tools/lib/perf/tests/Build b/tools/lib/perf/tests/Build
-new file mode 100644
-index 000000000000..56e81378d443
---- /dev/null
-+++ b/tools/lib/perf/tests/Build
-@@ -0,0 +1,5 @@
-+tests-y += main.o
-+tests-y += test-evsel.o
-+tests-y += test-evlist.o
-+tests-y += test-cpumap.o
-+tests-y += test-threadmap.o
-diff --git a/tools/lib/perf/tests/Makefile b/tools/lib/perf/tests/Makefile
-deleted file mode 100644
-index b536cc9a26dd..000000000000
---- a/tools/lib/perf/tests/Makefile
-+++ /dev/null
-@@ -1,40 +0,0 @@
--# SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
--
--TESTS = test-cpumap test-threadmap test-evlist test-evsel
--
--TESTS_SO := $(addsuffix -so,$(TESTS))
--TESTS_A  := $(addsuffix -a,$(TESTS))
--
--TEST_ARGS := $(if $(V),-v)
--
--# Set compile option CFLAGS
--ifdef EXTRA_CFLAGS
--  CFLAGS := $(EXTRA_CFLAGS)
--else
--  CFLAGS := -g -Wall
--endif
--
--all:
--
--include $(srctree)/tools/scripts/Makefile.include
--
--INCLUDE = -I$(srctree)/tools/lib/perf/include -I$(srctree)/tools/include -I$(srctree)/tools/lib
--
--$(TESTS_A): FORCE
--	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -o $@ $(subst -a,.c,$@) ../libperf.a $(LIBAPI)
--
--$(TESTS_SO): FORCE
--	$(QUIET_LINK)$(CC) $(INCLUDE) $(CFLAGS) -L.. -o $@ $(subst -so,.c,$@) $(LIBAPI) -lperf
--
--all: $(TESTS_A) $(TESTS_SO)
--
--run:
--	@echo "running static:"
--	@for i in $(TESTS_A); do ./$$i $(TEST_ARGS); done
--	@echo "running dynamic:"
--	@for i in $(TESTS_SO); do LD_LIBRARY_PATH=../ ./$$i $(TEST_ARGS); done
--
--clean:
--	$(call QUIET_CLEAN, tests)$(RM) $(TESTS_A) $(TESTS_SO)
--
--.PHONY: all clean FORCE
-diff --git a/tools/lib/perf/tests/main.c b/tools/lib/perf/tests/main.c
-new file mode 100644
-index 000000000000..56423fd4db19
---- /dev/null
-+++ b/tools/lib/perf/tests/main.c
-@@ -0,0 +1,15 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <internal/tests.h>
-+#include "tests.h"
-+
-+int tests_failed;
-+int tests_verbose;
-+
-+int main(int argc, char **argv)
-+{
-+	__T("test cpumap", !test_cpumap(argc, argv));
-+	__T("test threadmap", !test_threadmap(argc, argv));
-+	__T("test evlist", !test_evlist(argc, argv));
-+	__T("test evsel", !test_evsel(argc, argv));
-+	return 0;
-+}
-diff --git a/tools/lib/perf/tests/test-cpumap.c b/tools/lib/perf/tests/test-cpumap.c
-index c70e9e03af3e..d39378eaf897 100644
---- a/tools/lib/perf/tests/test-cpumap.c
-+++ b/tools/lib/perf/tests/test-cpumap.c
-@@ -3,6 +3,7 @@
- #include <stdio.h>
- #include <perf/cpumap.h>
- #include <internal/tests.h>
-+#include "tests.h"
++	evsel->idx = evlist->nr_entries;
+ 	list_add_tail(&evsel->node, &evlist->entries);
+ 	evlist->nr_entries += 1;
+ 	__perf_evlist__propagate_maps(evlist, evsel);
+diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+index bd8c2f19ef74..dccdc3456b23 100644
+--- a/tools/lib/perf/evsel.c
++++ b/tools/lib/perf/evsel.c
+@@ -18,10 +18,12 @@
+ #include <sys/ioctl.h>
+ #include <sys/mman.h>
  
- static int libperf_print(enum libperf_print_level level,
- 			 const char *fmt, va_list ap)
-@@ -10,7 +11,7 @@ static int libperf_print(enum libperf_print_level level,
- 	return vfprintf(stderr, fmt, ap);
+-void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr)
++void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
++		      int idx)
+ {
+ 	INIT_LIST_HEAD(&evsel->node);
+ 	evsel->attr = *attr;
++	evsel->idx  = idx;
  }
  
--int main(int argc, char **argv)
-+int test_cpumap(int argc, char **argv)
+ struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
+@@ -29,7 +31,7 @@ struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
+ 	struct perf_evsel *evsel = zalloc(sizeof(*evsel));
+ 
+ 	if (evsel != NULL)
+-		perf_evsel__init(evsel, attr);
++		perf_evsel__init(evsel, attr, 0);
+ 
+ 	return evsel;
+ }
+diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
+index 1c067d088bc6..86f674e36f62 100644
+--- a/tools/lib/perf/include/internal/evsel.h
++++ b/tools/lib/perf/include/internal/evsel.h
+@@ -49,9 +49,11 @@ struct perf_evsel {
+ 	/* parse modifier helper */
+ 	int			 nr_members;
+ 	bool			 system_wide;
++	int			 idx;
+ };
+ 
+-void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr);
++void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
++		      int idx);
+ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads);
+ void perf_evsel__close_fd(struct perf_evsel *evsel);
+ void perf_evsel__free_fd(struct perf_evsel *evsel);
+diff --git a/tools/perf/arch/x86/util/iostat.c b/tools/perf/arch/x86/util/iostat.c
+index d63acb782b63..eeafe97b8105 100644
+--- a/tools/perf/arch/x86/util/iostat.c
++++ b/tools/perf/arch/x86/util/iostat.c
+@@ -322,7 +322,7 @@ static int iostat_event_group(struct evlist *evl,
+ 	}
+ 
+ 	evlist__for_each_entry(evl, evsel) {
+-		evsel->priv = list->rps[evsel->idx / metrics_count];
++		evsel->priv = list->rps[evsel->core.idx / metrics_count];
+ 	}
+ 	list->nr_entries = 0;
+ err:
+@@ -428,7 +428,7 @@ void iostat_print_metric(struct perf_stat_config *config, struct evsel *evsel,
  {
- 	struct perf_cpu_map *cpus;
+ 	double iostat_value = 0;
+ 	u64 prev_count_val = 0;
+-	const char *iostat_metric = iostat_metric_by_idx(evsel->idx);
++	const char *iostat_metric = iostat_metric_by_idx(evsel->core.idx);
+ 	u8 die = ((struct iio_root_port *)evsel->priv)->die;
+ 	struct perf_counts_values *count = perf_counts(evsel->counts, die, 0);
  
-diff --git a/tools/lib/perf/tests/test-evlist.c b/tools/lib/perf/tests/test-evlist.c
-index e2ac0b7f432e..7435529fb21c 100644
---- a/tools/lib/perf/tests/test-evlist.c
-+++ b/tools/lib/perf/tests/test-evlist.c
-@@ -18,6 +18,7 @@
- #include <perf/event.h>
- #include <internal/tests.h>
- #include <api/fs/fs.h>
-+#include "tests.h"
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index f52b3a799e76..80450c0e8f36 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -1031,12 +1031,12 @@ static int process_base_stream(struct data__file *data_base,
+ 			continue;
  
- static int libperf_print(enum libperf_print_level level,
- 			 const char *fmt, va_list ap)
-@@ -397,7 +398,7 @@ static int test_mmap_cpus(void)
- 	return 0;
+ 		es_base = evsel_streams__entry(data_base->evlist_streams,
+-					       evsel_base->idx);
++					       evsel_base->core.idx);
+ 		if (!es_base)
+ 			return -1;
+ 
+ 		es_pair = evsel_streams__entry(data_pair->evlist_streams,
+-					       evsel_pair->idx);
++					       evsel_pair->core.idx);
+ 		if (!es_pair)
+ 			return -1;
+ 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index bc5c393021dc..4014de4da33b 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -332,7 +332,7 @@ static int process_read_event(struct perf_tool *tool,
+ 		const char *name = evsel__name(evsel);
+ 		int err = perf_read_values_add_value(&rep->show_threads_values,
+ 					   event->read.pid, event->read.tid,
+-					   evsel->idx,
++					   evsel->core.idx,
+ 					   name,
+ 					   event->read.value);
+ 
+@@ -666,7 +666,7 @@ static int report__collapse_hists(struct report *rep)
+ 	evlist__for_each_entry(rep->session->evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
+ 
+-		if (pos->idx == 0)
++		if (pos->core.idx == 0)
+ 			hists->symbol_filter_str = rep->symbol_filter_str;
+ 
+ 		hists->socket_filter = rep->socket_filter;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 2d570bfe7a56..76343a418e67 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -264,9 +264,9 @@ static void perf_top__show_details(struct perf_top *top)
+ 
+ 	if (top->evlist->enabled) {
+ 		if (top->zero)
+-			symbol__annotate_zero_histogram(symbol, top->sym_evsel->idx);
++			symbol__annotate_zero_histogram(symbol, top->sym_evsel->core.idx);
+ 		else
+-			symbol__annotate_decay_histogram(symbol, top->sym_evsel->idx);
++			symbol__annotate_decay_histogram(symbol, top->sym_evsel->core.idx);
+ 	}
+ 	if (more != 0)
+ 		printf("%d lines not displayed, maybe increase display entries [e]\n", more);
+@@ -530,7 +530,7 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
+ 				fprintf(stderr, "\nAvailable events:");
+ 
+ 				evlist__for_each_entry(top->evlist, top->sym_evsel)
+-					fprintf(stderr, "\n\t%d %s", top->sym_evsel->idx, evsel__name(top->sym_evsel));
++					fprintf(stderr, "\n\t%d %s", top->sym_evsel->core.idx, evsel__name(top->sym_evsel));
+ 
+ 				prompt_integer(&counter, "Enter details event counter");
+ 
+@@ -541,7 +541,7 @@ static bool perf_top__handle_keypress(struct perf_top *top, int c)
+ 					break;
+ 				}
+ 				evlist__for_each_entry(top->evlist, top->sym_evsel)
+-					if (top->sym_evsel->idx == counter)
++					if (top->sym_evsel->core.idx == counter)
+ 						break;
+ 			} else
+ 				top->sym_evsel = evlist__first(top->evlist);
+diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/evsel-roundtrip-name.c
+index b74cf80d1f10..5ebf56331904 100644
+--- a/tools/perf/tests/evsel-roundtrip-name.c
++++ b/tools/perf/tests/evsel-roundtrip-name.c
+@@ -44,7 +44,7 @@ static int perf_evsel__roundtrip_cache_name_test(void)
+ 
+ 			for (i = 0; i < PERF_COUNT_HW_CACHE_RESULT_MAX; i++) {
+ 				__evsel__hw_cache_type_op_res_name(type, op, i, name, sizeof(name));
+-				if (evsel->idx != idx)
++				if (evsel->core.idx != idx)
+ 					continue;
+ 
+ 				++idx;
+@@ -84,9 +84,9 @@ static int __perf_evsel__name_array_test(const char *names[], int nr_names,
+ 
+ 	err = 0;
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (strcmp(evsel__name(evsel), names[evsel->idx / distance])) {
++		if (strcmp(evsel__name(evsel), names[evsel->core.idx / distance])) {
+ 			--err;
+-			pr_debug("%s != %s\n", evsel__name(evsel), names[evsel->idx / distance]);
++			pr_debug("%s != %s\n", evsel__name(evsel), names[evsel->core.idx / distance]);
+ 		}
+ 	}
+ 
+diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+index 73ae8f7aa066..d38757db2dc2 100644
+--- a/tools/perf/tests/mmap-basic.c
++++ b/tools/perf/tests/mmap-basic.c
+@@ -139,7 +139,7 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ 				 " doesn't map to an evsel\n", sample.id);
+ 			goto out_delete_evlist;
+ 		}
+-		nr_events[evsel->idx]++;
++		nr_events[evsel->core.idx]++;
+ 		perf_mmap__consume(&md->core);
+ 	}
+ 	perf_mmap__read_done(&md->core);
+@@ -147,10 +147,10 @@ int test__basic_mmap(struct test *test __maybe_unused, int subtest __maybe_unuse
+ out_init:
+ 	err = 0;
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (nr_events[evsel->idx] != expected_nr_events[evsel->idx]) {
++		if (nr_events[evsel->core.idx] != expected_nr_events[evsel->core.idx]) {
+ 			pr_debug("expected %d %s events, got %d\n",
+-				 expected_nr_events[evsel->idx],
+-				 evsel__name(evsel), nr_events[evsel->idx]);
++				 expected_nr_events[evsel->core.idx],
++				 evsel__name(evsel), nr_events[evsel->core.idx]);
+ 			err = -1;
+ 			goto out_delete_evlist;
+ 		}
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index f5509a958e38..cd2ef8f3b474 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -749,7 +749,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 				hbt->timer(hbt->arg);
+ 
+ 			if (delay_secs != 0) {
+-				symbol__annotate_decay_histogram(sym, evsel->idx);
++				symbol__annotate_decay_histogram(sym, evsel->core.idx);
+ 				hists__scnprintf_title(hists, title, sizeof(title));
+ 				annotate_browser__show(&browser->b, title, help);
+ 			}
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index abe1499a9164..aa04a3655236 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -961,7 +961,7 @@ static int symbol__inc_addr_samples(struct map_symbol *ms,
+ 	if (sym == NULL)
+ 		return 0;
+ 	src = symbol__hists(sym, evsel->evlist->core.nr_entries);
+-	return src ? __symbol__inc_addr_samples(ms, src, evsel->idx, addr, sample) : 0;
++	return src ? __symbol__inc_addr_samples(ms, src, evsel->core.idx, addr, sample) : 0;
  }
  
--int main(int argc, char **argv)
-+int test_evlist(int argc, char **argv)
+ static int symbol__account_cycles(u64 addr, u64 start,
+@@ -2159,7 +2159,7 @@ static void annotation__calc_percent(struct annotation *notes,
+ 
+ 			BUG_ON(i >= al->data_nr);
+ 
+-			sym_hist = annotation__histogram(notes, evsel->idx);
++			sym_hist = annotation__histogram(notes, evsel->core.idx);
+ 			data = &al->data[i++];
+ 
+ 			calc_percent(sym_hist, hists, data, al->offset, end);
+@@ -2340,7 +2340,7 @@ static void print_summary(struct rb_root *root, const char *filename)
+ static void symbol__annotate_hits(struct symbol *sym, struct evsel *evsel)
  {
- 	__T_START;
+ 	struct annotation *notes = symbol__annotation(sym);
+-	struct sym_hist *h = annotation__histogram(notes, evsel->idx);
++	struct sym_hist *h = annotation__histogram(notes, evsel->core.idx);
+ 	u64 len = symbol__size(sym), offset;
  
-diff --git a/tools/lib/perf/tests/test-evsel.c b/tools/lib/perf/tests/test-evsel.c
-index 288b5feaefe2..a184e4861627 100644
---- a/tools/lib/perf/tests/test-evsel.c
-+++ b/tools/lib/perf/tests/test-evsel.c
-@@ -6,6 +6,7 @@
- #include <perf/threadmap.h>
- #include <perf/evsel.h>
- #include <internal/tests.h>
-+#include "tests.h"
+ 	for (offset = 0; offset < len; ++offset)
+@@ -2373,7 +2373,7 @@ int symbol__annotate_printf(struct map_symbol *ms, struct evsel *evsel,
+ 	const char *d_filename;
+ 	const char *evsel_name = evsel__name(evsel);
+ 	struct annotation *notes = symbol__annotation(sym);
+-	struct sym_hist *h = annotation__histogram(notes, evsel->idx);
++	struct sym_hist *h = annotation__histogram(notes, evsel->core.idx);
+ 	struct annotation_line *pos, *queue = NULL;
+ 	u64 start = map__rip_2objdump(map, sym->start);
+ 	int printed = 2, queue_len = 0, addr_fmt_width;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 6ba9664089bd..6563ce3b9541 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -165,11 +165,9 @@ void evlist__delete(struct evlist *evlist)
  
- static int libperf_print(enum libperf_print_level level,
- 			 const char *fmt, va_list ap)
-@@ -184,7 +185,7 @@ static int test_stat_user_read(int event)
- 	return 0;
+ void evlist__add(struct evlist *evlist, struct evsel *entry)
+ {
+-	entry->evlist = evlist;
+-	entry->idx = evlist->core.nr_entries;
+-	entry->tracking = !entry->idx;
+-
+ 	perf_evlist__add(&evlist->core, &entry->core);
++	entry->evlist = evlist;
++	entry->tracking = !entry->core.idx;
+ 
+ 	if (evlist->core.nr_entries == 1)
+ 		evlist__set_id_pos(evlist);
+@@ -232,7 +230,7 @@ void __evlist__set_leader(struct list_head *list)
+ 	leader = list_entry(list->next, struct evsel, core.node);
+ 	evsel = list_entry(list->prev, struct evsel, core.node);
+ 
+-	leader->core.nr_members = evsel->idx - leader->idx + 1;
++	leader->core.nr_members = evsel->core.idx - leader->core.idx + 1;
+ 
+ 	__evlist__for_each_entry(list, evsel) {
+ 		evsel->leader = leader;
+@@ -2137,7 +2135,7 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx)
+ 	struct evsel *evsel;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel->idx == idx)
++		if (evsel->core.idx == idx)
+ 			return evsel;
+ 	}
+ 	return NULL;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index b1c930eca40f..cce16814dc2c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -239,8 +239,7 @@ bool evsel__is_function_event(struct evsel *evsel)
+ void evsel__init(struct evsel *evsel,
+ 		 struct perf_event_attr *attr, int idx)
+ {
+-	perf_evsel__init(&evsel->core, attr);
+-	evsel->idx	   = idx;
++	perf_evsel__init(&evsel->core, attr, idx);
+ 	evsel->tracking	   = !idx;
+ 	evsel->leader	   = evsel;
+ 	evsel->unit	   = "";
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index bdad52a06438..09c290bce3cc 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -49,7 +49,6 @@ struct evsel {
+ 	struct perf_evsel	core;
+ 	struct evlist		*evlist;
+ 	off_t			id_offset;
+-	int			idx;
+ 	int			id_pos;
+ 	int			is_pos;
+ 	unsigned int		sample_size;
+@@ -406,7 +405,7 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 
+ static inline int evsel__group_idx(struct evsel *evsel)
+ {
+-	return evsel->idx - evsel->leader->idx;
++	return evsel->core.idx - evsel->leader->core.idx;
  }
  
--int main(int argc, char **argv)
-+int test_evsel(int argc, char **argv)
- {
- 	__T_START;
+ /* Iterates group WITHOUT the leader. */
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 0158d2945bab..9c8efb1898a0 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -789,7 +789,7 @@ static int write_group_desc(struct feat_fd *ff,
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		if (evsel__is_group_leader(evsel) && evsel->core.nr_members > 1) {
+ 			const char *name = evsel->group_name ?: "{anon_group}";
+-			u32 leader_idx = evsel->idx;
++			u32 leader_idx = evsel->core.idx;
+ 			u32 nr_members = evsel->core.nr_members;
  
-diff --git a/tools/lib/perf/tests/test-threadmap.c b/tools/lib/perf/tests/test-threadmap.c
-index 384471441b48..5e2a0291e94c 100644
---- a/tools/lib/perf/tests/test-threadmap.c
-+++ b/tools/lib/perf/tests/test-threadmap.c
-@@ -3,6 +3,7 @@
- #include <stdio.h>
- #include <perf/threadmap.h>
- #include <internal/tests.h>
-+#include "tests.h"
+ 			ret = do_write_string(ff, name);
+@@ -1844,7 +1844,7 @@ static struct evsel *read_event_desc(struct feat_fd *ff)
+ 		msz = sz;
  
- static int libperf_print(enum libperf_print_level level,
- 			 const char *fmt, va_list ap)
-@@ -10,7 +11,7 @@ static int libperf_print(enum libperf_print_level level,
- 	return vfprintf(stderr, fmt, ap);
- }
+ 	for (i = 0, evsel = events; i < nre; evsel++, i++) {
+-		evsel->idx = i;
++		evsel->core.idx = i;
  
--int main(int argc, char **argv)
-+int test_threadmap(int argc, char **argv)
- {
- 	struct perf_thread_map *threads;
+ 		/*
+ 		 * must read entire on-file attr struct to
+@@ -2379,7 +2379,7 @@ static struct evsel *evlist__find_by_index(struct evlist *evlist, int idx)
+ 	struct evsel *evsel;
  
-diff --git a/tools/lib/perf/tests/tests.h b/tools/lib/perf/tests/tests.h
-new file mode 100644
-index 000000000000..604838f21b2b
---- /dev/null
-+++ b/tools/lib/perf/tests/tests.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef TESTS_H
-+#define TESTS_H
-+
-+int test_cpumap(int argc, char **argv);
-+int test_threadmap(int argc, char **argv);
-+int test_evlist(int argc, char **argv);
-+int test_evsel(int argc, char **argv);
-+
-+#endif /* TESTS_H */
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel->idx == idx)
++		if (evsel->core.idx == idx)
+ 			return evsel;
+ 	}
+ 
+@@ -2393,7 +2393,7 @@ static void evlist__set_event_name(struct evlist *evlist, struct evsel *event)
+ 	if (!event->name)
+ 		return;
+ 
+-	evsel = evlist__find_by_index(evlist, event->idx);
++	evsel = evlist__find_by_index(evlist, event->core.idx);
+ 	if (!evsel)
+ 		return;
+ 
+@@ -2739,7 +2739,7 @@ static int process_group_desc(struct feat_fd *ff, void *data __maybe_unused)
+ 
+ 	i = nr = 0;
+ 	evlist__for_each_entry(session->evlist, evsel) {
+-		if (evsel->idx == (int) desc[i].leader_idx) {
++		if (evsel->core.idx == (int) desc[i].leader_idx) {
+ 			evsel->leader = evsel;
+ 			/* {anon_group} is a dummy name */
+ 			if (strcmp(desc[i].name, "{anon_group}")) {
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index d3cf2dee36c8..d956d9cf73f7 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -219,7 +219,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 		if (has_constraint && ev->weak_group)
+ 			continue;
+ 		/* Ignore event if already used and merging is disabled. */
+-		if (metric_no_merge && test_bit(ev->idx, evlist_used))
++		if (metric_no_merge && test_bit(ev->core.idx, evlist_used))
+ 			continue;
+ 		if (!has_constraint && ev->leader != current_leader) {
+ 			/*
+@@ -269,7 +269,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 	for (i = 0; i < idnum; i++) {
+ 		ev = metric_events[i];
+ 		/* Don't free the used events. */
+-		set_bit(ev->idx, evlist_used);
++		set_bit(ev->core.idx, evlist_used);
+ 		/*
+ 		 * The metric leader points to the identically named event in
+ 		 * metric_events.
+@@ -291,7 +291,7 @@ static struct evsel *find_evsel_group(struct evlist *perf_evlist,
+ 			    evsel_same_pmu_or_none(ev->leader, metric_events[i]->leader))
+ 				break;
+ 			if (!strcmp(metric_events[i]->name, ev->name)) {
+-				set_bit(ev->idx, evlist_used);
++				set_bit(ev->core.idx, evlist_used);
+ 				ev->metric_leader = metric_events[i];
+ 			}
+ 		}
+@@ -391,7 +391,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	}
+ 
+ 	evlist__for_each_entry_safe(perf_evlist, tmp, evsel) {
+-		if (!test_bit(evsel->idx, evlist_used)) {
++		if (!test_bit(evsel->core.idx, evlist_used)) {
+ 			evlist__remove(perf_evlist, evsel);
+ 			evsel__delete(evsel);
+ 		}
+@@ -1312,7 +1312,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 		nd = rblist__entry(old_metric_events, i);
+ 		old_me = container_of(nd, struct metric_event, nd);
+ 
+-		evsel = evlist__find_evsel(evlist, old_me->evsel->idx);
++		evsel = evlist__find_evsel(evlist, old_me->evsel->core.idx);
+ 		if (!evsel)
+ 			return -EINVAL;
+ 		new_me = metricgroup__lookup(new_metric_events, evsel, true);
+@@ -1320,7 +1320,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 			return -ENOMEM;
+ 
+ 		pr_debug("copying metric event for cgroup '%s': %s (idx=%d)\n",
+-			 cgrp ? cgrp->name : "root", evsel->name, evsel->idx);
++			 cgrp ? cgrp->name : "root", evsel->name, evsel->core.idx);
+ 
+ 		list_for_each_entry(old_expr, &old_me->head, nd) {
+ 			new_expr = malloc(sizeof(*new_expr));
+@@ -1363,7 +1363,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+ 			/* copy evsel in the same position */
+ 			for (idx = 0; idx < nr; idx++) {
+ 				evsel = old_expr->metric_events[idx];
+-				evsel = evlist__find_evsel(evlist, evsel->idx);
++				evsel = evlist__find_evsel(evlist, evsel->core.idx);
+ 				if (evsel == NULL) {
+ 					free(new_expr->metric_events);
+ 					free(new_expr->metric_refs);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 84108c17f48d..e936c7c02d14 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1740,7 +1740,7 @@ parse_events__set_leader_for_uncore_aliase(char *name, struct list_head *list,
+ 
+ 	leader = list_first_entry(list, struct evsel, core.node);
+ 	evsel = list_last_entry(list, struct evsel, core.node);
+-	total_members = evsel->idx - leader->idx + 1;
++	total_members = evsel->core.idx - leader->core.idx + 1;
+ 
+ 	leaders = calloc(total_members, sizeof(uintptr_t));
+ 	if (WARN_ON(!leaders))
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 412f8e79e409..8feef3a05af7 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1032,7 +1032,7 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
+ 
+ 	Py_INCREF(pevsel);
+ 	evsel = &((struct pyrf_evsel *)pevsel)->evsel;
+-	evsel->idx = evlist->core.nr_entries;
++	evsel->core.idx = evlist->core.nr_entries;
+ 	evlist__add(evlist, evsel);
+ 
+ 	return Py_BuildValue("i", evlist->core.nr_entries);
+diff --git a/tools/perf/util/stream.c b/tools/perf/util/stream.c
+index 4bd5e5a00aa5..545e44981a27 100644
+--- a/tools/perf/util/stream.c
++++ b/tools/perf/util/stream.c
+@@ -139,7 +139,7 @@ static int evlist__init_callchain_streams(struct evlist *evlist,
+ 
+ 		hists__output_resort(hists, NULL);
+ 		init_hot_callchain(hists, &es[i]);
+-		es[i].evsel_idx = pos->idx;
++		es[i].evsel_idx = pos->core.idx;
+ 		i++;
+ 	}
+ 
 -- 
 2.31.1
 
