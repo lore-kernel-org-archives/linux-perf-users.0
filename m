@@ -2,118 +2,229 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91857C07E96
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 22:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF51C07E95
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 05:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B0EF61C91
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jul 2021 22:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD81361CBB
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 05:46:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229876AbhGFWxm (ORCPT
+        id S230285AbhGGFtU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jul 2021 18:53:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:31331 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229753AbhGFWxl (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jul 2021 18:53:41 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10037"; a="196488367"
-X-IronPort-AV: E=Sophos;i="5.83,329,1616482800"; 
-   d="scan'208";a="196488367"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2021 15:50:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.83,329,1616482800"; 
-   d="scan'208";a="627825471"
-Received: from gupta-dev2.jf.intel.com (HELO gupta-dev2.localdomain) ([10.54.74.119])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jul 2021 15:50:53 -0700
-Date:   Tue, 6 Jul 2021 15:51:27 -0700
-From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To:     Eduardo Habkost <ehabkost@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Victor Ding <victording@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Anand K Mistry <amistry@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH 4/4] x86/tsx: Add cmdline tsx=fake to not clear CPUID
- bits RTM and HLE
-Message-ID: <20210706225127.kyn7amrln6ydfcig@gupta-dev2.localdomain>
-References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <de6b97a567e273adff1f5268998692bad548aa10.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <20210706195233.h6w4cm73oktfqpgz@habkost.net>
- <20210706211606.ezme3xvwztagbjqy@gupta-dev2.localdomain>
- <CAOpTY_pmNah_OCzk3XRyTsgkCPdJD1tp2RxKHMieFQM1s-tQNA@mail.gmail.com>
+        Wed, 7 Jul 2021 01:49:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43338 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230233AbhGGFtT (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 7 Jul 2021 01:49:19 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1675X3X9136411;
+        Wed, 7 Jul 2021 01:46:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=iuZqyzS78URMiOC6yoDGhfeDLozMiKUWZ2xk1Ovlovs=;
+ b=gzvS+o4kaZOdZK7oATSmpBUB0nHTFH1ACbpvFtSI6cLp7zNYzKxXGmgcbl87Kyneb3ZN
+ uqh/Ejqf00PGVFjnHoAkvv4L0Zpd+UDnYewaoPbgpA9eB64DF4TrTxUL8g+0spfSYFWy
+ a+tgzUDxbagZLJtavU4bXezjIFzzzvoEnOETkNqQHJDJGynfkp4eN7AnJcVBPuT+uan6
+ HoSBQhBYY8zpYCUTkDsukUeec8SjaXDVLyfwepcRVVTx73cJL9+VgTCMgN5aFpcYsdBX
+ 0PsXRSPnMDkp8H9TK3SSsHsEfr7wrE6+8BjSIQVjLUMnc/+/OBjjTWXSvBYjhAExElsE ow== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39mvq1kybs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Jul 2021 01:46:31 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1675jJe1195722;
+        Wed, 7 Jul 2021 01:46:31 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 39mvq1kybj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Jul 2021 01:46:31 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1675fuiW026039;
+        Wed, 7 Jul 2021 05:46:30 GMT
+Received: from b03cxnp07027.gho.boulder.ibm.com (b03cxnp07027.gho.boulder.ibm.com [9.17.130.14])
+        by ppma04dal.us.ibm.com with ESMTP id 39jfhckuh7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 07 Jul 2021 05:46:30 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp07027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1675kTqd31261038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 7 Jul 2021 05:46:29 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8291136051;
+        Wed,  7 Jul 2021 05:46:28 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4502313604F;
+        Wed,  7 Jul 2021 05:46:22 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.41.160])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  7 Jul 2021 05:46:21 +0000 (GMT)
+Subject: Re: [PATCH] perf script python: Fix buffer size to report iregs in
+ perf script
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, maddy@linux.vnet.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        ravi.bangoria@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, rnsastry@linux.ibm.com,
+        "Paul A. Clarke" <pc@us.ibm.com>
+References: <20210628062341.155839-1-kjain@linux.ibm.com>
+ <20210628144937.GE142768@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
+ <ee98968a-f343-a68e-9a3e-58e97dc130c8@linux.ibm.com>
+ <c6fb2136-21e1-325a-f7f7-9745dbe29661@linux.ibm.com>
+ <YOSr25+a+r3MF2Ob@kernel.org>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <d59266da-2aa6-69ff-646b-144ba874ee2f@linux.ibm.com>
+Date:   Wed, 7 Jul 2021 11:16:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAOpTY_pmNah_OCzk3XRyTsgkCPdJD1tp2RxKHMieFQM1s-tQNA@mail.gmail.com>
+In-Reply-To: <YOSr25+a+r3MF2Ob@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: A-M0Rg2DUBmECvzGt7h7FASLkiNjwSmY
+X-Proofpoint-GUID: TJs2TuLx5DHbzFkZO00ukLkzoTu9N9vG
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-07-07_01:2021-07-06,2021-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 suspectscore=0 impostorscore=0
+ mlxscore=0 spamscore=0 adultscore=0 phishscore=0 clxscore=1015
+ mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2104190000 definitions=main-2107070029
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06.07.2021 17:19, Eduardo Habkost wrote:
->On Tue, Jul 6, 2021 at 5:15 PM Pawan Gupta
-><pawan.kumar.gupta@linux.intel.com> wrote:
->>
->> On 06.07.2021 15:52, Eduardo Habkost wrote:
->> >On Wed, Jun 09, 2021 at 02:14:39PM -0700, Pawan Gupta wrote:
->> >> On CPUs that deprecated TSX, clearing the enumeration bits CPUID.RTM and
->> >> CPUID.HLE may not be desirable in some corner cases. Like a saved guest
->> >> would refuse to resume if it was saved before the microcode update
->> >> that deprecated TSX.
->> >
->> >Why is a global option necessary to allow those guests to be
->> >resumed?  Why can't KVM_GET_SUPPORTED_CPUID always return the HLE
->> >and RTM bits as supported when the host CPU has them?
->>
->> Yes, the global option is unnecessary and this patch was dropped in v2.
->
->Was the behaviour this patch originally tried to fix changed in v2 as
->well? Is it going to be possible to resume a HLE=1,RTM=1 VM on a
->TSX_FORCE_ABORT=1 host with no extra kernel command line options
->needed?
 
-The problem it tried to solve is still present, but the global switch
-was thought to be unnecessary. I see that Paolo has some suggestions to
-fix this in the userspace.
+
+On 7/7/21 12:45 AM, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jul 06, 2021 at 05:26:12PM +0530, kajoljain escreveu:
+>>
+>>
+>> On 6/29/21 12:39 PM, kajoljain wrote:
+>>>
+>>>
+>>> On 6/28/21 8:19 PM, Paul A. Clarke wrote:
+>>>> On Mon, Jun 28, 2021 at 11:53:41AM +0530, Kajol Jain wrote:
+>>>>> Commit 48a1f565261d ("perf script python: Add more PMU fields
+>>>>> to event handler dict") added functionality to report fields like
+>>>>> weight, iregs, uregs etc via perf report.
+>>>>> That commit predefined buffer size to 512 bytes to print those fields.
+>>>>>
+>>>>> But incase of powerpc, since we added extended regs support
+>>>>> in commits:
+>>>>>
+>>>>> Commit 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
+>>>>> Counter SPRs as part of extended regs")
+>>>>> Commit d735599a069f ("powerpc/perf: Add extended regs support for
+>>>>> power10 platform")
+>>>>>
+>>>>> Now iregs can carry more bytes of data and this predefined buffer size
+>>>>> can result to data loss in perf script output.
+>>>>>
+>>>>> Patch resolve this issue by making buffer size dynamic based on number
+>>>>> of registers needed to print. It also changed return type for function
+>>>>> "regs_map" from int to void, as the return value is not being used by
+>>>>> the caller function "set_regs_in_dict".
+>>>>>
+>>>>> Fixes: 068aeea3773a ("perf powerpc: Support exposing Performance Monitor
+>>>>> Counter SPRs as part of extended regs")
+>>>>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>>>>> ---
+>>>>>  .../util/scripting-engines/trace-event-python.c | 17 ++++++++++++-----
+>>>>>  1 file changed, 12 insertions(+), 5 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+>>>>> index 4e4aa4c97ac5..c8c9706b4643 100644
+>>>>> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+>>>>> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+>>>> [...]
+>>>>> @@ -713,7 +711,16 @@ static void set_regs_in_dict(PyObject *dict,
+>>>>>  			     struct evsel *evsel)
+>>>>>  {
+>>>>>  	struct perf_event_attr *attr = &evsel->core.attr;
+>>>>> -	char bf[512];
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * Here value 28 is a constant size which can be used to print
+>>>>> +	 * one register value and its corresponds to:
+>>>>> +	 * 16 chars is to specify 64 bit register in hexadecimal.
+>>>>> +	 * 2 chars is for appending "0x" to the hexadecimal value and
+>>>>> +	 * 10 chars is for register name.
+>>>>> +	 */
+>>>>> +	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+>>>>> +	char bf[size];
+>>>>
+>>>> I propose using a template rather than a magic number here. Something like:
+>>>> const char reg_name_tmpl[] = "10 chars  ";
+>>>> const char reg_value_tmpl[] = "0x0123456789abcdef";
+>>>> const int size = __sw_hweight64(attr->sample_regs_intr) +
+>>>>                  sizeof reg_name_tmpl + sizeof reg_value_tmpl;
+>>>>
+>>>
+>>> Hi Paul,
+>>>    Thanks for reviewing the patch. Yes these are
+>>> some standardization we can do by creating macros for different
+>>> fields.
+>>> The basic idea is, we want to provide significant buffer size
+>>> based on number of registers present in sample_regs_intr to accommodate
+>>> all data.
+>>>
+>>
+>> Hi Arnaldo/Jiri,
+>>    Is the approach used in this patch looks fine to you?
+> 
+> Yeah, and the comment you provide right above it explains it, so I think
+> that is enough, ok?
+> 
+
+Hi Arnaldo,
+    Thanks for reviewing it. As you said added comment already explains
+why we are taking size constant as 28, should we skip adding macros part?
+Can you pull this patch.
 
 Thanks,
-Pawan
+Kajol Jain
+
+> - Arnaldo
+>  
+>> Thanks,
+>> Kajol Jain
+>>
+>>> But before going to optimizing code, Arnaldo/Jiri, is this approach looks good to you?
+>>>
+>>>> Pardon my ignorance, but is there no separation/whitespace between the name
+>>>> and the value?
+>>>
+>>> This is how we will get data via perf script
+>>>
+>>> r0:0xc000000000112008
+>>> r1:0xc000000023b37920
+>>> r2:0xc00000000144c900
+>>> r3:0xc0000000bc566120
+>>> r4:0xc0000000c5600000
+>>> r5:0x2606c6506ca
+>>> r6:0xc000000023b378f8
+>>> r7:0xfffffd9f93a48f0e
+>>> .....
+>>>
+>>>  And is there some significance to 10 characters for the
+>>>> register name, or is that a magic number?
+>>>
+>>> Most of the register name are within 10 characters, basically we are giving this
+>>> magic number to make sure we have enough space in buffer to contain all registers
+>>> name with colon.
+>>>
+>>> Thanks,
+>>> Kajol Jain
+>>>  
+>>>>
+>>>> PC
+>>>>
+> 
