@@ -2,226 +2,136 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D67C07E9C
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9316DC07E95
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0708761CBE
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A90561CC9
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231406AbhGGS0a (ORCPT
+        id S231338AbhGGShD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jul 2021 14:26:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59588 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231361AbhGGS03 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jul 2021 14:26:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625682228;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mF5DpeP80QzR+srksvVofJQ5IcNTAEAob1kzMD7f+i8=;
-        b=MWv29evPpLgWw0RWHBKs3TRyi8WXALF0PtVH5LD2Ofq0HkQBIFMmBoyyBGOaDNXFm471GU
-        /VVOnStR23zl5eLFTdrlvsOvaoMAS1dF1vwObAqThi/NIdDqToqQQl/8xbFpeo1rvI/MCF
-        usIzrKZBEqxzu5yjBm2HhRvBpTjqW+k=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-329-MHdBMlZ8O6K0ueXKBEXiqQ-1; Wed, 07 Jul 2021 14:23:47 -0400
-X-MC-Unique: MHdBMlZ8O6K0ueXKBEXiqQ-1
-Received: by mail-lf1-f72.google.com with SMTP id g9-20020ac24d890000b0290361688a4446so1262568lfe.23
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jul 2021 11:23:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mF5DpeP80QzR+srksvVofJQ5IcNTAEAob1kzMD7f+i8=;
-        b=oXbeE2cxHFsPOX6AAGJWkUN0aFEVEV/OgFBf3KWtKJM83Itd1xzXJcNiCiLqAdEToJ
-         ncbyGwVJyGfspDC31ViSrovGflz+ZhLzwo5vcgR/Nrcvbk6brxiK81jSS5Ymz5pmr0q3
-         UQ2DY4wOQEQyHM61bAD2oCVR/TMpYMxd0XBJSDU/98Bh4j7OSZJJ22LU/Thtkel89Dfs
-         Oybzl1AyXMS5rlmu826ediTqRoBLszJlMFTsoG4E1uVHJSdQ1FTDFjLIhFX0AH3z0MNo
-         2KpVv9cbLJx+I5cVWbOvlN9Q7lVl2a+6o8c6K2saEOrBGu4VOptDvuAqNii/3cDqqJHA
-         N/XA==
-X-Gm-Message-State: AOAM532BXvqe0l+BKtTtPAP7w+g4NxSkowK6/kO7Q6PH33jTDbyerlxT
-        ou5bXUj8ghobK96MWUQRaDigNVwQ/fYy9MJod0PqWZepkZeOQ+OUOgDdEQSvl4jkVcuQJhP9SHv
-        OonZT1KzXJxp79Hpu14M3pVXErOvu7y8RqnRq3vJk+kCrJg==
-X-Received: by 2002:a05:6512:102e:: with SMTP id r14mr18889742lfr.34.1625682225879;
-        Wed, 07 Jul 2021 11:23:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy4VicBqw5BsVoDBTNFKPvGAeJlL3wDstpjkgYJrOsDZySOMD3MZoE7XcqdtBYd0iNslu+I/yE/+9jHfk6lnPs=
-X-Received: by 2002:a05:6512:102e:: with SMTP id r14mr18889718lfr.34.1625682225596;
- Wed, 07 Jul 2021 11:23:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <de6b97a567e273adff1f5268998692bad548aa10.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
- <20210706195233.h6w4cm73oktfqpgz@habkost.net> <4cc2c5fe-2153-05c5-dedd-8cb650753740@redhat.com>
- <CAOpTY_qdbbnauTkbjkz+cZmo8=Hz6qqLNY6i6uamqhcty=Q1sw@mail.gmail.com>
- <671be35f-220a-f583-aa31-3a2da7dae93a@redhat.com> <CAOpTY_paTO=xqfGXPCC2Paty5ptJ6Dqpo4Tzb4C2hrO_t=vS8w@mail.gmail.com>
- <CALMp9eSJyvU1=FndZyR+hZMtKPWwgibKisBqp0Xcx4jxjrWn2w@mail.gmail.com>
- <CAOpTY_pefOmJ0zJjUzitgTGxqgX6XxwTP0fMKoiyuBCHrh+AWg@mail.gmail.com> <CALMp9eSNS+yKsDgS3TXH6bSf4eUM2sJaRrLxZa+Y8e0FqVhRJA@mail.gmail.com>
-In-Reply-To: <CALMp9eSNS+yKsDgS3TXH6bSf4eUM2sJaRrLxZa+Y8e0FqVhRJA@mail.gmail.com>
-From:   Eduardo Habkost <ehabkost@redhat.com>
-Date:   Wed, 7 Jul 2021 14:23:29 -0400
-Message-ID: <CAOpTY_qyWbpRMHL7Ob7fvvLehOPzVBC=7cMHELYJ3E=mPAc7sA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] x86/tsx: Add cmdline tsx=fake to not clear CPUID bits
- RTM and HLE
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 7 Jul 2021 14:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43286 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230481AbhGGShD (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 7 Jul 2021 14:37:03 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3425161CBE;
+        Wed,  7 Jul 2021 18:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625682862;
+        bh=EZhXqLJ9GU0ND6GPzxWqhR9qRBz/WNLDPFdlJUX8i8M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lZS+dmzAgiWsGUZztqLO/NVaUAdIp47XMY+/e6SNSUlP0ZTv6u1dMneFCwVAkhtYU
+         w0gnfIZhwtZ1RXnnCH5hhZSk8WZ3eymS7cCtQX8WE0PbdhNty3wESG1HXtgZt4KaZS
+         6Lv2OVBDtdEzuo19bfJ9eUCwNTZpW7S6/ue2pp/e827nkDCB28fE+vuVPD16A+/NCX
+         e0jUORbIfPAdqqi0xndFKeW00auUhXrW8scDQYPTkrug/1gLZh0zGxJ/fBmKWceosn
+         nv6j2fKea4duRG1mVAIIO+lsT3p3dhRBSx57buiZ5uxbs6wehqMhwUvGV7/CWG7wtO
+         JbdXRbUtb6xSw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CFFF540B1A; Wed,  7 Jul 2021 15:34:19 -0300 (-03)
+Date:   Wed, 7 Jul 2021 15:34:19 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Tony Luck <tony.luck@intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Kyung Min Park <kyung.min.park@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Victor Ding <victording@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Anthony Steinhauser <asteinhauser@google.com>,
-        Anand K Mistry <amistry@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        kvm@vger.kernel.org, Jiri Denemark <jdenemar@redhat.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        Michal Privoznik <mprivozn@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>, nakamura.shun@fujitsu.com,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/7] libperf: Move leader to perf_evsel::leader
+Message-ID: <YOXzq9irKEL2mMmr@kernel.org>
+References: <20210706151704.73662-1-jolsa@kernel.org>
+ <20210706151704.73662-4-jolsa@kernel.org>
+ <YOW/5+Ep7JpL4qLL@kernel.org>
+ <YOXu7PPoaJ0cpeQI@krava>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YOXu7PPoaJ0cpeQI@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 7, 2021 at 1:18 PM Jim Mattson <jmattson@google.com> wrote:
->
-> On Wed, Jul 7, 2021 at 10:08 AM Eduardo Habkost <ehabkost@redhat.com> wrote:
-> >
-> > On Wed, Jul 7, 2021 at 12:42 PM Jim Mattson <jmattson@google.com> wrote:
-> > >
-> > > On Wed, Jul 7, 2021 at 8:09 AM Eduardo Habkost <ehabkost@redhat.com> wrote:
-> > > >
-> > > > CCing libvir-list, Jiri Denemark, Michal Privoznik, so they are aware
-> > > > that the definition of "supported CPU features" will probably become a
-> > > > bit more complex in the future.
-> > >
-> > > Has there ever been a clear definition? Family, model, and stepping,
-> > > for instance: are these the only values supported? That would make
-> > > cross-platform migration impossible. What about the vendor string? Is
-> > > that the only value supported? That would make cross-vendor migration
-> > > impossible. For the maximum input value for basic CPUID information
-> > > (CPUID.0H:EAX), is that the only value supported, or is it the maximum
-> > > value supported? On the various individual feature bits, does a '1'
-> > > imply that '0' is also supported, or is '1' the only value supported?
-> > > What about the feature bits with reversed polarity (e.g.
-> > > CPUID.(EAX=07H,ECX=0):EBX.FDP_EXCPTN_ONLY[bit 6])?
-> > >
-> > > This API has never made sense to me. I have no idea how to interpret
-> > > what it is telling me.
-> >
-> > Is this about GET_SUPPORTED_CPUID, QEMU's query-cpu-model-expansion &
-> > related commands, or the libvirt CPU APIs?
->
-> This is my ongoing rant about KVM_GET_SUPPORTED_CPUID.
->
+Em Wed, Jul 07, 2021 at 08:14:04PM +0200, Jiri Olsa escreveu:
+> On Wed, Jul 07, 2021 at 11:53:27AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Jul 06, 2021 at 05:17:00PM +0200, Jiri Olsa escreveu:
+> > > Moving evsel::leader to perf_evsel::leader, so we can move
+> > > the group interface to libperf.
+> > 
+> > I also had to apply this, because you didn't build with
+> > BUILD_BPF_SKEL=1, right?
+> 
+> ah right.. I also plan to build in arm/s390/ppc,
+> so I'll take what you have in tmp.perf/core
 
-I agree the definition is not clear. I have tried to enumerate below
-what QEMU assumes about the return value of KVM_GET_SUPPORTED_CPUID.
-These are a collection of workarounds and feature-specific rules that
-are encoded in the kvm_arch_get_supported_cpuid()
-x86_cpu_filter_features(), and cpu_x86_cpuid() functions in QEMU.
+Ok, just pushed, so far so good, the android ones are unrelated, some
+cross-builds already passed with debian:experimental
 
-1. Passing through the returned values (unchanged) from
-KVM_GET_SUPPORTED_CPUID to KVM_SET_CPUID is assumed to be always safe,
-as long as the ability to save/resume VCPU state is not required.
-(This is the behavior implemented by "-cpu host,migratable=off")
-2. The safety of setting a bit to a different value requires specific
-knowledge about the CPUID bit.
-2.1. For a specific set of registers (see below), QEMU assumes it's
-safe to set the bit to 0 when KVM_GET_SUPPORTED_CPUID returns 1.
-2.2. For a few specific leaves (see below), there are more complex rules.
-2.4. For all other leaves, QEMU doesn't use the return value of
-KVM_GET_SUPPORTED_CPUID at all (AFAICS).
-
-
-The CPUID leaves mentioned in 2.1 are:
-
-CPUID[1].EDX
-CPUID[1].ECX
-CPUID[6].EAX
-CPUID[EAX=7,ECX=0].EBX
-- This unfortunately includes de-feature bits like FDP_EXCPTN_ONLY and
-ZERO_FCS_FDS
-CPUID[EAX=7,ECX=0].ECX
-CPUID[EAX=7,ECX=0].EDX
-CPUID[EAX=7,ECX=1].EAX
-CPUID[EAX=0Dh,ECX=0].EAX
-CPUID[EAX=0Dh,ECX=0].EDX
-CPUID[EAX=0Dh,ECX=1].EAX
-- Note that CPUID[0Dh] has additional logic to ensure XSAVE component
-info on CPUID is consistent
-CPUID[40000001h].EAX
-CPUID[40000001h].EDX
-CPUID[80000001h].EDX
-CPUID[80000001h].ECX
-CPUID[80000007h].EDX
-CPUID[80000008h].EBX
-CPUID[8000000Ah].EDX
-CPUID[C0000001h].EDX
-
-
-Some of the CPUID leaves mentioned in 2.2 are:
-
-CPUID[1].ECX.HYPERVISOR[bit 31]
-- Can be enabled unconditionally
-CPUID[1].ECX.TSC_DEADLINE_TIMER[bit 24]
-- Can be set to 1 if using the in-kernel irqchip and
-KVM_CAP_TSC_DEADLINE_TIMER is enabled
-CPUID[1].ECX.X2APIC[bit 21]
-- Can be set to 1 if using the in-kernel irqchip
-CPUID[1].ECX.MONITOR[bit 3]
-- Can be set to 1 if KVM_X86_DISABLE_EXITS_MWAIT is enabled
-CPUID[6].EAX.ARAT[bit 2]
-- Can be enabled unconditionally
-CPUID[EAX=7,ECX=0].EDX.ARCH_CAPABILITIES
-- Workaround for KVM bug in Linux v4.17-v4.20
-CPUID[EAX=14h,ECX=0], CPUID{EAX=14h,ECX=1]
-- Most bits must match the host, unless
-CPUID[EAX=7,ECX=0].EBX.INTEL_PT[bit 25] is 0
-CPUID[80000001h].EDX
-- AMD-specific feature flag aliases can be set based on CPUID[1].EDX
-CPUID[40000001h].EAX
-- KVM_FEATURE_PV_UNHALT requires in-kernel irqchip
-- KVM_FEATURE_MSI_EXT_DEST_ID requires split irqchip
-CPUID[40000001].EDX.KVM_HINTS_REALTIME
-- Can be enabled unconditionally
-
---
-Eduardo
-
+[perfbuilder@five ~]$ export PERF_TARBALL=http://192.168.100.2/perf/perf-5.13.0.tar.xz
+[perfbuilder@five ~]$ time dm
+Wed Jul  7 02:56:10 PM -03 2021
+# export PERF_TARBALL=http://192.168.100.2/perf/perf-5.13.0.tar.xz
+# dm
+   1    95.13 almalinux:8                   : Ok   gcc (GCC) 8.4.1 20200928 (Red Hat 8.4.1-1) , clang version 11.0.0 (Red Hat 11.0.0-1.module_el8.4.0+2107+39fed697)
+   2    69.95 alpine:3.4                    : Ok   gcc (Alpine 5.3.0) 5.3.0 , clang version 3.8.0 (tags/RELEASE_380/final)
+   3    71.37 alpine:3.5                    : Ok   gcc (Alpine 6.2.1) 6.2.1 20160822 , clang version 3.8.1 (tags/RELEASE_381/final)
+   4    75.00 alpine:3.6                    : Ok   gcc (Alpine 6.3.0) 6.3.0 , clang version 4.0.0 (tags/RELEASE_400/final)
+   5    91.85 alpine:3.7                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.0 (tags/RELEASE_500/final) (based on LLVM 5.0.0)
+   6    83.13 alpine:3.8                    : Ok   gcc (Alpine 6.4.0) 6.4.0 , Alpine clang version 5.0.1 (tags/RELEASE_501/final) (based on LLVM 5.0.1)
+   7    86.74 alpine:3.9                    : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 5.0.1 (tags/RELEASE_502/final) (based on LLVM 5.0.1)
+   8   113.74 alpine:3.10                   : Ok   gcc (Alpine 8.3.0) 8.3.0 , Alpine clang version 8.0.0 (tags/RELEASE_800/final) (based on LLVM 8.0.0)
+   9   134.59 alpine:3.11                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 9.0.0 (https://git.alpinelinux.org/aports f7f0d2c2b8bcd6a5843401a9a702029556492689) (based on LLVM 9.0.0)
+  10   117.15 alpine:3.12                   : Ok   gcc (Alpine 9.3.0) 9.3.0 , Alpine clang version 10.0.0 (https://gitlab.alpinelinux.org/alpine/aports.git 7445adce501f8473efdb93b17b5eaf2f1445ed4c)
+  11   125.76 alpine:3.13                   : Ok   gcc (Alpine 10.2.1_pre1) 10.2.1 20201203 , Alpine clang version 10.0.1
+  12   112.50 alpine:edge                   : Ok   gcc (Alpine 10.3.1_git20210424) 10.3.1 20210424 , Alpine clang version 11.1.0
+  13    68.75 alt:p8                        : Ok   x86_64-alt-linux-gcc (GCC) 5.3.1 20151207 (ALT p8 5.3.1-alt3.M80P.1) , clang version 3.8.0 (tags/RELEASE_380/final)
+  14    86.52 alt:p9                        : Ok   x86_64-alt-linux-gcc (GCC) 8.4.1 20200305 (ALT p9 8.4.1-alt0.p9.1) , clang version 10.0.0
+  15    84.62 alt:sisyphus                  : Ok   x86_64-alt-linux-gcc (GCC) 10.2.1 20210313 (ALT Sisyphus 10.2.1-alt3) , clang version 10.0.1
+  16    64.95 amazonlinux:1                 : Ok   gcc (GCC) 7.2.1 20170915 (Red Hat 7.2.1-2) , clang version 3.6.2 (tags/RELEASE_362/final)
+  17    90.32 amazonlinux:2                 : Ok   gcc (GCC) 7.3.1 20180712 (Red Hat 7.3.1-13) , clang version 11.1.0 (Amazon Linux 2 11.1.0-1.amzn2.0.2)
+  18     6.80 android-ndk:r12b-arm          : FAIL gcc version 4.9.x 20150123 (prerelease) (GCC)
+                     from util/intel-pt-decoder/intel-pt-insn-decoder.c:15:
+    /git/perf-5.13.0/tools/include/linux/kconfig.h:10:0: error: "__LITTLE_ENDIAN" redefined [-Werror]
+     #define __LITTLE_ENDIAN 1234
+     ^
+    In file included from /opt/android-ndk-r12b/platforms/android-24/arch-arm/usr/include/endian.h:31:0,
+                     from /git/perf-5.13.0/tools/include/linux/kernel.h:10,
+                     from util/intel-pt-decoder/intel-pt-insn-decoder.c:7:
+    /opt/android-ndk-r12b/platforms/android-24/arch-arm/usr/include/sys/endian.h:39:0: note: this is the location of the previous definition
+     #define __LITTLE_ENDIAN _LITTLE_ENDIAN
+     ^
+    cc1: all warnings being treated as errors
+    make[4]: *** [/git/perf-5.13.0/tools/build/Makefile.build:139: intel-pt-decoder] Error 2
+  19     6.99 android-ndk:r15c-arm          : FAIL gcc version 4.9.x 20150123 (prerelease) (GCC)
+                     from util/intel-pt-decoder/intel-pt-insn-decoder.c:15:
+    /git/perf-5.13.0/tools/include/linux/kconfig.h:10:0: error: "__LITTLE_ENDIAN" redefined [-Werror]
+     #define __LITTLE_ENDIAN 1234
+     ^
+    In file included from /opt/android-ndk-r15c/platforms/android-26/arch-arm/usr/include/endian.h:31:0,
+                     from /git/perf-5.13.0/tools/include/linux/kernel.h:10,
+                     from util/intel-pt-decoder/intel-pt-insn-decoder.c:7:
+    /opt/android-ndk-r15c/platforms/android-26/arch-arm/usr/include/sys/endian.h:39:0: note: this is the location of the previous definition
+     #define __LITTLE_ENDIAN _LITTLE_ENDIAN
+     ^
+    cc1: all warnings being treated as errors
+    make[4]: *** [/git/perf-5.13.0/tools/build/Makefile.build:139: intel-pt-decoder] Error 2
+  20    98.76 centos:8                      : Ok   gcc (GCC) 8.3.1 20191121 (Red Hat 8.3.1-5) , clang version 10.0.1 (Red Hat 10.0.1-1.module_el8.3.0+467+cb298d5b)
+  21    59.86 clearlinux:latest             : Ok   gcc (Clear Linux OS for Intel Architecture) 11.1.1 20210624 releases/gcc-11.1.0-356-gf19b20de1b , clang version 11.1.0
+  22    79.48 debian:9                      : Ok   gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516 , clang version 3.8.1-24 (tags/RELEASE_381/final)
+  23    72.76 debian:10                     : Ok   gcc (Debian 8.3.0-6) 8.3.0 , clang version 7.0.1-8+deb10u2 (tags/RELEASE_701/final)
+  24    72.25 debian:experimental           : Ok   gcc (Debian 10.2.1-6) 10.2.1 20210110 , Debian clang version 11.0.1-2
+  25    28.49 debian:experimental-x-arm64   : Ok   aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
+  26    24.46 debian:experimental-x-mips    : Ok   mips-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
+  27    26.17 debian:experimental-x-mips64  : Ok   mips64-linux-gnuabi64-gcc (Debian 10.2.1-6) 10.2.1 20210110
+  28    26.97 debian:experimental-x-mipsel  : Ok   mipsel-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110
+  29    24.97 fedora:22                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.5.0 (tags/RELEASE_350/final)
+  30    64.61 fedora:23                     : Ok   gcc (GCC) 5.3.1 20160406 (Red Hat 5.3.1-6) , clang version 3.7.0 (tags/RELEASE_370/final)
