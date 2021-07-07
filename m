@@ -2,192 +2,226 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A562BC07E95
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D67C07E9C
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ECBA61C72
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0708761CBE
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 18:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232277AbhGGSXA (ORCPT
+        id S231406AbhGGS0a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jul 2021 14:23:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:29051 "EHLO
+        Wed, 7 Jul 2021 14:26:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:59588 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232067AbhGGSWv (ORCPT
+        by vger.kernel.org with ESMTP id S231361AbhGGS03 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jul 2021 14:22:51 -0400
+        Wed, 7 Jul 2021 14:26:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1625682010;
+        s=mimecast20190719; t=1625682228;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=4AONbdOElNVA6Dx7kA8iOl08aAX5KPGMe0+7XYqoXzU=;
-        b=Xc7StHwfnckUvJ66bWAxAWqRkUzBkN+c4GjgqTxWwJJBT31O5JQNYYi9yQjk9HpXX83BH8
-        kOXUzPdzkr5TBt3aY03jio8iFgvMiodkZM8iPjoOkk7QAg3ovC3wa2aZ/nGjgNFjDcyTnl
-        vtHTqDT7v8IbnDkwHAMXjjD4QviUgSM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-512-B2Abvg-nOUCAQaUSvdzBTw-1; Wed, 07 Jul 2021 14:20:09 -0400
-X-MC-Unique: B2Abvg-nOUCAQaUSvdzBTw-1
-Received: by mail-wr1-f72.google.com with SMTP id a4-20020adffb840000b02901304c660e75so1044872wrr.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jul 2021 11:20:09 -0700 (PDT)
+        bh=mF5DpeP80QzR+srksvVofJQ5IcNTAEAob1kzMD7f+i8=;
+        b=MWv29evPpLgWw0RWHBKs3TRyi8WXALF0PtVH5LD2Ofq0HkQBIFMmBoyyBGOaDNXFm471GU
+        /VVOnStR23zl5eLFTdrlvsOvaoMAS1dF1vwObAqThi/NIdDqToqQQl/8xbFpeo1rvI/MCF
+        usIzrKZBEqxzu5yjBm2HhRvBpTjqW+k=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-329-MHdBMlZ8O6K0ueXKBEXiqQ-1; Wed, 07 Jul 2021 14:23:47 -0400
+X-MC-Unique: MHdBMlZ8O6K0ueXKBEXiqQ-1
+Received: by mail-lf1-f72.google.com with SMTP id g9-20020ac24d890000b0290361688a4446so1262568lfe.23
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jul 2021 11:23:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4AONbdOElNVA6Dx7kA8iOl08aAX5KPGMe0+7XYqoXzU=;
-        b=Ym/+OOGkjfb71wMaSDMWy3qsOS9XzMshN3HvrHANV+astCFUbi0V3jLZxas36sE4eL
-         zljQVVslo48c3TI+WAkR9af5dzn5/AM+k/4EtOiz/07Bew5YoWhzN82EE8FhrAP75i6Z
-         y3FkG3h1KJo74zMo37dXlxtujikiN070aloIefvxW9l7kwPsSjVRe52hUuXo7fT5GdLc
-         7vnzkAYzzxV2JBfZP6+jQ95TCA2oCKSZhCK7Cc7AO5NflTvK4TXA7+6pXeIsY2R3iuso
-         SwmDnnQAzjWweh3/Ma+Q0jw7ys4nMGMWz8drnnxEtRENfPvv2FiZRHBTgLtnjFYTF0Uy
-         dCSQ==
-X-Gm-Message-State: AOAM533eFmgBx/XGLIkfVT2wR2hqFfQk5yRtBOzJTQDHlPctj0CJ4v8/
-        fOViAdNx7vox6aavCC8rqNlhhwPS2KxnegPbYwJmz8ytT9QQi70lYCybyqU3QIdm9QdTOhhHy50
-        3yZjGev0qBw2Oh68khzHZ+sw04BkVUA==
-X-Received: by 2002:adf:edc4:: with SMTP id v4mr29481936wro.54.1625682008256;
-        Wed, 07 Jul 2021 11:20:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwaXEKTieGyjfVUIMyo4K5xvdOFkeQ+zh4QglF053YAlFPCnlZK49ypa+BjyHd0h/Ycr2wD8g==
-X-Received: by 2002:adf:edc4:: with SMTP id v4mr29481918wro.54.1625682008092;
-        Wed, 07 Jul 2021 11:20:08 -0700 (PDT)
-Received: from krava ([185.153.78.55])
-        by smtp.gmail.com with ESMTPSA id c8sm20570919wri.91.2021.07.07.11.20.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jul 2021 11:20:07 -0700 (PDT)
-Date:   Wed, 7 Jul 2021 20:20:04 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>, nakamura.shun@fujitsu.com,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [RFCv2 0/7] libperf: Add leader/group info to perf_evsel
-Message-ID: <YOXwVPS6zIyw0C/k@krava>
-References: <20210706151704.73662-1-jolsa@kernel.org>
- <YOW+eyxYtPhc2hSf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mF5DpeP80QzR+srksvVofJQ5IcNTAEAob1kzMD7f+i8=;
+        b=oXbeE2cxHFsPOX6AAGJWkUN0aFEVEV/OgFBf3KWtKJM83Itd1xzXJcNiCiLqAdEToJ
+         ncbyGwVJyGfspDC31ViSrovGflz+ZhLzwo5vcgR/Nrcvbk6brxiK81jSS5Ymz5pmr0q3
+         UQ2DY4wOQEQyHM61bAD2oCVR/TMpYMxd0XBJSDU/98Bh4j7OSZJJ22LU/Thtkel89Dfs
+         Oybzl1AyXMS5rlmu826ediTqRoBLszJlMFTsoG4E1uVHJSdQ1FTDFjLIhFX0AH3z0MNo
+         2KpVv9cbLJx+I5cVWbOvlN9Q7lVl2a+6o8c6K2saEOrBGu4VOptDvuAqNii/3cDqqJHA
+         N/XA==
+X-Gm-Message-State: AOAM532BXvqe0l+BKtTtPAP7w+g4NxSkowK6/kO7Q6PH33jTDbyerlxT
+        ou5bXUj8ghobK96MWUQRaDigNVwQ/fYy9MJod0PqWZepkZeOQ+OUOgDdEQSvl4jkVcuQJhP9SHv
+        OonZT1KzXJxp79Hpu14M3pVXErOvu7y8RqnRq3vJk+kCrJg==
+X-Received: by 2002:a05:6512:102e:: with SMTP id r14mr18889742lfr.34.1625682225879;
+        Wed, 07 Jul 2021 11:23:45 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy4VicBqw5BsVoDBTNFKPvGAeJlL3wDstpjkgYJrOsDZySOMD3MZoE7XcqdtBYd0iNslu+I/yE/+9jHfk6lnPs=
+X-Received: by 2002:a05:6512:102e:: with SMTP id r14mr18889718lfr.34.1625682225596;
+ Wed, 07 Jul 2021 11:23:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YOW+eyxYtPhc2hSf@kernel.org>
+References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
+ <de6b97a567e273adff1f5268998692bad548aa10.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
+ <20210706195233.h6w4cm73oktfqpgz@habkost.net> <4cc2c5fe-2153-05c5-dedd-8cb650753740@redhat.com>
+ <CAOpTY_qdbbnauTkbjkz+cZmo8=Hz6qqLNY6i6uamqhcty=Q1sw@mail.gmail.com>
+ <671be35f-220a-f583-aa31-3a2da7dae93a@redhat.com> <CAOpTY_paTO=xqfGXPCC2Paty5ptJ6Dqpo4Tzb4C2hrO_t=vS8w@mail.gmail.com>
+ <CALMp9eSJyvU1=FndZyR+hZMtKPWwgibKisBqp0Xcx4jxjrWn2w@mail.gmail.com>
+ <CAOpTY_pefOmJ0zJjUzitgTGxqgX6XxwTP0fMKoiyuBCHrh+AWg@mail.gmail.com> <CALMp9eSNS+yKsDgS3TXH6bSf4eUM2sJaRrLxZa+Y8e0FqVhRJA@mail.gmail.com>
+In-Reply-To: <CALMp9eSNS+yKsDgS3TXH6bSf4eUM2sJaRrLxZa+Y8e0FqVhRJA@mail.gmail.com>
+From:   Eduardo Habkost <ehabkost@redhat.com>
+Date:   Wed, 7 Jul 2021 14:23:29 -0400
+Message-ID: <CAOpTY_qyWbpRMHL7Ob7fvvLehOPzVBC=7cMHELYJ3E=mPAc7sA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] x86/tsx: Add cmdline tsx=fake to not clear CPUID bits
+ RTM and HLE
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Tony Luck <tony.luck@intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Kyung Min Park <kyung.min.park@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Victor Ding <victording@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Anthony Steinhauser <asteinhauser@google.com>,
+        Anand K Mistry <amistry@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org, Jiri Denemark <jdenemar@redhat.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        Michal Privoznik <mprivozn@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 07, 2021 at 11:47:23AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Tue, Jul 06, 2021 at 05:16:57PM +0200, Jiri Olsa escreveu:
-> > hi,
-> > moving leader/group info to libperf's perf_evsel.
-> > 
-> > This was asked for by Shunsuke [1] and is on my list
-> > as a prereq for event parsing move to libperf.
-> 
-> So I'll add a:
-> 
-> Requested-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+On Wed, Jul 7, 2021 at 1:18 PM Jim Mattson <jmattson@google.com> wrote:
+>
+> On Wed, Jul 7, 2021 at 10:08 AM Eduardo Habkost <ehabkost@redhat.com> wrote:
+> >
+> > On Wed, Jul 7, 2021 at 12:42 PM Jim Mattson <jmattson@google.com> wrote:
+> > >
+> > > On Wed, Jul 7, 2021 at 8:09 AM Eduardo Habkost <ehabkost@redhat.com> wrote:
+> > > >
+> > > > CCing libvir-list, Jiri Denemark, Michal Privoznik, so they are aware
+> > > > that the definition of "supported CPU features" will probably become a
+> > > > bit more complex in the future.
+> > >
+> > > Has there ever been a clear definition? Family, model, and stepping,
+> > > for instance: are these the only values supported? That would make
+> > > cross-platform migration impossible. What about the vendor string? Is
+> > > that the only value supported? That would make cross-vendor migration
+> > > impossible. For the maximum input value for basic CPUID information
+> > > (CPUID.0H:EAX), is that the only value supported, or is it the maximum
+> > > value supported? On the various individual feature bits, does a '1'
+> > > imply that '0' is also supported, or is '1' the only value supported?
+> > > What about the feature bits with reversed polarity (e.g.
+> > > CPUID.(EAX=07H,ECX=0):EBX.FDP_EXCPTN_ONLY[bit 6])?
+> > >
+> > > This API has never made sense to me. I have no idea how to interpret
+> > > what it is telling me.
+> >
+> > Is this about GET_SUPPORTED_CPUID, QEMU's query-cpu-model-expansion &
+> > related commands, or the libvirt CPU APIs?
+>
+> This is my ongoing rant about KVM_GET_SUPPORTED_CPUID.
+>
 
-yep, but let's hear from him first if that's the case actualy ;-)
+I agree the definition is not clear. I have tried to enumerate below
+what QEMU assumes about the return value of KVM_GET_SUPPORTED_CPUID.
+These are a collection of workarounds and feature-specific rules that
+are encoded in the kvm_arch_get_supported_cpuid()
+x86_cpu_filter_features(), and cpu_x86_cpuid() functions in QEMU.
 
-he did not mention any specific interface.. so I wonder
-what we have is ok with him
+1. Passing through the returned values (unchanged) from
+KVM_GET_SUPPORTED_CPUID to KVM_SET_CPUID is assumed to be always safe,
+as long as the ability to save/resume VCPU state is not required.
+(This is the behavior implemented by "-cpu host,migratable=off")
+2. The safety of setting a bit to a different value requires specific
+knowledge about the CPUID bit.
+2.1. For a specific set of registers (see below), QEMU assumes it's
+safe to set the bit to 0 when KVM_GET_SUPPORTED_CPUID returns 1.
+2.2. For a few specific leaves (see below), there are more complex rules.
+2.4. For all other leaves, QEMU doesn't use the return value of
+KVM_GET_SUPPORTED_CPUID at all (AFAICS).
 
-thanks,
-jirka
 
-> 
-> - Arnaldo
->  
-> > I still need to do more tests, but I'd like to check
-> > with you guys if there's any feedback on this first.
-> > 
-> > Also available in:
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   libperf/groups
-> > 
-> > v2 change:
-> >   - repost due to smtp failures, no changes
-> > 
-> > thanks,
-> > jirka
-> > 
-> > 
-> > [1] https://lore.kernel.org/linux-perf-users/OSBPR01MB46005B38568E90509946ECA9F7319@OSBPR01MB4600.jpnprd01.prod.outlook.com/
-> > 
-> > 
-> > ---
-> > Jiri Olsa (7):
-> >       libperf: Change tests to single static and shared binaries
-> >       libperf: Move idx to perf_evsel::idx
-> >       libperf: Move leader to perf_evsel::leader
-> >       libperf: Move nr_groups to evlist::nr_groups
-> >       libperf: Add perf_evlist__set_leader function
-> >       libperF: Add group support to perf_evsel__open
-> >       libperf: Add tests for perf_evlist__set_leader function
-> > 
-> >  tools/lib/perf/Build                     |  2 ++
-> >  tools/lib/perf/Makefile                  | 30 +++++++++++++++++++++++++-----
-> >  tools/lib/perf/evlist.c                  | 22 ++++++++++++++++++++++
-> >  tools/lib/perf/evsel.c                   | 33 +++++++++++++++++++++++++++++----
-> >  tools/lib/perf/include/internal/evlist.h |  2 ++
-> >  tools/lib/perf/include/internal/evsel.h  |  5 ++++-
-> >  tools/lib/perf/include/internal/tests.h  |  4 ++--
-> >  tools/lib/perf/include/perf/evlist.h     |  1 +
-> >  tools/lib/perf/libperf.map               |  1 +
-> >  tools/lib/perf/tests/Build               |  5 +++++
-> >  tools/lib/perf/tests/Makefile            | 40 ----------------------------------------
-> >  tools/lib/perf/tests/main.c              | 15 +++++++++++++++
-> >  tools/lib/perf/tests/test-cpumap.c       |  3 ++-
-> >  tools/lib/perf/tests/test-evlist.c       | 30 +++++++++++++++++++++++-------
-> >  tools/lib/perf/tests/test-evsel.c        |  3 ++-
-> >  tools/lib/perf/tests/test-threadmap.c    |  3 ++-
-> >  tools/lib/perf/tests/tests.h             | 10 ++++++++++
-> >  tools/perf/arch/x86/util/iostat.c        |  4 ++--
-> >  tools/perf/builtin-diff.c                |  4 ++--
-> >  tools/perf/builtin-record.c              |  4 ++--
-> >  tools/perf/builtin-report.c              |  8 ++++----
-> >  tools/perf/builtin-script.c              |  9 +++++----
-> >  tools/perf/builtin-stat.c                | 12 ++++++------
-> >  tools/perf/builtin-top.c                 | 10 +++++-----
-> >  tools/perf/tests/bpf.c                   |  2 +-
-> >  tools/perf/tests/evsel-roundtrip-name.c  |  6 +++---
-> >  tools/perf/tests/mmap-basic.c            |  8 ++++----
-> >  tools/perf/tests/parse-events.c          | 74 +++++++++++++++++++++++++++++++++++++-------------------------------------
-> >  tools/perf/tests/pfm.c                   |  4 ++--
-> >  tools/perf/ui/browsers/annotate.c        |  2 +-
-> >  tools/perf/util/annotate.c               |  8 ++++----
-> >  tools/perf/util/auxtrace.c               | 12 ++++++------
-> >  tools/perf/util/cgroup.c                 |  2 +-
-> >  tools/perf/util/evlist.c                 | 44 +++++++++++++-------------------------------
-> >  tools/perf/util/evlist.h                 |  2 --
-> >  tools/perf/util/evsel.c                  | 32 +++++++++++++++++++++++++-------
-> >  tools/perf/util/evsel.h                  | 14 ++++++++------
-> >  tools/perf/util/header.c                 | 18 +++++++++---------
-> >  tools/perf/util/metricgroup.c            | 22 +++++++++++-----------
-> >  tools/perf/util/parse-events.c           |  8 ++++----
-> >  tools/perf/util/pfm.c                    |  2 +-
-> >  tools/perf/util/python.c                 |  2 +-
-> >  tools/perf/util/record.c                 |  6 +++---
-> >  tools/perf/util/stat-shadow.c            |  2 +-
-> >  tools/perf/util/stat.c                   |  2 +-
-> >  tools/perf/util/stream.c                 |  2 +-
-> >  46 files changed, 310 insertions(+), 224 deletions(-)
-> >  create mode 100644 tools/lib/perf/tests/Build
-> >  delete mode 100644 tools/lib/perf/tests/Makefile
-> >  create mode 100644 tools/lib/perf/tests/main.c
-> >  create mode 100644 tools/lib/perf/tests/tests.h
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
-> 
+The CPUID leaves mentioned in 2.1 are:
+
+CPUID[1].EDX
+CPUID[1].ECX
+CPUID[6].EAX
+CPUID[EAX=7,ECX=0].EBX
+- This unfortunately includes de-feature bits like FDP_EXCPTN_ONLY and
+ZERO_FCS_FDS
+CPUID[EAX=7,ECX=0].ECX
+CPUID[EAX=7,ECX=0].EDX
+CPUID[EAX=7,ECX=1].EAX
+CPUID[EAX=0Dh,ECX=0].EAX
+CPUID[EAX=0Dh,ECX=0].EDX
+CPUID[EAX=0Dh,ECX=1].EAX
+- Note that CPUID[0Dh] has additional logic to ensure XSAVE component
+info on CPUID is consistent
+CPUID[40000001h].EAX
+CPUID[40000001h].EDX
+CPUID[80000001h].EDX
+CPUID[80000001h].ECX
+CPUID[80000007h].EDX
+CPUID[80000008h].EBX
+CPUID[8000000Ah].EDX
+CPUID[C0000001h].EDX
+
+
+Some of the CPUID leaves mentioned in 2.2 are:
+
+CPUID[1].ECX.HYPERVISOR[bit 31]
+- Can be enabled unconditionally
+CPUID[1].ECX.TSC_DEADLINE_TIMER[bit 24]
+- Can be set to 1 if using the in-kernel irqchip and
+KVM_CAP_TSC_DEADLINE_TIMER is enabled
+CPUID[1].ECX.X2APIC[bit 21]
+- Can be set to 1 if using the in-kernel irqchip
+CPUID[1].ECX.MONITOR[bit 3]
+- Can be set to 1 if KVM_X86_DISABLE_EXITS_MWAIT is enabled
+CPUID[6].EAX.ARAT[bit 2]
+- Can be enabled unconditionally
+CPUID[EAX=7,ECX=0].EDX.ARCH_CAPABILITIES
+- Workaround for KVM bug in Linux v4.17-v4.20
+CPUID[EAX=14h,ECX=0], CPUID{EAX=14h,ECX=1]
+- Most bits must match the host, unless
+CPUID[EAX=7,ECX=0].EBX.INTEL_PT[bit 25] is 0
+CPUID[80000001h].EDX
+- AMD-specific feature flag aliases can be set based on CPUID[1].EDX
+CPUID[40000001h].EAX
+- KVM_FEATURE_PV_UNHALT requires in-kernel irqchip
+- KVM_FEATURE_MSI_EXT_DEST_ID requires split irqchip
+CPUID[40000001].EDX.KVM_HINTS_REALTIME
+- Can be enabled unconditionally
+
+--
+Eduardo
 
