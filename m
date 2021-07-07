@@ -2,70 +2,73 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50887C07E9B
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 16:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CBBC07E95
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 17:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CDD561CD0
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 16:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84AC61CC7
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jul 2021 17:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbhGGQpZ (ORCPT
+        id S230109AbhGGRL1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jul 2021 12:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42426 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbhGGQpZ (ORCPT
+        Wed, 7 Jul 2021 13:11:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:56999 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230378AbhGGRL0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jul 2021 12:45:25 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D67FFC061760
-        for <linux-perf-users@vger.kernel.org>; Wed,  7 Jul 2021 09:42:44 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id w15-20020a056830144fb02904af2a0d96f3so2835870otp.6
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jul 2021 09:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GGs8qC7yLeuU76aGHT+b9/9uNPRLJI8gTxSyotZUZjQ=;
-        b=ulqDE9XePT0F3X1rxoUkPWYmj/cjMwrSpkBWRNe6WgiTfaJW/vXMef8qiVm4PydT4M
-         jbH39id9qamVcenVkkU3LeJWCriDFwFdPEDgjjS/jH8FbNRapZZOavwTz+8vjvPMKYai
-         ee5TcQDOeoV2RAyE0sTUpqCNMFI7LpO7vyQ5DPYWTmFw6BehRCEknNp3jMKpUG3He1wY
-         z0yGFQC4J0szM/5KLyN1KSfwvCe7YC6gYJBOLqpqf64LE3MwloxNKpcNkr+oVpFYFmMA
-         mtFZxq6hgdQaQaKQKoy+QB5/J2IKaJvcDNPOESZeLDQXVmPo39QEhvj5Vlm3UZG80JcE
-         Ejow==
+        Wed, 7 Jul 2021 13:11:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1625677726;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZKokQ6HlP8zCRHXKsabsyD7PFz88tRZ5vWzOFOKcnus=;
+        b=FfHLnEX3izBdfFMwxSSipR4/UeMuEOkx2gfa3B4JveO2TmkD+bg0NMLrXIYVASHUiw+V61
+        E6FMj9QrQIHGjNoTMqx0CHXfpoYZMKcitifDzTFayIiKzg7H4+EWqiih9BUsrXaBm5r2F7
+        F8BnQngy0MywnmLukr6oT00iZsp5eJk=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-4V-dR9CfNhGF6m7Z16go5A-1; Wed, 07 Jul 2021 13:08:44 -0400
+X-MC-Unique: 4V-dR9CfNhGF6m7Z16go5A-1
+Received: by mail-lf1-f71.google.com with SMTP id t14-20020ac24c0e0000b0290323b04a9bd4so1403509lfq.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jul 2021 10:08:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GGs8qC7yLeuU76aGHT+b9/9uNPRLJI8gTxSyotZUZjQ=;
-        b=ByzCKR/s0Uc0mdSTqZOU1nkoDOgV+qZJGBMqsdsyOifxZ7XhYqRzOHWfnXR3LhC0P+
-         1WEi7Js/ms5lohnckPKigcVMWFQ01eUf54EcCXtYNO2tJegKTRWRPQ5phR07WeVmtM2j
-         lMxf36VM/93DzLI+dal71u5iRLA9GNwId610g26QdCtD42Dyy/dDQelNk9e1MaG5Gt8n
-         q4Z7FJD6rgO92D4XksGlR0agytjpaifaKpK2GHRfJKhJVZCXS46QhA+kF6Et31Nm5hRE
-         f8R5zF4ZjSI2By0zIs8LxU/5t6jfBq6JBUtcUQ/hN8/wrjDrP9bGjRY2Qto+xKOybSNB
-         X1vQ==
-X-Gm-Message-State: AOAM533uuk/Ad8PXpa4x6Iy/zOFDLI46a3sdIL7ZPgLrl6bP2rehs4+7
-        2q8hqq3lN/R3+YQkQ22xkloFvQfR0Fhf/LsW7/Gzdw==
-X-Google-Smtp-Source: ABdhPJxV/BWpTieutmD1GHOrCDI3SB0Memv132JxXJ8jgEqQapcXhpkMcicwRomyQ3PoTY61I19Y36tPpb8y777naR4=
-X-Received: by 2002:a9d:550e:: with SMTP id l14mr20870914oth.241.1625676163750;
- Wed, 07 Jul 2021 09:42:43 -0700 (PDT)
+        bh=ZKokQ6HlP8zCRHXKsabsyD7PFz88tRZ5vWzOFOKcnus=;
+        b=h/qcfvQz+TeBJNPGa58X6SzEKV0KBld8xF8nR6YpEch0QWea0BA/gbHXm6QCAB49TW
+         TMW7DYV3BsoEt8U9A971EUyzhMqtv2ILaBRRWkTju1pLj40UWjS3ZL6X6RhuqbpcAM9F
+         VCDE/wv9XNI0kFdFtVCgDpsROpv/viKnEUB3ymxzRbYGry5IXYFtv/5VqjgPVwFkfa6E
+         rT6R45JPB3vmjqYnGT3hNOcwS9kz4A1GtgIiw6OfsxRt6mcK/p7a6V9aDqNwvKR5sgD2
+         /QSF784JDpKEKQCYK8UDZEJQJkpGU4CZkh2CZMS9dRYm36PafJXXIta83oBeZ7h099mh
+         T+0w==
+X-Gm-Message-State: AOAM5327eyOdBBi5hDqNVVIpQ+uxF77LLey3lAYvaNez+tSscbLALsOn
+        V+RUkgZuhqn6cVuodb9Qij4vZLu/PRDnRIaRQZ+lBk7KRYkjB7rhFdbSnxS/j1uVq7No9/pP+n0
+        Xi77oulum7HcPCXC1DMJniB5THb+fAvswcxmYb8TwtoirbA==
+X-Received: by 2002:a19:6d06:: with SMTP id i6mr13400958lfc.295.1625677723032;
+        Wed, 07 Jul 2021 10:08:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxIVbMaYKmhK4voQf0eRNSJP0bDqNGYvkVM74ION1H4OiOMDQQFrRwSGJ2qM5HSbBwHujP+BJ9y3biXkOhSbn8=
+X-Received: by 2002:a19:6d06:: with SMTP id i6mr13400912lfc.295.1625677722393;
+ Wed, 07 Jul 2021 10:08:42 -0700 (PDT)
 MIME-Version: 1.0
 References: <cover.2d906c322f72ec1420955136ebaa7a4c5073917c.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
  <de6b97a567e273adff1f5268998692bad548aa10.1623272033.git-series.pawan.kumar.gupta@linux.intel.com>
  <20210706195233.h6w4cm73oktfqpgz@habkost.net> <4cc2c5fe-2153-05c5-dedd-8cb650753740@redhat.com>
  <CAOpTY_qdbbnauTkbjkz+cZmo8=Hz6qqLNY6i6uamqhcty=Q1sw@mail.gmail.com>
  <671be35f-220a-f583-aa31-3a2da7dae93a@redhat.com> <CAOpTY_paTO=xqfGXPCC2Paty5ptJ6Dqpo4Tzb4C2hrO_t=vS8w@mail.gmail.com>
-In-Reply-To: <CAOpTY_paTO=xqfGXPCC2Paty5ptJ6Dqpo4Tzb4C2hrO_t=vS8w@mail.gmail.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 7 Jul 2021 09:42:26 -0700
-Message-ID: <CALMp9eSJyvU1=FndZyR+hZMtKPWwgibKisBqp0Xcx4jxjrWn2w@mail.gmail.com>
+ <CALMp9eSJyvU1=FndZyR+hZMtKPWwgibKisBqp0Xcx4jxjrWn2w@mail.gmail.com>
+In-Reply-To: <CALMp9eSJyvU1=FndZyR+hZMtKPWwgibKisBqp0Xcx4jxjrWn2w@mail.gmail.com>
+From:   Eduardo Habkost <ehabkost@redhat.com>
+Date:   Wed, 7 Jul 2021 13:08:26 -0400
+Message-ID: <CAOpTY_pefOmJ0zJjUzitgTGxqgX6XxwTP0fMKoiyuBCHrh+AWg@mail.gmail.com>
 Subject: Re: [PATCH 4/4] x86/tsx: Add cmdline tsx=fake to not clear CPUID bits
  RTM and HLE
-To:     Eduardo Habkost <ehabkost@redhat.com>
+To:     Jim Mattson <jmattson@google.com>
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -115,67 +118,31 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 7, 2021 at 8:09 AM Eduardo Habkost <ehabkost@redhat.com> wrote:
+On Wed, Jul 7, 2021 at 12:42 PM Jim Mattson <jmattson@google.com> wrote:
 >
-> CCing libvir-list, Jiri Denemark, Michal Privoznik, so they are aware
-> that the definition of "supported CPU features" will probably become a
-> bit more complex in the future.
+> On Wed, Jul 7, 2021 at 8:09 AM Eduardo Habkost <ehabkost@redhat.com> wrote:
+> >
+> > CCing libvir-list, Jiri Denemark, Michal Privoznik, so they are aware
+> > that the definition of "supported CPU features" will probably become a
+> > bit more complex in the future.
+>
+> Has there ever been a clear definition? Family, model, and stepping,
+> for instance: are these the only values supported? That would make
+> cross-platform migration impossible. What about the vendor string? Is
+> that the only value supported? That would make cross-vendor migration
+> impossible. For the maximum input value for basic CPUID information
+> (CPUID.0H:EAX), is that the only value supported, or is it the maximum
+> value supported? On the various individual feature bits, does a '1'
+> imply that '0' is also supported, or is '1' the only value supported?
+> What about the feature bits with reversed polarity (e.g.
+> CPUID.(EAX=07H,ECX=0):EBX.FDP_EXCPTN_ONLY[bit 6])?
+>
+> This API has never made sense to me. I have no idea how to interpret
+> what it is telling me.
 
-Has there ever been a clear definition? Family, model, and stepping,
-for instance: are these the only values supported? That would make
-cross-platform migration impossible. What about the vendor string? Is
-that the only value supported? That would make cross-vendor migration
-impossible. For the maximum input value for basic CPUID information
-(CPUID.0H:EAX), is that the only value supported, or is it the maximum
-value supported? On the various individual feature bits, does a '1'
-imply that '0' is also supported, or is '1' the only value supported?
-What about the feature bits with reversed polarity (e.g.
-CPUID.(EAX=07H,ECX=0):EBX.FDP_EXCPTN_ONLY[bit 6])?
+Is this about GET_SUPPORTED_CPUID, QEMU's query-cpu-model-expansion &
+related commands, or the libvirt CPU APIs?
 
-This API has never made sense to me. I have no idea how to interpret
-what it is telling me.
+-- 
+Eduardo
 
-> On Tue, Jul 6, 2021 at 5:58 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >
-> > On 06/07/21 23:33, Eduardo Habkost wrote:
-> > > On Tue, Jul 6, 2021 at 5:05 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > >> It's a bit tricky, because HLE and RTM won't really behave well.  An old
-> > >> guest that sees RTM=1 might end up retrying and aborting transactions
-> > >> too much.  So I'm not sure that a QEMU "-cpu host" guest should have HLE
-> > >> and RTM enabled.
-> > >
-> > > Is the purpose of GET_SUPPORTED_CPUID to return what is supported by
-> > > KVM, or to return what "-cpu host" should enable by default? They are
-> > > conflicting requirements in this case.
-> >
-> > In theory there is GET_EMULATED_CPUID for the former, so it should be
-> > the latter.  In practice neither QEMU nor Libvirt use it; maybe now we
-> > have a good reason to add it, but note that userspace could also check
-> > host RTM_ALWAYS_ABORT.
-> >
-> > > Returning HLE=1,RTM=1 in GET_SUPPORTED_CPUID makes existing userspace
-> > > take bad decisions until it's updated.
-> > >
-> > > Returning HLE=0,RTM=0 in GET_SUPPORTED_CPUID prevents existing
-> > > userspace from resuming existing VMs (despite being technically
-> > > possible).
-> > >
-> > > The first option has an easy workaround that doesn't require a
-> > > software update (disabling HLE/RTM in the VM configuration). The
-> > > second option doesn't have a workaround. I'm inclined towards the
-> > > first option.
-> >
-> > The default has already been tsx=off for a while though, so checking
-> > either GET_EMULATED_CPUID or host RTM_ALWAYS_ABORT in userspace might
-> > also be feasible for those that are still on tsx=on.
->
-> This sounds like a perfect use case for GET_EMULATED_CPUID. My only
-> concern is breaking existing userspace.
->
-> But if this was already broken for a few kernel releases due to
-> tsx=off being the default, maybe GET_EMULATED_CPUID will be a
-> reasonable approach.
->
-> --
-> Eduardo
->
