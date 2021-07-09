@@ -2,166 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59EA1C07E99
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jul 2021 16:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2822C07E99
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jul 2021 17:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31AFE613CA
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jul 2021 16:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA879613CA
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jul 2021 17:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbhGIQh4 (ORCPT
+        id S229506AbhGISAK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jul 2021 12:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbhGIQh4 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jul 2021 12:37:56 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49EBC0613DD;
-        Fri,  9 Jul 2021 09:35:11 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id h8so1419401eds.4;
-        Fri, 09 Jul 2021 09:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tQVonobh9dEWViCupkTvvzo+E7fxVjP7o2OOWiVB+Hw=;
-        b=AHXL2iVjVJS4yxCtwy4e+Z6lbW8mAqOYVFO1kOuzbR31sEFXPAGUQM6yRV4G44Cp6I
-         WmY9Vp9SFuoJvulaX6X2cxh7iWWx5lDEXUu0aZZSE4F7F1F5mjq/+0AxpNjfPqTBDtcx
-         4guH7Hl80pHp7fBk5WsPjnpE+uE//33Oh7rKEwSYOlv+ktRJUvtvM/Nai3CMiwr+nntu
-         crawwmaySoGLFkAPJ7DCHDm1VD4qTNffJ5hgOMzRCYadVIdykQVuy7aVCWREib2rJkUd
-         poTOFnYU8OneJVyZ1awUO4Fu1oKF9twnO1Mr1kaR/iRRAwSl3eeuh9XvkHL/bgL1NO06
-         uNrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tQVonobh9dEWViCupkTvvzo+E7fxVjP7o2OOWiVB+Hw=;
-        b=dIpDxglM1ENkHaU9YleG6Xh0O0qSFKdksIw7N7oUv6SVVt2KbOGm9RNNFXMT9nM133
-         vAd1P6UFr893KyTuOJPn/6poE7VolpJtEOd/mzHcT00wrffiKNLwtxTAszulL039oRJ9
-         R2fL44fpJNU1LMr696vg5IjQymRx4JfzhdrKDZlWqtxLeZzqU5piC/0QTZdIFkn3fPKS
-         a7laSBeDP+E+A1PL1yQXxy2t1aWYz5bN7+uS61G5kNsoIDGyB1Np1xmd8i9ECw6EcVqy
-         Kk5WxUtbUTOqCez5kmBUXUiXWtqHmcdJMAkecyKAB3QwfacGdEfVk88Si2jF42ybDyki
-         2bXw==
-X-Gm-Message-State: AOAM532Px7lBAAque7cS9Yr9heIhVVj1/2mjOOzjw70jVVw958uPqdO6
-        mm9zMj0rslOM8tXjLCFThGc=
-X-Google-Smtp-Source: ABdhPJwHCLANmMv7DUjkqrjvz3LdqyK2TMEM/4yhWBPFbIN8h9t7ERgdRSTaBVXj/EJn1tDigm4KLA==
-X-Received: by 2002:a05:6402:50d3:: with SMTP id h19mr37507219edb.344.1625848509907;
-        Fri, 09 Jul 2021 09:35:09 -0700 (PDT)
-Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id b25sm3341899edv.9.2021.07.09.09.35.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jul 2021 09:35:09 -0700 (PDT)
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 9 Jul 2021 14:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229459AbhGISAK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 9 Jul 2021 14:00:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 28C1A613C9;
+        Fri,  9 Jul 2021 17:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1625853446;
+        bh=C1m6Z9er+kZNyzP955FA2czrvjgxs0c+EFM0BbWsrF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YTFtmBV8+FFOIZrRpKe4P8sa2BS1tkgqKR09afY18rlcW0DlBGNQp1WSZWtmTSjgt
+         n4btsgBgp/1Vv7tIlaG67SC98AaUgACoNlxJvk8Y4/9K7Sd1+vW0mGQlCQrHkGoZZg
+         2LNX4jFjDbhhCGTsUgCYjqatklBZPvoayJs7WcrnRxVxVdLSfy4qFCSe6MZ8HoNZa2
+         K0VxUskNo/4PdMz4ukuNajchxahsJNVh8h8AzPxMt8YquQ/lxzajkI4tM+if6lCIKw
+         CxgJOb/r5wZlk+BAnzOLbD7wU2qTfUdeu152iXX733pDh6epIbUAtQ42jr49tNyVC6
+         Rz0tQTEkbs8nQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3C9B540B1A; Fri,  9 Jul 2021 14:57:23 -0300 (-03)
+Date:   Fri, 9 Jul 2021 14:57:23 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
-        Remi Bernon <rbernon@codeweavers.com>,
-        Fabian Hemmer <copy@copy.sh>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf test: add missing free for scandir-returned dirent entities
-Date:   Fri,  9 Jul 2021 18:34:53 +0200
-Message-Id: <20210709163454.672082-1-rickyman7@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] libperf: Remove BUG_ON() from library code in
+ get_group_fd(). was Re: [PATCH 6/7] libperF: Add group support to
+ perf_evsel__open
+Message-ID: <YOiOA5zOtVH9IBbE@kernel.org>
+References: <20210706151704.73662-1-jolsa@kernel.org>
+ <20210706151704.73662-7-jolsa@kernel.org>
+ <YOXnq2yTVwklbrpO@kernel.org>
+ <YOXvSpcxeAnrGBTi@krava>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YOXvSpcxeAnrGBTi@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reported a memory leak for items of the entlist returned from scandir.
-In fact, scandir returns a malloc'd array of malloc'd dirents.
-This patch adds the missing (z)frees.
+Em Wed, Jul 07, 2021 at 08:15:38PM +0200, Jiri Olsa escreveu:
+> On Wed, Jul 07, 2021 at 02:43:07PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Jul 06, 2021 at 05:17:03PM +0200, Jiri Olsa escreveu:
+> > > +static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread)
+> > > +{
+> > > +	struct perf_evsel *leader = evsel->leader;
+> > > +	int fd;
+> > > +
+> > > +	if (evsel == leader)
+> > > +		return -1;
+> > > +
+> > > +	/*
+> > > +	 * Leader must be already processed/open,
+> > > +	 * if not it's a bug.
+> > > +	 */
+> > > +	BUG_ON(!leader->fd);
 
-Fixes: da963834fe6975a1 ("perf test: Iterate over shell tests in alphabetical order")
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
----
- tools/perf/tests/builtin-test.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+> > Humm, having panics in library code looks ugly, why can't we just return
+> > some errno and let the whatever is using the library to fail gracefully?
+ 
+> true, I took it from perf code, did not realize this,
+> I'll check what can we do in here
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 41e3cf6bb66c68e8..5e6242576236325c 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -26,6 +26,7 @@
- #include <linux/kernel.h>
- #include <linux/string.h>
- #include <subcmd/exec-cmd.h>
-+#include <linux/zalloc.h>
- 
- static bool dont_fork;
- 
-@@ -540,7 +541,7 @@ static int shell_tests__max_desc_width(void)
- {
- 	struct dirent **entlist;
- 	struct dirent *ent;
--	int n_dirs;
-+	int n_dirs, e;
- 	char path_dir[PATH_MAX];
- 	const char *path = shell_tests__dir(path_dir, sizeof(path_dir));
- 	int width = 0;
-@@ -564,8 +565,9 @@ static int shell_tests__max_desc_width(void)
- 		}
- 	}
- 
-+	for (e = 0; e < n_dirs; e++)
-+		zfree(&entlist[e]);
- 	free(entlist);
--
- 	return width;
+So, I've added this as a follow up patch:
+
+commit 0ec138125eaea5f15157adcecc3e0def1ad2ed22
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Fri Jul 9 14:52:16 2021 -0300
+
+    libperf: Remove BUG_ON() from library code in get_group_fd()
+    
+    We shouldn't just panic, return a value that doesn't clash with what
+    perf_evsel__open() was already returning in case of error, i.e. errno
+    when sys_perf_event_open() fails.
+    
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Ian Rogers <irogers@google.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Michael Petlan <mpetlan@redhat.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+index 9ebf7122d4766c5e..d8886720e83d8dfe 100644
+--- a/tools/lib/perf/evsel.c
++++ b/tools/lib/perf/evsel.c
+@@ -77,23 +77,30 @@ sys_perf_event_open(struct perf_event_attr *attr,
+ 	return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
  }
  
-@@ -596,7 +598,7 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
+-static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread)
++static int get_group_fd(struct perf_evsel *evsel, int cpu, int thread, int *group_fd)
  {
- 	struct dirent **entlist;
- 	struct dirent *ent;
--	int n_dirs;
-+	int n_dirs, e;
- 	char path_dir[PATH_MAX];
- 	struct shell_test st = {
- 		.dir = shell_tests__dir(path_dir, sizeof(path_dir)),
-@@ -629,6 +631,8 @@ static int run_shell_tests(int argc, const char *argv[], int i, int width)
- 		test_and_print(&test, false, -1);
- 	}
+ 	struct perf_evsel *leader = evsel->leader;
+ 	int fd;
  
-+	for (e = 0; e < n_dirs; e++)
-+		zfree(&entlist[e]);
- 	free(entlist);
- 	return 0;
- }
-@@ -730,7 +734,7 @@ static int perf_test__list_shell(int argc, const char **argv, int i)
- {
- 	struct dirent **entlist;
- 	struct dirent *ent;
--	int n_dirs;
-+	int n_dirs, e;
- 	char path_dir[PATH_MAX];
- 	const char *path = shell_tests__dir(path_dir, sizeof(path_dir));
+-	if (evsel == leader)
+-		return -1;
++	if (evsel == leader) {
++		*group_fd = -1;
++		return 0;
++	}
  
-@@ -752,8 +756,11 @@ static int perf_test__list_shell(int argc, const char **argv, int i)
- 			continue;
+ 	/*
+ 	 * Leader must be already processed/open,
+ 	 * if not it's a bug.
+ 	 */
+-	BUG_ON(!leader->fd);
++	if (!leader->fd)
++		return -ENOTCONN;
  
- 		pr_info("%2d: %s\n", i, t.desc);
+ 	fd = FD(leader, cpu, thread);
+-	BUG_ON(fd == -1);
+-	return fd;
++	if (fd == -1)
++		return -EBADF;
 +
- 	}
- 
-+	for (e = 0; e < n_dirs; e++)
-+		zfree(&entlist[e]);
- 	free(entlist);
- 	return 0;
++	*group_fd = fd;
++
++	return 0;
  }
--- 
-2.23.0
-
+ 
+ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+@@ -133,7 +140,9 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 		for (thread = 0; thread < threads->nr; thread++) {
+ 			int fd, group_fd;
+ 
+-			group_fd = get_group_fd(evsel, cpu, thread);
++			err = get_group_fd(evsel, cpu, thread, &group_fd);
++			if (err < 0)
++				return err;
+ 
+ 			fd = sys_perf_event_open(&evsel->attr,
+ 						 threads->map[thread].pid,
