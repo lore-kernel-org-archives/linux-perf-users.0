@@ -2,61 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F49C07E9C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 850C6C07E9B
 	for <linux-perf-users@archiver.kernel.org>; Sun, 11 Jul 2021 10:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1493C61205
+	by mail.kernel.org (Postfix) with ESMTP id 6995D61205
 	for <linux-perf-users@archiver.kernel.org>; Sun, 11 Jul 2021 10:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231575AbhGKKoG (ORCPT
+        id S232154AbhGKKoG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Sun, 11 Jul 2021 06:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48446 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232106AbhGKKoD (ORCPT
+        with ESMTP id S232214AbhGKKoG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 11 Jul 2021 06:44:03 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54173C0613E5
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jul 2021 03:41:16 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id d12so14947683pgd.9
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jul 2021 03:41:16 -0700 (PDT)
+        Sun, 11 Jul 2021 06:44:06 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B003EC0613DD
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jul 2021 03:41:19 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id x21-20020a17090aa395b029016e25313bfcso8742255pjp.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jul 2021 03:41:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=autL+G6wNOJhX+2XA6qCLFYkzemigzI9rlpwicEf3/0=;
-        b=qmxcjU7pcuXli6awXmV/nZtxDOtEBwFxPrj6N1DIcmTZdtfhFAaPT/AsX3g3YYrZpV
-         v0vqF6jyLC1EKqz3YRS5wITXbvMjNmUjKEO/jPb/MUVroPlelu6xOA3qI6A8xxFvWTU4
-         VvqkBRJCNqFxVw3CURKvgtoZ0eqJHJQ8cXVfHnNNbbJMGcTwrfYAhoArao6DPawblPS9
-         5GWtOB/TnbTOefACYg8WKfeecai7diFsc//80s9+oLet10sngwTlOVNqRw0Wb9tTSmC/
-         ShsFIkXwaJ8HMSzv2XvXXMYiu0/ScBCknf3Syxq1FYijVXpl6wjR3VpHN4oEcSL1xKyp
-         TQnQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mUfdU9WBYmi8/NBmndyLWLFFhQ6mqBUwjCh/GuP5qb8=;
+        b=RtX0qI4MGvgBvDGGTerEq7GxtH+wniuNEW7utX4Sj0O4q4Q26d6jcMwwestxzCiHzf
+         QNREUyk2x12NqOorPsbS3FoidmVIpuT/X9x1hAaaDwk5vvIg5bJeUN/xIvP+5jXZxRNx
+         u/oWY3EUWzmjc8kBz9+LguNLGpCx88gDP2zAl34xnTCTXim7dSVTNN4jzMPHY5CZfNP3
+         rQ+MsT5YTP5b2k71mOiwnmQObvk5ATNEF1tVHNUWlJA56zt5qd8az7VglCncXoOBA7Zf
+         bgX5cPJFk47D0smGeeKZxFnYCvrVO30Dz7ypy3OlOpHsT0reQULiqgBvOOWyCoycLp+D
+         xZDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=autL+G6wNOJhX+2XA6qCLFYkzemigzI9rlpwicEf3/0=;
-        b=qh+WOQb0nT5xiP0smhvFeqPbLXM5W9ek69oX1wp7Z5MP2KnH3Mohx3kUrZpDttcWzM
-         UpQA2XtDxOjOCkiiIslMAyeqLiGdYqH3c1AnJuKbKlKioixqsOui/UcUOxxysQJlENrl
-         H9zkKlSmFlpoadku9KuLNJaYCx/qgJzS4iKZF9huae64fcrBIJKZGd5gMOQVsBNcLgYK
-         r9tMD6BTpX3IkMSKJuuYyKNOKqjTVai64Q9Fs+uPvWVfyNjxxDZfzTyfLVCYrZIyz7ph
-         4EamxV/ooX31Y1Q8WUKvM8F+8B/keBdbuXY2oEDnnBZj0OWoGxR91ZVsSF2sv3V6DEoQ
-         hNfg==
-X-Gm-Message-State: AOAM532lu578TZSx4Ye7FzivnhLmit7xStnt4DGbW963/TdmmCyI+ZaD
-        nEqyh34u/KXm25b/tQj0yWolnA==
-X-Google-Smtp-Source: ABdhPJx6JaA27RaGLvgVyJTKnzik6HHN9J9xNcylnEcWBb6V6DAIk/u/8UHFXFG/VZOrnguSvrwVlA==
-X-Received: by 2002:a62:888d:0:b029:329:b081:128 with SMTP id l135-20020a62888d0000b0290329b0810128mr8217397pfd.70.1626000075775;
-        Sun, 11 Jul 2021 03:41:15 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mUfdU9WBYmi8/NBmndyLWLFFhQ6mqBUwjCh/GuP5qb8=;
+        b=l43tzLdqk80PzYIt6grC/mQo1n4KW+VUaF4bpy0fDNggn/EtdAUKO/TMbyhkzZ8WSU
+         QmN39f5fQtyrFVFgCmSrXICS+1AsH7mo5V5aJLdep78BohU5GD07dNP8i0grLWwlJFgH
+         hvGL1rs6VLxEV0vFvSEEr+I4z+0BshHTn/PjzEfDkHjWlaPJZgH81SH0unNqn7XcE+JW
+         K0X7yN4IhvacIe3wWMa+R9HQ+DVuFvFr+GSilvLwRX8E1ArtjHTuQcVObwXmZJUOeaKm
+         x/e5okfDmOMVCwKn1mcei4xLZC/F/AbHE5sMsstNxuuW4faVphTVwbGmPYI8nNM4dZEk
+         zV8w==
+X-Gm-Message-State: AOAM531lRmjqCT50qASoORzCZosczdOQrpRg9S+ycWi4nK1xG8lPeSt7
+        6l6fXmxYzxFVph71HvBaEaCnuw==
+X-Google-Smtp-Source: ABdhPJyQ8XxCLn1vu+B0STHNwIFTAWH9uvWnYEj6A61rhx5yfvxHRMAmDfZWPGYHsUsY0F9uNVDSvg==
+X-Received: by 2002:a17:90a:9511:: with SMTP id t17mr48277859pjo.108.1626000079190;
+        Sun, 11 Jul 2021 03:41:19 -0700 (PDT)
 Received: from localhost ([103.127.241.250])
-        by smtp.gmail.com with ESMTPSA id d3sm10152263pjo.31.2021.07.11.03.41.14
+        by smtp.gmail.com with ESMTPSA id t2sm16735752pjq.0.2021.07.11.03.41.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jul 2021 03:41:15 -0700 (PDT)
+        Sun, 11 Jul 2021 03:41:18 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
@@ -75,85 +75,52 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v4 00/11] perf: Refine barriers for AUX ring buffer
-Date:   Sun, 11 Jul 2021 18:40:54 +0800
-Message-Id: <20210711104105.505728-1-leo.yan@linaro.org>
+Subject: [PATCH v4 01/11] perf/ring_buffer: Add comment for barriers on AUX ring buffer
+Date:   Sun, 11 Jul 2021 18:40:55 +0800
+Message-Id: <20210711104105.505728-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210711104105.505728-1-leo.yan@linaro.org>
+References: <20210711104105.505728-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch series is to refine the memory barriers for AUX ring buffer.
+AUX ring buffer applies almost the same barriers as perf ring buffer,
+but there has an exception for ordering between writing the AUX trace
+data and updating user_page::aux_head.
 
-Patches 01 ~ 04 to address the barriers usage in the kernel.  The first
-patch is to make clear comment for how to use the barriers between the
-data store and aux_head store, this asks the driver to make sure the
-data is visible.  Patches 02 ~ 04 is to refine the drivers for barriers
-after the data store.
+This patch adds comment for how to use the barriers on AUX ring buffer,
+and gives comment to ask the drivers to flush the trace data into AUX
+ring buffer prior to updating user_page::aux_head.
 
-Patch 05 is to use WRITE_ONCE() for updating aux_tail.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/ring_buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Patches 06 ~ 09 is to drop the legacy __sync functions, and polish for
-duplicate code and cleanup the build and feature test after
-SYNC_COMPARE_AND_SWAP is not used.
-
-Patch 10 introduces a new global variable to indicate the kernel runs in
-64-bit mode which can be used to confirm if in compat mode; patch 11
-introduces variant functions for accessing AUX head/tail, it resolves
-the aotmicity for reading head pointer, and returns error for the tail
-is bigger than 4GB.
-
-Have testes the patches on Arm64 Juno platform.
-
-Changes from v3:
-- Removed the inapprocate paragraph in the commit log for patch "perf
-  auxtrace: Drop legacy __sync functions" (Adrian);
-- Added new patch to remove feature-sync-compare-and-swap test (Adrian);
-- Th patch for "perf auxtrace: Use WRITE_ONCE() for updating aux_tail",
-  is a standlone and simple change, so moved it ahead in the patch set
-  for better ordering;
-- Minor improvement for commit logs in the last two patches.
-
-Changes from v2:
-- Removed auxtrace_mmap__read_snapshot_head(), which has the duplicated
-  code with auxtrace_mmap__read_head();
-- Cleanuped the build for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT (Adrian);
-- Added global variable "kernel_is_64_bit" (Adrian);
-- Added compat variants compat_auxtrace_mmap__{read_head|write_tail}
-  (Adrian).
-
-
-Leo Yan (11):
-  perf/ring_buffer: Add comment for barriers on AUX ring buffer
-  coresight: tmc-etr: Add barrier after updating AUX ring buffer
-  coresight: tmc-etf: Add comment for store ordering
-  perf/x86: Add barrier after updating bts
-  perf auxtrace: Use WRITE_ONCE() for updating aux_tail
-  perf auxtrace: Drop legacy __sync functions
-  perf auxtrace: Remove auxtrace_mmap__read_snapshot_head()
-  perf: Cleanup for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-  tools: Remove feature-sync-compare-and-swap feature detection
-  perf env: Set flag for kernel is 64-bit mode
-  perf auxtrace: Add compat_auxtrace_mmap__{read_head|write_tail}
-
- arch/x86/events/intel/bts.c                   |   3 +
- .../hwtracing/coresight/coresight-tmc-etf.c   |   6 +
- .../hwtracing/coresight/coresight-tmc-etr.c   |   8 ++
- kernel/events/ring_buffer.c                   |   9 ++
- tools/build/Makefile.feature                  |   1 -
- tools/build/feature/Makefile                  |   4 -
- tools/build/feature/test-all.c                |   4 -
- .../feature/test-sync-compare-and-swap.c      |  15 ---
- tools/perf/Makefile.config                    |   4 -
- tools/perf/util/auxtrace.c                    |  19 ++-
- tools/perf/util/auxtrace.h                    | 109 ++++++++++++++----
- tools/perf/util/env.c                         |  17 ++-
- tools/perf/util/env.h                         |   1 +
- 13 files changed, 136 insertions(+), 64 deletions(-)
- delete mode 100644 tools/build/feature/test-sync-compare-and-swap.c
-
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 52868716ec35..5cf6579be05e 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -509,6 +509,15 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+ 		perf_event_aux_event(handle->event, aux_head, size,
+ 				     handle->aux_flags);
+ 
++	/*
++	 * See perf_output_put_handle(), AUX ring buffer applies the same
++	 * barrier pairing as the perf ring buffer; except for B, since
++	 * AUX ring buffer is written by hardware trace, we cannot simply
++	 * use the generic memory barrier (like smp_wmb()) prior to update
++	 * user_page::aux_head, the hardware trace driver takes the
++	 * responsibility to ensure the trace data has been flushed into
++	 * the AUX buffer before calling perf_aux_output_end().
++	 */
+ 	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
+ 	if (rb_need_aux_wakeup(rb))
+ 		wakeup = true;
 -- 
 2.25.1
 
