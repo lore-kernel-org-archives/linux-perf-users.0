@@ -2,133 +2,301 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F411EC07E99
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 10:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2835C07E9C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 14:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF611610CD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 10:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBAC610A7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 14:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235070AbhGLK5b (ORCPT
+        id S231907AbhGLOGx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jul 2021 06:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235055AbhGLK53 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jul 2021 06:57:29 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89575C0613DD
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jul 2021 03:54:40 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 62so17839154pgf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jul 2021 03:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=JA4gd/MMGfc1bOk2g+m+nyNDBErsTegW/6UjqqXM42A=;
-        b=c0Kl1T0GIdx/YSFtCjVP0ifXWWNh6tWYOQmER2lnFRi+M5/BTGGUVeFI5SfSnC4EWR
-         GslbvfVJP2ce4WA7Piflj2DDrpom0floUP6s6GdYABbKPWkTMUbfW/vctT/PheHaxlqj
-         Y2HcFWqTh7ubkSm7m3VZ25uHBG9qmopsMKIO/1N1M2murbE9LEYgAukMYdeIawDeBl2s
-         ECDUO038erxpjwNCfEu7k2k/TGnpgegN58upQSEpKg5HDl938IX0x3CMRT7chiWRVFQo
-         KZYFmqSF7OxUVfminCutnphxr8nqClfP0CW+31WHqXvHMAi+Etb6mcwYwdm1sIkXai0/
-         l+3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=JA4gd/MMGfc1bOk2g+m+nyNDBErsTegW/6UjqqXM42A=;
-        b=Bg/J6UJhq02v4DqVDe5sgu27n1Ef04xVZfJZgR4sHQe3g0K9KAe7WziE2Hkc0Y7XKA
-         Q+Xca1hhRnwA8tb1J6DSfrY3EmYqipaSa3jsoYCyediUIJTjryAL9lXbGWbI1UQETFxV
-         clAf9jDz5oKOBLhf9YGITnkgaIWAny9cXdAoKsSDhN3JYwwIUG54yFOhE7287SGedKQE
-         9wZoHzKSfc6QWBCwL+n6+9IgmDYRt90uDnjFVl/2zzgaRzTRoJiUlNzq3S8hCmYwTP1q
-         tRlp3ZWRNQyw1iabFlxg6EZGg/ES5widj3VCq2znohsXwquPPlT4TI2y6EcQJohPy/sn
-         5d8A==
-X-Gm-Message-State: AOAM531UrYZtF3mzLDdGLGk5b7YhPoQVWoVa4cBOHW0vbjG39NO0oi0T
-        yqA9iVjCaHowNQW2rcVc0WHA5A==
-X-Google-Smtp-Source: ABdhPJzwlG37y5qH/zJqKUdv7VgIG/DkqI/nK6PluMVwdOragJNswNAZJdb3l/flnshAu013xAMcJA==
-X-Received: by 2002:a63:43c4:: with SMTP id q187mr52510934pga.172.1626087279943;
-        Mon, 12 Jul 2021 03:54:39 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id w16sm13265914pgi.41.2021.07.12.03.54.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jul 2021 03:54:39 -0700 (PDT)
-Date:   Mon, 12 Jul 2021 18:54:31 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Mon, 12 Jul 2021 10:06:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30522 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230214AbhGLOGx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 12 Jul 2021 10:06:53 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10042"; a="271097776"
+X-IronPort-AV: E=Sophos;i="5.84,234,1620716400"; 
+   d="scan'208";a="271097776"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2021 07:04:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,234,1620716400"; 
+   d="scan'208";a="486524182"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jul 2021 07:03:58 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 6CF33FF; Mon, 12 Jul 2021 17:04:25 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>, Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ben Gardon <bgardon@google.com>, Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 02/11] coresight: tmc-etr: Add barrier after updating
- AUX ring buffer
-Message-ID: <20210712105431.GA704210@leoy-ThinkPad-X240s>
-References: <20210711104105.505728-1-leo.yan@linaro.org>
- <20210711104105.505728-3-leo.yan@linaro.org>
- <f9734d69-b1f5-825c-f152-705626f4b256@arm.com>
+        Shuah Khan <shuah@kernel.org>
+Subject: [PATCH v2 1/1] tools: Rename bitmap_alloc() to bitmap_zalloc()
+Date:   Mon, 12 Jul 2021 17:04:23 +0300
+Message-Id: <20210712140423.17836-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9734d69-b1f5-825c-f152-705626f4b256@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Suzuki,
+Rename bitmap_alloc() to bitmap_zalloc() in tools to follow the bitmap API
+in the kernel.
 
-On Mon, Jul 12, 2021 at 11:40:12AM +0100, Suzuki Kuruppassery Poulose wrote:
-> On 11/07/2021 11:40, Leo Yan wrote:
-> > Since a memory barrier is required between AUX trace data store and
-> > aux_head store, and the AUX trace data is filled with memcpy(), it's
-> > sufficient to use smp_wmb() so can ensure the trace data is visible
-> > prior to updating aux_head.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >   drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> > index acdb59e0e661..713205db15a1 100644
-> > --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> > +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
-> > @@ -1563,6 +1563,14 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
-> >   	 */
-> >   	if (etr_perf->snapshot)
-> >   		handle->head += size;
-> > +
-> > +	/*
-> > +	 * It requires the ordering between the AUX trace data and aux_head
-> > +	 * store, below smp_wmb() ensures the AUX trace data is visible prior
-> > +	 * to updating aux_head.
-> > +	 */
-> 
-> Please could we reword this a bit, something like :
-> 
-> 	/*
-> 	 * Ensure that the AUX trace data is visible before the aux_head
-> 	 * is updated via perf_aux_output_end(), as expected by the
-> 	 * perf ring buffer.
-> 	 */
+No functional changes intended.
 
-Will refine with this in next spin.  Thanks for review!
+Suggested-by: Yury Norov <yury.norov@gmail.com>
+Acked-by: Yury Norov <yury.norov@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: fixed commit message, Yury's email, added Ack (Yury)
+ tools/include/linux/bitmap.h                            | 4 ++--
+ tools/perf/bench/find-bit-bench.c                       | 2 +-
+ tools/perf/builtin-c2c.c                                | 6 +++---
+ tools/perf/builtin-record.c                             | 2 +-
+ tools/perf/tests/bitmap.c                               | 2 +-
+ tools/perf/tests/mem2node.c                             | 2 +-
+ tools/perf/util/affinity.c                              | 4 ++--
+ tools/perf/util/header.c                                | 4 ++--
+ tools/perf/util/metricgroup.c                           | 2 +-
+ tools/perf/util/mmap.c                                  | 4 ++--
+ tools/testing/selftests/kvm/dirty_log_perf_test.c       | 2 +-
+ tools/testing/selftests/kvm/dirty_log_test.c            | 4 ++--
+ tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c | 2 +-
+ 13 files changed, 20 insertions(+), 20 deletions(-)
 
-> > +	smp_wmb();
-> > +
-> 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index 9d959bc24859..95611df1d26e 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -111,10 +111,10 @@ static inline int test_and_clear_bit(int nr, unsigned long *addr)
+ }
+ 
+ /**
+- * bitmap_alloc - Allocate bitmap
++ * bitmap_zalloc - Allocate bitmap
+  * @nbits: Number of bits
+  */
+-static inline unsigned long *bitmap_alloc(int nbits)
++static inline unsigned long *bitmap_zalloc(int nbits)
+ {
+ 	return calloc(1, BITS_TO_LONGS(nbits) * sizeof(unsigned long));
+ }
+diff --git a/tools/perf/bench/find-bit-bench.c b/tools/perf/bench/find-bit-bench.c
+index 73b5bcc5946a..22b5cfe97023 100644
+--- a/tools/perf/bench/find-bit-bench.c
++++ b/tools/perf/bench/find-bit-bench.c
+@@ -54,7 +54,7 @@ static bool asm_test_bit(long nr, const unsigned long *addr)
+ 
+ static int do_for_each_set_bit(unsigned int num_bits)
+ {
+-	unsigned long *to_test = bitmap_alloc(num_bits);
++	unsigned long *to_test = bitmap_zalloc(num_bits);
+ 	struct timeval start, end, diff;
+ 	u64 runtime_us;
+ 	struct stats fb_time_stats, tb_time_stats;
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index 6dea37f141b2..c34d77bee4ef 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -139,11 +139,11 @@ static void *c2c_he_zalloc(size_t size)
+ 	if (!c2c_he)
+ 		return NULL;
+ 
+-	c2c_he->cpuset = bitmap_alloc(c2c.cpus_cnt);
++	c2c_he->cpuset = bitmap_zalloc(c2c.cpus_cnt);
+ 	if (!c2c_he->cpuset)
+ 		return NULL;
+ 
+-	c2c_he->nodeset = bitmap_alloc(c2c.nodes_cnt);
++	c2c_he->nodeset = bitmap_zalloc(c2c.nodes_cnt);
+ 	if (!c2c_he->nodeset)
+ 		return NULL;
+ 
+@@ -2047,7 +2047,7 @@ static int setup_nodes(struct perf_session *session)
+ 		struct perf_cpu_map *map = n[node].map;
+ 		unsigned long *set;
+ 
+-		set = bitmap_alloc(c2c.cpus_cnt);
++		set = bitmap_zalloc(c2c.cpus_cnt);
+ 		if (!set)
+ 			return -ENOMEM;
+ 
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 671a21c9ee4d..f1b30ac094cb 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2786,7 +2786,7 @@ int cmd_record(int argc, const char **argv)
+ 
+ 	if (rec->opts.affinity != PERF_AFFINITY_SYS) {
+ 		rec->affinity_mask.nbits = cpu__max_cpu();
+-		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
++		rec->affinity_mask.bits = bitmap_zalloc(rec->affinity_mask.nbits);
+ 		if (!rec->affinity_mask.bits) {
+ 			pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
+ 			err = -ENOMEM;
+diff --git a/tools/perf/tests/bitmap.c b/tools/perf/tests/bitmap.c
+index 96c137360918..12b805efdca0 100644
+--- a/tools/perf/tests/bitmap.c
++++ b/tools/perf/tests/bitmap.c
+@@ -14,7 +14,7 @@ static unsigned long *get_bitmap(const char *str, int nbits)
+ 	unsigned long *bm = NULL;
+ 	int i;
+ 
+-	bm = bitmap_alloc(nbits);
++	bm = bitmap_zalloc(nbits);
+ 
+ 	if (map && bm) {
+ 		for (i = 0; i < map->nr; i++)
+diff --git a/tools/perf/tests/mem2node.c b/tools/perf/tests/mem2node.c
+index a258bd51f1a4..e4d0d58b97f8 100644
+--- a/tools/perf/tests/mem2node.c
++++ b/tools/perf/tests/mem2node.c
+@@ -27,7 +27,7 @@ static unsigned long *get_bitmap(const char *str, int nbits)
+ 	unsigned long *bm = NULL;
+ 	int i;
+ 
+-	bm = bitmap_alloc(nbits);
++	bm = bitmap_zalloc(nbits);
+ 
+ 	if (map && bm) {
+ 		for (i = 0; i < map->nr; i++) {
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+index a5e31f826828..7b12bd7a3080 100644
+--- a/tools/perf/util/affinity.c
++++ b/tools/perf/util/affinity.c
+@@ -25,11 +25,11 @@ int affinity__setup(struct affinity *a)
+ {
+ 	int cpu_set_size = get_cpu_set_size();
+ 
+-	a->orig_cpus = bitmap_alloc(cpu_set_size * 8);
++	a->orig_cpus = bitmap_zalloc(cpu_set_size * 8);
+ 	if (!a->orig_cpus)
+ 		return -1;
+ 	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
+-	a->sched_cpus = bitmap_alloc(cpu_set_size * 8);
++	a->sched_cpus = bitmap_zalloc(cpu_set_size * 8);
+ 	if (!a->sched_cpus) {
+ 		zfree(&a->orig_cpus);
+ 		return -1;
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 44249027507a..563dec72adeb 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -278,7 +278,7 @@ static int do_read_bitmap(struct feat_fd *ff, unsigned long **pset, u64 *psize)
+ 	if (ret)
+ 		return ret;
+ 
+-	set = bitmap_alloc(size);
++	set = bitmap_zalloc(size);
+ 	if (!set)
+ 		return -ENOMEM;
+ 
+@@ -1294,7 +1294,7 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+ 
+ 	size++;
+ 
+-	n->set = bitmap_alloc(size);
++	n->set = bitmap_zalloc(size);
+ 	if (!n->set) {
+ 		closedir(dir);
+ 		return -ENOMEM;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 99d047c5ead0..29b747ac31c1 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -313,7 +313,7 @@ static int metricgroup__setup_events(struct list_head *groups,
+ 	struct evsel *evsel, *tmp;
+ 	unsigned long *evlist_used;
+ 
+-	evlist_used = bitmap_alloc(perf_evlist->core.nr_entries);
++	evlist_used = bitmap_zalloc(perf_evlist->core.nr_entries);
+ 	if (!evlist_used)
+ 		return -ENOMEM;
+ 
+diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
+index ab7108d22428..512dc8b9c168 100644
+--- a/tools/perf/util/mmap.c
++++ b/tools/perf/util/mmap.c
+@@ -106,7 +106,7 @@ static int perf_mmap__aio_bind(struct mmap *map, int idx, int cpu, int affinity)
+ 		data = map->aio.data[idx];
+ 		mmap_len = mmap__mmap_len(map);
+ 		node_index = cpu__get_node(cpu);
+-		node_mask = bitmap_alloc(node_index + 1);
++		node_mask = bitmap_zalloc(node_index + 1);
+ 		if (!node_mask) {
+ 			pr_err("Failed to allocate node mask for mbind: error %m\n");
+ 			return -1;
+@@ -258,7 +258,7 @@ static void build_node_mask(int node, struct mmap_cpu_mask *mask)
+ static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
+ {
+ 	map->affinity_mask.nbits = cpu__max_cpu();
+-	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
++	map->affinity_mask.bits = bitmap_zalloc(map->affinity_mask.nbits);
+ 	if (!map->affinity_mask.bits)
+ 		return -1;
+ 
+diff --git a/tools/testing/selftests/kvm/dirty_log_perf_test.c b/tools/testing/selftests/kvm/dirty_log_perf_test.c
+index 04a2641261be..fbf0c2c1fbc9 100644
+--- a/tools/testing/selftests/kvm/dirty_log_perf_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_perf_test.c
+@@ -121,7 +121,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+ 	guest_num_pages = (nr_vcpus * guest_percpu_mem_size) >> vm_get_page_shift(vm);
+ 	guest_num_pages = vm_adjust_num_guest_pages(mode, guest_num_pages);
+ 	host_num_pages = vm_num_host_pages(mode, guest_num_pages);
+-	bmap = bitmap_alloc(host_num_pages);
++	bmap = bitmap_zalloc(host_num_pages);
+ 
+ 	if (dirty_log_manual_caps) {
+ 		cap.cap = KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2;
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index 5fe0140e407e..792c60e1b17d 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -749,8 +749,8 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+ 
+ 	pr_info("guest physical test memory offset: 0x%lx\n", guest_test_phys_mem);
+ 
+-	bmap = bitmap_alloc(host_num_pages);
+-	host_bmap_track = bitmap_alloc(host_num_pages);
++	bmap = bitmap_zalloc(host_num_pages);
++	host_bmap_track = bitmap_zalloc(host_num_pages);
+ 
+ 	/* Add an extra memory slot for testing dirty logging */
+ 	vm_userspace_mem_region_add(vm, VM_MEM_SRC_ANONYMOUS,
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+index 06a64980a5d2..68f26a8b4f42 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
+ 	nested_map(vmx, vm, NESTED_TEST_MEM1, GUEST_TEST_MEM, 4096);
+ 	nested_map(vmx, vm, NESTED_TEST_MEM2, GUEST_TEST_MEM, 4096);
+ 
+-	bmap = bitmap_alloc(TEST_MEM_PAGES);
++	bmap = bitmap_zalloc(TEST_MEM_PAGES);
+ 	host_test_mem = addr_gpa2hva(vm, GUEST_TEST_MEM);
+ 
+ 	while (!done) {
+-- 
+2.30.2
+
