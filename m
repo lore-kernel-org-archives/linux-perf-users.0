@@ -2,169 +2,98 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AF2C07E9A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 10:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CE8C07E99
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 10:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D7C610CD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 10:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AEE610CD
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jul 2021 10:40:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236464AbhGLKgH (ORCPT
+        id S233701AbhGLKnQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jul 2021 06:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235572AbhGLKgF (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jul 2021 06:36:05 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6271C08EA3D
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jul 2021 03:32:45 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id f12-20020a056830204cb029048bcf4c6bd9so18385038otp.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jul 2021 03:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6hEyAkHkInoJotPHkAfN0wodjsUHpYTw3naBo9WfZZI=;
-        b=F5afFXcZ+9ghtWqcOutMJAHUlfgrHnNxqJ1BaAL0FeHqhlADIU4WewWZ+7lEidJJEM
-         MDWZ5fPxKt+RdAVtf38zGqUZZdPq4xGVrfpV2fjD2XaXmNH8Y3GYykKc/yf9PH8QeLeQ
-         Rnhuqvnpuf5Esg3W0RDHGp4wc/eecEY8Nl4wT9I5OnH8iJlAM9yGPBEcVgOLa9gInteg
-         fIVn30QAvaeowSYG3fizYXe7sMHx6/i0jFR3d7Y9R8xcWFqEtdPgkXR2Df6Mwc3d0eH0
-         11D3w5c47q62DFT6jMYAhaasjylQbcOVnEoYmwPjkXyChsUAM9+OQkcZQs0jqHDOslLy
-         rC7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6hEyAkHkInoJotPHkAfN0wodjsUHpYTw3naBo9WfZZI=;
-        b=FacIi7ch1qXcjBClbmFO33VgE6G4/W4hhR1OHoH5nB3YK4jVlgatoboZxt3Y4mAYow
-         I0pb4BkDOWX+93IfDoLes+xNCxERy6kU+L5j0EBAb6D/oNFu/i8UJWMrc49PcxLTQBq3
-         yE3SU5V5mqAmkZZhqPN9C29yfKp7f55CG6KLF+chbGLQ87FZ9koQmCt8G8kxa8JESdwV
-         2jP+uuwMGOAG7NYtpXnr7ZKf6p8N+3g2wG47T2dzp/XNGBRyABE1MLF0G8ffyRt3j8fo
-         rqVeuiZHPjBeqnM546VdLB7XthRUnfGbnLpxI9+7HDbsKZCJ/1j7y8heNLFpUdOCcE9Y
-         fJ+w==
-X-Gm-Message-State: AOAM531GlLWtFW9dizYKeUSUK4sBFXImeFxQ80hatMO67XfT7QgnDGi9
-        vFSCdvE+RtqBpIRgP0l65tdeRVGgiDFmOPcZUdJTNA==
-X-Google-Smtp-Source: ABdhPJxFghSlOXue0bs+uwqobpo7cI8sIEg9IDF5ibUxHIb/e7alSJi47P5evIhXER5Fjeu7fnsftbugg+ShnCwX2AU=
-X-Received: by 2002:a9d:650e:: with SMTP id i14mr12659704otl.233.1626085964667;
- Mon, 12 Jul 2021 03:32:44 -0700 (PDT)
+        Mon, 12 Jul 2021 06:43:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:53290 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233738AbhGLKnG (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 12 Jul 2021 06:43:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38BB81FB;
+        Mon, 12 Jul 2021 03:40:18 -0700 (PDT)
+Received: from [10.57.35.32] (unknown [10.57.35.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3102F3F694;
+        Mon, 12 Jul 2021 03:40:15 -0700 (PDT)
+Subject: Re: [PATCH v4 02/11] coresight: tmc-etr: Add barrier after updating
+ AUX ring buffer
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+References: <20210711104105.505728-1-leo.yan@linaro.org>
+ <20210711104105.505728-3-leo.yan@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f9734d69-b1f5-825c-f152-705626f4b256@arm.com>
+Date:   Mon, 12 Jul 2021 11:40:12 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20210705084453.2151729-1-elver@google.com>
-In-Reply-To: <20210705084453.2151729-1-elver@google.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 12 Jul 2021 12:32:33 +0200
-Message-ID: <CANpmjNP7Z0mxaF+eYCtP1aabPcoh-0aDSOiW6FQsPkR8SbVwnA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] perf: Fix required permissions if sigtrap is requested
-To:     elver@google.com, peterz@infradead.org
-Cc:     tglx@linutronix.de, mingo@kernel.org, dvyukov@google.com,
-        glider@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, ebiederm@xmission.com,
-        omosnace@redhat.com, serge@hallyn.com,
-        linux-security-module@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20210711104105.505728-3-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It'd be good to get this sorted -- please take another look.
-
-Many thanks,
--- Marco
-
-On Mon, 5 Jul 2021 at 10:45, Marco Elver <elver@google.com> wrote:
-> If perf_event_open() is called with another task as target and
-> perf_event_attr::sigtrap is set, and the target task's user does not
-> match the calling user, also require the CAP_KILL capability or
-> PTRACE_MODE_ATTACH permissions.
->
-> Otherwise, with the CAP_PERFMON capability alone it would be possible
-> for a user to send SIGTRAP signals via perf events to another user's
-> tasks. This could potentially result in those tasks being terminated if
-> they cannot handle SIGTRAP signals.
->
-> Note: The check complements the existing capability check, but is not
-> supposed to supersede the ptrace_may_access() check. At a high level we
-> now have:
->
->         capable of CAP_PERFMON and (CAP_KILL if sigtrap)
->                 OR
->         ptrace_may_access(...) // also checks for same thread-group and uid
->
-> Fixes: 97ba62b27867 ("perf: Add support for SIGTRAP on perf events")
-> Cc: <stable@vger.kernel.org> # 5.13+
-> Reported-by: Dmitry Vyukov <dvyukov@google.com>
-> Signed-off-by: Marco Elver <elver@google.com>
+On 11/07/2021 11:40, Leo Yan wrote:
+> Since a memory barrier is required between AUX trace data store and
+> aux_head store, and the AUX trace data is filled with memcpy(), it's
+> sufficient to use smp_wmb() so can ensure the trace data is visible
+> prior to updating aux_head.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
-> v3:
-> * Upgrade ptrace mode check to ATTACH if attr.sigtrap, otherwise it's
->   possible to change the target task (send signal) even if only read
->   ptrace permissions were granted (reported by Eric W. Biederman).
->
-> v2: https://lkml.kernel.org/r/20210701083842.580466-1-elver@google.com
-> * Drop kill_capable() and just check CAP_KILL (reported by Ondrej Mosnacek).
-> * Use ns_capable(__task_cred(task)->user_ns, CAP_KILL) to check for
->   capability in target task's ns (reported by Ondrej Mosnacek).
->
-> v1: https://lkml.kernel.org/r/20210630093709.3612997-1-elver@google.com
-> ---
->  kernel/events/core.c | 25 ++++++++++++++++++++++++-
->  1 file changed, 24 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index fe88d6eea3c2..f79ee82e644a 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -12152,10 +12152,33 @@ SYSCALL_DEFINE5(perf_event_open,
->         }
->
->         if (task) {
-> +               unsigned int ptrace_mode = PTRACE_MODE_READ_REALCREDS;
-> +               bool is_capable;
+>   drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> index acdb59e0e661..713205db15a1 100644
+> --- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> +++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+> @@ -1563,6 +1563,14 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+>   	 */
+>   	if (etr_perf->snapshot)
+>   		handle->head += size;
 > +
->                 err = down_read_interruptible(&task->signal->exec_update_lock);
->                 if (err)
->                         goto err_file;
->
-> +               is_capable = perfmon_capable();
-> +               if (attr.sigtrap) {
-> +                       /*
-> +                        * perf_event_attr::sigtrap sends signals to the other
-> +                        * task. Require the current task to also have
-> +                        * CAP_KILL.
-> +                        */
-> +                       rcu_read_lock();
-> +                       is_capable &= ns_capable(__task_cred(task)->user_ns, CAP_KILL);
-> +                       rcu_read_unlock();
+> +	/*
+> +	 * It requires the ordering between the AUX trace data and aux_head
+> +	 * store, below smp_wmb() ensures the AUX trace data is visible prior
+> +	 * to updating aux_head.
+> +	 */
+
+Please could we reword this a bit, something like :
+
+	/*
+	 * Ensure that the AUX trace data is visible before the aux_head
+	 * is updated via perf_aux_output_end(), as expected by the
+	 * perf ring buffer.
+	 */
+> +	smp_wmb();
 > +
-> +                       /*
-> +                        * If the required capabilities aren't available, checks
-> +                        * for ptrace permissions: upgrade to ATTACH, since
-> +                        * sending signals can effectively change the target
-> +                        * task.
-> +                        */
-> +                       ptrace_mode = PTRACE_MODE_ATTACH_REALCREDS;
-> +               }
-> +
->                 /*
->                  * Preserve ptrace permission check for backwards compatibility.
->                  *
-> @@ -12165,7 +12188,7 @@ SYSCALL_DEFINE5(perf_event_open,
->                  * perf_event_exit_task() that could imply).
->                  */
->                 err = -EACCES;
-> -               if (!perfmon_capable() && !ptrace_may_access(task, PTRACE_MODE_READ_REALCREDS))
-> +               if (!is_capable && !ptrace_may_access(task, ptrace_mode))
->                         goto err_cred;
->         }
->
-> --
-> 2.32.0.93.g670b81a890-goog
->
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
