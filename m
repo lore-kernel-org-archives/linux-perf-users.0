@@ -2,132 +2,81 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B857FC07E95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 18:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3333CC07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 18:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 936F6613AB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 18:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068AA60D07
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 18:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbhGMSQD (ORCPT
+        id S229500AbhGMS5D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 14:16:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Tue, 13 Jul 2021 14:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229478AbhGMSQD (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 14:16:03 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 16A2361374;
-        Tue, 13 Jul 2021 18:13:09 +0000 (UTC)
-Date:   Tue, 13 Jul 2021 19:13:02 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        id S229478AbhGMS5C (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 13 Jul 2021 14:57:02 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 666D460FEB;
+        Tue, 13 Jul 2021 18:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626202452;
+        bh=svx4BysCDN++nwq/Uq7Id8auGbV4pq5BbTPAk7gpD6c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EA3gkdtjXdaxENdJpfXVN63km87jTp3narHN04n2MUypo8tVbHvLhQW1jIvb4VgHA
+         MkvbqJsHfiraaaouaS4qJ6YB1B/O3Z0Daq9d/7MH4AYCg54rhL+8rxqECra5f1cS9T
+         IKNVKAR91WpKuapaJQsyvc0Vee+JDN/iApGyen4h9lc4f3ECC7VK0U29nlQQkK4lxo
+         Sj5erUOL45lD78pQDqBEk/v8a6oInE7pOokjcqujsX28TmZUMcJJkk+/2UVEve5S+9
+         8n3iogtQrkh2dsAywLI6KcNjVuc+iLJczKYqyl7xFSUVg75cEqBjnXrIP65LUeBSOt
+         tvwTrOIve4QPw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A5343403F2; Tue, 13 Jul 2021 15:54:09 -0300 (-03)
+Date:   Tue, 13 Jul 2021 15:54:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 11/11] perf auxtrace: Add
- compat_auxtrace_mmap__{read_head|write_tail}
-Message-ID: <20210713181301.GE13181@arm.com>
-References: <20210711104105.505728-1-leo.yan@linaro.org>
- <20210711104105.505728-12-leo.yan@linaro.org>
- <20210712144410.GE22278@shell.armlinux.org.uk>
- <20210713154602.GD748506@leoy-ThinkPad-X240s>
- <20210713161441.GK22278@shell.armlinux.org.uk>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] libperf: fix build error with LIBPFM4=1
+Message-ID: <YO3hUUqRv5R/AxI5@kernel.org>
+References: <20210713091907.1555560-1-hca@linux.ibm.com>
+ <YO1dngCS/v0j3cAE@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210713161441.GK22278@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YO1dngCS/v0j3cAE@krava>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 05:14:41PM +0100, Russell King wrote:
-> On Tue, Jul 13, 2021 at 11:46:02PM +0800, Leo Yan wrote:
-> > On Mon, Jul 12, 2021 at 03:44:11PM +0100, Russell King (Oracle) wrote:
-> > > On Sun, Jul 11, 2021 at 06:41:05PM +0800, Leo Yan wrote:
-> > > > When perf runs in compat mode (kernel in 64-bit mode and the perf is in
-> > > > 32-bit mode), the 64-bit value atomicity in the user space cannot be
-> > > > assured, E.g. on some architectures, the 64-bit value accessing is split
-> > > > into two instructions, one is for the low 32-bit word accessing and
-> > > > another is for the high 32-bit word.
-> > > 
-> > > Does this apply to 32-bit ARM code on aarch64? I would not have thought
-> > > it would, as the structure member is a __u64 and
-> > > compat_auxtrace_mmap__read_head() doesn't seem to be marking anything
-> > > as packed, so the compiler _should_ be able to use a LDRD instruction
-> > > to load the value.
+Em Tue, Jul 13, 2021 at 11:32:14AM +0200, Jiri Olsa escreveu:
+> On Tue, Jul 13, 2021 at 11:19:07AM +0200, Heiko Carstens wrote:
+> > Fix build error with LIBPFM4=1:
+> >   CC      util/pfm.o
+> > util/pfm.c: In function ‘parse_libpfm_events_option’:
+> > util/pfm.c:102:30: error: ‘struct evsel’ has no member named ‘leader’
+> >   102 |                         evsel->leader = grp_leader;
+> >       |                              ^~
 > > 
-> > I think essentially your question is relevant to the memory model.
-> > For 32-bit Arm application on aarch64, in the Armv8 architecture
-> > reference manual ARM DDI 0487F.c, chapter "E2.2.1
-> > Requirements for single-copy atomicity" describes:
-> > 
-> > "LDM, LDC, LDRD, STM, STC, STRD, PUSH, POP, RFE, SRS, VLDM, VLDR, VSTM,
-> > and VSTR instructions are executed as a sequence of word-aligned word
-> > accesses. Each 32-bit word access is guaranteed to be single-copy
-> > atomic. The architecture does not require subsequences of two or more
-> > word accesses from the sequence to be single-copy atomic."
+> > Fixes: fba7c86601e2 ("libperf: Move 'leader' from tools/perf to perf_evsel::leader")
+> > Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 > 
-> ... which is an interesting statement for ARMv7 code. DDI0406C says
-> similar but goes on to say:
-> 
->    In an implementation that includes the Large Physical Address
->    Extension, LDRD and STRD accesses to 64-bit aligned locations
->    are 64-bit single-copy atomic as seen by translation table
->    walks and accesses to translation tables.
-> 
-> then states that LPAE page tables must be stored in memory that such
-> page tables must be in memory that is capable of supporting 64-bit
-> single-copy atomic accesses.
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-A similar statement is in the ARMv8 ARM (E2.2.1 in version G.a).
+Argh, we have this in 'make -C tools/perf build-test'
 
-> In Linux, we assume all RAM that the kernel has access to can contain
-> page tables. So by implication, all RAM that the kernel has access to
-> and exposes to userspace must be 64-bit single-copy atomic (if not,
-> we have a rather serious bug.)
+⬢[acme@toolbox perf]$ grep libpfm tools/perf/tests/make
+make_with_libpfm4   := LIBPFM4=1
+run += make_with_libpfm4
+⬢[acme@toolbox perf]$
 
-Indeed. We should assume that the SDRAM supports all the CPU features.
+But I forgot to install libpfm-devel :-\
 
-> The remaining question is whether it would be sane for LDRD and STRD
-> to be single-copy atomic to translation table walkers but not to other
-> CPUs. Since Linux expects to be able to modify the page tables from
-> any CPU in the system, this requirement must hold, otherwise it's going
-> to be a really strangely designed system.
+Thanks, applied.
 
-The above statement does say "translation table walks and accesses to
-translation tables". The accesses can be LDRD/STRD instructions from
-other CPUs. Since the hardware can't tell whether the access is to a
-page table, the designers just made LDRD/STRD single-copy atomic.
-
-> I'd be interested to hear what Catalin and Will have to say on this,
-> but I suspect in practice, Arm systems that are running Linux with
-> LPAE (ARMv7+LPAE, ARMv8) will implement LDRD and STRD with 64-bit
-> single-copy atomic semantics.
-
-That's my understanding as well. In theory one could have a page table
-access from EL0, so it should be atomic.
-
-We could try to clarify E2.2.1 to simply state that naturally aligned
-LDRD/STRD are single-copy atomic without any subsequent statement on the
-translation table.
-
--- 
-Catalin
+- Arnaldo
