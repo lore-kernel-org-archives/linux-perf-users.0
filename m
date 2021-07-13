@@ -2,29 +2,30 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D79EC07E95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5F3C07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E6461175
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7DD610A7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:40:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237073AbhGMPnY (ORCPT
+        id S237123AbhGMPn2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 11:43:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:45528 "EHLO foss.arm.com"
+        Tue, 13 Jul 2021 11:43:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:45554 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236932AbhGMPnX (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 11:43:23 -0400
+        id S236932AbhGMPn2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 13 Jul 2021 11:43:28 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 614DC6D;
-        Tue, 13 Jul 2021 08:40:33 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B6A1D6E;
+        Tue, 13 Jul 2021 08:40:38 -0700 (PDT)
 Received: from e121896.arm.com (unknown [10.57.35.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1B64F3F774;
-        Tue, 13 Jul 2021 08:40:28 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 06BAE3F774;
+        Tue, 13 Jul 2021 08:40:33 -0700 (PDT)
 From:   James Clark <james.clark@arm.com>
 To:     acme@kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org, leo.yan@linaro.org
@@ -39,43 +40,68 @@ Cc:     al.grant@arm.com, branislav.rankov@arm.com, suzuki.poulose@arm.com,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/6] perf cs-etm: Support TRBE (unformatted decoding)
-Date:   Tue, 13 Jul 2021 16:40:02 +0100
-Message-Id: <20210713154008.29656-1-james.clark@arm.com>
+Subject: [PATCH 1/6] perf cs-etm: Refactor initialisation of kernel start address
+Date:   Tue, 13 Jul 2021 16:40:03 +0100
+Message-Id: <20210713154008.29656-2-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20210713154008.29656-1-james.clark@arm.com>
+References: <20210713154008.29656-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patchset consists of refactoring to allow the decoder to be
-created in advance when the AUX records are iterated over. The
-AUX record flags are used to communicate whether the data is
-formatted or not which is the reason this refactoring is required.
+The kernel start address is already cached in the machine struct once it
+is initialised, so storing it in the cs_etm struct is unnecessary.
 
-These changes result in some simplifications, removal of early exit
-conditions etc.
+It also depends on kernel maps being available to be initialised.
+Therefore cs_etm__setup_queues() isn't an appropriate place to call it
+because it could be called before processing starts. It would be better
+to initialise it at the point when it is needed, then we can be sure
+that all the necessary maps are available. Also by calling
+machine__kernel_start() multiple times it can be initialised at some
+point, even if it failed to initialise previously due to missing maps.
 
-A change was also made to --dump-raw-trace code to allow the
-formatted/unformatted status to persist and for the decoder to
-not be continually deleted and recreated.
+In a later commit cs_etm__setup_queues() will be moved which is the
+motivation for this change.
 
-The changes apply on top of the previous patchset "[PATCH v7 0/2] perf
-cs-etm: Split Coresight decode by aux records".
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/cs-etm.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-James Clark (6):
-  perf cs-etm: Refactor initialisation of kernel start address
-  perf cs-etm: Split setup and timestamp search functions
-  perf cs-etm: Only setup queues when they are modified
-  perf cs-etm: Suppress printing when resetting decoder
-  perf cs-etm: Use existing decoder instead of resetting it
-  perf cs-etm: Pass unformatted flag to decoder
-
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  10 +-
- tools/perf/util/cs-etm.c                      | 174 ++++++++----------
- 2 files changed, 84 insertions(+), 100 deletions(-)
-
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index bc1f64873c8f..4c69ef391f60 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -62,7 +62,6 @@ struct cs_etm_auxtrace {
+ 	u64 instructions_sample_period;
+ 	u64 instructions_id;
+ 	u64 **metadata;
+-	u64 kernel_start;
+ 	unsigned int pmu_type;
+ };
+ 
+@@ -691,7 +690,7 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+ 
+ 	machine = etmq->etm->machine;
+ 
+-	if (address >= etmq->etm->kernel_start) {
++	if (address >= machine__kernel_start(machine)) {
+ 		if (machine__is_host(machine))
+ 			return PERF_RECORD_MISC_KERNEL;
+ 		else
+@@ -901,9 +900,6 @@ static int cs_etm__setup_queues(struct cs_etm_auxtrace *etm)
+ 	unsigned int i;
+ 	int ret;
+ 
+-	if (!etm->kernel_start)
+-		etm->kernel_start = machine__kernel_start(etm->machine);
+-
+ 	for (i = 0; i < etm->queues.nr_queues; i++) {
+ 		ret = cs_etm__setup_queue(etm, &etm->queues.queue_array[i], i);
+ 		if (ret)
 -- 
 2.28.0
 
