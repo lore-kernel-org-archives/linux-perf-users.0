@@ -2,48 +2,66 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DAAAC07E95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 13:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243F2C07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 13:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45D8C610CB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 13:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B696115B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 13:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236216AbhGMNFL (ORCPT
+        id S236342AbhGMNNP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 09:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        Tue, 13 Jul 2021 09:13:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236205AbhGMNFK (ORCPT
+        with ESMTP id S236329AbhGMNNP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 09:05:10 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 604C3C0613DD;
-        Tue, 13 Jul 2021 06:02:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DMp6dV42xRnlQcyCD45dsoHe0RPJLXS1wpNt9+DfJBE=; b=gtUSRbzqGA40wzFUSnXaJMuUqL
-        x91iV79pM3zhMvCQadTmu1q8aBOxweAzI5xONNOUoCGL7sl2IbyPkwBFjNQM+jm87kuZbmrAkDU6s
-        QViQmQVQdJgBmi3rdTio50BeGuUml+YvhFsY1MeyYulu4+bgzSP4NsVJSZCcSaxTFDYCIfs0m7s8E
-        R4zF4ZAS8Q/jKitj7MZpYqKUtmHVeUSwUPmw4Z9OO0L8iihbxDSRs6eyduwy/467uy7RAVG5aBKkS
-        Vn2RJZ04wyvFYaY00ity1eWGP/s5UaxZlhj0RpKsS8cobTPE6BwhBR+uoWOw9fg5e9wIy+uDjICYl
-        n49HWOUQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1m3I2t-00HAA7-NW; Tue, 13 Jul 2021 13:01:56 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9E864987782; Tue, 13 Jul 2021 15:01:54 +0200 (CEST)
-Date:   Tue, 13 Jul 2021 15:01:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leo Yan <leo.yan@linaro.org>
+        Tue, 13 Jul 2021 09:13:15 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D93C0613DD
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 06:10:25 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id 17so19573098pfz.4
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 06:10:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VUU1Kwvq4GBakNNijA9o5ryuRCyw2WYxhJlpoTQmeDM=;
+        b=F+19KqtKCMQP1/ZSGE0pKtTbAbaCy4Gy7dSnmcaKh6mlDPZcmZADNKNXMBl1BLmlgg
+         fZEIrUhlTvD7ckmpRogdtNLrBgnsfug/fOz+izrAXCsBuGI0/sPaY1OJSok69hUjj9lv
+         rVa5k8mLIVa4jvPEJ/12PMQYklfYqi7MASgtBYjPMYm9G1Evcn8hc8ckbGazly6vZYrR
+         KwSrAj6hX0hr10iW7gIiUYzTx0HPlx4pYE0rPAQEtcRdax8KMDMXvkJD7TZ5c0qThQhg
+         ehU1tXHaV5gJ7HbpAbO+ZJBWKRlgnzFrhikl7SigIricfVFBHxVVlvXoZZdzM1zalEFs
+         QzmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VUU1Kwvq4GBakNNijA9o5ryuRCyw2WYxhJlpoTQmeDM=;
+        b=jo8Q8T3qt/wXAok3raGuUX3zzdOqyEGl0AmzBxagqkE/Tc30BBzy50PT/Rc9+Dxz9N
+         lLdBpO67LggXiF5dAU7uRAir7gtWDwxsIhRN/TCnqI84OxtQak0RAopN7s7cEag+hXxu
+         UadbDoy9eEexWfaYOEwwiyTEge3m0eEDEkbPpVNJ3TnCzEa5pFe4q5Tg6GraNpkPOv3X
+         z4/j5Cs2D+wJnwb35JqsgE5kQRfVvsOvRYVXU/6heIVNBOvaTXLUfIjsY7XtA4+mbtcP
+         yaPYUbmik0UfKfnITEzO92uzkHKpLMvaAzLUGhm+ec02Zf93tZ4uwU9vNpOuKy3zoY8z
+         Okfw==
+X-Gm-Message-State: AOAM531im4Z9eq7ZNI7p68zFJ+8tdMU0elA5DVACRsRJgqoDkqTdyyGh
+        5yZhB/aCqDJjuRlp2gu3CP5jGA==
+X-Google-Smtp-Source: ABdhPJwPLGUmEVAkt/uYOyw07UUtKM7cvXZoj28ALl+IDI3I8DSEq4m+ESyjcRWzcjoCA9/lSdUCog==
+X-Received: by 2002:a63:d709:: with SMTP id d9mr4258879pgg.337.1626181825205;
+        Tue, 13 Jul 2021 06:10:25 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([202.131.71.237])
+        by smtp.gmail.com with ESMTPSA id z13sm4449296pfn.94.2021.07.13.06.10.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jul 2021 06:10:24 -0700 (PDT)
+Date:   Tue, 13 Jul 2021 21:10:18 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -57,41 +75,47 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mike Leach <mike.leach@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 04/11] perf/x86: Add barrier after updating bts
-Message-ID: <20210713130154.GC4170@worktop.programming.kicks-ass.net>
+Subject: Re: [PATCH v4 07/11] perf auxtrace: Remove
+ auxtrace_mmap__read_snapshot_head()
+Message-ID: <20210713131018.GB748506@leoy-ThinkPad-X240s>
 References: <20210711104105.505728-1-leo.yan@linaro.org>
- <20210711104105.505728-5-leo.yan@linaro.org>
+ <20210711104105.505728-8-leo.yan@linaro.org>
+ <4c65b6ba-2258-ff36-2ecc-92219e61e578@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210711104105.505728-5-leo.yan@linaro.org>
+In-Reply-To: <4c65b6ba-2258-ff36-2ecc-92219e61e578@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jul 11, 2021 at 06:40:58PM +0800, Leo Yan wrote:
-> Add barrier wmb() to separate the AUX data store and aux_head store.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  arch/x86/events/intel/bts.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-> index 6320d2cfd9d3..4a015d160bc5 100644
-> --- a/arch/x86/events/intel/bts.c
-> +++ b/arch/x86/events/intel/bts.c
-> @@ -209,6 +209,9 @@ static void bts_update(struct bts_ctx *bts)
->  	} else {
->  		local_set(&buf->data_size, head);
->  	}
-> +
-> +	/* The WMB separates data store and aux_head store matches. */
-> +	wmb();
+On Mon, Jul 12, 2021 at 05:32:11PM +0300, Adrian Hunter wrote:
 
-Alexander, last time you mentioned (on IRC) that BTS is supposed to be
-coherent, in which case we can probably get away with just a compiler
-barrier. Can you confirm?
+[...]
 
-That said; this BTS crud is so horrifically slow, an extra MFENCE isn't
-going to matter one way or another.
+> > --- a/tools/perf/util/auxtrace.c
+> > +++ b/tools/perf/util/auxtrace.c
+> > @@ -1686,13 +1686,12 @@ static int __auxtrace_mmap__read(struct mmap *map,
+> >  	union perf_event ev;
+> >  	void *data1, *data2;
+> >  
+> > +	head = auxtrace_mmap__read_head(mm);
+> > +
+> >  	if (snapshot) {
+> > -		head = auxtrace_mmap__read_snapshot_head(mm);
+> >  		if (auxtrace_record__find_snapshot(itr, mm->idx, mm, data,
+> >  						   &head, &old))
+> 
+> That leaves a nested 'if' which is not kernel style i.e. could be
+> 
+> 	if (snapshot &&
+> 	    auxtrace_record__find_snapshot(itr, mm->idx, mm, data, &head, &old))
+
+Will refine in next spin, thanks for suggestion!
+
+> >  			return -1;
+> > -	} else {
+> > -		head = auxtrace_mmap__read_head(mm);
+> >  	}
+> >  
+> >  	if (old == head)
