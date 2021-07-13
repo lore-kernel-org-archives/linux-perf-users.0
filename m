@@ -2,145 +2,171 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA955C07E95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC2BC07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 11:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 930A261158
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 09:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ABA76127C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 11:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235060AbhGMKAq (ORCPT
+        id S235557AbhGMLZr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 06:00:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57205 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234857AbhGMKAq (ORCPT
+        Tue, 13 Jul 2021 07:25:47 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:6809 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235413AbhGMLZr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 06:00:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626170276;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ux0PfeAXzOBlghNBmZ0mm1ZgRmQRaTVzR3iizUuPVT0=;
-        b=bJNPFgGatpMKZGB82VPGWIwd7SzLf5gFW8FWu9P3buvH5B6Oom23mfxkLUGHh1KrmO9PK8
-        USnJK0KUHhVC2xvhKV0s57p9v5ynMBcIlikmarUJoJdc/Cgb3fKMe+Raa+57q8HN+ovPCe
-        1B7h6Ce148dyhsaW7deAMUiTlKJh9cY=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-4qds3ADCOZKaLzQjDIPwKg-1; Tue, 13 Jul 2021 05:57:54 -0400
-X-MC-Unique: 4qds3ADCOZKaLzQjDIPwKg-1
-Received: by mail-wr1-f72.google.com with SMTP id y15-20020a5d614f0000b029013cd60e9baaso6105465wrt.7
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 02:57:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ux0PfeAXzOBlghNBmZ0mm1ZgRmQRaTVzR3iizUuPVT0=;
-        b=BzVSfsg4KzS6mJMLta/HYL3+VLjy+w24jwXnyxlEwzPS8nJhwfaXrXRPrw2rG5WidC
-         iR6RNXUsXDVdSgAB98q04P10Bdubw4GqqI4zRnvPihm0tnEyNgUKQWkQBLWY5vDoK2P7
-         1nNZb5yQbmvZosAD60gHI9kzi09SO/zdKkEQaYr2bSyVB9mGwylZoJxG8u6w1hoHI8nL
-         Va4MSbmh8o6IOSXP1nT7KB+LPZoeoBn0cvLGZDaaE79yfLqYXH9vf3wPUM+GdMgNVf35
-         F/ADMS6+qi5Z69PSFSkzQoZGgAUTjrhMu8e0+aMWwtQmWb4B/lmpe54Sq1YbENBMBVpB
-         txBQ==
-X-Gm-Message-State: AOAM532+SaMm0lKdOkzCeH3Nwa4bY/qQU0GhAqLP3k15G5BWumPqyV7S
-        Eb59nrGAcaB2a7YvPss+/B86TFmo9iYSe87fgKtNyevqx9GKXKXmUja8PwjkmHXYdZUMnbcETFy
-        TQFp3Oq4Wr2OnVYYhqdcpD92/c1CEcg==
-X-Received: by 2002:adf:e107:: with SMTP id t7mr4557148wrz.165.1626170273701;
-        Tue, 13 Jul 2021 02:57:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxRXcscEbtweoNvDykByU0x2geYjbVhx2fh+FYLF+uLiJkfw5lMhGHodZMku5u2c9EnBCt60g==
-X-Received: by 2002:adf:e107:: with SMTP id t7mr4557133wrz.165.1626170273546;
-        Tue, 13 Jul 2021 02:57:53 -0700 (PDT)
-Received: from krava ([5.171.209.239])
-        by smtp.gmail.com with ESMTPSA id r9sm15099853wmq.25.2021.07.13.02.57.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 02:57:52 -0700 (PDT)
-Date:   Tue, 13 Jul 2021 11:57:50 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Michael Petlan <mpetlan@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, acme@kernel.org
-Subject: Re: [PATCH] perf tests vmlinux-kallsyms: ignore hidden symbols
-Message-ID: <YO1jnjHofv9oSR0M@krava>
-References: <20210708122805.2832-1-mpetlan@redhat.com>
+        Tue, 13 Jul 2021 07:25:47 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GPJ4n2Z0czXs9R;
+        Tue, 13 Jul 2021 19:17:13 +0800 (CST)
+Received: from dggpemm000003.china.huawei.com (7.185.36.128) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 13 Jul 2021 19:22:50 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.61) by
+ dggpemm000003.china.huawei.com (7.185.36.128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 13 Jul 2021 19:22:49 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>, <laoar.shao@gmail.com>,
+        <rostedt@goodmis.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf sched: Fix record failed when CONFIG_SCHEDSTATS is not set
+Date:   Tue, 13 Jul 2021 19:23:58 +0800
+Message-ID: <20210713112358.194693-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210708122805.2832-1-mpetlan@redhat.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm000003.china.huawei.com (7.185.36.128)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 08, 2021 at 02:28:05PM +0200, Michael Petlan wrote:
-> Symbols containing particular prefixes are purposely hidden from kallsyms.
-> The prefixes are listed in scripts/kallsyms.c, using ignored_prefixes[]
-> string array. The perf test "vmlinux symtab matches kallsyms" fails in case
-> perf finds some of the hidden symbols in its machine image and can't match
-> them to kallsyms.
+The tracepoints trace_sched_stat_{wait, sleep, iowait} are not exposed to user
+if CONFIG_SCHEDSTATS is not set, "perf sched record" records the three events.
+As a result, the command fails to be executed.
 
-there's also other arrays like ignored_suffixes, ignored_matches ...
-should we have them as well? should we take the whole is_ignored_symbol
-function?
+Before:
 
-> 
-> Let's add a filter to check if a symbol not found isn't one of these before
-> failing the test.
-> 
-> The ignored_prefixes[] array has been copied from scripts/kallsyms.c and needs
-> to be updated along with the original.
-> 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/tests/vmlinux-kallsyms.c | 41 +++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-> index 193b7c91b4e2..11cd276ec8fd 100644
-> --- a/tools/perf/tests/vmlinux-kallsyms.c
-> +++ b/tools/perf/tests/vmlinux-kallsyms.c
-> @@ -14,6 +14,41 @@
->  
->  #define UM(x) kallsyms_map->unmap_ip(kallsyms_map, (x))
->  
-> +/* Symbol names that begin with the following are ignored. (a copy from scripts/kallsyms.c) */
-> +static const char * const ignored_prefixes[] = {
-> +	"$",			/* local symbols for ARM, MIPS, etc. */
-> +	".LASANPC",		/* s390 kasan local symbols */
-> +	"__crc_",		/* modversions */
-> +	"__efistub_",		/* arm64 EFI stub namespace */
-> +	"__kvm_nvhe_",		/* arm64 non-VHE KVM namespace */
-> +	"__AArch64ADRPThunk_",	/* arm64 lld */
-> +	"__ARMV5PILongThunk_",	/* arm lld */
-> +	"__ARMV7PILongThunk_",
-> +	"__ThumbV7PILongThunk_",
-> +	"__LA25Thunk_",		/* mips lld */
-> +	"__microLA25Thunk_",
-> +	NULL
-> +};
-> +
-> +static int has_prefix(const char *prefix, const char *string)
-> +{
-> +	while(*prefix)
-> +        if(*prefix++ != *string++)
-> +            return 0;
-> +
-> +	return 1;
-> +}
-> +
-> +static int should_be_hidden(const char *sym_name)
-> +{
-> +	int i;
-> +	for(i = 0; ignored_prefixes[i] != NULL; i++)
-> +		if(has_prefix(ignored_prefixes[i], sym_name))
-> +			return 1;
-> +
-> +	return 0;
+  #perf sched record sleep 1
+  event syntax error: 'sched:sched_stat_wait'
+                       \___ unknown tracepoint
 
-please check your patch with scripts/checkpatch.pl before posting
+  Error:  File /sys/kernel/tracing/events/sched/sched_stat_wait not found.
+  Hint:   Perhaps this kernel misses some CONFIG_ setting to enable this feature?.
 
-thanks,
-jirka
+  Run 'perf list' for a list of valid events
+
+   Usage: perf record [<options>] [<command>]
+      or: perf record [<options>] -- <command> [<options>]
+
+      -e, --event <event>   event selector. use 'perf list' to list available events
+
+Solution:
+  Check whether schedstat tracepoints are exposed. If no, these events are not recorded.
+
+After:
+  # perf sched record sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.163 MB perf.data (1091 samples) ]
+  # perf sched report
+  run measurement overhead: 4736 nsecs
+  sleep measurement overhead: 9059979 nsecs
+  the run test took 999854 nsecs
+  the sleep test took 8945271 nsecs
+  nr_run_events:        716
+  nr_sleep_events:      785
+  nr_wakeup_events:     0
+  ...
+  ------------------------------------------------------------
+
+Fixes: 2a09b5de235a6 ("sched/fair: do not expose some tracepoints to user if CONFIG_SCHEDSTATS is not set")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-sched.c | 33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 954ce2f594e9..3e5b7faf0c16 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3335,6 +3335,16 @@ static void setup_sorting(struct perf_sched *sched, const struct option *options
+ 	sort_dimension__add("pid", &sched->cmp_pid);
+ }
+ 
++static bool schedstat_events_exposed(void)
++{
++	/*
++	 * Select "sched:sched_stat_wait" event to check
++	 * whether schedstat tracepoints are exposed.
++	 */
++	return IS_ERR(trace_event__tp_format("sched", "sched_stat_wait")) ?
++		false : true;
++}
++
+ static int __cmd_record(int argc, const char **argv)
+ {
+ 	unsigned int rec_argc, i, j;
+@@ -3346,21 +3356,33 @@ static int __cmd_record(int argc, const char **argv)
+ 		"-m", "1024",
+ 		"-c", "1",
+ 		"-e", "sched:sched_switch",
+-		"-e", "sched:sched_stat_wait",
+-		"-e", "sched:sched_stat_sleep",
+-		"-e", "sched:sched_stat_iowait",
+ 		"-e", "sched:sched_stat_runtime",
+ 		"-e", "sched:sched_process_fork",
+ 		"-e", "sched:sched_wakeup_new",
+ 		"-e", "sched:sched_migrate_task",
+ 	};
++
++	/*
++	 * The tracepoints trace_sched_stat_{wait, sleep, iowait}
++	 * are not exposed to user if CONFIG_SCHEDSTATS is not set,
++	 * to prevent "perf sched record" execution failure, determine
++	 * whether to record schedstat events according to actual situation.
++	 */
++	const char * const schedstat_args[] = {
++		"-e", "sched:sched_stat_wait",
++		"-e", "sched:sched_stat_sleep",
++		"-e", "sched:sched_stat_iowait",
++	};
++	unsigned int schedstat_argc = schedstat_events_exposed() ?
++		ARRAY_SIZE(schedstat_args) : 0;
++
+ 	struct tep_event *waking_event;
+ 
+ 	/*
+ 	 * +2 for either "-e", "sched:sched_wakeup" or
+ 	 * "-e", "sched:sched_waking"
+ 	 */
+-	rec_argc = ARRAY_SIZE(record_args) + 2 + argc - 1;
++	rec_argc = ARRAY_SIZE(record_args) + 2 + schedstat_argc + argc - 1;
+ 	rec_argv = calloc(rec_argc + 1, sizeof(char *));
+ 
+ 	if (rec_argv == NULL)
+@@ -3376,6 +3398,9 @@ static int __cmd_record(int argc, const char **argv)
+ 	else
+ 		rec_argv[i++] = strdup("sched:sched_wakeup");
+ 
++	for (j = 0; j < schedstat_argc; j++)
++		rec_argv[i++] = strdup(schedstat_args[j]);
++
+ 	for (j = 1; j < (unsigned int)argc; j++, i++)
+ 		rec_argv[i] = argv[j];
+ 
+-- 
+2.30.GIT
 
