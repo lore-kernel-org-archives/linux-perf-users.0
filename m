@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99015C11F69
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89898C07E95
 	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 12:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F826128E
+	by mail.kernel.org (Postfix) with ESMTP id 74DCC61249
 	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 12:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236182AbhGMMOd (ORCPT
+        id S236133AbhGMMOf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 08:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40898 "EHLO
+        Tue, 13 Jul 2021 08:14:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236158AbhGMMOa (ORCPT
+        with ESMTP id S236172AbhGMMOd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 08:14:30 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F40C0613DD;
-        Tue, 13 Jul 2021 05:11:38 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id l7so29262773wrv.7;
-        Tue, 13 Jul 2021 05:11:38 -0700 (PDT)
+        Tue, 13 Jul 2021 08:14:33 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EC8C0613EF;
+        Tue, 13 Jul 2021 05:11:42 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id l7so29263017wrv.7;
+        Tue, 13 Jul 2021 05:11:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v9LNvyAk4LnR/JexNnOWydf8xno1p0xFPLqjD1zB79s=;
-        b=aOOBrruYWxSWn9DC7kRZUHzgCosjXqVpZgrpHo/rMbFe94kd3BhdqCGlaSMFWTwCgW
-         tdotxeGBmxmFNjWSipoPdR+Y17ui9dcasXm08aGm6+su9YsypA/GRHDCyQoXcz0mwh5Q
-         J4pGY2vutu9GledtsCg53kzQ+P3zIFOaJe1o4b5Wmld83n/avLMc0/YiWpAFg2s50EB5
-         sH6y7e1jp1TWecbxLzBeWW3MiWxjaIxX/vgDt26K7Oz+hRRvKv3XdFmjoD29FPZCrjgu
-         HesnhVMCrCKNqVwLbJTjwqHXX7J+PtTNyRm6ug0fKjHdaPH3nt0wS8/y6yzrFF/F46Bd
-         +MwA==
+        bh=6WNHzJ7TZJXM3U37FlFXdskl78ntwTEiBDlOoJjZQ24=;
+        b=LTSRY90x7Y7DimNCF6RUhDJbyVReFviK/HDP4qepG7UHo0saNt3Neo6gmWuoflS8gW
+         clL15AvJb36PQxkydvOBbthju+yLjTqzZbzWIJ4WZUs2rBVcRY3XjX7IFM9oOXqVqbOz
+         GP9SRyrLRf9u8TSTmWWCmn3iQatZPID/1ayg+8uUn9Pi6yI+p6MmZ4F/NB9r31QCAsGi
+         iGC2FRV6RXNPJZfviYnrevdLRkYKXYmUQix/wD8ESgVyJl4ZghEDUQhFoKVdXdcKwaIq
+         bcrdzpv7iBn7/j1yelMqIlbgchwiNPytfBE1cykcdPOc/EuE4mK20oiZbY6QZdy2zEve
+         eugg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v9LNvyAk4LnR/JexNnOWydf8xno1p0xFPLqjD1zB79s=;
-        b=mMzRrUXN+ro/GPF0K3M8nJ68bF+nNHtt10tCMGpHVmw0RbjYvR+hUR3DxtuTf2d8cX
-         yIYr1NSR7u/URxd/Zj7JpoPLrkwftJQN0cCNFeEfd99zOA67dLNImkKCr/MNLdjK+cPY
-         sI4toj5z2DvJ5Th3yHoX1qprgA/2u8qgaxRT5ghMcEjumxluDUMNKWh3cnIlyO/4/beO
-         ymPV6XYSqzjj4Kd0pdB9yAmMyvVtP28/mdvjn6ND4MDnld4nrxs3qTGrnvvaERYqNRYa
-         dQlsZm9T839Pk5qfI84RxJBcXoir0sIOx3tvF4Dva5s9+lAo8UpYRgyzz6NVB+Kna2T4
-         oyRA==
-X-Gm-Message-State: AOAM531XMNXIZPqGam0iJYn2V5VH1WyHVdwZPeyJJAwIT3C4073l5+pz
-        aF5499b4XFRvJ7hxRGpViNw=
-X-Google-Smtp-Source: ABdhPJxkDnMDtWVdwJ+bJFESQReV+zZPdwC170d8Xdim4zRslqn6x79F79/rtEcwjIlCB2nN+2tXTA==
-X-Received: by 2002:adf:ed4a:: with SMTP id u10mr5271150wro.330.1626178297406;
-        Tue, 13 Jul 2021 05:11:37 -0700 (PDT)
+        bh=6WNHzJ7TZJXM3U37FlFXdskl78ntwTEiBDlOoJjZQ24=;
+        b=pO6MBV/e0uQNNIL/Jw7Hf1I0c8Yb1lBGJeLsXSdPIqiSYGaiPp4mXQBI32LFgyF6qx
+         ebF8pSEQaYYkt6TJuDakmTzyR5C8J8Ebn7mNWOJ9RlkuEeSJHPZR0j9SE4Rtsty2Fax5
+         5eB5oIEY/5gr4dS4Uitsc3BtGgHk1cLruEX1R2+rm3yWmws+Vye1ElniT4ab1BCc/+6X
+         uD0Cs3sxXQzRbMJgYhVlVLQ/bE7ZbLOoq1BEJPJt+QVr43yUsBjrPe7pmt0rDotYs5sY
+         NsNab/05S6q22JgBHs/xRRkPvX92qrBOmlCzPDplurbJ8e7m/pnvrd32kmWXm21tikba
+         9kGQ==
+X-Gm-Message-State: AOAM531KV9xRjQ2MmIKVGbTSHh7csqPqLlh3NjaHvIqvIxRCpuFOdFbe
+        1I78MAlUBhV/ZoNpIwAP2ak=
+X-Google-Smtp-Source: ABdhPJzKUtfswrK+N087tU7Je+1UDSJUnz0e0h7Vb88mX6gkah3HK5+zOnKgr1iYjUGOzRnGSNIoeA==
+X-Received: by 2002:adf:a350:: with SMTP id d16mr5348380wrb.207.1626178301238;
+        Tue, 13 Jul 2021 05:11:41 -0700 (PDT)
 Received: from localhost.localdomain ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id o3sm17551425wrw.56.2021.07.13.05.11.36
+        by smtp.googlemail.com with ESMTPSA id o3sm17551425wrw.56.2021.07.13.05.11.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 05:11:37 -0700 (PDT)
+        Tue, 13 Jul 2021 05:11:40 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH 06/10] perf workqueue: introduce workqueue struct
-Date:   Tue, 13 Jul 2021 14:11:17 +0200
-Message-Id: <efda4e29da6f6aa8c34a3751ed676c7ee0506cf8.1626177381.git.rickyman7@gmail.com>
+Subject: [RFC PATCH 10/10] perf synthetic-events: use workqueue parallel_for
+Date:   Tue, 13 Jul 2021 14:11:21 +0200
+Message-Id: <b430c981f027cb03c1c20f6f7ee4800aded7a810.1626177381.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626177381.git.rickyman7@gmail.com>
 References: <cover.1626177381.git.rickyman7@gmail.com>
@@ -80,381 +80,250 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds the workqueue definition, along with simple creation and
-destruction functions.
-Furthermore, a simple subtest is added.
+To generate synthetic events, perf has the option to use multiple
+threads. These threads are created manually using pthread_created.
 
-A workqueue is attached to a pool, on which it executes its workers.
-Next patches will introduce workers.
+This patch replaces the manual pthread_create with a workqueue,
+using the parallel_for utility.
+
+Experimental results show that workqueue has a higher overhead, but
+this is repayed by the improved work balancing among threads.
+
+Results of perf bench before and after are reported below:
+Command: sudo ./perf bench internals synthesize -t
+Average synthesis time in usec is reported.
+
+Laptop (dual core i7 w/ hyperthreading), avg num events ~14200:
+ N    pthread (before)        workqueue (after)
+ 1  70714.400 +-  908.789   73306.000 +- 1597.868
+ 2  77426.700 +- 2986.579   46782.300 +-  326.221
+ 3  53176.300 +- 3405.635   41614.100 +-  239.827
+ 4  50760.900 +-  702.623   41071.300 +-  230.200
+
+VM (16 vCPUs over 16 core Intel Xeon E5-2630L v3), avg num events ~2760:
+ N    pthread (before)        workqueue (after)
+ 1  30309.500 +-  578.283   34252.000 +-  839.474
+ 2  23815.200 +- 1339.102   28487.200 +- 1423.481
+ 3  20644.300 +-  311.573   19220.200 +- 1436.024
+ 4  19091.500 +-  446.109   15048.600 +-  319.138
+ 5  17574.000 +-  988.612   14938.500 +-  411.078
+ 6  18908.900 +-  520.676   13997.600 +-  358.668
+ 7  19275.700 +-  631.989   11371.400 +-  365.038
+ 8  15671.200 +-  306.727   11964.800 +-  338.021
+ 9  14660.900 +-  333.218   11762.800 +-  652.763
+10  12490.200 +-  579.211   11832.300 +-  200.601
+11  18052.900 +-  941.578   13166.900 +-  704.318
+12  14253.600 +-  354.332   12012.000 +-  309.724
+13  12219.000 +-  516.438   12023.800 +-  273.626
+14  15896.600 +-  442.419   11764.600 +-  353.961
+15  15087.200 +-  337.612   11942.600 +-  304.102
+16  15368.700 +-  336.785   13625.200 +-  715.125
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/tests/workqueue.c          |  92 +++++++++++++
- tools/perf/util/workqueue/Build       |   1 +
- tools/perf/util/workqueue/workqueue.c | 184 ++++++++++++++++++++++++++
- tools/perf/util/workqueue/workqueue.h |  24 ++++
- 4 files changed, 301 insertions(+)
- create mode 100644 tools/perf/util/workqueue/workqueue.c
- create mode 100644 tools/perf/util/workqueue/workqueue.h
+ tools/perf/util/synthetic-events.c | 131 ++++++++++++-----------------
+ 1 file changed, 56 insertions(+), 75 deletions(-)
 
-diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
-index 3c64db8203556847..423dc8a92ca2563c 100644
---- a/tools/perf/tests/workqueue.c
-+++ b/tools/perf/tests/workqueue.c
-@@ -5,6 +5,7 @@
- #include "tests.h"
- #include "util/debug.h"
- #include "util/workqueue/threadpool.h"
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 35aa0c0f7cd955b2..a55c7fa41b4f86d3 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -41,6 +41,7 @@
+ #include <sys/stat.h>
+ #include <fcntl.h>
+ #include <unistd.h>
 +#include "util/workqueue/workqueue.h"
  
- #define DUMMY_FACTOR 100000
- #define N_DUMMY_WORK_SIZES 7
-@@ -13,6 +14,11 @@ struct threadpool_test_args_t {
- 	int pool_size;
+ #define DEFAULT_PROC_MAP_PARSE_TIMEOUT 500
+ 
+@@ -882,16 +883,13 @@ static int __perf_event__synthesize_threads(struct perf_tool *tool,
+ 					    perf_event__handler_t process,
+ 					    struct machine *machine,
+ 					    bool mmap_data,
+-					    struct dirent **dirent,
+-					    int start,
+-					    int num)
++					    char *d_name)
+ {
+ 	union perf_event *comm_event, *mmap_event, *fork_event;
+ 	union perf_event *namespaces_event;
+ 	int err = -1;
+ 	char *end;
+ 	pid_t pid;
+-	int i;
+ 
+ 	comm_event = malloc(sizeof(comm_event->comm) + machine->id_hdr_size);
+ 	if (comm_event == NULL)
+@@ -911,24 +909,22 @@ static int __perf_event__synthesize_threads(struct perf_tool *tool,
+ 	if (namespaces_event == NULL)
+ 		goto out_free_fork;
+ 
+-	for (i = start; i < start + num; i++) {
+-		if (!isdigit(dirent[i]->d_name[0]))
+-			continue;
++	if (!isdigit(d_name[0]))
++		goto out_free_namespaces;
+ 
+-		pid = (pid_t)strtol(dirent[i]->d_name, &end, 10);
+-		/* only interested in proper numerical dirents */
+-		if (*end)
+-			continue;
+-		/*
+-		 * We may race with exiting thread, so don't stop just because
+-		 * one thread couldn't be synthesized.
+-		 */
+-		__event__synthesize_thread(comm_event, mmap_event, fork_event,
+-					   namespaces_event, pid, 1, process,
+-					   tool, machine, mmap_data);
+-	}
++	pid = (pid_t)strtol(d_name, &end, 10);
++	/* only interested in proper numerical dirents */
++	if (*end)
++		goto out_free_namespaces;
++	/*
++	 * We may race with exiting thread, so don't stop just because
++	 * one thread couldn't be synthesized.
++	 */
++	__event__synthesize_thread(comm_event, mmap_event, fork_event,
++					namespaces_event, pid, 1, process,
++					tool, machine, mmap_data);
+ 	err = 0;
+-
++out_free_namespaces:
+ 	free(namespaces_event);
+ out_free_fork:
+ 	free(fork_event);
+@@ -946,19 +942,15 @@ struct synthesize_threads_arg {
+ 	struct machine *machine;
+ 	bool mmap_data;
+ 	struct dirent **dirent;
+-	int num;
+-	int start;
  };
  
-+struct workqueue_test_args_t {
-+	int pool_size;
-+	int n_work_items;
-+};
-+
- struct test_task {
- 	struct task_struct task;
- 	int n_threads;
-@@ -140,6 +146,58 @@ static int __test__threadpool(void *_args)
- 	return 0;
+-static void *synthesize_threads_worker(void *arg)
++static void synthesize_threads_worker(int i, void *arg)
+ {
+ 	struct synthesize_threads_arg *args = arg;
+ 
+ 	__perf_event__synthesize_threads(args->tool, args->process,
+ 					 args->machine, args->mmap_data,
+-					 args->dirent,
+-					 args->start, args->num);
+-	return NULL;
++					 args->dirent[i]->d_name);
  }
  
-+
-+static int __workqueue__prepare(struct threadpool_struct **pool,
-+				struct workqueue_struct **wq,
-+				int pool_size)
-+{
-+	int ret;
-+
-+	ret = __threadpool__prepare(pool, pool_size);
-+	if (ret)
-+		return ret;
-+
-+	*wq = create_workqueue(*pool);
-+	TEST_ASSERT_VAL("workqueue creation failure", *wq);
-+	TEST_ASSERT_VAL("workqueue wrong size", workqueue_nr_threads(*wq) == pool_size);
-+	TEST_ASSERT_VAL("threadpool is not executing", threadpool_is_busy(*pool));
-+
-+	return 0;
-+}
-+
-+static int __workqueue__teardown(struct threadpool_struct *pool,
-+				struct workqueue_struct *wq)
-+{
-+	int ret;
-+
-+	ret = destroy_workqueue(wq);
-+	TEST_ASSERT_VAL("workqueue detruction failure", ret == 0);
-+
-+	ret = __threadpool__teardown(pool);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int __test__workqueue(void *_args)
-+{
-+	struct workqueue_test_args_t *args = _args;
+ int perf_event__synthesize_threads(struct perf_tool *tool,
+@@ -967,15 +959,14 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
+ 				   bool mmap_data,
+ 				   unsigned int nr_threads_synthesize)
+ {
+-	struct synthesize_threads_arg *args = NULL;
+-	pthread_t *synthesize_threads = NULL;
++	struct synthesize_threads_arg args;
+ 	char proc_path[PATH_MAX];
+ 	struct dirent **dirent;
+-	int num_per_thread;
+-	int m, n, i, j;
++	int n, i;
+ 	int thread_nr;
+-	int base = 0;
+-	int err = -1;
++	int err = -1, ret;
 +	struct threadpool_struct *pool;
 +	struct workqueue_struct *wq;
-+	int ret;
-+
-+	ret = __workqueue__prepare(&pool, &wq, args->pool_size);
-+	if (ret)
-+		return ret;
-+
-+	ret = __workqueue__teardown(pool, wq);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static const struct threadpool_test_args_t threadpool_test_args[] = {
- 	{
- 		.pool_size = 1
-@@ -158,6 +216,33 @@ static const struct threadpool_test_args_t threadpool_test_args[] = {
- 	}
- };
  
-+static const struct workqueue_test_args_t workqueue_test_args[] = {
-+	{
-+		.pool_size = 1,
-+		.n_work_items = 1
-+	},
-+	{
-+		.pool_size = 1,
-+		.n_work_items = 10
-+	},
-+	{
-+		.pool_size = 2,
-+		.n_work_items = 1
-+	},
-+	{
-+		.pool_size = 2,
-+		.n_work_items = 100
-+	},
-+	{
-+		.pool_size = 16,
-+		.n_work_items = 7
-+	},
-+	{
-+		.pool_size = 16,
-+		.n_work_items = 2789
-+	}
-+};
-+
- struct test_case {
- 	const char *desc;
- 	int (*func)(void *args);
-@@ -173,6 +258,13 @@ static struct test_case workqueue_testcase_table[] = {
- 		.args = (void *) threadpool_test_args,
- 		.n_args = (int)ARRAY_SIZE(threadpool_test_args),
- 		.arg_size = sizeof(struct threadpool_test_args_t)
-+	},
-+	{
-+		.desc = "Workqueue",
-+		.func = __test__workqueue,
-+		.args = (void *) workqueue_test_args,
-+		.n_args = (int)ARRAY_SIZE(workqueue_test_args),
-+		.arg_size = sizeof(struct workqueue_test_args_t)
- 	}
- };
  
-diff --git a/tools/perf/util/workqueue/Build b/tools/perf/util/workqueue/Build
-index 8b72a6cd4e2cba0d..4af721345c0a6bb7 100644
---- a/tools/perf/util/workqueue/Build
-+++ b/tools/perf/util/workqueue/Build
-@@ -1 +1,2 @@
- perf-y += threadpool.o
-+perf-y += workqueue.o
-diff --git a/tools/perf/util/workqueue/workqueue.c b/tools/perf/util/workqueue/workqueue.c
-new file mode 100644
-index 0000000000000000..5099252a0662e788
---- /dev/null
-+++ b/tools/perf/util/workqueue/workqueue.c
-@@ -0,0 +1,184 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <errno.h>
-+#include <string.h>
-+#include <pthread.h>
-+#include <linux/list.h>
-+#include "debug.h"
-+#include "workqueue.h"
-+
-+enum workqueue_status {
-+	WORKQUEUE_STATUS__READY,	/* wq is ready to receive work */
-+	WORKQUEUE_STATUS__ERROR,
-+	WORKQUEUE_STATUS__MAX
-+};
-+
-+struct workqueue_struct {
-+	pthread_mutex_t		lock;		/* locking of the thread_pool */
-+	pthread_cond_t		idle_cond;	/* all workers are idle cond */
-+	struct threadpool_struct *pool;		/* underlying pool */
-+	struct task_struct	task;		/* threadpool task */
-+	struct list_head	busy_list;	/* busy workers */
-+	struct list_head	idle_list;	/* idle workers */
-+	struct list_head	pending;	/* pending work items */
-+	int			msg_pipe[2];	/* main thread comm pipes */
-+	enum workqueue_status	status;
-+};
-+
-+/**
-+ * worker_thread - worker function executed on threadpool
-+ */
-+static void worker_thread(int tidx, struct task_struct *task)
-+{
-+	struct workqueue_struct *wq = container_of(task, struct workqueue_struct, task);
-+
-+	pr_debug("hi from worker %d. Pool is in status %d\n", tidx, wq->status);
-+}
-+
-+/**
-+ * attach_threadpool_to_workqueue - start @wq workers on @pool
-+ */
-+static int attach_threadpool_to_workqueue(struct workqueue_struct *wq,
-+					struct threadpool_struct *pool)
-+{
-+	int err;
-+
-+	if (!threadpool_is_ready(pool)) {
-+		pr_err("workqueue: cannot attach to pool: pool is not ready\n");
-+		return -1;
-+	}
-+
-+	wq->pool = pool;
-+
-+	err = execute_in_threadpool(pool, &wq->task);
+ 	if (machine__is_default_guest(machine))
+@@ -992,54 +983,44 @@ int perf_event__synthesize_threads(struct perf_tool *tool,
+ 		thread_nr = nr_threads_synthesize;
+ 
+ 	if (thread_nr <= 1) {
+-		err = __perf_event__synthesize_threads(tool, process,
+-						       machine, mmap_data,
+-						       dirent, base, n);
++		for (i = 0; i < n; i++)
++			err = __perf_event__synthesize_threads(tool, process,
++								machine, mmap_data,
++								dirent[i]->d_name);
+ 		goto free_dirent;
+ 	}
+-	if (thread_nr > n)
+-		thread_nr = n;
+ 
+-	synthesize_threads = calloc(sizeof(pthread_t), thread_nr);
+-	if (synthesize_threads == NULL)
++	pool = create_threadpool(thread_nr);
++	if (!pool)
+ 		goto free_dirent;
+ 
+-	args = calloc(sizeof(*args), thread_nr);
+-	if (args == NULL)
+-		goto free_threads;
+-
+-	num_per_thread = n / thread_nr;
+-	m = n % thread_nr;
+-	for (i = 0; i < thread_nr; i++) {
+-		args[i].tool = tool;
+-		args[i].process = process;
+-		args[i].machine = machine;
+-		args[i].mmap_data = mmap_data;
+-		args[i].dirent = dirent;
+-	}
+-	for (i = 0; i < m; i++) {
+-		args[i].num = num_per_thread + 1;
+-		args[i].start = i * args[i].num;
+-	}
+-	if (i != 0)
+-		base = args[i-1].start + args[i-1].num;
+-	for (j = i; j < thread_nr; j++) {
+-		args[j].num = num_per_thread;
+-		args[j].start = base + (j - i) * args[i].num;
+-	}
+-
+-	for (i = 0; i < thread_nr; i++) {
+-		if (pthread_create(&synthesize_threads[i], NULL,
+-				   synthesize_threads_worker, &args[i]))
+-			goto out_join;
+-	}
+-	err = 0;
+-out_join:
+-	for (i = 0; i < thread_nr; i++)
+-		pthread_join(synthesize_threads[i], NULL);
+-	free(args);
+-free_threads:
+-	free(synthesize_threads);
++	err = start_threadpool(pool);
 +	if (err)
-+		return -1;
++		goto free_pool;
 +
-+	return 0;
-+}
++	wq = create_workqueue(pool);
++	if (!wq)
++		goto stop_pool;
 +
-+/**
-+ * detach_threadpool_from_workqueue - stop @wq workers on @pool
-+ */
-+static int detach_threadpool_from_workqueue(struct workqueue_struct *wq)
-+{
-+	int ret, err = 0;
++	args.tool = tool;
++	args.process = process;
++	args.machine = machine;
++	args.mmap_data = mmap_data;
++	args.dirent = dirent;
 +
-+	if (wq->status != WORKQUEUE_STATUS__READY) {
-+		pr_err("workqueue: cannot attach to pool: wq is not ready\n");
-+		return -1;
-+	}
++	ret = parallel_for(wq, 0, n, 1, synthesize_threads_worker, &args);
++	if (ret)
++		err = ret;
 +
-+	ret = wait_threadpool(wq->pool);
-+	if (ret) {
-+		pr_err("workqueue: error waiting threadpool\n");
-+		err = -1;
-+	}
-+
-+	wq->pool = NULL;
-+	return err;
-+}
-+
-+/**
-+ * create_workqueue - create a workqueue associated to @pool
-+ *
-+ * Only one workqueue can execute on a pool at a time.
-+ */
-+struct workqueue_struct *create_workqueue(struct threadpool_struct *pool)
-+{
-+	int err;
-+	struct workqueue_struct *wq = malloc(sizeof(struct workqueue_struct));
-+
-+
-+	err = pthread_mutex_init(&wq->lock, NULL);
-+	if (err)
-+		goto out_free_wq;
-+
-+	err = pthread_cond_init(&wq->idle_cond, NULL);
-+	if (err)
-+		goto out_destroy_mutex;
-+
-+	wq->pool = NULL;
-+	INIT_LIST_HEAD(&wq->busy_list);
-+	INIT_LIST_HEAD(&wq->idle_list);
-+
-+	INIT_LIST_HEAD(&wq->pending);
-+
-+	err = pipe(wq->msg_pipe);
-+	if (err)
-+		goto out_destroy_cond;
-+
-+	wq->task.fn = worker_thread;
-+
-+	err = attach_threadpool_to_workqueue(wq, pool);
-+	if (err)
-+		goto out_destroy_cond;
-+
-+	wq->status = WORKQUEUE_STATUS__READY;
-+
-+	return wq;
-+
-+out_destroy_cond:
-+	pthread_cond_destroy(&wq->idle_cond);
-+out_destroy_mutex:
-+	pthread_mutex_destroy(&wq->lock);
-+out_free_wq:
-+	free(wq);
-+	return NULL;
-+}
-+
-+/**
-+ * destroy_workqueue - stop @wq workers and destroy @wq
-+ */
-+int destroy_workqueue(struct workqueue_struct *wq)
-+{
-+	int err = 0, ret;
-+
-+	ret = detach_threadpool_from_workqueue(wq);
-+	if (ret) {
-+		pr_err("workqueue: error detaching from threadpool.\n");
-+		err = -1;
-+	}
-+
-+	ret = pthread_mutex_destroy(&wq->lock);
-+	if (ret) {
-+		err = -1;
-+		pr_err("workqueue: error pthread_mutex_destroy: %s\n",
-+			strerror(errno));
-+	}
-+
-+	ret = pthread_cond_destroy(&wq->idle_cond);
-+	if (ret) {
-+		err = -1;
-+		pr_err("workqueue: error pthread_cond_destroy: %s\n",
-+			strerror(errno));
-+	}
-+
-+	ret = close(wq->msg_pipe[0]);
-+	if (ret) {
-+		err = -1;
-+		pr_err("workqueue: error close msg_pipe[0]: %s\n",
-+			strerror(errno));
-+	}
-+
-+	ret = close(wq->msg_pipe[1]);
-+	if (ret) {
-+		err = -1;
-+		pr_err("workqueue: error close msg_pipe[1]: %s\n",
-+			strerror(errno));
-+	}
-+
-+	free(wq);
-+
-+	return err;
-+}
-+
-+/**
-+ * workqueue_nr_threads - get size of threadpool underlying @wq
-+ */
-+int workqueue_nr_threads(struct workqueue_struct *wq)
-+{
-+	return threadpool_size(wq->pool);
-+}
-diff --git a/tools/perf/util/workqueue/workqueue.h b/tools/perf/util/workqueue/workqueue.h
-new file mode 100644
-index 0000000000000000..86ec1d69274f41db
---- /dev/null
-+++ b/tools/perf/util/workqueue/workqueue.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __WORKQUEUE_WORKQUEUE_H
-+#define __WORKQUEUE_WORKQUEUE_H
-+
-+#include <stdlib.h>
-+#include <sys/types.h>
-+#include <linux/list.h>
-+#include "threadpool.h"
-+
-+struct work_struct;
-+typedef void (*work_func_t)(struct work_struct *work);
-+
-+struct work_struct {
-+	struct list_head entry;
-+	work_func_t func;
-+};
-+
-+struct workqueue_struct;
-+
-+extern struct workqueue_struct *create_workqueue(struct threadpool_struct *pool);
-+extern int destroy_workqueue(struct workqueue_struct *wq);
-+
-+extern int workqueue_nr_threads(struct workqueue_struct *wq);
-+#endif /* __WORKQUEUE_WORKQUEUE_H */
++	ret = destroy_workqueue(wq);
++	if (ret)
++		err = ret;
++stop_pool:
++	ret = stop_threadpool(pool);
++	if (ret)
++		err = ret;
++free_pool:
++	destroy_threadpool(pool);
+ free_dirent:
+ 	for (i = 0; i < n; i++)
+ 		zfree(&dirent[i]);
 -- 
 2.31.1
 
