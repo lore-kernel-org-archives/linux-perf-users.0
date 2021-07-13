@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98531C11F66
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99015C11F69
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 12:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81CE761249
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 12:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F826128E
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 12:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236200AbhGMMOf (ORCPT
+        id S236182AbhGMMOd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 08:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
+        Tue, 13 Jul 2021 08:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236151AbhGMMOb (ORCPT
+        with ESMTP id S236158AbhGMMOa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 08:14:31 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E75C0613EE;
-        Tue, 13 Jul 2021 05:11:41 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id u8-20020a7bcb080000b02901e44e9caa2aso2176205wmj.4;
-        Tue, 13 Jul 2021 05:11:41 -0700 (PDT)
+        Tue, 13 Jul 2021 08:14:30 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F40C0613DD;
+        Tue, 13 Jul 2021 05:11:38 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id l7so29262773wrv.7;
+        Tue, 13 Jul 2021 05:11:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=wrfAS+mMRUT8LDRtdpJEqZr/ZEkXHQf7XdSey0KQIRo=;
-        b=F7imLOfGlCdtb+j2z+c+J1wsEKV7Ru8sdxwG9HsbE0j2riS1z/tn7KsqwvpZD+vObH
-         tpY5yHqiV0eNybuZ+hASu8y4LB/vB1qyDsOupmx9qaPaZvNl2nCNRnRlst3SzR87dnFA
-         pyETt7jD8C6o55qvM/GE67hV4rsLrwOgzFq0rEBZJskWtknWR4PoS7bP53WDnUhISe5k
-         uB9n+4cSuhbZIBAYfZIAg3TQhnevCO3mbmC93OlVmajj6VUw8eUbwnIM8n+2qjxB3Q2y
-         awksjjLDVsdvJ+rT5UhMb5NBNsDEyCyqpPiHkSpfSoeDHigkV6ZV5emMwLbpSBGseXb6
-         OkEw==
+        bh=v9LNvyAk4LnR/JexNnOWydf8xno1p0xFPLqjD1zB79s=;
+        b=aOOBrruYWxSWn9DC7kRZUHzgCosjXqVpZgrpHo/rMbFe94kd3BhdqCGlaSMFWTwCgW
+         tdotxeGBmxmFNjWSipoPdR+Y17ui9dcasXm08aGm6+su9YsypA/GRHDCyQoXcz0mwh5Q
+         J4pGY2vutu9GledtsCg53kzQ+P3zIFOaJe1o4b5Wmld83n/avLMc0/YiWpAFg2s50EB5
+         sH6y7e1jp1TWecbxLzBeWW3MiWxjaIxX/vgDt26K7Oz+hRRvKv3XdFmjoD29FPZCrjgu
+         HesnhVMCrCKNqVwLbJTjwqHXX7J+PtTNyRm6ug0fKjHdaPH3nt0wS8/y6yzrFF/F46Bd
+         +MwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wrfAS+mMRUT8LDRtdpJEqZr/ZEkXHQf7XdSey0KQIRo=;
-        b=lAkO9yG7rJKnoJ67waakm3jC5f1s49E6KMTByrCN+6MTuHUZFnn7Rgz2XQWisL9Fkn
-         /WG0M6msLBaSXXlHhxR3epxCKfBpdMx5TrjZCXpjM/XAz6uKc+JHPxo0KhtG9s2r4QP6
-         tbdzEab+UFOJLcnPqwQMFumBQN5OCxVjGFIdFdxOtn93eJW1jZS6lxbU5emXj5Ngt1zF
-         OYVnQquqaz9Pzx7em1XwCeXXVXDKCzIROjjL2J1G3BWw0KsOduUU4qsUtE8AEqz8un2k
-         m6rd80yAJwTxben5uXclAUJ7Bw1ZxgT3Bu21m2Mbr5OsSpfLDYbZWRW6S6PbrxkpCb99
-         dhJA==
-X-Gm-Message-State: AOAM531DALqNhqrOO4yQMLJcTGbGvjFIcD4t0DyLRNP/0w2LsaHQm+N6
-        tIOpiby+/3EuMZ84oRATGBg=
-X-Google-Smtp-Source: ABdhPJy047TsRJBGd/1GkKHej2jtsTHzHQg5LPraCNUi8uN4tPNTjgjDX1HibgK7/fkX9i2UDQDqUQ==
-X-Received: by 2002:a1c:a58b:: with SMTP id o133mr4740824wme.160.1626178299975;
-        Tue, 13 Jul 2021 05:11:39 -0700 (PDT)
+        bh=v9LNvyAk4LnR/JexNnOWydf8xno1p0xFPLqjD1zB79s=;
+        b=mMzRrUXN+ro/GPF0K3M8nJ68bF+nNHtt10tCMGpHVmw0RbjYvR+hUR3DxtuTf2d8cX
+         yIYr1NSR7u/URxd/Zj7JpoPLrkwftJQN0cCNFeEfd99zOA67dLNImkKCr/MNLdjK+cPY
+         sI4toj5z2DvJ5Th3yHoX1qprgA/2u8qgaxRT5ghMcEjumxluDUMNKWh3cnIlyO/4/beO
+         ymPV6XYSqzjj4Kd0pdB9yAmMyvVtP28/mdvjn6ND4MDnld4nrxs3qTGrnvvaERYqNRYa
+         dQlsZm9T839Pk5qfI84RxJBcXoir0sIOx3tvF4Dva5s9+lAo8UpYRgyzz6NVB+Kna2T4
+         oyRA==
+X-Gm-Message-State: AOAM531XMNXIZPqGam0iJYn2V5VH1WyHVdwZPeyJJAwIT3C4073l5+pz
+        aF5499b4XFRvJ7hxRGpViNw=
+X-Google-Smtp-Source: ABdhPJxkDnMDtWVdwJ+bJFESQReV+zZPdwC170d8Xdim4zRslqn6x79F79/rtEcwjIlCB2nN+2tXTA==
+X-Received: by 2002:adf:ed4a:: with SMTP id u10mr5271150wro.330.1626178297406;
+        Tue, 13 Jul 2021 05:11:37 -0700 (PDT)
 Received: from localhost.localdomain ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id o3sm17551425wrw.56.2021.07.13.05.11.39
+        by smtp.googlemail.com with ESMTPSA id o3sm17551425wrw.56.2021.07.13.05.11.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 05:11:39 -0700 (PDT)
+        Tue, 13 Jul 2021 05:11:37 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH 09/10] perf workqueue: add utility to execute a for loop in parallel
-Date:   Tue, 13 Jul 2021 14:11:20 +0200
-Message-Id: <68bbee1a8235ce83e85605138b7dffebe6554331.1626177381.git.rickyman7@gmail.com>
+Subject: [RFC PATCH 06/10] perf workqueue: introduce workqueue struct
+Date:   Tue, 13 Jul 2021 14:11:17 +0200
+Message-Id: <efda4e29da6f6aa8c34a3751ed676c7ee0506cf8.1626177381.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626177381.git.rickyman7@gmail.com>
 References: <cover.1626177381.git.rickyman7@gmail.com>
@@ -80,71 +80,99 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds the parallel_for which executes a given function inside
-the workqueue, taking care of managing the work items.
+This patch adds the workqueue definition, along with simple creation and
+destruction functions.
+Furthermore, a simple subtest is added.
+
+A workqueue is attached to a pool, on which it executes its workers.
+Next patches will introduce workers.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/tests/workqueue.c          |  84 +++++++++++++++++
- tools/perf/util/workqueue/workqueue.c | 125 ++++++++++++++++++++++++++
- tools/perf/util/workqueue/workqueue.h |   7 ++
- 3 files changed, 216 insertions(+)
+ tools/perf/tests/workqueue.c          |  92 +++++++++++++
+ tools/perf/util/workqueue/Build       |   1 +
+ tools/perf/util/workqueue/workqueue.c | 184 ++++++++++++++++++++++++++
+ tools/perf/util/workqueue/workqueue.h |  24 ++++
+ 4 files changed, 301 insertions(+)
+ create mode 100644 tools/perf/util/workqueue/workqueue.c
+ create mode 100644 tools/perf/util/workqueue/workqueue.h
 
 diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
-index f71a839d5752d224..462a17904f2858db 100644
+index 3c64db8203556847..423dc8a92ca2563c 100644
 --- a/tools/perf/tests/workqueue.c
 +++ b/tools/perf/tests/workqueue.c
-@@ -19,6 +19,12 @@ struct workqueue_test_args_t {
- 	int n_work_items;
+@@ -5,6 +5,7 @@
+ #include "tests.h"
+ #include "util/debug.h"
+ #include "util/workqueue/threadpool.h"
++#include "util/workqueue/workqueue.h"
+ 
+ #define DUMMY_FACTOR 100000
+ #define N_DUMMY_WORK_SIZES 7
+@@ -13,6 +14,11 @@ struct threadpool_test_args_t {
+ 	int pool_size;
  };
  
-+struct parallel_for_test_args_t {
++struct workqueue_test_args_t {
 +	int pool_size;
 +	int n_work_items;
-+	int work_size;
 +};
 +
  struct test_task {
  	struct task_struct task;
  	int n_threads;
-@@ -265,6 +271,44 @@ static int __test__workqueue(void *_args)
+@@ -140,6 +146,58 @@ static int __test__threadpool(void *_args)
  	return 0;
  }
  
-+static void test_pfw_fn(int i, void *args)
-+{
-+	int *array = args;
 +
-+	dummy_work(i);
-+	array[i] = i+1;
++static int __workqueue__prepare(struct threadpool_struct **pool,
++				struct workqueue_struct **wq,
++				int pool_size)
++{
++	int ret;
++
++	ret = __threadpool__prepare(pool, pool_size);
++	if (ret)
++		return ret;
++
++	*wq = create_workqueue(*pool);
++	TEST_ASSERT_VAL("workqueue creation failure", *wq);
++	TEST_ASSERT_VAL("workqueue wrong size", workqueue_nr_threads(*wq) == pool_size);
++	TEST_ASSERT_VAL("threadpool is not executing", threadpool_is_busy(*pool));
++
++	return 0;
 +}
 +
-+static int __test__parallel_for(void *_args)
++static int __workqueue__teardown(struct threadpool_struct *pool,
++				struct workqueue_struct *wq)
 +{
-+	struct parallel_for_test_args_t *args = _args;
++	int ret;
++
++	ret = destroy_workqueue(wq);
++	TEST_ASSERT_VAL("workqueue detruction failure", ret == 0);
++
++	ret = __threadpool__teardown(pool);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static int __test__workqueue(void *_args)
++{
++	struct workqueue_test_args_t *args = _args;
 +	struct threadpool_struct *pool;
 +	struct workqueue_struct *wq;
-+	int ret, i;
-+	int *array;
-+
-+	array = calloc(args->n_work_items, sizeof(*array));
++	int ret;
 +
 +	ret = __workqueue__prepare(&pool, &wq, args->pool_size);
 +	if (ret)
 +		return ret;
 +
-+	ret = parallel_for(wq, 0, args->n_work_items, args->work_size,
-+				test_pfw_fn, array);
-+	TEST_ASSERT_VAL("parallel_for failure", ret == 0);
-+
-+	for (i = 0; i < args->n_work_items; i++)
-+		TEST_ASSERT_VAL("failed array check", array[i] == i+1);
-+
 +	ret = __workqueue__teardown(pool, wq);
 +	if (ret)
 +		return ret;
-+
-+	free(array);
 +
 +	return 0;
 +}
@@ -152,209 +180,281 @@ index f71a839d5752d224..462a17904f2858db 100644
  static const struct threadpool_test_args_t threadpool_test_args[] = {
  	{
  		.pool_size = 1
-@@ -310,6 +354,39 @@ static const struct workqueue_test_args_t workqueue_test_args[] = {
+@@ -158,6 +216,33 @@ static const struct threadpool_test_args_t threadpool_test_args[] = {
  	}
  };
  
-+static const struct parallel_for_test_args_t parallel_for_test_args[] = {
++static const struct workqueue_test_args_t workqueue_test_args[] = {
 +	{
 +		.pool_size = 1,
-+		.n_work_items = 1,
-+		.work_size = 1
++		.n_work_items = 1
 +	},
 +	{
 +		.pool_size = 1,
-+		.n_work_items = 10,
-+		.work_size = 3
++		.n_work_items = 10
 +	},
 +	{
 +		.pool_size = 2,
-+		.n_work_items = 1,
-+		.work_size = 1
++		.n_work_items = 1
 +	},
 +	{
 +		.pool_size = 2,
-+		.n_work_items = 100,
-+		.work_size = 10
++		.n_work_items = 100
 +	},
 +	{
 +		.pool_size = 16,
-+		.n_work_items = 7,
-+		.work_size = 2
++		.n_work_items = 7
 +	},
 +	{
 +		.pool_size = 16,
-+		.n_work_items = 2789,
-+		.work_size = 16
++		.n_work_items = 2789
 +	}
 +};
 +
  struct test_case {
  	const char *desc;
  	int (*func)(void *args);
-@@ -332,6 +409,13 @@ static struct test_case workqueue_testcase_table[] = {
- 		.args = (void *) workqueue_test_args,
- 		.n_args = (int)ARRAY_SIZE(workqueue_test_args),
- 		.arg_size = sizeof(struct workqueue_test_args_t)
+@@ -173,6 +258,13 @@ static struct test_case workqueue_testcase_table[] = {
+ 		.args = (void *) threadpool_test_args,
+ 		.n_args = (int)ARRAY_SIZE(threadpool_test_args),
+ 		.arg_size = sizeof(struct threadpool_test_args_t)
 +	},
 +	{
-+		.desc = "Workqueue parallel-for",
-+		.func = __test__parallel_for,
-+		.args = (void *) parallel_for_test_args,
-+		.n_args = (int)ARRAY_SIZE(parallel_for_test_args),
-+		.arg_size = sizeof(struct parallel_for_test_args_t)
++		.desc = "Workqueue",
++		.func = __test__workqueue,
++		.args = (void *) workqueue_test_args,
++		.n_args = (int)ARRAY_SIZE(workqueue_test_args),
++		.arg_size = sizeof(struct workqueue_test_args_t)
  	}
  };
  
+diff --git a/tools/perf/util/workqueue/Build b/tools/perf/util/workqueue/Build
+index 8b72a6cd4e2cba0d..4af721345c0a6bb7 100644
+--- a/tools/perf/util/workqueue/Build
++++ b/tools/perf/util/workqueue/Build
+@@ -1 +1,2 @@
+ perf-y += threadpool.o
++perf-y += workqueue.o
 diff --git a/tools/perf/util/workqueue/workqueue.c b/tools/perf/util/workqueue/workqueue.c
-index 20d196de9500d369..e69ed1568228a261 100644
---- a/tools/perf/util/workqueue/workqueue.c
+new file mode 100644
+index 0000000000000000..5099252a0662e788
+--- /dev/null
 +++ b/tools/perf/util/workqueue/workqueue.c
-@@ -515,3 +515,128 @@ void init_work(struct work_struct *work)
- {
- 	INIT_LIST_HEAD(&work->entry);
- }
+@@ -0,0 +1,184 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdlib.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <errno.h>
++#include <string.h>
++#include <pthread.h>
++#include <linux/list.h>
++#include "debug.h"
++#include "workqueue.h"
 +
-+/* Parallel-for utility */
++enum workqueue_status {
++	WORKQUEUE_STATUS__READY,	/* wq is ready to receive work */
++	WORKQUEUE_STATUS__ERROR,
++	WORKQUEUE_STATUS__MAX
++};
 +
-+#define ceil_div(a, b) (((a)+(b)-1)/(b))
-+
-+struct parallel_for_work {
-+	struct work_struct work;	/* work item that is queued */
-+	parallel_for_func_t func;	/* function to execute for each item */
-+	void *args;			/* additional args to pass to func */
-+	int start;			/* first item to execute */
-+	int num;			/* number of items to execute */
++struct workqueue_struct {
++	pthread_mutex_t		lock;		/* locking of the thread_pool */
++	pthread_cond_t		idle_cond;	/* all workers are idle cond */
++	struct threadpool_struct *pool;		/* underlying pool */
++	struct task_struct	task;		/* threadpool task */
++	struct list_head	busy_list;	/* busy workers */
++	struct list_head	idle_list;	/* idle workers */
++	struct list_head	pending;	/* pending work items */
++	int			msg_pipe[2];	/* main thread comm pipes */
++	enum workqueue_status	status;
 +};
 +
 +/**
-+ * parallel_for_work_fn - execute parallel_for_work.func in parallel
-+ *
-+ * This function will be executed by workqueue's workers.
++ * worker_thread - worker function executed on threadpool
 + */
-+static void parallel_for_work_fn(struct work_struct *work)
++static void worker_thread(int tidx, struct task_struct *task)
 +{
-+	struct parallel_for_work *pfw = container_of(work, struct parallel_for_work, work);
-+	int i;
++	struct workqueue_struct *wq = container_of(task, struct workqueue_struct, task);
 +
-+	for (i = 0; i < pfw->num; i++)
-+		pfw->func(pfw->start+i, pfw->args);
-+}
-+
-+static inline void init_parallel_for_work(struct parallel_for_work *pfw,
-+					parallel_for_func_t func, void *args,
-+					int start, int num)
-+{
-+	init_work(&pfw->work);
-+	pfw->work.func = parallel_for_work_fn;
-+	pfw->func = func;
-+	pfw->args = args;
-+	pfw->start = start;
-+	pfw->num = num;
-+
-+	pr_debug2("pfw: start=%d, num=%d\n", start, num);
++	pr_debug("hi from worker %d. Pool is in status %d\n", tidx, wq->status);
 +}
 +
 +/**
-+ * parallel_for - execute @func in parallel over indexes between @from and @to
-+ * @wq: workqueue that will run @func in parallel
-+ * @from: first index
-+ * @to: last index (excluded)
-+ * @work_size: number of indexes to handle on the same work item.
-+ *             ceil((to-from)/work_size) work items will be added to @wq
-+ *             NB: this is only a hint. The function will reduce the size of
-+ *                 the work items to fill all workers.
-+ * @func: function to execute in parallel
-+ * @args: additional arguments to @func
-+ *
-+ * This function is equivalent to:
-+ * for (i = from; i < to; i++) {
-+ *     // parallel
-+ *     func(i, args);
-+ * }
-+ * // sync
-+ *
-+ * This function takes care of:
-+ *  - creating balanced work items to submit to workqueue
-+ *  - submitting the work items to the workqueue
-+ *  - waiting for completion of the work items
-+ *  - cleanup of the work items
++ * attach_threadpool_to_workqueue - start @wq workers on @pool
 + */
-+int parallel_for(struct workqueue_struct *wq, int from, int to, int work_size,
-+		parallel_for_func_t func, void *args)
++static int attach_threadpool_to_workqueue(struct workqueue_struct *wq,
++					struct threadpool_struct *pool)
 +{
-+	int n = to-from;
-+	int n_work_items;
-+	int nr_threads = workqueue_nr_threads(wq);
-+	int i, j, start, num, m, base, num_per_item;
-+	struct parallel_for_work *pfw_array;
-+	int err = 0;
++	int err;
 +
-+	if (work_size <= 0) {
-+		pr_err("workqueue parallel-for: work_size must be >0\n");
-+		return -EINVAL;
++	if (!threadpool_is_ready(pool)) {
++		pr_err("workqueue: cannot attach to pool: pool is not ready\n");
++		return -1;
 +	}
 +
-+	if (to < from) {
-+		pr_err("workqueue parallel-for: to must be >= from\n");
-+		return -EINVAL;
-+	} else if (to == from) {
-+		pr_info("workqueue parallel-for: skip since from == to\n");
-+		return 0;
++	wq->pool = pool;
++
++	err = execute_in_threadpool(pool, &wq->task);
++	if (err)
++		return -1;
++
++	return 0;
++}
++
++/**
++ * detach_threadpool_from_workqueue - stop @wq workers on @pool
++ */
++static int detach_threadpool_from_workqueue(struct workqueue_struct *wq)
++{
++	int ret, err = 0;
++
++	if (wq->status != WORKQUEUE_STATUS__READY) {
++		pr_err("workqueue: cannot attach to pool: wq is not ready\n");
++		return -1;
 +	}
 +
-+	n_work_items = ceil_div(n, work_size);
-+	if (n_work_items < nr_threads)
-+		n_work_items = min(n, nr_threads);
-+
-+	pfw_array = calloc(n_work_items, sizeof(*pfw_array));
-+
-+	num_per_item = n / n_work_items;
-+	m = n % n_work_items;
-+
-+	for (i = 0; i < m; i++) {
-+		num = num_per_item + 1;
-+		start = i * num;
-+		init_parallel_for_work(&pfw_array[i], func, args, start, num);
-+		err = queue_work(wq, &pfw_array[i].work);
-+		if (err)
-+			goto out;
-+	}
-+	if (i != 0)
-+		base = pfw_array[i-1].start + pfw_array[i-1].num;
-+	else
-+		base = 0;
-+	for (j = i; j < n_work_items; j++) {
-+		num = num_per_item;
-+		start = base + (j - i) * num;
-+		init_parallel_for_work(&pfw_array[j], func, args, start, num);
-+		err = queue_work(wq, &pfw_array[j].work);
-+		if (err)
-+			goto out;
++	ret = wait_threadpool(wq->pool);
++	if (ret) {
++		pr_err("workqueue: error waiting threadpool\n");
++		err = -1;
 +	}
 +
-+out:
-+	err = flush_workqueue(wq);
-+
-+	free(pfw_array);
++	wq->pool = NULL;
 +	return err;
 +}
++
++/**
++ * create_workqueue - create a workqueue associated to @pool
++ *
++ * Only one workqueue can execute on a pool at a time.
++ */
++struct workqueue_struct *create_workqueue(struct threadpool_struct *pool)
++{
++	int err;
++	struct workqueue_struct *wq = malloc(sizeof(struct workqueue_struct));
++
++
++	err = pthread_mutex_init(&wq->lock, NULL);
++	if (err)
++		goto out_free_wq;
++
++	err = pthread_cond_init(&wq->idle_cond, NULL);
++	if (err)
++		goto out_destroy_mutex;
++
++	wq->pool = NULL;
++	INIT_LIST_HEAD(&wq->busy_list);
++	INIT_LIST_HEAD(&wq->idle_list);
++
++	INIT_LIST_HEAD(&wq->pending);
++
++	err = pipe(wq->msg_pipe);
++	if (err)
++		goto out_destroy_cond;
++
++	wq->task.fn = worker_thread;
++
++	err = attach_threadpool_to_workqueue(wq, pool);
++	if (err)
++		goto out_destroy_cond;
++
++	wq->status = WORKQUEUE_STATUS__READY;
++
++	return wq;
++
++out_destroy_cond:
++	pthread_cond_destroy(&wq->idle_cond);
++out_destroy_mutex:
++	pthread_mutex_destroy(&wq->lock);
++out_free_wq:
++	free(wq);
++	return NULL;
++}
++
++/**
++ * destroy_workqueue - stop @wq workers and destroy @wq
++ */
++int destroy_workqueue(struct workqueue_struct *wq)
++{
++	int err = 0, ret;
++
++	ret = detach_threadpool_from_workqueue(wq);
++	if (ret) {
++		pr_err("workqueue: error detaching from threadpool.\n");
++		err = -1;
++	}
++
++	ret = pthread_mutex_destroy(&wq->lock);
++	if (ret) {
++		err = -1;
++		pr_err("workqueue: error pthread_mutex_destroy: %s\n",
++			strerror(errno));
++	}
++
++	ret = pthread_cond_destroy(&wq->idle_cond);
++	if (ret) {
++		err = -1;
++		pr_err("workqueue: error pthread_cond_destroy: %s\n",
++			strerror(errno));
++	}
++
++	ret = close(wq->msg_pipe[0]);
++	if (ret) {
++		err = -1;
++		pr_err("workqueue: error close msg_pipe[0]: %s\n",
++			strerror(errno));
++	}
++
++	ret = close(wq->msg_pipe[1]);
++	if (ret) {
++		err = -1;
++		pr_err("workqueue: error close msg_pipe[1]: %s\n",
++			strerror(errno));
++	}
++
++	free(wq);
++
++	return err;
++}
++
++/**
++ * workqueue_nr_threads - get size of threadpool underlying @wq
++ */
++int workqueue_nr_threads(struct workqueue_struct *wq)
++{
++	return threadpool_size(wq->pool);
++}
 diff --git a/tools/perf/util/workqueue/workqueue.h b/tools/perf/util/workqueue/workqueue.h
-index 719bd0e5fb0ce7b7..409acacbdba9e60d 100644
---- a/tools/perf/util/workqueue/workqueue.h
+new file mode 100644
+index 0000000000000000..86ec1d69274f41db
+--- /dev/null
 +++ b/tools/perf/util/workqueue/workqueue.h
-@@ -28,4 +28,11 @@ extern int flush_workqueue(struct workqueue_struct *wq);
- 
- extern void init_work(struct work_struct *work);
- 
-+/* parallel_for utility */
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __WORKQUEUE_WORKQUEUE_H
++#define __WORKQUEUE_WORKQUEUE_H
 +
-+typedef void (*parallel_for_func_t)(int i, void *args);
++#include <stdlib.h>
++#include <sys/types.h>
++#include <linux/list.h>
++#include "threadpool.h"
 +
-+extern int parallel_for(struct workqueue_struct *wq, int from, int to, int work_size,
-+			parallel_for_func_t func, void *args);
++struct work_struct;
++typedef void (*work_func_t)(struct work_struct *work);
 +
- #endif /* __WORKQUEUE_WORKQUEUE_H */
++struct work_struct {
++	struct list_head entry;
++	work_func_t func;
++};
++
++struct workqueue_struct;
++
++extern struct workqueue_struct *create_workqueue(struct threadpool_struct *pool);
++extern int destroy_workqueue(struct workqueue_struct *wq);
++
++extern int workqueue_nr_threads(struct workqueue_struct *wq);
++#endif /* __WORKQUEUE_WORKQUEUE_H */
 -- 
 2.31.1
 
