@@ -6,61 +6,60 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF290C07E95
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71178C07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF00D60698
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BE5611AB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jul 2021 15:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237155AbhGMPtB (ORCPT
+        id S237065AbhGMPvP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jul 2021 11:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33500 "EHLO
+        Tue, 13 Jul 2021 11:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237131AbhGMPtB (ORCPT
+        with ESMTP id S237061AbhGMPvP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jul 2021 11:49:01 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F22C0613E9
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 08:46:10 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id p14-20020a17090ad30eb02901731c776526so1679777pju.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 08:46:10 -0700 (PDT)
+        Tue, 13 Jul 2021 11:51:15 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F78FC0613E9
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 08:48:25 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id c15so11305795pls.13
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jul 2021 08:48:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=88HXaPtHKzXvJfwVkmoFRhzh8ULUchVJgvCgSXMZAEA=;
-        b=IMSe346IusRmrX3pn5fJMJ9Kjb0J8qJPIB5Fw4mHBShvol+ZM0iW6AswXxYKFgThp2
-         NiUrVqwOW22Ibl7Uo8Irfjyetq41nt5wNmRgY6CbxpMB3wzP3d57Y8uJaIAHG9Mc05Sq
-         8YDwgsFnmHQjD4rkzAXRsHb132CuLelWS3qujGuiYxCoW+O4A4bKq8VA85gemw0mEy0r
-         +RODPf++g0m9822Bw3VJ/64YIRmde2Bsm0zZ5ECgd1b+z05p2Ky/cL+vMPd30KuLxxcg
-         gGlHCVWO8yyLSnXlVB98vCQej203Ql1lhPhZNS+6Mq0cgS10cfsf/lcJJqfvsfEoOzIc
-         KNtw==
+        bh=nOwfQkcUfoATzJqAE5bisD/PokYKrCYviR8WyjP18Ic=;
+        b=IUP2Pn9R2xrjs8iHm7lcOdGOcLhhCOL7rCwupu8dwAtL9t2rkM4XJWKrJJ/daLRvWD
+         XfdgrAx+sffHZtp/1o7u2AnnkOjET+Vs32kTTN0JbP0a9ojq3hWpXB9OQWoJ7Y02T9uJ
+         ++1P5Ds8obO2eLfheTKugZMgh91ftTf4E3cHXhlPpYAClTmQuFaKSvDNgjOnHAIBQWI3
+         G27rIN1lt3yxSuYDzW8P4eNcekR/LpFuOph9Bcskpcd2KbRBU3ihS1T49svnhsDuG96+
+         729GkE05pZDr8iQILLchxtUsvkYCTiOLVAvTiNRpi90cctkETvoymJRNVxVKhNzbBaUH
+         TqSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=88HXaPtHKzXvJfwVkmoFRhzh8ULUchVJgvCgSXMZAEA=;
-        b=qVlIU3GdH/+V1z1u9hh1dxNekmANyMsyOTmf7/dedtzRZO63wiAw4JdxixbCdBUCJ9
-         F51GznX8WpDlrEweRC3RA8DsHARDeWuIeUmr2BNzhKb3Y68Yqd5s7SZf2jVn9qRgumHY
-         noF/VtZPGKPpYPvbL7NgkaT9qnquBB2Zkm0dh4bC5BZ2sfzT6wBIph//DFVugNpmcMcq
-         9tqU5hKl1epZxfN6vNf64GWZXXVCcpYUTuy3CoaU+jVFrLiYUdv0cPkPmk3OuOpJ6m6r
-         LcAB4gUG6gdjBc2hrDEyFWXLRpocS0uT7zpQT98v2r84M/E1hig/wJocrOubC6/csle0
-         je7w==
-X-Gm-Message-State: AOAM5331WTQQhBITthsa+cdLC0SXAPNFvaaIAC/UYifHYyAeyqqbL1l1
-        L9lSGIaYdhanN3DrupbwQF5+LQ==
-X-Google-Smtp-Source: ABdhPJza4OuJ5oLLl2sYrZSHnrhml4tdTkspyGV08RSdzPXDKi8rSdcWd4cuhMJeAVtMgMXK28WI4g==
-X-Received: by 2002:a17:902:ed95:b029:ee:aa46:547a with SMTP id e21-20020a170902ed95b02900eeaa46547amr4011323plj.27.1626191169630;
-        Tue, 13 Jul 2021 08:46:09 -0700 (PDT)
+        bh=nOwfQkcUfoATzJqAE5bisD/PokYKrCYviR8WyjP18Ic=;
+        b=d3jzOIU08uo7iogrRTAIf/DIAAk9vLPiHKSc4PEXhR6iyaWyvwxxotRYEhVrHDXxUt
+         G6vZTlJQUGofH+kVToinZMgeFof2TZSoR4f1T1xtcrtfLekjkcfl/ipcxTJafYu0rE9W
+         50Y55+xipAI0ufBdQY2PGvPnJNTbThMDs8xRaABigOW+z6ssKQbY00mk+Pv/De5Pb0ad
+         wEA9LsDgi+HaJHBuTlG4jz1Sx9ex++S+D3oGYqNiA20VBV8AKTQjCm0vKC3Y2gr89muF
+         qwjb6yN1dRxecIg+6p7MkbX2UvXQfkUBDM/3EUHafuRz1j1Qtd69b5fVbJYLbxlxt0qx
+         OuNw==
+X-Gm-Message-State: AOAM531xTrC4MZq+ayaxw+MfJlgRXwjK2yQGOp99ulfQr11vALF1HSoW
+        GF16GTHrf4FyfEJegMOD4GdCmQ==
+X-Google-Smtp-Source: ABdhPJwigp0rQLZis0JaDnZZN9nSa9J+V3Qsqnlk+GBUzYAD1Zi/QIvqfwyS+A8X8b3jUHAKI0IMdg==
+X-Received: by 2002:a17:90a:9484:: with SMTP id s4mr82939pjo.231.1626191304719;
+        Tue, 13 Jul 2021 08:48:24 -0700 (PDT)
 Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id i1sm3257836pjs.31.2021.07.13.08.46.04
+        by smtp.gmail.com with ESMTPSA id z141sm22530841pfc.146.2021.07.13.08.48.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jul 2021 08:46:08 -0700 (PDT)
-Date:   Tue, 13 Jul 2021 23:46:02 +0800
+        Tue, 13 Jul 2021 08:48:24 -0700 (PDT)
+Date:   Tue, 13 Jul 2021 23:48:17 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -77,56 +76,54 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
 Subject: Re: [PATCH v4 11/11] perf auxtrace: Add
  compat_auxtrace_mmap__{read_head|write_tail}
-Message-ID: <20210713154602.GD748506@leoy-ThinkPad-X240s>
+Message-ID: <20210713154817.GE748506@leoy-ThinkPad-X240s>
 References: <20210711104105.505728-1-leo.yan@linaro.org>
  <20210711104105.505728-12-leo.yan@linaro.org>
- <20210712144410.GE22278@shell.armlinux.org.uk>
+ <2e4cbd2f-19b6-6fca-a8e3-86ba14247cb8@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210712144410.GE22278@shell.armlinux.org.uk>
+In-Reply-To: <2e4cbd2f-19b6-6fca-a8e3-86ba14247cb8@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Russell,
+On Tue, Jul 13, 2021 at 10:07:03AM +0300, Adrian Hunter wrote:
 
-On Mon, Jul 12, 2021 at 03:44:11PM +0100, Russell King (Oracle) wrote:
-> On Sun, Jul 11, 2021 at 06:41:05PM +0800, Leo Yan wrote:
-> > When perf runs in compat mode (kernel in 64-bit mode and the perf is in
-> > 32-bit mode), the 64-bit value atomicity in the user space cannot be
-> > assured, E.g. on some architectures, the 64-bit value accessing is split
-> > into two instructions, one is for the low 32-bit word accessing and
-> > another is for the high 32-bit word.
+[...]
+
+> > +/*
+> > + * In the compat mode kernel runs in 64-bit and perf tool runs in 32-bit mode,
+> > + * 32-bit perf tool cannot access 64-bit value atomically, which might lead to
+> > + * the issues caused by the below sequence on multiple CPUs: when perf tool
+> > + * accesses either the load operation or the store operation for 64-bit value,
+> > + * on some architectures the operation is divided into two instructions, one
+> > + * is for accessing the low 32-bit value and another is for the high 32-bit;
+> > + * thus these two user operations can give the kernel chances to access the
+> > + * 64-bit value, and thus leads to the unexpected load values.
+> > + *
+> > + *   kernel (64-bit)                        user (32-bit)
+> > + *
+> > + *   if (LOAD ->aux_tail) { --,             LOAD ->aux_head_lo
+> > + *       STORE $aux_data      |       ,--->
+> > + *       FLUSH $aux_data      |       |     LOAD ->aux_head_hi
+> > + *       STORE ->aux_head   --|-------`     smp_rmb()
+> > + *   }                        |             LOAD $data
+> > + *                            |             smp_mb()
+> > + *                            |             STORE ->aux_tail_lo
+> > + *                            `----------->
+> > + *                                          STORE ->aux_tail_hi
+> > + *
+> > + * For this reason, it's impossible for the perf tool to work correctly when
+> > + * the AUX head or tail is bigger than 4GB (more than 32 bits length); and we
+> > + * can not simply limit the AUX ring buffer to less than 4GB, the reason is
+> > + * the pointers can be increased monotonically (e.g in snapshot mode), whatever
 > 
-> Does this apply to 32-bit ARM code on aarch64? I would not have thought
-> it would, as the structure member is a __u64 and
-> compat_auxtrace_mmap__read_head() doesn't seem to be marking anything
-> as packed, so the compiler _should_ be able to use a LDRD instruction
-> to load the value.
+> At least for Intel PT, in snapshot mode, the head is always an offset
+> into the buffer, so never more than 4GB for a 32-bit perf tool. So maybe
+> leave out "(e.g in snapshot mode)"
 
-I think essentially your question is relevant to the memory model.
-For 32-bit Arm application on aarch64, in the Armv8 architecture
-reference manual ARM DDI 0487F.c, chapter "E2.2.1
-Requirements for single-copy atomicity" describes:
-
-"LDM, LDC, LDRD, STM, STC, STRD, PUSH, POP, RFE, SRS, VLDM, VLDR, VSTM,
-and VSTR instructions are executed as a sequence of word-aligned word
-accesses. Each 32-bit word access is guaranteed to be single-copy
-atomic. The architecture does not require subsequences of two or more
-word accesses from the sequence to be single-copy atomic."
-
-So I think LDRD/STRD instruction cannot promise the atomicity for
-loading or storing two words in 32-bit Arm.
-
-And another thought is the functions compat_auxtrace_mmap__read_head()
-is a general function, I avoid to write it with any architecture
-specific instructions.
-
-> Is this a problem noticed on non-ARM architectures?
-
-No, actually we just concluded the potential issue based on the analysis
-for the weak memory model.
+Sure, will leave out "(e.g in snapshot mode)".
 
 Thanks,
 Leo
