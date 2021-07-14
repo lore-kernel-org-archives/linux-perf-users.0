@@ -2,174 +2,94 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376CFC07E9A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 08:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0377BC07E9A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 08:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21D88613AB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 08:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73DA6052B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 08:41:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238498AbhGNIit (ORCPT
+        id S238540AbhGNInw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jul 2021 04:38:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238482AbhGNIit (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jul 2021 04:38:49 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id D43B16115A;
-        Wed, 14 Jul 2021 08:35:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626251758;
-        bh=HDymZW8IKRKt/jb2rj2qbgVXui81unjwJTpptk8kJ7c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RB/QPHzlz7sU+FJoEw2Rl9ORqYNYDU0ByM2fH+ZDN8PFpW72iGwx2iJTvk34xXdDK
-         4afkxT3NphonGmGcHZDxnWFZ4lKMQboC5f7pX9/gFmeZdoaXOYj1L75Q0sxdjkFEFQ
-         VcH5G+mYU4/gBv5D1pr9vF10r0Hn6jAwiGok9NiDCzN/SpQbBq6mnLsA/qvXhiy+Gg
-         l+xcAQNJMAH9+OoQyRKGxGjRtUi2zYRqBteaHq/g1Rbu2Nct06EorWxVIS/0uehre2
-         Xt4WnHe29rmSkUuhrgDndDxPRvg0wkqqITtZmFIA4OrmUMBFVir8u54QK5+2e1TzzH
-         jgjRxZ6A3X7SA==
-Date:   Wed, 14 Jul 2021 17:35:53 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@redhat.com>, <namhyung@kernel.org>, <irogers@google.com>,
-        <fche@redhat.com>, <ravi.bangoria@linux.ibm.com>,
-        <yao.jin@linux.intel.com>, <srikar@linux.vnet.ibm.com>,
-        <Jianlin.Lv@arm.com>, <lihuafei1@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf probe: Fix add event failed when 32-bit perf
- running in 64-bit kernel
-Message-Id: <20210714173553.944cef13897dfe1bea7b8d78@kernel.org>
-In-Reply-To: <20210714065432.188061-1-yangjihong1@huawei.com>
-References: <20210714065432.188061-1-yangjihong1@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 14 Jul 2021 04:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238432AbhGNInv (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 14 Jul 2021 04:43:51 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F709C06175F;
+        Wed, 14 Jul 2021 01:41:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HO9aj6B1WjYj8qsLsiziGZ5099hZ4tz+d5ON9qD4q5w=; b=d8cUJ5EJK8sII/t/B+2QPL1G/
+        kxh260fNM8iyZQ1aLQNZFrMiCwROlnhMLFjMlUh27iZkJLHQNXi5N3vfbxJBLVhRRvAIB3mbAn8ZI
+        7ZbwQCvsHvwXvjvOuHJuDEI3JAIeKoui08fdMyVBQWAi6nR8vpe+b/kPcN/oal67TYm+pEA83K+x8
+        DqvV3rZXHwHXbRey4tU9Z626ywvTL1mLkS+1aYkot9wCferIwr+OxHWcemeWH0hVRmpPpBeDTSihU
+        NhEYMUxgHKzNMv1MqDgEDMycwR6v9OyztoXXnhZ784qQaTjxHJ5P/yVkXydcW/i7GNCBHRuOSz5bA
+        hnyL5T2xQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46084)
+        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1m3aRT-000762-AL; Wed, 14 Jul 2021 09:40:31 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1m3aRD-00018I-Ky; Wed, 14 Jul 2021 09:40:15 +0100
+Date:   Wed, 14 Jul 2021 09:40:15 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 11/11] perf auxtrace: Add
+ compat_auxtrace_mmap__{read_head|write_tail}
+Message-ID: <20210714084015.GM22278@shell.armlinux.org.uk>
+References: <20210711104105.505728-1-leo.yan@linaro.org>
+ <20210711104105.505728-12-leo.yan@linaro.org>
+ <20210712144410.GE22278@shell.armlinux.org.uk>
+ <20210713154602.GD748506@leoy-ThinkPad-X240s>
+ <20210713161441.GK22278@shell.armlinux.org.uk>
+ <20210713181301.GE13181@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210713181301.GE13181@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Yang,
+On Tue, Jul 13, 2021 at 07:13:02PM +0100, Catalin Marinas wrote:
+> We could try to clarify E2.2.1 to simply state that naturally aligned
+> LDRD/STRD are single-copy atomic without any subsequent statement on the
+> translation table.
 
-On Wed, 14 Jul 2021 14:54:32 +0800
-Yang Jihong <yangjihong1@huawei.com> wrote:
-
-> The "address" member  of "struct probe_trace_point" uses long data type.
-> If kernel is 64-bit and perf program is 32-bit, size of "address" variable is
-> 32 bits. As a result, upper 32 bits of address read from kernel are truncated,
-> An error occurs during address comparison in kprobe_warn_out_range function.
-
-Good catch!
-I didn't imagine that such a use case. But that is important because perf
-probe can be used for cross-arch probe definition too.
-
-> 
-> Before:
-> 
->   # perf probe -a schedule
->   schedule is out of .text, skip it.
->     Error: Failed to add events.
-> 
-> Solution:
->   Change data type of "address" variable to u64 and change corresponding
-> address printing and value assignment.
-
-OK, as far as I can see, the other parts of the perf also uses u64 for
-"address" storing variables. (e.g. symbols, maps etc.)
-
-> 
-> After:
-> 
->   # perf.new.new probe -a schedule
->   Added new event:
->     probe:schedule       (on schedule)
-> 
->   You can now use it in all perf tools, such as:
-> 
->           perf record -e probe:schedule -aR sleep 1
-> 
->   # perf probe -l
->     probe:schedule       (on schedule)
-
-I think you missed one thing here.
-Usually, this shows the filename and line number of schedule().
-
-Could you try below diff?
-
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 7d2ba8419b0c..609ca1671501 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -113,14 +113,14 @@ static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
-  *
-  * Find a line number and file name for @addr in @cu_die.
-  */
--int cu_find_lineinfo(Dwarf_Die *cu_die, unsigned long addr,
--		    const char **fname, int *lineno)
-+int cu_find_lineinfo(Dwarf_Die *cu_die, Dwarf_Addr addr,
-+		     const char **fname, int *lineno)
- {
- 	Dwarf_Line *line;
- 	Dwarf_Die die_mem;
- 	Dwarf_Addr faddr;
- 
--	if (die_find_realfunc(cu_die, (Dwarf_Addr)addr, &die_mem)
-+	if (die_find_realfunc(cu_die, addr, &die_mem)
- 	    && die_entrypc(&die_mem, &faddr) == 0 &&
- 	    faddr == addr) {
- 		*fname = dwarf_decl_file(&die_mem);
-@@ -128,7 +128,7 @@ int cu_find_lineinfo(Dwarf_Die *cu_die, unsigned long addr,
- 		goto out;
- 	}
- 
--	line = cu_getsrc_die(cu_die, (Dwarf_Addr)addr);
-+	line = cu_getsrc_die(cu_die, addr);
- 	if (line && dwarf_lineno(line, lineno) == 0) {
- 		*fname = dwarf_linesrc(line, NULL, NULL);
- 		if (!*fname)
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index cb99646843a9..7ee0fa19b5c4 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -19,7 +19,7 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
- const char *cu_get_comp_dir(Dwarf_Die *cu_die);
- 
- /* Get a line number and file name for given address */
--int cu_find_lineinfo(Dwarf_Die *cudie, unsigned long addr,
-+int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
- 		     const char **fname, int *lineno);
- 
- /* Walk on functions at given address */
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 8ba01bbdf05c..50d861a80f57 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1727,7 +1727,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
- 	}
- 
- 	/* Find a corresponding line (filename and lineno) */
--	cu_find_lineinfo(&cudie, addr, &fname, &lineno);
-+	cu_find_lineinfo(&cudie, (Dwarf_Addr)addr, &fname, &lineno);
- 	/* Don't care whether it failed or not */
- 
- 	/* Find a corresponding function (name, baseline and baseaddr) */
-@@ -1828,8 +1828,7 @@ static int line_range_add_line(const char *src, unsigned int lineno,
- }
- 
- static int line_range_walk_cb(const char *fname, int lineno,
--			      Dwarf_Addr addr __maybe_unused,
--			      void *data)
-+			      Dwarf_Addr addr, void *data)
- {
- 	struct line_finder *lf = data;
- 	const char *__fname;
-
+I think that clarification would be most helpful. Thanks.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
