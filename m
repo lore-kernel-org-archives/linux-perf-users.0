@@ -2,94 +2,147 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0377BC07E9A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 08:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDEBC07E9A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 12:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D73DA6052B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 08:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C98B613C1
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 12:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238540AbhGNInw (ORCPT
+        id S239357AbhGNMon (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jul 2021 04:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238432AbhGNInv (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jul 2021 04:43:51 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F709C06175F;
-        Wed, 14 Jul 2021 01:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HO9aj6B1WjYj8qsLsiziGZ5099hZ4tz+d5ON9qD4q5w=; b=d8cUJ5EJK8sII/t/B+2QPL1G/
-        kxh260fNM8iyZQ1aLQNZFrMiCwROlnhMLFjMlUh27iZkJLHQNXi5N3vfbxJBLVhRRvAIB3mbAn8ZI
-        7ZbwQCvsHvwXvjvOuHJuDEI3JAIeKoui08fdMyVBQWAi6nR8vpe+b/kPcN/oal67TYm+pEA83K+x8
-        DqvV3rZXHwHXbRey4tU9Z626ywvTL1mLkS+1aYkot9wCferIwr+OxHWcemeWH0hVRmpPpBeDTSihU
-        NhEYMUxgHKzNMv1MqDgEDMycwR6v9OyztoXXnhZ784qQaTjxHJ5P/yVkXydcW/i7GNCBHRuOSz5bA
-        hnyL5T2xQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46084)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1m3aRT-000762-AL; Wed, 14 Jul 2021 09:40:31 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1m3aRD-00018I-Ky; Wed, 14 Jul 2021 09:40:15 +0100
-Date:   Wed, 14 Jul 2021 09:40:15 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Leo Yan <leo.yan@linaro.org>, Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Wed, 14 Jul 2021 08:44:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231356AbhGNMon (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 14 Jul 2021 08:44:43 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id D417F613BE;
+        Wed, 14 Jul 2021 12:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626266512;
+        bh=QmkEEw5HPjaeIwBl2KuFwiuPeDWX0r9aAoveov6ob6s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dF3T7ABlSNn0ySBp9984CdkyROyEHLo2b+X+zbXx5gSq1GpW0Qlv0dHAdSGEr1I7x
+         HjBj3bt6jxkSHJRynGrV9a0/KILOiTR1WzuscA6BotC9qb3DOJBrIILJuzwt6txtYw
+         thJTZlHXxYgrpnecQ6FU0IhCqxtItazfS+WvWNhqhEi/9HdyNm+qnQuPr57W12m/R4
+         oikSIKLoNsjo12jt0wYI+MGnhv5tiAPfptOnUa+CCOblAGpk5SYfTfZ4XBoHdLWzzx
+         GHccKGn6KfhQtej1/D15JDUJ4q5YMJw+U757WjVGD0sumB7SSg3DmNqeSH90mbfMDj
+         89VA/b9z0XK1w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id DF318403F2; Wed, 14 Jul 2021 09:41:48 -0300 (-03)
+Date:   Wed, 14 Jul 2021 09:41:48 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 11/11] perf auxtrace: Add
- compat_auxtrace_mmap__{read_head|write_tail}
-Message-ID: <20210714084015.GM22278@shell.armlinux.org.uk>
-References: <20210711104105.505728-1-leo.yan@linaro.org>
- <20210711104105.505728-12-leo.yan@linaro.org>
- <20210712144410.GE22278@shell.armlinux.org.uk>
- <20210713154602.GD748506@leoy-ThinkPad-X240s>
- <20210713161441.GK22278@shell.armlinux.org.uk>
- <20210713181301.GE13181@arm.com>
+        bpf@vger.kernel.org, huawei.libin@huawei.com
+Subject: Re: [PATCH] perf trace: Update cmd string table to decode sys_bpf
+ first arg
+Message-ID: <YO7bjJ6Es+Y7j0K4@kernel.org>
+References: <20210714015000.2844867-1-liwei391@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20210713181301.GE13181@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210714015000.2844867-1-liwei391@huawei.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 07:13:02PM +0100, Catalin Marinas wrote:
-> We could try to clarify E2.2.1 to simply state that naturally aligned
-> LDRD/STRD are single-copy atomic without any subsequent statement on the
-> translation table.
+Em Wed, Jul 14, 2021 at 09:50:00AM +0800, Wei Li escreveu:
+> As 'enum bpf_cmd' has been extended a lot, update the cmd string table to
+> decode sys_bpf first arg clearly in perf-trace.
 
-I think that clarification would be most helpful. Thanks.
+I'll apply this, as it improves what we have right now, but the plan is
+to use BTF for this, see how pahole can get all that from
+/sys/kernel/btf/vmlinux:
+
+⬢[acme@toolbox perf]$ pahole bpf_cmd
+enum bpf_cmd {
+	BPF_MAP_CREATE                  = 0,
+	BPF_MAP_LOOKUP_ELEM             = 1,
+	BPF_MAP_UPDATE_ELEM             = 2,
+	BPF_MAP_DELETE_ELEM             = 3,
+	BPF_MAP_GET_NEXT_KEY            = 4,
+	BPF_PROG_LOAD                   = 5,
+	BPF_OBJ_PIN                     = 6,
+	BPF_OBJ_GET                     = 7,
+	BPF_PROG_ATTACH                 = 8,
+	BPF_PROG_DETACH                 = 9,
+	BPF_PROG_TEST_RUN               = 10,
+	BPF_PROG_GET_NEXT_ID            = 11,
+	BPF_MAP_GET_NEXT_ID             = 12,
+	BPF_PROG_GET_FD_BY_ID           = 13,
+	BPF_MAP_GET_FD_BY_ID            = 14,
+	BPF_OBJ_GET_INFO_BY_FD          = 15,
+	BPF_PROG_QUERY                  = 16,
+	BPF_RAW_TRACEPOINT_OPEN         = 17,
+	BPF_BTF_LOAD                    = 18,
+	BPF_BTF_GET_FD_BY_ID            = 19,
+	BPF_TASK_FD_QUERY               = 20,
+	BPF_MAP_LOOKUP_AND_DELETE_ELEM  = 21,
+	BPF_MAP_FREEZE                  = 22,
+	BPF_BTF_GET_NEXT_ID             = 23,
+	BPF_MAP_LOOKUP_BATCH            = 24,
+	BPF_MAP_LOOKUP_AND_DELETE_BATCH = 25,
+	BPF_MAP_UPDATE_BATCH            = 26,
+	BPF_MAP_DELETE_BATCH            = 27,
+	BPF_LINK_CREATE                 = 28,
+	BPF_LINK_UPDATE                 = 29,
+	BPF_LINK_GET_FD_BY_ID           = 30,
+	BPF_LINK_GET_NEXT_ID            = 31,
+	BPF_ENABLE_STATS                = 32,
+	BPF_ITER_CREATE                 = 33,
+	BPF_LINK_DETACH                 = 34,
+	BPF_PROG_BIND_MAP               = 35,
+};
+⬢[acme@toolbox perf]$
+ 
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+>  tools/perf/builtin-trace.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 7ec18ff57fc4..17bc6284a93e 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -707,7 +707,15 @@ static size_t syscall_arg__scnprintf_char_array(char *bf, size_t size, struct sy
+>  
+>  static const char *bpf_cmd[] = {
+>  	"MAP_CREATE", "MAP_LOOKUP_ELEM", "MAP_UPDATE_ELEM", "MAP_DELETE_ELEM",
+> -	"MAP_GET_NEXT_KEY", "PROG_LOAD",
+> +	"MAP_GET_NEXT_KEY", "PROG_LOAD", "OBJ_PIN", "OBJ_GET", "PROG_ATTACH",
+> +	"PROG_DETACH", "PROG_TEST_RUN", "PROG_GET_NEXT_ID", "MAP_GET_NEXT_ID",
+> +	"PROG_GET_FD_BY_ID", "MAP_GET_FD_BY_ID", "OBJ_GET_INFO_BY_FD",
+> +	"PROG_QUERY", "RAW_TRACEPOINT_OPEN", "BTF_LOAD", "BTF_GET_FD_BY_ID",
+> +	"TASK_FD_QUERY", "MAP_LOOKUP_AND_DELETE_ELEM", "MAP_FREEZE",
+> +	"BTF_GET_NEXT_ID", "MAP_LOOKUP_BATCH", "MAP_LOOKUP_AND_DELETE_BATCH",
+> +	"MAP_UPDATE_BATCH", "MAP_DELETE_BATCH", "LINK_CREATE", "LINK_UPDATE",
+> +	"LINK_GET_FD_BY_ID", "LINK_GET_NEXT_ID", "ENABLE_STATS", "ITER_CREATE",
+> +	"LINK_DETACH", "PROG_BIND_MAP",
+>  };
+>  static DEFINE_STRARRAY(bpf_cmd, "BPF_");
+>  
+> -- 
+> 2.25.1
+> 
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+
+- Arnaldo
