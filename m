@@ -2,86 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C2FC07E9A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 17:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA239C47E48
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 19:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD394613C3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 17:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5948613F7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jul 2021 19:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbhGNRs2 (ORCPT
+        id S236795AbhGNToQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jul 2021 13:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
+        Wed, 14 Jul 2021 15:44:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229685AbhGNRs2 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jul 2021 13:48:28 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5D8DC613BE;
-        Wed, 14 Jul 2021 17:45:36 +0000 (UTC)
+        id S235927AbhGNTnZ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 14 Jul 2021 15:43:25 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 82A90613D7;
+        Wed, 14 Jul 2021 19:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626284736;
-        bh=WhHMSzbJG7vgyfqcgNwQHLAWwiQT+eksDibFemIqlus=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SyOvmz2v8I1bHZImwjKbBuHy3wsFD1yCc5frQsIQozIx0+drfOIfLX4RC8B9foP3+
-         E0Vkkvi8kH/w36zgno5uw1/Qg/4+F9+VuXNHQkSlRlhXrDfPteTKGnnVGU7w91XbhE
-         Vqqgh/mbj66AyJvEjQtlBmeHP9XcQ9GRWirL1JcbfR3PoreKkIIc4NX/Y+AHMrfKfm
-         XhMiY69v3KuUa1iZ6PMqoJiG4Pukb4AYUbOknq1iZ2E3OipQ1zi56Sv5lUjTIPK2QY
-         hXkHZlPX+OC4J71lowy37iTn5qDvGqjbHY6UNSI86xV1xXsksxYGeiC7tPJdWSoE7y
-         KT1Mbzk2oHRpA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 32546403F2; Wed, 14 Jul 2021 14:45:34 -0300 (-03)
-Date:   Wed, 14 Jul 2021 14:45:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
-        leo.yan@linaro.org, al.grant@arm.com, branislav.rankov@arm.com,
-        denik@chromium.org, suzuki.poulose@arm.com,
-        anshuman.khandual@arm.com, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
-Message-ID: <YO8ivntow2JfdQWW@kernel.org>
-References: <20210624164303.28632-1-james.clark@arm.com>
- <20210624164303.28632-3-james.clark@arm.com>
- <20210705193338.GB1493103@p14s>
+        s=k20201202; t=1626291629;
+        bh=RiM7k+/NBviQcsk8+FG0hXNIHhOXpACT94wSjDwPxAk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WrFnPAXj7Q7FECgzuCA/bZv6zwaQOYWinlLVdXZprAfz7+O/s8p0W2XhiX3nGGAiW
+         +Z58bdCXBDZQqEKFkp88kioIJiDlhviJgnm0jov1+jVsDx0xZc1X+vFQj60tP0hMZg
+         mBJxhPhO0k3axzyU6s7pHK1u2/7yjitvbx5gpWOJcCZ+AXqeUTdzgKjidbCSROclnX
+         3QUR2044anhMiErmu3/JIUj1yq3q9Js9za9QBO42k+e2p/O2jolpAwVIx5yYp1QgRH
+         TjUfmuBrtpohR2rAcu0GHymCI5v6QSasEq5Lnhb7ejTtxrMSxjKui1Tf6XStDWCZVf
+         qKfpfB3WjgRvA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        gushengxian <gushengxian@yulong.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.13 104/108] perf/x86/intel/uncore: Clean up error handling path of iio mapping
+Date:   Wed, 14 Jul 2021 15:37:56 -0400
+Message-Id: <20210714193800.52097-104-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210714193800.52097-1-sashal@kernel.org>
+References: <20210714193800.52097-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210705193338.GB1493103@p14s>
-X-Url:  http://acmel.wordpress.com
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jul 05, 2021 at 01:33:38PM -0600, Mathieu Poirier escreveu:
-> On Thu, Jun 24, 2021 at 05:43:03PM +0100, James Clark wrote:
-> > for example:
-> > 
-> >         Idx:808; ID:1c; I_BAD_SEQUENCE : Invalid Sequence in packet.[I_ASYNC]
-> >         ...
-> >         PKTP_ETMV4I_0016 : 0x0014 (OCSD_ERR_INVALID_PCKT_HDR) [Invalid packet header]; TrcIdx=822
-> > 
-> > Signed-off-by: James Clark <james.clark@arm.com>
-> > ---
-> >  tools/perf/util/cs-etm.c | 20 ++++++++++++++++++--
-> >  1 file changed, 18 insertions(+), 2 deletions(-)
-> > 
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+From: Kan Liang <kan.liang@linux.intel.com>
 
+[ Upstream commit d4ba0b06306a70c99a43f9d452886a86e2d3bd26 ]
 
+The error handling path of iio mapping looks fragile. We already fixed
+one issue caused by it, commit f797f05d917f ("perf/x86/intel/uncore:
+Fix for iio mapping on Skylake Server"). Clean up the error handling
+path and make the code robust.
 
-Thanks, applied.
+Reported-by: gushengxian <gushengxian@yulong.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/40e66cf9-398b-20d7-ce4d-433be6e08921@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/events/intel/uncore_snbep.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-- Arnaldo
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index 3a75a2c601c2..1f7bb4898a9d 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -3789,11 +3789,11 @@ static int skx_iio_set_mapping(struct intel_uncore_type *type)
+ 	/* One more for NULL. */
+ 	attrs = kcalloc((uncore_max_dies() + 1), sizeof(*attrs), GFP_KERNEL);
+ 	if (!attrs)
+-		goto err;
++		goto clear_topology;
+ 
+ 	eas = kcalloc(uncore_max_dies(), sizeof(*eas), GFP_KERNEL);
+ 	if (!eas)
+-		goto err;
++		goto clear_attrs;
+ 
+ 	for (die = 0; die < uncore_max_dies(); die++) {
+ 		sprintf(buf, "die%ld", die);
+@@ -3814,7 +3814,9 @@ static int skx_iio_set_mapping(struct intel_uncore_type *type)
+ 	for (; die >= 0; die--)
+ 		kfree(eas[die].attr.attr.name);
+ 	kfree(eas);
++clear_attrs:
+ 	kfree(attrs);
++clear_topology:
+ 	kfree(type->topology);
+ clear_attr_update:
+ 	type->attr_update = NULL;
+-- 
+2.30.2
 
