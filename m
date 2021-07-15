@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2814BC636CA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D088CC636C9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0723D613BB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA1C613C9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243964AbhGOUFF (ORCPT
+        id S237959AbhGOUKT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jul 2021 16:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48768 "EHLO mail.kernel.org"
+        Thu, 15 Jul 2021 16:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346517AbhGOUEy (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jul 2021 16:04:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F3D466128C;
-        Thu, 15 Jul 2021 20:01:59 +0000 (UTC)
+        id S237428AbhGOUKS (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 15 Jul 2021 16:10:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 06DA5613BB;
+        Thu, 15 Jul 2021 20:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626379320;
-        bh=IummxTc4JRlXQtiz0o5C7rVL+MKKmoxVNrkyDkv/s/k=;
+        s=k20201202; t=1626379645;
+        bh=K5MRPmLvT25SpKV4UrNDisb7Z3VHaPFGmFuDsU3OKFM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F54UFW1vnLmr+UE5jzbfibNxLGg17oUC428MMDgos6h2er6f3oOwD8x7la5zNI7NF
-         TywcjNLfBO2RBVeu6DO1Xk7bQzPnHiQKBVCf14S5AbsdJwWeCreAmtSIC3g8mKcz9J
-         0G/m420uhr0ugvUxISi8lAMu/C+IkPrAJq86xutNLgcdWDRdq6kUsNQKZcxVRPEBsv
-         wVvfqkf79iz2mu4zuti7u/Ksz8jjQGZR8t8zrbgJ7AbKPyO3lRQBx7cdA7WrYRg6Z1
-         aeGSZ1Oh2cyEWBRV3nxZbXAQWyeJPj0Eava3QAAMn//rGgXtVId50p4hq2pWR8fbol
-         PiuiTwAX+qZzQ==
+        b=YR17l5wlk+WMsVLc2WQRQaDSBNlogcxcQYf75ek3+kz+rFb1VCipkEzdjzTDACgKs
+         /AUYPWGlLOfskIQdbaR007zKgcJZ8O++0AR6fQfiUNm+0aRZ0Bzwb1HOM0GWJghWeo
+         aSjstWSbg3PAlxACo+PX6axS1wq8q5Z3h0O966QbnE92ruS/KvWmo5J8jfjTFEd9CC
+         49SgfM01gfyZiBrHwnKO189eMX++mQsoPx4FOVsjVOAfWgBIvJH4vGvtz+iCBHiS2t
+         +oYPRru4CHdksklZAz4zftH6UmpXDyqRzUU0ijOs7WiFTzLEp6/ejqZoKm2fT1cLO9
+         K40jnWjNPPHdw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6AC05403F2; Thu, 15 Jul 2021 17:01:57 -0300 (-03)
-Date:   Thu, 15 Jul 2021 17:01:57 -0300
+        id BE860403F2; Thu, 15 Jul 2021 17:07:22 -0300 (-03)
+Date:   Thu, 15 Jul 2021 17:07:22 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Riccardo Mancini <rickyman7@gmail.com>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -46,7 +45,7 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH 06/20] perf dso: fix memory leak in dso__new_map
-Message-ID: <YPCUNe2VGAsL+OCg@kernel.org>
+Message-ID: <YPCVeuKXzI7xndPC@kernel.org>
 References: <cover.1626343282.git.rickyman7@gmail.com>
  <60bfe0cd06e89e2ca33646eb8468d7f5de2ee597.1626343282.git.rickyman7@gmail.com>
 MIME-Version: 1.0
@@ -67,17 +66,12 @@ Em Thu, Jul 15, 2021 at 06:07:11PM +0200, Riccardo Mancini escreveu:
 > 
 > This patch adds the missing dso__put.
 
+Fixes: d3a7c489c7fd2463 ("perf tools: Reference count struct dso")
+
 Thanks, applied.
 
-This needs some extra thinking for some unrelated issue, namely that
-this dso isn't linked in the machine dso list, I think this is only used
-by 'perf probe' :-\
-
-I guess this won't be a problem since using the machine dso list is
-important just for other tools, like when traversing to get the
-build-ids, etc.
-
 - Arnaldo
+
  
 > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 > ---
