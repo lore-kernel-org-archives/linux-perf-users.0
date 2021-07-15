@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85B5C07E96
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F9BC47E4D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B470F613F0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5D6613F1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233404AbhGOQKp (ORCPT
+        id S235533AbhGOQKq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jul 2021 12:10:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47128 "EHLO
+        Thu, 15 Jul 2021 12:10:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234115AbhGOQKm (ORCPT
+        with ESMTP id S234374AbhGOQKm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Thu, 15 Jul 2021 12:10:42 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FAF6C061766;
-        Thu, 15 Jul 2021 09:07:47 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id f17so8496066wrt.6;
-        Thu, 15 Jul 2021 09:07:47 -0700 (PDT)
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B956C061768;
+        Thu, 15 Jul 2021 09:07:48 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id k4so8453306wrc.8;
+        Thu, 15 Jul 2021 09:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7jnAP5IbnC2zCgq+4HdFt5yTacLKkXCnHyA/6fpXXTI=;
-        b=Q52V+1zOzDLhRN44K5XN2+/wa35l5jVQzTrduwWrIrnEHxnj68uzfOAl69kVAvb1ff
-         6Gge3PklpPXk9GvTATufcb5ee/18MQRstZJlARAeLDmgygHQAjacHxMJWeTt3sfxdpSO
-         LLQJknzO1lZDz+XJUolgnQ84PO/dalKNUUuA2HmpYtr9hEJUm7y/B6IIKpDtuqIZFNO3
-         dHcGKQHvfFnt4xTtRKJawApgwE78wfNLWembIp1xMCVh/bAVYXX28WBNerR+sjO1Kn7z
-         JThO0r+zfoP+Gf8oXHmdT/6ZDtqiQ2wM58j8T7fB0IoshkOhDeBNz9fsYI1+Gntn81JV
-         gojw==
+        bh=riEbMkvLA7aRiLgBpIs6UlI0MS+Z3HsL/W5MKJdNIMY=;
+        b=k5+JAsd32MWe2dZpwzJO4FKgJAZV83Z/yxjSKfQ/XLshtCjwq6A2e5ztwzgAZsXpQ5
+         SmaisksLGvD5mGVcemq4c2hKq2WX1JqTLBlyE+80T1PzIoAIKP+GfA4vWfgCwUa+NbMf
+         rLpookaBNL0oh70n+d9wGKu9iKmodhsJgZFisRo0b+WBdesq0SUCFLZdmNp27ycKPf3o
+         KK6zVlRGUuwLE1PkstgDBg8u4YulOW6zUxFuS7KcdZWvH+s41APVmxglbleih0Ktnl1F
+         HBokglF2JvspLxpIkxzysc1IdJblw47ZQFlmuFv8YbuHu/soUolrDRXlwJvlVJ2Qh7X0
+         gE5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7jnAP5IbnC2zCgq+4HdFt5yTacLKkXCnHyA/6fpXXTI=;
-        b=lgLS6XA/UVhed8xEdiYhIg7qEE1KdUpYDYt3aZ5VJRtBG5UppErzrytVEv03lIjERU
-         j/mW+5bg0yFOIEf3a31ao/1l8GkhAoOKN/Yl4qfn1A2WwGIhWQaYweKgRmPR4gJfyt+A
-         CpkuKu6Z9Rnsn0WHksVTZbjJwsjfqjx2WRorlGL9T7IbvM5uagwFAQc6aql7VMY+dzjf
-         HIFf+3PK5Oq6JE7ivjy5247jq5px2+xU9uca5Hmtuc6/8TuC0gbjkzinF3x4XO6mNFRq
-         KjFrKbzINIoFDyrZz2+AdB8Zn13wlr9KALi7LvMXg7tjulW/2lZUbojV+7+okmW2KnlH
-         Ii1Q==
-X-Gm-Message-State: AOAM5321oe3eUXs0ql31pAim6tk+OKbgiw5iVK4xbFCoFivI7/1KCqdF
-        PwaG+fSVko65aV5bpts3iNs=
-X-Google-Smtp-Source: ABdhPJzWl5ja1qFbl7BjZYNKXufJ2f8aEYDBj/372uNz9mGh2BGCUAkjt1hUY7KD5y95V/CS7XCsyw==
-X-Received: by 2002:a5d:6dd1:: with SMTP id d17mr6643630wrz.344.1626365266010;
+        bh=riEbMkvLA7aRiLgBpIs6UlI0MS+Z3HsL/W5MKJdNIMY=;
+        b=XY79uvbxtnXdWIDC6IwnpALUuKOaG232AaA1FQQck4QtAMDDq84CI5rAKQiidgDKMT
+         Ik0N+DKqf3ST6yrckOaFdoUH1zS0zgrGTorKWbyu92zuIpXMMi5HACxba5Uz68/yMnWV
+         JpG34f4jr2ijqH+sloUS90gR+vN4ZXQUzDCkknozbAplBbclOZ0kLVoyS3NEgKnYcUiO
+         H8Q7g0boMf9LIP00IsvQ9NLQkWfdgSDZKbv4SQw2N8K4hTJukb+GDkgl0A5j3kRaQ+a8
+         6h86YJ4Dp1SZHbrl44KjN/hSCmaTjmjaS13/4Qsqkry0F6otx6JyQo/pAlZDdOUez5c4
+         mLAA==
+X-Gm-Message-State: AOAM532zX9V8GwvjDKGmmT+jwto68u98FN7g4zlnE5XeY8kN1Cg5NHkW
+        HY28gQ5BJ5c9mdALyg7rpNI=
+X-Google-Smtp-Source: ABdhPJwq6d+CiLmxUmfWqcCSuwWYHJQstvf3d+50FXn+KFvoyv6OdV4ZwfHD/PZuAn5AF9CGI5eNTA==
+X-Received: by 2002:adf:e7c6:: with SMTP id e6mr6581717wrn.221.1626365266970;
         Thu, 15 Jul 2021 09:07:46 -0700 (PDT)
 Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.45
+        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 09:07:45 -0700 (PDT)
+        Thu, 15 Jul 2021 09:07:46 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [PATCH 16/20] perf trace: free syscall->arg_fmt
-Date:   Thu, 15 Jul 2021 18:07:21 +0200
-Message-Id: <d68f25c043d30464ac9fa79c3399e18f429bca82.1626343282.git.rickyman7@gmail.com>
+Subject: [PATCH 17/20] perf trace: free syscall tp fields in evsel->priv
+Date:   Thu, 15 Jul 2021 18:07:22 +0200
+Message-Id: <46526611904ec5ff2768b59014e3afce8e0197d1.1626343282.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626343282.git.rickyman7@gmail.com>
 References: <cover.1626343282.git.rickyman7@gmail.com>
@@ -82,54 +82,55 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 ASan reports several memory leaks running the perf test
 "88: Check open filename arg using perf trace + vfs_getname".
-The second of these leaks is caused by the arg_fmt field of syscall not
+The third of these leaks is related to evsel->priv fields of sycalls never
 being deallocated.
 
-This patch adds a new function syscall__exit which is called on all
-syscalls.table entries in trace__exit, which will free the arg_fmt
-field.
+This patch adds the function evlist__free_syscall_tp_fields which
+iterates over all evsels in evlist, matching syscalls, and calling the
+missing frees.
+This new function is called at the end of trace__run, right before
+calling evlist__delete.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/builtin-trace.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index fe26d87ca8ccc14d..d67f02d237eb0c7e 100644
+index d67f02d237eb0c7e..d9c65d55a9ae7526 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -2266,6 +2266,14 @@ static void *syscall__augmented_args(struct syscall *sc, struct perf_sample *sam
- 	return augmented_args;
+@@ -3103,6 +3103,21 @@ static struct evsel *evsel__new_pgfault(u64 config)
+ 	return evsel;
  }
  
-+static void syscall__exit(struct syscall *sc)
++static void evlist__free_syscall_tp_fields(struct evlist *evlist)
 +{
-+	if (!sc)
-+		return;
++	struct evsel *evsel;
 +
-+	free(sc->arg_fmt);
++	evlist__for_each_entry(evlist, evsel) {
++		struct evsel_trace *et = evsel->priv;
++
++		if (!et || !evsel->tp_format || strcmp(evsel->tp_format->system, "syscalls"))
++			continue;
++
++		free(et->fmt);
++		free(et);
++	}
 +}
 +
- static int trace__sys_enter(struct trace *trace, struct evsel *evsel,
- 			    union perf_event *event __maybe_unused,
- 			    struct perf_sample *sample)
-@@ -4703,9 +4711,15 @@ static int trace__config(const char *var, const char *value, void *arg)
- 
- static void trace__exit(struct trace *trace)
+ static void trace__handle_event(struct trace *trace, union perf_event *event, struct perf_sample *sample)
  {
-+	int i;
-+
- 	strlist__delete(trace->ev_qualifier);
- 	free(trace->ev_qualifier_ids.entries);
--	free(trace->syscalls.table);
-+	if (trace->syscalls.table) {
-+		for (i = 0; i <= trace->sctbl->syscalls.max_id; i++)
-+			syscall__exit(&trace->syscalls.table[i]);
-+		free(trace->syscalls.table);
-+	}
- 	syscalltbl__delete(trace->sctbl);
- 	zfree(&trace->perfconfig_events);
- }
+ 	const u32 type = event->header.type;
+@@ -4138,7 +4153,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 
+ out_delete_evlist:
+ 	trace__symbols__exit(trace);
+-
++	evlist__free_syscall_tp_fields(evlist);
+ 	evlist__delete(evlist);
+ 	cgroup__put(trace->cgroup);
+ 	trace->evlist = NULL;
 -- 
 2.31.1
 
