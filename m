@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F9BC47E4D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEA3C47E4B
 	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5D6613F1
+	by mail.kernel.org (Postfix) with ESMTP id 9B4F5613F0
 	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235533AbhGOQKq (ORCPT
+        id S235538AbhGOQKq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Thu, 15 Jul 2021 12:10:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47144 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234374AbhGOQKm (ORCPT
+        with ESMTP id S230420AbhGOQKn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jul 2021 12:10:42 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B956C061768;
-        Thu, 15 Jul 2021 09:07:48 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id k4so8453306wrc.8;
-        Thu, 15 Jul 2021 09:07:48 -0700 (PDT)
+        Thu, 15 Jul 2021 12:10:43 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868BBC0613DC;
+        Thu, 15 Jul 2021 09:07:49 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id u1so8528899wrs.1;
+        Thu, 15 Jul 2021 09:07:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=riEbMkvLA7aRiLgBpIs6UlI0MS+Z3HsL/W5MKJdNIMY=;
-        b=k5+JAsd32MWe2dZpwzJO4FKgJAZV83Z/yxjSKfQ/XLshtCjwq6A2e5ztwzgAZsXpQ5
-         SmaisksLGvD5mGVcemq4c2hKq2WX1JqTLBlyE+80T1PzIoAIKP+GfA4vWfgCwUa+NbMf
-         rLpookaBNL0oh70n+d9wGKu9iKmodhsJgZFisRo0b+WBdesq0SUCFLZdmNp27ycKPf3o
-         KK6zVlRGUuwLE1PkstgDBg8u4YulOW6zUxFuS7KcdZWvH+s41APVmxglbleih0Ktnl1F
-         HBokglF2JvspLxpIkxzysc1IdJblw47ZQFlmuFv8YbuHu/soUolrDRXlwJvlVJ2Qh7X0
-         gE5Q==
+        bh=A4HXyy2prW6zIXxOdQTWtyGlQ5vJrf9Gh1RnoG3M4TE=;
+        b=hOjSgi7Vfo0CTNeZhpTh5LcivjMxPuzh94gvc5QUZGXEcdgdU6YasESduvqzcNJswu
+         Dv8bcKi1VN0G6/Nf4Aly2kn+6XrWMcLbtKubQ/2QaROk7T9XIQFXNnqlUm5aMUUrzKw/
+         i+3Im6bGRogP4LH4GLQFloUW6z+OrUVxaxpEb8EMIRVFszg0AnjjePbkWixtMFkyocQK
+         8Myrp2IgBPKh7R2xifSyJTc/OzkYMTqasmA1+/JF3kxtf2hEAsBymlJzdC6gTqnc31Kk
+         dgzyDnuqtROdfweo/siSMGcgdbl5lVRwYBKIS+JZQfiZioSM97df4BYYoqLIIFQ9CsNg
+         GIVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=riEbMkvLA7aRiLgBpIs6UlI0MS+Z3HsL/W5MKJdNIMY=;
-        b=XY79uvbxtnXdWIDC6IwnpALUuKOaG232AaA1FQQck4QtAMDDq84CI5rAKQiidgDKMT
-         Ik0N+DKqf3ST6yrckOaFdoUH1zS0zgrGTorKWbyu92zuIpXMMi5HACxba5Uz68/yMnWV
-         JpG34f4jr2ijqH+sloUS90gR+vN4ZXQUzDCkknozbAplBbclOZ0kLVoyS3NEgKnYcUiO
-         H8Q7g0boMf9LIP00IsvQ9NLQkWfdgSDZKbv4SQw2N8K4hTJukb+GDkgl0A5j3kRaQ+a8
-         6h86YJ4Dp1SZHbrl44KjN/hSCmaTjmjaS13/4Qsqkry0F6otx6JyQo/pAlZDdOUez5c4
-         mLAA==
-X-Gm-Message-State: AOAM532zX9V8GwvjDKGmmT+jwto68u98FN7g4zlnE5XeY8kN1Cg5NHkW
-        HY28gQ5BJ5c9mdALyg7rpNI=
-X-Google-Smtp-Source: ABdhPJwq6d+CiLmxUmfWqcCSuwWYHJQstvf3d+50FXn+KFvoyv6OdV4ZwfHD/PZuAn5AF9CGI5eNTA==
-X-Received: by 2002:adf:e7c6:: with SMTP id e6mr6581717wrn.221.1626365266970;
-        Thu, 15 Jul 2021 09:07:46 -0700 (PDT)
+        bh=A4HXyy2prW6zIXxOdQTWtyGlQ5vJrf9Gh1RnoG3M4TE=;
+        b=mVztgDg5W+I0t4m4ZXVfrm7+2IEntPwsKpOXRKaVH/3UpSC2tblMagfZd3Fs5GayRH
+         JMdUWui0rpQ5YPhwhlJF+rxAVVUR+MRErQ9kQthPpl6qwQVfQhJ7taHUtKMBWFhAU2VL
+         Vlp6I1lITrtHC0PwB3WMZtmC3/NfqQu+rRT850NTyNmT8bxFRObJgqLJygMFEsc2YqGp
+         q3vM/7eP4s1K7KTfpuUq/cNbO1WTp3C3edky+92byJLBhbWtadzzX7er8psWXXxcPlZz
+         DEYzEtA+1b3cF4xGFZSysMe22R2iYYxL0dzNEj5Ol5+gN1rimUgICHzc1KB1wCLieQtg
+         rUBg==
+X-Gm-Message-State: AOAM530nDiKqaefEPaMwJRqebTZtIPjrChOWFKRPj2JA47JrRYoB+wMG
+        HKxXldXxKg7AWNxT2iJXg70=
+X-Google-Smtp-Source: ABdhPJzCdcBPZrIzbAecdPK19H4qXiX6/W1BosY/GCdo8r5gAH3GLzXSjrsq6Ef7TjIwnFEsCpzjpA==
+X-Received: by 2002:a5d:408f:: with SMTP id o15mr6646699wrp.342.1626365268082;
+        Thu, 15 Jul 2021 09:07:48 -0700 (PDT)
 Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.46
+        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 09:07:46 -0700 (PDT)
+        Thu, 15 Jul 2021 09:07:47 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [PATCH 17/20] perf trace: free syscall tp fields in evsel->priv
-Date:   Thu, 15 Jul 2021 18:07:22 +0200
-Message-Id: <46526611904ec5ff2768b59014e3afce8e0197d1.1626343282.git.rickyman7@gmail.com>
+Subject: [PATCH 18/20] perf trace: free strings in trace__parse_events_option
+Date:   Thu, 15 Jul 2021 18:07:23 +0200
+Message-Id: <34d08535b11124106b859790549991abff5a7de8.1626343282.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626343282.git.rickyman7@gmail.com>
 References: <cover.1626343282.git.rickyman7@gmail.com>
@@ -82,55 +82,30 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 ASan reports several memory leaks running the perf test
 "88: Check open filename arg using perf trace + vfs_getname".
-The third of these leaks is related to evsel->priv fields of sycalls never
-being deallocated.
+The fourth of these leaks is related to some strings never being freed
+in trace__parse_events_option.
 
-This patch adds the function evlist__free_syscall_tp_fields which
-iterates over all evsels in evlist, matching syscalls, and calling the
-missing frees.
-This new function is called at the end of trace__run, right before
-calling evlist__delete.
+This patch adds the missing frees.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/builtin-trace.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d67f02d237eb0c7e..d9c65d55a9ae7526 100644
+index d9c65d55a9ae7526..4a677f3ff273887a 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3103,6 +3103,21 @@ static struct evsel *evsel__new_pgfault(u64 config)
- 	return evsel;
- }
+@@ -4659,6 +4659,9 @@ static int trace__parse_events_option(const struct option *opt, const char *str,
+ 		err = parse_events_option(&o, lists[0], 0);
+ 	}
+ out:
++	free(strace_groups_dir);
++	free(lists[0]);
++	free(lists[1]);
+ 	if (sep)
+ 		*sep = ',';
  
-+static void evlist__free_syscall_tp_fields(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		struct evsel_trace *et = evsel->priv;
-+
-+		if (!et || !evsel->tp_format || strcmp(evsel->tp_format->system, "syscalls"))
-+			continue;
-+
-+		free(et->fmt);
-+		free(et);
-+	}
-+}
-+
- static void trace__handle_event(struct trace *trace, union perf_event *event, struct perf_sample *sample)
- {
- 	const u32 type = event->header.type;
-@@ -4138,7 +4153,7 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 
- out_delete_evlist:
- 	trace__symbols__exit(trace);
--
-+	evlist__free_syscall_tp_fields(evlist);
- 	evlist__delete(evlist);
- 	cgroup__put(trace->cgroup);
- 	trace->evlist = NULL;
 -- 
 2.31.1
 
