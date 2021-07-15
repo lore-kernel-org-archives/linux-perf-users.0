@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C82AC636C8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 19:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93130C636CD
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 19:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6091261360
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 19:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9CD61374
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 19:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245589AbhGOTtF (ORCPT
+        id S235859AbhGOTwv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jul 2021 15:49:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43436 "EHLO mail.kernel.org"
+        Thu, 15 Jul 2021 15:52:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245675AbhGOTrK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jul 2021 15:47:10 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B1A8061285;
-        Thu, 15 Jul 2021 19:44:15 +0000 (UTC)
+        id S1347358AbhGOTwX (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 15 Jul 2021 15:52:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 107D061073;
+        Thu, 15 Jul 2021 19:49:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626378255;
-        bh=iDWh59cM2afPoMa/66sIp2JlggYfn/qurVOjSaXYYrw=;
+        s=k20201202; t=1626378570;
+        bh=KXCm1A076DPrtlFUA5qZsd5SDqWL2dBoIWTzb3neksE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bkgpzawRXfwgGySx8MEzW+SSTY8MZx0yIJidGVnAqIkChgDrZTJEZtQNgPQl9dlw9
-         cCXrhytc/aQ+5j1zwQwopNmWQ9jQynGnGHZOG+cBolujPrqMmPbnwgawd5D/RIS0M0
-         yuDe80Tg1rxYqqxMQKaL4YQeJGf61XZchwcHWaCELGIpeXrmjxWD3zBTV1SBNYM8Aw
-         axKSGElARKH8dGBIwvU4de7Of9CGaNlhPLjBzUNGeH9OFc+Y/gurQ/b+QThpQgzgpw
-         IUxIUh/RxPH+Q/J8jqqyw+Om+ZuTpNEkmai5jzg0IuOtz8D4u4ZRtshyfqK/C/rxKg
-         U4EJfqMUuX9pw==
+        b=Xx6cGAYxVKkd8Nn8Y1gjAtKqpfTnEOxrL/iST7NHGMwQ6rM7m+YBVu5jJotgkCpPi
+         CvjU0i7bJDkVGa+qHkfjoof92pw7W69LoWmmHjF4H9D+x8JaCoA2nsBctn3/EJxoPS
+         dRdZvG65hmylmAb8mbwyM6HyezY56b/spuTll7lgnSEECs5r1X+S5sXgz1RjkrW6dT
+         abMVWfyggRQEA7m/1bymNPQ64NKZOEBJx4kpWnztsNCAoHCoYNM7H1MyVJLPPtzRHz
+         VqUZNpu8ZdxFcT7CJ4sUgqHORxdmctBAwmoz15LLIKw3XuWzLAFP1+VAPiKvo0wHVN
+         Gj+yi3Vfn49aQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A2E79403F2; Thu, 15 Jul 2021 16:44:12 -0300 (-03)
-Date:   Thu, 15 Jul 2021 16:44:12 -0300
+        id 9E6CC403F2; Thu, 15 Jul 2021 16:49:27 -0300 (-03)
+Date:   Thu, 15 Jul 2021 16:49:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Krister Johansen <kjlx@templeofstupid.com>,
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
         Ian Rogers <irogers@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -45,80 +46,78 @@ Cc:     Krister Johansen <kjlx@templeofstupid.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 01/20] perf nsinfo: fix refcounting
-Message-ID: <YPCQDK7dQhLNAWGT@kernel.org>
+Subject: Re: [PATCH 02/20] perf env: fix sibling_dies memory leak
+Message-ID: <YPCRR8jv47kHG/xC@kernel.org>
 References: <cover.1626343282.git.rickyman7@gmail.com>
- <55223bc8821b34ccb01f92ef1401c02b6a32e61f.1626343282.git.rickyman7@gmail.com>
- <YPCGONcQx5SxEKdY@kernel.org>
+ <2140d0b57656e4eb9021ca9772250c24c032924b.1626343282.git.rickyman7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YPCGONcQx5SxEKdY@kernel.org>
+In-Reply-To: <2140d0b57656e4eb9021ca9772250c24c032924b.1626343282.git.rickyman7@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 15, 2021 at 04:02:16PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Thu, Jul 15, 2021 at 06:07:06PM +0200, Riccardo Mancini escreveu:
-> > ASan reports a memory leak of nsinfo during the execution of the perf
-> > test "31: Lookup mmap thread".
-> > The leak is caused by a refcounted variable being replaced without
-> > dropping the refcount.
-> > 
-> > This patch makes sure that the refcnt of nsinfo is decreased whenever
-> > a refcounted variable is replaced with a new value.
+Em Thu, Jul 15, 2021 at 06:07:07PM +0200, Riccardo Mancini escreveu:
+> ASan reports a memory leak in perf_env while running the perf test
+> "41: Session topology", caused by sibling_dies not being freed.
 > 
-> So, there are multiple fixes in just one patch, I'll split it into
-> three, no need to resend.
-> 
-> I'll try and check if finding Fixes: for the three is easy, that way
-> stable@vger.kernel.org will figure out which of the supported releases
-> need each of them.
-
-3rd:
-
-commit 7416120498f83963f4c5662847a1a0556e771b89
-Author: Riccardo Mancini <rickyman7@gmail.com>
-Date:   Thu Jul 15 18:07:06 2021 +0200
-
-    perf probe: Fix dso->nsinfo refcounting
-    
-    ASan reports a memory leak of nsinfo during the execution of:
-    
-     # perf test "31: Lookup mmap thread".
-    
-    The leak is caused by a refcounted variable being replaced without
-    dropping the refcount.
-    
-    This patch makes sure that the refcnt of nsinfo is decreased whenever
-    a refcounted variable is replaced with a new value.
-    
-    Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-    Fixes: 544abd44c7064c8a ("perf probe: Allow placing uprobes in alternate namespaces.")
-    Cc: Ian Rogers <irogers@google.com>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Krister Johansen <kjlx@templeofstupid.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Link: http://lore.kernel.org/lkml/55223bc8821b34ccb01f92ef1401c02b6a32e61f.1626343282.git.rickyman7@gmail.com
-    [ Split from a larger patch ]
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index c14e1d228e56b1c6..e05750cea34c3a95 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -179,8 +179,10 @@ struct map *get_target_map(const char *target, struct nsinfo *nsi, bool user)
- 		struct map *map;
+> This patch adds the required free.
  
- 		map = dso__new_map(target);
--		if (map && map->dso)
-+		if (map && map->dso) {
-+			nsinfo__put(map->dso->nsinfo);
- 			map->dso->nsinfo = nsinfo__get(nsi);
-+		}
- 		return map;
- 	} else {
- 		return kernel_get_module_map(target);
+> Fixes: acae8b36cded0ee6 ("perf header: Add die information in CPU topology")
+
+So, I CC the author of the patch and its committer, using this shell
+script:
+
+  $ cat ~/bin/fixes
+  #!/bin/bash
+  
+  cset=$1
+  if [ $# -eq 0 ] ; then
+  	read cset
+  fi
+  git show --pretty=fuller $cset | grep '^\(Author\|Commit\): ' | sed -r 's/.*: +/Cc: /g' | grep -v "Arnaldo Carvalho de Melo" | sort -u
+  echo Fixes: `git one $cset`
+  $
+  $ grep one -B1 ~/.gitconfig
+  [alias]
+	one = show -s --pretty='format:%h (\"%s\")'
+  $
+  $ fixes acae8b36cded0ee6
+  Cc: Kan Liang <kan.liang@linux.intel.com>
+  Fixes: acae8b36cded0ee6 ("perf header: Add die information in CPU topology")
+  $
+
+Normally I copy the cset SHA and, in vim, select it and run !fixes, i.e.
+
+:'<,'>!fixes
+
+Thanks, applied.
+
+- Arnaldo
+
+> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> ---
+>  tools/perf/util/env.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index ebc5e9ad35db21d1..6c765946ef6f591c 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -186,6 +186,7 @@ void perf_env__exit(struct perf_env *env)
+>  	zfree(&env->cpuid);
+>  	zfree(&env->cmdline);
+>  	zfree(&env->cmdline_argv);
+> +	zfree(&env->sibling_dies);
+>  	zfree(&env->sibling_cores);
+>  	zfree(&env->sibling_threads);
+>  	zfree(&env->pmu_mappings);
+> -- 
+> 2.31.1
+> 
+
+-- 
+
+- Arnaldo
