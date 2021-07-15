@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D35C07E96
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9288CC47E48
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66711613F8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801E1613F6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232655AbhGOQKd (ORCPT
+        id S233758AbhGOQKe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jul 2021 12:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47056 "EHLO
+        Thu, 15 Jul 2021 12:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232505AbhGOQKb (ORCPT
+        with ESMTP id S232404AbhGOQKb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Thu, 15 Jul 2021 12:10:31 -0400
 Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF36C06175F;
-        Thu, 15 Jul 2021 09:07:36 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id t5so8457535wrw.12;
-        Thu, 15 Jul 2021 09:07:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD9EC061764;
+        Thu, 15 Jul 2021 09:07:37 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id v5so8502314wrt.3;
+        Thu, 15 Jul 2021 09:07:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mKOsdep4+AHMtJyYdkPwuXhq2BB+9CFGuNQWr4puijY=;
-        b=iM2CI+kFsbchyBJETgmZhp6HPqxuYV/XVicaXJIFhvcjuNkShQsO0QxvJ4zHiCeW78
-         WRzjK5SlWjHlGhL4RBq3G7UjnsNe3e4UjR8Fgz+MG5CDxmETSJJ+7iUQOVMEIRnj3T/o
-         2bJrAtj2d41HYUvx0Obi2Rfd6Qyzp9dRvWGh7731sG85PgpxvfzAkLHGJjyE9PR6X1Ob
-         gdiLigMFHlM8nkRey8GutnxuWfOp8psX+lF137qJO7wLR2p2hC2o2R7waudjSZhWdM0v
-         xgRkcYgfYrY3kod3q2m9MGkUGyVKS7/lj7q4MiAFOmDMoLb02kcxkTZO0Pv7JG0QzyeT
-         cLug==
+        bh=BXFdRwfSh/bEwWtJAAKqaZ/Dfgb0l78ZFWkOfVRAIR8=;
+        b=s7QAG04/uowor3SEV4/GhhxGEGNY/ExxjwKTHa0V0AIoGa4Kf5XxX6q+owJh1DCCme
+         r3z9XIBw/7JWTysK5sB6hnPpz4flnyI2EWXDJl5jSm/pIgClWoVMjCqbIRKt3IL+scoL
+         URWg5tq79kb9stUL43kVfR2cIMvFepSaujievngMiWU4eK3HdGNwXzgiA6r1CNjFLNAM
+         ANskkpb5fyU+GJBx9YqpyUqpK9bClrkaGrzPNXMz6yUhREQCLQFEhQODBlPVYUNCC1Xp
+         VqisP7FQGVEi/Pqd8hJ310d4+GxTRlgz6jqSCK+tjKJs1s5Vjpj88swLoa/56yC01/Cd
+         tKfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mKOsdep4+AHMtJyYdkPwuXhq2BB+9CFGuNQWr4puijY=;
-        b=kRAYkxY4cIaofrcQS0P+ulrZQXU4Od13AqrqsreL2MLHZm0/hyNd8f1FlmBuP0OHRE
-         xk/peC8a4p/u5ZtYauCR0rrKgRfcDaT48gKiDMYU7RHXh32tLHu348apAoTBzbnzyj5w
-         mws3YTricDlCZUnEE0OoWLYUfCY6wsYhPXaTmiefvMonSysx8ra6uOmy5vQ3ROkShZ0F
-         Hb/U7vMMyIbZ6xE1zLSqegtxqZPbEb+xeyR691MSiHE0XxESUz/Ens8xzZtAHFLW5H8U
-         NgCUrG58PgHsXO6qRyJ+LCsSpSICE8wbklf8DWQu8b+EW0IyTk/7IJjg1mdTatsT5vas
-         xuHg==
-X-Gm-Message-State: AOAM533Pc9PaPPDSWBGDlxzARgCa4l9XwRNjKUQpT4VwCfgdndR3fTke
-        LCsOlAQHLK8HyvZ2emeiRlw=
-X-Google-Smtp-Source: ABdhPJyBhxVrfItxsG76O6AbnGJn7MT/H95UPG8tGNmYuhAFJRXPBjUY0NPqoR0mWXxlGEoSusO1Ig==
-X-Received: by 2002:a5d:4e4d:: with SMTP id r13mr6570410wrt.224.1626365255334;
-        Thu, 15 Jul 2021 09:07:35 -0700 (PDT)
+        bh=BXFdRwfSh/bEwWtJAAKqaZ/Dfgb0l78ZFWkOfVRAIR8=;
+        b=LO6skMq4rwpB8uRy7MD4wK10VvRuDEkTXoDLH2PuUZjwnutnhS5TtgLj9WDM+qHKJ4
+         wWVx3CkqEgfuaj3yxJ7ENkQzTDCamCDxMYPvC3IE3eAvsSRQ/15SDwWd3mZpCS7QFVLB
+         qo7AWANkyzvxlofqm/HEBSTA/sG2IbgKgdJEB/x6qhGQQ6WhcdAnDzPmD2gic8aaK3SL
+         fHxhG+1mtWlaohmGKpIVMSN5wHAB4A+tfn4XzfKNkLvQXpZv7KKbo4e4NzhR800jSFfJ
+         CMmmXcxlsAooOZdx86yPG7SddzI+prXzQD54WR/GAXA6H6UANralgxPr0AeMAwsYZcqt
+         mllg==
+X-Gm-Message-State: AOAM532E2iO5HGHLQW6vsCeAqrzPDXYi8Rc8ZLR5XZ/4VtvHJfVr3uVk
+        cyjifEk3HbdK4HVa79uStT0=
+X-Google-Smtp-Source: ABdhPJzwd0IW2F5i3hDXQeeJf2tHBVKo+KVqevdBncEuIQ0+G4Z93HMHLu6+pTjXtrBNllgl1L/LCQ==
+X-Received: by 2002:a5d:408f:: with SMTP id o15mr6645193wrp.342.1626365256439;
+        Thu, 15 Jul 2021 09:07:36 -0700 (PDT)
 Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.34
+        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 09:07:34 -0700 (PDT)
+        Thu, 15 Jul 2021 09:07:35 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [PATCH 07/20] perf test: maps__merge_in: fix memory leak of maps
-Date:   Thu, 15 Jul 2021 18:07:12 +0200
-Message-Id: <a1a29b97a58738987d150e94d4ebfad0282fb038.1626343282.git.rickyman7@gmail.com>
+Subject: [PATCH 08/20] perf env: fix memory leak of cpu_pmu_caps
+Date:   Thu, 15 Jul 2021 18:07:13 +0200
+Message-Id: <6ba036a8220156ec1f3d6be3e5d25920f6145028.1626343282.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626343282.git.rickyman7@gmail.com>
 References: <cover.1626343282.git.rickyman7@gmail.com>
@@ -80,31 +80,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reports a memory leak when running the perf test
-"65: maps__merge_in". This is the second and final patch addressing
-these memory leaks.
-This time, the problem is simply that the maps object is never
-destructed.
+ASan reports memory leaks while running the perf test
+"83: Zstd perf.data compression/decompression".
+The first of the leaks is caused by env->cpu_pmu_caps not being freed.
 
-This patch adds the missing maps__exit call.
+This patch adds the missing (z)free inside perf_env__exit.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/tests/maps.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/env.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-index edcbc70ff9d66e22..1ac72919fa358601 100644
---- a/tools/perf/tests/maps.c
-+++ b/tools/perf/tests/maps.c
-@@ -116,5 +116,7 @@ int test__maps__merge_in(struct test *t __maybe_unused, int subtest __maybe_unus
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 6c765946ef6f591c..cec2e6cad8aabfe7 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -191,6 +191,7 @@ void perf_env__exit(struct perf_env *env)
+ 	zfree(&env->sibling_threads);
+ 	zfree(&env->pmu_mappings);
+ 	zfree(&env->cpu);
++	zfree(&env->cpu_pmu_caps);
+ 	zfree(&env->numa_map);
  
- 	ret = check_maps(merged3, ARRAY_SIZE(merged3), &maps);
- 	TEST_ASSERT_VAL("merge check failed", !ret);
-+
-+	maps__exit(&maps);
- 	return TEST_OK;
- }
+ 	for (i = 0; i < env->nr_numa_nodes; i++)
 -- 
 2.31.1
 
