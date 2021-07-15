@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2D4C47E4B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A24C12002
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F9A613D7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8157613D3
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235167AbhGOBgu (ORCPT
+        id S235345AbhGOBgx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jul 2021 21:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45642 "EHLO
+        Wed, 14 Jul 2021 21:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234878AbhGOBgu (ORCPT
+        with ESMTP id S235277AbhGOBgw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jul 2021 21:36:50 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CB8C06175F
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:33:57 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id i190-20020a3786c70000b02903b54f40b442so2629052qkd.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:33:56 -0700 (PDT)
+        Wed, 14 Jul 2021 21:36:52 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C66CC061764
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:33:59 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id h1-20020a255f410000b02905585436b530so5363943ybm.21
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:33:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=q4BHOu/wzrpYqkE7mCMBCj6/ZE93wztWfxyCm7cmFBc=;
-        b=W70LOBXjGPw6qkIkmwPRBu9X/rO3vxDEUhYFmK3v7r9Giv42BOe3r6w8KP6RaUZmhU
-         HDiV2CKSIKjVwY6QJduve0Hr6z65b2WegIiK6S5zx6seC6AdmyJx0C1yqrm8psZCMHZG
-         hQDXqvzhdvmetv6zPO8zFXawoxAyFWVvxcqUrnaRL6Ls69bEYLoi0qffdliEJtKQYrP+
-         oJiVzVgZRVLFppHjuz8ZNepjeZG29nQ1DlB1Js3nZbLDNabTEsbjHOSL/aUMKjTneGam
-         taR+egNJn3lVJNPpsX+EMc3n7ZB89Ybb6CvKtGR58kGXjZb1weYiDnTzo2ZvoHsh1JNL
-         slhQ==
+        bh=1xMjO4kgd9GThnwLrzWb6z2olJzN511MeRsxBTktrzk=;
+        b=pRHGVkQD82aM2yJLyYhoIsWE+JyJ2wImCtJzcHe4/zJiRulZVfj42YGWY58XGlIXdV
+         5LYqcPYKAL5K2+GrKgD0g9zb+LCgiC2+WD1efwrmxYxAl6xpJEO7qHTQnkMk2rSbOp2c
+         kwivQbYIiyFTMMF8c5LxseFw2ku7iCZeEXz2yNFGLhmo/R1LHHDn7cEe+Nr4VbCCEQn7
+         ZtY0VB/quv6SH8ELwa+HWCCudGga4JtSXzH0BXu0QIhcyKTi0DrM6F1DSnAyp2Zi2G0V
+         36HW9ohU2uMy8l/Q3o/wFm5VZ+SI2DhIbcbteEf5P9yR3PUiTi6AjPx/3Jqi1KojtC9h
+         P7fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=q4BHOu/wzrpYqkE7mCMBCj6/ZE93wztWfxyCm7cmFBc=;
-        b=jjyYJfuNUTxHZo8KXC0QmGlI+QMQFQA1GiNV3WZnnTxDeehzT9xRzswJLVPlYVWze6
-         V/GkQZ31DhApLWJUbDHoK97mdT9DxoPN6j+fAp16djrcYeS2RJwM8OCtFENlRt4C/UE1
-         bCp2Z/zy6kc/OQQ0m2HbApbpcEa/dL4vgpfI/EYDpBUmrZiptmZmnQq5b5Tb30VaDLUM
-         js1YDkw9a0orjLKi6S2IE1zKmxRU6KEJm0JTkdrOaVP3FH63xnSyVUispZMiSkc/0Olp
-         /b1vzbHUSmVhn8E0GgNRkfqsX9UNE7YgWrASeKLr7+49SZj+BSA6/pF6OVTYtWQDiIrb
-         aqdQ==
-X-Gm-Message-State: AOAM533mQemSUdEMxavSWirheAcviJdYK+IAkAbQxeTk04Uh5lPCd5ss
-        6nsgwnxXe+tqY1GG5mofCRt5YV+VfrcW
-X-Google-Smtp-Source: ABdhPJyUmDFahCxgVA4ss9+o7IBSi9Md8e1si6j9kEE5+qw0mTEqSY8II6I+kFzgOOAxk7OhXz4KHrG3YN9t
+        bh=1xMjO4kgd9GThnwLrzWb6z2olJzN511MeRsxBTktrzk=;
+        b=V6egoFT+qNjqOa42u387KfL3viZuLuDXuW+4jorZGn0aH1bVKOD+YFrNm/KfdpMufg
+         nUW5Lw+QbVML31qPvFv0S7Mykp2nB9QbBEPZ3QIwWTGk5dwRs4fH3H/wMr/vul5lvFxh
+         GdnoSHJnYh4pD0YdWOqJcbAZ6CtTHZiDfJBLiWjAEIYrbzUGxlHe+F0GBpXrj2dn86lz
+         04ZcxK3og9z/eUCol163okoOdlmIltEJlT3VDHE3dEpg3cunzfDTR5I0H7OwusEx/UMx
+         /2xXSdl7JpmlYWEQpVcq3egWYWO09S39gX3fUZIh7tIq3+t6fUR5dGbjEakog6AOg1Af
+         u/Zg==
+X-Gm-Message-State: AOAM5301d4eNOQeSoFEkiK4MXJEusIqhznc72bPyLlB+WLcaInbr5aMc
+        mZI2kASOGGn68T6UOrxADBwHAOeJUVD5
+X-Google-Smtp-Source: ABdhPJyOLYEmVqY779oa560cGqUl3Entvz5QJopYEhEmjtBsyZCK85zVwW3Pn4IcYC6QO5vVsWKtIP6J/5m+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:c0a3:e3b0:6b14:de32])
- (user=irogers job=sendgmr) by 2002:a05:6214:172:: with SMTP id
- y18mr1256939qvs.14.1626312836130; Wed, 14 Jul 2021 18:33:56 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 18:33:37 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:4d2:: with SMTP id u18mr1321425ybp.158.1626312838591;
+ Wed, 14 Jul 2021 18:33:58 -0700 (PDT)
+Date:   Wed, 14 Jul 2021 18:33:38 -0700
 In-Reply-To: <20210715013343.2286699-1-irogers@google.com>
-Message-Id: <20210715013343.2286699-2-irogers@google.com>
+Message-Id: <20210715013343.2286699-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20210715013343.2286699-1-irogers@google.com>
 X-Mailer: git-send-email 2.32.0.402.g57bb445576-goog
-Subject: [PATCH 1/7] perf doc: Fix perfman.info build
+Subject: [PATCH 2/7] perf doc: Fix doc.dep
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,83 +77,67 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Before this change 'make perfman.info' fails as cat-texi.perl is
-missing. It also fails as the makeinfo output isn't written into the
-appropriate file. Add cat-texi.perl from git. Add missing output file
-flag for makeinfo.
+The doc.dep dependencies for the Makefile fail to build as
+build-docdep.perl is missing. Add this file from git.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/Makefile      |  2 +-
- tools/perf/Documentation/cat-texi.perl | 46 ++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+), 1 deletion(-)
- create mode 100755 tools/perf/Documentation/cat-texi.perl
+ tools/perf/Documentation/build-docdep.perl | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100755 tools/perf/Documentation/build-docdep.perl
 
-diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index 6e54979c2124..859ec1496716 100644
---- a/tools/perf/Documentation/Makefile
-+++ b/tools/perf/Documentation/Makefile
-@@ -331,7 +331,7 @@ $(OUTPUT)perfman.texi: $(MAN_XML) cat-texi.perl
- 	mv $@+ $@
- 
- $(OUTPUT)perfman.info: $(OUTPUT)perfman.texi
--	$(QUIET_MAKEINFO)$(MAKEINFO) --no-split --no-validate $*.texi
-+	$(QUIET_MAKEINFO)$(MAKEINFO) --no-split --no-validate -o $@ $*.texi
- 
- $(patsubst %.txt,%.texi,$(MAN_TXT)): %.texi : %.xml
- 	$(QUIET_DB2TEXI)$(RM) $@+ $@ && \
-diff --git a/tools/perf/Documentation/cat-texi.perl b/tools/perf/Documentation/cat-texi.perl
+diff --git a/tools/perf/Documentation/build-docdep.perl b/tools/perf/Documentation/build-docdep.perl
 new file mode 100755
-index 000000000000..14d2f8341517
+index 000000000000..ba4205e0302a
 --- /dev/null
-+++ b/tools/perf/Documentation/cat-texi.perl
++++ b/tools/perf/Documentation/build-docdep.perl
 @@ -0,0 +1,46 @@
-+#!/usr/bin/perl -w
++#!/usr/bin/perl
 +
-+use strict;
-+use warnings;
++my %include = ();
++my %included = ();
 +
-+my @menu = ();
-+my $output = $ARGV[0];
-+
-+open my $tmp, '>', "$output.tmp";
-+
-+while (<STDIN>) {
-+	next if (/^\\input texinfo/../\@node Top/);
-+	next if (/^\@bye/ || /^\.ft/);
-+	if (s/^\@top (.*)/\@node $1,,,Top/) {
-+		push @menu, $1;
++for my $text (<*.txt>) {
++    open I, '<', $text || die "cannot read: $text";
++    while (<I>) {
++	if (/^include::/) {
++	    chomp;
++	    s/^include::\s*//;
++	    s/\[\]//;
++	    $include{$text}{$_} = 1;
++	    $included{$_} = 1;
 +	}
-+	s/\(\@pxref\{\[(URLS|REMOTES)\]}\)//;
-+	s/\@anchor\{[^{}]*\}//g;
-+	print $tmp $_;
++    }
++    close I;
 +}
-+close $tmp;
 +
-+print '\input texinfo
-+@setfilename gitman.info
-+@documentencoding UTF-8
-+@dircategory Development
-+@direntry
-+* Git Man Pages: (gitman).  Manual pages for Git revision control system
-+@end direntry
-+@node Top,,, (dir)
-+@top Git Manual Pages
-+@documentlanguage en
-+@menu
-+';
++# Do we care about chained includes???
++my $changed = 1;
++while ($changed) {
++    $changed = 0;
++    while (my ($text, $included) = each %include) {
++	for my $i (keys %$included) {
++	    # $text has include::$i; if $i includes $j
++	    # $text indirectly includes $j.
++	    if (exists $include{$i}) {
++		for my $j (keys %{$include{$i}}) {
++		    if (!exists $include{$text}{$j}) {
++			$include{$text}{$j} = 1;
++			$included{$j} = 1;
++			$changed = 1;
++		    }
++		}
++	    }
++	}
++    }
++}
 +
-+for (@menu) {
-+	print "* ${_}::\n";
++while (my ($text, $included) = each %include) {
++    if (! exists $included{$text} &&
++	(my $base = $text) =~ s/\.txt$//) {
++	print "$base.html $base.xml : ", join(" ", keys %$included), "\n";
++    }
 +}
-+print "\@end menu\n";
-+open $tmp, '<', "$output.tmp";
-+while (<$tmp>) {
-+	print;
-+}
-+close $tmp;
-+print "\@bye\n";
-+unlink "$output.tmp";
 -- 
 2.32.0.402.g57bb445576-goog
 
