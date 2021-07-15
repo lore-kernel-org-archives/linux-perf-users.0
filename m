@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC80C12002
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD36C12002
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9802D613D0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2909C613D1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235717AbhGOBhC (ORCPT
+        id S235972AbhGOBhF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jul 2021 21:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
+        Wed, 14 Jul 2021 21:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235822AbhGOBhC (ORCPT
+        with ESMTP id S236037AbhGOBhE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jul 2021 21:37:02 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A689AC061762
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:08 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id z6-20020a05622a0606b029025368c044d9so3164970qta.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:08 -0700 (PDT)
+        Wed, 14 Jul 2021 21:37:04 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 147FFC061760
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:11 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id h7-20020a5b0a870000b029054c59edf217so5428577ybq.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=DTdO0iYUr3tsZd3QdGCYNG4c6LNiO3CfWVyTLuAjf0U=;
-        b=DLC6ZUlopRThS5wwEXziEwgZUsiQFr/WMkkDWPQan+kgcacxeTFTudfycoLOwM1Fqu
-         qvuddKq/ztcWHP1ZRVJLPML+VKYNz3kMw8dGc1xsVQWKMAdhCoEGI3gsFcEk6VjNAv1R
-         VyOaQx+xdK8YedJOwuFZADfPF0JTZ+ekFCu7HAuM5VbV6cBvORcdTZ9kCHdwmOGZVnwY
-         xmK6IPW3C2JpGGPA2fjwyYNh/KT85GCwwJC56LLN24V7Dj+rW9BdOqciLuBe24Lbi/yD
-         7lD4XmTBO/FgC2G2sEKxGqlvNrfTQet6tE8nUq+P1YaBteG3TglLwy1feODSA8BxCgAd
-         ugbA==
+        bh=1wHURlKzmxHcDsgqqsL7boqc8awDzR5MT7ZrdY0GfAc=;
+        b=FhIUcbYKQWuBLjEcw6rTeD0kQZ0N62gcAnyt1AKJz2x9Dz1jbevUS5LNAVpsU7A6Si
+         TrCpgnD/zGbmGc0F3owUEDbIG/IdEwNiqKYy0MymsXIVwbSrglxV6cUgVIaFzR8avAOY
+         NIIid6gPuG/Cgd95Eyz7GAXtwdLtQLj9U1RGFA4RKcD5Rj4sIa6eqC/AJKbmNy4WCOiq
+         x0HRQSMjl9+i+256MIGg2LLIxkGQ5MzUACPoLufGda/088yFbgWeP1enqsIwFax/hExl
+         0OR8emoyXes6iW5MjspwCnWiaJMubsXfbIrEPqCdCqv3vOspxxrtte3B2MkQ8R22Hn8R
+         O1rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=DTdO0iYUr3tsZd3QdGCYNG4c6LNiO3CfWVyTLuAjf0U=;
-        b=HK+DNUlKQHIAVTXnL0k7C6TCKsjPm20OYAwga49Bn8nm0L9kWhzIlZKQyYwejUtVP5
-         r2O2y2OlTJL9IZFExDPUWN0GDyd2XMjo0MR8TNLM2N6EI6Q+NfVMw3dPCVU/qyZCcF6g
-         UOOwmLFZnRRM5hdO/XUy5yZ31XmxJzgYGn7jh7CWTb954bHgBqtSgGcg2cqBkJBwDNZo
-         ywS3fhDMxYmsZCqVraHoDDtSlTMNHntlSobuZeFRYSoVUgDC7+mM6BNbNV/7V0T8Ec6g
-         47H0me4dWUpiHxCGDVS930moMP9XWnmQ8snQgr0I1v/C00hHVXNZyLz/n7sQxuW7C+Fo
-         fkmQ==
-X-Gm-Message-State: AOAM531G1maVWIVjVoLrIx2ipLfN2qjZCgGxK2VciFalojwG9DlhJBMx
-        U3YDi7BUpVV8vrwROchk5JOf+eknPpLJ
-X-Google-Smtp-Source: ABdhPJzDBG+wIjPM20CutNVzhPSyKssLfx3uW1s6fh/ZEz7S4KilDePRV36i72b4ODtJgGCPbSQ1zNvzOOPm
+        bh=1wHURlKzmxHcDsgqqsL7boqc8awDzR5MT7ZrdY0GfAc=;
+        b=IGppigG+gXGAtEHrhctnYwAVaNxjOljFVP5frhDcPa0eyyxZnhiN8wfds8Um0BLMXY
+         lP2PE7pouzoh1PGFbxk480arAwI0gjaJf4b2LyX7Nr8GSTtNFep8C55VmyHklIpXp3JQ
+         p9ezZqcW4qdKWzeJ/rzC0CBSqjvbN7icCc0rZrHr3WgbxvOP4DM8YnVNmtZq/M/GdBpX
+         w5Cis3+CZLrGocnrPLRFU1dyFavERQi8fscjsnQsiSmR1Bb6NBytBmrknHKKXVqKz4RQ
+         hQGuq9v9mpXGQZ8LB40dlFO3Dk88b5DgE368tjVrsozznxD9PetSYvhsi/7lGuOf+a8e
+         u+lQ==
+X-Gm-Message-State: AOAM532uXGVkb2F3utl2JxtmEu2Saen7hblDMFUinqZvaTOdQpCzaFHB
+        pyGcC1D6UR5W0foc4MA2vVpq1I0qi9oi
+X-Google-Smtp-Source: ABdhPJxbVDXRTy6sbjAARKBzB/mvgBEYIQUu73ZC19a6yWwKDW9uGGj/kjofLj71Lf31YTAM4v1rPCstk1XF
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:c0a3:e3b0:6b14:de32])
- (user=irogers job=sendgmr) by 2002:a05:6214:2623:: with SMTP id
- gv3mr1057146qvb.46.1626312847812; Wed, 14 Jul 2021 18:34:07 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 18:33:42 -0700
+ (user=irogers job=sendgmr) by 2002:a25:8146:: with SMTP id
+ j6mr1349646ybm.28.1626312850299; Wed, 14 Jul 2021 18:34:10 -0700 (PDT)
+Date:   Wed, 14 Jul 2021 18:33:43 -0700
 In-Reply-To: <20210715013343.2286699-1-irogers@google.com>
-Message-Id: <20210715013343.2286699-7-irogers@google.com>
+Message-Id: <20210715013343.2286699-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20210715013343.2286699-1-irogers@google.com>
 X-Mailer: git-send-email 2.32.0.402.g57bb445576-goog
-Subject: [PATCH 6/7] perf doc: Remove howto-index.sh related references.
+Subject: [PATCH 7/7] perf doc: Reorganize ARTICLES variables.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,50 +77,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-howto-index.sh exists in git but not in perf, as such targets that
-depend upon it fail. Remove such failing targets.
+Place early, as they are in the git Makefile. Remove references to a
+'technical` directory that doesn't exist in perf.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/Makefile | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ tools/perf/Documentation/Makefile | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index c5ec17ee5bb0..9d991b14ac4b 100644
+index 9d991b14ac4b..6e7b88917ca0 100644
 --- a/tools/perf/Documentation/Makefile
 +++ b/tools/perf/Documentation/Makefile
-@@ -242,8 +242,7 @@ CLEAN_FILES =									\
- 	$(MAN_HTML) $(addsuffix +,$(MAN_HTML))					\
- 	$(DOC_HTML) $(DOC_MAN1) $(DOC_MAN5) $(DOC_MAN7)				\
- 	$(OUTPUT)*.texi $(OUTPUT)*.texi+ $(OUTPUT)*.texi++			\
--	$(OUTPUT)perf.info $(OUTPUT)perfman.info				\
--	$(OUTPUT)howto-index.txt $(OUTPUT)howto/*.html $(OUTPUT)doc.dep		\
-+	$(OUTPUT)perf.info $(OUTPUT)perfman.info $(OUTPUT)doc.dep		\
- 	$(OUTPUT)technical/api-*.html $(OUTPUT)technical/api-index.txt
- clean:
- 	$(call QUIET_CLEAN, Documentation) $(RM) $(CLEAN_FILES)
-@@ -294,21 +293,11 @@ $(patsubst %.txt,%.texi,$(MAN_TXT)): %.texi : %.xml
- 	$(DOCBOOK2X_TEXI) --to-stdout $*.xml >$@+ && \
- 	mv $@+ $@
+@@ -2,6 +2,10 @@
+ include ../../scripts/Makefile.include
+ include ../../scripts/utilities.mak
  
--howto-index.txt: howto-index.sh $(wildcard howto/*.txt)
--	$(QUIET_GEN)$(RM) $@+ $@ && \
--	'$(SHELL_PATH_SQ)' ./howto-index.sh $(wildcard howto/*.txt) >$@+ && \
--	mv $@+ $@
++ARTICLES =
++# with their own formatting rules.
++SP_ARTICLES =
++
+ MAN1_TXT= \
+ 	$(filter-out $(addsuffix .txt, $(ARTICLES) $(SP_ARTICLES)), \
+ 		$(wildcard perf-*.txt)) \
+@@ -16,13 +20,6 @@ _MAN_HTML=$(patsubst %.txt,%.html,$(MAN_TXT))
+ MAN_XML=$(addprefix $(OUTPUT),$(_MAN_XML))
+ MAN_HTML=$(addprefix $(OUTPUT),$(_MAN_HTML))
+ 
+-ARTICLES =
+-# with their own formatting rules.
+-SP_ARTICLES =
+-API_DOCS = $(patsubst %.txt,%,$(filter-out technical/api-index-skel.txt technical/api-index.txt, $(wildcard technical/api-*.txt)))
+-SP_ARTICLES += $(API_DOCS)
+-SP_ARTICLES += technical/api-index
 -
- $(patsubst %,%.html,$(ARTICLES)) : %.html : %.txt
- 	$(QUIET_ASCIIDOC)$(ASCIIDOC) -b $(ASCIIDOC_HTML) $*.txt
- 
- WEBDOC_DEST = /pub/software/tools/perf/docs
- 
--$(patsubst %.txt,%.html,$(wildcard howto/*.txt)): %.html : %.txt
--	$(QUIET_ASCIIDOC)$(RM) $@+ $@ && \
--	sed -e '1,/^$$/d' $< | $(ASCIIDOC) -b $(ASCIIDOC_HTML) - >$@+ && \
--	mv $@+ $@
--
- # UNIMPLEMENTED
- #install-webdoc : html
- #	'$(SHELL_PATH_SQ)' ./install-webdoc.sh $(WEBDOC_DEST)
+ _DOC_HTML = $(_MAN_HTML)
+ _DOC_HTML+=$(patsubst %,%.html,$(ARTICLES) $(SP_ARTICLES))
+ DOC_HTML=$(addprefix $(OUTPUT),$(_DOC_HTML))
 -- 
 2.32.0.402.g57bb445576-goog
 
