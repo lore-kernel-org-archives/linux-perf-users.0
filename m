@@ -7,66 +7,69 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1EE8C636C9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 393FFC636C8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7D46613D4
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115DD613D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 20:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbhGOU0M (ORCPT
+        id S229937AbhGOU2B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jul 2021 16:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57166 "EHLO mail.kernel.org"
+        Thu, 15 Jul 2021 16:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229531AbhGOU0L (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jul 2021 16:26:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DF5D0613D3;
-        Thu, 15 Jul 2021 20:23:17 +0000 (UTC)
+        id S229700AbhGOU2B (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 15 Jul 2021 16:28:01 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A2336613D0;
+        Thu, 15 Jul 2021 20:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626380598;
-        bh=NAA3pvCu1mpUmxXH7m15oH4LrJfZEDDX9RdjpZ4Ql6E=;
+        s=k20201202; t=1626380707;
+        bh=0KsGtkqOtNJIx0EmoPSRoxO2JdEUeXSwh4aAVfBC7yk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J6ZWywj6Y87TtNVIvsZqXPqCIjkQXrtmVJfXJNWPNb04arBOYMHZa7C2Ub9RBniyY
-         eS3DdAnuBaaiSf+8Z0rt3SYlv13mHnuxLN2zLCXrsBLJmVsF/9Mbm4e6Wp6IRKptIq
-         ay4h1KB1X0/IKVw5Lyfry/vTbZnUyC+n9XCP9vaA1uzsrjJh0lPS8fQ+MeNed/ro3d
-         GHkXawmIFM4ORVHHJQAJcMMzwU7LeKZ1rh8OCksowQ2iF08oQrU+af83P1/8bdMkKG
-         ydpYnaf9JBhqTmAtqekFTWi9H/mh1Ba5qYFzRz7/OaKh0mwbec4iYA6FIfXmvBU9Rk
-         LXWHSU2LAoaDQ==
+        b=H/DA7RFGacnK0kFiABNN1cJryMJmb6l5fvKqFleiv15Lr3hOr8K9E+sXLvmkoTd26
+         EovO0M/hfQyuSTfGh1EWSw5DV79oXqTdmNMH8oBFayG9Jf/d3tiTwz+JmHArA5G/3Z
+         XcaU8EsqAM/uLISEOV3hUtosXf/j8ZS7Hf7wo82n7zED4H4qDAVJsjWnP213MWIJrn
+         1FOLptjJ8cuDDJVZ6We7K4EOHHS+6e/5UvB0bCbd/Q1RIVHXfHplKnA7kdq7OWm7da
+         GDxbusGUiXh8cnPfONy0dk5P2teOLm1B2xKnbm5imnTaYmowilD4mqu2ivpTo0SzV3
+         D0yCFBk43c6Qg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 55306403F2; Thu, 15 Jul 2021 17:23:15 -0300 (-03)
-Date:   Thu, 15 Jul 2021 17:23:15 -0300
+        id 4F7CB403F2; Thu, 15 Jul 2021 17:25:05 -0300 (-03)
+Date:   Thu, 15 Jul 2021 17:25:05 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Milian Wolff <milian.wolff@kdab.com>,
-        Ian Rogers <irogers@google.com>,
+Cc:     Ian Rogers <irogers@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 12/20] perf script: release zstd data
-Message-ID: <YPCZMzf/X8xlOws3@kernel.org>
+Subject: Re: [PATCH 13/20] perf script: fix memory leaks in perf_script
+Message-ID: <YPCZoa/IwENjYPe5@kernel.org>
 References: <cover.1626343282.git.rickyman7@gmail.com>
- <39388e8cc2f85ca219ea18697a17b7bd8f74b693.1626343282.git.rickyman7@gmail.com>
+ <5ee73b19791c6fa9d24c4d57f4ac1a23609400d7.1626343282.git.rickyman7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <39388e8cc2f85ca219ea18697a17b7bd8f74b693.1626343282.git.rickyman7@gmail.com>
+In-Reply-To: <5ee73b19791c6fa9d24c4d57f4ac1a23609400d7.1626343282.git.rickyman7@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jul 15, 2021 at 06:07:17PM +0200, Riccardo Mancini escreveu:
-> ASan reports several memory leak while running the perf test
+Em Thu, Jul 15, 2021 at 06:07:18PM +0200, Riccardo Mancini escreveu:
+> ASan reports several memory leaks while running the perf test
 > "82: Use vfs_getname probe to get syscall args filenames".
-> One of the leaks is caused by zstd data not being released on exit in
-> perf-script.
+> Two of these are caused by some refcounts not being decreased on
+> perf-script exit, namely script.threads and script.cpus.
 > 
-> This patch adds the missing zstd_fini.
+> This patch adds the missing __put calls in a new perf_script__exit
+> function, which is called at the end of cmd_script.
+> 
+> This patch concludes the fixes of all remaining memory leaks in perf
+> test "82: Use vfs_getname probe to get syscall args filenames".
 
-Fixes: b13b04d9382113f7 ("perf script: Initialize zstd_data")
+Fixes: cfc8874a48599249 ("perf script: Process cpu/threads maps")
 
 Thanks, applied.
 
@@ -75,21 +78,34 @@ Thanks, applied.
  
 > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 > ---
->  tools/perf/builtin-script.c | 1 +
->  1 file changed, 1 insertion(+)
+>  tools/perf/builtin-script.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
 > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 8c03a9862872d495..bae0e5b72c0e6050 100644
+> index bae0e5b72c0e6050..064da7f3618d39d8 100644
 > --- a/tools/perf/builtin-script.c
 > +++ b/tools/perf/builtin-script.c
-> @@ -4143,6 +4143,7 @@ int cmd_script(int argc, const char **argv)
->  		zfree(&script.ptime_range);
+> @@ -2601,6 +2601,12 @@ static void perf_script__exit_per_event_dump_stats(struct perf_script *script)
 >  	}
+>  }
 >  
-> +	zstd_fini(&(session->zstd_data));
+> +static void perf_script__exit(struct perf_script *script)
+> +{
+> +	perf_thread_map__put(script->threads);
+> +	perf_cpu_map__put(script->cpus);
+> +}
+> +
+>  static int __cmd_script(struct perf_script *script)
+>  {
+>  	int ret;
+> @@ -4146,6 +4152,7 @@ int cmd_script(int argc, const char **argv)
+>  	zstd_fini(&(session->zstd_data));
 >  	evlist__free_stats(session->evlist);
 >  	perf_session__delete(session);
+> +	perf_script__exit(&script);
 >  
+>  	if (script_started)
+>  		cleanup_scripting();
 > -- 
 > 2.31.1
 > 
