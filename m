@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A8CC47E4B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FFCC07E96
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 435EF613F6
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0116A613F1
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 16:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234995AbhGOQKk (ORCPT
+        id S235191AbhGOQKn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jul 2021 12:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47120 "EHLO
+        Thu, 15 Jul 2021 12:10:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234130AbhGOQKh (ORCPT
+        with ESMTP id S234575AbhGOQKi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jul 2021 12:10:37 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B970C0613DB;
-        Thu, 15 Jul 2021 09:07:44 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id d2so8560394wrn.0;
-        Thu, 15 Jul 2021 09:07:44 -0700 (PDT)
+        Thu, 15 Jul 2021 12:10:38 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1DAC061762;
+        Thu, 15 Jul 2021 09:07:45 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id o30-20020a05600c511eb029022e0571d1a0so3987444wms.5;
+        Thu, 15 Jul 2021 09:07:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=O+9Ne/QX0Bs3iWrwgum6FPcBqk+/cS+YWhh75mjH/Og=;
-        b=fwPRaLU7B1RgsPmB8i/mQv2O7dBKqe6ZIPqwBpz0easFPpclFZrpS+oMr6a9W1Pa/+
-         cHm2G75FnSvTfGPsb7qwQEyiWG8hpGar+FilZVL/NVnUZLSpPumJfYwj9DP4MZKvGWnm
-         pilg6VALYFOUtDkG/cUH8K5hm7lqnw2plLTSD90eRb4WOkuCamZ3X+Fzncyw3vp8MG0B
-         C1d1+GWERnWkWSNh6JdVRt6At9vx1owfg15m6hC4nCiVxsycjNlJVi11iquBnYdBHJwg
-         9rlFDvAYmHE6WHBLw6l77s6aY3Jp1fPihjP6pU+m+pdzzJHalfAqDXWzDYEsbyxkMpfc
-         8KRw==
+        bh=A5GRbt29qAoVm0D0wGwcK31dyKDJYpMUl424OWXmdYE=;
+        b=iL0Bbc2SAIlZEQdZI2a+opJ5YvSGOtTb8e//MvldIdVMgb89YwDd61ami5qZgClM5S
+         pqrOTauaTyhOfU3GHgTi3iV90S5OzQNAFea0aYPlV5+XZEaxwiMnq7bU6iU23x4JKLhP
+         ox9LrmLWrRVo2yOnj73oc0jtgE3WC0LLvQaWbs9m8vm0IEQDl2SMMlOwTU3I9D+m/Yat
+         lFdsX66QWohwnZChiGnGQcorVKfPXBCtrXptZJlbHveAIstB/W6uC17rD2bUULHNpfxA
+         CpiQpe74Nrfm0wKzBDjh7rRpDgCC7oAs1xKs2U25UZ1FP0FjvGmLQbVbKx7A3DrZvsD8
+         NCnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=O+9Ne/QX0Bs3iWrwgum6FPcBqk+/cS+YWhh75mjH/Og=;
-        b=pAkbE5VDOiunAUTLCp6imzvFAKhqxC4gZGiBeFso9l+gp5IQmxnY6vHPJfwu9gX3QY
-         3vI+yGZ4/gOHScyQIb9vDsVADPOZW2npDLhpMIGneoVn8O5WudABF485bp9gUskDHbfv
-         LGyfaqh88tFRvy5wC0ULaeoRqp80zUi9k7tYaDOJcnWKNYKJsVLKg/Re3QiDVLcvO+yU
-         4Nq/iGyEMymaNAL9B+lKDSUgehDKQDaFnfOjTiwYAnOc5zFitNfB94ijc+WCIcbbiKuS
-         ksiJ09nQXmrcpD+hNRb1Hn043+UnMH5f7LAnZLJL8rHXXnhozAbt8MzcHSXG8jVH0dKF
-         shng==
-X-Gm-Message-State: AOAM5330hpeTeEXWcQtWdw1XU14BUo2vrLiWraZmHruB9nA6ECfmPiMG
-        BlWKYmk3IhivSX546sjzYds=
-X-Google-Smtp-Source: ABdhPJwMNbDmfFrjyuuaOGW1KbJwJm/IV46kkmgcaDaaBs6CAvjUE5x8Y5RpC0l5mAoyv+ihQQHCIg==
-X-Received: by 2002:adf:ea08:: with SMTP id q8mr6556959wrm.297.1626365262867;
-        Thu, 15 Jul 2021 09:07:42 -0700 (PDT)
+        bh=A5GRbt29qAoVm0D0wGwcK31dyKDJYpMUl424OWXmdYE=;
+        b=jax9LAseahwBE6ps4JtssCoS8SSDI/SrUNa559GR9gc2H/5v4TtWGw6iXeYEWV8ywn
+         E7K6Z9Moe8BAcit336017wKD+4Sp2k8wcqdf1aF11p2+irgGBA6ZkbyQ0ndQ4n/QhZdD
+         KM7ILZn3kXeni1cnb21baad5BRZjnWSsENbiGs+DT/2XoNDJFEgY2606OMrNtrLw7W79
+         X1Ya1wvWXRwuk98BSrkzQBGQ4xMpTKuO/KDF2auA0A4MnduzKfUzpUoZAri3KXbrYi10
+         iXYLJ7ux2eZcyOKI3yPbw1GOzG3CMWu9rNxGAXUyn0zgsWpwkTWBAM+m+NxExWXqwjBO
+         JJxw==
+X-Gm-Message-State: AOAM532H3L8jlVxr77sIY/g4pV17MHCpwINO6Y2x3CJQ94zt93l++s2d
+        /u7wVDSXna7exg6P3f7YoK+oSNbJkMiGWJvdO58=
+X-Google-Smtp-Source: ABdhPJy+1Y4Mo6bnwwZC+r3s0DHrVGsINtFenFTGlan1RZvEO/zNg+CrRWFjdgstPhd+idfAovtBdw==
+X-Received: by 2002:a7b:c4d2:: with SMTP id g18mr5420715wmk.146.1626365263876;
+        Thu, 15 Jul 2021 09:07:43 -0700 (PDT)
 Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.41
+        by smtp.googlemail.com with ESMTPSA id k13sm7446952wrp.34.2021.07.15.09.07.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jul 2021 09:07:42 -0700 (PDT)
+        Thu, 15 Jul 2021 09:07:43 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [PATCH 13/20] perf script: fix memory leaks in perf_script
-Date:   Thu, 15 Jul 2021 18:07:18 +0200
-Message-Id: <5ee73b19791c6fa9d24c4d57f4ac1a23609400d7.1626343282.git.rickyman7@gmail.com>
+Subject: [PATCH 14/20] perf util/lzma: close lzma stream
+Date:   Thu, 15 Jul 2021 18:07:19 +0200
+Message-Id: <aaf50bdce7afe996cfc06e1bbb36e4a2a9b9db93.1626343282.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626343282.git.rickyman7@gmail.com>
 References: <cover.1626343282.git.rickyman7@gmail.com>
@@ -80,47 +80,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-ASan reports several memory leaks while running the perf test
-"82: Use vfs_getname probe to get syscall args filenames".
-Two of these are caused by some refcounts not being decreased on
-perf-script exit, namely script.threads and script.cpus.
+ASan reports memory leaks when running the perf test
+"88: Check open filename arg using perf trace + vfs_getname".
+One of these is caused by the lzma stream never being closed inside
+lzma_decompress_to_file.
 
-This patch adds the missing __put calls in a new perf_script__exit
-function, which is called at the end of cmd_script.
-
-This patch concludes the fixes of all remaining memory leaks in perf
-test "82: Use vfs_getname probe to get syscall args filenames".
+This patch adds the missing lzma_end.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/builtin-script.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/lzma.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index bae0e5b72c0e6050..064da7f3618d39d8 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -2601,6 +2601,12 @@ static void perf_script__exit_per_event_dump_stats(struct perf_script *script)
+diff --git a/tools/perf/util/lzma.c b/tools/perf/util/lzma.c
+index 39062df0262915bd..51424cdc3b682c64 100644
+--- a/tools/perf/util/lzma.c
++++ b/tools/perf/util/lzma.c
+@@ -69,7 +69,7 @@ int lzma_decompress_to_file(const char *input, int output_fd)
+ 
+ 			if (ferror(infile)) {
+ 				pr_err("lzma: read error: %s\n", strerror(errno));
+-				goto err_fclose;
++				goto err_lzma_end;
+ 			}
+ 
+ 			if (feof(infile))
+@@ -83,7 +83,7 @@ int lzma_decompress_to_file(const char *input, int output_fd)
+ 
+ 			if (writen(output_fd, buf_out, write_size) != write_size) {
+ 				pr_err("lzma: write error: %s\n", strerror(errno));
+-				goto err_fclose;
++				goto err_lzma_end;
+ 			}
+ 
+ 			strm.next_out  = buf_out;
+@@ -95,11 +95,13 @@ int lzma_decompress_to_file(const char *input, int output_fd)
+ 				break;
+ 
+ 			pr_err("lzma: failed %s\n", lzma_strerror(ret));
+-			goto err_fclose;
++			goto err_lzma_end;
+ 		}
  	}
- }
  
-+static void perf_script__exit(struct perf_script *script)
-+{
-+	perf_thread_map__put(script->threads);
-+	perf_cpu_map__put(script->cpus);
-+}
-+
- static int __cmd_script(struct perf_script *script)
- {
- 	int ret;
-@@ -4146,6 +4152,7 @@ int cmd_script(int argc, const char **argv)
- 	zstd_fini(&(session->zstd_data));
- 	evlist__free_stats(session->evlist);
- 	perf_session__delete(session);
-+	perf_script__exit(&script);
- 
- 	if (script_started)
- 		cleanup_scripting();
+ 	err = 0;
++err_lzma_end:
++	lzma_end(&strm);
+ err_fclose:
+ 	fclose(infile);
+ 	return err;
 -- 
 2.31.1
 
