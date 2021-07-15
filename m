@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33125C12002
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B413C12002
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 195FF613D0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1C2613D0
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jul 2021 01:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235550AbhGOBg4 (ORCPT
+        id S235580AbhGOBg6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jul 2021 21:36:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        Wed, 14 Jul 2021 21:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235432AbhGOBgz (ORCPT
+        with ESMTP id S235370AbhGOBg5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jul 2021 21:36:55 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5C8C061760
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:01 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id q6-20020a05620a05a6b02903b8bd8b612eso1981063qkq.19
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:01 -0700 (PDT)
+        Wed, 14 Jul 2021 21:36:57 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8A3C061762
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:04 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id s83-20020a2545560000b029055ae952c336so5429509yba.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jul 2021 18:34:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=l9ulLD/fU9W0OzwZvZuuX6b1DWiP15Rr9ZcqPkR8f8k=;
-        b=CkCzHjKN+XzIPI2Z5zYy3Yi3XPmd2TIinrVvFVKDdgrl54PJA5sH0dgxtyPE2HP9cI
-         vGdd3rUu9rt/3q6Ruq9Ctp4SQ8IKLu6SJUbIjTWtk/+x4oI7ZtpIVyUsW8uJS6MYyaqg
-         BXNifY1jn40WqPMglg65h+DZMQvLMfug1LaKOeF82/wsnF/odLT1t0LbwqYJxU95K2ax
-         XjXH6rv+s/EnPO6Yhc30BVHg6pkqrJpo6utrc9R8atbw9MjLGff2NsfOsFaIsLmbFDQu
-         KdPoWYqhJhaTjf44ssIjf1PfJk3ubGwkzKiJEMyM3J6475CYoTeenCUVFBQsow1c7sPV
-         fcTw==
+        bh=GIjWo0gzOMptvkl7/douQ77SF5UMK5TcXXj5psLQmwQ=;
+        b=YfYatFr1PgmuDlSqCxGHNS7KP86q5AQ6O4VjwKg1ku2Vjnrx9PUEOSlRRlTDNnYjGT
+         lkbu9PGbmIVZq1MgvMPNwcDSFCVd1HpW9yaO8T0clDTLLJCPJXAaIbmsukYaTnsS1GzM
+         UjCe2BhfEZS0KXWUQbDl9ScElnh0XxjZVJ6ien4zR6T7v7c2kEBVIwtnMs/PDoITSF+o
+         45UuJoywYuvd/vTFUSxanL8U3Cwu5xTP0IP26bw5cRRaEO95UpstaXs9gMjgrxET0Vu0
+         1mLanC+CvRqHfLa0jZrN/LCz3hUqqg29hLXwVLmoWjjm/E/sQp1YgmIgLGzepfK/5oc/
+         0g/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=l9ulLD/fU9W0OzwZvZuuX6b1DWiP15Rr9ZcqPkR8f8k=;
-        b=LjZjxvyx+2+Aa82iTKDYdq3GJnDJmqMKVUnG/nCtFU8XCDfiE4fQ8EzUhfO7C6Nx7+
-         XSdtzjRvaS2bSrk2kIsrao7Q0jwZ5ta27m5ZUQEYVRhjw9nfZfJ0+esK3CQxax82k+oi
-         3aGi/7uepuTV4Iolb4gJu180eR1YSVPyDtkHhFni06J5JvMuvn/kOY3An/UHw2qgicXC
-         UHuWcS2WK/xFZel4L7bABsWAxeMIijoWUoK9IJOfipTWUMFMkdQmVQxMhAv89VrROiQy
-         A24UwOXpQvXxbH+9PR4CWslD8odscQH+c0ShYsSNAa134p2rOVTirjUTiZ1G4LBYIcIg
-         qdOg==
-X-Gm-Message-State: AOAM530K6SKbl05cFjlnth2einRTPChqMESM5hD0o1cP/Fs92cbY5Jw2
-        yjKmWNlnQKhdHKviya21t2Hx9SeRaWru
-X-Google-Smtp-Source: ABdhPJwkeYsMicvviGQ328kdTa+3vamfieBa/crfDN2NpM25ZiGM1zK9Rz0mMWhNhBeIMraKrLaQFf3rF7vy
+        bh=GIjWo0gzOMptvkl7/douQ77SF5UMK5TcXXj5psLQmwQ=;
+        b=TUckSaZJKrc71zpWgcZSjUdL2Ons8VRiVY5ZiP8G0NRNRF8gQosW0S0JU5s9xk/sAn
+         3AEBFJaZ+YJpTBWzWGjuFwzqQNgGQnSoXIMrlyfcDcFe1bCMCHpSQ/wIRSZ8eAd5fmL3
+         ylql27iIllUxwRTTCmv9X9V7hPYkZItfmNfinr5U9zwH0aCE1R7yFwBJY8unM22IkPIw
+         2FVN7+8Dczd1r+BemUIQfqx44Swqg4bXQ1DW38HeFx+sE5xNrQJuyQbjKOaDe0UmFHNC
+         tXRF7rxAv678Pf+tPpIAwaLDCs6jVVvKd2dByAxu4n/R4mOGSd5ffA2e7/DTriFVRN3r
+         8LfQ==
+X-Gm-Message-State: AOAM5320rv9iU21SvEwrFUpPZmfM5vC/fpCkf3mQio22ia0jQRf2J9z2
+        FNLJr6FqsDZp7lUN9wY30ARDBoLfELHB
+X-Google-Smtp-Source: ABdhPJwm9dD9egCtGYZHwFPyFZ1Trxro9AjycOBuUEmkfseiRuUNBjrVu3FodNRFeytyKV0I6AM/71SGvDDP
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:c0a3:e3b0:6b14:de32])
- (user=irogers job=sendgmr) by 2002:a05:6214:d6d:: with SMTP id
- 13mr1049593qvs.3.1626312840822; Wed, 14 Jul 2021 18:34:00 -0700 (PDT)
-Date:   Wed, 14 Jul 2021 18:33:39 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ed01:: with SMTP id
+ k1mr1315360ybh.74.1626312843141; Wed, 14 Jul 2021 18:34:03 -0700 (PDT)
+Date:   Wed, 14 Jul 2021 18:33:40 -0700
 In-Reply-To: <20210715013343.2286699-1-irogers@google.com>
-Message-Id: <20210715013343.2286699-4-irogers@google.com>
+Message-Id: <20210715013343.2286699-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20210715013343.2286699-1-irogers@google.com>
 X-Mailer: git-send-email 2.32.0.402.g57bb445576-goog
-Subject: [PATCH 3/7] perf doc: Remove references to user-manual
+Subject: [PATCH 4/7] perf doc: Add info pages to all target.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,66 +77,26 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf doesn't have a user-manual.txt, but git does and this explains why
-there are references here. Having these references breaks 'make info' as
-user-manual.info can't be created given the missing dependency. Remove
-all references to user-manual so that 'make info' can succeed.
+Enabled to ensure that info pages build.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/Makefile | 25 -------------------------
- 1 file changed, 25 deletions(-)
+ tools/perf/Documentation/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index 859ec1496716..03300c151858 100644
+index 03300c151858..85a796c112a2 100644
 --- a/tools/perf/Documentation/Makefile
 +++ b/tools/perf/Documentation/Makefile
-@@ -186,8 +186,6 @@ man7: $(DOC_MAN7)
+@@ -173,7 +173,7 @@ ifneq ($(V),1)
+ endif
+ endif
  
- info: $(OUTPUT)perf.info $(OUTPUT)perfman.info
+-all: html man
++all: html man info
  
--pdf: $(OUTPUT)user-manual.pdf
--
- install: install-man
+ html: $(DOC_HTML)
  
- check-man-tools:
-@@ -225,11 +223,6 @@ install-info: info
- 	  echo "No directory found in $(DESTDIR)$(infodir)" >&2 ; \
- 	fi
- 
--install-pdf: pdf
--	$(call QUIET_INSTALL, Documentation-pdf) \
--		$(INSTALL) -d -m 755 $(DESTDIR)$(pdfdir); \
--		$(INSTALL) -m 644 $(OUTPUT)user-manual.pdf $(DESTDIR)$(pdfdir)
--
- #install-html: html
- #	'$(SHELL_PATH_SQ)' ./install-webdoc.sh $(DESTDIR)$(htmldir)
- 
-@@ -304,24 +297,6 @@ $(OUTPUT)%.xml : %.txt
- XSLT = docbook.xsl
- XSLTOPTS = --xinclude --stringparam html.stylesheet docbook-xsl.css
- 
--$(OUTPUT)user-manual.html: $(OUTPUT)user-manual.xml
--	$(QUIET_XSLTPROC)xsltproc $(XSLTOPTS) -o $@ $(XSLT) $<
--
--$(OUTPUT)perf.info: $(OUTPUT)user-manual.texi
--	$(QUIET_MAKEINFO)$(MAKEINFO) --no-split -o $@ $(OUTPUT)user-manual.texi
--
--$(OUTPUT)user-manual.texi: $(OUTPUT)user-manual.xml
--	$(QUIET_DB2TEXI)$(RM) $@+ $@ && \
--	$(DOCBOOK2X_TEXI) $(OUTPUT)user-manual.xml --encoding=UTF-8 --to-stdout >$@++ && \
--	$(PERL_PATH) fix-texi.perl <$@++ >$@+ && \
--	rm $@++ && \
--	mv $@+ $@
--
--$(OUTPUT)user-manual.pdf: $(OUTPUT)user-manual.xml
--	$(QUIET_DBLATEX)$(RM) $@+ $@ && \
--	$(DBLATEX) -o $@+ -p /etc/asciidoc/dblatex/asciidoc-dblatex.xsl -s /etc/asciidoc/dblatex/asciidoc-dblatex.sty $< && \
--	mv $@+ $@
--
- $(OUTPUT)perfman.texi: $(MAN_XML) cat-texi.perl
- 	$(QUIET_DB2TEXI)$(RM) $@+ $@ && \
- 	($(foreach xml,$(MAN_XML),$(DOCBOOK2X_TEXI) --encoding=UTF-8 \
 -- 
 2.32.0.402.g57bb445576-goog
 
