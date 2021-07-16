@@ -8,59 +8,59 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09142C07E95
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 13:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D7BC636CA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 13:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0BA6613F7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 13:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80845613F8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 13:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232842AbhGPNjt (ORCPT
+        id S232910AbhGPN47 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jul 2021 09:39:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58662 "EHLO
+        Fri, 16 Jul 2021 09:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232808AbhGPNjs (ORCPT
+        with ESMTP id S232808AbhGPN46 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jul 2021 09:39:48 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A1C4C06175F;
-        Fri, 16 Jul 2021 06:36:53 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id a23-20020a05600c2257b0290236ec98bebaso3430681wmm.1;
-        Fri, 16 Jul 2021 06:36:52 -0700 (PDT)
+        Fri, 16 Jul 2021 09:56:58 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01455C06175F;
+        Fri, 16 Jul 2021 06:54:02 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id j34so5882926wms.5;
+        Fri, 16 Jul 2021 06:54:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=message-id:subject:from:to:cc:date:in-reply-to:references
          :user-agent:mime-version:content-transfer-encoding;
-        bh=bh1fbgJJAMRpo0ekrWYMDCML1c7hFhd4x7I0H+rROSA=;
-        b=XieeVH9m6fo2f4pksEiZjb/iyejbJOlbaprxVWUXjDlm8PCZjXfopGJiD6eHzvSxEk
-         jG5rEosltYX5q9aM33EEYIsnfENP38wh0648zAfPlHSHX0zmkqrbuJ7gKYWX+5qOYKBS
-         f+t/cB2c7r1s38mnayITXdqy+c8nb9cSK8PdGTi7+azbGZQ2wyxHf1CA0TigNDinfnEj
-         qpEnHZ3wDOqchZA+gdFkjutkV7Ke43RH5h4XnJaK/Mop4/JWe8CE1vf6GLFBak7SeuZr
-         +X8kGTgu/DAbcwN2JmgYVDCRxJoWpEvDDoKASJutDp25z4DXIOAWcOrLRfGiAwzmorb9
-         ONig==
+        bh=btgN7tUSP/yLaAouyGCSHQGvOMd/ZnNWc68W+rcJ3YQ=;
+        b=JOCzVv4MLgKKHP4v6mJ5+ORzX855S7Sh94alQwCx3tzzoyu+aUY8jA9BgFTtGkxKhk
+         JfTUd1oFUWE6xIR+1nMeWiEB7Wl8G909k4FAbBq3ZnmJGfmPM2KBC1J0FYCEVwmH9dLZ
+         MsVa4fj8arUIy5Sm8jc7oPt0BR9NLz1T/58SC9FRAdKOsX5dKyd/tHIKe3sLYbnfbY7u
+         UMoMYwJ7/Dpenuq6FujRuEG4R4VXkR1mhq8+xqDArHG4XV8QvGT/yyPcItbd3kWlyeva
+         0PupMqEkgw4JOCtO+ut7Udzz5aVW+XEpMnzEJ4f7KcYTdIjOHNdbfrEj7Pgi4wxzh6X2
+         TbRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:user-agent:mime-version:content-transfer-encoding;
-        bh=bh1fbgJJAMRpo0ekrWYMDCML1c7hFhd4x7I0H+rROSA=;
-        b=WYi37/B6nD8eVT7sSUjo3fzs828ObEVKWp0GwXosLM6T3pkNOXqajviqgiUpCCxkmH
-         JiqiTPQT5n3hJNJsk9wM8dcp38pQa8Z+UT0LbLn+5r4VwBb7XmRZ4o8WIjBCgxaXlrMz
-         CkFi/pH2e6X9Mu1+7/Aw9pc49iwpWPQfY1g/CRvmZzjF3d8W1cTp9qzgEefHbMof4e4n
-         zv4GVCe52NZJLrdJEXhkbbkKpfqzez7ajxAiao0x0zaq70s//fFoiWg/Uj1LcZKUdvWl
-         xIyWqoZJ+NSUKRQ398eMkdEahsqcsdUj02ELZZUpJ3coMpbeCLV0rf94vmRVBr1Qo1Qw
-         eOPA==
-X-Gm-Message-State: AOAM530zjFa8LdBl1/1YzODNeVRviJJLQacdIueasTWVPrmuzhFjxRNZ
-        FjqxM5zBtpxlGD9Vt23RqFc=
-X-Google-Smtp-Source: ABdhPJzShu+P0l9GZrJEM3xUNj9X7LLIMhLllB9nymJUuteMScFsOqN05ZkU0YGFUSgRSLd+t6NQVQ==
-X-Received: by 2002:a05:600c:4ed3:: with SMTP id g19mr10349248wmq.145.1626442611548;
-        Fri, 16 Jul 2021 06:36:51 -0700 (PDT)
+        bh=btgN7tUSP/yLaAouyGCSHQGvOMd/ZnNWc68W+rcJ3YQ=;
+        b=c5w+nf43ee8hOvibFMyZSp780hTsuae3SYpKeiiPwLvSY/xAj7lyDipylsIH1968ak
+         cuVar8F61CS6OX1uYWdGz6rsWJCI1NwU4zXDvpWzKJNIUUJavqQI5NAQTfzAGZQsltMj
+         pXAA9v+3wbw1Xr9MUnlGhjgQRRLgqFdoZy4thp9KJHLEqLZvEEEbebPqB0eQC+l5wcdG
+         e259NDpJD0yINfjlKfNgF9IDZbV03wbflM17zUKiwDtk4IGbdulJwTAtezjhNSO23Qgb
+         oTwVXmf8Kme7dE2ZjUKXzT20zCg/s1EVpzphWQ8/1kzllTzH/m+kfXdGobpzo4lw3/JA
+         +1jA==
+X-Gm-Message-State: AOAM531tZQx8sIon3gCw/n+EdonCExy5mH1gMWZlySJIQG3Y49ZOnXsz
+        Ar/M379Odp493exSWRQ/w2XxCDU/RDeUFe2hq3nXjA==
+X-Google-Smtp-Source: ABdhPJwM1rTbOTCZhGtN9CeCQDbcumwffAnfw17P9wpcEJZN3DHDIGzwEuSGiwBrognwIlFC6U3r7g==
+X-Received: by 2002:a1c:8083:: with SMTP id b125mr10833257wmd.132.1626443641356;
+        Fri, 16 Jul 2021 06:54:01 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6456:fd99:ced0:db1c:53e1:191e? ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.gmail.com with ESMTPSA id m6sm13142854wrw.9.2021.07.16.06.36.49
+        by smtp.gmail.com with ESMTPSA id q72sm2475284wme.14.2021.07.16.06.53.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 06:36:50 -0700 (PDT)
-Message-ID: <b7aa58d750f5919f30877fe2f9878698f3cddbc4.camel@gmail.com>
-Subject: Re: [RFC PATCH 01/10] perf workqueue: threadpool creation and
- destruction
+        Fri, 16 Jul 2021 06:53:59 -0700 (PDT)
+Message-ID: <5866e3456645659423030339f71f3461659ffe2d.camel@gmail.com>
+Subject: Re: [RFC PATCH 03/10] perf workqueue: add threadpool start and stop
+ functions
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -72,12 +72,11 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
-Date:   Fri, 16 Jul 2021 15:36:49 +0200
-In-Reply-To: <CAM9d7chhjRhif=1+Sjjwrc2p+mLN+Lv4LY8dFZZpk5z5VG-+Pw@mail.gmail.com>
+Date:   Fri, 16 Jul 2021 15:53:58 +0200
+In-Reply-To: <CAM9d7chvRswKLmRvW5rd4GApqngN8QeG+nPmVy4zxz_YR0MMxw@mail.gmail.com>
 References: <cover.1626177381.git.rickyman7@gmail.com>
-         <46f9e291af3d87c212d279717d56eeab4cbfde68.1626177381.git.rickyman7@gmail.com>
-         <YO7xpFg0F5Fv/7sI@kernel.org>
-         <CAM9d7chhjRhif=1+Sjjwrc2p+mLN+Lv4LY8dFZZpk5z5VG-+Pw@mail.gmail.com>
+         <118c988358322b9daf69aeb98ff8986748b0dad2.1626177381.git.rickyman7@gmail.com>
+         <CAM9d7chvRswKLmRvW5rd4GApqngN8QeG+nPmVy4zxz_YR0MMxw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.40.2 (3.40.2-1.fc34) 
 MIME-Version: 1.0
@@ -87,115 +86,161 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi Namhyung,
-thanks for the review.
 
-On Thu, 2021-07-15 at 16:29 -0700, Namhyung Kim wrote:
-> Hi Riccardo and Arnaldo,
-> 
-> On Wed, Jul 14, 2021 at 7:16 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+On Thu, 2021-07-15 at 16:48 -0700, Namhyung Kim wrote:
+> On Tue, Jul 13, 2021 at 5:11 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
 > > 
-> > Em Tue, Jul 13, 2021 at 02:11:12PM +0200, Riccardo Mancini escreveu:
-> > > The workqueue library is made up by two components:
-> > >  - threadpool: handles the lifetime of the threads
-> > >  - workqueue: handles work distribution among the threads
-> > > 
-> > > This first patch introduces the threadpool, starting from its creation
-> > > and destruction functions.
-> > > Thread management is based on the prototype from Alexey:
-> > > https://lore.kernel.org/lkml/cover.1625227739.git.alexey.v.bayduraev@linux.intel.com/
-> > > 
-> > > Each thread in the threadpool executes the same function (aka task)
-> > > with a different argument tidx.
-> > > Threads use a pair of pipes to communicate with the main process.
-> > > The threadpool is static (all threads will be spawned at the same time).
-> > > Future work could include making it resizable and adding affinity support
-> > > (as in Alexey prototype).
-> > > 
-> > > Suggested-by: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
-> > > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-> > > ---
-> > >  tools/perf/util/Build                  |   1 +
-> > >  tools/perf/util/workqueue/Build        |   1 +
-> > >  tools/perf/util/workqueue/threadpool.c | 175 +++++++++++++++++++++++++
-> > >  tools/perf/util/workqueue/threadpool.h |  19 +++
-> > >  4 files changed, 196 insertions(+)
-> > >  create mode 100644 tools/perf/util/workqueue/Build
-> > >  create mode 100644 tools/perf/util/workqueue/threadpool.c
-> > >  create mode 100644 tools/perf/util/workqueue/threadpool.h
+> > This patch adds the start and stop functions, alongside the thread
+> > function.
+> > Each thread will run until a stop signal is received.
+> > Furthermore, start and stop are added to the test.
+> > 
+> > Thread management is based on the prototype from Alexey:
+> > https://lore.kernel.org/lkml/cover.1625227739.git.alexey.v.bayduraev@linux.intel.com/
+> > 
+> > Suggested-by: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+> > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> > ---
+> >  tools/perf/tests/workqueue.c           |  13 ++
+> >  tools/perf/util/workqueue/threadpool.c | 238 +++++++++++++++++++++++++
+> >  tools/perf/util/workqueue/threadpool.h |   5 +
+> >  3 files changed, 256 insertions(+)
+> > 
+> > diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
+> > index 1bd4d78c13eb3b14..be377e9897bab4e9 100644
+> > --- a/tools/perf/tests/workqueue.c
+> > +++ b/tools/perf/tests/workqueue.c
+> > @@ -10,16 +10,29 @@ struct threadpool_test_args_t {
+> > 
+> >  static int __threadpool__prepare(struct threadpool_struct **pool, int
+> > pool_size)
+> >  {
+> > +       int ret;
+> > +
+> >         *pool = create_threadpool(pool_size);
+> >         TEST_ASSERT_VAL("threadpool creation failure", *pool != NULL);
+> >         TEST_ASSERT_VAL("threadpool size is wrong",
+> >                         threadpool_size(*pool) == pool_size);
+> > 
+> > +       ret = start_threadpool(*pool);
+> > +       TEST_ASSERT_VAL("threadpool start failure", ret == 0);
+> > +       TEST_ASSERT_VAL("threadpool is not ready",
+> > threadpool_is_ready(*pool));
+> > +
+> >         return 0;
+> >  }
+> > 
+> >  static int __threadpool__teardown(struct threadpool_struct *pool)
+> >  {
+> > +       int ret;
+> > +
+> > +       ret = stop_threadpool(pool);
+> > +       TEST_ASSERT_VAL("threadpool start failure", ret == 0);
+> 
+> s/start/stop/
+Thanks.
+> 
+> > +       TEST_ASSERT_VAL("stopped threadpool is ready",
+> > +                       !threadpool_is_ready(pool));
+> > +
+> >         destroy_threadpool(pool);
+> > 
+> >         return 0;
+> > diff --git a/tools/perf/util/workqueue/threadpool.c
+> > b/tools/perf/util/workqueue/threadpool.c
+> > index 70c67569f956a3e2..f4635ff782b9388e 100644
+> > --- a/tools/perf/util/workqueue/threadpool.c
+> > +++ b/tools/perf/util/workqueue/threadpool.c
+> [SNIP]
+> > +/**
+> > + * wait_thread - receive ack from thread
+> > + *
+> > + * NB: call only from main thread!
+> > + */
+> > +static int wait_thread(struct thread_struct *thread)
+> > +{
+> > +       int res;
+> > +       enum thread_msg msg = THREAD_MSG__UNDEFINED;
+> > +
+> > +       res = read(thread->pipes.from[0], &msg, sizeof(msg));
+> > +       if (res < 0) {
+> 
+> Maybe it needs to handle -EINTR.
+
+Its behaviour should be retry, right?
+Since these reads are used multiple times in the code, maybe I'm better off
+writing a wrapper function handling also EINTR.
+
+> 
+> > +               pr_err("threadpool: failed to recv msg from tid=%d: %s\n",
+> > +                      thread->tid, strerror(errno));
+> > +               return -1;
+> > +       }
+> > +       if (msg != THREAD_MSG__ACK) {
+> > +               pr_err("threadpool: received unexpected msg from tid=%d:
+> > %s\n",
+> > +                      thread->tid, thread_msg_tags[msg]);
+> > +               return -1;
+> > +       }
+> > +
+> > +       pr_debug2("threadpool: received ack from tid=%d\n", thread->tid);
+> > +
+> > +       return 0;
+> > +}
+> > 
 <SNIP>
-> > > +
-> > > +struct threadpool_struct {
-> > 
-> > Can this be just 'struct threadpool'? I think its descriptive enough:
-> > 
-> > > +     int                     nr_threads;     /* number of threads in the
-> > > pool */
-> > > +     struct thread_struct    *threads;       /* array of threads in the
-> > > pool */
-> > > +     struct task_struct      *current_task;  /* current executing
-> > > function */
+> > +static int __start_threadpool(struct threadpool_struct *pool)
+> > +{
+> > +       int t, tt, ret = 0, nr_threads = pool->nr_threads;
+> > +       sigset_t full, mask;
+> > +       pthread_t handle;
+> > +       pthread_attr_t attrs;
+> > +
+> > +       sigfillset(&full);
+> > +       if (sigprocmask(SIG_SETMASK, &full, &mask)) {
+> > +               pr_err("Failed to block signals on threads start: %s\n",
+> > +                       strerror(errno));
+> > +               return -1;
+> > +       }
+> > +
+> > +       pthread_attr_init(&attrs);
+> > +       pthread_attr_setdetachstate(&attrs, PTHREAD_CREATE_DETACHED);
+> > +
+> > +       for (t = 0; t < nr_threads; t++) {
+> > +               struct thread_struct *thread = &pool->threads[t];
+> > +
+> > +               if (pthread_create(&handle, &attrs, threadpool_thread,
+> > thread)) {
+> > +                       for (tt = 1; tt < t; tt++)
+> > +                               terminate_thread(thread);
+> > +                       pr_err("Failed to start threads: %s\n",
+> > strerror(errno));
+> > +                       ret = -1;
+> > +                       goto out_free_attr;
+> > +               }
+> > +
+> > +               if (wait_thread(thread)) {
+> > +                       for (tt = 1; tt <= t; tt++)
+> > +                               terminate_thread(thread);
+> > +                       ret = -1;
+> > +                       goto out_free_attr;
+> > +               }
+> > +       }
 > 
-> Does this mean it can only have a single function to run?
-
-Yes.
-
-> Why do we need it?
-
-My idea is to separate the workqueue from the actual implementation of the
-threads. This way, when the function executing on the threadpool ends, the
-threads are kept alive to execute new work. 
-By adding this additional layer of abstraction, we can achieve more flexibility.
-For example, the use-case I have in mind is to recycle the same threadpool for
-both Alexey's threaded trace and the workqueue.
-I don't think this could be easily achieved with just the workqueue since the
-perf-record threads are not just a task that needs to be executed by they have
-specific affinities to be respected.
-
-What are your thoughts?
-
+> Isn't it better doing this way?
 > 
+> for (t = 0; t < nr_threads; t++) {
+>     pthread_create(t)
+> }
 > 
-> > > +     enum threadpool_status  status;         /* current status of the
-> > > pool */
-> > > +};
-> > > +
-> > > +struct thread_struct {
-> > > +     int                             idx;    /* idx of thread in pool-
-> > > >threads */
-> > > +     pid_t                           tid;    /* tid of thread */
-> > > +     struct threadpool_struct        *pool;  /* parent threadpool */
-> > > +     struct {
-> > > +             int from[2];                    /* messages from thread
-> > > (acks) */
-> > > +             int to[2];                      /* messages to thread
-> > > (commands) */
-> 
-> It can be confusing if you think from the main thread.
-> Maybe 'ack' and 'cmd' would be better.
+> for (t = 0; t < nr_threads; t++) {
+>     wait_thread(t)
+> }
 
-Agreed.
-
-> 
-> 
-> > > +     } pipes;
-> > > +};
-> > 
-> > This one, since we have already a 'struct thread' in tools/perf, to
-> > represent a PERF_RECORD_FORK, perhaps we can call it 'struct
-> > threadpool_entry'?
-> 
-> I think we can even use 'worker' instead of 'thread' but it requires
-> huge renaming and conflicts so I won't insist on it strongly.  :)
-
-Also, worker internally conflicts with the workqueue's worker, which runs on a
-(threadpool-)thread.
-Another name I had in mind is pool_thread to prevent having too many 'thread' in
-the name, but it might be confusing.
-I think threadpool_entry is fine.
-
-I have another question.
-In general, when should I use zfree instead of free?
+I wondered the same thing, but I saw that it was done like that also in Alexey
+patch, so I kept it like so.
+To me, it also looks like it should be not a problem doing as you suggest. It
+should also be more efficient.
 
 Thanks,
 Riccardo
@@ -203,5 +248,20 @@ Riccardo
 > 
 > Thanks,
 > Namhyung
+> 
+> 
+> > +
+> > +out_free_attr:
+> > +       pthread_attr_destroy(&attrs);
+> > +
+> > +       if (sigprocmask(SIG_SETMASK, &mask, NULL)) {
+> > +               pr_err("Failed to unblock signals on threads start: %s\n",
+> > +                       strerror(errno));
+> > +               ret = -1;
+> > +       }
+> > +
+> > +       return ret;
+> > +}
+> > +
 
 
