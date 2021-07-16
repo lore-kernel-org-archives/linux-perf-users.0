@@ -2,262 +2,128 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04675C12002
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 13:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F352C12002
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 14:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C1D613DF
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 13:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06F83613E8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 14:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240210AbhGPN6i (ORCPT
+        id S233151AbhGPOPC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jul 2021 09:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
+        Fri, 16 Jul 2021 10:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239738AbhGPN6i (ORCPT
+        with ESMTP id S233212AbhGPOPB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jul 2021 09:58:38 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397D7C06175F;
-        Fri, 16 Jul 2021 06:55:42 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id a13so12176356wrf.10;
-        Fri, 16 Jul 2021 06:55:42 -0700 (PDT)
+        Fri, 16 Jul 2021 10:15:01 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83514C06175F;
+        Fri, 16 Jul 2021 07:12:05 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id j34so5918240wms.5;
+        Fri, 16 Jul 2021 07:12:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=h6v+FDBeQnRoZ//cxoHOViS1xVmtQ5wKO8sbxgZ7IxQ=;
-        b=Hs6+G709aR5jo6GSikZL4aOziKc92p+cipf5wI8YSlbK+qAYGKa6Qh1R6iuNTnVgRM
-         9MapeAiGkmY36C3pgkL4FtMNb5r7a1BKNdCxgfs/02obR3IcRzulTPxIGLMM/A6pVSYI
-         Sh8TH89Vf+nPJRlNaJHYo/vQEkzNBF03iuC7RcVRuNpzmHFOcYygkRko0DV0hMbE2aHL
-         GtbywZRuj5pHT63OPXRYQzNHiIIy8OXOyteOgweFvBY76pysZTDmhqJv81CotPlukilf
-         viSIzST9Fr+/IQF6JF8ppUKt7FyaBd5s1xy85G7aJ1YP+5mB5P5FtAFWy0AiDf2oyolJ
-         5Bww==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pHO/OuJ19tFgQlImaLECSeFWZFEdjnugOKUNYJ6qjas=;
+        b=Ihnytgiyf1ZDDOEAswttF30OscuVa4F4xg4QtRKFYmu9KjBtibGRiliedYD2zwtgg2
+         ILgYAA0PZOJVJLTHiMD/9M8qNeleqkhvQb68cn27Jatu1tCwxnH7MY1NT4YJMOOcnDuO
+         SuE1vpkAeriB4jHEtHoKo1rnoRUW0maTHdusSU7Q/+7HESyVnPOq5cP/PmD/UkJ/IpkK
+         gmrjlx6262qEfGa7v70XRtGEvNlvCg7YFi4QE/njHs06qnKs6yL0AKRyZSfdpxLrSJmB
+         Yo52bNZDBHASGeFgKOL9BRpyj1MSIxOnGyJT53IJLCSSI4vw5n4u023h7Unfd1I5vFje
+         9iMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=h6v+FDBeQnRoZ//cxoHOViS1xVmtQ5wKO8sbxgZ7IxQ=;
-        b=CuPhqesRSioxWIjkLuylRPSylulVKhqsHliBwNOBS71SucGTmN/RS9WIzoXi8RLbJB
-         yg3o5g5mo6+bko0IT0ZLln1QgWd/qNc9GJesHYK1aoQbXo/rFttAza4ZX667f6HhCAQz
-         zf6iY3HmPXgDHLHmAzlYy134XG7yuesc7iFrSFsCe8ACLgJLnDl0etvUD4z75PmqFJ3s
-         WtMqSEtSIceYUXolZikeUAL4ZmFgbW3A0BrSsyHwu7Ph7FM+VkhL7Hdhf4YqmujBazLy
-         oyd/pw1+HuwZ7g7CoEN0tOdJu2T6xfMrP199/mrO567yeWpsS6JBXeAs6m32j//+A46x
-         FBxQ==
-X-Gm-Message-State: AOAM533gw8uvASaJCOca0iIefZb6epOhsf7U8E3L8As69yRUH+YrGCz0
-        uLWd9+AXA6Lt7SMG0C+5WjM=
-X-Google-Smtp-Source: ABdhPJy+HfwxsgwfaNlyW/rpnYRJlNHnZVVTwk+wJw8wbW1cVlQZw9nBJrAsVOcTv7OyoRNLr+iWsw==
-X-Received: by 2002:a5d:6302:: with SMTP id i2mr12587159wru.366.1626443740776;
-        Fri, 16 Jul 2021 06:55:40 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6456:fd99:ced0:db1c:53e1:191e? ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.gmail.com with ESMTPSA id d15sm10110214wri.39.2021.07.16.06.55.39
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pHO/OuJ19tFgQlImaLECSeFWZFEdjnugOKUNYJ6qjas=;
+        b=VjsexSdF20T6U8Sc7F9kjypKi4UdgE6lrGyO8l0IenoOHdAOA47ChiJHIvdwP1f/13
+         10oQE2PfVEF0mesQsOUpCy5VvYW/NbarseTBge4LdmAtCl4A35YnijY4cTyaV9MQc6aQ
+         WyUqm0SOseLA80V2YWLmE/bGXy/HA94D8ibYxcEGDhFRoiG8dDCPNMnH+CghRowmNsUj
+         4tYFf6Rq2LSo+IXDcVDsrlO7LTjzE5+03byNxv4p4mE0kwhCPNsn96LbNK7BQVsxZW61
+         R9RWOWa5uchLfPHRlaDchmo+J5n1Vwtsovosa0WbaVDDUM5DaLI4hQLaLBbQYhqhK3bS
+         fGuw==
+X-Gm-Message-State: AOAM533vyfz/61D6Iq8+rovNC7X7NFn7INQt4m4jyHqyTw1YBiXLbZ1T
+        1JPRu3ks3u8IPTnnxOTBCIE=
+X-Google-Smtp-Source: ABdhPJyXA3L2LOIAr5mUWHvp28X930mFBTDm4GUANPazykCet5ITaCY4PDUFPS4wyQYc2vXbFnYXSw==
+X-Received: by 2002:a7b:c4d9:: with SMTP id g25mr16350004wmk.108.1626444723940;
+        Fri, 16 Jul 2021 07:12:03 -0700 (PDT)
+Received: from localhost.localdomain ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
+        by smtp.googlemail.com with ESMTPSA id v21sm11327787wml.5.2021.07.16.07.12.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 06:55:40 -0700 (PDT)
-Message-ID: <b82d7c8f1c1d48f9a79d30d2e76cf56b1f7c8ee0.camel@gmail.com>
-Subject: Re: [RFC PATCH 04/10] perf workqueue: add threadpool execute and
- wait functions
+        Fri, 16 Jul 2021 07:12:03 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>
-Date:   Fri, 16 Jul 2021 15:55:39 +0200
-In-Reply-To: <CAM9d7ci9vCBsyYAj6kXUAtEufG9PW0D=1-7PP-VrA_PPU6wbkA@mail.gmail.com>
-References: <cover.1626177381.git.rickyman7@gmail.com>
-         <a5fee5068f9630f14f1f5c259434badf43d451c4.1626177381.git.rickyman7@gmail.com>
-         <CAM9d7ci9vCBsyYAj6kXUAtEufG9PW0D=1-7PP-VrA_PPU6wbkA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.2 (3.40.2-1.fc34) 
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] perf data: close all files in close_dir
+Date:   Fri, 16 Jul 2021 16:11:20 +0200
+Message-Id: <20210716141122.858082-1-rickyman7@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Namhyung,
-thanks again for the review.
+When using perf report in directory mode, the first file is not closed on
+exit, causing a memory leak.
+The problem is caused by the iterating variable never reaching 0.
 
-On Thu, 2021-07-15 at 16:56 -0700, Namhyung Kim wrote:
-> On Tue, Jul 13, 2021 at 5:11 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
-> > 
-> > This patch adds:
-> >  - execute_in_threadpool: assigns a task to the threads to execute
-> >    asynchronously.
-> >  - wait_threadpool: waits for the task to complete on all threads.
-> > Furthermore, testing for these new functions is added.
-> > 
-> > This patch completes the threadpool.
-> > 
-> > Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-> > ---
-> >  tools/perf/tests/workqueue.c           |  86 ++++++++++++++++++++-
-> >  tools/perf/util/workqueue/threadpool.c | 103 +++++++++++++++++++++++++
-> >  tools/perf/util/workqueue/threadpool.h |   5 ++
-> >  3 files changed, 193 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
-> > index be377e9897bab4e9..3c64db8203556847 100644
-> > --- a/tools/perf/tests/workqueue.c
-> > +++ b/tools/perf/tests/workqueue.c
-> > @@ -1,13 +1,59 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > +#include <stdlib.h>
-> >  #include <linux/kernel.h>
-> > +#include <linux/zalloc.h>
-> >  #include "tests.h"
-> >  #include "util/debug.h"
-> >  #include "util/workqueue/threadpool.h"
-> > 
-> > +#define DUMMY_FACTOR 100000
-> > +#define N_DUMMY_WORK_SIZES 7
-> > +
-> >  struct threadpool_test_args_t {
-> >         int pool_size;
-> >  };
-> > 
-> > +struct test_task {
-> > +       struct task_struct task;
-> > +       int n_threads;
-> > +       int *array;
-> > +};
-> > +
-> > +/**
-> > + * dummy_work - calculates DUMMY_FACTOR * (idx % N_DUMMY_WORK_SIZES)
-> > inefficiently
-> > + *
-> > + * This function uses modulus to create work items of different sizes.
-> > + */
-> > +static void dummy_work(int idx)
-> > +{
-> > +       int prod = 0;
-> 
-> I'm not sure but having 'volatile' would prevent some kind of
-> possible compiler optimizations..
+Cc: Jiri Olsa <jolsa@kernel.org>
+Fixes: 145520631130bd64 ("perf data: Add perf_data__(create_dir|close_dir) functions")
+Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+Hi Arnaldo, 
 
-Agreed.
+I think this patch might have gone lost in the mailbox, submerged by
+other mails.
+I'll take advantage of the resend to add the missing 'Fixes:' tag.
 
-> 
-> > +       int k = idx % N_DUMMY_WORK_SIZES;
-> > +       int i, j;
-> > +
-> > +       for (i = 0; i < DUMMY_FACTOR; i++)
-> > +               for (j = 0; j < k; j++)
-> > +                       prod ++;
-> > +
-> > +       pr_debug3("dummy: %d * %d = %d\n", DUMMY_FACTOR, k, prod);
-> > +}
-> > +
-> > +static void test_task_fn1(int tidx, struct task_struct *task)
-> > +{
-> > +       struct test_task *mtask = container_of(task, struct test_task,
-> > task);
-> > +
-> > +       dummy_work(tidx);
-> > +       mtask->array[tidx] = tidx+1;
-> > +}
-> > +
-> > +static void test_task_fn2(int tidx, struct task_struct *task)
-> > +{
-> > +       struct test_task *mtask = container_of(task, struct test_task,
-> > task);
-> > +
-> > +       dummy_work(tidx);
-> > +       mtask->array[tidx] = tidx*2;
-> > +}
-> > +
-> > +
-> >  static int __threadpool__prepare(struct threadpool_struct **pool, int
-> > pool_size)
-> >  {
-> >         int ret;
-> > @@ -38,21 +84,59 @@ static int __threadpool__teardown(struct
-> > threadpool_struct *pool)
-> >         return 0;
-> >  }
-> > 
-> > +static int __threadpool__exec_wait(struct threadpool_struct *pool,
-> > +                               struct task_struct *task)
-> > +{
-> > +       int ret;
-> > +
-> > +       ret = execute_in_threadpool(pool, task);
-> > +       TEST_ASSERT_VAL("threadpool execute failure", ret == 0);
-> > +       TEST_ASSERT_VAL("threadpool is not executing",
-> > threadpool_is_busy(pool));
-> > +
-> > +       ret = wait_threadpool(pool);
-> > +       TEST_ASSERT_VAL("threadpool wait failure", ret == 0);
-> > +       TEST_ASSERT_VAL("waited threadpool is not ready",
-> > threadpool_is_ready(pool));
-> > +
-> > +       return 0;
-> > +}
-> > 
-> >  static int __test__threadpool(void *_args)
-> >  {
-> >         struct threadpool_test_args_t *args = _args;
-> >         struct threadpool_struct *pool;
-> > -       int ret;
-> > +       int ret, i;
-> > +       struct test_task task;
-> > +
-> > +       task.task.fn = test_task_fn1;
-> > +       task.n_threads = args->pool_size;
-> > +       task.array = calloc(args->pool_size, sizeof(*task.array));
-> 
-> Need to check the return value.
+I didn't flag this as v2 since it contains no logical change, let me
+know if doing so would've been better.
 
-Thanks.
+Changes from first send: 
+ - collected ack from Namhyung
+ - added Fixes: tag
 
-> 
-> > 
-> >         ret = __threadpool__prepare(&pool, args->pool_size);
-> >         if (ret)
-> >                 return ret;
-> > 
-> > +       ret = __threadpool__exec_wait(pool, &task.task);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       for (i = 0; i < args->pool_size; i++)
-> > +               TEST_ASSERT_VAL("failed array check (1)", task.array[i] ==
-> > i+1);
-> > +
-> > +       task.task.fn = test_task_fn2;
-> > +
-> > +       ret = __threadpool__exec_wait(pool, &task.task);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       for (i = 0; i < args->pool_size; i++)
-> > +               TEST_ASSERT_VAL("failed array check (2)", task.array[i] ==
-> > 2*i);
-> > +
-> >         ret = __threadpool__teardown(pool);
-> >         if (ret)
-> >                 return ret;
-> > 
-> > +       free(task.array);
-> 
-> All previous returns will leak it.
-
-Oh, right.
+Original: https://lkml.kernel.org/lkml/20210621214220.167927-1-rickyman7@gmail.com/
 
 Thanks,
 Riccardo
+---
+ tools/perf/util/data.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Thanks,
-> Namhyung
-
+diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+index 8fca4779ae6a8e90..70b91ce35178c5f9 100644
+--- a/tools/perf/util/data.c
++++ b/tools/perf/util/data.c
+@@ -20,7 +20,7 @@
+ 
+ static void close_dir(struct perf_data_file *files, int nr)
+ {
+-	while (--nr >= 1) {
++	while (--nr >= 0) {
+ 		close(files[nr].fd);
+ 		zfree(&files[nr].path);
+ 	}
+-- 
+2.23.0
 
