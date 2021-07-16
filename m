@@ -2,124 +2,101 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A25C12002
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 16:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37ACC12002
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 16:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC18961374
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 16:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9544D613EB
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 16:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbhGPQcP (ORCPT
+        id S229597AbhGPQxK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jul 2021 12:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
+        Fri, 16 Jul 2021 12:53:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229574AbhGPQcN (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jul 2021 12:32:13 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 65EA261374;
-        Fri, 16 Jul 2021 16:29:18 +0000 (UTC)
+        id S229462AbhGPQxK (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 16 Jul 2021 12:53:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 2377B613E8;
+        Fri, 16 Jul 2021 16:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1626452958;
-        bh=RPbljYHBe0gfkpEz6K8SRbVUNW/KwEPHQZ7dKTYAA7w=;
+        s=k20201202; t=1626454215;
+        bh=fR1eM/k0XR7Gjhkw/+2oWO8IaDRE53G+CK69zJwzPmU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qsII8xGeR+hHV1JuAwt94vlkQ/IsqObycM+nj7FtuclDiYrMxXUGYVzuIsxapIuKR
-         a7W9C2SUctE9ejQwN5Y4nJniB2M3jMd55IEXE9KEC9m9jEfh6AAeLzkBD/oQsdyK8T
-         SlLdop5024U2B5gMTIxLQtEdNxMvFTAHvxDiIUd56ImF6zkMQC2HO/h+CvI1NC0Ryj
-         PYwPfgntraC2GUOoi0ZTvD9EyL7pt/A4GHlpS2uGE3bS8INLlHhgnAFs11RCi/qPrj
-         dIyQOuqWYMvVmtmS4P0kFW7sjMWwYVQMOaYonTNTeQtcz5CsLmwwG3px1T0OoXd1Hx
-         qsQns2c6gPVPA==
+        b=L9xhBcOnRgZA5EVe5cuHX1nLFC/iRx55ZmhUjTRsUURldVwYETJaETU8/sdZpm0Dc
+         HuTNbtPmwHNvLU/RaeOGhU50wkb4pzLOD9eP0CgvL1Ky1+zOMh27PzLtRw0WJa049n
+         L93kAOJryx5HoULBcauUTuVhZUkGRZWoH5sio+TC108R98ACfrZeplIHVbE0m1ICEJ
+         TN4VsWmRvVE/p4Tcy2fH7GRKX7XjicmTKi/ZOLOyp+XfJZGGEr0f9JidLaLhcccvRT
+         +bzZwXUtmrEb9Wi/QlwBBFllgC1DDS8qKxsrtR6tBF2b6h+0Byc2FVw9L4jZGlLU+0
+         9ruczedy1v6nQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 85C1F403F2; Fri, 16 Jul 2021 13:29:15 -0300 (-03)
-Date:   Fri, 16 Jul 2021 13:29:15 -0300
+        id 8A601403F2; Fri, 16 Jul 2021 13:50:12 -0300 (-03)
+Date:   Fri, 16 Jul 2021 13:50:12 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+Cc:     Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
-Subject: Re: [RFC PATCH 03/10] perf workqueue: add threadpool start and stop
- functions
-Message-ID: <YPGz2xTCa/EkvrxY@kernel.org>
-References: <cover.1626177381.git.rickyman7@gmail.com>
- <118c988358322b9daf69aeb98ff8986748b0dad2.1626177381.git.rickyman7@gmail.com>
- <CAM9d7chvRswKLmRvW5rd4GApqngN8QeG+nPmVy4zxz_YR0MMxw@mail.gmail.com>
- <5866e3456645659423030339f71f3461659ffe2d.camel@gmail.com>
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 19/20] perf test: bpf: free obj_buf
+Message-ID: <YPG4xEmVVZetIem9@kernel.org>
+References: <cover.1626343282.git.rickyman7@gmail.com>
+ <60f3ca935fe6672e7e866276ce6264c9e26e4c87.1626343282.git.rickyman7@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5866e3456645659423030339f71f3461659ffe2d.camel@gmail.com>
+In-Reply-To: <60f3ca935fe6672e7e866276ce6264c9e26e4c87.1626343282.git.rickyman7@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jul 16, 2021 at 03:53:58PM +0200, Riccardo Mancini escreveu:
-> On Thu, 2021-07-15 at 16:48 -0700, Namhyung Kim wrote:
-> > On Tue, Jul 13, 2021 at 5:11 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
-> > > +++ b/tools/perf/util/workqueue/threadpool.c
-> > [SNIP]
-> > > +/**
-> > > + * wait_thread - receive ack from thread
-> > > + *
-> > > + * NB: call only from main thread!
-> > > + */
-> > > +static int wait_thread(struct thread_struct *thread)
-> > > +{
-> > > +       int res;
-> > > +       enum thread_msg msg = THREAD_MSG__UNDEFINED;
-> > > +
-> > > +       res = read(thread->pipes.from[0], &msg, sizeof(msg));
-> > > +       if (res < 0) {
+Em Thu, Jul 15, 2021 at 06:07:24PM +0200, Riccardo Mancini escreveu:
+> ASan reports some memory leaks when running the perf test
+> "42: BPF filter".
+> The first of these leaks is caused by obj_buf never being deallocated in
+> __test__bpf.
+> 
+> This patch adds the missing free.
+> 
+> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> ---
+>  tools/perf/tests/bpf.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/tests/bpf.c b/tools/perf/tests/bpf.c
+> index 33bda9c265423547..2cda4a6297e07967 100644
+> --- a/tools/perf/tests/bpf.c
+> +++ b/tools/perf/tests/bpf.c
+> @@ -276,6 +276,7 @@ static int __test__bpf(int idx)
+>  	}
+>  
+>  out:
+> +	free(obj_buf);
+>  	bpf__clear();
+>  	return ret;
+>  }
+> -- 
 
-> > Maybe it needs to handle -EINTR.
+I followed the advice and added the stdlib.h include, elsewhere we're
+getting included via some other include by luck.
 
-> Its behaviour should be retry, right?
-> Since these reads are used multiple times in the code, maybe I'm better off
-> writing a wrapper function handling also EINTR.
-
-Take a look at readn():
-
-tools/lib/perf/lib.c
-
-static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
-{
-        void *buf_start = buf;
-        size_t left = n;
-
-        while (left) {
-                /* buf must be treated as const if !is_read. */
-                ssize_t ret = is_read ? read(fd, buf, left) :
-                                        write(fd, buf, left);
-
-                if (ret < 0 && errno == EINTR)
-                        continue;
-                if (ret <= 0)
-                        return ret;
-
-                left -= ret;
-                buf  += ret;
-        }
-
-        BUG_ON((size_t)(buf - buf_start) != n);
-        return n;
-}
-
-/*
- * Read exactly 'n' bytes or return an error.
- */
-ssize_t readn(int fd, void *buf, size_t n)
-{
-        return ion(true, fd, buf, n);
-}
- 
- 
 - Arnaldo
+
+  66     6.97 ubuntu:18.04-x-m68k           : FAIL gcc version 7.5.0 (Ubuntu 7.5.0-3ubuntu1~18.04)
+    tests/bpf.c: In function '__test__bpf':
+    tests/bpf.c:279:2: error: implicit declaration of function 'free' [-Werror=implicit-function-declaration]
+      free(obj_buf);
+      ^~~~
+    tests/bpf.c:279:2: error: incompatible implicit declaration of built-in function 'free' [-Werror]
+    tests/bpf.c:279:2: note: include '<stdlib.h>' or provide a declaration of 'free'
+    cc1: all warnings being treated as errors
+    /git/perf-5.14.0-rc1/tools/build/Makefile.build:139: recipe for target 'tests' failed
+    make[3]: *** [tests] Error 2
+
