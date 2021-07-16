@@ -2,128 +2,124 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F352C12002
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 14:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5A25C12002
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 16:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06F83613E8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 14:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC18961374
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jul 2021 16:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233151AbhGPOPC (ORCPT
+        id S229741AbhGPQcP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jul 2021 10:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233212AbhGPOPB (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jul 2021 10:15:01 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83514C06175F;
-        Fri, 16 Jul 2021 07:12:05 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id j34so5918240wms.5;
-        Fri, 16 Jul 2021 07:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pHO/OuJ19tFgQlImaLECSeFWZFEdjnugOKUNYJ6qjas=;
-        b=Ihnytgiyf1ZDDOEAswttF30OscuVa4F4xg4QtRKFYmu9KjBtibGRiliedYD2zwtgg2
-         ILgYAA0PZOJVJLTHiMD/9M8qNeleqkhvQb68cn27Jatu1tCwxnH7MY1NT4YJMOOcnDuO
-         SuE1vpkAeriB4jHEtHoKo1rnoRUW0maTHdusSU7Q/+7HESyVnPOq5cP/PmD/UkJ/IpkK
-         gmrjlx6262qEfGa7v70XRtGEvNlvCg7YFi4QE/njHs06qnKs6yL0AKRyZSfdpxLrSJmB
-         Yo52bNZDBHASGeFgKOL9BRpyj1MSIxOnGyJT53IJLCSSI4vw5n4u023h7Unfd1I5vFje
-         9iMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pHO/OuJ19tFgQlImaLECSeFWZFEdjnugOKUNYJ6qjas=;
-        b=VjsexSdF20T6U8Sc7F9kjypKi4UdgE6lrGyO8l0IenoOHdAOA47ChiJHIvdwP1f/13
-         10oQE2PfVEF0mesQsOUpCy5VvYW/NbarseTBge4LdmAtCl4A35YnijY4cTyaV9MQc6aQ
-         WyUqm0SOseLA80V2YWLmE/bGXy/HA94D8ibYxcEGDhFRoiG8dDCPNMnH+CghRowmNsUj
-         4tYFf6Rq2LSo+IXDcVDsrlO7LTjzE5+03byNxv4p4mE0kwhCPNsn96LbNK7BQVsxZW61
-         R9RWOWa5uchLfPHRlaDchmo+J5n1Vwtsovosa0WbaVDDUM5DaLI4hQLaLBbQYhqhK3bS
-         fGuw==
-X-Gm-Message-State: AOAM533vyfz/61D6Iq8+rovNC7X7NFn7INQt4m4jyHqyTw1YBiXLbZ1T
-        1JPRu3ks3u8IPTnnxOTBCIE=
-X-Google-Smtp-Source: ABdhPJyXA3L2LOIAr5mUWHvp28X930mFBTDm4GUANPazykCet5ITaCY4PDUFPS4wyQYc2vXbFnYXSw==
-X-Received: by 2002:a7b:c4d9:: with SMTP id g25mr16350004wmk.108.1626444723940;
-        Fri, 16 Jul 2021 07:12:03 -0700 (PDT)
-Received: from localhost.localdomain ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id v21sm11327787wml.5.2021.07.16.07.12.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jul 2021 07:12:03 -0700 (PDT)
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        Fri, 16 Jul 2021 12:32:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229574AbhGPQcN (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 16 Jul 2021 12:32:13 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 65EA261374;
+        Fri, 16 Jul 2021 16:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626452958;
+        bh=RPbljYHBe0gfkpEz6K8SRbVUNW/KwEPHQZ7dKTYAA7w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qsII8xGeR+hHV1JuAwt94vlkQ/IsqObycM+nj7FtuclDiYrMxXUGYVzuIsxapIuKR
+         a7W9C2SUctE9ejQwN5Y4nJniB2M3jMd55IEXE9KEC9m9jEfh6AAeLzkBD/oQsdyK8T
+         SlLdop5024U2B5gMTIxLQtEdNxMvFTAHvxDiIUd56ImF6zkMQC2HO/h+CvI1NC0Ryj
+         PYwPfgntraC2GUOoi0ZTvD9EyL7pt/A4GHlpS2uGE3bS8INLlHhgnAFs11RCi/qPrj
+         dIyQOuqWYMvVmtmS4P0kFW7sjMWwYVQMOaYonTNTeQtcz5CsLmwwG3px1T0OoXd1Hx
+         qsQns2c6gPVPA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 85C1F403F2; Fri, 16 Jul 2021 13:29:15 -0300 (-03)
+Date:   Fri, 16 Jul 2021 13:29:15 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Riccardo Mancini <rickyman7@gmail.com>
 Cc:     Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] perf data: close all files in close_dir
-Date:   Fri, 16 Jul 2021 16:11:20 +0200
-Message-Id: <20210716141122.858082-1-rickyman7@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Subject: Re: [RFC PATCH 03/10] perf workqueue: add threadpool start and stop
+ functions
+Message-ID: <YPGz2xTCa/EkvrxY@kernel.org>
+References: <cover.1626177381.git.rickyman7@gmail.com>
+ <118c988358322b9daf69aeb98ff8986748b0dad2.1626177381.git.rickyman7@gmail.com>
+ <CAM9d7chvRswKLmRvW5rd4GApqngN8QeG+nPmVy4zxz_YR0MMxw@mail.gmail.com>
+ <5866e3456645659423030339f71f3461659ffe2d.camel@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <5866e3456645659423030339f71f3461659ffe2d.camel@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When using perf report in directory mode, the first file is not closed on
-exit, causing a memory leak.
-The problem is caused by the iterating variable never reaching 0.
+Em Fri, Jul 16, 2021 at 03:53:58PM +0200, Riccardo Mancini escreveu:
+> On Thu, 2021-07-15 at 16:48 -0700, Namhyung Kim wrote:
+> > On Tue, Jul 13, 2021 at 5:11 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
+> > > +++ b/tools/perf/util/workqueue/threadpool.c
+> > [SNIP]
+> > > +/**
+> > > + * wait_thread - receive ack from thread
+> > > + *
+> > > + * NB: call only from main thread!
+> > > + */
+> > > +static int wait_thread(struct thread_struct *thread)
+> > > +{
+> > > +       int res;
+> > > +       enum thread_msg msg = THREAD_MSG__UNDEFINED;
+> > > +
+> > > +       res = read(thread->pipes.from[0], &msg, sizeof(msg));
+> > > +       if (res < 0) {
 
-Cc: Jiri Olsa <jolsa@kernel.org>
-Fixes: 145520631130bd64 ("perf data: Add perf_data__(create_dir|close_dir) functions")
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
----
-Hi Arnaldo, 
+> > Maybe it needs to handle -EINTR.
 
-I think this patch might have gone lost in the mailbox, submerged by
-other mails.
-I'll take advantage of the resend to add the missing 'Fixes:' tag.
+> Its behaviour should be retry, right?
+> Since these reads are used multiple times in the code, maybe I'm better off
+> writing a wrapper function handling also EINTR.
 
-I didn't flag this as v2 since it contains no logical change, let me
-know if doing so would've been better.
+Take a look at readn():
 
-Changes from first send: 
- - collected ack from Namhyung
- - added Fixes: tag
+tools/lib/perf/lib.c
 
-Original: https://lkml.kernel.org/lkml/20210621214220.167927-1-rickyman7@gmail.com/
+static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
+{
+        void *buf_start = buf;
+        size_t left = n;
 
-Thanks,
-Riccardo
----
- tools/perf/util/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+        while (left) {
+                /* buf must be treated as const if !is_read. */
+                ssize_t ret = is_read ? read(fd, buf, left) :
+                                        write(fd, buf, left);
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 8fca4779ae6a8e90..70b91ce35178c5f9 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -20,7 +20,7 @@
+                if (ret < 0 && errno == EINTR)
+                        continue;
+                if (ret <= 0)
+                        return ret;
+
+                left -= ret;
+                buf  += ret;
+        }
+
+        BUG_ON((size_t)(buf - buf_start) != n);
+        return n;
+}
+
+/*
+ * Read exactly 'n' bytes or return an error.
+ */
+ssize_t readn(int fd, void *buf, size_t n)
+{
+        return ion(true, fd, buf, n);
+}
  
- static void close_dir(struct perf_data_file *files, int nr)
- {
--	while (--nr >= 1) {
-+	while (--nr >= 0) {
- 		close(files[nr].fd);
- 		zfree(&files[nr].path);
- 	}
--- 
-2.23.0
-
+ 
+- Arnaldo
