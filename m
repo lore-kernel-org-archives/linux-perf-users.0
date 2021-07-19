@@ -2,98 +2,103 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B3DC07E95
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 14:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB214C07E95
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 14:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D08C5610F7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 14:13:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D935610F7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 14:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239278AbhGSNc3 (ORCPT
+        id S232083AbhGSONC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jul 2021 09:32:29 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3432 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239277AbhGSNc2 (ORCPT
+        Mon, 19 Jul 2021 10:13:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27279 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232059AbhGSONA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jul 2021 09:32:28 -0400
-Received: from fraeml707-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GT3Rn5Dcpz6H7SH;
-        Mon, 19 Jul 2021 22:01:41 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml707-chm.china.huawei.com (10.206.15.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.2; Mon, 19 Jul 2021 16:13:04 +0200
-Received: from [10.47.85.214] (10.47.85.214) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Mon, 19 Jul
- 2021 15:13:03 +0100
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>
-From:   John Garry <john.garry@huawei.com>
-Subject: [bug report] Patch "perf tools: Fix pattern matching for same
- substring in different pmu type" broken
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <44e25825-5f23-c641-9f1c-72268d895f75@huawei.com>
-Date:   Mon, 19 Jul 2021 15:13:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.85.214]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        Mon, 19 Jul 2021 10:13:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1626706420;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=vn3ipMwDK1MDy8wVT3Gd+hfZl1XsGuxvMDl2lJNjysg=;
+        b=JuEsvlizYBeZnOMjqiWtmze6JyrH7YWUoNlgFyk4AUcFs+iFwRet5zDMklPnkwq4pfHSUe
+        onx3U+XT4XCoENhgLtnEkOOM46XAwxZJ3PTxsCmdjs14Nvagt6f+t6m1pRcQOFnc8u76r+
+        poQYCDWhtdf+heQsl3xAQIkxwZANgvQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-532-U7a6Q5tIPUqWUJt0kDTAMA-1; Mon, 19 Jul 2021 10:53:38 -0400
+X-MC-Unique: U7a6Q5tIPUqWUJt0kDTAMA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C19B91922960;
+        Mon, 19 Jul 2021 14:53:37 +0000 (UTC)
+Received: from Diego.redhat.com (unknown [10.36.110.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6301618F0A;
+        Mon, 19 Jul 2021 14:53:35 +0000 (UTC)
+From:   Michael Petlan <mpetlan@redhat.com>
+To:     acme@redhat.com, linux-perf-users@vger.kernel.org
+Cc:     jolsa@redhat.com, jlelli@redhat.com, milian.wolff@kdab.com
+Subject: [PATCH] perf machine: Initialize srcline string member in add_location struct
+Date:   Mon, 19 Jul 2021 16:53:32 +0200
+Message-Id: <20210719145332.29747-1-mpetlan@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi guys,
+It's later supposed to be either a correct address or NULL. Without the
+initialization, it may contain an undefined value which results in the
+following segmentation fault:
 
-The named patch has broken PMU alias matching on my arm64 system.
+  # perf top --sort comm -g --ignore-callees=do_idle
 
-Specifically it is broken for when multiple tokens are used in the 
-alias. For example, alias "hisi_sccl,l3c" would previously match for PMU 
-"hisi_sccl3_l3c7", but that no longer works.
+terminates with
 
-In my example, in looking at the code, the callchain 
-pmu_uncore_alias_match("hisi_sccl,l3c", "hisi_sccl3_l3c7") -> 
-per_pmu__valid_suffix("hisi_sccl3_l3c7", "hisi_sccl") fails in the 
-following check:
+  perf: Segmentation fault
+  -------- backtrace --------
+  perf(+0x417b26)[0x557794f1fb26]
+  /lib64/libc.so.6(+0x37400)[0x7f62a0194400]
+  /lib64/libc.so.6(+0x15d685)[0x7f62a02ba685]
+  /lib64/libc.so.6(__strdup+0x12)[0x7f62a01e6802]
+  perf(+0x3769d9)[0x557794e7e9d9]
+  perf(+0x376d3a)[0x557794e7ed3a]
+  perf(+0x377284)[0x557794e7f284]
+  perf(+0x3773e0)[0x557794e7f3e0]
+  perf(hist_entry_iter__add+0xc4)[0x557794e80114]
+  perf(+0x2799aa)[0x557794d819aa]
+  perf(+0x354ec8)[0x557794e5cec8]
+  perf(+0x279341)[0x557794d81341]
+  /lib64/libpthread.so.0(+0x814a)[0x7f62a27b514a]
+  /lib64/libc.so.6(clone+0x43)[0x7f62a0259dc3]
 
-static bool perf_pmu__valid_suffix(char *pmu_name, char *tok)
-{
-	char *p;
-	...
-	p = pmu_name + strlen(tok);
-	...
-	if (*p != '_') //here
-		return false;
-}
+Fixes: 1fb7d06a509e ("perf report: Use srcline from callchain for hist entries")
 
-This check assumes the first token must be followed by a '_', but it is 
-possibly a numeric.
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Reported-by: Juri Lelli <jlelli@redhat.com>
+CC: Milian Wolff <milian.wolff@kdab.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/machine.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Please let me know how this should work. Previously it would match on 
-the tokens, ignoring numerics and '_'.
-
-As an aside, I'll look at why our testcases don't cover this scenario 
-and look to add a test if necessary.
-
-Thanks,
-john
-
-Ps, please cc linux-perf-users@vger.kernel.org as in the MAINTAINERS 
-file in future, as not all subscribe to the open kernel list (and so 
-cannot easily reply directly).
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index da19be7da284..44e40bad0e33 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2149,6 +2149,7 @@ static int add_callchain_ip(struct thread *thread,
+ 
+ 	al.filtered = 0;
+ 	al.sym = NULL;
++	al.srcline = NULL;
+ 	if (!cpumode) {
+ 		thread__find_cpumode_addr_location(thread, ip, &al);
+ 	} else {
+-- 
+2.18.4
 
