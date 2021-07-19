@@ -2,103 +2,127 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB214C07E95
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 14:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21966C07E9D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 17:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D935610F7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 14:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100A060E0C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 17:01:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232083AbhGSONC (ORCPT
+        id S235186AbhGSQUU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jul 2021 10:13:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27279 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232059AbhGSONA (ORCPT
+        Mon, 19 Jul 2021 12:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352781AbhGSQOl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jul 2021 10:13:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626706420;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=vn3ipMwDK1MDy8wVT3Gd+hfZl1XsGuxvMDl2lJNjysg=;
-        b=JuEsvlizYBeZnOMjqiWtmze6JyrH7YWUoNlgFyk4AUcFs+iFwRet5zDMklPnkwq4pfHSUe
-        onx3U+XT4XCoENhgLtnEkOOM46XAwxZJ3PTxsCmdjs14Nvagt6f+t6m1pRcQOFnc8u76r+
-        poQYCDWhtdf+heQsl3xAQIkxwZANgvQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-532-U7a6Q5tIPUqWUJt0kDTAMA-1; Mon, 19 Jul 2021 10:53:38 -0400
-X-MC-Unique: U7a6Q5tIPUqWUJt0kDTAMA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C19B91922960;
-        Mon, 19 Jul 2021 14:53:37 +0000 (UTC)
-Received: from Diego.redhat.com (unknown [10.36.110.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6301618F0A;
-        Mon, 19 Jul 2021 14:53:35 +0000 (UTC)
-From:   Michael Petlan <mpetlan@redhat.com>
-To:     acme@redhat.com, linux-perf-users@vger.kernel.org
-Cc:     jolsa@redhat.com, jlelli@redhat.com, milian.wolff@kdab.com
-Subject: [PATCH] perf machine: Initialize srcline string member in add_location struct
-Date:   Mon, 19 Jul 2021 16:53:32 +0200
-Message-Id: <20210719145332.29747-1-mpetlan@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Mon, 19 Jul 2021 12:14:41 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BF5C069A5A
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 09:10:25 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d12so16965491pfj.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 09:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o4i922N5SDDsYvh6TuHE/Y23vxIVmH2yUEAQuG2pCpE=;
+        b=hgDtj98JFI7Uz5/o2YUanStRm2pgcmFJm9RqwEPCvbw2aM+Q7aSMp7yYigxQLxLrzH
+         WNufFHdOpsrEeWEMk14EzulrQrKVeKMqiawwkWlOy9p3p4o6bzsyvJMizvYqVx68p/Wn
+         ULZo05dvfacQM7L+0gDIHSUcsxwbDVvdEMH/SGJIWpO0kaOoLZtFWWJ721B1R8cRY8JC
+         LknEn894OJbOJbPp7UeYwkUfk6UbSjWUyserq0H/3TbOq1jybBTUIntbBKihgBSTR+Z8
+         /6LWc2I0wa9wt3wLPo7CFnGXHNs6oq/aYDDJehLcati9Mqs2LOBk57XXuGoVDGOFUkPc
+         DEgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o4i922N5SDDsYvh6TuHE/Y23vxIVmH2yUEAQuG2pCpE=;
+        b=TjjcKFIfiWKujaU0/9cINj8DWDUVtawCRy1o7xYv0nGadYFpZ/vQ9kjAKgZA5ibaVK
+         xje0gcbOzCoSO7oqgm1kJsDF3alHuoLRPGbrhaxWeorzYF9o/Npdxi5Lyn1+oWRslePR
+         EED+tb6QkDPv+XhoWnkN6RjgSayUKcyiMkI7TrjHhZ4vpFOclwJowSuCD4sY/PPkMDkw
+         yBvuFV20Gn/3s83/tXoBvlTtl9HmxUbQHyRj//dyLqdqPPQzhpiaJkCYk9aHoQiPn9OR
+         azvZHo4cc8WT52iduF2vf3iZgO5QKev8iIpt4Aspkd24JvQCpY1AHPQWVvyMex9wsu1H
+         1iWg==
+X-Gm-Message-State: AOAM532e1SpD9YKyXfuWLVGmypp/17at/IFpSluLwm3wDpYG3Hb2PDuW
+        NWILgBLKnnwEI8wsYxiyzWSUbQ==
+X-Google-Smtp-Source: ABdhPJy2jGcpXSz3/n0yGq6EvR3KsN/25stQN4X0pzpZtImNNpTvcohu0e6B44HVvELefA3SZ45ehQ==
+X-Received: by 2002:a63:ef45:: with SMTP id c5mr26810707pgk.78.1626712421192;
+        Mon, 19 Jul 2021 09:33:41 -0700 (PDT)
+Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
+        by smtp.gmail.com with ESMTPSA id y82sm21001336pfb.121.2021.07.19.09.33.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jul 2021 09:33:39 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 10:33:36 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+        leo.yan@linaro.org, al.grant@arm.com, branislav.rankov@arm.com,
+        denik@chromium.org, suzuki.poulose@arm.com,
+        anshuman.khandual@arm.com, John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] perf cs-etm: Split --dump-raw-trace by AUX records
+Message-ID: <20210719163336.GA2255168@p14s>
+References: <20210624164303.28632-1-james.clark@arm.com>
+ <20210624164303.28632-3-james.clark@arm.com>
+ <20210705193338.GB1493103@p14s>
+ <YO8ivntow2JfdQWW@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YO8ivntow2JfdQWW@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It's later supposed to be either a correct address or NULL. Without the
-initialization, it may contain an undefined value which results in the
-following segmentation fault:
+Hi Arnaldo,
 
-  # perf top --sort comm -g --ignore-callees=do_idle
+On Wed, Jul 14, 2021 at 02:45:34PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jul 05, 2021 at 01:33:38PM -0600, Mathieu Poirier escreveu:
+> > On Thu, Jun 24, 2021 at 05:43:03PM +0100, James Clark wrote:
+> > > for example:
+> > > 
+> > >         Idx:808; ID:1c; I_BAD_SEQUENCE : Invalid Sequence in packet.[I_ASYNC]
+> > >         ...
+> > >         PKTP_ETMV4I_0016 : 0x0014 (OCSD_ERR_INVALID_PCKT_HDR) [Invalid packet header]; TrcIdx=822
+> > > 
+> > > Signed-off-by: James Clark <james.clark@arm.com>
+> > > ---
+> > >  tools/perf/util/cs-etm.c | 20 ++++++++++++++++++--
+> > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > > 
+> > 
+> > Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> 
+> 
+> 
+> Thanks, applied.
 
-terminates with
+This patch is the second of a two patch series[1][2].  The first one was applied and
+is in Linus' current master branch.  But I can't find the second one in
+either your core branch or Linus', and that despite your reply above that it has been
+applied.  As such I am guessing something went wrong with the process.  
 
-  perf: Segmentation fault
-  -------- backtrace --------
-  perf(+0x417b26)[0x557794f1fb26]
-  /lib64/libc.so.6(+0x37400)[0x7f62a0194400]
-  /lib64/libc.so.6(+0x15d685)[0x7f62a02ba685]
-  /lib64/libc.so.6(__strdup+0x12)[0x7f62a01e6802]
-  perf(+0x3769d9)[0x557794e7e9d9]
-  perf(+0x376d3a)[0x557794e7ed3a]
-  perf(+0x377284)[0x557794e7f284]
-  perf(+0x3773e0)[0x557794e7f3e0]
-  perf(hist_entry_iter__add+0xc4)[0x557794e80114]
-  perf(+0x2799aa)[0x557794d819aa]
-  perf(+0x354ec8)[0x557794e5cec8]
-  perf(+0x279341)[0x557794d81341]
-  /lib64/libpthread.so.0(+0x814a)[0x7f62a27b514a]
-  /lib64/libc.so.6(clone+0x43)[0x7f62a0259dc3]
+How do you want to proceed - should we resend the second patch[2] or you still
+have it somewhere in your Inbox?
 
-Fixes: 1fb7d06a509e ("perf report: Use srcline from callchain for hist entries")
+Thanks,
+Mathieu
 
-Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-Reported-by: Juri Lelli <jlelli@redhat.com>
-CC: Milian Wolff <milian.wolff@kdab.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/machine.c | 1 +
- 1 file changed, 1 insertion(+)
+[1]. https://lists.linaro.org/pipermail/coresight/2021-June/006575.html
+[2]. https://lists.linaro.org/pipermail/coresight/2021-June/006576.html
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index da19be7da284..44e40bad0e33 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2149,6 +2149,7 @@ static int add_callchain_ip(struct thread *thread,
- 
- 	al.filtered = 0;
- 	al.sym = NULL;
-+	al.srcline = NULL;
- 	if (!cpumode) {
- 		thread__find_cpumode_addr_location(thread, ip, &al);
- 	} else {
--- 
-2.18.4
-
+> 
+> - Arnaldo
+> 
