@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC86DC07E95
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 23:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA61C07E95
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 23:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9816113B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 23:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B2B6113A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 23:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242382AbhGSWg1 (ORCPT
+        id S1349817AbhGSWgt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jul 2021 18:36:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42450 "EHLO
+        Mon, 19 Jul 2021 18:36:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385463AbhGSTAs (ORCPT
+        with ESMTP id S1385461AbhGSTAs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 19 Jul 2021 15:00:48 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B209C061787
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 12:31:46 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id o4so15526306pgs.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 12:39:33 -0700 (PDT)
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70489C06178A
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 12:32:12 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d12so17439012pfj.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 12:39:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=fFuXsI4PgyPBGNuMhPa281s8CQuE4AWpLc5Xceic260=;
-        b=ECiX0oNLlcFpWmilqN5OxAdbfaPG4SI/FYoyMUhgO6rGqvzRbd4O8okKz6He/+mk4N
-         X82VoHVUOn1ejX7uUGUggH07qc4nAiIrHskUJdEbwrekzZ39/etYvl195Oee2LkLuum7
-         SzN9RhjYIR0Gt8edNDQInjXwZEblPSMvCSyFaXqA7rmKOuUNoULZ2mdzbjDE1BrSHb3H
-         cD5E9c1X5VG40NnzwX/gCsGjlgKPg0ORwuwuwVc3J/YXlVYtftAN8VpWU4ZfmdcBspSy
-         imvGfdFYOFi6UVYvgwN7eSxsO9rC/McbDLIzshd6NJEx392PYakf04rT0lJpB38Fx1Az
-         89Uw==
+        bh=kcNZ/XE6xPDuF3u3ajPrSNsiNkSWt/dpU0wB6i8pSgg=;
+        b=H+YZ2LRHc1EK4Ihx0pQXR5M6TMgWaov1OLiHhzilMHFZYQGzGrid+x3koK2RhDXBge
+         fd8U6o/kZ8jiqEev4sfgKTwwxg0945l29NryEXTF4qwtjCKw1MuTRIRA9G08DJCWjOGu
+         PZWLYdpC/CHPZUun7TyBF9l+NtoImwhpqhcZX07mz138q/3fhgTg+KyUDLXDLP35jKSX
+         b2SZRT1QpaEQrtlrnLPMJZ9YsWQxYItXIYfJf67JuDTG/uILAQz3JroU31wDSabviwdh
+         eGyrxQx6k5gKFtaJ/3WCl6z/8aJqva/VMeC+yE2J8pqFkPO38VVvOYCe5qHyZOpbD5Ao
+         uGMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fFuXsI4PgyPBGNuMhPa281s8CQuE4AWpLc5Xceic260=;
-        b=GVv/9ZdTUVsKTYfJqSfPMjULSqh6b0ipquu2Gr193HIXeiwuY17CAESHRnIKGf/nhS
-         LRRxzSRF+mAJZUo2myCY1RxLJZdf6GYgLlsOu9qqNmcgIztDzkI9Pw9gk073iqqFyuGk
-         J30wa1/LC56oJXuN6W47Vzmdw4lhp/OzFRWKoecKhVxIQ50fyWffSLaG8i8BHZUM13zH
-         l+jIcDs2EfSdFsYagP8MYirfJ+KrZTysjsGDCtBw+L2qah1Ym8hfv8ygRj/5UP1KAMCC
-         FDzmgjdRc+7WeOaNp8xLp3u6uZWVT3l0M4qmSQ7AIrO9LX4MAdb744S8St/7y1qcY+3P
-         7Tlg==
-X-Gm-Message-State: AOAM5330mzBByyDKA9coHNEM2gkLGTy2W4mr+leG8MpA5uV0wrT2pCOI
-        OPslfIaUzxrqVmJYN0xXa8sVyw==
-X-Google-Smtp-Source: ABdhPJxFKcaSE33JIxQuQEL7vCmz1D74iz2EYew7MfencyWpYdy/Jt286p6phb6zm/weKNVUd7aPIw==
-X-Received: by 2002:aa7:8f07:0:b029:332:958b:1513 with SMTP id x7-20020aa78f070000b0290332958b1513mr27832606pfr.4.1626723572793;
-        Mon, 19 Jul 2021 12:39:32 -0700 (PDT)
+        bh=kcNZ/XE6xPDuF3u3ajPrSNsiNkSWt/dpU0wB6i8pSgg=;
+        b=sh17kAmIHVcBXNAvNHxHhz6Rl0xDeX9p0qDjIz6G0+oactI2p0xP4KINTYpEGHAy5d
+         twIGLncIFxoxvl/yH14VTrCsKwooUMv6iL0IHlDWg5p7dzxDe60f1dsqUb3Fa4auQY98
+         eHvQM8tareb4bd4BUfwcYvcv+P2NRJny57BvZ4GuKYZXcI/IKiv2LGHaruADMKdg0VPd
+         vHenxa9LhBAQoN8gdVJzZ+wh+a27NWUH8NwWRd0kuwezdWn+OSQx8XWjop0gNAThMfm5
+         ihuV8v7zywmIjCDKzsbP10d2i3titRdQjho9WWNiLq0BuCkMsuytSRo/TEI0YccHFWkr
+         RQ4Q==
+X-Gm-Message-State: AOAM5332ncQ4MhjdmPO8+bE/iih+Z0oG/CZ5aVetufDfhXPXcggHGo8b
+        eaEpZF/zzJvKp/CCFU4R0/hLyg==
+X-Google-Smtp-Source: ABdhPJz3hw3TMu3EsXfdCJpfVGBnQysNmXwi0/aJJenGo1f4wqdszSyEfEAupio8TDGx1G6MAEh/0A==
+X-Received: by 2002:a62:6101:0:b029:326:3166:8b0b with SMTP id v1-20020a6261010000b029032631668b0bmr28065521pfb.4.1626723596644;
+        Mon, 19 Jul 2021 12:39:56 -0700 (PDT)
 Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id n12sm21573191pgr.2.2021.07.19.12.39.30
+        by smtp.gmail.com with ESMTPSA id y8sm21635325pfe.162.2021.07.19.12.39.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jul 2021 12:39:31 -0700 (PDT)
-Date:   Mon, 19 Jul 2021 13:39:29 -0600
+        Mon, 19 Jul 2021 12:39:54 -0700 (PDT)
+Date:   Mon, 19 Jul 2021 13:39:52 -0600
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     acme@kernel.org, coresight@lists.linaro.org, leo.yan@linaro.org,
@@ -71,69 +71,126 @@ Cc:     acme@kernel.org, coresight@lists.linaro.org, leo.yan@linaro.org,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] perf cs-etm: Suppress printing when resetting decoder
-Message-ID: <20210719193929.GE2255168@p14s>
+Subject: Re: [PATCH 5/6] perf cs-etm: Use existing decoder instead of
+ resetting it
+Message-ID: <20210719193952.GF2255168@p14s>
 References: <20210713154008.29656-1-james.clark@arm.com>
- <20210713154008.29656-5-james.clark@arm.com>
+ <20210713154008.29656-6-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210713154008.29656-5-james.clark@arm.com>
+In-Reply-To: <20210713154008.29656-6-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 04:40:06PM +0100, James Clark wrote:
-> The decoder is quite noisy when being reset. In a future commit,
-> dump-raw-trace will use a code path that resets the decoder rather than
-> creating a new one, so printing has to be suppressed to not flood the
-> output.
+On Tue, Jul 13, 2021 at 04:40:07PM +0100, James Clark wrote:
+> When dumping trace, the decoder is continually deleted and recreated to
+> decode each buffer. To support both formatted and unformatted trace in
+> a later commit, the decoder will be configured in advance.
+> 
+> This commit removes the deletion of the decoder and allows the
+> formatted/unformatted setting to persist.
 > 
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->
 
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> index 3e1a05bc82cc..ed1f0326f859 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -35,6 +35,7 @@
->  struct cs_etm_decoder {
->  	void *data;
->  	void (*packet_printer)(const char *msg);
-> +	bool suppress_printing;
->  	dcd_tree_handle_t dcd_tree;
->  	cs_etm_mem_cb_type mem_access;
->  	ocsd_datapath_resp_t prev_return;
-> @@ -74,9 +75,10 @@ int cs_etm_decoder__reset(struct cs_etm_decoder *decoder)
->  	ocsd_datapath_resp_t dp_ret;
->  
->  	decoder->prev_return = OCSD_RESP_CONT;
-> -
-> +	decoder->suppress_printing = true;
->  	dp_ret = ocsd_dt_process_data(decoder->dcd_tree, OCSD_OP_RESET,
->  				      0, 0, NULL, NULL);
-> +	decoder->suppress_printing = false;
->  	if (OCSD_DATA_RESP_IS_FATAL(dp_ret))
->  		return -1;
->  
-> @@ -146,8 +148,10 @@ static void cs_etm_decoder__print_str_cb(const void *p_context,
->  					 const char *msg,
->  					 const int str_len)
->  {
-> -	if (p_context && str_len)
-> -		((struct cs_etm_decoder *)p_context)->packet_printer(msg);
-> +	const struct cs_etm_decoder *decoder = p_context;
-> +
-> +	if (p_context && str_len && !decoder->suppress_printing)
-> +		decoder->packet_printer(msg);
+>  tools/perf/util/cs-etm.c | 37 +++++++------------------------------
+>  1 file changed, 7 insertions(+), 30 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 2d07e52ffd3c..760050ea936d 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -508,14 +508,11 @@ static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
+>  	return ret;
 >  }
 >  
->  static int
+> -static void cs_etm__dump_event(struct cs_etm_auxtrace *etm,
+> +static void cs_etm__dump_event(struct cs_etm_queue *etmq,
+>  			       struct auxtrace_buffer *buffer)
+>  {
+>  	int ret;
+>  	const char *color = PERF_COLOR_BLUE;
+> -	struct cs_etm_decoder_params d_params;
+> -	struct cs_etm_trace_params *t_params;
+> -	struct cs_etm_decoder *decoder;
+>  	size_t buffer_used = 0;
+>  
+>  	fprintf(stdout, "\n");
+> @@ -523,29 +520,11 @@ static void cs_etm__dump_event(struct cs_etm_auxtrace *etm,
+>  		     ". ... CoreSight ETM Trace data: size %zu bytes\n",
+>  		     buffer->size);
+>  
+> -	/* Use metadata to fill in trace parameters for trace decoder */
+> -	t_params = zalloc(sizeof(*t_params) * etm->num_cpu);
+> -
+> -	if (!t_params)
+> -		return;
+> -
+> -	if (cs_etm__init_trace_params(t_params, etm))
+> -		goto out_free;
+> -
+> -	/* Set decoder parameters to simply print the trace packets */
+> -	if (cs_etm__init_decoder_params(&d_params, NULL,
+> -					CS_ETM_OPERATION_PRINT))
+> -		goto out_free;
+> -
+> -	decoder = cs_etm_decoder__new(etm->num_cpu, &d_params, t_params);
+> -
+> -	if (!decoder)
+> -		goto out_free;
+>  	do {
+>  		size_t consumed;
+>  
+>  		ret = cs_etm_decoder__process_data_block(
+> -				decoder, buffer->offset,
+> +				etmq->decoder, buffer->offset,
+>  				&((u8 *)buffer->data)[buffer_used],
+>  				buffer->size - buffer_used, &consumed);
+>  		if (ret)
+> @@ -554,10 +533,7 @@ static void cs_etm__dump_event(struct cs_etm_auxtrace *etm,
+>  		buffer_used += consumed;
+>  	} while (buffer_used < buffer->size);
+>  
+> -	cs_etm_decoder__free(decoder);
+> -
+> -out_free:
+> -	zfree(&t_params);
+> +	cs_etm_decoder__reset(etmq->decoder);
+>  }
+>  
+>  static int cs_etm__flush_events(struct perf_session *session,
+> @@ -769,7 +745,8 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+>  
+>  	/* Set decoder parameters to decode trace packets */
+>  	if (cs_etm__init_decoder_params(&d_params, etmq,
+> -					CS_ETM_OPERATION_DECODE))
+> +					dump_trace ? CS_ETM_OPERATION_PRINT :
+> +						     CS_ETM_OPERATION_DECODE))
+>  		goto out_free;
+>  
+>  	etmq->decoder = cs_etm_decoder__new(etm->num_cpu, &d_params, t_params);
+> @@ -2422,7 +2399,7 @@ static void dump_queued_data(struct cs_etm_auxtrace *etm,
+>  	for (i = 0; i < etm->queues.nr_queues; ++i)
+>  		list_for_each_entry(buf, &etm->queues.queue_array[i].head, list)
+>  			if (buf->reference == event->reference)
+> -				cs_etm__dump_event(etm, buf);
+> +				cs_etm__dump_event(etm->queues.queue_array[i].priv, buf);
+>  }
+>  
+>  static int cs_etm__process_auxtrace_event(struct perf_session *session,
+> @@ -2460,7 +2437,7 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+>  
+>  		if (dump_trace)
+>  			if (auxtrace_buffer__get_data(buffer, fd)) {
+> -				cs_etm__dump_event(etm, buffer);
+> +				cs_etm__dump_event(etm->queues.queue_array[idx].priv, buffer);
+>  				auxtrace_buffer__put_data(buffer);
+>  			}
+>  	} else if (dump_trace)
 > -- 
 > 2.28.0
 > 
