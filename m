@@ -2,105 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D0DC07E9B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 05:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A72DC07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 08:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C76236113C
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 05:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8A77611F2
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 08:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236028AbhGTFQQ (ORCPT
+        id S233603AbhGTHmx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jul 2021 01:16:16 -0400
-Received: from mga03.intel.com ([134.134.136.65]:7710 "EHLO mga03.intel.com"
+        Tue, 20 Jul 2021 03:42:53 -0400
+Received: from mga18.intel.com ([134.134.136.126]:51765 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232431AbhGTFQP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jul 2021 01:16:15 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10050"; a="211240200"
+        id S231295AbhGTHm3 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 20 Jul 2021 03:42:29 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10050"; a="198469894"
 X-IronPort-AV: E=Sophos;i="5.84,254,1620716400"; 
-   d="scan'208";a="211240200"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2021 22:56:54 -0700
+   d="scan'208";a="198469894"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2021 01:22:21 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.84,254,1620716400"; 
-   d="scan'208";a="500513712"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.147]) ([10.238.4.147])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2021 22:56:51 -0700
-Subject: Re: [bug report] Patch "perf tools: Fix pattern matching for same
- substring in different pmu type" broken
-To:     John Garry <john.garry@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>,
-        "liuqi (BA)" <liuqi115@huawei.com>,
-        Andi Kleen <ak@linux.intel.com>, "Jin, Yao" <yao.jin@intel.com>
-References: <44e25825-5f23-c641-9f1c-72268d895f75@huawei.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <1522c39e-5658-d030-2e1e-f6e5d849d29b@linux.intel.com>
-Date:   Tue, 20 Jul 2021 13:56:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-MIME-Version: 1.0
-In-Reply-To: <44e25825-5f23-c641-9f1c-72268d895f75@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="453985379"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
+  by orsmga007.jf.intel.com with ESMTP; 20 Jul 2021 01:22:18 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
+        john.garry@huawei.com, Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH] perf pmu: Create x86 specific perf_pmu__valid_suffix
+Date:   Tue, 20 Jul 2021 16:20:44 +0800
+Message-Id: <20210720082044.5380-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi John, Hi Arnaldo,
+The commit c47a5599eda3 ("perf tools: Fix pattern matching for same
+substring in different PMU type") breaks arm64 system because it
+assumes the first token must be followed by a '_', but it is
+possibly a numeric on arm64.
 
-On 7/19/2021 10:13 PM, John Garry wrote:
-> Hi guys,
-> 
-> The named patch has broken PMU alias matching on my arm64 system.
-> 
-> Specifically it is broken for when multiple tokens are used in the alias. For example, alias 
-> "hisi_sccl,l3c" would previously match for PMU "hisi_sccl3_l3c7", but that no longer works.
-> 
-> In my example, in looking at the code, the callchain pmu_uncore_alias_match("hisi_sccl,l3c", 
-> "hisi_sccl3_l3c7") -> per_pmu__valid_suffix("hisi_sccl3_l3c7", "hisi_sccl") fails in the following 
-> check:
-> 
-> static bool perf_pmu__valid_suffix(char *pmu_name, char *tok)
-> {
->      char *p;
->      ...
->      p = pmu_name + strlen(tok);
->      ...
->      if (*p != '_') //here
->          return false;
-> }
-> 
-> This check assumes the first token must be followed by a '_', but it is possibly a numeric.
-> 
+For example, perf_pmu__valid_suffix("hisi_sccl3_l3c7", "hisi_sccl")
+fails. "hisi_sccl3_l3c7" is pmu name and "hisi_sccl" is token.
+"hisi_sccl" is followed by a digit but not followed by a '_'
+('3' in this example).
 
-It looks that the PMU alias format on arm64 has big difference than the format on x86. My new idea 
-is we create a x86 specific perf_pmu__valid_suffix, and for other arch, the weak function always 
-returns true. That will not change original behavior.
+Since the PMU alias format on arm64 has difference than the format
+on x86. Create a x86 specific perf_pmu__valid_suffix. For other arch,
+the weak function always returns true to keep original behavior
+unchanged.
 
-What do you think?
+Fixes: c47a5599eda3 ("perf tools: Fix pattern matching for same substring in different PMU type")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Reported-by: John Garry <john.garry@huawei.com>
+---
+ tools/perf/arch/x86/util/pmu.c | 22 ++++++++++++++++++++++
+ tools/perf/util/pmu.c          | 27 ++++++---------------------
+ tools/perf/util/pmu.h          |  1 +
+ 3 files changed, 29 insertions(+), 21 deletions(-)
 
-> Please let me know how this should work. Previously it would match on the tokens, ignoring numerics 
-> and '_'.
-> 
-> As an aside, I'll look at why our testcases don't cover this scenario and look to add a test if 
-> necessary.
-> 
-> Thanks,
-> john
-> 
-> Ps, please cc linux-perf-users@vger.kernel.org as in the MAINTAINERS file in future, as not all 
-> subscribe to the open kernel list (and so cannot easily reply directly).
-> 
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index d48d608517fd..519da0811308 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -3,6 +3,7 @@
+ 
+ #include <linux/stddef.h>
+ #include <linux/perf_event.h>
++#include <linux/ctype.h>
+ 
+ #include "../../../util/intel-pt.h"
+ #include "../../../util/intel-bts.h"
+@@ -18,3 +19,24 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __mayb
+ #endif
+ 	return NULL;
+ }
++
++bool perf_pmu__valid_suffix(char *pmu_name, char *tok)
++{
++	char *p;
++
++	if (strncmp(pmu_name, tok, strlen(tok)))
++		return false;
++
++	p = pmu_name + strlen(tok);
++	if (*p == 0)
++		return true;
++
++	if (*p != '_')
++		return false;
++
++	++p;
++	if (*p == 0 || !isdigit(*p))
++		return false;
++
++	return true;
++}
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 44b90d638ad5..a671b16f2d3e 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -742,27 +742,6 @@ struct pmu_events_map *__weak pmu_events_map__find(void)
+ 	return perf_pmu__find_map(NULL);
+ }
+ 
+-static bool perf_pmu__valid_suffix(char *pmu_name, char *tok)
+-{
+-	char *p;
+-
+-	if (strncmp(pmu_name, tok, strlen(tok)))
+-		return false;
+-
+-	p = pmu_name + strlen(tok);
+-	if (*p == 0)
+-		return true;
+-
+-	if (*p != '_')
+-		return false;
+-
+-	++p;
+-	if (*p == 0 || !isdigit(*p))
+-		return false;
+-
+-	return true;
+-}
+-
+ bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+ {
+ 	char *tmp = NULL, *tok, *str;
+@@ -1906,3 +1885,9 @@ int perf_pmu__match(char *pattern, char *name, char *tok)
+ 
+ 	return 0;
+ }
++
++bool __weak perf_pmu__valid_suffix(char *pmu_name __maybe_unused,
++				   char *tok __maybe_unused)
++{
++	return true;
++}
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 926da483a141..901812987b79 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -134,5 +134,6 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+ 
+ bool perf_pmu__has_hybrid(void);
+ int perf_pmu__match(char *pattern, char *name, char *tok);
++bool perf_pmu__valid_suffix(char *pmu_name, char *tok);
+ 
+ #endif /* __PMU_H */
+-- 
+2.17.1
 
-Sorry about that! I will remember that, cc linux-perf-users@vger.kernel.org in next patch.
-
-Thanks
-Jin Yao
