@@ -2,169 +2,121 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86094C07E95
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 23:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C36C07E95
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 03:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5005A6113B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jul 2021 23:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C4D6108B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 03:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242887AbhGSWhx (ORCPT
+        id S235019AbhGTClu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jul 2021 18:37:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:54827 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1387839AbhGSUgZ (ORCPT
+        Mon, 19 Jul 2021 22:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60984 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1346409AbhGTCkW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jul 2021 16:36:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1626729376;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CZbqAx8RCbkxkOvue3VbFWnAjITofkdFcSi0ebBpg7c=;
-        b=LopMR2h4/mKBTIbo5vFuos2vIBXsI137sPQ+oF/lIVKwA6+8Y+OdfdkWAPgl5bZWMdIGFB
-        zovyWtaIu4JeUMtHF+COzZ8y+FlqLFUChCDFLgdI8wtNrXvcjtVXfoLs06CyFcFc4nqsia
-        mODia137yNLlutyVyX6dUSjMIk+SLiQ=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-f-gF58wDOiK3B8RD5JJzsw-1; Mon, 19 Jul 2021 17:13:31 -0400
-X-MC-Unique: f-gF58wDOiK3B8RD5JJzsw-1
-Received: by mail-ej1-f71.google.com with SMTP id t8-20020a1709063e48b0290501cd965554so5970960eji.8
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jul 2021 14:13:30 -0700 (PDT)
+        Mon, 19 Jul 2021 22:40:22 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1483DC061762;
+        Mon, 19 Jul 2021 20:21:01 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id s18so21257889pgg.8;
+        Mon, 19 Jul 2021 20:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gjZSaF3RXySa1uirQyy8STm6C8ddpC3urY/fbzCQUXc=;
+        b=XseHADv0++kRb+kSNwrb3v0X4VVhmQ4uSd1tnGhlh18VmYAjeGz1/kTi+jaQJ9AdsJ
+         SertRRPrsL+Wkb373CVhz4BDOmvsP90wYEYWyjaEZzcpFzyG6ecIm72fZtNT+WMHV1D8
+         cog6vS6VNHJYL/5t1wFMQ0rcczKN3neLIyhBX7N4ScwWlBmE6R0eV9EaOmwdeL+3eBSD
+         qcHhgKgBwyre6neBpjrhkrg5xT05kikmQJ0tJN9r+jSbZpD9d6cA/wok1TBBNJTjMkjC
+         P1PBRFP5ew2GFjlmrLvYhKWrjv3gpM2bjpNwV5/Lhnq/Cdtmf2tXh71aVv9BYEoqV5IG
+         VifA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CZbqAx8RCbkxkOvue3VbFWnAjITofkdFcSi0ebBpg7c=;
-        b=lZ3kE/YAY2m0PvT8V55o83byac7IpElwHCMnczq+bjXaxagauki+CKirAbtWJ/tD/4
-         NCQisxFcYIBy/rR8/fu3rbD0rbIDbXH3QV1cus3AliowuF1xLDMs/crlojzuSxynZ7QV
-         u1VBTPl1cuz7YVYLenLjG9Nh5iPRU+1qxPRpxDceyPoiv2xvrT5SQckQ8+fakK3KkNU7
-         vhu7xlId162Kreu+iLZSVAzoOlVwMinrg42pHnSLXFRzkmcJXliO1qBP1cbfQVlPNdEp
-         nNhNDdnS0ZggmM7owrCvaezxCjDtsVcOr/gWTxX4Swg4XctRQKMf700LZe4nE4tYsbhS
-         MhKA==
-X-Gm-Message-State: AOAM530VLyvVj7WO5mKFU4BJlCMwUFVC98nAjgR5C8mH3/QHL7kWrLW0
-        pyy8VgyvrPesgkqVBI1LQhuSskNXsq20z78YLkiBqHECaNRBkOqGLHw8N2+ybTY0HVuRLla3l+Y
-        o+y0wmB3bJmdm0NVbIM31D3bYQuwreA==
-X-Received: by 2002:a17:907:1c9f:: with SMTP id nb31mr29626540ejc.342.1626729209742;
-        Mon, 19 Jul 2021 14:13:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyZcbdUplE0ZM5hFo76QHPnaJkulHVLBuERYtpqhzmRgCab8byCiyP4+jrQdhO9FmizVgN1RQ==
-X-Received: by 2002:a17:907:1c9f:: with SMTP id nb31mr29626521ejc.342.1626729209530;
-        Mon, 19 Jul 2021 14:13:29 -0700 (PDT)
-Received: from krava ([83.240.60.59])
-        by smtp.gmail.com with ESMTPSA id jw8sm6284226ejc.60.2021.07.19.14.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Jul 2021 14:13:29 -0700 (PDT)
-Date:   Mon, 19 Jul 2021 23:13:27 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gjZSaF3RXySa1uirQyy8STm6C8ddpC3urY/fbzCQUXc=;
+        b=kjy6UmD9ign1vKZuRYETUD+tvEVdZ3yqSa14v4gRGy/AOLQ/8H2+9TZyA+BHwhZVwx
+         lG0ELjK/lTg25dvo4G/J8zWApvCVZtPKR0wqWTxF3waxwnf0FJ/I/1QN7xMIituwiixQ
+         /namVjdavSxmKJKaMyXGGfbxJ3Mmr6wgnC8KVz66J2VhvVoBoMb7fs/PNc6voHkFTYP4
+         he94tKUqyaCe3tmgpEG//eLZIgBS9BBu1Tvz3qbE3gHJRYkRBvHEPO8vxbWV2sP6r5sF
+         o4bLfJxYQTecdp0JpocT33q/9gmaG4w7HhjXsjWJ4RdRhpdkIvMJJ5QqocQBkUk7ZhPo
+         v6ug==
+X-Gm-Message-State: AOAM533Uhe+ncSTa1rLJyzL2tw0/ko10MTmehCFUMHD7o/7FcgUti5m3
+        x6Wu8qNx71es7Ik0PttIJlQ=
+X-Google-Smtp-Source: ABdhPJyzJvpYTOYuIWrFwJI+qv5A0h900M++L6KlKXy25fOba4f/yYi5GNtEYVkLuy/XcXQ5gH+XEw==
+X-Received: by 2002:a05:6a00:1c6d:b029:338:322:137d with SMTP id s45-20020a056a001c6db02903380322137dmr19547938pfw.38.1626751260573;
+        Mon, 19 Jul 2021 20:21:00 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id i8sm947324pjh.36.2021.07.19.20.20.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 19 Jul 2021 20:21:00 -0700 (PDT)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Joerg Roedel <jroedel@suse.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH 00/10] perf: add workqueue library and use it in
- synthetic-events
-Message-ID: <YPXq95yUYo+cH740@krava>
-References: <cover.1626177381.git.rickyman7@gmail.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: 0001-perf-x86-amd-Do-not-touch-the-AMD64_EVENTSEL_HOSTONL.patchFrom 9f724a38754d3f99a1b332c11e72e9dd213289d7 Mon Sep 17 00:00:00 2001
+Date:   Tue, 20 Jul 2021 11:20:48 +0800
+Message-Id: <20210720032048.90815-1-likexu@tencent.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1626177381.git.rickyman7@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jul 13, 2021 at 02:11:11PM +0200, Riccardo Mancini wrote:
-> This patchset introduces a new utility library inside perf/util, which
-> provides a work queue abstraction, which loosely follows the Kernel
-> workqueue API.
-> 
-> The workqueue abstraction is made up by two components:
->  - threadpool: which takes care of managing a pool of threads. It is
->    inspired by the prototype for threaded trace in perf-record from Alexey:
->    https://lore.kernel.org/lkml/cover.1625227739.git.alexey.v.bayduraev@linux.intel.com/
->  - workqueue: manages a shared queue and provides the workers implementation.
-> 
-> On top of the workqueue, a simple parallel-for utility is implemented
-> which is then showcased in synthetic-events.c, replacing the previous
-> manual pthread-created threads.
-> 
-> Through some experiments with perf bench, I can see how the new 
-> workqueue has a higher overhead compared to manual creation of threads, 
-> but is able to more effectively partition work among threads, yielding 
-> a better result with more threads.
-> Furthermore, the overhead could be configured by changing the
-> `work_size` (currently 1), aka the number of dirents that are 
-> processed by a thread before grabbing a lock to get the new work item.
-> I experimented with different sizes but, while bigger sizes reduce overhead
-> as expected, they do not scale as well to more threads.
-> 
-> I tried to keep the patchset as simple as possible, deferring possible
-> improvements and features to future work.
-> Naming a few:
->  - in order to achieve a better performance, we could consider using 
->    work-stealing instead of a common queue.
->  - affinities in the thread pool, as in Alexey prototype for
->    perf-record. Doing so would enable reusing the same threadpool for
->    different purposes (evlist open, threaded trace, synthetic threads),
->    avoiding having to spin up threads multiple times.
->  - resizable threadpool, e.g. for lazy spawining of threads.
-> 
-> @Arnaldo
-> Since I wanted the workqueue to provide a similar API to the Kernel's
-> workqueue, I followed the naming style I found there, instead of the
-> usual object__method style that is typically found in perf. 
-> Let me know if you'd like me to follow perf style instead.
-> 
-> Thanks,
-> Riccardo
-> 
-> Riccardo Mancini (10):
->   perf workqueue: threadpool creation and destruction
->   perf tests: add test for workqueue
->   perf workqueue: add threadpool start and stop functions
->   perf workqueue: add threadpool execute and wait functions
->   perf workqueue: add sparse annotation header
->   perf workqueue: introduce workqueue struct
->   perf workqueue: implement worker thread and management
->   perf workqueue: add queue_work and flush_workqueue functions
->   perf workqueue: add utility to execute a for loop in parallel
->   perf synthetic-events: use workqueue parallel_for
+From: Like Xu <likexu@tencent.com>
 
-looks great, would it make sense to put this to libperf?
+If we use "perf record" in an AMD Milan guest, dmesg reports a #GP warning
+from an unchecked MSR access error on MSR_F15H_PERF_CTLx:
 
-jirka
+[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write
+0x0000020000110076) at rIP: 0xffffffff8106ddb4 (native_write_msr+0x4/0x20)
+[] Call Trace:
+[]  amd_pmu_disable_event+0x22/0x90
+[]  x86_pmu_stop+0x4c/0xa0
+[]  x86_pmu_del+0x3a/0x140
 
-> 
->  tools/perf/tests/Build                 |   1 +
->  tools/perf/tests/builtin-test.c        |   9 +
->  tools/perf/tests/tests.h               |   3 +
->  tools/perf/tests/workqueue.c           | 453 +++++++++++++++++
->  tools/perf/util/Build                  |   1 +
->  tools/perf/util/synthetic-events.c     | 131 +++--
->  tools/perf/util/workqueue/Build        |   2 +
->  tools/perf/util/workqueue/sparse.h     |  21 +
->  tools/perf/util/workqueue/threadpool.c | 516 ++++++++++++++++++++
->  tools/perf/util/workqueue/threadpool.h |  29 ++
->  tools/perf/util/workqueue/workqueue.c  | 642 +++++++++++++++++++++++++
->  tools/perf/util/workqueue/workqueue.h  |  38 ++
->  12 files changed, 1771 insertions(+), 75 deletions(-)
->  create mode 100644 tools/perf/tests/workqueue.c
->  create mode 100644 tools/perf/util/workqueue/Build
->  create mode 100644 tools/perf/util/workqueue/sparse.h
->  create mode 100644 tools/perf/util/workqueue/threadpool.c
->  create mode 100644 tools/perf/util/workqueue/threadpool.h
->  create mode 100644 tools/perf/util/workqueue/workqueue.c
->  create mode 100644 tools/perf/util/workqueue/workqueue.h
-> 
-> -- 
-> 2.31.1
-> 
+The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host,
+while the guest perf driver should avoid such use.
+
+Signed-off-by: Like Xu <likexu@tencent.com>
+---
+ arch/x86/events/perf_event.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 2bf1c7ea2758..795f4779023c 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1116,8 +1116,9 @@ void x86_pmu_stop(struct perf_event *event, int flags);
+ static inline void x86_pmu_disable_event(struct perf_event *event)
+ {
+ 	struct hw_perf_event *hwc = &event->hw;
++	u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
+ 
+-	wrmsrl(hwc->config_base, hwc->config);
++	wrmsrl(hwc->config_base, hwc->config & ~disable_mask);
+ 
+ 	if (is_counter_pair(hwc))
+ 		wrmsrl(x86_pmu_config_addr(hwc->idx + 1), 0);
+-- 
+2.32.0
 
