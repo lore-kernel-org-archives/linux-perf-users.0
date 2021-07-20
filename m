@@ -2,94 +2,105 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F444C07E9B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 03:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D0DC07E9B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 05:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8736113B
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 03:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76236113C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jul 2021 05:56:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346611AbhGTCsO (ORCPT
+        id S236028AbhGTFQQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jul 2021 22:48:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244726AbhGTCr4 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jul 2021 22:47:56 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68820C061762;
-        Mon, 19 Jul 2021 20:28:34 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id j4so4601834pgk.5;
-        Mon, 19 Jul 2021 20:28:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=D86blkjNHKioN25R04XcYte58T6pb5DQYVQYgurli6Y=;
-        b=sZ83FT/uYsaywhpvb6rqo0lNjDavwpJ0/Id0igA1lKTbijfq+XEWHxqNAIRP91zn2Z
-         wPLiiJRPz98+vq7MGPOT8Ni2vjfd8pCwKR5n0/zI/kByD/2mRhJEacvwWjBAfVnBfC3s
-         qXMrVLfLlqsw+ajNmRwlCthwvcgg6n/nOKmdtgs1S5K3HJyOwCUe+hQDaegeXEqIL074
-         4+Gi6zJ2XvBGiAxfCLO6cfBnTSCPcQq5GygbP1kRd5yKTpvDhaOyHwCmfxMAP/PGsQD9
-         SUonr0Y6r7gmXl50jk21a+7YzWUM0bvuT9bddRYj0A4UU1KEjiwGTf0OLXLfCoEPpNlE
-         RvUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=D86blkjNHKioN25R04XcYte58T6pb5DQYVQYgurli6Y=;
-        b=DcfcwiGNPoUl/i4oc5XhAfjC//DL+HdVJ/kla52bc8dfGPT/Znzkc/zfUlzpIxjeXO
-         /o241HybXvGyJ3Hx05AxU7mj8g3A2PpK8VUXaIxKIlC9Ur93yxSXT1Oql6s09bmpG8g3
-         zlHj4GzZ349bOXbf3a4GFVgVQKjaqHcYUNC/Bixvmm7Y90QjEldN03sQBYKJCjOmDypw
-         uY7a4o4Y/fori38Le+Sv1pRfou5TykkwaHM/E0a4H7y4b+Jyi61jX40fA07xayS/MEzs
-         PqRaUUH58jeSrdNRu26JtR3srf53SYza8+YZp/rZGX47pjAnwKYx/C2oF1QnDXe7YASC
-         ed2Q==
-X-Gm-Message-State: AOAM530o8RNloHW1SRNV3x6vIiA5KSH1U4/VIMVMxy6FYGA90J2GUd1o
-        R+NsXssKb9Rp63HmC0AdJFzHzsn/qn7NRycL
-X-Google-Smtp-Source: ABdhPJxOqjtMd2iZm414Gw/g3s/4B6+7cGFr46qbXy9AAMu7ATkAd3WUwRgjNv88g3QcdMQ32rsUVg==
-X-Received: by 2002:a63:67c3:: with SMTP id b186mr7184478pgc.384.1626751713979;
-        Mon, 19 Jul 2021 20:28:33 -0700 (PDT)
-Received: from Likes-MacBook-Pro.local ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id g5sm1380557pfj.212.2021.07.19.20.28.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jul 2021 20:28:33 -0700 (PDT)
-Subject: Re:
- 0001-perf-x86-amd-Do-not-touch-the-AMD64_EVENTSEL_HOSTONL.patchFrom
- 9f724a38754d3f99a1b332c11e72e9dd213289d7 Mon Sep 17 00:00:00 2001
-From:   Like Xu <like.xu.linux@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <jroedel@suse.de>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Tue, 20 Jul 2021 01:16:16 -0400
+Received: from mga03.intel.com ([134.134.136.65]:7710 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232431AbhGTFQP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 20 Jul 2021 01:16:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10050"; a="211240200"
+X-IronPort-AV: E=Sophos;i="5.84,254,1620716400"; 
+   d="scan'208";a="211240200"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2021 22:56:54 -0700
+X-IronPort-AV: E=Sophos;i="5.84,254,1620716400"; 
+   d="scan'208";a="500513712"
+Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.4.147]) ([10.238.4.147])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2021 22:56:51 -0700
+Subject: Re: [bug report] Patch "perf tools: Fix pattern matching for same
+ substring in different pmu type" broken
+To:     John Garry <john.garry@huawei.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20210720032048.90815-1-likexu@tencent.com>
-Message-ID: <38c206c9-ffc2-95f1-8590-5f14b7cdcfcf@gmail.com>
-Date:   Tue, 20 Jul 2021 11:28:23 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.12.0
+        Jiri Olsa <jolsa@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        "liuqi (BA)" <liuqi115@huawei.com>,
+        Andi Kleen <ak@linux.intel.com>, "Jin, Yao" <yao.jin@intel.com>
+References: <44e25825-5f23-c641-9f1c-72268d895f75@huawei.com>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <1522c39e-5658-d030-2e1e-f6e5d849d29b@linux.intel.com>
+Date:   Tue, 20 Jul 2021 13:56:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20210720032048.90815-1-likexu@tencent.com>
+In-Reply-To: <44e25825-5f23-c641-9f1c-72268d895f75@huawei.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The subject should be:
+Hi John, Hi Arnaldo,
 
-"perf/x86: Do not touch AMD64_EVENTSEL_HOSTONLY bit inside the guest"
+On 7/19/2021 10:13 PM, John Garry wrote:
+> Hi guys,
+> 
+> The named patch has broken PMU alias matching on my arm64 system.
+> 
+> Specifically it is broken for when multiple tokens are used in the alias. For example, alias 
+> "hisi_sccl,l3c" would previously match for PMU "hisi_sccl3_l3c7", but that no longer works.
+> 
+> In my example, in looking at the code, the callchain pmu_uncore_alias_match("hisi_sccl,l3c", 
+> "hisi_sccl3_l3c7") -> per_pmu__valid_suffix("hisi_sccl3_l3c7", "hisi_sccl") fails in the following 
+> check:
+> 
+> static bool perf_pmu__valid_suffix(char *pmu_name, char *tok)
+> {
+>      char *p;
+>      ...
+>      p = pmu_name + strlen(tok);
+>      ...
+>      if (*p != '_') //here
+>          return false;
+> }
+> 
+> This check assumes the first token must be followed by a '_', but it is possibly a numeric.
+> 
 
-Sorry for the noise.
+It looks that the PMU alias format on arm64 has big difference than the format on x86. My new idea 
+is we create a x86 specific perf_pmu__valid_suffix, and for other arch, the weak function always 
+returns true. That will not change original behavior.
+
+What do you think?
+
+> Please let me know how this should work. Previously it would match on the tokens, ignoring numerics 
+> and '_'.
+> 
+> As an aside, I'll look at why our testcases don't cover this scenario and look to add a test if 
+> necessary.
+> 
+> Thanks,
+> john
+> 
+> Ps, please cc linux-perf-users@vger.kernel.org as in the MAINTAINERS file in future, as not all 
+> subscribe to the open kernel list (and so cannot easily reply directly).
+> 
+
+Sorry about that! I will remember that, cc linux-perf-users@vger.kernel.org in next patch.
+
+Thanks
+Jin Yao
