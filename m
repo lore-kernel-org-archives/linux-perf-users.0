@@ -2,120 +2,107 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE74C636CE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 15:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6225C6377A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 15:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8579B61245
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 15:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAC161221
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 15:03:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239008AbhGUOW1 (ORCPT
+        id S239307AbhGUOWa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jul 2021 10:22:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34710 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239434AbhGUOTG (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jul 2021 10:19:06 -0400
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DF8C0613D3
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 07:59:43 -0700 (PDT)
-Received: by mail-io1-xd35.google.com with SMTP id z9so2665382iob.8
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 07:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XI+Dx3h7cED2ymBlyHrrhom6GxHUNS25otSbDCgTdfM=;
-        b=StuwqrCNBxAbvlaItriRISqUD2bCPrwte93gRcZgZRTpbgma1yt3VbTMnXPiMYOT5A
-         wS66/RgcYikmz21fweGdngLUbmyoAe3hK5pFRTh9jZlus1fm+U7mop8//e75VPGWFshD
-         W8lmHS5IsP0PyTYfCpXsxiFt/RTFuRO/9WKS2MLzRnX0d/YB8Ox7xseTNkhOdAz1bq1z
-         zicnkCWJKkJMNBQBYp1XGtf4+RTBQnIySSHou9FUDsOFmMV17QmHE3vNZCpvw36297uy
-         MDhIhNVEtFGBXPtXDJqQA99PsjO8xZhZ4/sfFnw8K/7aSKLBw6O/H8VV6NECw9vx6eez
-         31Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XI+Dx3h7cED2ymBlyHrrhom6GxHUNS25otSbDCgTdfM=;
-        b=bB9uoyPSvkL2+X2kOzR9w4vIiLxasLCKTHRvBx0EfXZ46PndzfuusE7vO6Fjz2nmYS
-         FnCH/94MVNmKYLqzhVkNMtvZxJr5/9mEuCYJ0JnPiHTHava7+J0PVVb0fNNWwdS1kgbb
-         aqMfme7DSvlCuCdBjhamDTOz36WpSUCE+Msr+7xKfkctEjoiZj5uZrL216ymZeRkIkww
-         qiajR1KbQwNRIvoqar8FhTv4vlaaegfW5QgoOniVIp5wie/TN8azCuUzYSFZBatYuPfZ
-         3nILKQvo2RxIV8UbY6Hw7fUVbDtiBdwQdXE8pTC8Bcv/ux2CCsRLczWuIyD5P+Enm6+8
-         PWvg==
-X-Gm-Message-State: AOAM530P9fT/iqDHokUOOEKFCRshy6OzTmttwQ3iqWsiGgmFlUpyrEyr
-        v0izf+Rdvs/HXTEECmdbql154JetgHv3UZRY8E9gYg==
-X-Google-Smtp-Source: ABdhPJxWig2ftKvDrXZ52oVv1Tgm9j7Gynu/T56MHNUX8Y4w0mTDu5mLA7JxdJDhGzDmynKXL3lild0by9DMwauSDc4=
-X-Received: by 2002:a02:380b:: with SMTP id b11mr31300909jaa.83.1626879582678;
- Wed, 21 Jul 2021 07:59:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210721090706.21523-1-james.clark@arm.com>
-In-Reply-To: <20210721090706.21523-1-james.clark@arm.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 21 Jul 2021 08:59:31 -0600
-Message-ID: <CANLsYkyjQi9+qM7mzWw+nxD_G36oRbN8Q8K2Vyo0rvsSnJQ90w@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Support ETE decoding
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Al Grant <al.grant@arm.com>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        Wed, 21 Jul 2021 10:22:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:56866 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239502AbhGUOVj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 21 Jul 2021 10:21:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CEF531B;
+        Wed, 21 Jul 2021 08:02:13 -0700 (PDT)
+Received: from e121896.arm.com (unknown [10.57.39.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 01DFC3F73D;
+        Wed, 21 Jul 2021 08:02:10 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     acme@kernel.org, mathieu.poirier@linaro.org,
+        coresight@lists.linaro.org
+Cc:     leo.yan@linaro.org, al.grant@arm.com, suzuki.poulose@arm.com,
+        anshuman.khandual@arm.com, mike.leach@linaro.org,
+        James Clark <james.clark@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/6] perf cs-etm: Refactor initialisation of kernel start address
+Date:   Wed, 21 Jul 2021 16:01:57 +0100
+Message-Id: <20210721150202.32065-2-james.clark@arm.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20210721150202.32065-1-james.clark@arm.com>
+References: <20210721150202.32065-1-james.clark@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+The kernel start address is already cached in the machine struct once it
+is initialised, so storing it in the cs_etm struct is unnecessary.
 
-I have received this set but won't be able to look at it for quite some time.
+It also depends on kernel maps being available to be initialised.
+Therefore cs_etm__setup_queues() isn't an appropriate place to call it
+because it could be called before processing starts. It would be better
+to initialise it at the point when it is needed, then we can be sure
+that all the necessary maps are available. Also by calling
+machine__kernel_start() multiple times it can be initialised at some
+point, even if it failed to initialise previously due to missing maps.
 
-Thanks,
-Mathieu
+In a later commit cs_etm__setup_queues() will be moved which is the
+motivation for this change.
 
-On Wed, 21 Jul 2021 at 03:07, James Clark <james.clark@arm.com> wrote:
->
-> Decoding ETE already works because it is a superset of
-> ETMv4, but if any new packet types are found then they will be
-> ignored by the decoder. This patchset creates an ETE decoder
-> which can output the new packets and saves a new register that
-> is required. No new packet types are handled by perf yet, as this
-> can be added in the future.
->
-> This set applies on top of "perf cs-etm: Support TRBE
-> (unformatted decoding)" on perf/core.
->
-> James Clark (6):
->   perf cs-etm: Refactor initialisation of decoder params.
->   perf cs-etm: Initialise architecture based on TRCIDR1
->   perf cs-etm: Save TRCDEVARCH register
->   perf cs-etm: Update OpenCSD decoder for ETE
->   perf cs-etm: Create ETE decoder
->   perf cs-etm: Print the decoder name
->
->  tools/build/feature/test-libopencsd.c         |   4 +-
->  tools/perf/arch/arm/util/cs-etm.c             |  13 +-
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 151 ++++++++----------
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   8 +
->  tools/perf/util/cs-etm.c                      |  54 ++++++-
->  tools/perf/util/cs-etm.h                      |   6 +-
->  6 files changed, 147 insertions(+), 89 deletions(-)
->
-> --
-> 2.28.0
->
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/cs-etm.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index bc1f64873c8f..4c69ef391f60 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -62,7 +62,6 @@ struct cs_etm_auxtrace {
+ 	u64 instructions_sample_period;
+ 	u64 instructions_id;
+ 	u64 **metadata;
+-	u64 kernel_start;
+ 	unsigned int pmu_type;
+ };
+ 
+@@ -691,7 +690,7 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+ 
+ 	machine = etmq->etm->machine;
+ 
+-	if (address >= etmq->etm->kernel_start) {
++	if (address >= machine__kernel_start(machine)) {
+ 		if (machine__is_host(machine))
+ 			return PERF_RECORD_MISC_KERNEL;
+ 		else
+@@ -901,9 +900,6 @@ static int cs_etm__setup_queues(struct cs_etm_auxtrace *etm)
+ 	unsigned int i;
+ 	int ret;
+ 
+-	if (!etm->kernel_start)
+-		etm->kernel_start = machine__kernel_start(etm->machine);
+-
+ 	for (i = 0; i < etm->queues.nr_queues; i++) {
+ 		ret = cs_etm__setup_queue(etm, &etm->queues.queue_array[i], i);
+ 		if (ret)
+-- 
+2.28.0
+
