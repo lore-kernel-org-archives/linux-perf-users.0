@@ -2,198 +2,217 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B777DC07E9B
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 10:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C01C12002
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 11:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96647611CE
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 10:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3243460FD7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 11:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236263AbhGUJaA (ORCPT
+        id S235617AbhGUKvz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jul 2021 05:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48690 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238000AbhGUJIg (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jul 2021 05:08:36 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD675C0613DE
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 02:48:37 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id m2so1497986wrq.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 02:48:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c+CueOPSFipiw/XJiAIFpj+yTNZ5ToaTqkjqSIuNMpE=;
-        b=MVc3/mriI9k583ToR9PCvBMUQPpyNlUEs9LUVL/+cCvXIQcabkNxAZe2i7LeK4op/Y
-         P9Ibv8HNJZoIle+3ZvrhU1FG2Xi2WggMmBak+D2dbI2VGPHRxkhYNG4F1lw8+jnBo/+Y
-         4E6O79g8hNQaESitJ/FUtfkFKubKYvNHR7IowqIkiU8qFAKotamBu2FN/MWmRyyZ6YMS
-         5tazJYLcK4oJUuaMILvRXNQdmxnsGWZ9kKVfNXTQv55KFzrJihH45T112xqG5dJCXxB3
-         vXM3PlnhuGELB0JQd69Vzdk9TGwiwbhwhpOrPeP5Xqb7jf+wL/cM1I6Z4J8iS1jpDZhL
-         uZfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c+CueOPSFipiw/XJiAIFpj+yTNZ5ToaTqkjqSIuNMpE=;
-        b=Ih8PuW627gjS+O0JceeEmZvqGPPk0gf1OMAVsqTwAKV7ZLqJvOpzHeqEoQwBggeixN
-         FkXy1fJZ+qa3mI88x7uwcr2mziIyxkTWw72m5H/TayxleOoTnu1/cxkwQ372ZxawWxC2
-         LT4ZNUT76gUAa4q9hS7Z5bIbmt/AnLFzsJloCMIZEIQymF0v8ciD/Vv/c89GxDR0Sqy/
-         j4qsVuPgxsxjKwZeSF4Vfqb0Pj1YmDRiFCSLOWR176EYd9ZUNh0UYhvGd6gM7iuSf+SP
-         j6LPrxM5eDF22iemsjdoc+ABPZe8+smSbbuESpPy8nPgnp0gtj+2H3BPV9boHesm1W5S
-         QgIQ==
-X-Gm-Message-State: AOAM532hJs5o7pUd0o+/BiWTaCpID3PhnLPJP7vhE1W2XVWoJ2so67bt
-        mt0QIwI5A6fgkpkzXaySv/UUPXZE+O3hMXy9D+GEFg==
-X-Google-Smtp-Source: ABdhPJzwkpznRK0IRjduzCynNactBKoBSXW5Eamm9KWhj2PKS0Vwwb58NSrjyuOm8LV/oyF9XOiEfJ1tmcmACqDIYoc=
-X-Received: by 2002:a5d:4b44:: with SMTP id w4mr40151015wrs.275.1626860916345;
- Wed, 21 Jul 2021 02:48:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210721090706.21523-1-james.clark@arm.com> <20210721090706.21523-4-james.clark@arm.com>
-In-Reply-To: <20210721090706.21523-4-james.clark@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Wed, 21 Jul 2021 10:48:25 +0100
-Message-ID: <CAJ9a7Vjz_CMugYrLcAqr_aFsK6jYcqR3xLwJUi9KTXB3aPjnEQ@mail.gmail.com>
-Subject: Re: [PATCH 3/6] perf cs-etm: Save TRCDEVARCH register
-To:     James Clark <james.clark@arm.com>
+        Wed, 21 Jul 2021 06:51:55 -0400
+Received: from mail-db8eur05on2073.outbound.protection.outlook.com ([40.107.20.73]:19552
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S239256AbhGUJwq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 21 Jul 2021 05:52:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCBquauyynfzYz90IgG9iybvWXuVWac7vCnngC7cj8w=;
+ b=HtDzTn45/MXWBsMnHsvQCVr7bwEWFq22vYvp7OUCcXngUUFZiYank91dwcWnNa1kyh+2w7MFKJd2TDsD7V5U9q76mw3gHcjEt0HFS9MIIJswSoSsL7jQrozzBpTJDSpYx8BJtjUzNWctRh+d625y+sVIofR1553dY+J9jh8xZwg=
+Received: from DU2PR04CA0064.eurprd04.prod.outlook.com (2603:10a6:10:232::9)
+ by AS8PR08MB7175.eurprd08.prod.outlook.com (2603:10a6:20b:406::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.24; Wed, 21 Jul
+ 2021 10:33:21 +0000
+Received: from DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:232:cafe::7d) by DU2PR04CA0064.outlook.office365.com
+ (2603:10a6:10:232::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.21 via Frontend
+ Transport; Wed, 21 Jul 2021 10:33:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=pass action=none
+ header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT033.mail.protection.outlook.com (10.152.20.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4352.24 via Frontend Transport; Wed, 21 Jul 2021 10:33:21 +0000
+Received: ("Tessian outbound b269bca6e298:v99"); Wed, 21 Jul 2021 10:33:21 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: f84d688195fedbd4
+X-CR-MTA-TID: 64aa7808
+Received: from ec7f684646af.2
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 95748713-DBF0-4532-9D42-1EEAC575EF5D.1;
+        Wed, 21 Jul 2021 10:33:04 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ec7f684646af.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 21 Jul 2021 10:33:04 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=m6Dq8VCTCCu3Kz3HodgRfhwRsMPqhn3VSe6l0KCcL0wDTrc5YeUcoh3tUMakYoqP7x/bAce+g4W6O6Qbi0CrWOCkOkeWTmGyLKLPqEJ4TtvSF2BrVQLz9+Wumwf+uz8GOxvHXNtDR9eSgHSHqF00D2KsJqCf/Uk5dskFVraySELCnq64wzMMDT9xGcZDSStSB6s0ksuNoNvA7QwpLUyWJ7tPMQZ70f3pEz5oxVlvSDsn15M03r3t8z4SdnVpxJ7kLHxoKOQC5mbOf9Hmv3d2REUdS3sjGuaFIrOx32AdeRHCM3qPc5wYhrtOL+iX8z39SZ4AaTu4dZ8a1HAUAMdCGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCBquauyynfzYz90IgG9iybvWXuVWac7vCnngC7cj8w=;
+ b=AeaCGmX99WlrP2FYo10Au46UeaJJPB9uMcvlax+WdBeMeQQsoTkAR4pqdL6Wj+2T0Trne4wDsLE2MZ10tz2LjXlbRSbS6JxLz9DRHBri6YYeVuP136ugkfMBhjizlu5G0+92z46D+tCFBeyC9S51Atoc6GvsiSPOwQ+xMdj5PLI8rJiRI44pWm2WiXhRGJSrvXnGt3IEB/V9rbrTpddW7tYBDvfKX7jsxQnxbxMw5o9wQlD1DWO7Byc9G02gzlk3OCj1Fz5ZGHOsJpTFrovmEU4NQ2ig1VxwEd9KOFoU/J7E2TEH5TmlejELWewqniYR5dVDJU5S3fUk7E729DDAyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCBquauyynfzYz90IgG9iybvWXuVWac7vCnngC7cj8w=;
+ b=HtDzTn45/MXWBsMnHsvQCVr7bwEWFq22vYvp7OUCcXngUUFZiYank91dwcWnNa1kyh+2w7MFKJd2TDsD7V5U9q76mw3gHcjEt0HFS9MIIJswSoSsL7jQrozzBpTJDSpYx8BJtjUzNWctRh+d625y+sVIofR1553dY+J9jh8xZwg=
+Authentication-Results-Original: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+Received: from AS8PR08MB6069.eurprd08.prod.outlook.com (2603:10a6:20b:29c::13)
+ by AM5PR0801MB1970.eurprd08.prod.outlook.com (2603:10a6:203:4a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4331.26; Wed, 21 Jul
+ 2021 10:33:02 +0000
+Received: from AS8PR08MB6069.eurprd08.prod.outlook.com
+ ([fe80::4cb0:5d8d:26b4:a9c5]) by AS8PR08MB6069.eurprd08.prod.outlook.com
+ ([fe80::4cb0:5d8d:26b4:a9c5%4]) with mapi id 15.20.4331.032; Wed, 21 Jul 2021
+ 10:33:02 +0000
+To:     coresight@lists.linaro.org, linux-perf-users@vger.kernel.org
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Al Grant <al.grant@arm.com>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Brown <Mark.Brown@arm.com>,
+        Tamas Zsoldos <tamas.zsoldos@arm.com>, nd@arm.com
+From:   Branislav Rankov <branislav.rankov@arm.com>
+Subject: [PATCH] perf build: Fix static linking with libopencsd.
+Message-ID: <e88952b3-2470-da96-dee9-e247a1759cd0@arm.com>
+Date:   Wed, 21 Jul 2021 11:32:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0462.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1aa::17) To AS8PR08MB6069.eurprd08.prod.outlook.com
+ (2603:10a6:20b:29c::13)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [10.57.35.153] (217.140.99.251) by LO4P123CA0462.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:1aa::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4352.24 via Frontend Transport; Wed, 21 Jul 2021 10:33:02 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4c1b18b3-607d-47e3-6db4-08d94c32f63f
+X-MS-TrafficTypeDiagnostic: AM5PR0801MB1970:|AS8PR08MB7175:
+X-LD-Processed: f34e5979-57d9-4aaa-ad4d-b122a662184d,ExtAddr
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AS8PR08MB7175F5EAEDA4203C00B2F7D494E39@AS8PR08MB7175.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:813;OLM:813;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: rl0XuKWsv/gH1PScDuIHg7YAm5WmjpuyuGurJNinHxk7GSyPc7P6TCWN4J4RrWaA34R6Nghg7VChWcxawYkiIk/z3vFr/1LmHT5dvzkgL93O74abzNcaypYIFI0vP74brpnYqzmBdlzPE0buKZZD9lhYKjCjsT/rroksw2/rjlYP65YYfzJ+D6XK2wKyAHiPuP3PQ80Zi2BdhLInWRjq4OHpYqATwxOJXjpouvn/z9b5/nnwiHf161eAaBgTOYAUDGSct5bQ0xavmpDCKacPQKwzOUYj3tbRjmwOZQ92dXp5I2XYvoUOJs2DYSREHi84v9o3R0FrFZuhhlfz9RWDm55XYdSfimr08zDpntLAt9un/7IAsrqVIhhdCdcRmhXizrlSXcC9+K01hqQTGdSUSJTqybxwYofyy3/p0iIkTtCHVEkelzx088pu2KmPlg5MbO8OVQwZ8A4dA92rRamKR036G/uYQiM8S2iOe44+m3wsadf+eAFpgKwCEo8MHAUr7LcrZ5G4OZYrILcVUmOK0ZHShnF6tBK+d2iOn1OrztckWinbMLvjz/yspsVE/Fy4gQPn5gWkAPc4vEw8WWADymlOPCro8WK/BKbfUI6wj8YXQ6AmBrPydEl9EqH5JRpr59l+j1q6y/V/8URcC8WBcOsg0h+y/zgg3ccuNw16djGi0qyUjB8GSdAqB6lcsmAHHr7beib4rjJgxbs8eUDopAQqTUp9dWnMbXLSBLZhu894OB4ntTPlMG6SOwp2MJew
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR08MB6069.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(136003)(376002)(366004)(346002)(86362001)(5660300002)(26005)(2616005)(6486002)(2906002)(316002)(31696002)(16576012)(186003)(54906003)(8936002)(478600001)(956004)(36756003)(31686004)(66946007)(66556008)(6666004)(66476007)(8676002)(83380400001)(4326008)(44832011)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R2Q4ckRPRlFGcGlER3ZUbjdYdldtVFBCODVEMU1vRi9tYm9qaXVhZ2pYZ1g0?=
+ =?utf-8?B?LzdGUjhFR29DVXRnbmxuSzQyR2I3dndZbC9nYWUvajhoSlpXVDRVdGdWUHdR?=
+ =?utf-8?B?cE55c0JBWnJ3RmdaUk9YbE15NXNrSFljSlRMbEJRU2dXb3IvYW83ZjdFWHhN?=
+ =?utf-8?B?VzMyanZBYmsxY1lHbTI4QVRNT01LZHRjdFNRWXlaakRTOFdEMnJMUFowelNR?=
+ =?utf-8?B?bWVkT3YyeXc3SFlSdzlRQUY3TlB6bFBhVFVpeXMwNVVoeEc2SUttMDU3SWVh?=
+ =?utf-8?B?eDRxblpNUEx1WitJcHc3TXRUSjF5b2JLeStodDJsM1FTTG9TQXliTFhMQitM?=
+ =?utf-8?B?Y1NkK0tlNUUyYXhXTHg4clpVdXFkSGVRanZmaE80L2ovQ3FISmZFMzdldzFU?=
+ =?utf-8?B?RDJ3Y3NJeXExWk9pWDNWT0R6a1pzdjVsTWEzZzZQcmUzc2pqV0VyQysyN0d0?=
+ =?utf-8?B?MzNnRVRzNkdPbFRvTDZnY2tMQnl2OG9zNktDYk50aUJZMVJsNWhsbUxCOTlH?=
+ =?utf-8?B?WGg0d0VQM0JtcTZxNnVXc2hFMXI1ejcxb250VnZ2MS9ncmJ5Smpwb2UzaFZV?=
+ =?utf-8?B?VXB1bDhEcWNGOGtmMU1tOTZkblVHTmFQenVxSitvWFdtZDcvbmJ6SEV1b1VD?=
+ =?utf-8?B?NG4wVVBoMUlNU2d4eklYWGJwam9UOG40eW1LcjIvWUYrWmd1dDBjRlltM1NR?=
+ =?utf-8?B?UFhoeDdSa1RkNmFlbzBiOTZWNzZXNDR3ZGNSQWo2QzU4SUo2S1VyTVEyc3pZ?=
+ =?utf-8?B?RW5yUldUWDRvM2ZVc0M1RXJKbDVUMTlreW9KNGowN1hIbW5uWUZyOVlqRzA5?=
+ =?utf-8?B?L0lnTldjcWtCRFN1N0JuRkJWZTFoUmlNKzRUbEVXcyt6NmU5dWxvdVVxTHE0?=
+ =?utf-8?B?RXpNTHFDL2RnVW9YVkhzY2xIY0dGLzUyMnVId3ZrMkRUYUdPbHd0UVJJVVQr?=
+ =?utf-8?B?eUFRM1RDd1hnMDZ0cG5qR3o5WkJtRG5yZmpjNjhQUFhBY0ZVeTQyVWVYa3Jt?=
+ =?utf-8?B?cHBIYURIeHAwTE9qT3dpWnRCYlZ5WW4zNDJPb0hmZ285bFJJWUNmMnljbDFk?=
+ =?utf-8?B?Z2VLTkkxWjZBWFJMa2dRRmhPRG5EWktRRVhWcjUrOEo3b1ZsZFRCcGRpcm82?=
+ =?utf-8?B?dmpwSlZCUU53RXA4ZjdTNUQ2a2JEZ0l1YWxCSjVBZ1llSGN5eFF1QkxGYXhH?=
+ =?utf-8?B?NzN1eVU1QUQwZ295V0xBM3J2S2NOdFk5UjRLQUh5M0gyRmJaTFUzaThXZ0l5?=
+ =?utf-8?B?V3J1RTgySWNBTVRWU2w3enBzZkFSaUp1UEw1NU1ESDBEelhTZGJlRVA4VWJj?=
+ =?utf-8?B?SmN3NVc5MXNwc01Hck1qOWJWVmZEU3VNVmE5MHZELzR6eWxUYmI3YzZHNGZO?=
+ =?utf-8?B?WS95QXZKcVFmeWI3N2UrZFVjZUpQMmdxbVk3MStwenhpeENLajMwRkQzY04w?=
+ =?utf-8?B?ZkJwK21WZGRIVVVrcHN5b1NiNi9QYUU5b2t0WHpSSld5WWVzNmZ0YjliTyt6?=
+ =?utf-8?B?M0VyRDk1REZNdnpwN1Z6b2s5UEU2MkNndTQ5RXFyS0FpYXU4K2NFaERyVy9k?=
+ =?utf-8?B?UGYwdC9OWDBtSWUyYVMzNzFDZ0ZES25oTjhkNFhMMzhyMUxQMTRndjY5NkNX?=
+ =?utf-8?B?N01pQkI2eHAxR3JZdHJ1OTYyV0pwb0dFQ0t0S3RoMVd6SzBqVks1UWJXNnBE?=
+ =?utf-8?B?SDhOaW8vSVJrNHVjWk8rVndoV2VXR0RtRHpVR2FVRDZDZjRvTHorWTJkOUxu?=
+ =?utf-8?Q?ks9wOdgooyAuxaWu32wvONafP/G+NWxew0pb6Vo?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1970
+Original-Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 79b8ee5e-50a5-4f05-59fb-08d94c32eb26
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nauQ248gtgQt80X4vjZhrvo5WdrN1vXcQkM8LuQeHgIALDNsYxON0qf0I3UxkiKlK9o5POjEMZXQlM2nnLOXoq/IVUfLdciqHQOBbO3zRyteiNjmNZYnaz88R7FmOZtMgRQzSpvOO4CemZK8z073IJv7Yi7PnxQSRbMaTy4GLzG08HJ803RpPxre/BgFd4ITpk+pjcgmr+tjPeoOXNmA4L5aWkIx3RmDyvBpkIQ0Cy+WqfTtC6UHTs0qhV6e3gEJWIRhJDRYQO8jektL1T93+BdwwFV4XX/0InlsOzf62qK2vvDegFKG3+wcGSzskJh7+fznZs8anVIdivS5sAzLUJGevFLmxDvY/xDZIVMTLUzrw/qidTYYb7eiGY7TjcUid+NNtpFYZLDyABQfCl02Os40mVlnenhq+RP95KvFB2fGd0sJyqpSKj7CLwRvrbYLSnipu9zdA5n8QU3PZRiN9wxIUSP9MrRsuzS4bxaJVmJVZlEM0TRtlUMxjDlXuopMmeeHpFNIV6IXV4Jg49IMchAb8yq+ge9Iw4zFx0eRuDi5+AG6f8AZLOLxWNWxRFhlYPANK+Ylwz1qHg9BXbe0GX4v7Qqm4dSTKkU389i+mHwhoYJhMO5VX3ABZLA+Vc57QIjQ4hBEYqtyxhRWqoGYYjLysTAVSHwgvIr/i1MVeSE2146yZZgFwm49mVGKXNNbQ/NAkFT8lm1MykSiIRk0EkFKlxb4YpmKEkP9jS8Iv1s=
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(39860400002)(136003)(36840700001)(46966006)(26005)(186003)(336012)(16576012)(316002)(31686004)(54906003)(82740400003)(2906002)(4326008)(5660300002)(956004)(83380400001)(2616005)(47076005)(81166007)(82310400003)(356005)(6486002)(36860700001)(70206006)(44832011)(478600001)(36756003)(6666004)(86362001)(70586007)(31696002)(8676002)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2021 10:33:21.2993
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c1b18b3-607d-47e3-6db4-08d94c32f63f
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB7175
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-HI James,
+Add -lstdc++ to perf when linking libopencsd as it is a dependency. It
+does not hurt to add it when dynamic linking.
 
-On Wed, 21 Jul 2021 at 10:07, James Clark <james.clark@arm.com> wrote:
->
-> Now that the metadata has a length field we can add extra registers
-> without breaking any previous versions of perf.
->
-> Save the TRCDEVARCH register so that it can be used to configure the ETE
-> decoder in the next commit. If the sysfs file doesn't exist then 0 will
-> be saved which is an impossible register value and can also be used to
-> signify that the file couldn't be read.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c | 13 ++++++++++++-
->  tools/perf/util/cs-etm.c          |  1 +
->  tools/perf/util/cs-etm.h          |  5 +++--
->  3 files changed, 16 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 85168d87b2d7..65a863bdf5cc 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -53,6 +53,7 @@ static const char *metadata_etmv4_ro[CS_ETMV4_PRIV_MAX] = {
->         [CS_ETMV4_TRCIDR2]              = "trcidr/trcidr2",
->         [CS_ETMV4_TRCIDR8]              = "trcidr/trcidr8",
->         [CS_ETMV4_TRCAUTHSTATUS]        = "mgmt/trcauthstatus",
-> +       [CS_ETE_TRCDEVARCH]             = "mgmt/trcdevarch"
->  };
->
->  static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
-> @@ -73,7 +74,7 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
->         if (!cs_etm_is_etmv4(itr, cpu))
->                 goto out;
->
-> -       /* Get a handle on TRCIRD2 */
-> +       /* Get a handle on TRCIDR2 */
->         snprintf(path, PATH_MAX, "cpu%d/%s",
->                  cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2]);
->         err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
-> @@ -643,6 +644,16 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
->                         cs_etm_get_ro(cs_etm_pmu, cpu,
->                                       metadata_etmv4_ro
->                                       [CS_ETMV4_TRCAUTHSTATUS]);
-> +               /*
-> +                * ETE uses the same registers as ETMv4 plus TRCDEVARCH. It's also backwards
-> +                * compatible, so don't change the magic number otherwise that will reduce the
-> +                * number of versions of perf that can open it. Just append TRCDEVARCH to the end of
-> +                * the register block and allow newer versions of perf to make use. cs_etm_get_ro()
-> +                * returns 0 if it couldn't be read.
-> +                */
+Filter out -static flag when building plugins as they are always built
+as dynamic libraries and -static and -dynamic don't work well together
+on arm and arm64.
 
-ETE is a superset of ETMv4, but an old perf that only knows ETMv4
-cannot be guaranteed to decode all ETE due to new packet types.
-Therefore do we want to allow old perfs to decode only some ETE,
-possibly with errors?
+Signed-off-by: Tamas Zsoldos <tamas.zsoldos@arm.com>
+Signed-off-by: Branislav Rankov <branislav.rankov@arm.com>
+---
+ tools/perf/Makefile.config | 2 +-
+ tools/perf/Makefile.perf   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I think it would be better to add in a new magic number for the new
-decoder rather than have some grey overlap area were an "older" perf
-might work intermittently dependent on the packets generated in a
-particular trace run.
-
-Regards
-
-Mike
-
-> +               info->priv[*offset + CS_ETE_TRCDEVARCH] =
-> +                       cs_etm_get_ro(cs_etm_pmu, cpu,
-> +                                     metadata_etmv4_ro[CS_ETE_TRCDEVARCH]);
->
->                 /* How much space was used */
->                 increment = CS_ETMV4_PRIV_MAX;
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 62769a84a53f..68978f6707a8 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -2508,6 +2508,7 @@ static const char * const cs_etmv4_priv_fmts[] = {
->         [CS_ETMV4_TRCIDR2]      = "     TRCIDR2                        %llx\n",
->         [CS_ETMV4_TRCIDR8]      = "     TRCIDR8                        %llx\n",
->         [CS_ETMV4_TRCAUTHSTATUS] = "    TRCAUTHSTATUS                  %llx\n",
-> +       [CS_ETE_TRCDEVARCH]     = "     TRCDEVARCH                     %llx\n"
->  };
->
->  static const char * const param_unk_fmt =
-> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-> index d65c7b19407d..52d82dce9d59 100644
-> --- a/tools/perf/util/cs-etm.h
-> +++ b/tools/perf/util/cs-etm.h
-> @@ -59,7 +59,7 @@ enum {
->  /* define fixed version 0 length - allow new format reader to read old files. */
->  #define CS_ETM_NR_TRC_PARAMS_V0 (CS_ETM_ETMIDR - CS_ETM_ETMCR + 1)
->
-> -/* ETMv4 metadata */
-> +/* ETMv4 + ETE metadata */
->  enum {
->         /* Dynamic, configurable parameters */
->         CS_ETMV4_TRCCONFIGR = CS_ETM_COMMON_BLK_MAX_V1,
-> @@ -70,7 +70,8 @@ enum {
->         CS_ETMV4_TRCIDR2,
->         CS_ETMV4_TRCIDR8,
->         CS_ETMV4_TRCAUTHSTATUS,
-> -       CS_ETMV4_PRIV_MAX,
-> +       CS_ETE_TRCDEVARCH,
-> +       CS_ETMV4_PRIV_MAX
->  };
->
->  /* define fixed version 0 length - allow new format reader to read old files. */
-> --
-> 2.28.0
->
-
-
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 73df23dd664c..b014a9bdd0db 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -143,7 +143,7 @@ FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
+ ifdef CSINCLUDES
+   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
+ endif
+-OPENCSDLIBS := -lopencsd_c_api -lopencsd
++OPENCSDLIBS := -lopencsd_c_api -lopencsd -lstdc++
+ ifdef CSLIBS
+   LIBOPENCSD_LDFLAGS := -L$(CSLIBS)
+ endif
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index e47f04e5b51e..cd3cf910fa8a 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -792,7 +792,7 @@ endif
+ 
+ $(patsubst perf-%,%.o,$(PROGRAMS)): $(wildcard */*.h)
+ 
+-LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(LDFLAGS)'
++LIBTRACEEVENT_FLAGS += plugin_dir=$(plugindir_SQ) 'EXTRA_CFLAGS=$(EXTRA_CFLAGS)' 'LDFLAGS=$(filter-out -static,$(LDFLAGS))'
+ 
+ $(LIBTRACEEVENT): FORCE
+ 	$(Q)$(MAKE) -C $(TRACE_EVENT_DIR) $(LIBTRACEEVENT_FLAGS) O=$(OUTPUT) $(OUTPUT)libtraceevent.a
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.17.1
