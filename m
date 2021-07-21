@@ -2,163 +2,198 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C954C6377A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 09:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B777DC07E9B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 10:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF6761221
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 09:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96647611CE
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 10:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235742AbhGUIm5 (ORCPT
+        id S236263AbhGUJaA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jul 2021 04:42:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:49328 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235457AbhGUI1i (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jul 2021 04:27:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0654B1396;
-        Wed, 21 Jul 2021 02:07:40 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.38.215])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 666D93F694;
-        Wed, 21 Jul 2021 02:07:37 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org
-Cc:     leo.yan@linaro.org, al.grant@arm.com, suzuki.poulose@arm.com,
-        anshuman.khandual@arm.com, mike.leach@linaro.org,
-        James Clark <james.clark@arm.com>,
+        Wed, 21 Jul 2021 05:30:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238000AbhGUJIg (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 21 Jul 2021 05:08:36 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD675C0613DE
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 02:48:37 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id m2so1497986wrq.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 02:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c+CueOPSFipiw/XJiAIFpj+yTNZ5ToaTqkjqSIuNMpE=;
+        b=MVc3/mriI9k583ToR9PCvBMUQPpyNlUEs9LUVL/+cCvXIQcabkNxAZe2i7LeK4op/Y
+         P9Ibv8HNJZoIle+3ZvrhU1FG2Xi2WggMmBak+D2dbI2VGPHRxkhYNG4F1lw8+jnBo/+Y
+         4E6O79g8hNQaESitJ/FUtfkFKubKYvNHR7IowqIkiU8qFAKotamBu2FN/MWmRyyZ6YMS
+         5tazJYLcK4oJUuaMILvRXNQdmxnsGWZ9kKVfNXTQv55KFzrJihH45T112xqG5dJCXxB3
+         vXM3PlnhuGELB0JQd69Vzdk9TGwiwbhwhpOrPeP5Xqb7jf+wL/cM1I6Z4J8iS1jpDZhL
+         uZfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c+CueOPSFipiw/XJiAIFpj+yTNZ5ToaTqkjqSIuNMpE=;
+        b=Ih8PuW627gjS+O0JceeEmZvqGPPk0gf1OMAVsqTwAKV7ZLqJvOpzHeqEoQwBggeixN
+         FkXy1fJZ+qa3mI88x7uwcr2mziIyxkTWw72m5H/TayxleOoTnu1/cxkwQ372ZxawWxC2
+         LT4ZNUT76gUAa4q9hS7Z5bIbmt/AnLFzsJloCMIZEIQymF0v8ciD/Vv/c89GxDR0Sqy/
+         j4qsVuPgxsxjKwZeSF4Vfqb0Pj1YmDRiFCSLOWR176EYd9ZUNh0UYhvGd6gM7iuSf+SP
+         j6LPrxM5eDF22iemsjdoc+ABPZe8+smSbbuESpPy8nPgnp0gtj+2H3BPV9boHesm1W5S
+         QgIQ==
+X-Gm-Message-State: AOAM532hJs5o7pUd0o+/BiWTaCpID3PhnLPJP7vhE1W2XVWoJ2so67bt
+        mt0QIwI5A6fgkpkzXaySv/UUPXZE+O3hMXy9D+GEFg==
+X-Google-Smtp-Source: ABdhPJzwkpznRK0IRjduzCynNactBKoBSXW5Eamm9KWhj2PKS0Vwwb58NSrjyuOm8LV/oyF9XOiEfJ1tmcmACqDIYoc=
+X-Received: by 2002:a5d:4b44:: with SMTP id w4mr40151015wrs.275.1626860916345;
+ Wed, 21 Jul 2021 02:48:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210721090706.21523-1-james.clark@arm.com> <20210721090706.21523-4-james.clark@arm.com>
+In-Reply-To: <20210721090706.21523-4-james.clark@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Wed, 21 Jul 2021 10:48:25 +0100
+Message-ID: <CAJ9a7Vjz_CMugYrLcAqr_aFsK6jYcqR3xLwJUi9KTXB3aPjnEQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] perf cs-etm: Save TRCDEVARCH register
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Leo Yan <leo.yan@linaro.org>, Al Grant <al.grant@arm.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 6/6] perf cs-etm: Print the decoder name
-Date:   Wed, 21 Jul 2021 10:07:05 +0100
-Message-Id: <20210721090706.21523-7-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20210721090706.21523-1-james.clark@arm.com>
-References: <20210721090706.21523-1-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use the real name of the decoder instead of hard-coding "ETM" to avoid
-confusion when the trace is ETE. This also now distinguishes between
-ETMv3 and ETMv4.
+HI James,
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 17 +++++++++++------
- tools/perf/util/cs-etm-decoder/cs-etm-decoder.h |  1 +
- tools/perf/util/cs-etm.c                        |  4 ++--
- 3 files changed, 14 insertions(+), 8 deletions(-)
+On Wed, 21 Jul 2021 at 10:07, James Clark <james.clark@arm.com> wrote:
+>
+> Now that the metadata has a length field we can add extra registers
+> without breaking any previous versions of perf.
+>
+> Save the TRCDEVARCH register so that it can be used to configure the ETE
+> decoder in the next commit. If the sysfs file doesn't exist then 0 will
+> be saved which is an impossible register value and can also be used to
+> signify that the file couldn't be read.
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/arch/arm/util/cs-etm.c | 13 ++++++++++++-
+>  tools/perf/util/cs-etm.c          |  1 +
+>  tools/perf/util/cs-etm.h          |  5 +++--
+>  3 files changed, 16 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 85168d87b2d7..65a863bdf5cc 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -53,6 +53,7 @@ static const char *metadata_etmv4_ro[CS_ETMV4_PRIV_MAX] = {
+>         [CS_ETMV4_TRCIDR2]              = "trcidr/trcidr2",
+>         [CS_ETMV4_TRCIDR8]              = "trcidr/trcidr8",
+>         [CS_ETMV4_TRCAUTHSTATUS]        = "mgmt/trcauthstatus",
+> +       [CS_ETE_TRCDEVARCH]             = "mgmt/trcdevarch"
+>  };
+>
+>  static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+> @@ -73,7 +74,7 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
+>         if (!cs_etm_is_etmv4(itr, cpu))
+>                 goto out;
+>
+> -       /* Get a handle on TRCIRD2 */
+> +       /* Get a handle on TRCIDR2 */
+>         snprintf(path, PATH_MAX, "cpu%d/%s",
+>                  cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2]);
+>         err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
+> @@ -643,6 +644,16 @@ static void cs_etm_get_metadata(int cpu, u32 *offset,
+>                         cs_etm_get_ro(cs_etm_pmu, cpu,
+>                                       metadata_etmv4_ro
+>                                       [CS_ETMV4_TRCAUTHSTATUS]);
+> +               /*
+> +                * ETE uses the same registers as ETMv4 plus TRCDEVARCH. It's also backwards
+> +                * compatible, so don't change the magic number otherwise that will reduce the
+> +                * number of versions of perf that can open it. Just append TRCDEVARCH to the end of
+> +                * the register block and allow newer versions of perf to make use. cs_etm_get_ro()
+> +                * returns 0 if it couldn't be read.
+> +                */
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index 37bc9d6a7677..177c08f5be8d 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -37,6 +37,7 @@ struct cs_etm_decoder {
- 	dcd_tree_handle_t dcd_tree;
- 	cs_etm_mem_cb_type mem_access;
- 	ocsd_datapath_resp_t prev_return;
-+	const char *decoder_name;
- };
- 
- static u32
-@@ -614,7 +615,6 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
- 				   struct cs_etm_trace_params *t_params,
- 				   struct cs_etm_decoder *decoder)
- {
--	const char *decoder_name;
- 	ocsd_etmv3_cfg config_etmv3;
- 	ocsd_etmv4_cfg trace_config_etmv4;
- 	ocsd_ete_cfg trace_config_ete;
-@@ -625,19 +625,19 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
- 	case CS_ETM_PROTO_ETMV3:
- 	case CS_ETM_PROTO_PTM:
- 		cs_etm_decoder__gen_etmv3_config(t_params, &config_etmv3);
--		decoder_name = (t_params->protocol == CS_ETM_PROTO_ETMV3) ?
-+		decoder->decoder_name = (t_params->protocol == CS_ETM_PROTO_ETMV3) ?
- 							OCSD_BUILTIN_DCD_ETMV3 :
- 							OCSD_BUILTIN_DCD_PTM;
- 		trace_config = &config_etmv3;
- 		break;
- 	case CS_ETM_PROTO_ETMV4i:
- 		cs_etm_decoder__gen_etmv4_config(t_params, &trace_config_etmv4);
--		decoder_name = OCSD_BUILTIN_DCD_ETMV4I;
-+		decoder->decoder_name = OCSD_BUILTIN_DCD_ETMV4I;
- 		trace_config = &trace_config_etmv4;
- 		break;
- 	case CS_ETM_PROTO_ETE:
- 		cs_etm_decoder__gen_ete_config(t_params, &trace_config_ete);
--		decoder_name = OCSD_BUILTIN_DCD_ETE;
-+		decoder->decoder_name = OCSD_BUILTIN_DCD_ETE;
- 		trace_config = &trace_config_ete;
- 		break;
- 	default:
-@@ -646,7 +646,7 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
- 
- 	if (d_params->operation == CS_ETM_OPERATION_DECODE) {
- 		if (ocsd_dt_create_decoder(decoder->dcd_tree,
--					   decoder_name,
-+					   decoder->decoder_name,
- 					   OCSD_CREATE_FLG_FULL_DECODER,
- 					   trace_config, &csid))
- 			return -1;
-@@ -658,7 +658,7 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
- 
- 		return 0;
- 	} else if (d_params->operation == CS_ETM_OPERATION_PRINT) {
--		if (ocsd_dt_create_decoder(decoder->dcd_tree, decoder_name,
-+		if (ocsd_dt_create_decoder(decoder->dcd_tree, decoder->decoder_name,
- 					   OCSD_CREATE_FLG_PACKET_PROC,
- 					   trace_config, &csid))
- 			return -1;
-@@ -790,3 +790,8 @@ void cs_etm_decoder__free(struct cs_etm_decoder *decoder)
- 	decoder->dcd_tree = NULL;
- 	free(decoder);
- }
-+
-+const char *cs_etm_decoder__get_name(struct cs_etm_decoder *decoder)
-+{
-+	return decoder->decoder_name;
-+}
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-index 9137796fe3c5..fbd6786baf99 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-@@ -99,5 +99,6 @@ int cs_etm_decoder__get_packet(struct cs_etm_packet_queue *packet_queue,
- 			       struct cs_etm_packet *packet);
- 
- int cs_etm_decoder__reset(struct cs_etm_decoder *decoder);
-+const char *cs_etm_decoder__get_name(struct cs_etm_decoder *decoder);
- 
- #endif /* INCLUDE__CS_ETM_DECODER_H__ */
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 870073bce670..bb7957afd9cb 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -564,8 +564,8 @@ static void cs_etm__dump_event(struct cs_etm_queue *etmq,
- 
- 	fprintf(stdout, "\n");
- 	color_fprintf(stdout, color,
--		     ". ... CoreSight ETM Trace data: size %zu bytes\n",
--		     buffer->size);
-+		     ". ... CoreSight %s Trace data: size %zu bytes\n",
-+		     cs_etm_decoder__get_name(etmq->decoder), buffer->size);
- 
- 	do {
- 		size_t consumed;
+ETE is a superset of ETMv4, but an old perf that only knows ETMv4
+cannot be guaranteed to decode all ETE due to new packet types.
+Therefore do we want to allow old perfs to decode only some ETE,
+possibly with errors?
+
+I think it would be better to add in a new magic number for the new
+decoder rather than have some grey overlap area were an "older" perf
+might work intermittently dependent on the packets generated in a
+particular trace run.
+
+Regards
+
+Mike
+
+> +               info->priv[*offset + CS_ETE_TRCDEVARCH] =
+> +                       cs_etm_get_ro(cs_etm_pmu, cpu,
+> +                                     metadata_etmv4_ro[CS_ETE_TRCDEVARCH]);
+>
+>                 /* How much space was used */
+>                 increment = CS_ETMV4_PRIV_MAX;
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 62769a84a53f..68978f6707a8 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -2508,6 +2508,7 @@ static const char * const cs_etmv4_priv_fmts[] = {
+>         [CS_ETMV4_TRCIDR2]      = "     TRCIDR2                        %llx\n",
+>         [CS_ETMV4_TRCIDR8]      = "     TRCIDR8                        %llx\n",
+>         [CS_ETMV4_TRCAUTHSTATUS] = "    TRCAUTHSTATUS                  %llx\n",
+> +       [CS_ETE_TRCDEVARCH]     = "     TRCDEVARCH                     %llx\n"
+>  };
+>
+>  static const char * const param_unk_fmt =
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index d65c7b19407d..52d82dce9d59 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -59,7 +59,7 @@ enum {
+>  /* define fixed version 0 length - allow new format reader to read old files. */
+>  #define CS_ETM_NR_TRC_PARAMS_V0 (CS_ETM_ETMIDR - CS_ETM_ETMCR + 1)
+>
+> -/* ETMv4 metadata */
+> +/* ETMv4 + ETE metadata */
+>  enum {
+>         /* Dynamic, configurable parameters */
+>         CS_ETMV4_TRCCONFIGR = CS_ETM_COMMON_BLK_MAX_V1,
+> @@ -70,7 +70,8 @@ enum {
+>         CS_ETMV4_TRCIDR2,
+>         CS_ETMV4_TRCIDR8,
+>         CS_ETMV4_TRCAUTHSTATUS,
+> -       CS_ETMV4_PRIV_MAX,
+> +       CS_ETE_TRCDEVARCH,
+> +       CS_ETMV4_PRIV_MAX
+>  };
+>
+>  /* define fixed version 0 length - allow new format reader to read old files. */
+> --
+> 2.28.0
+>
+
+
 -- 
-2.28.0
-
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
