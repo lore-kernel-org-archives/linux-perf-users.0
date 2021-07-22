@@ -2,288 +2,322 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA72C12002
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 16:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50203C6377B
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 01:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C227A61242
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jul 2021 16:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2BF6127C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 01:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230406AbhGUPYy (ORCPT
+        id S230209AbhGVBGr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jul 2021 11:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbhGUPYx (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jul 2021 11:24:53 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF58C061757
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 09:05:30 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d12so2579508pfj.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jul 2021 09:05:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CGpixdwO7S1rtC4H5PLra/JF15vH5Z2FO/vDmyJkJCY=;
-        b=zy/yk5PdgpZ09jUzAIhm6OJ/jZVUOLlg3DrvB4ZhRyXKQ8IJPDCay3t57CzO7CNFph
-         cPQ8TiYVKrWPE3zEsGC7HJzMarSeTSoNnumeO7mF/D2wnviQiYbIvrG+7sJuilZo0TiX
-         MIwwcyil7lfV20bZK6J4vuQZQ1uKJ47OxZ+tXQsSmdZEoW6XBozN/0Px2XLut0pFlLhW
-         3ipGtwgJhJ4xjCpPXJ9fyJzhBLOlkjEPvdVTVmj3nC8YHoObOMyv6Ichpe9hHRzmJMSA
-         9DdgXDkG/FVCt08zJDMsqzCr1vH9xqETYfk+hnU6fv1g1rRkYtgXHE40aWSCKOMa8HvF
-         zNXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CGpixdwO7S1rtC4H5PLra/JF15vH5Z2FO/vDmyJkJCY=;
-        b=ehcCUSJ6AbvamITTDJWHX0tUxTH6GGTRN39YmP/WmF0otrf5tUADfH6Ja/VzxG6YDy
-         P/dUAOFoYmEo91sFe6bTf/pY+9yBH8LfYx0xsubykR6np0DkBSgSZov8be6CdAH9nZEc
-         Uq6OERrjpfK4p0dFMFMGBslxH5pg5EnpsmmUhvAspPtgTClthSGCpU6gWZMWIgVsuYMC
-         RYHmNWSx1DP2jFhhnWIU7OKf+N6kD7984KFmjphyLGiVgCpoNL/SEPZVhAnX/NC+s7JM
-         Vy+kLBAqCk/MnLAwXJCH+37tQpdRLJKI6fUvOPt9uu5aOxLlU/coLIRtdWhrb8Fmj6f2
-         clQg==
-X-Gm-Message-State: AOAM533am5IzVB9kcKNJmJZ53vLHINfn12Jg7p15Y7SiIcpXRDvpqP88
-        7okRzJyyN341X573GSLAfAASIQ==
-X-Google-Smtp-Source: ABdhPJxWoDOsxiyBezzrV73RXSCqJWMdMtgO5FSvBKjrjA1h1cvQFu6ROZ2dOE8hLSRB3qKxKGXhHA==
-X-Received: by 2002:a63:67c5:: with SMTP id b188mr37038490pgc.333.1626883529937;
-        Wed, 21 Jul 2021 09:05:29 -0700 (PDT)
-Received: from p14s (S0106889e681aac74.cg.shawcable.net. [68.147.0.187])
-        by smtp.gmail.com with ESMTPSA id p24sm31234336pgl.68.2021.07.21.09.05.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jul 2021 09:05:25 -0700 (PDT)
-Date:   Wed, 21 Jul 2021 10:05:23 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, coresight@lists.linaro.org, leo.yan@linaro.org,
-        al.grant@arm.com, suzuki.poulose@arm.com,
-        anshuman.khandual@arm.com, mike.leach@linaro.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] perf cs-etm: Pass unformatted flag to decoder
-Message-ID: <20210721160523.GA2377909@p14s>
-References: <20210721150202.32065-1-james.clark@arm.com>
- <20210721150202.32065-7-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210721150202.32065-7-james.clark@arm.com>
+        Wed, 21 Jul 2021 21:06:47 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55053 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230151AbhGVBGq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 21 Jul 2021 21:06:46 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10052"; a="208431628"
+X-IronPort-AV: E=Sophos;i="5.84,259,1620716400"; 
+   d="scan'208";a="208431628"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2021 18:47:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,259,1620716400"; 
+   d="scan'208";a="470359857"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
+  by fmsmga008.fm.intel.com with ESMTP; 21 Jul 2021 18:47:19 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v1] perf pmu: Add PMU alias support
+Date:   Thu, 22 Jul 2021 09:45:46 +0800
+Message-Id: <20210722014546.11948-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 04:02:02PM +0100, James Clark wrote:
-> The TRBE (Trace Buffer Extension) feature allows a separate trace buffer
-> for each trace source, therefore the trace wouldn't need to be
-> formatted. The driver was introduced in commit 3fbf7f011f24
-> ("coresight: sink: Add TRBE driver").
-> 
-> The formatted/unformatted mode is encoded in one of the flags of the
-> AUX record. The first AUX record encountered for each event is used to
-> determine the mode, and this will persist for the remaining trace that
-> is either decoded or dumped.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  4 +-
->  tools/perf/util/cs-etm.c                      | 53 ++++++++++++++-----
->  2 files changed, 42 insertions(+), 15 deletions(-)
-> 
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+A perf uncore PMU may have two PMU names, a real name and an alias. The
+alias is exported at /sys/bus/event_source/devices/uncore_*/alias.
+The perf tool should support the alias as well.
 
-Arnaldo, please consider adding this set to your tree.
+Add alias_name in the struct perf_pmu to store the alias. For the PMU
+which doesn't have an alias. It's NULL.
 
-Thanks,
-Mathieu
+Introduce two X86 specific functions to retrieve the real name and the
+alias separately.
 
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> index ed1f0326f859..9c9039ae6989 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -687,7 +687,7 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
->  }
->  
->  struct cs_etm_decoder *
-> -cs_etm_decoder__new(int num_cpu, struct cs_etm_decoder_params *d_params,
-> +cs_etm_decoder__new(int decoders, struct cs_etm_decoder_params *d_params,
->  		    struct cs_etm_trace_params t_params[])
->  {
->  	struct cs_etm_decoder *decoder;
-> @@ -732,7 +732,7 @@ cs_etm_decoder__new(int num_cpu, struct cs_etm_decoder_params *d_params,
->  	/* init raw frame logging if required */
->  	cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
->  
-> -	for (i = 0; i < num_cpu; i++) {
-> +	for (i = 0; i < decoders; i++) {
->  		ret = cs_etm_decoder__create_etm_decoder(d_params,
->  							 &t_params[i],
->  							 decoder);
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 760050ea936d..f4b2bff533f3 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -461,13 +461,14 @@ static void cs_etm__set_trace_param_etmv4(struct cs_etm_trace_params *t_params,
->  }
->  
->  static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
-> -				     struct cs_etm_auxtrace *etm)
-> +				     struct cs_etm_auxtrace *etm,
-> +				     int decoders)
->  {
->  	int i;
->  	u32 etmidr;
->  	u64 architecture;
->  
-> -	for (i = 0; i < etm->num_cpu; i++) {
-> +	for (i = 0; i < decoders; i++) {
->  		architecture = etm->metadata[i][CS_ETM_MAGIC];
->  
->  		switch (architecture) {
-> @@ -488,7 +489,8 @@ static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
->  
->  static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
->  				       struct cs_etm_queue *etmq,
-> -				       enum cs_etm_decoder_operation mode)
-> +				       enum cs_etm_decoder_operation mode,
-> +				       bool formatted)
->  {
->  	int ret = -EINVAL;
->  
-> @@ -498,7 +500,7 @@ static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
->  	d_params->packet_printer = cs_etm__packet_dump;
->  	d_params->operation = mode;
->  	d_params->data = etmq;
-> -	d_params->formatted = true;
-> +	d_params->formatted = formatted;
->  	d_params->fsyncs = false;
->  	d_params->hsyncs = false;
->  	d_params->frame_aligned = true;
-> @@ -720,11 +722,17 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  	return len;
->  }
->  
-> -static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
-> +static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
-> +						bool formatted)
->  {
->  	struct cs_etm_decoder_params d_params;
->  	struct cs_etm_trace_params  *t_params = NULL;
->  	struct cs_etm_queue *etmq;
-> +	/*
-> +	 * Each queue can only contain data from one CPU when unformatted, so only one decoder is
-> +	 * needed.
-> +	 */
-> +	int decoders = formatted ? etm->num_cpu : 1;
->  
->  	etmq = zalloc(sizeof(*etmq));
->  	if (!etmq)
-> @@ -735,21 +743,23 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
->  		goto out_free;
->  
->  	/* Use metadata to fill in trace parameters for trace decoder */
-> -	t_params = zalloc(sizeof(*t_params) * etm->num_cpu);
-> +	t_params = zalloc(sizeof(*t_params) * decoders);
->  
->  	if (!t_params)
->  		goto out_free;
->  
-> -	if (cs_etm__init_trace_params(t_params, etm))
-> +	if (cs_etm__init_trace_params(t_params, etm, decoders))
->  		goto out_free;
->  
->  	/* Set decoder parameters to decode trace packets */
->  	if (cs_etm__init_decoder_params(&d_params, etmq,
->  					dump_trace ? CS_ETM_OPERATION_PRINT :
-> -						     CS_ETM_OPERATION_DECODE))
-> +						     CS_ETM_OPERATION_DECODE,
-> +					formatted))
->  		goto out_free;
->  
-> -	etmq->decoder = cs_etm_decoder__new(etm->num_cpu, &d_params, t_params);
-> +	etmq->decoder = cs_etm_decoder__new(decoders, &d_params,
-> +					    t_params);
->  
->  	if (!etmq->decoder)
->  		goto out_free;
-> @@ -777,14 +787,15 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
->  
->  static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
->  			       struct auxtrace_queue *queue,
-> -			       unsigned int queue_nr)
-> +			       unsigned int queue_nr,
-> +			       bool formatted)
->  {
->  	struct cs_etm_queue *etmq = queue->priv;
->  
->  	if (list_empty(&queue->head) || etmq)
->  		return 0;
->  
-> -	etmq = cs_etm__alloc_queue(etm);
-> +	etmq = cs_etm__alloc_queue(etm, formatted);
->  
->  	if (!etmq)
->  		return -ENOMEM;
-> @@ -2430,8 +2441,14 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
->  		if (err)
->  			return err;
->  
-> +		/*
-> +		 * Knowing if the trace is formatted or not requires a lookup of
-> +		 * the aux record so only works in non-piped mode where data is
-> +		 * queued in cs_etm__queue_aux_records(). Always assume
-> +		 * formatted in piped mode (true).
-> +		 */
->  		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
-> -					  idx);
-> +					  idx, true);
->  		if (err)
->  			return err;
->  
-> @@ -2678,6 +2695,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
->  	union perf_event auxtrace_fragment;
->  	__u64 aux_offset, aux_size;
->  	__u32 idx;
-> +	bool formatted;
->  
->  	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
->  						   struct cs_etm_auxtrace,
-> @@ -2745,7 +2763,9 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
->  			return err;
->  
->  		idx = auxtrace_event->idx;
-> -		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx], idx);
-> +		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
-> +		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
-> +					   idx, formatted);
->  	}
->  
->  	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
-> @@ -3034,6 +3054,13 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
->  		goto err_delete_thread;
->  
->  	etm->data_queued = etm->queues.populated;
-> +	/*
-> +	 * Print warning in pipe mode, see cs_etm__process_auxtrace_event() and
-> +	 * cs_etm__queue_aux_fragment() for details relating to limitations.
-> +	 */
-> +	if (!etm->data_queued)
-> +		pr_warning("CS ETM warning: Coresight decode and TRBE support requires random file access.\n"
-> +			   "Continuing with best effort decoding in piped mode.\n\n");
->  
->  	return 0;
->  
-> -- 
-> 2.28.0
-> 
+Only go through the sysfs to retrieve the mapping between the real name
+and the alias once. The result is cached in a list, uncore_pmu_list.
+
+Nothing changed for the other ARCHs.
+
+With the patch, the perf tool can monitor the PMU with either the real
+name or the alias.
+
+Use the real name,
+ $ perf stat -e uncore_cha_2/event=1/ -x,
+   4044879584,,uncore_cha_2/event=1/,2528059205,100.00,,
+
+Use the alias,
+ $ perf stat -e uncore_type_0_2/event=1/ -x,
+   3659675336,,uncore_type_0_2/event=1/,2287306455,100.00,,
+
+Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/arch/x86/util/pmu.c | 109 ++++++++++++++++++++++++++++++++-
+ tools/perf/util/parse-events.y |   3 +-
+ tools/perf/util/pmu.c          |  26 +++++++-
+ tools/perf/util/pmu.h          |   5 ++
+ 4 files changed, 138 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+index d48d608517fd..bb79b1d19b96 100644
+--- a/tools/perf/arch/x86/util/pmu.c
++++ b/tools/perf/arch/x86/util/pmu.c
+@@ -1,12 +1,28 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <string.h>
+-
++#include <stdio.h>
++#include <sys/types.h>
++#include <dirent.h>
++#include <fcntl.h>
+ #include <linux/stddef.h>
+ #include <linux/perf_event.h>
++#include <linux/zalloc.h>
++#include <api/fs/fs.h>
+ 
+ #include "../../../util/intel-pt.h"
+ #include "../../../util/intel-bts.h"
+ #include "../../../util/pmu.h"
++#include "../../../util/fncache.h"
++
++#define TEMPLATE_ALIAS	"%s/bus/event_source/devices/%s/alias"
++
++struct perf_pmu_alias_name {
++	char *name;
++	char *alias;
++	struct list_head list;
++};
++
++static LIST_HEAD(pmu_alias_name_list);
+ 
+ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+ {
+@@ -18,3 +34,94 @@ struct perf_event_attr *perf_pmu__get_default_config(struct perf_pmu *pmu __mayb
+ #endif
+ 	return NULL;
+ }
++
++static void setup_pmu_alias_list(void)
++{
++	char path[PATH_MAX];
++	DIR *dir;
++	struct dirent *dent;
++	const char *sysfs = sysfs__mountpoint();
++	struct perf_pmu_alias_name *pmu;
++	char buf[MAX_PMU_NAME_LEN];
++	FILE *file;
++
++	if (!sysfs)
++		return;
++
++	snprintf(path, PATH_MAX,
++		 "%s" EVENT_SOURCE_DEVICE_PATH, sysfs);
++
++	dir = opendir(path);
++	if (!dir)
++		return;
++
++	while ((dent = readdir(dir))) {
++		if (!strcmp(dent->d_name, ".") ||
++		    !strcmp(dent->d_name, ".."))
++			continue;
++
++		snprintf(path, PATH_MAX,
++			 TEMPLATE_ALIAS, sysfs, dent->d_name);
++
++		if (!file_available(path))
++			continue;
++
++		file = fopen(path, "r");
++		if (!file)
++			continue;
++
++		if (fscanf(file, "%s", buf) != 1)
++			continue;
++
++		pmu = zalloc(sizeof(*pmu));
++		if (!pmu)
++			continue;
++
++		pmu->alias = strdup(buf);
++		if (!pmu->alias) {
++			free(pmu);
++			continue;
++		}
++		pmu->name = strdup(dent->d_name);
++		list_add_tail(&pmu->list, &pmu_alias_name_list);
++		fclose(file);
++	}
++
++	closedir(dir);
++}
++
++static char *__pmu_find_real_name(const char *name)
++{
++	struct perf_pmu_alias_name *pmu;
++
++	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
++		if (!strcmp(name, pmu->alias))
++			return strdup(pmu->name);
++	}
++
++	return strdup(name);
++}
++
++char *pmu_find_real_name(const char *name)
++{
++	static bool cached_list;
++
++	if (cached_list)
++		return __pmu_find_real_name(name);
++
++	setup_pmu_alias_list();
++	cached_list = true;
++
++	return __pmu_find_real_name(name);
++}
++
++char *pmu_find_alias_name(const char *name)
++{
++	struct perf_pmu_alias_name *pmu;
++
++	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
++		if (!strcmp(name, pmu->name))
++			return strdup(pmu->alias);
++	}
++	return NULL;
++}
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 9321bd0e2f76..d94e48e1ff9b 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
+ 			if (!strncmp(name, "uncore_", 7) &&
+ 			    strncmp($1, "uncore_", 7))
+ 				name += 7;
+-			if (!perf_pmu__match(pattern, name, $1)) {
++			if (!perf_pmu__match(pattern, name, $1) ||
++			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
+ 				if (parse_events_copy_term_list(orig_terms, &terms))
+ 					CLEANUP_YYABORT;
+ 				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 44b90d638ad5..cc9af7942e7b 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -944,13 +944,28 @@ static int pmu_max_precise(const char *name)
+ 	return max_precise;
+ }
+ 
+-static struct perf_pmu *pmu_lookup(const char *name)
++char * __weak
++pmu_find_real_name(const char *name)
++{
++	return strdup(name);
++}
++
++char * __weak
++pmu_find_alias_name(const char *name __maybe_unused)
++{
++	return NULL;
++}
++
++static struct perf_pmu *pmu_lookup(const char *lookup_name)
+ {
+ 	struct perf_pmu *pmu;
++	char *name;
+ 	LIST_HEAD(format);
+ 	LIST_HEAD(aliases);
+ 	__u32 type;
+ 
++	name = pmu_find_real_name(lookup_name);
++
+ 	/*
+ 	 * The pmu data we store & need consists of the pmu
+ 	 * type value and format definitions. Load both right
+@@ -973,7 +988,8 @@ static struct perf_pmu *pmu_lookup(const char *name)
+ 		return NULL;
+ 
+ 	pmu->cpus = pmu_cpumask(name);
+-	pmu->name = strdup(name);
++	pmu->name = name;
++	pmu->alias_name = pmu_find_alias_name(name);
+ 	pmu->type = type;
+ 	pmu->is_uncore = pmu_is_uncore(name);
+ 	if (pmu->is_uncore)
+@@ -1003,7 +1019,8 @@ static struct perf_pmu *pmu_find(const char *name)
+ 	struct perf_pmu *pmu;
+ 
+ 	list_for_each_entry(pmu, &pmus, list)
+-		if (!strcmp(pmu->name, name))
++		if (!strcmp(pmu->name, name) ||
++		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
+ 			return pmu;
+ 
+ 	return NULL;
+@@ -1898,6 +1915,9 @@ bool perf_pmu__has_hybrid(void)
+ 
+ int perf_pmu__match(char *pattern, char *name, char *tok)
+ {
++	if (!name)
++		return -1;
++
+ 	if (fnmatch(pattern, name, 0))
+ 		return -1;
+ 
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 926da483a141..f6ca9f6a06ef 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -21,6 +21,7 @@ enum {
+ #define PERF_PMU_FORMAT_BITS 64
+ #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
+ #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
++#define MAX_PMU_NAME_LEN 128
+ 
+ struct perf_event_attr;
+ 
+@@ -32,6 +33,7 @@ struct perf_pmu_caps {
+ 
+ struct perf_pmu {
+ 	char *name;
++	char *alias_name;	/* PMU alias name */
+ 	char *id;
+ 	__u32 type;
+ 	bool selectable;
+@@ -135,4 +137,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
+ bool perf_pmu__has_hybrid(void);
+ int perf_pmu__match(char *pattern, char *name, char *tok);
+ 
++char *pmu_find_real_name(const char *name);
++char *pmu_find_alias_name(const char *name);
++
+ #endif /* __PMU_H */
+-- 
+2.17.1
+
