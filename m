@@ -2,147 +2,102 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFFEC6377D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 11:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33549C6377D
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 15:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D794261289
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 11:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13B4F61279
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 15:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231661AbhGVKaN (ORCPT
+        id S232624AbhGVOxr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jul 2021 06:30:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56454 "EHLO
+        Thu, 22 Jul 2021 10:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231450AbhGVKaN (ORCPT
+        with ESMTP id S232217AbhGVOxq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jul 2021 06:30:13 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCC00C061757
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jul 2021 04:10:47 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id c15so5503235wrs.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jul 2021 04:10:47 -0700 (PDT)
+        Thu, 22 Jul 2021 10:53:46 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62710C061757;
+        Thu, 22 Jul 2021 08:34:20 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id k14-20020a05600c1c8eb02901f13dd1672aso2737873wms.0;
+        Thu, 22 Jul 2021 08:34:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+BbEYjJZrDMvVMU8Gk6ZZXnsglhpn/IFncHvu0fGydQ=;
-        b=dwSE7daosIqAIYrAg6zfool4qyV1Av+1/M71w7zKk1Q7KC7+ks3lA1z6zT65mf7I6C
-         wvkepV4WJgSNdJB5ApE8wMASfJm7BYkWCslG2YdS+g+/qfFdl3YlVGfGl4zIh636hjya
-         B9tHEjL7imZ/MEZ5MWpEg3Pnu76OprUuLZrrqG9KoR+iAtStpz+54ci+5g510O9ZcZTj
-         OCtL3tXvyrLATrlQ9z8pEIWlxXTdSAZC1LOMJV0ki8G3kGHI6JcLtmiiuO8MlI4AqG7l
-         ta6R5LkO9d2rTpcGpfTs+8a1Fq6/YkiR9HDJLlNIYCWexCHUFhkFc5hz09kauipJH574
-         gctA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dyJINemfwGSOATCuLd9fCZ7pa/ePCnr/XUM9FOXXsb4=;
+        b=G5YyGfStsB9EVlRm3eT80MFacY56yEfeHXGU/frm0/nqvvEUBqqfmLtAM1Fyi1YjPs
+         QO8mvc8H3nEy0vCLE9Rxp1d73eyrQBNv6BooPcXpJwNU8dQEniMGo0HUZch1BCkD+GwA
+         nCu58wZ6QSL5oQDHmpBrUyewocN+SzbmgTasyjnti1gJdqvCRpCCy2x6Ir025v4jXK0h
+         JFpaKnhq3rDDJu89WVyBB/rdAV80FulZOc9UD157aCWN0xz6e7y9a/fD1NdwhxbS30Nf
+         M+Yoal/YD+McZ58wlRFhq7jF5SzRKcYr9h22EMi3IYkAYJe4QMeKrbRPMhAm3dA+W43G
+         4z8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+BbEYjJZrDMvVMU8Gk6ZZXnsglhpn/IFncHvu0fGydQ=;
-        b=rN0+RF9vx5/Dd89V25a+MMtd3W86SKtFkfx0fjk70VnlUdaWoIuw8Dx0/zXj0vNDYN
-         /YpyBGebSYspBu8j4QslC698avYnjQC1LgdWhdgDZURNNRmdIjFauO1mxROaxEKubyND
-         WZk+McEpiyHCncmso/5c9jMBpMP/04N+eMTSrMEcp09xoiYZCCA5fhHrNyaoRbLIvAfU
-         +W6KUkJPYA8lmQFXBMUWHCUF4XM6kyMhDAMv9ojDv9fftXKBPZhpgdvmTr0mx415BywR
-         GpOk72y7hCU0f+EqIbHzxvw1kVrvb46cvE+YxmHQ73N4MtmsSD3LYh68veb8aesQmuDx
-         bXIQ==
-X-Gm-Message-State: AOAM530Abv6Y9P8OuzAV13nA8eeZdfQTchVe/yNREWpbnk5MVCMRkhIP
-        TPut/kZVz7GSZZkn37H7/VY26L9mwQK9FK9Q2l0B+g==
-X-Google-Smtp-Source: ABdhPJwWnzl/vvtrpZNDGt12uO9nxNx15w3I8z53H5T1+Rtm/pEgI7ux1/XG3alF95NgDGAbjNhXo5AR0bbcINTVsP4=
-X-Received: by 2002:adf:f949:: with SMTP id q9mr46150136wrr.178.1626952246441;
- Thu, 22 Jul 2021 04:10:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210721090706.21523-1-james.clark@arm.com> <20210721090706.21523-3-james.clark@arm.com>
-In-Reply-To: <20210721090706.21523-3-james.clark@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Thu, 22 Jul 2021 12:10:35 +0100
-Message-ID: <CAJ9a7Viap53OgrM2e_DU4+oymFB41jspbKbvEVFQWROt7ifuXw@mail.gmail.com>
-Subject: Re: [PATCH 2/6] perf cs-etm: Initialise architecture based on TRCIDR1
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Leo Yan <leo.yan@linaro.org>, Al Grant <al.grant@arm.com>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dyJINemfwGSOATCuLd9fCZ7pa/ePCnr/XUM9FOXXsb4=;
+        b=bWNte8Z7z8LpFPsYGce/Q+mJAoJOO3D71wYxvq0W4RIwygA6MgWtQGyN1sHXaDYOil
+         G7TIFnRO+9Ylr46f4clhEzOVSJsyCToIkcIIFg+hnzUmJgGk0totWEqG76DbmquEZWSV
+         0cT4xEmZeVFJBXjzyPbYgiO1/Qumb379mMIsCRYTSbVJ4rdpzSFpcetkV6MM1KGSsQ18
+         t5nny+dheLvkjHj42HHUCd8bgCT/rxb6lufiOTaAEbSr/SxtQzo2zY5NYrMYhS9LbKzF
+         8ewfVG0yRQ0PvIRKWTTkgD2avzP5h/8RSlIjnJLTJ/ZUsgUfE67K/y3lqlD03pMU1Nlj
+         tGfw==
+X-Gm-Message-State: AOAM530xad3W2j8kG9FyNiG6/EUsZ55hQ3GLfeazHGeXQiZWLuvIVY4e
+        8YzAhweodecUcCshMPJyZXU=
+X-Google-Smtp-Source: ABdhPJwtaOoDNCk6VjMtEbgUvxoECSMJySKBc+hFIfTJdtGxA8XzU17iDUKGiuW9bQV0gvbtbMbsdA==
+X-Received: by 2002:a1c:4d14:: with SMTP id o20mr9336496wmh.89.1626968058881;
+        Thu, 22 Jul 2021 08:34:18 -0700 (PDT)
+Received: from honeypot.. ([185.91.190.155])
+        by smtp.googlemail.com with ESMTPSA id o29sm23735557wms.13.2021.07.22.08.34.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jul 2021 08:34:18 -0700 (PDT)
+From:   Riccardo Mancini <rickyman7@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Riccardo Mancini <rickyman7@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/3] tools: add gettid to libc_compat.h
+Date:   Thu, 22 Jul 2021 17:34:13 +0200
+Message-Id: <cover.1626966805.git.rickyman7@gmail.com>
+X-Mailer: git-send-email 2.31.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-HI James
+Hi Arnaldo,
 
-On Wed, 21 Jul 2021 at 10:07, James Clark <james.clark@arm.com> wrote:
->
-> Currently the architecture is hard coded as ARCH_V8, but with the
-> introduction of ETE we want to pick ARCH_AA64. And this change is also
-> applicable to ETM v4.4 onwards as well.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> index 30889a9d0165..5972a8afcc6b 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -126,6 +126,18 @@ static int cs_etm_decoder__gen_etmv3_config(struct cs_etm_trace_params *params,
->         return 0;
->  }
->
-> +#define TRCIDR1_TRCARCHMIN_SHIFT 4
-> +#define TRCIDR1_TRCARCHMIN_MASK  GENMASK(7, 4)
-> +#define TRCIDR1_TRCARCHMIN(x)    (((x) & TRCIDR1_TRCARCHMIN_MASK) >> TRCIDR1_TRCARCHMIN_SHIFT)
-> +static enum _ocsd_arch_version cs_etm_decoder__get_arch_ver(u32 reg_idr1)
-> +{
-> +       /*
-> +        * If the ETM trace minor version is 4 or more then we can assume
-> +        * the architecture is ARCH_AA64 rather than just V8
-> +        */
-> +       return TRCIDR1_TRCARCHMIN(reg_idr1) >= 4 ? ARCH_AA64 : ARCH_V8;
-> +}
+following our previous discussion on workqueue RFC patchset, I'm sending
+this patchet to add gettid to tools/include/tools/libc_compat.h.
+This new definition will replace existing uses and will be used by the
+workqueue code.
 
-This is true for ETM4.x & ETE 1.x (arch 5.x) but not ETM 3.x
-Probably need to beef up this comment or the function name to emphasise this.
+Thanks,
+Riccardo
 
-Also only true because we don't currently support AArch32 builds of
-the ETM4.x driver.
+Riccardo Mancini (3):
+  tools libc_compat: add gettid
+  perf jvmti: use gettid from libc_compat
+  perf test: mmap-thread-lookup: use gettid
 
-Regards
-
-Mike
-
-> +
->  static void cs_etm_decoder__gen_etmv4_config(struct cs_etm_trace_params *params,
->                                              ocsd_etmv4_cfg *config)
->  {
-> @@ -140,7 +152,7 @@ static void cs_etm_decoder__gen_etmv4_config(struct cs_etm_trace_params *params,
->         config->reg_idr11 = 0;
->         config->reg_idr12 = 0;
->         config->reg_idr13 = 0;
-> -       config->arch_ver = ARCH_V8;
-> +       config->arch_ver = cs_etm_decoder__get_arch_ver(params->etmv4.reg_idr1);
->         config->core_prof = profile_CortexA;
->  }
->
-> --
-> 2.28.0
->
-
+ tools/include/tools/libc_compat.h     | 7 +++++++
+ tools/perf/jvmti/jvmti_agent.c        | 9 +--------
+ tools/perf/tests/mmap-thread-lookup.c | 4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
 -- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+2.31.1
+
