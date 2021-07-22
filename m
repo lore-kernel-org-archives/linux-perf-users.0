@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A83C63798
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 15:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDC6C63799
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0717F60BD3
+	by mail.kernel.org (Postfix) with ESMTP id 041AF6052B
 	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 15:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232672AbhGVOxu (ORCPT
+        id S232677AbhGVOxv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jul 2021 10:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
+        Thu, 22 Jul 2021 10:53:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232661AbhGVOxt (ORCPT
+        with ESMTP id S232644AbhGVOxu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jul 2021 10:53:49 -0400
+        Thu, 22 Jul 2021 10:53:50 -0400
 Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A458EC061575;
-        Thu, 22 Jul 2021 08:34:23 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id f17so6388846wrt.6;
-        Thu, 22 Jul 2021 08:34:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90EECC061757;
+        Thu, 22 Jul 2021 08:34:24 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id r11so6381037wro.9;
+        Thu, 22 Jul 2021 08:34:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=67qwQMdJiWpJhcKWHqbeIHIALS+B+pZPfDzT1EC8xO0=;
-        b=BxjUIh+JjBdbu5EiOvQ7SHg3AI5wMYa9cqio9E/gRh1eSlFlXcTMiAHW6pYKdzxLlo
-         H18rNtZ3h0Bj9ORH7+gO3RDHNSPveR+Cx1EUlNjAGA/SnBPhZ41EFwjbq9d517hpYm47
-         qWDEpD45M/KkMGbor6wm3O5x4FlAq0umruP+1UnhEpzgEjfxtzY4YEDnq/y3mq99vb6u
-         3AS/srj8/LKRNdSrD8ogPQdxUwII1U677GVrNdouJBMZqujXkBTRKgViGT2o4TShJ8PZ
-         YZOFRNkjY8q1uT/Ft5Uu+ZUzuJXEt+fpYTXd3VReJv50PAD0L5Gwaj1ydYQf0JF+VBRU
-         YOYw==
+        bh=M49ul0bkJBQFuWjJm4FuBm3fFgxnr1HIV0sqLLOvDXs=;
+        b=armzozJMAlKNiuq9bWfR6WGUdd8xa0OHH5L5fy0Ia6FcdEC03WhPLs3BfOdh2WwmSj
+         sKKoefIXGpgTdb20h8CIZ5eBCual812a9RyuaKvjC8TiZl4fHl65Yd6YOfk159xQfuud
+         mfXZohGq/H9TlSrjOUuRhz60lR8DH/bc3cHoBzZyMHqsnj8FrSDp73xVhgYxNUICWfxg
+         T7Tb9yrBwxEOAoq0rPK8orHzbLi7Ev65qBY8p0T7Zsp+exx15+iQaQc8FcG+Ta6l6jaI
+         ilhi+3hVOqbV3O/+FX3PtQAifol5x77zKvjnIs9X1JoPO/P/lZlj2rqYqi3Db5X2X8on
+         g93g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=67qwQMdJiWpJhcKWHqbeIHIALS+B+pZPfDzT1EC8xO0=;
-        b=T//v340Cxb13imjnJ0J8mOdvvVSYE7oofqi4KFjXb9Wcw+tIntpiH2rEZCe7vcJNtS
-         ethfc603EjZX6MbvqN33D/Ouwv4xwxxdYEBbRGJy1uSKmCRZwt3jhE1xYGDtHxZg0YMw
-         PdiR9+aTPKAKUhn97edBhjDvdK4FwwzopWIt41sQwKXsrfHKSE4oTgr/tImQzWpglERH
-         Sg5eIKIkOiYj7AMYZHSCsSLB1o8z6quWSSMon1VwONqHBE2yClNTla2WZWK9inrHOyqT
-         TMKajGt2uJAi+ih/Iy0CeJDTJQ8tNHa46lN0qngoYnbqLj4l6n7MB90/cSN/ePMvluFK
-         dS5w==
-X-Gm-Message-State: AOAM530ZcrvzxefroBCq/xGbrl2MFCem3zlgrJb+HXVo0IC3EHXyrPVi
-        dqkKYx7eYFlKf1ym21Oqg4Q=
-X-Google-Smtp-Source: ABdhPJyBuQJW0ucUYrGfD/t7PI00bPap8z4Qzxz23rdMY7Kf1oLMjRlx1tL9XxPVnWEBlRKB67efZA==
-X-Received: by 2002:a5d:6209:: with SMTP id y9mr559965wru.402.1626968062269;
-        Thu, 22 Jul 2021 08:34:22 -0700 (PDT)
+        bh=M49ul0bkJBQFuWjJm4FuBm3fFgxnr1HIV0sqLLOvDXs=;
+        b=F7NjLRw5TGWcG29yT9up+iCvHfmsjJUVAPOx0DzQCGZmBuF92RLW4AEgL0ic4y+Ye+
+         uZJzEw1RWyrlbGVofwQBxoRrc/DBoF2FjoP8u0CTBwPSaX3nAonFJLK/HJMV6rY5OCV/
+         GsCDbLjAWxRY90HeXWCRGrVwYa5ek0/7np1XrlCc0iGX/MG0IK6fohPfMzKxU78hJdHv
+         HQrtdImxTfGiFTdaATdvA9jaOouW7d1vxlysjwujnAJvA7XH+wTN9BDkLjATZbR8Pd9r
+         fVjrxuY64UoFXEVJRjlX8ngY6rZ8kT8ED9YNE/v8wGNscq7Sm2mi7Tc+uZWhKXq6AzA6
+         YH8Q==
+X-Gm-Message-State: AOAM530Zc7mPIBk4XL37FRditg64Fnf97UPZybNB55inFcYPWSiAehJo
+        COKCSc0Nr4Rf0ow5bCQpavc=
+X-Google-Smtp-Source: ABdhPJwE7vPAoVuY4DJru2lCuHaWt4j5GDD3Ge5/oeUElLRfRHo7oQq+xdySreCxwS2j4JAeNOPThg==
+X-Received: by 2002:adf:db85:: with SMTP id u5mr547432wri.167.1626968063144;
+        Thu, 22 Jul 2021 08:34:23 -0700 (PDT)
 Received: from honeypot.. ([185.91.190.155])
-        by smtp.googlemail.com with ESMTPSA id o29sm23735557wms.13.2021.07.22.08.34.20
+        by smtp.googlemail.com with ESMTPSA id o29sm23735557wms.13.2021.07.22.08.34.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jul 2021 08:34:21 -0700 (PDT)
+        Thu, 22 Jul 2021 08:34:22 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Namhyung Kim <namhyung@kernel.org>,
@@ -69,9 +69,9 @@ Cc:     Namhyung Kim <namhyung@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>,
         Riccardo Mancini <rickyman7@gmail.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/3] perf jvmti: use gettid from libc_compat
-Date:   Thu, 22 Jul 2021 17:34:15 +0200
-Message-Id: <4e24f9b00cbe53520cfe66781b29a3977ae23243.1626966805.git.rickyman7@gmail.com>
+Subject: [PATCH 3/3] perf test: mmap-thread-lookup: use gettid
+Date:   Thu, 22 Jul 2021 17:34:16 +0200
+Message-Id: <0328557450dc7817cd979ee71b33ca9166a1d78b.1626966805.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1626966805.git.rickyman7@gmail.com>
 References: <cover.1626966805.git.rickyman7@gmail.com>
@@ -81,42 +81,38 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch removes the re-definition of gettid in jvmti_agent.c, adding
-the include of the libc_compat.h header, which now contains the gettid
-function.
+This patch replaces the manual syscall to get the current thread tid,
+with the libc equivalent gettid.
+Since it is only available from glibc 2.30, the libc_compat.h header is
+included, which provides its definition in case gettid is not available.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/jvmti/jvmti_agent.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ tools/perf/tests/mmap-thread-lookup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/jvmti/jvmti_agent.c b/tools/perf/jvmti/jvmti_agent.c
-index 526dcaf9f07903dd..299e7e87198cc18d 100644
---- a/tools/perf/jvmti/jvmti_agent.c
-+++ b/tools/perf/jvmti/jvmti_agent.c
-@@ -33,7 +33,7 @@
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index 8d9d4cbff76d17d5..055cc850a6061798 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <inttypes.h>
  #include <unistd.h>
- #include <time.h>
+-#include <sys/syscall.h>
++#include <tools/libc_compat.h> // gettid
+ #include <sys/types.h>
  #include <sys/mman.h>
--#include <syscall.h> /* for gettid() */
-+#include <tools/libc_compat.h> /* for gettid() */
- #include <err.h>
- #include <linux/kernel.h>
+ #include <pthread.h>
+@@ -45,7 +45,7 @@ static int thread_init(struct thread_data *td)
+ 	}
  
-@@ -45,13 +45,6 @@
- static char jit_path[PATH_MAX];
- static void *marker_addr;
+ 	td->map = map;
+-	td->tid = syscall(SYS_gettid);
++	td->tid = gettid();
  
--#ifndef HAVE_GETTID
--static inline pid_t gettid(void)
--{
--	return (pid_t)syscall(__NR_gettid);
--}
--#endif
--
- static int get_e_machine(struct jitheader *hdr)
- {
- 	ssize_t sret;
+ 	pr_debug("tid = %d, map = %p\n", td->tid, map);
+ 	return 0;
 -- 
 2.31.1
 
