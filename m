@@ -2,185 +2,276 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC14DC6377D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 16:16:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4754C4338F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 21:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B41C56128C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 16:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA54560EE6
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 21:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbhGVPfl (ORCPT
+        id S230480AbhGVUUO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jul 2021 11:35:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbhGVPfl (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jul 2021 11:35:41 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53609C061575;
-        Thu, 22 Jul 2021 09:16:14 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id n1so6507711wri.10;
-        Thu, 22 Jul 2021 09:16:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=iQYWSnZ/6PjfGdSChJbuu3B34GWztbBSbniPKOWI1lk=;
-        b=g9dzTxSs5GNB1pz/ITivhant+Q354d0+HbkjnTRF63imjYZa159rm0UTDf5wZoPZ/I
-         LITgFTU8ALrCU4w5xhsRkDzXUFbfPfc8sbbPDjuLE+0Ki+wDogcnBv+qlXgGRvHmIrSF
-         t8Pa20G30wDHG9R3IN4Da8dU4IsCwJWuVu7DXOBeSc3wtAJSX9SPkngQqittKN94tToi
-         k87QNxPKcjbTU2teYezH/JIvxnpzfDSt22eLpadttBJC71we3FIP/02QWzDp1AJyYCes
-         IslY0io8rdgX0uSRyuohkp/uIYgMD0k6VFNo8WBvK+3uFLUS9J5yYZu8L9L+BrGWIP7C
-         0k7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=iQYWSnZ/6PjfGdSChJbuu3B34GWztbBSbniPKOWI1lk=;
-        b=mqH6ziigmSmJ1odCcu1i7xuQC39yQxiCKPHrbfxZWhfZxrr2GBs+zWVihPBjGzSIrq
-         W3hD3hXGUJfHsAOWw5K7tyoosilStVgpzsz8B1dasfuwz8Ph25PJ/Bb+GLCHZ17VED6Y
-         S6AshMnR+y4B44gV55twoAR5f+h+pUp3MKTf+OrqaYXK5McMKieHgg4c8vsj+3qaUkos
-         kUmhliUS2Zxokol3Q2/Ylciz178Rbh0Pjxe2Br0UEW5YvKQrv/B6NZkR87+OeqEAtG1b
-         3g2DcdqtQc1vYd8uclN4mKhRPb4Vr0oVpqPymH6xiNfWwSMSQg0xeBY7+K17uWU09fPD
-         r/Sg==
-X-Gm-Message-State: AOAM532iUaDNcgk3NRYueya7zmLMrgwBivpcl9A/ErxjebP6XI1coGRK
-        NlOmQml3dUpQjHSlbXTKsLY=
-X-Google-Smtp-Source: ABdhPJw12V5yMpNOV1oISUFAqrKnm66M94Xodmpxhki2r08WGjWxMZ4ayRaaNDYpBKshRPacjvCkgA==
-X-Received: by 2002:adf:f411:: with SMTP id g17mr784407wro.160.1626970572854;
-        Thu, 22 Jul 2021 09:16:12 -0700 (PDT)
-Received: from [192.168.1.75] ([185.91.190.155])
-        by smtp.gmail.com with ESMTPSA id q81sm3528885wme.18.2021.07.22.09.16.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jul 2021 09:16:12 -0700 (PDT)
-Message-ID: <5fc68331f925419c26a01ff678c17339a4735e93.camel@gmail.com>
-Subject: Re: [RFC PATCH 00/10] perf: add workqueue library and use it in
- synthetic-events
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 22 Jul 2021 16:20:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230467AbhGVUUO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 22 Jul 2021 16:20:14 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A46E460EB5;
+        Thu, 22 Jul 2021 21:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1626987649;
+        bh=lAP/pYgBUvFwv2o+B17C9qM7AFYaCQ7N2qkjjh82T+g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cPU7EksBYf91NuieodeCxZCV+IzLRCvrd/hUhHNKfn0mrSlztoc5DrXctSQOOmi/J
+         V5TEMTILl7nmR/MtxWAP5jX9/lAfiya0hm81TXbje4nLg4FQW7rrVQLt16JDJnWyxu
+         u3U8Tx83n7gxnUmb4yd1eEcyPAAkkz1FOsYm8hWIWUayPbK0Ndqg32yrmfPlJXWSY+
+         FUk4grmMnxex9UA+Rnd1oju/yVgLyIZ5uFjEOu6FPpcwVAL0gaW7iYlyYy8cBKxof5
+         IQ56iUgJ2MqokQTgZQdWKRUoZuHmquyo6Bbc63yhaTTGlrtrvibKjsFQfdzDTQYqRt
+         TDNjR23AJoaBQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id CF6F1403F2; Thu, 22 Jul 2021 18:00:44 -0300 (-03)
+Date:   Thu, 22 Jul 2021 18:00:44 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+        leo.yan@linaro.org, al.grant@arm.com, suzuki.poulose@arm.com,
+        anshuman.khandual@arm.com, mike.leach@linaro.org,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Date:   Thu, 22 Jul 2021 18:15:19 +0200
-In-Reply-To: <YPXq95yUYo+cH740@krava>
-References: <cover.1626177381.git.rickyman7@gmail.com>
-         <YPXq95yUYo+cH740@krava>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.2 (3.40.2-1.fc34) 
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] perf cs-etm: Pass unformatted flag to decoder
+Message-ID: <YPncfIyzvzj4v/rx@kernel.org>
+References: <20210721150202.32065-1-james.clark@arm.com>
+ <20210721150202.32065-7-james.clark@arm.com>
+ <20210721160523.GA2377909@p14s>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210721160523.GA2377909@p14s>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jiri,
-
-On Mon, 2021-07-19 at 23:13 +0200, Jiri Olsa wrote:
-> On Tue, Jul 13, 2021 at 02:11:11PM +0200, Riccardo Mancini wrote:
-> > This patchset introduces a new utility library inside perf/util, which
-> > provides a work queue abstraction, which loosely follows the Kernel
-> > workqueue API.
+Em Wed, Jul 21, 2021 at 10:05:23AM -0600, Mathieu Poirier escreveu:
+> On Wed, Jul 21, 2021 at 04:02:02PM +0100, James Clark wrote:
+> > The TRBE (Trace Buffer Extension) feature allows a separate trace buffer
+> > for each trace source, therefore the trace wouldn't need to be
+> > formatted. The driver was introduced in commit 3fbf7f011f24
+> > ("coresight: sink: Add TRBE driver").
 > > 
-> > The workqueue abstraction is made up by two components:
-> >  - threadpool: which takes care of managing a pool of threads. It is
-> >    inspired by the prototype for threaded trace in perf-record from Alexey:
-> >   
-> > https://lore.kernel.org/lkml/cover.1625227739.git.alexey.v.bayduraev@linux.intel.com/
-> >  - workqueue: manages a shared queue and provides the workers
-> > implementation.
+> > The formatted/unformatted mode is encoded in one of the flags of the
+> > AUX record. The first AUX record encountered for each event is used to
+> > determine the mode, and this will persist for the remaining trace that
+> > is either decoded or dumped.
 > > 
-> > On top of the workqueue, a simple parallel-for utility is implemented
-> > which is then showcased in synthetic-events.c, replacing the previous
-> > manual pthread-created threads.
+> > Signed-off-by: James Clark <james.clark@arm.com>
+> > ---
+> >  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  4 +-
+> >  tools/perf/util/cs-etm.c                      | 53 ++++++++++++++-----
+> >  2 files changed, 42 insertions(+), 15 deletions(-)
 > > 
-> > Through some experiments with perf bench, I can see how the new 
-> > workqueue has a higher overhead compared to manual creation of threads, 
-> > but is able to more effectively partition work among threads, yielding 
-> > a better result with more threads.
-> > Furthermore, the overhead could be configured by changing the
-> > `work_size` (currently 1), aka the number of dirents that are 
-> > processed by a thread before grabbing a lock to get the new work item.
-> > I experimented with different sizes but, while bigger sizes reduce overhead
-> > as expected, they do not scale as well to more threads.
-> > 
-> > I tried to keep the patchset as simple as possible, deferring possible
-> > improvements and features to future work.
-> > Naming a few:
-> >  - in order to achieve a better performance, we could consider using 
-> >    work-stealing instead of a common queue.
-> >  - affinities in the thread pool, as in Alexey prototype for
-> >    perf-record. Doing so would enable reusing the same threadpool for
-> >    different purposes (evlist open, threaded trace, synthetic threads),
-> >    avoiding having to spin up threads multiple times.
-> >  - resizable threadpool, e.g. for lazy spawining of threads.
-> > 
-> > @Arnaldo
-> > Since I wanted the workqueue to provide a similar API to the Kernel's
-> > workqueue, I followed the naming style I found there, instead of the
-> > usual object__method style that is typically found in perf. 
-> > Let me know if you'd like me to follow perf style instead.
-> > 
-> > Thanks,
-> > Riccardo
-> > 
-> > Riccardo Mancini (10):
-> >   perf workqueue: threadpool creation and destruction
-> >   perf tests: add test for workqueue
-> >   perf workqueue: add threadpool start and stop functions
-> >   perf workqueue: add threadpool execute and wait functions
-> >   perf workqueue: add sparse annotation header
-> >   perf workqueue: introduce workqueue struct
-> >   perf workqueue: implement worker thread and management
-> >   perf workqueue: add queue_work and flush_workqueue functions
-> >   perf workqueue: add utility to execute a for loop in parallel
-> >   perf synthetic-events: use workqueue parallel_for
 > 
-> looks great, would it make sense to put this to libperf?
-
-I don't know about libperf in particular. 
-The idea is to start using it in perf and, if everything goes well, to put it in
-lib/ so that everyone interested in it could just include it.
-Since I'm looking for other parts where a workqueue could be useful, if you know
-of some in libperf, I could try having a look at them too.
-
-Riccardo
-
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > 
-> jirka
+> Arnaldo, please consider adding this set to your tree.
+
+Thanks, applied to perf/core.
+
+- Arnaldo
+ 
+> Thanks,
+> Mathieu
 > 
-> > 
-> >  tools/perf/tests/Build                 |   1 +
-> >  tools/perf/tests/builtin-test.c        |   9 +
-> >  tools/perf/tests/tests.h               |   3 +
-> >  tools/perf/tests/workqueue.c           | 453 +++++++++++++++++
-> >  tools/perf/util/Build                  |   1 +
-> >  tools/perf/util/synthetic-events.c     | 131 +++--
-> >  tools/perf/util/workqueue/Build        |   2 +
-> >  tools/perf/util/workqueue/sparse.h     |  21 +
-> >  tools/perf/util/workqueue/threadpool.c | 516 ++++++++++++++++++++
-> >  tools/perf/util/workqueue/threadpool.h |  29 ++
-> >  tools/perf/util/workqueue/workqueue.c  | 642 +++++++++++++++++++++++++
-> >  tools/perf/util/workqueue/workqueue.h  |  38 ++
-> >  12 files changed, 1771 insertions(+), 75 deletions(-)
-> >  create mode 100644 tools/perf/tests/workqueue.c
-> >  create mode 100644 tools/perf/util/workqueue/Build
-> >  create mode 100644 tools/perf/util/workqueue/sparse.h
-> >  create mode 100644 tools/perf/util/workqueue/threadpool.c
-> >  create mode 100644 tools/perf/util/workqueue/threadpool.h
-> >  create mode 100644 tools/perf/util/workqueue/workqueue.c
-> >  create mode 100644 tools/perf/util/workqueue/workqueue.h
-> > 
+> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > index ed1f0326f859..9c9039ae6989 100644
+> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > @@ -687,7 +687,7 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
+> >  }
+> >  
+> >  struct cs_etm_decoder *
+> > -cs_etm_decoder__new(int num_cpu, struct cs_etm_decoder_params *d_params,
+> > +cs_etm_decoder__new(int decoders, struct cs_etm_decoder_params *d_params,
+> >  		    struct cs_etm_trace_params t_params[])
+> >  {
+> >  	struct cs_etm_decoder *decoder;
+> > @@ -732,7 +732,7 @@ cs_etm_decoder__new(int num_cpu, struct cs_etm_decoder_params *d_params,
+> >  	/* init raw frame logging if required */
+> >  	cs_etm_decoder__init_raw_frame_logging(d_params, decoder);
+> >  
+> > -	for (i = 0; i < num_cpu; i++) {
+> > +	for (i = 0; i < decoders; i++) {
+> >  		ret = cs_etm_decoder__create_etm_decoder(d_params,
+> >  							 &t_params[i],
+> >  							 decoder);
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 760050ea936d..f4b2bff533f3 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -461,13 +461,14 @@ static void cs_etm__set_trace_param_etmv4(struct cs_etm_trace_params *t_params,
+> >  }
+> >  
+> >  static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
+> > -				     struct cs_etm_auxtrace *etm)
+> > +				     struct cs_etm_auxtrace *etm,
+> > +				     int decoders)
+> >  {
+> >  	int i;
+> >  	u32 etmidr;
+> >  	u64 architecture;
+> >  
+> > -	for (i = 0; i < etm->num_cpu; i++) {
+> > +	for (i = 0; i < decoders; i++) {
+> >  		architecture = etm->metadata[i][CS_ETM_MAGIC];
+> >  
+> >  		switch (architecture) {
+> > @@ -488,7 +489,8 @@ static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
+> >  
+> >  static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
+> >  				       struct cs_etm_queue *etmq,
+> > -				       enum cs_etm_decoder_operation mode)
+> > +				       enum cs_etm_decoder_operation mode,
+> > +				       bool formatted)
+> >  {
+> >  	int ret = -EINVAL;
+> >  
+> > @@ -498,7 +500,7 @@ static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
+> >  	d_params->packet_printer = cs_etm__packet_dump;
+> >  	d_params->operation = mode;
+> >  	d_params->data = etmq;
+> > -	d_params->formatted = true;
+> > +	d_params->formatted = formatted;
+> >  	d_params->fsyncs = false;
+> >  	d_params->hsyncs = false;
+> >  	d_params->frame_aligned = true;
+> > @@ -720,11 +722,17 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+> >  	return len;
+> >  }
+> >  
+> > -static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+> > +static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
+> > +						bool formatted)
+> >  {
+> >  	struct cs_etm_decoder_params d_params;
+> >  	struct cs_etm_trace_params  *t_params = NULL;
+> >  	struct cs_etm_queue *etmq;
+> > +	/*
+> > +	 * Each queue can only contain data from one CPU when unformatted, so only one decoder is
+> > +	 * needed.
+> > +	 */
+> > +	int decoders = formatted ? etm->num_cpu : 1;
+> >  
+> >  	etmq = zalloc(sizeof(*etmq));
+> >  	if (!etmq)
+> > @@ -735,21 +743,23 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+> >  		goto out_free;
+> >  
+> >  	/* Use metadata to fill in trace parameters for trace decoder */
+> > -	t_params = zalloc(sizeof(*t_params) * etm->num_cpu);
+> > +	t_params = zalloc(sizeof(*t_params) * decoders);
+> >  
+> >  	if (!t_params)
+> >  		goto out_free;
+> >  
+> > -	if (cs_etm__init_trace_params(t_params, etm))
+> > +	if (cs_etm__init_trace_params(t_params, etm, decoders))
+> >  		goto out_free;
+> >  
+> >  	/* Set decoder parameters to decode trace packets */
+> >  	if (cs_etm__init_decoder_params(&d_params, etmq,
+> >  					dump_trace ? CS_ETM_OPERATION_PRINT :
+> > -						     CS_ETM_OPERATION_DECODE))
+> > +						     CS_ETM_OPERATION_DECODE,
+> > +					formatted))
+> >  		goto out_free;
+> >  
+> > -	etmq->decoder = cs_etm_decoder__new(etm->num_cpu, &d_params, t_params);
+> > +	etmq->decoder = cs_etm_decoder__new(decoders, &d_params,
+> > +					    t_params);
+> >  
+> >  	if (!etmq->decoder)
+> >  		goto out_free;
+> > @@ -777,14 +787,15 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm)
+> >  
+> >  static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+> >  			       struct auxtrace_queue *queue,
+> > -			       unsigned int queue_nr)
+> > +			       unsigned int queue_nr,
+> > +			       bool formatted)
+> >  {
+> >  	struct cs_etm_queue *etmq = queue->priv;
+> >  
+> >  	if (list_empty(&queue->head) || etmq)
+> >  		return 0;
+> >  
+> > -	etmq = cs_etm__alloc_queue(etm);
+> > +	etmq = cs_etm__alloc_queue(etm, formatted);
+> >  
+> >  	if (!etmq)
+> >  		return -ENOMEM;
+> > @@ -2430,8 +2441,14 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+> >  		if (err)
+> >  			return err;
+> >  
+> > +		/*
+> > +		 * Knowing if the trace is formatted or not requires a lookup of
+> > +		 * the aux record so only works in non-piped mode where data is
+> > +		 * queued in cs_etm__queue_aux_records(). Always assume
+> > +		 * formatted in piped mode (true).
+> > +		 */
+> >  		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
+> > -					  idx);
+> > +					  idx, true);
+> >  		if (err)
+> >  			return err;
+> >  
+> > @@ -2678,6 +2695,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+> >  	union perf_event auxtrace_fragment;
+> >  	__u64 aux_offset, aux_size;
+> >  	__u32 idx;
+> > +	bool formatted;
+> >  
+> >  	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+> >  						   struct cs_etm_auxtrace,
+> > @@ -2745,7 +2763,9 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+> >  			return err;
+> >  
+> >  		idx = auxtrace_event->idx;
+> > -		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx], idx);
+> > +		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
+> > +		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
+> > +					   idx, formatted);
+> >  	}
+> >  
+> >  	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
+> > @@ -3034,6 +3054,13 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+> >  		goto err_delete_thread;
+> >  
+> >  	etm->data_queued = etm->queues.populated;
+> > +	/*
+> > +	 * Print warning in pipe mode, see cs_etm__process_auxtrace_event() and
+> > +	 * cs_etm__queue_aux_fragment() for details relating to limitations.
+> > +	 */
+> > +	if (!etm->data_queued)
+> > +		pr_warning("CS ETM warning: Coresight decode and TRBE support requires random file access.\n"
+> > +			   "Continuing with best effort decoding in piped mode.\n\n");
+> >  
+> >  	return 0;
+> >  
 > > -- 
-> > 2.31.1
+> > 2.28.0
 > > 
-> 
 
+-- 
 
+- Arnaldo
