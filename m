@@ -2,116 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB642C4338F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jul 2021 07:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EC3C4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jul 2021 08:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A6B60E90
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jul 2021 07:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D30160EBD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jul 2021 08:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbhGWGm4 (ORCPT
+        id S230502AbhGWIOS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jul 2021 02:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbhGWGm4 (ORCPT
+        Fri, 23 Jul 2021 04:14:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52476 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229906AbhGWIOS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jul 2021 02:42:56 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F279C061757
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jul 2021 00:23:30 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id mt6so1018100pjb.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jul 2021 00:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dccwzm0JUzZfAJpe+VU8zCtj99qVQ/WnWSS+WqLNfXc=;
-        b=cJCXGMp8MI+6mMbvnEnN7tpaXHLuE5vChILj5btQ3jW/cK0Zpgduooa5G13HjLtbmC
-         ehUUr7sBMeXBIV2NdtIGfXLn8G2munVGIT+CKukcHagjnB8pAE8Jo0lYqjThD9jwaziN
-         moSL5g86ag5nAublBJb8iVC7YvfFB+Ig9U5uxRB/OWCe4sN4Ux01X0RLyXS9iKsOyw4z
-         /uvEJ2q///1dY6Q8L+fbDAy+6aveoLMLZIM697/bJ1RaN75OjLfYtGYXJg5xFiLXWdMH
-         E4lkJffCLsyxS2ecp8UsskwUTnl9tgqGEwdQb5Thr3JoJYuIzs4tzPmo9+1YRsHMpib0
-         34Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dccwzm0JUzZfAJpe+VU8zCtj99qVQ/WnWSS+WqLNfXc=;
-        b=Da/+m5FX+3PFRYKB94kCtVzB9eodyVEb3A5Vjyvt2c+rkCf5k7/FGeIi2MYs+EI2jT
-         JDduNhNwlFTT41kctOAqoLm17DuDaUHvluFyeP0N1Al3+AGujwBw87/BQkKWs7zCKK8K
-         7/gIxRbxLrMBi0wuooXC6R/cyNu1Vr/MYDEIKMWOSviG2TkUTAY4jZ+mNlEnI4KbVI4b
-         +qqQakGkIFgKXfKleG6JeunuhcIdrA9DgNUM3m3btu/npXkS8UFZZUzedmnYuxIdrO8J
-         wGjlu3lHtp/Phc9BVPDt1OMLU0n8HsL+v1eDZyF/QQzmRxRvv7AEG4ss2j4oCGx0UG4d
-         1Uhw==
-X-Gm-Message-State: AOAM5304gzxOSE7B3XCO3w+LOHVxsOg4mzP7yI3RTnKei3F1MHOumiJr
-        3m7LU9ZJaf/sx6PcrBqsq802FA==
-X-Google-Smtp-Source: ABdhPJzNtFnnoe4/UhTqBiAsl2EgKRySlzbbMT3VPGBJcvrUM/u8D8/ITGSWh9WufLdYvuhu0nrlHw==
-X-Received: by 2002:a63:78d:: with SMTP id 135mr3678920pgh.116.1627025009837;
-        Fri, 23 Jul 2021 00:23:29 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id x26sm33678743pfj.71.2021.07.23.00.23.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jul 2021 00:23:29 -0700 (PDT)
-Date:   Fri, 23 Jul 2021 15:23:22 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 11/11] perf auxtrace: Add
- compat_auxtrace_mmap__{read_head|write_tail}
-Message-ID: <20210723072322.GG179035@leoy-ThinkPad-X240s>
-References: <20210711104105.505728-1-leo.yan@linaro.org>
- <20210711104105.505728-12-leo.yan@linaro.org>
- <20210712144410.GE22278@shell.armlinux.org.uk>
- <20210713154602.GD748506@leoy-ThinkPad-X240s>
- <20210713161441.GK22278@shell.armlinux.org.uk>
- <20210713181301.GE13181@arm.com>
- <20210714084015.GM22278@shell.armlinux.org.uk>
+        Fri, 23 Jul 2021 04:14:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627030491;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dPJvsI/cfZvDoTuADWpT5AdO3H2WRDT7omlgQJKybgw=;
+        b=NUh94fKsDU8g/Wu953mZYSUzlSLaONzrbKg4N+j0qggAieAiPnIzq55mjgt819ehYls4AA
+        8mEV+zt3OF1UIOxXIxaO2W5s30wM822G7HrH5lkirQuxwI02t8JYwG+cth98BJimFviYTH
+        g/6yu8p65c80SsjWqwjR0E5jBnPmki8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-Eu3YA8YQMASTZB3IGUdDGg-1; Fri, 23 Jul 2021 04:54:50 -0400
+X-MC-Unique: Eu3YA8YQMASTZB3IGUdDGg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4254B363A4;
+        Fri, 23 Jul 2021 08:54:49 +0000 (UTC)
+Received: from Diego (unknown [10.36.110.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A073B60853;
+        Fri, 23 Jul 2021 08:54:47 +0000 (UTC)
+Date:   Fri, 23 Jul 2021 10:54:45 +0200 (CEST)
+From:   Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To:     Jiri Olsa <jolsa@redhat.com>
+cc:     linux-perf-users@vger.kernel.org, acme@kernel.org
+Subject: Re: [PATCH] perf tests vmlinux-kallsyms: ignore hidden symbols
+In-Reply-To: <YO1jnjHofv9oSR0M@krava>
+Message-ID: <alpine.LRH.2.20.2107231053150.27231@Diego>
+References: <20210708122805.2832-1-mpetlan@redhat.com> <YO1jnjHofv9oSR0M@krava>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210714084015.GM22278@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 14, 2021 at 09:40:15AM +0100, Russell King (Oracle) wrote:
-> On Tue, Jul 13, 2021 at 07:13:02PM +0100, Catalin Marinas wrote:
-> > We could try to clarify E2.2.1 to simply state that naturally aligned
-> > LDRD/STRD are single-copy atomic without any subsequent statement on the
-> > translation table.
+On Tue, 13 Jul 2021, Jiri Olsa wrote:
+> On Thu, Jul 08, 2021 at 02:28:05PM +0200, Michael Petlan wrote:
+> > Symbols containing particular prefixes are purposely hidden from kallsyms.
+> > The prefixes are listed in scripts/kallsyms.c, using ignored_prefixes[]
+> > string array. The perf test "vmlinux symtab matches kallsyms" fails in case
+> > perf finds some of the hidden symbols in its machine image and can't match
+> > them to kallsyms.
 > 
-> I think that clarification would be most helpful. Thanks.
+> there's also other arrays like ignored_suffixes, ignored_matches ...
+> should we have them as well? should we take the whole is_ignored_symbol
+> function?
 
-Thanks for the suggestion and confirmation, Russell & Catalin.
+Well, maybe? There hasn't been a problem with the others yet... :-)
 
-If so, I will implement the weak functions for
-compat_auxtrace_mmap__{read_head|write_tail}; and write the arm/arm64
-specific functions with using LDRD/STRD instructions.
+Arnaldo, should I do a v2 with the above?
+> 
+> > 
+> > Let's add a filter to check if a symbol not found isn't one of these before
+> > failing the test.
+> > 
+> > The ignored_prefixes[] array has been copied from scripts/kallsyms.c and needs
+> > to be updated along with the original.
+> > 
+> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> > ---
+> >  tools/perf/tests/vmlinux-kallsyms.c | 41 +++++++++++++++++++++++++++++
+> >  1 file changed, 41 insertions(+)
+> > 
+> > diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
+> > index 193b7c91b4e2..11cd276ec8fd 100644
+> > --- a/tools/perf/tests/vmlinux-kallsyms.c
+> > +++ b/tools/perf/tests/vmlinux-kallsyms.c
+> > @@ -14,6 +14,41 @@
+> >  
+> >  #define UM(x) kallsyms_map->unmap_ip(kallsyms_map, (x))
+> >  
+> > +/* Symbol names that begin with the following are ignored. (a copy from scripts/kallsyms.c) */
+> > +static const char * const ignored_prefixes[] = {
+> > +	"$",			/* local symbols for ARM, MIPS, etc. */
+> > +	".LASANPC",		/* s390 kasan local symbols */
+> > +	"__crc_",		/* modversions */
+> > +	"__efistub_",		/* arm64 EFI stub namespace */
+> > +	"__kvm_nvhe_",		/* arm64 non-VHE KVM namespace */
+> > +	"__AArch64ADRPThunk_",	/* arm64 lld */
+> > +	"__ARMV5PILongThunk_",	/* arm lld */
+> > +	"__ARMV7PILongThunk_",
+> > +	"__ThumbV7PILongThunk_",
+> > +	"__LA25Thunk_",		/* mips lld */
+> > +	"__microLA25Thunk_",
+> > +	NULL
+> > +};
+> > +
+> > +static int has_prefix(const char *prefix, const char *string)
+> > +{
+> > +	while(*prefix)
+> > +        if(*prefix++ != *string++)
+> > +            return 0;
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +static int should_be_hidden(const char *sym_name)
+> > +{
+> > +	int i;
+> > +	for(i = 0; ignored_prefixes[i] != NULL; i++)
+> > +		if(has_prefix(ignored_prefixes[i], sym_name))
+> > +			return 1;
+> > +
+> > +	return 0;
+> 
+> please check your patch with scripts/checkpatch.pl before posting
+> 
+> thanks,
+> jirka
+> 
+> 
 
-For better patches organization, I will use a separate patch set for
-enabling the compat functions (in particular patches 10, 11/11) in
-the next spin.
-
-Thanks,
-Leo
