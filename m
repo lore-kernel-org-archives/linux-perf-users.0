@@ -2,103 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03D6C4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 23:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C0EC4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jul 2021 01:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D477460E9B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jul 2021 23:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FDE60EBF
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jul 2021 01:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232654AbhGVWvU (ORCPT
+        id S232992AbhGWBH5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jul 2021 18:51:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232505AbhGVWvT (ORCPT
+        Thu, 22 Jul 2021 21:07:57 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:7045 "EHLO
+        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230318AbhGWBH5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jul 2021 18:51:19 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F426C061575
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jul 2021 16:31:53 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id l18so457847ioh.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jul 2021 16:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1Ah3hxIEkxG4Tfj2BhFU2Ycu/VLeQs8pazhZDcOSRuI=;
-        b=L/jbABCG0hw5gPUITvGkMBLiNMiW1P2E9lQr8zCrJyrrAmkBZkoncrILNrhXpXV8/s
-         B6TZiGk6/iEGHBPe2Ms4FDKZ7mr8Heh9xbs5Me1P+fUcBV3yU8W6Nawg0qszuz5ZHpsu
-         OpPv1zmMkN/1oVxJvt6W4ghM0WswFxQM47ZyEpUpAjgUkeouihsQPL0iXjZxplzXsrJp
-         6RS2Ul5ad0cGtFvMpASk5q74qpeb+JDBVZfGqn+5sdWemP2Kx43rG2nFJZS4Flc3EoAC
-         Jh1Jw9+UX3Mn7Zc02rjGSXcO3EmjkvDqCZbUQNznlyqjPkP9qL/4mSlmpveMOSsUE2t0
-         zXoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Ah3hxIEkxG4Tfj2BhFU2Ycu/VLeQs8pazhZDcOSRuI=;
-        b=mxeTkHS3C6Fykvhd1s+rkHmC/rd/Fu7fEbCGr2kEJTLmS1tVkN6Q0u5qzty/60rrIM
-         Da/bGI9p+qEhmWVsfEYdN7KzDy1pKt/fBDJ68r4SXTXibDudu4LF5eZuB01YRg0on5cD
-         OOQDQettQU8xdPiYgMYRgsV886wVatwu+S/NxNMrrDIjJK9eF9VpZhgWSwMKkbfMTN9L
-         73WiO+Vvwsr6mHphz34Wb5TnPtMMxsrRw+zX1CzM5MUm2fo4Rdv3cuHDceWnKpDiVOld
-         OPFRSJ2TM6avWGYVIfnS/BHcvkdcIEY+B+VKthg/X9w55Jkmg0G8s2ONQLWEmlf4AfBW
-         /X/Q==
-X-Gm-Message-State: AOAM532sChZHrGaYkbA9o+1p70px8Oo+F+QhtB2u4poduBqkD7vMFf0Q
-        dy2UxZOC3IeCzmNUsQrYyrIH7Xzc5YEUieJhYEDIsA==
-X-Google-Smtp-Source: ABdhPJxQDTtZ1I9K905D80K8OFIlnniKJQhcYDu31zNPQKLJxskE8hli0iKE8HJVoeO2yxuZcT1y+DrjRYxA9WvxSBI=
-X-Received: by 2002:a6b:4f16:: with SMTP id d22mr1644492iob.15.1626996712569;
- Thu, 22 Jul 2021 16:31:52 -0700 (PDT)
+        Thu, 22 Jul 2021 21:07:57 -0400
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4GWBsD3fC8zYfQr;
+        Fri, 23 Jul 2021 09:42:40 +0800 (CST)
+Received: from dggema753-chm.china.huawei.com (10.1.198.195) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Fri, 23 Jul 2021 09:48:29 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.174) by
+ dggema753-chm.china.huawei.com (10.1.198.195) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Fri, 23 Jul 2021 09:48:29 +0800
+From:   Li Huafei <lihuafei1@huawei.com>
+To:     <jolsa@kernel.org>, <acme@kernel.org>
+CC:     <peterz@infradead.org>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <alexander.shishkin@linux.intel.com>, <namhyung@kernel.org>,
+        <mliska@suse.cz>, <irogers@google.com>, <dzhu@wavecomp.com>,
+        <rickyman7@gmail.com>, <yao.jin@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhangjinhao2@huawei.com>
+Subject: [PATCH] perf env: Normalize aarch64.* to arm64 in normalize_arch()
+Date:   Fri, 23 Jul 2021 09:49:44 +0800
+Message-ID: <20210723014944.214887-1-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <cover.1626966805.git.rickyman7@gmail.com>
-In-Reply-To: <cover.1626966805.git.rickyman7@gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Jul 2021 16:31:40 -0700
-Message-ID: <CAP-5=fWxuGkJdFPNt7B=t3bc81jP8YWOUdyvfFcntStGqUxuag@mail.gmail.com>
-Subject: Re: [PATCH 0/3] tools: add gettid to libc_compat.h
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.174]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggema753-chm.china.huawei.com (10.1.198.195)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jul 22, 2021 at 8:34 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
->
-> Hi Arnaldo,
->
-> following our previous discussion on workqueue RFC patchset, I'm sending
-> this patchet to add gettid to tools/include/tools/libc_compat.h.
-> This new definition will replace existing uses and will be used by the
-> workqueue code.
->
-> Thanks,
-> Riccardo
->
-> Riccardo Mancini (3):
->   tools libc_compat: add gettid
->   perf jvmti: use gettid from libc_compat
->   perf test: mmap-thread-lookup: use gettid
->
->  tools/include/tools/libc_compat.h     | 7 +++++++
->  tools/perf/jvmti/jvmti_agent.c        | 9 +--------
->  tools/perf/tests/mmap-thread-lookup.c | 4 ++--
->  3 files changed, 10 insertions(+), 10 deletions(-)
+On my aarch64 big endian machine, the perf annotate does not work.
 
-All 3 patches look like great cleanup, thanks!
+ # perf annotate
+  Percent |      Source code & Disassembly of [kernel.kallsyms] for cycles (253 samples, percent: local period)
+ --------------------------------------------------------------------------------------------------------------
+  Percent |      Source code & Disassembly of [kernel.kallsyms] for cycles (1 samples, percent: local period)
+ ------------------------------------------------------------------------------------------------------------
+  Percent |      Source code & Disassembly of [kernel.kallsyms] for cycles (47 samples, percent: local period)
+ -------------------------------------------------------------------------------------------------------------
+ ...
 
-Acked-by: Ian Rogers <irogers@google.com>
+This is because the arch_find() function uses the normalized architecture
+name provided by normalize_arch(), and my machine's architecture name
+aarch64_be is not normalized to arm64.  Like other architectures such as
+arm and powerpc, we can fuzzy match the architecture names associated with
+aarch64.* and normalize them.
 
-Thanks,
-Ian
+Fixes: c34df25b40c2 ("perf annotate: Add symbol__annotate function")
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+---
+ tools/perf/util/annotate.c | 4 +++-
+ tools/perf/util/env.c      | 2 +-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index aa04a3655236..cb280de3369f 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2192,8 +2192,10 @@ int symbol__annotate(struct map_symbol *ms, struct evsel *evsel,
+ 		return errno;
+ 
+ 	args.arch = arch = arch__find(arch_name);
+-	if (arch == NULL)
++	if (arch == NULL) {
++		pr_err("%s: unsupported arch %s\n", __func__, arch_name);
+ 		return ENOTSUP;
++	}
+ 
+ 	if (parch)
+ 		*parch = arch;
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index cec2e6cad8aa..a91da1e9b201 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -349,7 +349,7 @@ static const char *normalize_arch(char *arch)
+ 		return "x86";
+ 	if (!strcmp(arch, "sun4u") || !strncmp(arch, "sparc", 5))
+ 		return "sparc";
+-	if (!strcmp(arch, "aarch64") || !strcmp(arch, "arm64"))
++	if (!strncmp(arch, "aarch64", 7) || !strcmp(arch, "arm64"))
+ 		return "arm64";
+ 	if (!strncmp(arch, "arm", 3) || !strcmp(arch, "sa110"))
+ 		return "arm";
+-- 
+2.17.1
+
