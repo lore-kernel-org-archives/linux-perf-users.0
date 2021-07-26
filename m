@@ -7,42 +7,46 @@ X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E126C4320A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374C4C4338F
 	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jul 2021 09:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2376860F11
+	by mail.kernel.org (Postfix) with ESMTP id 11AC360F02
 	for <linux-perf-users@archiver.kernel.org>; Mon, 26 Jul 2021 09:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232754AbhGZIeJ (ORCPT
+        id S232734AbhGZIeI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 26 Jul 2021 04:34:09 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:60518 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232454AbhGZIeH (ORCPT
+        Mon, 26 Jul 2021 04:34:08 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:34186 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232524AbhGZIeH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 26 Jul 2021 04:34:07 -0400
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 3393621D07;
+        by smtp-out2.suse.de (Postfix) with ESMTP id 7F85C1FE5A;
         Mon, 26 Jul 2021 09:14:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
         t=1627290875; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=mJL/LDUSwy4oHGXTaM6+iHFBN1M1pD20XNyDOqtl5tQ=;
-        b=v5KHtyJsREwwlYYRnWABVGbcgwnzNhpWV4clFLWDrxpaY6nu2wd5R6/DMrBa8ebaLn7xRH
-        luoSWwZ1ZuObYhTH+E/IoxP0rA8E9knEknEFX3deTBctRCMF4TSVKFhmCvMl+ESiYSZX/h
-        sR/4JaQNfW2gscZiVhd3bz9roJEf/dI=
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pl9BIMcRreWpSXrBQ0aeLR51QxWiKTLVlNTci/lUwXk=;
+        b=CPHAeh7/YvIZnDwX0clHAqEat7tRXelPvLgfHbHMBRoThTmtBtYCTuMYdPJov1vsolEzWx
+        elwFH/gS73IdOviQo2c16ZIocqc/jvoudEP9dveQZlE7tkeQZl11HMc6E9tTDDTOuAIqUw
+        BjkoGeBf0fW++rw3/7SIBmB/SeqHwyA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
         s=susede2_ed25519; t=1627290875;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=mJL/LDUSwy4oHGXTaM6+iHFBN1M1pD20XNyDOqtl5tQ=;
-        b=4sbrnlxfP2o8EDYz/0S8FkXAZcGNRwvuS+UJa4umkbsMzEA0UCUJBhESefUQBQid6y+u22
-        DKRdz7ZeJ1zFytAQ==
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Pl9BIMcRreWpSXrBQ0aeLR51QxWiKTLVlNTci/lUwXk=;
+        b=PLpvvNHpVHWohJdVaDh5RC4ZMfYBIGhXbbi4VUsvatkaS9v39XIZ8NhvGCj7taTq6ojPOu
+        6FYJwTWjH+uc+CAQ==
 Received: from localhost.localdomain (unknown [10.100.201.122])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A9375A3B89;
-        Mon, 26 Jul 2021 09:14:34 +0000 (UTC)
+        by relay2.suse.de (Postfix) with ESMTPS id 3AC66A3B94;
+        Mon, 26 Jul 2021 09:14:35 +0000 (UTC)
 From:   Jiri Slaby <jslaby@suse.cz>
 To:     acme@redhat.com
 Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -55,35 +59,30 @@ Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v2 1/2] perf: don't install headers with x permissions
-Date:   Mon, 26 Jul 2021 11:14:33 +0200
-Message-Id: <20210726091434.5000-1-jslaby@suse.cz>
+Subject: [PATCH 2/2] perf: remove shebang from scripts/{perl,python}/*.{pl,py}
+Date:   Mon, 26 Jul 2021 11:14:34 +0200
+Message-Id: <20210726091434.5000-2-jslaby@suse.cz>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20210726091434.5000-1-jslaby@suse.cz>
+References: <20210726091434.5000-1-jslaby@suse.cz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-install(1), by default, installs with rwxr-xr-x permissions. Modify
-perf's Makefile to pass '-m 644' when installing:
-* perf_dlfilter.h header
-* trace/strace/groups/*
-* scripts/perl/Perf-Trace-Util/lib/Perf/Trace/*
-* scripts/perl/*.pl
-* perf-completion.sh
-* Documentation/tips.txt
-* tests/attr.py
-* tests/attr/*
-* tests/shell/lib/*.sh
+The scripts cannot be executed on their own. The python ones were always
+installed without x permissions, the perl ones fail anyway:
+  BEGIN failed--compilation aborted at /usr/lib/perf-core/scripts/perl/rw-by-pid.pl line 18.
+so there is no point to have a shebang in them. This causes rpmlint to
+complain too:
+  W: non-executable-script /usr/lib/perf-core/scripts/perl/rw-by-file.pl 644 /usr/bin/perl -w
 
-All those are supposed to be non-executable. Either they are not scripts
-at all, or they don't have shebang.
-
-The fixes line below is only for the perf_dlfilter.h header addition...
+Hence drop shebangs in them all and remove x permissions in the
+repository. If anyone wants some of them executable, they need to fix
+the install scripts first.
 
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Fixes: 0beb218315e0 (perf build: Install perf_dlfilter.h)
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -95,69 +94,86 @@ Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
-[v2] extend to more than perf_dlfilter.h.
+ tools/perf/scripts/perl/rw-by-file.pl            | 1 -
+ tools/perf/scripts/perl/rw-by-pid.pl             | 1 -
+ tools/perf/scripts/perl/rwtop.pl                 | 1 -
+ tools/perf/scripts/perl/wakeup-latency.pl        | 1 -
+ tools/perf/scripts/python/exported-sql-viewer.py | 1 -
+ tools/perf/scripts/python/flamegraph.py          | 0
+ tools/perf/scripts/python/libxed.py              | 1 -
+ tools/perf/scripts/python/net_dropmonitor.py     | 0
+ tools/perf/scripts/python/stackcollapse.py       | 0
+ 9 files changed, 6 deletions(-)
+ mode change 100755 => 100644 tools/perf/scripts/python/exported-sql-viewer.py
+ mode change 100755 => 100644 tools/perf/scripts/python/flamegraph.py
+ mode change 100755 => 100644 tools/perf/scripts/python/net_dropmonitor.py
+ mode change 100755 => 100644 tools/perf/scripts/python/stackcollapse.py
 
- tools/perf/Makefile.perf | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 77e7f18c0bd0..01bd153c4f2a 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -925,7 +925,7 @@ install-tools: all install-gtk
- 		$(INSTALL) $(OUTPUT)perf '$(DESTDIR_SQ)$(bindir_SQ)'; \
- 		$(LN) '$(DESTDIR_SQ)$(bindir_SQ)/perf' '$(DESTDIR_SQ)$(bindir_SQ)/trace'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(includedir_SQ)/perf'; \
--		$(INSTALL) util/perf_dlfilter.h -t '$(DESTDIR_SQ)$(includedir_SQ)/perf'
-+		$(INSTALL) -m 644 util/perf_dlfilter.h -t '$(DESTDIR_SQ)$(includedir_SQ)/perf'
- ifndef NO_PERF_READ_VDSO32
- 	$(call QUIET_INSTALL, perf-read-vdso32) \
- 		$(INSTALL) $(OUTPUT)perf-read-vdso32 '$(DESTDIR_SQ)$(bindir_SQ)';
-@@ -960,13 +960,13 @@ endif
- ifndef NO_LIBAUDIT
- 	$(call QUIET_INSTALL, strace/groups) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(STRACE_GROUPS_INSTDIR_SQ)'; \
--		$(INSTALL) trace/strace/groups/* -t '$(DESTDIR_SQ)$(STRACE_GROUPS_INSTDIR_SQ)'
-+		$(INSTALL) trace/strace/groups/* -m 644 -t '$(DESTDIR_SQ)$(STRACE_GROUPS_INSTDIR_SQ)'
- endif
- ifndef NO_LIBPERL
- 	$(call QUIET_INSTALL, perl-scripts) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace'; \
--		$(INSTALL) scripts/perl/Perf-Trace-Util/lib/Perf/Trace/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace'; \
--		$(INSTALL) scripts/perl/*.pl -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl'; \
-+		$(INSTALL) scripts/perl/Perf-Trace-Util/lib/Perf/Trace/* -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/Perf-Trace-Util/lib/Perf/Trace'; \
-+		$(INSTALL) scripts/perl/*.pl -m 644 -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/bin'; \
- 		$(INSTALL) scripts/perl/bin/* -t '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/scripts/perl/bin'
- endif
-@@ -980,22 +980,22 @@ ifndef NO_LIBPYTHON
- endif
- 	$(call QUIET_INSTALL, perf_completion-script) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(sysconfdir_SQ)/bash_completion.d'; \
--		$(INSTALL) perf-completion.sh '$(DESTDIR_SQ)$(sysconfdir_SQ)/bash_completion.d/perf'
-+		$(INSTALL) perf-completion.sh -m 644 '$(DESTDIR_SQ)$(sysconfdir_SQ)/bash_completion.d/perf'
- 	$(call QUIET_INSTALL, perf-tip) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(tip_instdir_SQ)'; \
--		$(INSTALL) Documentation/tips.txt -t '$(DESTDIR_SQ)$(tip_instdir_SQ)'
-+		$(INSTALL) Documentation/tips.txt -m 644 -t '$(DESTDIR_SQ)$(tip_instdir_SQ)'
+diff --git a/tools/perf/scripts/perl/rw-by-file.pl b/tools/perf/scripts/perl/rw-by-file.pl
+index 92a750b8552b..e0e4e23d5597 100644
+--- a/tools/perf/scripts/perl/rw-by-file.pl
++++ b/tools/perf/scripts/perl/rw-by-file.pl
+@@ -1,4 +1,3 @@
+-#!/usr/bin/perl -w
+ # SPDX-License-Identifier: GPL-2.0-only
+ # (c) 2009, Tom Zanussi <tzanussi@gmail.com>
  
- install-tests: all install-gtk
- 	$(call QUIET_INSTALL, tests) \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
--		$(INSTALL) tests/attr.py '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
-+		$(INSTALL) tests/attr.py -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
- 		$(INSTALL) tests/pe-file.exe* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
--		$(INSTALL) tests/attr/* '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
-+		$(INSTALL) tests/attr/* -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/attr'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
- 		$(INSTALL) tests/shell/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell'; \
- 		$(INSTALL) -d -m 755 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'; \
--		$(INSTALL) tests/shell/lib/*.sh '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
-+		$(INSTALL) tests/shell/lib/*.sh -m 644 '$(DESTDIR_SQ)$(perfexec_instdir_SQ)/tests/shell/lib'
+diff --git a/tools/perf/scripts/perl/rw-by-pid.pl b/tools/perf/scripts/perl/rw-by-pid.pl
+index d789fe39caab..43fcd4823f21 100644
+--- a/tools/perf/scripts/perl/rw-by-pid.pl
++++ b/tools/perf/scripts/perl/rw-by-pid.pl
+@@ -1,4 +1,3 @@
+-#!/usr/bin/perl -w
+ # SPDX-License-Identifier: GPL-2.0-only
+ # (c) 2009, Tom Zanussi <tzanussi@gmail.com>
  
- install-bin: install-tools install-tests install-traceevent-plugins
+diff --git a/tools/perf/scripts/perl/rwtop.pl b/tools/perf/scripts/perl/rwtop.pl
+index eba4df67af6b..96ce72e53f8e 100644
+--- a/tools/perf/scripts/perl/rwtop.pl
++++ b/tools/perf/scripts/perl/rwtop.pl
+@@ -1,4 +1,3 @@
+-#!/usr/bin/perl -w
+ # SPDX-License-Identifier: GPL-2.0-only
+ # (c) 2010, Tom Zanussi <tzanussi@gmail.com>
  
+diff --git a/tools/perf/scripts/perl/wakeup-latency.pl b/tools/perf/scripts/perl/wakeup-latency.pl
+index 53444ff4ec7f..f8b59f0bd949 100644
+--- a/tools/perf/scripts/perl/wakeup-latency.pl
++++ b/tools/perf/scripts/perl/wakeup-latency.pl
+@@ -1,4 +1,3 @@
+-#!/usr/bin/perl -w
+ # SPDX-License-Identifier: GPL-2.0-only
+ # (c) 2009, Tom Zanussi <tzanussi@gmail.com>
+ 
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+old mode 100755
+new mode 100644
+index 13f2d8a81610..358438a648a9
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ # SPDX-License-Identifier: GPL-2.0
+ # exported-sql-viewer.py: view data from sql database
+ # Copyright (c) 2014-2018, Intel Corporation.
+diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts/python/flamegraph.py
+old mode 100755
+new mode 100644
+diff --git a/tools/perf/scripts/python/libxed.py b/tools/perf/scripts/python/libxed.py
+index 2c70a5a7eb9c..3ea5bb8195c4 100644
+--- a/tools/perf/scripts/python/libxed.py
++++ b/tools/perf/scripts/python/libxed.py
+@@ -1,4 +1,3 @@
+-#!/usr/bin/env python
+ # SPDX-License-Identifier: GPL-2.0
+ # libxed.py: Python wrapper for libxed.so
+ # Copyright (c) 2014-2021, Intel Corporation.
+diff --git a/tools/perf/scripts/python/net_dropmonitor.py b/tools/perf/scripts/python/net_dropmonitor.py
+old mode 100755
+new mode 100644
+diff --git a/tools/perf/scripts/python/stackcollapse.py b/tools/perf/scripts/python/stackcollapse.py
+old mode 100755
+new mode 100644
 -- 
 2.32.0
 
