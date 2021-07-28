@@ -2,84 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F99C4320A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 10:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5038CC4338F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 23:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AA4660FE3
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 10:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA8A36101B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 23:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235832AbhG1K3m (ORCPT
+        id S232300AbhG1XCj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jul 2021 06:29:42 -0400
-Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:52918
-        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235913AbhG1K3k (ORCPT
+        Wed, 28 Jul 2021 19:02:39 -0400
+Received: from mail-io1-f45.google.com ([209.85.166.45]:39747 "EHLO
+        mail-io1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232290AbhG1XCi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jul 2021 06:29:40 -0400
-Received: from localhost (1.general.cking.uk.vpn [10.172.193.212])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id A48F03FE70;
-        Wed, 28 Jul 2021 10:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1627468177;
-        bh=08v9EnWWhb7N+pT1ksAl83l8mO7xM8LVAJkXVI7FsWE=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
-        b=irV5N8ws4Be4YXlU5m4pLzyb/ZNDwLBF7tKjEu86BFwhXMhU9cELJvU9/dIVg++fs
-         jKeI84qQbvXf3O8Np4bqoOQVGXU2kt2ILoNR43iUJ1ilYeKsK/+dp69ANUNTgW9VyL
-         sIc52hlgo+lTOzS/4lVAyzRTCCYJSc4u8tzzZ0VJ+mel1F64Ih2j17GW+O4OvV5DGJ
-         RdyJ2XedWZx77AsvXuA2NCYKZLj9i9jV9iaVqnzt8W21ExTgnX0L578klYh7NV2y/Z
-         C4Ks8zuGDDih79hsLuG/czlob0cV1Hc7/810pLKCKQcyJ+6VjHp9aoniO0TvnbXW/Y
-         1kmZVYaYMrh/w==
-From:   Colin King <colin.king@canonical.com>
+        Wed, 28 Jul 2021 19:02:38 -0400
+Received: by mail-io1-f45.google.com with SMTP id j21so4646951ioo.6;
+        Wed, 28 Jul 2021 16:02:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zcT0CaB9kN2T3PMOS6JNuQI+lMgOqz4mktM1Kdoh2lA=;
+        b=LeO+wWmsE/LKNyxty0n8/u6ysjPDPu0VhRDoWl8WWdsEw2T9hpLkpPATfRzXi1ZDKc
+         eCYTocxAav7oKx9C385+Zti2cPLriF2DZ7tf2jPuDufDA1pPTf/iguCAygsrjkHzOrNz
+         XiQfWZbcTwcQfxx/f8PCv4Bcb+sYtvPRrZzTHcXzcfielnjNFwFW9blaGPu/+P7525mi
+         OPl0yR0HN3VqJEEvvMp+KltwFGaolrrD/sLgu7BNd1NihtAWjdP4gOwD7lgdqZQUsPeA
+         zRNKewWlH2Gj4WUVVYVnUhYllUKpNgFYzjkvfZPUPKQeJ6KN678igNCaAOpN67UwXAoA
+         VtWg==
+X-Gm-Message-State: AOAM531ZZEN/7ZLcNqvBDJm1SVZLBCL9U31mkN61EVfvtne1WMazMv23
+        86I5eI5s72PMd2n45Mpt+Q==
+X-Google-Smtp-Source: ABdhPJxdSkqY3tEIRhGrhjM5Xphb7LnOBoDAgo8/cHwZSqsaUtz//z4pW+rTG1kG7NYgvkhWikMI6A==
+X-Received: by 2002:a6b:e016:: with SMTP id z22mr1430367iog.187.1627513355565;
+        Wed, 28 Jul 2021 16:02:35 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.248])
+        by smtp.googlemail.com with ESMTPSA id j20sm974821ile.17.2021.07.28.16.02.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jul 2021 16:02:34 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         linux-perf-users@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf tools:  Fix spelling contraction "cant'" -> "can't"
-Date:   Wed, 28 Jul 2021 11:29:35 +0100
-Message-Id: <20210728102935.171274-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.31.1
+Subject: [RFC 0/3] perf/x86: Rework RDPMC access handling
+Date:   Wed, 28 Jul 2021 17:02:27 -0600
+Message-Id: <20210728230230.1911468-1-robh@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+This series is preparation for supporting perf user counter access on arm64.
 
-There is a spelling mistake in a pr_warning message. Fix it.
+Originally, the arm64 implementation was just a copy of the x86 version, but
+Will did not like the mm_context state tracking nor the IPIs (mm_cpumask
+doesn't work for arm64). The hook into switch_mm and the IPIs feel like
+working around limitations in the perf core (aka the platform problem).
+So this series aims to solve that such that all the state for RDPMC is
+tracked and controlled via the perf core.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- tools/perf/util/header.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Alternatively, I could avoid all the x86 changes here with a new PMU
+callback (.set_user_access()?) and plumb that into the perf core context
+and mmap code. However, it's better in the long run if there's a common
+implementation.
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 44249027507a..5c9f7444939e 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1284,7 +1284,7 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
- 
- 	dir = opendir(path);
- 	if (!dir) {
--		pr_warning("failed: cant' open memory sysfs data\n");
-+		pr_warning("failed: can't open memory sysfs data\n");
- 		return -1;
- 	}
- 
--- 
-2.31.1
+So far, I've only tested the perf core changes with the arm64 version of
+the code which is similar to the x86 version here. I'm hoping for some
+quick feedback on the direction here and whether I've missed some usecase
+that isn't handled.
 
+Rob
+
+
+Rob Herring (3):
+  x86: perf: Move RDPMC event flag to a common definition
+  perf/x86: Control RDPMC access from .enable() hook
+  perf/x86: Call mmap event callbacks on event's CPU
+
+ arch/x86/events/core.c             | 113 +++++++++++++++--------------
+ arch/x86/events/perf_event.h       |   2 +-
+ arch/x86/include/asm/mmu.h         |   1 -
+ arch/x86/include/asm/mmu_context.h |   6 --
+ arch/x86/include/asm/perf_event.h  |   1 -
+ arch/x86/mm/tlb.c                  |  29 +-------
+ include/linux/perf_event.h         |   9 ++-
+ kernel/events/core.c               |  56 +++++++++++---
+ 8 files changed, 113 insertions(+), 104 deletions(-)
+
+--
+2.27.0
