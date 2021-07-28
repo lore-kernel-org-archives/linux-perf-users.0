@@ -2,110 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6148EC4338F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 09:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F99C4320A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 10:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40B7F60F9C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 09:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA4660FE3
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 10:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233740AbhG1JMh (ORCPT
+        id S235832AbhG1K3m (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jul 2021 05:12:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:53442 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231392AbhG1JMd (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jul 2021 05:12:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC48D1FB;
-        Wed, 28 Jul 2021 02:12:31 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6384C3F73D;
-        Wed, 28 Jul 2021 02:12:30 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     mike.leach@linaro.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
+        Wed, 28 Jul 2021 06:29:42 -0400
+Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:52918
+        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235913AbhG1K3k (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 28 Jul 2021 06:29:40 -0400
+Received: from localhost (1.general.cking.uk.vpn [10.172.193.212])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id A48F03FE70;
+        Wed, 28 Jul 2021 10:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1627468177;
+        bh=08v9EnWWhb7N+pT1ksAl83l8mO7xM8LVAJkXVI7FsWE=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
+        b=irV5N8ws4Be4YXlU5m4pLzyb/ZNDwLBF7tKjEu86BFwhXMhU9cELJvU9/dIVg++fs
+         jKeI84qQbvXf3O8Np4bqoOQVGXU2kt2ILoNR43iUJ1ilYeKsK/+dp69ANUNTgW9VyL
+         sIc52hlgo+lTOzS/4lVAyzRTCCYJSc4u8tzzZ0VJ+mel1F64Ih2j17GW+O4OvV5DGJ
+         RdyJ2XedWZx77AsvXuA2NCYKZLj9i9jV9iaVqnzt8W21ExTgnX0L578klYh7NV2y/Z
+         C4Ks8zuGDDih79hsLuG/czlob0cV1Hc7/810pLKCKQcyJ+6VjHp9aoniO0TvnbXW/Y
+         1kmZVYaYMrh/w==
+From:   Colin King <colin.king@canonical.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH] tools: perf: Report collisions in AUX records
-Date:   Wed, 28 Jul 2021 10:12:19 +0100
-Message-Id: <20210728091219.527886-1-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20210723124456.3828769-1-suzuki.poulose@arm.com>
-References: <20210723124456.3828769-1-suzuki.poulose@arm.com>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf tools:  Fix spelling contraction "cant'" -> "can't"
+Date:   Wed, 28 Jul 2021 11:29:35 +0100
+Message-Id: <20210728102935.171274-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Just like the other flags in the AUX records, report a summary
-of the Collisions if there were any.
+From: Colin Ian King <colin.king@canonical.com>
 
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: James Clark <james.clark@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+There is a spelling mistake in a pr_warning message. Fix it.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- tools/perf/util/events_stats.h | 1 +
- tools/perf/util/session.c      | 9 +++++++++
- 2 files changed, 10 insertions(+)
+ tools/perf/util/header.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-index 3480bafd414b..1b0006092265 100644
---- a/tools/perf/util/events_stats.h
-+++ b/tools/perf/util/events_stats.h
-@@ -30,6 +30,7 @@ struct events_stats {
- 	u64 total_lost_samples;
- 	u64 total_aux_lost;
- 	u64 total_aux_partial;
-+	u64 total_aux_collision;
- 	u64 total_invalid_chains;
- 	u32 nr_events[PERF_RECORD_HEADER_MAX];
- 	u32 nr_lost_warned;
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 51f727402912..59b6c3fe0d01 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1540,6 +1540,8 @@ static int machines__deliver_event(struct machines *machines,
- 				evlist->stats.total_aux_lost += 1;
- 			if (event->aux.flags & PERF_AUX_FLAG_PARTIAL)
- 				evlist->stats.total_aux_partial += 1;
-+			if (event->aux.flags & PERF_AUX_FLAG_COLLISION)
-+				evlist->stats.total_aux_collision += 1;
- 		}
- 		return tool->aux(tool, event, sample, machine);
- 	case PERF_RECORD_ITRACE_START:
-@@ -1895,6 +1897,13 @@ static void perf_session__warn_about_errors(const struct perf_session *session)
- 			    "");
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 44249027507a..5c9f7444939e 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1284,7 +1284,7 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+ 
+ 	dir = opendir(path);
+ 	if (!dir) {
+-		pr_warning("failed: cant' open memory sysfs data\n");
++		pr_warning("failed: can't open memory sysfs data\n");
+ 		return -1;
  	}
  
-+	if (session->tool->aux == perf_event__process_aux &&
-+	    stats->total_aux_collision != 0) {
-+		ui__warning("AUX data detected collision  %" PRIu64 " times out of %u!\n\n",
-+			    stats->total_aux_collision,
-+			    stats->nr_events[PERF_RECORD_AUX]);
-+	}
-+
- 	if (stats->nr_unknown_events != 0) {
- 		ui__warning("Found %u unknown events!\n\n"
- 			    "Is this an older tool processing a perf.data "
 -- 
-2.24.1
+2.31.1
 
