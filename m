@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99430C4320E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 23:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63408C4338F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 23:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BAFC61055
-	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 23:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C4F6101B
+	for <linux-perf-users@archiver.kernel.org>; Wed, 28 Jul 2021 23:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbhG1XCq (ORCPT
+        id S232441AbhG1XCv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 28 Jul 2021 19:02:46 -0400
-Received: from mail-il1-f176.google.com ([209.85.166.176]:36708 "EHLO
-        mail-il1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232506AbhG1XCp (ORCPT
+        Wed, 28 Jul 2021 19:02:51 -0400
+Received: from mail-io1-f52.google.com ([209.85.166.52]:34718 "EHLO
+        mail-io1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232400AbhG1XCs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 28 Jul 2021 19:02:45 -0400
-Received: by mail-il1-f176.google.com with SMTP id c3so3911865ilh.3;
-        Wed, 28 Jul 2021 16:02:42 -0700 (PDT)
+        Wed, 28 Jul 2021 19:02:48 -0400
+Received: by mail-io1-f52.google.com with SMTP id y200so4675944iof.1;
+        Wed, 28 Jul 2021 16:02:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OlxhkbpU4nmz7mi89ehT/s5YzHtXWqhp1iY8cLO7UBc=;
-        b=s2fQGJH2CgHFRCwq8U0YEGgL10EQLsHmvtIByF8zwX+URTOEuujUfPQA3j4ErLxRvZ
-         3CspAUlau5F2ag07noSjxHZkqWjwbp2r6zmI6XJWgxITQppSl0TJSCcnM/1mtKw9w/j1
-         aXVDIaQfddYVJ4+88SdvRaaZjPzGKJDQRqDcU9o0W1pdEe4OqI35HCi2mEbnLkZrEkRo
-         gs+FzLpvZXN+8/gCe7FYY4hv1gYqDQqEkEOoq0wntueZGbNEEV1/skK3LmsFWbmddjrm
-         GYm9rJhVuu1j7E9sQCmF/tdHUstOSmaXNl+cKNd8DeqEtpyRauqHidOb8U5iR7iQWmX+
-         j6yA==
-X-Gm-Message-State: AOAM531VEupt5CsGd0MrVZRrC7Ud5mcIzUnJayOseHvoniMapHtOdVm4
-        ViaXPvvUoHUJiUyFbHSIew==
-X-Google-Smtp-Source: ABdhPJx1SekHX1X78Z7Gb3st0jNWwI0MvaovP32m+aDxgwHQlsAwg/Q6byj115NVY25/I/a5OA5uFQ==
-X-Received: by 2002:a92:750f:: with SMTP id q15mr1118351ilc.240.1627513362527;
-        Wed, 28 Jul 2021 16:02:42 -0700 (PDT)
+        bh=1+wbcr+VBTDUZpsNhwOBUg2XbpkNI7kdtS7DIAN1nS4=;
+        b=p5GNR2RljaZFPNVr3PjgO6cJFiCB85DWGF5Q1ERJHEQYJluumpQ9SVT8EXJuCbKaXR
+         xK5TZrTHV776dxzMa47zGDqSQD1qb5pqP5kjRDtFanUwFxaqNuY4CG0cC3+nbFei69oF
+         PZxiNbnyhC07XBLUd6AKJiLkwRMYAEyZ46Oj16MrEH+gwPy7ido2Zv6ACnNLsKxhMpWF
+         qfJqHJl8YO0DM+rpNvKeC00opOZUdKhQKiBPmm+KAnKxNSNB0UsyVlwGtcKfSqow0hoK
+         TY6+MXAwkOft+FsQJw5LCmvNZvAMqQS+USxsD1KSbuG+gYwSyJk8fIgCgvXMY4u6KU1d
+         aXPg==
+X-Gm-Message-State: AOAM532uiPXuxtjNwy5B/Ajmh0jq7hEw57loYjrLhGE1RN7dB82Tgmcj
+        UNfX0gIATSMRsTC6NDNnuw==
+X-Google-Smtp-Source: ABdhPJw85aApxfcjzIRuCO0duB5kWC+cEDlFbc17PV/Mk8g7msGOrqqs8b4kuADa9AG4yBS4FRMFCg==
+X-Received: by 2002:a5d:9648:: with SMTP id d8mr1441382ios.171.1627513365698;
+        Wed, 28 Jul 2021 16:02:45 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.248])
-        by smtp.googlemail.com with ESMTPSA id j20sm974821ile.17.2021.07.28.16.02.39
+        by smtp.googlemail.com with ESMTPSA id j20sm974821ile.17.2021.07.28.16.02.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jul 2021 16:02:41 -0700 (PDT)
+        Wed, 28 Jul 2021 16:02:43 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,9 +58,9 @@ Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         linux-perf-users@vger.kernel.org
-Subject: [RFC 2/3] perf/x86: Control RDPMC access from .enable() hook
-Date:   Wed, 28 Jul 2021 17:02:29 -0600
-Message-Id: <20210728230230.1911468-3-robh@kernel.org>
+Subject: [RFC 3/3] perf/x86: Call mmap event callbacks on event's CPU
+Date:   Wed, 28 Jul 2021 17:02:30 -0600
+Message-Id: <20210728230230.1911468-4-robh@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20210728230230.1911468-1-robh@kernel.org>
 References: <20210728230230.1911468-1-robh@kernel.org>
@@ -70,244 +70,249 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rather than controlling RDPMC access behind the scenes from switch_mm(),
-move RDPMC access controls to the PMU .enable() hook. The .enable() hook
-is called whenever the perf CPU or task context changes which is when
-the RDPMC access may need to change.
+Mark suggested that mmapping of events should be treated like other
+event changes in that the PMU callbacks run on the CPU the event is on.
+Given that the only implementation of .event_(un)mapped() (on x86) end up
+running on each CPU, this makes sense.
 
-This is the first step in moving the RDPMC state tracking out of the mm
-context to the perf context.
+Since the .event_(un)mapped() callbacks are now called on multiple CPUs,
+the tracking of enabling RDPMC is moved to the context in the perf core.
+This allows removing perf_rdpmc_allowed, and for arm64 to share the same
+user access tracking.
 
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: x86@kernel.org
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Not sure, but I think the set_attr_rdpmc() IPI needs to hold the perf
-ctx lock?
+Note that the intent here is to only call event_mapped() on the first mmap
+and event_unmapped on the last unmapping using the event->mmap_count. I'm
+not sure if there's some flaw with that idea?
 
 
- arch/x86/events/core.c             | 75 +++++++++++++++++++-----------
- arch/x86/include/asm/mmu_context.h |  6 ---
- arch/x86/include/asm/perf_event.h  |  1 -
- arch/x86/mm/tlb.c                  | 29 +-----------
- 4 files changed, 49 insertions(+), 62 deletions(-)
+ arch/x86/events/core.c     | 38 +++++++-------------------
+ arch/x86/include/asm/mmu.h |  1 -
+ include/linux/perf_event.h |  7 +++--
+ kernel/events/core.c       | 56 ++++++++++++++++++++++++++++++++------
+ 4 files changed, 61 insertions(+), 41 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 03f87fd4c017..5c1703206ef5 100644
+index 5c1703206ef5..c755190c3970 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -52,8 +52,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
- 	.pmu = &pmu,
- };
+@@ -753,9 +753,13 @@ static void perf_clear_dirty_counters(struct cpu_hw_events *cpuc)
 
--DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
--DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
-+static DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
-+static DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
- DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
-
- /*
-@@ -727,11 +727,52 @@ static void x86_pmu_disable(struct pmu *pmu)
- 	static_call(x86_pmu_disable_all)();
+ static void x86_pmu_set_user_access(struct cpu_hw_events *cpuc)
+ {
++	struct perf_cpu_context *cpuctx = this_cpu_ptr(cpuc->pmu->pmu_cpu_context);
++	struct perf_event_context *task_ctx = cpuctx->task_ctx;
++
+ 	if (static_branch_unlikely(&rdpmc_always_available_key) ||
+ 	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
+-	     atomic_read(&(this_cpu_read(cpu_tlbstate.loaded_mm)->context.perf_rdpmc_allowed)))) {
++	     (atomic_read(&cpuctx->ctx.nr_user) ||
++	      (task_ctx && atomic_read(&task_ctx->nr_user))))) {
+ 		/*
+ 		 * Clear the existing dirty counters to
+ 		 * prevent the leak for an RDPMC task.
+@@ -2522,34 +2526,12 @@ static void x86_pmu_set_user_access_ipi(void *unused)
+ 	x86_pmu_set_user_access(this_cpu_ptr(&cpu_hw_events));
  }
 
-+static void perf_clear_dirty_counters(struct cpu_hw_events *cpuc)
-+{
-+	int i;
-+
-+	 /* Don't need to clear the assigned counter. */
-+	for (i = 0; i < cpuc->n_events; i++)
-+		__clear_bit(cpuc->assign[i], cpuc->dirty);
-+
-+	if (bitmap_empty(cpuc->dirty, X86_PMC_IDX_MAX))
-+		return;
-+
-+	for_each_set_bit(i, cpuc->dirty, X86_PMC_IDX_MAX) {
-+		/* Metrics and fake events don't have corresponding HW counters. */
-+		if (is_metric_idx(i) || (i == INTEL_PMC_IDX_FIXED_VLBR))
-+			continue;
-+		else if (i >= INTEL_PMC_IDX_FIXED)
-+			wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + (i - INTEL_PMC_IDX_FIXED), 0);
-+		else
-+			wrmsrl(x86_pmu_event_addr(i), 0);
-+	}
-+
-+	bitmap_zero(cpuc->dirty, X86_PMC_IDX_MAX);
-+}
-+
-+static void x86_pmu_set_user_access(struct cpu_hw_events *cpuc)
-+{
-+	if (static_branch_unlikely(&rdpmc_always_available_key) ||
-+	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
-+	     atomic_read(&(this_cpu_read(cpu_tlbstate.loaded_mm)->context.perf_rdpmc_allowed)))) {
-+		/*
-+		 * Clear the existing dirty counters to
-+		 * prevent the leak for an RDPMC task.
-+		 */
-+		perf_clear_dirty_counters(cpuc);
-+		cr4_set_bits_irqsoff(X86_CR4_PCE);
-+	} else
-+		cr4_clear_bits_irqsoff(X86_CR4_PCE);
-+}
-+
- void x86_pmu_enable_all(int added)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	int idx;
-
-+	x86_pmu_set_user_access(cpuc);
-+
- 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
- 		struct hw_perf_event *hwc = &cpuc->events[idx]->hw;
-
-@@ -2476,29 +2517,9 @@ static int x86_pmu_event_init(struct perf_event *event)
- 	return err;
- }
-
--void perf_clear_dirty_counters(void)
-+static void x86_pmu_set_user_access_ipi(void *unused)
- {
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
--	int i;
--
--	 /* Don't need to clear the assigned counter. */
--	for (i = 0; i < cpuc->n_events; i++)
--		__clear_bit(cpuc->assign[i], cpuc->dirty);
--
--	if (bitmap_empty(cpuc->dirty, X86_PMC_IDX_MAX))
+-static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+-{
+-	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
 -		return;
 -
--	for_each_set_bit(i, cpuc->dirty, X86_PMC_IDX_MAX) {
--		/* Metrics and fake events don't have corresponding HW counters. */
--		if (is_metric_idx(i) || (i == INTEL_PMC_IDX_FIXED_VLBR))
--			continue;
--		else if (i >= INTEL_PMC_IDX_FIXED)
--			wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + (i - INTEL_PMC_IDX_FIXED), 0);
--		else
--			wrmsrl(x86_pmu_event_addr(i), 0);
--	}
+-	/*
+-	 * This function relies on not being called concurrently in two
+-	 * tasks in the same mm.  Otherwise one task could observe
+-	 * perf_rdpmc_allowed > 1 and return all the way back to
+-	 * userspace with CR4.PCE clear while another task is still
+-	 * doing on_each_cpu_mask() to propagate CR4.PCE.
+-	 *
+-	 * For now, this can't happen because all callers hold mmap_lock
+-	 * for write.  If this changes, we'll need a different solution.
+-	 */
+-	mmap_assert_write_locked(mm);
 -
--	bitmap_zero(cpuc->dirty, X86_PMC_IDX_MAX);
-+	x86_pmu_set_user_access(this_cpu_ptr(&cpu_hw_events));
- }
-
- static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
-@@ -2519,7 +2540,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
- 	mmap_assert_write_locked(mm);
-
- 	if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) == 1)
--		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
-+		on_each_cpu_mask(mm_cpumask(mm), x86_pmu_set_user_access_ipi, NULL, 1);
- }
-
- static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
-@@ -2528,7 +2549,7 @@ static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *m
+-	if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) == 1)
+-		on_each_cpu_mask(mm_cpumask(mm), x86_pmu_set_user_access_ipi, NULL, 1);
+-}
+-
+-static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *mm)
++static void x86_pmu_event_map_changed(struct perf_event *event)
+ {
+-	if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
++	if (atomic_read(&event->ctx->nr_user) != 1)
  		return;
 
- 	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
--		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
-+		on_each_cpu_mask(mm_cpumask(mm), x86_pmu_set_user_access_ipi, NULL, 1);
+-	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
+-		on_each_cpu_mask(mm_cpumask(mm), x86_pmu_set_user_access_ipi, NULL, 1);
++	x86_pmu_set_user_access_ipi(NULL);
  }
 
  static int x86_pmu_event_idx(struct perf_event *event)
-@@ -2584,7 +2605,7 @@ static ssize_t set_attr_rdpmc(struct device *cdev,
- 		else if (x86_pmu.attr_rdpmc == 2)
- 			static_branch_dec(&rdpmc_always_available_key);
+@@ -2707,8 +2689,8 @@ static struct pmu pmu = {
 
--		on_each_cpu(cr4_update_pce, NULL, 1);
-+		on_each_cpu(x86_pmu_set_user_access_ipi, NULL, 1);
- 		x86_pmu.attr_rdpmc = val;
- 	}
+ 	.event_init		= x86_pmu_event_init,
 
-diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
-index 27516046117a..1cbb32ac245e 100644
---- a/arch/x86/include/asm/mmu_context.h
-+++ b/arch/x86/include/asm/mmu_context.h
-@@ -22,12 +22,6 @@ static inline void paravirt_activate_mm(struct mm_struct *prev,
+-	.event_mapped		= x86_pmu_event_mapped,
+-	.event_unmapped		= x86_pmu_event_unmapped,
++	.event_mapped		= x86_pmu_event_map_changed,
++	.event_unmapped		= x86_pmu_event_map_changed,
+
+ 	.add			= x86_pmu_add,
+ 	.del			= x86_pmu_del,
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 5d7494631ea9..bd27fc666024 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -46,7 +46,6 @@ typedef struct {
+ 	void __user *vdso;			/* vdso base address */
+ 	const struct vdso_image *vdso_image;	/* vdso image in use */
+
+-	atomic_t perf_rdpmc_allowed;	/* nonzero if rdpmc is allowed */
+ #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
+ 	/*
+ 	 * One bit per protection key says whether userspace can
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index f5815448ca9b..23944f9386b3 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -329,10 +329,10 @@ struct pmu {
+
+ 	/*
+ 	 * Notification that the event was mapped or unmapped.  Called
+-	 * in the context of the mapping task.
++	 * on each CPU the event is on.
+ 	 */
+-	void (*event_mapped)		(struct perf_event *event, struct mm_struct *mm); /* optional */
+-	void (*event_unmapped)		(struct perf_event *event, struct mm_struct *mm); /* optional */
++	void (*event_mapped)		(struct perf_event *event); /* optional */
++	void (*event_unmapped)		(struct perf_event *event); /* optional */
+
+ 	/*
+ 	 * Flags for ->add()/->del()/ ->start()/->stop(). There are
+@@ -824,6 +824,7 @@ struct perf_event_context {
+ 	int				nr_stat;
+ 	int				nr_freq;
+ 	int				rotate_disable;
++	atomic_t			nr_user;
+ 	/*
+ 	 * Set when nr_events != nr_active, except tolerant to events not
+ 	 * necessary to be active due to scheduling constraints, such as cgroups.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 464917096e73..26c3fb962e4a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5988,6 +5988,48 @@ void ring_buffer_put(struct perf_buffer *rb)
+ 	call_rcu(&rb->rcu_head, rb_free_rcu);
  }
- #endif	/* !CONFIG_PARAVIRT_XXL */
 
--#ifdef CONFIG_PERF_EVENTS
--DECLARE_STATIC_KEY_FALSE(rdpmc_never_available_key);
--DECLARE_STATIC_KEY_FALSE(rdpmc_always_available_key);
--void cr4_update_pce(void *ignored);
--#endif
--
- #ifdef CONFIG_MODIFY_LDT_SYSCALL
- /*
-  * ldt_structs can be allocated, used, and freed, but they are never
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 8fc1b5003713..544f41a179fb 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -478,7 +478,6 @@ struct x86_pmu_lbr {
-
- extern void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap);
- extern void perf_check_microcode(void);
--extern void perf_clear_dirty_counters(void);
- extern int x86_perf_rdpmc_index(struct perf_event *event);
- #else
- static inline void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index cfe6b1e85fa6..060a3de78380 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -400,31 +400,6 @@ static void cond_ibpb(struct task_struct *next)
- 	}
- }
-
--#ifdef CONFIG_PERF_EVENTS
--static inline void cr4_update_pce_mm(struct mm_struct *mm)
--{
--	if (static_branch_unlikely(&rdpmc_always_available_key) ||
--	    (!static_branch_unlikely(&rdpmc_never_available_key) &&
--	     atomic_read(&mm->context.perf_rdpmc_allowed))) {
--		/*
--		 * Clear the existing dirty counters to
--		 * prevent the leak for an RDPMC task.
--		 */
--		perf_clear_dirty_counters();
--		cr4_set_bits_irqsoff(X86_CR4_PCE);
--	} else
--		cr4_clear_bits_irqsoff(X86_CR4_PCE);
--}
--
--void cr4_update_pce(void *ignored)
--{
--	cr4_update_pce_mm(this_cpu_read(cpu_tlbstate.loaded_mm));
--}
--
--#else
--static inline void cr4_update_pce_mm(struct mm_struct *mm) { }
--#endif
--
- void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
- 			struct task_struct *tsk)
++static void __perf_event_mapped(struct perf_event *event,
++				 struct perf_cpu_context *cpuctx,
++				 struct perf_event_context *ctx,
++				 void *info)
++{
++	event->pmu->event_mapped(event);
++}
++
++static void perf_event_mapped(struct perf_event *event)
++{
++	struct perf_event_context *ctx;
++
++	if (!event->pmu->event_mapped || !(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
++		return;
++
++	ctx = perf_event_ctx_lock(event);
++	event_function_call(event, __perf_event_mapped, NULL);
++	atomic_dec(&ctx->nr_user);
++	perf_event_ctx_unlock(event, ctx);
++}
++
++static void __perf_event_unmapped(struct perf_event *event,
++				 struct perf_cpu_context *cpuctx,
++				 struct perf_event_context *ctx,
++				 void *info)
++{
++	event->pmu->event_unmapped(event);
++}
++
++static void perf_event_unmapped(struct perf_event *event)
++{
++	struct perf_event_context *ctx;
++
++	if (!event->pmu->event_unmapped || !(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
++		return;
++
++	ctx = perf_event_ctx_lock(event);
++	atomic_inc(&ctx->nr_user);
++	event_function_call(event, __perf_event_unmapped, NULL);
++	perf_event_ctx_unlock(event, ctx);
++}
++
+ static void perf_mmap_open(struct vm_area_struct *vma)
  {
-@@ -581,10 +556,8 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
- 	this_cpu_write(cpu_tlbstate.loaded_mm, next);
- 	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
+ 	struct perf_event *event = vma->vm_file->private_data;
+@@ -5997,9 +6039,6 @@ static void perf_mmap_open(struct vm_area_struct *vma)
 
--	if (next != real_prev) {
--		cr4_update_pce_mm(next);
-+	if (next != real_prev)
- 		switch_ldt(real_prev, next);
--	}
+ 	if (vma->vm_pgoff)
+ 		atomic_inc(&event->rb->aux_mmap_count);
+-
+-	if (event->pmu->event_mapped)
+-		event->pmu->event_mapped(event, vma->vm_mm);
  }
 
- /*
+ static void perf_pmu_output_stop(struct perf_event *event);
+@@ -6021,9 +6060,6 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	unsigned long size = perf_data_size(rb);
+ 	bool detach_rest = false;
+
+-	if (event->pmu->event_unmapped)
+-		event->pmu->event_unmapped(event, vma->vm_mm);
+-
+ 	/*
+ 	 * rb->aux_mmap_count will always drop before rb->mmap_count and
+ 	 * event->mmap_count, so it is ok to use event->mmap_mutex to
+@@ -6056,6 +6092,8 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	if (!atomic_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
+ 		goto out_put;
+
++	perf_event_unmapped(event);
++
+ 	ring_buffer_attach(event, NULL);
+ 	mutex_unlock(&event->mmap_mutex);
+
+@@ -6330,6 +6368,9 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 		atomic_dec(&rb->mmap_count);
+ 	}
+ aux_unlock:
++	if (atomic_read(&event->mmap_count) == 1)
++		perf_event_mapped(event);
++
+ 	mutex_unlock(&event->mmap_mutex);
+
+ 	/*
+@@ -6339,9 +6380,6 @@ static int perf_mmap(struct file *file, struct vm_area_struct *vma)
+ 	vma->vm_flags |= VM_DONTCOPY | VM_DONTEXPAND | VM_DONTDUMP;
+ 	vma->vm_ops = &perf_mmap_vmops;
+
+-	if (event->pmu->event_mapped)
+-		event->pmu->event_mapped(event, vma->vm_mm);
+-
+ 	return ret;
+ }
+
 --
 2.27.0
