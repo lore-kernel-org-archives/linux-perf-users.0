@@ -2,243 +2,138 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B32C4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 13:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0920FC4338F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 13:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6589F6052B
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 13:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37DA60F00
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 13:49:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237698AbhG2NlE (ORCPT
+        id S237725AbhG2Nt6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Jul 2021 09:41:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49328 "EHLO
+        Thu, 29 Jul 2021 09:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237608AbhG2NlD (ORCPT
+        with ESMTP id S237759AbhG2Nt4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Jul 2021 09:41:03 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C95FBC061765;
-        Thu, 29 Jul 2021 06:40:59 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id j2so6988076wrx.9;
-        Thu, 29 Jul 2021 06:40:59 -0700 (PDT)
+        Thu, 29 Jul 2021 09:49:56 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E06C061765;
+        Thu, 29 Jul 2021 06:49:51 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id m1so10416837pjv.2;
+        Thu, 29 Jul 2021 06:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=4w68rscaz0+YoNz6qjqRAKpGkBdq7Bv5iW8piRmlRkI=;
-        b=oI+fQKNSqEhly+u+/QGKeOk8d6uZ66iEljWZBXVUIcBF9zAG9TEzllAv4x3SuVUVxE
-         3UOtBi7c9CT6QKGCAFfy+ThTUp0rQCmWMBhSYCbDW4hugYuKE7SHuKvoEuKZkLkCAt2a
-         snkCLGwvc4HJ6/xXEGLVz6bVQGfrFJAslZQVE7sYP0wEK/tSvUHhaOk9GZMceUqaI4EL
-         k3dClFaHl+rZVxVxf9c5m+Yd3IKVZiPvoAuANZQT3cJoPQN1jgoAeIc40h511N5bmGuG
-         W1W3je76l2AJX2gIjDiWroIyEYNvaZKYUodUVOVX+AStZIRJy1Uu7NC7bdffUo7w8B0f
-         eDCg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+t3sniSKOc3BRa9Xn6DUU+HnDxTzlw5NGRXexej3vbQ=;
+        b=WyW+3/Qfmu8NRAxgJfsR6dTZsEHx4ozTXiOHkPWMgbdIvK0JqV+sCNm1huZZ7iyK43
+         jj1iHlxIc9nYdV5sM2X7h88IYAvKacYg/L/azBRKKCzOqL1XUPmefuSMf9kfjoEHTI6X
+         EVL5sdLyAs7Y6m/IqjulcFsHaVGN0wLM51hiPWyhgkYgb1n/iZlPwUYk33NOyiVymNud
+         D/gj32jkNb/VDefplk7aBWLuleCrf46xzStOIq/ZApQM6GccLx1aWYO0OzRbupMwhhy3
+         aszJMVNGHgz+qdIffJVXBY94REWsBcU70+NwGbPu/gEG6+Z9yl/JFQx0wl1NrhSe4xS2
+         JQgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=4w68rscaz0+YoNz6qjqRAKpGkBdq7Bv5iW8piRmlRkI=;
-        b=IffUVDeVbrjGTkc2asCbSZH+TG5QRGx/snKyAJK89yWzrqTRLJa1ojPj0fyKRBXijh
-         Ro4j3nQ6+atPf98ruYcnB5xFPYbxkB8b2YaJMJXttMK2HiiJ3jz5pEsPs8Wl6GtulMyP
-         8DyXVHvch/aroL1sp7W3cvt3EfMIgylX6pueVrBO92KJbNJkqJ4l20OlxpiqNzmck2q3
-         YIGNeqeo+g4sY/hWNzJsVPk9tHfUy+bF55+Wf5X1aIpa1mu301rL+0AHrePOMVaSiOWw
-         Gi2BRqwyFwbpiom/p/wNw2VozJEbiS/mfsiQWeSxuJU1iVoye8DITGfwtqqXRUImIbeX
-         4aLQ==
-X-Gm-Message-State: AOAM532XZDnN//Bj74RLxjVp+7XTmkwUIdP9cwoorgID+bGhJnWU3xI0
-        eNguR+4+mZi0tMSjAm7baV8=
-X-Google-Smtp-Source: ABdhPJxhjLM3nWd3D1zfYfg/aITNTg30InX9cJZF62KMdLOk2n1/Hph737MHI3gQ1K4VRR1VxoxVdA==
-X-Received: by 2002:a5d:6dac:: with SMTP id u12mr4926273wrs.153.1627566058333;
-        Thu, 29 Jul 2021 06:40:58 -0700 (PDT)
-Received: from [192.168.1.121] (93-40-209-49.ip40.fastwebnet.it. [93.40.209.49])
-        by smtp.gmail.com with ESMTPSA id l23sm3412282wme.22.2021.07.29.06.40.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jul 2021 06:40:57 -0700 (PDT)
-Message-ID: <cb2ebcbb2ea963169823ad052be8ebf9290cc97b.camel@gmail.com>
-Subject: Re: [PATCH 3/3] perf test: Be more consistent in use of TEST_*
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     eranian@google.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+t3sniSKOc3BRa9Xn6DUU+HnDxTzlw5NGRXexej3vbQ=;
+        b=NR55MKm1OV0IP2lIchCieT8gH3buBAvWnvHxUqCMSYrFztasGDwlvTGbP49g7GJeyp
+         gaD2EIBHwLhREd0CAxusyVxDabpADrUxrGoN2R09WY3ovb3JQQdxCJ6cAsQ+POCMN/Ie
+         8rbxypTdjGgYsQnKnKFfXIiYBD5duZ6gXxVPOKUYK3l524d0iEMMCvIx00EaYSyLv5+n
+         egHvBCpGVtLVMJNtdD+6GdTUWPAi6HBoPKHuGes5fvY4XypaFffyKKMowzdByj/meXus
+         8xfckkIqmwSq+s8qpUD805wi6HTRLf4xBKPGF6kEF2Trp6Fe3nb2HcGcftJzpacrsuh+
+         RJtg==
+X-Gm-Message-State: AOAM530GiZQGC++ZieW8uSqO5W3MSww1fbNbL4XrXrr810W5buKdEIY6
+        r5Rii5R6nrOlquB9vu04v9Y=
+X-Google-Smtp-Source: ABdhPJwEt26sYE4kRfr190XgRWgzWdUbj6jn25osbrGUSi+GUHqos/waQFvv3wKaXfO1IUcy/CkpaQ==
+X-Received: by 2002:a63:6e83:: with SMTP id j125mr3844782pgc.12.1627566591071;
+        Thu, 29 Jul 2021 06:49:51 -0700 (PDT)
+Received: from Likes-MacBook-Pro.local ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id gk5sm9942061pjb.51.2021.07.29.06.49.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jul 2021 06:49:50 -0700 (PDT)
+Subject: Re: [RESEND PATCH] perf/x86/amd: Do not touch the
+ AMD64_EVENTSEL_HOSTONLY bit inside the guest
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Kim Phillips <kim.phillips@amd.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 29 Jul 2021 15:39:26 +0200
-In-Reply-To: <20210729062451.1349566-4-irogers@google.com>
-References: <20210729062451.1349566-1-irogers@google.com>
-         <20210729062451.1349566-4-irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Richter <rrichter@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20210720112605.63286-1-likexu@tencent.com>
+ <c49b7e74-5b34-745c-a3dc-55bb2e83474a@amd.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+Message-ID: <173cb541-fa2e-494c-f1b7-e9894bd4f25b@gmail.com>
+Date:   Thu, 29 Jul 2021 21:49:40 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
+ Gecko/20100101 Thunderbird/78.12.0
 MIME-Version: 1.0
+In-Reply-To: <c49b7e74-5b34-745c-a3dc-55bb2e83474a@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-
-On Wed, 2021-07-28 at 23:24 -0700, Ian Rogers wrote:
-> The TEST_OK, TEST_FAIL and TEST_SKIP enum values are used
-> inconsistently. Try to reduce this by swapping constants for enum values
-> to try to be more intention revealing.
+On 24/7/2021 4:16 am, Kim Phillips wrote:
+> +Tom L., Robert R.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/x86/tests/rdpmc.c           |   8 +-
->  tools/perf/tests/attr.c                     |   2 +-
->  tools/perf/tests/bitmap.c                   |   2 +-
->  tools/perf/tests/bp_account.c               |   4 +-
->  tools/perf/tests/bp_signal.c                |  51 +++++++--
->  tools/perf/tests/code-reading.c             |  12 +-
->  tools/perf/tests/cpumap.c                   |  10 +-
->  tools/perf/tests/dso-data.c                 |   8 +-
->  tools/perf/tests/dwarf-unwind.c             |  14 ++-
->  tools/perf/tests/event-times.c              |   2 +-
->  tools/perf/tests/evsel-roundtrip-name.c     |  14 +--
->  tools/perf/tests/evsel-tp-sched.c           |  28 ++---
->  tools/perf/tests/expr.c                     |   4 +-
->  tools/perf/tests/fdarray.c                  |   4 +-
->  tools/perf/tests/genelf.c                   |   2 +-
->  tools/perf/tests/hists_cumulate.c           |   2 +-
->  tools/perf/tests/hists_filter.c             |  12 +-
->  tools/perf/tests/hists_link.c               |  33 +++---
->  tools/perf/tests/keep-tracking.c            |   4 +-
->  tools/perf/tests/kmod-path.c                |   6 +-
->  tools/perf/tests/mem.c                      |   4 +-
->  tools/perf/tests/mem2node.c                 |   2 +-
->  tools/perf/tests/mmap-basic.c               |  10 +-
->  tools/perf/tests/mmap-thread-lookup.c       |   2 +-
->  tools/perf/tests/openat-syscall-all-cpus.c  |   4 +-
->  tools/perf/tests/openat-syscall-tp-fields.c |   4 +-
->  tools/perf/tests/openat-syscall.c           |   6 +-
->  tools/perf/tests/parse-events.c             | 118 ++++++++++----------
->  tools/perf/tests/parse-metric.c             |  16 +--
->  tools/perf/tests/parse-no-sample-id-all.c   |   4 +-
->  tools/perf/tests/perf-hooks.c               |   2 +-
->  tools/perf/tests/perf-record.c              |   2 +-
->  tools/perf/tests/perf-time-to-tsc.c         |   4 +-
->  tools/perf/tests/pfm.c                      |   4 +-
->  tools/perf/tests/pmu-events.c               |  36 +++---
->  tools/perf/tests/pmu.c                      |  16 +--
->  tools/perf/tests/python-use.c               |   2 +-
->  tools/perf/tests/sample-parsing.c           |  10 +-
->  tools/perf/tests/stat.c                     |  12 +-
->  tools/perf/tests/sw-clock.c                 |   8 +-
->  tools/perf/tests/switch-tracking.c          |   9 +-
->  tools/perf/tests/task-exit.c                |  12 +-
->  tools/perf/tests/tests.h                    |   4 +-
->  tools/perf/tests/thread-map.c               |   8 +-
->  tools/perf/tests/thread-maps-share.c        |   2 +-
->  tools/perf/tests/time-utils-test.c          |   2 +-
->  tools/perf/tests/topology.c                 |   2 +-
->  tools/perf/tests/vmlinux-kallsyms.c         |   6 +-
->  tools/perf/tests/wp.c                       |  10 +-
->  49 files changed, 292 insertions(+), 251 deletions(-)
+> On 7/20/21 6:26 AM, Like Xu wrote:
+>> From: Like Xu <likexu@tencent.com>
+>>
+>> If we use "perf record" in an AMD Milan guest, dmesg reports a #GP
+>> warning from an unchecked MSR access error on MSR_F15H_PERF_CTLx:
+>>
+>> [] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write
+>> 0x0000020000110076) at rIP: 0xffffffff8106ddb4 
+>> (native_write_msr+0x4/0x20)
+>> [] Call Trace:
+>> []  amd_pmu_disable_event+0x22/0x90
+>> []  x86_pmu_stop+0x4c/0xa0
+>> []  x86_pmu_del+0x3a/0x140
+>>
+>> The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host,
+>> while the guest perf driver should avoid such use.
+>>
+>> Signed-off-by: Like Xu <likexu@tencent.com>
+>> ---
 > 
-<SNIP>
-> diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-> index 9866cddebf23..70e92e074dba 100644
-> --- a/tools/perf/tests/code-reading.c
-> +++ b/tools/perf/tests/code-reading.c
-> @@ -725,20 +725,20 @@ int test__code_reading(struct test *test __maybe_unused,
-> int subtest __maybe_unu
->  
->         switch (ret) {
->         case TEST_CODE_READING_OK:
-> -               return 0;
-> +               return TEST_OK;
->         case TEST_CODE_READING_NO_VMLINUX:
->                 pr_debug("no vmlinux\n");
-> -               return 0;
-> +               return TEST_SKIP;
->         case TEST_CODE_READING_NO_KCORE:
->                 pr_debug("no kcore\n");
-> -               return 0;
-> +               return TEST_SKIP;
->         case TEST_CODE_READING_NO_ACCESS:
->                 pr_debug("no access\n");
-> -               return 0;
-> +               return TEST_SKIP;
->         case TEST_CODE_READING_NO_KERNEL_OBJ:
->                 pr_debug("no kernel obj\n");
-> -               return 0;
-> +               return TEST_SKIP;
->         default:
-> -               return -1;
-> +               return TEST_FAIL;
->         };
->  }
+> Tested-by: Kim Phillips <kim.phillips@amd.com>
 
+Thanks Kim.
 
-I think it's better to separate changes that do not change the current behaviour
-from these changes (0 -> TEST_SKIP) into different patches.
+Hi Peter, should I post a new version with the fix tag ?
 
-Riccardo
-
-> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> index 0472b110fe65..bfcb85a965bb 100644
-> --- a/tools/perf/tests/cpumap.c
-> +++ b/tools/perf/tests/cpumap.c
-> @@ -42,7 +42,7 @@ static int process_event_mask(struct perf_tool *tool
-> __maybe_unused,
->         }
->  
->         perf_cpu_map__put(map);
-> -       return 0;
-> +       return TEST_OK;
->  }
->  
->  static int process_event_cpus(struct perf_tool *tool __maybe_unused,
-> @@ -71,7 +71,7 @@ static int process_event_cpus(struct perf_tool *tool
-> __maybe_unused,
->         TEST_ASSERT_VAL("wrong cpu", map->map[1] == 256);
->         TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
->         perf_cpu_map__put(map);
-> -       return 0;
-> +       return TEST_OK;
->  }
->  
->  
-> @@ -94,7 +94,7 @@ int test__cpu_map_synthesize(struct test *test
-> __maybe_unused, int subtest __may
->                 !perf_event__synthesize_cpu_map(NULL, cpus,
-> process_event_cpus, NULL));
->  
->         perf_cpu_map__put(cpus);
-> -       return 0;
-> +       return TEST_OK;
->  }
->  
->  static int cpu_map_print(const char *str)
-> @@ -120,7 +120,7 @@ int test__cpu_map_print(struct test *test __maybe_unused,
-> int subtest __maybe_un
->         TEST_ASSERT_VAL("failed to convert map", cpu_map_print("1,3-6,8-
-> 10,24,35-37"));
->         TEST_ASSERT_VAL("failed to convert map", cpu_map_print("1,3-6,8-
-> 10,24,35-37"));
->         TEST_ASSERT_VAL("failed to convert map", cpu_map_print("1-10,12-20,22-
-> 30,32-40"));
-> -       return 0;
-> +       return TEST_OK;
->  }
->  
->  int test__cpu_map_merge(struct test *test __maybe_unused, int subtest
-> __maybe_unused)
-> @@ -135,5 +135,5 @@ int test__cpu_map_merge(struct test *test __maybe_unused,
-> int subtest __maybe_un
->         TEST_ASSERT_VAL("failed to merge map: bad result", !strcmp(buf, "1-
-> 2,4-5,7"));
->         perf_cpu_map__put(b);
->         perf_cpu_map__put(c);
-> -       return 0;
-> +       return TEST_OK;
->  }
-<SNIP>
-
+> 
+> If we were to add a Fixes: tag, would this be the right commit?:
+> 
+> commit 1018faa6cf23b256bf25919ef203cd7c129f06f2
+> 
+> Author: Joerg Roedel <joerg.roedel@amd.com>
+> 
+> Date:   Wed Feb 29 14:57:32 2012 +0100
+> 
+> 
+> 
+>      perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled
+> 
+> 
+> Thanks,
+> 
+> Kim
