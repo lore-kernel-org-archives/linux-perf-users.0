@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2528C4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A67C43214
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE20660F42
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05CE60F46
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238188AbhG2QAS (ORCPT
+        id S238164AbhG2QAT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Jul 2021 12:00:18 -0400
-Received: from foss.arm.com ([217.140.110.172]:51346 "EHLO foss.arm.com"
+        Thu, 29 Jul 2021 12:00:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:51362 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238298AbhG2P6z (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Jul 2021 11:58:55 -0400
+        id S238179AbhG2P66 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 29 Jul 2021 11:58:58 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52B6E1042;
-        Thu, 29 Jul 2021 08:58:51 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F3091063;
+        Thu, 29 Jul 2021 08:58:54 -0700 (PDT)
 Received: from e121896.arm.com (unknown [10.57.40.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AB6603F73D;
-        Thu, 29 Jul 2021 08:58:48 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 483A93F73D;
+        Thu, 29 Jul 2021 08:58:52 -0700 (PDT)
 From:   James Clark <james.clark@arm.com>
 To:     acme@kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org, linux-perf-users@vger.kernel.org
@@ -38,9 +38,9 @@ Cc:     leo.yan@linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 2/6] perf tools: Re-add annotate_warned functionality
-Date:   Thu, 29 Jul 2021 16:58:01 +0100
-Message-Id: <20210729155805.2830-3-james.clark@arm.com>
+Subject: [RFC PATCH 3/6] perf tools: Add disassembly warnings for annotate --stdio
+Date:   Thu, 29 Jul 2021 16:58:02 +0100
+Message-Id: <20210729155805.2830-4-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20210729155805.2830-1-james.clark@arm.com>
 References: <20210729155805.2830-1-james.clark@arm.com>
@@ -50,45 +50,58 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Setting annotate_warned to true on errors was removed in
-commit ee51d851392e ("perf annotate: Introduce strerror for handling
-symbol__disassemble() errors") which means when 'perf annotate
---skip-missing' is used warnings are shown multiple times for the same
-DSO.
-
-Setting this again restores the original behavior of only one warning
-each.
+Currently 'perf annotate --stdio' (and --stdio2) will exit without
+printing anything if there are disassembly errors. Apply the same
+error handler that's used for TUI and GTK modes. This makes comparing
+disassembly across the different modes more consistent.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/ui/browsers/annotate.c | 1 +
- tools/perf/ui/gtk/annotate.c      | 1 +
- 2 files changed, 2 insertions(+)
+ tools/perf/util/annotate.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 701130ad43a2..ef4da4295bf7 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -966,6 +966,7 @@ int symbol__tui_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	err = symbol__annotate2(ms, evsel, opts, &browser.arch);
- 	if (err) {
- 		char msg[BUFSIZ];
-+		ms->map->dso->annotate_warned = true;
- 		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
- 		ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
- 		goto out_free_offsets;
-diff --git a/tools/perf/ui/gtk/annotate.c b/tools/perf/ui/gtk/annotate.c
-index 94167bfed722..0a50e962f9a3 100644
---- a/tools/perf/ui/gtk/annotate.c
-+++ b/tools/perf/ui/gtk/annotate.c
-@@ -177,6 +177,7 @@ static int symbol__gtk_annotate(struct map_symbol *ms, struct evsel *evsel,
- 	err = symbol__annotate(ms, evsel, &annotation__default_options, NULL);
- 	if (err) {
- 		char msg[BUFSIZ];
-+		ms->map->dso->annotate_warned = true;
- 		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
- 		ui__error("Couldn't annotate %s: %s\n", sym->name, msg);
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index aa04a3655236..1ed097bcb78a 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2787,9 +2787,17 @@ int symbol__tty_annotate2(struct map_symbol *ms, struct evsel *evsel,
+ 	struct rb_root source_line = RB_ROOT;
+ 	struct hists *hists = evsel__hists(evsel);
+ 	char buf[1024];
++	int err;
++
++	err = symbol__annotate2(ms, evsel, opts, NULL);
++	if (err) {
++		char msg[BUFSIZ];
+ 
+-	if (symbol__annotate2(ms, evsel, opts, NULL) < 0)
++		dso->annotate_warned = true;
++		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
++		ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
  		return -1;
++	}
+ 
+ 	if (opts->print_lines) {
+ 		srcline_full_filename = opts->full_path;
+@@ -2813,9 +2821,17 @@ int symbol__tty_annotate(struct map_symbol *ms, struct evsel *evsel,
+ 	struct dso *dso = ms->map->dso;
+ 	struct symbol *sym = ms->sym;
+ 	struct rb_root source_line = RB_ROOT;
++	int err;
++
++	err = symbol__annotate(ms, evsel, opts, NULL);
++	if (err) {
++		char msg[BUFSIZ];
+ 
+-	if (symbol__annotate(ms, evsel, opts, NULL) < 0)
++		dso->annotate_warned = true;
++		symbol__strerror_disassemble(ms, err, msg, sizeof(msg));
++		ui__error("Couldn't annotate %s:\n%s", sym->name, msg);
+ 		return -1;
++	}
+ 
+ 	symbol__calc_percent(sym, evsel);
+ 
 -- 
 2.28.0
 
