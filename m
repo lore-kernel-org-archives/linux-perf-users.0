@@ -2,29 +2,30 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD2DC4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 210D5C4320A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9B260F42
-	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DAF561050
+	for <linux-perf-users@archiver.kernel.org>; Thu, 29 Jul 2021 16:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237999AbhG2QAO (ORCPT
+        id S237817AbhG2QAR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 29 Jul 2021 12:00:14 -0400
-Received: from foss.arm.com ([217.140.110.172]:51310 "EHLO foss.arm.com"
+        Thu, 29 Jul 2021 12:00:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:51328 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238333AbhG2P6r (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 29 Jul 2021 11:58:47 -0400
+        id S238271AbhG2P6z (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 29 Jul 2021 11:58:55 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16F0C1FB;
-        Thu, 29 Jul 2021 08:58:44 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B305CD6E;
+        Thu, 29 Jul 2021 08:58:47 -0700 (PDT)
 Received: from e121896.arm.com (unknown [10.57.40.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6BDFB3F73D;
-        Thu, 29 Jul 2021 08:58:41 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 11F6D3F73D;
+        Thu, 29 Jul 2021 08:58:44 -0700 (PDT)
 From:   James Clark <james.clark@arm.com>
 To:     acme@kernel.org, mathieu.poirier@linaro.org,
         coresight@lists.linaro.org, linux-perf-users@vger.kernel.org
@@ -37,58 +38,58 @@ Cc:     leo.yan@linaro.org, suzuki.poulose@arm.com, mike.leach@linaro.org,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 0/6] perf tools: Warning fixes
-Date:   Thu, 29 Jul 2021 16:57:59 +0100
-Message-Id: <20210729155805.2830-1-james.clark@arm.com>
+Subject: [RFC PATCH 1/6] perf tools: Add WARN_ONCE equivalent for UI warnings
+Date:   Thu, 29 Jul 2021 16:58:00 +0100
+Message-Id: <20210729155805.2830-2-james.clark@arm.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20210729155805.2830-1-james.clark@arm.com>
+References: <20210729155805.2830-1-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I'm submitting this as an RFC because there are a few changes I'd
-like to get feedback on. The two changes I wanted to make were the
-last two for Coresight warnings, but I ended up making some perf-wide
-changes along the way.
+Currently WARN_ONCE prints to stderr and corrupts the TUI. Add
+equivalent methods for UI warnings.
 
-For #1 (perf tools: Add WARN_ONCE equivalent for UI warnings)
- * Does it make sense to add warn once equivalents at all, or
-   should the once be re-done for each usage?
- * Or should there be some kind of generic 'once' wrapper?
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/debug.h | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-For #3 (perf tools: Add disassembly warnings for annotate --stdio)
- * If the output is interpreted by any other tools, then adding
-   these warnings could be an issue, so maybe this change could
-   be dropped, but no error output at all isn't ideal.
-
-For #4 (perf tools: Add flag for tracking warnings of missing DSOs)
- * In theory I could re-use 'annotate_warned', but it might make sense
-   to rename it in that case, or just leave the new auxtrace_warned and
-   remove any confusion.
-
-This set applies to perf/core e73f0f0ee7541
-
-Thanks
-James
-
-James Clark (6):
-  perf tools: Add WARN_ONCE equivalent for UI warnings
-  perf tools: Re-add annotate_warned functionality
-  perf tools: Add disassembly warnings for annotate --stdio
-  perf tools: Add flag for tracking warnings of missing DSOs
-  perf cs-etm: Improve Coresight zero timestamp warning
-  perf cs-etm: Add warnings for missing DSOs
-
- tools/perf/ui/browsers/annotate.c             |  1 +
- tools/perf/ui/gtk/annotate.c                  |  1 +
- tools/perf/util/annotate.c                    | 20 +++++++++++++++++--
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  7 +++++--
- tools/perf/util/cs-etm.c                      | 10 +++++++++-
- tools/perf/util/debug.h                       | 14 +++++++++++++
- tools/perf/util/dso.h                         |  1 +
- 7 files changed, 49 insertions(+), 5 deletions(-)
-
+diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
+index 48f631966067..f99468a7f681 100644
+--- a/tools/perf/util/debug.h
++++ b/tools/perf/util/debug.h
+@@ -22,6 +22,13 @@ extern int debug_data_convert;
+ 	eprintf(0, verbose, pr_fmt(fmt), ##__VA_ARGS__)
+ #define pr_warning(fmt, ...) \
+ 	eprintf(0, verbose, pr_fmt(fmt), ##__VA_ARGS__)
++#define pr_warning_once(fmt, ...) ({		\
++	static int __warned;			\
++	if (unlikely(!__warned)) {		\
++		pr_warning(fmt, ##__VA_ARGS__); \
++		__warned = 1;			\
++	}					\
++})
+ #define pr_info(fmt, ...) \
+ 	eprintf(0, verbose, pr_fmt(fmt), ##__VA_ARGS__)
+ #define pr_debug(fmt, ...) \
+@@ -55,6 +62,13 @@ void trace_event(union perf_event *event);
+ 
+ int ui__error(const char *format, ...) __printf(1, 2);
+ int ui__warning(const char *format, ...) __printf(1, 2);
++#define ui__warning_once(format, ...) ({		\
++	static int __warned;				\
++	if (unlikely(!__warned)) {			\
++		ui__warning(format, ##__VA_ARGS__);	\
++		__warned = 1;				\
++	}						\
++})
+ 
+ void pr_stat(const char *fmt, ...);
+ 
 -- 
 2.28.0
 
