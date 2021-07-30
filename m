@@ -2,139 +2,172 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D54DC4338F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 12:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEDAC4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 15:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23F7861059
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 12:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2ED60F26
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 15:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238646AbhG3MUL (ORCPT
+        id S239341AbhG3Pgl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jul 2021 08:20:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48042 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230355AbhG3MUK (ORCPT
+        Fri, 30 Jul 2021 11:36:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232661AbhG3Per (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jul 2021 08:20:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1627647605;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZpJdboMHeuxCJGy2Uim1DHCRXoke156ShhYeaCTcAvA=;
-        b=eVKSxikRmYbb18iIsrQzjBnrsh0APE4CM130EDW6oLbtXBXLQSMFe2tl4WBPloP+/ORRL1
-        0iOYt/i1s9FrWOZcdyMSEicdszQALLDWGZhddbvCJAs9KJBrB85mk2ZeYmMbopi4o+arpk
-        AORIG4oErb1eCvhLUgCgeciyDMopFs8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-245-rEo64waWO6ilAr3M6reZUQ-1; Fri, 30 Jul 2021 08:20:03 -0400
-X-MC-Unique: rEo64waWO6ilAr3M6reZUQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF0D7EC1A0
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jul 2021 12:20:02 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C23746;
-        Fri, 30 Jul 2021 12:20:00 +0000 (UTC)
-Date:   Fri, 30 Jul 2021 14:19:58 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     linux-perf-users@vger.kernel.org
-cc:     Eirik Fuller <efuller@redhat.com>, acme@redhat.com,
-        jolsa@redhat.com
-Subject: Re: [PATCH] perf test: Handle fd gaps in test__dso_data_reopen
-In-Reply-To: <alpine.LRH.2.20.2106301043550.27231@Diego>
-Message-ID: <alpine.LRH.2.20.2107291608360.27231@Diego>
-References: <20210626023825.1398547-1-efuller@redhat.com> <alpine.LRH.2.20.2106301043550.27231@Diego>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Fri, 30 Jul 2021 11:34:47 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E1B6C061765;
+        Fri, 30 Jul 2021 08:34:24 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id f14-20020a05600c154eb02902519e4abe10so9433614wmg.4;
+        Fri, 30 Jul 2021 08:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yXVPRJ1bxZJUL/ue/BthOJ9EM++tRcJBnBje0eCPUjk=;
+        b=g/mOvvMdoMMIpIMRuqib+1s5P7mjityOnJ9AcHuCTpnp8gHr4lYFUX8m63IhpMyX+V
+         dKQZjZ6VQc9cmgFZ82TP/Hp7BC2XQxWc6Y7xt74cWI/pDQRQPpoVDFPeC6xJMjkNOFSE
+         56bTFwH6Is+2GPDnHpqjhh2DcbZh46hXkfJDEh4R6KrwyHJoVkCTGY6IPyPwSRd/As+1
+         LlckILzoxC5InZ7zR6hUPBmSvVdBwy83rHpFTMGE3k1BPgcqXs8n3ms3cmm8M5Eph2UM
+         G05Hvx6nmx99dnjuUdpLom9EpbWWuu5yoOXaT5QO7OQZeZA1OGUdmJY4gtaQ1ZQY/Acn
+         dndQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yXVPRJ1bxZJUL/ue/BthOJ9EM++tRcJBnBje0eCPUjk=;
+        b=Ak8CtydfYqjQW8zcAqleoZvmJHGAOcmIAjaR71MxMFm6NnQGqXeu2q6Bzpp+ngjw82
+         ppmGqdQx1calgXBN8xRpIMcLf422nqR1IZdbsULjKjmnw03xV4FGyUR5ZCIiyFIzwNjQ
+         qEFWizZDTS+NA3SRagvtMm0L6aXlc1mRZjTCgAV0iAbMVV8udc2J0UpsfYN4h6plf90+
+         GgluuxwzGr5xtOl0bGXDg93ApBCykXk55mgwrE37zkZwiRA52zSklSNrHspdRImEcyml
+         bQCrgmBKIvfj1gXeFK4woTnxlTkkedNVQQlDWYUeS6Eccdg/b2oeOAGHLhZMncrlY2Vs
+         OT+A==
+X-Gm-Message-State: AOAM531M/7xIktRWyhoCuVcS060VHxohzI6Qeqc5+Z0+cEv/xp7rZts/
+        uPdUobLVUNkpXAZVVz4n6aY=
+X-Google-Smtp-Source: ABdhPJyZd9c2c5dgq39mAgctHgGwwS7RhQSHntOqQ0T9AhL8N6Lg8CatOpb1LvcvPykXrus2TkMNyg==
+X-Received: by 2002:a1c:7c17:: with SMTP id x23mr3574515wmc.43.1627659262490;
+        Fri, 30 Jul 2021 08:34:22 -0700 (PDT)
+Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
+        by smtp.googlemail.com with ESMTPSA id v15sm2354727wmj.39.2021.07.30.08.34.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jul 2021 08:34:22 -0700 (PDT)
+From:   Riccardo Mancini <rickyman7@gmail.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>
+Subject: [RFC PATCH v2 00/10] perf: add workqueue library and use it in synthetic-events
+Date:   Fri, 30 Jul 2021 17:34:07 +0200
+Message-Id: <cover.1627643744.git.rickyman7@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, 30 Jun 2021, Michael Petlan wrote:
-> On Fri, 25 Jun 2021, Eirik Fuller wrote:
-> > https://github.com/beaker-project/restraint/issues/215 describes a file
-> > descriptor leak which revealed the test failure described here.
-> > 
-> > The 'DSO data reopen' perf test assumes that RLIMIT_NOFILE limits the
-> > number of open file descriptors, but it actually limits newly opened
-> > file descriptors. When the file descriptor limit is reduced, file
-> > descriptors already open remain open regardless of the new limit. This
-> > test failure does not occur if open file descriptors are contiguous,
-> > beginning at zero.
-> > 
-> > The following command triggers this perf test failure.
-> > 
-> > perf test 'DSO data reopen' 3>/dev/null 8>/dev/null
-> > 
-> > This patch determines the file descriptor limit by opening four files
-> > and then closing them. The limit is set to the fourth file descriptor,
-> > leaving only the first three available because any newly opened file
-> > descriptor must be less than the limit.
-> > 
-> > Signed-off-by: Eirik Fuller <efuller@redhat.com>
-> 
-> Acked-by: Michael Petlan <mpetlan@redhat.com>
+Changes in v2:
+ - rename threadpool_struct and its functions to adhere to naming style
+ - use ERR_PTR instead of returning NULL
+ - add *__strerror functions, removing pr_err from library code
+ - wait for threads after creation of all threads, instead of waiting
+   after each creation
+ - use intention-revealing macros in test code instead of 0 and -1
+ - use readn/writen functions
 
-Hi Arnaldo,
-kindly reminder, could this get merged?
+v1: https://lkml.kernel.org/lkml/cover.1626177381.git.rickyman7@gmail.com/
 
-Thank you.
+This patchset introduces a new utility library inside perf/util, which
+provides a work queue abstraction, which loosely follows the Kernel
+workqueue API.
 
-> 
-> > ---
-> >  tools/perf/tests/dso-data.c | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
-> > index 627c1aaf1c9e..43e1b01e5afc 100644
-> > --- a/tools/perf/tests/dso-data.c
-> > +++ b/tools/perf/tests/dso-data.c
-> > @@ -308,10 +308,20 @@ int test__dso_data_cache(struct test *test __maybe_unused, int subtest __maybe_u
-> >  	return 0;
-> >  }
-> >  
-> > +static long new_limit(int count)
-> > +{
-> > +	int fd = open("/dev/null", O_RDONLY);
-> > +	long ret = fd;
-> > +	if (count > 0)
-> > +		ret = new_limit(--count);
-> > +	close(fd);
-> > +	return ret;
-> > +}
-> > +
-> >  int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_unused)
-> >  {
-> >  	struct machine machine;
-> > -	long nr_end, nr = open_files_cnt();
-> > +	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
-> >  	int fd, fd_extra;
-> >  
-> >  #define dso_0 (dsos[0])
-> > @@ -334,7 +344,7 @@ int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_
-> >  
-> >  	/* Make sure we are able to open 3 fds anyway */
-> >  	TEST_ASSERT_VAL("failed to set file limit",
-> > -			!set_fd_limit((nr + 3)));
-> > +			!set_fd_limit((lim)));
-> >  
-> >  	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
-> >  
-> > -- 
-> > 2.27.0
-> > 
-> > 
-> 
-> 
+The workqueue abstraction is made up by two components:
+ - threadpool: which takes care of managing a pool of threads. It is
+   inspired by the prototype for threaded trace in perf-record from Alexey:
+   https://lore.kernel.org/lkml/cover.1625227739.git.alexey.v.bayduraev@linux.intel.com/
+ - workqueue: manages a shared queue and provides the workers implementation.
+
+On top of the workqueue, a simple parallel-for utility is implemented
+which is then showcased in synthetic-events.c, replacing the previous
+manual pthread-created threads.
+
+Through some experiments with perf bench, I can see how the new 
+workqueue has a slightly higher overhead compared to manual creation of 
+threads, but is able to more effectively partition work among threads, 
+yielding better results overall.
+Furthermore, the overhead could be reduced by changing the
+`work_size` (currently 1), aka the number of dirents that are
+processed by a thread before grabbing a lock to get the new work item.
+I experimented with different sizes but, while bigger sizes reduce overhead
+as expected, they do not scale as well to more threads.
+
+I believe the next steps are, in order:
+ - add support to specifying affinities to threads.
+ - add worker queues with round robin assignment (replacing the current
+   shared queue).
+ - optionally add work stealing among the worker queues. I'd keep it a
+   future work for the moment since we do not have a specific use case
+   for it at the moment (the synthetic threads would not benefit too
+   much from it imo).
+ - add support to executing jobs on a specific worker (which will have
+   its own affinity). This is useful for Alexey's usecase and for the
+   following evlist open usecase.
+ - make workqueue directly manage the threadpool (as Arnaldo already 
+   suggested). We could also make the workqueue global but that requires
+   an autogrow feature so that threads are created on demand and not all
+   at the beginning. I'd keep it a future work.
+ - apply workqueue to the evlist open (the idea is to pin each thread to
+   a GPU and submit a work_struct for each evsel/cpu to the matching cpu).
+
+Any comment or idea is highly appreciated.
+
+Thanks,
+Riccardo
+
+Riccardo Mancini (10):
+  perf workqueue: threadpool creation and destruction
+  perf tests: add test for workqueue
+  perf workqueue: add threadpool start and stop functions
+  perf workqueue: add threadpool execute and wait functions
+  tools: add sparse context/locking annotations in compiler-types.h
+  perf workqueue: introduce workqueue struct
+  perf workqueue: implement worker thread and management
+  perf workqueue: add queue_work and flush_workqueue functions
+  perf workqueue: add utility to execute a for loop in parallel
+  perf synthetic-events: use workqueue parallel_for
+
+ tools/include/linux/compiler_types.h   |  18 +
+ tools/perf/tests/Build                 |   1 +
+ tools/perf/tests/builtin-test.c        |   9 +
+ tools/perf/tests/tests.h               |   3 +
+ tools/perf/tests/workqueue.c           | 450 +++++++++++++++
+ tools/perf/util/Build                  |   1 +
+ tools/perf/util/synthetic-events.c     | 155 ++---
+ tools/perf/util/workqueue/Build        |   2 +
+ tools/perf/util/workqueue/threadpool.c | 674 ++++++++++++++++++++++
+ tools/perf/util/workqueue/threadpool.h |  40 ++
+ tools/perf/util/workqueue/workqueue.c  | 750 +++++++++++++++++++++++++
+ tools/perf/util/workqueue/workqueue.h  |  51 ++
+ 12 files changed, 2080 insertions(+), 74 deletions(-)
+ create mode 100644 tools/perf/tests/workqueue.c
+ create mode 100644 tools/perf/util/workqueue/Build
+ create mode 100644 tools/perf/util/workqueue/threadpool.c
+ create mode 100644 tools/perf/util/workqueue/threadpool.h
+ create mode 100644 tools/perf/util/workqueue/workqueue.c
+ create mode 100644 tools/perf/util/workqueue/workqueue.h
+
+-- 
+2.31.1
 
