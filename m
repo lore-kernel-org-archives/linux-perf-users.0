@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE6C41537
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8965CC43216
 	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 15:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F01610A6
+	by mail.kernel.org (Postfix) with ESMTP id 6D8E860F4A
 	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 15:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239628AbhG3PhD (ORCPT
+        id S239606AbhG3PhB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jul 2021 11:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
+        Fri, 30 Jul 2021 11:37:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233330AbhG3PfL (ORCPT
+        with ESMTP id S232746AbhG3Pet (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jul 2021 11:35:11 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39E67C0617A3;
-        Fri, 30 Jul 2021 08:34:31 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id n28-20020a05600c3b9cb02902552e60df56so6664289wms.0;
-        Fri, 30 Jul 2021 08:34:31 -0700 (PDT)
+        Fri, 30 Jul 2021 11:34:49 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0ADEC06179B;
+        Fri, 30 Jul 2021 08:34:27 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id c16so11786039wrp.13;
+        Fri, 30 Jul 2021 08:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HR7XmzQssixZvIlMrrC3zL3vuGUtLnyM8+gDu6116Qw=;
-        b=qjTNp6HFnlP0JDpRw3uCeCz3lFSLMM7zrEt9PZTsYEcP7TEw2/tiNWiUd8ygFRHeNi
-         RbSIgFEYzE3EU6/uoPoPtr5omVp6NY6vqQQ7BprfBKstsZXv5fj374qfeP4crxb3lM62
-         bJvPGVl2DRQdTcO5Ee5NguwziUb1rUJSOqB1QGaLZvmrT/LDcoSj78OZsJPeoY2EM1wR
-         UeKpQAb72JlhX9BRAikBju/Rxd18hv02glvIVqEO4EAYkx371n49zwUM2qqUjYF99ugx
-         YmNFmU8aaKrz0lECvXyqbmUZYwL/jrsz/nXZ8Ko3vd3bxiDMFu0bR0ihIiOSBSRUXWTp
-         37DQ==
+        bh=et2Vmn/m/kig5JVT51IzZ+wV7f8kKEkQi2Z+9+BNt/M=;
+        b=lWQFYKxDTNaslQDyWGhmk59zq+qfr9jhoqxYXLJKj1mzCRWoGiz8so8yW5d6Al+vC5
+         aK5RoVTxOMypbcn6rx4qeQIWCeDnn2Xu5NoWDOYA7kMFBwN/xMgvnIaJfkt24yV3IcG1
+         1AbKLBHo6wGJ4UjWKKdxNzYtyPSRftcEaqyKHXhIqV/7+g8rWsyRgoGPMg612IRzfI5z
+         VFy6YGjGztVhNoxGLVjwCjqQD567KUBnPYrhj9YAWEWNA3RuD8izC04CIYGLBQEE9CGA
+         BIADFMhL1lqxnksawQNVMCyERhf0010d1kSkX4qiwz5DdJRgy+G8ZJBh+aFAYj+Xzra7
+         g+xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HR7XmzQssixZvIlMrrC3zL3vuGUtLnyM8+gDu6116Qw=;
-        b=fMBjy4XbEdtx3KyVKk77eH735N58vAP7iJDQKAHdORFFmwCxD9v5XWQP9fXiJx8HEE
-         D2wU3y/tL6LFtkY8Io8KogB8FRA/kArC7ZaXJDTqAnQA4+Aka/7n84kXaeWVO/yyKqPn
-         oEhX/+IB4v/vF39BHvac4RJVfVgGWGJ4qi5hi1rm/O877vyWOLYhZ/m4WjR3A6s0Gpty
-         zQDT8psd+ptJQccekJEzPP6nDwbgruIRE7d1er235tBe599lmiyyltPsTR18JDZs4Ks8
-         HE+1suGMG3zJqiUudcpMrUUtCKBqeYjEC9uBMdUY+W0eMiT8sgpS9J6mLtoO/Zg/+QcH
-         j/nQ==
-X-Gm-Message-State: AOAM531tPEq0eBXRlCgAXczxKjX6gqqmM6lzpHJO6BVBuObk1uLKQ7pG
-        E0VKE3fSNzl5kUwiBuy38H4=
-X-Google-Smtp-Source: ABdhPJxcwaQYUHLHWoneiufPplWbjmy18Be2lqddBq5J1qntvyKi+4JDDjfW6kZ1WGT/ubN8TrsHhw==
-X-Received: by 2002:a05:600c:4401:: with SMTP id u1mr3815390wmn.49.1627659269694;
-        Fri, 30 Jul 2021 08:34:29 -0700 (PDT)
+        bh=et2Vmn/m/kig5JVT51IzZ+wV7f8kKEkQi2Z+9+BNt/M=;
+        b=PnfBBKDxtCqlM0mCxBkbcsuVlS9h9a5lPUQpfvXvYpnyFStAOPjf70Z41dkItTrndR
+         Ay79XUTstV5h1BoihGn+yEmsTfJ9k3xjKztv6Y7U17UHlxVo2PGYuABUX80/bYw5DyJo
+         Fqx2dvFNPrMxMxMQs+1nc7IZOGtJTo+T1nXKyJhpq/A0FBhfx5mwN2hcxDcqbX0tu+S1
+         dtpDss//d4WW5iRCj4J533kJJc3doTaEPYNSMnyLgIBncg2XDczPGOEIynlHQPAcqEI/
+         afP8F72fc/YbhNzsTBFdbULnAa/rMTT+OMm+WvcIBEx/E/tiSYDzQpIGBUyJ3q5qOPUH
+         ILfg==
+X-Gm-Message-State: AOAM533svDNZ6fJgU1TZenb+g9nFtfubzRRc725GQYmwOcTHWXE3Zw0N
+        blpPc0uZaukybGBKPWTX3yE=
+X-Google-Smtp-Source: ABdhPJyex6WTAeXV051kVf80qrz59SrZYYDS9OjM/uX/MhohzDKOJv4wwO3GS9l1cbhKVebwEnBYrQ==
+X-Received: by 2002:a5d:6905:: with SMTP id t5mr3595615wru.78.1627659266032;
+        Fri, 30 Jul 2021 08:34:26 -0700 (PDT)
 Received: from honeypot.lan ([2001:b07:6456:fd99:ced0:db1c:53e1:191e])
-        by smtp.googlemail.com with ESMTPSA id v15sm2354727wmj.39.2021.07.30.08.34.28
+        by smtp.googlemail.com with ESMTPSA id v15sm2354727wmj.39.2021.07.30.08.34.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 08:34:29 -0700 (PDT)
+        Fri, 30 Jul 2021 08:34:25 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -69,9 +69,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v2 08/10] perf workqueue: add queue_work and flush_workqueue functions
-Date:   Fri, 30 Jul 2021 17:34:15 +0200
-Message-Id: <cf11e40889edfb10e296c5d6f575cd73cec99172.1627657061.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v2 04/10] perf workqueue: add threadpool execute and wait functions
+Date:   Fri, 30 Jul 2021 17:34:11 +0200
+Message-Id: <2b55c73f1c1738361d80349f1c67e5fe9cce7174.1627657061.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1627657061.git.rickyman7@gmail.com>
 References: <cover.1627657061.git.rickyman7@gmail.com>
@@ -81,281 +81,351 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds functions to queue and wait work_structs, and
-related tests.
+This patch adds:
+ - threadpool__execute: assigns a task to the threads to execute
+   asynchronously.
+ - threadpool__wait: waits for the task to complete on all threads.
+Furthermore, testing for these new functions is added.
 
-When a new work item is added, the workqueue first checks if there
-are threads to wake up. If so, it wakes it up with the given work item,
-otherwise it will just add it to the list pending work items. A thread
-which completes a work item will check this list before going to sleep.
+This patch completes the threadpool.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/tests/workqueue.c          |  70 ++++++++++++++++-
- tools/perf/util/workqueue/workqueue.c | 106 ++++++++++++++++++++++++++
- tools/perf/util/workqueue/workqueue.h |   6 ++
- 3 files changed, 181 insertions(+), 1 deletion(-)
+ tools/perf/tests/workqueue.c           |  85 +++++++++++++-
+ tools/perf/util/workqueue/threadpool.c | 146 ++++++++++++++++++++++++-
+ tools/perf/util/workqueue/threadpool.h |   1 +
+ 3 files changed, 230 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
-index 2165a563e47bd6a5..2488ee971877b1f0 100644
+index 767e4fb60be4b190..87bf8fc71c346653 100644
 --- a/tools/perf/tests/workqueue.c
 +++ b/tools/perf/tests/workqueue.c
-@@ -147,6 +147,27 @@ static int __test__threadpool(void *_args)
- 	return ret;
- }
+@@ -1,14 +1,60 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdlib.h>
+ #include <linux/kernel.h>
+ #include <linux/err.h>
++#include <linux/zalloc.h>
+ #include "tests.h"
+ #include "util/debug.h"
+ #include "util/workqueue/threadpool.h"
  
-+struct test_work {
-+	struct work_struct work;
-+	int i;
++#define DUMMY_FACTOR 100000
++#define N_DUMMY_WORK_SIZES 7
++
+ struct threadpool_test_args_t {
+ 	int pool_size;
+ };
+ 
++struct test_task {
++	struct task_struct task;
++	int n_threads;
 +	int *array;
 +};
 +
-+static void test_work_fn1(struct work_struct *work)
++/**
++ * dummy_work - calculates DUMMY_FACTOR * (idx % N_DUMMY_WORK_SIZES) inefficiently
++ *
++ * This function uses modulus to create work items of different sizes.
++ */
++static void dummy_work(int idx)
 +{
-+	struct test_work *mwork = container_of(work, struct test_work, work);
++	volatile int prod = 0;	/* prevent possible compiler optimizations */
++	int k = idx % N_DUMMY_WORK_SIZES;
++	int i, j;
 +
-+	dummy_work(mwork->i);
-+	mwork->array[mwork->i] = mwork->i+1;
++	for (i = 0; i < DUMMY_FACTOR; i++)
++		for (j = 0; j < k; j++)
++			prod++;
++
++	pr_debug3("dummy: %d * %d = %d\n", DUMMY_FACTOR, k, prod);
 +}
 +
-+static void test_work_fn2(struct work_struct *work)
++static void test_task_fn1(int tidx, struct task_struct *task)
 +{
-+	struct test_work *mwork = container_of(work, struct test_work, work);
++	struct test_task *mtask = container_of(task, struct test_task, task);
 +
-+	dummy_work(mwork->i);
-+	mwork->array[mwork->i] = mwork->i*2;
++	dummy_work(tidx);
++	mtask->array[tidx] = tidx+1;
 +}
- 
- static int __workqueue__prepare(struct threadpool **pool,
- 				struct workqueue_struct **wq,
-@@ -175,21 +196,68 @@ static int __workqueue__teardown(struct threadpool *pool,
- 	return __threadpool__teardown(pool);
++
++static void test_task_fn2(int tidx, struct task_struct *task)
++{
++	struct test_task *mtask = container_of(task, struct test_task, task);
++
++	dummy_work(tidx);
++	mtask->array[tidx] = tidx*2;
++}
++
++
+ static int __threadpool__prepare(struct threadpool **pool, int pool_size)
+ {
+ 	int ret;
+@@ -39,22 +85,59 @@ static int __threadpool__teardown(struct threadpool *pool)
+ 	return TEST_OK;
  }
  
-+static int __workqueue__exec_wait(struct workqueue_struct *wq,
-+				int *array, struct test_work *works,
-+				work_func_t func, int n_work_items)
++static int __threadpool__exec_wait(struct threadpool *pool,
++				struct task_struct *task)
 +{
-+	int ret, i;
++	int ret = threadpool__execute(pool, task);
 +
-+	for (i = 0; i < n_work_items; i++) {
-+		works[i].array = array;
-+		works[i].i = i;
++	TEST_ASSERT_VAL("threadpool execute failure", ret == 0);
++	TEST_ASSERT_VAL("threadpool is not executing", threadpool__is_busy(pool));
 +
-+		init_work(&works[i].work);
-+		works[i].work.func = func;
-+		queue_work(wq, &works[i].work);
-+	}
-+
-+	ret = flush_workqueue(wq);
-+	TEST_ASSERT_VAL("workqueue flush failure", ret == 0);
++	ret = threadpool__wait(pool);
++	TEST_ASSERT_VAL("threadpool wait failure", ret == 0);
++	TEST_ASSERT_VAL("waited threadpool is not ready", threadpool__is_ready(pool));
 +
 +	return TEST_OK;
 +}
-+
-+
- static int __test__workqueue(void *_args)
- {
- 	struct workqueue_test_args_t *args = _args;
- 	struct threadpool *pool;
- 	struct workqueue_struct *wq;
--	int ret = __workqueue__prepare(&pool, &wq, args->pool_size);
-+	int *array;
-+	struct test_work *works;
-+	int i, ret = __workqueue__prepare(&pool, &wq, args->pool_size);
  
-+	if (ret)
-+		return ret;
+ static int __test__threadpool(void *_args)
+ {
+ 	struct threadpool_test_args_t *args = _args;
+ 	struct threadpool *pool;
+-	int ret;
++	int ret, i;
++	struct test_task task;
 +
-+	array = calloc(args->n_work_items, sizeof(*array));
-+	TEST_ASSERT_VAL("failed array calloc", array);
-+	works = calloc(args->n_work_items, sizeof(*works));
-+	TEST_ASSERT_VAL("failed works calloc", works);
-+
-+	ret = __workqueue__exec_wait(wq, array, works, test_work_fn1,
-+					args->n_work_items);
++	task.task.fn = test_task_fn1;
++	task.n_threads = args->pool_size;
++	task.array = calloc(args->pool_size, sizeof(*task.array));
++	TEST_ASSERT_VAL("calloc failure", task.array);
+ 
+ 	ret = __threadpool__prepare(&pool, args->pool_size);
  	if (ret)
  		goto out;
  
-+	for (i = 0; i < args->n_work_items; i++)
-+		TEST_ASSERT_VAL("failed array check (1)", array[i] == i+1);
-+
-+	ret = __workqueue__exec_wait(wq, array, works, test_work_fn2,
-+					args->n_work_items);
++	ret = __threadpool__exec_wait(pool, &task.task);
 +	if (ret)
 +		goto out;
 +
-+	for (i = 0; i < args->n_work_items; i++)
-+		TEST_ASSERT_VAL("failed array check (2)", array[i] == 2*i);
++	for (i = 0; i < args->pool_size; i++)
++		TEST_ASSERT_VAL("failed array check (1)", task.array[i] == i+1);
 +
- 	ret = __workqueue__teardown(pool, wq);
++	task.task.fn = test_task_fn2;
++
++	ret = __threadpool__exec_wait(pool, &task.task);
++	if (ret)
++		goto out;
++
++	for (i = 0; i < args->pool_size; i++)
++		TEST_ASSERT_VAL("failed array check (2)", task.array[i] == 2*i);
++
+ 	ret = __threadpool__teardown(pool);
  	if (ret)
  		goto out;
  
  out:
-+	free(array);
-+	free(works);
++	free(task.array);
  	return ret;
  }
  
-diff --git a/tools/perf/util/workqueue/workqueue.c b/tools/perf/util/workqueue/workqueue.c
-index 16a55de25cf247d8..a32d62dac1ec04a6 100644
---- a/tools/perf/util/workqueue/workqueue.c
-+++ b/tools/perf/util/workqueue/workqueue.c
-@@ -23,12 +23,14 @@ enum worker_msg {
- 
- enum workqueue_status {
- 	WORKQUEUE_STATUS__READY,	/* wq is ready to receive work */
-+	WORKQUEUE_STATUS__STOPPING,	/* wq is being destructed */
- 	WORKQUEUE_STATUS__ERROR,
- 	WORKQUEUE_STATUS__MAX
+diff --git a/tools/perf/util/workqueue/threadpool.c b/tools/perf/util/workqueue/threadpool.c
+index 850ef7e110566536..33320dd0fb44fe38 100644
+--- a/tools/perf/util/workqueue/threadpool.c
++++ b/tools/perf/util/workqueue/threadpool.c
+@@ -26,6 +26,7 @@ static inline pid_t gettid(void)
+ enum threadpool_status {
+ 	THREADPOOL_STATUS__STOPPED,		/* no threads */
+ 	THREADPOOL_STATUS__READY,		/* threads are ready but idle */
++	THREADPOOL_STATUS__BUSY,		/* threads are busy */
+ 	THREADPOOL_STATUS__ERROR,		/* errors */
+ 	THREADPOOL_STATUS__MAX
  };
- 
- static const char * const workqueue_status_tags[] = {
+@@ -33,6 +34,7 @@ enum threadpool_status {
+ static const char * const threadpool_status_tags[] = {
+ 	"stopped",
  	"ready",
-+	"stopping",
++	"busy",
  	"error"
  };
  
-@@ -120,6 +122,39 @@ __must_hold(&wq->lock)
- 		pthread_cond_signal(&wq->idle_cond);
+@@ -181,6 +183,28 @@ static int threadpool__terminate_thread(struct threadpool_entry *thread)
+ 	return threadpool__wait_thread(thread);
  }
  
 +/**
-+ * wake_worker - wake worker @w of workqueue @wq assigning @work to do
++ * threadpool__wake_thread - send wake msg to @thread
 + *
-+ * Called from main thread.
-+ * Moves worker from idle to busy list, assigns @work to it and sends it a
-+ * wake up message.
-+ *
-+ * NB: this function releases the lock to be able to send the notification
-+ * outside the critical section.
++ * This function does not wait for the thread to actually wake
++ * NB: call only from main thread!
 + */
-+static int wake_worker(struct workqueue_struct *wq, struct worker *w,
-+			struct work_struct *work)
-+__must_hold(&wq->lock)
-+__releases(&wq->lock)
++static int threadpool__wake_thread(struct threadpool_entry *thread)
 +{
-+	enum worker_msg msg = WORKER_MSG__WAKE;
-+	int ret;
++	int res;
++	enum threadpool_msg msg = THREADPOOL_MSG__WAKE;
 +
-+	list_move(&w->entry, &wq->busy_list);
-+	w->current_work = work;
-+	unlock_workqueue(wq);
-+
-+	// send wake msg outside critical section to reduce time spent inside it
-+	ret = writen(w->msg_pipe[1], &msg, sizeof(msg));
-+	if (ret < 0) {
-+		pr_debug2("wake_worker[%d]: error seding msg: %s\n",
-+			w->tidx, strerror(errno));
-+		return -WORKQUEUE_ERROR__WRITEPIPE;
++	res = writen(thread->pipes.cmd[1], &msg, sizeof(msg));
++	if (res < 0) {
++		pr_debug2("threadpool: error sending wake msg: %s\n", strerror(errno));
++		return -THREADPOOL_ERROR__WRITEPIPE;
 +	}
 +
++	pr_debug2("threadpool: sent wake msg %s to tid=%d\n",
++		threadpool_msg_tags[msg], thread->tid);
 +	return 0;
 +}
 +
  /**
-  * stop_worker - stop worker @w
-  *
-@@ -319,6 +354,11 @@ static int detach_threadpool_from_workqueue(struct workqueue_struct *wq)
- 		return -WORKQUEUE_ERROR__NOTALLOWED;
+  * threadpool_entry__function - send ack to main thread
+  */
+@@ -249,6 +273,15 @@ static void *threadpool_entry__function(void *args)
+ 
+ 		if (cmd == THREADPOOL_MSG__STOP)
+ 			break;
++
++		if (!thread->pool->current_task) {
++			pr_debug("threadpool[%d]: received wake without task\n",
++				thread->tid);
++			break;
++		}
++
++		pr_debug("threadpool[%d]: executing task\n", thread->tid);
++		thread->pool->current_task->fn(thread->idx, thread->pool->current_task);
  	}
  
-+	wq->status = WORKQUEUE_STATUS__STOPPING;
-+	ret = flush_workqueue(wq);
+ 	pr_debug2("threadpool[%d]: exit\n", thread->tid);
+@@ -502,10 +535,14 @@ static int __threadpool__stop(struct threadpool *pool)
+  * threadpool__stop - stop all threads in the pool.
+  *
+  * This function blocks waiting for ack from all threads.
++ * If the pool was busy, it will first wait for the task to finish.
+  */
+ int threadpool__stop(struct threadpool *pool)
+ {
+-	int ret;
++	int ret = threadpool__wait(pool);
++
 +	if (ret)
 +		return ret;
-+
- 	lock_workqueue(wq);
- 	for_each_idle_worker(wq, w) {
- 		ret = stop_worker(w);
-@@ -507,3 +547,69 @@ int workqueue_nr_threads(struct workqueue_struct *wq)
+ 
+ 	if (pool->status != THREADPOOL_STATUS__READY) {
+ 		pr_debug2("threadpool: stopping not ready pool\n");
+@@ -528,3 +565,110 @@ bool threadpool__is_ready(struct threadpool *pool)
  {
- 	return threadpool__size(wq->pool);
+ 	return pool->status == THREADPOOL_STATUS__READY;
  }
 +
 +/**
-+ * queue_work - add @work to @wq internal queue
++ * __threadpool__execute - execute @task on all threads of the @pool
 + *
-+ * If there are idle threads, one of these will be woken up.
-+ * Otherwise, the work is added to the pending list.
++ * NB: use threadpool__execute. This function does not change @pool->status.
 + */
-+int queue_work(struct workqueue_struct *wq, struct work_struct *work)
++static int __threadpool__execute(struct threadpool *pool, struct task_struct *task)
 +{
-+	struct worker *chosen_worker;
-+	int ret = 0;
++	int t, ret;
 +
-+	// in particular, this can fail if workqueue is marked to be stopping
-+	if (wq->status != WORKQUEUE_STATUS__READY) {
-+		pr_debug2("workqueue: trying to queue but workqueue is not ready\n");
-+		return -WORKQUEUE_ERROR__NOTALLOWED;
++	pool->current_task = task;
++
++	for (t = 0; t < pool->nr_threads; t++) {
++		ret = threadpool__wake_thread(&pool->threads[t]);
++		if (ret)
++			return ret;
 +	}
 +
-+	lock_workqueue(wq);
-+	if (list_empty(&wq->idle_list)) {
-+		list_add_tail(&work->entry, &wq->pending);
-+		unlock_workqueue(wq);
-+		pr_debug("workqueue: queued new work item\n");
-+	} else {
-+		chosen_worker = list_first_entry(&wq->idle_list, struct worker, entry);
-+		ret = wake_worker(wq, chosen_worker, work);
-+		pr_debug("workqueue: woke worker %d\n", chosen_worker->tidx);
-+	}
-+
-+	if (ret) {
-+		wq->status = WORKQUEUE_STATUS__ERROR;
-+		return ret;
-+	}
 +	return 0;
 +}
 +
 +/**
-+ * flush_workqueue - wait for all currently executed and pending work to finish
++ * threadpool__execute - execute @task on all threads of the @pool
 + *
-+ * This function blocks until all threads become idle.
++ * The task will run asynchronously wrt the main thread.
++ * The task can be waited with threadpool__wait.
++ *
++ * NB: make sure the pool is ready before calling this, since no queueing is
++ *     performed. If you need queueing, have a look at the workqueue.
 + */
-+int flush_workqueue(struct workqueue_struct *wq)
++int threadpool__execute(struct threadpool *pool, struct task_struct *task)
 +{
-+	int err = 0, ret;
++	int ret;
 +
-+	lock_workqueue(wq);
-+	while (!list_empty(&wq->busy_list)) {
-+		ret = pthread_cond_wait(&wq->idle_cond, &wq->lock);
-+		if (ret) {
-+			pr_debug2("%s: error in pthread_cond_wait\n", __func__);
-+			err = -ret;
-+			break;
-+		}
++	if (pool->status != THREADPOOL_STATUS__READY) {
++		pr_debug2("threadpool: executing on not ready pool\n");
++		return -THREADPOOL_ERROR__NOTALLOWED;
 +	}
-+	unlock_workqueue(wq);
 +
++	ret = __threadpool__execute(pool, task);
++	if (ret) {
++		pool->status = THREADPOOL_STATUS__ERROR;
++		return ret;
++	}
++	pool->status = THREADPOOL_STATUS__BUSY;
++	return 0;
++}
++
++/**
++ * __threadpool__wait - wait until all threads in @pool are done
++ *
++ * NB: use threadpool__wait. This function does not change @pool->status.
++ */
++static int __threadpool__wait(struct threadpool *pool)
++{
++	int t, err = 0, ret;
++
++	for (t = 0; t < pool->nr_threads; t++) {
++		ret = threadpool__wait_thread(&pool->threads[t]);
++		if (ret)
++			err = ret;
++	}
++
++	pool->current_task = NULL;
 +	return err;
 +}
 +
 +/**
-+ * init_work - initialize the @work struct
++ * threadpool__wait - wait until all threads in @pool are done
++ *
++ * This function will wait for all threads to finish execution and send their
++ * ack message.
++ *
++ * NB: call only from main thread!
 + */
-+void init_work(struct work_struct *work)
++int threadpool__wait(struct threadpool *pool)
 +{
-+	INIT_LIST_HEAD(&work->entry);
++	int ret;
++
++	switch (pool->status) {
++	case THREADPOOL_STATUS__BUSY:
++		break;
++	case THREADPOOL_STATUS__READY:
++		return 0;
++	default:
++	case THREADPOOL_STATUS__STOPPED:
++	case THREADPOOL_STATUS__ERROR:
++	case THREADPOOL_STATUS__MAX:
++		return -THREADPOOL_ERROR__NOTALLOWED;
++	}
++
++	ret = __threadpool__wait(pool);
++	if (ret) {
++		pool->status = THREADPOOL_STATUS__ERROR;
++		return ret;
++	}
++	pool->status = THREADPOOL_STATUS__READY;
++	return 0;
 +}
-diff --git a/tools/perf/util/workqueue/workqueue.h b/tools/perf/util/workqueue/workqueue.h
-index 456cd8b6cb2a26d8..ec998291b6a0623d 100644
---- a/tools/perf/util/workqueue/workqueue.h
-+++ b/tools/perf/util/workqueue/workqueue.h
-@@ -22,6 +22,12 @@ extern int destroy_workqueue(struct workqueue_struct *wq);
++
++/**
++ * threadpool__is_busy - check if the pool is busy
++ */
++int threadpool__is_busy(struct threadpool *pool)
++{
++	return pool->status == THREADPOOL_STATUS__BUSY;
++}
+diff --git a/tools/perf/util/workqueue/threadpool.h b/tools/perf/util/workqueue/threadpool.h
+index 7d56e5450fac605b..f28b3856d30e91e5 100644
+--- a/tools/perf/util/workqueue/threadpool.h
++++ b/tools/perf/util/workqueue/threadpool.h
+@@ -22,6 +22,7 @@ extern int threadpool__wait(struct threadpool *pool);
  
- extern int workqueue_nr_threads(struct workqueue_struct *wq);
+ extern int threadpool__size(struct threadpool *pool);
+ extern bool threadpool__is_ready(struct threadpool *pool);
++extern int threadpool__is_busy(struct threadpool *pool);
  
-+extern int queue_work(struct workqueue_struct *wq, struct work_struct *work);
-+
-+extern int flush_workqueue(struct workqueue_struct *wq);
-+
-+extern void init_work(struct work_struct *work);
-+
- #define WORKQUEUE_STRERR_BUFSIZE (128+THREADPOOL_STRERR_BUFSIZE)
- #define WORKQUEUE_ERROR__OFFSET 512
- enum {
+ /* Error management */
+ #define THREADPOOL_STRERR_BUFSIZE (128+STRERR_BUFSIZE)
 -- 
 2.31.1
 
