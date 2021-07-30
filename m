@@ -2,248 +2,139 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579C3C4338F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 08:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D54DC4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 12:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A60060F6B
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 08:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F7861059
+	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 12:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233700AbhG3IaJ (ORCPT
+        id S238646AbhG3MUL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jul 2021 04:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230285AbhG3IaJ (ORCPT
+        Fri, 30 Jul 2021 08:20:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48042 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230355AbhG3MUK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jul 2021 04:30:09 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E50C061765;
-        Fri, 30 Jul 2021 01:30:03 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id g15so10259288wrd.3;
-        Fri, 30 Jul 2021 01:30:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=n+JT42UW3IX9wla9IjzVJHPpAx8LymWRP5IJmE/8TXw=;
-        b=TBuannp55Fo6X9qwBaBst5wqKodJRSvCB7kPMWugQpuHcP9OPhi9oam5JoZ2T2JOED
-         WgvlbFXIc7UacXzKaNGoBu7y4yfvyu+mCQtt7b3f1D7ffoDl14iUBGcPQ2KYH0Olq9mP
-         gLRF8hm/hNqOXIZgXFqjKOLbT5gy4NMpXS5sMKOOJuh+vJHcBp+7aZ9mqvoJdRvuUtsI
-         A5cDdIRlsIFN+53cK5zNGQk1p1dxo05fZYqpovxgMO6Qo7IE+LriWPX72jPg+34vpH+e
-         8bS3uKSG4A3XQGAeDq7jNpftjcoERyobuP1yWLKOOfIUMw2gBAcsLJeqTno9NWNsH69l
-         23Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=n+JT42UW3IX9wla9IjzVJHPpAx8LymWRP5IJmE/8TXw=;
-        b=s43ObTzCY0ZzC15QXGY0fhFMMLVxlNVRI3lpTMP647dY7tjtlYpf9TU7lyg9K9mfaq
-         +Ff8Uqb0/Y03MaSuPcnbMNtdv3NhK6E6lGkm/rJfk0euMEREVMtJ9UcxoZqUo3ROqCTR
-         VYB/nd9BuiSYisFz0+mSR1aHdOxj8Ill+GxF6JZdDrVXq51idT+MhZA3rzgsH7N/wS9R
-         fm2ZdMty61p3XyGaX2lbtfZ4ERbyRRliLr8/5PGynm9EYuYx4pAt9O5Mx/uzGLg+/n8T
-         64JfC/j0xxq3RmbBn7dRQnBbYZpbEcmvR4fFbwVq9EV9n6xvZkengXqqahJvBaJgCE0m
-         itSQ==
-X-Gm-Message-State: AOAM531+HQrVsDZe3POSpIYcDdDjLdZlXhaIwPyZshScT7q8uGok7BGN
-        IBiFZJRO4qa8hDkcrpp2cgI1yhjBZmymFsO16H8=
-X-Google-Smtp-Source: ABdhPJzg5X/gQWMkIcI6BElZvWcGuhFc6ckR3N2jFxooaYHCkeFlz20H6F/OsGLrX+urA/cfHC0YoA==
-X-Received: by 2002:a5d:6146:: with SMTP id y6mr1674453wrt.278.1627633802106;
-        Fri, 30 Jul 2021 01:30:02 -0700 (PDT)
-Received: from [192.168.1.121] (93-40-209-49.ip40.fastwebnet.it. [93.40.209.49])
-        by smtp.gmail.com with ESMTPSA id l2sm891233wmq.0.2021.07.30.01.30.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jul 2021 01:30:01 -0700 (PDT)
-Message-ID: <071252c1bcf72a3fddd5664ca82b05b6589957cc.camel@gmail.com>
-Subject: Re: [PATCH v3 1/2] perf pmu: Add PMU alias support
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com
-Date:   Fri, 30 Jul 2021 10:28:30 +0200
-In-Reply-To: <20210730070717.30997-2-yao.jin@linux.intel.com>
-References: <20210730070717.30997-1-yao.jin@linux.intel.com>
-         <20210730070717.30997-2-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.3 (3.40.3-1.fc34) 
+        Fri, 30 Jul 2021 08:20:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1627647605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZpJdboMHeuxCJGy2Uim1DHCRXoke156ShhYeaCTcAvA=;
+        b=eVKSxikRmYbb18iIsrQzjBnrsh0APE4CM130EDW6oLbtXBXLQSMFe2tl4WBPloP+/ORRL1
+        0iOYt/i1s9FrWOZcdyMSEicdszQALLDWGZhddbvCJAs9KJBrB85mk2ZeYmMbopi4o+arpk
+        AORIG4oErb1eCvhLUgCgeciyDMopFs8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-245-rEo64waWO6ilAr3M6reZUQ-1; Fri, 30 Jul 2021 08:20:03 -0400
+X-MC-Unique: rEo64waWO6ilAr3M6reZUQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BF0D7EC1A0
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jul 2021 12:20:02 +0000 (UTC)
+Received: from Diego (unknown [10.39.208.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C23746;
+        Fri, 30 Jul 2021 12:20:00 +0000 (UTC)
+Date:   Fri, 30 Jul 2021 14:19:58 +0200 (CEST)
+From:   Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To:     linux-perf-users@vger.kernel.org
+cc:     Eirik Fuller <efuller@redhat.com>, acme@redhat.com,
+        jolsa@redhat.com
+Subject: Re: [PATCH] perf test: Handle fd gaps in test__dso_data_reopen
+In-Reply-To: <alpine.LRH.2.20.2106301043550.27231@Diego>
+Message-ID: <alpine.LRH.2.20.2107291608360.27231@Diego>
+References: <20210626023825.1398547-1-efuller@redhat.com> <alpine.LRH.2.20.2106301043550.27231@Diego>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On Wed, 30 Jun 2021, Michael Petlan wrote:
+> On Fri, 25 Jun 2021, Eirik Fuller wrote:
+> > https://github.com/beaker-project/restraint/issues/215 describes a file
+> > descriptor leak which revealed the test failure described here.
+> > 
+> > The 'DSO data reopen' perf test assumes that RLIMIT_NOFILE limits the
+> > number of open file descriptors, but it actually limits newly opened
+> > file descriptors. When the file descriptor limit is reduced, file
+> > descriptors already open remain open regardless of the new limit. This
+> > test failure does not occur if open file descriptors are contiguous,
+> > beginning at zero.
+> > 
+> > The following command triggers this perf test failure.
+> > 
+> > perf test 'DSO data reopen' 3>/dev/null 8>/dev/null
+> > 
+> > This patch determines the file descriptor limit by opening four files
+> > and then closing them. The limit is set to the fourth file descriptor,
+> > leaving only the first three available because any newly opened file
+> > descriptor must be less than the limit.
+> > 
+> > Signed-off-by: Eirik Fuller <efuller@redhat.com>
+> 
+> Acked-by: Michael Petlan <mpetlan@redhat.com>
 
-thanks for your quick revision. 
+Hi Arnaldo,
+kindly reminder, could this get merged?
 
-There is still one small memory issue with a variable not being freed, which I
-noticed when running this patchset together with John's patchset.
+Thank you.
 
-On Fri, 2021-07-30 at 15:07 +0800, Jin Yao wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
 > 
-> A perf uncore PMU may have two PMU names, a real name and an alias. The
-> alias is exported at /sys/bus/event_source/devices/uncore_*/alias.
-> The perf tool should support the alias as well.
+> > ---
+> >  tools/perf/tests/dso-data.c | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/tests/dso-data.c b/tools/perf/tests/dso-data.c
+> > index 627c1aaf1c9e..43e1b01e5afc 100644
+> > --- a/tools/perf/tests/dso-data.c
+> > +++ b/tools/perf/tests/dso-data.c
+> > @@ -308,10 +308,20 @@ int test__dso_data_cache(struct test *test __maybe_unused, int subtest __maybe_u
+> >  	return 0;
+> >  }
+> >  
+> > +static long new_limit(int count)
+> > +{
+> > +	int fd = open("/dev/null", O_RDONLY);
+> > +	long ret = fd;
+> > +	if (count > 0)
+> > +		ret = new_limit(--count);
+> > +	close(fd);
+> > +	return ret;
+> > +}
+> > +
+> >  int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_unused)
+> >  {
+> >  	struct machine machine;
+> > -	long nr_end, nr = open_files_cnt();
+> > +	long nr_end, nr = open_files_cnt(), lim = new_limit(3);
+> >  	int fd, fd_extra;
+> >  
+> >  #define dso_0 (dsos[0])
+> > @@ -334,7 +344,7 @@ int test__dso_data_reopen(struct test *test __maybe_unused, int subtest __maybe_
+> >  
+> >  	/* Make sure we are able to open 3 fds anyway */
+> >  	TEST_ASSERT_VAL("failed to set file limit",
+> > -			!set_fd_limit((nr + 3)));
+> > +			!set_fd_limit((lim)));
+> >  
+> >  	TEST_ASSERT_VAL("failed to create dsos\n", !dsos__create(3, TEST_FILE_SIZE));
+> >  
+> > -- 
+> > 2.27.0
+> > 
+> > 
 > 
-> Add alias_name in the struct perf_pmu to store the alias. For the PMU
-> which doesn't have an alias. It's NULL.
 > 
-> Introduce two X86 specific functions to retrieve the real name and the
-> alias separately.
-> 
-> Only go through the sysfs to retrieve the mapping between the real name
-> and the alias once. The result is cached in a list, uncore_pmu_list.
-> 
-> Nothing changed for the other ARCHs.
-> 
-> With the patch, the perf tool can monitor the PMU with either the real
-> name or the alias.
-> 
-> Use the real name,
->  $ perf stat -e uncore_cha_2/event=1/ -x,
->    4044879584,,uncore_cha_2/event=1/,2528059205,100.00,,
-> 
-> Use the alias,
->  $ perf stat -e uncore_type_0_2/event=1/ -x,
->    3659675336,,uncore_type_0_2/event=1/,2287306455,100.00,,
-> 
-> Co-developed-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
-> v3:
->  - Use fgets to read alias string from sysfs.
->  - Resource cleanup.
-> 
-> v2:
->  - No change.
-> 
->  tools/perf/arch/x86/util/pmu.c | 129 ++++++++++++++++++++++++++++++++-
->  tools/perf/util/parse-events.y |   3 +-
->  tools/perf/util/pmu.c          |  26 ++++++-
->  tools/perf/util/pmu.h          |   5 ++
->  4 files changed, 158 insertions(+), 5 deletions(-)
-> 
-<SNIP>
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 44b90d638ad5..cc9af7942e7b 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -944,13 +944,28 @@ static int pmu_max_precise(const char *name)
->         return max_precise;
->  }
->  
-> -static struct perf_pmu *pmu_lookup(const char *name)
-> +char * __weak
-> +pmu_find_real_name(const char *name)
-> +{
-> +       return strdup(name);
-> +}
-> +
-> +char * __weak
-> +pmu_find_alias_name(const char *name __maybe_unused)
-> +{
-> +       return NULL;
-> +}
-> +
-> +static struct perf_pmu *pmu_lookup(const char *lookup_name)
->  {
->         struct perf_pmu *pmu;
-> +       char *name;
->         LIST_HEAD(format);
->         LIST_HEAD(aliases);
->         __u32 type;
->  
-> +       name = pmu_find_real_name(lookup_name);
-
-name is not freed if one of the following checks fails.
-
-	/*
-	 * The pmu data we store & need consists of the pmu
-	 * type value and format definitions. Load both right
-	 * now.
-	 */
-	if (pmu_format(name, &format))
-		return NULL;
-
-	/*
-	 * Check the type first to avoid unnecessary work.
-	 */
-	if (pmu_type(name, &type))
-		return NULL;
-
-	if (pmu_aliases(name, &aliases))
-		return NULL;
-
-Thanks,
-Riccardo
-
-
-> @@ -973,7 +988,8 @@ static struct perf_pmu *pmu_lookup(const char *name)
->                 return NULL;
->  
->         pmu->cpus = pmu_cpumask(name);
-> -       pmu->name = strdup(name);
-> +       pmu->name = name;
-> +       pmu->alias_name = pmu_find_alias_name(name);
->         pmu->type = type;
->         pmu->is_uncore = pmu_is_uncore(name);
->         if (pmu->is_uncore)
-> @@ -1003,7 +1019,8 @@ static struct perf_pmu *pmu_find(const char *name)
->         struct perf_pmu *pmu;
->  
->         list_for_each_entry(pmu, &pmus, list)
-> -               if (!strcmp(pmu->name, name))
-> +               if (!strcmp(pmu->name, name) ||
-> +                   (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->                         return pmu;
->  
->         return NULL;
-> @@ -1898,6 +1915,9 @@ bool perf_pmu__has_hybrid(void)
->  
->  int perf_pmu__match(char *pattern, char *name, char *tok)
->  {
-> +       if (!name)
-> +               return -1;
-> +
->         if (fnmatch(pattern, name, 0))
->                 return -1;
->  
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 926da483a141..f6ca9f6a06ef 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -21,6 +21,7 @@ enum {
->  #define PERF_PMU_FORMAT_BITS 64
->  #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
->  #define CPUS_TEMPLATE_CPU      "%s/bus/event_source/devices/%s/cpus"
-> +#define MAX_PMU_NAME_LEN 128
->  
->  struct perf_event_attr;
->  
-> @@ -32,6 +33,7 @@ struct perf_pmu_caps {
->  
->  struct perf_pmu {
->         char *name;
-> +       char *alias_name;       /* PMU alias name */
->         char *id;
->         __u32 type;
->         bool selectable;
-> @@ -135,4 +137,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu,
-> __u64 config,
->  bool perf_pmu__has_hybrid(void);
->  int perf_pmu__match(char *pattern, char *name, char *tok);
->  
-> +char *pmu_find_real_name(const char *name);
-> +char *pmu_find_alias_name(const char *name);
-> +
->  #endif /* __PMU_H */
-
 
