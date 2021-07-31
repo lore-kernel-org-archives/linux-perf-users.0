@@ -2,243 +2,146 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D3BC432BE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 20:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49A1C4338F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Jul 2021 01:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0CC60F5E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 30 Jul 2021 20:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF28E60F48
+	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Jul 2021 01:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230471AbhG3UjW (ORCPT
+        id S235029AbhGaBjA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 30 Jul 2021 16:39:22 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:31202 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230217AbhG3UjV (ORCPT
+        Fri, 30 Jul 2021 21:39:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231335AbhGaBjA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 30 Jul 2021 16:39:21 -0400
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 16UKa7r2013229;
-        Fri, 30 Jul 2021 20:37:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=WQqZO2vXgRMAEHOwfeKW9pvCxNym6y/aItCMeaAsAXU=;
- b=olBVhedoSR0HyLxxaOOgS/a493vrgoE/vHjB1qCQMRSOSMkXWtAMIIzT/mgyAUMlX2a+
- 4R7x0iCWahUWZ2JGvCB3NkCUA4h6KThCiDqWSXf6OXTxu6pBBRAgG5SM0JP5zsymF4RN
- tKDuJxLyG8GE4VZxGTolR8vFsrBaLzpG3S5CRhNPsQqcDYBpsyiTcsNpRKVSaCq196Au
- oKSySFhUaitkfkM+jyqM+0QQi40s8xw+0oFUC7kD2AlEM3aiA8QYAeVGTgzVyv+HT2cD
- w6/fK3xgCh4LttpWT0ZXWGViQl6mOqpN14tSjsL29h7b18f4IrL48GZkoEw/vf1E/Ju9 OA== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=WQqZO2vXgRMAEHOwfeKW9pvCxNym6y/aItCMeaAsAXU=;
- b=gR7P6ADvIldouOpafOj/tiG2rFjyQCQdqDp7kgnnyKPCov4DwD4ZvRkeLdokRmTnOSoW
- dCbGXm5i+9iW00b7G9zuek/bRuoFjBonzDgZdbnYNUp2n9gPNNiBlhdHLqG3GkZ9xgXM
- aeIkjbUEpQClN74QIFlBB1dQdEXUVpG+8b5Zv8+paXELjvWPmWHDBpBbIwcqjUuUl7+f
- WiVxHv5YwDpnI1gLp+zv0Iw0KmYSp7+5vEd3anfI63XBw+hmUPiVJK7z4gkYA41sTAqj
- ennltRZ+OkjZ+KOHmu8L0R3e99nSb2qaSuc+7UuCx8UuyVZBWM5UVEN0VXdZKHrFbEf/ mQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3a488da6us-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Jul 2021 20:37:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 16UKZpMW026681;
-        Fri, 30 Jul 2021 20:37:41 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2177.outbound.protection.outlook.com [104.47.57.177])
-        by aserp3030.oracle.com with ESMTP id 3a4ngv12th-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Jul 2021 20:37:41 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OwwTLA62HnA7D6mAwuAHj/MSfi+6JM6uBib2mZgfGOBl4fJfVuVGnL97TUyi+zVoZUYlmC+m99q/W3FyydP2mnWkEIeF5SOsfW+hwPeUgG2FLzJiH1qMjD3pOTP2Q6dtIvHLNS/3pDhYo7TK+MlmjgKHF5UVll/FhjP9j6G+VWcsaagoxhFSY/KRWVuZAKfwuOAb+UB5OIfT7eCCcI9ljc3w2u1HwSz7Lmk+/8hAS9srVCrEas0u0Q+SUMp5kpjr6+bK27vRLBK9LFW6tyOAPiIRwFuPbs7ptA63ttyNWsdETPPZFQqKCX7CDH3NQvs9akHd+gUqxuQyDO01sGCMmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WQqZO2vXgRMAEHOwfeKW9pvCxNym6y/aItCMeaAsAXU=;
- b=AJ+Ura8vH5oA34c9wvlKyuwRSyqVVWtOGQQfdzmIHlCYhj7iqVjksaXML8VSA91MwqJy10MEfQnxGE2ROrsBl51npCcCV/Ik26uRDGpJqXevx16Sd1ze5T6hpVugyVA34NAwsuj48fXHGJJUPAYGK+g6qNvAKPVYHTJmKd0Hj/RAMP3ViE64IeicB7vVx5h8xfJF5HXcBeqgzkww+aQO9Tp7wQHJ3GxxytRdUWqErKnWoRgzjLx4I16AIrA0/Kxp4JnKOPGlGrHx1unlaJnwXUfH7Fj7muWT5mXcErxqmUuPeFKwsJdl/F8LizQuDSI2dfNKVmtY+PngEYA7QrXdjQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Fri, 30 Jul 2021 21:39:00 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF32DC06175F
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jul 2021 18:38:54 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id u16so4596828ple.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Jul 2021 18:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WQqZO2vXgRMAEHOwfeKW9pvCxNym6y/aItCMeaAsAXU=;
- b=M3qwMaSy1cNSgKlaKFRGkoV871IF3xOdtm1/pORV0cUKxkegNdV9N7V5yNfSk/IWti6yt86e0ouiK/cD+Fck/+RKYB1Hrkk9ZmzIEzpYGv7SPFU5UatApjCE1DV8Vb1o6/w0J3JT5uE6cdRokxC5r5dURfa5Cp3y7wijRbEf2vI=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
- by MN2PR10MB4253.namprd10.prod.outlook.com (2603:10b6:208:1d6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.21; Fri, 30 Jul
- 2021 20:37:39 +0000
-Received: from BLAPR10MB5009.namprd10.prod.outlook.com
- ([fe80::f10d:29d2:cb38:ed0]) by BLAPR10MB5009.namprd10.prod.outlook.com
- ([fe80::f10d:29d2:cb38:ed0%8]) with mapi id 15.20.4373.025; Fri, 30 Jul 2021
- 20:37:38 +0000
-Subject: Re: [PATCH v1 4/5] PCI: Adapt all code locations to not use struct
- pci_dev::driver directly
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>, kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uuVTonTXDxyJ4QjMz6cgVCH3/BgRnNTazOR/+h+kv28=;
+        b=pzaKjF0lCNmHVtmIqyMWU9hIgzpoV7qC/9cCzvbkdpE72axIv0wKrNaicxA3j7rdDP
+         VwWaLPxa8UgEcHFdJA+0eiQjbvKXSefMGqVk/NWlPB35KLTM2g71W4OQELZ6YRLrpOro
+         WRZjCUUxezYRwp6MGp6jpBp5YfFzNddBH6KL7Y6fShskVtn5UQucAtDUbaYuxqwRQ4io
+         p1JpNrjnOAGtzq2W7fmctKg504QN2enFA/ZSaH7U+tNEfzkCQEEm9OrP5ULe1txrowPe
+         r4FQPuvIDwdtKE90mDib4wIoX3OLb0QqIr2T93kXBODJK2+0Ldk9neYE+76+ORS2J/7+
+         ayMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uuVTonTXDxyJ4QjMz6cgVCH3/BgRnNTazOR/+h+kv28=;
+        b=dcc7vrL2c9lEHaXV6Cag/eNyYFqALKRK2Ev5xizae6j8fWYRGM6c4KF1qoLWIImtsh
+         EZx8zRukBZ0sBCweeQtf6UCsDg0PUHVwRhXMmDRGdXDojw7j9Bn7GjH6nhNfJWOhYJ0s
+         ADQgqSD2mLv0vk5maUOTYKpPh12XHMEfsn/ubeNCxjnrSFZqU+XMGDGWkc076HfLDG8l
+         +5lKORMe+5agqhUkNpbqFLbDgM6ZHqtZjWNcJN34zUrAkdaCAaJlNDN+pNHwN7/kj1Wa
+         UcdiffCj0u1kLAnZM5E2HYbRXOKWLl707gRUq/5IAZGsBkLm5ikn7SLbJIHTi2OJGxyR
+         iz0w==
+X-Gm-Message-State: AOAM532PrPbyh5UWEb71Dbddakdb9QqKlDliNU6wpNBe0Z1S/EMyIC3N
+        dmwJoGyxcBaATmMT3qixVGAqKnfd72MfX3c0
+X-Google-Smtp-Source: ABdhPJzjariSTS9La8MnK9n3pnXpF0JnRXXS8TiGiqPZ2+smpdDs9yP4waNR7jj1T6/6v92dTU7DEQ==
+X-Received: by 2002:a17:90a:c8b:: with SMTP id v11mr5866382pja.114.1627695534183;
+        Fri, 30 Jul 2021 18:38:54 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([202.155.204.36])
+        by smtp.gmail.com with ESMTPSA id m7sm4118919pgl.67.2021.07.30.18.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Jul 2021 18:38:53 -0700 (PDT)
+Date:   Sat, 31 Jul 2021 09:38:47 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org,
+        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
+        James Clark <james.clark@arm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Michael Buesch <m@bues.ch>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-crypto@vger.kernel.org, qat-linux@intel.com,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@corigine.com,
-        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
-References: <20210729203740.1377045-1-u.kleine-koenig@pengutronix.de>
- <20210729203740.1377045-5-u.kleine-koenig@pengutronix.de>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <2b5e8cb5-fac2-5da2-f87b-d287d2c5ea81@oracle.com>
-Date:   Fri, 30 Jul 2021 16:37:31 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.12.0
-In-Reply-To: <20210729203740.1377045-5-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: CH0PR03CA0207.namprd03.prod.outlook.com
- (2603:10b6:610:e4::32) To BLAPR10MB5009.namprd10.prod.outlook.com
- (2603:10b6:208:321::10)
+        Jiri Olsa <jolsa@redhat.com>, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: [PATCH] tools: perf: Report collisions in AUX records
+Message-ID: <20210731013847.GA91194@leoy-ThinkPad-X240s>
+References: <20210723124456.3828769-1-suzuki.poulose@arm.com>
+ <20210728091219.527886-1-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.74.103.140] (160.34.89.140) by CH0PR03CA0207.namprd03.prod.outlook.com (2603:10b6:610:e4::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18 via Frontend Transport; Fri, 30 Jul 2021 20:37:33 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 96576103-4114-4377-14bd-08d95399dedd
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4253:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR10MB4253B4C0F753BFF1FA01C0B38AEC9@MN2PR10MB4253.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s6ovWgFeuFXbSv56/21AW+kfDUirYVwOPMw5MTa/HnbouQolX0Q48Fc4cLIkdalDaE1j2C2BIBId9QbD6Jd+F6lOrw35+RryNbJ1G8epQziPi4gZAfSOlZZeLnEzKCTJ90ascCHYrReDB4HLVBZH6Huv91YItm4KenDYCoSWBhj7W6IUzH+BUOe+a/L9gF0u785j8yaFEF2PN9rK42iFyTQTuwPmwP1h5S/rxodsSYfKgEh8S926zVQha7qxnCaUpRCMJ6lu62nuaQKAY/2srG5fMMN1gBlRlFTOvaIwVZokZLxQ2gFWjaFIj+XFPfezwAG+zww1EUu6b4ghgp+mSVNobpOJftrgfhMjut93w2jDWWxILz5cE4NW3GsoM+pk2d3xPanaRjawdmOPNLTnr0HBX3zoxQUnbhJpwdiIqnZyUDC6j2qHq3dBCMJ09DE+I/6ljbGaF0Qn9v2/Ery/wP2LqjIMOUo/CYUSPhqwUd7EiiUSTK/k/X/AlPa9lYTH6TVbjnkHuHHwRmigOkdzvF8Qd5ZKTqGDmn24lqJ2klYP5HMOlEh9AgyrmXZFfg9hFluxLL4A22ZGmUjUruBaTnuUGsNmABSKd+6+8jU54Bx7acBuWntyieY62mmkeSswkgUxSNRYVh/KeiFgbScPNAed7hWSc7yjRUt4EuHrXT53/UIN7tKPG+QdXOmiv3Bio5pUewx1Ja7MTT8CEW4noMxLAsTYWtpRcoY7GZj5Oqc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(396003)(136003)(39860400002)(346002)(366004)(31686004)(2906002)(8936002)(31696002)(6486002)(7366002)(110136005)(8676002)(5660300002)(36756003)(316002)(2616005)(7416002)(16576012)(38100700002)(44832011)(7406005)(86362001)(66556008)(26005)(186003)(956004)(66476007)(478600001)(4744005)(4326008)(53546011)(66946007)(54906003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NW1WdmlybHdpdHhFcWhFSXZpZXFPK1BkNkhKeWxWSjd2SDM5NWZ4OFcrVTFT?=
- =?utf-8?B?eGQ0bE9PWEx4bHQ5NkJMc0Yvb3BBSXB2YmtXeHlScGhuU3krc0lOTVBFdWpl?=
- =?utf-8?B?TmpYRG1BTkVGRkw2MGJKUFFvRkZiSzRPaW4zMnFEVUo5eWNuQXQ4dERLR2w5?=
- =?utf-8?B?ME9YMWdQQVVaNTgrdlA0QkhwcnhGK1NUeUpvdlEzSk80ZlJXMU0zdms3QW00?=
- =?utf-8?B?QjhrdHpVVXltNUViVW9vK3ZlNmpXSnpPNFFybExiUUFYSFRNaXl1RkNJMThT?=
- =?utf-8?B?SXN4MUU3dWFiaisyWW9MZTc1YjBVMGdMOTR5b1B6OTdETkl3THFiSG4rdGhE?=
- =?utf-8?B?RDRCdTlLOVZYakdZYXhvQWZHeDQ5SysxN012d1FSN0p5RkZ1Kyt3RE9MSHB4?=
- =?utf-8?B?c3VFZWZnVDJ4RWZicnJ6dW9FYkROVndzdHU0KzVNc0pacndrYVNWVm9FNENZ?=
- =?utf-8?B?Z09ZdCsvMlA0cFBoVkV0UzhtU0tOcWFKaFBCRlphUElDOHQ0UEp4VWlnZ2NK?=
- =?utf-8?B?T1RMaXZHMzhIcUp1WGlDVUxhcGRaMTJnaVBlYUtqQnpjY0syS25ZZ3BmVlhr?=
- =?utf-8?B?V2ZTbnduUWlwT2x4ZTByNEhjUWxsVXdzOFRNWFZaY1BTZzBMKzhLeEtpKzd0?=
- =?utf-8?B?bTZvRkR6Szl3bDFoQStmQVM5QTJjRVdrbTV3cG9aZnV1QTF0WW9YYkJZOVlC?=
- =?utf-8?B?WTVGUFoxUU15Mm5qUy84d2VkLyt5VnlxbWJqRWhjSjlITWNBZVliRDZEbDdr?=
- =?utf-8?B?OWdjY0NvaEF5YlR5bWNPN2ttdDZ1OWxwNWx4MEt4anRSL1U2alRyQWpZS3No?=
- =?utf-8?B?RzFCT1p0L3ZQRHEyVjBveklmZzZxbjAyUHo2QnM0ekRNY0VRTVlnZHVUUmo5?=
- =?utf-8?B?b29QYmxsSHNKend3R1oxVUlpY1VuMDdodHk1SVZldWN0M0JsZU02ZXNvWDJw?=
- =?utf-8?B?TlJvbFNtRXRvY1ZKY25FVjBnRlVlT2hlK3ZncXZJcUcxQWVrcVorZEloQ0Z1?=
- =?utf-8?B?YjBidFh3WWlSa2JYUHNKTVI3T2ZJdmtST3YwZVZveHBjVkdNZURMZ2hiTDNO?=
- =?utf-8?B?TVA3NlVqOWVvbVNXYWpPcHVxdkV0QXhZZlVaTHZkVmxSWnBCOXkvTm1jUHZS?=
- =?utf-8?B?YVR1d1QyTzlJSmVXYkNoSHZyZzBRbFBheGFNTTFwRTRLRUN1Ui9YZEZYSkZJ?=
- =?utf-8?B?OXlTbnlud1dyZ3FEalREWExqTTFoRnh6cmdieTRiV2R5dXE4aExtcTNQbGZt?=
- =?utf-8?B?U2NDS0dtZ2h2aXU5UnhnUWVFOUl5L1hSYkUvczRwZkhaMXR4UGxnVUI1VG1U?=
- =?utf-8?B?dmp1VmEyTmxJVDY2dXBNRlZUM2Rta2JkMVVLbmhaWnhqYlNmbzh1R2d3M3A0?=
- =?utf-8?B?YUxMbTdWWFBBRC9mZm5EN0R4QzJuQVFSZmtDeCtkVFA3RmxiVlV1SmdIbmZq?=
- =?utf-8?B?VUpRMFBiOTlSNWlWMURBUHFuQ21samlEOXAxcmoxSi9oUGdTdkwxaEw0eDgz?=
- =?utf-8?B?dWd5TVFKRFIyb3BTQU94RXNSeXlqRXFXVHF6RytTY2hDaVlTQU50WVloSDRD?=
- =?utf-8?B?aUdxNGFLTmJITXREUE1FQS9xaktxNElxUnY5cFBIcEdzZUIrd3pyS3M4L0l2?=
- =?utf-8?B?cnlFbjZ5S0pqajFJeTV0KzRCK1BhUndKVVVTdWJHQWw1NUtXT0xoUGRvMXJv?=
- =?utf-8?B?dEVqZys1dVZoWEp0YWdvRmFteGV0L1JyRDE5UFBuSjZ2SVFiOE9sQXcyc1NI?=
- =?utf-8?Q?EYn00mTAVHJlTHteaHmu1hCGNpvNUR0DxNjrjdj?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96576103-4114-4377-14bd-08d95399dedd
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2021 20:37:38.7750
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MYW0UmmAZESi7E9HqplJenptPPPpkZg9GTDBk/J5JkiaC7jkFeeumgUZ8WLSyI/faLrx9128OvOsyBsR90qjAO1uS5oH8QnETj+5eGZA91A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4253
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10061 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=909
- mlxscore=0 phishscore=0 bulkscore=0 suspectscore=0 spamscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2107300140
-X-Proofpoint-GUID: KbCouSxoq4ys_s-0Tgq7VsQevDeTuMTo
-X-Proofpoint-ORIG-GUID: KbCouSxoq4ys_s-0Tgq7VsQevDeTuMTo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210728091219.527886-1-suzuki.poulose@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Jul 28, 2021 at 10:12:19AM +0100, Suzuki Kuruppassery Poulose wrote:
+> Just like the other flags in the AUX records, report a summary
+> of the Collisions if there were any.
+> 
+> Cc: Mike Leach <mike.leach@linaro.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: James Clark <james.clark@arm.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-On 7/29/21 4:37 PM, Uwe Kleine-König wrote:
+The change looks good to me:
 
-> --- a/drivers/pci/xen-pcifront.c
-> +++ b/drivers/pci/xen-pcifront.c
-> @@ -599,12 +599,12 @@ static pci_ers_result_t pcifront_common_process(int cmd,
->  	result = PCI_ERS_RESULT_NONE;
->  
->  	pcidev = pci_get_domain_bus_and_slot(domain, bus, devfn);
-> -	if (!pcidev || !pcidev->driver) {
-> +	pdrv = pci_driver_of_dev(pcidev);
-> +	if (!pcidev || !pdrv) {
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-
-If pcidev is NULL we are dead by the time we reach 'if' statement.
-
-
--boris
-
-
-
->  		dev_err(&pdev->xdev->dev, "device or AER driver is NULL\n");
->  		pci_dev_put(pcidev);
->  		return result;
+> ---
+>  tools/perf/util/events_stats.h | 1 +
+>  tools/perf/util/session.c      | 9 +++++++++
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
+> index 3480bafd414b..1b0006092265 100644
+> --- a/tools/perf/util/events_stats.h
+> +++ b/tools/perf/util/events_stats.h
+> @@ -30,6 +30,7 @@ struct events_stats {
+>  	u64 total_lost_samples;
+>  	u64 total_aux_lost;
+>  	u64 total_aux_partial;
+> +	u64 total_aux_collision;
+>  	u64 total_invalid_chains;
+>  	u32 nr_events[PERF_RECORD_HEADER_MAX];
+>  	u32 nr_lost_warned;
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 51f727402912..59b6c3fe0d01 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1540,6 +1540,8 @@ static int machines__deliver_event(struct machines *machines,
+>  				evlist->stats.total_aux_lost += 1;
+>  			if (event->aux.flags & PERF_AUX_FLAG_PARTIAL)
+>  				evlist->stats.total_aux_partial += 1;
+> +			if (event->aux.flags & PERF_AUX_FLAG_COLLISION)
+> +				evlist->stats.total_aux_collision += 1;
+>  		}
+>  		return tool->aux(tool, event, sample, machine);
+>  	case PERF_RECORD_ITRACE_START:
+> @@ -1895,6 +1897,13 @@ static void perf_session__warn_about_errors(const struct perf_session *session)
+>  			    "");
 >  	}
-> -	pdrv = pcidev->driver;
 >  
+> +	if (session->tool->aux == perf_event__process_aux &&
+> +	    stats->total_aux_collision != 0) {
+> +		ui__warning("AUX data detected collision  %" PRIu64 " times out of %u!\n\n",
+> +			    stats->total_aux_collision,
+> +			    stats->nr_events[PERF_RECORD_AUX]);
+> +	}
+> +
+>  	if (stats->nr_unknown_events != 0) {
+>  		ui__warning("Found %u unknown events!\n\n"
+>  			    "Is this an older tool processing a perf.data "
+> -- 
+> 2.24.1
+> 
