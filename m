@@ -2,109 +2,165 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B50C4338F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Jul 2021 07:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50707C4338F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Jul 2021 12:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 951E960F3A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Jul 2021 07:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271CF61042
+	for <linux-perf-users@archiver.kernel.org>; Sat, 31 Jul 2021 12:10:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230196AbhGaHoC (ORCPT
+        id S232807AbhGaMKR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 31 Jul 2021 03:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39974 "EHLO
+        Sat, 31 Jul 2021 08:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbhGaHoC (ORCPT
+        with ESMTP id S232705AbhGaMKQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 31 Jul 2021 03:44:02 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63038C06175F
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Jul 2021 00:43:56 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id nh14so6733674pjb.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Jul 2021 00:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0bXc4+f8J7h+BNDmqSHrABgRPZcrLEP+EUPIPGuZBSg=;
-        b=blBn1bdjx0Hf4LXvShmXzIy4bQIUJ9jycI0lDUNppPmirEO7h5mAx0gV7nO5jX346z
-         U3p0hj/1qUcV1nsT28DFNsq30tBlCi0Bxl3frbMNVC93xafbGfTVKvpjWcFFOx3BU8yL
-         HK0Dh0uDgP4GeRBYtKdLvNR4Fef0nQj28rgnH9lWLo6yNowde7McWWn4IEPghztHOHtk
-         o+eultcLoEi8OK/uHZ3IACCj2nQPuOizNNvmwVZcJAR9nKX7cDu5I/UJ7ES6jQvluQHd
-         kEaznNnOFuj+O35NscZ6/IjWWLbw0arQTM7WneF+T6T9KU2qHLhugSaUJkRfTbTW8pV1
-         Bkfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0bXc4+f8J7h+BNDmqSHrABgRPZcrLEP+EUPIPGuZBSg=;
-        b=CETV3eMflMCIVBhSFZbRJoE9yuWNRNcAyqwfiiDnmAvDhgkA6Fk0mYmysWV+cmzJkD
-         Oea5ZGNN4LVwkQBE+FaulOSbePY5wsKb6yOQxqArlJbtkT9iwxTzK6rJGz3f4tjNF4p5
-         C8S75MiqrmmSAv3FmlCucw6di39MrOVKLQGpDiBun2uUK+qeCptF3LbJ+4TCK+X1rdEL
-         djwcxVr3whCL3982OLNlgiJCJDJjLOFKQz7ImYvSkeXXnj0WWfr1/jifiPbFL1f8pIU0
-         LKt6P9K4+UqUmnS0GNCEJKTg9uPbJZrdZ+tvurh/IioXkQQGDQoyBqAoSt0zvlEYd9gk
-         ix0Q==
-X-Gm-Message-State: AOAM533OSzY+9UcS9KZCpon9KN/A93kZXb1YJFYXRUmOihdSYfLudYVm
-        ULVOUUx3kDPjj9jvXt/o8hAFiw==
-X-Google-Smtp-Source: ABdhPJwlRPY/8pm/IxhL59d2iJ856M16SNNYrqVK93bnXOKLeJqia0voU1lxF64lbFo8TO0S73or2w==
-X-Received: by 2002:a17:902:8a98:b029:12c:3177:c3ef with SMTP id p24-20020a1709028a98b029012c3177c3efmr5902070plo.21.1627717435852;
-        Sat, 31 Jul 2021 00:43:55 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([204.124.181.43])
-        by smtp.gmail.com with ESMTPSA id j3sm4663125pfc.10.2021.07.31.00.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 31 Jul 2021 00:43:55 -0700 (PDT)
-Date:   Sat, 31 Jul 2021 15:43:43 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     acme@kernel.org, mathieu.poirier@linaro.org,
-        coresight@lists.linaro.org, al.grant@arm.com,
-        suzuki.poulose@arm.com, anshuman.khandual@arm.com,
-        mike.leach@linaro.org, John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
+        Sat, 31 Jul 2021 08:10:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36ABCC0613CF
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Jul 2021 05:10:09 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m9nnU-0007Ot-05; Sat, 31 Jul 2021 14:08:56 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m9nnD-0007eB-Mm; Sat, 31 Jul 2021 14:08:39 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1m9nnD-0001LE-Jt; Sat, 31 Jul 2021 14:08:39 +0200
+Date:   Sat, 31 Jul 2021 14:08:36 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        oss-drivers@corigine.com, Oliver O'Halloran <oohall@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        linux-perf-users@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
+        qat-linux@intel.com,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/6] perf cs-etm: Save TRCDEVARCH register
-Message-ID: <20210731074343.GG7437@leoy-ThinkPad-X240s>
-References: <20210721090706.21523-1-james.clark@arm.com>
- <20210721090706.21523-4-james.clark@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v1 4/5] PCI: Adapt all code locations to not use struct
+ pci_dev::driver directly
+Message-ID: <20210731120836.vegno6voijvlflws@pengutronix.de>
+References: <20210729203740.1377045-1-u.kleine-koenig@pengutronix.de>
+ <20210729203740.1377045-5-u.kleine-koenig@pengutronix.de>
+ <2b5e8cb5-fac2-5da2-f87b-d287d2c5ea81@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rawlqk3jhoxts24y"
 Content-Disposition: inline
-In-Reply-To: <20210721090706.21523-4-james.clark@arm.com>
+In-Reply-To: <2b5e8cb5-fac2-5da2-f87b-d287d2c5ea81@oracle.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jul 21, 2021 at 10:07:02AM +0100, James Clark wrote:
-> Now that the metadata has a length field we can add extra registers
-> without breaking any previous versions of perf.
-> 
-> Save the TRCDEVARCH register so that it can be used to configure the ETE
-> decoder in the next commit. If the sysfs file doesn't exist then 0 will
-> be saved which is an impossible register value and can also be used to
-> signify that the file couldn't be read.
 
-After reviewed the whole patch set, come back to highlight one thing:
-seems to me ETE is only a feature introduced by new ETMv4 revisions; in
-other words, if we support ETMv4.5 or any later revisions, it will
-support ETE feature.
+--rawlqk3jhoxts24y
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here I think the right thing to do is to support newer revisions for
-ETMv4, and then based on the revision it creates a decoder with
-supporting ETE feature.  For a more neat solution, if the perf tool
-passes the "correct" revision number to the OpenCSD decoder, it should
-can decode trace data with ETE packets.  In this way, the ETE decoding
-can be transparent for perf cs-etm code.
+Hello Boris,
 
-How about you think for this?  Sorry if I introduce noise due to my
-lack knowledge (and platform) for ETE.
+On Fri, Jul 30, 2021 at 04:37:31PM -0400, Boris Ostrovsky wrote:
+> On 7/29/21 4:37 PM, Uwe Kleine-K=F6nig wrote:
+> > --- a/drivers/pci/xen-pcifront.c
+> > +++ b/drivers/pci/xen-pcifront.c
+> > @@ -599,12 +599,12 @@ static pci_ers_result_t pcifront_common_process(i=
+nt cmd,
+> >  	result =3D PCI_ERS_RESULT_NONE;
+> > =20
+> >  	pcidev =3D pci_get_domain_bus_and_slot(domain, bus, devfn);
+> > -	if (!pcidev || !pcidev->driver) {
+> > +	pdrv =3D pci_driver_of_dev(pcidev);
+> > +	if (!pcidev || !pdrv) {
+>=20
+> If pcidev is NULL we are dead by the time we reach 'if' statement.
 
-Thanks,
-Leo
+Oh, you're right. So this needs something like:
+
+	if (!pcidev || !(pdrv =3D pci_driver_of_dev(pcidev)))
+
+or repeating the call to pci_driver_of_dev for each previous usage of
+pdev->driver.
+
+If there are no other preferences I'd got with the first approach for
+v2.
+
+Best regards and thanks for catching,
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--rawlqk3jhoxts24y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEFPUEACgkQwfwUeK3K
+7AlQoAgAidQUuX/L2YhXMvP0F+SSjym4ILhKdbRYnWojo/QbFUE8WbOQueAZA76q
+NW0vq2X07i0bUwTfbZoOgqSFvMfXJiETcN9R48epPUGWS2IT17NE8EgtH+/srht0
+sGGI7bia2a1L++nruccUllCf1qMfngKRQUhatVOPYqIs2dX3ijjjpSAxHh8L+gjC
+nOMgWu7lZm7QQawBjQGfirpYGBUFdAh3odwm/JHN7+cZKC6dbhLYGm2WS8db1bCI
+4k4EO2RpSeuZb9XaFPq9DEWy1exgtgjnmKt3Szrp31/xWizjhMEOrZVWfWD1bjUa
+rWcmnDR4bm4Fz/MdVFhjJq2XJQoIDw==
+=2o5y
+-----END PGP SIGNATURE-----
+
+--rawlqk3jhoxts24y--
