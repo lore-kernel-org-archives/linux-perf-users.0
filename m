@@ -2,126 +2,162 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CB3C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 07:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6533EC4320A
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 07:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 886F260E76
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 07:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC9460F9F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 07:45:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232483AbhHBHJP (ORCPT
+        id S232524AbhHBHpb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Aug 2021 03:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53700 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbhHBHJL (ORCPT
+        Mon, 2 Aug 2021 03:45:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:25942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232482AbhHBHp3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Aug 2021 03:09:11 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11495C06175F;
-        Mon,  2 Aug 2021 00:09:02 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id j1so23934797pjv.3;
-        Mon, 02 Aug 2021 00:09:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AOZsXW9hACOugC8V16L56rF4ZBxWoq+nLcBwRkl2cto=;
-        b=HwJQrN8r9lqPPo8iQqAfHbUzAX50uItU3ykESKsSsauMl2NuEodC5PssntDI5v0uo9
-         ITM8jMZqaSyy98giZaI6A/ZKTAvAl2SQzNBF2ySdXZvD7IO4iBy+b4TJBL+xmAHWIf9E
-         MOHuFDmp0AzrccCuSmpUAYt/uuQr0/hqA8SzLTOrVX4Tn0sQnz4r64Fy35v217V1Okz1
-         M8GoAHHRcVJYKPwRfaS5MMoOi0RLw2KNEutmZcTeqr6pnuvjEcp+S2ERFvAZyvWjuyEL
-         W73z/AtuUqLHQbsGo021uxb0fCA08br/ejB4gfG9Cpcnq+v0mdmcvc9sJx5+apZDNoO5
-         PJqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AOZsXW9hACOugC8V16L56rF4ZBxWoq+nLcBwRkl2cto=;
-        b=PG7QDCYPT/euREx9jW/kmCU52bhIH9axlYAl2AsXu90tPpyqBDGxkWzvYPbrrJz2N/
-         9X3l1ID0FfrMs1X8wwN7CM9f9i/217XWlKwuEtA5cOJ1fxnVb7NaDJeaR4MwpkPZomI7
-         7PpSuhPH9zo+KXCL9+fYUz0X57HfvB8ziNoSg+WLNwMqwrDo8APGF+EGuJo1muFF4+9S
-         QNuqEbtqaeztd4QtSyV5NYsNCLJIa8g1kVv8I2uYtiNakuGFsTb4ei220NZWM+7uZ7lU
-         MNrEnNR4dIALCJP7QjRDlaIz8Jm0LJ9imEqy6LqVfew34LHFIe9o6Qmh7Zvj9KBBKuRC
-         gnGg==
-X-Gm-Message-State: AOAM533wBgs5WXK1Bi4asaT36rATOodxCBSjpoVNltcYEak1b4WFNFSX
-        8WDqT57BIlNSUTVkt/SvVnM=
-X-Google-Smtp-Source: ABdhPJzoCwMmpm+/FNSS9UEX0Mvdxk+Tn3aYpFcqdzxgnySrWhGudGNvYNOfUpjyJwBzO1VrD5jl7Q==
-X-Received: by 2002:a05:6a00:1307:b029:308:1e2b:a24b with SMTP id j7-20020a056a001307b02903081e2ba24bmr15371208pfu.57.1627888141449;
-        Mon, 02 Aug 2021 00:09:01 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id g20sm10391238pfj.69.2021.08.02.00.08.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 02 Aug 2021 00:09:00 -0700 (PDT)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Joerg Roedel <joerg.roedel@amd.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf/x86/amd: Don't touch the AMD64_EVENTSEL_HOSTONLY bit inside the guest
-Date:   Mon,  2 Aug 2021 15:08:50 +0800
-Message-Id: <20210802070850.35295-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.32.0
+        Mon, 2 Aug 2021 03:45:29 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 1727Y5rd125744;
+        Mon, 2 Aug 2021 03:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=3GTKSoYuyeI7amyWljKoeZqQ+nHMylTD/J3zpAbpSkU=;
+ b=opXA+N2F/OyCTrMckSbOQvv0dIelBOVELlf0qOm/01gfXdjEuvk6vCiHmojnt3SMYS8K
+ bxW+LNNfiXRU7UgPKtR4usSebN/rk1tanddBuxxEMvc8FRtczuLXIVPnjwSFJgxozrim
+ zD8r7WT5rh1J5mZs1h0CVY2lRQwX67Qo2K9kKqyBQp7M/LNmVWXi/5p3gxxnDiJaCLN9
+ rZs1ekfust89aikdjGSboEL5x7zhilaaveAazi3oEk70xDpx1YXVJKNxQDDkLJ3jZa23
+ DxTIk25KIE8o9mHofZKFkLQtN+Lxjp+q7mu/NEr2rJCrB2HANs6cVKDtn15Evjr5PfHQ iQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3a5kjutct4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Aug 2021 03:45:12 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1727cEhp137848;
+        Mon, 2 Aug 2021 03:45:11 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3a5kjutcs5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Aug 2021 03:45:11 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1727bmXr009344;
+        Mon, 2 Aug 2021 07:45:09 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01wdc.us.ibm.com with ESMTP id 3a4x5a7t7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 02 Aug 2021 07:45:09 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1727j9XO21889420
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 2 Aug 2021 07:45:09 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F3602B2064;
+        Mon,  2 Aug 2021 07:45:08 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 09D95B2068;
+        Mon,  2 Aug 2021 07:45:04 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.36.88])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  2 Aug 2021 07:45:03 +0000 (GMT)
+Subject: Re: [PATCH v3] fpga: dfl: fme: Fix cpu hotplug issue in performance
+ reporting
+To:     will@kernel.org, hao.wu@intel.com, mark.rutland@arm.com
+Cc:     trix@redhat.com, yilun.xu@intel.com, mdf@kernel.org,
+        linux-fpga@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, rnsastry@linux.ibm.com,
+        linux-perf-users@vger.kernel.org, stable@vger.kernel.org
+References: <20210713074216.208391-1-kjain@linux.ibm.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <61495dc0-f496-992c-1d2a-9229a04e6e44@linux.ibm.com>
+Date:   Mon, 2 Aug 2021 13:15:00 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+In-Reply-To: <20210713074216.208391-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: RyHz5855e0unzEdNSw03Cg5mCfzhtRmF
+X-Proofpoint-GUID: W10U2EPBpxzuTFdcHfQHeMJ90pMtAAy-
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-08-02_01:2021-08-02,2021-08-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 phishscore=0 impostorscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 bulkscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2107140000 definitions=main-2108020053
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
 
-If we use "perf record" in an AMD Milan guest, dmesg reports a #GP
-warning from an unchecked MSR access error on MSR_F15H_PERF_CTLx:
 
-[] unchecked MSR access error: WRMSR to 0xc0010200 (tried to write
-0x0000020000110076) at rIP: 0xffffffff8106ddb4 (native_write_msr+0x4/0x20)
-[] Call Trace:
-[]  amd_pmu_disable_event+0x22/0x90
-[]  x86_pmu_stop+0x4c/0xa0
-[]  x86_pmu_del+0x3a/0x140
+On 7/13/21 1:12 PM, Kajol Jain wrote:
+> The performance reporting driver added cpu hotplug
+> feature but it didn't add pmu migration call in cpu
+> offline function.
+> This can create an issue incase the current designated
+> cpu being used to collect fme pmu data got offline,
+> as based on current code we are not migrating fme pmu to
+> new target cpu. Because of that perf will still try to
+> fetch data from that offline cpu and hence we will not
+> get counter data.
+> 
+> Patch fixed this issue by adding pmu_migrate_context call
+> in fme_perf_offline_cpu function.
+> 
+> Fixes: 724142f8c42a ("fpga: dfl: fme: add performance reporting support")
+> Tested-by: Xu Yilun <yilun.xu@intel.com>
+> Acked-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Cc: stable@vger.kernel.org
+> ---
 
-The AMD64_EVENTSEL_HOSTONLY bit is defined and used on the host,
-while the guest perf driver should avoid such use.
+Any update on this patch? Please let me know if any changes required.
 
-Fixes: 1018faa6cf23 ("perf/x86/kvm: Fix Host-Only/Guest-Only counting with SVM disabled")
-Signed-off-by: Like Xu <likexu@tencent.com>
-Tested-by: Kim Phillips <kim.phillips@amd.com>
----
-v2: Add Fixes tag and Tested-by from Kim.
-v1: https://lore.kernel.org/lkml/20210720112605.63286-1-likexu@tencent.com/
+Thanks,
+Kajol Jain
 
- arch/x86/events/perf_event.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index d6003e08b055..1c3ae954a230 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1116,8 +1116,9 @@ void x86_pmu_stop(struct perf_event *event, int flags);
- static inline void x86_pmu_disable_event(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-+	u64 disable_mask = __this_cpu_read(cpu_hw_events.perf_ctr_virt_mask);
- 
--	wrmsrl(hwc->config_base, hwc->config);
-+	wrmsrl(hwc->config_base, hwc->config & ~disable_mask);
- 
- 	if (is_counter_pair(hwc))
- 		wrmsrl(x86_pmu_config_addr(hwc->idx + 1), 0);
--- 
-2.32.0
-
+>  drivers/fpga/dfl-fme-perf.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> ---
+> Changelog:
+> v2 -> v3:
+> - Added Acked-by tag
+> - Removed comment as suggested by Wu Hao
+> - Link to patch v2: https://lkml.org/lkml/2021/7/9/143
+> 
+> v1 -> v2:
+> - Add stable@vger.kernel.org in cc list
+> - Link to patch v1: https://lkml.org/lkml/2021/6/28/275
+> 
+> RFC -> PATCH v1
+> - Remove RFC tag
+> - Did nits changes on subject and commit message as suggested by Xu Yilun
+> - Added Tested-by tag
+> - Link to rfc patch: https://lkml.org/lkml/2021/6/28/112
+> ---
+> 
+> diff --git a/drivers/fpga/dfl-fme-perf.c b/drivers/fpga/dfl-fme-perf.c
+> index 4299145ef347..587c82be12f7 100644
+> --- a/drivers/fpga/dfl-fme-perf.c
+> +++ b/drivers/fpga/dfl-fme-perf.c
+> @@ -953,6 +953,8 @@ static int fme_perf_offline_cpu(unsigned int cpu, struct hlist_node *node)
+>  		return 0;
+>  
+>  	priv->cpu = target;
+> +	perf_pmu_migrate_context(&priv->pmu, cpu, target);
+> +
+>  	return 0;
+>  }
+>  
+> 
