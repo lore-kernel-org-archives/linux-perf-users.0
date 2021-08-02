@@ -2,251 +2,181 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DD8C4320A
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 13:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50523C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 14:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F29660FF2
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 13:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3418060F41
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 14:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233765AbhHBNIn (ORCPT
+        id S235571AbhHBOVg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Aug 2021 09:08:43 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:13018 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233718AbhHBNIm (ORCPT
+        Mon, 2 Aug 2021 10:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235835AbhHBOVa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Aug 2021 09:08:42 -0400
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 172D1HKh028080;
-        Mon, 2 Aug 2021 13:06:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=Q9ZBUhg1LK0z1heQNXxYh1j73JsSHk6rkbtV9O7kV8c=;
- b=hl439AKrCKssYWt0Gtgdle2UFUF7VfEALhMs3sFn5ihDq3n28v1pCgibpSGLJeWPWGVV
- 9S08ujARZz6Pgv31s3kJlqg4i/z4b0RxWLYSbKayvZvl8Jm3jOC+9nhkrNnCncU5OAez
- qy2STLKPXH4uNwPDRjS71P3F4uvofYwOFEx++ywfhGkT1okvxPKkrJCefLMzTjWfX08t
- D16RcJ1NGANqGlHUUUpaHkDpf8qnMNkOpVHnPFla3zNHkTNHbM73i4pUoDn7hlB0KVqn
- MteKf5MiskWZtbyjm+p4j2vTpV+3YyeFzToryznh6eoz1d0thAfdkRPERauOM3fw/RVK AQ== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2020-01-29;
- bh=Q9ZBUhg1LK0z1heQNXxYh1j73JsSHk6rkbtV9O7kV8c=;
- b=emVgII1uc1IERxY3o++Kv1eMAqGG5k63VtNk5liUyXSQiNQEt+J4Iiz0AiGprvX33K63
- 1jFuTe9v6Q5oHMSCagk6RyiM7xhz87ECTo8lCdNbU2kgWKOr77vWecVlk1YGLwqxeuRa
- vpokEhM4WY5VuZKoisxx2QXJ5zU4XHVU1IO8o4hxb6mqhC6wSQJFsfBFodmUDbC4p4yz
- 2VEtmrXvVzGvzLPUkeaDtD+DwIZPlOIo5kymW0AWgtFcFInlyR3qyaKixzMhc2OWJ2Xx
- 8n6pM/X0EOKVVpcvwRCzCCxGnuCa/s3s6vETR52Cm2J0PyAuETW4kd1r1c3SSynWfBdE mw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3a65vd975r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Aug 2021 13:06:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 172D5rHY025118;
-        Mon, 2 Aug 2021 13:06:55 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2172.outbound.protection.outlook.com [104.47.55.172])
-        by aserp3020.oracle.com with ESMTP id 3a4xb4upbf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 02 Aug 2021 13:06:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ipqQqAdtkrHrw53rJup/e1rMdPpPbskowkaKasngA0dVFdWvvnDHmuQingns8us1alWzTIk6VJkEYcsTfi04zbk5RZw4DSTuG2RL2RpKRMQC3K+80wpsfAZPGvnXj0nTO0ROaeuwy+Iz8ypMPTzEG3qKv0fcHFTIZciso1p3zvrhog/409CWdsXFwV2bYXtVe6YLXuMLKEfSW0wzRCTVxIsKlrbWDO4x/1odnU8C0WjE5MOv8DkePneaFelHKxjJj6f4Ddx2NB4wwtYEhQJfu+/EJsBw7HaWnT78oZKTlcoYBMj/GyFPUcsIbQdQFGUa6HvsoIr1uKC2i0M9odOQBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I5W7Rt23VbQ7Mj8HWXmATUJEbSZASSn2vfTtnLqvcMA=;
- b=luW0cSXxHZrzCcfpPmNxgqfJhmU3/ftf+08o3zEpkdqayBQUDBpZwy6yLd3OBzdx/Oo8tZUp2tB4bSckkSRHrnUXIn2GBi08T5R8Rf8M+yt1UD3x+CrEx7xefhqsGODk0Np+SqkrJkjQIyqZ4FZCl0b8akNUKr+DZ7MO8b6Xn02m2FBIDhS/3ssYYUn+dKWUwxvngPzoIK7iGvqTse4n7iPKiCpyO03AfR35vzAZswtFzbObGYiuzxov0T4EPkDMUDlyNc4ugaLIkj3h1bXYBhCtqLkRRAoIPII4VWbdb/BrFO9awRzI4LbNdVZUjBc7jVkSX6fbDrrJKlX0taF82Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Mon, 2 Aug 2021 10:21:30 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EB3C04F9ED
+        for <linux-perf-users@vger.kernel.org>; Mon,  2 Aug 2021 07:04:26 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id d8so21610031wrm.4
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Aug 2021 07:04:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I5W7Rt23VbQ7Mj8HWXmATUJEbSZASSn2vfTtnLqvcMA=;
- b=pX856HZ+QxlSUKjYYeXuExEdh6++R+B9RlqLJdH1lymUIJQIFrk5ZISPCt5siz3U17t6M/yNyJhXRoJKDYQqnDSBZYTMwl4Snjd9iu4X+ZFppEoZEeun4snm7cga84o3f1Mq+5v44VHEf1FXNi/eCzsyyIK7n+y0qMoy8Z+W6Os=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=oracle.com;
-Received: from BLAPR10MB5009.namprd10.prod.outlook.com (2603:10b6:208:321::10)
- by MN2PR10MB4400.namprd10.prod.outlook.com (2603:10b6:208:198::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.18; Mon, 2 Aug
- 2021 13:06:52 +0000
-Received: from BLAPR10MB5009.namprd10.prod.outlook.com
- ([fe80::f10d:29d2:cb38:ed0]) by BLAPR10MB5009.namprd10.prod.outlook.com
- ([fe80::f10d:29d2:cb38:ed0%8]) with mapi id 15.20.4373.026; Mon, 2 Aug 2021
- 13:06:52 +0000
-Subject: Re: [PATCH v1 4/5] PCI: Adapt all code locations to not use struct
- pci_dev::driver directly
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        oss-drivers@corigine.com, Oliver O'Halloran <oohall@gmail.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        linux-perf-users@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
-        qat-linux@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <20210729203740.1377045-1-u.kleine-koenig@pengutronix.de>
- <20210729203740.1377045-5-u.kleine-koenig@pengutronix.de>
- <2b5e8cb5-fac2-5da2-f87b-d287d2c5ea81@oracle.com>
- <20210731120836.vegno6voijvlflws@pengutronix.de>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Message-ID: <d9dfe855-a2a5-c48b-b4c4-8109d7289809@oracle.com>
-Date:   Mon, 2 Aug 2021 09:06:34 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.12.0
-In-Reply-To: <20210731120836.vegno6voijvlflws@pengutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: SN6PR04CA0087.namprd04.prod.outlook.com
- (2603:10b6:805:f2::28) To BLAPR10MB5009.namprd10.prod.outlook.com
- (2603:10b6:208:321::10)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GGcJcVuBMTNniuH6oPjRek2wcyQ76GIx2ijfvVqwMm4=;
+        b=yLqyflXhTARsXMrp29c8dXGjJOX7spRoIgWbHXKv/mcem+uWVf8wkF0ahVL51JEcCU
+         qpZLnNkmrRM2Dg38QHfp+prX+GSGmzMwU84cKf5DqlzzqIJL7ArTlWgR4E+BnEuy9wKk
+         0oYJNSJ8B0ywYxrbaWhO9iGCLOtmglVz9uFLmPzV1P2gU/SD4pRoY15k87GObRFGYKSt
+         HiSwE/qjA0SzXWOUw+6l3PNU9WiItn96J4lo3c+jo37HFk7//AvgAU2ApniEgshX7AHC
+         ASmYInGUUO4kuf7xxMijxqx+9oKkSKK1GdDXd7fXsMkTwFDF2ZBd89dXhCcIVrkEvuva
+         vFCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GGcJcVuBMTNniuH6oPjRek2wcyQ76GIx2ijfvVqwMm4=;
+        b=YJrfR/1yb647s/sw0+0Jtxt6YbUwostEAEbG1Bba3k42La9hlB5snGVt0pj+XR8Kga
+         +YWqJC8jm6ovmUi8NRVWZ5FlCdbIh7sTdBmCsIYJJo+lpFFIzmPtb3k832wLaojRuZUk
+         +BUawmI2MZPfSwWf7pZXV5uXlHLHusah/xBZuz/LLEx4WHryLU8siR2PqpYhftWJcsFG
+         k9BdyYd6CpZjtNJ977Cb7xQF2bLnlkO57xX9z+gCYHslgSXQt29QmjtrcBSMg5kkZjgq
+         1Eioh5LKm529TiAwv/S5BTavzLFpUNTz57uxO/uRLPqUeskBBC3DFhfWOjQcljiZuDLv
+         9D2w==
+X-Gm-Message-State: AOAM532x5/9OByRb8DtyP9JvEWMT7J6NpcwXRLE89nUQXIrKlnABzFAn
+        GePd1M5bJmT/R9MSRxlT2djmRbgc0SOxCCQ5SqgBvQ==
+X-Google-Smtp-Source: ABdhPJzQSJdFOi2vjtzt+Q7dSNNBb4tr6a/Mwax1tPCV9HLA/5PAckD1yG3py7TliYwlz6aX2/PJIRSJrRPiVzrgIMA=
+X-Received: by 2002:adf:fb92:: with SMTP id a18mr17983431wrr.182.1627913064693;
+ Mon, 02 Aug 2021 07:04:24 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.74.101.14] (160.34.89.14) by SN6PR04CA0087.namprd04.prod.outlook.com (2603:10b6:805:f2::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4373.19 via Frontend Transport; Mon, 2 Aug 2021 13:06:38 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5d6de3c4-6f98-4c6f-2e64-08d955b6654d
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4400:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR10MB4400A5E9184CD5BC55012BC28AEF9@MN2PR10MB4400.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Mh9lttD8PHCHFtbhor09IMvlqtOLt2k1ZQPqGoJoNP1JHi6njLVTS9AAfNYrhXu0Hj5Al9Y075k61p3h4eiv2JP8oiHMjaMLkrlopRWRtcotv0McNha3QJuYRV/Xl/SkxbobKP+ctDC711ILml1r6Al58ZkDld+0jtTUSkFuWCHZbb3CE63dEffimycsPMEGhUolXOx3vs1cAk1A64Lw/3ll84i7+R2yTl19lmh0LPoUp5ckRBshW8FjlcOGFesTTucGW3O7bNpMI63O7pB8jwQ4P+CYpUJOfksIY4BNmhm1307bicNsUctQ2iBqf6mFhoYoWSgrFfO3rARBPW6gJnVC5pPb1kMEJ+LHqMadVxqsiOHueZTQEwhZMDD6YKzkzGUyBXO8dYTseEZ6odHvUSwJWRC2IuJu2VVRawlgePgy1eAM6UTWi8Mu1UdGQpvWhUibxHYKy6K/Kjc2uOCOVv5zvYgHxYWVLmbyh3DNiHmZOhr5meMXw+DoOj0c/hH6MKnsJIXrlWwMBopeK4+Iurg5aMiKj5O1TNBuFpTrmMFRnv+2gaBwyAIuV4cyNi7X/9LOJ1vwNszRSqQ5amnVJwLmkch/ycOUtsAFjU27tcUa5/DxXN9hYkiiVe0lCA7RYv83AroI8StHfiwVEGLqZ+zb/dvyjqxbs3fn4YG7KNvy66mFKzGU1CeRhrgTQVOXnEus2SMP0dcDB3M/iTy5lE0Amzq2nvdVnMoGBamSlZc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5009.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(39860400002)(396003)(136003)(366004)(6916009)(186003)(36756003)(54906003)(5660300002)(38100700002)(8676002)(26005)(478600001)(6486002)(83380400001)(4326008)(31686004)(66476007)(6666004)(31696002)(16576012)(66946007)(2616005)(956004)(316002)(7416002)(7366002)(44832011)(53546011)(2906002)(66556008)(8936002)(7406005)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?Windows-1252?Q?rcNtk0kzhjsCG5MAuUYd78NhRJ2btE+WRp7OgQ7GCAVtNOGg2NgNfzeN?=
- =?Windows-1252?Q?3o9rEXpQJNysR/gTElyHvB4f/XxlbI0UO6ccGokQ9vBPDgu4OXbOQnTv?=
- =?Windows-1252?Q?Q0ltA2jZ0Q6KyWVojNvlpKyd6Nku4FZCaS2UHZiDcbMG3Y42PvFRYAZy?=
- =?Windows-1252?Q?fmKufJ7LUBcl8DqV2uOT35yurVRG0/Fsurewhao+oa3ZYAuQ207sH0Vu?=
- =?Windows-1252?Q?gnN8I6T+lojHlav33CiYPqc7gvUlrzTTZALiL7cUYASaJK3Lt3UNvRSz?=
- =?Windows-1252?Q?LAZkkFmjCkjaQXfPN7Rb576WiVi5wpih+017cRK9ToPe5MoSb020X1BO?=
- =?Windows-1252?Q?rUxANcFtPWz546unMNUR2673dZYNGfYEQB5SxKO96OLVmneS4iTpu43j?=
- =?Windows-1252?Q?ti2ZVdj2EAnCMCcdA52f2YdZFX72Njj9PGs30NhTaEoSSEBfIYLhi8w7?=
- =?Windows-1252?Q?XsiPuGBy9mHZtTpRVGGfTCA667C1GgyCGsLHS4KkTZNDHpt2DUZi8PzJ?=
- =?Windows-1252?Q?VmqXdIBUunuL5YBFUibpOFhHHu40BN4w0JdF3ZQyQzeqXOHqEYoX0ho0?=
- =?Windows-1252?Q?jM7YBHqmR42sfiduM+LF2Eu6UHUp/ocMhFbQFsqnvH1sx4nkVVt/R6JQ?=
- =?Windows-1252?Q?So8DR07C6henvOo2xyxEq3yHAkCtOa8zW1KpyqfRGaXsvCtYjIO99yQs?=
- =?Windows-1252?Q?gK6dRhkDtZl0jOHQpkCNsN3Hm1H2hqrsYbjtdhm4VxJrQmSzo3SBn2Fp?=
- =?Windows-1252?Q?7MUeIRHYpg6pdCBSwhf7EEF37JZ6d/1ky4CC022rVR77ZsYnlXyTp/aI?=
- =?Windows-1252?Q?xkZf5YnmZJwRYG2IlRZO6nsTBnJX+aqb6qgfmgAqTcz7CJs+PG2USfdq?=
- =?Windows-1252?Q?5yTkxuBE6n8xnJbiVwkN+qXRL3/YyF6h3buteo710yHwenUkD78L/VrZ?=
- =?Windows-1252?Q?02sb8ezoMfvIgCb76ilv5+/vOkVwYQ5dB4TY4Pd2B4fB40dxg/9C3dIH?=
- =?Windows-1252?Q?uugYyizHKZNGBJOQZaUPrJfFcVhCZiuZ55rLkK7hIjlmk40K0fiad6Dq?=
- =?Windows-1252?Q?+MwBNgyUUeIdzQ+VQJmax9jbvdELms3815Ff2r3wr82P6NzM1INdgoEa?=
- =?Windows-1252?Q?moB2XIAZbWDPsD4NPS1tI6LQkqD5c8EqW6xoqRxH5Qm/D2Rz+jShLrjN?=
- =?Windows-1252?Q?0KTwRjyd7f4T/IIQJNreafs7kUHCjGaJpO6SzCg+1jOq8vz9dXeJjqm0?=
- =?Windows-1252?Q?2snzBrNeBf5u46L7bVblicBEi55ZiaSlCfLWxof4PxNRB+cCz/TpFPVW?=
- =?Windows-1252?Q?HjhUKEgKQ3D5OJHZUJh2c7reJB4vE1NaZQHijtLL7p65dBQEAfXvfrXk?=
- =?Windows-1252?Q?AOdj+7B9yO/iyqEaq8S0jXjniBq3iONcPU0JBRM3rmBfFskO/9WB9Vuk?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d6de3c4-6f98-4c6f-2e64-08d955b6654d
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5009.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2021 13:06:52.5454
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x2OnNT6q3yqdtGadtAo3vZIPgtDyvQxqnxYrttQ11vZL556exA0nVFhGxXF2buUtsq6pyWbMmwCMB3WyE5VMs0uzcq5pVDXEc77LySMJyRo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4400
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=10063 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 malwarescore=0
- bulkscore=0 spamscore=0 adultscore=0 mlxlogscore=896 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108020088
-X-Proofpoint-GUID: wAR5ySqhpQ-thK5-cyYz49DWDX4QJIq0
-X-Proofpoint-ORIG-GUID: wAR5ySqhpQ-thK5-cyYz49DWDX4QJIq0
+References: <20210721090706.21523-1-james.clark@arm.com> <20210721090706.21523-3-james.clark@arm.com>
+ <CAJ9a7Viap53OgrM2e_DU4+oymFB41jspbKbvEVFQWROt7ifuXw@mail.gmail.com> <20210731060312.GB7437@leoy-ThinkPad-X240s>
+In-Reply-To: <20210731060312.GB7437@leoy-ThinkPad-X240s>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Mon, 2 Aug 2021 15:04:14 +0100
+Message-ID: <CAJ9a7VhdLaP3rkXwscAQpVe+jSgcx02WjY=RmiBkaCB6ObGTjQ@mail.gmail.com>
+Subject: Re: [PATCH 2/6] perf cs-etm: Initialise architecture based on TRCIDR1
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Al Grant <al.grant@arm.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Leo,
 
-On 7/31/21 8:08 AM, Uwe Kleine-König wrote:
-> Hello Boris,
+On Sat, 31 Jul 2021 at 07:03, Leo Yan <leo.yan@linaro.org> wrote:
 >
-> On Fri, Jul 30, 2021 at 04:37:31PM -0400, Boris Ostrovsky wrote:
->> On 7/29/21 4:37 PM, Uwe Kleine-König wrote:
->>> --- a/drivers/pci/xen-pcifront.c
->>> +++ b/drivers/pci/xen-pcifront.c
->>> @@ -599,12 +599,12 @@ static pci_ers_result_t pcifront_common_process(int cmd,
->>>  	result = PCI_ERS_RESULT_NONE;
->>>  
->>>  	pcidev = pci_get_domain_bus_and_slot(domain, bus, devfn);
->>> -	if (!pcidev || !pcidev->driver) {
->>> +	pdrv = pci_driver_of_dev(pcidev);
->>> +	if (!pcidev || !pdrv) {
->> If pcidev is NULL we are dead by the time we reach 'if' statement.
-> Oh, you're right. So this needs something like:
+> On Thu, Jul 22, 2021 at 12:10:35PM +0100, Mike Leach wrote:
+> > HI James
+> >
+> > On Wed, 21 Jul 2021 at 10:07, James Clark <james.clark@arm.com> wrote:
+> > >
+> > > Currently the architecture is hard coded as ARCH_V8, but with the
+> > > introduction of ETE we want to pick ARCH_AA64. And this change is also
+> > > applicable to ETM v4.4 onwards as well.
+> > >
+> > > Signed-off-by: James Clark <james.clark@arm.com>
+> > > ---
+> > >  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 14 +++++++++++++-
+> > >  1 file changed, 13 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > > index 30889a9d0165..5972a8afcc6b 100644
+> > > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > > @@ -126,6 +126,18 @@ static int cs_etm_decoder__gen_etmv3_config(struct cs_etm_trace_params *params,
+> > >         return 0;
+> > >  }
+> > >
+> > > +#define TRCIDR1_TRCARCHMIN_SHIFT 4
+> > > +#define TRCIDR1_TRCARCHMIN_MASK  GENMASK(7, 4)
+> > > +#define TRCIDR1_TRCARCHMIN(x)    (((x) & TRCIDR1_TRCARCHMIN_MASK) >> TRCIDR1_TRCARCHMIN_SHIFT)
+> > > +static enum _ocsd_arch_version cs_etm_decoder__get_arch_ver(u32 reg_idr1)
+> > > +{
+> > > +       /*
+> > > +        * If the ETM trace minor version is 4 or more then we can assume
+> > > +        * the architecture is ARCH_AA64 rather than just V8
+> > > +        */
+> > > +       return TRCIDR1_TRCARCHMIN(reg_idr1) >= 4 ? ARCH_AA64 : ARCH_V8;
+> > > +}
+> >
+> > This is true for ETM4.x & ETE 1.x (arch 5.x) but not ETM 3.x
+> > Probably need to beef up this comment or the function name to emphasise this.
 >
-> 	if (!pcidev || !(pdrv = pci_driver_of_dev(pcidev)))
-
-
-Sure, that's fine. And while at it please also drop 'if (pdrv)' check below (it's not directly related to your change but is more noticeable now so since you are in that function anyway I'd appreciate if you could do that).
-
-
-Thanks.
-
--boris
-
-
+> Yeah, I think it's good to change the function name.  Eventually, this
+> function should only be used for ETM4.x and ETE.
 >
-> or repeating the call to pci_driver_of_dev for each previous usage of
-> pdev->driver.
+> Another minor comment is: can we refine the arch version number, e.g.
+> change the OpenCSD's macro "ARCH_AA64" to "ARCH_V8R4", (or
+> "ARCH_V8R3_AA64"), this can give more clear clue what's the ETM version.
 >
-> If there are no other preferences I'd got with the first approach for
-> v2.
+
+The purpose of these macros is to inform the decoder of the
+architecture of the PE - not the version of the ETM.
+
+These OpenCSD macros are defined by the library headers
+(ocsd_if_types.h) and not the perf headers.
+These have been published as the API / ABI for OpenCSD and as such
+changing them affects all OpenCSD clients, not just perf.
+
+This PE architecture version is used along with the core profile to
+determine which instructions are valid waypoint instructions to
+associate with atom elements when walking the program image during
+trace decode.
+
+From v8.3  onwards we moved away from filtering on specific
+architecture versions. This was due to two factors:-
+1. The architectural rules now allow architectural features for one
+increment e.g. Arch 8.4, to be backported into  the previous increment
+- e,g, 8.3, which made this filtering more difficult to track.
+2. After discussion with the PE architects it was clear that
+instructions in a later architect version would not re-use older
+opcodes from a previous one and  be nop / invalid in the earlier
+architectures. (certainly in the scope of AA64). Therefore
+the policy in the decoder is to check for all the instructions we know
+about for the latest version of architecture, even if we could be
+decoding an earlier architecture version. This means we may check for
+a few more opcodes than necessary for earlier version of the
+architecture, but the overall decode is more robust and easier to
+maintain.
+
+Therefore for any AA64 core beyond v8.3 - it is safe to use the
+ARCH_AA64 PE architecture version and the decoder will handle it.
+
+Regards
+
+Mike
+
+> And a nitpick: how about to change OpenCSD macro "ARCH_V8r3" to
+> "ARCH_V8R3" and assign it for ETMv4.3 IPs.
 >
-> Best regards and thanks for catching,
-> Uwe
->
+> Thanks,
+> Leo
+
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
