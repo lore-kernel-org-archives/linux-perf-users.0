@@ -2,143 +2,152 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC0DC4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 11:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8602C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 12:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5CE60F6E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 11:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CABE60F70
+	for <linux-perf-users@archiver.kernel.org>; Mon,  2 Aug 2021 12:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233412AbhHBLrM (ORCPT
+        id S233455AbhHBMGD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 2 Aug 2021 07:47:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40816 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233341AbhHBLrL (ORCPT
+        Mon, 2 Aug 2021 08:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230503AbhHBMGC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 2 Aug 2021 07:47:11 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 172BYQLU020153;
-        Mon, 2 Aug 2021 07:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=u+Y6F5QtBSt4VUckLV0sPWwGGN6ZjKtKBgxX2XNTfig=;
- b=aSJ3jH42W5k2fcz4VyHSJiozCmgoAVVfnTyTpehvQ9q9u5rGk35j41crgeupZZfQABC8
- g1FPETQIS/VOHGzo89u9HyFJZWOqHLZaLkLOk2MfKPljlH+Kv+QXoVC+OExS5/1tjhvN
- Cyi65WBzZAicyXbxRMBHF6vCxG64Qrc7gsqmrC6MmeEWRgpILcmS7H6SFxH9yf6OljIo
- F5Dv2Un9OjuAsvtLkvWusrYOx4E7hpge0nH7OfswJaJDXK0GJsQBINoEsFywMIIDrFZb
- QQwqNe4hBD1ixeJ+MZWAPsyg3mzWaH3AJNFnzmfBbNZT0dZ0zmmPG8ZbNTAy23Y/diiI HQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a5ke59mba-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Aug 2021 07:46:53 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 172BZqjF025050;
-        Mon, 2 Aug 2021 07:46:53 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a5ke59may-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Aug 2021 07:46:53 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 172BkaTP027039;
-        Mon, 2 Aug 2021 11:46:52 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 3a4x5aww6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 02 Aug 2021 11:46:52 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 172Bkp1C52560244
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Aug 2021 11:46:51 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A9A9124075;
-        Mon,  2 Aug 2021 11:46:51 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08EC6124052;
-        Mon,  2 Aug 2021 11:46:46 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.34.7])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Aug 2021 11:46:45 +0000 (GMT)
-Subject: Re: [PATCH v3] fpga: dfl: fme: Fix cpu hotplug issue in performance
- reporting
-To:     Moritz Fischer <mdf@kernel.org>
-Cc:     will@kernel.org, hao.wu@intel.com, mark.rutland@arm.com,
-        trix@redhat.com, yilun.xu@intel.com, linux-fpga@vger.kernel.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        rnsastry@linux.ibm.com, linux-perf-users@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20210713074216.208391-1-kjain@linux.ibm.com>
- <61495dc0-f496-992c-1d2a-9229a04e6e44@linux.ibm.com>
- <YQezqZcOrePV/FnW@archbook>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <0d31afc5-b86e-4da6-878c-be4ba7b4a23a@linux.ibm.com>
-Date:   Mon, 2 Aug 2021 17:16:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        Mon, 2 Aug 2021 08:06:02 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97163C0613D5
+        for <linux-perf-users@vger.kernel.org>; Mon,  2 Aug 2021 05:05:53 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id pj14-20020a17090b4f4eb029017786cf98f9so13722858pjb.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 02 Aug 2021 05:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=0kDiBlJoK8SwQL0AO/6bSRAuB/n3Sin/aq5lPKY5VZA=;
+        b=IvdBG/R3DD3elu/VswhN8sDqSFqK1j+y+p5AhZ6twjSA522qW10eg6DtBZJB2lhrTm
+         k1UbVMglLA+d0Tfhas09Of44vOZ4wlvXOfC1jVXd4cEHUwD1MyXbLqLwX4GS1kseQXqw
+         MwIRU0p69s0hu9BSoapajbHT3fxZ5JxH8JKgpXZGruUaesRJD0NzWdrB+BJjwwDwOEXP
+         eyZmBsN2sEr468eevar1HCLy819e3SazmPdqNerEDat+sl0PIzS1FrbquRCxCxCoDHpK
+         O3vtA8KeVwhjsgBd4Lpn6/ubBVEzr7uXcK+WsWLNd1I7eSGF+tZoPq4juIvBDPlAD1IZ
+         Vf9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0kDiBlJoK8SwQL0AO/6bSRAuB/n3Sin/aq5lPKY5VZA=;
+        b=uW4CsLvc6XgGWEth+ISzeC0z2gPgM2v0QcF7RJ9kroGUMrMOBOjkwGiXDVskztYr7A
+         8AibNF/Aq0EB0uRvo2DqWh8Y/E/CNJR7tmVRH3e6cqMSaRI5nnXzUPK2rbo503qFcnnm
+         URQo8lVMlDO9EhDNyLV6QCiBn1Q+OFql7WhRKFccSMEdFNWVy1++QECcxwLjsYVUvl4h
+         NaRamsj2ycVlpT8+uSniLADJGUvfjCipbUI3Fe+Wo2hjUE5vj++JcZBz+LneE8uOiqdd
+         lY3Hwjkp9TqTTf6FwlpE0EeSygC/ecMt9Pn14aEKSFcV4cjwmHpVoBnvyIXBtbHaEny7
+         yJOw==
+X-Gm-Message-State: AOAM531+N6GAN5+Z5tklPmEaLJ5fkLXy9B83f8ob9DOGTYM/XyPkR7OE
+        lk2HcBp+KdgdOJ93A/6v1jI3qQ==
+X-Google-Smtp-Source: ABdhPJzhfRR5zHRCHa7+fEUklyy2loDgcix5JVetpSORYNP3hvmnut/fV4+tmG88Ir+94hZX6Sb1eA==
+X-Received: by 2002:a17:902:f542:b029:12c:6f4:ad92 with SMTP id h2-20020a170902f542b029012c06f4ad92mr13928495plf.5.1627905952956;
+        Mon, 02 Aug 2021 05:05:52 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([210.0.159.74])
+        by smtp.gmail.com with ESMTPSA id mu9sm10791138pjb.26.2021.08.02.05.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Aug 2021 05:05:52 -0700 (PDT)
+Date:   Mon, 2 Aug 2021 20:05:45 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mike Leach <mike.leach@linaro.org>
+Cc:     James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Al Grant <al.grant@arm.com>,
+        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/6] perf cs-etm: Save TRCDEVARCH register
+Message-ID: <20210802120545.GJ7437@leoy-ThinkPad-X240s>
+References: <20210721090706.21523-1-james.clark@arm.com>
+ <20210721090706.21523-4-james.clark@arm.com>
+ <20210731074343.GG7437@leoy-ThinkPad-X240s>
+ <CAJ9a7Vj_KhV+v6VU+EQN5t818VS9jvf3v3-2JbwVMOHZbi3gcg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <YQezqZcOrePV/FnW@archbook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 1Gca7qDh268Hhxr5iv5qsOpjYdAOm4rx
-X-Proofpoint-ORIG-GUID: 1UMGX8qImnvnJCp0cj0jdn-uhbyA4gR0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-02_05:2021-08-02,2021-08-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- priorityscore=1501 clxscore=1015 bulkscore=0 mlxlogscore=999
- suspectscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2107140000 definitions=main-2108020077
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7Vj_KhV+v6VU+EQN5t818VS9jvf3v3-2JbwVMOHZbi3gcg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Mike,
 
+On Mon, Aug 02, 2021 at 12:21:31PM +0100, Mike Leach wrote:
 
-On 8/2/21 2:28 PM, Moritz Fischer wrote:
-> On Mon, Aug 02, 2021 at 01:15:00PM +0530, kajoljain wrote:
->>
->>
->> On 7/13/21 1:12 PM, Kajol Jain wrote:
->>> The performance reporting driver added cpu hotplug
->>> feature but it didn't add pmu migration call in cpu
->>> offline function.
->>> This can create an issue incase the current designated
->>> cpu being used to collect fme pmu data got offline,
->>> as based on current code we are not migrating fme pmu to
->>> new target cpu. Because of that perf will still try to
->>> fetch data from that offline cpu and hence we will not
->>> get counter data.
->>>
->>> Patch fixed this issue by adding pmu_migrate_context call
->>> in fme_perf_offline_cpu function.
->>>
->>> Fixes: 724142f8c42a ("fpga: dfl: fme: add performance reporting support")
->>> Tested-by: Xu Yilun <yilun.xu@intel.com>
->>> Acked-by: Wu Hao <hao.wu@intel.com>
->>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->>> Cc: stable@vger.kernel.org
->>> ---
->>
->> Any update on this patch? Please let me know if any changes required.
->>
->> Thanks,
->> Kajol Jain
+[...]
+
+> > Here I think the right thing to do is to support newer revisions for
+> > ETMv4, and then based on the revision it creates a decoder with
+> > supporting ETE feature.  For a more neat solution, if the perf tool
+> > passes the "correct" revision number to the OpenCSD decoder, it should
+> > can decode trace data with ETE packets.  In this way, the ETE decoding
+> > can be transparent for perf cs-etm code.
+> >
 > 
-> It's in my 'fixes' branch.
+> The OpenCSD decoder separates the ETMv4 decoder from the ETE decoder -
+> for the reasons given above.
 
-Thanks Moritz for informing me.
+Thanks for explanation.
+
+> Additionally the ETE decoder and the ETMv4 decoder required different
+> sets of ID registers to correctly set up the decoder.  For example,
+> for ETMv4 the version is extracted form TRCIDR1, for ETE the version
+> in TRCIDR1 is set 0xFF, and thus needs TRCDEVARCH to extract the
+> revision. It is likely that later updates to ETE will require an
+> additional TRCIDR register to be saved.
+
+Okay, for ETMv4.x and ETE, finally I think we need to rely on TRCDEVARCH to
+decide the tracer version based on the architecture number (arch 4 or 5)
+and revision number.
+
+> Choosing the base type of decoder in this way is how the library can
+> support ETMv3, EMTv4, ETE, STM, PTM etc - and while some of those
+> protocols use TRCIDR1 and TRCDEVARCH - not all do.
+> 
+> It would in theory be possible to have the OpenCSD library
+> "autodetect" the type of decoder needed based purely on a set of ID
+> registers. But this set of ID registers would be far larger than the
+> ones currently used, and would require modifcation to a lot of the
+> existing device drivers to ensure they were accessible via sysfs. This
+> register set includes the ID registers that are currently used to
+> identify the component on the AMBA bus and match to the correct
+> driver, plus additional CoreSight management registers. This would
+> also create a dependency between decoder creation and ID numbers - in
+> the same way that each new ETM4.x part number has to be added to the
+> ETM4.x device driver.
+> 
+> Such a system would require a significant update to the OpenCSD
+> infrastructure, and is not planned at this time.
+
+It's fine for me not introducing significant change in OpenCSD.
+
+If so, I understand your suggestion in another email to add a new magic
+number and a new protocol (this patch set has added the new protocol
+CS_ETM_PROTO_ETE) for creating ETE decoder.
+
+Just confirm one thing which is a bit confused me: for ETMv4.5 or any
+newer ETM IPs, should the perf tool keep the existed way to create the
+ETMv4 decoder?  Or there have updating is required for decoder to
+support the extended packets?
 
 Thanks,
-Kajol Jain
-
-> 
-> - Moritz
-> 
+Leo
