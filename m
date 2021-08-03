@@ -2,164 +2,151 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C433C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 08:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7122DC4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 08:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 039C760F11
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 08:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 595E860F70
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 08:19:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234359AbhHCIGo (ORCPT
+        id S234311AbhHCIUA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Aug 2021 04:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234292AbhHCIGo (ORCPT
+        Tue, 3 Aug 2021 04:20:00 -0400
+Received: from frasgout.his.huawei.com ([185.176.79.56]:3567 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234238AbhHCIT7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Aug 2021 04:06:44 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECD9C0613D5
-        for <linux-perf-users@vger.kernel.org>; Tue,  3 Aug 2021 01:06:30 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id c16so24269030wrp.13
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Aug 2021 01:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iPbQVJkJzSXcaXx9HbEOsAieS9ipsFl/K2G+c6GXkNI=;
-        b=NLhiIT5ZqvIp6hesu5f82dogfMtWpOiJTml48Z7xZMQKMJIMqzXTFQNS+MfS0bsZBQ
-         TKP2ykFdeWmIHne9ufVz2KNi8RnrbaCA5CbIunIFErf91SCM6IEkk4BxYXQQ5UKajW/8
-         Mh/+SsI1O5U6acCO2Z/3Vzc4ABLCiAztlJ/wf/aXZ4h9BjAR8SuOT2QN/bbf1LZXCXsD
-         Vy+Dq0PiXbIgxnONTTVSIXgXr+MngMY2BP/W4EoCVpWxse9shAdQT4P2+3Hb/70SHdOs
-         ByTmigwGDH9nyJu0rHgC83ifszmgJHWUeYA7bioBHNYwS0hBgyxyc5fqQPC6j5LF3UHG
-         7yzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iPbQVJkJzSXcaXx9HbEOsAieS9ipsFl/K2G+c6GXkNI=;
-        b=stGjb3te5oxgr8U5/yP6l17TFYsvhqB6GAj9pNYycGaQQ+T04mG6u5WrWYW2lKT02M
-         BRyheP3bka3QXr/4Y502Gq7S+IUNLP3yVmE77mmJT5KR2+VbQIDYt4PBwnLjzv4a4AD5
-         BlyYm6p4yk5kf4xJ3pbpoYRl9/EFwEE7zCwBuhqTGQbaSEiyNmC/htvYIOYUFnaS0wzy
-         T4jYUGvwJJnwAMiH+MIw047p5m2o/1zpJlk1wun1OdJ+vY7ZAEEVmQA5SQk7ngYslTrn
-         mDvRbVSOxNOMh7vDeh5Ywrex7WlRvKGDV0m8ry5SZb0WJWjID7O0EJCBiyqLIfyPcnUN
-         WJbg==
-X-Gm-Message-State: AOAM53161jyu8trpKWa5K3wsE4B6tFhnPVcCHAAgB5XKltfw6BN/C1dX
-        UXoc9lqQyCP47UMIXZHfE7+xcbQNTInZYQ5k4Kaaig==
-X-Google-Smtp-Source: ABdhPJyN4PO+BxU1EjejPtiIX6WBg4h+HCVRraj7kpE7SS4FXwATcvwBaJlFjf7LHdc6rMAy6B3va9ZQhTFEcr8JpBY=
-X-Received: by 2002:a5d:4a4f:: with SMTP id v15mr20967610wrs.178.1627977988620;
- Tue, 03 Aug 2021 01:06:28 -0700 (PDT)
+        Tue, 3 Aug 2021 04:19:59 -0400
+Received: from fraeml734-chm.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Gf78917yXz6DJnq;
+        Tue,  3 Aug 2021 16:19:37 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml734-chm.china.huawei.com (10.206.15.215) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.2; Tue, 3 Aug 2021 10:19:46 +0200
+Received: from [10.47.27.165] (10.47.27.165) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.2; Tue, 3 Aug 2021
+ 09:19:45 +0100
+Subject: Re: [PATCH 02/11] perf jevents: Relocate test events to cpu folder
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <yao.jin@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <irogers@google.com>, <linuxarm@huawei.com>
+References: <1627566986-30605-1-git-send-email-john.garry@huawei.com>
+ <1627566986-30605-3-git-send-email-john.garry@huawei.com>
+ <YQgHMt4BsDeJnE09@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <90094733-741c-50e5-ac7d-f5640b5f0bdd@huawei.com>
+Date:   Tue, 3 Aug 2021 09:19:20 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-References: <20210729155805.2830-1-james.clark@arm.com> <20210729155805.2830-7-james.clark@arm.com>
- <YQgGjlWtbaNApkp6@kernel.org> <20210802170307.GA3050918@p14s>
-In-Reply-To: <20210802170307.GA3050918@p14s>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Tue, 3 Aug 2021 09:06:17 +0100
-Message-ID: <CAJ9a7VhLqgsEOVV3yksLiTJ2w2FOogNS92-gX5G4sgL8wiEwCA@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/6] perf cs-etm: Add warnings for missing DSOs
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YQgHMt4BsDeJnE09@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.27.165]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-HI James,
+On 02/08/2021 15:54, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Jul 29, 2021 at 09:56:17PM +0800, John Garry escreveu:
+>> In future to add support for sys events, relocate the core and uncore
+>> events to a cpu folder.
+>>
+>> Signed-off-by: John Garry<john.garry@huawei.com>
+>> ---
+>>   .../pmu-events/arch/test/{test_cpu => test_soc/cpu}/branch.json | 0
+>>   .../pmu-events/arch/test/{test_cpu => test_soc/cpu}/cache.json  | 0
+>>   .../pmu-events/arch/test/{test_cpu => test_soc/cpu}/other.json  | 0
+>>   .../pmu-events/arch/test/{test_cpu => test_soc/cpu}/uncore.json | 0
+>>   tools/perf/pmu-events/jevents.c                                 | 2 +-
+>>   5 files changed, 1 insertion(+), 1 deletion(-)
+>>   rename tools/perf/pmu-events/arch/test/{test_cpu => test_soc/cpu}/branch.json (100%)
+>>   rename tools/perf/pmu-events/arch/test/{test_cpu => test_soc/cpu}/cache.json (100%)
+>>   rename tools/perf/pmu-events/arch/test/{test_cpu => test_soc/cpu}/other.json (100%)
+>>   rename tools/perf/pmu-events/arch/test/{test_cpu => test_soc/cpu}/uncore.json (100%)
+>>
+>> diff --git a/tools/perf/pmu-events/arch/test/test_cpu/branch.json b/tools/perf/pmu-events/arch/test/test_soc/cpu/branch.json
+>> similarity index 100%
+>> rename from tools/perf/pmu-events/arch/test/test_cpu/branch.json
+>> rename to tools/perf/pmu-events/arch/test/test_soc/cpu/branch.json
+>> diff --git a/tools/perf/pmu-events/arch/test/test_cpu/cache.json b/tools/perf/pmu-events/arch/test/test_soc/cpu/cache.json
+>> similarity index 100%
+>> rename from tools/perf/pmu-events/arch/test/test_cpu/cache.json
+>> rename to tools/perf/pmu-events/arch/test/test_soc/cpu/cache.json
+>> diff --git a/tools/perf/pmu-events/arch/test/test_cpu/other.json b/tools/perf/pmu-events/arch/test/test_soc/cpu/other.json
+>> similarity index 100%
+>> rename from tools/perf/pmu-events/arch/test/test_cpu/other.json
+>> rename to tools/perf/pmu-events/arch/test/test_soc/cpu/other.json
+>> diff --git a/tools/perf/pmu-events/arch/test/test_cpu/uncore.json b/tools/perf/pmu-events/arch/test/test_soc/cpu/uncore.json
+>> similarity index 100%
+>> rename from tools/perf/pmu-events/arch/test/test_cpu/uncore.json
+>> rename to tools/perf/pmu-events/arch/test/test_soc/cpu/uncore.json
+>> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+>> index 9604446f8360..405bdd36b9b9 100644
+>> --- a/tools/perf/pmu-events/jevents.c
+>> +++ b/tools/perf/pmu-events/jevents.c
+>> @@ -814,7 +814,7 @@ static void print_mapping_test_table(FILE *outfp)
+>>   	fprintf(outfp, "\t.cpuid = \"testcpu\",\n");
+>>   	fprintf(outfp, "\t.version = \"v1\",\n");
+>>   	fprintf(outfp, "\t.type = \"core\",\n");
+>> -	fprintf(outfp, "\t.table = pme_test_cpu,\n");
+>> +	fprintf(outfp, "\t.table = pme_test_soc_cpu,\n");
+> Humm, is this already generated by some script? I.e. this
+> 'pme_test_soc_cpu' table? Or does this works only when applying the full
+> patchset?
 
-On Mon, 2 Aug 2021 at 18:03, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
->
-> On Mon, Aug 02, 2021 at 11:51:58AM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Jul 29, 2021 at 04:58:05PM +0100, James Clark escreveu:
-> > > Currently decode will silently fail if no binary data is available for
-> > > the decode. This is made worse if only partial data is available because
-> > > the decode will appear to work, but any trace from that missing DSO will
-> > > silently not be generated.
-> > >
+So I think we need something like this:
 
-The decoder actually outputs a OCSD_GEN_TRC_ELEM_ADDR_NACC packet if
-binary memory data is missing.
-These packets are currently ignored by perf / cs-etm-decoder.c.
+----->8--------
 
-I think this per DSO warning is fine, but perhaps at some point add in
-handling for OCSD_GEN_TRC_ELEM_ADDR_NACC - which perhaps is only
-active when dumping trace packets.
+ From a08df563665e9ec088b1af86ceed058497e112a4 Mon Sep 17 00:00:00 2001
+From: John Garry <john.garry@huawei.com>
+Date: Tue, 3 Aug 2021 08:44:09 +0100
+Subject: [PATCH] perf jevents: Make build dependency on test JSONs
 
-Regards
+Currently all JSONs and the mapfile for an arch are dependencies for
+building pmu-events.c
 
-Mike
+The test JSONs are missing as a dependency, so add them.
 
+Signed-off-by: John Garry <john.garry@huawei.com>
 
-> > > Add a UI popup once if there is any data missing, and then warn in the
-> > > bottom left for each individual DSO that's missing.
-> >
-> > Looks ok to me (the last 3 patches in this series, the rest I applied
-> > already), can I get some Acked-by/Reviewed-by from the CoreSight people?
-> >
->
-> I have a substantial backlog of patches to go through and I will be away for the
-> next two weeks.  As such it will be some time before I get to review this set.
->
-> Regards,
-> Mathieu
->
-> > Thanks,
-> >
-> > - Arnaldo
-> >
-> > > Signed-off-by: James Clark <james.clark@arm.com>
-> > > ---
-> > >  tools/perf/util/cs-etm.c | 10 +++++++++-
-> > >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> > > index 32ad92d3e454..e6851260d059 100644
-> > > --- a/tools/perf/util/cs-etm.c
-> > > +++ b/tools/perf/util/cs-etm.c
-> > > @@ -746,8 +746,16 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
-> > >
-> > >     len = dso__data_read_offset(al.map->dso, machine, offset, buffer, size);
-> > >
-> > > -   if (len <= 0)
-> > > +   if (len <= 0) {
-> > > +           ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' to export data from the traced system.\n");
-> > > +           if (!al.map->dso->auxtrace_warned) {
-> > > +                   pr_err("CS ETM Trace: Debug data not found for address %#"PRIx64" in %s\n",
-> > > +                               address,
-> > > +                               al.map->dso->long_name ? al.map->dso->long_name : "Unknown");
-> > > +                   al.map->dso->auxtrace_warned = true;
-> > > +           }
-> > >             return 0;
-> > > +   }
-> > >
-> > >     return len;
-> > >  }
-> > > --
-> > > 2.28.0
-> > >
-> >
-> > --
-> >
-> > - Arnaldo
+diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+index 215ba30b8534..a055dee6a46a 100644
+--- a/tools/perf/pmu-events/Build
++++ b/tools/perf/pmu-events/Build
+@@ -6,10 +6,13 @@ pmu-events-y	+= pmu-events.o
+  JDIR		=  pmu-events/arch/$(SRCARCH)
+  JSON		=  $(shell [ -d $(JDIR) ] &&				\
+  			find $(JDIR) -name '*.json' -o -name 'mapfile.csv')
++JDIR_TEST	=  pmu-events/arch/test
++JSON_TEST	=  $(shell [ -d $(JDIR_TEST) ] &&			\
++			find $(JDIR_TEST) -name '*.json')
+
+  #
+  # Locate/process JSON files in pmu-events/arch/
+  # directory and create tables in pmu-events.c.
+  #
+-$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JEVENTS)
++$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS)
+  	$(Q)$(call echo-cmd,gen)$(JEVENTS) $(SRCARCH) pmu-events/arch 
+$(OUTPUT)pmu-events/pmu-events.c $(V)
 
 
+-----8<-----
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Thanks,
+john
