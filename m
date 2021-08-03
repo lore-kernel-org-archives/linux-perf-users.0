@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA7AAC4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 13:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF674C4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 13:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A257160F0F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 13:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C084B60F8F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 13:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236236AbhHCNYX (ORCPT
+        id S236265AbhHCNZy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Aug 2021 09:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35752 "EHLO mail.kernel.org"
+        Tue, 3 Aug 2021 09:25:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236228AbhHCNYX (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Aug 2021 09:24:23 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2A4BC60EB9;
-        Tue,  3 Aug 2021 13:24:12 +0000 (UTC)
+        id S236257AbhHCNZy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 3 Aug 2021 09:25:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5190260724;
+        Tue,  3 Aug 2021 13:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1627997052;
-        bh=o3dWD+NtSdOsjF8zTizWlT8Zz2qjfP7d2UK7eV2zcx4=;
+        s=k20201202; t=1627997143;
+        bh=DBOV+sLiodjz3XvPMCJ9WYSqkgPQ9eyjU6qlmV9sTnk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oJoyztAawT1ekxaSi4QoOSf8H2WrU+IKOIlgDS8KtFz3nQ4oUmlWnfqwAcGPOIgRm
-         ixCJbu5S8Xqhh4OAXzLmtnVDiWessoBrsi/L5dQVGv6ki9aYpoPOXy4zSuJA8snbk5
-         1lLsiIhsj4Ew57bxMAqaPeM+AyyFVYMFZVC3X+9Ajk+W5GErX4ZQhm2Bim2mWdWZdM
-         nhIIz68trv6MAYiVrzQ29JYwY+7/YqP5rQF8L14L3Gd1ITp/PQnA2nN9yuCFvCJX7u
-         0zC5DlaLeW8MvuXieoV82mrA7aAhyYQx3G1t8tWe8C9UQ8Q3qL0rA5WZYzaHdFYYsC
-         9dEX8IN7OVnOg==
+        b=mLrIqT8ZSitrWbItGqotK8VV4e7xnJcRWjHrWbOpRdfAw7cX/fbVc3sfzvDydHBSZ
+         kCvXnidOB66jp12gzN83usgAsim1dDd0yID9S+bEyOQHSmymGJ/u77J+0dy79woVTQ
+         ye6xytHFABNP0OJJDka1z9HcJgmXDKK9eKq4iF7B1rLkZDD9Lxrb2gZd6MSPfbfRo9
+         FLJs7Xay/uR8u19qeHNBxfyGTMrXt08wuDa0TkvCrp3fbPlaMyBc1wt8OLhJlGBw6o
+         qkHpAB+o0uecU6Y6MhzT2rdrTAC0wPlTI86eTQ7MvjU4Bb5+VLVgc6xHit8ZpK+6Se
+         0R5Qdc4QdH3Vw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2F5E9403F2; Tue,  3 Aug 2021 10:24:09 -0300 (-03)
-Date:   Tue, 3 Aug 2021 10:24:09 -0300
+        id 0593F403F2; Tue,  3 Aug 2021 10:25:40 -0300 (-03)
+Date:   Tue, 3 Aug 2021 10:25:39 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
@@ -47,85 +47,63 @@ Cc:     James Clark <james.clark@arm.com>, mathieu.poirier@linaro.org,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 6/6] perf cs-etm: Add warnings for missing DSOs
-Message-ID: <YQlDefz+g45dqFsP@kernel.org>
+Subject: Re: [RFC PATCH 5/6] perf cs-etm: Improve Coresight zero timestamp
+ warning
+Message-ID: <YQlD06FZ3SyBeolc@kernel.org>
 References: <20210729155805.2830-1-james.clark@arm.com>
- <20210729155805.2830-7-james.clark@arm.com>
- <20210802154145.GC148327@leoy-ThinkPad-X240s>
+ <20210729155805.2830-6-james.clark@arm.com>
+ <20210802151710.GB148327@leoy-ThinkPad-X240s>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210802154145.GC148327@leoy-ThinkPad-X240s>
+In-Reply-To: <20210802151710.GB148327@leoy-ThinkPad-X240s>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 02, 2021 at 11:41:45PM +0800, Leo Yan escreveu:
-> On Thu, Jul 29, 2021 at 04:58:05PM +0100, James Clark wrote:
-> > Currently decode will silently fail if no binary data is available for
-> > the decode. This is made worse if only partial data is available because
-> > the decode will appear to work, but any trace from that missing DSO will
-> > silently not be generated.
+Em Mon, Aug 02, 2021 at 11:17:10PM +0800, Leo Yan escreveu:
+> On Thu, Jul 29, 2021 at 04:58:04PM +0100, James Clark wrote:
+> > Only show the warning if the user hasn't already set timeless mode and
+> > improve the text because there was ambiguity around the meaning of '...'
 > > 
-> > Add a UI popup once if there is any data missing, and then warn in the
-> > bottom left for each individual DSO that's missing.
+> > Change the warning to a UI warning instead of printing straight to
+> > stderr because this corrupts the UI when perf report TUI is used. The UI
+> > warning function also handles printing to stderr when in perf script
+> > mode.
 > > 
+> > Suggested-by: Leo Yan <leo.yan@linaro.org>
 > > Signed-off-by: James Clark <james.clark@arm.com>
-> > ---
-> >  tools/perf/util/cs-etm.c | 10 +++++++++-
-> >  1 file changed, 9 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> > index 32ad92d3e454..e6851260d059 100644
-> > --- a/tools/perf/util/cs-etm.c
-> > +++ b/tools/perf/util/cs-etm.c
-> > @@ -746,8 +746,16 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
-> >  
-> >  	len = dso__data_read_offset(al.map->dso, machine, offset, buffer, size);
-> >  
-> > -	if (len <= 0)
-> > +	if (len <= 0) {
-> > +		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' to export data from the traced system.\n");
-> > +		if (!al.map->dso->auxtrace_warned) {
-> > +			pr_err("CS ETM Trace: Debug data not found for address %#"PRIx64" in %s\n",
-> > +				    address,
-> > +				    al.map->dso->long_name ? al.map->dso->long_name : "Unknown");
-> > +			al.map->dso->auxtrace_warned = true;
-> > +		}
-> 
-> This is very useful.
-> 
-> Just one comment: in particularly if the perf fails to find the kernel
-> symbols, the user needs to enable config "CONFIG_PROC_KCORE=y" or
-> specify option "-k /path/to/vmlinux".  In this case, using 'perf
-> archive' is not helpful.  So I think the UI warning can be imporved
-> like:
-> 
->         ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' to export data from the traced system.\n"
->                          " Enable CONFIG_PROC_KCORE or use option '-k /path/to/vmlinux' for kernel symbols\n");
-
-one can also use debuginfod-client, which, as time passes, probably will
-be the main way of finding DSOs now that we have build-ids in
-PERF_RECORD_MMAP2 and debuginfod servers such as:
-
-export DEBUGINFOD_URLS=https://debuginfod.fedoraproject.org/
-
-https://fedoraproject.org/wiki/Debuginfod
- 
-> With this improvement, the patch looks good to me:
 > 
 > Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-Does this apply to the other 5 patches in this series?
+Thanks, applied.
 
 - Arnaldo
+
  
-> >  		return 0;
-> > +	}
-> >  
-> >  	return len;
-> >  }
+> > ---
+> >  tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 7 +++++--
+> >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > index 3e1a05bc82cc..5084bd2ca6eb 100644
+> > --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> > @@ -324,8 +324,11 @@ cs_etm_decoder__do_hard_timestamp(struct cs_etm_queue *etmq,
+> >  		 * underflow.
+> >  		 */
+> >  		packet_queue->cs_timestamp = 0;
+> > -		WARN_ONCE(true, "Zero Coresight timestamp found at Idx:%" OCSD_TRC_IDX_STR
+> > -				". Decoding may be improved with --itrace=Z...\n", indx);
+> > +		if (!cs_etm__etmq_is_timeless(etmq))
+> > +			pr_warning_once("Zero Coresight timestamp found at Idx:%" OCSD_TRC_IDX_STR
+> > +					". Decoding may be improved by prepending 'Z' to your current --itrace arguments.\n",
+> > +					indx);
+> > +
+> >  	} else if (packet_queue->instr_count > elem->timestamp) {
+> >  		/*
+> >  		 * Sanity check that the elem->timestamp - packet_queue->instr_count would not
 > > -- 
 > > 2.28.0
 > > 
