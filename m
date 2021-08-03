@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C85C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 12:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0ACEC4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 12:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 886E060F56
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 12:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16D160F8F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 12:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235309AbhHCMaA (ORCPT
+        id S235709AbhHCMdQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Aug 2021 08:30:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:48722 "EHLO foss.arm.com"
+        Tue, 3 Aug 2021 08:33:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:48782 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235709AbhHCMaA (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Aug 2021 08:30:00 -0400
+        id S234524AbhHCMdQ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 3 Aug 2021 08:33:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2831B11FB;
-        Tue,  3 Aug 2021 05:29:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5475411FB;
+        Tue,  3 Aug 2021 05:33:05 -0700 (PDT)
 Received: from [10.57.36.239] (unknown [10.57.36.239])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D6EEC3F40C;
-        Tue,  3 Aug 2021 05:29:46 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1499C3F40C;
+        Tue,  3 Aug 2021 05:33:02 -0700 (PDT)
 Subject: Re: [PATCH 3/6] perf cs-etm: Save TRCDEVARCH register
 To:     Leo Yan <leo.yan@linaro.org>, Mike Leach <mike.leach@linaro.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -44,16 +44,15 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
 References: <20210721090706.21523-1-james.clark@arm.com>
  <20210721090706.21523-4-james.clark@arm.com>
- <20210731074343.GG7437@leoy-ThinkPad-X240s>
- <CAJ9a7Vj_KhV+v6VU+EQN5t818VS9jvf3v3-2JbwVMOHZbi3gcg@mail.gmail.com>
- <20210802120545.GJ7437@leoy-ThinkPad-X240s>
+ <CAJ9a7Vjz_CMugYrLcAqr_aFsK6jYcqR3xLwJUi9KTXB3aPjnEQ@mail.gmail.com>
+ <20210731063731.GC7437@leoy-ThinkPad-X240s>
 From:   James Clark <james.clark@arm.com>
-Message-ID: <ef068f6a-0a31-bd34-7140-5d7cca331369@arm.com>
-Date:   Tue, 3 Aug 2021 13:29:45 +0100
+Message-ID: <6d1954d2-28bc-4b70-25fc-e74d63cc86cd@arm.com>
+Date:   Tue, 3 Aug 2021 13:33:01 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.8.1
 MIME-Version: 1.0
-In-Reply-To: <20210802120545.GJ7437@leoy-ThinkPad-X240s>
+In-Reply-To: <20210731063731.GC7437@leoy-ThinkPad-X240s>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,14 +62,48 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 02/08/2021 13:05, Leo Yan wrote:
-> If so, I understand your suggestion in another email to add a new magic
-> number and a new protocol (this patch set has added the new protocol
-> CS_ETM_PROTO_ETE) for creating ETE decoder.
+On 31/07/2021 07:37, Leo Yan wrote:
+> I checked ETMv4.3 and ETMv4.4 spec (ARM IHI0064E for ETMv4.3 and ARM
+> IHI0064F for ETMv4.4), both clarify ETMv4 has the register TRCDEVARCH;
+> thus TRCDEVARCH is not a new register introduced by ETE.
+> 
+> For this case, it's good to directly add a new field in the metadata
+> array for recording register TRCDEVARCH.
 
-Yes this is what I'm working on now. I think that it's actually
-cleaner than the previous change where there was some half way
-solution that old versions of perf wouldn't properly decode ETE
-but would try to anyway.
+This might be true, but the OpenCSD library doesn't take TRCDEVARCH as a config
+parameter for ETMv4 so it couldn't be used. This is the struct:
 
+        typedef struct _ocsd_etmv4_cfg 
+        {
+        uint32_t                reg_idr0;    /**< ID0 register */
+        uint32_t                reg_idr1;    /**< ID1 register */
+        uint32_t                reg_idr2;    /**< ID2 register */
+        uint32_t                reg_idr8;
+        uint32_t                reg_idr9;   
+        uint32_t                reg_idr10;
+        uint32_t                reg_idr11;
+        uint32_t                reg_idr12;
+        uint32_t                reg_idr13;
+        uint32_t                reg_configr;  /**< Config Register */
+        uint32_t                reg_traceidr;  /**< Trace Stream ID register */
+        ocsd_arch_version_t    arch_ver;   /**< Architecture version */
+        ocsd_core_profile_t    core_prof;  /**< Core Profile */
+        } ocsd_etmv4_cfg;
+
+And this is ETE where TRCDEVARCH is used:
+
+        typedef struct _ocsd_ete_cfg
+        {
+        uint32_t                reg_idr0;       /**< ID0 register */
+        uint32_t                reg_idr1;       /**< ID1 register */
+        uint32_t                reg_idr2;       /**< ID2 register */
+        uint32_t                reg_idr8;       /**< ID8 - maxspec */
+        uint32_t                reg_devarch;    /**< DevArch register */
+        uint32_t                reg_configr;    /**< Config Register */
+        uint32_t                reg_traceidr;   /**< Trace Stream ID register */
+        ocsd_arch_version_t    arch_ver;        /**< Architecture version */
+        ocsd_core_profile_t    core_prof;       /**< Core Profile */
+        } ocsd_ete_cfg;
+
+Thanks
 James
