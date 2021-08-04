@@ -4,156 +4,208 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF9EC4320A
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 14:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4015FC4338F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Aug 2021 04:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD68610A2
-	for <linux-perf-users@archiver.kernel.org>; Tue,  3 Aug 2021 14:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ABE60E74
+	for <linux-perf-users@archiver.kernel.org>; Wed,  4 Aug 2021 04:22:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236540AbhHCOr5 (ORCPT
+        id S229571AbhHDEXI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 3 Aug 2021 10:47:57 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:59171 "EHLO
-        new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236662AbhHCOre (ORCPT
+        Wed, 4 Aug 2021 00:23:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229562AbhHDEXH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 3 Aug 2021 10:47:34 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id EBF245806A0;
-        Tue,  3 Aug 2021 10:46:16 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 03 Aug 2021 10:46:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=ZhhzKAcbp08j/zLplXp7CUKlTW+9yQngYwV71xLLU
-        uk=; b=F/09aFygJQYV2RtiZgmhk7lrEY/SgDHVCp9GLx/945GbshDofvqnTjhPv
-        MdQvU0XkuXuw8J+MuhKrJ5gR1GZcomEdsTK6ZD7aIFtguwONkYK584aL0vB3+uOi
-        1cZ7en9ladrjw6Am+2BpbC6fRp8uuoZu3LuWznvdmPAybGSJD4k6LsC2dgve+Rgl
-        7lVDmmuL7y/jEYsgA56vScY1S21u5F3TLg4OLHZRv4+oQDdiQgC7TWc+gnXL5h4w
-        2rvrqIo0t83pmPMDPPc41jSJk9WPHxdOeJIBVx4KzCnsejQeB77xOjaT3gfaZ5ud
-        PQwuZWkKpupEjh03t9vkMNG6BzFeQ==
-X-ME-Sender: <xms:slYJYT6kZeAR_u8nmIhOwwTdbdSTNZDG6YV26ZSH5RAkJpiwDMEecg>
-    <xme:slYJYY6-9FEu98HWO-uZSzE-IqI3ADKc0IPE-fH4fhb6O37ZXlqSYAoGH26C6xR_Y
-    3AnO0EnJ1_HFrI>
-X-ME-Received: <xmr:slYJYacOsY7ys2tiGj1OcG6XygrXSWg4xrc9GnX_-fPcsyrhgEjtC7VnWYQEv5nVsTuIg9N7CZQZGuQjxh2ppRV9AbXp_w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrieeggdejjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpedvffevkeefieeiueeitedufeekveekuefhueeiudduteekgeelfedvgeehjeeh
-    hfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehiug
-    hoshgthhesihguohhstghhrdhorhhg
-X-ME-Proxy: <xmx:slYJYUKzZG3Xz6r6LaeXad3wYy6LOTbk81cO0cMnwYXwbSFEc7wHjQ>
-    <xmx:slYJYXJjCcb3nZi9UnC0Hz6_YYtYtVnj1jBbwCxXsrsAsiMMX5tIkw>
-    <xmx:slYJYdxfVsvKDxmjEDddhWRd4PUJmS19TokpDNA-XT3HSimKkg7Dwg>
-    <xmx:uFYJYVgEB2oEZs8RPQxAloMFD7GNawFrzXmXD3USqGR6p1WsqWraOg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 3 Aug 2021 10:46:09 -0400 (EDT)
-Date:   Tue, 3 Aug 2021 17:46:05 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, kernel@pengutronix.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vadym Kochan <vkochan@marvell.com>,
-        Taras Chornyi <tchornyi@marvell.com>,
-        Jiri Pirko <jiri@nvidia.com>, Ido Schimmel <idosch@nvidia.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Michael Buesch <m@bues.ch>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        Alexander Duyck <alexanderduyck@fb.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-crypto@vger.kernel.org, qat-linux@intel.com,
-        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        netdev@vger.kernel.org, oss-drivers@corigine.com,
-        xen-devel@lists.xenproject.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] PCI: Adapt all code locations to not use struct
- pci_dev::driver directly
-Message-ID: <YQlWrcCY3X01eNJJ@shredder>
-References: <20210803100150.1543597-1-u.kleine-koenig@pengutronix.de>
- <20210803100150.1543597-6-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Wed, 4 Aug 2021 00:23:07 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73294C0613D5
+        for <linux-perf-users@vger.kernel.org>; Tue,  3 Aug 2021 21:22:55 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id t7-20020a17090a5d87b029017807007f23so3758859pji.5
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Aug 2021 21:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i04VfYofLYKCIG1Z6skleSNL7OKcr09RxkFflI43t/Q=;
+        b=mwMdGF9iwdQXOz5cWezZNFZBuH4MXIGpo34e3rrYRHna/vjpbhQx3tVW1NW4f261zr
+         5vIvDizIhY/Jp2BgVohOgBKcU8FrOZEBkTlVmOKO7eQLyx5zRR1CabdK2wvzJs42RBqK
+         2KZQsI0kHFjZ4BEgpWqgavfLQxWCBA6mHC0Ol1IiepsnsnACKXQgdXNmoNS/s/t3CzGp
+         pqk6zeCviLcPHWek6b/UOGJfmXX27pHNLC/ynz5sP2cADVhpyKbCqbO2mSKF6nfWdtMp
+         B2fYxmee1mJGwZJUGQApJF10lhozDLK7uiI8UopN1RVr2VxE0imPvvXO+/8gLfJwzh/q
+         N/Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=i04VfYofLYKCIG1Z6skleSNL7OKcr09RxkFflI43t/Q=;
+        b=Cx91mCJ6K5AI3wiQVFYbXP19Z7041qXaZTPaNoK5C0U9aW+alBKJGrpRFAGvPjMM98
+         b1W0pzSes38KaYd3GYRU5rjeBGFsdUFz+lqBqislj2C4P+oE3HspOHqT4kkKjBCXoMBc
+         VCLHMw1nTaZIiTnzxlcPD7Um4drRbLCN9TJIbqimuLptemzoR43McemlN69MqGs3Uxy/
+         zCCawt0YgfwjgkiqeuvJW2MbxLu5JZCzSI2dksZpGoblcMPxYmybnZSwl9f5qjtIxLK3
+         XzVy6mgmMgstLeJfjh2fkfoRBaE1fL3fy3D+lLhL/tCZ5gWZ7Iq2Auhi31WAFuT2fuiL
+         QaSw==
+X-Gm-Message-State: AOAM530JRXN5e8xcyD0OHQOoiVxNWRMagR4VuFtnLs0zfYQdBiSTqdbv
+        3lHY0NbuAOJyJIG90bsK6wyhYg==
+X-Google-Smtp-Source: ABdhPJz2rvddHcEo28ed9rl2wL1JFcrDn7cljKcQ4AfRhN3PpF0qgvY/h2xt6pHPI7PasNsMKcBtSA==
+X-Received: by 2002:a62:e714:0:b029:3c4:8544:b2b7 with SMTP id s20-20020a62e7140000b02903c48544b2b7mr4265679pfh.5.1628050974761;
+        Tue, 03 Aug 2021 21:22:54 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id q2sm816324pfu.205.2021.08.03.21.22.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Aug 2021 21:22:54 -0700 (PDT)
+Date:   Tue, 03 Aug 2021 21:22:54 -0700 (PDT)
+X-Google-Original-Date: Tue, 03 Aug 2021 21:22:49 PDT (-0700)
+Subject:     Re: [PATCH 1/4] tools/perf/arch/riscv: record registers needed for --call-graph=dwarf
+In-Reply-To: <20210705232524.4024832-2-edwin@etorok.net>
+CC:     linux-riscv@lists.infradead.org, edwin@etorok.net,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@redhat.com, namhyung@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-perf-users@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     edwin@etorok.net
+Message-ID: <mhng-3ff979c8-3e24-48a4-8a22-8aa3f14f42ac@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20210803100150.1543597-6-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 12:01:49PM +0200, Uwe Kleine-König wrote:
-> This prepares removing the driver member of struct pci_dev which holds the
-> same information than struct pci_dev::dev->driver.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Mon, 05 Jul 2021 16:25:21 PDT (-0700), edwin@etorok.net wrote:
+> For libdw-based callgraph sampling to work we need to sample registers.
+>
+> Tested on HiFive Unmatched with a trunk version of OCaml:
+
+These generally LGTM, but I don't have patch #2.  Sometimes that means 
+they're just not targeted at the RISC-V tree, which is fine with me but 
+I'm happy to take some time to look closer and take them if that's what 
+you're looking for.
+
+A cover letter can be a good bet, to describe this sort of stuff.
+
+> ```
+>  # perf record --user-regs=?
+> available registers: pc ra sp gp tp t0 t1 t2 s0 s1 a0 a1 a2 a3 a4 a5 a6 a7
+>  s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 t3 t4 t5 t6
+>
+>  # sed -e 's/(\*\*//' -e 's/\*\*)//' \
+> testsuite/tests/misc-unsafe/almabench.ml >almabench_benchmark.ml
+>  # ocamlopt almabench_benchmark.ml -unsafe -o almabench_benchmark
+>  # perf record -e cpu-clock -v --call-graph=dwarf -F 99 \
+> ./almabench_benchmark
+>
+> callchain: type DWARF
+> callchain: stack dump size 8192
+> nr_cblocks: 0
+> affinity: SYS
+> mmap flush: 1
+> comp level: 0
+> mmap size 528384B
+> mmap size 528384B
+> Control descriptor is not initialized
+> 0 17.00 -26.06
+> 1 12.34 1.29
+> 2 6.83 22.95
+> 3 0.04 -1.26
+> 4 2.30 12.54
+> 5 2.93 14.35
+> 6 21.27 -16.57
+> 7 20.41 -19.04
+> [ perf record: Woken up 65 times to write data ]
+> Looking at the vmlinux_path (8 entries long)
+> Failed to open /proc/kcore.
+> Note /proc/kcore requires CAP_SYS_RAWIO capability to access.
+> Using /proc/kallsyms for symbols
+> failed to write feature CPUDESC
+> failed to write feature CPUID
+> failed to write feature NUMA_TOPOLOGY
+> failed to write feature MEM_TOPOLOGY
+> [ perf record: Captured and wrote 16.265 MB perf.data (1997 samples) ]
+>
+>  # perf script
+> ...
+> almabench_bench  1193 14816.399235:   10101010 cpu-clock:
+>  3fbbd63d54 reduce_sincos+0x268 (inlined)
+>  3fbbd63d54 __cos+0x268 (/lib/libm-2.33.so)
+>  2aac4b261b Almabench_benchmark.planetpv+0x25f
+>     (/home/root/ocaml/almabench_benchmark)
+>  2aac4b3e03 Almabench_benchmark.entry+0x12bb
+>     (/home/root/ocaml/almabench_benchmark)
+>  2aac4b0097 caml_program+0x143
+>     (/home/root/ocaml/almabench_benchmark)
+>  2aac4e4e3d caml_start_program+0x71
+>     (/home/root/ocaml/almabench_benchmark)
+>  2aac4e5409 caml_startup_common+0x18f
+>     (/home/root/ocaml/almabench_benchmark)
+>  2aac4e5465 caml_startup_exn+0x9 (inlined)
+>  2aac4e5465 caml_startup+0x9 (inlined)
+>  2aac4e5465 caml_main+0x9
+>     (/home/root/ocaml/almabench_benchmark)
+>  2aac4afe89 main+0x9
+>     (/home/root/ocaml/almabench_benchmark)
+>  3fbbc47b0b __libc_start_main+0x85 (/lib/libc-2.33.so)
+>  2aac4afebb _start+0x2b (/home/root/ocaml/almabench_benchmark)
+> ```
+>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Edwin TÃ¶rÃ¶k <edwin@etorok.net>
 > ---
->  arch/powerpc/include/asm/ppc-pci.h            |  3 +-
->  arch/powerpc/kernel/eeh_driver.c              | 12 ++++---
->  arch/x86/events/intel/uncore.c                |  2 +-
->  arch/x86/kernel/probe_roms.c                  |  2 +-
->  drivers/bcma/host_pci.c                       |  6 ++--
->  drivers/crypto/hisilicon/qm.c                 |  2 +-
->  drivers/crypto/qat/qat_common/adf_aer.c       |  2 +-
->  drivers/message/fusion/mptbase.c              |  4 +--
->  drivers/misc/cxl/guest.c                      | 21 +++++------
->  drivers/misc/cxl/pci.c                        | 25 +++++++------
->  .../ethernet/hisilicon/hns3/hns3_ethtool.c    |  2 +-
->  .../ethernet/marvell/prestera/prestera_pci.c  |  2 +-
->  drivers/net/ethernet/mellanox/mlxsw/pci.c     |  2 +-
->  .../ethernet/netronome/nfp/nfp_net_ethtool.c  |  2 +-
->  drivers/pci/iov.c                             | 23 +++++++-----
->  drivers/pci/pci-driver.c                      | 28 ++++++++-------
->  drivers/pci/pci.c                             | 10 +++---
->  drivers/pci/pcie/err.c                        | 35 ++++++++++---------
->  drivers/pci/xen-pcifront.c                    |  3 +-
->  drivers/ssb/pcihost_wrapper.c                 |  7 ++--
->  drivers/usb/host/xhci-pci.c                   |  3 +-
->  21 files changed, 112 insertions(+), 84 deletions(-)
-
-For mlxsw:
-
-Tested-by: Ido Schimmel <idosch@nvidia.com>
+>  tools/perf/arch/riscv/util/perf_regs.c | 32 ++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
+> index 2864e2e3776d..8c9f511e8322 100644
+> --- a/tools/perf/arch/riscv/util/perf_regs.c
+> +++ b/tools/perf/arch/riscv/util/perf_regs.c
+> @@ -2,5 +2,37 @@
+>  #include "../../util/perf_regs.h"
+>
+>  const struct sample_reg sample_reg_masks[] = {
+> +	SMPL_REG(pc, PERF_REG_RISCV_PC),
+> +	SMPL_REG(ra, PERF_REG_RISCV_RA),
+> +	SMPL_REG(sp, PERF_REG_RISCV_SP),
+> +	SMPL_REG(gp, PERF_REG_RISCV_GP),
+> +	SMPL_REG(tp, PERF_REG_RISCV_TP),
+> +	SMPL_REG(t0, PERF_REG_RISCV_T0),
+> +	SMPL_REG(t1, PERF_REG_RISCV_T1),
+> +	SMPL_REG(t2, PERF_REG_RISCV_T2),
+> +	SMPL_REG(s0, PERF_REG_RISCV_S0),
+> +	SMPL_REG(s1, PERF_REG_RISCV_S1),
+> +	SMPL_REG(a0, PERF_REG_RISCV_A0),
+> +	SMPL_REG(a1, PERF_REG_RISCV_A1),
+> +	SMPL_REG(a2, PERF_REG_RISCV_A2),
+> +	SMPL_REG(a3, PERF_REG_RISCV_A3),
+> +	SMPL_REG(a4, PERF_REG_RISCV_A4),
+> +	SMPL_REG(a5, PERF_REG_RISCV_A5),
+> +	SMPL_REG(a6, PERF_REG_RISCV_A6),
+> +	SMPL_REG(a7, PERF_REG_RISCV_A7),
+> +	SMPL_REG(s2, PERF_REG_RISCV_S2),
+> +	SMPL_REG(s3, PERF_REG_RISCV_S3),
+> +	SMPL_REG(s4, PERF_REG_RISCV_S4),
+> +	SMPL_REG(s5, PERF_REG_RISCV_S5),
+> +	SMPL_REG(s6, PERF_REG_RISCV_S6),
+> +	SMPL_REG(s7, PERF_REG_RISCV_S7),
+> +	SMPL_REG(s8, PERF_REG_RISCV_S8),
+> +	SMPL_REG(s9, PERF_REG_RISCV_S9),
+> +	SMPL_REG(s10, PERF_REG_RISCV_S10),
+> +	SMPL_REG(s11, PERF_REG_RISCV_S11),
+> +	SMPL_REG(t3, PERF_REG_RISCV_T3),
+> +	SMPL_REG(t4, PERF_REG_RISCV_T4),
+> +	SMPL_REG(t5, PERF_REG_RISCV_T5),
+> +	SMPL_REG(t6, PERF_REG_RISCV_T6),
+>  	SMPL_REG_END
+>  };
