@@ -2,122 +2,188 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C45CC4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 09:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40FFC4338F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 10:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01F9D60E96
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 09:40:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880EA610CC
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 10:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239366AbhHEJks (ORCPT
+        id S240080AbhHEK7v (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Aug 2021 05:40:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60228 "EHLO
+        Thu, 5 Aug 2021 06:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239045AbhHEJks (ORCPT
+        with ESMTP id S234312AbhHEK7u (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Aug 2021 05:40:48 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC980C061765
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Aug 2021 02:40:32 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id a8so7320829pjk.4
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Aug 2021 02:40:32 -0700 (PDT)
+        Thu, 5 Aug 2021 06:59:50 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0176FC0613C1
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 Aug 2021 03:59:37 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id j1so7759159pjv.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Aug 2021 03:59:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=nDgSiKT3PmC/uVgbSGJ5t/4JCmbXe35pN3HpY7zZV9E=;
-        b=C6wyBK36441JkySRlvZ/2pfKdBz31BE8gQlFQzt5bcvETqDRArNU8tGTG9jk5HrXm8
-         c+VvdloQWAyGTz2BO0E9PWSmHPiFYRdhwGc+BINqy6yNpcrZ3VMorgtPknMB8368Q6WM
-         snrSDbzmuiLJgbUt/DcpuxCppoZAnA7Yl4VVW3v7NYIeSpR7DT1ZGAmdvklUADOVK4p0
-         D/VDnfrUAidl0RQOXIlojaUCwmIOfTTF22wN8u9J3/NYWcwXvsEMX8ghCKZu/Cyi9i41
-         J6R2QjAG00zXHIlPnv962j2wh2i9Sr2rJfS9GrXYaJEfblDCtvBJ5AA5uh51aRsaLVzY
-         Ffjw==
+        bh=31wHV3k4OdqroTKePjUTotq6cHm90H/l7isQSu9I3mQ=;
+        b=UVg0o3Dq+LIsAEv2uGRdOXFlsXHXH78Oos0ipXcwmv8NucK2/DwxeAgf+m3SlkEuZY
+         4tzXbhlusZeGUcuzNcVdWF23L62eH/sIFOjHgmVs6hAmwETVFlP1lV3ws4fCe7s8nh/P
+         U61wr/wDXVaSJKdyi5si93afqoO1NR9j1w03s84MVBik9lvyIigZF//ufhn3bYf7fAqI
+         yF2aliJguBQ6fFvMAPzae2TsEgn8Du1jDq6cViVEtAMEJiNmOkXQqGOPVAmACUO6Xred
+         +FTubQdYRPMZH3rrdOO10nolo275CtjHWDw81zL5z8b/xt4Sh/l2GJ20kIKfFXDAmZ6e
+         byLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=nDgSiKT3PmC/uVgbSGJ5t/4JCmbXe35pN3HpY7zZV9E=;
-        b=YHKTx9f2m88AOk9hgZMHg9tGJk0pdV5DwBf0E6v+cY9CowbH2dbDEeZVlwF9fu2YKl
-         w6+Hzk7yaXWQp2v7xfTf5S0S4K0SZUKOExh+oBnS3DJX9IYezhACns6lxKDjTuaHJgeV
-         BxpFf8wiccwa42sCgvlec8NsHaQVvDPKeksu93TstdDZBl/yKPImfXb9Ki+FH6RIqveu
-         5mRCN1RZ8wvmIkvt0w3w3p3R9PPxLxGwkNjg0kVsi1E6ur1CDVXMJOUXSZeZ+CoF9Uln
-         6Ye0xULcbBjILIyb5abFVGNi3XIpVlM/28K/eC0zS8egOzwHHIbEwxzzZj/cyxt6hgA6
-         7A3g==
-X-Gm-Message-State: AOAM532eymvY/ONPvCpMLe9Q4BEgfAwAQuJrvoa9AEm9yUREHt/92qZk
-        nXwrYySl7D1UFsDBpsKfNxkkAg==
-X-Google-Smtp-Source: ABdhPJyPyEcVsCvddqnfpJm3MeotME9LAyQ5SA1NJxPIjyQ+VBI4nEmORfuHRBrQHWkSGcv02u0ZuA==
-X-Received: by 2002:a05:6a00:16d6:b029:32a:ffe9:76a with SMTP id l22-20020a056a0016d6b029032affe9076amr4429638pfc.60.1628156432150;
-        Thu, 05 Aug 2021 02:40:32 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id x189sm6908188pfx.99.2021.08.05.02.40.26
+        bh=31wHV3k4OdqroTKePjUTotq6cHm90H/l7isQSu9I3mQ=;
+        b=SCtRDHzrJbu9R82/m/QK4l0RBY8MPr0yGWAUvwU/mJMns9dtS2RZkaURs/pxBhAJkt
+         UuC2G0xiNBAzTyiU/3MwQN/4ITJaVO/J+9Ht226igiMSj7PPulxNAQP4ODD4ps+WckKk
+         FLlWIuVmH3jyL+O8zkYB/Dgtgx5b+5k52uHH2gvhPn88aph08d3DcWq0Jlp1awUMXGcX
+         +Utl9t5eY0Rjx6uGNEy3m/BGXpIvx+HHgDmYEu6iNSGS3H7XbSNM7VGv60jaztyCp/Sl
+         90H27W5Mv4gXBDX2usBL0AvT92uHIMhXZelZkdiBCMK/0NXx9P9OPiJcS71vFOHoNRiK
+         CkBQ==
+X-Gm-Message-State: AOAM532Ul9XFVTIn7xpSA+oIYtKN1sa50UbPJNjksQjfhjD6KgKWMyl8
+        Pp6qgAO6B+WLkkbThwaG+/kmiQ==
+X-Google-Smtp-Source: ABdhPJy4GX8AlScXr0EhwPw/Y1CY7MoxWD+tSDBVhOh/m82Ukd6RvOIJJU0ctRZE20HMuwXCRqcE0g==
+X-Received: by 2002:a05:6a00:704:b029:39e:3043:ec64 with SMTP id 4-20020a056a000704b029039e3043ec64mr4483509pfl.68.1628161176325;
+        Thu, 05 Aug 2021 03:59:36 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([210.0.159.74])
+        by smtp.gmail.com with ESMTPSA id y9sm7399800pgr.10.2021.08.05.03.59.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Aug 2021 02:40:31 -0700 (PDT)
-Date:   Thu, 5 Aug 2021 17:40:24 +0800
+        Thu, 05 Aug 2021 03:59:35 -0700 (PDT)
+Date:   Thu, 5 Aug 2021 18:59:26 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     James Clark <james.clark@arm.com>
-Cc:     Mike Leach <mike.leach@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        Al Grant <al.grant@arm.com>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>, acme@kernel.org,
+        mathieu.poirier@linaro.org, coresight@lists.linaro.org,
+        al.grant@arm.com, anshuman.khandual@arm.com, mike.leach@linaro.org,
         John Garry <john.garry@huawei.com>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/6] perf cs-etm: Save TRCDEVARCH register
-Message-ID: <20210805094024.GA19058@leoy-ThinkPad-X240s>
+Subject: Re: [PATCH 5/6] perf cs-etm: Create ETE decoder
+Message-ID: <20210805105926.GA22454@leoy-ThinkPad-X240s>
 References: <20210721090706.21523-1-james.clark@arm.com>
- <20210721090706.21523-4-james.clark@arm.com>
- <CAJ9a7Vjz_CMugYrLcAqr_aFsK6jYcqR3xLwJUi9KTXB3aPjnEQ@mail.gmail.com>
- <20210731063731.GC7437@leoy-ThinkPad-X240s>
- <9156d7a1-3676-ab98-2c38-26f9765b845c@arm.com>
+ <20210721090706.21523-6-james.clark@arm.com>
+ <20210731072341.GE7437@leoy-ThinkPad-X240s>
+ <654cf3ae-325b-49c9-a9d0-ebf704a83d6f@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9156d7a1-3676-ab98-2c38-26f9765b845c@arm.com>
+In-Reply-To: <654cf3ae-325b-49c9-a9d0-ebf704a83d6f@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 03, 2021 at 01:34:36PM +0100, James Clark wrote:
+On Tue, Aug 03, 2021 at 02:09:38PM +0100, James Clark wrote:
+
+[...]
+
+> >> -static enum _ocsd_arch_version cs_etm_decoder__get_arch_ver(u32 reg_idr1)
+> >> +static enum _ocsd_arch_version cs_etm_decoder__get_arch_ver(u32 reg_idr1, u32 reg_devarch)
+> >>  {
+> >> +	/* ETE has to be v9 so set arch version to v8.3+ (ARCH__AA64) */
+> >> +	if (cs_etm__is_ete(reg_devarch))
+> >> +		return ARCH_AA64;
+> >> +
+> > 
+> > Based on values used in below change, I think we can unify the ETM
+> > versio number like:
+> > 
+> >   ARCH_V8R3 : REVISION, bits[19:16] is 0x3
+> >   ARCH_V8R4 : REVISION, bits[19:16] is 0x4
+> >   ARCH_V8R5 : REVISION, bits[19:16] is 0x5
 > 
-> On 31/07/2021 07:37, Leo Yan wrote:
-> >>> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> >>> index 85168d87b2d7..65a863bdf5cc 100644
-> >>> --- a/tools/perf/arch/arm/util/cs-etm.c
-> >>> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> >>> @@ -53,6 +53,7 @@ static const char *metadata_etmv4_ro[CS_ETMV4_PRIV_MAX] = {
-> >>>         [CS_ETMV4_TRCIDR2]              = "trcidr/trcidr2",
-> >>>         [CS_ETMV4_TRCIDR8]              = "trcidr/trcidr8",
-> >>>         [CS_ETMV4_TRCAUTHSTATUS]        = "mgmt/trcauthstatus",
-> >>> +       [CS_ETE_TRCDEVARCH]             = "mgmt/trcdevarch"
-> > ETMv4 supports TRCDEVARCH, so I think it's good to use the naming
-> > "CS_ETMV4_TRCDEVARCH"?
+> Do you mean make this change in OpenCSD? At the moment it understands these
+> values so I'm not sure if the extra ones would be useful:
+
+Yes.  As Mike said, these new macros will cause big changes in OpenCSD,
+so I don't have strong opinion to add more macros for tracer versions.
+
+> >> +struct cs_ete_trace_params {
+> >> +	struct cs_etmv4_trace_params base_params;
+> >> +	u32 reg_devarch;
+> > 
+> > As we have said, can we directly support ETMv4.5, so that it can
+> > smoothly support ETE features?  If so, we don't need to add a new
+> > structure "cs_ete_trace_params" at here.
 > > 
 > 
-> Based on the other discussions do you still think I should do this?
+> I think with the new magic number change this is more likely to stay,
+> what are your thoughts?
 
-No, don't need to add TRCDEVARCH for ETMv4 anymore.
+Agreed.  Just wander if need to define the struct cs_ete_trace_params
+as below?
 
-> As part of the new magic number I moved it into a new enum so it
-> might be clearer now?
+  struct cs_ete_trace_params {
+          u32 reg_idr0;
+          u32 reg_idr1;
+          u32 reg_idr2;
+          u32 reg_idr8;
+          u32 reg_configr;
+          u32 reg_traceidr;
+          u32 reg_devarch;
+  }
 
-Regard ETMv4 and ETE use the different decoder types from OpenCSD, you
-could add a new magic number and new enum for ETE.  It would be easier
-for later extension for ETMv4 and ETE separately if decoder requires
-to pass more config info.
+> >> +
+> >> +#define TRCDEVARCH_ARCHPART_SHIFT 0
+> >> +#define TRCDEVARCH_ARCHPART_MASK  GENMASK(11, 0)
+> >> +#define TRCDEVARCH_ARCHPART(x)    (((x) & TRCDEVARCH_ARCHPART_MASK) >> TRCDEVARCH_ARCHPART_SHIFT)
+> >> +
+> >> +#define TRCDEVARCH_ARCHVER_SHIFT 12
+> >> +#define TRCDEVARCH_ARCHVER_MASK  GENMASK(15, 12)
+> >> +#define TRCDEVARCH_ARCHVER(x)    (((x) & TRCDEVARCH_ARCHVER_MASK) >> TRCDEVARCH_ARCHVER_SHIFT)
+> >> +
+> >> +bool cs_etm__is_ete(u32 trcdevarch)
+> >> +{
+> >> +	/*
+> >> +	 * ETE if ARCHVER is 5 (ARCHVER is 4 for ETM) and ARCHPART is 0xA13.
+> >> +	 * See ETM_DEVARCH_ETE_ARCH in coresight-etm4x.h
+> >> +	 */
+> >> +	return TRCDEVARCH_ARCHVER(trcdevarch) == 5 && TRCDEVARCH_ARCHPART(trcdevarch) == 0xA13;
+> > 
+> > I think this is incorrect.
+> > 
+> > Here should check the bit field "REVISION, bits[19:16]".  If it's
+> > field value is >= 5, then we can say it supports ETE.  I checked the
+> > spec for ETMv4.4 and ETMv4.6, both use the same values for the
+> > Bits[15:12] = 0x4, so the architecture ID is same for ETMv4.x IPs.
+> > 
+> 
+> I tried to copy this as closely as possible from the ETE driver. See in coresight-etm4x.h
+> 
+> 	#define ETM_DEVARCH_ETE_ARCH						\
+> 		(ETM_DEVARCH_ARCHITECT_ARM | ETM_DEVARCH_ARCHID_ETE | ETM_DEVARCH_PRESENT) 
+> 
+> Where ETM_DEVARCH_ARCHID_ETE is ARCHVER == 5 and ARCHPART == 0xA13. I didn't check 
+> ETM_DEVARCH_ARCHITECT_ARM because I thought that wouldn't be necessary. If we want to make
+> the change do detect >= 5 then I think this should be made in the driver first. @Suzuki,
+> what do you think?
+
+The tracer has two fields:
+
+- ARCHID bits[15:12]
+- REVISION, bits[19:16]
+
+For ETE its ARCHID[15:12] is 0x5 and ETMv4.x's ARCHID[15:12] is 0x4.
+So checking ARCHID[15:12] is the right way to distinguish if the
+tracer is ETE and creates corresponding decoder for it.
+
+When reviewed this patch I assumed we also need to create ETE decoder
+if ETMv4.x has supported packet extension.  As Mike confirmed, all
+ETMv4.x tracers keep to use existed way to create decoder; so it's not
+necessary to check REVISION bit field.
+
+So please ignore my this comment.
 
 Thanks,
 Leo
