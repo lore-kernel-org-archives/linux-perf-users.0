@@ -1,283 +1,112 @@
 Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-21.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	MONEY_FREEMAIL_REPTO,MONEY_NOHTML,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8127FC4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 17:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8569DC4320A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 22:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6420361102
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 17:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A3261158
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 22:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237497AbhHERO7 (ORCPT
+        id S238365AbhHEWFD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Aug 2021 13:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52670 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232651AbhHERO7 (ORCPT
+        Thu, 5 Aug 2021 18:05:03 -0400
+Received: from ns3020889.ip-5-39-64.eu ([5.39.64.141]:38390 "EHLO
+        server.example.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S238146AbhHEWE6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Aug 2021 13:14:59 -0400
-Received: from mail-io1-xd49.google.com (mail-io1-xd49.google.com [IPv6:2607:f8b0:4864:20::d49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18668C0613D5
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Aug 2021 10:14:45 -0700 (PDT)
-Received: by mail-io1-xd49.google.com with SMTP id k20-20020a6b6f140000b029053817be16cdso4079734ioc.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Aug 2021 10:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=INEvP19P6WTC1AGBfQEXR3fV4WN5Ayl4veWqJISDaiQ=;
-        b=N5Xwt3ZG+nWnvK2mcmtPCia+NEMrO/oyV9+aumLMqiwAqGkw4QI8GvxplQK6fHVJav
-         kNgbLjymnv+CuALFDDkIO4a++gcamdQnr2Dkg5R3JrOe0eliBSerFwHKOFEn0kIVGsZ1
-         aoplmPoGEY/VhgPWpEmQ2oA/sS/4i6v9WmyNWfrKpEhrO6cMyHijHgU1bamG8usON3kW
-         eJMnUdNaJDzNB8OolugGcYngJRH09yucB/M5KH6zHHv0wPB6Jz7/+FSslvRYTArBYctl
-         SOcaOQ2KrTzYNznABfgFE16XvHO9MutE6sg6C08bAmJ4++Ov+xj0KLIOOhSWCYnKbsqC
-         OzFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=INEvP19P6WTC1AGBfQEXR3fV4WN5Ayl4veWqJISDaiQ=;
-        b=AtblGneyfDHzWNLDpppS9vKnuLen2zt9AWjOGrsq+piP3+LRQAcupj6wXMb+d2XZsF
-         pATNBV8F/caU9k/TZJ+kbb4tha2DdWC8wT2DdNsYHtVvXsA8mRpxbdaEkqbzGLkD5TCR
-         u3KtRI+pR4kH8VfFiQHJdfkxh8D62GA1U3RmRr1DFHJB82Cko4TIN1AXagMBrx5dO7hf
-         iDRPJPgiuu/X4v/4eOyLTNvchKW7qBitgeHkUtanOVw5ofUs+2afEZyRUkc170DfHK7u
-         90+gFqW7J5kefcUpne+koByp3URWy6FezulPAYZZPr1QMvM1ZMhUBy/XwfAEHrU5q3bh
-         jsLQ==
-X-Gm-Message-State: AOAM531H3xGcKtM9qIhBfadQ6+SJ7B8k/0/asXGs6kVtMlcYKcbc1XzN
-        Cv37Ft8TSRhuhJ4cOSaI3V3ei7LBgcsgjctySc2ACz0aYleq5a+ZXCofeQ0vP0WWFulhwNEaSyQ
-        Z/28BK2OxKROKXbXsM8cdg4wYx2puLmMOY+OdwyTP38P4ak2UCTzY/TQnLnuYRnSdnwlLLxueD2
-        4=
-X-Google-Smtp-Source: ABdhPJycgyaIlPUs35dwX8nRQZnNTy7oj/KlyZ/36c1VHTFdVZE4GKQN3/BTFvSouM1sUdjmwALZwxmSflg=
-X-Received: from cjense.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:6d0])
- (user=cjense job=sendgmr) by 2002:a5d:97cc:: with SMTP id k12mr183182ios.4.1628183684323;
- Thu, 05 Aug 2021 10:14:44 -0700 (PDT)
-Date:   Thu,  5 Aug 2021 17:14:31 +0000
-Message-Id: <20210805171431.940897-1-cjense@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.32.0.605.g8dce9f2422-goog
-Subject: [PATCH 1/1] perf test: Add test for CSV output.
-From:   Claire Jensen <cjense@google.com>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, irogers@google.com,
-        eranian@google.com
-Cc:     Claire Jensen <cjense@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 5 Aug 2021 18:04:58 -0400
+Received: by server.example.com (Postfix, from userid 1023)
+        id 4040FD468DB; Thu,  5 Aug 2021 21:15:43 +0000 (UTC)
+To:     linux-perf-users@vger.kernel.org
+Subject: {Spam?} =?UTF-8?Q?Z._HD,Sehr_geehrte_/_r_Fondsempf=C3=A4nger?=
+Date:   Thu, 5 Aug 2021 21:15:43 +0000
+From:   "ANWALT BILBAO &EMMA ASSOZIIERT & CO..." 
+        <support@quali.speed.hebergement-com4design.fr>
+Reply-To: buroLotto.es@spainmail.com
+Message-ID: <7924f310dba6428ed1d4b0d7ff3f74b8@www.quali.speed.hebergement-com4design.fr>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-yoursite-MailScanner-Information: Please contact the ISP for more information
+X-yoursite-MailScanner-ID: 4040FD468DB.AAAE7
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-SpamCheck: spam, SpamAssassin (cached, score=7.061,
+        required 6, ADVANCE_FEE_2_NEW_MONEY 0.15,
+        FREEMAIL_FORGED_REPLYTO 2.50, FREEMAIL_REPLYTO 1.00,
+        LOTS_OF_MONEY 0.00, MONEY_FREEMAIL_REPTO 2.43, MONEY_NOHTML 0.97,
+        NO_RELAYS -0.00, T_FILL_THIS_FORM_SHORT 0.01, XFER_LOTSA_MONEY 0.00)
+X-yoursite-MailScanner-SpamScore: sssssss
+X-yoursite-MailScanner-From: support@quali.speed.hebergement-com4design.fr
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add field checking tests for perf stat CSV output. Counts expected
-fields for various commands. No testing added for summary mode
-since it is broken.
+Rechtsanwältin BILBAO &EMMA ASSOZIIERT & CO...
+#########################################
+AV/DE GRAN VIA NO.38k, 28008 MADRID.   SPAIN 
+TEL. ( 34) 602 810 185 FAX: ( 34) 931-702-120
+Eingetragener Fall NR: GY/Q3J63753 / SQQ/93000XS10.
 
-An example of the summary output is:
+Ihnen wird empfohlen, die folgenden Informationen an Ihre Bevollmächtigte zu senden. Rechtsanwältin  BILBAO & EMMA  ASSOZIIERT CO ERMÖGLICHT IHNEN DIE FREIGABE IHRES FONDS:Wir bitten dringend, Ihre E-Mails an unsere Büro-E-Mail zu beantworten, buroLotto.es@spainmail.com, 
 
-         summary,263831,,instructions:u,1435072,100.0,0.46,insn per cycle
-,,,,,1.37,stalled cycles per insn
+Wir gratulieren und informieren Sie über die Auswahl des Geldpreises €935.470,00 EUROS, SOMMERBONANZA, EL GORDO DE LA PRIMITIVA LOTTERIE IN VERBINDUNG MIT EUROMILLIONS ESPAÑA INTERNATIONAL LOTTERIE BEFÖRDERUNG  PROGRAMM Madrid Spanien
 
-This should be:
+ Sehr Geehrter  Begünstigten, 
+Wir möchten Sie informieren, dass das Büro des nicht Beanspruchten Preisgeldes in Spanien,unsere Anwaltskanzlei ernannt hat, als gesetzliche Berater zu handeln, in der Verarbeitung und der Zahlung eines Preisgeldes, das auf Ihrem Namen gutgeschrieben wurde, und nun seit über zwei Jahren nicht beansprucht wurde.
 
-         summary,263831,,instructions:u,1435072,100.0,0.46,insn per cycle
-         summary,,,,,,1.37,stalled cycles per insn
+ Der Gesamtbetrag der ihnen zusteht beträgt momentan €935, 470, 15, cent.
 
-The output has 7 fields when it should have 8. Additionally, the newline
-spacing is wrong, so it was excluded from testing until a fix is made.
----
- .../tests/shell/lib/perf_csv_output_lint.py   |  55 ++++++++
- tools/perf/tests/shell/stat+csv_output.sh     | 117 ++++++++++++++++++
- 2 files changed, 172 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/perf_csv_output_lint.py
- create mode 100644 tools/perf/tests/shell/stat+csv_output.sh
+Der Gesamtbetrag der ihnen zusteht beträgt momentan  €935, 470, 15, neunhundert fünfunddreißigtausend, vierhundertsiebzig und fünfzehn Cent, Das ursprüngliche Preisgeld bertug €785.810, 15.00 EUROS. Siebenhundert Fünfundachtzigtausend Acht Hundertzehn Euro und fünfzehn Cent Diese Summe wurde fuer nun mehr als zwei Jahre,Gewinnbringend  angelegt,daher die aufstockung auf die oben genannte Gesamtsumme.Entsprechend dem Büros des nicht Beanspruchten  Preisgeldes,wurde dieses Geld als nicht beanspruchten Gewinn einer Lotterie Firma bei ihnen zum verwalten niedergelegt und  in ihrem namen versichert. Nach Ansicht der Lotterie Firma wurde ihnen das Geld nach einer Weihnachts Förderung Lotterie  zugesprochen. 
 
-diff --git a/tools/perf/tests/shell/lib/perf_csv_output_lint.py b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-new file mode 100644
-index 000000000000..ef8a32c3523c
---- /dev/null
-+++ b/tools/perf/tests/shell/lib/perf_csv_output_lint.py
-@@ -0,0 +1,55 @@
-+#!/usr/bin/python
-+# SPDX-License-Identifier: GPL-2.0
-+
-+from __future__ import print_function
-+import argparse
-+import sys
-+
-+# Basic sanity check of perf CSV output as specified in the man page.
-+# Currently just checks the number of fields per line in output.
-+
-+ap = argparse.ArgumentParser()
-+ap.add_argument('--no-args', action='store_true')
-+ap.add_argument('--interval', action='store_true')
-+ap.add_argument('--all-cpus-no-aggr', action='store_true')
-+ap.add_argument('--all-cpus', action='store_true')
-+ap.add_argument('--event', action='store_true')
-+ap.add_argument('--per-core', action='store_true')
-+ap.add_argument('--per-thread', action='store_true')
-+ap.add_argument('--per-die', action='store_true')
-+ap.add_argument('--per-node', action='store_true')
-+ap.add_argument('--per-socket', action='store_true')
-+ap.add_argument('--separator', const=',', nargs='?')
-+args = ap.parse_args()
-+
-+Lines = sys.stdin.readlines()
-+ch = args.separator
-+
-+
-+def check_csv_output(exp):
-+  for line in Lines:
-+    if 'failed' not in line:
-+      count = 0
-+      count = line.count(args.separator)
-+      if count != exp:
-+        sys.stdout.write(''.join(Lines))
-+        raise RuntimeError('wrong number of fields.'
-+                           ' expected {0} in {1}\n'.format(exp, line))
-+
-+try:
-+  if args.no_args or args.all_cpus or args.event:
-+    check_csv_output(6)
-+
-+  if args.interval or args.per_thread:
-+    check_csv_output(7)
-+
-+  if args.per_core or args.per_socket or args.per_node or args.per_die:
-+    check_csv_output(8)
-+
-+except:
-+  sys.stdout.write('Test failed for input: ' + ''.join(Lines))
-+  raise
-+
-+
-+
-+
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-new file mode 100644
-index 000000000000..282f9547e7be
---- /dev/null
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -0,0 +1,117 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# perf stat csv output test
-+# Tests various perf stat CSV output commands for the
-+# correct number of fields and the CSV separator set to ','.
-+
-+set -e
-+
-+pythonchecker=$(dirname $0)/lib/perf_csv_output_lint.py
-+file="/proc/sys/kernel/perf_event_paranoid"
-+paranoia=$(cat "$file" | grep -o -E '[0-9]+')
-+echo $paranoia
-+
-+check_no_args()
-+{
-+	perf stat -x, sleep 1 2>&1 | \
-+	python $pythonchecker --no-args --separator
-+}
-+
-+if [ $paranoia -gt 0 ];
-+then
-+	echo check_all_cpus test skipped because of paranoia level.
-+else
-+	check_all_cpus()
-+	{
-+		perf stat -x, -a 2>&1 sleep 1 | \
-+		python $pythonchecker --all-cpus --separator
-+	}
-+	check_all_cpus
-+fi
-+
-+check_interval()
-+{
-+	perf stat -x, -I 1000 2>&1 sleep 1 | \
-+	python $pythonchecker --interval --separator
-+}
-+
-+check_all_cpus_no_aggr()
-+{
-+	perf stat -x, -A -a --no-merge 2>&1 sleep 1 | \
-+	python $pythonchecker --all-cpus-no-aggr --separator
-+}
-+
-+check_event()
-+{
-+	perf stat -x, -e cpu-clock 2>&1 sleep 1 | \
-+	python $pythonchecker --event --separator
-+}
-+
-+if [ $paranoia -gt 0 ];
-+then
-+	echo check_all_cpus test skipped because of paranoia level.
-+else
-+	check_per_core()
-+	{
-+		perf stat -x, --per-core -a 2>&1 sleep 1 | \
-+		python $pythonchecker --per-core --separator
-+	}
-+	check_per_core
-+fi
-+
-+if [ $paranoia -gt 0 ];
-+then
-+	echo check_all_cpus test skipped because of paranoia level.
-+else
-+	check_per_thread()
-+	{
-+		perf stat -x, --per-thread -a 2>&1 sleep 1 | \
-+		python $pythonchecker --per-thread --separator
-+	}
-+	check_per_thread
-+fi
-+
-+if [ $paranoia -gt 0 ];
-+then
-+	echo check_per_die test skipped because of paranoia level.
-+else
-+	check_per_die()
-+	{
-+		perf stat -x, --per-die -a 2>&1 sleep 1 | \
-+		python $pythonchecker --per-die --separator
-+	}
-+	check_per_die
-+fi
-+
-+if [ $paranoia -gt 0 ];
-+then
-+	echo check_per_node test skipped because of paranoia level.
-+else
-+	check_per_node()
-+	{
-+		perf stat -x, --per-node -a 2>&1 sleep 1 | \
-+		python $pythonchecker --per-node --separator
-+	}
-+	check_per_node
-+fi
-+
-+if [ $paranoia -gt 0 ];
-+then
-+	echo check_per_socket test skipped because of paranoia level.
-+else
-+	check_per_socket()
-+	{
-+		perf stat -x, --per-socket -a 2>&1 sleep 1 | \
-+		python $pythonchecker --per-socket --separator
-+	}
-+	check_per_socket
-+fi
-+
-+check_no_args
-+check_interval
-+check_all_cpus_no_aggr
-+check_event
-+
-+exit 0
-+
--- 
-2.32.0.605.g8dce9f2422-goog
+ Die Kupons wurden von einer Investmentgesellschaft gekauft.Nach Ansicht der Lotterie Firma wurden sie damals Angeschrieben um Sie über dieses Geld zu informieren es hat sich aber leider bis zum Ablauf  der  gesetzten  Frist  keiner gemeldet um den Gewinn zu Beanspruchen. Dieses war der Grund weshalb das Geld zum verwalten niedergelegt wurde. Gemab des Spanischen Gesetzes muss der inhaber alle zwei Jahre ueber seinen vorhanden Gewinn informiert werden.Sollte dass Geld wieder nicht beansprucht werden,.wird der Gewinn abermals ueber eine Investierung gesellschaft fur eine weitere Periode von zwei Jahren angelegt werden.Wir sind daher, durch das Buro des nicht Beanspruchten Preisgelds beauftragt worden sie anzuschreiben.Dies ist eine Notifikation für das Beanspruchen dieses Gelds.
+
+Wir möchten sie darauf hinweisen, dass die Lotteriegesellschaft überprüfen und bestätigen wird ob ihre Identität  übereinstimmt bevor ihnen ihr Geld ausbezahlt wird.Wir werden sie beraten wie sie ihren Anspruch geltend machen.Bitte  setzen sie sich dafuer mit unserer Deutsch Spanisch oder Englisch Sprachigen Rechtsanwalt in Verbindung Rechtsanwältin: Bilbao & Emma ASSOZIIERT & CO.., TEL( 34) 602 810 185 & email,( Ihre Antwort sollte an diese E-MAIL-Adresse gerichtet, (promolottooffice@spainmail.com  )ist zustaendig fuer  Auszahlungen ins Ausland und wird ihnen in dieser sache zur seite stehen. Der Anspruch sollte vor den 30 August 2021 geltend  gemacht werden,da sonst dass Geld wieder angelegt werden wuerde.Wir freuen uns, von Ihnen zu hören, während wir Ihnen  unsere Rechtshilfe Versichern.
+
+Nachdem Sie die von Ihnen geforderten Daten bereitgestellt haben, können Sie davon ausgehen, dass Sie innerhalb weniger  Stunden direkt von diesem Büro erfahren werden. Bis dahin müssen wir Ihre Informationen verarbeitet und Ihre Fonds Akte für  die Zustellung vorbereitet haben, um Verzögerungen zu vermeiden. 
+Wir gehen davon aus, dass Sie die erläuternden Anweisungen und Anweisungen für den Erhalt Ihrer Prämien (935 €, 470, 15 Cent) verstehen, die Ihnen von der spanischen Euro Millones /El Gordo de la Primitiva International lotterie Madrid Spain legal zugesprochen werden.
+
+HINWEIS: Um unnötige Verzögerungen zu vermeiden, wenn es eine Änderung Ihrer Adresse oder Komplikationen geben, informieren Sie Ihren Agenten so schnell wie möglich, Ihr Agent wird 10% des Premium Preises bezahlt, da die Provision NACH Dem, was Sie Ihr Geld auf Ihr kostenpflichtiges Konto erhalten haben. Das Zahlungsbearbeitung Formular ist mit einer Fotokopie Ihres Ausweises auszufüllen und zur Überprüfung per Faxnummer zu senden: ( 34) 935457490 & E-Mail: Wir bitten dringend, Ihre E-Mails an unsere Büro-E-Mail zu beantworten  promolottooffice@spainmail.com
+
+Mit Freundlichen Grüßen
+Rechtsanwältin Bilbao & Emma ASSOZIIERT & CO..
+
+ANMELDEFORMULAR FÜR DEN GEWINNANSPRUCH Vom 28. Juni bis 30. August 2021
+Hinweis bitte geben Sie die folgenden Informationen, wie unten gefordert, faxen   34935457490 oder e mail: promolottooffice@spainmail.com ,es zurück in mein Büro sofort für uns in der Lage zu sein die Legalisierung Prozess Ihrer  Persönliche investiertes Preisgeld zu vervollständigen, und das Geld wird Ihnen von Zentralbank spain Int  ausgezahlt.  Alle Prozess Überprüfung durch unsere Kanzlei ist für Sie kostenlos, weil unsere Kosten werden von der internationalen  Lotto Kommission am Ende des Prozesses zu zahlen, wenn Sie Ihr Geld erhalten.Wenn Sie nicht die erforderlichen  Informationen vor der Zeit gegeben hat, können ist Anwaltskanzlei nicht haftbar gemacht werden, wenn Ihr Geld reinvestiert  wurde.
+
+Ein Bestätigungsschreiben wird Ihnen gefaxt werden sofort wenn wir komplette Überprüfung der Informationen die Sie uns zur  Verfügung stellen habe, Ich werde die Investmentbank unverzüglich über die von Ihnen angegebene Informationen zu kommen,  bevor sie werden mit Ihnen Kontakt aufnehmen für die ausZahlung von Ihrem Geld . Ihre Daten werden vertraulich gehalten  nach der Europäischen Union Datenschutzrecht.
+
+"Antworten Sie nicht auf die Absenderadresse oder die Quell-E-Mail-Adresse, es wird über den Computer gesendet virtuelle  Hilfe für die Antwort wird  nicht meine menschliche sondern Computer" Daher müssen Sie die Treuhänder über Telefon und E- Mail-Adresse oben" (ACHTUNG Wir (bitten Sie, auf diese E-Mail-Adresse zu antworten, (promolottooffice@spainmail.com )
+########################################################
+
+REF.NR:………………………………STAPELN Sie NR:…………………………
+Vorname:……………………Vor-NACHNAME…………………………………
+GEBURTSDATUM:……………………………BERUF:……………………………
+STRASSE:………………………………………PLZ/ORT…………………………
+ADRESSE:……………………………………………………………………………
+TELEFON:(___)……………………HANDY:(__)………………FAX (__)………
+EMAIL:…………………………………………………………Nationalitit:……
+
+HINWEIS: BANKVERBINDUNG IST NUR ERFORDERLICH, WENN SIE BESCHLIEßEN, IHREN GEWINN ZU ERHALTEN PER ÜBERWEISUNG
+
+Nachdem Sie die von Ihnen geforderten Daten bereitgestellt haben, können Sie davon ausgehen, dass Sie innerhalb weniger  Stunden direkt von diesem Büro erfahren werden. Bis dahin müssen wir Ihre Informationen verarbeitet und Ihre Fonds Akte für  die Zustellung vorbereitet haben, um Verzögerungen zu vermeiden. Wir gehen davon aus, dass Sie die erklärenden Anweisungen  und Anweisungen zum Einholen und Einholen Ihrer Auszeichnungen (€935,470,15 EUROS) verstehen, die Ihnen vom spanischen Euro Millones de La Primitiva International Madrid legal zugesprochen wurden
+
+BANK ZAHLUNGSOPTIONEN: A / BANKÜBERWEISUNG Oder BANK CERTIFIED CHECK (BANKDATEN SIND NUR NOTWENDIG, WENN SIE SICH FÜR EINE  BANKÜBERWEISUNG ENTSCHIEDEN HABEN)
+ZAHLUNGSOPTION: (A) BESTÄTIGTER SCHECK (BEZAHLEN Sie ÜBERTRAGUNG EIN
+
+BETRÄGE GEWONNEN: ……………………………………………………
+NAME DER BANK:……………………………………………………………
+KONTONUMMER:…………………………SWIFT-CODE:…………………
+ADRESSE DER BANK …………………………………………………………
+GEB-DATUM:…………Unterschrift …………(Erst bei hmeAbna)
+
+Rechtsanwältin  Bilbao & Emma Asociados, Abogados, Fiscal Y Accesorios horario de consultas Lunes.bis Samstag De. 09 - 16.30 Uhr  654280 / MLA & (Seien Sie informiert, dass Ihr Vertreter 10% des Preises als Provision erhält, wenn Sie Ihr Geld auf Ihrem  angegebenen Konto erhalten haben) Mitglied des Consejo de Constitucional de España, (ACHTUNG Wir bitten Sie, auf diese E-Mail-Adresse zu antworten (promolottooffice@spainmail.com) BÜRO-KONTOINFORMATIONEN- BANK NAME: P.F.S.SPAIN SL SWIFT CODE: PFSSESM1 IBAN: ES17 6713   0002 5700 0584 3906)COPYRIGHT 2019.LOTERIA SPANIEN. Alle Rechte vorbehalten. NUTZUNGSBEDINGUNGEN HANDELSPOLITIK DATENSCHUTZ VON BESCHWERDEN....
+ 
+Diese E-Mail ist für den vorgesehenen Empfänger bestimmt und enthält Informationen, die vertraulich sein können. Wenn Sie nicht der beabsichtigte Empfänger sind, benachrichtigen Sie bitte den Absender per E-Mail und löschen Sie diese E-Mail aus Ihrem Posteingang. Jede unbefugte Nutzung oder Verbreitung dieser E-Mail, ganz oder teilweise, ist strengstens untersagt und kann rechtswidrig sein. Alle in dieser E-Mail enthaltenen Preisangebote sind nur indikativ und führen zu keiner rechtlich bindenden oder durchsetzbaren Verpflichtung. Sofern nicht ausdrücklich als beabsichtigter E-Vertrag bezeichnet, stellt diese E-Mail kein Vertragsangebot, keine Vertragsänderung oder eine Annahme eines Vertragsangebots dar.
+WWW.GORDO/ EUROMILLIONS ESPAÑA  Sitz der Gesellschaft: Torre Europa Paseo de la Barcelona 15. Planta 16 28006 • Madrid. (Spanien)
 
