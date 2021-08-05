@@ -2,90 +2,84 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8E0C4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 12:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30315C4320A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 12:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2CA260720
-	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 12:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0888260525
+	for <linux-perf-users@archiver.kernel.org>; Thu,  5 Aug 2021 12:59:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241546AbhHEM5n (ORCPT
+        id S239200AbhHENAH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Aug 2021 08:57:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:44926 "EHLO foss.arm.com"
+        Thu, 5 Aug 2021 09:00:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:45002 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241557AbhHEM5n (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Aug 2021 08:57:43 -0400
+        id S238277AbhHENAH (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 5 Aug 2021 09:00:07 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 134F411FB;
-        Thu,  5 Aug 2021 05:57:29 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.40.41])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A3F4D3F719;
-        Thu,  5 Aug 2021 05:57:26 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org,
-        coresight@lists.linaro.org, linux-perf-users@vger.kernel.org
-Cc:     suzuki.poulose@arm.com, mike.leach@linaro.org,
-        James Clark <james.clark@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E5211042;
+        Thu,  5 Aug 2021 05:59:53 -0700 (PDT)
+Received: from [10.57.40.41] (unknown [10.57.40.41])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04AB73F719;
+        Thu,  5 Aug 2021 05:59:50 -0700 (PDT)
+Subject: Re: [RFC PATCH 6/6] perf cs-etm: Add warnings for missing DSOs
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     mathieu.poirier@linaro.org, coresight@lists.linaro.org,
+        linux-perf-users@vger.kernel.org, suzuki.poulose@arm.com,
+        mike.leach@linaro.org, Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] perf cs-etm: Add warnings for missing DSOs
-Date:   Thu,  5 Aug 2021 13:56:34 +0100
-Message-Id: <20210805125634.873368-2-james.clark@arm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20210805125634.873368-1-james.clark@arm.com>
-References: <20210805125634.873368-1-james.clark@arm.com>
+        John Garry <john.garry@huawei.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20210729155805.2830-1-james.clark@arm.com>
+ <20210729155805.2830-7-james.clark@arm.com>
+ <20210802154145.GC148327@leoy-ThinkPad-X240s> <YQlDefz+g45dqFsP@kernel.org>
+ <20210803140122.GC247709@leoy-ThinkPad-X240s>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <b03f9794-ff84-c869-0370-e8f13c577ed5@arm.com>
+Date:   Thu, 5 Aug 2021 13:59:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210803140122.GC247709@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently decode will silently fail if no binary data is available for
-the decode. This is made worse if only partial data is available because
-the decode will appear to work, but any trace from that missing DSO will
-silently not be generated.
 
-Add a UI popup once if there is any data missing, and then warn in the
-bottom left for each individual DSO that's missing.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/cs-etm.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+On 03/08/2021 15:01, Leo Yan wrote:
+>> one can also use debuginfod-client, which, as time passes, probably will
+>> be the main way of finding DSOs now that we have build-ids in
+>> PERF_RECORD_MMAP2 and debuginfod servers such as:
+>>
+>> export DEBUGINFOD_URLS=https://debuginfod.fedoraproject.org/
+> If so, maybe should use more general description for missing DSO.
+> 
+>> https://fedoraproject.org/wiki/Debuginfod
+>>  
+>>> With this improvement, the patch looks good to me:
+>>>
+>>> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+>> Does this apply to the other 5 patches in this series?
+> I finished to reivew patches 01, 04, 05, 06/06, so my review tag can
+> apply on these patches.  Current patch 06/06 needs James to improve for
+> the comments.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index f4b2bff533f3..b59d234e437d 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -716,8 +716,17 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 
- 	len = dso__data_read_offset(al.map->dso, machine, offset, buffer, size);
- 
--	if (len <= 0)
-+	if (len <= 0) {
-+		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
-+				 "              Enable CONFIG_PROC_KCORE or use option '-k /path/to/vmlinux' for kernel symbols.\n");
-+		if (!al.map->dso->auxtrace_warned) {
-+			pr_err("CS ETM Trace: Debug data not found for address %#"PRIx64" in %s\n",
-+				    address,
-+				    al.map->dso->long_name ? al.map->dso->long_name : "Unknown");
-+			al.map->dso->auxtrace_warned = true;
-+		}
- 		return 0;
-+	}
- 
- 	return len;
- }
--- 
-2.23.0
+Thanks for the reviews, I've submitted v2.
 
+I also had a play around with debuginfod, it looks promising.
+Especially if it's integrated with perf report, which I assume is the plan?
+
+Thanks
+James
