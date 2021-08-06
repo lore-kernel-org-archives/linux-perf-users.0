@@ -2,149 +2,192 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F3CC4338F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 22:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05004C4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 22:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4E861165
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 22:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D643D610CB
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 22:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241242AbhHFW2s (ORCPT
+        id S232199AbhHFWvo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Aug 2021 18:28:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22188 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237272AbhHFW2r (ORCPT
+        Fri, 6 Aug 2021 18:51:44 -0400
+Received: from mail-io1-f43.google.com ([209.85.166.43]:34534 "EHLO
+        mail-io1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232090AbhHFWvo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Aug 2021 18:28:47 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 176ML27K034486;
-        Fri, 6 Aug 2021 18:28:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=vzk8eIJzQpp5+lo/qyJnzpHXqej7XaaGcJFZ/7nY1U0=;
- b=ruuvX7GsdJC/J/GYsVuh+CCEEM4Vc2B70HYSqZfEgViGz9fN7K5+hE4QnoWvQAmGNgts
- JGZBFhuUaga+G8mHLt/UIjcRx3CPyAM17xx9M4hHHUIPAaO1fUl7BtB6TuFJC6dx7yME
- lgSMioHXxp0mCE/f5MHKuvvu1NPiyixjthbDzFtpvft9/qsfLHy/SRgh+MDkPkm3f76N
- vKH6pAgfnlrXM6v9gV4aeB+8FaNnbYyqKfWIHHDwXZZUOpVZeEpLXa+OvoIVaTqBfWH2
- xHGV/Y/YOi+sL1Ig3jnQvC+7M6VIV6ITuzcAAo03hZs9YRlTjVeCynBQUmhRejqMfHUd 5w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a9dst841b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Aug 2021 18:28:20 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 176MLIkv035535;
-        Fri, 6 Aug 2021 18:28:20 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a9dst8413-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Aug 2021 18:28:19 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 176MDPKv026405;
-        Fri, 6 Aug 2021 22:28:19 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 3a77h6bm9r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Aug 2021 22:28:19 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 176MSIpP43581700
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Aug 2021 22:28:18 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5DA0CC605A;
-        Fri,  6 Aug 2021 22:28:18 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0BB07C605B;
-        Fri,  6 Aug 2021 22:28:16 +0000 (GMT)
-Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.77.144.67])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Fri,  6 Aug 2021 22:28:16 +0000 (GMT)
-Date:   Fri, 6 Aug 2021 17:28:10 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Fri, 6 Aug 2021 18:51:44 -0400
+Received: by mail-io1-f43.google.com with SMTP id i7so8296853iow.1;
+        Fri, 06 Aug 2021 15:51:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8oTOX5UKRcKwRtyxPU4JY7BhGYOImlGPViKIREQZZ9E=;
+        b=osb9lxwTyTqTmnyYueVyb586q6xgQ1oDayo8BBuhIo2H1L3zTLKiq0zESHB9rbWOCB
+         gsyBPkZt8bbVCJg7Xx9fnMfTeR9vDtb7gRjzM/zxzw0V8GVo/wvYY8GbkL8+iED3+diw
+         W3lpu6WEmDX94D/XjZpSMyzdDaXusP7FokN4J9CscijhYGLE5NiX37ttErVd16dkTqNu
+         BDD7MqbhJux3h7ue/Vwx437VgFmFX6FBFGB9B54wP3MN26BESZqtMUEiCLhuJoaKhyM8
+         y2CqDW2wYIgNM8WezBvzZZAK/UuDIT2mo7fuxhDNOwqohh/6MUFrFKSqMGXmNILy7ebm
+         ydLg==
+X-Gm-Message-State: AOAM530frLw9GnngEocqNierkfkIy1kxPOr5LJjTe0xHG3G/hQujaMyU
+        R0G6a+t+lZBEnn/zov2M9g==
+X-Google-Smtp-Source: ABdhPJz6kn3RnAeRpdhNsQ8o4BoGB7NWJk3dP9MjIMaRLvX6Y1KGDoNPus+S9DKBkoGD2fBI+YSv8g==
+X-Received: by 2002:a5e:924a:: with SMTP id z10mr58037iop.35.1628290286591;
+        Fri, 06 Aug 2021 15:51:26 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.248])
+        by smtp.googlemail.com with ESMTPSA id x11sm5670338ilu.3.2021.08.06.15.51.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Aug 2021 15:51:26 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        honnappa.nagarahalli@arm.com, Zachary.Leaf@arm.com,
+        Raphael Gault <raphael.gault@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf script python: fix unintended underline
-Message-ID: <20210806222810.GB66379@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-References: <20210806204502.110305-1-stephen.s.brennan@oracle.com>
- <20210806211348.GA66379@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
- <87bl6a1cwi.fsf@stepbren-lnx.us.oracle.com>
+        Itaru Kitayama <itaru.kitayama@gmail.com>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH v9 0/3] arm64 userspace counter support
+Date:   Fri,  6 Aug 2021 16:51:20 -0600
+Message-Id: <20210806225123.1958497-1-robh@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bl6a1cwi.fsf@stepbren-lnx.us.oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: nPfVkTvFumYO-KQA8R7h4Yygd4YgDTxc
-X-Proofpoint-ORIG-GUID: uKZgyrIMOLY-NNe_7UbEmUmG7i3zz8IL
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-06_07:2021-08-06,2021-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 adultscore=0 phishscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 priorityscore=1501
- clxscore=1015 mlxscore=0 suspectscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108060140
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 06, 2021 at 02:28:13PM -0700, Stephen Brennan wrote:
-> "Paul A. Clarke" <pc@us.ibm.com> writes:
-> > On Fri, Aug 06, 2021 at 01:45:01PM -0700, Stephen Brennan wrote:
-> >> The text ranging from "subsystem__event_name" to
-> >> "raw_syscalls__sys_enter()" is interpreted by asciidoc as a pair of
-> >> unconstrained text formatting markers. The result is that the manual
-> >> page displayed this text as underlined, and the HTML pages displayed
-> >> this text as italicized. Escape the first double-underscore to prevent
-> >> this.
-> >
-> > I think it would be better to escape the second double-underscore as well,
-> > to prevent the same problem recurring with future changes.
-> >
-> >> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-> >> index 5e43cfa5ea1e..0250dc61cf98 100644
-> >> --- a/tools/perf/Documentation/perf-script-python.txt
-> >> +++ b/tools/perf/Documentation/perf-script-python.txt
-> >> @@ -167,7 +167,7 @@ below).
-> >> 
-> >>  Following those are the 'event handler' functions generated one for
-> >>  every event in the 'perf record' output.  The handler functions take
-> >> -the form subsystem__event_name, and contain named parameters, one for
-> >> +the form subsystem\__event_name, and contain named parameters, one for
-> >>  each field in the event; in this case, there's only one event,
-> >>  raw_syscalls__sys_enter().  (see the EVENT HANDLERS section below for
-> >
-> > escape this    ^ , too.
-> 
-> I've tried escaping a few combinations of these four underscores.
-> 
->   \__ __    - escaping the first but not the second (as this patch)
->               produces correct output
->   \_\_ \_\_ - escaping all underscores results in no underlines, but the
->               manual page shows "raw_syscalls\_\_sys_enter()" in its
->               output.
->   \_\_ __   - escaping the first two results in no underlines, but the
->               manual page shows "subsystem\_\_event_name"
->   \__ \__   - escaping the first of each double-underscore results in no
->               underlines, but the manual page shows
->               "raw_syscalls\__sys_enter()"
-> 
-> It seems that asciidoc only allows the first in a potential pair to be
-> escaped? I'll be the first to admit, I know nothing about asciidoc, so I
-> may have missed something here.
+Will, Mark,
 
-Ugh. Thanks for trying. I thought it would be easy, but that probably shows
-I know even less about asciidoc.  :-/
+This depends on:
 
-PC
+https://lore.kernel.org/lkml/20210728230230.1911468-1-robh@kernel.org/
+
+Go review that first, thanks!
+
+Another version of arm64 userspace counter access support. This is just the
+Arm bits as Arnaldo asked to send the tools bits separately.
+
+The Arm implementation departs from the x86 implementation by requiring
+the user to always explicitly request user access (via attr.config1) and
+only enables access for task bound events. Rather than trying to lock
+down the access as the x86 implementation has been doing, we can start
+with only a limited use case enabled and later expand it if needed.
+
+This originally resurrected Raphael's series[1] to enable userspace counter
+access on arm64. My previous versions are here[2][3][4][5][6][7][8][9].
+
+Changes in v9:
+ - Reworked x86 and perf core to handle user access tracking and call
+   .event_mapped() and .event_unmapped() on the CPU with the event like
+   other changes to events.
+ - Use sysctl instead of sysfs to disable user access.
+
+Changes in v8:
+ - Restrict user access to thread bound events which simplifies the
+   implementation. A couple of perf core changes (patches 1 and 2) are
+   needed to do this.
+ - Always require the user to request userspace access.
+
+Changes in v7:
+ - Handling of dirty counter leakage and reworking of context switch and
+   user access enabling. The .sched_task hook and undef instruction handler
+   are now utilized. (Patch 3)
+ - Add a userspace disable switch like x86. (Patch 5)
+
+Changes in v6:
+ - Reworking of the handling of 64-bit counters and user access. There's
+   a new config1 flag to request user access. This takes priority over
+   the 64-bit flag and the user will get the maximum size the h/w
+   supports without chaining.
+ - The libperf evsel mmap struct is stored in its own xyarray
+ - New tests for user 64-bit and 32-bit counters
+ - Rebase to v5.12-rc2
+
+Changes in v5:
+ - Limit enabling/disabling access to CPUs associated with the PMU
+   (supported_cpus) and with the mm_struct matching current->active_mm.
+   The x86 method of using mm_cpumask doesn't work for arm64 as it is not
+   updated.
+ - Only set cap_user_rdpmc if event is on current cpu. See patch 2.
+ - Create an mmap for every event in an evsel. This results in some changes
+   to the libperf mmap API from the last version.
+ - Rebase to v5.11-rc2
+
+Changes in v4:
+ - Dropped 'arm64: pmu: Add hook to handle pmu-related undefined instructions'.
+   The onus is on userspace to pin itself to a homogeneous subset of CPUs
+   and avoid any aborts on heterogeneous systems, so the hook is not needed.
+ - Make perf_evsel__mmap() take pages rather than bytes for size
+ - Fix building arm64 heterogeneous test.
+
+Changes in v3:
+ - Dropped removing x86 rdpmc test until libperf tests can run via 'perf test'
+ - Added verbose prints for tests
+ - Split adding perf_evsel__mmap() to separate patch
+
+The following changes to the arm64 support have been made compared to
+Raphael's last version:
+
+The major change is support for heterogeneous systems with some
+restrictions. Specifically, userspace must pin itself to like CPUs, open
+a specific PMU by type, and use h/w specific events. The tests have been
+reworked to demonstrate this.
+
+Chained events are not supported. The problem with supporting chained
+events was there's no way to distinguish between a chained event and a
+native 64-bit counter. We could add some flag, but do self monitoring
+processes really need that? Native 64-bit counters are supported if the
+PMU h/w has support. As there's already an explicit ABI to request 64-bit
+counters, userspace can request 64-bit counters and if user
+access is not enabled, then it must retry with 32-bit counters.
+
+Prior versions broke the build on arm32 (surprisingly never caught by
+0-day). As a result, event_mapped and event_unmapped implementations have
+been moved into the arm64 code.
+
+There was a bug in that pmc_width was not set in the user page. The tests
+now check for this.
+
+The documentation has been converted to rST. I've added sections on
+chained events and heterogeneous.
+
+Rob
+
+[1] https://lore.kernel.org/r/20190822144220.27860-1-raphael.gault@arm.com/
+[2] https://lore.kernel.org/r/20200707205333.624938-1-robh@kernel.org/
+[3] https://lore.kernel.org/r/20200828205614.3391252-1-robh@kernel.org/
+[4] https://lore.kernel.org/r/20200911215118.2887710-1-robh@kernel.org/
+[5] https://lore.kernel.org/r/20201001140116.651970-1-robh@kernel.org/
+[6] https://lore.kernel.org/r/20210114020605.3943992-1-robh@kernel.org/
+[7] https://lore.kernel.org/r/20210311000837.3630499-1-robh@kernel.org/
+[8] https://lore.kernel.org/r/20210420031511.2348977-1-robh@kernel.org/
+[9] https://lore.kernel.org/r/20210517195405.3079458-1-robh@kernel.org/
+
+Raphael Gault (1):
+  Documentation: arm64: Document PMU counters access from userspace
+
+Rob Herring (2):
+  arm64: perf: Add userspace counter access disable switch
+  arm64: perf: Enable PMU counter userspace access for perf event
+
+ Documentation/arm64/perf.rst   |  68 ++++++++++++++-
+ arch/arm64/kernel/perf_event.c | 154 +++++++++++++++++++++++++++++++--
+ include/linux/perf/arm_pmu.h   |   6 ++
+ 3 files changed, 219 insertions(+), 9 deletions(-)
+
+-- 
+2.30.2
+
