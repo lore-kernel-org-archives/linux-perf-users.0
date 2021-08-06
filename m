@@ -2,127 +2,170 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAB6C43214
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 21:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED85C4320E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 21:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9D6611BF
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 21:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF0EE611F2
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 21:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235061AbhHFVOX (ORCPT
+        id S240578AbhHFVZK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Aug 2021 17:14:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21796 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S245202AbhHFVOX (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Aug 2021 17:14:23 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 176L5NHv056964;
-        Fri, 6 Aug 2021 17:13:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=cRkEW63PV2Y6BSJzudvoYxZko/o4YF/irIOsVhYwkiE=;
- b=KTiKrKWLPOoWxVLu6FcaPTYU8SLOuJZVuoE9YjeAK2od9ozLQ6PxpTFc85sJ0Hfo5GrC
- Bj8LThMBQS0bIt4tmgqUoW9xq8P7qiKVrNEIrlN/uuWowBezH57HIdzVm0OJ17VZb6ZO
- PXYwukHUnCnITjpPTgJsCfNziWrO2xMZPJm7RY4UOiP/fua8vKZa8R48xAkU2siCPhTR
- l/p9UPyWGHXuCqWex0/r+3jhg8Jr5Pj54rSnSrm9lE4ZbEEhzdyLFNwsrCPBc5B4/VG/
- OhV806bAh4+nOmmqE756G5dtIku8npE8n+YM+X1coBEpJfqe3AFZSIOPcs+aCCU/GJZX zg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a9bxdhc4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Aug 2021 17:13:56 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 176L65RU061266;
-        Fri, 6 Aug 2021 17:13:56 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3a9bxdhc46-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Aug 2021 17:13:56 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 176LDKTB009026;
-        Fri, 6 Aug 2021 21:13:54 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 3a8gwuqnay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Aug 2021 21:13:54 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 176LDsEk33620242
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Aug 2021 21:13:54 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 13ADDAE06A;
-        Fri,  6 Aug 2021 21:13:54 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EBE9BAE066;
-        Fri,  6 Aug 2021 21:13:51 +0000 (GMT)
-Received: from li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com (unknown [9.77.144.67])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri,  6 Aug 2021 21:13:51 +0000 (GMT)
-Date:   Fri, 6 Aug 2021 16:13:48 -0500
-From:   "Paul A. Clarke" <pc@us.ibm.com>
-To:     Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Fri, 6 Aug 2021 17:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38082 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240338AbhHFVZJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 6 Aug 2021 17:25:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4064360EE8;
+        Fri,  6 Aug 2021 21:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628285093;
+        bh=OJXVvQV1lg0BTpnm4/Nv7ym7sLl0HIhqKTRdfOznYwg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=goH/1yJM9CgOOo+OcwLI85KOcKMTJKy8qsbi9kmA/eUKLp96x9J8M/JAw+C0HoXtl
+         LLP9C54GqLgkjnKpGR9kkrYUXUKz/g5bCUA/CpaOzR6XQzlUTgr5y3Dk7zGrmBxX8N
+         en5fOF69mFY7iz78CR1nGEcyNekjfw/CZ0EQbDXeU3Hh82nmIhL0nXS2kQ3mhduoVP
+         XswzHNEybaPpFHtw5KHBi3RP5f5dPsW9v9eFEsYvxzj76KiOdi8Bw4rMEV5B6PvQ1z
+         CLKL2wH1wGanKV5ZinDF8ZSKormkVT85L0UCSY8TizkDvEv+r8Jkclod/etLJWRRFl
+         2rifLx8uQfKtA==
+Date:   Fri, 6 Aug 2021 16:24:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-perf-users@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
+        qat-linux@intel.com,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf script python: fix unintended underline
-Message-ID: <20210806211348.GA66379@li-24c3614c-2adc-11b2-a85c-85f334518bdb.ibm.com>
-References: <20210806204502.110305-1-stephen.s.brennan@oracle.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20210806212452.GA1867870@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20210806204502.110305-1-stephen.s.brennan@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: qD-FdmqpX4JZSrLVBbhJVFa1WMTZXgL4
-X-Proofpoint-ORIG-GUID: OlW__nPxS_ycWnetDraG5IadXgiXoxD4
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-08-06_06:2021-08-06,2021-08-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- impostorscore=0 suspectscore=0 phishscore=0 clxscore=1011 bulkscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2107140000
- definitions=main-2108060138
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 06, 2021 at 01:45:01PM -0700, Stephen Brennan wrote:
-> The text ranging from "subsystem__event_name" to
-> "raw_syscalls__sys_enter()" is interpreted by asciidoc as a pair of
-> unconstrained text formatting markers. The result is that the manual
-> page displayed this text as underlined, and the HTML pages displayed
-> this text as italicized. Escape the first double-underscore to prevent
-> this.
+On Fri, Aug 06, 2021 at 08:46:23AM +0200, Uwe Kleine-König wrote:
+> On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
 
-I think it would be better to escape the second double-underscore as well,
-to prevent the same problem recurring with future changes.
-
-> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-> index 5e43cfa5ea1e..0250dc61cf98 100644
-> --- a/tools/perf/Documentation/perf-script-python.txt
-> +++ b/tools/perf/Documentation/perf-script-python.txt
-> @@ -167,7 +167,7 @@ below).
+> > I looked at all the bus_type.probe() methods, it looks like pci_dev is
+> > not the only offender here.  At least the following also have a driver
+> > pointer in the device struct:
+> > 
+> >   parisc_device.driver
+> >   acpi_device.driver
+> >   dio_dev.driver
+> >   hid_device.driver
+> >   pci_dev.driver
+> >   pnp_dev.driver
+> >   rio_dev.driver
+> >   zorro_dev.driver
 > 
->  Following those are the 'event handler' functions generated one for
->  every event in the 'perf record' output.  The handler functions take
-> -the form subsystem__event_name, and contain named parameters, one for
-> +the form subsystem\__event_name, and contain named parameters, one for
->  each field in the event; in this case, there's only one event,
->  raw_syscalls__sys_enter().  (see the EVENT HANDLERS section below for
+> Right, when I converted zorro_dev it was pointed out that the code was
+> copied from pci and the latter has the same construct. :-)
+> See
+> https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutronix.de
+> for the patch, I don't find where pci was pointed out, maybe it was on
+> irc only.
 
-escape this    ^ , too.
+Oh, thanks!  I looked to see if you'd done something similar
+elsewhere, but I missed this one.
 
->  more info on event handlers).
-> -- 
+> > Looking through the places that care about pci_dev.driver (the ones
+> > updated by patch 5/6), many of them are ... a little dubious to begin
+> > with.  A few need the "struct pci_error_handlers *err_handler"
+> > pointer, so that's probably legitimate.  But many just need a name,
+> > and should probably be using dev_driver_string() instead.
+> 
+> Yeah, I considered adding a function to get the driver name from a
+> pci_dev and a function to get the error handlers. Maybe it's an idea to
+> introduce these two and then use to_pci_driver(pdev->dev.driver) for the
+> few remaining users? Maybe doing that on top of my current series makes
+> sense to have a clean switch from pdev->driver to pdev->dev.driver?!
 
-PC
+I'd propose using dev_driver_string() for these places:
+
+  eeh_driver_name() (could change callers to use dev_driver_string())
+  bcma_host_pci_probe()
+  qm_alloc_uacce()
+  hns3_get_drvinfo()
+  prestera_pci_probe()
+  mlxsw_pci_probe()
+  nfp_get_drvinfo()
+  ssb_pcihost_probe()
+
+The use in mpt_device_driver_register() looks unnecessary: it's only
+to get a struct pci_device_id *, which is passed to ->probe()
+functions that don't need it.
+
+The use in adf_enable_aer() looks wrong: it sets the err_handler
+pointer in one of the adf_driver structs.  I think those structs
+should be basically immutable, and the drivers that call
+adf_enable_aer() from their .probe() methods should set
+".err_handler = &adf_err_handler" in their static adf_driver
+definitions instead.
+
+I think that basically leaves these:
+
+  uncore_pci_probe()     # .id_table, custom driver "registration"
+  match_id()             # .id_table, arch/x86/kernel/probe_roms.c
+  xhci_pci_quirks()      # .id_table
+  pci_error_handlers()   # roll-your-own AER handling, drivers/misc/cxl/guest.c
+
+I think it would be fine to use to_pci_driver(pdev->dev.driver) for
+these few.
+
+Bjorn
