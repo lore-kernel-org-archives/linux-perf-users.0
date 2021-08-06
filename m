@@ -2,228 +2,404 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB792C4320A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 06:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3092C4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 07:55:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB6D611B0
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 06:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B362061050
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 07:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243440AbhHFGt1 (ORCPT
+        id S230002AbhHFHz4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Aug 2021 02:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242342AbhHFGtH (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Aug 2021 02:49:07 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9658C061798
-        for <linux-perf-users@vger.kernel.org>; Thu,  5 Aug 2021 23:48:51 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mBtcu-0007Bd-Gw; Fri, 06 Aug 2021 08:46:40 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mBtce-0004p1-8f; Fri, 06 Aug 2021 08:46:24 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1mBtce-0003LN-5b; Fri, 06 Aug 2021 08:46:24 +0200
-Date:   Fri, 6 Aug 2021 08:46:23 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-perf-users@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
-        qat-linux@intel.com,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Yisen Zhuang <yisen.zhuang@huawei.com>,
-        Fiona Trahe <fiona.trahe@intel.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
-        Jiri Pirko <jiri@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Salil Mehta <salil.mehta@huawei.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
-        MPT-FusionLinux.pdl@broadcom.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org,
-        Wojciech Ziemba <wojciech.ziemba@intel.com>,
-        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
-        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
- bound driver
-Message-ID: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
-References: <20210803100150.1543597-1-u.kleine-koenig@pengutronix.de>
- <20210805234234.GA1797883@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nllglfksvmzlkdkm"
-Content-Disposition: inline
-In-Reply-To: <20210805234234.GA1797883@bjorn-Precision-5520>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+        Fri, 6 Aug 2021 03:55:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:5273 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229992AbhHFHzz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 6 Aug 2021 03:55:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10067"; a="211224810"
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="211224810"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2021 00:55:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,300,1620716400"; 
+   d="scan'208";a="459290387"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.163])
+  by orsmga007.jf.intel.com with ESMTP; 06 Aug 2021 00:55:36 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
+        irogers@google.com, Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v4] perf vendor events: Add metrics for Icelake Server
+Date:   Fri,  6 Aug 2021 15:54:04 +0800
+Message-Id: <20210806075404.31209-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Add JSON metrics for Icelake Server to perf.
 
---nllglfksvmzlkdkm
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Based on TMA metrics 4.21 at 01.org.
+https://download.01.org/perfmon/
 
-Hello Bjorn,
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+---
+v4:
+ - Since now perf tool can support #SMT_on in metric expression as a token,
+   support #SMT_on in 'ILP' and 'SMT_2T_Utilization'.
 
-On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
-> On Tue, Aug 03, 2021 at 12:01:44PM +0200, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> >=20
-> > changes since v1 (https://lore.kernel.org/linux-pci/20210729203740.1377=
-045-1-u.kleine-koenig@pengutronix.de):
-> >=20
-> > - New patch to simplify drivers/pci/xen-pcifront.c, spotted and
-> >   suggested by Boris Ostrovsky
-> > - Fix a possible NULL pointer dereference I introduced in xen-pcifront.c
-> > - A few whitespace improvements
-> > - Add a commit log to patch #6 (formerly #5)
-> >=20
-> > I also expanded the audience for patches #4 and #6 to allow affected
-> > people to actually see the changes to their drivers.
-> >=20
-> > Interdiff can be found below.
-> >=20
-> > The idea is still the same: After a few cleanups (#1 - #3) a new macro
-> > is introduced abstracting access to struct pci_dev->driver. All users
-> > are then converted to use this and in the last patch the macro is
-> > changed to make use of struct pci_dev::dev->driver to get rid of the
-> > duplicated tracking.
->=20
-> I love the idea of this series!
+v3:
+ - PMU cstate_core and cstate_pkg are supported for ICX since 5.14-rc1,
+   add cstate metrics for Core C1/C6 and Package C2/C6.
 
-\o/
+v2:
+ - Fix perf test 10 error.
 
-> I looked at all the bus_type.probe() methods, it looks like pci_dev is
-> not the only offender here.  At least the following also have a driver
-> pointer in the device struct:
->=20
->   parisc_device.driver
->   acpi_device.driver
->   dio_dev.driver
->   hid_device.driver
->   pci_dev.driver
->   pnp_dev.driver
->   rio_dev.driver
->   zorro_dev.driver
+   # ./perf test 10
+   10: PMU events                                                      :
+   10.1: PMU event table sanity                                        : Ok
+   10.2: PMU event map aliases                                         : Ok
+   10.3: Parsing of PMU event table metrics                            : Ok
+   10.4: Parsing of PMU event table metrics with fake PMUs             : Ok
 
-Right, when I converted zorro_dev it was pointed out that the code was
-copied from pci and the latter has the same construct. :-)
-See
-https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutro=
-nix.de
-for the patch, I don't find where pci was pointed out, maybe it was on
-irc only.
+ - Remove cstate metrics because the kernel has not supported
+   cstate_core and cstate_core for Icelake server.
 
-> Do you plan to do the same for all of them, or is there some reason
-> why they need the pointer and PCI doesn't?
+ - Remove the topdown L1/L2 metrics.
 
-There is a list of cleanup stuff I intend to work on. Considering how
-working on that list only made it longer in the recent past, maybe it
-makes more sense to not work on it :-)
+ .../arch/x86/icelakex/icx-metrics.json        | 315 ++++++++++++++++++
+ 1 file changed, 315 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
 
-> In almost all cases, other buses define a "to_<bus>_driver()"
-> interface.  In fact, PCI already has a to_pci_driver().
->=20
-> This series adds pci_driver_of_dev(), which basically just means we
-> can do this:
->=20
->   pdrv =3D pci_driver_of_dev(pdev);
->=20
-> instead of this:
->=20
->   pdrv =3D to_pci_driver(pdev->dev.driver);
->=20
-> I don't see any other "<bus>_driver_of_dev()" interfaces, so I assume
-> other buses just live with the latter style?  I'd rather not be
-> different and have two ways to get the "struct pci_driver *" unless
-> there's a good reason.
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json b/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+new file mode 100644
+index 000000000000..57ddbb9f9b31
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+@@ -0,0 +1,315 @@
++[
++    {
++        "BriefDescription": "Instructions Per Cycle (per Logical Processor)",
++        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD",
++        "MetricGroup": "Summary",
++        "MetricName": "IPC"
++    },
++    {
++        "BriefDescription": "Uops Per Instruction",
++        "MetricExpr": "UOPS_RETIRED.SLOTS / INST_RETIRED.ANY",
++        "MetricGroup": "Pipeline;Retire",
++        "MetricName": "UPI"
++    },
++    {
++        "BriefDescription": "Instruction per taken branch",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;FetchBW;PGO",
++        "MetricName": "IpTB"
++    },
++    {
++        "BriefDescription": "Cycles Per Instruction (per Logical Processor)",
++        "MetricExpr": "1 / (INST_RETIRED.ANY / CPU_CLK_UNHALTED.THREAD)",
++        "MetricGroup": "Pipeline",
++        "MetricName": "CPI"
++    },
++    {
++        "BriefDescription": "Per-Logical Processor actual clocks when the Logical Processor is active.",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
++        "MetricGroup": "Pipeline",
++        "MetricName": "CLKS"
++    },
++    {
++        "BriefDescription": "Instructions Per Cycle (per physical core)",
++        "MetricExpr": "INST_RETIRED.ANY / CPU_CLK_UNHALTED.DISTRIBUTED",
++        "MetricGroup": "SMT;TmaL1",
++        "MetricName": "CoreIPC"
++    },
++    {
++        "BriefDescription": "Floating Point Operations Per Cycle",
++        "MetricExpr": "( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE ) / CPU_CLK_UNHALTED.DISTRIBUTED",
++        "MetricGroup": "Flops",
++        "MetricName": "FLOPc"
++    },
++    {
++        "BriefDescription": "Instruction-Level-Parallelism (average number of uops executed when there is at least 1 uop executed)",
++        "MetricExpr": "UOPS_EXECUTED.THREAD / (( UOPS_EXECUTED.CORE_CYCLES_GE_1 / 2 ) if #SMT_on else UOPS_EXECUTED.CORE_CYCLES_GE_1)",
++        "MetricGroup": "Pipeline;PortsUtil",
++        "MetricName": "ILP"
++    },
++    {
++        "BriefDescription": "Number of Instructions per non-speculative Branch Misprediction (JEClear)",
++        "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "BrMispredicts",
++        "MetricName": "IpMispredict"
++    },
++    {
++        "BriefDescription": "Core actual clocks when any Logical Processor is active on the Physical Core",
++        "MetricExpr": "CPU_CLK_UNHALTED.DISTRIBUTED",
++        "MetricGroup": "SMT",
++        "MetricName": "CORE_CLKS"
++    },
++    {
++        "BriefDescription": "Instructions per Load (lower number means higher occurrence rate)",
++        "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_LOADS",
++        "MetricGroup": "InsType",
++        "MetricName": "IpLoad"
++    },
++    {
++        "BriefDescription": "Instructions per Store (lower number means higher occurrence rate)",
++        "MetricExpr": "INST_RETIRED.ANY / MEM_INST_RETIRED.ALL_STORES",
++        "MetricGroup": "InsType",
++        "MetricName": "IpStore"
++    },
++    {
++        "BriefDescription": "Instructions per Branch (lower number means higher occurrence rate)",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.ALL_BRANCHES",
++        "MetricGroup": "Branches;InsType",
++        "MetricName": "IpBranch"
++    },
++    {
++        "BriefDescription": "Instructions per (near) call (lower number means higher occurrence rate)",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_CALL",
++        "MetricGroup": "Branches",
++        "MetricName": "IpCall"
++    },
++    {
++        "BriefDescription": "Branch instructions per taken branch. ",
++        "MetricExpr": "BR_INST_RETIRED.ALL_BRANCHES / BR_INST_RETIRED.NEAR_TAKEN",
++        "MetricGroup": "Branches;PGO",
++        "MetricName": "BpTkBranch"
++    },
++    {
++        "BriefDescription": "Instructions per Floating Point (FP) Operation (lower number means higher occurrence rate)",
++        "MetricExpr": "INST_RETIRED.ANY / ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE )",
++        "MetricGroup": "Flops;FpArith;InsType",
++        "MetricName": "IpFLOP"
++    },
++    {
++        "BriefDescription": "Total number of retired Instructions, Sample with: INST_RETIRED.PREC_DIST",
++        "MetricExpr": "INST_RETIRED.ANY",
++        "MetricGroup": "Summary;TmaL1",
++        "MetricName": "Instructions"
++    },
++    {
++        "BriefDescription": "Fraction of Uops delivered by the LSD (Loop Stream Detector; aka Loop Cache)",
++        "MetricExpr": "LSD.UOPS / (IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
++        "MetricGroup": "LSD",
++        "MetricName": "LSD_Coverage"
++    },
++    {
++        "BriefDescription": "Fraction of Uops delivered by the DSB (aka Decoded ICache; or Uop Cache)",
++        "MetricExpr": "IDQ.DSB_UOPS / (IDQ.DSB_UOPS + LSD.UOPS + IDQ.MITE_UOPS + IDQ.MS_UOPS)",
++        "MetricGroup": "DSB;FetchBW",
++        "MetricName": "DSB_Coverage"
++    },
++    {
++        "BriefDescription": "Actual Average Latency for L1 data-cache miss demand loads (in core cycles)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / ( MEM_LOAD_RETIRED.L1_MISS + MEM_LOAD_RETIRED.FB_HIT )",
++        "MetricGroup": "MemoryBound;MemoryLat",
++        "MetricName": "Load_Miss_Real_Latency"
++    },
++    {
++        "BriefDescription": "Memory-Level-Parallelism (average number of L1 miss demand load when there is at least one such miss. Per-Logical Processor)",
++        "MetricExpr": "L1D_PEND_MISS.PENDING / L1D_PEND_MISS.PENDING_CYCLES",
++        "MetricGroup": "MemoryBound;MemoryBW",
++        "MetricName": "MLP"
++    },
++    {
++        "BriefDescription": "Utilization of the core's Page Walker(s) serving STLB misses triggered by instruction/Load/Store accesses",
++        "MetricConstraint": "NO_NMI_WATCHDOG",
++        "MetricExpr": "( ITLB_MISSES.WALK_PENDING + DTLB_LOAD_MISSES.WALK_PENDING + DTLB_STORE_MISSES.WALK_PENDING ) / ( 2 * CPU_CLK_UNHALTED.DISTRIBUTED )",
++        "MetricGroup": "MemoryTLB",
++        "MetricName": "Page_Walks_Utilization"
++    },
++    {
++        "BriefDescription": "Average data fill bandwidth to the L1 data cache [GB / sec]",
++        "MetricExpr": "64 * L1D.REPLACEMENT / 1000000000 / duration_time",
++        "MetricGroup": "MemoryBW",
++        "MetricName": "L1D_Cache_Fill_BW"
++    },
++    {
++        "BriefDescription": "Average data fill bandwidth to the L2 cache [GB / sec]",
++        "MetricExpr": "64 * L2_LINES_IN.ALL / 1000000000 / duration_time",
++        "MetricGroup": "MemoryBW",
++        "MetricName": "L2_Cache_Fill_BW"
++    },
++    {
++        "BriefDescription": "Average per-core data fill bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * LONGEST_LAT_CACHE.MISS / 1000000000 / duration_time",
++        "MetricGroup": "MemoryBW",
++        "MetricName": "L3_Cache_Fill_BW"
++    },
++    {
++        "BriefDescription": "Average per-core data access bandwidth to the L3 cache [GB / sec]",
++        "MetricExpr": "64 * OFFCORE_REQUESTS.ALL_REQUESTS / 1000000000 / duration_time",
++        "MetricGroup": "MemoryBW;Offcore",
++        "MetricName": "L3_Cache_Access_BW"
++    },
++    {
++        "BriefDescription": "L1 cache true misses per kilo instruction for retired demand loads",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L1_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "CacheMisses",
++        "MetricName": "L1MPKI"
++    },
++    {
++        "BriefDescription": "L2 cache true misses per kilo instruction for retired demand loads",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L2_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "CacheMisses",
++        "MetricName": "L2MPKI"
++    },
++    {
++        "BriefDescription": "L2 cache misses per kilo instruction for all request types (including speculative)",
++        "MetricExpr": "1000 * ( ( OFFCORE_REQUESTS.ALL_DATA_RD - OFFCORE_REQUESTS.DEMAND_DATA_RD ) + L2_RQSTS.ALL_DEMAND_MISS + L2_RQSTS.SWPF_MISS ) / INST_RETIRED.ANY",
++        "MetricGroup": "CacheMisses;Offcore",
++        "MetricName": "L2MPKI_All"
++    },
++    {
++        "BriefDescription": "L3 cache true misses per kilo instruction for retired demand loads",
++        "MetricExpr": "1000 * MEM_LOAD_RETIRED.L3_MISS / INST_RETIRED.ANY",
++        "MetricGroup": "CacheMisses",
++        "MetricName": "L3MPKI"
++    },
++    {
++        "BriefDescription": "Rate of silent evictions from the L2 cache per Kilo instruction where the evicted lines are dropped (no writeback to L3 or memory)",
++        "MetricExpr": "1000 * L2_LINES_OUT.SILENT / INST_RETIRED.ANY",
++        "MetricGroup": "L2Evicts;Server",
++        "MetricName": "L2_Evictions_Silent_PKI"
++    },
++    {
++        "BriefDescription": "Rate of non silent evictions from the L2 cache per Kilo instruction",
++        "MetricExpr": "1000 * L2_LINES_OUT.NON_SILENT / INST_RETIRED.ANY",
++        "MetricGroup": "L2Evicts;Server",
++        "MetricName": "L2_Evictions_NonSilent_PKI"
++    },
++    {
++        "BriefDescription": "Average CPU Utilization",
++        "MetricExpr": "CPU_CLK_UNHALTED.REF_TSC / msr@tsc@",
++        "MetricGroup": "HPC;Summary",
++        "MetricName": "CPU_Utilization"
++    },
++    {
++        "BriefDescription": "Measured Average Frequency for unhalted processors [GHz]",
++        "MetricExpr": "(CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC) * msr@tsc@ / 1000000000 / duration_time",
++        "MetricGroup": "Summary;Power",
++        "MetricName": "Average_Frequency"
++    },
++    {
++        "BriefDescription": "Giga Floating Point Operations Per Second",
++        "MetricExpr": "( ( 1 * ( FP_ARITH_INST_RETIRED.SCALAR_SINGLE + FP_ARITH_INST_RETIRED.SCALAR_DOUBLE ) + 2 * FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + 4 * ( FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE ) + 8 * ( FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE + FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE ) + 16 * FP_ARITH_INST_RETIRED.512B_PACKED_SINGLE ) / 1000000000 ) / duration_time",
++        "MetricGroup": "Flops;HPC",
++        "MetricName": "GFLOPs"
++    },
++    {
++        "BriefDescription": "Average Frequency Utilization relative nominal frequency",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD / CPU_CLK_UNHALTED.REF_TSC",
++        "MetricGroup": "Power",
++        "MetricName": "Turbo_Utilization"
++    },
++    {
++        "BriefDescription": "Fraction of cycles where both hardware Logical Processors were active",
++        "MetricExpr": "1 - CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_DISTRIBUTED if #SMT_on else 0",
++        "MetricGroup": "SMT",
++        "MetricName": "SMT_2T_Utilization"
++    },
++    {
++        "BriefDescription": "Fraction of cycles spent in the Operating System (OS) Kernel mode",
++        "MetricExpr": "CPU_CLK_UNHALTED.THREAD_P:k / CPU_CLK_UNHALTED.THREAD",
++        "MetricGroup": "OS",
++        "MetricName": "Kernel_Utilization"
++    },
++    {
++        "BriefDescription": "Average external Memory Bandwidth Use for reads and writes [GB / sec]",
++        "MetricExpr": "( 64 * ( uncore_imc@cas_count_read@ + uncore_imc@cas_count_write@ ) / 1000000000 ) / duration_time",
++        "MetricGroup": "HPC;MemoryBW;SoC",
++        "MetricName": "DRAM_BW_Use"
++    },
++    {
++        "BriefDescription": "Average latency of data read request to external memory (in nanoseconds). Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "1000000000 * ( UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD / UNC_CHA_TOR_INSERTS.IA_MISS_DRD ) / ( cha_0@event\\=0x0@ / duration_time )",
++        "MetricGroup": "MemoryLat;SoC",
++        "MetricName": "MEM_Read_Latency"
++    },
++    {
++        "BriefDescription": "Average number of parallel data read requests to external memory. Accounts for demand loads and L1/L2 prefetches",
++        "MetricExpr": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD / cha@event\\=0x36\\,umask\\=0xC817FE01\\,thresh\\=1@",
++        "MetricGroup": "MemoryBW;SoC",
++        "MetricName": "MEM_Parallel_Reads"
++    },
++    {
++        "BriefDescription": "Average latency of data read request to external 3D X-Point memory [in nanoseconds]. Accounts for demand loads and L1/L2 data-read prefetches",
++        "MetricExpr": "( 1000000000 * ( UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD_PMM / UNC_CHA_TOR_INSERTS.IA_MISS_DRD_PMM ) / cha_0@event\\=0x0@ )",
++        "MetricGroup": "MemoryLat;SoC;Server",
++        "MetricName": "MEM_PMM_Read_Latency"
++    },
++    {
++        "BriefDescription": "Average 3DXP Memory Bandwidth Use for reads [GB / sec]",
++        "MetricExpr": "( ( 64 * imc@event\\=0xe3@ / 1000000000 ) / duration_time )",
++        "MetricGroup": "MemoryBW;SoC;Server",
++        "MetricName": "PMM_Read_BW"
++    },
++    {
++        "BriefDescription": "Average 3DXP Memory Bandwidth Use for Writes [GB / sec]",
++        "MetricExpr": "( ( 64 * imc@event\\=0xe7@ / 1000000000 ) / duration_time )",
++        "MetricGroup": "MemoryBW;SoC;Server",
++        "MetricName": "PMM_Write_BW"
++    },
++    {
++        "BriefDescription": "Average IO (network or disk) Bandwidth Use for Writes [GB / sec]",
++        "MetricExpr": "UNC_CHA_TOR_INSERTS.IO_PCIRDCUR * 64 / 1000000000 / duration_time",
++        "MetricGroup": "IoBW;SoC;Server",
++        "MetricName": "IO_Write_BW"
++    },
++    {
++        "BriefDescription": "Average IO (network or disk) Bandwidth Use for Reads [GB / sec]",
++        "MetricExpr": "( UNC_CHA_TOR_INSERTS.IO_HIT_ITOM + UNC_CHA_TOR_INSERTS.IO_MISS_ITOM + UNC_CHA_TOR_INSERTS.IO_HIT_ITOMCACHENEAR + UNC_CHA_TOR_INSERTS.IO_MISS_ITOMCACHENEAR ) * 64 / 1000000000 / duration_time",
++        "MetricGroup": "IoBW;SoC;Server",
++        "MetricName": "IO_Read_BW"
++    },
++    {
++        "BriefDescription": "Socket actual clocks when any core is active on that socket",
++        "MetricExpr": "cha_0@event\\=0x0@",
++        "MetricGroup": "SoC",
++        "MetricName": "Socket_CLKS"
++    },
++    {
++        "BriefDescription": "Instructions per Far Branch ( Far Branches apply upon transition from application to operating system, handling interrupts, exceptions) [lower number means higher occurrence rate]",
++        "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.FAR_BRANCH:u",
++        "MetricGroup": "Branches;OS",
++        "MetricName": "IpFarBranch"
++    },
++    {
++        "BriefDescription": "C1 residency percent per core",
++        "MetricExpr": "(cstate_core@c1\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C1_Core_Residency"
++    },
++    {
++        "BriefDescription": "C6 residency percent per core",
++        "MetricExpr": "(cstate_core@c6\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C6_Core_Residency"
++    },
++    {
++        "BriefDescription": "C2 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c2\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C2_Pkg_Residency"
++    },
++    {
++        "BriefDescription": "C6 residency percent per package",
++        "MetricExpr": "(cstate_pkg@c6\\-residency@ / msr@tsc@) * 100",
++        "MetricGroup": "Power",
++        "MetricName": "C6_Pkg_Residency"
++    },
++]
+-- 
+2.17.1
 
-Among few the busses I already fixed in this regard pci was the first
-that has a considerable amount of usage. So I considered it worth giving
-it a name.
-=20
-> Looking through the places that care about pci_dev.driver (the ones
-> updated by patch 5/6), many of them are ... a little dubious to begin
-> with.  A few need the "struct pci_error_handlers *err_handler"
-> pointer, so that's probably legitimate.  But many just need a name,
-> and should probably be using dev_driver_string() instead.
-
-Yeah, I considered adding a function to get the driver name from a
-pci_dev and a function to get the error handlers. Maybe it's an idea to
-introduce these two and then use to_pci_driver(pdev->dev.driver) for the
-few remaining users? Maybe doing that on top of my current series makes
-sense to have a clean switch from pdev->driver to pdev->dev.driver?!
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---nllglfksvmzlkdkm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEM2rwACgkQwfwUeK3K
-7AlqBggAh2Z8+ZW+YMYlQQ8AzujRmGYo9gKX26eGdp2jNjZUeOc0CEZwm/GiW4aZ
-9+W1RS3i+O6ToHVYkt9fNEpdUGO3YdBKiMHGWsrkQuwNjm4Yv5Dlx/wRz0dU4vIX
-QQDa5tw6Mow1g0gjZqHvDuwbgKoJyHXzFD115kBaINYN/XqOLST9YvMqxxSsHHsD
-qRmpU59QTxEqHXKIsgABctdVnQBkbixppZH3/6nu+Xh7qkZvczBLpx/C5V1+XeAv
-47LOxaH3wiLQBS/sICKlAFeYcbAyNhwh+nbMxx5i3lG6O6LhaeX46FPMoTG6qiAj
-MaO1mAnwrEO35eTXFBgw4IYh37zS9A==
-=/ZHI
------END PGP SIGNATURE-----
-
---nllglfksvmzlkdkm--
