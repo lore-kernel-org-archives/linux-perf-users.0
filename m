@@ -2,271 +2,228 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86E9C432BE
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 01:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB792C4320A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 06:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE4761184
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 01:33:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DB6D611B0
+	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 06:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243209AbhHFBd4 (ORCPT
+        id S243440AbhHFGt1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 5 Aug 2021 21:33:56 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:50792 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243210AbhHFBdz (ORCPT
+        Fri, 6 Aug 2021 02:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36760 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242342AbhHFGtH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 5 Aug 2021 21:33:55 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 9A8D3223C7;
-        Fri,  6 Aug 2021 01:33:39 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3BF4E13DD1;
-        Fri,  6 Aug 2021 01:33:38 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id OIMXBXKRDGFiBgAAMHmgww
-        (envelope-from <dave@stgolabs.net>); Fri, 06 Aug 2021 01:33:38 +0000
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     acme@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        dave@stgolabs.net, Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 3/3] perf/bench-futex, requeue: Add --pi parameter
-Date:   Thu,  5 Aug 2021 18:33:29 -0700
-Message-Id: <20210806013329.94627-4-dave@stgolabs.net>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20210806013329.94627-1-dave@stgolabs.net>
-References: <20210806013329.94627-1-dave@stgolabs.net>
+        Fri, 6 Aug 2021 02:49:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9658C061798
+        for <linux-perf-users@vger.kernel.org>; Thu,  5 Aug 2021 23:48:51 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mBtcu-0007Bd-Gw; Fri, 06 Aug 2021 08:46:40 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mBtce-0004p1-8f; Fri, 06 Aug 2021 08:46:24 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mBtce-0003LN-5b; Fri, 06 Aug 2021 08:46:24 +0200
+Date:   Fri, 6 Aug 2021 08:46:23 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-pci@vger.kernel.org, Alexander Duyck <alexanderduyck@fb.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        oss-drivers@corigine.com, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Jiri Olsa <jolsa@redhat.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        linux-perf-users@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-scsi@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Ido Schimmel <idosch@nvidia.com>, x86@kernel.org,
+        qat-linux@intel.com,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-wireless@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Fiona Trahe <fiona.trahe@intel.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Michael Buesch <m@bues.ch>,
+        Jiri Pirko <jiri@nvidia.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        xen-devel@lists.xenproject.org, Vadym Kochan <vkochan@marvell.com>,
+        MPT-FusionLinux.pdl@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org,
+        Wojciech Ziemba <wojciech.ziemba@intel.com>,
+        linux-kernel@vger.kernel.org, Taras Chornyi <tchornyi@marvell.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        linux-crypto@vger.kernel.org, kernel@pengutronix.de,
+        netdev@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/6] PCI: Drop duplicated tracking of a pci_dev's
+ bound driver
+Message-ID: <20210806064623.3lxl4clzbjpmchef@pengutronix.de>
+References: <20210803100150.1543597-1-u.kleine-koenig@pengutronix.de>
+ <20210805234234.GA1797883@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nllglfksvmzlkdkm"
+Content-Disposition: inline
+In-Reply-To: <20210805234234.GA1797883@bjorn-Precision-5520>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This extends the program to measure WAIT_REQUEUE_PI+CMP_REQUEUE_PI
-pairs, which are the underlying machinery behind priority-inheritance
-aware condition variables. The defaults are the same as with the regular
-non-pi version, requeueing one task at a time, with the exception that
-PI will always wakeup the first waiter.
 
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
----
- tools/perf/bench/futex-requeue.c | 81 +++++++++++++++++++++++++-------
- tools/perf/bench/futex.h         | 40 ++++++++++++++--
- 2 files changed, 100 insertions(+), 21 deletions(-)
+--nllglfksvmzlkdkm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-index 51f2c0d5e6f8..fcbf04235d94 100644
---- a/tools/perf/bench/futex-requeue.c
-+++ b/tools/perf/bench/futex-requeue.c
-@@ -6,7 +6,8 @@
-  *                on futex2, N at a time.
-  *
-  * This program is particularly useful to measure the latency of nthread
-- * requeues without waking up any tasks -- thus mimicking a regular futex_wait.
-+ * requeues without waking up any tasks (in the non-pi case) -- thus
-+ * mimicking a regular futex_wait.
-  */
- 
- /* For the CLR_() macros */
-@@ -41,7 +42,8 @@ static int futex_flag = 0;
- 
- struct parameters {
- 	unsigned int nthreads;
--        unsigned int nrequeue;
-+	unsigned int nrequeue;
-+	bool pi;
- 	bool silent;
- 	bool fshared;
- 	bool mlockall;
-@@ -60,6 +62,8 @@ static const struct option options[] = {
- 		     "Specify amount of threads"),
- 	OPT_UINTEGER('q', "nrequeue", &params.nrequeue,
- 		     "Specify amount of threads to requeue at once"),
-+	OPT_BOOLEAN( 'p', "pi", &params.pi,
-+		     "Use PI-aware variants of FUTEX_CMP_REQUEUE"),
- 	OPT_BOOLEAN( 's', "silent",   &params.silent,
- 		     "Silent mode: do not display data/details"),
- 	OPT_BOOLEAN( 'S', "shared",   &params.fshared,
-@@ -96,7 +100,18 @@ static void *workerfn(void *arg __maybe_unused)
- 	pthread_cond_wait(&thread_worker, &thread_lock);
- 	pthread_mutex_unlock(&thread_lock);
- 
--	futex_wait(&futex1, 0, NULL, futex_flag);
-+	if (!params.pi)
-+		futex_wait(&futex1, 0, NULL, futex_flag);
-+	else {
-+		int ret = futex_wait_requeue_pi(&futex1, 0, &futex2,
-+						 NULL, futex_flag);
-+		if (ret)
-+			warnx("waiter was not requeued");
-+		else
-+			futex_unlock_pi(&futex2, futex_flag);
-+	}
-+
-+
- 	return NULL;
- }
- 
-@@ -167,9 +182,10 @@ int bench_futex_requeue(int argc, const char **argv)
- 	if (params.nrequeue > params.nthreads)
- 		params.nrequeue = params.nthreads;
- 
--	printf("Run summary [PID %d]: Requeuing %d threads (from [%s] %p to %p), "
-+	printf("Run summary [PID %d]: Requeuing %d threads (from [%s] %p to %s%p), "
- 	       "%d at a time.\n\n",  getpid(), params.nthreads,
--	       params.fshared ? "shared":"private", &futex1, &futex2, params.nrequeue);
-+	       params.fshared ? "shared":"private", &futex1,
-+	       params.pi ? "PI ": "", &futex2, params.nrequeue);
- 
- 	init_stats(&requeued_stats);
- 	init_stats(&requeuetime_stats);
-@@ -179,7 +195,7 @@ int bench_futex_requeue(int argc, const char **argv)
- 	pthread_cond_init(&thread_worker, NULL);
- 
- 	for (j = 0; j < bench_repeat && !done; j++) {
--		unsigned int nrequeued = 0;
-+		unsigned int nrequeued = 0, wakeups = 0;
- 		struct timeval start, end, runtime;
- 
- 		/* create, launch & block all threads */
-@@ -197,13 +213,30 @@ int bench_futex_requeue(int argc, const char **argv)
- 		/* Ok, all threads are patiently blocked, start requeueing */
- 		gettimeofday(&start, NULL);
- 		while (nrequeued < params.nthreads) {
-+			int r;
-+
- 			/*
--			 * Do not wakeup any tasks blocked on futex1, allowing
--			 * us to really measure futex_wait functionality.
-+			 * For the regular non-pi case, do not wakeup any tasks
-+			 * blocked on futex1, allowing us to really measure
-+			 * futex_wait functionality. For the PI case the first
-+			 * waiter is always awoken.
- 			 */
--			nrequeued += futex_cmp_requeue(&futex1, 0, &futex2, 0,
--						       params.nrequeue,
--						       futex_flag);
-+			if (!params.pi) {
-+				r = futex_cmp_requeue(&futex1, 0, &futex2, 0,
-+						      params.nrequeue,
-+						      futex_flag);
-+			} else {
-+				r = futex_cmp_requeue_pi(&futex1, 0, &futex2,
-+							 params.nrequeue,
-+							 futex_flag);
-+				wakeups++; /* assume no error */
-+			}
-+
-+			if (r < 0)
-+				err(EXIT_FAILURE, "couldn't requeue from %p to %p",
-+				    &futex1, &futex2);
-+
-+			nrequeued += r;
- 		}
- 
- 		gettimeofday(&end, NULL);
-@@ -213,16 +246,28 @@ int bench_futex_requeue(int argc, const char **argv)
- 		update_stats(&requeuetime_stats, runtime.tv_usec);
- 
- 		if (!params.silent) {
--			printf("[Run %d]: Requeued %d of %d threads in %.4f ms\n",
--			       j + 1, nrequeued, params.nthreads,
--			       runtime.tv_usec / (double)USEC_PER_MSEC);
-+			if (!params.pi)
-+				printf("[Run %d]: Requeued %d of %d threads in "
-+				       "%.4f ms\n", j + 1, nrequeued,
-+				       params.nthreads,
-+				       runtime.tv_usec / (double)USEC_PER_MSEC);
-+			else {
-+				nrequeued -= wakeups;
-+				printf("[Run %d]: Awoke and Requeued (%d+%d) of "
-+				       "%d threads in %.4f ms\n",
-+				       j + 1, wakeups, nrequeued,
-+				       params.nthreads,
-+				       runtime.tv_usec / (double)USEC_PER_MSEC);
-+			}
- 		}
- 
- 		/* everybody should be blocked on futex2, wake'em up */
--		nrequeued = futex_wake(&futex2, nrequeued, futex_flag);
--		if (params.nthreads != nrequeued)
--			warnx("couldn't wakeup all tasks (%d/%d)",
--			      nrequeued, params.nthreads);
-+		if (!params.pi) {
-+			nrequeued = futex_wake(&futex2, nrequeued, futex_flag);
-+			if (params.nthreads != nrequeued)
-+				err(EXIT_FAILURE, "couldn't wakeup all tasks (%d/%d)",
-+				    nrequeued, params.nthreads);
-+		}
- 
- 		for (i = 0; i < params.nthreads; i++) {
- 			ret = pthread_join(worker[i], NULL);
-diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-index 31b53cc7d5bc..f64a3c231184 100644
---- a/tools/perf/bench/futex.h
-+++ b/tools/perf/bench/futex.h
-@@ -77,13 +77,47 @@ futex_unlock_pi(u_int32_t *uaddr, int opflags)
- /**
- * futex_cmp_requeue() - requeue tasks from uaddr to uaddr2
- * @nr_wake:        wake up to this many tasks
--* @nr_requeue:        requeue up to this many tasks
-+* @nr_requeue:     requeue up to this many tasks
- */
- static inline int
--futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wake,
--		 int nr_requeue, int opflags)
-+futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
-+		  int nr_wake, int nr_requeue, int opflags)
- {
- 	return futex(uaddr, FUTEX_CMP_REQUEUE, nr_wake, nr_requeue, uaddr2,
- 		 val, opflags);
- }
-+
-+/**
-+ * futex_wait_requeue_pi() - block on uaddr and prepare to requeue to uaddr2
-+ * @uaddr:	non-PI futex source
-+ * @uaddr2:	PI futex target
-+ *
-+ * This is the first half of the requeue_pi mechanism. It shall always be
-+ * paired with futex_cmp_requeue_pi().
-+ */
-+static inline int
-+futex_wait_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
-+		      struct timespec *timeout, int opflags)
-+{
-+	return futex(uaddr, FUTEX_WAIT_REQUEUE_PI, val, timeout, uaddr2, 0,
-+		     opflags);
-+}
-+
-+/**
-+ * futex_cmp_requeue_pi() - requeue tasks from uaddr to uaddr2
-+ * @uaddr:	non-PI futex source
-+ * @uaddr2:	PI futex target
-+ * @nr_requeue:	requeue up to this many tasks
-+ *
-+ * This is the second half of the requeue_pi mechanism. It shall always be
-+ * paired with futex_wait_requeue_pi(). The first waker is always awoken.
-+ */
-+static inline int
-+futex_cmp_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
-+		     int nr_requeue, int opflags)
-+{
-+	return futex(uaddr, FUTEX_CMP_REQUEUE_PI, 1, nr_requeue, uaddr2,
-+		     val, opflags);
-+}
-+
- #endif /* _FUTEX_H */
--- 
-2.26.2
+Hello Bjorn,
 
+On Thu, Aug 05, 2021 at 06:42:34PM -0500, Bjorn Helgaas wrote:
+> On Tue, Aug 03, 2021 at 12:01:44PM +0200, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> >=20
+> > changes since v1 (https://lore.kernel.org/linux-pci/20210729203740.1377=
+045-1-u.kleine-koenig@pengutronix.de):
+> >=20
+> > - New patch to simplify drivers/pci/xen-pcifront.c, spotted and
+> >   suggested by Boris Ostrovsky
+> > - Fix a possible NULL pointer dereference I introduced in xen-pcifront.c
+> > - A few whitespace improvements
+> > - Add a commit log to patch #6 (formerly #5)
+> >=20
+> > I also expanded the audience for patches #4 and #6 to allow affected
+> > people to actually see the changes to their drivers.
+> >=20
+> > Interdiff can be found below.
+> >=20
+> > The idea is still the same: After a few cleanups (#1 - #3) a new macro
+> > is introduced abstracting access to struct pci_dev->driver. All users
+> > are then converted to use this and in the last patch the macro is
+> > changed to make use of struct pci_dev::dev->driver to get rid of the
+> > duplicated tracking.
+>=20
+> I love the idea of this series!
+
+\o/
+
+> I looked at all the bus_type.probe() methods, it looks like pci_dev is
+> not the only offender here.  At least the following also have a driver
+> pointer in the device struct:
+>=20
+>   parisc_device.driver
+>   acpi_device.driver
+>   dio_dev.driver
+>   hid_device.driver
+>   pci_dev.driver
+>   pnp_dev.driver
+>   rio_dev.driver
+>   zorro_dev.driver
+
+Right, when I converted zorro_dev it was pointed out that the code was
+copied from pci and the latter has the same construct. :-)
+See
+https://lore.kernel.org/r/20210730191035.1455248-5-u.kleine-koenig@pengutro=
+nix.de
+for the patch, I don't find where pci was pointed out, maybe it was on
+irc only.
+
+> Do you plan to do the same for all of them, or is there some reason
+> why they need the pointer and PCI doesn't?
+
+There is a list of cleanup stuff I intend to work on. Considering how
+working on that list only made it longer in the recent past, maybe it
+makes more sense to not work on it :-)
+
+> In almost all cases, other buses define a "to_<bus>_driver()"
+> interface.  In fact, PCI already has a to_pci_driver().
+>=20
+> This series adds pci_driver_of_dev(), which basically just means we
+> can do this:
+>=20
+>   pdrv =3D pci_driver_of_dev(pdev);
+>=20
+> instead of this:
+>=20
+>   pdrv =3D to_pci_driver(pdev->dev.driver);
+>=20
+> I don't see any other "<bus>_driver_of_dev()" interfaces, so I assume
+> other buses just live with the latter style?  I'd rather not be
+> different and have two ways to get the "struct pci_driver *" unless
+> there's a good reason.
+
+Among few the busses I already fixed in this regard pci was the first
+that has a considerable amount of usage. So I considered it worth giving
+it a name.
+=20
+> Looking through the places that care about pci_dev.driver (the ones
+> updated by patch 5/6), many of them are ... a little dubious to begin
+> with.  A few need the "struct pci_error_handlers *err_handler"
+> pointer, so that's probably legitimate.  But many just need a name,
+> and should probably be using dev_driver_string() instead.
+
+Yeah, I considered adding a function to get the driver name from a
+pci_dev and a function to get the error handlers. Maybe it's an idea to
+introduce these two and then use to_pci_driver(pdev->dev.driver) for the
+few remaining users? Maybe doing that on top of my current series makes
+sense to have a clean switch from pdev->driver to pdev->dev.driver?!
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--nllglfksvmzlkdkm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmEM2rwACgkQwfwUeK3K
+7AlqBggAh2Z8+ZW+YMYlQQ8AzujRmGYo9gKX26eGdp2jNjZUeOc0CEZwm/GiW4aZ
+9+W1RS3i+O6ToHVYkt9fNEpdUGO3YdBKiMHGWsrkQuwNjm4Yv5Dlx/wRz0dU4vIX
+QQDa5tw6Mow1g0gjZqHvDuwbgKoJyHXzFD115kBaINYN/XqOLST9YvMqxxSsHHsD
+qRmpU59QTxEqHXKIsgABctdVnQBkbixppZH3/6nu+Xh7qkZvczBLpx/C5V1+XeAv
+47LOxaH3wiLQBS/sICKlAFeYcbAyNhwh+nbMxx5i3lG6O6LhaeX46FPMoTG6qiAj
+MaO1mAnwrEO35eTXFBgw4IYh37zS9A==
+=/ZHI
+-----END PGP SIGNATURE-----
+
+--nllglfksvmzlkdkm--
