@@ -2,185 +2,388 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E1C4320A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 22:51:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA63C4338F
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 Aug 2021 02:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 886F4610CB
-	for <linux-perf-users@archiver.kernel.org>; Fri,  6 Aug 2021 22:51:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EFF161167
+	for <linux-perf-users@archiver.kernel.org>; Sat,  7 Aug 2021 02:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245617AbhHFWvv (ORCPT
+        id S230004AbhHGCZW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 6 Aug 2021 18:51:51 -0400
-Received: from mail-io1-f53.google.com ([209.85.166.53]:35418 "EHLO
-        mail-io1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244611AbhHFWvt (ORCPT
+        Fri, 6 Aug 2021 22:25:22 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:35640 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229943AbhHGCZW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 6 Aug 2021 18:51:49 -0400
-Received: by mail-io1-f53.google.com with SMTP id s184so14577652ios.2;
-        Fri, 06 Aug 2021 15:51:33 -0700 (PDT)
+        Fri, 6 Aug 2021 22:25:22 -0400
+Received: by mail-lf1-f41.google.com with SMTP id c16so21649721lfc.2;
+        Fri, 06 Aug 2021 19:25:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9Hgxz19RdIXBXlB6JUJjJ2L0EQ+QiZ5LkbfFS3m/GYk=;
-        b=A3wVp94HsyeUyQdn0pikzsalbPcW1jdq3pd/PX4xOsHnCUl0nJDvoIDRUtylQS+mIV
-         yvxV5i/bFlgMmXNCmB5GgiVOMevh3B++2gQyohWF9p69RrKeYZeqcYRggRFw3bOw1dXl
-         2TeKqMlPw2x9H1Xy7bIpSqnD/t9gxcTGKB11SL9aosbnpX/LwUW+sA1LGswW+V9qmaAF
-         eslam4+s3ccjf4z9pfeLu5yiIUgq199Ia0MhdHzRIs7Y0HnsNuVmoPJhVK04FmNUrIVz
-         fEL9VPgo2Ss8YTimGF19TiD1bpKFrZn+rrNJl+/B3VeJxb5yQpegCztSdFa0YRf1GO5b
-         WWrw==
-X-Gm-Message-State: AOAM530shl+yEt9grZ8i3RfvLuSTQte7UnGisJCrjIDTuV7va2vvn7i7
-        Hf02Clp0BCDEhRH6O5FaIw==
-X-Google-Smtp-Source: ABdhPJybqm/xp7N1NbKP6o213fl3HnTmjQCNX5M7YLK2eyLxm2rPTJks5eQ7ZIRUluTW84b4OKwFVg==
-X-Received: by 2002:a6b:b502:: with SMTP id e2mr734725iof.152.1628290293125;
-        Fri, 06 Aug 2021 15:51:33 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.248])
-        by smtp.googlemail.com with ESMTPSA id x11sm5670338ilu.3.2021.08.06.15.51.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 15:51:32 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        honnappa.nagarahalli@arm.com, Zachary.Leaf@arm.com,
-        Raphael Gault <raphael.gault@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Itaru Kitayama <itaru.kitayama@gmail.com>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH v9 3/3] Documentation: arm64: Document PMU counters access from userspace
-Date:   Fri,  6 Aug 2021 16:51:23 -0600
-Message-Id: <20210806225123.1958497-4-robh@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210806225123.1958497-1-robh@kernel.org>
-References: <20210806225123.1958497-1-robh@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QO6Ft3x4wdD+Qi4/Mq7hzsh4s/CmEKiBMSvOY+GSzdI=;
+        b=GyvxOr1a1hvllAK32IRzYJvbwmqJwKaH3RjhaYtIHwMIBBG52UJ8cCAskUm9HC6j9W
+         cHeWAwBDe3fNx/S33BtsNKNKJKqjYpb2M7LRKyjSa4kQ+cQ8gFIQj9UZVxAX628+uAl6
+         VX9HFA61ruNBWotd3mOiQjP74oX+Q/t8QvVrfmpn19Kqnrofb9huwIS8KUA2r/5oKxzu
+         m70Wn+5cjS0uyA/Y1HTLfEfePKzvDdPo96b0lX6FpG6AXSmOy4aKlULPlrrbbh2QSwVo
+         VeVfjA8HXoIiGclwcL1wE7GVWkmQFgsQTTYCzI0Tbzq0SdIuGW44wzkhPafvlo8MG54t
+         9vJg==
+X-Gm-Message-State: AOAM531+8pUirjSidMfazxD2CqKzX5+LXBpWCMDZ39TxWo2LGc2neIlQ
+        vEJyA2uDkxqyhzEBwTSBBhH6+O7DUsf9R842bas=
+X-Google-Smtp-Source: ABdhPJyhMplD2vQlCwu02dmFDSfmFeIwjqjnZ+i5plwVkN94lGOTufoaXDo5TnYacHSsMchbp9gjAxPXKCTOvU5mLLY=
+X-Received: by 2002:a05:6512:3456:: with SMTP id j22mr9342820lfr.635.1628303103564;
+ Fri, 06 Aug 2021 19:25:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1627657061.git.rickyman7@gmail.com> <4f0cd6c8e77c0b4f4d4b8d553a7032757b976e61.1627657061.git.rickyman7@gmail.com>
+In-Reply-To: <4f0cd6c8e77c0b4f4d4b8d553a7032757b976e61.1627657061.git.rickyman7@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 6 Aug 2021 19:24:52 -0700
+Message-ID: <CAM9d7ci0LcdTZyDu5sxGkaS07Z-m4hvr2xU4TDK_aTRAJm7b7A@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 01/10] perf workqueue: threadpool creation and destruction
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Raphael Gault <raphael.gault@arm.com>
+Hi Riccardo,
 
-Add documentation to describe the access to the pmu hardware counters from
-userspace.
+On Fri, Jul 30, 2021 at 8:34 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
+>
+> The workqueue library is made up by two components:
+>  - threadpool: handles the lifetime of the threads
+>  - workqueue: handles work distribution among the threads
+>
+> This first patch introduces the threadpool, starting from its creation
+> and destruction functions.
+> Thread management is based on the prototype from Alexey:
+> https://lore.kernel.org/lkml/cover.1625227739.git.alexey.v.bayduraev@linux.intel.com/
+>
+> Each thread in the threadpool executes the same function (aka task)
+> with a different argument tidx.
+> Threads use a pair of pipes to communicate with the main process.
+> The threadpool is static (all threads will be spawned at the same time).
+> Future work could include making it resizable and adding affinity support
+> (as in Alexey prototype).
+>
+> Suggested-by: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> ---
+>  tools/perf/util/Build                  |   1 +
+>  tools/perf/util/workqueue/Build        |   1 +
+>  tools/perf/util/workqueue/threadpool.c | 208 +++++++++++++++++++++++++
+>  tools/perf/util/workqueue/threadpool.h |  30 ++++
+>  4 files changed, 240 insertions(+)
+>  create mode 100644 tools/perf/util/workqueue/Build
+>  create mode 100644 tools/perf/util/workqueue/threadpool.c
+>  create mode 100644 tools/perf/util/workqueue/threadpool.h
+>
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 2d4fa13041789cd6..c7b09701661c869d 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -180,6 +180,7 @@ perf-$(CONFIG_LIBBABELTRACE) += data-convert-bt.o
+>  perf-y += data-convert-json.o
+>
+>  perf-y += scripting-engines/
+> +perf-y += workqueue/
+>
+>  perf-$(CONFIG_ZLIB) += zlib.o
+>  perf-$(CONFIG_LZMA) += lzma.o
+> diff --git a/tools/perf/util/workqueue/Build b/tools/perf/util/workqueue/Build
+> new file mode 100644
+> index 0000000000000000..8b72a6cd4e2cba0d
+> --- /dev/null
+> +++ b/tools/perf/util/workqueue/Build
+> @@ -0,0 +1 @@
+> +perf-y += threadpool.o
+> diff --git a/tools/perf/util/workqueue/threadpool.c b/tools/perf/util/workqueue/threadpool.c
+> new file mode 100644
+> index 0000000000000000..0004ce606d5fa73d
+> --- /dev/null
+> +++ b/tools/perf/util/workqueue/threadpool.c
+> @@ -0,0 +1,208 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <stdlib.h>
+> +#include <stdio.h>
+> +#include <unistd.h>
+> +#include <errno.h>
+> +#include <string.h>
+> +#include "debug.h"
+> +#include <asm/bug.h>
+> +#include <linux/zalloc.h>
+> +#include <linux/string.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include "threadpool.h"
+> +
+> +enum threadpool_status {
+> +       THREADPOOL_STATUS__STOPPED,             /* no threads */
+> +       THREADPOOL_STATUS__ERROR,               /* errors */
+> +       THREADPOOL_STATUS__MAX
+> +};
+> +
+> +struct threadpool {
+> +       int                     nr_threads;     /* number of threads in the pool */
+> +       struct threadpool_entry *threads;       /* array of threads in the pool */
+> +       struct task_struct      *current_task;  /* current executing function */
+> +       enum threadpool_status  status;         /* current status of the pool */
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v9:
- - No change
-v8:
- - Reword that config1:1 must always be set to request user access
-v7:
- - Merge into existing arm64 perf.rst
-v6:
-  - Update the chained event section with attr.config1 details
-v2:
-  - Update links to test examples
+Better to move to below the nr_threads for alignment.
 
-Changes from Raphael's v4:
-  - Convert to rSt
-  - Update chained event status
-  - Add section for heterogeneous systems
----
- Documentation/arm64/perf.rst | 68 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 67 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/arm64/perf.rst b/Documentation/arm64/perf.rst
-index b567f177d385..fa8706df2281 100644
---- a/Documentation/arm64/perf.rst
-+++ b/Documentation/arm64/perf.rst
-@@ -2,7 +2,10 @@
- 
- .. _perf_index:
- 
--=====================
-+====
-+Perf
-+====
-+
- Perf Event Attributes
- =====================
- 
-@@ -88,3 +91,66 @@ exclude_host. However when using !exclude_hv there is a small blackout
- window at the guest entry/exit where host events are not captured.
- 
- On VHE systems there are no blackout windows.
-+
-+Perf Userspace PMU Hardware Counter Access
-+==========================================
-+
-+Overview
-+--------
-+The perf userspace tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 PMUv3 which makes sure that the access to the pmu
-+registers is enabled and that the userspace has access to the relevant
-+information in order to use them.
-+
-+In order to have access to the hardware counter it is necessary to open the
-+event using the perf tool interface with config1:1 attr bit set: the
-+sys_perf_event_open syscall returns a fd which can subsequently be used
-+with the mmap syscall in order to retrieve a page of memory containing
-+information about the event. The PMU driver uses this page to expose to
-+the user the hardware counter's index and other necessary data. Using
-+this index enables the user to access the PMU registers using the `mrs`
-+instruction.
-+
-+The userspace access is supported in libperf using the perf_evsel__mmap()
-+and perf_evsel__read() functions. See `tools/lib/perf/tests/test-evsel.c`_ for
-+an example.
-+
-+About heterogeneous systems
-+---------------------------
-+On heterogeneous systems such as big.LITTLE, userspace PMU counter access can
-+only be enabled when the tasks are pinned to a homogeneous subset of cores and
-+the corresponding PMU instance is opened by specifying the 'type' attribute.
-+The use of generic event types is not supported in this case.
-+
-+Have a look at `tools/perf/arch/arm64/tests/user-events.c`_ for an example. It
-+can be run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+.. code-block:: sh
-+
-+  perf test -v user
-+
-+About chained events and 64-bit counters
-+----------------------------------------
-+Chained events are not supported in conjunction with userspace counter
-+access. If a 64-bit counter is requested (attr.config1:0) with userspace
-+access (attr.config1:1 set), then counter chaining will be disabled. The
-+'pmc_width' in the user page will indicate the actual width of the
-+counter which could be only 32-bits depending on the event and PMU
-+features.
-+
-+.. Links
-+.. _tools/perf/arch/arm64/tests/user-events.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/arch/arm64/tests/user-events.c
-+.. _tools/lib/perf/tests/test-evsel.c:
-+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/lib/perf/tests/test-evsel.c
--- 
-2.30.2
+> +};
+> +
+> +struct threadpool_entry {
+> +       int                             idx;    /* idx of thread in pool->threads */
+> +       pid_t                           tid;    /* tid of thread */
+> +       struct threadpool               *pool;  /* parent threadpool */
+> +       struct {
+> +               int ack[2];                     /* messages from thread (acks) */
+> +               int cmd[2];                     /* messages to thread (commands) */
+> +       } pipes;
+> +};
+> +
+> +/**
+> + * threadpool_entry__init_pipes - initialize all pipes of @thread
+> + */
+> +static void threadpool_entry__init_pipes(struct threadpool_entry *thread)
+> +{
+> +       thread->pipes.ack[0] = -1;
+> +       thread->pipes.ack[1] = -1;
+> +       thread->pipes.cmd[0] = -1;
+> +       thread->pipes.cmd[1] = -1;
+> +}
+> +
+> +/**
+> + * threadpool_entry__open_pipes - open all pipes of @thread
+> + */
+> +static int threadpool_entry__open_pipes(struct threadpool_entry *thread)
+> +{
+> +       if (pipe(thread->pipes.ack)) {
+> +               pr_debug2("threadpool: failed to create comm pipe 'from': %s\n",
+> +                       strerror(errno));
+> +               return -ENOMEM;
+> +       }
+> +
+> +       if (pipe(thread->pipes.cmd)) {
+> +               pr_debug2("threadpool: failed to create comm pipe 'to': %s\n",
+> +                       strerror(errno));
+> +               close(thread->pipes.ack[0]);
+> +               thread->pipes.ack[0] = -1;
+> +               close(thread->pipes.ack[1]);
+> +               thread->pipes.ack[1] = -1;
 
+Maybe you don't need to do it here if the caller handles it already ...
+
+> +               return -ENOMEM;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * threadpool_entry__close_pipes - close all communication pipes of @thread
+> + */
+> +static void threadpool_entry__close_pipes(struct threadpool_entry *thread)
+> +{
+> +       if (thread->pipes.ack[0] != -1) {
+> +               close(thread->pipes.ack[0]);
+> +               thread->pipes.ack[0] = -1;
+> +       }
+> +       if (thread->pipes.ack[1] != -1) {
+> +               close(thread->pipes.ack[1]);
+> +               thread->pipes.ack[1] = -1;
+> +       }
+> +       if (thread->pipes.cmd[0] != -1) {
+> +               close(thread->pipes.cmd[0]);
+> +               thread->pipes.cmd[0] = -1;
+> +       }
+> +       if (thread->pipes.cmd[1] != -1) {
+> +               close(thread->pipes.cmd[1]);
+> +               thread->pipes.cmd[1] = -1;
+> +       }
+> +}
+> +
+> +/**
+> + * threadpool__new - create a fixed threadpool with @n_threads threads
+> + */
+> +struct threadpool *threadpool__new(int n_threads)
+> +{
+> +       int ret, err, t;
+> +       struct threadpool *pool = malloc(sizeof(*pool));
+> +
+> +       if (!pool) {
+> +               pr_debug2("threadpool: cannot allocate pool: %s\n",
+> +                       strerror(errno));
+> +               err = -ENOMEM;
+> +               goto out_return;
+> +       }
+> +
+> +       if (n_threads <= 0) {
+> +               pr_debug2("threadpool: invalid number of threads: %d\n",
+> +                       n_threads);
+> +               err = -EINVAL;
+> +               goto out_free_pool;
+
+Isn't' it natural to check it before the allocation?
+
+> +       }
+> +
+> +       pool->nr_threads = n_threads;
+> +       pool->current_task = NULL;
+> +
+> +       pool->threads = calloc(n_threads, sizeof(*pool->threads));
+> +       if (!pool->threads) {
+> +               pr_debug2("threadpool: cannot allocate threads: %s\n",
+> +                       strerror(errno));
+> +               err = -ENOMEM;
+> +               goto out_free_pool;
+> +       }
+> +
+> +       for (t = 0; t < n_threads; t++) {
+> +               pool->threads[t].idx = t;
+> +               pool->threads[t].tid = -1;
+> +               pool->threads[t].pool = pool;
+> +               threadpool_entry__init_pipes(&pool->threads[t]);
+> +       }
+> +
+> +       for (t = 0; t < n_threads; t++) {
+> +               ret = threadpool_entry__open_pipes(&pool->threads[t]);
+> +               if (ret) {
+> +                       err = -ret;
+> +                       goto out_close_pipes;
+
+... like this.  But threadpool_entry__open_pipes() already
+returns a negative.
+
+> +               }
+> +       }
+> +
+> +       pool->status = THREADPOOL_STATUS__STOPPED;
+> +
+> +       return pool;
+> +
+> +out_close_pipes:
+> +       for (t = 0; t < n_threads; t++)
+> +               threadpool_entry__close_pipes(&pool->threads[t]);
+> +
+> +       zfree(&pool->threads);
+> +out_free_pool:
+> +       free(pool);
+> +out_return:
+> +       return ERR_PTR(err);
+> +}
+> +
+> +/**
+> + * threadpool__strerror - print message regarding given @err in @pool
+> + *
+> + * Buffer size should be at least THREADPOOL_STRERR_BUFSIZE bytes.
+> + */
+> +int threadpool__strerror(struct threadpool *pool __maybe_unused, int err, char *buf, size_t size)
+> +{
+> +       char sbuf[STRERR_BUFSIZE], *emsg;
+> +
+> +       emsg = str_error_r(err, sbuf, sizeof(sbuf));
+> +       return scnprintf(buf, size, "Error: %s.\n", emsg);
+> +}
+> +
+> +/**
+> + * threadpool__new_strerror - print message regarding @err_ptr
+> + *
+> + * Buffer size should be at least THREADPOOL_STRERR_BUFSIZE bytes.
+> + */
+> +int threadpool__new_strerror(struct threadpool *err_ptr, char *buf, size_t size)
+> +{
+> +       return threadpool__strerror(err_ptr, PTR_ERR(err_ptr), buf, size);
+> +}
+
+Why two different functions?
+
+> +
+> +/**
+> + * threadpool__delete - free the @pool and all its resources
+> + */
+> +void threadpool__delete(struct threadpool *pool)
+> +{
+> +       int t;
+> +
+> +       if (IS_ERR_OR_NULL(pool))
+> +               return;
+> +
+> +       WARN_ON(pool->status != THREADPOOL_STATUS__STOPPED
+> +               && pool->status != THREADPOOL_STATUS__ERROR);
+> +
+> +       for (t = 0; t < pool->nr_threads; t++)
+> +               threadpool_entry__close_pipes(&pool->threads[t]);
+> +
+> +       zfree(&pool->threads);
+> +       free(pool);
+> +}
+> +
+> +/**
+> + * threadpool__size - get number of threads in the threadpool
+> + */
+> +int threadpool__size(struct threadpool *pool)
+> +{
+> +       return pool->nr_threads;
+> +}
+> diff --git a/tools/perf/util/workqueue/threadpool.h b/tools/perf/util/workqueue/threadpool.h
+> new file mode 100644
+> index 0000000000000000..fb18aa32fb64f671
+> --- /dev/null
+> +++ b/tools/perf/util/workqueue/threadpool.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __WORKQUEUE_THREADPOOL_H
+> +#define __WORKQUEUE_THREADPOOL_H
+> +
+> +struct threadpool;
+> +struct task_struct;
+
+You can just move the definition here.
+
+> +
+> +typedef void (*task_func_t)(int tidx, struct task_struct *task);
+> +
+> +struct task_struct {
+> +       task_func_t fn;
+> +};
+> +
+> +extern struct threadpool *threadpool__new(int n_threads);
+> +extern void threadpool__delete(struct threadpool *pool);
+> +
+> +extern int threadpool__start(struct threadpool *pool);
+> +extern int threadpool__stop(struct threadpool *pool);
+> +
+> +extern int threadpool__execute(struct threadpool *pool, struct task_struct *task);
+> +extern int threadpool__wait(struct threadpool *pool);
+
+These are not defined yet.
+
+> +
+> +extern int threadpool__size(struct threadpool *pool);
+> +
+> +/* Error management */
+> +#define THREADPOOL_STRERR_BUFSIZE (128+STRERR_BUFSIZE)
+> +extern int threadpool__strerror(struct threadpool *pool, int err, char *buf, size_t size);
+> +extern int threadpool__new_strerror(struct threadpool *err_ptr, char *buf, size_t size);
+> +
+> +#endif /* __WORKQUEUE_THREADPOOL_H */
+> --
+> 2.31.1
+>
