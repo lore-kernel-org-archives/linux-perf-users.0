@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EF6C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F9C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 218BA61052
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE986101E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbhHIUCB (ORCPT
+        id S230079AbhHIUCj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 16:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
+        Mon, 9 Aug 2021 16:02:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229483AbhHIUCA (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 16:02:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 62DB86056B;
-        Mon,  9 Aug 2021 20:01:39 +0000 (UTC)
+        id S229483AbhHIUCj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 9 Aug 2021 16:02:39 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id E02686056B;
+        Mon,  9 Aug 2021 20:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628539299;
-        bh=Eq+URu3bwlUYfVc+gzjSPPb11z8iUaCCLWyPR6rHUw0=;
+        s=k20201202; t=1628539338;
+        bh=n8gtlw3IyiLYqu4+9qU9LPJ3PiUmIz8KgvCh3DjVqOo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V2CWCLM0pG0fEHxdiahKtWoTLBCYjtXbyQVNvkojMfrejIIiBM0hy2taxgWXVfAJ1
-         UDLe85d2QiLvGW1A3/KIv3Gj7W82735StTJEI960IJLqsiQLlCXw07izjs7QAp7MLO
-         cfvo0Xs+VEwnOoWdVkDy8m+LgVXCZYokrtYf9VfFLs2UOHJAWJKgXe+wa5HgE6nKr+
-         aECu/itp1i4uPX1+/3+aQIAhELfnz5R0a03itDFEBn0AVKdcJlQtpNVVuGv2VNuaHc
-         0mxa2ujcm36Q/zEnYhp8VxweG0hAcNiVYxkzVKhRdvtUQQcAgrXm1uKicEeJ82esT0
-         PE19IPUi8o76A==
+        b=LgrDCopn65ratKG6U00C/T8QdPzLLrhFq4yK1FHO+k2+eh+EVoS5zjpc+NzBkz+/9
+         GF5gghoDes2jbb7VkBzFNe7BZ6cZ+xPBRhRgqYToBICp7ZTNg55B+QIokDaAp/Aif5
+         n4QOQX+7BVh6b7pYtzrOFZCUTM0gnYxl4m1TorVobHjN/XPv8OauUPmxWFx/C3W91p
+         +FfUY+jmEwJnBqnazaegkVhvWdGn4PGBGW675xDB4gB6wJNCX/pVxEMuze4DPnceOS
+         o+FmP4Q/OHxWi3PutG0yvKeBSWyGpG9P08FZAWfZaJ+hoQ6GPOtP9dmdCqjP5dzkxD
+         l6xqKWGM7mzGQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7D123403F2; Mon,  9 Aug 2021 17:01:36 -0300 (-03)
-Date:   Mon, 9 Aug 2021 17:01:36 -0300
+        id 626DC410A0; Mon,  9 Aug 2021 17:02:15 -0300 (-03)
+Date:   Mon, 9 Aug 2021 17:02:15 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -60,85 +60,66 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
-Subject: Re: [PATCH v5 7/9] perf auxtrace: Remove
- auxtrace_mmap__read_snapshot_head()
-Message-ID: <YRGJoNdr253SHqlh@kernel.org>
+Subject: Re: [PATCH v5 8/9] perf: Cleanup for
+ HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
+Message-ID: <YRGJx5zJ9/OHob/C@kernel.org>
 References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-8-leo.yan@linaro.org>
+ <20210809111407.596077-9-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210809111407.596077-8-leo.yan@linaro.org>
+In-Reply-To: <20210809111407.596077-9-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 09, 2021 at 07:14:05PM +0800, Leo Yan escreveu:
-> Since the function auxtrace_mmap__read_snapshot_head() is exactly same
-> with auxtrace_mmap__read_head(), whether the session is in snapshot mode
-> or not, it's unified to use function auxtrace_mmap__read_head() for
-> reading AUX buffer head.
-> 
-> And the function auxtrace_mmap__read_snapshot_head() is unused so this
-> patch removes it.
+Em Mon, Aug 09, 2021 at 07:14:06PM +0800, Leo Yan escreveu:
+> Since the __sync functions have been dropped, This patch removes unused
+> build and checking for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT in perf tool.
+ 
 
 Thanks, applied to perf/core.
 
 - Arnaldo
 
- 
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  tools/perf/util/auxtrace.c | 13 +++++--------
->  tools/perf/util/auxtrace.h | 10 ----------
->  2 files changed, 5 insertions(+), 18 deletions(-)
+>  tools/perf/Makefile.config | 4 ----
+>  tools/perf/util/auxtrace.c | 5 -----
+>  2 files changed, 9 deletions(-)
 > 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index eb8e487ef90b..4a0d9a6defc7 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -349,10 +349,6 @@ CXXFLAGS += $(INC_FLAGS)
+>  
+>  LIBPERF_CFLAGS := $(CORE_CFLAGS) $(EXTRA_CFLAGS)
+>  
+> -ifeq ($(feature-sync-compare-and-swap), 1)
+> -  CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
+> -endif
+> -
+>  ifeq ($(feature-pthread-attr-setaffinity-np), 1)
+>    CFLAGS += -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
+>  endif
 > diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index cb19669d2a5b..2dcf3d12ba32 100644
+> index 2dcf3d12ba32..f33f09b8b535 100644
 > --- a/tools/perf/util/auxtrace.c
 > +++ b/tools/perf/util/auxtrace.c
-> @@ -1686,14 +1686,11 @@ static int __auxtrace_mmap__read(struct mmap *map,
->  	union perf_event ev;
->  	void *data1, *data2;
->  
-> -	if (snapshot) {
-> -		head = auxtrace_mmap__read_snapshot_head(mm);
-> -		if (auxtrace_record__find_snapshot(itr, mm->idx, mm, data,
-> -						   &head, &old))
-> -			return -1;
-> -	} else {
-> -		head = auxtrace_mmap__read_head(mm);
-> -	}
-> +	head = auxtrace_mmap__read_head(mm);
-> +
-> +	if (snapshot &&
-> +	    auxtrace_record__find_snapshot(itr, mm->idx, mm, data, &head, &old))
-> +		return -1;
->  
->  	if (old == head)
+> @@ -130,11 +130,6 @@ int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
 >  		return 0;
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index 4f9176368134..d68a5e80b217 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -440,16 +440,6 @@ struct auxtrace_cache;
+>  	}
 >  
->  #ifdef HAVE_AUXTRACE_SUPPORT
+> -#if BITS_PER_LONG != 64 && !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
+> -	pr_err("Cannot use AUX area tracing mmaps\n");
+> -	return -1;
+> -#endif
+> -
+>  	pc->aux_offset = mp->offset;
+>  	pc->aux_size = mp->len;
 >  
-> -static inline u64 auxtrace_mmap__read_snapshot_head(struct auxtrace_mmap *mm)
-> -{
-> -	struct perf_event_mmap_page *pc = mm->userpg;
-> -	u64 head = READ_ONCE(pc->aux_head);
-> -
-> -	/* Ensure all reads are done after we read the head */
-> -	smp_rmb();
-> -	return head;
-> -}
-> -
->  static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
->  {
->  	struct perf_event_mmap_page *pc = mm->userpg;
 > -- 
 > 2.25.1
 > 
