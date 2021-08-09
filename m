@@ -4,273 +4,430 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCF8C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBF9C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F13DB6101E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039DB61056
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233782AbhHIUMy (ORCPT
+        id S234056AbhHIUXz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 16:12:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60852 "EHLO mail.kernel.org"
+        Mon, 9 Aug 2021 16:23:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233122AbhHIUMy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 16:12:54 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3EBE960F11;
-        Mon,  9 Aug 2021 20:12:33 +0000 (UTC)
+        id S233061AbhHIUXz (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 9 Aug 2021 16:23:55 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 291A36101E;
+        Mon,  9 Aug 2021 20:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628539953;
-        bh=EspkTptJWNcCjEtEuHL0zQWAAqCwaT5wWDI6oGL/1k8=;
+        s=k20201202; t=1628540614;
+        bh=J5RaGWfrhprnHWMncCMmbDhppJOblEv5Du+oLkqkc3c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qBLCrVvg2GzJPYenRNLdT7QMI/+D2knBb4vII0Zw07u3kQ65Ya4frlonmGpCKkqtb
-         MSae/GGFCW+7+F5egPQbiWiTOvpgWV0MlmKvW8vyVPgNtuWlUrCn3iRfKJW2H12x3K
-         K/Q+OJxHItA+oeXX895OCKrfrNnDK7MMeNFsFzM/7uCO1Jyz7OS1vIW/Z6epW5hvCM
-         3LhIn39UiQ2EbasVR5roYLis2bDreoRp4BZ+8GfhamevVM3rIl7p4aa9Nac6rqVSJD
-         FNAMDlW7pQGE+4f9GoHeXzZfswom6E61a91XyTzAk6KaT5xpvx7beMz79alab7V9Rf
-         SiClhTWraTehQ==
+        b=eBuxhmxszoqTClkIyNw5g/z7kQ/dR3PbYo+sH0lJRVDnHNERNlwGm9lZS2xev8zSX
+         ftnXgFm/UuvHu0g4JwHCtnQ2XS4rXnQBlyNgFnk5EXIbJPo0uMSZgX6OTdzW60yC4W
+         8YrsAEJmp3w4c18ZewobKDaJ4+uOg1kp20XcuxD62TBOdst4Yk+snrpMXFs1fd2K6k
+         qO9FqWTLf0mJJEgJurjFm5ZRQ97hSWlYbIJVSoKi/zH6WfXZkwxc40PfE9KIpxOcwo
+         NWzH7Q7+eZuobvgk1KNEOwaOEet6rcAoHiLD6SU6XDq91ZuUn/ar7ltkwVbUfnv49t
+         xgDk98/oM5doQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 42B58403F2; Mon,  9 Aug 2021 17:12:30 -0300 (-03)
-Date:   Mon, 9 Aug 2021 17:12:30 -0300
+        id 7BB7A403F2; Mon,  9 Aug 2021 17:23:31 -0300 (-03)
+Date:   Mon, 9 Aug 2021 17:23:31 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Li Huafei <lihuafei1@huawei.com>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] perf auxtrace: Add
- compat_auxtrace_mmap__{read_head|write_tail}
-Message-ID: <YRGMLsEnWI+opAqB@kernel.org>
-References: <20210809112727.596876-1-leo.yan@linaro.org>
- <20210809112727.596876-3-leo.yan@linaro.org>
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf bench: add benchmark for evlist open/close
+ operations
+Message-ID: <YRGOwx3xlPRxNAXM@kernel.org>
+References: <20210809201101.277594-1-rickyman7@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210809112727.596876-3-leo.yan@linaro.org>
+In-Reply-To: <20210809201101.277594-1-rickyman7@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 09, 2021 at 07:27:26PM +0800, Leo Yan escreveu:
-> When perf runs in compat mode (kernel in 64-bit mode and the perf is in
-> 32-bit mode), the 64-bit value atomicity in the user space cannot be
-> assured, E.g. on some architectures, the 64-bit value accessing is split
-> into two instructions, one is for the low 32-bit word accessing and
-> another is for the high 32-bit word.
+Em Mon, Aug 09, 2021 at 10:11:02PM +0200, Riccardo Mancini escreveu:
+> This new benchmark finds the total time that is taken to open, mmap,
+> enable, disable, munmap, close an evlist (time taken for new,
+> create_maps, config, delete is not counted in).
+> The evlist can be configured as in perf-record using the
+> -a,-C,-e,-u,--per-thread,-t,-p options.
+> The events can be duplicated in the evlist to quickly test performance
+> with many events using the -n options.
+> Furthermore, also the number of iterations used to calculate the
+> statistics is customizable.
 > 
-> This patch introduces weak functions compat_auxtrace_mmap__read_head()
-> and compat_auxtrace_mmap__write_tail(), as their naming indicates, when
-> perf tool works in compat mode, it uses these two functions to access
-> the AUX head and tail.  These two functions can allow the perf tool to
-> work properly in certain conditions, e.g. when perf tool works in
-> snapshot mode with only using AUX head pointer, or perf tool uses the
-> AUX buffer and the incremented tail is not bigger than 4GB.
+> Examples:
+> - Open one dummy event system-wide:
+> $ sudo ./perf bench internals evlist-open-close
+>   Number of cpus:       4
+>   Number of threads:    1
+>   Number of events:     1 (4 fds)
+>   Number of iterations: 100
+>   Average open-close took: 613.870 usec (+- 32.852 usec)
 > 
-> When perf tool cannot handle the case when the AUX tail is bigger than
-> 4GB, the function compat_auxtrace_mmap__write_tail() returns -1 and
-> tells the caller to bail out for the error.
+> - Open the group '{cs,cycles}' on CPU 0
+> $ sudo ./perf bench internals evlist-open-close -e '{cs,cycles}' -C 0
+>   Number of cpus:       1
+>   Number of threads:    1
+>   Number of events:     2 (2 fds)
+>   Number of iterations: 100
+>   Average open-close took: 8503.220 usec (+- 252.652 usec)
 > 
-> These two functions are declared as weak attribute, this allows to
-> implement arch specific functions if any arch can support the 64-bit
-> value atomicity in compat mode.
-
-Adrian, ARM guys, can you please review this?
-
-Thanks,
-
-- Arnaldo
- 
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> - Open 10 'cycles' events for user 0, calculate average over 100 runs
+> $ sudo ./perf bench internals evlist-open-close -e cycles -n 10 -u 0 -i 100
+>   Number of cpus:       4
+>   Number of threads:    328
+>   Number of events:     10 (13120 fds)
+>   Number of iterations: 100
+>   Average open-close took: 180043.140 usec (+- 2295.889 usec)
+> 
+> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 > ---
->  tools/perf/util/auxtrace.c | 88 ++++++++++++++++++++++++++++++++++++--
->  tools/perf/util/auxtrace.h | 22 ++++++++--
->  2 files changed, 103 insertions(+), 7 deletions(-)
+>  tools/perf/bench/Build               |   1 +
+>  tools/perf/bench/bench.h             |   1 +
+>  tools/perf/bench/evlist-open-close.c | 275 +++++++++++++++++++++++++++
+>  tools/perf/builtin-bench.c           |   1 +
+>  4 files changed, 278 insertions(+)
+>  create mode 100644 tools/perf/bench/evlist-open-close.c
 > 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index f33f09b8b535..60975df05d54 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -1669,6 +1669,82 @@ int perf_event__process_auxtrace_error(struct perf_session *session,
->  	return 0;
->  }
+> diff --git a/tools/perf/bench/Build b/tools/perf/bench/Build
+> index e43f46931b41b78f..61d45fcb4057c945 100644
+> --- a/tools/perf/bench/Build
+> +++ b/tools/perf/bench/Build
+> @@ -13,6 +13,7 @@ perf-y += synthesize.o
+>  perf-y += kallsyms-parse.o
+>  perf-y += find-bit-bench.o
+>  perf-y += inject-buildid.o
+> +perf-y += evlist-open-close.o
 >  
-> +/*
-> + * In the compat mode kernel runs in 64-bit and perf tool runs in 32-bit mode,
-> + * 32-bit perf tool cannot access 64-bit value atomically, which might lead to
-> + * the issues caused by the below sequence on multiple CPUs: when perf tool
-> + * accesses either the load operation or the store operation for 64-bit value,
-> + * on some architectures the operation is divided into two instructions, one
-> + * is for accessing the low 32-bit value and another is for the high 32-bit;
-> + * thus these two user operations can give the kernel chances to access the
-> + * 64-bit value, and thus leads to the unexpected load values.
-> + *
-> + *   kernel (64-bit)                        user (32-bit)
-> + *
-> + *   if (LOAD ->aux_tail) { --,             LOAD ->aux_head_lo
-> + *       STORE $aux_data      |       ,--->
-> + *       FLUSH $aux_data      |       |     LOAD ->aux_head_hi
-> + *       STORE ->aux_head   --|-------`     smp_rmb()
-> + *   }                        |             LOAD $data
-> + *                            |             smp_mb()
-> + *                            |             STORE ->aux_tail_lo
-> + *                            `----------->
-> + *                                          STORE ->aux_tail_hi
-> + *
-> + * For this reason, it's impossible for the perf tool to work correctly when
-> + * the AUX head or tail is bigger than 4GB (more than 32 bits length); and we
-> + * can not simply limit the AUX ring buffer to less than 4GB, the reason is
-> + * the pointers can be increased monotonically, whatever the buffer size it is,
-> + * at the end the head and tail can be bigger than 4GB and carry out to the
-> + * high 32-bit.
-> + *
-> + * To mitigate the issues and improve the user experience, we can allow the
-> + * perf tool working in certain conditions and bail out with error if detect
-> + * any overflow cannot be handled.
-> + *
-> + * For reading the AUX head, it reads out the values for three times, and
-> + * compares the high 4 bytes of the values between the first time and the last
-> + * time, if there has no change for high 4 bytes injected by the kernel during
-> + * the user reading sequence, it's safe for use the second value.
-> + *
-> + * When update the AUX tail and detects any carrying in the high 32 bits, it
-> + * means there have two store operations in user space and it cannot promise
-> + * the atomicity for 64-bit write, so return '-1' in this case to tell the
-> + * caller an overflow error has happened.
-> + */
-> +u64 __weak compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
+>  perf-$(CONFIG_X86_64) += mem-memcpy-x86-64-asm.o
+>  perf-$(CONFIG_X86_64) += mem-memset-x86-64-asm.o
+> diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> index eac36afab2b39fa5..b3480bc33fe84885 100644
+> --- a/tools/perf/bench/bench.h
+> +++ b/tools/perf/bench/bench.h
+> @@ -48,6 +48,7 @@ int bench_epoll_ctl(int argc, const char **argv);
+>  int bench_synthesize(int argc, const char **argv);
+>  int bench_kallsyms_parse(int argc, const char **argv);
+>  int bench_inject_build_id(int argc, const char **argv);
+> +int bench_evlist_open_close(int argc, const char **argv);
+>  
+>  #define BENCH_FORMAT_DEFAULT_STR	"default"
+>  #define BENCH_FORMAT_DEFAULT		0
+> diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
+> new file mode 100644
+> index 0000000000000000..40bce06f5ca7bef3
+> --- /dev/null
+> +++ b/tools/perf/bench/evlist-open-close.c
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <limits.h>
+> +#include "bench.h"
+> +#include "../util/debug.h"
+> +#include "../util/stat.h"
+> +#include "../util/evlist.h"
+> +#include "../util/evsel.h"
+> +#include "../util/strbuf.h"
+> +#include "../util/record.h"
+> +#include "../util/parse-events.h"
+> +#include "internal/threadmap.h"
+> +#include "internal/cpumap.h"
+> +#include <linux/perf_event.h>
+> +#include <linux/kernel.h>
+> +#include <linux/time64.h>
+> +#include <linux/string.h>
+> +#include <subcmd/parse-options.h>
+> +
+> +#define MMAP_FLUSH_DEFAULT 1
+> +
+> +static int iterations = 100;
+> +static int nr_events = 1;
+> +static const char *event_string = "dummy";
+> +
+> +static struct record_opts opts = {
+> +	.sample_time	     = true,
+> +	.mmap_pages	     = UINT_MAX,
+> +	.user_freq	     = UINT_MAX,
+> +	.user_interval	     = ULLONG_MAX,
+> +	.freq		     = 4000,
+> +	.target		     = {
+> +		.uses_mmap   = true,
+> +		.default_per_cpu = true,
+> +	},
+> +	.mmap_flush          = MMAP_FLUSH_DEFAULT,
+> +	.nr_threads_synthesize = 1,
+> +	.ctl_fd              = -1,
+> +	.ctl_fd_ack          = -1,
+> +};
+> +
+> +static const struct option options[] = {
+> +	OPT_STRING('e', "event", &event_string, "event",
+> +		     "event selector. use 'perf list' to list available events"),
+> +	OPT_INTEGER('n', "nr-events", &nr_events,
+> +		     "number of dummy events to create (default 1). If used with -e, it clones those events n times (1 = no change)"),
+> +	OPT_INTEGER('i', "iterations", &iterations,
+> +		"Number of iterations used to compute average (default=100)"),
+> +	OPT_BOOLEAN('a', "all-cpus", &opts.target.system_wide,
+> +		"system-wide collection from all CPUs"),
+> +	OPT_STRING('C', "cpu", &opts.target.cpu_list, "cpu",
+> +		    "list of cpus where to open events"),
+> +	OPT_STRING('p', "pid", &opts.target.pid, "pid",
+> +		    "record events on existing process id"),
+> +	OPT_STRING('t', "tid", &opts.target.tid, "tid",
+> +		    "record events on existing thread id"),
+> +	OPT_STRING('u', "uid", &opts.target.uid_str, "user",
+> +		   "user to profile"),
+> +	OPT_BOOLEAN(0, "per-thread", &opts.target.per_thread,
+> +		    "use per-thread mmaps"),
+> +	OPT_END()
+> +};
+> +
+> +static const char *const bench_usage[] = {
+> +	"perf bench internals evlist-open-close <options>",
+> +	NULL
+> +};
+> +
+> +static int evlist__count_evsel_fds(struct evlist *evlist)
 > +{
-> +	struct perf_event_mmap_page *pc = mm->userpg;
-> +	u64 first, second, last;
-> +	u64 mask = (u64)(UINT32_MAX) << 32;
+> +	struct evsel *evsel;
+> +	int cnt = 0;
 > +
-> +	do {
-> +		first = READ_ONCE(pc->aux_head);
-> +		/* Ensure all reads are done after we read the head */
-> +		smp_rmb();
-> +		second = READ_ONCE(pc->aux_head);
-> +		/* Ensure all reads are done after we read the head */
-> +		smp_rmb();
-> +		last = READ_ONCE(pc->aux_head);
-> +	} while ((first & mask) != (last & mask));
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		cnt += evsel->core.threads->nr * evsel->core.cpus->nr;
+> +	}
 > +
-> +	return second;
+> +	return cnt;
 > +}
 > +
-> +int __weak compat_auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail)
+> +static struct evlist *bench__create_evlist(char *evstr)
 > +{
-> +	struct perf_event_mmap_page *pc = mm->userpg;
-> +	u64 mask = (u64)(UINT32_MAX) << 32;
+> +	struct evlist *evlist;
+> +	struct parse_events_error err;
+> +	int ret;
 > +
-> +	if (tail & mask)
-> +		return -1;
+> +	evlist = evlist__new();
+> +	if (!evlist) {
+> +		pr_err("Not enough memory to create evlist\n");
+> +		return NULL;
+> +	}
 > +
-> +	/* Ensure all reads are done before we write the tail out */
-> +	smp_mb();
-> +	WRITE_ONCE(pc->aux_tail, tail);
+> +	bzero(&err, sizeof(err));
+
+man bzero
+
+       The bzero() function is deprecated (marked as LEGACY in POSIX.1-2001); use memset(3) in new programs.  POSIX.1-2008 removes the specification of bzero().  The bzero() function first appeared in 4.3BSD.
+       
+I'm replacing it with a memset().
+
+> +	ret = parse_events(evlist, evstr, &err);
+> +	if (ret) {
+> +		parse_events_print_error(&err, evstr);
+> +		pr_err("Run 'perf list' for a list of valid events\n");
+> +		ret = 1;
+> +		goto out_delete_evlist;
+> +	}
+> +
+> +	ret = evlist__create_maps(evlist, &opts.target);
+> +	if (ret < 0) {
+> +		pr_err("Not enough memory to create thread/cpu maps\n");
+> +		goto out_delete_evlist;
+> +	}
+> +
+> +	evlist__config(evlist, &opts, NULL);
+> +
+> +	return evlist;
+> +
+> +out_delete_evlist:
+> +	evlist__delete(evlist);
+> +	return NULL;
+> +}
+> +
+> +static int bench__do_evlist_open_close(struct evlist *evlist)
+> +{
+> +	int err = -1;
+> +	char sbuf[STRERR_BUFSIZE];
+> +
+> +	err = evlist__open(evlist);
+> +	if (err < 0) {
+> +		pr_err("evlist__open: %s\n",
+> +			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> +		return err;
+> +	}
+> +
+> +	err = evlist__mmap(evlist, opts.mmap_pages);
+> +	if (err < 0) {
+> +		pr_err("evlist__mmap: %s\n",
+> +			 str_error_r(errno, sbuf, sizeof(sbuf)));
+> +		return err;
+> +	}
+> +
+> +	evlist__enable(evlist);
+> +
+> +	evlist__disable(evlist);
+> +	evlist__munmap(evlist);
+> +	evlist__close(evlist);
+> +
 > +	return 0;
 > +}
 > +
->  static int __auxtrace_mmap__read(struct mmap *map,
->  				 struct auxtrace_record *itr,
->  				 struct perf_tool *tool, process_auxtrace_t fn,
-> @@ -1680,8 +1756,9 @@ static int __auxtrace_mmap__read(struct mmap *map,
->  	size_t size, head_off, old_off, len1, len2, padding;
->  	union perf_event ev;
->  	void *data1, *data2;
-> +	int kernel_is_64_bit = perf_env__kernel_is_64_bit(evsel__env(NULL));
->  
-> -	head = auxtrace_mmap__read_head(mm);
-> +	head = auxtrace_mmap__read_head(mm, kernel_is_64_bit);
->  
->  	if (snapshot &&
->  	    auxtrace_record__find_snapshot(itr, mm->idx, mm, data, &head, &old))
-> @@ -1764,10 +1841,13 @@ static int __auxtrace_mmap__read(struct mmap *map,
->  	mm->prev = head;
->  
->  	if (!snapshot) {
-> -		auxtrace_mmap__write_tail(mm, head);
-> -		if (itr->read_finish) {
-> -			int err;
-> +		int err;
+> +static int bench_evlist_open_close__run(char *evstr)
+> +{
+> +	struct evlist *evlist;
+> +	struct timeval start, end, diff;
+> +	double time_average, time_stddev;
+> +	int i;
+> +	int err;
+> +	u64 runtime_us;
+> +	struct stats time_stats;
 > +
-> +		err = auxtrace_mmap__write_tail(mm, head, kernel_is_64_bit);
-> +		if (err < 0)
+> +	init_stats(&time_stats);
+> +
+> +	// used to print statistics only
+> +	evlist = bench__create_evlist(evstr);
+> +
+> +	printf("  Number of cpus:\t%d\n", evlist->core.cpus->nr);
+> +	printf("  Number of threads:\t%d\n", evlist->core.threads->nr);
+> +	printf("  Number of events:\t%d (%d fds)\n",
+> +		evlist->core.nr_entries, evlist__count_evsel_fds(evlist));
+> +	printf("  Number of iterations:\t%d\n", iterations);
+> +
+> +	evlist__delete(evlist);
+> +
+> +	for (i = 0; i < iterations; i++) {
+> +		pr_debug("Started iteration %d\n", i);
+> +		evlist = bench__create_evlist(evstr);
+> +		gettimeofday(&start, NULL);
+> +		err = bench__do_evlist_open_close(evlist);
+> +		if (err) {
+> +			evlist__delete(evlist);
 > +			return err;
->  
-> +		if (itr->read_finish) {
->  			err = itr->read_finish(itr, mm->idx);
->  			if (err < 0)
->  				return err;
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index d68a5e80b217..5f383908ca6e 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -440,23 +440,39 @@ struct auxtrace_cache;
->  
->  #ifdef HAVE_AUXTRACE_SUPPORT
->  
-> -static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
-> +u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm);
-> +int compat_auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail);
+> +		}
 > +
-> +static inline u64 auxtrace_mmap__read_head(struct auxtrace_mmap *mm,
-> +					   int kernel_is_64_bit __maybe_unused)
->  {
->  	struct perf_event_mmap_page *pc = mm->userpg;
-> -	u64 head = READ_ONCE(pc->aux_head);
-> +	u64 head;
+> +		gettimeofday(&end, NULL);
+> +		timersub(&end, &start, &diff);
+> +		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
+> +		update_stats(&time_stats, runtime_us);
 > +
-> +#if BITS_PER_LONG == 32
-> +	if (kernel_is_64_bit)
-> +		return compat_auxtrace_mmap__read_head(mm);
-> +#endif
-> +	head = READ_ONCE(pc->aux_head);
->  
->  	/* Ensure all reads are done after we read the head */
->  	smp_rmb();
->  	return head;
->  }
->  
-> -static inline void auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail)
-> +static inline int auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail,
-> +					    int kernel_is_64_bit __maybe_unused)
->  {
->  	struct perf_event_mmap_page *pc = mm->userpg;
->  
-> +#if BITS_PER_LONG == 32
-> +	if (kernel_is_64_bit)
-> +		return compat_auxtrace_mmap__write_tail(mm, tail);
-> +#endif
->  	/* Ensure all reads are done before we write the tail out */
->  	smp_mb();
->  	WRITE_ONCE(pc->aux_tail, tail);
+> +		evlist__delete(evlist);
+> +		pr_debug("Iteration %d took:\t%ldus\n", i, runtime_us);
+> +	}
+> +
+> +	time_average = avg_stats(&time_stats);
+> +	time_stddev = stddev_stats(&time_stats);
+> +	printf("  Average open-close took: %.3f usec (+- %.3f usec)\n",
+> +		time_average, time_stddev);
+> +
 > +	return 0;
->  }
+> +}
+> +
+> +static char *bench__repeat_event_string(const char *evstr, int n)
+> +{
+> +	int err, i, final_size, str_size;
+> +	struct strbuf buf;
+> +	char sbuf[STRERR_BUFSIZE];
+> +
+> +	str_size = strlen(evstr);
+> +	final_size = str_size * n + n;
+> +
+> +	err = strbuf_init(&buf, final_size);
+> +	if (err) {
+> +		pr_err("strbuf_init: %s\n",
+> +			 str_error_r(err, sbuf, sizeof(sbuf)));
+> +		goto out_error;
+> +	}
+> +
+> +	for (i = 0; i < n; i++) {
+> +		err = strbuf_add(&buf, evstr, str_size);
+> +		if (err) {
+> +			pr_err("strbuf_add: %s\n",
+> +				str_error_r(err, sbuf, sizeof(sbuf)));
+> +			goto out_error;
+> +		}
+> +
+> +		err = strbuf_addch(&buf, i == n-1 ? '\0' : ',');
+> +		if (err) {
+> +			pr_err("strbuf_addch: %s\n",
+> +				str_error_r(err, sbuf, sizeof(sbuf)));
+> +			goto out_error;
+> +		}
+> +	}
+> +
+> +	return strbuf_detach(&buf, NULL);
+> +
+> +out_error:
+> +	strbuf_release(&buf);
+> +	return NULL;
+> +}
+> +
+> +
+> +int bench_evlist_open_close(int argc, const char **argv)
+> +{
+> +	int err = 0;
+> +	char *evstr, errbuf[BUFSIZ];
+> +
+> +	argc = parse_options(argc, argv, options, bench_usage, 0);
+> +	if (argc) {
+> +		usage_with_options(bench_usage, options);
+> +		exit(EXIT_FAILURE);
+> +	}
+> +
+> +	err = target__validate(&opts.target);
+> +	if (err) {
+> +		target__strerror(&opts.target, err, errbuf, BUFSIZ);
+> +		pr_err("%s\n", errbuf);
+> +		goto out;
+> +	}
+> +
+> +	err = target__parse_uid(&opts.target);
+> +	if (err) {
+> +		target__strerror(&opts.target, err, errbuf, BUFSIZ);
+> +		pr_err("%s", errbuf);
+> +		goto out;
+> +	}
+> +
+> +	/* Enable ignoring missing threads when -u/-p option is defined. */
+> +	opts.ignore_missing_thread = opts.target.uid != UINT_MAX || opts.target.pid;
+> +
+> +	evstr = bench__repeat_event_string(event_string, nr_events);
+> +	if (!evstr) {
+> +		err = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	err = bench_evlist_open_close__run(evstr);
+> +
+> +	free(evstr);
+> +out:
+> +	return err;
+> +}
+> diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+> index 62a7b7420a448517..d0895162c2ba6411 100644
+> --- a/tools/perf/builtin-bench.c
+> +++ b/tools/perf/builtin-bench.c
+> @@ -88,6 +88,7 @@ static struct bench internals_benchmarks[] = {
+>  	{ "synthesize", "Benchmark perf event synthesis",	bench_synthesize	},
+>  	{ "kallsyms-parse", "Benchmark kallsyms parsing",	bench_kallsyms_parse	},
+>  	{ "inject-build-id", "Benchmark build-id injection",	bench_inject_build_id	},
+> +	{ "evlist-open-close", "Benchmark evlist open and close",	bench_evlist_open_close	},
+>  	{ NULL,		NULL,					NULL			}
+>  };
 >  
->  int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
 > -- 
-> 2.25.1
+> 2.31.1
 > 
 
 -- 
