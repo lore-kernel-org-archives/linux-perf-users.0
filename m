@@ -2,297 +2,215 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CAB2C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 15:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFB8C43216
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 15:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBB5660F8F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 15:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FCCF6101E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 15:34:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbhHIPCL (ORCPT
+        id S235598AbhHIPfA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 11:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60272 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233910AbhHIPCL (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 11:02:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F12B60EBB;
-        Mon,  9 Aug 2021 15:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628521310;
-        bh=0+ee5uC+v5lSFBTNdvjLKGUDn6ec9XH2urhmfQoKCH8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HR7D+KVqefqnck72k7lBb/zG+UJlSJl5tdayOlKYqAhL3OSeAPqIi1KRaDvmukIpf
-         ZgJrkUqttIdMOYVtPYR7xx88qc4etaesJHeMEQBZXNZILvtmyasIE4ZEWDwmImw/CR
-         Z711UcSpVLrl4IDuCwRJKFiRu6v1AWDaOQJKon0HqmYGJ7Qof21ohx4Sk3zmnCHoEm
-         TCtv0AZIgrWQPel1DZxUrmyuMb2X9NrQTry1vcTTXSwelJ8JbfL0kIbxOO2OEWjtsB
-         eSlIanDmyPMTM+4urZ3qgvOTa/XBFbgM8XpFCchFrrgPkBgDYlyHyYvfSw2XJF6rSc
-         lTH7c2ij/8ErQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6FBDB403F2; Mon,  9 Aug 2021 12:01:47 -0300 (-03)
-Date:   Mon, 9 Aug 2021 12:01:47 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     mingo@redhat.com, peterz@infradead.org, tglx@linutronix.de,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 7/7] perf/bench-futex, requeue: Add --pi parameter
-Message-ID: <YRFDW+iBhtwegkzZ@kernel.org>
-References: <20210809043301.66002-1-dave@stgolabs.net>
- <20210809043301.66002-8-dave@stgolabs.net>
+        Mon, 9 Aug 2021 11:35:00 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:47725 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234934AbhHIPeC (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 9 Aug 2021 11:34:02 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 07AF45C017C;
+        Mon,  9 Aug 2021 11:33:39 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 09 Aug 2021 11:33:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=
+        from:to:cc:subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; s=fm3; bh=GuQ3t8asJUM3Hiy+Ty+shtYHpK
+        tsHUjYSTv9E22Sm5I=; b=u4jLJAnBvr3rnpqpbaA0DRUuM4L7CkEiGWmXpoHIaQ
+        rDYdj2g9MkTeWV91i/x9QF9gGJ/ht7a8FULqKPsQOUMtaeBMzbxhnvVxTd4O3eSW
+        4Io2+E3jo3xiRM0Yhd30uPS/5wwxSybvA1Gyc8oe6jE0BQfw5AGVZtyXRdt9vyyC
+        qzr8GcJlcqfgaldp+91SbkuuvAihQCQgHpkBnLVlgAMVufgBJDnG/eSv5eH/aWly
+        W7uErYtz0wZbvqZwHphOCyQn/kg/hkSahNG2gMn0B8h5TmjAc9VCDhN+ztUJ+X/y
+        zglLvIwSdDtDI/tObFuhRjNmWYRCRfsZrc8RtoWkaYCA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=GuQ3t8
+        asJUM3Hiy+Ty+shtYHpKtsHUjYSTv9E22Sm5I=; b=dBKbkEfFJSMrbqKQG0x1Mc
+        NZyMSUTGwdvXa2eb6P+TMQDpzjidi++mMUrNGOiPEJ+M6C+sy0wa2OG9pbwF4CWx
+        /0p2kKr7UZWtVqPUSlrmJBBCb1rjfM2egXBaMAUKBj+ApFQhBr7jOBlAhk3bpf04
+        B+M/WS/ttQkqMWEJ2jpcUI60dcjTh1g/0ugnNjjnklxpxRrBJyMfNbOpSpsLWPyU
+        KBzxgFyyow1SxfIF+NHpRBMiMFEgjZm+08+/n6txLPwiwG5clpTJyVCAEMO0FHsO
+        Gm2z40iOhTnDSnU7OeKtkOoBiVCvBiSr6E45I8kF8+KlnLbOYJaMHgKEbe+DNzNA
+        ==
+X-ME-Sender: <xms:0koRYeUIjXEOzXHfr5xfHX3NZIubGbVuWHQHykOZkVQCV3pcaLcFMg>
+    <xme:0koRYamjHCDHDZMZF98krujM4yrqqi-qmeJosuVs9LHPiennv3PV3P_lIQaO4hMKx
+    C_drpVJMCCYKzqlww>
+X-ME-Received: <xmr:0koRYSbdZ8zokm2BF0sKv5aT69YEg4krbjkXmAgshf9-ZwwiUN4_W7_COY9itk6IcJe5n6CwzgU6zLF5VWxsWQmJ1TTtjA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrjeejgdeltdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofggtgfgsehtkeertdertdejnecuhfhrohhmpeetlhihshhsrgcu
+    tfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenucggtffrrghtthgvrhhnpedtleegvd
+    etfeehuddthfeuheefvedvtedtgfevkeetgefftdetleevjefhleevgeenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehqhihlihhsshesvghvvg
+    drqhihlhhishhsrdhnvght
+X-ME-Proxy: <xmx:0koRYVW51HDgLFES2d4wfoLShb8SrirBvrpihP1Hvjo6KMBKSxd10Q>
+    <xmx:0koRYYkLtfXArof-yJNpRXd3bEKojMMS282qZJbX8srXr_aFgKcb1w>
+    <xmx:0koRYaebpTfO9we8X3oLfxRrIMc-5zIf-qaKCqPnyPWdbaW_XZCQ-g>
+    <xmx:00oRYSVqittr4krcEgd5udMfcxb_CmLwfDmoOa2kqBFnAWlPIW_kzQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Aug 2021 11:33:38 -0400 (EDT)
+Received: by eve.qyliss.net (Postfix, from userid 1000)
+        id 937AD16D3; Mon,  9 Aug 2021 15:33:34 +0000 (UTC)
+From:   Alyssa Ross <hi@alyssa.is>
+To:     linux-perf-users@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Alyssa Ross <hi@alyssa.is>
+Subject: [PATCH] tools/perf/Documentation: fix accidental em-dashes
+Date:   Mon,  9 Aug 2021 15:32:26 +0000
+Message-Id: <20210809153226.332545-1-hi@alyssa.is>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210809043301.66002-8-dave@stgolabs.net>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Aug 08, 2021 at 09:33:01PM -0700, Davidlohr Bueso escreveu:
-> This extends the program to measure WAIT_REQUEUE_PI+CMP_REQUEUE_PI
-> pairs, which are the underlying machinery behind priority-inheritance
-> aware condition variables. The defaults are the same as with the regular
-> non-pi version, requeueing one task at a time, with the exception that
-> PI will always wakeup the first waiter.
+" -- " is an em dash (—) in asciidoc, so all these examples that were
+supposed to be producing a literal two dashes were being misrendered.
 
-Thanks, applied.
+Signed-off-by: Alyssa Ross <hi@alyssa.is>
+---
+ tools/perf/Documentation/intel-hybrid.txt |  2 +-
+ tools/perf/Documentation/perf-c2c.txt     |  2 +-
+ tools/perf/Documentation/perf-iostat.txt  |  4 ++--
+ tools/perf/Documentation/perf-record.txt  |  2 +-
+ tools/perf/Documentation/perf-stat.txt    | 14 +++++++-------
+ 5 files changed, 12 insertions(+), 12 deletions(-)
 
-- Arnaldo
-
+diff --git a/tools/perf/Documentation/intel-hybrid.txt b/tools/perf/Documentation/intel-hybrid.txt
+index 07f0aa3bf682..c9302096dc46 100644
+--- a/tools/perf/Documentation/intel-hybrid.txt
++++ b/tools/perf/Documentation/intel-hybrid.txt
+@@ -140,7 +140,7 @@ displayed. The percentage is the event's running time/enabling time.
+ One example, 'triad_loop' runs on cpu16 (atom core), while we can see the
+ scaled value for core cycles is 160,444,092 and the percentage is 0.47%.
  
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  tools/perf/bench/futex-requeue.c | 100 +++++++++++++++++++++++--------
->  tools/perf/bench/futex.h         |  37 +++++++++++-
->  2 files changed, 111 insertions(+), 26 deletions(-)
-> 
-> diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-> index e4892ba6864f..03a05814d45e 100644
-> --- a/tools/perf/bench/futex-requeue.c
-> +++ b/tools/perf/bench/futex-requeue.c
-> @@ -6,7 +6,8 @@
->   *                on futex2, N at a time.
->   *
->   * This program is particularly useful to measure the latency of nthread
-> - * requeues without waking up any tasks -- thus mimicking a regular futex_wait.
-> + * requeues without waking up any tasks (in the non-pi case) -- thus
-> + * mimicking a regular futex_wait.
->   */
->  
->  /* For the CLR_() macros */
-> @@ -53,6 +54,8 @@ static const struct option options[] = {
->  	OPT_BOOLEAN( 'S', "shared",   &params.fshared, "Use shared futexes instead of private ones"),
->  	OPT_BOOLEAN( 'm', "mlockall", &params.mlockall, "Lock all current and future memory"),
->  	OPT_BOOLEAN( 'B', "broadcast", &params.broadcast, "Requeue all threads at once"),
-> +	OPT_BOOLEAN( 'p', "pi", &params.pi, "Use PI-aware variants of FUTEX_CMP_REQUEUE"),
-> +
->  	OPT_END()
->  };
->  
-> @@ -86,14 +89,30 @@ static void *workerfn(void *arg __maybe_unused)
->  	pthread_mutex_unlock(&thread_lock);
->  
->  	while (1) {
-> -		ret = futex_wait(&futex1, 0, NULL, futex_flag);
-> -		if (!ret)
-> -			break;
-> -
-> -		if (ret && errno != EAGAIN) {
-> -			if (!params.silent)
-> -				warn("futex_wait");
-> -			break;
-> +		if (!params.pi) {
-> +			ret = futex_wait(&futex1, 0, NULL, futex_flag);
-> +			if (!ret)
-> +				break;
-> +
-> +			if (ret && errno != EAGAIN) {
-> +				if (!params.silent)
-> +					warnx("futex_wait");
-> +				break;
-> +			}
-> +		} else {
-> +			ret = futex_wait_requeue_pi(&futex1, 0, &futex2,
-> +						    NULL, futex_flag);
-> +			if (!ret) {
-> +				/* got the lock at futex2 */
-> +				futex_unlock_pi(&futex2, futex_flag);
-> +				break;
-> +			}
-> +
-> +			if (ret && errno != EAGAIN) {
-> +				if (!params.silent)
-> +					warnx("futex_wait_requeue_pi");
-> +				break;
-> +			}
->  		}
->  	}
->  
-> @@ -170,9 +189,10 @@ int bench_futex_requeue(int argc, const char **argv)
->  	if (params.broadcast)
->  		params.nrequeue = params.nthreads;
->  
-> -	printf("Run summary [PID %d]: Requeuing %d threads (from [%s] %p to %p), "
-> +	printf("Run summary [PID %d]: Requeuing %d threads (from [%s] %p to %s%p), "
->  	       "%d at a time.\n\n",  getpid(), params.nthreads,
-> -	       params.fshared ? "shared":"private", &futex1, &futex2, params.nrequeue);
-> +	       params.fshared ? "shared":"private", &futex1,
-> +	       params.pi ? "PI ": "", &futex2, params.nrequeue);
->  
->  	init_stats(&requeued_stats);
->  	init_stats(&requeuetime_stats);
-> @@ -182,7 +202,7 @@ int bench_futex_requeue(int argc, const char **argv)
->  	pthread_cond_init(&thread_worker, NULL);
->  
->  	for (j = 0; j < bench_repeat && !done; j++) {
-> -		unsigned int nrequeued = 0;
-> +		unsigned int nrequeued = 0, wakeups = 0;
->  		struct timeval start, end, runtime;
->  
->  		/* create, launch & block all threads */
-> @@ -200,13 +220,30 @@ int bench_futex_requeue(int argc, const char **argv)
->  		/* Ok, all threads are patiently blocked, start requeueing */
->  		gettimeofday(&start, NULL);
->  		while (nrequeued < params.nthreads) {
-> +			int r;
-> +
->  			/*
-> -			 * Do not wakeup any tasks blocked on futex1, allowing
-> -			 * us to really measure futex_wait functionality.
-> +			 * For the regular non-pi case, do not wakeup any tasks
-> +			 * blocked on futex1, allowing us to really measure
-> +			 * futex_wait functionality. For the PI case the first
-> +			 * waiter is always awoken.
->  			 */
-> -			nrequeued += futex_cmp_requeue(&futex1, 0, &futex2, 0,
-> -						       params.nrequeue,
-> -						       futex_flag);
-> +			if (!params.pi) {
-> +				r = futex_cmp_requeue(&futex1, 0, &futex2, 0,
-> +						      params.nrequeue,
-> +						      futex_flag);
-> +			} else {
-> +				r = futex_cmp_requeue_pi(&futex1, 0, &futex2,
-> +							 params.nrequeue,
-> +							 futex_flag);
-> +				wakeups++; /* assume no error */
-> +			}
-> +
-> +			if (r < 0)
-> +				err(EXIT_FAILURE, "couldn't requeue from %p to %p",
-> +				    &futex1, &futex2);
-> +
-> +			nrequeued += r;
->  		}
->  
->  		gettimeofday(&end, NULL);
-> @@ -216,16 +253,29 @@ int bench_futex_requeue(int argc, const char **argv)
->  		update_stats(&requeuetime_stats, runtime.tv_usec);
->  
->  		if (!params.silent) {
-> -			printf("[Run %d]: Requeued %d of %d threads in %.4f ms\n",
-> -			       j + 1, nrequeued, params.nthreads,
-> -			       runtime.tv_usec / (double)USEC_PER_MSEC);
-> +			if (!params.pi)
-> +				printf("[Run %d]: Requeued %d of %d threads in "
-> +				       "%.4f ms\n", j + 1, nrequeued,
-> +				       params.nthreads,
-> +				       runtime.tv_usec / (double)USEC_PER_MSEC);
-> +			else {
-> +				nrequeued -= wakeups;
-> +				printf("[Run %d]: Awoke and Requeued (%d+%d) of "
-> +				       "%d threads in %.4f ms\n",
-> +				       j + 1, wakeups, nrequeued,
-> +				       params.nthreads,
-> +				       runtime.tv_usec / (double)USEC_PER_MSEC);
-> +			}
-> +
->  		}
->  
-> -		/* everybody should be blocked on futex2, wake'em up */
-> -		nrequeued = futex_wake(&futex2, nrequeued, futex_flag);
-> -		if (params.nthreads != nrequeued)
-> -			warnx("couldn't wakeup all tasks (%d/%d)",
-> -			      nrequeued, params.nthreads);
-> +		if (!params.pi) {
-> +			/* everybody should be blocked on futex2, wake'em up */
-> +			nrequeued = futex_wake(&futex2, nrequeued, futex_flag);
-> +			if (params.nthreads != nrequeued)
-> +				warnx("couldn't wakeup all tasks (%d/%d)",
-> +				      nrequeued, params.nthreads);
-> +		}
->  
->  		for (i = 0; i < params.nthreads; i++) {
->  			ret = pthread_join(worker[i], NULL);
-> diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
-> index 36f158650edf..f0ad6d988349 100644
-> --- a/tools/perf/bench/futex.h
-> +++ b/tools/perf/bench/futex.h
-> @@ -21,6 +21,7 @@ struct bench_futex_parameters {
->  	bool fshared;
->  	bool mlockall;
->  	bool multi; /* lock-pi */
-> +	bool pi; /* requeue-pi */
->  	bool broadcast; /* requeue */
->  	unsigned int runtime; /* seconds*/
->  	unsigned int nthreads;
-> @@ -93,7 +94,7 @@ futex_unlock_pi(u_int32_t *uaddr, int opflags)
->  /**
->  * futex_cmp_requeue() - requeue tasks from uaddr to uaddr2
->  * @nr_wake:        wake up to this many tasks
-> -* @nr_requeue:        requeue up to this many tasks
-> +* @nr_requeue:     requeue up to this many tasks
->  */
->  static inline int
->  futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wake,
-> @@ -102,4 +103,38 @@ futex_cmp_requeue(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2, int nr_wak
->  	return futex(uaddr, FUTEX_CMP_REQUEUE, nr_wake, nr_requeue, uaddr2,
->  		 val, opflags);
->  }
-> +
-> +/**
-> + * futex_wait_requeue_pi() - block on uaddr and prepare to requeue to uaddr2
-> + * @uaddr:	non-PI futex source
-> + * @uaddr2:	PI futex target
-> + *
-> + * This is the first half of the requeue_pi mechanism. It shall always be
-> + * paired with futex_cmp_requeue_pi().
-> + */
-> +static inline int
-> +futex_wait_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
-> +		      struct timespec *timeout, int opflags)
-> +{
-> +	return futex(uaddr, FUTEX_WAIT_REQUEUE_PI, val, timeout, uaddr2, 0,
-> +		     opflags);
-> +}
-> +
-> +/**
-> + * futex_cmp_requeue_pi() - requeue tasks from uaddr to uaddr2
-> + * @uaddr:	non-PI futex source
-> + * @uaddr2:	PI futex target
-> + * @nr_requeue:	requeue up to this many tasks
-> + *
-> + * This is the second half of the requeue_pi mechanism. It shall always be
-> + * paired with futex_wait_requeue_pi(). The first waker is always awoken.
-> + */
-> +static inline int
-> +futex_cmp_requeue_pi(u_int32_t *uaddr, u_int32_t val, u_int32_t *uaddr2,
-> +		     int nr_requeue, int opflags)
-> +{
-> +	return futex(uaddr, FUTEX_CMP_REQUEUE_PI, 1, nr_requeue, uaddr2,
-> +		     val, opflags);
-> +}
-> +
->  #endif /* _FUTEX_H */
-> -- 
-> 2.26.2
-> 
-
+-perf stat -e cycles -- taskset -c 16 ./triad_loop
++perf stat -e cycles \-- taskset -c 16 ./triad_loop
+ 
+ As previous, two events are created.
+ 
+diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+index c81d72e3eecf..de6beedb7283 100644
+--- a/tools/perf/Documentation/perf-c2c.txt
++++ b/tools/perf/Documentation/perf-c2c.txt
+@@ -9,7 +9,7 @@ SYNOPSIS
+ --------
+ [verse]
+ 'perf c2c record' [<options>] <command>
+-'perf c2c record' [<options>] -- [<record command options>] <command>
++'perf c2c record' [<options>] \-- [<record command options>] <command>
+ 'perf c2c report' [<options>]
+ 
+ DESCRIPTION
+diff --git a/tools/perf/Documentation/perf-iostat.txt b/tools/perf/Documentation/perf-iostat.txt
+index 165176944031..04d510364384 100644
+--- a/tools/perf/Documentation/perf-iostat.txt
++++ b/tools/perf/Documentation/perf-iostat.txt
+@@ -9,7 +9,7 @@ SYNOPSIS
+ --------
+ [verse]
+ 'perf iostat' list
+-'perf iostat' <ports> -- <command> [<options>]
++'perf iostat' <ports> \-- <command> [<options>]
+ 
+ DESCRIPTION
+ -----------
+@@ -85,4 +85,4 @@ EXAMPLES
+ 
+ SEE ALSO
+ --------
+-linkperf:perf-stat[1]
+\ No newline at end of file
++linkperf:perf-stat[1]
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index d71bac847936..f1079ee7f2ec 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -9,7 +9,7 @@ SYNOPSIS
+ --------
+ [verse]
+ 'perf record' [-e <EVENT> | --event=EVENT] [-a] <command>
+-'perf record' [-e <EVENT> | --event=EVENT] [-a] -- <command> [<options>]
++'perf record' [-e <EVENT> | --event=EVENT] [-a] \-- <command> [<options>]
+ 
+ DESCRIPTION
+ -----------
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 45c2467e4eb2..4c9310be6acc 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -9,8 +9,8 @@ SYNOPSIS
+ --------
+ [verse]
+ 'perf stat' [-e <EVENT> | --event=EVENT] [-a] <command>
+-'perf stat' [-e <EVENT> | --event=EVENT] [-a] -- <command> [<options>]
+-'perf stat' [-e <EVENT> | --event=EVENT] [-a] record [-o file] -- <command> [<options>]
++'perf stat' [-e <EVENT> | --event=EVENT] [-a] \-- <command> [<options>]
++'perf stat' [-e <EVENT> | --event=EVENT] [-a] record [-o file] \-- <command> [<options>]
+ 'perf stat' report [-i file]
+ 
+ DESCRIPTION
+@@ -217,8 +217,8 @@ Append to the output file designated with the -o option. Ignored if -o is not sp
+ 
+ Log output to fd, instead of stderr.  Complementary to --output, and mutually exclusive
+ with it.  --append may be used here.  Examples:
+-     3>results  perf stat --log-fd 3          -- $cmd
+-     3>>results perf stat --log-fd 3 --append -- $cmd
++     3>results  perf stat --log-fd 3          \-- $cmd
++     3>>results perf stat --log-fd 3 --append \-- $cmd
+ 
+ --control=fifo:ctl-fifo[,ack-fifo]::
+ --control=fd:ctl-fd[,ack-fd]::
+@@ -245,7 +245,7 @@ disable events during measurements:
+ 
+  perf stat -D -1 -e cpu-cycles -a -I 1000       \
+            --control fd:${ctl_fd},${ctl_fd_ack} \
+-           -- sleep 30 &
++           \-- sleep 30 &
+  perf_pid=$!
+ 
+  sleep 5  && echo 'enable' >&${ctl_fd} && read -u ${ctl_fd_ack} e1 && echo "enabled(${e1})"
+@@ -265,7 +265,7 @@ disable events during measurements:
+ --post::
+ 	Pre and post measurement hooks, e.g.:
+ 
+-perf stat --repeat 10 --null --sync --pre 'make -s O=defconfig-build/clean' -- make -s -j64 O=defconfig-build/ bzImage
++perf stat --repeat 10 --null --sync --pre 'make -s O=defconfig-build/clean' \-- make -s -j64 O=defconfig-build/ bzImage
+ 
+ -I msecs::
+ --interval-print msecs::
+@@ -496,7 +496,7 @@ $ perf config stat.no-csv-summary=true
+ EXAMPLES
+ --------
+ 
+-$ perf stat -- make
++$ perf stat \-- make
+ 
+    Performance counter stats for 'make':
+ 
 -- 
+2.32.0
 
-- Arnaldo
