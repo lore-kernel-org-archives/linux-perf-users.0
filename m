@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A43C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C91AC4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 238A76056B
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E6B61004
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:11:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbhHIUCs (ORCPT
+        id S236138AbhHIUMK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 16:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
+        Mon, 9 Aug 2021 16:12:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233152AbhHIUCs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 16:02:48 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 35FB461004;
-        Mon,  9 Aug 2021 20:02:27 +0000 (UTC)
+        id S234637AbhHIUMJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 9 Aug 2021 16:12:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 595A560F11;
+        Mon,  9 Aug 2021 20:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628539347;
-        bh=j3hndUG7lkQkjtsWLC+uWaE1KhSwN1hBDeqIoSynZqU=;
+        s=k20201202; t=1628539908;
+        bh=jfw1tYl8A57CAPEONb9M989EngiLdenLu91eHbvweiM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZEXhcJ1/owU75BaTBzvK3QMgLAgphLMzuxK8d69yqoBzKlbV8IyS21aNtNK/RWg3e
-         evQm5tu5h3uJcn/4XrSWPXCuc/v/vOn1+Vcidxe4AEO1Ynmbya4sn1lcUPs13VWKHh
-         S+dES0hzPdYih1DEM0ykSMDQr9mWd67B2IBwITXxbL5Qbdpl0ilIgB+YGl3F5q3gQU
-         KUmyl9b/qBsTmw8kbgUs8qKRK0YWJ1WS0tAjS3uBvN+OLn2vtcNVRE+lzNH3jDouvm
-         pC/6HzRzIqv89zNYg8HwOqRtV0lVQNTEV5rGKchb6sXtfcDACrViCPnNfcXb6N3mRz
-         vLsZA715YKDuw==
+        b=V3LnA/nWmB4VMIgXB5zLdw3UbeVYfh+ASo0VL1cbKjFSCSlEqn1ybGRY0ABX2k0Nj
+         sLU8j+z1Tn0qF0pURIfTcATOdsRO+V2ykQAPf3QKTSvEu4u9SeHuzxT6gLUlHCbHV2
+         Cj6YYkFsGIG31l6razoaqfr225X6B/Jx56PVU8IB/i0kyMUmTVxAkvMR+mX1MS4aDz
+         cyVddGWOwFJty4b9ItsJw28+7jsKDh0bPKPR4rv0vB24dBideQaF+MOpFq8kDoaUu1
+         qLt9P4Qn9cKJBpWEOX8sA/mb1osBUJOYiktjQzNbRPJ3lwI8LTQJZwOTYbexSQLdAY
+         QA2KMv9bO3rmw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5D987410A1; Mon,  9 Aug 2021 17:02:24 -0300 (-03)
-Date:   Mon, 9 Aug 2021 17:02:24 -0300
+        id 14A8C403F2; Mon,  9 Aug 2021 17:11:44 -0300 (-03)
+Date:   Mon, 9 Aug 2021 17:11:44 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -44,126 +44,116 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        "Frank Ch. Eigler" <fche@redhat.com>,
-        Song Liu <songliubraving@fb.com>, x86@kernel.org,
-        Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
+        John Garry <john.garry@huawei.com>,
         Andi Kleen <ak@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Li Huafei <lihuafei1@huawei.com>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org
-Subject: Re: [PATCH v5 9/9] tools: Remove feature-sync-compare-and-swap
- feature detection
-Message-ID: <YRGJ0IbubWMql/Is@kernel.org>
-References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-10-leo.yan@linaro.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH v1 1/3] perf env: Track kernel 64-bit mode in environment
+Message-ID: <YRGMAHj3MUndBEUq@kernel.org>
+References: <20210809112727.596876-1-leo.yan@linaro.org>
+ <20210809112727.596876-2-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210809111407.596077-10-leo.yan@linaro.org>
+In-Reply-To: <20210809112727.596876-2-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 09, 2021 at 07:14:07PM +0800, Leo Yan escreveu:
-> Since the __sync functions have been removed from perf, it's needless
-> for perf tool to test the feature sync-compare-and-swap.
+Em Mon, Aug 09, 2021 at 07:27:25PM +0800, Leo Yan escreveu:
+> It's useful to know that the kernel is running in 32-bit or 64-bit
+> mode.  E.g. We can decide if perf tool is running in compat mode
+> based on the info.
 > 
-> The feature test is not used by any other components, remove it.
+> This patch adds an item "kernel_is_64_bit" into session's environment
+> structure perf_env, its value is initialized based on the architecture
+> string.
 
-Thanks, applied to perf/core.
+Thanks, applied.
 
 - Arnaldo
 
  
+> Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  tools/build/Makefile.feature                     |  1 -
->  tools/build/feature/Makefile                     |  4 ----
->  tools/build/feature/test-all.c                   |  4 ----
->  tools/build/feature/test-sync-compare-and-swap.c | 15 ---------------
->  4 files changed, 24 deletions(-)
->  delete mode 100644 tools/build/feature/test-sync-compare-and-swap.c
+>  tools/perf/util/env.c | 24 +++++++++++++++++++++++-
+>  tools/perf/util/env.h |  3 +++
+>  2 files changed, 26 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-> index 04a8e3db8a54..3dd2f68366f9 100644
-> --- a/tools/build/Makefile.feature
-> +++ b/tools/build/Makefile.feature
-> @@ -34,7 +34,6 @@ FEATURE_TESTS_BASIC :=                  \
->          dwarf_getlocations              \
->          eventfd                         \
->          fortify-source                  \
-> -        sync-compare-and-swap           \
->          get_current_dir_name            \
->          gettid				\
->          glibc                           \
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index ec203e28407f..eff55d287db1 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -9,7 +9,6 @@ FILES=                                          \
->           test-dwarf_getlocations.bin            \
->           test-eventfd.bin                       \
->           test-fortify-source.bin                \
-> -         test-sync-compare-and-swap.bin         \
->           test-get_current_dir_name.bin          \
->           test-glibc.bin                         \
->           test-gtk2.bin                          \
-> @@ -260,9 +259,6 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
->  $(OUTPUT)test-libbabeltrace.bin:
->  	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index ab341050be46..8f7ff0035c41 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -219,13 +219,35 @@ void perf_env__exit(struct perf_env *env)
+>  	zfree(&env->hybrid_cpc_nodes);
+>  }
 >  
-> -$(OUTPUT)test-sync-compare-and-swap.bin:
-> -	$(BUILD)
-> -
->  $(OUTPUT)test-compile-32.bin:
->  	$(CC) -m32 -o $@ test-compile.c
+> -void perf_env__init(struct perf_env *env __maybe_unused)
+> +void perf_env__init(struct perf_env *env)
+>  {
+>  #ifdef HAVE_LIBBPF_SUPPORT
+>  	env->bpf_progs.infos = RB_ROOT;
+>  	env->bpf_progs.btfs = RB_ROOT;
+>  	init_rwsem(&env->bpf_progs.lock);
+>  #endif
+> +	env->kernel_is_64_bit = -1;
+> +}
+> +
+> +static void perf_env__init_kernel_mode(struct perf_env *env)
+> +{
+> +	const char *arch = perf_env__raw_arch(env);
+> +
+> +	if (!strncmp(arch, "x86_64", 6) || !strncmp(arch, "aarch64", 7) ||
+> +	    !strncmp(arch, "arm64", 5) || !strncmp(arch, "mips64", 6) ||
+> +	    !strncmp(arch, "parisc64", 8) || !strncmp(arch, "riscv64", 7) ||
+> +	    !strncmp(arch, "s390x", 5) || !strncmp(arch, "sparc64", 7))
+> +		env->kernel_is_64_bit = 1;
+> +	else
+> +		env->kernel_is_64_bit = 0;
+> +}
+> +
+> +int perf_env__kernel_is_64_bit(struct perf_env *env)
+> +{
+> +	if (env->kernel_is_64_bit == -1)
+> +		perf_env__init_kernel_mode(env);
+> +
+> +	return env->kernel_is_64_bit;
+>  }
 >  
-> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-> index 464873883396..920439527291 100644
-> --- a/tools/build/feature/test-all.c
-> +++ b/tools/build/feature/test-all.c
-> @@ -106,10 +106,6 @@
->  # include "test-libdw-dwarf-unwind.c"
->  #undef main
+>  int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[])
+> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+> index 6824a7423a2d..1f5175820a05 100644
+> --- a/tools/perf/util/env.h
+> +++ b/tools/perf/util/env.h
+> @@ -61,6 +61,7 @@ struct perf_env {
+>  	unsigned long long	total_mem;
+>  	unsigned int		msr_pmu_type;
+>  	unsigned int		max_branches;
+> +	int			kernel_is_64_bit;
 >  
-> -#define main main_test_sync_compare_and_swap
-> -# include "test-sync-compare-and-swap.c"
-> -#undef main
-> -
->  #define main main_test_zlib
->  # include "test-zlib.c"
->  #undef main
-> diff --git a/tools/build/feature/test-sync-compare-and-swap.c b/tools/build/feature/test-sync-compare-and-swap.c
-> deleted file mode 100644
-> index 3bc6b0768a53..000000000000
-> --- a/tools/build/feature/test-sync-compare-and-swap.c
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -#include <stdint.h>
-> -
-> -volatile uint64_t x;
-> -
-> -int main(int argc, char *argv[])
-> -{
-> -	uint64_t old, new = argc;
-> -
-> -	(void)argv;
-> -	do {
-> -		old = __sync_val_compare_and_swap(&x, 0, 0);
-> -	} while (!__sync_bool_compare_and_swap(&x, old, new));
-> -	return old == new;
-> -}
+>  	int			nr_cmdline;
+>  	int			nr_sibling_cores;
+> @@ -143,6 +144,8 @@ extern struct perf_env perf_env;
+>  
+>  void perf_env__exit(struct perf_env *env);
+>  
+> +int perf_env__kernel_is_64_bit(struct perf_env *env);
+> +
+>  int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
+>  
+>  int perf_env__read_cpuid(struct perf_env *env);
 > -- 
 > 2.25.1
 > 
