@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F9C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A43C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE986101E
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238A76056B
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 20:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbhHIUCj (ORCPT
+        id S229493AbhHIUCs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 16:02:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58108 "EHLO mail.kernel.org"
+        Mon, 9 Aug 2021 16:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229483AbhHIUCj (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 16:02:39 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E02686056B;
-        Mon,  9 Aug 2021 20:02:17 +0000 (UTC)
+        id S233152AbhHIUCs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 9 Aug 2021 16:02:48 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 35FB461004;
+        Mon,  9 Aug 2021 20:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628539338;
-        bh=n8gtlw3IyiLYqu4+9qU9LPJ3PiUmIz8KgvCh3DjVqOo=;
+        s=k20201202; t=1628539347;
+        bh=j3hndUG7lkQkjtsWLC+uWaE1KhSwN1hBDeqIoSynZqU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LgrDCopn65ratKG6U00C/T8QdPzLLrhFq4yK1FHO+k2+eh+EVoS5zjpc+NzBkz+/9
-         GF5gghoDes2jbb7VkBzFNe7BZ6cZ+xPBRhRgqYToBICp7ZTNg55B+QIokDaAp/Aif5
-         n4QOQX+7BVh6b7pYtzrOFZCUTM0gnYxl4m1TorVobHjN/XPv8OauUPmxWFx/C3W91p
-         +FfUY+jmEwJnBqnazaegkVhvWdGn4PGBGW675xDB4gB6wJNCX/pVxEMuze4DPnceOS
-         o+FmP4Q/OHxWi3PutG0yvKeBSWyGpG9P08FZAWfZaJ+hoQ6GPOtP9dmdCqjP5dzkxD
-         l6xqKWGM7mzGQ==
+        b=ZEXhcJ1/owU75BaTBzvK3QMgLAgphLMzuxK8d69yqoBzKlbV8IyS21aNtNK/RWg3e
+         evQm5tu5h3uJcn/4XrSWPXCuc/v/vOn1+Vcidxe4AEO1Ynmbya4sn1lcUPs13VWKHh
+         S+dES0hzPdYih1DEM0ykSMDQr9mWd67B2IBwITXxbL5Qbdpl0ilIgB+YGl3F5q3gQU
+         KUmyl9b/qBsTmw8kbgUs8qKRK0YWJ1WS0tAjS3uBvN+OLn2vtcNVRE+lzNH3jDouvm
+         pC/6HzRzIqv89zNYg8HwOqRtV0lVQNTEV5rGKchb6sXtfcDACrViCPnNfcXb6N3mRz
+         vLsZA715YKDuw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 626DC410A0; Mon,  9 Aug 2021 17:02:15 -0300 (-03)
-Date:   Mon, 9 Aug 2021 17:02:15 -0300
+        id 5D987410A1; Mon,  9 Aug 2021 17:02:24 -0300 (-03)
+Date:   Mon, 9 Aug 2021 17:02:24 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Leo Yan <leo.yan@linaro.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -60,66 +60,110 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
-Subject: Re: [PATCH v5 8/9] perf: Cleanup for
- HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-Message-ID: <YRGJx5zJ9/OHob/C@kernel.org>
+Subject: Re: [PATCH v5 9/9] tools: Remove feature-sync-compare-and-swap
+ feature detection
+Message-ID: <YRGJ0IbubWMql/Is@kernel.org>
 References: <20210809111407.596077-1-leo.yan@linaro.org>
- <20210809111407.596077-9-leo.yan@linaro.org>
+ <20210809111407.596077-10-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210809111407.596077-9-leo.yan@linaro.org>
+In-Reply-To: <20210809111407.596077-10-leo.yan@linaro.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 09, 2021 at 07:14:06PM +0800, Leo Yan escreveu:
-> Since the __sync functions have been dropped, This patch removes unused
-> build and checking for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT in perf tool.
- 
+Em Mon, Aug 09, 2021 at 07:14:07PM +0800, Leo Yan escreveu:
+> Since the __sync functions have been removed from perf, it's needless
+> for perf tool to test the feature sync-compare-and-swap.
+> 
+> The feature test is not used by any other components, remove it.
 
 Thanks, applied to perf/core.
 
 - Arnaldo
 
+ 
 > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  tools/perf/Makefile.config | 4 ----
->  tools/perf/util/auxtrace.c | 5 -----
->  2 files changed, 9 deletions(-)
+>  tools/build/Makefile.feature                     |  1 -
+>  tools/build/feature/Makefile                     |  4 ----
+>  tools/build/feature/test-all.c                   |  4 ----
+>  tools/build/feature/test-sync-compare-and-swap.c | 15 ---------------
+>  4 files changed, 24 deletions(-)
+>  delete mode 100644 tools/build/feature/test-sync-compare-and-swap.c
 > 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index eb8e487ef90b..4a0d9a6defc7 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -349,10 +349,6 @@ CXXFLAGS += $(INC_FLAGS)
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 04a8e3db8a54..3dd2f68366f9 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -34,7 +34,6 @@ FEATURE_TESTS_BASIC :=                  \
+>          dwarf_getlocations              \
+>          eventfd                         \
+>          fortify-source                  \
+> -        sync-compare-and-swap           \
+>          get_current_dir_name            \
+>          gettid				\
+>          glibc                           \
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index ec203e28407f..eff55d287db1 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -9,7 +9,6 @@ FILES=                                          \
+>           test-dwarf_getlocations.bin            \
+>           test-eventfd.bin                       \
+>           test-fortify-source.bin                \
+> -         test-sync-compare-and-swap.bin         \
+>           test-get_current_dir_name.bin          \
+>           test-glibc.bin                         \
+>           test-gtk2.bin                          \
+> @@ -260,9 +259,6 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
+>  $(OUTPUT)test-libbabeltrace.bin:
+>  	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
 >  
->  LIBPERF_CFLAGS := $(CORE_CFLAGS) $(EXTRA_CFLAGS)
->  
-> -ifeq ($(feature-sync-compare-and-swap), 1)
-> -  CFLAGS += -DHAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-> -endif
+> -$(OUTPUT)test-sync-compare-and-swap.bin:
+> -	$(BUILD)
 > -
->  ifeq ($(feature-pthread-attr-setaffinity-np), 1)
->    CFLAGS += -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
->  endif
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 2dcf3d12ba32..f33f09b8b535 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -130,11 +130,6 @@ int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
->  		return 0;
->  	}
+>  $(OUTPUT)test-compile-32.bin:
+>  	$(CC) -m32 -o $@ test-compile.c
 >  
-> -#if BITS_PER_LONG != 64 && !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
-> -	pr_err("Cannot use AUX area tracing mmaps\n");
-> -	return -1;
-> -#endif
+> diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+> index 464873883396..920439527291 100644
+> --- a/tools/build/feature/test-all.c
+> +++ b/tools/build/feature/test-all.c
+> @@ -106,10 +106,6 @@
+>  # include "test-libdw-dwarf-unwind.c"
+>  #undef main
+>  
+> -#define main main_test_sync_compare_and_swap
+> -# include "test-sync-compare-and-swap.c"
+> -#undef main
 > -
->  	pc->aux_offset = mp->offset;
->  	pc->aux_size = mp->len;
->  
+>  #define main main_test_zlib
+>  # include "test-zlib.c"
+>  #undef main
+> diff --git a/tools/build/feature/test-sync-compare-and-swap.c b/tools/build/feature/test-sync-compare-and-swap.c
+> deleted file mode 100644
+> index 3bc6b0768a53..000000000000
+> --- a/tools/build/feature/test-sync-compare-and-swap.c
+> +++ /dev/null
+> @@ -1,15 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -#include <stdint.h>
+> -
+> -volatile uint64_t x;
+> -
+> -int main(int argc, char *argv[])
+> -{
+> -	uint64_t old, new = argc;
+> -
+> -	(void)argv;
+> -	do {
+> -		old = __sync_val_compare_and_swap(&x, 0, 0);
+> -	} while (!__sync_bool_compare_and_swap(&x, old, new));
+> -	return old == new;
+> -}
 > -- 
 > 2.25.1
 > 
