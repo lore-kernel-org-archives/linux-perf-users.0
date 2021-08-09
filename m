@@ -2,61 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50C8C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64339C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFBCD60F8F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A75961051
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234958AbhHILPi (ORCPT
+        id S234971AbhHILPl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 07:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57022 "EHLO
+        Mon, 9 Aug 2021 07:15:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234946AbhHILPi (ORCPT
+        with ESMTP id S234970AbhHILPk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 07:15:38 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE97C0613D3
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:17 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id q2so15943766plr.11
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:17 -0700 (PDT)
+        Mon, 9 Aug 2021 07:15:40 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76876C0613D3
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:20 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id lw7-20020a17090b1807b029017881cc80b7so7800910pjb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HF9zwf39YHVZ/xNRzTLJZocl+a9xlESe8qkBXQSh72k=;
-        b=dD7+MJlbjpccJ9M/03ozzehQwpA+sgBRT0zT/Vqfy2jY1oBIRUBEGt0+L5IUx51kNo
-         lXzsu2SFNgVaJC9tgOlvH5Y9gBvQdjb6oTYwmMpMWTkPdfWjZhf+pYc+1MRUBq10IzYq
-         TD4QWBoE2TgFF/VxqEiYgbQCR+oGrXklNgpRebSfz3j6MPYQ42Rk1lZHPbnc4Vf1Y4KU
-         NP+vdAsarUZ4pXUFRxFCuS35xdbT0YPu6CJhykbMZZrr/02/G3UtmjUzCE1qer9Tgniw
-         a4Mt1W3IkSAgzc/zvVrE2UM7rKeHY9b0vIN6ugjsWaIFT30PNdaSd87WrxhR1rc86Yoz
-         5llg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mUfdU9WBYmi8/NBmndyLWLFFhQ6mqBUwjCh/GuP5qb8=;
+        b=qpdVxW5apeotrdM2TF06hZw08s65z4QwLumvU9xv/1WhAR9sgk2/cegXSUJAq5nd4z
+         td9kmETmFcktCDgTZxPCkDSJN6YY1kAaofoZC+aMUG+r6j5hl2gFFJrrXA2dvq78eizO
+         0uDjrQalWkQzu2N0/KVrfSHpa1MUGr04hBRaTN50+g/22xftdVxSfiQRLcbQfeLYmJ1o
+         nvGA41UTpDKNXPh4t743VyFNgURK2k0H70kDUz8cKfqoarcH7wHGvtRPqMGzlZxL/fQ/
+         YurX1u9V3i1s202T4XOfeWwVXlnXd72hrMnJ4AQ5Ob6sBo9wD4xXUrJf/RJci26N+MDy
+         Qohg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HF9zwf39YHVZ/xNRzTLJZocl+a9xlESe8qkBXQSh72k=;
-        b=NhdAiF/TatOWyLZzz3OcpmiFNmhuv+oTiZvzwGQTPoKFl5dXFjrp9aUh9JH16kx1t6
-         FvwIJtSKam4zc7q8Kr92nEcRsBQgEFO/+0ObFk8KIXD+Nu+reftgBX8juHJ57m2qSboD
-         9YXXrGdgSC22w+81hWmma2wn0m2TJn01CU/6Zqb/kw+Eg/EhrhOJXaugOKEzuTO36TFV
-         P4vZTGK94acWLFHsdsOL7jnEhTwtrhJpsDQ+8Cm2ULSE0T+LbbK8wLhyoi9YFCdty+KD
-         i+3aRTP33DgAKeNqW3daHxCe4WjBtGatAtShZ8IDIWB/we6vp9xacYqJPoiM/6aSGs72
-         hbcw==
-X-Gm-Message-State: AOAM533ni+L5ER8CP7Odf2S7BUivxlKDzzpijZfHHsa0sle6eIZfdAfs
-        ph6hPV+rTVMmpkYkNXR6zOIzdw==
-X-Google-Smtp-Source: ABdhPJwH9Q0NLLJRK5o1bYiE+h3L3lo71E0x7NXitJKkzu+AEVvjTEKGnfv0brl1GKpeUjmpu/ogAw==
-X-Received: by 2002:a65:68d1:: with SMTP id k17mr21274pgt.285.1628507717335;
-        Mon, 09 Aug 2021 04:15:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mUfdU9WBYmi8/NBmndyLWLFFhQ6mqBUwjCh/GuP5qb8=;
+        b=HyWDJ93aEDEcmlR71YszrqQO2G+p5a8ohWxOuKQBE9L+Qpv18Tn3Y6Cm5Y2AJRdDsG
+         NvndgYsip/6LhrMpWVEajfTTnJ0EHZTNlBxk1FlWpsoSfssT9KELg92bp0YxGIKorbjJ
+         sJflNYwhCa/19nnt6SqyBjzVaQ3aInnqxy9Fr7fcy4/kiXJzYytB3otgg0g/cXLDL7Bl
+         bfLr6oK7S6G30pcYVCW3FXByk7MAl/qqhZmM7q4+AhmFfqlE6q8NtJk9jxWe1gNbIgV4
+         5JndRoz2xfcJ0QEyZoT6ONtwuYt+ZMb6d/wwpKCtQvSRt79iSr8aKVFYFil50VRmYaq0
+         IqAA==
+X-Gm-Message-State: AOAM531A0GWpsC0QrcISzj7wFH2K4ERfZ1wiS3oSbY0fDcV6grtMGwGf
+        rGJZML/GPDpVzvrhIsP9BVu9Ow==
+X-Google-Smtp-Source: ABdhPJxbQmUGGecefTVu1P63BV4lnVu3QGLeQsDHNtt0egqlT6WsDEjcKt0medrp0IYgHlC9XawHvA==
+X-Received: by 2002:a17:903:22c7:b029:12c:4621:a2fd with SMTP id y7-20020a17090322c7b029012c4621a2fdmr9050245plg.61.1628507719959;
+        Mon, 09 Aug 2021 04:15:19 -0700 (PDT)
 Received: from localhost ([210.0.159.74])
-        by smtp.gmail.com with ESMTPSA id 186sm20611228pfg.11.2021.08.09.04.15.15
+        by smtp.gmail.com with ESMTPSA id v15sm17844635pja.53.2021.08.09.04.15.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Aug 2021 04:15:16 -0700 (PDT)
+        Mon, 09 Aug 2021 04:15:19 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -83,86 +83,52 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 0/9] perf: Refine barriers for AUX ring buffer
-Date:   Mon,  9 Aug 2021 19:13:58 +0800
-Message-Id: <20210809111407.596077-1-leo.yan@linaro.org>
+Subject: [PATCH v5 1/9] perf/ring_buffer: Add comment for barriers on AUX ring buffer
+Date:   Mon,  9 Aug 2021 19:13:59 +0800
+Message-Id: <20210809111407.596077-2-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210809111407.596077-1-leo.yan@linaro.org>
+References: <20210809111407.596077-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch series is to refine the memory barriers for AUX ring buffer.
+AUX ring buffer applies almost the same barriers as perf ring buffer,
+but there has an exception for ordering between writing the AUX trace
+data and updating user_page::aux_head.
 
-Patches 01 ~ 04 to address the barriers usage in the kernel.  The first
-patch is to make clear comment for how to use the barriers between the
-data store and aux_head store, this asks the driver to make sure the
-data is visible.  Patches 02 ~ 04 is to refine the drivers for barriers
-after the data store.
+This patch adds comment for how to use the barriers on AUX ring buffer,
+and gives comment to ask the drivers to flush the trace data into AUX
+ring buffer prior to updating user_page::aux_head.
 
-Patch 05 is to use WRITE_ONCE() for updating aux_tail.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/ring_buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Patches 06 ~ 09 is to drop the legacy __sync functions, and polish for
-duplicate code and cleanup the build and feature test after
-SYNC_COMPARE_AND_SWAP is not used.
-
-For easier review and more clear patch organization, comparing against
-to the previous patch series, the patches for support compat mode for
-AUX trace have been left out and will be sent out as a separate patch
-set.
-
-This patch set have been tested on Arm64 Juno platform.
-
-Changes from v4:
-- Refined comment for CoreSight ETR/ETF drivers (Suzuki/Peter);
-- Changed to use compiler barrier for BTS (mentioned by Peter, but have
-  not received response from Intel developer);
-- Refined the coding style for patch 07 (Adrian).
-
-Changes from v3:
-- Removed the inapprocate paragraph in the commit log for patch "perf
-  auxtrace: Drop legacy __sync functions" (Adrian);
-- Added new patch to remove feature-sync-compare-and-swap test (Adrian);
-- Th patch for "perf auxtrace: Use WRITE_ONCE() for updating aux_tail",
-  is a standlone and simple change, so moved it ahead in the patch set
-  for better ordering;
-- Minor improvement for commit logs in the last two patches.
-
-Changes from v2:
-- Removed auxtrace_mmap__read_snapshot_head(), which has the duplicated
-  code with auxtrace_mmap__read_head();
-- Cleanuped the build for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT (Adrian);
-- Added global variable "kernel_is_64_bit" (Adrian);
-- Added compat variants compat_auxtrace_mmap__{read_head|write_tail}
-  (Adrian).
-
-
-Leo Yan (9):
-  perf/ring_buffer: Add comment for barriers on AUX ring buffer
-  coresight: tmc-etr: Add barrier after updating AUX ring buffer
-  coresight: tmc-etf: Add comment for store ordering
-  perf/x86: Add compiler barrier after updating BTS
-  perf auxtrace: Use WRITE_ONCE() for updating aux_tail
-  perf auxtrace: Drop legacy __sync functions
-  perf auxtrace: Remove auxtrace_mmap__read_snapshot_head()
-  perf: Cleanup for HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT
-  tools: Remove feature-sync-compare-and-swap feature detection
-
- arch/x86/events/intel/bts.c                   |  6 ++++
- .../hwtracing/coresight/coresight-tmc-etf.c   |  5 +++
- .../hwtracing/coresight/coresight-tmc-etr.c   |  8 +++++
- kernel/events/ring_buffer.c                   |  9 ++++++
- tools/build/Makefile.feature                  |  1 -
- tools/build/feature/Makefile                  |  4 ---
- tools/build/feature/test-all.c                |  4 ---
- .../feature/test-sync-compare-and-swap.c      | 15 ---------
- tools/perf/Makefile.config                    |  4 ---
- tools/perf/util/auxtrace.c                    | 18 +++--------
- tools/perf/util/auxtrace.h                    | 31 +------------------
- 11 files changed, 34 insertions(+), 71 deletions(-)
- delete mode 100644 tools/build/feature/test-sync-compare-and-swap.c
-
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 52868716ec35..5cf6579be05e 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -509,6 +509,15 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
+ 		perf_event_aux_event(handle->event, aux_head, size,
+ 				     handle->aux_flags);
+ 
++	/*
++	 * See perf_output_put_handle(), AUX ring buffer applies the same
++	 * barrier pairing as the perf ring buffer; except for B, since
++	 * AUX ring buffer is written by hardware trace, we cannot simply
++	 * use the generic memory barrier (like smp_wmb()) prior to update
++	 * user_page::aux_head, the hardware trace driver takes the
++	 * responsibility to ensure the trace data has been flushed into
++	 * the AUX buffer before calling perf_aux_output_end().
++	 */
+ 	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
+ 	if (rb_need_aux_wakeup(rb))
+ 		wakeup = true;
 -- 
 2.25.1
 
