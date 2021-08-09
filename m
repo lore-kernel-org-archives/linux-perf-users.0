@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64339C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1CADC4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A75961051
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D92E4610CB
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234971AbhHILPl (ORCPT
+        id S234992AbhHILPp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 07:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
+        Mon, 9 Aug 2021 07:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234970AbhHILPk (ORCPT
+        with ESMTP id S234996AbhHILPn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 07:15:40 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76876C0613D3
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:20 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id lw7-20020a17090b1807b029017881cc80b7so7800910pjb.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:20 -0700 (PDT)
+        Mon, 9 Aug 2021 07:15:43 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED1EC061796
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:23 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id lw7-20020a17090b1807b029017881cc80b7so7801119pjb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mUfdU9WBYmi8/NBmndyLWLFFhQ6mqBUwjCh/GuP5qb8=;
-        b=qpdVxW5apeotrdM2TF06hZw08s65z4QwLumvU9xv/1WhAR9sgk2/cegXSUJAq5nd4z
-         td9kmETmFcktCDgTZxPCkDSJN6YY1kAaofoZC+aMUG+r6j5hl2gFFJrrXA2dvq78eizO
-         0uDjrQalWkQzu2N0/KVrfSHpa1MUGr04hBRaTN50+g/22xftdVxSfiQRLcbQfeLYmJ1o
-         nvGA41UTpDKNXPh4t743VyFNgURK2k0H70kDUz8cKfqoarcH7wHGvtRPqMGzlZxL/fQ/
-         YurX1u9V3i1s202T4XOfeWwVXlnXd72hrMnJ4AQ5Ob6sBo9wD4xXUrJf/RJci26N+MDy
-         Qohg==
+        bh=FNKiiIhfoxwyjjlrmMVPD0DKnFNw0oyY5Z/6cuWikiM=;
+        b=q50IRsTzpC659Hj0lYLMLuS575e4kkbjR6P5w0qCT/vBGQXrlGA9mAYEtRCevdNVXO
+         IW/7JO5iQ6ifmD/sqFUOzDnoRbGD+VdR8F9i9UVppdU6oz0LpeG0pOARX3Aiu+7ztsRv
+         i0pimaiGSBM/WBcgk4+OcFqgtApCNqfCIJbE6y5PqahgUnf3DNMRxSgwPexiMsISE622
+         O2K8sX9HYLU+Q4imWk7EBYkQyOXi9EGtA26f9B5G+28WkP36Htn+u/BdffzD8vT0RuKI
+         Ibg7+7DUA/bGCv/buIEyfL8IXjAZ08XKDaFWzN8Jrg2e3RuHJO8zd2LGIicd8ceinsdz
+         4SXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mUfdU9WBYmi8/NBmndyLWLFFhQ6mqBUwjCh/GuP5qb8=;
-        b=HyWDJ93aEDEcmlR71YszrqQO2G+p5a8ohWxOuKQBE9L+Qpv18Tn3Y6Cm5Y2AJRdDsG
-         NvndgYsip/6LhrMpWVEajfTTnJ0EHZTNlBxk1FlWpsoSfssT9KELg92bp0YxGIKorbjJ
-         sJflNYwhCa/19nnt6SqyBjzVaQ3aInnqxy9Fr7fcy4/kiXJzYytB3otgg0g/cXLDL7Bl
-         bfLr6oK7S6G30pcYVCW3FXByk7MAl/qqhZmM7q4+AhmFfqlE6q8NtJk9jxWe1gNbIgV4
-         5JndRoz2xfcJ0QEyZoT6ONtwuYt+ZMb6d/wwpKCtQvSRt79iSr8aKVFYFil50VRmYaq0
-         IqAA==
-X-Gm-Message-State: AOAM531A0GWpsC0QrcISzj7wFH2K4ERfZ1wiS3oSbY0fDcV6grtMGwGf
-        rGJZML/GPDpVzvrhIsP9BVu9Ow==
-X-Google-Smtp-Source: ABdhPJxbQmUGGecefTVu1P63BV4lnVu3QGLeQsDHNtt0egqlT6WsDEjcKt0medrp0IYgHlC9XawHvA==
-X-Received: by 2002:a17:903:22c7:b029:12c:4621:a2fd with SMTP id y7-20020a17090322c7b029012c4621a2fdmr9050245plg.61.1628507719959;
-        Mon, 09 Aug 2021 04:15:19 -0700 (PDT)
+        bh=FNKiiIhfoxwyjjlrmMVPD0DKnFNw0oyY5Z/6cuWikiM=;
+        b=OTxJGY7hm3YIynHXYlnC9hYJeMnLGWSbc2ebgYeRZcZDZtrP+VgPL5JIvXxftFQdvk
+         KycdJ57knJ1FXytBiFNGSz2fUPk7qhzEbW0B8NAfrKHlP0/1vOIFc2yVI5PGs2ih6xvA
+         yI4Y+EeDUFmHDuUT6LLIXzMyaCpkfCqNmEdZdxXKZ1ccX7aw2mF8FlS9g6TwvriwMoRy
+         yeRZFvoQjFTjn0Iud/kMsva9GxcDAnPir80y9C3sTa3Qy3MjW6LsXAVqkbkYeCAa6wAz
+         KOlIlHFQM0uWx/BW9fOWU2duUDTjAxZiaPel23z8QfcAurUAVERtcs8Xu2C9Rflez8WJ
+         4icQ==
+X-Gm-Message-State: AOAM5304rlYt2PPZiKL2XQiSa6/TsGaY33taj/R57iqt2ikm1ZufZlHB
+        wdRhgi3OLip71KJAH5XTuXHoFQ==
+X-Google-Smtp-Source: ABdhPJwEQt4wx3EDVsKEI4XgBS5gyLZRktaFVxothL5bIu5lfUl2KRqYEoPglvPGKDc0UiH6GxMDdQ==
+X-Received: by 2002:a17:903:1243:b029:107:eca4:d5bf with SMTP id u3-20020a1709031243b0290107eca4d5bfmr1421457plh.15.1628507722603;
+        Mon, 09 Aug 2021 04:15:22 -0700 (PDT)
 Received: from localhost ([210.0.159.74])
-        by smtp.gmail.com with ESMTPSA id v15sm17844635pja.53.2021.08.09.04.15.19
+        by smtp.gmail.com with ESMTPSA id w15sm17904203pjc.45.2021.08.09.04.15.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Aug 2021 04:15:19 -0700 (PDT)
+        Mon, 09 Aug 2021 04:15:22 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -83,9 +83,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 1/9] perf/ring_buffer: Add comment for barriers on AUX ring buffer
-Date:   Mon,  9 Aug 2021 19:13:59 +0800
-Message-Id: <20210809111407.596077-2-leo.yan@linaro.org>
+Subject: [PATCH v5 2/9] coresight: tmc-etr: Add barrier after updating AUX ring buffer
+Date:   Mon,  9 Aug 2021 19:14:00 +0800
+Message-Id: <20210809111407.596077-3-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210809111407.596077-1-leo.yan@linaro.org>
 References: <20210809111407.596077-1-leo.yan@linaro.org>
@@ -95,40 +95,36 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-AUX ring buffer applies almost the same barriers as perf ring buffer,
-but there has an exception for ordering between writing the AUX trace
-data and updating user_page::aux_head.
-
-This patch adds comment for how to use the barriers on AUX ring buffer,
-and gives comment to ask the drivers to flush the trace data into AUX
-ring buffer prior to updating user_page::aux_head.
+Since a memory barrier is required between AUX trace data store and
+aux_head store, and the AUX trace data is filled with memcpy(), it's
+sufficient to use smp_wmb() so can ensure the trace data is visible
+prior to updating aux_head.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 52868716ec35..5cf6579be05e 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -509,6 +509,15 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
- 		perf_event_aux_event(handle->event, aux_head, size,
- 				     handle->aux_flags);
- 
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index acdb59e0e661..13fd1fc730ed 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -1563,6 +1563,14 @@ tmc_update_etr_buffer(struct coresight_device *csdev,
+ 	 */
+ 	if (etr_perf->snapshot)
+ 		handle->head += size;
++
 +	/*
-+	 * See perf_output_put_handle(), AUX ring buffer applies the same
-+	 * barrier pairing as the perf ring buffer; except for B, since
-+	 * AUX ring buffer is written by hardware trace, we cannot simply
-+	 * use the generic memory barrier (like smp_wmb()) prior to update
-+	 * user_page::aux_head, the hardware trace driver takes the
-+	 * responsibility to ensure the trace data has been flushed into
-+	 * the AUX buffer before calling perf_aux_output_end().
++	 * Ensure that the AUX trace data is visible before the aux_head
++	 * is updated via perf_aux_output_end(), as expected by the
++	 * perf ring buffer.
 +	 */
- 	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
- 	if (rb_need_aux_wakeup(rb))
- 		wakeup = true;
++	smp_wmb();
++
+ out:
+ 	/*
+ 	 * Don't set the TRUNCATED flag in snapshot mode because 1) the
 -- 
 2.25.1
 
