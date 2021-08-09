@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9ACC432BE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F284FC4320A
 	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04671610A7
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F93610FF
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235039AbhHILPz (ORCPT
+        id S235031AbhHILPz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Mon, 9 Aug 2021 07:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57094 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235003AbhHILPt (ORCPT
+        with ESMTP id S235007AbhHILPv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 07:15:49 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3249C0613D3
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:28 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id j18-20020a17090aeb12b029017737e6c349so19006279pjz.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:28 -0700 (PDT)
+        Mon, 9 Aug 2021 07:15:51 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACB31C0617A1
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:31 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id lw7-20020a17090b1807b029017881cc80b7so7801732pjb.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Icy+Z5PUT8u8Dpc5dkfKGlMZmq16q7ysRKkB/tucaTI=;
-        b=g/ZYxqNSVYfAFHS8Y3Q3LzN7lJVW0gpKxk0VOgH2xoHxQ2NKRV+6csjIvgyrBywe+R
-         ltqX4DJvWgANRw6Nqe8rUwmSIG+EDpqswEY0E+CfJ/O//FkSNNgnONSqBD52NBgheHqf
-         IL+wA/2mBW0nWKRFKTNOTKsUawDafYB7PEly8exN+kIZ5jNUcK1KLqO9Dv498JOnhgtn
-         lOPBbeeSBqs5TUIxc7BkRpvOakIRWVcxw0bGa7bs44s7HueWVPIuULbCQwrnovXyAjN4
-         iEqu1DIH3tJr1THGFTL8yGEUVs6AytYqfeczR72X6Dpe58kkFXlTkoE8PmF6NpOpUN4G
-         elHw==
+        bh=u/h6y01vhaIboCmoU5QTv0ntWs0BLu7zaNEJjRy0DS4=;
+        b=hkyAS0RhMsAa7LD1MUeZEUEA6CJRhXoRGGkq6d3F/54q7BhmZASfdVQkwasll/kw/F
+         SOlyMLOFqZnh8DJsZGVsmPrQNJoy7r5Pn6+5mB7m8wBMq8/T5iw4lpJIXPriz+L/s3Ta
+         CUMoKKCINcM90LBQz+WzRu0ZljJj6Kc68I9BhgoVQEJLyNaPTaYetVpHcANKcsXqPpOp
+         aT0ZBXoKMZ9+ieE6wuiUHu7x9QLwSQ2MDDFyzhE+3nsBXnD2/KwhT06slkS/XlqVYk6m
+         Rsb1U5aIIiDhb/3A58reek7T5dSubzZKW8upKdfCAJmV3FVf7LmaQvzRKlDW9cPjKM+b
+         OHZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Icy+Z5PUT8u8Dpc5dkfKGlMZmq16q7ysRKkB/tucaTI=;
-        b=D7Htgogpfbtqk+VYBu837zuIhaNVHHbbln668gZBEgOyScCA2HTYe+Wr8rZG1eoJQW
-         aHqTUKRoSm5EcKJ/y6JgNvVFUNDe8hemSxi433/EJzISTcvhRT7eHRDvHFmhmge2OuzE
-         OttJu4QCEeY4ZPEKFCz59v1Kjn52wlTDjoroZj/4HSIqBI5uE9T9m+6W7K8YH6FrxGA3
-         K/ALcMAjFjCg6OnOmO1iyP2IzibAiPANmr4qYD40ydihlZ/qoejAodqx/gK5S0aD3+Hq
-         yfPhtFu0GrSahirY9/EhB28NQ/5mOcAhrgq+hQtOyVo65vF7a9W0TegbRKj3OA15xhF6
-         adFg==
-X-Gm-Message-State: AOAM531P1g8c2Mcesw/0eM+KHbftjKj0S5v6kzNa9BTT6CcRSNpU7tcb
-        yZ/BJ0f9j4zJqjGwZWn5ROnpiA==
-X-Google-Smtp-Source: ABdhPJyNV8pgx/xOzD9VU7toSF2rH3xwT8aKSjCPECncWnnPs/WlkFT7R4RMV2uLO/EZwqlldYgXEg==
-X-Received: by 2002:a17:902:ce8f:b029:12c:c4e7:682d with SMTP id f15-20020a170902ce8fb029012cc4e7682dmr19964157plg.58.1628507728380;
-        Mon, 09 Aug 2021 04:15:28 -0700 (PDT)
+        bh=u/h6y01vhaIboCmoU5QTv0ntWs0BLu7zaNEJjRy0DS4=;
+        b=Rb+Jn+KdhtIVmS26l4SNBxEetHoMcMKCcux2YbU2KvnmYxXy6F7+JMGglmlSge8rv+
+         45Q5y4PRETj15+FzqCNNx7mFmohaOWPzCqVrvZOtMF1+4S+b92sZQya3Ndv1FteOo8ML
+         3uULJzozDtv2e0VFoEViVFFRGaS9E7APfO/nGVe+5WRX6f3JvP6iH8ggTDs4LBLlC2hP
+         ahgcuCcUE1SXfdjrf6HJUhzUYqV39tq1Udoi/+MnuWYZPYSz7WCLio++CIWfuSjINTK4
+         3kwoEGW+EDVQ7DUYtnZSQ9+6JuzWTRcku0seQt8M6SkW9Pt19WB3IpXpYWKf81v6lWaK
+         7k7g==
+X-Gm-Message-State: AOAM5329UE2H0t4QPrHkIgdMXD+lk40l+u/5ktQy8JnMBT6lMEZYPAOe
+        B8zWKDUw0cBTrnE0NVzMAn0szw==
+X-Google-Smtp-Source: ABdhPJzqhcGgIWjxWcNcl2NY9IEGS+ZexPGs38I6dKh/kL4UUSiskPXmu4C2WEkQ/2bALqJpxIqNBQ==
+X-Received: by 2002:a63:fd51:: with SMTP id m17mr56716pgj.395.1628507731152;
+        Mon, 09 Aug 2021 04:15:31 -0700 (PDT)
 Received: from localhost ([210.0.159.74])
-        by smtp.gmail.com with ESMTPSA id 136sm23941683pge.77.2021.08.09.04.15.27
+        by smtp.gmail.com with ESMTPSA id 81sm20460136pfv.185.2021.08.09.04.15.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Aug 2021 04:15:27 -0700 (PDT)
+        Mon, 09 Aug 2021 04:15:30 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -83,9 +83,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         coresight@lists.linaro.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 4/9] perf/x86: Add compiler barrier after updating BTS
-Date:   Mon,  9 Aug 2021 19:14:02 +0800
-Message-Id: <20210809111407.596077-5-leo.yan@linaro.org>
+Subject: [PATCH v5 5/9] perf auxtrace: Use WRITE_ONCE() for updating aux_tail
+Date:   Mon,  9 Aug 2021 19:14:03 +0800
+Message-Id: <20210809111407.596077-6-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210809111407.596077-1-leo.yan@linaro.org>
 References: <20210809111407.596077-1-leo.yan@linaro.org>
@@ -95,31 +95,29 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since BTS is coherent, simply add a compiler barrier to separate the BTS
-update and aux_head store.
+Use WRITE_ONCE() for updating aux_tail, so can avoid unexpected memory
+behaviour.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/events/intel/bts.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/auxtrace.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-index 6320d2cfd9d3..974e917e65b2 100644
---- a/arch/x86/events/intel/bts.c
-+++ b/arch/x86/events/intel/bts.c
-@@ -209,6 +209,12 @@ static void bts_update(struct bts_ctx *bts)
- 	} else {
- 		local_set(&buf->data_size, head);
- 	}
-+
-+	/*
-+	 * Since BTS is coherent, just add compiler barrier to ensure
-+	 * BTS updating is ordered against bts::handle::event.
-+	 */
-+	barrier();
- }
- 
- static int
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index cc1c1b9cec9c..79227b8864cd 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -480,7 +480,7 @@ static inline void auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail)
+ 	/* Ensure all reads are done before we write the tail out */
+ 	smp_mb();
+ #if BITS_PER_LONG == 64 || !defined(HAVE_SYNC_COMPARE_AND_SWAP_SUPPORT)
+-	pc->aux_tail = tail;
++	WRITE_ONCE(pc->aux_tail, tail);
+ #else
+ 	do {
+ 		old_tail = __sync_val_compare_and_swap(&pc->aux_tail, 0, 0);
 -- 
 2.25.1
 
