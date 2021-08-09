@@ -2,61 +2,61 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8475BC4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B930C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACE86103B
-	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E9F6101E
+	for <linux-perf-users@archiver.kernel.org>; Mon,  9 Aug 2021 11:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235070AbhHILQN (ORCPT
+        id S235132AbhHIL14 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 9 Aug 2021 07:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57188 "EHLO
+        Mon, 9 Aug 2021 07:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbhHILQE (ORCPT
+        with ESMTP id S234982AbhHIL14 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 9 Aug 2021 07:16:04 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C420AC0617A2
-        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:15:42 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id c16so15968800plh.7
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:15:42 -0700 (PDT)
+        Mon, 9 Aug 2021 07:27:56 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 341F6C0613D3
+        for <linux-perf-users@vger.kernel.org>; Mon,  9 Aug 2021 04:27:36 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id z3so15986684plg.8
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Aug 2021 04:27:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LPazFJ4r8q67LCTGt2fdXct+L4YxBkcY5QLx/BSTmrQ=;
-        b=Y37NeWeM8ygxFN4RiHvbkan+MaeJwrFayZTpBNaCeDDH8fKKm4bpBNKixRxVrqFS7Z
-         dxeNKAzOAoxVahIuXzem57PUjcJjPegN3KJMMl1pUooq/DbOBHAi71oJhXadH+zDS8/g
-         IPA4uUq63TLJQJGLobhD91tzGzhhekRTD/U5llmlwOdEQT7G9yrHCGE77ee2uvidGAN5
-         hmO7ThrnPz7GKvts73DCbSA3ZQrbZI20YpvQoZJzPQOrinBU0P6xtrHRc1PZLpcUCPIR
-         EkN9+574DjseV6Ppp06abJEvAWMtGiLs5RIq3L5NQa6J/E2vJ3zvs+CZyGZAVt1CchPh
-         0eXg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k/+aHLq7iQTHQvse8lBK4UCS63ZAxvJXMyNkAqg6dBM=;
+        b=XeC9RsTGxZMmNPGSMZ36jBKda4lwYJNW4jQonBDaQ4ieollr30yeXDOvukJd49x3cO
+         zCPnZ5Ojpik0a8R4XWMDzO+jLoDa5nGB2clJbv3THaJo5MtfNkviaSRsBZZPEoLjbgdA
+         FCWhrRH8ibsKKPY1x6lX1EuiR2HfcR1dSfanqtVPN8+y/LwCiYOgfImciPez7JlOdX9j
+         3dZxVWlf7wBQNW5yVudwjKE+hj2Z5uPJVvO9obZSsPDjCOAMlfYYeKAD/uNrDBiS8Hy2
+         oE3lMEf4+VSNPoZW27rUqoJxG4lsGW+iMfloFyGbztXqcMV8doPy10FMJpX8jJpJzVsR
+         kVLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LPazFJ4r8q67LCTGt2fdXct+L4YxBkcY5QLx/BSTmrQ=;
-        b=GpXx8y+pdBLhcZJetrcCmZk2u1Kng2xKk2Ge7J0SRp7oPVcbGHyC0wlu801cmH36ri
-         CHu2KRzuPnpRrH9iwxz00Wf3Wo09EflGbw9+YF89ql4Ih98gdnMb3mYKdCjBOKck9W+2
-         HG6h7lNwx+Fk4ye2AYqNBi8IANjstPoqhC7+BVBi7dgcm3RmO+V8w4mlNp+pJHwsmIZ8
-         Z040bgvLJUKoQZiJUg9ZxhHGd9ygAiyIQ4gADE8qoucapp4RAFORViAX1A0Hn4Bim8Qb
-         BndAwCRl+urV1b5q2ezke66V+nHprvWRMNgP7EwedMWgAHgv0yU99GJ4Y/3JXtnhopld
-         yVRw==
-X-Gm-Message-State: AOAM532ybFei5mXiWidDUCJc3XXs42zmBGRFuOODwDC52sVD6WPnuQ33
-        4ogib5/wqby2f8aCZhymzKvZCQ==
-X-Google-Smtp-Source: ABdhPJyNRUiLvwAeyayLK8GRSGYueC2D8c/065kp0jX3tzimYMHZ2HpvOp+REZs7Zc2SGXyC2WeCKw==
-X-Received: by 2002:a17:902:d114:b029:12d:4202:655a with SMTP id w20-20020a170902d114b029012d4202655amr215137plw.0.1628507742274;
-        Mon, 09 Aug 2021 04:15:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=k/+aHLq7iQTHQvse8lBK4UCS63ZAxvJXMyNkAqg6dBM=;
+        b=GwQqqarV4IoTTzeLEOaIT+SpfRrm0WVG6Bd0b8sPUT6L7YpGTQnJw9wId7XWNPM46w
+         KUCVKFyFb0sgvOw1/YCsZ1liHRtlhfrNYSS8iim26UfwIgOyqNHt4S8qKfxBeS9OS475
+         JP1/h3vPkgVlMZCuKD7hvddiOb0xaq6UqfXP3Jk3bVlUbD2dipg5G/HjHaSf2cn4mnIs
+         nUM1Z2jlx8Z5YWzmPUnTh9fl+F7SP61D3qtjdVS3ul4VOBkRb+1lO9Sybo8CnNpK/p/p
+         GxXXjArt+LoSIfbTpf+QIoe7P7qZm59G15APlqfT6a0IxRYmX5Z6Co/aJ1ssCvvPNkKH
+         DFdQ==
+X-Gm-Message-State: AOAM530O0btF34EdEnaifEmT2TTJZyGoIHLRJEnYDFG4Oh1ZhtoC5e0a
+        Fo55p8hkMGDjVvNXgwFNi4cTXA==
+X-Google-Smtp-Source: ABdhPJzpEvnVFdglrKETSDfohtwNkBqgAITuAfv3vI+IuzpICq6uCOz0156egLMB2k4EGAZggu+6Ag==
+X-Received: by 2002:a17:902:a40c:b029:12c:17cf:ab6f with SMTP id p12-20020a170902a40cb029012c17cfab6fmr609701plq.71.1628508455681;
+        Mon, 09 Aug 2021 04:27:35 -0700 (PDT)
 Received: from localhost ([210.0.159.74])
-        by smtp.gmail.com with ESMTPSA id b10sm19656631pfi.122.2021.08.09.04.15.41
+        by smtp.gmail.com with ESMTPSA id r18sm25123055pgk.54.2021.08.09.04.27.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Aug 2021 04:15:41 -0700 (PDT)
+        Mon, 09 Aug 2021 04:27:35 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -66,119 +66,68 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        "Frank Ch. Eigler" <fche@redhat.com>,
-        Song Liu <songliubraving@fb.com>, x86@kernel.org,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
+        John Garry <john.garry@huawei.com>,
         Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Li Huafei <lihuafei1@huawei.com>, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v5 9/9] tools: Remove feature-sync-compare-and-swap feature detection
-Date:   Mon,  9 Aug 2021 19:14:07 +0800
-Message-Id: <20210809111407.596077-10-leo.yan@linaro.org>
+Subject: [PATCH v1 0/3] perf: Support compat mode for AUX ring buffer
+Date:   Mon,  9 Aug 2021 19:27:24 +0800
+Message-Id: <20210809112727.596876-1-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210809111407.596077-1-leo.yan@linaro.org>
-References: <20210809111407.596077-1-leo.yan@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since the __sync functions have been removed from perf, it's needless
-for perf tool to test the feature sync-compare-and-swap.
+For better organising and easier review, this patch series is extracted
+from the patch set "perf: Refine barriers for AUX ring buffer" .  When
+applying this patch series, it needs to be applied on the top of the
+patch series [1].
 
-The feature test is not used by any other components, remove it.
+To support the compat mode in perf tool, the patch 01 adds an new item
+in "perf_env" to track if kernel is running in 64-bit mode.  This patch
+is a preparation for later changes.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/build/Makefile.feature                     |  1 -
- tools/build/feature/Makefile                     |  4 ----
- tools/build/feature/test-all.c                   |  4 ----
- tools/build/feature/test-sync-compare-and-swap.c | 15 ---------------
- 4 files changed, 24 deletions(-)
- delete mode 100644 tools/build/feature/test-sync-compare-and-swap.c
+Patch 02 introduces compat variant functions for accessing AUX trace's
+head and tail, these two functions are defined with weak attribute, so
+they can be called when any architectures cannot provide 64-bit value
+atomic accessing when perf is in compat mode.
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 04a8e3db8a54..3dd2f68366f9 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -34,7 +34,6 @@ FEATURE_TESTS_BASIC :=                  \
-         dwarf_getlocations              \
-         eventfd                         \
-         fortify-source                  \
--        sync-compare-and-swap           \
-         get_current_dir_name            \
-         gettid				\
-         glibc                           \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index ec203e28407f..eff55d287db1 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -9,7 +9,6 @@ FILES=                                          \
-          test-dwarf_getlocations.bin            \
-          test-eventfd.bin                       \
-          test-fortify-source.bin                \
--         test-sync-compare-and-swap.bin         \
-          test-get_current_dir_name.bin          \
-          test-glibc.bin                         \
-          test-gtk2.bin                          \
-@@ -260,9 +259,6 @@ $(OUTPUT)test-libdw-dwarf-unwind.bin:
- $(OUTPUT)test-libbabeltrace.bin:
- 	$(BUILD) # -lbabeltrace provided by $(FEATURE_CHECK_LDFLAGS-libbabeltrace)
- 
--$(OUTPUT)test-sync-compare-and-swap.bin:
--	$(BUILD)
--
- $(OUTPUT)test-compile-32.bin:
- 	$(CC) -m32 -o $@ test-compile.c
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 464873883396..920439527291 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -106,10 +106,6 @@
- # include "test-libdw-dwarf-unwind.c"
- #undef main
- 
--#define main main_test_sync_compare_and_swap
--# include "test-sync-compare-and-swap.c"
--#undef main
--
- #define main main_test_zlib
- # include "test-zlib.c"
- #undef main
-diff --git a/tools/build/feature/test-sync-compare-and-swap.c b/tools/build/feature/test-sync-compare-and-swap.c
-deleted file mode 100644
-index 3bc6b0768a53..000000000000
---- a/tools/build/feature/test-sync-compare-and-swap.c
-+++ /dev/null
-@@ -1,15 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <stdint.h>
--
--volatile uint64_t x;
--
--int main(int argc, char *argv[])
--{
--	uint64_t old, new = argc;
--
--	(void)argv;
--	do {
--		old = __sync_val_compare_and_swap(&x, 0, 0);
--	} while (!__sync_bool_compare_and_swap(&x, old, new));
--	return old == new;
--}
+Patch 03 supports compat_auxtrace_mmap__{read_head|write_tail} on Arm
+platform.  For Arm platform with compat mode, the kernel runs in 64-bit
+kernel mode and user space tool runs in 32-bit mode, it uses the
+instructions "ldrd" and "strd" for 64-bit value atomicity.
+
+This patch set have been tested on Arm64 Juno platform for the perf tool
+is built with compiler arm-linux-gnueabihf-gcc.
+
+[1] https://lore.kernel.org/patchwork/cover/1473916/
+
+
+Leo Yan (3):
+  perf env: Track kernel 64-bit mode in environment
+  perf auxtrace: Add compat_auxtrace_mmap__{read_head|write_tail}
+  perf auxtrace arm: Support
+    compat_auxtrace_mmap__{read_head|write_tail}
+
+ tools/perf/arch/arm/util/auxtrace.c | 32 +++++++++++
+ tools/perf/util/auxtrace.c          | 88 +++++++++++++++++++++++++++--
+ tools/perf/util/auxtrace.h          | 22 +++++++-
+ tools/perf/util/env.c               | 24 +++++++-
+ tools/perf/util/env.h               |  3 +
+ 5 files changed, 161 insertions(+), 8 deletions(-)
+
 -- 
 2.25.1
 
