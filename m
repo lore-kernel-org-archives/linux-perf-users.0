@@ -2,110 +2,161 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99821C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E481CC4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7558960E52
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA0E60F35
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233274AbhHJOBf (ORCPT
+        id S240260AbhHJODr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Aug 2021 10:01:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38812 "EHLO mail.kernel.org"
+        Tue, 10 Aug 2021 10:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240095AbhHJOBf (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:01:35 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B9EEF600CD;
-        Tue, 10 Aug 2021 14:01:12 +0000 (UTC)
+        id S236686AbhHJODr (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 10 Aug 2021 10:03:47 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id F371960E52;
+        Tue, 10 Aug 2021 14:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628604073;
-        bh=us0HzEBX/W5loXdCO8hr6J585fhTK/EB9VDovlCx3v0=;
+        s=k20201202; t=1628604205;
+        bh=Td8E4SnrU0EwYxqbg86EgADaAZSpTbgyuIW0jEf6cek=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r4kmDveMC10bO/v0RhDZvZFjtrC2GsvVIKEHVDyXshd7svecYkblUKvk3xEHHTEj+
-         hOEEiE5K1Za+rcXbjHk+grLNVLNb9FKdieOP+RIRXEi7gcYASdLrKjLQS+xZlZ8a4H
-         pwqHzgzaqsjQrf/rOJzXZDraDDSVT+ym65YJfR/c4nh/6K3BrIl6inkZxtHF0Ak574
-         VcuVztz9e4Z6TilvT5ZvUzu8avZAvfoOctqezdaKPGoOiOvMusl7SC/mRoNhMD4qJy
-         DlC37OTAbx7tJ/XQbWexQ0DpLqk0gTF+hUbpWTXAGbZEMDmhUrePZeQsuLAPnIwUTl
-         PamZn0jdpz8AQ==
+        b=WnPHh11oY7YFlpTdsCAQ+09LermdZbMkyjzjjyr8yoJ09r80n5nE1bMblfcW9dSfw
+         599+S1R1XP5jQQj9v9ad4/S/ML13MNGvIae/qztxO2dU3eWHmsJQ2RN19Bf+EEMSNQ
+         2JSrTCBOnh5l1Za9wWMI09xdHXKEohmeX8ly+5bzfV+XgCAw3qmAqS4qTFDloePGGu
+         u/uUIeb73MiqOobayU/ipgqc7D5bl4m3uoA49xfE9foxqCd8HF1jqIfcN42dVdjO3A
+         hBJPhL5I5FlFtCeZrrsNA8E7jDikFCdBrN5FXpZ9oHXxnfwmfjLjGBXf5BzK2ZSqMX
+         PTkkviwJCIkUA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EBF96403F2; Tue, 10 Aug 2021 11:01:07 -0300 (-03)
-Date:   Tue, 10 Aug 2021 11:01:07 -0300
+        id 6FFC8403F2; Tue, 10 Aug 2021 11:03:22 -0300 (-03)
+Date:   Tue, 10 Aug 2021 11:03:22 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, linuxarm@huawei.com
-Subject: Re: [PATCH 02/11] perf jevents: Relocate test events to cpu folder
-Message-ID: <YRKGo1AtfBn85sZ7@kernel.org>
-References: <1627566986-30605-1-git-send-email-john.garry@huawei.com>
- <1627566986-30605-3-git-send-email-john.garry@huawei.com>
- <YQgHMt4BsDeJnE09@kernel.org>
- <90094733-741c-50e5-ac7d-f5640b5f0bdd@huawei.com>
- <88294bb8-6fb1-b485-446c-4ec15ff28d4a@huawei.com>
+To:     Riccardo Mancini <rickyman7@gmail.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf bench: add benchmark for evlist open/close
+ operations
+Message-ID: <YRKHKiHMSaYZWwQv@kernel.org>
+References: <20210809201101.277594-1-rickyman7@gmail.com>
+ <YRGOwx3xlPRxNAXM@kernel.org>
+ <YRGP3DR8f6ZEvn/P@kernel.org>
+ <aa2e93cdaf636b0cd9df05d759661363b2a59d3f.camel@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <88294bb8-6fb1-b485-446c-4ec15ff28d4a@huawei.com>
+In-Reply-To: <aa2e93cdaf636b0cd9df05d759661363b2a59d3f.camel@gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Aug 09, 2021 at 04:46:04PM +0100, John Garry escreveu:
-> On 03/08/2021 09:19, John Garry wrote:
-> > So I think we need something like this:
-> > 
-> > ----->8--------
-> > 
-> >  From a08df563665e9ec088b1af86ceed058497e112a4 Mon Sep 17 00:00:00 2001
-> > From: John Garry <john.garry@huawei.com>
-> > Date: Tue, 3 Aug 2021 08:44:09 +0100
-> > Subject: [PATCH] perf jevents: Make build dependency on test JSONs
-> > 
-> > Currently all JSONs and the mapfile for an arch are dependencies for
-> > building pmu-events.c
-> > 
-> > The test JSONs are missing as a dependency, so add them.
-> > 
-> > Signed-off-by: John Garry <john.garry@huawei.com>
-> > 
-> > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> > index 215ba30b8534..a055dee6a46a 100644
-> > --- a/tools/perf/pmu-events/Build
-> > +++ b/tools/perf/pmu-events/Build
-> > @@ -6,10 +6,13 @@ pmu-events-y    += pmu-events.o
-> >   JDIR        =  pmu-events/arch/$(SRCARCH)
-> >   JSON        =  $(shell [ -d $(JDIR) ] &&                \
-> >               find $(JDIR) -name '*.json' -o -name 'mapfile.csv')
-> > +JDIR_TEST    =  pmu-events/arch/test
-> > +JSON_TEST    =  $(shell [ -d $(JDIR_TEST) ] &&            \
-> > +            find $(JDIR_TEST) -name '*.json')
-> > 
-> >   #
-> >   # Locate/process JSON files in pmu-events/arch/
-> >   # directory and create tables in pmu-events.c.
-> >   #
-> > -$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JEVENTS)
-> > +$(OUTPUT)pmu-events/pmu-events.c: $(JSON) $(JSON_TEST) $(JEVENTS)
-> >       $(Q)$(call echo-cmd,gen)$(JEVENTS) $(SRCARCH) pmu-events/arch
-> > $(OUTPUT)pmu-events/pmu-events.c $(V)
-> > 
-> > 
-> > -----8<-----
-> 
+Em Tue, Aug 10, 2021 at 12:31:55PM +0200, Riccardo Mancini escreveu:
 > Hi Arnaldo,
 > 
-> Shall I send this as a formal patch?
+> On Mon, 2021-08-09 at 17:28 -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Aug 09, 2021 at 05:23:31PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Mon, Aug 09, 2021 at 10:11:02PM +0200, Riccardo Mancini escreveu:
+> > > > +static struct evlist *bench__create_evlist(char *evstr)
+> > > > +{
+> > > > +       struct evlist *evlist;
+> > > > +       struct parse_events_error err;
+> > > > +       int ret;
+> > 
+> > > > +       evlist = evlist__new();
+> > > > +       if (!evlist) {
+> > > > +               pr_err("Not enough memory to create evlist\n");
+> > > > +               return NULL;
+> > > > +       }
+> > 
+> > > > +       bzero(&err, sizeof(err));
+> > 
+> > > man bzero
+> > > 
+> > >        The bzero() function is deprecated (marked as LEGACY in POSIX.1-2001);
+> > > use memset(3) in new programs.  POSIX.1-2008 removes the specification of
+> > > bzero().  The bzero() function first appeared in 4.3BSD.
+> 
+> Oops, I didn't know, but I saw it is being used in some parts in perf, maybe we
+> should get rid of them:
+> $ rg -c bzero
+> builtin-lock.c:1
+> arch/powerpc/util/kvm-stat.c:1
+> builtin-stat.c:1
+> builtin-trace.c:2
+> bench/evlist-open-close.c:1
+> bench/numa.c:5
+> tests/parse-events.c:1
+> tests/backward-ring-buffer.c:1
+> tests/bpf.c:2
+> util/metricgroup.c:1
+> util/parse-events.c:1
 
-The question is when should I apply this patch? After this series? After
-the patch I commented about, before?
+Yeah, patches are welcome, but at least lets not add new ones :-)
+ 
+> > > I'm replacing it with a memset().
+> > 
+> > This one is also equivalent:
+> > 
+> > tools/perf/tests/pmu-events.c:  struct parse_events_error error = { .idx = 0, };
+> > 
+> > https://gcc.gnu.org/onlinedocs/gcc/Designated-Inits.html
+> > 
+> > That text is a bit roundabout, as it says that the members that are not
+> > explicitely initialized will be initialized as variables with static
+> > storage duration, i.e. zeroed.
+> 
+> Would it be the same doing the shorter {0}. It would be a general solution for
+> these init-to-zero cases.
+
+I'd have to do some extra research to remember why that is also not
+optimal, IIRC the '= { .a = 0, };' is the optimal one.
+ 
+> Unrelated to this small issue, I noticed I forgot to check the return of
+> bench__create_evlist. Would you like me to send a v2 fixing both issues or are
+> you able to apply this other small change yourself?
+
+Nah, as this is the HEAD right now in my local branch, I'll apply it
+myself, thanks!
+
+- Arnaldo
+ 
+> diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
+> index 40bce06f5ca7bef3..f0b9c330f34f2984 100644
+> --- a/tools/perf/bench/evlist-open-close.c
+> +++ b/tools/perf/bench/evlist-open-close.c
+> @@ -168,7 +168,11 @@ static int bench_evlist_open_close__run(char *evstr)
+>  
+>         for (i = 0; i < iterations; i++) {
+>                 pr_debug("Started iteration %d\n", i);
+> +
+>                 evlist = bench__create_evlist(evstr);
+> +               if (!evlist)
+> +                       return -ENOMEM;
+> +
+>                 gettimeofday(&start, NULL);
+>                 err = bench__do_evlist_open_close(evlist);
+>                 if (err) {
+> 
+> Thanks,
+> Riccardo
+> 
+> > 
+> > - Arnaldo
+> 
+> 
+
+-- 
 
 - Arnaldo
