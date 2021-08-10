@@ -2,91 +2,104 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044B8C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D48BEC4320A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A3860E52
-	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85C96056B
+	for <linux-perf-users@archiver.kernel.org>; Tue, 10 Aug 2021 14:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241698AbhHJOIL (ORCPT
+        id S242396AbhHJOQQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 10 Aug 2021 10:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        Tue, 10 Aug 2021 10:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238554AbhHJOIL (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 10 Aug 2021 10:08:11 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 0F87A60F41;
-        Tue, 10 Aug 2021 14:07:49 +0000 (UTC)
+        id S242395AbhHJOPy (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 10 Aug 2021 10:15:54 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C3A5A60F94;
+        Tue, 10 Aug 2021 14:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628604469;
-        bh=fuZaM92NMwEjwHL4v3wyfLCUEczcXE1BVry4drvjgIY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eW02T+ZPCQk0NsOoyktfO5bMfoj75bUx9IhvAD4fzIO8RWh/kaztN3D4L41WrJUt4
-         TdRDBaxbWcRGKFiLdyYSqUHiYtrkdDjZ7fsUpz4g2c761oH3DgPEFNb2zhfwPwpt8Q
-         MtIFwGWvX/gHQv4AS3Rqjr1REqQLT+cPwSff0D6TD/hRq94oRonbEIudTsxkTJekCk
-         IXMQySE/gKtM7NDKIGXnQfifcrIa5b7/cQzT3OvJq4lDVHMD7utSqgUBIbHsVfyOBC
-         misMURDErIbit1Sau0xB1JBvZB97hdJZfHSgSzhvgE/JQ9wjcH3dKpDy30S0OiI1pR
-         CRYqDMlhLdtPQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 75BEC403F2; Tue, 10 Aug 2021 11:07:46 -0300 (-03)
-Date:   Tue, 10 Aug 2021 11:07:46 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1628604932;
+        bh=jC6uSCrgt69kXfrpA/d+Zpv7RChIWevKRH+aKooCZ/c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fXx6eHWArKZe5Jr5YlScKwnc+I9Lv35SxtAGwKc0cHz+0DHGQrZD605dRlFlTvVzb
+         Cy6Eo2WuZT5ubBxbcf8e8J9ZmkLTST7ZkFdosG0O03Hvpw634dBXtJa0vTdFDAMHeY
+         iPSr4ebaz5sPmoiDIkFj64Rh87VfHPzGnpR29JXlKKb9GpjJmV0rP95JoGkodAWRvW
+         KjBkhFNAHhIlkqAvsFQvh924qKLzTk+bQVfvVKVnB7cYin4PNJEen2DWgMA/DsE4iV
+         LjLQu0QYYAK+c28iy8stODayiTDKaw2oPhzmQkk/ekWkMH6ds1LqKkpuJQx3bz+q2f
+         MojgDOaTs+x1A==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Like Xu <likexu@tencent.com>, Sasha Levin <sashal@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf bench: add benchmark for evlist open/close
- operations
-Message-ID: <YRKIMtH0mgKtFGPH@kernel.org>
-References: <20210809201101.277594-1-rickyman7@gmail.com>
- <YRGOwx3xlPRxNAXM@kernel.org>
- <YRGP3DR8f6ZEvn/P@kernel.org>
- <aa2e93cdaf636b0cd9df05d759661363b2a59d3f.camel@gmail.com>
- <YRKHKiHMSaYZWwQv@kernel.org>
+Subject: [PATCH AUTOSEL 5.13 20/24] perf/x86: Fix out of bound MSR access
+Date:   Tue, 10 Aug 2021 10:15:01 -0400
+Message-Id: <20210810141505.3117318-20-sashal@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210810141505.3117318-1-sashal@kernel.org>
+References: <20210810141505.3117318-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YRKHKiHMSaYZWwQv@kernel.org>
-X-Url:  http://acmel.wordpress.com
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Aug 10, 2021 at 11:03:22AM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, Aug 10, 2021 at 12:31:55PM +0200, Riccardo Mancini escreveu:
-> > Unrelated to this small issue, I noticed I forgot to check the return of
-> > bench__create_evlist. Would you like me to send a v2 fixing both issues or are
-> > you able to apply this other small change yourself?
- 
-> Nah, as this is the HEAD right now in my local branch, I'll apply it
-> myself, thanks!
+From: Peter Zijlstra <peterz@infradead.org>
 
-Also you forgot another check for this same function
-(bench__create_evlist()), before that loop. I'm fixing that as well.
+[ Upstream commit f4b4b45652578357031fbbef7f7a1b04f6fa2dc3 ]
+
+On Wed, Jul 28, 2021 at 12:49:43PM -0400, Vince Weaver wrote:
+> [32694.087403] unchecked MSR access error: WRMSR to 0x318 (tried to write 0x0000000000000000) at rIP: 0xffffffff8106f854 (native_write_msr+0x4/0x20)
+> [32694.101374] Call Trace:
+> [32694.103974]  perf_clear_dirty_counters+0x86/0x100
+
+The problem being that it doesn't filter out all fake counters, in
+specific the above (erroneously) tries to use FIXED_BTS. Limit the
+fixed counters indexes to the hardware supplied number.
+
+Reported-by: Vince Weaver <vincent.weaver@maine.edu>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Tested-by: Vince Weaver <vincent.weaver@maine.edu>
+Tested-by: Like Xu <likexu@tencent.com>
+Link: https://lkml.kernel.org/r/YQJxka3dxgdIdebG@hirez.programming.kicks-ass.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/events/core.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 1eb45139fcc6..3092fbf9dbe4 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2489,13 +2489,15 @@ void perf_clear_dirty_counters(void)
+ 		return;
  
-> - Arnaldo
->  
-> > diff --git a/tools/perf/bench/evlist-open-close.c b/tools/perf/bench/evlist-open-close.c
-> > index 40bce06f5ca7bef3..f0b9c330f34f2984 100644
-> > --- a/tools/perf/bench/evlist-open-close.c
-> > +++ b/tools/perf/bench/evlist-open-close.c
-> > @@ -168,7 +168,11 @@ static int bench_evlist_open_close__run(char *evstr)
-> >  
-> >         for (i = 0; i < iterations; i++) {
-> >                 pr_debug("Started iteration %d\n", i);
-> > +
-> >                 evlist = bench__create_evlist(evstr);
-> > +               if (!evlist)
-> > +                       return -ENOMEM;
-> > +
-> >                 gettimeofday(&start, NULL);
-> >                 err = bench__do_evlist_open_close(evlist);
+ 	for_each_set_bit(i, cpuc->dirty, X86_PMC_IDX_MAX) {
+-		/* Metrics and fake events don't have corresponding HW counters. */
+-		if (is_metric_idx(i) || (i == INTEL_PMC_IDX_FIXED_VLBR))
+-			continue;
+-		else if (i >= INTEL_PMC_IDX_FIXED)
++		if (i >= INTEL_PMC_IDX_FIXED) {
++			/* Metrics and fake events don't have corresponding HW counters. */
++			if ((i - INTEL_PMC_IDX_FIXED) >= hybrid(cpuc->pmu, num_counters_fixed))
++				continue;
++
+ 			wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + (i - INTEL_PMC_IDX_FIXED), 0);
+-		else
++		} else {
+ 			wrmsrl(x86_pmu_event_addr(i), 0);
++		}
+ 	}
+ 
+ 	bitmap_zero(cpuc->dirty, X86_PMC_IDX_MAX);
+-- 
+2.30.2
+
