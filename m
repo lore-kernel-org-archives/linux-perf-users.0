@@ -6,122 +6,68 @@ X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEDAC4338F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Aug 2021 19:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51390C4338F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Aug 2021 19:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 779376105A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Aug 2021 19:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 300C560EB9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 11 Aug 2021 19:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbhHKTDX (ORCPT
+        id S230391AbhHKTJy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 11 Aug 2021 15:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60990 "EHLO mail.kernel.org"
+        Wed, 11 Aug 2021 15:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229946AbhHKTDW (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 11 Aug 2021 15:03:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 8BB6F61077;
-        Wed, 11 Aug 2021 19:02:58 +0000 (UTC)
+        id S229655AbhHKTJx (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 11 Aug 2021 15:09:53 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A0D4C60F21;
+        Wed, 11 Aug 2021 19:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1628708578;
-        bh=STUcYPXnkJiThMTmp6iJIfCxEefd9IOUulaqLIj3Dyg=;
+        s=k20201202; t=1628708969;
+        bh=vUEiqMDOgegvrF85jfSJPR40TzW+3TCm5rt5o8ByeHc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rYocvPLSfGLglCzJSWA3cskjMhkpjD6hLZEErYf8A1IjPH32/g11+ZolGJpctCVD3
-         77ask/NRROrFZc0hXstQydfngzJbHZxF0hxR47y6Ol+zOxFH9s4xd8uHR5ZJvyHLEc
-         hDg+oShmRPyd2oXY4dC8yUUsMsqcnVcNI08n/wcBwmzyq21EPxkzgKf415NKsPjXlZ
-         H6OLNGY6D+PlQGxXvx25w3uu1vbBLhE07Agi4t/xO9zgH1DNoBVD3yEL5T5FJO/PEg
-         FaZUcC+0O+QVMzZKNna78gdc2YQA+h778Bt9PK3U/UFP08YjHsHENb80Tuo4+LNah5
-         Sk3PdYoI+QkAA==
+        b=ux7G78V8M1YuE8+Eg1zPvYws2EAKmPeiSULwqbN0tkAPJihNdk9ME4tJLkxFVfcUi
+         oCXLSiR6h+pg/MxoKc9kcxHJVdsLqUZNIJwb8PsyZF65O1TW3Vj5TtOIlAiDHR94aI
+         htcw8PK2/2HWUDbPWe6PXS8tK8652u8+OQ5rJlqrIQIqUPoEqQoL9wxj+5o4pa529D
+         nrznQfNeu/2oHkJhdClkc5CJBUCvqbDoLmM504Tsz/70m7Oim+mAEU2fkuUu07Fdpc
+         yVix4qqP95n8shPOxIOmz+mcNMzQG8FuDbQJNy5qQnr8xRJspGNLAdydl66HcaPtvd
+         j1cN+DOymrbKg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 87F6E403F2; Wed, 11 Aug 2021 16:02:53 -0300 (-03)
-Date:   Wed, 11 Aug 2021 16:02:53 -0300
+        id 1F8F4403F2; Wed, 11 Aug 2021 16:09:26 -0300 (-03)
+Date:   Wed, 11 Aug 2021 16:09:26 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test: make --skip work on shell tests
-Message-ID: <YRQe3cIaC2AA5xQl@kernel.org>
-References: <20210811180625.160944-1-rickyman7@gmail.com>
- <YRQZqOH9JLGAX6NE@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, jolsa@kernel.org,
+        peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 0/3] perf tool: Enable cpu list for hybrid
+Message-ID: <YRQgZsFtMiuw9HIo@kernel.org>
+References: <20210723063433.7318-1-yao.jin@linux.intel.com>
+ <YRQebER3uDUkJogC@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YRQZqOH9JLGAX6NE@kernel.org>
+In-Reply-To: <YRQebER3uDUkJogC@krava>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Aug 11, 2021 at 03:40:40PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Aug 11, 2021 at 08:06:26PM +0200, Riccardo Mancini escreveu:
-> > perf-test has the option --skip to provide a list of tests to skip.
-> > However, this option does not work with shell scripts.
+Em Wed, Aug 11, 2021 at 09:01:00PM +0200, Jiri Olsa escreveu:
+> On Fri, Jul 23, 2021 at 02:34:30PM +0800, Jin Yao wrote:
+> > The perf-record and perf-stat have supported the option '-C/--cpus'
+> > to count or collect only on the list of CPUs provided. This option
+> > needs to be supported for hybrid as well.
 > > 
-> > This patch passes the skiplist to run_shell_tests, so that also shell
-> > scripts could be skipped using --skip.
+> > v4:
+> > ---
+> > Rename evlist__use_cpu_list to evlist__fix_hybrid_cpus
+> > Add comments to evlist__fix_hybrid_cpus.
 > 
-> In such cases please provide an example of the usage you're fixing, what
-> was it that you tried that didn't work and that now works?
-> 
-> Its obviously a fix, so I'm applying it.
+> Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-So I added this to the commit log:
+Thanks, applied.
 
-Committer tests:
+- Arnaldo
 
-Tests 79 onwards are shell tests:
-
-Before:
-
-  # perf test --skip 1,2,81,82,84,88,90
-   1: vmlinux symtab matches kallsyms                                 : Skip (user override)
-   2: Detect openat syscall event                                     : Skip (user override)
-   3: Detect openat syscall event on all cpus                         : Ok
-   4: Read samples using the mmap interface                           : Ok
-   5: Test data source output                                         : Ok
-  <SNIP>
-  78: x86 Sample parsing                                              : Ok
-  79: build id cache operations                                       : Ok
-  80: daemon operations                                               : Ok
-  81: perf pipe recording and injection test                          : Ok
-  82: Add vfs_getname probe to get syscall args filenames             : FAILED!
-  83: probe libc's inet_pton & backtrace it with ping                 : Ok
-  84: Use vfs_getname probe to get syscall args filenames             : FAILED!
-  85: Zstd perf.data compression/decompression                        : Ok
-  86: perf stat csv summary test                                      : Ok
-  87: perf stat metrics (shadow stat) test                            : Ok
-  88: perf stat --bpf-counters test                                   : Ok
-  89: Check Arm CoreSight trace data recording and synthesized samples: Skip
-  90: Check open filename arg using perf trace + vfs_getname          : FAILED!
-  #
-
-After:
-
-  # perf test --skip 1,2,81,82,84,88,90
-   1: vmlinux symtab matches kallsyms                                 : Skip (user override)
-   2: Detect openat syscall event                                     : Skip (user override)
-   3: Detect openat syscall event on all cpus                         : Ok
-   4: Read samples using the mmap interface                           : Ok
-   5: Test data source output                                         : Ok
-  <SNIP>
-  78: x86 Sample parsing                                              : Ok
-  79: build id cache operations                                       : Ok
-  80: daemon operations                                               : Ok
-  81: perf pipe recording and injection test                          : Skip (user override)
-  82: Add vfs_getname probe to get syscall args filenames             : Skip (user override)
-  83: probe libc's inet_pton & backtrace it with ping                 : Ok
-  84: Use vfs_getname probe to get syscall args filenames             : Skip (user override)
-  85: Zstd perf.data compression/decompression                        : Ok
-  86: perf stat csv summary test                                      : Ok
-  87: perf stat metrics (shadow stat) test                            : Ok
-  88: perf stat --bpf-counters test                                   : Skip (user override)
-  89: Check Arm CoreSight trace data recording and synthesized samples: Skip
-  90: Check open filename arg using perf trace + vfs_getname          : Skip (user override)
-  #
-
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
