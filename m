@@ -2,261 +2,120 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FFFC4338F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Aug 2021 12:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D76C4338F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Aug 2021 16:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7EA060FD7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Aug 2021 12:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB396103E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 12 Aug 2021 16:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232328AbhHLMQC (ORCPT
+        id S233471AbhHLQvJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 Aug 2021 08:16:02 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3643 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231384AbhHLMQC (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 Aug 2021 08:16:02 -0400
-Received: from fraeml713-chm.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GllxY2vJLz6FFjn;
-        Thu, 12 Aug 2021 20:14:57 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml713-chm.china.huawei.com (10.206.15.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.8; Thu, 12 Aug 2021 14:15:35 +0200
-Received: from [10.47.80.186] (10.47.80.186) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2176.2; Thu, 12 Aug
- 2021 13:15:34 +0100
-Subject: Re: [PATCH v4 1/2] perf pmu: Add PMU alias support
-To:     Jin Yao <yao.jin@linux.intel.com>, <acme@kernel.org>,
-        <jolsa@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <alexander.shishkin@linux.intel.com>
-CC:     <Linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <ak@linux.intel.com>, <kan.liang@intel.com>, <yao.jin@intel.com>,
-        <rickyman7@gmail.com>, Kan Liang <kan.liang@linux.intel.com>
-References: <20210811024827.9483-1-yao.jin@linux.intel.com>
- <20210811024827.9483-2-yao.jin@linux.intel.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8730872e-dae1-4d95-48aa-60b15dec2fa7@huawei.com>
-Date:   Thu, 12 Aug 2021 13:14:53 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Thu, 12 Aug 2021 12:51:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233442AbhHLQvJ (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 12 Aug 2021 12:51:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EEEB160F57;
+        Thu, 12 Aug 2021 16:50:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1628787043;
+        bh=MMQsxh6VWVq+fupL985dZZlxsg7x7bCSJmg0HZ5KAPI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pt+GzlIWPUjvN1FKuS5Y2/IT/zDean7E5jRFJMDVSdForr8hHIkFcvxvIgA1VLxr5
+         pCdN8z00KhbjHiAA4irL4DFIfFrkNwygyuY6uBv6V0rRCvfnV7XcHbYbAXxI8zlFIh
+         WNC2/eOQy6Ql9nKTNxoA2m4yhbJ9AMxX2IE3nBrOUc9czsoAkh5+522i9Ls1Bd80x9
+         QEgqgWdXXx0HGNZa5q968gd6UF/+4XrH/jdFZi0de4rMIeXbG23lCX51NKut68f/NO
+         muWhaLjjPWfBhhYuJqCvFaZlkfmA0nxNijwNi0WjY+k+ywxi/JjQy1Ejfvu4bKjIzQ
+         obGlL6971gNAw==
+Subject: Re: [RFC 2/3] perf/x86: Control RDPMC access from .enable() hook
+To:     Rob Herring <robh@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-perf-users@vger.kernel.org
+References: <20210728230230.1911468-1-robh@kernel.org>
+ <20210728230230.1911468-3-robh@kernel.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Message-ID: <d720903c-926e-f57a-0862-4e5d76db763a@kernel.org>
+Date:   Thu, 12 Aug 2021 09:50:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-In-Reply-To: <20210811024827.9483-2-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20210728230230.1911468-3-robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.80.186]
-X-ClientProxiedBy: lhreml704-chm.china.huawei.com (10.201.108.53) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf pmu: Add x86 PMU alias support
+On 7/28/21 4:02 PM, Rob Herring wrote:
+> Rather than controlling RDPMC access behind the scenes from switch_mm(),
+> move RDPMC access controls to the PMU .enable() hook. The .enable() hook
+> is called whenever the perf CPU or task context changes which is when
+> the RDPMC access may need to change.
+> 
+> This is the first step in moving the RDPMC state tracking out of the mm
+> context to the perf context.
 
-> +char *pmu_find_real_name(const char *name)
-> +{
-> +	static bool cached_list;
-> +
-> +	if (cached_list)
-> +		return __pmu_find_real_name(name);
-> +
-> +	setup_pmu_alias_list();
-> +	cached_list = true;
-> +
-> +	return __pmu_find_real_name(name);
-> +}
-> +
-> +char *pmu_find_alias_name(const char *name)
-> +{
-> +	struct perf_pmu_alias_name *pmu;
-> +
-> +	list_for_each_entry(pmu, &pmu_alias_name_list, list) {
-> +		if (!strcmp(name, pmu->name))
-> +			return strdup(pmu->alias);
+Is this series supposed to be a user-visible change or not?  I'm confused.
 
-I would not expect a function which does a "find" to duplicate the name.
+If you intend to have an entire mm have access to RDPMC if an event is
+mapped, then surely access needs to be context switched for the whole
+mm.  If you intend to only have the thread to which the event is bound
+have access, then the only reason I see to use IPIs is to revoke access
+on munmap from the wrong thread.  But even that latter case could be
+handled with a more targeted approach, not a broadcast to all of mm_cpumask.
 
-Same goes for all the other places which does similar.
+Can you clarify what the overall intent is and what this particular
+patch is trying to do?
 
-> +	}
-> +	return NULL;
-> +}
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index 9321bd0e2f76..d94e48e1ff9b 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
->   			if (!strncmp(name, "uncore_", 7) &&
->   			    strncmp($1, "uncore_", 7))
->   				name += 7;
-> -			if (!perf_pmu__match(pattern, name, $1)) {
-> +			if (!perf_pmu__match(pattern, name, $1) ||
-> +			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
->   				if (parse_events_copy_term_list(orig_terms, &terms))
->   					CLEANUP_YYABORT;
->   				if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index fc683bc41715..796a4be752f4 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -946,6 +946,18 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
->   	return NULL;
->   }
->   
-> +char * __weak
-> +pmu_find_real_name(const char *name)
-> +{
-> +	return strdup(name);
-> +}
+> 
+>  	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
+> -		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
+> +		on_each_cpu_mask(mm_cpumask(mm), x86_pmu_set_user_access_ipi, NULL, 1);
 
-That's not finding anything.
+Here you do something for the whole mm.
 
-> +
-> +char * __weak
-> +pmu_find_alias_name(const char *name __maybe_unused)
-> +{
-> +	return NULL;
- > +}
-> +
->   static int pmu_max_precise(const char *name)
->   {
->   	char path[PATH_MAX];
-> @@ -959,19 +971,25 @@ static int pmu_max_precise(const char *name)
->   	return max_precise;
->   }
->   
-> -static struct perf_pmu *pmu_lookup(const char *name)
-> +static struct perf_pmu *pmu_lookup(const char *lookup_name)
->   {
-> -	struct perf_pmu *pmu;
-> +	struct perf_pmu *pmu = NULL;
->   	LIST_HEAD(format);
->   	LIST_HEAD(aliases);
->   	__u32 type;
-> -	bool is_hybrid = perf_pmu__hybrid_mounted(name);
-> +	bool is_hybrid;
-> +	char *name = pmu_find_real_name(lookup_name);
-> +
-> +	if (!name)
-> +		return NULL;
-> +
-> +	is_hybrid = perf_pmu__hybrid_mounted(name);
->   
->   	/*
->   	 * Check pmu name for hybrid and the pmu may be invalid in sysfs
->   	 */
->   	if (!strncmp(name, "cpu_", 4) && !is_hybrid)
-> -		return NULL;
-> +		goto out;
->   
->   	/*
->   	 * The pmu data we store & need consists of the pmu
-> @@ -979,23 +997,24 @@ static struct perf_pmu *pmu_lookup(const char *name)
->   	 * now.
->   	 */
->   	if (pmu_format(name, &format))
-> -		return NULL;
-> +		goto out;
->   
->   	/*
->   	 * Check the type first to avoid unnecessary work.
->   	 */
->   	if (pmu_type(name, &type))
-> -		return NULL;
-> +		goto out;
->   
->   	if (pmu_aliases(name, &aliases))
-> -		return NULL;
-> +		goto out;
->   
->   	pmu = zalloc(sizeof(*pmu));
->   	if (!pmu)
-> -		return NULL;
-> +		goto out;
->   
->   	pmu->cpus = pmu_cpumask(name);
-> -	pmu->name = strdup(name);
-> +	pmu->name = name;
-> +	pmu->alias_name = pmu_find_alias_name(name);
->   	pmu->type = type;
->   	pmu->is_uncore = pmu_is_uncore(name);
->   	if (pmu->is_uncore)
-> @@ -1017,6 +1036,10 @@ static struct perf_pmu *pmu_lookup(const char *name)
->   
->   	pmu->default_config = perf_pmu__get_default_config(pmu);
->   
-> +out:
-> +	if (!pmu)
-> +		free(name);
+> -		on_each_cpu(cr4_update_pce, NULL, 1);
+> +		on_each_cpu(x86_pmu_set_user_access_ipi, NULL, 1);
 
-I don't understand this. There are lots of places this function can fail 
-, but we don't free memories allocated previously - why just free this one?
+Here too.
 
-> +
->   	return pmu;
->   }
->   
-> @@ -1025,7 +1048,8 @@ static struct perf_pmu *pmu_find(const char *name)
->   	struct perf_pmu *pmu;
->   
->   	list_for_each_entry(pmu, &pmus, list)
-> -		if (!strcmp(pmu->name, name))
-> +		if (!strcmp(pmu->name, name) ||
-> +		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->   			return pmu;
+>  void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+>  			struct task_struct *tsk)
+>  {
+> @@ -581,10 +556,8 @@ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+>  	this_cpu_write(cpu_tlbstate.loaded_mm, next);
+>  	this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);
+> 
+> -	if (next != real_prev) {
+> -		cr4_update_pce_mm(next);
+> +	if (next != real_prev)
+>  		switch_ldt(real_prev, next);
+> -	}
+>  }
 
-I'd be inclined to use {} for the list_for_each_entry() call
+But if you remove this, then what handles context switching?
 
->   
->   	return NULL;
-> @@ -1920,6 +1944,9 @@ bool perf_pmu__has_hybrid(void)
->   
->   int perf_pmu__match(char *pattern, char *name, char *tok)
->   {
-> +	if (!name)
-> +		return -1;
-> +
->   	if (fnmatch(pattern, name, 0))
->   		return -1;
->   
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 926da483a141..f6ca9f6a06ef 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -21,6 +21,7 @@ enum {
->   #define PERF_PMU_FORMAT_BITS 64
->   #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
->   #define CPUS_TEMPLATE_CPU	"%s/bus/event_source/devices/%s/cpus"
-> +#define MAX_PMU_NAME_LEN 128
->   
->   struct perf_event_attr;
->   
-> @@ -32,6 +33,7 @@ struct perf_pmu_caps {
->   
->   struct perf_pmu {
->   	char *name;
-> +	char *alias_name;	/* PMU alias name */
-
-useless comment
-
->   	char *id;
->   	__u32 type;
->   	bool selectable;
-> @@ -135,4 +137,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
->   bool perf_pmu__has_hybrid(void);
->   int perf_pmu__match(char *pattern, char *name, char *tok);
->   
-> +char *pmu_find_real_name(const char *name);
-> +char *pmu_find_alias_name(const char *name);
-> +
->   #endif /* __PMU_H */
+> 
+>  /*
+> --
+> 2.27.0
 > 
 
