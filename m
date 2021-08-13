@@ -7,260 +7,94 @@ X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9893C4338F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Aug 2021 01:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F2AC4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Aug 2021 12:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9C661038
-	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Aug 2021 01:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88CE60720
+	for <linux-perf-users@archiver.kernel.org>; Fri, 13 Aug 2021 12:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231392AbhHMB7o (ORCPT
+        id S230521AbhHMMRP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 12 Aug 2021 21:59:44 -0400
-Received: from mga12.intel.com ([192.55.52.136]:26461 "EHLO mga12.intel.com"
+        Fri, 13 Aug 2021 08:17:15 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24919 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229919AbhHMB7o (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 12 Aug 2021 21:59:44 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="195073404"
-X-IronPort-AV: E=Sophos;i="5.84,317,1620716400"; 
-   d="scan'208";a="195073404"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 18:59:16 -0700
-X-IronPort-AV: E=Sophos;i="5.84,317,1620716400"; 
-   d="scan'208";a="517749378"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.255.30.176]) ([10.255.30.176])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2021 18:59:12 -0700
-Subject: Re: [PATCH v4 1/2] perf pmu: Add PMU alias support
-To:     John Garry <john.garry@huawei.com>, acme@kernel.org,
-        jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
-        rickyman7@gmail.com, Kan Liang <kan.liang@linux.intel.com>
-References: <20210811024827.9483-1-yao.jin@linux.intel.com>
- <20210811024827.9483-2-yao.jin@linux.intel.com>
- <8730872e-dae1-4d95-48aa-60b15dec2fa7@huawei.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <3f74ca01-8e15-d393-969c-e9d222a989ef@linux.intel.com>
-Date:   Fri, 13 Aug 2021 09:59:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S229474AbhHMMRP (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 13 Aug 2021 08:17:15 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10074"; a="202710620"
+X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
+   d="scan'208";a="202710620"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2021 05:16:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,318,1620716400"; 
+   d="scan'208";a="422851035"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.174]) ([10.237.72.174])
+  by orsmga003.jf.intel.com with ESMTP; 13 Aug 2021 05:16:45 -0700
+Subject: Re: [PATCH V2 1/3] perf/x86: Add new event for AUX output counter
+ index
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>, Leo Yan <leo.yan@linaro.org>,
+        Kan Liang <kan.liang@linux.intel.com>, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20210701131732.31602-1-adrian.hunter@intel.com>
+ <20210701131732.31602-2-adrian.hunter@intel.com>
+ <YOKzkPQ5gAeLUTnY@hirez.programming.kicks-ass.net>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <52e21dcc-3b0d-3c87-deb4-18ead45fed24@intel.com>
+Date:   Fri, 13 Aug 2021 15:17:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <8730872e-dae1-4d95-48aa-60b15dec2fa7@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <YOKzkPQ5gAeLUTnY@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi John,
-
-On 8/12/2021 8:14 PM, John Garry wrote:
-> perf pmu: Add x86 PMU alias support
-> 
->> +char *pmu_find_real_name(const char *name)
+On 5/07/21 10:24 am, Peter Zijlstra wrote:
+> On Thu, Jul 01, 2021 at 04:17:30PM +0300, Adrian Hunter wrote:
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index e28892270c58..7a7c3b18acec 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -2400,6 +2400,12 @@ static void intel_pmu_disable_event(struct perf_event *event)
+>>  		intel_pmu_pebs_disable(event);
+>>  }
+>>  
+>> +static void intel_pmu_assign_event(struct perf_event *event, int idx)
 >> +{
->> +    static bool cached_list;
->> +
->> +    if (cached_list)
->> +        return __pmu_find_real_name(name);
->> +
->> +    setup_pmu_alias_list();
->> +    cached_list = true;
->> +
->> +    return __pmu_find_real_name(name);
+>> +	if (is_pebs_pt(event))
+>> +		perf_report_aux_output_id(event, idx);
 >> +}
 >> +
->> +char *pmu_find_alias_name(const char *name)
->> +{
->> +    struct perf_pmu_alias_name *pmu;
->> +
->> +    list_for_each_entry(pmu, &pmu_alias_name_list, list) {
->> +        if (!strcmp(name, pmu->name))
->> +            return strdup(pmu->alias);
+>>  static void intel_pmu_del_event(struct perf_event *event)
+>>  {
+>>  	if (needs_branch_stack(event))
+>> @@ -4596,6 +4602,7 @@ static __initconst const struct x86_pmu intel_pmu = {
+>>  	.enable_all		= intel_pmu_enable_all,
+>>  	.enable			= intel_pmu_enable_event,
+>>  	.disable		= intel_pmu_disable_event,
+>> +	.assign			= intel_pmu_assign_event,
+>>  	.add			= intel_pmu_add_event,
+>>  	.del			= intel_pmu_del_event,
+>>  	.read			= intel_pmu_read_event,
 > 
-> I would not expect a function which does a "find" to duplicate the name.
-> 
-> Same goes for all the other places which does similar.
-> 
+> How about we only set that method (or clear it again) when
+> intel_cap.pebs_output_pt_available ?
 
-Yes, you are right. Jiri has the similar comment for the name duplicating here. We will still keep 
-the 'pmu->name = strdup(name);' in pmu_lookup() in v5.
+I've finally got back to this, but now, in the case of hybrids,
+there seems to be more than one intel_cap.pebs_output_pt_available.
+Any suggestions?
 
->> +    }
->> +    return NULL;
->> +}
->> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
->> index 9321bd0e2f76..d94e48e1ff9b 100644
->> --- a/tools/perf/util/parse-events.y
->> +++ b/tools/perf/util/parse-events.y
->> @@ -316,7 +316,8 @@ event_pmu_name opt_pmu_config
->>               if (!strncmp(name, "uncore_", 7) &&
->>                   strncmp($1, "uncore_", 7))
->>                   name += 7;
->> -            if (!perf_pmu__match(pattern, name, $1)) {
->> +            if (!perf_pmu__match(pattern, name, $1) ||
->> +                !perf_pmu__match(pattern, pmu->alias_name, $1)) {
->>                   if (parse_events_copy_term_list(orig_terms, &terms))
->>                       CLEANUP_YYABORT;
->>                   if (!parse_events_add_pmu(_parse_state, list, pmu->name, terms, true, false))
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index fc683bc41715..796a4be752f4 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -946,6 +946,18 @@ perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
->>       return NULL;
->>   }
->> +char * __weak
->> +pmu_find_real_name(const char *name)
->> +{
->> +    return strdup(name);
->> +}
 > 
-> That's not finding anything.
+> Other than that, this looks good to me.
 > 
 
-Will just return name in non-x86 implementation.
-
-pmu_find_real_name(const char *name)
-{
-	return name;
-}
-
->> +
->> +char * __weak
->> +pmu_find_alias_name(const char *name __maybe_unused)
->> +{
->> +    return NULL;
->  > +}
->> +
->>   static int pmu_max_precise(const char *name)
->>   {
->>       char path[PATH_MAX];
->> @@ -959,19 +971,25 @@ static int pmu_max_precise(const char *name)
->>       return max_precise;
->>   }
->> -static struct perf_pmu *pmu_lookup(const char *name)
->> +static struct perf_pmu *pmu_lookup(const char *lookup_name)
->>   {
->> -    struct perf_pmu *pmu;
->> +    struct perf_pmu *pmu = NULL;
->>       LIST_HEAD(format);
->>       LIST_HEAD(aliases);
->>       __u32 type;
->> -    bool is_hybrid = perf_pmu__hybrid_mounted(name);
->> +    bool is_hybrid;
->> +    char *name = pmu_find_real_name(lookup_name);
->> +
->> +    if (!name)
->> +        return NULL;
->> +
->> +    is_hybrid = perf_pmu__hybrid_mounted(name);
->>       /*
->>        * Check pmu name for hybrid and the pmu may be invalid in sysfs
->>        */
->>       if (!strncmp(name, "cpu_", 4) && !is_hybrid)
->> -        return NULL;
->> +        goto out;
->>       /*
->>        * The pmu data we store & need consists of the pmu
->> @@ -979,23 +997,24 @@ static struct perf_pmu *pmu_lookup(const char *name)
->>        * now.
->>        */
->>       if (pmu_format(name, &format))
->> -        return NULL;
->> +        goto out;
->>       /*
->>        * Check the type first to avoid unnecessary work.
->>        */
->>       if (pmu_type(name, &type))
->> -        return NULL;
->> +        goto out;
->>       if (pmu_aliases(name, &aliases))
->> -        return NULL;
->> +        goto out;
->>       pmu = zalloc(sizeof(*pmu));
->>       if (!pmu)
->> -        return NULL;
->> +        goto out;
->>       pmu->cpus = pmu_cpumask(name);
->> -    pmu->name = strdup(name);
->> +    pmu->name = name;
->> +    pmu->alias_name = pmu_find_alias_name(name);
->>       pmu->type = type;
->>       pmu->is_uncore = pmu_is_uncore(name);
->>       if (pmu->is_uncore)
->> @@ -1017,6 +1036,10 @@ static struct perf_pmu *pmu_lookup(const char *name)
->>       pmu->default_config = perf_pmu__get_default_config(pmu);
->> +out:
->> +    if (!pmu)
->> +        free(name);
-> 
-> I don't understand this. There are lots of places this function can fail , but we don't free 
-> memories allocated previously - why just free this one?
->
-
-That's because it's only introduced by my patch (duplicating name). :)
-
-But if we keep 'pmu->name = strdup(name)' in pmu_lookup(), I'm OK to keep original code/behavior.
-
->> +
->>       return pmu;
->>   }
->> @@ -1025,7 +1048,8 @@ static struct perf_pmu *pmu_find(const char *name)
->>       struct perf_pmu *pmu;
->>       list_for_each_entry(pmu, &pmus, list)
->> -        if (!strcmp(pmu->name, name))
->> +        if (!strcmp(pmu->name, name) ||
->> +            (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->>               return pmu;
-> 
-> I'd be inclined to use {} for the list_for_each_entry() call
-> 
-
-OK, I will add {}, thanks!
-
->>       return NULL;
->> @@ -1920,6 +1944,9 @@ bool perf_pmu__has_hybrid(void)
->>   int perf_pmu__match(char *pattern, char *name, char *tok)
->>   {
->> +    if (!name)
->> +        return -1;
->> +
->>       if (fnmatch(pattern, name, 0))
->>           return -1;
->> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->> index 926da483a141..f6ca9f6a06ef 100644
->> --- a/tools/perf/util/pmu.h
->> +++ b/tools/perf/util/pmu.h
->> @@ -21,6 +21,7 @@ enum {
->>   #define PERF_PMU_FORMAT_BITS 64
->>   #define EVENT_SOURCE_DEVICE_PATH "/bus/event_source/devices/"
->>   #define CPUS_TEMPLATE_CPU    "%s/bus/event_source/devices/%s/cpus"
->> +#define MAX_PMU_NAME_LEN 128
->>   struct perf_event_attr;
->> @@ -32,6 +33,7 @@ struct perf_pmu_caps {
->>   struct perf_pmu {
->>       char *name;
->> +    char *alias_name;    /* PMU alias name */
-> 
-> useless comment
-> 
-
-OK, remove it :)
-
-Thanks
-Jin Yao
-
->>       char *id;
->>       __u32 type;
->>       bool selectable;
->> @@ -135,4 +137,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
->>   bool perf_pmu__has_hybrid(void);
->>   int perf_pmu__match(char *pattern, char *name, char *tok);
->> +char *pmu_find_real_name(const char *name);
->> +char *pmu_find_alias_name(const char *name);
->> +
->>   #endif /* __PMU_H */
->>
-> 
