@@ -2,142 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A517C43214
-	for <linux-perf-users@archiver.kernel.org>; Sun, 15 Aug 2021 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD77EC432BE
+	for <linux-perf-users@archiver.kernel.org>; Sun, 15 Aug 2021 14:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 401966103A
-	for <linux-perf-users@archiver.kernel.org>; Sun, 15 Aug 2021 11:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91DA261159
+	for <linux-perf-users@archiver.kernel.org>; Sun, 15 Aug 2021 14:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237530AbhHOLKx (ORCPT
+        id S238676AbhHOOuN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 15 Aug 2021 07:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbhHOLKv (ORCPT
+        Sun, 15 Aug 2021 10:50:13 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:53748 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238541AbhHOOuJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 15 Aug 2021 07:10:51 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 226E7C061764;
-        Sun, 15 Aug 2021 04:10:22 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id nt11so22180101pjb.2;
-        Sun, 15 Aug 2021 04:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1hTo1UwRlyqp+pMdlXGYPhfq0rOnoJLrck7pYizHgPU=;
-        b=ki4MbLSO6ktJBBmJWeAW9iXHb99ZK/NlJzMuyhU1WHgiB1izAuZcFaDxzfK8e5I4GN
-         GNd6Ga0s6XH90h8kPCmLzUU1hnM+OEcwApME4miRVOxbrBhnYa4Phm5kgSW8z+yDtdBJ
-         hYos1WTb8FiECvf6YO6Ie9c3VDtniCE7hS0VR6AbuIsXJx/aeU8NOKMNkVoR9Qz38BCg
-         L42/kNp8yGfmgJwLWJ1n6XsD9Ccr6bDMoD/Qwua2omJgB+pJkyiJsC2qO2bAyKxPgh3S
-         N9ykDctPuAiy0lQ/wzrmJIxRPmkVOtIU0B54EJ0s3R2ShftkFCbK/TEbvxqaM99en7C/
-         Tvmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1hTo1UwRlyqp+pMdlXGYPhfq0rOnoJLrck7pYizHgPU=;
-        b=ZsJqVRkDQFisnC/Z5+FUGljpZ31HxTsSGhLYXTmKTsSGsPIocpgzUrTXzwz3Cgue0J
-         klFyFrc9oyjrk9KUvQ3iLYjD/qc8thOzpGVHgy81BfHw2xc9k0dNDznYqMdL5FNlmF4j
-         OGuPIb9T2+0ef9e/Um7EAkltERkBOoADWyKES1pq+Ctoqy07/zezwonHw1Cd/aqK7UEH
-         rN1dweq+tbhfxAgAdfQH/bPhmmmVo50Wa8EorZE/0N9xvg8vO8FjK5hHzd/BAPgGV+DW
-         oM4Jy+IRnm/To+Nx+KLL98fZxkyGmYfp+DhkQFkaZIBg7mlbmjqWYN4gNyPhnVygJOFc
-         CeWA==
-X-Gm-Message-State: AOAM532ihUlwUUnpzaU4hGtO/FaU4dPKbUPXHLFW1eiTr1dQVkzPu2mY
-        C6J9a6OH735Rbx9qDTrUWyyXuZV43yYMIx19EUw=
-X-Google-Smtp-Source: ABdhPJyX0puTwgDSKe17THJRks86nytntC1/Vm9fFgYZajAdikFyaOpXXy9Bg8UpfdHkE4M8OR1qUHu1CsaKoe3XyEw=
-X-Received: by 2002:a17:902:ced0:b029:12d:4ce1:ce3a with SMTP id
- d16-20020a170902ced0b029012d4ce1ce3amr9073769plg.0.1629025821388; Sun, 15 Aug
- 2021 04:10:21 -0700 (PDT)
+        Sun, 15 Aug 2021 10:50:09 -0400
+X-Greylist: delayed 556 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Aug 2021 10:50:07 EDT
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id 5893D870CD; Sun, 15 Aug 2021 16:40:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1629038411;
+        bh=azAF6tdlRERJnJMOPZFhCDXRn1/H4qSvoDeGxPIaHP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=owe9lDdY0GP8p5E9fWfvA9cpuUbO9raxRl84mcHZVTSA31mTb5lplKJ4I3VJCLe+C
+         0L8UoU7Woysh70ydIVxTJMWtUJt1ySBfrlgzrIG9aB5JOQiND06fC0K1BCOGVMbVKv
+         onZ+YWxO+xItbtGTLaNtI/wSEq88tBL03wM5tCJ4=
+Date:   Sun, 15 Aug 2021 07:40:10 -0700
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Claire Jensen <cjense@google.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, yao.jin@linux.intel.com,
+        song@kernel.org, andi@firstfloor.org, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, james.clark@arm.com,
+        alexander.antonov@linux.intel.com, changbin.du@intel.com,
+        liuqi115@huawei.com, irogers@google.com, eranian@google.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        clairej735@gmail.com
+Subject: Re: [PATCH v2 1/1] perf stat: Add JSON output option.
+Message-ID: <20210815144007.3e7cwiecbre2nt6y@two.firstfloor.org>
+References: <20210813220754.2104922-1-cjense@google.com>
 MIME-Version: 1.0
-References: <20210814211713.180533-1-yury.norov@gmail.com> <20210814211713.180533-18-yury.norov@gmail.com>
-In-Reply-To: <20210814211713.180533-18-yury.norov@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 15 Aug 2021 14:09:45 +0300
-Message-ID: <CAHp75Vcjq-XmX-rikawj+wVwG+V+gXzZPishpanZ79-SGFb8rA@mail.gmail.com>
-Subject: Re: [PATCH 17/17] vsprintf: rework bitmap_list_string
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Andrea Merello <andrea.merello@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rich Felker <dalias@libc.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="33mn4et7ecvdwvtw"
+Content-Disposition: inline
+In-Reply-To: <20210813220754.2104922-1-cjense@google.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Aug 15, 2021 at 12:21 AM Yury Norov <yury.norov@gmail.com> wrote:
->
-> bitmap_list_string() is very ineffective when printing bitmaps with long
-> ranges of set bits because it calls find_next_bit for each bit in the
-> bitmap.  We can do better by detecting ranges of set bits.
->
-> In my environment, before/after is 943008/31008 ns.
 
-I would add a couple of words, maybe in parentheses, to describe what
-your environment is.
+--33mn4et7ecvdwvtw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-...
+> CSV output example:
+> 
+> 1.20,msec,task-clock:u,1204272,100.00,0.697,CPUs utilized
+> 0,,context-switches:u,1204272,100.00,0.000,/sec
+> 0,,cpu-migrations:u,1204272,100.00,0.000,/sec
+> 70,,page-faults:u,1204272,100.00,58.126,K/sec
 
-> +               buf = number(++buf, end, rtop - 1, default_dec_spec);
+The difficult part of such changes to perf stat is that it has
+so many different output modes that all need to be tested.
+Unfortunately the unit tests in perf test are not really
+enough for it.
 
-++buf is a bit confusing here. Since you will rewrite the buf value
-anyway, I would write the parameter as buf + 1.
+I have an older script (attached) that tests a lot of these outputs. It just
+exercises them, you still need to check the output manually
 
--- 
-With Best Regards,
-Andy Shevchenko
+Can you check that all these modes work correctly both
+with and without json?
+
+-Andi
+
+--33mn4et7ecvdwvtw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=STAT-REGR-TEST
+
+#!/bin/sh
+# test perf stat output combinations with --metric-only
+# output has to be manually verified
+
+[ ! -d obj-perf ] && cd ..
+
+set -x
+
+PERF=${PERF:-./obj-perf/perf}
+
+run() {
+	$PERF stat -a "$@" sleep 2
+}
+
+runprog() {
+	$PERF stat "$@" true
+}
+
+
+run
+run -x, 
+run --per-core
+run --per-socket
+run -e cycles,instructions
+run -dddd
+
+# topdown
+# instructions
+
+run -I 500
+run -I 500 --per-core 
+run -I 500 --per-socket 
+run -I 500 -e cycles,instructions
+run -I 500 -dddd
+
+run -I 500 -x, 
+run -I 500 --per-core -x, 
+run -I 500 --per-socket -x, 
+run -I 500 -e cycles,instructions -x, 
+run -I 500 -dddd -x, 
+
+runprog -r3
+runprog -r3 -x, 
+$PERF stat -r3 true
+$PERF stat -r3 -x,  true
+
+sleep 3 & 
+$PERF stat --per-thread -p $! sleep 1
+$PERF stat --per-thread -t $! sleep 1
+
+
+--33mn4et7ecvdwvtw--
