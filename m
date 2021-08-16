@@ -2,78 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B00DC432BE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Aug 2021 13:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FC2C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Aug 2021 19:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22159632CF
-	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Aug 2021 13:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4749060F41
+	for <linux-perf-users@archiver.kernel.org>; Mon, 16 Aug 2021 19:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237070AbhHPNMK (ORCPT
+        id S229958AbhHPT26 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 16 Aug 2021 09:12:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:44114 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238575AbhHPNHq (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 16 Aug 2021 09:07:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9F6251FB;
-        Mon, 16 Aug 2021 06:07:13 -0700 (PDT)
-Received: from e121896.arm.com (unknown [10.57.41.204])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 945273F66F;
-        Mon, 16 Aug 2021 06:07:12 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     acme@kernel.org, jolsa@kernel.org, linux-perf-users@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] tools build: Fix feature detect clean for out of source builds
-Date:   Mon, 16 Aug 2021 14:07:05 +0100
-Message-Id: <20210816130705.1331868-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.28.0
+        Mon, 16 Aug 2021 15:28:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229587AbhHPT25 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 16 Aug 2021 15:28:57 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECAA7C061764;
+        Mon, 16 Aug 2021 12:28:25 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id a126so6005021ybg.6;
+        Mon, 16 Aug 2021 12:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xOLGmKqsNdO/wte6QQWYwVypGu5lv1VOL9/PE5zzppg=;
+        b=CA8ZD7TZwOAQKDSljQp1zBOxEqZoagJClVN1p/JdDItiAz55JSE7fm2HxWdD4Mbqt2
+         fxChgYBx2PavugcoRDnjKuGMFoERQO9uubZC/oxrMywnQekamQULSdzvlRPVM/nuk7IQ
+         6/08gnUpiEl2ZPOW+E4SgC7EW5LST560WMEsDJIr5gKiUQ3ULI9LtO6YPh3bXMyoQ16z
+         F2tejZzoQw+s/yLqYDwhEMps9XJqgsQCE5KIBe2dTIjNZyZV3cYuLid/YaaW+Jtjxwb4
+         GwZ5o2FC5Zbs/ljInvQlxZbj9s5lspwZfZG8Jp/wfGQfxeJ0Fw553X/LhJgxj63KT8wv
+         vqWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xOLGmKqsNdO/wte6QQWYwVypGu5lv1VOL9/PE5zzppg=;
+        b=b10Je8cUevDn+D5b/fy42wU+PhWG3Sli9fyj+09tT+ca3LifKGuNCeOHlwrzCtADN6
+         7VfaYB2AaqduAC/eBzGC6XZbbtIJHZ6mCBz6Od/+1kn1Uh4HajVJzRttAVax1mppTl2r
+         fhvs1FcOBaCV4hHJLyOWILRAzYZ8apdsm29xwy08Cr8k3r5hmy0fdg++EnXYWQwSh/1e
+         3tNgf9btw31KSxdyDaU+YtgH3A9oWNQy19lDoAZ9yS05V+Z1AJnr5jXUf7GkitVvw0Tv
+         8pzh5/VgggXCqK0hYs/FGH1qBSJ6Ezhhu3xEjmSpk54YNK5Qp+9tjDmNmX2gg8UZ9u6G
+         zHDw==
+X-Gm-Message-State: AOAM532rY6EBd7wlLS8PLwGRdLYgywBXAlli/xnCYT9Bz3uPWReh+Yhl
+        sUyGU07I1aq0Y9n0VuGVkBHl02YYurS1kKAc5og=
+X-Google-Smtp-Source: ABdhPJydaIx1EGJDFxukuEqSDWz/Sl0P7TDB1oBMX58voM9mT8n5uERM45Y3VwFbIt+do5gC9LOKUt5wbVPs/h9+9CQ=
+X-Received: by 2002:a25:d691:: with SMTP id n139mr23296265ybg.27.1629142105099;
+ Mon, 16 Aug 2021 12:28:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210815103610.27887-1-falakreyaz@gmail.com>
+In-Reply-To: <20210815103610.27887-1-falakreyaz@gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 16 Aug 2021 12:28:14 -0700
+Message-ID: <CAEf4BzZ+3hM9oPxdXsxXRKJD2TCmpXPnkWz1LPnP7mDagprdyA@mail.gmail.com>
+Subject: Re: [PATCH] perflib: deprecate bpf_map__resize in favor of bpf_map_set_max_entries
+To:     Muhammad Falak R Wani <falakreyaz@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Yu Kuai <yukuai3@huawei.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently the clean target when using O= isn't cleaning the feature
-detect output. This is because O= and OUTPUT= are set to canonical
-paths. For example in tools/perf/Makefile:
+On Sun, Aug 15, 2021 at 3:36 AM Muhammad Falak R Wani
+<falakreyaz@gmail.com> wrote:
+>
+> As a part of libbpf 1.0 plan[0], this patch deprecates use of
+> bpf_map__resize in favour of bpf_map__set_max_entries.
+>
+> Reference: https://github.com/libbpf/libbpf/issues/304
+> [0]: https://github.com/libbpf/libbpf/wiki/Libbpf:-the-road-to-v1.0#libbpfh-high-level-apis
+>
+> Signed-off-by: Muhammad Falak R Wani <falakreyaz@gmail.com>
+> ---
 
-  FULL_O := $(shell cd $(PWD); readlink -f $(O) || echo $(O))
+All looks good, there is an opportunity to simplify the code a bit (see below).
 
-This means that OUTPUT ends in a / and most usages prepend it to a file
-without adding an extra /. This line that was changed adds an extra /
-before the 'feature' folder but not to the end, resulting in a clean
-command like this:
+Arnaldo, I assume you'll take this through your tree or you'd like us
+to take it through bpf-next?
 
-  rm -f /tmp/build//featuretest-all.bin ...
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-After the change the clean command looks like this:
+>  tools/perf/util/bpf_counter.c        | 8 ++++----
+>  tools/perf/util/bpf_counter_cgroup.c | 8 ++++----
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+> index ba0f20853651..ced2dac31dcf 100644
+> --- a/tools/perf/util/bpf_counter.c
+> +++ b/tools/perf/util/bpf_counter.c
+> @@ -127,9 +127,9 @@ static int bpf_program_profiler_load_one(struct evsel *evsel, u32 prog_id)
+>
+>         skel->rodata->num_cpu = evsel__nr_cpus(evsel);
+>
+> -       bpf_map__resize(skel->maps.events, evsel__nr_cpus(evsel));
+> -       bpf_map__resize(skel->maps.fentry_readings, 1);
+> -       bpf_map__resize(skel->maps.accum_readings, 1);
+> +       bpf_map__set_max_entries(skel->maps.events, evsel__nr_cpus(evsel));
+> +       bpf_map__set_max_entries(skel->maps.fentry_readings, 1);
+> +       bpf_map__set_max_entries(skel->maps.accum_readings, 1);
+>
+>         prog_name = bpf_target_prog_name(prog_fd);
+>         if (!prog_name) {
+> @@ -399,7 +399,7 @@ static int bperf_reload_leader_program(struct evsel *evsel, int attr_map_fd,
+>                 return -1;
+>         }
+>
+> -       bpf_map__resize(skel->maps.events, libbpf_num_possible_cpus());
+> +       bpf_map__set_max_entries(skel->maps.events, libbpf_num_possible_cpus());
 
-  rm -f /tmp/build/feature/test-all.bin ...
+If you set max_entries to 0 (or just skip specifying it) for events
+map in util/bpf_skel/bperf_cgroup.bpf.c, you won't need to resize it,
+libbpf will automatically size it to number of possible CPUs.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/build/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/build/Makefile b/tools/build/Makefile
-index 5ed41b96fcde..6f11e6fc9ffe 100644
---- a/tools/build/Makefile
-+++ b/tools/build/Makefile
-@@ -32,7 +32,7 @@ all: $(OUTPUT)fixdep
- 
- # Make sure there's anything to clean,
- # feature contains check for existing OUTPUT
--TMP_O := $(if $(OUTPUT),$(OUTPUT)/feature,./)
-+TMP_O := $(if $(OUTPUT),$(OUTPUT)feature/,./)
- 
- clean:
- 	$(call QUIET_CLEAN, fixdep)
--- 
-2.28.0
-
+>         err = bperf_leader_bpf__load(skel);
+>         if (err) {
+>                 pr_err("Failed to load leader skeleton\n");
+> diff --git a/tools/perf/util/bpf_counter_cgroup.c b/tools/perf/util/bpf_counter_cgroup.c
+> index 89aa5e71db1a..cbc6c2bca488 100644
+> --- a/tools/perf/util/bpf_counter_cgroup.c
+> +++ b/tools/perf/util/bpf_counter_cgroup.c
+> @@ -65,14 +65,14 @@ static int bperf_load_program(struct evlist *evlist)
+>
+>         /* we need one copy of events per cpu for reading */
+>         map_size = total_cpus * evlist->core.nr_entries / nr_cgroups;
+> -       bpf_map__resize(skel->maps.events, map_size);
+> -       bpf_map__resize(skel->maps.cgrp_idx, nr_cgroups);
+> +       bpf_map__set_max_entries(skel->maps.events, map_size);
+> +       bpf_map__set_max_entries(skel->maps.cgrp_idx, nr_cgroups);
+>         /* previous result is saved in a per-cpu array */
+>         map_size = evlist->core.nr_entries / nr_cgroups;
+> -       bpf_map__resize(skel->maps.prev_readings, map_size);
+> +       bpf_map__set_max_entries(skel->maps.prev_readings, map_size);
+>         /* cgroup result needs all events (per-cpu) */
+>         map_size = evlist->core.nr_entries;
+> -       bpf_map__resize(skel->maps.cgrp_readings, map_size);
+> +       bpf_map__set_max_entries(skel->maps.cgrp_readings, map_size);
+>
+>         set_max_rlimit();
+>
+> --
+> 2.17.1
+>
