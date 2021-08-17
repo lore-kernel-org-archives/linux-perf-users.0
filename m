@@ -2,147 +2,155 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3B7C4320E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 16:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66873C4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 18:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 509A960BD3
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 16:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E9B60FE6
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 18:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbhHQQgF (ORCPT
+        id S232473AbhHQSAm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Aug 2021 12:36:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
+        Tue, 17 Aug 2021 14:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbhHQQgE (ORCPT
+        with ESMTP id S232355AbhHQSAl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Aug 2021 12:36:04 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18002C061764;
-        Tue, 17 Aug 2021 09:35:31 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id 14so23742356qkc.4;
-        Tue, 17 Aug 2021 09:35:31 -0700 (PDT)
+        Tue, 17 Aug 2021 14:00:41 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C4BC061764
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Aug 2021 11:00:08 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id a15so10330099iot.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 17 Aug 2021 11:00:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=X66JXd8TkYUtNgpL3dedMaEApQt+UVVwJJYfA0n1YPg=;
-        b=g4zglayFs+OL2K1Tv5FWDo95NGXXY+tGDfEDov2cEemXLUcWHxppV7kaJhjKlxcOrQ
-         oHuvXm/1NLEueeijcc4k/pdxM6Mcwr6Rl3B3D7wFZy2ccLhUt4vZeoQJfZfhrPomyELx
-         GW+C0UiShHbqj3n/zGjS26Xwp4uQ61Z7LoZVhXIKdcRcj7Sdhe8A3DrLEAc6nInsJUvl
-         dp18hI9oI9+JlQYtUPxQqvz7toBSYsOVPi7y9JftNaV8NSLYZ/DiplGaFcbmP3J6IdzX
-         /fxmtbTG72QjQmjUz5DePLa7WUGZoqPqI4I9C2Rmp2XHKrgJhxvGhIuRvnmdts6lZMbP
-         wyDw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3EQ4mM9cWz0DrH1U8SdciDq+Tk0hQntHt9l+G76fc50=;
+        b=rTA0zkQcD6+DZgwYwD8Zz+OeKIPeOFaLcbn3vpTlWGylV/imH0ebdGYT3dFylK0FEd
+         9UGeSkAFbMLOzLxOou7MLygRP9j6di4dPxP3endFZS4TWTNkqSnYG5gcCx+oP/nhI1Pa
+         tpaZ4Q0gzE7hOgZusTtbzi3TvK4lWH3SNCBQGcIPWnHFdVyIBz82JCFjRo14QrS2vZkZ
+         vmKsZVtCJ8Q55r5aP3xZiE7tCO8OPPDHp0C6Ux4Z8x+J3wmsnnCAei4U/V2WaxiVSk78
+         +7RvnxGAgsQVIrHGYarIHlnOc39fRUT+mLMGCAAboPD/nwAGPOdJYfBuHN8e3ZtiYrj/
+         o6GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=X66JXd8TkYUtNgpL3dedMaEApQt+UVVwJJYfA0n1YPg=;
-        b=ORjTzeyqPQaBh0uyn/NC4C11EiCihBNYaSnvbWaI3sZQyf9ShRgJVwEjVds14wz3V6
-         bjLG59W9LjVl7sUP2IKiBvfWNyIHGm3/gpLjPOHLUc+qDCIFFxAnsWMJdB++PmU0biqd
-         LKP0CPophlzLhDJQr/NRlmbEkSjU3WqkBxvOD0KmLZy8DsB2edlqEKWIosv86ABN4oKI
-         /C7mH3XPmxATKG3TQFjs7uByl9RaZQMmUVaZHsCIUYspcYq3CN0kOCmxofE6mQKrLeZJ
-         0Cbeows5P4GXGtStvw1AiyaADxyLdDAErZcc1Tvd/f1c7iYpOJwVF+mu8Pvozh1vcw9E
-         jd/w==
-X-Gm-Message-State: AOAM531rb4r/Ekcks2FQRMUOyDUsxUn+jJ+bcvVZ6cFP3WszGxkusO2d
-        w371uGSeD4bH5SavYYwAsHY=
-X-Google-Smtp-Source: ABdhPJy2J9eIa9r5vu8RSDOAqKg1RDnXqD3PiG96WXh1xZ4GPhHRSNuK2PyNoYNfQalFqu4qZofQxQ==
-X-Received: by 2002:a37:d54:: with SMTP id 81mr4580109qkn.103.1629218130100;
-        Tue, 17 Aug 2021 09:35:30 -0700 (PDT)
-Received: from localhost ([12.28.44.171])
-        by smtp.gmail.com with ESMTPSA id k8sm1584346qkk.96.2021.08.17.09.35.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Aug 2021 09:35:29 -0700 (PDT)
-Date:   Tue, 17 Aug 2021 09:35:28 -0700
-From:   Yury Norov <yury.norov@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Alexander Lobakin <alobakin@pm.me>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Klimov <aklimov@redhat.com>,
-        Andrea Merello <andrea.merello@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rich Felker <dalias@libc.org>,
-        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tejun Heo <tj@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Subject: Re: [PATCH 17/17] vsprintf: rework bitmap_list_string
-Message-ID: <YRvlUO87e7czAico@yury-ThinkPad>
-References: <20210814211713.180533-1-yury.norov@gmail.com>
- <20210814211713.180533-18-yury.norov@gmail.com>
- <CAHp75Vcjq-XmX-rikawj+wVwG+V+gXzZPishpanZ79-SGFb8rA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3EQ4mM9cWz0DrH1U8SdciDq+Tk0hQntHt9l+G76fc50=;
+        b=f7VMuC6EgjRYf50W5njPthnerCilVedpHFjgTWiLcZ8yWLUE3l58d2B6Kg3MHsLT2+
+         E5UGht8nY/RaTLwnsD4tF+TdJJCI8Odr6OFippYmhSPhf1EypfP+SJPZ6TSEfmlZHgq2
+         /Hv25D7Y9+qUhvflFhOjNL/uuPPszffWjf7xWCuDGDZ6elNtdd8Z9HELZwm00dYNp3l9
+         CzAxyBOjLdFVvZnvLecrJTaPWKKsKwA8cKvJumI2hSwND5hXbYHgGAWpPtTAdRWaTrzD
+         HEFxN7LgW5+8m668ANj4LMuPd/ff+f+/JP4gVEH3fBHO45Bg5Zlh3MBf3ld8t2h6lBfp
+         Wyxg==
+X-Gm-Message-State: AOAM531UCOuriVtaJmH2zJOawQ5gELH3HBS4Yxya8F4wDHs1ZDdPGths
+        KnE4C2JZjeBPmU+5qhxskYxSO/ksbMxnFBFMI9d0Dw==
+X-Google-Smtp-Source: ABdhPJzxKZNXhJWeHYUXe0XMUlCUvmpDg+fBJ7uoG0zZv4hb70Ps4ntmb52BIwEMriE86EHRTPoPVdCP/HWPjGWAPtE=
+X-Received: by 2002:a5e:a81a:: with SMTP id c26mr3796200ioa.15.1629223207462;
+ Tue, 17 Aug 2021 11:00:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vcjq-XmX-rikawj+wVwG+V+gXzZPishpanZ79-SGFb8rA@mail.gmail.com>
+References: <20210813220754.2104922-1-cjense@google.com> <20210815144007.3e7cwiecbre2nt6y@two.firstfloor.org>
+In-Reply-To: <20210815144007.3e7cwiecbre2nt6y@two.firstfloor.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 17 Aug 2021 10:59:54 -0700
+Message-ID: <CAP-5=fUg=LU96ATtZ4OtJpyfe75bHwpkD+XTkoZPXVeJdPAVOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] perf stat: Add JSON output option.
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     Claire Jensen <cjense@google.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, yao.jin@linux.intel.com, song@kernel.org,
+        adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        james.clark@arm.com, alexander.antonov@linux.intel.com,
+        changbin.du@intel.com, liuqi115@huawei.com, eranian@google.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        clairej735@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Aug 15, 2021 at 02:09:45PM +0300, Andy Shevchenko wrote:
-> On Sun, Aug 15, 2021 at 12:21 AM Yury Norov <yury.norov@gmail.com> wrote:
+On Sun, Aug 15, 2021 at 7:40 AM Andi Kleen <andi@firstfloor.org> wrote:
+>
+> > CSV output example:
 > >
-> > bitmap_list_string() is very ineffective when printing bitmaps with long
-> > ranges of set bits because it calls find_next_bit for each bit in the
-> > bitmap.  We can do better by detecting ranges of set bits.
-> >
-> > In my environment, before/after is 943008/31008 ns.
-> 
-> I would add a couple of words, maybe in parentheses, to describe what
-> your environment is.
-> 
-> ...
-> 
-> > +               buf = number(++buf, end, rtop - 1, default_dec_spec);
-> 
-> ++buf is a bit confusing here. Since you will rewrite the buf value
-> anyway, I would write the parameter as buf + 1.
+> > 1.20,msec,task-clock:u,1204272,100.00,0.697,CPUs utilized
+> > 0,,context-switches:u,1204272,100.00,0.000,/sec
+> > 0,,cpu-migrations:u,1204272,100.00,0.000,/sec
+> > 70,,page-faults:u,1204272,100.00,58.126,K/sec
+>
+> The difficult part of such changes to perf stat is that it has
+> so many different output modes that all need to be tested.
+> Unfortunately the unit tests in perf test are not really
+> enough for it.
+>
+> I have an older script (attached) that tests a lot of these outputs. It just
+> exercises them, you still need to check the output manually
+>
+> Can you check that all these modes work correctly both
+> with and without json?
 
-Agree, it's sloppy. I'll  send the patch by tomorrow.
+Hi Andi,
+
+Completely agreed on the need to make sure output isn't broken.
+Claire's changes include tests for CSV and json output:
+
+CSV:
+https://lore.kernel.org/lkml/20210813220936.2105426-1-cjense@google.com/
+
+json:
+https://lore.kernel.org/lkml/20210813220936.2105426-1-cjense@google.com/
+
+I think we can improve the json test by making sure the json output is
+parseable, which can be a follow up patch. For the CSV output, an
+unfortunate aspect to Claire's test was to discover that the current
+CSV output is broken with summaries enabled. Specifically, when there
+are more than one "shadow stat" to display after the event the summary
+column disappears for the additional shadow stats. I'll point at the
+specific problems in the code as-is below as I'd like to refactor it,
+but it'd be nice to land Claire's work to build upon, including the
+tests.
+
+The current stat output display code works through a large number of
+"ifs" as well as through function pointers specialized to the style of
+output, the complexity of this leads to the CSV summary bug. With
+summaries enabled a summary column is added on the left here:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core&id=e0a7ef2a62e4f61a751bccfc79b9e7acb51474de#n453
+
+but then in the shadow stats a newline may get printed like:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-shadow.c?h=perf/core&id=fba7c86601e2e42d7057db47bf6d45865a208b8c#n986
+
+the CSV newline code doesn't know of the summary column:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core&id=e0a7ef2a62e4f61a751bccfc79b9e7acb51474de#n203
+
+which causes a row with fewer columns and the shadow stats out of place.
+
+There is a notion in the output of a prefix:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/stat-display.c?h=perf/core&id=e0a7ef2a62e4f61a751bccfc79b9e7acb51474de#n148
+
+but it seems to be unused.
+
+To refactor the code I'd like the printing code to focus on computing
+"stats" and "shadow stats" and calling helpers to print these. The
+helpers would be specialized per output kind, much as the new_line and
+print_metric function pointers currently do. To avoid the problem of
+the missing column, I'd like the abstraction for the printing to be
+slightly higher level - so things like, print_header, print_stat,
+print_shadow_stat and then we have functions for each output kind
+implementing this. These functions should be sufficiently specialized
+to avoid "ifs".
+
+In doing the refactor it is going to correct bugs like the missing
+column, and so we'll need to be mindful that some small changes in
+output are intentional. This brittleness points to why Claire's
+addition of json output is so useful :-)
+
+Thanks,
+Ian
+
+> -Andi
