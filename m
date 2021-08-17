@@ -8,45 +8,45 @@ X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BD5C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 22:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E715EC4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 22:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FE360EB5
-	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 22:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A5A60EE0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 17 Aug 2021 22:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234568AbhHQWQP (ORCPT
+        id S229869AbhHQWQb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 17 Aug 2021 18:16:15 -0400
-Received: from mail-dm6nam12on2058.outbound.protection.outlook.com ([40.107.243.58]:53857
+        Tue, 17 Aug 2021 18:16:31 -0400
+Received: from mail-dm6nam12on2067.outbound.protection.outlook.com ([40.107.243.67]:22692
         "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229869AbhHQWQO (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 17 Aug 2021 18:16:14 -0400
+        id S235959AbhHQWQa (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Tue, 17 Aug 2021 18:16:30 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iZgl6a9cywuxK/ryzXstikf1WQSRfBHfvbdbtkaMo8dUSUPCZ4Df0Hw3icSHugV/qp/dMKgdnQTARFQR0XVd3LHU5MRp5d21rsPvCIv9asFFLS0NGvO/k2PGqNK8IGWeq3mAyMsqo4Op+CHbf+uNA3n6stiOwJSlC8Qq2xPqMbFztJAMwWoO4KH+5RPxYJtym4i70GgAhQblfV51GtZBXZ/XDgwWZ88QOKi0vp32Eb6iMzl2Le6PNbwrHGtdZYOUxoHNMf+6E4iu5cVhfCwTsov0+Ke3nOh2sfEVcajuG9zoGzF/+3i2ZWifORWGC4/niLpRuIdK+aEcJCrMY2+dpw==
+ b=gt/vz0UamQQ/FeLzSuf9MKoYvdEJ+JD6sPkSYhLz9ekxkxppdH2paNcW7IZboMG0byr5R8gUI+OHtXO3u7641LbgNmBFxI1wo3VlweUgAFpElIoiA6IRVUFJ0eGZJMzommSzsipskhe0tJmx4ClxZr35J+TbujBTtEu3bYoKOtik50sGJO2+ZBbs7Zf8y3XJCBnk/Nedc5yw6KAiCeWBfTImteJ20JcWAEYkSrLPTMbpNlJgi8yVSPpq9tb3oJTzVDemoml1V/UmLTigKyfNj1G/8RsRO5TwpaXPQt/MbvUwwV+zXcpLGdUVSS8COoceCcOYqrALOJ0Y2Y6iLubeOA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=59xkcZNH3wtfwNhMyLL+nrUz9fw7afm8FXtxoFhO2Ew=;
- b=TJMlcU1BKzE4VlOr5LboIRtpMZ13GvFMMtTUyTepzx8ERKmO9UNr0suWheVjsd8Hx+ib9OdGCgh+aTg7ezPY37viCFCnhupCfFWVpol8/XO7uZFRQ2zCoeClnTAUaWkp66EuSM2vYf1YNDWzqcevmn50Kwg/dqfxaifhdWskKurY15aDDcrSL+bh7E1jneCCQk7TB83lJ0HgS7102xiL+sRbNs4kHJpZUdQQPPErzeGSgPcJruxAsjLfvrmLH04MoVK6KvV5QtfJokulL3LCQV12vmmbuSXhNHDtayZ89dYowcce7m0keHEclNo8eUAS6E6l5EaS1p4JMubVufdGSw==
+ bh=hzOKb98q/TE2xTvMtgsVck/oxHueD6ksUOSUP6H/Csk=;
+ b=B3ur6yF4Pp6P/xdyqzmTtw+RT4H65h1RCn+UDs8ppp5t0JAbFKSibfEXbKRaei7kuOX9zIQlPEev6XYRXvwcQFegjZaP/Gn0x6b50TXjWGOijkjiGjWSG8LX4w5XgffKNfrhs8oODYfFgKyfEzIOTuoJPK+k6uMXIhD4F+iyU6cRfJq5nzdxsJdQcWc1JRDi1djUIdKyBxlZkjCoK28gIpLPx1dmE0RJQP7e6g1ng5+NjXggl32w31SRqneNEcO8LnQM68BiPQh5ItNad8eVRK/tVVpiLaVVSxzD0YCSgLUJ5UpQdAVsMpLkQ12uneG6ra/6MFpOZVy9lwYjiEEw/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=59xkcZNH3wtfwNhMyLL+nrUz9fw7afm8FXtxoFhO2Ew=;
- b=iLgcqkTd97WK+CTok5KuK7L80/5snLiMzh/DRijxLf0XjL0FUXzdMa0jkTDuS8w+F/LXqtsamSv3MzwUq4vsHRBM8Z4dWKnTUxtZXMk+6yNM8BBrJJv89POsP4exHghlmpdETowwP3XddpOHyW8lN+/Pl5Qz6+c73MoKQ/ptBBA=
+ bh=hzOKb98q/TE2xTvMtgsVck/oxHueD6ksUOSUP6H/Csk=;
+ b=Lhc1V0Wi5eJRErt+6u4lM1PSHUlGyBH/2FDk257tnIChAjsPjjjVRJm/FcPo5S0mD4A0JoAuCp31BYw89sPYLHPPCBuP+D4JB0/P5tRviZq+b19VoxdKAeGJJkBjefFSJZ5tEm4taO0XkjmWqWxf5OX3E6kg0a+DTaM+3CDfFEo=
 Authentication-Results: redhat.com; dkim=none (message not signed)
  header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
 Received: from BN8PR12MB3505.namprd12.prod.outlook.com (2603:10b6:408:69::17)
  by BN8PR12MB3090.namprd12.prod.outlook.com (2603:10b6:408:67::26) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.16; Tue, 17 Aug
- 2021 22:15:39 +0000
+ 2021 22:15:55 +0000
 Received: from BN8PR12MB3505.namprd12.prod.outlook.com
  ([fe80::8836:fe8d:8e90:a420]) by BN8PR12MB3505.namprd12.prod.outlook.com
  ([fe80::8836:fe8d:8e90:a420%6]) with mapi id 15.20.4415.024; Tue, 17 Aug 2021
- 22:15:39 +0000
+ 22:15:55 +0000
 From:   Kim Phillips <kim.phillips@amd.com>
 To:     Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
 Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -63,76 +63,75 @@ Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Robert Richter <robert.richter@amd.com>,
         Stephane Eranian <eranian@google.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/3] perf env: Add perf_env__cpuid, perf_env__{nr_}pmu_mappings
-Date:   Tue, 17 Aug 2021 17:15:07 -0500
-Message-Id: <20210817221509.88391-2-kim.phillips@amd.com>
+Subject: [PATCH 2/3] perf report: Add tools/arch/x86/include/asm/amd-ibs.h
+Date:   Tue, 17 Aug 2021 17:15:08 -0500
+Message-Id: <20210817221509.88391-3-kim.phillips@amd.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20210817221509.88391-1-kim.phillips@amd.com>
 References: <20210817221509.88391-1-kim.phillips@amd.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SA0PR13CA0018.namprd13.prod.outlook.com
- (2603:10b6:806:130::23) To BN8PR12MB3505.namprd12.prod.outlook.com
+X-ClientProxiedBy: SA0PR11CA0180.namprd11.prod.outlook.com
+ (2603:10b6:806:1bb::35) To BN8PR12MB3505.namprd12.prod.outlook.com
  (2603:10b6:408:69::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fritz.amd.com (165.204.77.1) by SA0PR13CA0018.namprd13.prod.outlook.com (2603:10b6:806:130::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19 via Frontend Transport; Tue, 17 Aug 2021 22:15:36 +0000
+Received: from fritz.amd.com (165.204.77.1) by SA0PR11CA0180.namprd11.prod.outlook.com (2603:10b6:806:1bb::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.18 via Frontend Transport; Tue, 17 Aug 2021 22:15:51 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ceb8e734-9969-4b27-474e-08d961cc8b4c
+X-MS-Office365-Filtering-Correlation-Id: a1c28314-9e4b-4672-dcb6-08d961cc949f
 X-MS-TrafficTypeDiagnostic: BN8PR12MB3090:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB309065AF6B3CE22FA3E20A2287FE9@BN8PR12MB3090.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3090942FF3B461AE23A93C5087FE9@BN8PR12MB3090.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Lx+70taGuz8NFEh2Wl+G+sFkvTRuy5tiikrbQu4aOXjavXPjcQ0JiCh1u44SWHu0uWDOiTezm7W328L9p+cJfqLZvsoDdy48UyjsryC1DRP5GJk69Lk/Vnehnb/tkGjwxMGdb/lsh2SmDgo+Ly07d6s2qjm6en59uajt83uG5rWbfzza6zN/KQchcsSGBzaYtKios3u189C4rfUkakdlhf22ajGd/qgwJIPDTeWSS52T+rezeQjH+LXaTOjccw9BtIWy+wXraV6IUXMnjiP770BQ8iwe9OT9twqSofyoWMHqnXhBDWTZ9TMS0FJhjfvD4M9LHYHdi2qGYy83xxJVi56n3V6D9vzXI/vGyikM7dU/pxWf9Rh2tZ4ECuBbpMIEwmtRX3TNNDwMhtTkdQiF16FeW4U5lKHJyTUNdzjSrmTVIEkpJP6Ih+3ZNoPZzg8GTZTMaxqTrUfNhV5WL0kdSlZlDwR7vC/3SwuWhmKIM4SFM7w1FmzBxqrGwqQ4pr0diepURDMsW+NmBTClZqChW+ZzcN8w0TU7CGGiWdbDjzbXksX6Ml1HKEXD9tzY/qqySXF0lSV+bQFVXFP+egR7Y0rLDL8f3qCW4Q87SH1IagXXf/qild7zgAcpoyHRL0MTdh03KqcTafLnlaYgXlW7X4vptw4TeOeSQRUN1cyUADy4cYGAfO9VOcQAVMwcynxqQG33G8Q1H7tmw8f7dnepvgy3RYMSt20i+OKKqQ/xJ/c=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3505.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6666004)(38100700002)(38350700002)(44832011)(4326008)(186003)(1076003)(26005)(2906002)(54906003)(7416002)(66946007)(66476007)(66556008)(86362001)(2616005)(956004)(6486002)(8676002)(316002)(83380400001)(5660300002)(8936002)(36756003)(7696005)(52116002)(508600001)(101420200003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: Voe59yEEViWeSmvkbbbg/H5qJ4lV6rXmVu3PNCx1xAYyYcDB/MalnT+jquKVWZsiITIAG2aWg47/gHsNzfRH5kw4gmXMuZKY/swFNu6qbMvbB93hyoccgQxC15P/ixXKRZzugyofmt326xi+jNikq+ndmfgsfVXfuB1HFfb9SYt2uX5yh61HgMwpoWfzjlIdB3+HbPay3FSLwrWMDoSrwgLcJSQqJIfDSbiLwIQ6yRS/dyMgdqK2Oz86yDFtjHMKkmPH1vYSJVlsOfgPgyqsFbH8ySCGpb7rGY/WLa6Kdll3Q2vZZBWSz+TNyihOgz7mZe+gncTYXdpTkzcfW8+Y+VmVmfXRKTkBWUrPSVzi/vH/JONMZ+/kltESD7SGkSiAVC/VP1NZx9AybA1/AdIM5MhR/a35H5wjd3x0ZPEkppV7QuOTbVtLH++e1pYvRa/4M1SxCgGXOU9GQvSkZ5c9jY9m59kbbujrKmNQueBrdBOmR2J6CTxkqQ4TZT8LlkxLhr6EBtN+mlDiDFsPGVh3fC2/dv3GPxlYC8nuu5Rb10PxslntjqUYT0zUGDp9x5brQ7rsAl2VokgGXRaVq/xiS8YSZoqe/TDKUc+hqjP8uLyPCqTLRpg+VThvduxwD40yaW5JiiwckaPli+eRO+D9CaZ6oLxCIm13Ja7GxHTeKN0PtKAg95VTeoDVFQPoS8aQxySJti2aWoT3oNFO4ZPi9g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3505.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6666004)(38100700002)(38350700002)(44832011)(4326008)(186003)(1076003)(26005)(2906002)(54906003)(7416002)(66946007)(66476007)(66556008)(86362001)(2616005)(956004)(6486002)(8676002)(316002)(83380400001)(5660300002)(8936002)(36756003)(7696005)(52116002)(508600001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?r5DorZ0W8oD9cii6AvSNulYUztfcxntMkXQWAF8MYqgPIcoCmEv0DBXnQ/8y?=
- =?us-ascii?Q?6giaxW1X7PfrVryk6TdvXym8AKPIAVEWzrAra2OTMPcLTZ3UtjHog4xjRQYr?=
- =?us-ascii?Q?CNw8DvpYfu6VrN7clvw8LMNt90ptdoSdW1KcP37BXXj5SB96r0FCRyUpFVOo?=
- =?us-ascii?Q?YGDAu60PpMuVw3ONzR1wYqNuTsW1NawHHprqjdUvKwB3Hy4EZe3X1aMRWsln?=
- =?us-ascii?Q?p6OwJMyTmlMAgmiQoa2za8ApJoll1Sev426Y6aoNAQ0vuMRgZOISylef3f4d?=
- =?us-ascii?Q?kUm8dNT3lGP97fWLfROTRMgmpMEJe6g164Ae7pc6tavQ6EAii+upv5j/OEv3?=
- =?us-ascii?Q?3Nj0dO+znZD9BB5Wj0n2kIAeOPo3ZY6GyGMyuj6vEG2EP+ozHL8c7rjJ7/Ir?=
- =?us-ascii?Q?ao6b4/NK0QS7mQ0ft25Wgsj2uVVWhN7aDio6BCANDofWxwZrcqZpTaDBjkfR?=
- =?us-ascii?Q?tNzBmK29aSPWGeVSGxEKOjxRVumkvh2wCwi0JOobefN+Pruv0K4Wqeoyv8oR?=
- =?us-ascii?Q?Gw8Z/5L0D9OmkCH3LT3DeSt+fmNBRp5ZScnF94/qrNlD/qrsCdE7aSq9WrXI?=
- =?us-ascii?Q?d/vWLpFAD08JymCxXf0ehJlitNrHXx13EpxvXjaIEPNeYmFE26zfWA2gJurc?=
- =?us-ascii?Q?pfFa9r+oGNGoT5MRihqfXasJeuRA+CddP0IC/6ChDE3P5d4DZvaC0HAiTgjh?=
- =?us-ascii?Q?7+lvATt6OdKFndwuW0fArEAokL8peUbkDKpodPPRiO9r4oxLmfZ6tKAZbwvS?=
- =?us-ascii?Q?BGKWIk4JCqvSDEyGkH5XB7xP9jpAhDo5XZk0VGT4he6QVIB+jHjedlC53dCn?=
- =?us-ascii?Q?AoNDjyo9DhPsXKoEzkclo6U/trjuLzWxRc3FUEdIo3E0OLC+QLw16zATps39?=
- =?us-ascii?Q?MjmXIDKtGHTqSh4Uxpv1YO9n7v1g4+YhOXKckhbJrfULNaJelNKL4jDXJbMM?=
- =?us-ascii?Q?AzDX4NS6r7XqKJjBFvpxEl1ONoL/jbntFGVzL5jR/gl9lSLgZObrHUSI8Xi0?=
- =?us-ascii?Q?tdAmUBbOYv9g/f30FsUiYKzxCNIz4nJxa9oKjMnJRWDy0okFPF54iffgjvVk?=
- =?us-ascii?Q?zKGODt300rMiGun3rzMaJzSUzo5nNK/GsbFqeSxQe8v7SrXGICd/lux1GSpW?=
- =?us-ascii?Q?s7HEZaFKL0jtXiSnUPCjqL0lSHd91J+P4cZqNMcKYQ4uWj7j7Rse/LlcugAJ?=
- =?us-ascii?Q?XupQd2BnLb5i57DU42PtNjDRfOqrxvu0m+SY3udQu19w8A6bQzLKcTqO6h4J?=
- =?us-ascii?Q?yCUtIsQuo6X9MQCUB1XgQ34Zolts8UZPRDEs1M2dZiGYo1/6OXx9b8U/do6K?=
- =?us-ascii?Q?3Pvbm+Yxspadc5yk8Xbv3dax?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?7bX2I18QTQfUbtXpGFPb7FXta/ZP1JAeHkDomde1JXWgqt0yfQ0mqglW216Q?=
+ =?us-ascii?Q?erVA9L0DYWVikYnJrXp2VB2KVf1zzpA8YUB9sY1i8hhgz3/OJqat5mReCxny?=
+ =?us-ascii?Q?u1gEmDkh+LFsr+6BNWwo9UjLD4gJdaBiB0i5JWMBU7eZeS7VWWzGodwLLpfm?=
+ =?us-ascii?Q?IaeME//Udygu0Ng1hMGZ+K6DVxDp2S+v/OtJ6xnuZiFLdcHcr/igSVGXeiiN?=
+ =?us-ascii?Q?K5Zh393/1sk2ZlNaoHzjkGNFOzY6iu/j00OR2mQOZp/cY5dAjpIyb4WRJOPk?=
+ =?us-ascii?Q?LoUu1LdJteBqaxKP7Rx/8mywsYjlKzSiAKhpvaU+93ikJ9mW1et0iKJaqkQ0?=
+ =?us-ascii?Q?8wTpUPAp7PjfK0TfQmoEMtVc3vKeaMuOOmn2Yy3RP6Uvcvm90+/fxPvUxXBk?=
+ =?us-ascii?Q?ZQv6qUYNj+hX6zYY5oxOfy858wo7uQdQS2o5/vof4rDoOaT/jtTV3nRL1Omv?=
+ =?us-ascii?Q?jJl14s2Ywk/LF2n/1D6Ywpdw/2ewJhM0YqOd4zaOOQ/kJcC6lAV4At16zHrg?=
+ =?us-ascii?Q?p7TMlZJOiTPocTVKxsMP9wBFh2OcqRwIUyKBr2OD2q8gl01X0hHj+tD0/sqE?=
+ =?us-ascii?Q?92MKCoC3c82ufMIcgN7aTL0e0Hk83bb6JesJBp0paSDeuJKlomQab2AfOisL?=
+ =?us-ascii?Q?qMwIMR3MCZxpnZKHboQQKNs10MpskM5HFLW3hZHp9+YyLptsFMboflInAdNJ?=
+ =?us-ascii?Q?PvQuq4QBCPN0zcMxqkaU1U6V0NoLSiBXuwT/PWDCgHX/PqwB94f0VncLD6Zz?=
+ =?us-ascii?Q?DKLf+9NGy76yjzP1K9IasrEJR1TgBtkP5g6lXBfF4SgtGYfsTT7138FdYKdx?=
+ =?us-ascii?Q?hCNh/Qo29JF/x11ZySU3gZQwy9YnC7y3P0DeMWhfPS6q1j7B8fBVrCVKD8L8?=
+ =?us-ascii?Q?XIjW9r51SrIHA3mmBaKG1hFXVJpO4A9LzDfWqfEZNZwgR7f1tw3q84gVKNbN?=
+ =?us-ascii?Q?jLPd6ZgR101RGOXOC76IeSpCVaxKRNHTP7m+eDPV3N32qLZj/i4OHapcXLZi?=
+ =?us-ascii?Q?ZoQ4i4xheGzRZZO1+RRdxv/k3T30Pr+xs3zyiQOLJ2/rjNF4QVyLntZvUTm8?=
+ =?us-ascii?Q?zwjGHWFH3lKp1kf+KrpVCrfpwrYey5HC4h8i8Y0B0KRtiKa5A5CJgMDLuaqh?=
+ =?us-ascii?Q?6RyjG5lAGp6HtzJyLGFr7J/T4AybAKf3kdo2MniAkjzQ7RgWAyRit4eKdZ6k?=
+ =?us-ascii?Q?DahOgMAKH3F1xC1HYexbLtj4r896y//PbmZiKdqmDw5a/ffU/dHrtV8js66m?=
+ =?us-ascii?Q?AaeJ2dVLwRu122NJA3nq3tleuZGAgAv7rVmD+TezuAsfEsDZ6t2tiUiWiYd/?=
+ =?us-ascii?Q?S3z7xp/OnMDYGYSmSv4irfgD?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ceb8e734-9969-4b27-474e-08d961cc8b4c
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1c28314-9e4b-4672-dcb6-08d961cc949f
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3505.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2021 22:15:38.9969
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2021 22:15:55.0080
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mI5Rb3vyISoNiL1ySTvPAl60rz456kFEIMNNog+XqVP1BPQ7E/tMFNOZsDA4lCelyKK3eOuWLHVK6ikZZFNlxQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: uwFjJpekSUejGWZpPUcpk8uRiME/Nna6JvjF/euRGB9I1gOVZDpAFTg5jzIyEZEqc5LYITmMtrWGAg4TUTerOg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3090
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-To be used by IBS raw data display: It needs the recorder's cpuid in
-order to determine which errata workarounds to apply to the data, and
-the pmu_mappings are needed in order to figure out which PMU sample
-type is IBS Fetch vs. IBS Op.  When not available from perf.data,
-we assume local operation, and retrieve cpuid and pmu mappings
-directly from the running system.
+This is a tools/-side patch for the patch that adds the original copy
+of the IBS header file, in arch/x86/include/asm/.
+
+We also add an entry to check-headers.sh, so future changes continue
+to be copied.
 
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -152,134 +151,161 @@ Cc: Stephane Eranian <eranian@google.com>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-perf-users@vger.kernel.org
 ---
- tools/perf/util/env.c | 78 +++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/env.h |  5 +++
- 2 files changed, 83 insertions(+)
+ tools/arch/x86/include/asm/amd-ibs.h | 132 +++++++++++++++++++++++++++
+ tools/perf/check-headers.sh          |   1 +
+ 2 files changed, 133 insertions(+)
+ create mode 100644 tools/arch/x86/include/asm/amd-ibs.h
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 8f7ff0035c41..cf773f0dec38 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -10,6 +10,7 @@
- #include <sys/utsname.h>
- #include <stdlib.h>
- #include <string.h>
-+#include "strbuf.h"
- 
- struct perf_env perf_env;
- 
-@@ -306,6 +307,45 @@ int perf_env__read_cpu_topology_map(struct perf_env *env)
- 	return 0;
- }
- 
-+int perf_env__read_pmu_mappings(struct perf_env *env)
-+{
-+	struct perf_pmu *pmu = NULL;
-+	u32 pmu_num = 0;
-+	struct strbuf sb;
+diff --git a/tools/arch/x86/include/asm/amd-ibs.h b/tools/arch/x86/include/asm/amd-ibs.h
+new file mode 100644
+index 000000000000..46e1df45efc0
+--- /dev/null
++++ b/tools/arch/x86/include/asm/amd-ibs.h
+@@ -0,0 +1,132 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * From PPR Vol 1 for AMD Family 19h Model 01h B1
++ * 55898 Rev 0.35 - Feb 5, 2021
++ */
 +
-+	while ((pmu = perf_pmu__scan(pmu))) {
-+		if (!pmu->name)
-+			continue;
-+		pmu_num++;
-+	}
-+	if (!pmu_num) {
-+		pr_debug("pmu mappings not available\n");
-+		return -ENOENT;
-+	}
-+	env->nr_pmu_mappings = pmu_num;
++#include <asm/msr-index.h>
 +
-+	if (strbuf_init(&sb, 128 * pmu_num) < 0)
-+		return -ENOMEM;
++/*
++ * IBS Hardware MSRs
++ */
 +
-+	while ((pmu = perf_pmu__scan(pmu))) {
-+		if (!pmu->name)
-+			continue;
-+		if (strbuf_addf(&sb, "%u:%s", pmu->type, pmu->name) < 0)
-+			goto error;
-+		/* include a NULL character at the end */
-+		if (strbuf_add(&sb, "", 1) < 0)
-+			goto error;
-+	}
++/* MSR 0xc0011030: IBS Fetch Control */
++union ibs_fetch_ctl {
++	__u64 val;
++	struct {
++		__u64	fetch_maxcnt:16,/* 0-15: instruction fetch max. count */
++			fetch_cnt:16,	/* 16-31: instruction fetch count */
++			fetch_lat:16,	/* 32-47: instruction fetch latency */
++			fetch_en:1,	/* 48: instruction fetch enable */
++			fetch_val:1,	/* 49: instruction fetch valid */
++			fetch_comp:1,	/* 50: instruction fetch complete */
++			ic_miss:1,	/* 51: i-cache miss */
++			phy_addr_valid:1,/* 52: physical address valid */
++			l1tlb_pgsz:2,	/* 53-54: i-cache L1TLB page size
++					 *	  (needs IbsPhyAddrValid) */
++			l1tlb_miss:1,	/* 55: i-cache fetch missed in L1TLB */
++			l2tlb_miss:1,	/* 56: i-cache fetch missed in L2TLB */
++			rand_en:1,	/* 57: random tagging enable */
++			fetch_l2_miss:1,/* 58: L2 miss for sampled fetch
++					 *      (needs IbsFetchComp) */
++			reserved:5;	/* 59-63: reserved */
++	};
++};
 +
-+	env->pmu_mappings = strbuf_detach(&sb, NULL);
++/* MSR 0xc0011033: IBS Execution Control */
++union ibs_op_ctl {
++	__u64 val;
++	struct {
++		__u64	opmaxcnt:16,	/* 0-15: periodic op max. count */
++			reserved0:1,	/* 16: reserved */
++			op_en:1,	/* 17: op sampling enable */
++			op_val:1,	/* 18: op sample valid */
++			cnt_ctl:1,	/* 19: periodic op counter control */
++			opmaxcnt_ext:7,	/* 20-26: upper 7 bits of periodic op maximum count */
++			reserved1:5,	/* 27-31: reserved */
++			opcurcnt:27,	/* 32-58: periodic op counter current count */
++			reserved2:5;	/* 59-63: reserved */
++	};
++};
 +
-+	return 0;
++/* MSR 0xc0011035: IBS Op Data 2 */
++union ibs_op_data {
++	__u64 val;
++	struct {
++		__u64	comp_to_ret_ctr:16,	/* 0-15: op completion to retire count */
++			tag_to_ret_ctr:16,	/* 15-31: op tag to retire count */
++			reserved1:2,		/* 32-33: reserved */
++			op_return:1,		/* 34: return op */
++			op_brn_taken:1,		/* 35: taken branch op */
++			op_brn_misp:1,		/* 36: mispredicted branch op */
++			op_brn_ret:1,		/* 37: branch op retired */
++			op_rip_invalid:1,	/* 38: RIP is invalid */
++			op_brn_fuse:1,		/* 39: fused branch op */
++			op_microcode:1,		/* 40: microcode op */
++			reserved2:23;		/* 41-63: reserved */
++	};
++};
 +
-+error:
-+	strbuf_release(&sb);
-+	return -1;
-+}
++/* MSR 0xc0011036: IBS Op Data 2 */
++union ibs_op_data2 {
++	__u64 val;
++	struct {
++		__u64	data_src:3,	/* 0-2: data source */
++			reserved0:1,	/* 3: reserved */
++			rmt_node:1,	/* 4: destination node */
++			cache_hit_st:1,	/* 5: cache hit state */
++			reserved1:57;	/* 5-63: reserved */
++	};
++};
 +
- int perf_env__read_cpuid(struct perf_env *env)
- {
- 	char cpuid[128];
-@@ -404,6 +444,44 @@ const char *perf_env__arch(struct perf_env *env)
- 	return normalize_arch(arch_name);
- }
- 
-+const char *perf_env__cpuid(struct perf_env *env)
-+{
-+	int status;
++/* MSR 0xc0011037: IBS Op Data 3 */
++union ibs_op_data3 {
++	__u64 val;
++	struct {
++		__u64	ld_op:1,			/* 0: load op */
++			st_op:1,			/* 1: store op */
++			dc_l1tlb_miss:1,		/* 2: data cache L1TLB miss */
++			dc_l2tlb_miss:1,		/* 3: data cache L2TLB hit in 2M page */
++			dc_l1tlb_hit_2m:1,		/* 4: data cache L1TLB hit in 2M page */
++			dc_l1tlb_hit_1g:1,		/* 5: data cache L1TLB hit in 1G page */
++			dc_l2tlb_hit_2m:1,		/* 6: data cache L2TLB hit in 2M page */
++			dc_miss:1,			/* 7: data cache miss */
++			dc_mis_acc:1,			/* 8: misaligned access */
++			reserved:4,			/* 9-12: reserved */
++			dc_wc_mem_acc:1,		/* 13: write combining memory access */
++			dc_uc_mem_acc:1,		/* 14: uncacheable memory access */
++			dc_locked_op:1,			/* 15: locked operation */
++			dc_miss_no_mab_alloc:1,		/* 16: DC miss with no MAB allocated */
++			dc_lin_addr_valid:1,		/* 17: data cache linear address valid */
++			dc_phy_addr_valid:1,		/* 18: data cache physical address valid */
++			dc_l2_tlb_hit_1g:1,		/* 19: data cache L2 hit in 1GB page */
++			l2_miss:1,			/* 20: L2 cache miss */
++			sw_pf:1,			/* 21: software prefetch */
++			op_mem_width:4,			/* 22-25: load/store size in bytes */
++			op_dc_miss_open_mem_reqs:6,	/* 26-31: outstanding mem reqs on DC fill */
++			dc_miss_lat:16,			/* 32-47: data cache miss latency */
++			tlb_refill_lat:16;		/* 48-63: L1 TLB refill latency */
++	};
++};
 +
-+	if (!env || !env->cpuid) { /* Assume local operation */
-+		status = perf_env__read_cpuid(env);
-+		if (status)
-+			return NULL;
-+	}
++/* MSR 0xc001103c: IBS Fetch Control Extended */
++union ic_ibs_extd_ctl {
++	__u64 val;
++	struct {
++		__u64	itlb_refill_lat:16,	/* 0-15: ITLB Refill latency for sampled fetch */
++			reserved:48;		/* 16-63: reserved */
++	};
++};
 +
-+	return env->cpuid;
-+}
++/*
++ * IBS driver related
++ */
 +
-+int perf_env__nr_pmu_mappings(struct perf_env *env)
-+{
-+	int status;
-+
-+	if (!env || !env->nr_pmu_mappings) { /* Assume local operation */
-+		status = perf_env__read_pmu_mappings(env);
-+		if (status)
-+			return 0;
-+	}
-+
-+	return env->nr_pmu_mappings;
-+}
-+
-+const char *perf_env__pmu_mappings(struct perf_env *env)
-+{
-+	int status;
-+
-+	if (!env || !env->pmu_mappings) { /* Assume local operation */
-+		status = perf_env__read_pmu_mappings(env);
-+		if (status)
-+			return NULL;
-+	}
-+
-+	return env->pmu_mappings;
-+}
- 
- int perf_env__numa_node(struct perf_env *env, int cpu)
- {
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 1f5175820a05..1383876f72b3 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -149,11 +149,16 @@ int perf_env__kernel_is_64_bit(struct perf_env *env);
- int perf_env__set_cmdline(struct perf_env *env, int argc, const char *argv[]);
- 
- int perf_env__read_cpuid(struct perf_env *env);
-+int perf_env__read_pmu_mappings(struct perf_env *env);
-+int perf_env__nr_pmu_mappings(struct perf_env *env);
-+const char *perf_env__pmu_mappings(struct perf_env *env);
-+
- int perf_env__read_cpu_topology_map(struct perf_env *env);
- 
- void cpu_cache_level__free(struct cpu_cache_level *cache);
- 
- const char *perf_env__arch(struct perf_env *env);
-+const char *perf_env__cpuid(struct perf_env *env);
- const char *perf_env__raw_arch(struct perf_env *env);
- int perf_env__nr_cpus_avail(struct perf_env *env);
- 
++struct perf_ibs_data {
++	u32		size;
++	union {
++		u32	data[0];	/* data buffer starts here */
++		u32	caps;
++	};
++	u64		regs[MSR_AMD64_IBS_REG_COUNT_MAX];
++};
+diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+index c783558332b8..4a6b2b4ec507 100755
+--- a/tools/perf/check-headers.sh
++++ b/tools/perf/check-headers.sh
+@@ -34,6 +34,7 @@ arch/x86/include/asm/inat_types.h
+ arch/x86/include/asm/emulate_prefix.h
+ arch/x86/include/asm/irq_vectors.h
+ arch/x86/include/asm/msr-index.h
++arch/x86/include/asm/amd-ibs.h
+ arch/x86/include/uapi/asm/prctl.h
+ arch/x86/lib/x86-opcode-map.txt
+ arch/x86/tools/gen-insn-attr-x86.awk
 -- 
 2.31.1
 
