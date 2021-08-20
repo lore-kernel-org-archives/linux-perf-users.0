@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74180C4338F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0994C4320A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDC560FE7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3A560C3E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239322AbhHTKzH (ORCPT
+        id S239559AbhHTKzO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Aug 2021 06:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
+        Fri, 20 Aug 2021 06:55:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239259AbhHTKyx (ORCPT
+        with ESMTP id S239440AbhHTKzF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Aug 2021 06:54:53 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF68C06175F;
-        Fri, 20 Aug 2021 03:54:15 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id q3so13406757edt.5;
-        Fri, 20 Aug 2021 03:54:15 -0700 (PDT)
+        Fri, 20 Aug 2021 06:55:05 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CABA5C06179A;
+        Fri, 20 Aug 2021 03:54:19 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id h9so19390696ejs.4;
+        Fri, 20 Aug 2021 03:54:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SwbzEInT0NYckj1933prTLPUBDs9JwAKeIScX+4Vk78=;
-        b=BE1UyTza6RzTgpID4q8IInHFH6zDVr4+f8RT2NNabS7jLlDKP+f+GojhNwsZxO9tOw
-         +1ihx5+xAParwwraCKHPruGcPNFHx7QH/j71caRbK/Qzzwd4ffgn1dB8nV/pJ4IE4aan
-         BcFRd2lC8tyMwTtm6YjAqE07ucGqKmbjnEcCjFIduv7PyAPZQh33JlgfEZgG9xYEti1F
-         oJyVMM4FQXUMJS2jHH9x3rmJMmMMGNf33pK7IblFpUEQumMgYXWU3XHPjb5U/zlf5WdZ
-         h+R9lTb62ia+4YdyLYL4Q+/bCCz7f1zgaAz7DclNXpxMWti33TcmKQLAcERH7mI0tQiC
-         kLug==
+        bh=AwgtUznNB+XoCffYaoWbFnFw2HkfYuAMamDUWIC8uSM=;
+        b=TbG+SmEQgJ4076vSyRWs4hzZQDhVMDNI1X86RhVK4rTaDGLNVuAoZhchOSePCbcSaM
+         61xdcCpCM9VOZXuA/vGunk6kKsLGvPTdzmHy7iz47+Yf2W8yGCOmdWh+qPXuf64g2rl/
+         N6h8RgOqFS80TyFhDqTSpNkWn7+VnRfxgmJ3NDVzONoX06YKar91UNVt0lZtfP5KqrKC
+         +7nhCa/T3gDcfyGq+CuWRZreiJdgg5a50GOtqY8pCxGoCnQT04npNQHg5Ktom2qLI9P9
+         zdIplqiYVPyU/8Qm+tkJCliQpgJQwI6WtO7ZA2Y6LPbb3uNNVkLVVQLVMWZQcRXQUH5p
+         uBwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SwbzEInT0NYckj1933prTLPUBDs9JwAKeIScX+4Vk78=;
-        b=lyRTijYFJsYUgDqdbt9gNA6L+YJ5IGplcUyLPhiudt81W4sGDbYfGT2J1G1ZIlC63v
-         66dTIS+GwnwxNtWVoy6AXh2/gfFdDT+J48/YNQ8gQ09uTpLv8dWQhc/n9jn4YvWvKyEb
-         7UettRBrEC9Nm+3g1DlICCS7YfCnYe05pkpGizrs8dBfExbD9s2Y4Eg1TTdrzrvthsF7
-         Kq7DaK1lEX8FanPFwsx0NC1kTY+gwtsfUIYhZaWXKUBcJUhYAIDQUtUMm+j3ANPCzBD8
-         OwJK+C6X00kAaPwKnx6EB9j2Sf4ehJO1Xo5r/SuZD+ZgHbqxUw+jXS/f+GAuEZeBb0oZ
-         Yiyw==
-X-Gm-Message-State: AOAM530cNcvbHzPyek9dap5kXr56z0yK7H2KfO9wHxkE8OA+OoNjXJR6
-        qJgotCcCyfeheMVickuGLa0=
-X-Google-Smtp-Source: ABdhPJx7xDYO7tmZc41mHIA3K0X9D+6GT8sopnrq6Av8nYzDUPVBrWSz9V0stQ7VTkRQ6yeTrcOktg==
-X-Received: by 2002:a50:d795:: with SMTP id w21mr21909418edi.112.1629456854447;
-        Fri, 20 Aug 2021 03:54:14 -0700 (PDT)
+        bh=AwgtUznNB+XoCffYaoWbFnFw2HkfYuAMamDUWIC8uSM=;
+        b=quxtJgYFahKcnqMt0f74CU5KrWSAydMnfJsnc6k0RVADf5q65sfHB0yLOhlDPmWQKb
+         hhh5EuXjpJl9lQpvPxOJsddBLIJACxoMeJ+OZVrukWucWwugtfb5Kv3HVCiYcQXwL/Nv
+         CCbdmC411PFoA+joBnkxbOTKpvqYmychwAqy7L2Cm6sMfyUYmiHPXrw2mkbY5Mg/wgrt
+         htWtURsM1jPrtSUH6z2+xzntZhxJb/c+CEeRPpmdzuJcGkDRruEhGoe7w7AiP1Mxof2K
+         nJQpltb35tl4JIqh/y3EyfO1zu3N+SobbliJXw5BtzwrpXZFTyDpYernHEKp6Yq2ehSP
+         P7TQ==
+X-Gm-Message-State: AOAM530aKffnm1J7IBhG1YojKd5JF4OTFe6Yj1BE/uYMkXCe+IYSbEc6
+        InSh7EWe9kuPi6UAX77P7tY=
+X-Google-Smtp-Source: ABdhPJy7d3etfxEVYHqxnDqFupMROOXihMNNYhSoBkQ/UEbBSYHirHqV5NFRlmvIsAVQXtT1rHo05w==
+X-Received: by 2002:a17:907:35d0:: with SMTP id ap16mr20909966ejc.456.1629456858270;
+        Fri, 20 Aug 2021 03:54:18 -0700 (PDT)
 Received: from honeypot.epfl.ch (mob-176-243-199-7.net.vodafone.it. [176.243.199.7])
-        by smtp.googlemail.com with ESMTPSA id g29sm3451459edf.31.2021.08.20.03.54.12
+        by smtp.googlemail.com with ESMTPSA id g29sm3451459edf.31.2021.08.20.03.54.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 03:54:13 -0700 (PDT)
+        Fri, 20 Aug 2021 03:54:17 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -69,9 +69,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v3 04/15] perf workqueue: add threadpool execute and wait functions
-Date:   Fri, 20 Aug 2021 12:53:50 +0200
-Message-Id: <bb5784f3d0015208552cb27e90ca4859848a49c6.1629454773.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v3 06/15] perf workqueue: introduce workqueue struct
+Date:   Fri, 20 Aug 2021 12:53:52 +0200
+Message-Id: <9dee672538967a3cf7e82ef194ebccc709b1af41.1629454773.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629454773.git.rickyman7@gmail.com>
 References: <cover.1629454773.git.rickyman7@gmail.com>
@@ -81,293 +81,397 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds:
- - threadpool__execute: assigns a task to the threads to execute
-   asynchronously.
- - threadpool__wait: waits for the task to complete on all threads.
-Furthermore, testing for these new functions is added.
+This patch adds the workqueue definition, along with simple creation and
+destruction functions.
+Furthermore, a simple subtest is added.
+
+A workqueue is attached to a pool, on which it executes its workers.
+Next patches will introduce workers.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/tests/workqueue.c           | 86 ++++++++++++++++++++++-
- tools/perf/util/workqueue/threadpool.c | 94 ++++++++++++++++++++++++++
- tools/perf/util/workqueue/threadpool.h |  4 ++
- 3 files changed, 183 insertions(+), 1 deletion(-)
+ tools/perf/tests/workqueue.c          |  81 +++++++++++
+ tools/perf/util/workqueue/Build       |   1 +
+ tools/perf/util/workqueue/workqueue.c | 196 ++++++++++++++++++++++++++
+ tools/perf/util/workqueue/workqueue.h |  39 +++++
+ 4 files changed, 317 insertions(+)
+ create mode 100644 tools/perf/util/workqueue/workqueue.c
+ create mode 100644 tools/perf/util/workqueue/workqueue.h
 
 diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
-index 01f05b066d9fbc70..b145a5155089497f 100644
+index b145a5155089497f..1aa6ee788b0b1c32 100644
 --- a/tools/perf/tests/workqueue.c
 +++ b/tools/perf/tests/workqueue.c
-@@ -1,15 +1,61 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <unistd.h>
-+#include <stdlib.h>
- #include <linux/kernel.h>
- #include <linux/err.h>
-+#include <linux/zalloc.h>
+@@ -7,6 +7,7 @@
  #include "tests.h"
  #include "util/debug.h"
  #include "util/workqueue/threadpool.h"
++#include "util/workqueue/workqueue.h"
  
-+#define DUMMY_FACTOR 100000
-+#define N_DUMMY_WORK_SIZES 7
-+
- struct threadpool_test_args_t {
+ #define DUMMY_FACTOR 100000
+ #define N_DUMMY_WORK_SIZES 7
+@@ -15,6 +16,11 @@ struct threadpool_test_args_t {
  	int pool_size;
  };
  
-+struct test_task {
-+	struct task_struct task;
-+	int n_threads;
-+	int *array;
++struct workqueue_test_args_t {
++	int pool_size;
++	int n_work_items;
 +};
 +
-+/**
-+ * dummy_work - calculates DUMMY_FACTOR * (idx % N_DUMMY_WORK_SIZES) inefficiently
-+ *
-+ * This function uses modulus to create work items of different sizes.
-+ */
-+static void dummy_work(int idx)
-+{
-+	volatile int prod = 0;	/* prevent possible compiler optimizations */
-+	int k = idx % N_DUMMY_WORK_SIZES;
-+	int i, j;
-+
-+	for (i = 0; i < DUMMY_FACTOR; i++)
-+		for (j = 0; j < k; j++)
-+			prod++;
-+
-+	pr_debug3("dummy: %d * %d = %d\n", DUMMY_FACTOR, k, prod);
-+}
-+
-+static void test_task_fn1(int tidx, struct task_struct *task)
-+{
-+	struct test_task *mtask = container_of(task, struct test_task, task);
-+
-+	dummy_work(tidx);
-+	mtask->array[tidx] = tidx+1;
-+}
-+
-+static void test_task_fn2(int tidx, struct task_struct *task)
-+{
-+	struct test_task *mtask = container_of(task, struct test_task, task);
-+
-+	dummy_work(tidx);
-+	mtask->array[tidx] = tidx*2;
-+}
-+
-+
- static int __threadpool__prepare(struct threadpool **pool, int pool_size)
- {
- 	int ret;
-@@ -39,21 +85,59 @@ static int __threadpool__teardown(struct threadpool *pool)
- 	return TEST_OK;
+ struct test_task {
+ 	struct task_struct task;
+ 	int n_threads;
+@@ -141,6 +147,43 @@ static int __test__threadpool(void *_args)
+ 	return ret;
  }
  
-+static int __threadpool__exec_wait(struct threadpool *pool,
-+				struct task_struct *task)
++static int __workqueue__prepare(struct workqueue_struct **wq,
++				int pool_size)
 +{
-+	int ret = threadpool__execute(pool, task);
-+
-+	TEST_ASSERT_VAL("threadpool execute failure", ret == 0);
-+	TEST_ASSERT_VAL("threadpool is not executing", threadpool__is_busy(pool));
-+
-+	ret = threadpool__wait(pool);
-+	TEST_ASSERT_VAL("threadpool wait failure", ret == 0);
-+	TEST_ASSERT_VAL("waited threadpool is not running", threadpool__is_running(pool));
++	*wq = create_workqueue(pool_size);
++	TEST_ASSERT_VAL("workqueue creation failure", !IS_ERR(*wq));
++	TEST_ASSERT_VAL("workqueue wrong size", workqueue_nr_threads(*wq) == pool_size);
 +
 +	return TEST_OK;
 +}
 +
- static int __test__threadpool(void *_args)
- {
- 	struct threadpool_test_args_t *args = _args;
- 	struct threadpool *pool;
-+	struct test_task task;
- 	int pool_size = args->pool_size ?: sysconf(_SC_NPROCESSORS_ONLN);
--	int ret = __threadpool__prepare(&pool, pool_size);
-+	int i, ret = __threadpool__prepare(&pool, pool_size);
- 
- 	if (ret)
- 		goto out;
- 
-+	task.task.fn = test_task_fn1;
-+	task.n_threads = pool_size;
-+	task.array = calloc(pool_size, sizeof(*task.array));
-+	TEST_ASSERT_VAL("calloc failure", task.array);
-+
-+	ret = __threadpool__exec_wait(pool, &task.task);
-+	if (ret)
-+		goto out;
-+
-+	for (i = 0; i < pool_size; i++)
-+		TEST_ASSERT_VAL("failed array check (1)", task.array[i] == i+1);
-+
-+	task.task.fn = test_task_fn2;
-+
-+	ret = __threadpool__exec_wait(pool, &task.task);
-+	if (ret)
-+		goto out;
-+
-+	for (i = 0; i < pool_size; i++)
-+		TEST_ASSERT_VAL("failed array check (2)", task.array[i] == 2*i);
-+
- 	ret = __threadpool__teardown(pool);
- 	if (ret)
- 		goto out;
- 
- out:
-+	free(task.array);
- 	return ret;
- }
- 
-diff --git a/tools/perf/util/workqueue/threadpool.c b/tools/perf/util/workqueue/threadpool.c
-index 861a20231558e618..44bcbe4fa3d2d026 100644
---- a/tools/perf/util/workqueue/threadpool.c
-+++ b/tools/perf/util/workqueue/threadpool.c
-@@ -200,6 +200,17 @@ static int threadpool__terminate_thread(struct threadpool *pool, int tidx)
- 	goto out;
- }
- 
-+/**
-+ * threadpool__wake_thread - send wake msg to @thread
-+ *
-+ * This function does not wait for the thread to actually wake
-+ * NB: call only from main thread!
-+ */
-+static int threadpool__wake_thread(struct threadpool *pool, int tidx)
++static int __workqueue__teardown(struct workqueue_struct *wq)
 +{
-+	return threadpool__send_cmd(pool, tidx, THREADPOOL_MSG__WAKE);
-+}
++	int ret = destroy_workqueue(wq);
 +
- /**
-  * threadpool_entry__send_ack - send ack to main thread
-  */
-@@ -270,6 +281,15 @@ static void *threadpool_entry__function(void *args)
- 
- 		if (cmd == THREADPOOL_MSG__STOP)
- 			break;
-+
-+		if (!thread->pool->current_task) {
-+			pr_debug("threadpool[%d]: received wake without task\n",
-+				thread->tid);
-+			break;
-+		}
-+
-+		pr_debug("threadpool[%d]: executing task\n", thread->tid);
-+		thread->pool->current_task->fn(thread->idx, thread->pool->current_task);
- 	}
- 
- 	pr_debug2("threadpool[%d]: exit\n", thread->tid);
-@@ -448,6 +468,12 @@ int threadpool__start_thread(struct threadpool *pool, int tidx)
- 
- 	thread->running = true;
- 
-+	if (pool->current_task) {
-+		err = threadpool__wake_thread(pool, tidx);
-+		if (err)
-+			goto out_cancel;
-+	}
-+
- out:
- 	pthread_attr_destroy(&attrs);
- 
-@@ -498,6 +524,10 @@ int threadpool__stop(struct threadpool *pool)
- {
- 	int t, ret, err = 0;
- 
-+	err = threadpool__wait(pool);
-+	if (err)
-+		return err;
-+
- 	for (t = 0; t < pool->nr_threads; t++) {
- 		/**
- 		 * Even if a termination fails, we should continue to terminate
-@@ -523,3 +553,67 @@ bool threadpool__is_running(struct threadpool *pool)
- 			return true;
- 	return false;
- }
-+
-+/**
-+ * threadpool__execute - set threadpool @task
-+ *
-+ * The task will be immediately executed on all started threads. If a thread
-+ * is not running, it will start executing this task once started.
-+ * The task will run asynchronously wrt the main thread.
-+ * The task can be waited with threadpool__wait. Since no queueing is performed,
-+ * you need to wait the pool before submitting a new task.
-+ */
-+int threadpool__execute(struct threadpool *pool, struct task_struct *task)
-+{
-+	int t, ret;
-+
-+	if (pool->current_task)
-+		return -EBUSY;
-+
-+	pool->current_task = task;
-+
-+	for (t = 0; t < pool->nr_threads; t++) {
-+		if (!pool->threads[t].running)
-+			continue;
-+		ret = threadpool__wake_thread(pool, t);
-+		if (ret)
-+			return ret;
-+	}
++	TEST_ASSERT_VAL("workqueue detruction failure", ret == 0);
 +
 +	return 0;
 +}
 +
-+/**
-+ * threadpool__wait - wait until all threads in @pool are done
-+ *
-+ * This function will wait for all threads to finish execution and send their
-+ * ack message.
-+ *
-+ * NB: call only from main thread!
-+ */
-+int threadpool__wait(struct threadpool *pool)
++static int __test__workqueue(void *_args)
 +{
-+	int t, err = 0, ret;
++	struct workqueue_test_args_t *args = _args;
++	struct workqueue_struct *wq;
++	int pool_size = args->pool_size ?: sysconf(_SC_NPROCESSORS_ONLN);
++	int ret = __workqueue__prepare(&wq, pool_size);
 +
-+	if (!pool->current_task)
-+		return 0;
++	if (ret)
++		goto out;
 +
-+	for (t = 0; t < pool->nr_threads; t++) {
-+		if (!pool->threads[t].running)
-+			continue;
-+		ret = threadpool__wait_thread(pool, t);
-+		if (ret)
-+			err = ret;
++	ret = __workqueue__teardown(wq);
++	if (ret)
++		goto out;
++
++out:
++	return ret;
++}
++
+ static const struct threadpool_test_args_t threadpool_test_args[] = {
+ 	{
+ 		.pool_size = 1
+@@ -162,6 +205,37 @@ static const struct threadpool_test_args_t threadpool_test_args[] = {
+ 	}
+ };
+ 
++static const struct workqueue_test_args_t workqueue_test_args[] = {
++	{
++		.pool_size = 1,
++		.n_work_items = 1
++	},
++	{
++		.pool_size = 1,
++		.n_work_items = 10
++	},
++	{
++		.pool_size = 2,
++		.n_work_items = 1
++	},
++	{
++		.pool_size = 2,
++		.n_work_items = 100
++	},
++	{
++		.pool_size = 16,
++		.n_work_items = 7
++	},
++	{
++		.pool_size = 16,
++		.n_work_items = 2789
++	},
++	{
++		.pool_size = 0,	// sysconf(_SC_NPROCESSORS_ONLN)
++		.n_work_items = 8191
++	}
++};
++
+ struct test_case {
+ 	const char *desc;
+ 	int (*func)(void *args);
+@@ -177,6 +251,13 @@ static struct test_case workqueue_testcase_table[] = {
+ 		.args = (void *) threadpool_test_args,
+ 		.n_args = (int)ARRAY_SIZE(threadpool_test_args),
+ 		.arg_size = sizeof(struct threadpool_test_args_t)
++	},
++	{
++		.desc = "Workqueue",
++		.func = __test__workqueue,
++		.args = (void *) workqueue_test_args,
++		.n_args = (int)ARRAY_SIZE(workqueue_test_args),
++		.arg_size = sizeof(struct workqueue_test_args_t)
+ 	}
+ };
+ 
+diff --git a/tools/perf/util/workqueue/Build b/tools/perf/util/workqueue/Build
+index 8b72a6cd4e2cba0d..4af721345c0a6bb7 100644
+--- a/tools/perf/util/workqueue/Build
++++ b/tools/perf/util/workqueue/Build
+@@ -1 +1,2 @@
+ perf-y += threadpool.o
++perf-y += workqueue.o
+diff --git a/tools/perf/util/workqueue/workqueue.c b/tools/perf/util/workqueue/workqueue.c
+new file mode 100644
+index 0000000000000000..053aac43e038f0b7
+--- /dev/null
++++ b/tools/perf/util/workqueue/workqueue.c
+@@ -0,0 +1,196 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdlib.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <errno.h>
++#include <string.h>
++#include <pthread.h>
++#include <linux/list.h>
++#include <linux/err.h>
++#include <linux/string.h>
++#include <linux/zalloc.h>
++#include "debug.h"
++#include <internal/lib.h>
++#include "workqueue.h"
++
++struct workqueue_struct {
++	pthread_mutex_t		lock;		/* locking of the workqueue */
++	pthread_cond_t		idle_cond;	/* all workers are idle cond */
++	struct threadpool	*pool;		/* underlying pool */
++	int			pool_errno;	/* latest pool error */
++	struct task_struct	task;		/* threadpool task */
++	struct list_head	busy_list;	/* busy workers */
++	struct list_head	idle_list;	/* idle workers */
++	int			msg_pipe[2];	/* main thread comm pipes */
++};
++
++static const char * const workqueue_errno_str[] = {
++	"Error creating threadpool",
++	"Error executing function in threadpool",
++	"Error stopping the threadpool",
++	"Error starting thread in the threadpool",
++	"Error sending message to worker",
++	"Error receiving message from worker",
++	"Received unexpected message from worker",
++};
++
++/**
++ * create_workqueue - create a workqueue associated to @pool
++ *
++ * The workqueue will create a threadpool on which to execute.
++ */
++struct workqueue_struct *create_workqueue(int nr_threads)
++{
++	int ret, err = 0;
++	struct workqueue_struct *wq = zalloc(sizeof(struct workqueue_struct));
++
++	if (!wq) {
++		err = -ENOMEM;
++		goto out_return;
 +	}
 +
-+	pool->current_task = NULL;
++	wq->pool = threadpool__new(nr_threads);
++	if (IS_ERR(wq->pool)) {
++		err = -WORKQUEUE_ERROR__POOLNEW;
++		wq->pool_errno = PTR_ERR(wq->pool);
++		goto out_free_wq;
++	}
++
++	ret = pthread_mutex_init(&wq->lock, NULL);
++	if (ret) {
++		err = -ret;
++		goto out_delete_pool;
++	}
++
++	ret = pthread_cond_init(&wq->idle_cond, NULL);
++	if (ret) {
++		err = -ret;
++		goto out_destroy_mutex;
++	}
++
++	INIT_LIST_HEAD(&wq->busy_list);
++	INIT_LIST_HEAD(&wq->idle_list);
++
++	ret = pipe(wq->msg_pipe);
++	if (ret) {
++		err = -ENOMEM;
++		goto out_destroy_cond;
++	}
++
++	return wq;
++
++out_destroy_cond:
++	pthread_cond_destroy(&wq->idle_cond);
++out_destroy_mutex:
++	pthread_mutex_destroy(&wq->lock);
++out_delete_pool:
++	threadpool__delete(wq->pool);
++out_free_wq:
++	free(wq);
++out_return:
++	return ERR_PTR(err);
++}
++
++/**
++ * destroy_workqueue - stop @wq workers and destroy @wq
++ */
++int destroy_workqueue(struct workqueue_struct *wq)
++{
++	int err = 0, ret;
++	char sbuf[STRERR_BUFSIZE];
++
++	if (IS_ERR_OR_NULL(wq))
++		return 0;
++
++	threadpool__delete(wq->pool);
++	wq->pool = NULL;
++
++	ret = pthread_mutex_destroy(&wq->lock);
++	if (ret) {
++		err = -ret;
++		pr_debug2("workqueue: error pthread_mutex_destroy: %s\n",
++			str_error_r(ret, sbuf, sizeof(sbuf)));
++	}
++
++	ret = pthread_cond_destroy(&wq->idle_cond);
++	if (ret) {
++		err = -ret;
++		pr_debug2("workqueue: error pthread_cond_destroy: %s\n",
++			str_error_r(ret, sbuf, sizeof(sbuf)));
++	}
++
++	close(wq->msg_pipe[0]);
++	wq->msg_pipe[0] = -1;
++
++	close(wq->msg_pipe[1]);
++	wq->msg_pipe[1] = -1;
++
++	free(wq);
 +	return err;
 +}
 +
 +/**
-+ * threadpool__is_busy - check if the pool has work to do
++ * workqueue_strerror - print message regarding lastest error in @wq
++ *
++ * Buffer size should be at least WORKQUEUE_STRERR_BUFSIZE bytes.
 + */
-+bool threadpool__is_busy(struct threadpool *pool)
++int workqueue_strerror(struct workqueue_struct *wq, int err, char *buf, size_t size)
 +{
-+	return pool->current_task;
-+}
-diff --git a/tools/perf/util/workqueue/threadpool.h b/tools/perf/util/workqueue/threadpool.h
-index 0e03fdd377627e79..9a6081cef8af95e0 100644
---- a/tools/perf/util/workqueue/threadpool.h
-+++ b/tools/perf/util/workqueue/threadpool.h
-@@ -18,8 +18,12 @@ extern int threadpool__start_thread(struct threadpool *pool, int tidx);
- extern int threadpool__start(struct threadpool *pool);
- extern int threadpool__stop(struct threadpool *pool);
- 
-+extern int threadpool__wait(struct threadpool *pool);
-+extern int threadpool__execute(struct threadpool *pool, struct task_struct *task);
++	int ret;
++	char sbuf[THREADPOOL_STRERR_BUFSIZE], *emsg;
++	const char *errno_str;
 +
- extern int threadpool__size(struct threadpool *pool);
- extern bool threadpool__is_running(struct threadpool *pool);
-+extern bool threadpool__is_busy(struct threadpool *pool);
- 
- /* Error management */
- #define THREADPOOL_STRERR_BUFSIZE (128+STRERR_BUFSIZE)
++	errno_str = workqueue_errno_str[-err-WORKQUEUE_ERROR__OFFSET];
++
++	switch (err) {
++	case -WORKQUEUE_ERROR__POOLNEW:
++	case -WORKQUEUE_ERROR__POOLEXE:
++	case -WORKQUEUE_ERROR__POOLSTOP:
++	case -WORKQUEUE_ERROR__POOLSTARTTHREAD:
++		if (IS_ERR_OR_NULL(wq))
++			return scnprintf(buf, size, "%s: unknown.\n",
++				errno_str);
++
++		ret = threadpool__strerror(wq->pool, wq->pool_errno, sbuf, sizeof(sbuf));
++		if (ret < 0)
++			return ret;
++		return scnprintf(buf, size, "%s: %s.\n", errno_str, sbuf);
++	case -WORKQUEUE_ERROR__WRITEPIPE:
++	case -WORKQUEUE_ERROR__READPIPE:
++		emsg = str_error_r(errno, sbuf, sizeof(sbuf));
++		return scnprintf(buf, size, "%s: %s.\n", errno_str, emsg);
++	case -WORKQUEUE_ERROR__INVALIDMSG:
++		return scnprintf(buf, size, "%s.\n", errno_str);
++	default:
++		emsg = str_error_r(err, sbuf, sizeof(sbuf));
++		return scnprintf(buf, size, "Error: %s", emsg);
++	}
++}
++
++/**
++ * create_workqueue_strerror - print message regarding @err_ptr
++ *
++ * Buffer size should be at least WORKQUEUE_STRERR_BUFSIZE bytes.
++ */
++int create_workqueue_strerror(struct workqueue_struct *err_ptr, char *buf, size_t size)
++{
++	return workqueue_strerror(err_ptr, PTR_ERR(err_ptr), buf, size);
++}
++
++/**
++ * destroy_workqueue_strerror - print message regarding @err
++ *
++ * Buffer size should be at least WORKQUEUE_STRERR_BUFSIZE bytes.
++ */
++int destroy_workqueue_strerror(int err, char *buf, size_t size)
++{
++	return workqueue_strerror(NULL, err, buf, size);
++}
++
++/**
++ * workqueue_nr_threads - get size of threadpool underlying @wq
++ */
++int workqueue_nr_threads(struct workqueue_struct *wq)
++{
++	return threadpool__size(wq->pool);
++}
+diff --git a/tools/perf/util/workqueue/workqueue.h b/tools/perf/util/workqueue/workqueue.h
+new file mode 100644
+index 0000000000000000..100841cc035fde1d
+--- /dev/null
++++ b/tools/perf/util/workqueue/workqueue.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __WORKQUEUE_WORKQUEUE_H
++#define __WORKQUEUE_WORKQUEUE_H
++
++#include <stdlib.h>
++#include <sys/types.h>
++#include <linux/list.h>
++#include "threadpool.h"
++
++struct work_struct;
++typedef void (*work_func_t)(struct work_struct *work);
++
++struct work_struct {
++	struct list_head entry;
++	work_func_t func;
++};
++
++struct workqueue_struct;
++
++extern struct workqueue_struct *create_workqueue(int nr_threads);
++extern int destroy_workqueue(struct workqueue_struct *wq);
++
++extern int workqueue_nr_threads(struct workqueue_struct *wq);
++
++#define WORKQUEUE_STRERR_BUFSIZE (128+THREADPOOL_STRERR_BUFSIZE)
++#define WORKQUEUE_ERROR__OFFSET 512
++enum {
++	WORKQUEUE_ERROR__POOLNEW = WORKQUEUE_ERROR__OFFSET,
++	WORKQUEUE_ERROR__POOLEXE,
++	WORKQUEUE_ERROR__POOLSTOP,
++	WORKQUEUE_ERROR__POOLSTARTTHREAD,
++	WORKQUEUE_ERROR__WRITEPIPE,
++	WORKQUEUE_ERROR__READPIPE,
++	WORKQUEUE_ERROR__INVALIDMSG,
++};
++extern int workqueue_strerror(struct workqueue_struct *wq, int err, char *buf, size_t size);
++extern int create_workqueue_strerror(struct workqueue_struct *err_ptr, char *buf, size_t size);
++extern int destroy_workqueue_strerror(int err, char *buf, size_t size);
++#endif /* __WORKQUEUE_WORKQUEUE_H */
 -- 
 2.31.1
 
