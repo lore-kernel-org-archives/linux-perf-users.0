@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A62EFC432BE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C898C4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9158B60FDA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 013A560FE8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239746AbhHTKzW (ORCPT
+        id S239861AbhHTKza (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Aug 2021 06:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41544 "EHLO
+        Fri, 20 Aug 2021 06:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239485AbhHTKzG (ORCPT
+        with ESMTP id S239403AbhHTKzN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Aug 2021 06:55:06 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EFDC06129E;
-        Fri, 20 Aug 2021 03:54:25 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id cn28so13393132edb.6;
-        Fri, 20 Aug 2021 03:54:25 -0700 (PDT)
+        Fri, 20 Aug 2021 06:55:13 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F9CC061575;
+        Fri, 20 Aug 2021 03:54:28 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id r19so13354484eds.13;
+        Fri, 20 Aug 2021 03:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Lc2Zt/+CS0R575XVe79GSf+OTrq7xb/P6V3j1NCEBTY=;
-        b=hyOlzRlTsXRl1mYjSqJsRLOEhve2TLqYJcX/uB6fbFqpuZbYNvRhfAz8sRyAq76ei5
-         QR5nKClHtYx4bg3UjbXMREcLkt+XB03TQHDJtWS0PbQ68LHTZxiuFMo0UEfIDc03EQZr
-         X7oeG1t1wDs/AIP+5bT/AuIY8lsT1mxwDVtuelan9bEMRfKgF9d9uA3O1DzdknU8t7LS
-         wuIHqtHWPHob3op9bnvMheJfpoUvuuQIRC+kZNUZV3ETPmklosWvJP0JdyV9TbSIil9A
-         PkUhhrac8STHuMu71weWJ1uxqJxzOEPFynVELHe4Bkt3tC7aGZlsc/L9NW68OhtF0VJR
-         OZPw==
+        bh=eCdBEtrU7CII7A1ikCE1/NS99NEQQoA1vVPvKWOOetQ=;
+        b=DyKBEd7uEHaEajl3j0govc1fPM+ZZzjZ9ECdv839kuWWKl59aIEA9II40QzTl6WUOt
+         /Y9u7132H1u4BhMocw6ICPk7aI2bv4jy5gjpvb+qpOEaM19oCHGvBcUajLEnB8ODkw0/
+         ayeAinFI3MG1U19Crpv27A5daBCiEembwlcamKn3x23I3/Oz6TgOyTKNp1CQeaPsQXs+
+         Lw1l4fHqSa1srryc6mCEJ0NJxeiLKzr40D/9AXdhNIqjR2VKwJa/29gB2jw3P+ySiExI
+         yNPcrrxw82IYBhSyFfZLqqVtJn/ZlPRntya1qOQohyrxZXP8bXaqlHP8NBbQOvv9usOG
+         zG1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Lc2Zt/+CS0R575XVe79GSf+OTrq7xb/P6V3j1NCEBTY=;
-        b=rk0M4u5E4Z1jexvV7D4w6zbaSKDY3fuaFHuh2h1oGw1IisXIPkCxI0rH5gXYBZBUdm
-         QOKP2cEUOgdyZUQUHgXThOsnGGNprDm3gQHBwgYSiKXIYnmgo/JYmeguDqLjhZBwbK7X
-         iq3pt4TY/43xJlZnHmmTjhsHxj/7q/jn3fZUkySeNMm5KniA/T9W5mjop3g+AtiGc4Lf
-         yAZRIKw9VjYdcYJ8+81Ps2wTRd/IqMyxSHVsrF4mS7Kl08mywoQFd0ctoPgxHdkLKdKj
-         S2dprg29FE2OEaP/l9JHCxND8DX0KLPdqRQJ+92+hI19he2gg1nZPNunstwn5RcqKR78
-         3OtA==
-X-Gm-Message-State: AOAM533BfaT96uy4uPQqpKQw1n6cjCB+TUw1RverX3PpLbf2KS8ZKHYA
-        vkYecDVzTopJn+IwvUOwoF0=
-X-Google-Smtp-Source: ABdhPJyPVvi2FevBcNeRZm1psvv9GDKSX8L6ivH0T82vVs6aqkh90FnG9vcj33tlEN8NpmlTeaD2AA==
-X-Received: by 2002:a05:6402:34c7:: with SMTP id w7mr22764587edc.175.1629456864178;
-        Fri, 20 Aug 2021 03:54:24 -0700 (PDT)
+        bh=eCdBEtrU7CII7A1ikCE1/NS99NEQQoA1vVPvKWOOetQ=;
+        b=ZIgMBy1/YPBL11wqj0BhT+cZDHd5epy3ab7a9jUsHFcZqejmIH74RZCIRcl+h9XM1x
+         bcjcJLi/5LqJqeYNYy1MHWewhJtt4g+SCumbQQMP6oiAjK7kRmjEBK+KpG56THlNbNbj
+         GvfzKf08vebLIxkyin43gFxUQB8PbQ0SBGMvndhsQHwKNC3WokmBofkSXFVHUVyaw5gw
+         VQEqKB+tDV/j/n0/uEYpnkX5KI/GM9rwN68c4wdTIA1bLmo7+VE9ovS6ltVx5gurX4QW
+         i4PXZZitG5tL5/IB14oMD/TtUY5xtN72QtI+p2lxOUWj/R4AUlTvYay6SjHWM8tdFgXW
+         EyVw==
+X-Gm-Message-State: AOAM531OUx1bLn28JTzaL8zOjqTyXVcu4cOsic5VnoTtq42sTGbIch9J
+        9+S2oyKlwDkqsaOf4E8RtqzZi3pm1Ktb4QBHwzQ=
+X-Google-Smtp-Source: ABdhPJyOFlOzq+ofA7dR/rJT+eEP/FImvsxoDVahkdb/cyhqQlXKDlGBUEKagIS79Yi1Xr0tYeDamQ==
+X-Received: by 2002:a05:6402:8ce:: with SMTP id d14mr21700113edz.228.1629456866754;
+        Fri, 20 Aug 2021 03:54:26 -0700 (PDT)
 Received: from honeypot.epfl.ch (mob-176-243-199-7.net.vodafone.it. [176.243.199.7])
-        by smtp.googlemail.com with ESMTPSA id g29sm3451459edf.31.2021.08.20.03.54.22
+        by smtp.googlemail.com with ESMTPSA id g29sm3451459edf.31.2021.08.20.03.54.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 03:54:23 -0700 (PDT)
+        Fri, 20 Aug 2021 03:54:25 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -69,9 +69,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v3 09/15] perf workqueue: spinup threads when needed
-Date:   Fri, 20 Aug 2021 12:53:55 +0200
-Message-Id: <c50a4628b86c445391014fb16709c11f72082454.1629454773.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v3 10/15] perf workqueue: create global workqueue
+Date:   Fri, 20 Aug 2021 12:53:56 +0200
+Message-Id: <f10597457f953d565515d6a885821b0ac445e89b.1629454773.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629454773.git.rickyman7@gmail.com>
 References: <cover.1629454773.git.rickyman7@gmail.com>
@@ -81,120 +81,99 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds lazy thread creation in the workqueue.
-When a new work is submitted, first an idle worker is searched. If one
-is found, it will be selected for execution. Otherwise, a not already
-spawned thread is searched. If found, it will be spun up and selected.
-If none of the latter is found, one of the busy threads is chosen using
-a round-robin policy.
+This patch adds a global static workqueue, using the same API from the
+kernel (schedule_work, flush_scheduled_work, and so on).
+
+Before use, the global workqueue should be set up using
+setup_global_workqueue and eventually destroyed using
+teardown_global_workqueue.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/util/workqueue/workqueue.c | 54 +++++++++++++++++++--------
- 1 file changed, 38 insertions(+), 16 deletions(-)
+ tools/perf/util/workqueue/workqueue.c |  2 ++
+ tools/perf/util/workqueue/workqueue.h | 49 +++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
 diff --git a/tools/perf/util/workqueue/workqueue.c b/tools/perf/util/workqueue/workqueue.c
-index 1092ece9ad39d6d2..305a9cda39810b84 100644
+index 305a9cda39810b84..a89370e68bd720c8 100644
 --- a/tools/perf/util/workqueue/workqueue.c
 +++ b/tools/perf/util/workqueue/workqueue.c
-@@ -39,6 +39,7 @@ struct workqueue_struct {
- 	int			msg_pipe[2];	/* main thread comm pipes */
- 	struct worker		**workers;	/* array of all workers */
- 	struct worker		*next_worker;	/* next worker to choose (round robin) */
-+	int			first_stopped_worker; /* next worker to start if needed */
- };
+@@ -13,6 +13,8 @@
+ #include <internal/lib.h>
+ #include "workqueue.h"
  
- static const char * const workqueue_errno_str[] = {
-@@ -423,8 +424,7 @@ static void worker_thread(int tidx, struct task_struct *task)
-  */
- struct workqueue_struct *create_workqueue(int nr_threads)
- {
--	int ret, err = 0, t;
--	struct worker *worker;
-+	int ret, err = 0;
- 	struct workqueue_struct *wq = zalloc(sizeof(struct workqueue_struct));
- 
- 	if (!wq) {
-@@ -474,24 +474,11 @@ struct workqueue_struct *create_workqueue(int nr_threads)
- 		goto out_close_pipe;
- 	}
- 
--	for (t = 0; t < nr_threads; t++) {
--		err = spinup_worker(wq, t);
--		if (err)
--			goto out_stop_pool;
--	}
--
- 	wq->next_worker = NULL;
-+	wq->first_stopped_worker = 0;
- 
- 	return wq;
- 
--out_stop_pool:
--	lock_workqueue(wq);
--	for_each_idle_worker(wq, worker) {
--		ret = stop_worker(worker);
--		if (ret)
--			err = ret;
--	}
--	unlock_workqueue(wq);
- out_close_pipe:
- 	close(wq->msg_pipe[0]);
- 	wq->msg_pipe[0] = -1;
-@@ -686,10 +673,28 @@ __releases(&worker->lock)
-  */
- int queue_work(struct workqueue_struct *wq, struct work_struct *work)
- {
-+	int ret;
- 	struct worker *worker;
- 
-+repeat:
- 	lock_workqueue(wq);
- 	if (list_empty(&wq->idle_list)) {
-+		// find a worker to spin up
-+		while (wq->first_stopped_worker < threadpool__size(wq->pool)
-+				&& wq->workers[wq->first_stopped_worker])
-+			wq->first_stopped_worker++;
++struct workqueue_struct *global_wq;
 +
-+		// found one
-+		if (wq->first_stopped_worker < threadpool__size(wq->pool)) {
-+			// spinup does not hold the lock to make the thread register itself
-+			unlock_workqueue(wq);
-+			ret = spinup_worker(wq, wq->first_stopped_worker);
-+			if (ret)
-+				return ret;
-+			// worker is now in idle_list
-+			goto repeat;
-+		}
+ enum worker_msg {
+ 	WORKER_MSG__UNDEFINED,
+ 	WORKER_MSG__READY,                          /* from worker: ack */
+diff --git a/tools/perf/util/workqueue/workqueue.h b/tools/perf/util/workqueue/workqueue.h
+index 37ef84fc9c6ed4b6..fc6166757f0e1d0d 100644
+--- a/tools/perf/util/workqueue/workqueue.h
++++ b/tools/perf/util/workqueue/workqueue.h
+@@ -5,6 +5,7 @@
+ #include <stdlib.h>
+ #include <sys/types.h>
+ #include <linux/list.h>
++#include <linux/err.h>
+ #include "threadpool.h"
+ 
+ struct work_struct;
+@@ -29,6 +30,54 @@ extern int flush_workqueue(struct workqueue_struct *wq);
+ 
+ extern void init_work(struct work_struct *work);
+ 
++/* Global workqueue */
 +
- 		worker = wq->next_worker;
- 		advance_next_worker(wq);
- 	} else {
-@@ -705,7 +710,24 @@ int queue_work(struct workqueue_struct *wq, struct work_struct *work)
-  */
- int queue_work_on_worker(int tidx, struct workqueue_struct *wq, struct work_struct *work)
- {
-+	int ret;
++extern struct workqueue_struct *global_wq;
 +
- 	lock_workqueue(wq);
-+	if (!wq->workers[tidx]) {
-+		// spinup does not hold the lock to make the thread register itself
-+		unlock_workqueue(wq);
-+		ret = spinup_worker(wq, tidx);
-+		if (ret)
-+			return ret;
++/**
++ * setup_global_wq - create the global_wq
++ */
++static inline int setup_global_workqueue(int nr_threads)
++{
++	global_wq = create_workqueue(nr_threads);
++	return IS_ERR(global_wq) ? PTR_ERR(global_wq) : 0;
++}
 +
-+		// now recheck if worker is available
-+		lock_workqueue(wq);
-+		if (!wq->workers[tidx]) {
-+			unlock_workqueue(wq);
-+			return -WORKQUEUE_ERROR__NOTREADY;
-+		}
-+	}
++/**
++ * teardown_global_wq - destroy the global_wq
++ */
++static inline int teardown_global_workqueue(void)
++{
++	int ret = destroy_workqueue(global_wq);
 +
- 	lock_worker(wq->workers[tidx]);
- 	return __queue_work_on_worker(wq, wq->workers[tidx], work);
- }
++	global_wq = NULL;
++	return ret;
++}
++
++/**
++ * schedule_work - queue @work on the global_wq
++ */
++static inline int schedule_work(struct work_struct *work)
++{
++	return queue_work(global_wq, work);
++}
++
++/**
++ * schedule_work - queue @work on thread @tidx of global_wq
++ */
++static inline int schedule_work_on_worker(int tidx, struct work_struct *work)
++{
++	return queue_work_on_worker(tidx, global_wq, work);
++}
++
++/**
++ * flush_scheduled_work - ensure that any scheduled work in global_wq has run to completion
++ */
++static inline int flush_scheduled_work(void)
++{
++	return flush_workqueue(global_wq);
++}
++
+ #define WORKQUEUE_STRERR_BUFSIZE (128+THREADPOOL_STRERR_BUFSIZE)
+ #define WORKQUEUE_ERROR__OFFSET 512
+ enum {
 -- 
 2.31.1
 
