@@ -2,67 +2,43 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFB5C4320A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 13:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3912BC4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 14:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0EBA61053
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 13:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101BF61106
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 14:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240591AbhHTNKd (ORCPT
+        id S240681AbhHTOOT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Aug 2021 09:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238510AbhHTNKd (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 20 Aug 2021 09:10:33 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30389C061575;
-        Fri, 20 Aug 2021 06:09:55 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id h9so20184688ejs.4;
-        Fri, 20 Aug 2021 06:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=amLfY2WyHMkOd7qaXpy+DB72ahvQ2PinE48ltai+NY8=;
-        b=rwSw1HOFFZvRjHgzdxD6wIWXmbfC1tIbpjup1mvWgKiVHgnG/r3AedF9t81fLmqkHf
-         7E+PAgpDncoeBFUw0R77F9l28gYw3HhpT+ljs2Bh8Z/YJRBKD98iDfhnNH8s8QSRXalX
-         sDTXk82uptoHbmO990kyKWxdC3pjMrpD8GLdVICdK3hdyuhBwFbpoMkqI93V/Ks50YF6
-         L7ea3Olo1ttG6U2z8BK7eIWxEE0fDmuMYF+b3rTDshcilGXzyMp99bern34TouDOIRXI
-         qdhZ8EjFLv31xAJJaz0rHXZyo2N7gtkS9QaUmtj4UPDle/VtHgpRP8SVJTlZa545zR1/
-         C2zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=amLfY2WyHMkOd7qaXpy+DB72ahvQ2PinE48ltai+NY8=;
-        b=l0eFYTs7Ha6zwD/5NYAS3VqJTGEc/MW+lTwibWMyeNy7JUu8YTiSGDwjXgrpkg/3DS
-         gZ6gLWrBCXTw8hUujQsLXgJmhe8S4EdfoIOYVsJRPUNzl83EWSP+vNilayK2kunJWQi9
-         G41APKscb5Os7MyaSV9uUSBEmKQVkLWgjVWmCpEEIov4X0oxxlyhMSyNYVg7y8WQYO7T
-         xyVWJYoO9hGudsTn0UrvkvH/9G7UVmwPwkBGYp8d3oj/2StYDMq2xBpo55lNfdLDcC+K
-         C1bKlLuvBc6M+Zx1WYsYB/810/i2YCC9vJRz9SznVL6PIRFFjirUVS2MqXOj7WgQTMYf
-         nHUw==
-X-Gm-Message-State: AOAM533rEfg5ScZusVjT+7rmehl9f0nZwLTaWT5Gre3AASQuEwc7qOxY
-        MNS5ML/kjbeCjjlokImTTF4=
-X-Google-Smtp-Source: ABdhPJwigLSzgY4Ua5OOim8zTK83W7SDyxDLR5S3OjVyyHyfHwAly52j9pdy8ZsHMMURT+zQ1mZgxQ==
-X-Received: by 2002:a17:906:7154:: with SMTP id z20mr1255396ejj.547.1629464993668;
-        Fri, 20 Aug 2021 06:09:53 -0700 (PDT)
-Received: from honeypot.. (mob-176-243-242-182.net.vodafone.it. [176.243.242.182])
-        by smtp.googlemail.com with ESMTPSA id n2sm3594518edi.32.2021.08.20.06.09.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 06:09:53 -0700 (PDT)
-From:   Riccardo Mancini <rickyman7@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        Fri, 20 Aug 2021 10:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235032AbhHTOOS (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 20 Aug 2021 10:14:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 91E4C610FF;
+        Fri, 20 Aug 2021 14:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629468820;
+        bh=nLRJd2BhPGg9x5pL4Sm4XdH/2597fudaoCp7mLsY0TY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fCrKTzf8Uuqw7spFPDmtpk/PXKoqRrk/tfMb0JspaII+WxB4lDECM0OwjfPmh9qty
+         55W/OmUQs8cZbg/52TdDk8pd9uaJNC+nXT2+iSmMl57QFxZDW2AHDHohR+bGUhBUQj
+         f9yIRokHTymxNeQQJrmEih6CsVpHrtwVH7Ygx1LGy1W+1dvlhvp5uwn8k7N2sO5wTa
+         c+aoxU1pJCA+F5D1WpUZjMpohReAqs9kgH5AhF0/gx9A3j2JfxdwEIf1LmOzn5fWzX
+         KIY566rVzXimtaXQzXFG+UHbSoR/qCkc9AkIM8ORsTDbdUv/rn/caWjWQbunMLR0Aw
+         zgnrEud+bfzHA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 027754007E; Fri, 20 Aug 2021 11:13:36 -0300 (-03)
+Date:   Fri, 20 Aug 2021 11:13:36 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Riccardo Mancini <rickyman7@gmail.com>
 Cc:     Ian Rogers <irogers@google.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -71,48 +47,72 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>,
         Jin Yao <yao.jin@linux.intel.com>, Song Liu <song@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf config: fix caching and memory leak in perf_home_perfconfig
-Date:   Fri, 20 Aug 2021 15:08:17 +0200
-Message-Id: <20210820130817.740536-1-rickyman7@gmail.com>
-X-Mailer: git-send-email 2.31.1
+Subject: Re: [PATCH] perf config: fix caching and memory leak in
+ perf_home_perfconfig
+Message-ID: <YR+4kOwuIoPsz2Rw@kernel.org>
+References: <20210820130817.740536-1-rickyman7@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210820130817.740536-1-rickyman7@gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Acaict, perf_home_perfconfig is supposed to cache the result of
-home_perfconfig, which returns the default location of perfconfig for
-the user, given the HOME environment variable.
-However, the current implementation calls home_perfconfig every time
-perf_home_perfconfig is called (so no caching is actually performed),
-replacing the previous pointer, thus also causing a memory leak.
+Em Fri, Aug 20, 2021 at 03:08:17PM +0200, Riccardo Mancini escreveu:
+> Acaict, perf_home_perfconfig is supposed to cache the result of
+> home_perfconfig, which returns the default location of perfconfig for
+> the user, given the HOME environment variable.
+> However, the current implementation calls home_perfconfig every time
+> perf_home_perfconfig is called (so no caching is actually performed),
+> replacing the previous pointer, thus also causing a memory leak.
+> 
+> This patch adds a check of whether either config or failed is set and,
+> in that case, directly returns config without calling home_perfconfig at
+> each invocation.
+> 
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Fixes: f5f03e19ce14fc31 ("perf config: Add perf_home_perfconfig function")
+> Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
+> ---
+>  tools/perf/util/config.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+> index 63d472b336de21d4..6ab670cdf512507e 100644
+> --- a/tools/perf/util/config.c
+> +++ b/tools/perf/util/config.c
+> @@ -581,6 +581,9 @@ const char *perf_home_perfconfig(void)
+>  	static const char *config;
+>  	static bool failed;
+>  
+> +	if (config || failed)
+> +		return config;
+> +
+>  	config = failed ? NULL : home_perfconfig();
 
-This patch adds a check of whether either config or failed is set and,
-in that case, directly returns config without calling home_perfconfig at
-each invocation.
+humm, why keep the above failed test then?
 
-Cc: Jiri Olsa <jolsa@kernel.org>
-Fixes: f5f03e19ce14fc31 ("perf config: Add perf_home_perfconfig function")
-Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
----
- tools/perf/util/config.c | 3 +++
- 1 file changed, 3 insertions(+)
+>  	if (!config)
+>  		failed = true;
+
+I.e. please check this:
+
 
 diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 63d472b336de21d4..6ab670cdf512507e 100644
+index 63d472b336de21d4..4fb5e90d7a57ae48 100644
 --- a/tools/perf/util/config.c
 +++ b/tools/perf/util/config.c
-@@ -581,6 +581,9 @@ const char *perf_home_perfconfig(void)
+@@ -581,7 +581,10 @@ const char *perf_home_perfconfig(void)
  	static const char *config;
  	static bool failed;
  
-+	if (config || failed)
+-	config = failed ? NULL : home_perfconfig();
++	if (failed || config)
 +		return config;
 +
- 	config = failed ? NULL : home_perfconfig();
++	config = home_perfconfig();
  	if (!config)
  		failed = true;
--- 
-2.31.1
-
+ 
