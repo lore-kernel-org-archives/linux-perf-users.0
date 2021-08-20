@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A19C432BE
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E675C4338F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A4C60FDA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5843260FDA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 20 Aug 2021 10:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239472AbhHTKzP (ORCPT
+        id S239646AbhHTKzR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 20 Aug 2021 06:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41486 "EHLO
+        Fri, 20 Aug 2021 06:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239463AbhHTKzG (ORCPT
+        with ESMTP id S239479AbhHTKzG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 20 Aug 2021 06:55:06 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E40C0617AF;
-        Fri, 20 Aug 2021 03:54:21 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id i6so13427598edu.1;
-        Fri, 20 Aug 2021 03:54:21 -0700 (PDT)
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59F6C0612E7;
+        Fri, 20 Aug 2021 03:54:23 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id q3so13407243edt.5;
+        Fri, 20 Aug 2021 03:54:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=q55uo43bY1SXvA3GYrgM6zZrZfx+fjnW8CY5H1JInLE=;
-        b=UHP3gDcBRnjk2ej1kI131dy09iFi6R0dwLtdWWB9V+z+lnq6zGbzyBoek8yafaPJO1
-         dHHY/nNyFjXf0LTAG5k+zj7HOKWJZslw4DMbrQtEySs1v6Yo/6xUVjXuu2Scfa6s7XFM
-         DW6znoQwLJVlbIqTJ+fDAqF8RQpTA+rD5UXiRZC2iFqNqEpBVXdfCs4BtArWG4UMbjdm
-         9Un/WWiCjgX6rhIFq/PeVjn3JC5kS9feVE+Ri1f50LCy9Ejd+yTc8Z/a167skdo0q4Lq
-         +UWHz8BxQN5lrjhaPOoVYISEaDctbchIdeVJcxONLv/HGuUKeU4+aUQ72b9fg17x41u9
-         c0AQ==
+        bh=SUXeqCV+Zu6HYvK9lSq8KFT8ZqIRZTCMmeyZKMorHsg=;
+        b=lnlmg92Hsz+1gXF1pammlwPUvndHY7Z5wmUaZEWLOcsmDs4Zk+xW2Hh3wInrhoddQy
+         d4iTw2E8mcOUH3T1Xnz5JMc/9yr/3TxmGzXQIZR/s7QbPaKgcOFOAzbZksAtZIujfrDv
+         JILIUGLj2P9ZqTarUkr1zcyg6fMqR5TFUMDyvndHNwbs4qWn4RebBPtvPS1hFeRcvuUZ
+         sx8HRu7kgn0VknTvACnBcXayv0/urOduD+3DBMlI7a8xmuQoenMEFXc1r2sFNO1I3Wer
+         Le40yLx1WgOh57scDSxCYnHpoMtgakSnOFIRjlabpd8GVHNpMvtk01Ay061+xG9nQiIm
+         55yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=q55uo43bY1SXvA3GYrgM6zZrZfx+fjnW8CY5H1JInLE=;
-        b=UmxxAFQhLPoI3hHo4sJlWHhQmD0g/TIHWkiu/RVmSCSQKHH4trVM4MsI3qgh1HMf+c
-         z2sJr+JvLC9bg1lYt6qXX4QnU87DBxYmlj/jYN+kRGjVv37JIx4tzJPIHx9gm5KNxp4z
-         AKEj+qzVvcS6n2i0oiismYJGjXsNNR8XFiR0wf62KDzRab9K1fKeiXIAYytC6J71a4N8
-         ofdF/UTfGnUCAuF0yj72U/imbrPY43E5Mjcq8UPXhC9YjBqf0+pwQKuSG4g9+WUcIRSA
-         y6JqUuVA3viawqZi3WiJGxKcNVHgFJojiXnRVSUjdWiWaXio0znB59H3nKMEhnY4yKQD
-         d1Wg==
-X-Gm-Message-State: AOAM531LrFYiyKpqd7fDDcA7RInc0LcxgGnu0o+7psHY71hpAdCNK0QO
-        SYRDDIqOTSsd3o6b0Wrtxto=
-X-Google-Smtp-Source: ABdhPJzg3pMRmhlNLTffHuEjLklk61jP1PHpiTtWUeXtTKcPPC6dg+eLTOKbOZaMLrTydXKb9o9wQw==
-X-Received: by 2002:a05:6402:2049:: with SMTP id bc9mr21450396edb.130.1629456860387;
-        Fri, 20 Aug 2021 03:54:20 -0700 (PDT)
+        bh=SUXeqCV+Zu6HYvK9lSq8KFT8ZqIRZTCMmeyZKMorHsg=;
+        b=WPTIx7kGY+JUiHrnzP9X3w+psdvQ10u458edEkALZxEILaD421IaaL3jodbtvVhPET
+         U6QEhoJuFCUnu15GRuZMA6/Dt8wec2+CxgrYy3sTZSyMMFzss+YTZhL3I7IoNTwVFol5
+         O9p5ojOhhZFJr/z1JLK4WgHdxKA83RQ5G1KEwlrLz1E5GHZO5wunQWZG0p+We9hSoc7L
+         SCThprPxHJnjmqVD0V5F+MQd7bKU5b4pnLQ0rqkazV34bsMMEt8hbblpErxhXAudmH1k
+         4TNV4zQPfIu8g0CY0okwtSy0TDAy+0t9kmtq2BxLcs7otC0FZSZKkJ+8aCRg2zb508ib
+         Aotg==
+X-Gm-Message-State: AOAM531BfMyT419P88ssBoodFRaDfh12GeYVzwfDcyBvSokPWXbE4e0G
+        UoCu9S/BLgmc2GKWg55jRa4=
+X-Google-Smtp-Source: ABdhPJyULc9QSu4vZdhcdIcXO7EAfcD51CgsJTWBQADd2soOZr1NmcyKy8my/T08OUXWSEqwanERqQ==
+X-Received: by 2002:a50:9f25:: with SMTP id b34mr480868edf.323.1629456862244;
+        Fri, 20 Aug 2021 03:54:22 -0700 (PDT)
 Received: from honeypot.epfl.ch (mob-176-243-199-7.net.vodafone.it. [176.243.199.7])
-        by smtp.googlemail.com with ESMTPSA id g29sm3451459edf.31.2021.08.20.03.54.18
+        by smtp.googlemail.com with ESMTPSA id g29sm3451459edf.31.2021.08.20.03.54.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Aug 2021 03:54:19 -0700 (PDT)
+        Fri, 20 Aug 2021 03:54:21 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -69,9 +69,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org,
         Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v3 07/15] perf workqueue: implement worker thread and management
-Date:   Fri, 20 Aug 2021 12:53:53 +0200
-Message-Id: <e88e4e61309845043d1f0939b5c33cd60e9d3ed5.1629454773.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v3 08/15] perf workqueue: add queue_work and flush_workqueue functions
+Date:   Fri, 20 Aug 2021 12:53:54 +0200
+Message-Id: <f9100c6e428eafe1b9761f947550e45ccc9e8849.1629454773.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629454773.git.rickyman7@gmail.com>
 References: <cover.1629454773.git.rickyman7@gmail.com>
@@ -81,474 +81,394 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds the implementation of the worker thread that is executed
-in the threadpool, and all management-related functions.
+This patch adds functions to queue and wait work_structs, and
+related tests.
 
-At startup, a worker registers itself with the workqueue by adding itself
-to the idle_list, then it sends an ack back to the main thread. When
-creating wotkers, the main thread will wait for the related acks.
-Once there is work to do, threads are woken up to perform the work.
-Threads will try to dequeue a new pending work before going to sleep.
+When a new work item is added, the workqueue first checks if there
+are threads to wake up. If so, it wakes it up with the given work item,
+otherwise it will pick the next round-robin thread and queue the work
+item to its queue. A thread which completes its queue will go to sleep.
 
-This registering mechanism has been implemented to enable for lazy spin
-up of worker threads in following patches
+The round-robin mechanism is implemented through the next_worker
+attibute which will point to the next worker to be chosen for queueing.
+When work is assigned to that worker or when the worker goes to sleep,
+the pointer is moved to the next worker in the busy_list, if any.
+When a worker is woken up, it is added in the busy list just before the
+next_worker, so that it will be chosen as last (it's just been assigned
+a work item).
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/util/workqueue/workqueue.c | 376 +++++++++++++++++++++++++-
- 1 file changed, 374 insertions(+), 2 deletions(-)
+ tools/perf/tests/workqueue.c          |  71 ++++++++++-
+ tools/perf/util/workqueue/workqueue.c | 176 +++++++++++++++++++++++++-
+ tools/perf/util/workqueue/workqueue.h |   9 ++
+ 3 files changed, 254 insertions(+), 2 deletions(-)
 
+diff --git a/tools/perf/tests/workqueue.c b/tools/perf/tests/workqueue.c
+index 1aa6ee788b0b1c32..194bab2f3f668ce9 100644
+--- a/tools/perf/tests/workqueue.c
++++ b/tools/perf/tests/workqueue.c
+@@ -147,6 +147,28 @@ static int __test__threadpool(void *_args)
+ 	return ret;
+ }
+ 
++struct test_work {
++	struct work_struct work;
++	int i;
++	int *array;
++};
++
++static void test_work_fn1(struct work_struct *work)
++{
++	struct test_work *mwork = container_of(work, struct test_work, work);
++
++	dummy_work(mwork->i);
++	mwork->array[mwork->i] = mwork->i+1;
++}
++
++static void test_work_fn2(struct work_struct *work)
++{
++	struct test_work *mwork = container_of(work, struct test_work, work);
++
++	dummy_work(mwork->i);
++	mwork->array[mwork->i] = mwork->i*2;
++}
++
+ static int __workqueue__prepare(struct workqueue_struct **wq,
+ 				int pool_size)
+ {
+@@ -166,21 +188,68 @@ static int __workqueue__teardown(struct workqueue_struct *wq)
+ 	return 0;
+ }
+ 
++static int __workqueue__exec_wait(struct workqueue_struct *wq,
++				int *array, struct test_work *works,
++				work_func_t func, int n_work_items)
++{
++	int ret, i;
++
++	for (i = 0; i < n_work_items; i++) {
++		works[i].array = array;
++		works[i].i = i;
++
++		init_work(&works[i].work);
++		works[i].work.func = func;
++		queue_work(wq, &works[i].work);
++	}
++
++	ret = flush_workqueue(wq);
++	TEST_ASSERT_VAL("workqueue flush failure", ret == 0);
++
++	return TEST_OK;
++}
++
++
+ static int __test__workqueue(void *_args)
+ {
+ 	struct workqueue_test_args_t *args = _args;
+ 	struct workqueue_struct *wq;
++	struct test_work *works;
++	int *array;
+ 	int pool_size = args->pool_size ?: sysconf(_SC_NPROCESSORS_ONLN);
+-	int ret = __workqueue__prepare(&wq, pool_size);
++	int i, ret = __workqueue__prepare(&wq, pool_size);
+ 
++	if (ret)
++		return ret;
++
++	array = calloc(args->n_work_items, sizeof(*array));
++	TEST_ASSERT_VAL("failed array calloc", array);
++	works = calloc(args->n_work_items, sizeof(*works));
++	TEST_ASSERT_VAL("failed works calloc", works);
++
++	ret = __workqueue__exec_wait(wq, array, works, test_work_fn1,
++					args->n_work_items);
+ 	if (ret)
+ 		goto out;
+ 
++	for (i = 0; i < args->n_work_items; i++)
++		TEST_ASSERT_VAL("failed array check (1)", array[i] == i+1);
++
++	ret = __workqueue__exec_wait(wq, array, works, test_work_fn2,
++					args->n_work_items);
++	if (ret)
++		goto out;
++
++	for (i = 0; i < args->n_work_items; i++)
++		TEST_ASSERT_VAL("failed array check (2)", array[i] == 2*i);
++
+ 	ret = __workqueue__teardown(wq);
+ 	if (ret)
+ 		goto out;
+ 
+ out:
++	free(array);
++	free(works);
+ 	return ret;
+ }
+ 
 diff --git a/tools/perf/util/workqueue/workqueue.c b/tools/perf/util/workqueue/workqueue.c
-index 053aac43e038f0b7..a2747fcc004ab0d1 100644
+index a2747fcc004ab0d1..1092ece9ad39d6d2 100644
 --- a/tools/perf/util/workqueue/workqueue.c
 +++ b/tools/perf/util/workqueue/workqueue.c
-@@ -13,6 +13,21 @@
- #include <internal/lib.h>
- #include "workqueue.h"
- 
-+enum worker_msg {
-+	WORKER_MSG__UNDEFINED,
-+	WORKER_MSG__READY,                          /* from worker: ack */
-+	WORKER_MSG__WAKE,                           /* to worker: wake up */
-+	WORKER_MSG__STOP,                           /* to worker: exit */
-+	WORKER_MSG__ERROR,
-+	WORKER_MSG__MAX
-+};
-+
-+enum worker_status {
-+	WORKER_STATUS__IDLE,		/* worker is sleeping, waiting for signal */
-+	WORKER_STATUS__BUSY,		/* worker is executing */
-+	WORKER_STATUS__MAX
-+};
-+
- struct workqueue_struct {
- 	pthread_mutex_t		lock;		/* locking of the workqueue */
- 	pthread_cond_t		idle_cond;	/* all workers are idle cond */
-@@ -22,6 +37,7 @@ struct workqueue_struct {
- 	struct list_head	busy_list;	/* busy workers */
+@@ -38,6 +38,7 @@ struct workqueue_struct {
  	struct list_head	idle_list;	/* idle workers */
  	int			msg_pipe[2];	/* main thread comm pipes */
-+	struct worker		**workers;	/* array of all workers */
+ 	struct worker		**workers;	/* array of all workers */
++	struct worker		*next_worker;	/* next worker to choose (round robin) */
  };
  
  static const char * const workqueue_errno_str[] = {
-@@ -34,6 +50,310 @@ static const char * const workqueue_errno_str[] = {
+@@ -48,6 +49,8 @@ static const char * const workqueue_errno_str[] = {
+ 	"Error sending message to worker",
+ 	"Error receiving message from worker",
  	"Received unexpected message from worker",
++	"Worker is not ready",
++	"Worker is in an unrecognized status",
  };
  
-+struct worker {
-+	pthread_mutex_t			lock;		/* locking of the thread_pool */
-+	int				tidx;		/* idx of thread in pool */
-+	struct list_head		entry;		/* in idle or busy list */
-+	struct work_struct		*current_work;	/* work being processed */
-+	int				msg_pipe[2];	/* main thread comm pipes*/
-+	struct list_head		queue;		/* pending work items */
-+	enum worker_status		status;		/* worker status */
-+};
-+
-+#define for_each_busy_worker(wq, m_worker) \
-+	list_for_each_entry(m_worker, &wq->busy_list, entry)
-+
-+#define for_each_idle_worker(wq, m_worker) \
-+	list_for_each_entry(m_worker, &wq->idle_list, entry)
-+
-+static inline int lock_workqueue(struct workqueue_struct *wq)
-+__acquires(&wq->lock)
+ struct worker {
+@@ -94,6 +97,15 @@ __releases(&worker->lock)
+ 	return pthread_mutex_unlock(&worker->lock);
+ }
+ 
++static void advance_next_worker(struct workqueue_struct *wq)
++__must_hold(&wq->lock)
 +{
-+	__acquire(&wq->lock);
-+	return pthread_mutex_lock(&wq->lock);
++	if (list_is_last(&wq->next_worker->entry, &wq->busy_list))
++		wq->next_worker = list_first_entry(&wq->busy_list, struct worker, entry);
++	else
++		wq->next_worker = list_next_entry(wq->next_worker, entry);
 +}
 +
-+static inline int unlock_workqueue(struct workqueue_struct *wq)
-+__releases(&wq->lock)
-+{
-+	__release(&wq->lock);
-+	return pthread_mutex_unlock(&wq->lock);
-+}
-+
-+static inline int lock_worker(struct worker *worker)
-+__acquires(&worker->lock)
-+{
-+	__acquire(&worker->lock);
-+	return pthread_mutex_lock(&worker->lock);
-+}
-+
-+static inline int unlock_worker(struct worker *worker)
-+__releases(&worker->lock)
-+{
-+	__release(&worker->lock);
-+	return pthread_mutex_unlock(&worker->lock);
-+}
-+
+ /**
+  * available_work - check if worker @worker has work to do
+  */
+@@ -159,9 +171,13 @@ static void sleep_worker(struct workqueue_struct *wq, struct worker *worker)
+ __must_hold(&wq->lock)
+ {
+ 	worker->status = WORKER_STATUS__IDLE;
++	if (wq->next_worker == worker)
++		advance_next_worker(wq);
+ 	list_move(&worker->entry, &wq->idle_list);
+-	if (list_empty(&wq->busy_list))
++	if (list_empty(&wq->busy_list)) {
++		wq->next_worker = NULL;
+ 		pthread_cond_signal(&wq->idle_cond);
++	}
+ }
+ 
+ /**
+@@ -196,6 +212,52 @@ __must_hold(&worker->lock)
+ 	}
+ }
+ 
 +/**
-+ * available_work - check if worker @worker has work to do
++ * wake_worker - prepare for waking worker @worker of workqueue @wq assigning @work to do
++ *
++ * Called from main thread.
++ * Moves worker from idle to busy list and assigns @work to it.
++ * Must call wake_worker outside critical section afterwards.
 + */
-+static int available_work(struct worker *worker)
++static int prepare_wake_worker(struct workqueue_struct *wq, struct worker *worker,
++			struct work_struct *work)
++__must_hold(&wq->lock)
 +__must_hold(&worker->lock)
 +{
-+	return !list_empty(&worker->queue);
-+}
++	if (wq->next_worker)
++		list_move_tail(&worker->entry, &wq->next_worker->entry);
++	else
++		list_move(&worker->entry, &wq->busy_list);
++	wq->next_worker = worker;
 +
-+/**
-+ * dequeue_work - retrieve the next work in worker @worker's queue
-+ *
-+ * Called inside worker.
-+ */
-+static struct work_struct *dequeue_work(struct worker *worker)
-+__must_hold(&worker->lock)
-+{
-+	struct work_struct *work = list_first_entry(&worker->queue, struct work_struct, entry);
-+
-+	list_del_init(&work->entry);
-+	return work;
-+}
-+
-+/**
-+ * spinup_worker - start worker underlying thread and wait for it
-+ *
-+ * This function MUST NOT hold any lock and can be called only from main thread.
-+ */
-+static int spinup_worker(struct workqueue_struct *wq, int tidx)
-+{
-+	int ret;
-+	enum worker_msg msg = WORKER_MSG__UNDEFINED;
-+	char sbuf[STRERR_BUFSIZE];
-+
-+	wq->pool_errno = threadpool__start_thread(wq->pool, tidx);
-+	if (wq->pool_errno)
-+		return -WORKQUEUE_ERROR__POOLSTARTTHREAD;
-+
-+	ret = readn(wq->msg_pipe[0], &msg, sizeof(msg));
-+	if (ret < 0) {
-+		pr_debug("workqueue: error receiving ack: %s\n",
-+			str_error_r(errno, sbuf, sizeof(sbuf)));
-+		return -WORKQUEUE_ERROR__READPIPE;
-+	}
-+	if (msg != WORKER_MSG__READY) {
-+		pr_debug2("workqueue: received error\n");
-+		return -WORKQUEUE_ERROR__INVALIDMSG;
-+	}
-+
-+	pr_debug("workqueue: spinup worker %d\n", tidx);
++	list_add_tail(&work->entry, &worker->queue);
++	worker->status = WORKER_STATUS__BUSY;
 +
 +	return 0;
 +}
 +
 +/**
-+ * sleep_worker - worker @worker of workqueue @wq goes to sleep
-+ *
-+ * Called inside worker.
-+ * If this was the last idle thread, signal it to the main thread, in case it
-+ * was flushing the workqueue.
-+ */
-+static void sleep_worker(struct workqueue_struct *wq, struct worker *worker)
-+__must_hold(&wq->lock)
-+{
-+	worker->status = WORKER_STATUS__IDLE;
-+	list_move(&worker->entry, &wq->idle_list);
-+	if (list_empty(&wq->busy_list))
-+		pthread_cond_signal(&wq->idle_cond);
-+}
-+
-+/**
-+ * dequeue_or_sleep - check if work is available and dequeue or go to sleep
-+ *
-+ * Called inside worker.
-+ */
-+static void dequeue_or_sleep(struct worker *worker, struct workqueue_struct *wq)
-+__must_hold(&worker->lock)
-+{
-+	if (available_work(worker)) {
-+		worker->current_work = dequeue_work(worker);
-+		pr_debug2("worker[%d]: dequeued work\n", worker->tidx);
-+	} else {
-+		unlock_worker(worker);
-+
-+		lock_workqueue(wq);
-+		lock_worker(worker);
-+
-+		// Check if I've been assigned new work in the
-+		// meantime
-+		if (available_work(worker)) {
-+			// yep, no need to sleep
-+			worker->current_work = dequeue_work(worker);
-+		} else {
-+			// nope, I gotta sleep
-+			worker->current_work = NULL;
-+			sleep_worker(wq, worker);
-+			pr_debug2("worker[%d]: going to sleep\n", worker->tidx);
-+		}
-+		unlock_workqueue(wq);
-+	}
-+}
-+
-+
-+/**
-+ * stop_worker - stop worker @worker
++ * wake_worker - send wake message to worker @worker of workqueue @wq
 + *
 + * Called from main thread.
-+ * Send stop message to worker @worker.
++ * Must be called after prepare_wake_worker and outside critical section to
++ * reduce time spent inside it
 + */
-+static int stop_worker(struct worker *worker)
++static int wake_worker(struct worker *worker)
 +{
++	enum worker_msg msg = WORKER_MSG__WAKE;
 +	int ret;
-+	enum worker_msg msg;
 +	char sbuf[STRERR_BUFSIZE];
 +
-+	msg = WORKER_MSG__STOP;
 +	ret = writen(worker->msg_pipe[1], &msg, sizeof(msg));
 +	if (ret < 0) {
-+		pr_debug2("workqueue: error sending stop msg: %s\n",
-+			str_error_r(errno, sbuf, sizeof(sbuf)));
++		pr_debug2("wake worker %d: error seding msg: %s\n",
++			worker->tidx, str_error_r(errno, sbuf, sizeof(sbuf)));
 +		return -WORKQUEUE_ERROR__WRITEPIPE;
 +	}
 +
 +	return 0;
 +}
+ 
+ /**
+  * stop_worker - stop worker @worker
+@@ -418,6 +480,8 @@ struct workqueue_struct *create_workqueue(int nr_threads)
+ 			goto out_stop_pool;
+ 	}
+ 
++	wq->next_worker = NULL;
++
+ 	return wq;
+ 
+ out_stop_pool:
+@@ -532,6 +596,8 @@ int workqueue_strerror(struct workqueue_struct *wq, int err, char *buf, size_t s
+ 		emsg = str_error_r(errno, sbuf, sizeof(sbuf));
+ 		return scnprintf(buf, size, "%s: %s.\n", errno_str, emsg);
+ 	case -WORKQUEUE_ERROR__INVALIDMSG:
++	case -WORKQUEUE_ERROR__INVALIDWORKERSTATUS:
++	case -WORKQUEUE_ERROR__NOTREADY:
+ 		return scnprintf(buf, size, "%s.\n", errno_str);
+ 	default:
+ 		emsg = str_error_r(err, sbuf, sizeof(sbuf));
+@@ -566,3 +632,111 @@ int workqueue_nr_threads(struct workqueue_struct *wq)
+ {
+ 	return threadpool__size(wq->pool);
+ }
 +
 +/**
-+ * init_worker - init @worker struct
-+ * @worker: the struct to init
-+ * @tidx: index of the executing thread inside the threadpool
++ * __queue_work_on_worker - add @work to the internal queue of worker @worker
++ *
++ * NB: this function releases the locks to be able to send notification to
++ * thread outside the critical section.
 + */
-+static int init_worker(struct worker *worker, int tidx)
++static int __queue_work_on_worker(struct workqueue_struct *wq __maybe_unused,
++				struct worker *worker, struct work_struct *work)
++__must_hold(&wq->lock)
++__must_hold(&worker->lock)
++__releases(&wq->lock)
++__releases(&worker->lock)
 +{
 +	int ret;
-+	char sbuf[STRERR_BUFSIZE];
 +
-+	if (pipe(worker->msg_pipe)) {
-+		pr_debug2("worker[%d]: error opening pipe: %s\n",
-+			tidx, str_error_r(errno, sbuf, sizeof(sbuf)));
-+		return -ENOMEM;
++	switch (worker->status) {
++	case WORKER_STATUS__BUSY:
++		list_add_tail(&work->entry, &worker->queue);
++
++		unlock_worker(worker);
++		unlock_workqueue(wq);
++		pr_debug("workqueue: queued new work item\n");
++		return 0;
++	case WORKER_STATUS__IDLE:
++		ret = prepare_wake_worker(wq, worker, work);
++		unlock_worker(worker);
++		unlock_workqueue(wq);
++		if (ret)
++			return ret;
++		ret = wake_worker(worker);
++		if (!ret)
++		pr_debug("workqueue: woke worker %d\n", worker->tidx);
++		return ret;
++	default:
++	case WORKER_STATUS__MAX:
++		unlock_worker(worker);
++		unlock_workqueue(wq);
++		pr_debug2("workqueue: worker is in unrecognized status %d\n",
++			worker->status);
++		return -WORKQUEUE_ERROR__INVALIDWORKERSTATUS;
 +	}
-+
-+	worker->tidx = tidx;
-+	worker->current_work = NULL;
-+	worker->status = WORKER_STATUS__IDLE;
-+	INIT_LIST_HEAD(&worker->entry);
-+	INIT_LIST_HEAD(&worker->queue);
-+
-+	ret = pthread_mutex_init(&worker->lock, NULL);
-+	if (ret)
-+		return -ret;
 +
 +	return 0;
 +}
 +
 +/**
-+ * fini_worker - deallocate resources used by @worker struct
++ * queue_work - add @work to @wq internal queue
++ *
++ * If there are idle threads, one of these will be woken up.
++ * Otherwise, the work is added to the pending list.
 + */
-+static void fini_worker(struct worker *worker)
++int queue_work(struct workqueue_struct *wq, struct work_struct *work)
 +{
-+	close(worker->msg_pipe[0]);
-+	worker->msg_pipe[0] = -1;
-+	close(worker->msg_pipe[1]);
-+	worker->msg_pipe[1] = -1;
-+	pthread_mutex_destroy(&worker->lock);
-+}
++	struct worker *worker;
 +
-+/**
-+ * register_worker - add worker to @wq->idle_list
-+ */
-+static void register_worker(struct workqueue_struct *wq, struct worker *worker)
-+__must_hold(&wq->lock)
-+{
-+	list_move(&worker->entry, &wq->idle_list);
-+	wq->workers[worker->tidx] = worker;
-+}
-+
-+/**
-+ * unregister_worker - remove worker from @wq->idle_list
-+ */
-+static void unregister_worker(struct workqueue_struct *wq __maybe_unused,
-+			struct worker *worker)
-+__must_hold(&wq->lock)
-+{
-+	list_del_init(&worker->entry);
-+	wq->workers[worker->tidx] = NULL;
-+}
-+
-+/**
-+ * worker_thread - worker function executed on threadpool
-+ */
-+static void worker_thread(int tidx, struct task_struct *task)
-+{
-+	struct workqueue_struct *wq = container_of(task, struct workqueue_struct, task);
-+	char sbuf[STRERR_BUFSIZE];
-+	struct worker this_worker;
-+	enum worker_msg msg;
-+	int ret, init_err = init_worker(&this_worker, tidx);
-+
-+	if (init_err) {
-+		// send error message to main thread
-+		msg = WORKER_MSG__ERROR;
++	lock_workqueue(wq);
++	if (list_empty(&wq->idle_list)) {
++		worker = wq->next_worker;
++		advance_next_worker(wq);
 +	} else {
-+		lock_workqueue(wq);
-+		register_worker(wq, &this_worker);
-+		unlock_workqueue(wq);
-+
-+		// ack worker creation
-+		msg = WORKER_MSG__READY;
++		worker = list_first_entry(&wq->idle_list, struct worker, entry);
 +	}
++	lock_worker(worker);
 +
-+	ret = writen(wq->msg_pipe[1], &msg, sizeof(msg));
-+	if (ret < 0) {
-+		pr_debug("worker[%d]: error sending msg: %s\n",
-+			tidx, str_error_r(errno, sbuf, sizeof(sbuf)));
++	return __queue_work_on_worker(wq, worker, work);
++}
 +
-+		if (init_err)
-+			return;
-+		goto out;
-+	}
++/**
++ * queue_work_on_worker - add @work to worker @tidx internal queue
++ */
++int queue_work_on_worker(int tidx, struct workqueue_struct *wq, struct work_struct *work)
++{
++	lock_workqueue(wq);
++	lock_worker(wq->workers[tidx]);
++	return __queue_work_on_worker(wq, wq->workers[tidx], work);
++}
 +
-+	// stop if there have been errors in init
-+	if (init_err)
-+		return;
++/**
++ * flush_workqueue - wait for all currently executed and pending work to finish
++ *
++ * This function blocks until all threads become idle.
++ */
++int flush_workqueue(struct workqueue_struct *wq)
++{
++	int err = 0, ret;
 +
-+	for (;;) {
-+		msg = WORKER_MSG__UNDEFINED;
-+		ret = readn(this_worker.msg_pipe[0], &msg, sizeof(msg));
-+		if (ret < 0 || (msg != WORKER_MSG__WAKE && msg != WORKER_MSG__STOP)) {
-+			pr_debug("worker[%d]: error receiving msg: %s\n",
-+				tidx, str_error_r(errno, sbuf, sizeof(sbuf)));
++	lock_workqueue(wq);
++	while (!list_empty(&wq->busy_list)) {
++		ret = pthread_cond_wait(&wq->idle_cond, &wq->lock);
++		if (ret) {
++			pr_debug2("%s: error in pthread_cond_wait\n", __func__);
++			err = -ret;
 +			break;
 +		}
-+
-+		if (msg == WORKER_MSG__STOP)
-+			break;
-+
-+		// main thread takes care of moving to busy list and appending
-+		// work to list
-+
-+		for (;;) {
-+			lock_worker(&this_worker);
-+			dequeue_or_sleep(&this_worker, wq);
-+			unlock_worker(&this_worker);
-+
-+			if (!this_worker.current_work)
-+				break;
-+
-+			this_worker.current_work->func(this_worker.current_work);
-+		};
 +	}
-+
-+out:
-+	lock_workqueue(wq);
-+	unregister_worker(wq, &this_worker);
 +	unlock_workqueue(wq);
 +
-+	fini_worker(&this_worker);
++	return err;
 +}
 +
- /**
-  * create_workqueue - create a workqueue associated to @pool
-  *
-@@ -41,7 +361,8 @@ static const char * const workqueue_errno_str[] = {
-  */
- struct workqueue_struct *create_workqueue(int nr_threads)
- {
--	int ret, err = 0;
-+	int ret, err = 0, t;
-+	struct worker *worker;
- 	struct workqueue_struct *wq = zalloc(sizeof(struct workqueue_struct));
++/**
++ * init_work - initialize the @work struct
++ */
++void init_work(struct work_struct *work)
++{
++	INIT_LIST_HEAD(&work->entry);
++}
+diff --git a/tools/perf/util/workqueue/workqueue.h b/tools/perf/util/workqueue/workqueue.h
+index 100841cc035fde1d..37ef84fc9c6ed4b6 100644
+--- a/tools/perf/util/workqueue/workqueue.h
++++ b/tools/perf/util/workqueue/workqueue.h
+@@ -22,6 +22,13 @@ extern int destroy_workqueue(struct workqueue_struct *wq);
  
- 	if (!wq) {
-@@ -56,10 +377,16 @@ struct workqueue_struct *create_workqueue(int nr_threads)
- 		goto out_free_wq;
- 	}
+ extern int workqueue_nr_threads(struct workqueue_struct *wq);
  
-+	wq->workers = calloc(nr_threads, sizeof(*wq->workers));
-+	if (!wq->workers) {
-+		err = -ENOMEM;
-+		goto out_delete_pool;
-+	}
++extern int queue_work(struct workqueue_struct *wq, struct work_struct *work);
++extern int queue_work_on_worker(int tidx, struct workqueue_struct *wq, struct work_struct *work);
 +
- 	ret = pthread_mutex_init(&wq->lock, NULL);
- 	if (ret) {
- 		err = -ret;
--		goto out_delete_pool;
-+		goto out_free_workers;
- 	}
- 
- 	ret = pthread_cond_init(&wq->idle_cond, NULL);
-@@ -77,12 +404,41 @@ struct workqueue_struct *create_workqueue(int nr_threads)
- 		goto out_destroy_cond;
- 	}
- 
-+	wq->task.fn = worker_thread;
++extern int flush_workqueue(struct workqueue_struct *wq);
 +
-+	wq->pool_errno = threadpool__execute(wq->pool, &wq->task);
-+	if (wq->pool_errno) {
-+		err = -WORKQUEUE_ERROR__POOLEXE;
-+		goto out_close_pipe;
-+	}
++extern void init_work(struct work_struct *work);
 +
-+	for (t = 0; t < nr_threads; t++) {
-+		err = spinup_worker(wq, t);
-+		if (err)
-+			goto out_stop_pool;
-+	}
-+
- 	return wq;
- 
-+out_stop_pool:
-+	lock_workqueue(wq);
-+	for_each_idle_worker(wq, worker) {
-+		ret = stop_worker(worker);
-+		if (ret)
-+			err = ret;
-+	}
-+	unlock_workqueue(wq);
-+out_close_pipe:
-+	close(wq->msg_pipe[0]);
-+	wq->msg_pipe[0] = -1;
-+	close(wq->msg_pipe[1]);
-+	wq->msg_pipe[1] = -1;
- out_destroy_cond:
- 	pthread_cond_destroy(&wq->idle_cond);
- out_destroy_mutex:
- 	pthread_mutex_destroy(&wq->lock);
-+out_free_workers:
-+	free(wq->workers);
- out_delete_pool:
- 	threadpool__delete(wq->pool);
- out_free_wq:
-@@ -96,12 +452,27 @@ struct workqueue_struct *create_workqueue(int nr_threads)
-  */
- int destroy_workqueue(struct workqueue_struct *wq)
- {
-+	struct worker *worker;
- 	int err = 0, ret;
- 	char sbuf[STRERR_BUFSIZE];
- 
- 	if (IS_ERR_OR_NULL(wq))
- 		return 0;
- 
-+	lock_workqueue(wq);
-+	for_each_idle_worker(wq, worker) {
-+		ret = stop_worker(worker);
-+		if (ret)
-+			err = ret;
-+	}
-+	unlock_workqueue(wq);
-+
-+	wq->pool_errno = threadpool__stop(wq->pool);
-+	if (wq->pool_errno) {
-+		pr_debug2("workqueue: error stopping threadpool\n");
-+		err = -WORKQUEUE_ERROR__POOLSTOP;
-+	}
-+
- 	threadpool__delete(wq->pool);
- 	wq->pool = NULL;
- 
-@@ -125,6 +496,7 @@ int destroy_workqueue(struct workqueue_struct *wq)
- 	close(wq->msg_pipe[1]);
- 	wq->msg_pipe[1] = -1;
- 
-+	zfree(&wq->workers);
- 	free(wq);
- 	return err;
- }
+ #define WORKQUEUE_STRERR_BUFSIZE (128+THREADPOOL_STRERR_BUFSIZE)
+ #define WORKQUEUE_ERROR__OFFSET 512
+ enum {
+@@ -32,6 +39,8 @@ enum {
+ 	WORKQUEUE_ERROR__WRITEPIPE,
+ 	WORKQUEUE_ERROR__READPIPE,
+ 	WORKQUEUE_ERROR__INVALIDMSG,
++	WORKQUEUE_ERROR__NOTREADY,
++	WORKQUEUE_ERROR__INVALIDWORKERSTATUS,
+ };
+ extern int workqueue_strerror(struct workqueue_struct *wq, int err, char *buf, size_t size);
+ extern int create_workqueue_strerror(struct workqueue_struct *err_ptr, char *buf, size_t size);
 -- 
 2.31.1
 
