@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FF5C4320A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B5AC4338F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166A161156
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7A461186
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234559AbhHUJV7 (ORCPT
+        id S234666AbhHUJWM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 21 Aug 2021 05:21:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34106 "EHLO
+        Sat, 21 Aug 2021 05:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233924AbhHUJVZ (ORCPT
+        with ESMTP id S233594AbhHUJVj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 Aug 2021 05:21:25 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFFE3C061757;
-        Sat, 21 Aug 2021 02:20:14 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id i6so17675105edu.1;
-        Sat, 21 Aug 2021 02:20:14 -0700 (PDT)
+        Sat, 21 Aug 2021 05:21:39 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F08AC0611C1;
+        Sat, 21 Aug 2021 02:20:16 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id n12so17621850edx.8;
+        Sat, 21 Aug 2021 02:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MOotWiEv+98ro2y3QGt/u7+sbNifTqAd54gUTUaSOVY=;
-        b=WQwOgvKCgIfHmLnxQIvPieXmBZruWPCXgYrrC/NGtaFxT2VW5+VaGhuugXhZ/YjR+T
-         kEarLJfNc3dOEIJM72h9fyK0clcpw/YclDgb7lRUpeGhCSVGfMmA6+PGzGLn+V2+5Lyx
-         LKIeAXEqlW9I8//kwEpErGT9AolOUHfs9RYDCkfpIEfzHlbnkTBtvYXkwTwSfy61xfxu
-         kbTreXMXdxqHSS32ZpMW8eD8X3rJ/m3/btXID3L147HN0XnMfs8UDRk/45mcr1U75zMc
-         wSsfqIHvEW9cyDL38rYV9Khaa6MOD6F7uKeliwPSowNFL5K1Q5/vFiFLVt9iunMgzX9t
-         cAqQ==
+        bh=Kt1ytqrFQ3gxDFuU2/KO3OHIat7YiLJUy+EkQoB0jDg=;
+        b=VQUzkOsgyk04CQmPGLMYJKdX92MbEcNeSP7aW98PvA8QFuZP3rFpJykMWn30t1FYky
+         byLp9t4MJOgoMxmlBmGRnlNhwoSxVQKPj1GCtHp3f2AjnJIL8vnofjYqngZIbMK/58Sv
+         Oot81y+bSDY21kzySyVJcJnXkyYYhDOPGN8V/DHGtwHSidIJyaR/TT1TM/Wx8BK+ekAk
+         R+XTlxe0JkL0yEt0HpGTS7zDALlMbNOOSA6BbhkJy5Mc1NmifjjJnpXTra9nZHiEve8e
+         6HeGnAE3cYjvb0bjoxsrriN4j01pOB9v+thg5srLjvPNsx43oh8MmpF9MxI4fOQcpPMH
+         haXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MOotWiEv+98ro2y3QGt/u7+sbNifTqAd54gUTUaSOVY=;
-        b=iEk5UVM0BBDvoSYWVYWfRD+eUWupbpT9vZfEIZSg1c6mICdK3+FJepKVzkQY3w/hHg
-         vQbuLb6Ud43ZmKCJOcELr/btfiNByuDyALM1stsNkYO1vXMYklskrHZzR3q3xoMFF69e
-         zxfHLMftLFRmx6dim6TcPLmgmQ5YJ9THDLT78SRAuYOUHx9e3VvV3GX1LssCEycsiOim
-         sK7nONe/BX/XgKDtjMuovaHSPRFCX65h1D/C3KpA3kTt4zlkp6Ny1vy/hv3PjUlh8K8r
-         SFlnNDMdnYV8oc9N3B2UjxFFUHBdj6MW0tKlKRiJ1VzyaHr9+xMm0YtNMFqk1IaX7Tv8
-         sEHA==
-X-Gm-Message-State: AOAM532ejhQbKzpcpRYzTvh8yIkF5IWgZaEZ6wQQEh8DS1wP6DT1j0ak
-        cBiEzXFlCPaSOyxZPEwvfKg=
-X-Google-Smtp-Source: ABdhPJyW5yl0n572PbavDjuw61RHEFo3Jr1zPq0cWqyh+WG1+bF2jDt5++WL9keCJy/THQJi5sHnVw==
-X-Received: by 2002:a05:6402:344f:: with SMTP id l15mr6771949edc.56.1629537613394;
-        Sat, 21 Aug 2021 02:20:13 -0700 (PDT)
+        bh=Kt1ytqrFQ3gxDFuU2/KO3OHIat7YiLJUy+EkQoB0jDg=;
+        b=AEf5K1eTVFPWSiAD9jHR4w+NxCIll+Vztf/ZrR80Uzikbt+1k+OJI2UUQ5KgHlbMMJ
+         2phSrXTl+VjBC/dbwBAFN1A2x58pRoZBAAIqjmg6E8AA33HEgXiGOWx3+tvC5thsb1xo
+         mCDg9/ayDR0AcouMOrFQ13xg6TVLh/L8qEWDHG2UCAQdhgNh4sfI/9mD3qzJDG2b249U
+         KHyYeAer1hAruY3kTTR7PY/LNDm+FlTyyi6gBHf9YqVCTtAB03wOeo04PwQIx24pWCz8
+         15oxhf+AYOAAuGL4qWH3RYT2+F6Mil3drur7JNSfM4aVaDHfxiqa46SMnynxlCE6kb0l
+         fJ+Q==
+X-Gm-Message-State: AOAM533Da09PY4DEe/zxMakau4OgOiaB9E76fAsOR87vkbhixMXPwV84
+        6HOjzfY1KpdFroLlvZYiT5U=
+X-Google-Smtp-Source: ABdhPJzlgSjmm/lF0FgQ7+bskzwpSSZrrLGycbNOtdp017Sig4/W+nBL5b4RWVJoxp2k9By5mmSPKg==
+X-Received: by 2002:aa7:c0c6:: with SMTP id j6mr15646714edp.146.1629537614656;
+        Sat, 21 Aug 2021 02:20:14 -0700 (PDT)
 Received: from honeypot.. (mob-176-243-254-204.net.vodafone.it. [176.243.254.204])
-        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.12
+        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Aug 2021 02:20:13 -0700 (PDT)
+        Sat, 21 Aug 2021 02:20:14 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v1 20/37] perf evsel: separate rlimit increase from evsel__open_cpu
-Date:   Sat, 21 Aug 2021 11:19:26 +0200
-Message-Id: <2f256de8ec37b9809a5cef73c2fa7bce416af5d3.1629490974.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v1 21/37] perf evsel: move ignore_missing_thread to fallback code
+Date:   Sat, 21 Aug 2021 11:19:27 +0200
+Message-Id: <4eca51443c786baaf6811b7cd8e73aafd97f7606.1629490974.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629490974.git.rickyman7@gmail.com>
 References: <cover.1629490974.git.rickyman7@gmail.com>
@@ -80,103 +80,99 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is a preparatory patch for the following patches with the goal to
-separate from evlist__open_cpu the actual opening (which could be
-performed in parallel), from the existing fallback mechanisms, which
-should be handled sequentially.
+This patch moves ignore_missing_thread outside the perf_event_open loop.
+Doing so, we need to move the retry_open flag a few places higher, with
+minimal impact. Furthermore, thread need not be decreased since it won't
+get increased by the for loop (since we're jumping back inside), but we
+need to check that the nthreads decrease didn't put thread out of range.
 
-This patch separates the rlimit increase from evsel__open_cpu.
+The goal is to have fallbacks handled in one place only, since in the
+future parallel code, these would be handled separately.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/util/evsel.c | 50 ++++++++++++++++++++++++-----------------
- tools/perf/util/evsel.h |  3 +++
- 2 files changed, 33 insertions(+), 20 deletions(-)
+ tools/perf/util/evsel.c | 29 +++++++++++++----------------
+ tools/perf/util/evsel.h |  5 +++++
+ 2 files changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index c393bd992322d925..916930ea31450265 100644
+index 916930ea31450265..a1a88607fd59efcb 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1931,13 +1931,40 @@ bool evsel__detect_missing_features(struct evsel *evsel)
- 	}
+@@ -1656,7 +1656,7 @@ static int update_fds(struct evsel *evsel,
+ 	return 0;
  }
  
-+bool evsel__increase_rlimit(enum rlimit_action *set_rlimit)
-+{
-+	int old_errno;
-+	struct rlimit l;
-+
-+	if (*set_rlimit < INCREASED_MAX) {
-+
-+		old_errno = errno;
-+		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
-+			if (*set_rlimit == NO_CHANGE)
-+				l.rlim_cur = l.rlim_max;
-+			else {
-+				l.rlim_cur = l.rlim_max + 1000;
-+				l.rlim_max = l.rlim_cur;
-+			}
-+			if (setrlimit(RLIMIT_NOFILE, &l) == 0) {
-+				(*set_rlimit) += 1;
-+				errno = old_errno;
-+				return true;
-+			}
-+		}
-+		errno = old_errno;
-+	}
-+
-+	return false;
-+}
-+
- static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads,
- 		int start_cpu, int end_cpu)
- {
- 	int cpu, thread, nthreads;
- 	int pid = -1, err, old_errno;
--	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
-+	enum rlimit_action set_rlimit = NO_CHANGE;
+-static bool ignore_missing_thread(struct evsel *evsel,
++bool evsel__ignore_missing_thread(struct evsel *evsel,
+ 				  int nr_cpus, int cpu,
+ 				  struct perf_thread_map *threads,
+ 				  int thread, int err)
+@@ -1993,12 +1993,15 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
  
- 	err = __evsel__prepare_open(evsel, cpus, threads);
- 	if (err)
-@@ -2046,25 +2073,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		for (thread = 0; thread < nthreads; thread++) {
+ 			int fd, group_fd;
++retry_open:
++			if (thread >= nthreads)
++				break;
+ 
+ 			if (!evsel->cgrp && !evsel->core.system_wide)
+ 				pid = perf_thread_map__pid(threads, thread);
+ 
+ 			group_fd = get_group_fd(evsel, cpu, thread);
+-retry_open:
++
+ 			test_attr__ready();
+ 
+ 			fd = perf_event_open(evsel, pid, cpus->map[cpu],
+@@ -2016,20 +2019,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 			if (fd < 0) {
+ 				err = -errno;
+ 
+-				if (ignore_missing_thread(evsel, cpus->nr, cpu, threads, thread, err)) {
+-					/*
+-					 * We just removed 1 thread, so take a step
+-					 * back on thread index and lower the upper
+-					 * nthreads limit.
+-					 */
+-					nthreads--;
+-					thread--;
+-
+-					/* ... and pretend like nothing have happened. */
+-					err = 0;
+-					continue;
+-				}
+-
+ 				pr_debug2_peo("\nsys_perf_event_open failed, error %d\n",
+ 					  err);
+ 				goto try_fallback;
+@@ -2069,6 +2058,14 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	return 0;
+ 
+ try_fallback:
++	if (evsel__ignore_missing_thread(evsel, cpus->nr, cpu, threads, thread, err)) {
++		/* We just removed 1 thread, so lower the upper nthreads limit. */
++		nthreads--;
++
++		/* ... and pretend like nothing have happened. */
++		err = 0;
++		goto retry_open;
++	}
+ 	/*
  	 * perf stat needs between 5 and 22 fds per CPU. When we run out
  	 * of them try to increase the limits.
- 	 */
--	if (err == -EMFILE && set_rlimit < INCREASED_MAX) {
--		struct rlimit l;
--
--		old_errno = errno;
--		if (getrlimit(RLIMIT_NOFILE, &l) == 0) {
--			if (set_rlimit == NO_CHANGE)
--				l.rlim_cur = l.rlim_max;
--			else {
--				l.rlim_cur = l.rlim_max + 1000;
--				l.rlim_max = l.rlim_cur;
--			}
--			if (setrlimit(RLIMIT_NOFILE, &l) == 0) {
--				set_rlimit++;
--				errno = old_errno;
--				goto retry_open;
--			}
--		}
--		errno = old_errno;
--	}
-+	if (err == -EMFILE && evsel__increase_rlimit(&set_rlimit))
-+		goto retry_open;
- 
- 	if (err != -EINVAL || cpu > 0 || thread > 0)
- 		goto out_close;
 diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a83fb7f69b1ead73..bf9abd9a5cbf9852 100644
+index bf9abd9a5cbf9852..661d2677a19b6248 100644
 --- a/tools/perf/util/evsel.h
 +++ b/tools/perf/util/evsel.h
-@@ -290,6 +290,9 @@ int evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
- 		struct perf_thread_map *threads);
- bool evsel__detect_missing_features(struct evsel *evsel);
+@@ -293,6 +293,11 @@ bool evsel__detect_missing_features(struct evsel *evsel);
+ enum rlimit_action { NO_CHANGE, SET_TO_MAX, INCREASED_MAX };
+ bool evsel__increase_rlimit(enum rlimit_action *set_rlimit);
  
-+enum rlimit_action { NO_CHANGE, SET_TO_MAX, INCREASED_MAX };
-+bool evsel__increase_rlimit(enum rlimit_action *set_rlimit);
++bool evsel__ignore_missing_thread(struct evsel *evsel,
++				  int nr_cpus, int cpu,
++				  struct perf_thread_map *threads,
++				  int thread, int err);
 +
  struct perf_sample;
  
