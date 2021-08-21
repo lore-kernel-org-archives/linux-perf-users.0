@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06974C4338F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E67C4320A
 	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDCA561101
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E34461101
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:21:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234321AbhHUJVk (ORCPT
+        id S234385AbhHUJVk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Sat, 21 Aug 2021 05:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233806AbhHUJVP (ORCPT
+        with ESMTP id S234073AbhHUJVQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 Aug 2021 05:21:15 -0400
+        Sat, 21 Aug 2021 05:21:16 -0400
 Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A42CC06124C;
-        Sat, 21 Aug 2021 02:20:08 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id ia27so2990907ejc.10;
-        Sat, 21 Aug 2021 02:20:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD6BC061226;
+        Sat, 21 Aug 2021 02:20:09 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id bt14so25229171ejb.3;
+        Sat, 21 Aug 2021 02:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=BJSUm8Y9WnxzFwDFjQxHNxBZXFxJQPdQmlVoLoTFeKI=;
-        b=F3uSEingtZ8e2chaZYz9uYo2cTkvJWXNwlgxioO9kGhbAhoJKJhNipWw0o9rWStTzV
-         RpZZJE1XvmbaVlHEWfapDpAg24tCNWhNNQJnBhDaBtgndh8XFnTvIwCTM2EWyMewMkPo
-         /igCQT7wVgYn0BE1aJWEzqNOEHjQEYtxkz52VbnjiMx5At0Nlf9doLbgFzFmvrbEjoo+
-         c+WZtAKgwiM+PUkfu0YwmUgf4zbqmgN7Zrg8xjvUTd1NypFWJsfWVw6k8ZqowqeT11u+
-         BidrcuPhZ74fpLlBRtAz2D2jRnABTuckS12vIdwQaoy0T76sy3H//rE3ci3fbGNKNZdd
-         Q3Sg==
+        bh=K06lN51zooeraOtXEnuTstuj3NqHpgaRejWVBk4KyOk=;
+        b=PGI+h7CA1GqZcp4I1rAnRgvjggxCainerJwwcK2u4W8y/JqKLtiE4yBNPAF1aLnLI2
+         mzYHhOBesppnvlNDBLvrlBtZ3HtN5yViQa1qAhxvbIYbTExwoHbvwS+TzGTObAXknsuY
+         I3dEfvBhLmiHg8Du7CugiOSdi0Nl7CXb1lka+gP37UJ/9muyKhKZtzg3E0saCHlLm0Pv
+         bB+ljE9Ctzqllh1W08dZLQRS04IihAx7K1P0gHrJLAQFoQobCe/lr6Ku1ihCabX/KJq/
+         QMe01khZWUY1Krhr75Redrn73SPJ9k7bQZplB/CkG7HPHEWStw+4Ttl990zuXQBLAjD1
+         UG2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=BJSUm8Y9WnxzFwDFjQxHNxBZXFxJQPdQmlVoLoTFeKI=;
-        b=WhOntWXsy9wEBSoib79oc/2Uyg+9HlTrFzVaXMEEuD35g4SnaAdZ/+CT+hsMmaG+wu
-         WgY3ngy6DaBIBmum1tbr6PywvzHwyENYsplg4ccYGonkbxk1W5oh0P6jLDkVaPKpCJJP
-         qWBDE46RgteHe2YnuFFsiCw7n+CX2jfEZPm0/sYglJhYl2gcErGRJNIXCrW0Xrz1FDVG
-         TI3brDmUVfOZCsbSS/3w4JPqDi9E1756OHwWelUMWyvwB8JA6ix+E8qYOP7U83Aix8T4
-         JQburLmPlqFwYVvDV7DdJBYaUn6zSBPdXysqfB8WqOXI310eO/amcCyNXC9btyGG8Xk+
-         oN6A==
-X-Gm-Message-State: AOAM533iI6IVhrwVqLiD/opclEb/yLJQFjzYrsz9eSgf2hrpPK75SwaH
-        Q5zG5G0+Uf+dBCt7+KcCCow=
-X-Google-Smtp-Source: ABdhPJwOSjD4YnXLgM3rfVn2z0sRLUryjEgikOKbTOTa/LMfKaA5kNIsoN/FfqFjZuYHxvvjdl7rng==
-X-Received: by 2002:a17:906:405:: with SMTP id d5mr25680829eja.189.1629537606974;
-        Sat, 21 Aug 2021 02:20:06 -0700 (PDT)
+        bh=K06lN51zooeraOtXEnuTstuj3NqHpgaRejWVBk4KyOk=;
+        b=odLnZPLCIletJhoICxpxwB8qKKwKLve8HwzLShih8XjbbqhGnZjl/vZOXMeS5elk6i
+         K5LRfaxhYE3AAUDIaEIqiozvsc5AVQJg4kNcksDzQ3NXzc3Qwiab8OUbymeuCs3hcVZD
+         ZTt6n2jTMtvWdGPBpkT4lepwRdRNQ/lhQS35/uwBKqrffnqzE9cug05RjumTrYjDTym9
+         wuFSFOZzxdE/tY0tjwJXqwcXS9Oqq31XGb+1pjycwnExbIKqyrU7JTCVTYXEFKeH+0TW
+         LYdmM7qbV44w0Y394ubyyCeppOiXZBS9HwjPB5kBUAmpjytyceME9d9prFT9InReVbxP
+         sbSg==
+X-Gm-Message-State: AOAM5316VM9VVWzLMs+xh0j3YKqOUGSLtc83j4iclYafIGhEDGasXffc
+        UdZalCPI80+qyM6UQ7vDFWU=
+X-Google-Smtp-Source: ABdhPJwt8uU784n9hXFhioDFuLC0yISYbl4g86peqol/mnB6pyTeYBtayK+NLczWBOODuS4ItMlpYQ==
+X-Received: by 2002:a17:906:e57:: with SMTP id q23mr25767665eji.483.1629537608295;
+        Sat, 21 Aug 2021 02:20:08 -0700 (PDT)
 Received: from honeypot.. (mob-176-243-254-204.net.vodafone.it. [176.243.254.204])
-        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.05
+        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Aug 2021 02:20:06 -0700 (PDT)
+        Sat, 21 Aug 2021 02:20:08 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v1 15/37] perf evsel: separate open preparation from open itself
-Date:   Sat, 21 Aug 2021 11:19:21 +0200
-Message-Id: <e14118b934c338dbbf68b8677f20d0d7dbf9359a.1629490974.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v1 16/37] perf evsel: save open flags in evsel
+Date:   Sat, 21 Aug 2021 11:19:22 +0200
+Message-Id: <d9f63159098e56fa518eecf25171d72e6f74df37.1629490974.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629490974.git.rickyman7@gmail.com>
 References: <cover.1629490974.git.rickyman7@gmail.com>
@@ -80,96 +80,125 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is a preparatory patch for the following patches with the goal to
-separate in evlist__open_cpu the actual perf_event_open, which could be
-performed in parallel, from the existing fallback mechanisms, which
-should be handled sequentially.
+This patch caches the flags used in perf_event_open inside evsel, so
+that they can be set in __evsel__prepare_open (this will be useful
+in following patches, when the fallback mechanisms will be handled
+outside the open itself).
+This also optimizes the code, by not having to recompute them everytime.
 
-This patch separates the first lines of evsel__open_cpu into a new
-__evsel__prepare_open function.
+Since flags are now saved in evsel, the flags argument in
+perf_event_open is removed.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/util/evsel.c | 45 +++++++++++++++++++++++++++++++----------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+ tools/perf/util/evsel.c | 24 ++++++++++++------------
+ tools/perf/util/evsel.h |  1 +
+ 2 files changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 7b4bb3229a16524e..ddf324e2e17a0951 100644
+index ddf324e2e17a0951..509a2970a94b3142 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -1746,22 +1746,20 @@ static int perf_event_open(struct evsel *evsel,
- 	return fd;
+@@ -1710,17 +1710,16 @@ static void display_attr(struct perf_event_attr *attr)
  }
  
--static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
--		struct perf_thread_map *threads,
--		int start_cpu, int end_cpu)
-+
-+static struct perf_cpu_map *empty_cpu_map;
-+static struct perf_thread_map *empty_thread_map;
-+
-+static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
-+		struct perf_thread_map *threads)
+ static int perf_event_open(struct evsel *evsel,
+-			   pid_t pid, int cpu, int group_fd,
+-			   unsigned long flags)
++			   pid_t pid, int cpu, int group_fd)
  {
--	int cpu, thread, nthreads;
--	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
--	int pid = -1, err, old_errno;
--	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
-+	int nthreads;
+ 	int precise_ip = evsel->core.attr.precise_ip;
+ 	int fd;
  
- 	if ((perf_missing_features.write_backward && evsel->core.attr.write_backward) ||
- 	    (perf_missing_features.aux_output     && evsel->core.attr.aux_output))
- 		return -EINVAL;
+ 	while (1) {
+ 		pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
+-			  pid, cpu, group_fd, flags);
++			  pid, cpu, group_fd, evsel->open_flags);
  
- 	if (cpus == NULL) {
--		static struct perf_cpu_map *empty_cpu_map;
--
- 		if (empty_cpu_map == NULL) {
- 			empty_cpu_map = perf_cpu_map__dummy_new();
- 			if (empty_cpu_map == NULL)
-@@ -1772,8 +1770,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	}
+-		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, flags);
++		fd = sys_perf_event_open(&evsel->core.attr, pid, cpu, group_fd, evsel->open_flags);
+ 		if (fd >= 0)
+ 			break;
  
- 	if (threads == NULL) {
--		static struct perf_thread_map *empty_thread_map;
--
- 		if (empty_thread_map == NULL) {
- 			empty_thread_map = thread_map__new_by_tid(-1);
- 			if (empty_thread_map == NULL)
-@@ -1792,6 +1788,33 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+@@ -1788,6 +1787,10 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
  	    perf_evsel__alloc_fd(&evsel->core, cpus->nr, nthreads) < 0)
  		return -ENOMEM;
  
-+	return 0;
-+}
++	evsel->open_flags = PERF_FLAG_FD_CLOEXEC;
++	if (evsel->cgrp)
++		evsel->open_flags |= PERF_FLAG_PID_CGROUP;
 +
-+static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
-+		struct perf_thread_map *threads,
-+		int start_cpu, int end_cpu)
-+{
-+	int cpu, thread, nthreads;
-+	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
-+	int pid = -1, err, old_errno;
-+	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
-+
-+	err = __evsel__prepare_open(evsel, cpus, threads);
-+	if (err)
-+		return err;
-+
-+	if (cpus == NULL)
-+		cpus = empty_cpu_map;
-+
-+	if (threads == NULL)
-+		threads = empty_thread_map;
-+
-+	if (evsel->core.system_wide)
-+		nthreads = 1;
-+	else
-+		nthreads = threads->nr;
-+
- 	if (evsel->cgrp) {
- 		flags |= PERF_FLAG_PID_CGROUP;
+ 	return 0;
+ }
+ 
+@@ -1796,7 +1799,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		int start_cpu, int end_cpu)
+ {
+ 	int cpu, thread, nthreads;
+-	unsigned long flags = PERF_FLAG_FD_CLOEXEC;
+ 	int pid = -1, err, old_errno;
+ 	enum { NO_CHANGE, SET_TO_MAX, INCREASED_MAX } set_rlimit = NO_CHANGE;
+ 
+@@ -1815,10 +1817,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	else
+ 		nthreads = threads->nr;
+ 
+-	if (evsel->cgrp) {
+-		flags |= PERF_FLAG_PID_CGROUP;
++	if (evsel->cgrp)
  		pid = evsel->cgrp->fd;
+-	}
+ 
+ fallback_missing_features:
+ 	if (perf_missing_features.weight_struct) {
+@@ -1832,7 +1832,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		evsel->core.attr.clockid = 0;
+ 	}
+ 	if (perf_missing_features.cloexec)
+-		flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
++		evsel->open_flags &= ~(unsigned long)PERF_FLAG_FD_CLOEXEC;
+ 	if (perf_missing_features.mmap2)
+ 		evsel->core.attr.mmap2 = 0;
+ 	if (perf_missing_features.exclude_guest)
+@@ -1866,7 +1866,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 			test_attr__ready();
+ 
+ 			fd = perf_event_open(evsel, pid, cpus->map[cpu],
+-					     group_fd, flags);
++					     group_fd);
+ 
+ 			FD(evsel, cpu, thread) = fd;
+ 
+@@ -1874,7 +1874,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ 			if (unlikely(test_attr__enabled)) {
+ 				test_attr__open(&evsel->core.attr, pid, cpus->map[cpu],
+-						fd, group_fd, flags);
++						fd, group_fd, evsel->open_flags);
+ 			}
+ 
+ 			if (fd < 0) {
+@@ -2012,7 +2012,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		perf_missing_features.clockid = true;
+ 		pr_debug2_peo("switching off use_clockid\n");
+ 		goto fallback_missing_features;
+-	} else if (!perf_missing_features.cloexec && (flags & PERF_FLAG_FD_CLOEXEC)) {
++	} else if (!perf_missing_features.cloexec && (evsel->open_flags & PERF_FLAG_FD_CLOEXEC)) {
+ 		perf_missing_features.cloexec = true;
+ 		pr_debug2_peo("switching off cloexec flag\n");
+ 		goto fallback_missing_features;
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index eabccce406886320..1c0057e80d080f2f 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -149,6 +149,7 @@ struct evsel {
+ 		struct bperf_leader_bpf *leader_skel;
+ 		struct bperf_follower_bpf *follower_skel;
+ 	};
++	unsigned long		open_flags;
+ };
+ 
+ struct perf_missing_features {
 -- 
 2.31.1
 
