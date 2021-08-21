@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD48C4320A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB768C4320E
 	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:19:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C81961156
+	by mail.kernel.org (Postfix) with ESMTP id B1F9461156
 	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:19:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233597AbhHUJUb (ORCPT
+        id S233524AbhHUJUd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 21 Aug 2021 05:20:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
+        Sat, 21 Aug 2021 05:20:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233524AbhHUJUa (ORCPT
+        with ESMTP id S233478AbhHUJUb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 Aug 2021 05:20:30 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A63EEC061575;
-        Sat, 21 Aug 2021 02:19:50 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id mf2so6671166ejb.9;
-        Sat, 21 Aug 2021 02:19:50 -0700 (PDT)
+        Sat, 21 Aug 2021 05:20:31 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30C8CC061575;
+        Sat, 21 Aug 2021 02:19:52 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id gr13so25223178ejb.6;
+        Sat, 21 Aug 2021 02:19:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=mbPZDp/xkJGnPgN5FrjhXWQn3CwvReLDj7zmHU7fpVM=;
-        b=Q4cdAiRLpALsYo/BGM1e4/Df3zq8rBBfAO6wg/DJ7kxr5ekEoVLYHJHMt4ye1YZzw9
-         50RWVjwqc86ZX2sWywYTM4z8YL8egBA5ZkfA0u88cittsY0xVyrdlcEwDMxmV49JEuJR
-         Qnb17XXmligG5zNmGsEf/Kn7bhTnhASE7QnRiWgBW+3G06cI6p7Tpyb9SwZ4DCQOjuk/
-         cxdtXV/gsgBQnc3fOGty4aP8QPmL7fBR2daZ3OzX5JITg1eOROUBgPy6L8wlQ98Ys5uD
-         xjas/+qU8KloLKPJhGacXcVQVzG9U5YyuegS+005sigqFUGEB73OdcoenbSAW3jHtbe9
-         2N5Q==
+        bh=BbrLjcxucq8UgbwP3JKE4YkklXE9jxKK4CeYaVITJ/4=;
+        b=tdt/+7Rm7hYfFYB0kQ3E87nZQrVKKTWICbxWGUjCT4AEn9gaBCylm+b7HFhDpuFA86
+         LPgUZ2DOZiorpbodNh8d2ByS5uj7Tw4ijxs/OT2NQ+IVjsgbzhxK3QsjioU9GECFeQAu
+         XoD3FIgHtU0LlD++FlAcO5b+nGg79NuNCTLjINBgN/1q8kOLOrQa3Ztml66CC6TN9E2i
+         nznKy/TXMHpO1QePEgrARHueB7Jd/eQcaUYD9Vvd/0zQZL8JguymK1LQWOp8xJZNe4gQ
+         lf4EjJJr063WGApzcf5LkFrQI5AC9vQSq5UyAy03TUkNwsPb6mhJJmVSoDrjBtnoiIDZ
+         MhsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=mbPZDp/xkJGnPgN5FrjhXWQn3CwvReLDj7zmHU7fpVM=;
-        b=OebV9gypuPZsUfJfBvLWa6GZqZRTHKosPnT3Z1nTDg1hzZ4Uh9JIVpfQutBZwb3KLJ
-         FQR2bypNLS2Ed/yodBLJz9LopZDXokRBlEva0KRCpkibO9UZi2P83lRAClIYOrfWWqw9
-         c6rqMUa+AQPRQx1w8TlnteVHTFSZCZftpH4UZH6jvqVOZbO9roExV9Lh9nMD3jO53Eh1
-         TMBkZmgxMtMM4oQ4GdRYu9OqvqnKu6F8uDgr7EpoGb2SjpdkuxG5GOQ7QsLYs2JLCdER
-         /FupAVB9RUFap3IYginjBrf9RJU6HJOfnI0ZtKizXKlJM3VgoJHuvSzKeAoxKIVx96pK
-         GKog==
-X-Gm-Message-State: AOAM530xwLsxhiaEU5wNJmeu6G/IH60nSL00LTqvNw8jQw8zZfEt7UkW
-        kchy86JeHGTM4hYfV+7C79U=
-X-Google-Smtp-Source: ABdhPJwnXCQolY4RrQa1SsJmvAPCgz0c5ncMp/XmzMtNZc2mg1+lNkceGOFyikTiuyHLZLUkYTQ1sA==
-X-Received: by 2002:a17:906:3b54:: with SMTP id h20mr22119315ejf.436.1629537589196;
-        Sat, 21 Aug 2021 02:19:49 -0700 (PDT)
+        bh=BbrLjcxucq8UgbwP3JKE4YkklXE9jxKK4CeYaVITJ/4=;
+        b=CF2/wkmRzWyM+GcfQhJkvB/aw4jkpIpMTTQ3mdAOCjfTmCCPZWk4bzRTbo8o8DmgB8
+         FWPoMmmSMwSZV+zLcnquAwtpmUWmohJrpmoSNX2ARL7xUGY5/TGJ82dtzFF4UuBiholJ
+         APF4RMDS58Q0FG6QRib4NPLyPqPT2uHGtpllQJ6TG/VPuNmN82ZtCksV4a7kpCFeM6T6
+         6gzk/l+XWkDj3HVCC3YL3WXplfNGebIArhwMtU5vIVRGraGejSihz8z1lB8vFxIq0Lhr
+         jz3m2wOYpJ6g2FraqjM6pUo28rCQKxbzynStAiB0g6SKxM/pYLWN3z1xR15kBpkcQ/0+
+         cKWQ==
+X-Gm-Message-State: AOAM533lWtDzQNvqfDT6CNjTHkYe3vloAGO9nMSHugR7wbbnFefMw+FN
+        MLwSe74cSh80vTHmdizcF8q7/tOjRJUsd89o1JA=
+X-Google-Smtp-Source: ABdhPJyztVfLHDdgCbq2BBtskFQRRN0DJlhA1ZSs3RRshobNarv529xnoCHLWvw/vHMOueKN4FbUwA==
+X-Received: by 2002:a17:907:b09:: with SMTP id h9mr26199233ejl.278.1629537590632;
+        Sat, 21 Aug 2021 02:19:50 -0700 (PDT)
 Received: from honeypot.. (mob-176-243-254-204.net.vodafone.it. [176.243.254.204])
-        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.19.47
+        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.19.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Aug 2021 02:19:48 -0700 (PDT)
+        Sat, 21 Aug 2021 02:19:50 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -67,10 +67,11 @@ Cc:     Ian Rogers <irogers@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v1 02/37] libperf cpumap: improve max function
-Date:   Sat, 21 Aug 2021 11:19:08 +0200
-Message-Id: <fb79f02e7b86ea8044d563adb1e9890c906f982f.1629490974.git.rickyman7@gmail.com>
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [RFC PATCH v1 03/37] perf evlist: replace evsel__cpu_iter* functions with evsel__find_cpu
+Date:   Sat, 21 Aug 2021 11:19:09 +0200
+Message-Id: <5bfe13dd0985611285bb697987816ddc36e93e76.1629490974.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629490974.git.rickyman7@gmail.com>
 References: <cover.1629490974.git.rickyman7@gmail.com>
@@ -80,40 +81,263 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From commit 7074674e7338863e ("perf cpumap: Maintain cpumaps ordered and
-without dups"), perf_cpu_map elements are sorted in ascending order.
+Commit a8cbe40fe9f4ba49 ("perf evsel: Add iterator to iterate over events
+ordered by CPU") introduced an iterator for evsel.core.cpus inside evsel
+which is used to iterate over evlist one CPU at a time.
 
-This patch improves the perf_cpu_map__max function by returning the last
-element.
+However, this solution is hacky since it involves a mutable state in the
+evsel which is supposed to be unmodified during iteration.
+Sice checking that a CPU is within the evsel can be done quickly in
+O(logn) time, this patch replaces the aforementioned iterator with a
+simple check.
 
+Cc: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/lib/perf/cpumap.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ tools/perf/builtin-stat.c | 24 +++++++++--------
+ tools/perf/util/evlist.c  | 54 +++++++++++----------------------------
+ tools/perf/util/evlist.h  |  5 +---
+ tools/perf/util/evsel.h   |  1 -
+ 4 files changed, 30 insertions(+), 54 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index fb633272be3aaed9..80e03b2f0c60cce7 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -284,14 +284,10 @@ int perf_cpu_map__idx(struct perf_cpu_map *cpus, int cpu)
- 
- int perf_cpu_map__max(struct perf_cpu_map *map)
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 84de61795e67bbb9..62dcc001c8f0a78b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -407,7 +407,7 @@ static int read_affinity_counters(struct timespec *rs)
  {
--	int i, max = -1;
--
--	for (i = 0; i < map->nr; i++) {
--		if (map->map[i] > max)
--			max = map->map[i];
--	}
--
--	return max;
-+	if (map->nr > 0)
-+		return map->map[map->nr-1];
-+	else
-+		return -1;
+ 	struct evsel *counter;
+ 	struct affinity affinity;
+-	int i, ncpus, cpu;
++	int i, ncpus, cpu, cpu_idx;
+ 
+ 	if (all_counters_use_bpf)
+ 		return 0;
+@@ -424,13 +424,14 @@ static int read_affinity_counters(struct timespec *rs)
+ 		affinity__set(&affinity, cpu);
+ 
+ 		evlist__for_each_entry(evsel_list, counter) {
+-			if (evsel__cpu_iter_skip(counter, cpu))
++			cpu_idx = evsel__find_cpu(counter, cpu);
++			if (cpu_idx < 0)
+ 				continue;
+ 			if (evsel__is_bpf(counter))
+ 				continue;
+ 			if (!counter->err) {
+ 				counter->err = read_counter_cpu(counter, rs,
+-								counter->cpu_iter - 1);
++								cpu_idx);
+ 			}
+ 		}
+ 	}
+@@ -789,7 +790,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 	const bool forks = (argc > 0);
+ 	bool is_pipe = STAT_RECORD ? perf_stat.data.is_pipe : false;
+ 	struct affinity affinity;
+-	int i, cpu, err;
++	int i, cpu, cpu_idx, err;
+ 	bool second_pass = false;
+ 
+ 	if (forks) {
+@@ -823,7 +824,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 		affinity__set(&affinity, cpu);
+ 
+ 		evlist__for_each_entry(evsel_list, counter) {
+-			if (evsel__cpu_iter_skip(counter, cpu))
++			cpu_idx = evsel__find_cpu(counter, cpu);
++			if (cpu_idx < 0)
+ 				continue;
+ 			if (counter->reset_group || counter->errored)
+ 				continue;
+@@ -831,7 +833,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 				continue;
+ try_again:
+ 			if (create_perf_stat_counter(counter, &stat_config, &target,
+-						     counter->cpu_iter - 1) < 0) {
++						     cpu_idx) < 0) {
+ 
+ 				/*
+ 				 * Weak group failed. We cannot just undo this here
+@@ -877,22 +879,24 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
+ 			evlist__for_each_entry(evsel_list, counter) {
+ 				if (!counter->reset_group && !counter->errored)
+ 					continue;
+-				if (evsel__cpu_iter_skip_no_inc(counter, cpu))
++				cpu_idx = evsel__find_cpu(counter, cpu);
++				if (cpu_idx < 0)
+ 					continue;
+-				perf_evsel__close_cpu(&counter->core, counter->cpu_iter);
++				perf_evsel__close_cpu(&counter->core, cpu_idx);
+ 			}
+ 			/* Now reopen weak */
+ 			evlist__for_each_entry(evsel_list, counter) {
+ 				if (!counter->reset_group && !counter->errored)
+ 					continue;
+-				if (evsel__cpu_iter_skip(counter, cpu))
++				cpu_idx = evsel__find_cpu(counter, cpu);
++				if (cpu_idx < 0)
+ 					continue;
+ 				if (!counter->reset_group)
+ 					continue;
+ try_again_reset:
+ 				pr_debug2("reopening weak %s\n", evsel__name(counter));
+ 				if (create_perf_stat_counter(counter, &stat_config, &target,
+-							     counter->cpu_iter - 1) < 0) {
++							     cpu_idx) < 0) {
+ 
+ 					switch (stat_handle_error(counter)) {
+ 					case COUNTER_FATAL:
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 47581a237c7a7848..3d55d9a53b9f4875 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -341,36 +341,9 @@ static int evlist__nr_threads(struct evlist *evlist, struct evsel *evsel)
+ 		return perf_thread_map__nr(evlist->core.threads);
  }
  
- /*
+-void evlist__cpu_iter_start(struct evlist *evlist)
++int evsel__find_cpu(struct evsel *ev, int cpu)
+ {
+-	struct evsel *pos;
+-
+-	/*
+-	 * Reset the per evsel cpu_iter. This is needed because
+-	 * each evsel's cpumap may have a different index space,
+-	 * and some operations need the index to modify
+-	 * the FD xyarray (e.g. open, close)
+-	 */
+-	evlist__for_each_entry(evlist, pos)
+-		pos->cpu_iter = 0;
+-}
+-
+-bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu)
+-{
+-	if (ev->cpu_iter >= ev->core.cpus->nr)
+-		return true;
+-	if (cpu >= 0 && ev->core.cpus->map[ev->cpu_iter] != cpu)
+-		return true;
+-	return false;
+-}
+-
+-bool evsel__cpu_iter_skip(struct evsel *ev, int cpu)
+-{
+-	if (!evsel__cpu_iter_skip_no_inc(ev, cpu)) {
+-		ev->cpu_iter++;
+-		return false;
+-	}
+-	return true;
++	return perf_cpu_map__idx(ev->core.cpus, cpu);
+ }
+ 
+ static int evsel__strcmp(struct evsel *pos, char *evsel_name)
+@@ -400,7 +373,7 @@ static void __evlist__disable(struct evlist *evlist, char *evsel_name)
+ {
+ 	struct evsel *pos;
+ 	struct affinity affinity;
+-	int cpu, i, imm = 0;
++	int cpu, i, imm = 0, cpu_idx;
+ 	bool has_imm = false;
+ 
+ 	if (affinity__setup(&affinity) < 0)
+@@ -414,7 +387,8 @@ static void __evlist__disable(struct evlist *evlist, char *evsel_name)
+ 			evlist__for_each_entry(evlist, pos) {
+ 				if (evsel__strcmp(pos, evsel_name))
+ 					continue;
+-				if (evsel__cpu_iter_skip(pos, cpu))
++				cpu_idx = evsel__find_cpu(pos, cpu);
++				if (cpu_idx < 0)
+ 					continue;
+ 				if (pos->disabled || !evsel__is_group_leader(pos) || !pos->core.fd)
+ 					continue;
+@@ -422,7 +396,7 @@ static void __evlist__disable(struct evlist *evlist, char *evsel_name)
+ 					has_imm = true;
+ 				if (pos->immediate != imm)
+ 					continue;
+-				evsel__disable_cpu(pos, pos->cpu_iter - 1);
++				evsel__disable_cpu(pos, cpu_idx);
+ 			}
+ 		}
+ 		if (!has_imm)
+@@ -462,7 +436,7 @@ static void __evlist__enable(struct evlist *evlist, char *evsel_name)
+ {
+ 	struct evsel *pos;
+ 	struct affinity affinity;
+-	int cpu, i;
++	int cpu, i, cpu_idx;
+ 
+ 	if (affinity__setup(&affinity) < 0)
+ 		return;
+@@ -473,11 +447,12 @@ static void __evlist__enable(struct evlist *evlist, char *evsel_name)
+ 		evlist__for_each_entry(evlist, pos) {
+ 			if (evsel__strcmp(pos, evsel_name))
+ 				continue;
+-			if (evsel__cpu_iter_skip(pos, cpu))
++			cpu_idx = evsel__find_cpu(pos, cpu);
++			if (cpu_idx < 0)
+ 				continue;
+ 			if (!evsel__is_group_leader(pos) || !pos->core.fd)
+ 				continue;
+-			evsel__enable_cpu(pos, pos->cpu_iter - 1);
++			evsel__enable_cpu(pos, cpu_idx);
+ 		}
+ 	}
+ 	affinity__cleanup(&affinity);
+@@ -1264,7 +1239,7 @@ void evlist__close(struct evlist *evlist)
+ {
+ 	struct evsel *evsel;
+ 	struct affinity affinity;
+-	int cpu, i;
++	int cpu, i, cpu_idx;
+ 
+ 	/*
+ 	 * With perf record core.cpus is usually NULL.
+@@ -1282,9 +1257,10 @@ void evlist__close(struct evlist *evlist)
+ 		affinity__set(&affinity, cpu);
+ 
+ 		evlist__for_each_entry_reverse(evlist, evsel) {
+-			if (evsel__cpu_iter_skip(evsel, cpu))
+-			    continue;
+-			perf_evsel__close_cpu(&evsel->core, evsel->cpu_iter - 1);
++			cpu_idx = evsel__find_cpu(evsel, cpu);
++			if (cpu_idx < 0)
++				continue;
++			perf_evsel__close_cpu(&evsel->core, cpu_idx);
+ 		}
+ 	}
+ 	affinity__cleanup(&affinity);
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 5c22383489ae4905..fde893170c7ba6d2 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -310,15 +310,12 @@ void evlist__to_front(struct evlist *evlist, struct evsel *move_evsel);
+ 	__evlist__for_each_entry_safe(&(evlist)->core.entries, tmp, evsel)
+ 
+ #define evlist__for_each_cpu(evlist, index, cpu)	\
+-	evlist__cpu_iter_start(evlist);			\
+ 	perf_cpu_map__for_each_cpu (cpu, index, (evlist)->core.all_cpus)
+ 
+ struct evsel *evlist__get_tracking_event(struct evlist *evlist);
+ void evlist__set_tracking_event(struct evlist *evlist, struct evsel *tracking_evsel);
+ 
+-void evlist__cpu_iter_start(struct evlist *evlist);
+-bool evsel__cpu_iter_skip(struct evsel *ev, int cpu);
+-bool evsel__cpu_iter_skip_no_inc(struct evsel *ev, int cpu);
++int evsel__find_cpu(struct evsel *ev, int cpu);
+ 
+ struct evsel *evlist__find_evsel_by_str(struct evlist *evlist, const char *str);
+ 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 80383096d51c5f00..eabccce406886320 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -119,7 +119,6 @@ struct evsel {
+ 	bool			errored;
+ 	struct hashmap		*per_pkg_mask;
+ 	int			err;
+-	int			cpu_iter;
+ 	struct {
+ 		evsel__sb_cb_t	*cb;
+ 		void		*data;
 -- 
 2.31.1
 
