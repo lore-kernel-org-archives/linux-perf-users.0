@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BB7C4338F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF940C432BE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADED61186
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CC961186
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234077AbhHUJVQ (ORCPT
+        id S234150AbhHUJVQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Sat, 21 Aug 2021 05:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34094 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234134AbhHUJUs (ORCPT
+        with ESMTP id S234166AbhHUJUs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Sat, 21 Aug 2021 05:20:48 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B729C0612E7;
-        Sat, 21 Aug 2021 02:20:02 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id w5so25224867ejq.2;
-        Sat, 21 Aug 2021 02:20:01 -0700 (PDT)
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47953C06129D;
+        Sat, 21 Aug 2021 02:20:03 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id r19so17598085eds.13;
+        Sat, 21 Aug 2021 02:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nYCZWFJIc++fa6HHlc4YfaHaR0UFJ1cN64ckPkTe/mE=;
-        b=YnreBb68LiGNZPOjvwGEyR6jPj/i+sVhr1Z7zn2xSsRcwjbhgJN+AXLDnUEbfIHyJK
-         Mm+RFqaxbHNsKJbj0rP/6inIPRCoJInpdOcV3tHEWWaV/BiywMyIBlG+TbIjp0e3FaLb
-         VUZ+twcHjZnYLHiD6CQxRVjvFFct6zJkUFiX5T8bX6LTPNngQJHhdq+wNlApAYxA8BPn
-         ckEHKjIBcA51FJG9ODsna2tkPVCNvsD1IA3Tx8igZJ8stXn5tvF+CJOEU2viagGGigkT
-         l5iEjyQ3ZzYaLfkfwjaKjs08ScoC4hC4ClAvWenZfPwd5nZ/J8dffIDweqXnccbMYskQ
-         oXzg==
+        bh=KwlR07ut3cqVZEyAKALk9RBIbvWirqxmVWSTPfvdu3o=;
+        b=QsLXNogpiol/dymbdXO361CG8GbHjA0WP8xm+E1uGPSU/GjZ/vgkJ2pV0bv6XAy4T4
+         7QeXOlMUjeocaa3f42Q0WqBgERiWgVjzTiYgCfjPfhveSdgKuEoBluG0ienHIDXFOKrC
+         TPeyoNKHs5skJ8tH/qG7Pm0XXGSFnxG5FQWnIbK6O1rz0Q2bNLopdrwkVZtlyNLbOaEY
+         sQAJ1obJBGks6RaHuNMleqraIraSPRoSbW5c2xXmMHZxf4NcBVpi+lqBihCzwdMRAvwk
+         pL5hMhzzHH/GLGglDrNA/jr3b/Lw9ZGGNiKQYrdc01K+AV8CARi+3ND+5O2fGgYNzYZ1
+         UcOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nYCZWFJIc++fa6HHlc4YfaHaR0UFJ1cN64ckPkTe/mE=;
-        b=q8lXm4qas2wK8DfdtdpE/mUqEcioWbeZDFFPneJGNbWOIHZTkPmY3J3xiD+cHzZMVC
-         f172eznvD9ZAqpHrBX2BFIlFvn24FOotrBuT71zLoo3OjtrJ5h8vo0ufKzUsmtRPvSPE
-         CRAxZh/7nJUVO6FEdlyAXB1DzHOxO3xiUUp9VDAL532i0/Etbxv067DGUsb7k3tNqcrJ
-         B0/IMvpVQFl7vAcuu27Rj3OU0OrbOIL3lYujWa7dXKAX1WuOI1M5tdXZHudU+ibHnsFn
-         Cv2/BRP20l0SphLDHxS6TbhXMvl5xZSYPh+zxtxL4xmIS2PKYuDCHdNE4lVg7KFaxBuO
-         IVlQ==
-X-Gm-Message-State: AOAM530V56Nya0ecnwCkTQheSOvbMC8rOmbS73OXzZyD66rIwheGroOs
-        gt+0I4d32aziUmlMc+1XtXY=
-X-Google-Smtp-Source: ABdhPJyce9hWXTkxRNdvnxtjxseU74yk9B1zgj+Ux05n1XUE6rDGvaA9arGsiHRn6W4IjKsc0RnpfQ==
-X-Received: by 2002:a17:906:408d:: with SMTP id u13mr26070763ejj.344.1629537600562;
-        Sat, 21 Aug 2021 02:20:00 -0700 (PDT)
+        bh=KwlR07ut3cqVZEyAKALk9RBIbvWirqxmVWSTPfvdu3o=;
+        b=S04e1UQ9FzVh7ewqi3xbdng/9wBexg+i0hm+DSb/Vlj13MDeJ/ZsXSEjfiu7OchEaE
+         /BGirC+oMnQU1utWFoVReuzh59NvK7KatZxJV+QFxeJ4owDhQZ8Wh8+scWMq7f9jKdYZ
+         +3+0bG7d/wU83uIEY/VZmXWHUKnuDrSJFEuOhaS4xnU7t4gIn97fV5uxsNJHUqhfbP4w
+         09fwtmkSm94TwRhp/akKP2ZEU+OCLioPmD4dukwW58bRoIlGN1lA7T73tl8JFMZHfcoi
+         bQKU0Wo5Pd5hW12Fib/yzWLuJ/pKWPd7MXkZr49H3DtVhBxWW4IEa9adQzunwmS/Gyvb
+         g3oA==
+X-Gm-Message-State: AOAM530O3LxJ5L/oz31RcR0R//Z5l6seSayCzC2OONiYZFJNXXDecYXj
+        D36QycWuBEiWhQpFjmq/06A=
+X-Google-Smtp-Source: ABdhPJxrV3Ysw75iDG3KpLGT2qVE0SchiiZ1Q9MgRlbXXOR1V9j9M1AQI7VvO3Oy29GWH4teQQvEQg==
+X-Received: by 2002:a05:6402:84e:: with SMTP id b14mr26513634edz.227.1629537601871;
+        Sat, 21 Aug 2021 02:20:01 -0700 (PDT)
 Received: from honeypot.. (mob-176-243-254-204.net.vodafone.it. [176.243.254.204])
-        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.19.59
+        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Aug 2021 02:20:00 -0700 (PDT)
+        Sat, 21 Aug 2021 02:20:01 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v1 10/37] perf evlist: add multithreading helper
-Date:   Sat, 21 Aug 2021 11:19:16 +0200
-Message-Id: <34d8ec75acb56fbbbef08fee8be8404015e682cd.1629490974.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v1 11/37] perf evlist: add multithreading to evlist__disable
+Date:   Sat, 21 Aug 2021 11:19:17 +0200
+Message-Id: <7dd234195436b7f6db850719292f6d9d63fdd6ff.1629490974.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629490974.git.rickyman7@gmail.com>
 References: <cover.1629490974.git.rickyman7@gmail.com>
@@ -80,185 +80,90 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch adds the function evlist__for_each_evsel_cpu, which executes
-the given function on each evsel, for each cpu.
-
-If perf_singlethreaded is unset, this function will use a workqueue to
-execute the function.
-
-This helper function will be used in the following patches.
+In this patch, evlist__for_each_evsel_cpu is used in evlist__disable to
+allow it to run in parallel.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/util/evlist.c | 117 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evlist.h |  14 +++++
- 2 files changed, 131 insertions(+)
+ tools/perf/util/evlist.c | 57 +++++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 27 deletions(-)
 
 diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 3d55d9a53b9f4875..f9fdbd85a163ee97 100644
+index f9fdbd85a163ee97..5c82246813c51c51 100644
 --- a/tools/perf/util/evlist.c
 +++ b/tools/perf/util/evlist.c
-@@ -27,6 +27,8 @@
- #include "util/perf_api_probe.h"
- #include "util/evsel_fprintf.h"
- #include "util/evlist-hybrid.h"
-+#include "util/util.h"
-+#include "util/workqueue/workqueue.h"
- #include <signal.h>
- #include <unistd.h>
- #include <sched.h>
-@@ -41,6 +43,7 @@
- #include <sys/prctl.h>
+@@ -486,41 +486,44 @@ int evlist__for_each_evsel_cpu(struct evlist *evlist, evsel__cpu_func func, void
  
- #include <linux/bitops.h>
-+#include <linux/kernel.h>
- #include <linux/hash.h>
- #include <linux/log2.h>
- #include <linux/err.h>
-@@ -369,6 +372,120 @@ static int evlist__is_enabled(struct evlist *evlist)
- 	return false;
  }
  
-+struct evlist_work {
-+	struct work_struct work;
-+	struct evlist *evlist;
-+	int cpu;
-+	evsel__cpu_func func;
-+	void *args;
-+	int ret;
++struct evlist_disable_args {
++	char *evsel_name;
++	int imm;
 +};
 +
-+static void evlist__for_each_evsel_cpu_thread_func(struct work_struct *_work)
++static int __evlist__disable_evsel_cpu_func(struct evlist *evlist __maybe_unused,
++					struct evsel *pos, int cpu, void *_args)
 +{
-+	struct evlist_work *work = container_of(_work, struct evlist_work, work);
-+	int cpu_idx, ret, err = 0;
-+	struct evsel *pos;
++	int ret = 0;
++	struct evlist_disable_args *args = _args;
 +
-+	work->ret = 0;
-+	evlist__for_each_entry(work->evlist, pos) {
-+		cpu_idx = evsel__find_cpu(pos, work->cpu);
-+		if (cpu_idx < 0)
-+			continue;
-+		ret = work->func(work->evlist, pos, cpu_idx, work->args);
-+		if (ret) {
-+			work->ret = ret;
-+			if (err < 0)		// error
-+				return;
-+		}
-+	}
-+}
-+
-+static int evlist__for_each_evsel_cpu_multithreaded(struct evlist *evlist,
-+					evsel__cpu_func func, void *args)
-+{
-+	int i, cpu, ret;
-+	struct evlist_work *works;
-+	char errbuf[WORKQUEUE_STRERR_BUFSIZE];
-+
-+	works = calloc(perf_cpu_map__nr(evlist->core.all_cpus), sizeof(*works));
-+	perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpus) {
-+		init_work(&works[i].work);
-+		works[i].evlist = evlist;
-+		works[i].work.func = evlist__for_each_evsel_cpu_thread_func;
-+		works[i].cpu = cpu;
-+		works[i].func = func;
-+		works[i].args = args;
-+		works[i].ret = 0;
-+
-+		ret = schedule_work_on(cpu, &works[i].work);
-+		if (ret) {
-+			workqueue_strerror(global_wq, ret, errbuf, sizeof(errbuf));
-+			pr_debug("schedule_work: %s\n", errbuf);
-+			break;
-+		}
-+	}
-+
-+	ret = flush_scheduled_work();
-+	if (ret) {
-+		workqueue_strerror(global_wq, ret, errbuf, sizeof(errbuf));
-+		pr_debug("flush_scheduled_work: %s\n", errbuf);
-+		goto out;
-+	}
-+
-+	perf_cpu_map__for_each_cpu(cpu, i, evlist->core.all_cpus) {
-+		if (works[i].ret) {
-+			ret = works[i].ret;
-+			if (works[i].ret < 0)		// error
-+				goto out;
-+		}
-+	}
-+out:
-+	free(works);
++	if (evsel__strcmp(pos, args->evsel_name))
++		return 0;
++	if (pos->disabled || !evsel__is_group_leader(pos) || !pos->core.fd)
++		return 0;
++	if (pos->immediate)
++		ret = 1;
++	if (pos->immediate != args->imm)
++		return ret;
++	evsel__disable_cpu(pos, cpu);
 +
 +	return ret;
 +}
 +
-+static int evlist__for_each_evsel_cpu_singlethreaded(struct evlist *evlist,
-+					evsel__cpu_func func, void *args)
-+{
-+	int ret, err = 0, i, cpu, cpu_idx;
-+	struct affinity affinity;
-+	struct evsel *pos;
-+
-+	if (affinity__setup(&affinity) < 0)
-+		return -1;
-+
-+	evlist__for_each_cpu(evlist, i, cpu) {
-+		affinity__set(&affinity, cpu);
-+
-+		evlist__for_each_entry(evlist, pos) {
-+			cpu_idx = evsel__find_cpu(pos, cpu);
-+			if (cpu_idx < 0)
-+				continue;
-+			ret = func(evlist, pos, cpu_idx, args);
-+			if (ret) {
-+				err = ret;
-+				if (err < 0)		// error
-+					goto out;
-+			}
-+		}
-+	}
-+
-+out:
-+	affinity__cleanup(&affinity);
-+	return err;
-+}
-+
-+int evlist__for_each_evsel_cpu(struct evlist *evlist, evsel__cpu_func func, void *args)
-+{
-+	if (perf_singlethreaded)
-+		return evlist__for_each_evsel_cpu_singlethreaded(evlist, func, args);
-+	else
-+		return evlist__for_each_evsel_cpu_multithreaded(evlist, func, args);
-+
-+}
 +
  static void __evlist__disable(struct evlist *evlist, char *evsel_name)
  {
  	struct evsel *pos;
-diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-index fde893170c7ba6d2..5f24a45d4e3cf30a 100644
---- a/tools/perf/util/evlist.h
-+++ b/tools/perf/util/evlist.h
-@@ -363,4 +363,18 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
+-	struct affinity affinity;
+-	int cpu, i, imm = 0, cpu_idx;
+-	bool has_imm = false;
+-
+-	if (affinity__setup(&affinity) < 0)
+-		return;
++	int ret;
++	struct evlist_disable_args args = { .evsel_name = evsel_name };
  
- int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
- void evlist__check_mem_load_aux(struct evlist *evlist);
-+
-+/**
-+ * evsel__cpu_func - function to run on each evsel for each cpu
-+ * @evlist: the parent evlist
-+ * @evsel: the processed evsel
-+ * @cpu: index of the cpu in evsel->core.cpus
-+ * @args: additional custom arguments
-+ *
-+ * Returns:
-+ * A negative value is considered as an error.
-+ * A positive value will be propagated to evlist__for_each_evsel_cpu.
-+ */
-+typedef int (*evsel__cpu_func)(struct evlist *evlist, struct evsel *evsel, int cpu, void *args);
-+int evlist__for_each_evsel_cpu(struct evlist *evlist, evsel__cpu_func func, void *args);
- #endif /* __PERF_EVLIST_H */
+ 	/* Disable 'immediate' events last */
+-	for (imm = 0; imm <= 1; imm++) {
+-		evlist__for_each_cpu(evlist, i, cpu) {
+-			affinity__set(&affinity, cpu);
+-
+-			evlist__for_each_entry(evlist, pos) {
+-				if (evsel__strcmp(pos, evsel_name))
+-					continue;
+-				cpu_idx = evsel__find_cpu(pos, cpu);
+-				if (cpu_idx < 0)
+-					continue;
+-				if (pos->disabled || !evsel__is_group_leader(pos) || !pos->core.fd)
+-					continue;
+-				if (pos->immediate)
+-					has_imm = true;
+-				if (pos->immediate != imm)
+-					continue;
+-				evsel__disable_cpu(pos, cpu_idx);
+-			}
+-		}
+-		if (!has_imm)
++	for (args.imm = 0; args.imm <= 1; args.imm++) {
++		ret = evlist__for_each_evsel_cpu(evlist, __evlist__disable_evsel_cpu_func, &args);
++		if (!ret)	// does not have immediate evsels
+ 			break;
+ 	}
+ 
+-	affinity__cleanup(&affinity);
+ 	evlist__for_each_entry(evlist, pos) {
+ 		if (evsel__strcmp(pos, evsel_name))
+ 			continue;
 -- 
 2.31.1
 
