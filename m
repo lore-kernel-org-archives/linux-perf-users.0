@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2857C4338F
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0123C432BE
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB3B61101
-	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9DDD61209
+	for <linux-perf-users@archiver.kernel.org>; Sat, 21 Aug 2021 09:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233851AbhHUJVT (ORCPT
+        id S234216AbhHUJV0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 21 Aug 2021 05:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34154 "EHLO
+        Sat, 21 Aug 2021 05:21:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234216AbhHUJUv (ORCPT
+        with ESMTP id S234295AbhHUJUw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 21 Aug 2021 05:20:51 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C733AC0612A3;
-        Sat, 21 Aug 2021 02:20:05 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id g21so17634290edw.4;
-        Sat, 21 Aug 2021 02:20:05 -0700 (PDT)
+        Sat, 21 Aug 2021 05:20:52 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408A5C0612AC;
+        Sat, 21 Aug 2021 02:20:07 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id h9so25216803ejs.4;
+        Sat, 21 Aug 2021 02:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=GdLOUQfMiSvyr/krR4mQnx8RhZT43Ru8R5OO/VTr+4g=;
-        b=oex+PMhEWJc4qwt8Ggjweiaj75IMXWNcxKWGsglVkLTpLuRsDVhhn9Wih1vYhRL6uf
-         LAC+2aZENq3Dtc+KwR9Lt7gGQSGV+pDfGS8r+J3PeoTRCvpV5XXrjquIgDFvqAeMrAS3
-         9oiakVOvaZiFkni2m8E1FK2cu60iW+4wLCIBem/tQVDSffnmj8La6mCuj/UftextcpKu
-         LAVtX8rKzltLdnPy4zAtpMvZb9yJTWhkmOdSc3zZKkbXO1IZ+Wh9BY/CXeoUfqdub1VJ
-         zgpzgEUvNjZcdKNbCfyJI/ZBaRChM35Hh2Ls4pfU0hWowUWGSlInw6IjIqt2ovkU5IbJ
-         tnDg==
+        bh=TQW9vFf14CSQ8/UctEQPnfJzPFIegK8ITMd5pacLu0s=;
+        b=oPSURToHwIk6vpDnWikcvdiqa3NRcqB5AjozmrGNhz5bHbGqpeygl/kT/OUJcVSx60
+         8RaU/BSf0v4e317mZGJ+rBF71qk1Gvd6Vfqsu3Nt3AW4IlX9IjNMGx9/8TeqVMHUxNwv
+         4XKpBPmyQqWC4FihySXcEAO0lyt5Ym8DzU9ESlL63+KJyisG4VQtWJKSOQ1NWL6OuKeE
+         05/lNgfDdCmTzL3tsDg73k+gLEF0X4stcJUg7TxWDxS5VEcoOPAse9qiZ+5nawd9KzDx
+         +qDZBj/2OggNBISVQAdHuwUsJZA7HfRa9iuIUBJs13N9+3XBd+nnoh9eAcv9UqFF2yxP
+         crTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GdLOUQfMiSvyr/krR4mQnx8RhZT43Ru8R5OO/VTr+4g=;
-        b=TS3NuNSexre3XEqxfRLfyX0xuqC88AAW3NAr3kwuTSl4k5Yw6DWNTPZlj+3+2b1RMK
-         IneIbaVrOXjCK29Whe28ttRK4pZLuVl/ZDYz6SVXiydHw6FbWhOhO1JwEh0Q9ZaEhR6X
-         9XbY8A+Tn8ryMBcsDdE9aIR6RBMG//yRGVBrmTvS3c9GUrJ/zfjxr1XGg7bclyOKG0Uy
-         dAQcYr2jHeqUjJg2mOcSRk1Do0qZclgZ9NSDPso3s4HSWhz85y8sLR0a6OiKZhHgs3h9
-         nk480nE0eQ05nVGYY7+wsT6mDIF5Il5P7baEDdBHalr4C2h+OabV2ie05cQYFxUocVUO
-         ONbQ==
-X-Gm-Message-State: AOAM532mcYlrkj43o7cnxBryE6c/JQsOoLQqww/CiJGNbs5osflqA4MA
-        /WGlHeU75PmFoN/mhu439WI=
-X-Google-Smtp-Source: ABdhPJwv43GnPtCNdOqMO5P90nO8K3zv3Bm0H/mwUHij9kQ5Xq0T+kmsYbhkxKklIBPKKLg9Oq7N8Q==
-X-Received: by 2002:aa7:ce87:: with SMTP id y7mr26928301edv.306.1629537604387;
-        Sat, 21 Aug 2021 02:20:04 -0700 (PDT)
+        bh=TQW9vFf14CSQ8/UctEQPnfJzPFIegK8ITMd5pacLu0s=;
+        b=ZV+eDjWT2ZCNaQ+t/xq1H7RRdmxd/UjqSgf0prM8BMYlq9dbWYPtgJczh8Wunt0kZS
+         ZPJz/XkjGosjaPcJmLmcIY0jVcXk9bCt5XIwcCMYp3TGhMy8z3VZ+w5kfILeE0efi/+k
+         +VD0IG5rid5N/2/jDvI7RlUDqjeDwqlvcfLcEHVpXYrkgGKZzpRRmmOEzmVAZ+JKWKLk
+         NAhG4zfFenbOM7Vkm6Yj38Z+1iipGblezFuYtUoJSfhG8/hz4oa0tdwsHcfR4ImoPi2a
+         SuTDAGglUYMV8j4TKvx9/4tuCbXn9fQfsDFReWd+NyBee3awHhIihT0gB/DDl/1PyW4p
+         gSCA==
+X-Gm-Message-State: AOAM533E5rwMd/uSKJa5QIAwgw0UEtwuZQppJofPNA1awOiQrK+Ou56H
+        R9RV1+rvUE5yd8BCENgGxko=
+X-Google-Smtp-Source: ABdhPJzIRHMGLNKiGZP2u9AbH/A1Whdva6pfc1wbHv+YzGJR33ApWIVgLpHZjiauuoji7WBa0ybsPQ==
+X-Received: by 2002:a17:906:eda3:: with SMTP id sa3mr26444608ejb.451.1629537605773;
+        Sat, 21 Aug 2021 02:20:05 -0700 (PDT)
 Received: from honeypot.. (mob-176-243-254-204.net.vodafone.it. [176.243.254.204])
-        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.03
+        by smtp.googlemail.com with ESMTPSA id a25sm4003878ejv.91.2021.08.21.02.20.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Aug 2021 02:20:04 -0700 (PDT)
+        Sat, 21 Aug 2021 02:20:05 -0700 (PDT)
 From:   Riccardo Mancini <rickyman7@gmail.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
@@ -68,9 +68,9 @@ Cc:     Ian Rogers <irogers@google.com>,
         Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Riccardo Mancini <rickyman7@gmail.com>
-Subject: [RFC PATCH v1 13/37] perf evlist: add multithreading to evlist__close
-Date:   Sat, 21 Aug 2021 11:19:19 +0200
-Message-Id: <5473d8d537e30b3fd5333038dc5fdd25ba027d06.1629490974.git.rickyman7@gmail.com>
+Subject: [RFC PATCH v1 14/37] perf evsel: remove retry_sample_id goto label
+Date:   Sat, 21 Aug 2021 11:19:20 +0200
+Message-Id: <340af0d03408d6621fd9c742e311db18b3585b3b.1629490974.git.rickyman7@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <cover.1629490974.git.rickyman7@gmail.com>
 References: <cover.1629490974.git.rickyman7@gmail.com>
@@ -80,59 +80,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In this patch, evlist__for_each_evsel_cpu is used in evlist__close to
-allow it to run in parallel.
+As far as I can tell, there is no good reason, apart from optimization
+to have the retry_sample_id separate from fallback_missing_features.
+Probably, this label was added to avoid reapplying patches for missing
+features that had already been applied.
+However, missing features that have been added later have not used this
+optimization, always jumping to fallback_missing_features and reapplying
+all missing features.
+
+This patch removes that label, replacing it with
+fallback_missing_features.
 
 Signed-off-by: Riccardo Mancini <rickyman7@gmail.com>
 ---
- tools/perf/util/evlist.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+ tools/perf/util/evsel.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index fbe2d6ed8ecc8f21..f0a839107e8849bf 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -1340,11 +1340,17 @@ void evlist__set_selected(struct evlist *evlist, struct evsel *evsel)
- 	evlist->selected = evsel;
- }
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index f61e5dd53f5d2859..7b4bb3229a16524e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1825,7 +1825,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		evsel->core.attr.bpf_event = 0;
+ 	if (perf_missing_features.branch_hw_idx)
+ 		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_HW_INDEX;
+-retry_sample_id:
+ 	if (perf_missing_features.sample_id_all)
+ 		evsel->core.attr.sample_id_all = 0;
  
-+static int __evlist__close_evsel_cpu_func(struct evlist *evlist __maybe_unused,
-+					struct evsel *evsel, int cpu,
-+					void *args __maybe_unused)
-+{
-+	perf_evsel__close_cpu(&evsel->core, cpu);
-+	return 0;
-+}
-+
- void evlist__close(struct evlist *evlist)
- {
- 	struct evsel *evsel;
--	struct affinity affinity;
--	int cpu, i, cpu_idx;
- 
- 	/*
- 	 * With perf record core.cpus is usually NULL.
-@@ -1356,19 +1362,8 @@ void evlist__close(struct evlist *evlist)
- 		return;
- 	}
- 
--	if (affinity__setup(&affinity) < 0)
--		return;
--	evlist__for_each_cpu(evlist, i, cpu) {
--		affinity__set(&affinity, cpu);
-+	evlist__for_each_evsel_cpu(evlist, __evlist__close_evsel_cpu_func, NULL);
- 
--		evlist__for_each_entry_reverse(evlist, evsel) {
--			cpu_idx = evsel__find_cpu(evsel, cpu);
--			if (cpu_idx < 0)
--				continue;
--			perf_evsel__close_cpu(&evsel->core, cpu_idx);
--		}
--	}
--	affinity__cleanup(&affinity);
- 	evlist__for_each_entry_reverse(evlist, evsel) {
- 		perf_evsel__free_fd(&evsel->core);
- 		perf_evsel__free_id(&evsel->core);
+@@ -2006,7 +2005,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 	} else if (!perf_missing_features.sample_id_all) {
+ 		perf_missing_features.sample_id_all = true;
+ 		pr_debug2_peo("switching off sample_id_all\n");
+-		goto retry_sample_id;
++		goto fallback_missing_features;
+ 	} else if (!perf_missing_features.lbr_flags &&
+ 			(evsel->core.attr.branch_sample_type &
+ 			 (PERF_SAMPLE_BRANCH_NO_CYCLES |
 -- 
 2.31.1
 
