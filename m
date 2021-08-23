@@ -2,189 +2,153 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-16.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CD8C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 13:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 135EAC4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 13:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37DE761178
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 13:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8159611C8
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 13:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbhHWNkW (ORCPT
+        id S229505AbhHWNmv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Aug 2021 09:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47090 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229580AbhHWNkW (ORCPT
+        Mon, 23 Aug 2021 09:42:51 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:14314 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229477AbhHWNmv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Aug 2021 09:40:22 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0E9C061575;
-        Mon, 23 Aug 2021 06:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=vDAwDNrs70PDBIgh6tM7DTK9SFNnj5FHLm+1BK/qmTA=; b=j3PPjl5xKUWP3vBHITYYskIxm
-        9iGIA8RlWfQV0i5U4EVe61Cd68byE2j/Te/ishZPvEBDwM9iKqXwhC7ZqGdXhxeUz+vP5X8kOJu55
-        fe6k/1ZBBysMwya/j49spaXzoniVoLgDdNPqxtpBydMrAFmP9H3vfLVIj6cLiG+NymWlJb8vot5cJ
-        GFrmGwSJE5weKoRTeBO9KhvH8OncxES6OEd3oMKUKD5EL8kHMrnNP8O/t5PAiP/sWrNCCvwBIyLpw
-        VgxvPcalVUgyPr1oaJR1LtObLCPOEar1FXKUrMbkRpGgIPW8nEcoeTvn7ug4KkYgJMswdJDK05lta
-        KD+Ls+yEA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47582)
-        by pandora.armlinux.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1mIAAc-00033W-FT; Mon, 23 Aug 2021 14:39:22 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1mIAAY-0006Dc-ER; Mon, 23 Aug 2021 14:39:18 +0100
-Date:   Mon, 23 Aug 2021 14:39:18 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Li Huafei <lihuafei1@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>, coresight@lists.linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] perf auxtrace arm: Support
- compat_auxtrace_mmap__{read_head|write_tail}
-Message-ID: <20210823133918.GP22278@shell.armlinux.org.uk>
-References: <20210809112727.596876-1-leo.yan@linaro.org>
- <20210809112727.596876-4-leo.yan@linaro.org>
- <6ce4057a-57cf-501d-6449-2069cd00ba57@arm.com>
- <20210823133043.GF100516@leoy-ThinkPad-X240s>
+        Mon, 23 Aug 2021 09:42:51 -0400
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4GtYLm6chvz88Dq;
+        Mon, 23 Aug 2021 21:41:52 +0800 (CST)
+Received: from dggema753-chm.china.huawei.com (10.1.198.195) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2176.2; Mon, 23 Aug 2021 21:42:05 +0800
+Received: from ubuntu1804.huawei.com (10.67.174.174) by
+ dggema753-chm.china.huawei.com (10.1.198.195) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2176.2; Mon, 23 Aug 2021 21:42:05 +0800
+From:   Li Huafei <lihuafei1@huawei.com>
+To:     <acme@kernel.org>
+CC:     <hekuang@huawei.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@redhat.com>, <namhyung@kernel.org>,
+        <zhangjinhao2@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] perf unwind: Do not overwrite FEATURE_CHECK_LDFLAGS-libunwind-{x86,aarch64}
+Date:   Mon, 23 Aug 2021 21:43:40 +0800
+Message-ID: <20210823134340.60955-1-lihuafei1@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210823133043.GF100516@leoy-ThinkPad-X240s>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain
+X-Originating-IP: [10.67.174.174]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggema753-chm.china.huawei.com (10.1.198.195)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 09:30:43PM +0800, Leo Yan wrote:
-> Hi James,
-> 
-> On Mon, Aug 23, 2021 at 01:23:42PM +0100, James Clark wrote:
-> > 
-> > 
-> > On 09/08/2021 12:27, Leo Yan wrote:
-> > > When the tool runs with compat mode on Arm platform, the kernel is in
-> > > 64-bit mode and user space is in 32-bit mode; the user space can use
-> > > instructions "ldrd" and "strd" for 64-bit value atomicity.
-> > > 
-> > > This patch adds compat_auxtrace_mmap__{read_head|write_tail} for arm
-> > > building, it uses "ldrd" and "strd" instructions to ensure accessing
-> > > atomicity for aux head and tail.  The file arch/arm/util/auxtrace.c is
-> > > built for arm and arm64 building, these two functions are not needed for
-> > > arm64, so check the compiler macro "__arm__" to only include them for
-> > > arm building.
-> > > 
-> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > > ---
-> > >  tools/perf/arch/arm/util/auxtrace.c | 32 +++++++++++++++++++++++++++++
-> > >  1 file changed, 32 insertions(+)
-> > > 
-> > > diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-> > > index b187bddbd01a..c7c7ec0812d5 100644
-> > > --- a/tools/perf/arch/arm/util/auxtrace.c
-> > > +++ b/tools/perf/arch/arm/util/auxtrace.c
-> > > @@ -107,3 +107,35 @@ struct auxtrace_record
-> > >  	*err = 0;
-> > >  	return NULL;
-> > >  }
-> > > +
-> > > +#if defined(__arm__)
-> > > +u64 compat_auxtrace_mmap__read_head(struct auxtrace_mmap *mm)
-> > > +{
-> > > +	struct perf_event_mmap_page *pc = mm->userpg;
-> > > +	u64 result;
-> > > +
-> > > +	__asm__ __volatile__(
-> > > +"	ldrd    %0, %H0, [%1]"
-> > > +	: "=&r" (result)
-> > > +	: "r" (&pc->aux_head), "Qo" (pc->aux_head)
-> > > +	);
-> > > +
-> > > +	return result;
-> > > +}
-> > 
-> > Hi Leo,
-> > 
-> > I see that this is a duplicate of the atomic read in arch/arm/include/asm/atomic.h
-> 
-> Exactly.
-> 
-> > For x86, it's possible to include tools/include/asm/atomic.h, but that doesn't
-> > include arch/arm/include/asm/atomic.h and there are some other #ifdefs that might
-> > make it not so easy for Arm. Just wondering if you considered trying to include the
-> > existing one? Or decided that it was easier to duplicate it?
-> 
-> Good finding!
-> 
-> With you reminding, I recognized that the atomic operations for
-> arm/arm64 should be improved for user space program.  So far, perf tool
-> simply uses the compiler's atomic implementations (from
-> asm-generic/atomic-gcc.h) for arm/arm64; but for a more reliable
-> implementation, I think we should improve the user space program with
-> architecture's atomic instructions.
+When setting LIBUNWIND_DIR, we first set
 
-No we should not. Sometimes, what's in the kernel is for the kernel's
-use only, and not for userspace's use. That may be because what works
-in kernel space does not work in userspace.
+ FEATURE_CHECK_LDFLAGS-libunwind-{aarch64,x86} = -L$(LIBUNWIND_DIR)/lib.
 
-For example, the ARMv6+ atomic operations can be executed in userspace
-_provided_ they are only used on memory which has an exclusive monitor.
-They can't be used on anything that is not "normal memory". Prior to
-ARMv6, the atomic operations rely on disabling interrupts. That
-facility is simply not available to userspace, so these must not be
-made available to userspace.
+After commit 5c4d7c82c0dc ("perf unwind: Do not put libunwind-{x86,aarch64}
+in FEATURE_TESTS_BASIC"), FEATURE_CHECK_LDFLAGS-libunwind-{x86,aarch64} is
+overwritten. As a result, the remote libunwind libraries cannot be searched
+from $(LIBUNWIND_DIR)/lib directory during feature check tests. Fix it with
+variable appending.
 
-The same applies to bitops.
+Before this patch:
 
-We've been here before in the past, when the kernel headers were not
-separated from the user ABI headers, and people would write programs
-that included e.g. bitops.h on x86 because they had optimised bitops
-code. This made the userspace programs very non-portable - without
-re-implementing userspace versions of this stuff in every userspace
-program that did this stuff.
+ perf$ make VF=1 LIBUNWIND_DIR=/opt/libunwind_aarch64
+  BUILD:   Doing 'make -j16' parallel build
+ <SNIP>
+ ...
+ ...                    libopencsd: [ OFF ]
+ ...                 libunwind-x86: [ OFF ]
+ ...              libunwind-x86_64: [ OFF ]
+ ...                 libunwind-arm: [ OFF ]
+ ...             libunwind-aarch64: [ OFF ]
+ ...         libunwind-debug-frame: [ OFF ]
+ ...     libunwind-debug-frame-arm: [ OFF ]
+ ... libunwind-debug-frame-aarch64: [ OFF ]
+ ...                           cxx: [ OFF ]
+ <SNIP>
 
-So no, having experienced the effects of this kind of thing in the
-past, the kernel should _not_ export architecture specific code in
-header files to userspace.
+ perf$ cat ../build/feature/test-libunwind-aarch64.make.output
+ /usr/bin/ld: cannot find -lunwind-aarch64
+ /usr/bin/ld: cannot find -lunwind-aarch64
+ collect2: error: ld returned 1 exit status
 
-Also, it should be pointed out that by doing so, you create a licensing
-issue. If the code is GPLv2, and you build your program such that it
-incorporates GPLv2 code, then if the userspace program is not GPLv2
-compliant, you have a licensing problem, and in effect the program
-can be distributed.
+After this patch:
 
-Please do not go down this route.
+ perf$ make VF=1 LIBUNWIND_DIR=/opt/libunwind_aarch64
+  BUILD:   Doing 'make -j16' parallel build
+ <SNIP>
+ ...                    libopencsd: [ OFF ]
+ ...                 libunwind-x86: [ OFF ]
+ ...              libunwind-x86_64: [ OFF ]
+ ...                 libunwind-arm: [ OFF ]
+ ...             libunwind-aarch64: [ on  ]
+ ...         libunwind-debug-frame: [ OFF ]
+ ...     libunwind-debug-frame-arm: [ OFF ]
+ ... libunwind-debug-frame-aarch64: [ OFF ]
+ ...                           cxx: [ OFF ]
+ <SNIP>
 
+ perf$ cat ../build/feature/test-libunwind-aarch64.make.output
+
+ perf$ ldd ./perf
+        linux-vdso.so.1 (0x00007ffdf07da000)
+        libpthread.so.0 => /lib/x86_64-linux-gnu/libpthread.so.0 (0x00007f30953dc000)
+        librt.so.1 => /lib/x86_64-linux-gnu/librt.so.1 (0x00007f30951d4000)
+        libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f3094e36000)
+        libdl.so.2 => /lib/x86_64-linux-gnu/libdl.so.2 (0x00007f3094c32000)
+        libelf.so.1 => /usr/lib/x86_64-linux-gnu/libelf.so.1 (0x00007f3094a18000)
+        libdw.so.1 => /usr/lib/x86_64-linux-gnu/libdw.so.1 (0x00007f30947cc000)
+        libunwind-x86_64.so.8 => /usr/lib/x86_64-linux-gnu/libunwind-x86_64.so.8 (0x00007f30945ad000)
+        libunwind.so.8 => /usr/lib/x86_64-linux-gnu/libunwind.so.8 (0x00007f3094392000)
+        liblzma.so.5 => /lib/x86_64-linux-gnu/liblzma.so.5 (0x00007f309416c000)
+        libunwind-aarch64.so.8 => not found
+        libslang.so.2 => /lib/x86_64-linux-gnu/libslang.so.2 (0x00007f3093c8a000)
+        libpython2.7.so.1.0 => /usr/local/lib/libpython2.7.so.1.0 (0x00007f309386b000)
+        libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007f309364e000)
+        libnuma.so.1 => /usr/lib/x86_64-linux-gnu/libnuma.so.1 (0x00007f3093443000)
+        libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f3093052000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f3096097000)
+        libbz2.so.1.0 => /lib/x86_64-linux-gnu/libbz2.so.1.0 (0x00007f3092e42000)
+        libutil.so.1 => /lib/x86_64-linux-gnu/libutil.so.1 (0x00007f3092c3f000)
+
+Fixes: 5c4d7c82c0dc ("perf unwind: Do not put libunwind-{x86,aarch64} in FEATURE_TESTS_BASIC")
+Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+---
+ tools/perf/Makefile.config | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index eb8e487ef90b..29ffd57f5cd8 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -133,10 +133,10 @@ FEATURE_CHECK_LDFLAGS-libunwind = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+ FEATURE_CHECK_CFLAGS-libunwind-debug-frame = $(LIBUNWIND_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libunwind-debug-frame = $(LIBUNWIND_LDFLAGS) $(LIBUNWIND_LIBS)
+ 
+-FEATURE_CHECK_LDFLAGS-libunwind-arm = -lunwind -lunwind-arm
+-FEATURE_CHECK_LDFLAGS-libunwind-aarch64 = -lunwind -lunwind-aarch64
+-FEATURE_CHECK_LDFLAGS-libunwind-x86 = -lunwind -llzma -lunwind-x86
+-FEATURE_CHECK_LDFLAGS-libunwind-x86_64 = -lunwind -llzma -lunwind-x86_64
++FEATURE_CHECK_LDFLAGS-libunwind-arm += -lunwind -lunwind-arm
++FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
++FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
++FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
+ 
+ FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+2.17.1
+
