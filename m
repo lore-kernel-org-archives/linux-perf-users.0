@@ -2,251 +2,203 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D3DC4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 17:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1466DC4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 17:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D52D613AD
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 17:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA28613A5
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 17:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbhHWRJP (ORCPT
+        id S229479AbhHWRxs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Aug 2021 13:09:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:27284 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230360AbhHWRJO (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Aug 2021 13:09:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629738511;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=lxg//3eey4TUS/a3sz+07SLWq4shoABUaJ8HgvWL3kA=;
-        b=V/KfwNWEcItAtsjg9sUAqcBRiCYke/UbxhRyfKJxtX6DqY6K8rbsLYjYQh2l+sa8S+I1+K
-        4wtLkgMACFwtAqdtfz776yEg3vIRqV/IlOTRG6zwAZZ2LPbyvhcspde9m6GRL4ua8ImjVB
-        2naV/Y6OfRNzGZnxZty2Rq6QYxhvi2U=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-494-7nQiH2M2O72MV6SzZNaVeg-1; Mon, 23 Aug 2021 13:08:29 -0400
-X-MC-Unique: 7nQiH2M2O72MV6SzZNaVeg-1
-Received: by mail-wr1-f69.google.com with SMTP id p10-20020adfce0a000000b001572d05c970so3021891wrn.21
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 10:08:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=lxg//3eey4TUS/a3sz+07SLWq4shoABUaJ8HgvWL3kA=;
-        b=b5pXQULOJF30ADf2XF+UuyXlwcM9ws5II4SCea2gn++QZfEHQ8t+3Fhko+LHQxMLL+
-         cVAgFOQi72XNjGbxUeej9zpmiv7/G8Qk8HldvRzEh+erhXkBVWaScA3cY1/7976Dy2Oc
-         CPgNmvFAwCWXM1Kyz7n8DV6fITl4oVLwBCX5eV+nRbqsQHZbXrPb/c92Ir2NGkjlMaRF
-         mYnzlqtE6LxUpCpy4yuaV+v5vnCVr8fttfmescNUf3E9DNcFB+Q3MKwpc4yxNz3dZqao
-         xBdmGpY5rj+Bz/NRQgTfq8ZHtIuGyyjMU9l0n/vSlm+ct8227fhsCJDiNdP21jQOYI5k
-         m5sw==
-X-Gm-Message-State: AOAM531LwiHZzDDCTqYxI1yyNOGN0r7f45jRwKsBDGMEAiLWM5EuOgJa
-        u3f5nEbhAOSRamnEHYrDUZgrdaKj5iT1l8kUfwoJdzII8I0CF4OiJDriukyvd09kKro/rPxQCfO
-        kbhr2lGLBYkTRkML3N+sMZ8ihQXxohQ==
-X-Received: by 2002:a05:600c:2186:: with SMTP id e6mr1866568wme.71.1629738508639;
-        Mon, 23 Aug 2021 10:08:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwiSbMSRAVxD8kBhswAL0JoQgi00+ujYtI0IrE8IufaseRXpTKa3WcsJ4l0pg7mLFOg3BCf8w==
-X-Received: by 2002:a05:600c:2186:: with SMTP id e6mr1866545wme.71.1629738508325;
-        Mon, 23 Aug 2021 10:08:28 -0700 (PDT)
-Received: from krava ([83.240.61.5])
-        by smtp.gmail.com with ESMTPSA id o21sm1578929wms.32.2021.08.23.10.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Aug 2021 10:08:27 -0700 (PDT)
-Date:   Mon, 23 Aug 2021 19:08:26 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
+        Mon, 23 Aug 2021 13:53:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:46823 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231709AbhHWRxs (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Mon, 23 Aug 2021 13:53:48 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10085"; a="217182368"
+X-IronPort-AV: E=Sophos;i="5.84,344,1620716400"; 
+   d="scan'208";a="217182368"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2021 10:53:00 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.84,344,1620716400"; 
+   d="scan'208";a="535457813"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.174]) ([10.237.72.174])
+  by fmsmga002.fm.intel.com with ESMTP; 23 Aug 2021 10:52:58 -0700
+Subject: Re: intel_pt crash on alderlake
+To:     Jiri Olsa <jolsa@redhat.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: intel_pt crash on alderlake
-Message-ID: <YSPWCienSPEcvIbU@krava>
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+References: <YSPWCienSPEcvIbU@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <7e214d48-ff09-6fe0-f624-d82260ada786@intel.com>
+Date:   Mon, 23 Aug 2021 20:53:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <YSPWCienSPEcvIbU@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-hi,
-should intel_pt work on alderlake? I'm getting strange crash:
-(cpuinfo and uname below)
-
-	[root@intel-alderlake-m-02 perf]# ./perf record -e 'intel_pt//' --overwrit=
-e=20
-	perf: Segmentation fault
-	Obtained 16 stack frames.
-	./perf() [0x53b6eb]
-	./perf() [0x53b7cb]
-	./perf() [0x429b30]
-	/lib64/libc.so.6(+0x37400) [0x7f7b144db400]
-	./perf() [0x5a6fc8]
-	./perf() [0x505caa]
-	./perf() [0x4f39ca]
-	./perf() [0x646879]
-	./perf() [0x646b57]
-	./perf() [0x646da0]
-	./perf() [0x4f3eec]
-	./perf() [0x42a533]
-	./perf() [0x42a644]
-	./perf() [0x42aa72]
-	./perf() [0x42c915]
-	./perf() [0x42ecc3]
-	Segmentation fault (core dumped)
-
-
-	[root@intel-alderlake-m-02 perf]# gdb ./perf
-	GNU gdb (GDB) Red Hat Enterprise Linux 8.2-15.el8
-	Copyright (C) 2018 Free Software Foundation, Inc.
-	License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.ht=
-ml>
-	This is free software: you are free to change and redistribute it.
-	There is NO WARRANTY, to the extent permitted by law.
-	Type "show copying" and "show warranty" for details.
-	This GDB was configured as "x86_64-redhat-linux-gnu".
-	Type "show configuration" for configuration details.
-	For bug reporting instructions, please see:
-	<http://www.gnu.org/software/gdb/bugs/>.
-	Find the GDB manual and other documentation resources online at:
-	    <http://www.gnu.org/software/gdb/documentation/>.
-
-	For help, type "help".
-	Type "apropos word" to search for commands related to "word"...
-	Reading symbols from ./perf...done.
-	(gdb) r record -e 'intel_pt//' --overwrite
-	Starting program: /root/linux/tools/perf/perf record -e 'intel_pt//' --ove=
-rwrite
-	[Thread debugging using libthread_db enabled]
-	Using host libthread_db library "/lib64/libthread_db.so.1".
-
-	Program received signal SIGSEGV, Segmentation fault.
-	0x00000000005a6fc8 in auxtrace_mmap__mmap (mm=3D0x7ffff7e9c060, mp=3D0x7ff=
-fffff7588, userpg=3D0x7ffff7e0b000, fd=3D5) at util/auxtrace.c:133
-	133             pc->aux_offset =3D mp->offset;
-	Missing separate debuginfos, use: yum debuginfo-install brotli-1.0.6-3.el8=
-=2Ex86_64 bzip2-libs-1.0.6-26.el8.x86_64 cyrus-sasl-lib-2.1.27-5.el8.x86_64=
- elfutils-debuginfod-client-0.185-1.el8.x86_64 elfutils-libelf-0.185-1.el8.=
-x86_64 elfutils-libs-0.185-1.el8.x86_64 glib2-2.56.4-156.el8.x86_64 gmp-6.1=
-=2E2-10.el8.x86_64 gnutls-3.6.16-4.el8.x86_64 keyutils-libs-1.5.10-9.el8.x8=
-6_64 libbabeltrace-1.5.4-3.el8.x86_64 libbpf-0.3.0-1.el8.x86_64 libcap-2.26=
--4.el8.x86_64 libcom_err-1.45.6-2.el8.x86_64 libcurl-7.61.1-18.el8.x86_64 l=
-ibffi-3.1-22.el8.x86_64 libidn2-2.2.0-1.el8.x86_64 libpsl-0.20.2-6.el8.x86_=
-64 libselinux-2.9-5.el8.x86_64 libssh-0.9.4-3.el8.x86_64 libtasn1-4.13-3.el=
-8.x86_64 libunistring-0.9.9-3.el8.x86_64 libuuid-2.32.1-28.el8.x86_64 libxc=
-rypt-4.1.1-6.el8.x86_64 libzstd-1.4.4-1.el8.x86_64 numactl-libs-2.0.12-13.e=
-l8.x86_64 openldap-2.4.46-17.el8.x86_64 openssl-libs-1.1.1k-4.el8.x86_64 p1=
-1-kit-0.23.22-1.el8.x86_64 pcre-8.42-6.el8.x86_64 pcre2-10.32-2.el8.x86_64 =
-perl-libs-5.26.3-420.el8.x86_64 popt-1.18-1.el8.x86_64 slang-2.3.2-3.el8.x8=
-6_64 xz-libs-5.2.4-3.el8.x86_64
-	(gdb) bt
-	#0  0x00000000005a6fc8 in auxtrace_mmap__mmap (mm=3D0x7ffff7e9c060, mp=3D0=
-x7fffffff7588, userpg=3D0x7ffff7e0b000, fd=3D5) at util/auxtrace.c:133
-	#1  0x0000000000505caa in mmap__mmap (map=3D0x7ffff7e8c010, mp=3D0x7ffffff=
-f7570, fd=3D5, cpu=3D0) at util/mmap.c:306
-	#2  0x00000000004f39ca in perf_evlist__mmap_cb_mmap (_map=3D0x7ffff7e8c010=
-, _mp=3D0x7fffffff7570, output=3D5, cpu=3D0) at util/evlist.c:807
-	#3  0x0000000000646879 in mmap_per_evsel (evlist=3D0xf1c7d0, ops=3D0x7ffff=
-fff7550, idx=3D0, mp=3D0x7fffffff7570, cpu_idx=3D0, thread=3D0, _output=3D0=
-x7fffffff7480, _output_overwrite=3D0x7fffffff7484) at evlist.c:477
-	#4  0x0000000000646b57 in mmap_per_cpu (evlist=3D0xf1c7d0, ops=3D0x7ffffff=
-f7550, mp=3D0x7fffffff7570) at evlist.c:550
-	#5  0x0000000000646da0 in perf_evlist__mmap_ops (evlist=3D0xf1c7d0, ops=3D=
-0x7fffffff7550, mp=3D0x7fffffff7570) at evlist.c:602
-	#6  0x00000000004f3eec in evlist__mmap_ex (evlist=3D0xf1c7d0, pages=3D4294=
-967295, auxtrace_pages=3D1024, auxtrace_overwrite=3Dfalse, nr_cblocks=3D0, =
-affinity=3D0, flush=3D1, comp_level=3D0) at util/evlist.c:959
-	#7  0x000000000042a533 in record__mmap_evlist (rec=3D0xc8b580 <record>, ev=
-list=3D0xf1c7d0) at builtin-record.c:854
-	#8  0x000000000042a644 in record__mmap (rec=3D0xc8b580 <record>) at builti=
-n-record.c:881
-	#9  0x000000000042aa72 in record__open (rec=3D0xc8b580 <record>) at builti=
-n-record.c:963
-	#10 0x000000000042c915 in __cmd_record (rec=3D0xc8b580 <record>, argc=3D0,=
- argv=3D0x7fffffffddf0) at builtin-record.c:1717
-	#11 0x000000000042ecc3 in cmd_record (argc=3D0, argv=3D0x7fffffffddf0) at =
-builtin-record.c:2897
-	#12 0x00000000004d7143 in run_builtin (p=3D0xca33d8 <commands+216>, argc=
-=3D4, argv=3D0x7fffffffddf0) at perf.c:313
-	#13 0x00000000004d73b0 in handle_internal_command (argc=3D4, argv=3D0x7fff=
-ffffddf0) at perf.c:365
-	#14 0x00000000004d74f7 in run_argv (argcp=3D0x7fffffffdc4c, argv=3D0x7ffff=
-fffdc40) at perf.c:409
-	#15 0x00000000004d78c3 in main (argc=3D4, argv=3D0x7fffffffddf0) at perf.c=
-:539
-	(gdb) p *pc
-	$1 =3D {version =3D 0, compat_version =3D 0, lock =3D 2, index =3D 0, offs=
-et =3D 0, time_enabled =3D 0, time_running =3D 0, {capabilities =3D 26, {ca=
-p_bit0 =3D 0, cap_bit0_is_deprecated =3D 1, cap_user_rdpmc =3D 0, cap_user_=
-time =3D 1,=20
-	      cap_user_time_zero =3D 1, cap_user_time_short =3D 0, cap_____res =3D=
- 0}}, pmc_width =3D 48, time_shift =3D 31, time_mult =3D 2663050159, time_o=
-ffset =3D 18446743875728538161, time_zero =3D 18446743981699475147,=20
-	  size =3D 96, __reserved_1 =3D 0, time_cycles =3D 0, time_mask =3D 0, __r=
-eserved =3D '\000' <repeats 927 times>, data_head =3D 0, data_tail =3D 0, d=
-ata_offset =3D 4096, data_size =3D 524288, aux_head =3D 0, aux_tail =3D 0,=
-=20
-	  aux_offset =3D 0, aux_size =3D 0}
-	(gdb) p *mp
-	$2 =3D {mask =3D 4194303, offset =3D 528384, len =3D 4194304, prot =3D 3, =
-idx =3D 0, tid =3D -1, cpu =3D 0}
-	(gdb)=20
-
-
-any idea? thanks,
-jirka
-
-
-----
-[jolsa@krava linus-pure]$ cat /proc/cpuinfo=20
-processor       : 0
-vendor_id       : GenuineIntel
-cpu family      : 6
-model           : 142
-model name      : Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
-stepping        : 10
-microcode       : 0xea
-cpu MHz         : 2100.000
-cache size      : 8192 KB
-physical id     : 0
-siblings        : 8
-core id         : 0
-cpu cores       : 4
-apicid          : 0
-initial apicid  : 0
-fpu             : yes
-fpu_exception   : yes
-cpuid level     : 22
-wp              : yes
-flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca =
-cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx p=
-dpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopo=
-logy nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx s=
-mx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe po=
-pcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch=
- cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi fl=
-expriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms=
- invpcid rtm mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv=
-1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp md_c=
-lear flush_l1d
-vmx flags       : vnmi preemption_timer invvpid ept_x_only ept_ad ept_1gb f=
-lexpriority tsc_offset vtpr mtf vapic ept vpid unrestricted_guest ple shado=
-w_vmcs pml ept_mode_based_exec
-bugs            : cpu_meltdown spectre_v1 spectre_v2 spec_store_bypass l1tf=
- mds swapgs taa itlb_multihit srbds
-bogomips        : 4199.88
-clflush size    : 64
-cache_alignment : 64
-address sizes   : 39 bits physical, 48 bits virtual
-power management:
-
-[root@intel-alderlake-m-02 linux]# uname -a
-Linux intel-alderlake-m-02.ml3.eng.bos.redhat.com 5.14.0-rc6+ #1 SMP Fri Au=
-g 20 09:27:39 EDT 2021 x86_64 x86_64 x86_64 GNU/Linux
-
+T24gMjMvMDgvMjEgODowOCBwbSwgSmlyaSBPbHNhIHdyb3RlOg0KPiBoaSwNCj4gc2hvdWxk
+IGludGVsX3B0IHdvcmsgb24gYWxkZXJsYWtlPyBJJ20gZ2V0dGluZyBzdHJhbmdlIGNyYXNo
+Og0KPiAoY3B1aW5mbyBhbmQgdW5hbWUgYmVsb3cpDQo+IA0KPiAJW3Jvb3RAaW50ZWwtYWxk
+ZXJsYWtlLW0tMDIgcGVyZl0jIC4vcGVyZiByZWNvcmQgLWUgJ2ludGVsX3B0Ly8nIC0tb3Zl
+cndyaXRlIA0KDQpUaGUgc2VnZmF1bHQgaXMgcmVsYXRlZCAtLW92ZXJ3cml0ZSBub3QgQWxk
+ZXJsYWtlLg0KDQpBbHRob3VnaCBJIGFtIG5vdCBzdXJlIC0tb3ZlcndyaXRlIG1ha2Ugc2Vu
+c2UgZm9yIEludGVsIFBUIHNpbmNlIHdlIGhhdmUgc25hcHNob3QgbW9kZSBpLmUuIC0tc25h
+cHNob3QNCg0KPiAJcGVyZjogU2VnbWVudGF0aW9uIGZhdWx0DQo+IAlPYnRhaW5lZCAxNiBz
+dGFjayBmcmFtZXMuDQo+IAkuL3BlcmYoKSBbMHg1M2I2ZWJdDQo+IAkuL3BlcmYoKSBbMHg1
+M2I3Y2JdDQo+IAkuL3BlcmYoKSBbMHg0MjliMzBdDQo+IAkvbGliNjQvbGliYy5zby42KCsw
+eDM3NDAwKSBbMHg3ZjdiMTQ0ZGI0MDBdDQo+IAkuL3BlcmYoKSBbMHg1YTZmYzhdDQo+IAku
+L3BlcmYoKSBbMHg1MDVjYWFdDQo+IAkuL3BlcmYoKSBbMHg0ZjM5Y2FdDQo+IAkuL3BlcmYo
+KSBbMHg2NDY4NzldDQo+IAkuL3BlcmYoKSBbMHg2NDZiNTddDQo+IAkuL3BlcmYoKSBbMHg2
+NDZkYTBdDQo+IAkuL3BlcmYoKSBbMHg0ZjNlZWNdDQo+IAkuL3BlcmYoKSBbMHg0MmE1MzNd
+DQo+IAkuL3BlcmYoKSBbMHg0MmE2NDRdDQo+IAkuL3BlcmYoKSBbMHg0MmFhNzJdDQo+IAku
+L3BlcmYoKSBbMHg0MmM5MTVdDQo+IAkuL3BlcmYoKSBbMHg0MmVjYzNdDQo+IAlTZWdtZW50
+YXRpb24gZmF1bHQgKGNvcmUgZHVtcGVkKQ0KPiANCj4gDQo+IAlbcm9vdEBpbnRlbC1hbGRl
+cmxha2UtbS0wMiBwZXJmXSMgZ2RiIC4vcGVyZg0KPiAJR05VIGdkYiAoR0RCKSBSZWQgSGF0
+IEVudGVycHJpc2UgTGludXggOC4yLTE1LmVsOA0KPiAJQ29weXJpZ2h0IChDKSAyMDE4IEZy
+ZWUgU29mdHdhcmUgRm91bmRhdGlvbiwgSW5jLg0KPiAJTGljZW5zZSBHUEx2Mys6IEdOVSBH
+UEwgdmVyc2lvbiAzIG9yIGxhdGVyIDxodHRwOi8vZ251Lm9yZy9saWNlbnNlcy9ncGwuaHRt
+bD4NCj4gCVRoaXMgaXMgZnJlZSBzb2Z0d2FyZTogeW91IGFyZSBmcmVlIHRvIGNoYW5nZSBh
+bmQgcmVkaXN0cmlidXRlIGl0Lg0KPiAJVGhlcmUgaXMgTk8gV0FSUkFOVFksIHRvIHRoZSBl
+eHRlbnQgcGVybWl0dGVkIGJ5IGxhdy4NCj4gCVR5cGUgInNob3cgY29weWluZyIgYW5kICJz
+aG93IHdhcnJhbnR5IiBmb3IgZGV0YWlscy4NCj4gCVRoaXMgR0RCIHdhcyBjb25maWd1cmVk
+IGFzICJ4ODZfNjQtcmVkaGF0LWxpbnV4LWdudSIuDQo+IAlUeXBlICJzaG93IGNvbmZpZ3Vy
+YXRpb24iIGZvciBjb25maWd1cmF0aW9uIGRldGFpbHMuDQo+IAlGb3IgYnVnIHJlcG9ydGlu
+ZyBpbnN0cnVjdGlvbnMsIHBsZWFzZSBzZWU6DQo+IAk8aHR0cDovL3d3dy5nbnUub3JnL3Nv
+ZnR3YXJlL2dkYi9idWdzLz4uDQo+IAlGaW5kIHRoZSBHREIgbWFudWFsIGFuZCBvdGhlciBk
+b2N1bWVudGF0aW9uIHJlc291cmNlcyBvbmxpbmUgYXQ6DQo+IAkgICAgPGh0dHA6Ly93d3cu
+Z251Lm9yZy9zb2Z0d2FyZS9nZGIvZG9jdW1lbnRhdGlvbi8+Lg0KPiANCj4gCUZvciBoZWxw
+LCB0eXBlICJoZWxwIi4NCj4gCVR5cGUgImFwcm9wb3Mgd29yZCIgdG8gc2VhcmNoIGZvciBj
+b21tYW5kcyByZWxhdGVkIHRvICJ3b3JkIi4uLg0KPiAJUmVhZGluZyBzeW1ib2xzIGZyb20g
+Li9wZXJmLi4uZG9uZS4NCj4gCShnZGIpIHIgcmVjb3JkIC1lICdpbnRlbF9wdC8vJyAtLW92
+ZXJ3cml0ZQ0KPiAJU3RhcnRpbmcgcHJvZ3JhbTogL3Jvb3QvbGludXgvdG9vbHMvcGVyZi9w
+ZXJmIHJlY29yZCAtZSAnaW50ZWxfcHQvLycgLS1vdmVyd3JpdGUNCj4gCVtUaHJlYWQgZGVi
+dWdnaW5nIHVzaW5nIGxpYnRocmVhZF9kYiBlbmFibGVkXQ0KPiAJVXNpbmcgaG9zdCBsaWJ0
+aHJlYWRfZGIgbGlicmFyeSAiL2xpYjY0L2xpYnRocmVhZF9kYi5zby4xIi4NCj4gDQo+IAlQ
+cm9ncmFtIHJlY2VpdmVkIHNpZ25hbCBTSUdTRUdWLCBTZWdtZW50YXRpb24gZmF1bHQuDQo+
+IAkweDAwMDAwMDAwMDA1YTZmYzggaW4gYXV4dHJhY2VfbW1hcF9fbW1hcCAobW09MHg3ZmZm
+ZjdlOWMwNjAsIG1wPTB4N2ZmZmZmZmY3NTg4LCB1c2VycGc9MHg3ZmZmZjdlMGIwMDAsIGZk
+PTUpIGF0IHV0aWwvYXV4dHJhY2UuYzoxMzMNCj4gCTEzMyAgICAgICAgICAgICBwYy0+YXV4
+X29mZnNldCA9IG1wLT5vZmZzZXQ7DQo+IAlNaXNzaW5nIHNlcGFyYXRlIGRlYnVnaW5mb3Ms
+IHVzZTogeXVtIGRlYnVnaW5mby1pbnN0YWxsIGJyb3RsaS0xLjAuNi0zLmVsOC54ODZfNjQg
+YnppcDItbGlicy0xLjAuNi0yNi5lbDgueDg2XzY0IGN5cnVzLXNhc2wtbGliLTIuMS4yNy01
+LmVsOC54ODZfNjQgZWxmdXRpbHMtZGVidWdpbmZvZC1jbGllbnQtMC4xODUtMS5lbDgueDg2
+XzY0IGVsZnV0aWxzLWxpYmVsZi0wLjE4NS0xLmVsOC54ODZfNjQgZWxmdXRpbHMtbGlicy0w
+LjE4NS0xLmVsOC54ODZfNjQgZ2xpYjItMi41Ni40LTE1Ni5lbDgueDg2XzY0IGdtcC02LjEu
+Mi0xMC5lbDgueDg2XzY0IGdudXRscy0zLjYuMTYtNC5lbDgueDg2XzY0IGtleXV0aWxzLWxp
+YnMtMS41LjEwLTkuZWw4Lng4Nl82NCBsaWJiYWJlbHRyYWNlLTEuNS40LTMuZWw4Lng4Nl82
+NCBsaWJicGYtMC4zLjAtMS5lbDgueDg2XzY0IGxpYmNhcC0yLjI2LTQuZWw4Lng4Nl82NCBs
+aWJjb21fZXJyLTEuNDUuNi0yLmVsOC54ODZfNjQgbGliY3VybC03LjYxLjEtMTguZWw4Lng4
+Nl82NCBsaWJmZmktMy4xLTIyLmVsOC54ODZfNjQgbGliaWRuMi0yLjIuMC0xLmVsOC54ODZf
+NjQgbGlicHNsLTAuMjAuMi02LmVsOC54ODZfNjQgbGlic2VsaW51eC0yLjktNS5lbDgueDg2
+XzY0IGxpYnNzaC0wLjkuNC0zLmVsOC54ODZfNjQgbGlidGFzbjEtNC4xMy0zLmVsOC54ODZf
+NjQgbGlidW5pc3RyaW5nLTAuOS45LTMuZWw4Lng4Nl82NCBsaWJ1dWlkLTIuMzIuMS0yOC5l
+bDgueDg2XzY0IGxpYnhjcnlwdC00LjEuMS02LmVsOC54ODZfNjQgbGlienN0ZC0xLjQuNC0x
+LmVsOC54ODZfNjQgbnVtYWN0bC1saWJzLTIuMC4xMi0xMy5lbDgueDg2XzY0IG9wZW5sZGFw
+LTIuNC40Ni0xNy5lbDgueDg2XzY0IG9wZW5zc2wtbGlicy0xLjEuMWstNC5lbDgueDg2XzY0
+IHAxMS1raXQtMC4yMy4yMi0xLmVsOC54ODZfNjQgcGNyZS04LjQyLTYuZWw4Lng4Nl82NCBw
+Y3JlMi0xMC4zMi0yLmVsOC54ODZfNjQgcGVybC1saWJzLTUuMjYuMy00MjAuZWw4Lng4Nl82
+NCBwb3B0LTEuMTgtMS5lbDgueDg2XzY0IHNsYW5nLTIuMy4yLTMuZWw4Lng4Nl82NCB4ei1s
+aWJzLTUuMi40LTMuZWw4Lng4Nl82NA0KPiAJKGdkYikgYnQNCj4gCSMwICAweDAwMDAwMDAw
+MDA1YTZmYzggaW4gYXV4dHJhY2VfbW1hcF9fbW1hcCAobW09MHg3ZmZmZjdlOWMwNjAsIG1w
+PTB4N2ZmZmZmZmY3NTg4LCB1c2VycGc9MHg3ZmZmZjdlMGIwMDAsIGZkPTUpIGF0IHV0aWwv
+YXV4dHJhY2UuYzoxMzMNCj4gCSMxICAweDAwMDAwMDAwMDA1MDVjYWEgaW4gbW1hcF9fbW1h
+cCAobWFwPTB4N2ZmZmY3ZThjMDEwLCBtcD0weDdmZmZmZmZmNzU3MCwgZmQ9NSwgY3B1PTAp
+IGF0IHV0aWwvbW1hcC5jOjMwNg0KPiAJIzIgIDB4MDAwMDAwMDAwMDRmMzljYSBpbiBwZXJm
+X2V2bGlzdF9fbW1hcF9jYl9tbWFwIChfbWFwPTB4N2ZmZmY3ZThjMDEwLCBfbXA9MHg3ZmZm
+ZmZmZjc1NzAsIG91dHB1dD01LCBjcHU9MCkgYXQgdXRpbC9ldmxpc3QuYzo4MDcNCj4gCSMz
+ICAweDAwMDAwMDAwMDA2NDY4NzkgaW4gbW1hcF9wZXJfZXZzZWwgKGV2bGlzdD0weGYxYzdk
+MCwgb3BzPTB4N2ZmZmZmZmY3NTUwLCBpZHg9MCwgbXA9MHg3ZmZmZmZmZjc1NzAsIGNwdV9p
+ZHg9MCwgdGhyZWFkPTAsIF9vdXRwdXQ9MHg3ZmZmZmZmZjc0ODAsIF9vdXRwdXRfb3Zlcndy
+aXRlPTB4N2ZmZmZmZmY3NDg0KSBhdCBldmxpc3QuYzo0NzcNCj4gCSM0ICAweDAwMDAwMDAw
+MDA2NDZiNTcgaW4gbW1hcF9wZXJfY3B1IChldmxpc3Q9MHhmMWM3ZDAsIG9wcz0weDdmZmZm
+ZmZmNzU1MCwgbXA9MHg3ZmZmZmZmZjc1NzApIGF0IGV2bGlzdC5jOjU1MA0KPiAJIzUgIDB4
+MDAwMDAwMDAwMDY0NmRhMCBpbiBwZXJmX2V2bGlzdF9fbW1hcF9vcHMgKGV2bGlzdD0weGYx
+YzdkMCwgb3BzPTB4N2ZmZmZmZmY3NTUwLCBtcD0weDdmZmZmZmZmNzU3MCkgYXQgZXZsaXN0
+LmM6NjAyDQo+IAkjNiAgMHgwMDAwMDAwMDAwNGYzZWVjIGluIGV2bGlzdF9fbW1hcF9leCAo
+ZXZsaXN0PTB4ZjFjN2QwLCBwYWdlcz00Mjk0OTY3Mjk1LCBhdXh0cmFjZV9wYWdlcz0xMDI0
+LCBhdXh0cmFjZV9vdmVyd3JpdGU9ZmFsc2UsIG5yX2NibG9ja3M9MCwgYWZmaW5pdHk9MCwg
+Zmx1c2g9MSwgY29tcF9sZXZlbD0wKSBhdCB1dGlsL2V2bGlzdC5jOjk1OQ0KPiAJIzcgIDB4
+MDAwMDAwMDAwMDQyYTUzMyBpbiByZWNvcmRfX21tYXBfZXZsaXN0IChyZWM9MHhjOGI1ODAg
+PHJlY29yZD4sIGV2bGlzdD0weGYxYzdkMCkgYXQgYnVpbHRpbi1yZWNvcmQuYzo4NTQNCj4g
+CSM4ICAweDAwMDAwMDAwMDA0MmE2NDQgaW4gcmVjb3JkX19tbWFwIChyZWM9MHhjOGI1ODAg
+PHJlY29yZD4pIGF0IGJ1aWx0aW4tcmVjb3JkLmM6ODgxDQo+IAkjOSAgMHgwMDAwMDAwMDAw
+NDJhYTcyIGluIHJlY29yZF9fb3BlbiAocmVjPTB4YzhiNTgwIDxyZWNvcmQ+KSBhdCBidWls
+dGluLXJlY29yZC5jOjk2Mw0KPiAJIzEwIDB4MDAwMDAwMDAwMDQyYzkxNSBpbiBfX2NtZF9y
+ZWNvcmQgKHJlYz0weGM4YjU4MCA8cmVjb3JkPiwgYXJnYz0wLCBhcmd2PTB4N2ZmZmZmZmZk
+ZGYwKSBhdCBidWlsdGluLXJlY29yZC5jOjE3MTcNCj4gCSMxMSAweDAwMDAwMDAwMDA0MmVj
+YzMgaW4gY21kX3JlY29yZCAoYXJnYz0wLCBhcmd2PTB4N2ZmZmZmZmZkZGYwKSBhdCBidWls
+dGluLXJlY29yZC5jOjI4OTcNCj4gCSMxMiAweDAwMDAwMDAwMDA0ZDcxNDMgaW4gcnVuX2J1
+aWx0aW4gKHA9MHhjYTMzZDggPGNvbW1hbmRzKzIxNj4sIGFyZ2M9NCwgYXJndj0weDdmZmZm
+ZmZmZGRmMCkgYXQgcGVyZi5jOjMxMw0KPiAJIzEzIDB4MDAwMDAwMDAwMDRkNzNiMCBpbiBo
+YW5kbGVfaW50ZXJuYWxfY29tbWFuZCAoYXJnYz00LCBhcmd2PTB4N2ZmZmZmZmZkZGYwKSBh
+dCBwZXJmLmM6MzY1DQo+IAkjMTQgMHgwMDAwMDAwMDAwNGQ3NGY3IGluIHJ1bl9hcmd2IChh
+cmdjcD0weDdmZmZmZmZmZGM0YywgYXJndj0weDdmZmZmZmZmZGM0MCkgYXQgcGVyZi5jOjQw
+OQ0KPiAJIzE1IDB4MDAwMDAwMDAwMDRkNzhjMyBpbiBtYWluIChhcmdjPTQsIGFyZ3Y9MHg3
+ZmZmZmZmZmRkZjApIGF0IHBlcmYuYzo1MzkNCj4gCShnZGIpIHAgKnBjDQo+IAkkMSA9IHt2
+ZXJzaW9uID0gMCwgY29tcGF0X3ZlcnNpb24gPSAwLCBsb2NrID0gMiwgaW5kZXggPSAwLCBv
+ZmZzZXQgPSAwLCB0aW1lX2VuYWJsZWQgPSAwLCB0aW1lX3J1bm5pbmcgPSAwLCB7Y2FwYWJp
+bGl0aWVzID0gMjYsIHtjYXBfYml0MCA9IDAsIGNhcF9iaXQwX2lzX2RlcHJlY2F0ZWQgPSAx
+LCBjYXBfdXNlcl9yZHBtYyA9IDAsIGNhcF91c2VyX3RpbWUgPSAxLCANCj4gCSAgICAgIGNh
+cF91c2VyX3RpbWVfemVybyA9IDEsIGNhcF91c2VyX3RpbWVfc2hvcnQgPSAwLCBjYXBfX19f
+X3JlcyA9IDB9fSwgcG1jX3dpZHRoID0gNDgsIHRpbWVfc2hpZnQgPSAzMSwgdGltZV9tdWx0
+ID0gMjY2MzA1MDE1OSwgdGltZV9vZmZzZXQgPSAxODQ0Njc0Mzg3NTcyODUzODE2MSwgdGlt
+ZV96ZXJvID0gMTg0NDY3NDM5ODE2OTk0NzUxNDcsIA0KPiAJICBzaXplID0gOTYsIF9fcmVz
+ZXJ2ZWRfMSA9IDAsIHRpbWVfY3ljbGVzID0gMCwgdGltZV9tYXNrID0gMCwgX19yZXNlcnZl
+ZCA9ICdcMDAwJyA8cmVwZWF0cyA5MjcgdGltZXM+LCBkYXRhX2hlYWQgPSAwLCBkYXRhX3Rh
+aWwgPSAwLCBkYXRhX29mZnNldCA9IDQwOTYsIGRhdGFfc2l6ZSA9IDUyNDI4OCwgYXV4X2hl
+YWQgPSAwLCBhdXhfdGFpbCA9IDAsIA0KPiAJICBhdXhfb2Zmc2V0ID0gMCwgYXV4X3NpemUg
+PSAwfQ0KPiAJKGdkYikgcCAqbXANCj4gCSQyID0ge21hc2sgPSA0MTk0MzAzLCBvZmZzZXQg
+PSA1MjgzODQsIGxlbiA9IDQxOTQzMDQsIHByb3QgPSAzLCBpZHggPSAwLCB0aWQgPSAtMSwg
+Y3B1ID0gMH0NCj4gCShnZGIpIA0KPiANCj4gDQo+IGFueSBpZGVhPyB0aGFua3MsDQo+IGpp
+cmthDQo+IA0KPiANCj4gLS0tLQ0KPiBbam9sc2FAa3JhdmEgbGludXMtcHVyZV0kIGNhdCAv
+cHJvYy9jcHVpbmZvIA0KPiBwcm9jZXNzb3IgICAgICAgOiAwDQo+IHZlbmRvcl9pZCAgICAg
+ICA6IEdlbnVpbmVJbnRlbA0KPiBjcHUgZmFtaWx5ICAgICAgOiA2DQo+IG1vZGVsICAgICAg
+ICAgICA6IDE0Mg0KPiBtb2RlbCBuYW1lICAgICAgOiBJbnRlbChSKSBDb3JlKFRNKSBpNy04
+NjUwVSBDUFUgQCAxLjkwR0h6DQo+IHN0ZXBwaW5nICAgICAgICA6IDEwDQo+IG1pY3JvY29k
+ZSAgICAgICA6IDB4ZWENCj4gY3B1IE1IeiAgICAgICAgIDogMjEwMC4wMDANCj4gY2FjaGUg
+c2l6ZSAgICAgIDogODE5MiBLQg0KPiBwaHlzaWNhbCBpZCAgICAgOiAwDQo+IHNpYmxpbmdz
+ICAgICAgICA6IDgNCj4gY29yZSBpZCAgICAgICAgIDogMA0KPiBjcHUgY29yZXMgICAgICAg
+OiA0DQo+IGFwaWNpZCAgICAgICAgICA6IDANCj4gaW5pdGlhbCBhcGljaWQgIDogMA0KPiBm
+cHUgICAgICAgICAgICAgOiB5ZXMNCj4gZnB1X2V4Y2VwdGlvbiAgIDogeWVzDQo+IGNwdWlk
+IGxldmVsICAgICA6IDIyDQo+IHdwICAgICAgICAgICAgICA6IHllcw0KPiBmbGFncyAgICAg
+ICAgICAgOiBmcHUgdm1lIGRlIHBzZSB0c2MgbXNyIHBhZSBtY2UgY3g4IGFwaWMgc2VwIG10
+cnIgcGdlIG1jYSBjbW92IHBhdCBwc2UzNiBjbGZsdXNoIGR0cyBhY3BpIG1teCBmeHNyIHNz
+ZSBzc2UyIHNzIGh0IHRtIHBiZSBzeXNjYWxsIG54IHBkcGUxZ2IgcmR0c2NwIGxtIGNvbnN0
+YW50X3RzYyBhcnQgYXJjaF9wZXJmbW9uIHBlYnMgYnRzIHJlcF9nb29kIG5vcGwgeHRvcG9s
+b2d5IG5vbnN0b3BfdHNjIGNwdWlkIGFwZXJmbXBlcmYgcG5pIHBjbG11bHFkcSBkdGVzNjQg
+bW9uaXRvciBkc19jcGwgdm14IHNteCBlc3QgdG0yIHNzc2UzIHNkYmcgZm1hIGN4MTYgeHRw
+ciBwZGNtIHBjaWQgc3NlNF8xIHNzZTRfMiB4MmFwaWMgbW92YmUgcG9wY250IHRzY19kZWFk
+bGluZV90aW1lciBhZXMgeHNhdmUgYXZ4IGYxNmMgcmRyYW5kIGxhaGZfbG0gYWJtIDNkbm93
+cHJlZmV0Y2ggY3B1aWRfZmF1bHQgZXBiIGludnBjaWRfc2luZ2xlIHB0aSBzc2JkIGlicnMg
+aWJwYiBzdGlicCB0cHJfc2hhZG93IHZubWkgZmxleHByaW9yaXR5IGVwdCB2cGlkIGVwdF9h
+ZCBmc2dzYmFzZSB0c2NfYWRqdXN0IGJtaTEgaGxlIGF2eDIgc21lcCBibWkyIGVybXMgaW52
+cGNpZCBydG0gbXB4IHJkc2VlZCBhZHggc21hcCBjbGZsdXNob3B0IGludGVsX3B0IHhzYXZl
+b3B0IHhzYXZlYyB4Z2V0YnYxIHhzYXZlcyBkdGhlcm0gaWRhIGFyYXQgcGxuIHB0cyBod3Ag
+aHdwX25vdGlmeSBod3BfYWN0X3dpbmRvdyBod3BfZXBwIG1kX2NsZWFyIGZsdXNoX2wxZA0K
+PiB2bXggZmxhZ3MgICAgICAgOiB2bm1pIHByZWVtcHRpb25fdGltZXIgaW52dnBpZCBlcHRf
+eF9vbmx5IGVwdF9hZCBlcHRfMWdiIGZsZXhwcmlvcml0eSB0c2Nfb2Zmc2V0IHZ0cHIgbXRm
+IHZhcGljIGVwdCB2cGlkIHVucmVzdHJpY3RlZF9ndWVzdCBwbGUgc2hhZG93X3ZtY3MgcG1s
+IGVwdF9tb2RlX2Jhc2VkX2V4ZWMNCj4gYnVncyAgICAgICAgICAgIDogY3B1X21lbHRkb3du
+IHNwZWN0cmVfdjEgc3BlY3RyZV92MiBzcGVjX3N0b3JlX2J5cGFzcyBsMXRmIG1kcyBzd2Fw
+Z3MgdGFhIGl0bGJfbXVsdGloaXQgc3JiZHMNCj4gYm9nb21pcHMgICAgICAgIDogNDE5OS44
+OA0KPiBjbGZsdXNoIHNpemUgICAgOiA2NA0KPiBjYWNoZV9hbGlnbm1lbnQgOiA2NA0KPiBh
+ZGRyZXNzIHNpemVzICAgOiAzOSBiaXRzIHBoeXNpY2FsLCA0OCBiaXRzIHZpcnR1YWwNCj4g
+cG93ZXIgbWFuYWdlbWVudDoNCj4gDQo+IFtyb290QGludGVsLWFsZGVybGFrZS1tLTAyIGxp
+bnV4XSMgdW5hbWUgLWENCj4gTGludXggaW50ZWwtYWxkZXJsYWtlLW0tMDIubWwzLmVuZy5i
+b3MucmVkaGF0LmNvbSA1LjE0LjAtcmM2KyAjMSBTTVAgRnJpIEF1ZyAyMCAwOToyNzozOSBF
+RFQgMjAyMSB4ODZfNjQgeDg2XzY0IHg4Nl82NCBHTlUvTGludXgNCj4gDQoNCg==
