@@ -2,102 +2,111 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E233C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C2CC4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 031A46103A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CD161246
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:48:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232060AbhHWU1c (ORCPT
+        id S232638AbhHWUss (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Aug 2021 16:27:32 -0400
-Received: from mail-ot1-f50.google.com ([209.85.210.50]:35663 "EHLO
-        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbhHWU1b (ORCPT
+        Mon, 23 Aug 2021 16:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232446AbhHWUsr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Aug 2021 16:27:31 -0400
-Received: by mail-ot1-f50.google.com with SMTP id y14-20020a0568302a0e00b0051acbdb2869so32936577otu.2;
-        Mon, 23 Aug 2021 13:26:48 -0700 (PDT)
+        Mon, 23 Aug 2021 16:48:47 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F57AC061575
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 13:48:04 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id h29so18400335ila.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 13:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zLS9jHLALutIbPfMAvQtZQNv8NmxuoeFKVJ4owche3c=;
+        b=f0ff9e+cHuwlsz40CDVdhMwu+Y1P6KZ++e/fMChA2myIbIbgH/kvMI6BEnTrOpCHfc
+         K7oblfLqQK3cAuZ/7F3JHQsF2TycbT0fED4oVX9+/wJy6JoEKSrc6h+SAKGzGS8wFOWB
+         bEpt7puw5M8gWwhH6oKVysMdn3WsmnkWwWoyVjBC0BliqqD/96WB0mssmDg2mFs3VjPx
+         N2QUp0s2Q3u1LIsLk2zeUXmYPtPboyUOULtSV70e4NjC/fs2oNC5q+5iEfKwT7XHmJr6
+         WbZ+1CdwO1MrwJeRcLg4yzVm1KGiLxg8YQztuK7n9umR4j94Da4ZLS5XyW8QD7uOefzo
+         ezbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mc9lmGyL+jeXNfl+ikUp3ZPLt4CjX1mmz8iQ61bWTSw=;
-        b=E2Jj18DlmMySvIpbTBk2/B/LnaQQIvsnslXlfsJ1ZSEtGxobrlv2ziqu6FyIjPBAjw
-         PgX+GLBR3jB4nbg20xW3qoBLTq4ZY7AW15rCD3dOmEu0lnah5sVwZ8jNqgWMt8wHpaGc
-         apfFQJTg/i6jezvi/H1mVghfw8KjYK5WVzg5Z5he574QO5jUvzYIcgEXHnZMJCz65rCQ
-         Vc0aQaR/NG/Q8u0fBDSlvjM4tTup9Q1tRGTzeNuHssvrRb4qKYRx611hSUhe/hc6LLPl
-         ldVT0e4QsPs3NQ6q/zOYdY9rQZLY2J2NkXf4xeZcXU3EN4o6fSyh19/Wm/FOlr4eiJTE
-         R5kg==
-X-Gm-Message-State: AOAM532X4qni2ffEBaE4Qm9ykM+5zFZpY3jbMKELjWD8q7Hf6KUTiLH7
-        thjYbsFWok53TDJUmV7cxA==
-X-Google-Smtp-Source: ABdhPJx9TVZlSTriEOcPu+y1bXUWIWmA8WK4eIs83drHb2BEbfukR4hcMW8BKRsqjVpo9ofJ1PbzsQ==
-X-Received: by 2002:a05:6808:1494:: with SMTP id e20mr260053oiw.111.1629750408451;
-        Mon, 23 Aug 2021 13:26:48 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id b11sm3560434ooi.0.2021.08.23.13.26.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Aug 2021 13:26:48 -0700 (PDT)
-Received: (nullmailer pid 2662470 invoked by uid 1000);
-        Mon, 23 Aug 2021 20:26:42 -0000
-Date:   Mon, 23 Aug 2021 15:26:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/3] libperf tests: Fix verbose printing
-Message-ID: <YSQEghUuFobZN5T+@robh.at.kernel.org>
-References: <20210820093908.734503-1-nakamura.shun@fujitsu.com>
- <20210820093908.734503-3-nakamura.shun@fujitsu.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zLS9jHLALutIbPfMAvQtZQNv8NmxuoeFKVJ4owche3c=;
+        b=d1t6jKPajofdHznFvamSA7GASWEL0UlQxiGz56/CXRoLsBeAC6xTIgcA1V9DetAGyd
+         VdANqMpBYJQxKB5W/pmXAq/va/oZBrF2p0Gme+h1xobSYltCDtIpkmbIbQlBtkjmqJd2
+         Ieyfq8KWjB9PHLUhcu9dHHhCo6UQtW8+yKJzXFm/1Sh1hBJRrA3e5c99FZU8Oo0Oz1YJ
+         vxFRUOxtglTyCGILI/6xMm6CsoQ+DyHJ6wYZKQnu4NehyZLEUsOaNLKxnyncuwNjqZ3j
+         k4ofkfVBjUpMHg1Q9zODiWXTbsN48sSVyJadg1xpr4RK/D/fIfg8VgpTN3rBovzPp4VZ
+         CJaw==
+X-Gm-Message-State: AOAM530m/tyFwRXJW0chvvvSIiF/RtvvKWioYFPcOoq/YuepQJ3vb3do
+        Q/QU/ZE0ypV8KTQFlJk3sS5Kiw7Q8j+ctR1BHVGN8Q==
+X-Google-Smtp-Source: ABdhPJy0zo5sFtM+bsrybcGrHH2jHSecxZcgo9HEld36xXs4sjsjP+Z1GS5ekQBwoR/zOcNvBBTNmfmOd/8LaKw5ytw=
+X-Received: by 2002:a92:c68a:: with SMTP id o10mr23957128ilg.163.1629751683450;
+ Mon, 23 Aug 2021 13:48:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210820093908.734503-3-nakamura.shun@fujitsu.com>
+References: <3c4f8dd64d07373d876990ceb16e469b4029363f.camel@gmail.com> <b7a9f309-9765-2a64-026e-efa835989add@linux.intel.com>
+In-Reply-To: <b7a9f309-9765-2a64-026e-efa835989add@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 23 Aug 2021 13:47:51 -0700
+Message-ID: <CAP-5=fV1+WKKWVYVivDt1uE8P9koKre-=Boh0-P1vTD6uiw2=A@mail.gmail.com>
+Subject: Re: [GSoC] Multi-threading in perf: Final Report
+To:     "Bayduraev, Alexey V" <alexey.v.bayduraev@linux.intel.com>
+Cc:     Riccardo Mancini <rickyman7@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 06:39:07PM +0900, Shunsuke Nakamura wrote:
-> libperf's verbose printing checks the -v option every time the macro _T_ START
+On Mon, Aug 23, 2021 at 4:40 AM Bayduraev, Alexey V
+<alexey.v.bayduraev@linux.intel.com> wrote:
+>
+> On 21.08.2021 12:41, Riccardo Mancini wrote:
+> > Hi,
+> >
+> > this is the final report of my project "Multi-threading in perf",
+> > developed as part of the Google Summer of Code with the Linux Foundation.
+> > https://summerofcode.withgoogle.com/projects/#4670070929752064
+> <SNIP>
+> >
+> > Review activity:
+> > PATCHSET Introduce threaded trace streaming for basic perf record operation
+> >   Link: https://lore.kernel.org/lkml/cover.1629186429.git.alexey.v.bayduraev@linux.intel.com/
+> >   Contribution: helped in fixing some bugs, performed extensive testing
+>
+> Hi Riccardo,
+>
+> Thank you very much for the deep review and extensive testing of
+> this patchset, it was very helpful and allowed us to improve
+> the quality of the feature used in our product.
+>
+> Good luck,
+> Alexey
 
-__T_START
+Likewise, thank you Riccardo! It is always implied but not said often
+enough, thank you Arnaldo! I'm hoping the success of Riccardo's work
+will be an example for next year and we can also get more mentor
+volunteers.
 
-> is called.
-> 
-> Since there are currently four libperf tests registered, the macro _T_ START is
-> called four times, but verbose printing after the second time is not output.
-> 
-> Resets the index of the element processed by getopt() and fix verbose printing
-> so that it prints in all tests.
-> 
-> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-> ---
->  tools/lib/perf/include/internal/tests.h | 2 ++
->  1 file changed, 2 insertions(+)
+Thanks!
+Ian
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/tools/lib/perf/include/internal/tests.h b/tools/lib/perf/include/internal/tests.h
-> index 61052099225b..b130a6663ff8 100644
-> --- a/tools/lib/perf/include/internal/tests.h
-> +++ b/tools/lib/perf/include/internal/tests.h
-> @@ -23,6 +23,8 @@ static inline int get_verbose(char **argv, int argc)
->  			break;
->  		}
->  	}
-> +	optind = 1;
-> +
->  	return verbose;
->  }
->  
-> -- 
-> 2.25.1
-> 
-> 
+> > PATCHSET perf tools: Add PMU alias support
+> >   Link: https://lore.kernel.org/lkml/20210729070619.20726-1-yao.jin@linux.intel.com/
+> >   Link: https://lore.kernel.org/lkml/20210729070619.20726-1-yao.jin@linux.intel.com/
+> >   Contribution: helped in fixing some memory bugs
+> >
+> >
