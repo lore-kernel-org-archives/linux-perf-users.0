@@ -6,101 +6,95 @@ X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5A3C4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:12:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E233C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4F5613D0
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 031A46103A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232295AbhHWUNE (ORCPT
+        id S232060AbhHWU1c (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Aug 2021 16:13:04 -0400
-Received: from mail-ot1-f52.google.com ([209.85.210.52]:36718 "EHLO
-        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbhHWUND (ORCPT
+        Mon, 23 Aug 2021 16:27:32 -0400
+Received: from mail-ot1-f50.google.com ([209.85.210.50]:35663 "EHLO
+        mail-ot1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231569AbhHWU1b (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Aug 2021 16:13:03 -0400
-Received: by mail-ot1-f52.google.com with SMTP id a20-20020a0568300b9400b0051b8ca82dfcso18685095otv.3;
-        Mon, 23 Aug 2021 13:12:20 -0700 (PDT)
+        Mon, 23 Aug 2021 16:27:31 -0400
+Received: by mail-ot1-f50.google.com with SMTP id y14-20020a0568302a0e00b0051acbdb2869so32936577otu.2;
+        Mon, 23 Aug 2021 13:26:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=L179XY5+/AP6kKn6By4MFvJ/DUa+ej7EMi3LsNJUgg8=;
-        b=erHp3HLxbYf/S6WhkPf4Y3Ej1b4GH0+1grqoP2SBYTv3W5NclIQY7B9VBlOKHW+qJS
-         NkmjQ4GTKQZvBkrPyA8OT68Xtqw3Bc2QqKL9bePwPTupt1M/cJfLRIuWazxINu8J8DBt
-         sbMBdHI+n9pCF81EU2HV27p0CqojHK29HeOBAcQucQ/wX9IU76Cnz1L7AxYSeI5f6bJS
-         drICXj0E8IIzZW6xeSwN9xIYKX5QnAvCsYrEfPCO/5lQz1WAS+m9gFXdYIWI8ngcpFtk
-         iWhE6T7f3dXxJW82S4OJmh5cj0QIJa6FlyAKyRHfCh0mJJJ+huJSvIMnTDFamPkRz4oS
-         xIRw==
-X-Gm-Message-State: AOAM533pfGaj0ne3ZfFqgQxhqKA0GOUNcnQL6hmrXqPp7uPTXf3XYg0d
-        /MRQeWnPDdwGgIP8TGWqaA==
-X-Google-Smtp-Source: ABdhPJypZUdl4H1QY/HJlh7aKbMM5b7Qh20n0jvTwPptwLCsuyebV8QC6AAF5p2YxVxyTTLbXBnlRw==
-X-Received: by 2002:aca:b341:: with SMTP id c62mr252257oif.136.1629749540372;
-        Mon, 23 Aug 2021 13:12:20 -0700 (PDT)
+        bh=mc9lmGyL+jeXNfl+ikUp3ZPLt4CjX1mmz8iQ61bWTSw=;
+        b=E2Jj18DlmMySvIpbTBk2/B/LnaQQIvsnslXlfsJ1ZSEtGxobrlv2ziqu6FyIjPBAjw
+         PgX+GLBR3jB4nbg20xW3qoBLTq4ZY7AW15rCD3dOmEu0lnah5sVwZ8jNqgWMt8wHpaGc
+         apfFQJTg/i6jezvi/H1mVghfw8KjYK5WVzg5Z5he574QO5jUvzYIcgEXHnZMJCz65rCQ
+         Vc0aQaR/NG/Q8u0fBDSlvjM4tTup9Q1tRGTzeNuHssvrRb4qKYRx611hSUhe/hc6LLPl
+         ldVT0e4QsPs3NQ6q/zOYdY9rQZLY2J2NkXf4xeZcXU3EN4o6fSyh19/Wm/FOlr4eiJTE
+         R5kg==
+X-Gm-Message-State: AOAM532X4qni2ffEBaE4Qm9ykM+5zFZpY3jbMKELjWD8q7Hf6KUTiLH7
+        thjYbsFWok53TDJUmV7cxA==
+X-Google-Smtp-Source: ABdhPJx9TVZlSTriEOcPu+y1bXUWIWmA8WK4eIs83drHb2BEbfukR4hcMW8BKRsqjVpo9ofJ1PbzsQ==
+X-Received: by 2002:a05:6808:1494:: with SMTP id e20mr260053oiw.111.1629750408451;
+        Mon, 23 Aug 2021 13:26:48 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id 68sm4040897otj.57.2021.08.23.13.12.19
+        by smtp.gmail.com with ESMTPSA id b11sm3560434ooi.0.2021.08.23.13.26.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Aug 2021 13:12:19 -0700 (PDT)
-Received: (nullmailer pid 2638653 invoked by uid 1000);
-        Mon, 23 Aug 2021 20:12:19 -0000
-Date:   Mon, 23 Aug 2021 15:12:19 -0500
+        Mon, 23 Aug 2021 13:26:48 -0700 (PDT)
+Received: (nullmailer pid 2662470 invoked by uid 1000);
+        Mon, 23 Aug 2021 20:26:42 -0000
+Date:   Mon, 23 Aug 2021 15:26:42 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@redhat.com, namhyung@kernel.org,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/3] libperf: Add processing to scale the counters
- obtained during the read() system call when multiplexing
-Message-ID: <YSQBI+FZLBvKr088@robh.at.kernel.org>
+Subject: Re: [PATCH 2/3] libperf tests: Fix verbose printing
+Message-ID: <YSQEghUuFobZN5T+@robh.at.kernel.org>
 References: <20210820093908.734503-1-nakamura.shun@fujitsu.com>
- <20210820093908.734503-2-nakamura.shun@fujitsu.com>
+ <20210820093908.734503-3-nakamura.shun@fujitsu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210820093908.734503-2-nakamura.shun@fujitsu.com>
+In-Reply-To: <20210820093908.734503-3-nakamura.shun@fujitsu.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 06:39:06PM +0900, Shunsuke Nakamura wrote:
-> perf_evsel__read() scales counters obtained by RDPMC during multiplexing, but
-> does not scale counters obtained by read() system call.
+On Fri, Aug 20, 2021 at 06:39:07PM +0900, Shunsuke Nakamura wrote:
+> libperf's verbose printing checks the -v option every time the macro _T_ START
+
+__T_START
+
+> is called.
 > 
-> Add processing to perf_evsel__read() to scale the counters obtained during the
-> read() system call when multiplexing.
-
-Which one is right though? Changing what read() returns could break 
-users, right? Or are you implying that the RDPMC path is correct and 
-read() was not. More likely the former case since I wrote the latter.
-
+> Since there are currently four libperf tests registered, the macro _T_ START is
+> called four times, but verbose printing after the second time is not output.
+> 
+> Resets the index of the element processed by getopt() and fix verbose printing
+> so that it prints in all tests.
 > 
 > Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
 > ---
->  tools/lib/perf/evsel.c | 4 ++++
->  1 file changed, 4 insertions(+)
+>  tools/lib/perf/include/internal/tests.h | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Acked-by: Rob Herring <robh@kernel.org>
+
 > 
-> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-> index d8886720e83d..005cf64a1ad7 100644
-> --- a/tools/lib/perf/evsel.c
-> +++ b/tools/lib/perf/evsel.c
-> @@ -18,6 +18,7 @@
->  #include <sys/ioctl.h>
->  #include <sys/mman.h>
->  #include <asm/bug.h>
-> +#include <linux/math64.h>
->  
->  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
->  		      int idx)
-> @@ -308,6 +309,9 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
->  	if (readn(FD(evsel, cpu, thread), count->values, size) <= 0)
->  		return -errno;
->  
-> +	if (count->ena != count->run)
-> +		count->val = mul_u64_u64_div64(count->val, count->ena, count->run);
+> diff --git a/tools/lib/perf/include/internal/tests.h b/tools/lib/perf/include/internal/tests.h
+> index 61052099225b..b130a6663ff8 100644
+> --- a/tools/lib/perf/include/internal/tests.h
+> +++ b/tools/lib/perf/include/internal/tests.h
+> @@ -23,6 +23,8 @@ static inline int get_verbose(char **argv, int argc)
+>  			break;
+>  		}
+>  	}
+> +	optind = 1;
 > +
->  	return 0;
+>  	return verbose;
 >  }
 >  
 > -- 
