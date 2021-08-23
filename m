@@ -2,172 +2,108 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,INCLUDES_CR_TRAILER,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5336EC4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 19:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5A3C4338F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A898613D3
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 19:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E4F5613D0
+	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232240AbhHWTiY (ORCPT
+        id S232295AbhHWUNE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Aug 2021 15:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232138AbhHWTiN (ORCPT
+        Mon, 23 Aug 2021 16:13:04 -0400
+Received: from mail-ot1-f52.google.com ([209.85.210.52]:36718 "EHLO
+        mail-ot1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232237AbhHWUND (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Aug 2021 15:38:13 -0400
-Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B18DC061764
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 12:37:30 -0700 (PDT)
-Received: by mail-qv1-xf4a.google.com with SMTP id dv7-20020ad44ee7000000b0036fa79fd337so2813039qvb.6
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 12:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=reply-to:date:in-reply-to:message-id:mime-version:references
-         :subject:from:to:cc;
-        bh=rmYIpDdU3QK7p6S3HsrzN12lySY7VGfi8e7ewdZ2wvA=;
-        b=wJL7Xz9VU1rOK6hlGPydrdtHKr/VbFayeoZuxgI/pClqesV+XUtE4QUu6XbrrGKUZV
-         ITPHTHT20kry0avyUfIqLBA5JQIDxHabRE0taMXo5NdR5kv+wryPWEN84fvWo+bgfMCk
-         gsHovFqh4jAGff4gsw+zhuTuVahcourpbCDWAlPWtNjHNgrYonayLLqtPlPy7tWmSIYj
-         SV2v2u/HMZREXghd0Hpq/8lks5BDnj089jgrDv/KYMCPEauxiUC5forh8V9GGgO1yjGr
-         oWDhGoeu9Dc2hqnIrJJb0hakosarXIXsCuDxJGiDyZkJO4UhCloFjVRUdM2sYTUdJq/C
-         CGng==
+        Mon, 23 Aug 2021 16:13:03 -0400
+Received: by mail-ot1-f52.google.com with SMTP id a20-20020a0568300b9400b0051b8ca82dfcso18685095otv.3;
+        Mon, 23 Aug 2021 13:12:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:date:in-reply-to:message-id
-         :mime-version:references:subject:from:to:cc;
-        bh=rmYIpDdU3QK7p6S3HsrzN12lySY7VGfi8e7ewdZ2wvA=;
-        b=F37SOl+DOJORTt1SGIA9iN2YxWlLaAB3sULQXVzTlEgBD5m+nu1AEqyUSfWlDf54HL
-         ZRIlbNBMsKO6MJFCC+0h3FbW8SPKWs4i9t7AQG/EbnnOfqZjVZshb8GK8svxpG8ON5W4
-         iDFHp9pLPx1xNDE8WlNzbgu8vSFJoqk/UOK4HToymGhgkO5aexprLF8MmUX34P8tQIPp
-         unpJ2TL5K/VZ89pYyn+zQN9LvMLN02UT93zc8nV1RFlsXvfxkf/9YYWEpFjms0x0f+ko
-         3LOKl+fco2K8Ge+7OJh6lZd2Nf2OCTa28jAHIY7wiCiTBfcbnlY+QkuH1IrkhTztPRBt
-         T9zg==
-X-Gm-Message-State: AOAM532tDQcr3vPJ9/qKzpNrpDXoTQYSnWoakN5m+zQG6tiNwcTDl1XT
-        UGASJpaqfdRWOYTYPg2JY/SfISaKL/M=
-X-Google-Smtp-Source: ABdhPJxMughRTeNGSfkS7sQ5RCx/BDaAhNO0JOHhWF1MAuK3EB9WU/08l/gP2MCeN22B+W0LyWkDmS1X6TU=
-X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:109c:7eb8:d5ed:2e59])
- (user=seanjc job=sendgmr) by 2002:a05:6214:312:: with SMTP id
- i18mr2221144qvu.48.1629747449581; Mon, 23 Aug 2021 12:37:29 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Mon, 23 Aug 2021 12:37:09 -0700
-In-Reply-To: <20210823193709.55886-1-seanjc@google.com>
-Message-Id: <20210823193709.55886-4-seanjc@google.com>
-Mime-Version: 1.0
-References: <20210823193709.55886-1-seanjc@google.com>
-X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
-Subject: [PATCH 3/3] perf/x86/intel: Fold current_vcpu check into KVM's PT
- intr handler
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Artem Kashkanov <artem.kashkanov@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=L179XY5+/AP6kKn6By4MFvJ/DUa+ej7EMi3LsNJUgg8=;
+        b=erHp3HLxbYf/S6WhkPf4Y3Ej1b4GH0+1grqoP2SBYTv3W5NclIQY7B9VBlOKHW+qJS
+         NkmjQ4GTKQZvBkrPyA8OT68Xtqw3Bc2QqKL9bePwPTupt1M/cJfLRIuWazxINu8J8DBt
+         sbMBdHI+n9pCF81EU2HV27p0CqojHK29HeOBAcQucQ/wX9IU76Cnz1L7AxYSeI5f6bJS
+         drICXj0E8IIzZW6xeSwN9xIYKX5QnAvCsYrEfPCO/5lQz1WAS+m9gFXdYIWI8ngcpFtk
+         iWhE6T7f3dXxJW82S4OJmh5cj0QIJa6FlyAKyRHfCh0mJJJ+huJSvIMnTDFamPkRz4oS
+         xIRw==
+X-Gm-Message-State: AOAM533pfGaj0ne3ZfFqgQxhqKA0GOUNcnQL6hmrXqPp7uPTXf3XYg0d
+        /MRQeWnPDdwGgIP8TGWqaA==
+X-Google-Smtp-Source: ABdhPJypZUdl4H1QY/HJlh7aKbMM5b7Qh20n0jvTwPptwLCsuyebV8QC6AAF5p2YxVxyTTLbXBnlRw==
+X-Received: by 2002:aca:b341:: with SMTP id c62mr252257oif.136.1629749540372;
+        Mon, 23 Aug 2021 13:12:20 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id 68sm4040897otj.57.2021.08.23.13.12.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Aug 2021 13:12:19 -0700 (PDT)
+Received: (nullmailer pid 2638653 invoked by uid 1000);
+        Mon, 23 Aug 2021 20:12:19 -0000
+Date:   Mon, 23 Aug 2021 15:12:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/3] libperf: Add processing to scale the counters
+ obtained during the read() system call when multiplexing
+Message-ID: <YSQBI+FZLBvKr088@robh.at.kernel.org>
+References: <20210820093908.734503-1-nakamura.shun@fujitsu.com>
+ <20210820093908.734503-2-nakamura.shun@fujitsu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210820093908.734503-2-nakamura.shun@fujitsu.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move the check for a non-NULL current_vcpu into KVM's PT intr handler
-instead of relying on the caller to perform the check.  In addition to
-ensuring KVM's handler won't dereference a NULL pointer (and making it
-obvious that it can't), this avoids a reptoline when KVM is configured to
-run PT in "system mode", in which case handle_intel_pt_intr will be NULL.
+On Fri, Aug 20, 2021 at 06:39:06PM +0900, Shunsuke Nakamura wrote:
+> perf_evsel__read() scales counters obtained by RDPMC during multiplexing, but
+> does not scale counters obtained by read() system call.
+> 
+> Add processing to perf_evsel__read() to scale the counters obtained during the
+> read() system call when multiplexing.
 
-No functional change intended.
+Which one is right though? Changing what read() returns could break 
+users, right? Or are you implying that the RDPMC path is correct and 
+read() was not. More likely the former case since I wrote the latter.
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/events/intel/core.c | 7 +++----
- arch/x86/kvm/pmu.h           | 2 +-
- arch/x86/kvm/x86.c           | 6 +++++-
- include/linux/perf_event.h   | 2 +-
- 4 files changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index fca7a6e2242f..060f1f1ebe15 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2852,10 +2852,9 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
- 	 */
- 	if (__test_and_clear_bit(GLOBAL_STATUS_TRACE_TOPAPMI_BIT, (unsigned long *)&status)) {
- 		handled++;
--		if (unlikely(perf_guest_cbs && perf_guest_cbs->is_in_guest() &&
--			perf_guest_cbs->handle_intel_pt_intr))
--			perf_guest_cbs->handle_intel_pt_intr();
--		else
-+		if (likely(!perf_guest_cbs ||
-+			   !perf_guest_cbs->handle_intel_pt_intr ||
-+			   perf_guest_cbs->handle_intel_pt_intr()))
- 			intel_pt_interrupt();
- 	}
- 
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index b06dbbd7eeeb..4e8a38eca72b 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -41,7 +41,7 @@ struct kvm_pmu_ops {
- 	void (*reset)(struct kvm_vcpu *vcpu);
- 	void (*deliver_pmi)(struct kvm_vcpu *vcpu);
- 	void (*cleanup)(struct kvm_vcpu *vcpu);
--	void (*handle_intel_pt_intr)(void);
-+	int (*handle_intel_pt_intr)(void);
- };
- 
- static inline u64 pmc_bitmask(struct kvm_pmc *pmc)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b5ade47dad9c..3f289192f25f 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8292,13 +8292,17 @@ static unsigned long kvm_get_guest_ip(void)
- 	return ip;
- }
- 
--static void kvm_handle_intel_pt_intr(void)
-+static int kvm_handle_intel_pt_intr(void)
- {
- 	struct kvm_vcpu *vcpu = __this_cpu_read(current_vcpu);
- 
-+	if (!vcpu)
-+		return -ENXIO;
-+
- 	kvm_make_request(KVM_REQ_PMI, vcpu);
- 	__set_bit(MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI_BIT,
- 			(unsigned long *)&vcpu->arch.pmu.global_status);
-+	return 0;
- }
- 
- static struct perf_guest_info_callbacks kvm_guest_cbs = {
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 2d510ad750ed..f812c2570285 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -30,7 +30,7 @@ struct perf_guest_info_callbacks {
- 	int				(*is_in_guest)(void);
- 	int				(*is_user_mode)(void);
- 	unsigned long			(*get_guest_ip)(void);
--	void				(*handle_intel_pt_intr)(void);
-+	int				(*handle_intel_pt_intr)(void);
- };
- 
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
--- 
-2.33.0.rc2.250.ged5fa647cd-goog
-
+> 
+> Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+> ---
+>  tools/lib/perf/evsel.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+> index d8886720e83d..005cf64a1ad7 100644
+> --- a/tools/lib/perf/evsel.c
+> +++ b/tools/lib/perf/evsel.c
+> @@ -18,6 +18,7 @@
+>  #include <sys/ioctl.h>
+>  #include <sys/mman.h>
+>  #include <asm/bug.h>
+> +#include <linux/math64.h>
+>  
+>  void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
+>  		      int idx)
+> @@ -308,6 +309,9 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+>  	if (readn(FD(evsel, cpu, thread), count->values, size) <= 0)
+>  		return -errno;
+>  
+> +	if (count->ena != count->run)
+> +		count->val = mul_u64_u64_div64(count->val, count->ena, count->run);
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.25.1
+> 
+> 
