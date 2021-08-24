@@ -2,111 +2,137 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C2CC4338F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1AAC4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 02:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6CD161246
-	for <linux-perf-users@archiver.kernel.org>; Mon, 23 Aug 2021 20:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C92461361
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 02:13:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232638AbhHWUss (ORCPT
+        id S233706AbhHXCOR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 23 Aug 2021 16:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
+        Mon, 23 Aug 2021 22:14:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232446AbhHWUsr (ORCPT
+        with ESMTP id S232779AbhHXCOM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 23 Aug 2021 16:48:47 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F57AC061575
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 13:48:04 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id h29so18400335ila.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 13:48:04 -0700 (PDT)
+        Mon, 23 Aug 2021 22:14:12 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811AEC061757
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 19:13:28 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id b9so6936621plx.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 23 Aug 2021 19:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zLS9jHLALutIbPfMAvQtZQNv8NmxuoeFKVJ4owche3c=;
-        b=f0ff9e+cHuwlsz40CDVdhMwu+Y1P6KZ++e/fMChA2myIbIbgH/kvMI6BEnTrOpCHfc
-         K7oblfLqQK3cAuZ/7F3JHQsF2TycbT0fED4oVX9+/wJy6JoEKSrc6h+SAKGzGS8wFOWB
-         bEpt7puw5M8gWwhH6oKVysMdn3WsmnkWwWoyVjBC0BliqqD/96WB0mssmDg2mFs3VjPx
-         N2QUp0s2Q3u1LIsLk2zeUXmYPtPboyUOULtSV70e4NjC/fs2oNC5q+5iEfKwT7XHmJr6
-         WbZ+1CdwO1MrwJeRcLg4yzVm1KGiLxg8YQztuK7n9umR4j94Da4ZLS5XyW8QD7uOefzo
-         ezbg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hTyHyLQYzEOA4uGWERB+WxPgnaDFfEzDVJ9NEcQymOA=;
+        b=ravVzzjn1uN3ecrzUOIwEmyxWBG0Bqlfl4gAtOHZjf+4xRiy2kVXIMcyFiaqHPhGsV
+         oVLQpyr3ttQdVbbH6cxkYmAJkZg2AYl6h1XR9BqavGNSC2EjVzBbgm/xTMq2gwto8qir
+         UjsKMKIzGb0RNllfnlZHj1bqOsW6nIA/ZWqtBwuNYBRiib8Sb1zGNgOG/17AFGjZUdYR
+         UeR5Jr+ZfM1sxHm8SfZu+IzfgsN8hwASZMRsE6sLjI7MPRIVfHv/7/6+uNqkRAq3JDhy
+         QkKp1hzSbumGGYCS66x6h3CMI3JPRIJUEDVopLtbsjgJALodolwHIpait5gaxEaO0wn0
+         vnlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zLS9jHLALutIbPfMAvQtZQNv8NmxuoeFKVJ4owche3c=;
-        b=d1t6jKPajofdHznFvamSA7GASWEL0UlQxiGz56/CXRoLsBeAC6xTIgcA1V9DetAGyd
-         VdANqMpBYJQxKB5W/pmXAq/va/oZBrF2p0Gme+h1xobSYltCDtIpkmbIbQlBtkjmqJd2
-         Ieyfq8KWjB9PHLUhcu9dHHhCo6UQtW8+yKJzXFm/1Sh1hBJRrA3e5c99FZU8Oo0Oz1YJ
-         vxFRUOxtglTyCGILI/6xMm6CsoQ+DyHJ6wYZKQnu4NehyZLEUsOaNLKxnyncuwNjqZ3j
-         k4ofkfVBjUpMHg1Q9zODiWXTbsN48sSVyJadg1xpr4RK/D/fIfg8VgpTN3rBovzPp4VZ
-         CJaw==
-X-Gm-Message-State: AOAM530m/tyFwRXJW0chvvvSIiF/RtvvKWioYFPcOoq/YuepQJ3vb3do
-        Q/QU/ZE0ypV8KTQFlJk3sS5Kiw7Q8j+ctR1BHVGN8Q==
-X-Google-Smtp-Source: ABdhPJy0zo5sFtM+bsrybcGrHH2jHSecxZcgo9HEld36xXs4sjsjP+Z1GS5ekQBwoR/zOcNvBBTNmfmOd/8LaKw5ytw=
-X-Received: by 2002:a92:c68a:: with SMTP id o10mr23957128ilg.163.1629751683450;
- Mon, 23 Aug 2021 13:48:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <3c4f8dd64d07373d876990ceb16e469b4029363f.camel@gmail.com> <b7a9f309-9765-2a64-026e-efa835989add@linux.intel.com>
-In-Reply-To: <b7a9f309-9765-2a64-026e-efa835989add@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 23 Aug 2021 13:47:51 -0700
-Message-ID: <CAP-5=fV1+WKKWVYVivDt1uE8P9koKre-=Boh0-P1vTD6uiw2=A@mail.gmail.com>
-Subject: Re: [GSoC] Multi-threading in perf: Final Report
-To:     "Bayduraev, Alexey V" <alexey.v.bayduraev@linux.intel.com>
-Cc:     Riccardo Mancini <rickyman7@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hTyHyLQYzEOA4uGWERB+WxPgnaDFfEzDVJ9NEcQymOA=;
+        b=dNWEuwRxDr5Xr81ogRPv0LcU8sVw3kyw1tI+UQFGkMNOGI4RCcygipgBNVnzn1AN9n
+         8sJ80T04UgGGn1roVMfKSlsQlJndL2ZyK8w1UnuG21fS3mSdwiW58L4YcZcLlfa2Bos/
+         vqPfFnaXFdHopLoZa3C+qeW8S4KipJqLpnEvRsgT0nOwpRfeH3IuZUAkB+IEaKjusH4t
+         ohTmsB4avDRKrSbpF8Ixrl3tsJGJm6uccyWH/kADU3Hjed1vAZLav2Urm+lkLeehL8+V
+         8DPdjC5wLmcLTCdu1bltY4c7pad9TWwuQwwE2LLfkEessRn+eCp/7Yf0i1WTtWjHw4XW
+         7/Fg==
+X-Gm-Message-State: AOAM533tTJ46LJ+1yIotwI96OhXDx04ALtI+S6RRty1SCJXwKAoggSzu
+        ZK9bwQTp1RUxQ1+f9J7iQXmwwA==
+X-Google-Smtp-Source: ABdhPJw5H5ZKTPpbqVElGplnJQ/vrdCiMzI0zx7nxayb7jgjvyYy2Vk7apfHRO1XNDK+qpYPc5C61g==
+X-Received: by 2002:a17:903:22c2:b0:12d:b609:a37e with SMTP id y2-20020a17090322c200b0012db609a37emr31041795plg.68.1629771207771;
+        Mon, 23 Aug 2021 19:13:27 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s ([114.87.70.46])
+        by smtp.gmail.com with ESMTPSA id l12sm16720326pff.182.2021.08.23.19.13.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Aug 2021 19:13:27 -0700 (PDT)
+Date:   Tue, 24 Aug 2021 10:13:11 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.garry@huawei.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Li Huafei <lihuafei1@huawei.com>, coresight@lists.linaro.org
+Subject: Re: [PATCH v1 2/3] perf auxtrace: Add
+ compat_auxtrace_mmap__{read_head|write_tail}
+Message-ID: <20210824021311.GB169379@leoy-ThinkPad-X240s>
+References: <20210809112727.596876-1-leo.yan@linaro.org>
+ <20210809112727.596876-3-leo.yan@linaro.org>
+ <2b4e0c07-a8df-cca6-6a94-328560f4b0c6@arm.com>
+ <20210823095155.GC100516@leoy-ThinkPad-X240s>
+ <319ee11a-06f7-abde-6495-d2175928b9fe@arm.com>
+ <20210823121348.GE100516@leoy-ThinkPad-X240s>
+ <1c0101fd-2ca6-4741-5d72-82d3e00bfeb6@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c0101fd-2ca6-4741-5d72-82d3e00bfeb6@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 4:40 AM Bayduraev, Alexey V
-<alexey.v.bayduraev@linux.intel.com> wrote:
->
-> On 21.08.2021 12:41, Riccardo Mancini wrote:
-> > Hi,
-> >
-> > this is the final report of my project "Multi-threading in perf",
-> > developed as part of the Google Summer of Code with the Linux Foundation.
-> > https://summerofcode.withgoogle.com/projects/#4670070929752064
-> <SNIP>
-> >
-> > Review activity:
-> > PATCHSET Introduce threaded trace streaming for basic perf record operation
-> >   Link: https://lore.kernel.org/lkml/cover.1629186429.git.alexey.v.bayduraev@linux.intel.com/
-> >   Contribution: helped in fixing some bugs, performed extensive testing
->
-> Hi Riccardo,
->
-> Thank you very much for the deep review and extensive testing of
-> this patchset, it was very helpful and allowed us to improve
-> the quality of the feature used in our product.
->
-> Good luck,
-> Alexey
+On Mon, Aug 23, 2021 at 05:00:14PM +0100, James Clark wrote:
 
-Likewise, thank you Riccardo! It is always implied but not said often
-enough, thank you Arnaldo! I'm hoping the success of Riccardo's work
-will be an example for next year and we can also get more mentor
-volunteers.
+[...]
 
-Thanks!
-Ian
+> >> I couldn't see how it can ever return -1, it seems like it would loop forever
+> >> until it reads the correct value.
+> > 
+> > I use this chunk comment to address the function
+> > compat_auxtrace_mmap__write_tail():
+> > 
+> > +int __weak compat_auxtrace_mmap__write_tail(struct auxtrace_mmap *mm, u64 tail)
+> > +{
+> > +	struct perf_event_mmap_page *pc = mm->userpg;
+> > +	u64 mask = (u64)(UINT32_MAX) << 32;
+> > +
+> > +	if (tail & mask)
+> > +		return -1;
+> > +
+> > +	/* Ensure all reads are done before we write the tail out */
+> > +	smp_mb();
+> > +	WRITE_ONCE(pc->aux_tail, tail);
+> > +	return 0;
+> > +}
+> > 
+> > Please let me know if this is okay or not?  Otherwise, if you think
+> > the format can cause confusion, I'd like to split the comments into
+> > two sections, one section for reading AUX head and another is for
+> > writing AUX tail.
+> 
+> I see what you mean now, I think keeping it in one section is fine, I would just
+> replace "When update the AUX tail and detects" with "When
+> compat_auxtrace_mmap__write_tail() detects". If the function name is there then
+> it's clear that it's not the return value of compat_auxtrace_mmap__read_head()
 
-> > PATCHSET perf tools: Add PMU alias support
-> >   Link: https://lore.kernel.org/lkml/20210729070619.20726-1-yao.jin@linux.intel.com/
-> >   Link: https://lore.kernel.org/lkml/20210729070619.20726-1-yao.jin@linux.intel.com/
-> >   Contribution: helped in fixing some memory bugs
-> >
-> >
+Sure, will update and send out the new patch.
+
+Thanks for suggestion.
+Leo
