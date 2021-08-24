@@ -2,107 +2,113 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BB3C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 14:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFD8C4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 14:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B23860F58
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 14:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76857611C9
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 14:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237656AbhHXOMB (ORCPT
+        id S237745AbhHXOiE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Aug 2021 10:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44986 "EHLO
+        Tue, 24 Aug 2021 10:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237615AbhHXOL7 (ORCPT
+        with ESMTP id S237718AbhHXOiE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Aug 2021 10:11:59 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7218BC061757
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 07:11:15 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id r9so2425222pfh.6
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 07:11:15 -0700 (PDT)
+        Tue, 24 Aug 2021 10:38:04 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F44C061757;
+        Tue, 24 Aug 2021 07:37:20 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id n126so28177135ybf.6;
+        Tue, 24 Aug 2021 07:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YmLwTeFT+SxrtBDHPBlPpTooAeMLXJ6OjqZTL8UUNLs=;
-        b=I9NZiJ1mM99W5a+Rj8XRIr7s3/bH+LCbc2cMe4RQvNyEG7Y6litHc20xpr75dBtISa
-         kTS75RUDWc9R4tslWVGsZYjr7tWxI7F7lVhfXN+w83+i4hLncRmApmshgZHRS8VBIASz
-         JgO0+bxHdm+kKqInFXjRY8CYDXVk/E7MFO+2mKTVD2YNOfcxs35/rVsTkLo3qNbVxl+y
-         jJInUuwcnaldaK3ai3I+ZZ1Fj8bfdkHZjCroeg5eR4KRLRnJOFPYcfNLpz5A2rktxgAc
-         UqexHcwCIye8OLocmxGiFFcrLjPvRM6qrNUBkzD0qcZodnN9Elg+jeIRJ0D6K9HbYxTb
-         ri1g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3MRebzfdJOp7jfrcpL/FM2xLk9BBQctQ5lkdEQBZyiE=;
+        b=lUnmzjsSKekeg4RrPHvJL4hAY0dkCJBUVuO/Y3K99H1Ij3PpHtzCymd2Cv54aWYVUs
+         MR1ergB1cCMRNFbIAs1plvFg2CmLH5xTlzR3fTQtcQcjB5xo3Z/SPJfaWocFseERyQc6
+         U4kxWzLtdbm+5KqfgFqhQPVHujjTMNyYsYmkkV5WesNTQd/cy29ypPe+1ieBK6hTcnqp
+         13YjAhhHAuQuUSZa0gdedN/xLa59/qfEnLSaa9qcYkq/+oTg9bU1/efD3IQRZVDFwrBl
+         7UyN6pB9zdduy5vqtb5VwMk62oOJKT3rLyraZt5n4NPWNlc/l/5eFi3PojoH3peBf6cg
+         vK5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YmLwTeFT+SxrtBDHPBlPpTooAeMLXJ6OjqZTL8UUNLs=;
-        b=c/wNJK8T9Jq3ZiaefUGY7QqM5Aib5N8B9Setn6rziuqLlBnPjfeNs1lqGfsYM6FO5d
-         HIyCNFA0DZL6cowXPSJMMaXuemAy6pSBxeYGStrvCZ1TGl/wnDV9M//OTGaCPiSvqsxs
-         GIlkyi7YEh2IsbvM+aWDZPc8OsQ+6eHZ2lYkaRU3J8tIkFCFgu0JOVmCE/FYtuhYYp1c
-         tqFyKRBN3Ea70PrqEPyqnRth9ldTisXz7ApLagpshjW8e8Una2BRqECDJfObBfyR8s7v
-         yeiBxJMWViZPtLGaA/pLEySS8v/6QYdMW/eGCCTO6G8buC3i8bNLAJpZ7AwSwUueCKwi
-         dX9w==
-X-Gm-Message-State: AOAM533xpNjcMYJbvj1dKlb9rdigQrWRods8REUSSjZT7tyApRGCt6BZ
-        E/8q6mOs2eme+paFqPLyV4mggA==
-X-Google-Smtp-Source: ABdhPJz7RfF2QLwXvYlzePFOBGFnKOn7bmELvMtuWl6us8IT/ixsx9jdZRZh8RGN0l8N5PO4mwjiZA==
-X-Received: by 2002:a63:770f:: with SMTP id s15mr37114375pgc.137.1629814274047;
-        Tue, 24 Aug 2021 07:11:14 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id y12sm23658595pgk.7.2021.08.24.07.11.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 07:11:13 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 14:11:07 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Artem Kashkanov <artem.kashkanov@intel.com>
-Subject: Re: [PATCH 2/3] KVM: x86: Register Processor Trace interrupt hook
- iff PT enabled in guest
-Message-ID: <YST9+5K5Kv9J9ojY@google.com>
-References: <20210823193709.55886-1-seanjc@google.com>
- <20210823193709.55886-3-seanjc@google.com>
- <87v93vi9nb.fsf@ashishki-desk.ger.corp.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3MRebzfdJOp7jfrcpL/FM2xLk9BBQctQ5lkdEQBZyiE=;
+        b=UNZxNV4twpPu5b7QmLFRUESu/bsB/Jh4BIkMinPKCnQinvsC5wK5AhvhDPNBGBBrqD
+         FQdc/ztWxU1CFNNa4utDPAiZoHPQ6VlahiaGTzun+bPwLjG5BfVyPIn89YNueWYpqPGK
+         soDwlDs2T79QABQEVWw+Xk21Z/pMIAZ8Cf/xfNeSeDO5s+h/5YJ/loJ5CpE1rdrooDqi
+         R2mVr1B3btsu0w7Vt3D/ub3Bdmf1e3EVnWIedSGbB+83eY4FfNzzio9RJ3hOa1TU5u0/
+         ALtgLa+KYu4SKFKFz8c8jfIdUharcvU8MH6kJyR6nW62I7Tvrpcpm77Fl1AckLWMKuEW
+         yEvQ==
+X-Gm-Message-State: AOAM533Vp0nWV/JV9zKkpe8oZVeGu/Ohby6rwu070LpOuNIMeIQt93Ai
+        Bi9sHk3gNenNH3aXfierpDt9yaS3NqPOz6ZWgiU=
+X-Google-Smtp-Source: ABdhPJwKJmy4aqa4MWNoqDJiNS836xhXqLuUfoxvfZlxGsRtGm4/gB4+91sxR70u6FjJEi3JwghTzxN4YtmwKywnuAQ=
+X-Received: by 2002:a25:b948:: with SMTP id s8mr51178619ybm.281.1629815838270;
+ Tue, 24 Aug 2021 07:37:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v93vi9nb.fsf@ashishki-desk.ger.corp.intel.com>
+References: <20210824085947.224062-1-nghialm78@gmail.com>
+In-Reply-To: <20210824085947.224062-1-nghialm78@gmail.com>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Tue, 24 Aug 2021 16:37:19 +0200
+Message-ID: <CAKXUXMzbJRHyUpFLGk8SBJHrkmkwq4VtfXmgvZtUBJGiED8qxw@mail.gmail.com>
+Subject: Re: [PATCH] perf tools: Add missing newline at the end of file
+To:     Nghia Le <nghialm78@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Aug 24, 2021, Alexander Shishkin wrote:
-> Sean Christopherson <seanjc@google.com> writes:
-> 
-> > diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-> > index 0e4f2b1fa9fb..b06dbbd7eeeb 100644
-> > --- a/arch/x86/kvm/pmu.h
-> > +++ b/arch/x86/kvm/pmu.h
-> > @@ -41,6 +41,7 @@ struct kvm_pmu_ops {
-> >  	void (*reset)(struct kvm_vcpu *vcpu);
-> >  	void (*deliver_pmi)(struct kvm_vcpu *vcpu);
-> >  	void (*cleanup)(struct kvm_vcpu *vcpu);
-> > +	void (*handle_intel_pt_intr)(void);
-> 
-> What's this one for?
+On Tue, Aug 24, 2021 at 11:00 AM Nghia Le <nghialm78@gmail.com> wrote:
+>
+> Add missing newline at the end of file parse-sublevel-options.h.
+> Thus removing relevant warning reported by checkpatch.
+>
+> Signed-off-by: Nghia Le <nghialm78@gmail.com>
 
-Doh, the remnants of one of my explorations trying to figure out the least gross
-way to conditionally register the handling.  I'll get it removed.
+Reviewed-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Good eyeballs, thanks!
+This addresses the only instance of a "no newline at the end of the
+file" throughout the kernel tree.
+
+This is part of a larger effort to identify all rules that checkpatch
+warns about and that are never false positives (compared to the many
+rules in checkpatch that are heuristics or are known to be ignored by
+the current development community and hence, cause many false
+positives). We could use such rules to be enforced in the submission
+process.
+
+Lukas
+Lukas
+> ---
+>  tools/perf/util/parse-sublevel-options.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/parse-sublevel-options.h b/tools/perf/util/parse-sublevel-options.h
+> index 9b9efcc2aaad..578b18ef03bb 100644
+> --- a/tools/perf/util/parse-sublevel-options.h
+> +++ b/tools/perf/util/parse-sublevel-options.h
+> @@ -8,4 +8,4 @@ struct sublevel_option {
+>
+>  int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts);
+>
+> -#endif
+> \ No newline at end of file
+> +#endif
+> --
+> 2.25.1
+>
