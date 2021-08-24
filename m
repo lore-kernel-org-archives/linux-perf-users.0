@@ -2,285 +2,188 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93B5C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 09:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28375C432BE
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 10:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D1461374
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 09:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130B761265
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 10:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235642AbhHXJjk (ORCPT
+        id S236033AbhHXKTe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Aug 2021 05:39:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35825 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235604AbhHXJjj (ORCPT
+        Tue, 24 Aug 2021 06:19:34 -0400
+Received: from esa10.fujitsucc.c3s2.iphmx.com ([68.232.159.247]:63752 "EHLO
+        esa10.fujitsucc.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236023AbhHXKTd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Aug 2021 05:39:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1629797934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qChd5GhgvITv4lmb/RWLeTtz1XsnlAPe0fCBIjbTUHE=;
-        b=jP1vH2ZO8zxaAEOjfvDjDSvJ5wX71zU8HnAamP8x1U7uUM34Vp4AUBEfS6rvf4eyhaqCe9
-        wzYjlUKE3HivFfhI+kixiuMzUrX/cOuydSbQpYri2bKE5y4mXzSV2PiS6tyuyMI35467Tq
-        WYPdTu7R9LZWnWtthmbfVJNGQBFIxgw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-hma1MgTyO6moMmDyZclaDQ-1; Tue, 24 Aug 2021 05:38:53 -0400
-X-MC-Unique: hma1MgTyO6moMmDyZclaDQ-1
-Received: by mail-wm1-f69.google.com with SMTP id 5-20020a1c00050000b02902e67111d9f0so3904173wma.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 02:38:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=qChd5GhgvITv4lmb/RWLeTtz1XsnlAPe0fCBIjbTUHE=;
-        b=oE+Z+cyqsGuYN0Ciy39Jt40P5709Ysni1bOVL5z+kNLEI5/3p60M3TPD/ejf4O8LS3
-         efUPurzRO87ZmD/xTUribZV+0JaPkydWXNW124mE1HaDBEnJmBzGTT+7VD3ghclbdIaT
-         qZ50oY5xOFS2rBUO3MrKZOaJ3iQJuWb5DWHCFdwf4FvBe8DIm2R55yyOfJKVKOZ0PZgY
-         0wGnjr/E/BONUEZEVS76tmtnRNqRFRqzfMciHzntUKHReHKXh/F6OPtDldxUwfrBD9zo
-         BULmebfJtjJFclUj7TaCjELlGxtXG5pS8lnwF1IdmApZMaMipogrX4PQ7z66X10xOS0r
-         Kenw==
-X-Gm-Message-State: AOAM533d+wwJicogsJkHrdgtEg3Eq31iQU82hHZrOfFyboQf61R1qeNH
-        gRWRjxsLYdG2r4EOhUzawwyuUMYbB9SXAIsxJdmqjN3Dyr1Zo/yBpxEbniha2xunLdKltRJ3AP3
-        WIEljE1N6Oh7qxoUJBvTrI5T/vddIqQ==
-X-Received: by 2002:adf:f88d:: with SMTP id u13mr17789202wrp.297.1629797932104;
-        Tue, 24 Aug 2021 02:38:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwnUKMpixNJHtzrkXU+bCU4EhdsDCnZh4Ca5o5YpR9MUgRDfffa94tfJL6EuQFJRuVzUb3jkg==
-X-Received: by 2002:adf:f88d:: with SMTP id u13mr17789180wrp.297.1629797931915;
-        Tue, 24 Aug 2021 02:38:51 -0700 (PDT)
-Received: from krava ([83.240.63.86])
-        by smtp.gmail.com with ESMTPSA id q11sm1754808wmc.41.2021.08.24.02.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 02:38:51 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 11:38:49 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: intel_pt crash on alderlake
-Message-ID: <YSS+KbILtcwomsN4@krava>
-References: <YSPWCienSPEcvIbU@krava>
- <7e214d48-ff09-6fe0-f624-d82260ada786@intel.com>
- <YSPlmP4quB7N+qQE@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Tue, 24 Aug 2021 06:19:33 -0400
+X-Greylist: delayed 434 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Aug 2021 06:19:32 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1629800329; x=1661336329;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=E6i0UZ6+gvahniZGUQ2d1Vbpc3VDd9JplBy58EPr65w=;
+  b=ea687LnibRnERHcaFi+8ClpLdQr7PlP0uFY3XL7NsdQsU7jJ0JDL8nLK
+   NKF0oqeNMcN++Fm/NibbtBEIMS4wCkQCcCbixh/1p07p5a9aXQM0MaaT3
+   +CrZ+2y+75gNlTdnV9D44qcSoMRfDZj1W3g1+jH9WwzOhoeZdVkx9M3CP
+   D7HyTQjB9hLOTf2AurH4AjOA3UvSDDpM0u4UBc0JtR+7w6iGjkYJYmbPh
+   anoF4CUcWE4tE1eIyOx25Qu4b9v8XlUm70tCOi+mB3tsd2SnrlsvpYWVT
+   ZTc9Fq3qEzXsa1gvArZCMUhFbCcF+sNjf8+1sgt0IuLwMzroJ9HbyONcO
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10085"; a="37629787"
+X-IronPort-AV: E=Sophos;i="5.84,346,1620658800"; 
+   d="scan'208";a="37629787"
+Received: from mail-ty1jpn01lp2058.outbound.protection.outlook.com (HELO JPN01-TY1-obe.outbound.protection.outlook.com) ([104.47.93.58])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2021 19:11:31 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UzVQkVm4/ylbK9FNq0nn+fsT4JHuhUCGl9evC9IAq6oE8kFZhKUeLV17N+L2xYxRD7g8uClCak7ryYo/dZ1eZcWpNsNnnuEnMYN4kNiHTy3MW1PPqkv0FOWa1k43OmUKOGv1Hxmcccf+/X1c4j6K0ZKkSWRJOfk2LLwDTFB5r9l09rP+41uLHkwfhfiVW2BA389yATaDR+x4iMaE7togBP18RMiCJwmRobCwFrPCM0bvkOWUZDXBkfO1oCdtGZkS/Qpnvo5RuwPClT5hhdkNMCGpslpsuZJR6YY81RVBH/ohdzrDfL0NCLIpdCdgkk5ZkDzB8HLda4ZlL1Vqeld6Cg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E6i0UZ6+gvahniZGUQ2d1Vbpc3VDd9JplBy58EPr65w=;
+ b=A1WGNw2I5ZsLI3lTVlo5uXKUgrsZhTl/UI6jFfDC419J2BZlQTqIr04DyR5nh5OFD39ZDfs9w4x/5/GEsvrWd+saDyfjVme9iWeYhLOmMUDHvwdCVh7MMk4VAzlBr3k1OWuTa45QRCfjyZQqwakNUvQg7HTREdaHHk6vKG8R59VnOshRM5HzpO71o8ZbDEjt3AtXeD5rSk92kFU3Wr8X3wF/jbDEwlwpLvnuHHwZ4dcMwHbGefsT+oNGfJnEngho2Mudu2SadMLLHYUdj0kdtdZQBv3ZdXeB4Bc4rzHzgPtYN5Sr3+RDd0xTBTp3hb1HfHYylQQBgyvNi8fuuLCDrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E6i0UZ6+gvahniZGUQ2d1Vbpc3VDd9JplBy58EPr65w=;
+ b=MRZctDOF14h9PFV3WL+rDaE3PYzR4nQIP26uKUAQWPgW5lcOIBqoj2bLaRlQa8IsUHDatKr60Jx0Z1CDnqZ2emczIDMZuywpWxSaccu6opwLSM5WtVQrEsnrxfQcv/uxQTgGWOuVw7barCG7pF9WrVl5VUApqL3/EIP1/1qr+Vk=
+Received: from OSBPR01MB4600.jpnprd01.prod.outlook.com (2603:1096:604:7e::12)
+ by OSAPR01MB2737.jpnprd01.prod.outlook.com (2603:1096:603:38::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4436.19; Tue, 24 Aug
+ 2021 10:11:28 +0000
+Received: from OSBPR01MB4600.jpnprd01.prod.outlook.com
+ ([fe80::44e1:366f:8654:b23e]) by OSBPR01MB4600.jpnprd01.prod.outlook.com
+ ([fe80::44e1:366f:8654:b23e%7]) with mapi id 15.20.4436.024; Tue, 24 Aug 2021
+ 10:11:28 +0000
+From:   "nakamura.shun@fujitsu.com" <nakamura.shun@fujitsu.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 1/3] libperf: Add processing to scale the counters
+ obtained during the read() system call when multiplexing
+Thread-Topic: [PATCH 1/3] libperf: Add processing to scale the counters
+ obtained during the read() system call when multiplexing
+Thread-Index: AQHXmFsxBFGvQYUD8Uu1pPLYL2hYdauCbgJw
+Date:   Tue, 24 Aug 2021 10:11:28 +0000
+Message-ID: <OSBPR01MB4600288E176A169C07BF543EF7C59@OSBPR01MB4600.jpnprd01.prod.outlook.com>
+References: <20210820093908.734503-1-nakamura.shun@fujitsu.com>
+ <20210820093908.734503-2-nakamura.shun@fujitsu.com>
+ <YSQBI+FZLBvKr088@robh.at.kernel.org>
+In-Reply-To: <YSQBI+FZLBvKr088@robh.at.kernel.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Enabled=True;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SiteId=a19f121d-81e1-4858-a9d8-736e267fd4c7;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_SetDate=2021-08-24T10:11:27.838Z;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Name=FUJITSU-RESTRICTED;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_ContentBits=0;MSIP_Label_a7295cc1-d279-42ac-ab4d-3b0f4fece050_Method=Standard;
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db581252-1958-4e87-edda-08d966e789ae
+x-ms-traffictypediagnostic: OSAPR01MB2737:
+x-microsoft-antispam-prvs: <OSAPR01MB2737654D83F127ED82A09BD3F7C59@OSAPR01MB2737.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ymTtgcsk3ndtZ9Vs5gRBg8m7+qADECxf/kq6wmxRv8QKDsBYGkIacYat0m2Q+6FCPnyc+JpSUqmTiUneU6rOZp5hPG7i2dvlwru3Pd4Vkd17b6pQv6dc+sCvFPO2/4S+fRnMKxLq6xf4I4uMU2nzyaRh1H4rLZB1iDg97TIaK6J3lP2zfZ5LiHPnaNrqnlDmS7x4lGPdZlSnLi6g7XtSpavSzdcF22R2BOqwjdKi0AI9qHBTgMJqA5gwtxZEi6nzOssy8AuIwvGXMAQBEiP3VMw82c3FrKyxPcKT+WdzF4q/0Mh0KdGBAoOKvMojh9cTPm9fYyCuTEyHAQvOamqZdduxg8WfmxNeEhxMqL3tVHo2MZfQS8Rp5lUDCO1JcPZDXFomd5RI6W+rYEMVm0DjknHYrNr/8ANyrRwgbx8Vto+UPL7YK1rWt4rXzi+3e0oCtUHi1wTex9P36qhUn6XzVNb3zLS68GqsN1cUHtl4+gVGTP800VJK3L5uwT59nG0XXxHVYFqbLs76whTsqHmlmtnNiu/afevcTgCLqCtc/tXWkcim61oiyAtT/fhSmkXOOeSaoG2kwG7D6f/RuMjKRs05j7f1nLmrmwX1+BitmlZjqTzLN2IOHZIeFeUKwLhRcOmU1nR53uihm/uAuIrRzHkoYc6Hj0YyfX7tMKA2JrG2baYpcdarT/+gtnHINLdy6dK5rdV0wvEg9pthqzSZkw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSBPR01MB4600.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(376002)(136003)(366004)(54906003)(7696005)(4326008)(55016002)(8936002)(5660300002)(316002)(9686003)(85182001)(478600001)(52536014)(71200400001)(86362001)(64756008)(66476007)(66446008)(38100700002)(66556008)(6506007)(8676002)(76116006)(66946007)(26005)(186003)(122000001)(2906002)(7416002)(33656002)(38070700005)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?dHJXTkVpTk5YbER6eS8vK0RMZ0JxQmZtWWpkZjFUVWZpbUZjY2FlWG82?=
+ =?iso-2022-jp?B?cjgyQWdubWVhMWNnZDFTYWY3K05xUzlCZjFyakNXajlVRElPRkR2YVZ6?=
+ =?iso-2022-jp?B?YmxuMWxpYi81T2lUZHlwQzU4NUg4SnVobXZWdUpsd1R2TlFEZ092R0RI?=
+ =?iso-2022-jp?B?emRrWGNNVlNMVWpRTTJ5TUxWNjJjWjZib1YwaXB4WTVjeTdRQkRDZDkx?=
+ =?iso-2022-jp?B?MGNGc2NTS2Y0N1N1eS9RMDViTjRPdzZ5dEpxeHN0bjFWUC9YRmQxaDRP?=
+ =?iso-2022-jp?B?MWZCTjJNL0dvd1ZaRW9wL2NSSDdlZXgxSDlCbFY3a2U1azNIb29VUlQr?=
+ =?iso-2022-jp?B?NEpOQWxrVndMVloxN1JNNFVZci9KaUJmR0NQbkk2VXNHcDR0eUIvdDdR?=
+ =?iso-2022-jp?B?RDQyRVdiZUNOSjZKV1hjcUxEcE5xRFBTYTc0MjUzM0QzdTZwWWRGVVhX?=
+ =?iso-2022-jp?B?NFFrZm5uQm5GUlh5RVJHWmMwa3hBUUN4VUdQRXJOM1FJNjRmYTA2bUtp?=
+ =?iso-2022-jp?B?eEdYbk4rQmxPZEJaMHVsNDhkRkdRQkNUSmxDSDZYeVRFSmFnWGh2Q2Vu?=
+ =?iso-2022-jp?B?VkNvSWgyaWxKbEdFWnJ4bVg2WjROZ3kwMkI0L2o0K211eDkvOWd4bEZI?=
+ =?iso-2022-jp?B?Ui8yZjlmMmlFbDRaNENaN3JsejJPaWVSSWFKaG1wNHBLOUtudzROTHFZ?=
+ =?iso-2022-jp?B?ak01a0JIYVczdGVTYUFuVFcwOVh5QVR2amxheHo4b0pPN3UvbGMzK2s5?=
+ =?iso-2022-jp?B?ejkzVWZiU0pSSzM4TW4rZ1lpWjRJY0xwZkhNa1dYbTdvUmhENWJrSFRz?=
+ =?iso-2022-jp?B?RE9mOFJWTjBmTnJqT29iWTJWM0MwRjFBUzZjOEhtaVFhRVNZZFlaSFR1?=
+ =?iso-2022-jp?B?WVgwaklZbWZEbWdZdEhteTdZTHZPT3EzeEoxWSttcmNBSDE3Vzd1V1d2?=
+ =?iso-2022-jp?B?N0JxbWtqaS81UnpRb0hQR3NXZTVzcStib3Y5c3ltTjcxcHpvVlVaZmFC?=
+ =?iso-2022-jp?B?Z1d1TS9yenMrSVp1U04vZjZDdmdob1ZlVXVjQ1lQWlY4cHZHUTFOQjNS?=
+ =?iso-2022-jp?B?OXAyaEFsdFZyVCs5Q09NV202bHhONHZ5dzd0anNUeW5ETUVWRzlrVUtV?=
+ =?iso-2022-jp?B?TWJSdmhidHFoZHFsdFhDRWlpb2RRVi9sTGJRS3RIYXdCT2lMY2hNZ2NP?=
+ =?iso-2022-jp?B?QVA1dmRHOW5KV2RscGo2Q1BobUtHdHU5cWlwdzZWSmoxM0Zyc1FRWE40?=
+ =?iso-2022-jp?B?Rm9KZU1PWnoxalFaY2FOd2txQnlUSGhOcWJoZmEwMHFIelBxK0RXSFk2?=
+ =?iso-2022-jp?B?LzdzbHRVWUVFUzlnWGJvc1NjZi8xbUFtaFBWdU5nV0lEdG5rTzhWc2hY?=
+ =?iso-2022-jp?B?Z2pTdlZ0TU8xcWU1Q1g0aUwyWEZVUDdvbFVFOG9nUkhXd2MyelZ3S0ph?=
+ =?iso-2022-jp?B?MXFmSTJVWTlQbDhkRjZjRVR1MjE3SHpDL3p2SDl6MDBick5NTk1LWWl2?=
+ =?iso-2022-jp?B?WWg4dHhGa29MOCsyQk5OajF4bHZhUGFKQkNNM2EwMjczM0VFalZDa2cz?=
+ =?iso-2022-jp?B?N1NYdXFwaUhhSFZRUlY3MjhMNkJuZGlRMWdyRXEzSndVMldVakRVOUc3?=
+ =?iso-2022-jp?B?aWtrRFhqc0dqcFU3cU43T1RLYkVpYmt1cFNpTkhZWHZhVEphN2gycUk3?=
+ =?iso-2022-jp?B?dDhZU2NzRmNGVFJBTlRVMjNkbHMrU2F2U24wVmowS0dYSHAwd0prV2Zo?=
+ =?iso-2022-jp?B?ZE16YStwejlodXFlVWZ6ZU1BTnhQaUpJZzhyaDlWa0l1UGRYdHhZbTVQ?=
+ =?iso-2022-jp?B?QkErSXNiZDMyNnpHZWZ2M0kydFJsNWczTTVoRUU0eDNOM0dQdlVBcjJh?=
+ =?iso-2022-jp?B?UjEzQmZRSmVDOTBKUldQRFJnTnBBPQ==?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <YSPlmP4quB7N+qQE@krava>
+MIME-Version: 1.0
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB4600.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db581252-1958-4e87-edda-08d966e789ae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Aug 2021 10:11:28.2217
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jCeGUNBr5ckdI3V2zyWwxN5hqvVjXQjidEomeu8gWzmX7MG4xBn6Fnh++7+cpkHQwMIOUwqJG/X4gku1CKoOz+vuMNDn6Om70iVgY+qVrAE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSAPR01MB2737
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 08:14:48PM +0200, Jiri Olsa wrote:
-> On Mon, Aug 23, 2021 at 08:53:32PM +0300, Adrian Hunter wrote:
-> > On 23/08/21 8:08 pm, Jiri Olsa wrote:
-> > > hi,
-> > > should intel_pt work on alderlake? I'm getting strange crash:
-> > > (cpuinfo and uname below)
-> > >=20
-> > > 	[root@intel-alderlake-m-02 perf]# ./perf record -e 'intel_pt//' --ov=
-erwrite=20
-> >=20
-> > The segfault is related --overwrite not Alderlake.
->=20
-> ok, now I see that failing also on other server.. was too fast sry
-
-any idea of quick fix before I dive in? ;-)
-seems like permissions changed on the first mmap page for some reason
-
-thanks,
-jirka
-
->=20
-> >=20
-> > Although I am not sure --overwrite make sense for Intel PT since we hav=
-e snapshot mode i.e. --snapshot
->=20
-> it's for kdump to get the inte_pt data after crash
->=20
-> thanks,
-> jirka
->=20
-> >=20
-> > > 	perf: Segmentation fault
-> > > 	Obtained 16 stack frames.
-> > > 	./perf() [0x53b6eb]
-> > > 	./perf() [0x53b7cb]
-> > > 	./perf() [0x429b30]
-> > > 	/lib64/libc.so.6(+0x37400) [0x7f7b144db400]
-> > > 	./perf() [0x5a6fc8]
-> > > 	./perf() [0x505caa]
-> > > 	./perf() [0x4f39ca]
-> > > 	./perf() [0x646879]
-> > > 	./perf() [0x646b57]
-> > > 	./perf() [0x646da0]
-> > > 	./perf() [0x4f3eec]
-> > > 	./perf() [0x42a533]
-> > > 	./perf() [0x42a644]
-> > > 	./perf() [0x42aa72]
-> > > 	./perf() [0x42c915]
-> > > 	./perf() [0x42ecc3]
-> > > 	Segmentation fault (core dumped)
-> > >=20
-> > >=20
-> > > 	[root@intel-alderlake-m-02 perf]# gdb ./perf
-> > > 	GNU gdb (GDB) Red Hat Enterprise Linux 8.2-15.el8
-> > > 	Copyright (C) 2018 Free Software Foundation, Inc.
-> > > 	License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/=
-gpl.html>
-> > > 	This is free software: you are free to change and redistribute it.
-> > > 	There is NO WARRANTY, to the extent permitted by law.
-> > > 	Type "show copying" and "show warranty" for details.
-> > > 	This GDB was configured as "x86_64-redhat-linux-gnu".
-> > > 	Type "show configuration" for configuration details.
-> > > 	For bug reporting instructions, please see:
-> > > 	<http://www.gnu.org/software/gdb/bugs/>.
-> > > 	Find the GDB manual and other documentation resources online at:
-> > > 	    <http://www.gnu.org/software/gdb/documentation/>.
-> > >=20
-> > > 	For help, type "help".
-> > > 	Type "apropos word" to search for commands related to "word"...
-> > > 	Reading symbols from ./perf...done.
-> > > 	(gdb) r record -e 'intel_pt//' --overwrite
-> > > 	Starting program: /root/linux/tools/perf/perf record -e 'intel_pt//'=
- --overwrite
-> > > 	[Thread debugging using libthread_db enabled]
-> > > 	Using host libthread_db library "/lib64/libthread_db.so.1".
-> > >=20
-> > > 	Program received signal SIGSEGV, Segmentation fault.
-> > > 	0x00000000005a6fc8 in auxtrace_mmap__mmap (mm=3D0x7ffff7e9c060, mp=
-=3D0x7fffffff7588, userpg=3D0x7ffff7e0b000, fd=3D5) at util/auxtrace.c:133
-> > > 	133             pc->aux_offset =3D mp->offset;
-> > > 	Missing separate debuginfos, use: yum debuginfo-install brotli-1.0.6=
--3.el8.x86_64 bzip2-libs-1.0.6-26.el8.x86_64 cyrus-sasl-lib-2.1.27-5.el8.x8=
-6_64 elfutils-debuginfod-client-0.185-1.el8.x86_64 elfutils-libelf-0.185-1.=
-el8.x86_64 elfutils-libs-0.185-1.el8.x86_64 glib2-2.56.4-156.el8.x86_64 gmp=
--6.1.2-10.el8.x86_64 gnutls-3.6.16-4.el8.x86_64 keyutils-libs-1.5.10-9.el8.=
-x86_64 libbabeltrace-1.5.4-3.el8.x86_64 libbpf-0.3.0-1.el8.x86_64 libcap-2.=
-26-4.el8.x86_64 libcom_err-1.45.6-2.el8.x86_64 libcurl-7.61.1-18.el8.x86_64=
- libffi-3.1-22.el8.x86_64 libidn2-2.2.0-1.el8.x86_64 libpsl-0.20.2-6.el8.x8=
-6_64 libselinux-2.9-5.el8.x86_64 libssh-0.9.4-3.el8.x86_64 libtasn1-4.13-3.=
-el8.x86_64 libunistring-0.9.9-3.el8.x86_64 libuuid-2.32.1-28.el8.x86_64 lib=
-xcrypt-4.1.1-6.el8.x86_64 libzstd-1.4.4-1.el8.x86_64 numactl-libs-2.0.12-13=
-=2Eel8.x86_64 openldap-2.4.46-17.el8.x86_64 openssl-libs-1.1.1k-4.el8.x86_6=
-4 p11-kit-0.23.22-1.el8.x86_64 pcre-8.42-6.el8.x86_64 pcre2-10.32-2.el8.x86=
-_64 perl-libs-5.26.3-420.el8.x86_64 popt-1.18-1.el8.x86_64 slang-2.3.2-3.el=
-8.x86_64 xz-libs-5.2.4-3.el8.x86_64
-> > > 	(gdb) bt
-> > > 	#0  0x00000000005a6fc8 in auxtrace_mmap__mmap (mm=3D0x7ffff7e9c060, =
-mp=3D0x7fffffff7588, userpg=3D0x7ffff7e0b000, fd=3D5) at util/auxtrace.c:133
-> > > 	#1  0x0000000000505caa in mmap__mmap (map=3D0x7ffff7e8c010, mp=3D0x7=
-fffffff7570, fd=3D5, cpu=3D0) at util/mmap.c:306
-> > > 	#2  0x00000000004f39ca in perf_evlist__mmap_cb_mmap (_map=3D0x7ffff7=
-e8c010, _mp=3D0x7fffffff7570, output=3D5, cpu=3D0) at util/evlist.c:807
-> > > 	#3  0x0000000000646879 in mmap_per_evsel (evlist=3D0xf1c7d0, ops=3D0=
-x7fffffff7550, idx=3D0, mp=3D0x7fffffff7570, cpu_idx=3D0, thread=3D0, _outp=
-ut=3D0x7fffffff7480, _output_overwrite=3D0x7fffffff7484) at evlist.c:477
-> > > 	#4  0x0000000000646b57 in mmap_per_cpu (evlist=3D0xf1c7d0, ops=3D0x7=
-fffffff7550, mp=3D0x7fffffff7570) at evlist.c:550
-> > > 	#5  0x0000000000646da0 in perf_evlist__mmap_ops (evlist=3D0xf1c7d0, =
-ops=3D0x7fffffff7550, mp=3D0x7fffffff7570) at evlist.c:602
-> > > 	#6  0x00000000004f3eec in evlist__mmap_ex (evlist=3D0xf1c7d0, pages=
-=3D4294967295, auxtrace_pages=3D1024, auxtrace_overwrite=3Dfalse, nr_cblock=
-s=3D0, affinity=3D0, flush=3D1, comp_level=3D0) at util/evlist.c:959
-> > > 	#7  0x000000000042a533 in record__mmap_evlist (rec=3D0xc8b580 <recor=
-d>, evlist=3D0xf1c7d0) at builtin-record.c:854
-> > > 	#8  0x000000000042a644 in record__mmap (rec=3D0xc8b580 <record>) at =
-builtin-record.c:881
-> > > 	#9  0x000000000042aa72 in record__open (rec=3D0xc8b580 <record>) at =
-builtin-record.c:963
-> > > 	#10 0x000000000042c915 in __cmd_record (rec=3D0xc8b580 <record>, arg=
-c=3D0, argv=3D0x7fffffffddf0) at builtin-record.c:1717
-> > > 	#11 0x000000000042ecc3 in cmd_record (argc=3D0, argv=3D0x7fffffffddf=
-0) at builtin-record.c:2897
-> > > 	#12 0x00000000004d7143 in run_builtin (p=3D0xca33d8 <commands+216>, =
-argc=3D4, argv=3D0x7fffffffddf0) at perf.c:313
-> > > 	#13 0x00000000004d73b0 in handle_internal_command (argc=3D4, argv=3D=
-0x7fffffffddf0) at perf.c:365
-> > > 	#14 0x00000000004d74f7 in run_argv (argcp=3D0x7fffffffdc4c, argv=3D0=
-x7fffffffdc40) at perf.c:409
-> > > 	#15 0x00000000004d78c3 in main (argc=3D4, argv=3D0x7fffffffddf0) at =
-perf.c:539
-> > > 	(gdb) p *pc
-> > > 	$1 =3D {version =3D 0, compat_version =3D 0, lock =3D 2, index =3D 0=
-, offset =3D 0, time_enabled =3D 0, time_running =3D 0, {capabilities =3D 2=
-6, {cap_bit0 =3D 0, cap_bit0_is_deprecated =3D 1, cap_user_rdpmc =3D 0, cap=
-_user_time =3D 1,=20
-> > > 	      cap_user_time_zero =3D 1, cap_user_time_short =3D 0, cap_____r=
-es =3D 0}}, pmc_width =3D 48, time_shift =3D 31, time_mult =3D 2663050159, =
-time_offset =3D 18446743875728538161, time_zero =3D 18446743981699475147,=
-=20
-> > > 	  size =3D 96, __reserved_1 =3D 0, time_cycles =3D 0, time_mask =3D =
-0, __reserved =3D '\000' <repeats 927 times>, data_head =3D 0, data_tail =
-=3D 0, data_offset =3D 4096, data_size =3D 524288, aux_head =3D 0, aux_tail=
- =3D 0,=20
-> > > 	  aux_offset =3D 0, aux_size =3D 0}
-> > > 	(gdb) p *mp
-> > > 	$2 =3D {mask =3D 4194303, offset =3D 528384, len =3D 4194304, prot =
-=3D 3, idx =3D 0, tid =3D -1, cpu =3D 0}
-> > > 	(gdb)=20
-> > >=20
-> > >=20
-> > > any idea? thanks,
-> > > jirka
-> > >=20
-> > >=20
-> > > ----
-> > > [jolsa@krava linus-pure]$ cat /proc/cpuinfo=20
-> > > processor       : 0
-> > > vendor_id       : GenuineIntel
-> > > cpu family      : 6
-> > > model           : 142
-> > > model name      : Intel(R) Core(TM) i7-8650U CPU @ 1.90GHz
-> > > stepping        : 10
-> > > microcode       : 0xea
-> > > cpu MHz         : 2100.000
-> > > cache size      : 8192 KB
-> > > physical id     : 0
-> > > siblings        : 8
-> > > core id         : 0
-> > > cpu cores       : 4
-> > > apicid          : 0
-> > > initial apicid  : 0
-> > > fpu             : yes
-> > > fpu_exception   : yes
-> > > cpuid level     : 22
-> > > wp              : yes
-> > > flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pg=
-e mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscal=
-l nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl=
- xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl=
- vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic mo=
-vbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowpr=
-efetch cpuid_fault epb invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow v=
-nmi flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep bmi=
-2 erms invpcid rtm mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec =
-xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_ep=
-p md_clear flush_l1d
-> > > vmx flags       : vnmi preemption_timer invvpid ept_x_only ept_ad ept=
-_1gb flexpriority tsc_offset vtpr mtf vapic ept vpid unrestricted_guest ple=
- shadow_vmcs pml ept_mode_based_exec
-> > > bugs            : cpu_meltdown spectre_v1 spectre_v2 spec_store_bypas=
-s l1tf mds swapgs taa itlb_multihit srbds
-> > > bogomips        : 4199.88
-> > > clflush size    : 64
-> > > cache_alignment : 64
-> > > address sizes   : 39 bits physical, 48 bits virtual
-> > > power management:
-> > >=20
-> > > [root@intel-alderlake-m-02 linux]# uname -a
-> > > Linux intel-alderlake-m-02.ml3.eng.bos.redhat.com 5.14.0-rc6+ #1 SMP =
-Fri Aug 20 09:27:39 EDT 2021 x86_64 x86_64 x86_64 GNU/Linux
-> > >=20
-> >=20
-
+Hi, Rob=0A=
+=0A=
+> On Fri, Aug 20, 2021 at 06:39:06PM +0900, Shunsuke Nakamura wrote:=0A=
+> > perf_evsel__read() scales counters obtained by RDPMC during multiplexin=
+g, but=0A=
+> > does not scale counters obtained by read() system call.=0A=
+> > =0A=
+> > Add processing to perf_evsel__read() to scale the counters obtained dur=
+ing the=0A=
+> > read() system call when multiplexing.=0A=
+> =0A=
+> Which one is right though? Changing what read() returns could break =0A=
+> users, right? Or are you implying that the RDPMC path is correct and =0A=
+> read() was not. More likely the former case since I wrote the latter.=0A=
+=0A=
+perf_evsel__read() returns both the count obtained by RDPMC and the count o=
+btained=0A=
+by the read() system call when multiplexed with RDPMC enabled.=0A=
+=0A=
+That is, there is a mix of scaled and unscaled values.=0A=
+=0A=
+As Rob says, when this patch is applied, rescaling the count obtained from=
+=0A=
+perf_evsel__read() during multiplexing will break the count.=0A=
+=0A=
+I think the easiest solution is to change the value you get from RDPMC to n=
+ot scale =0A=
+and let the user scale it, but I thought it would be a little inconvenient.=
+=0A=
+=0A=
+Best Regards=0A=
+Shunsuke=
