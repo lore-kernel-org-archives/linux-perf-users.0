@@ -2,102 +2,97 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E50C4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 08:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22351C4320A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 09:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99CE861165
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 08:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09852613DA
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 09:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235016AbhHXIsN (ORCPT
+        id S235526AbhHXJA7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Aug 2021 04:48:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
+        Tue, 24 Aug 2021 05:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235247AbhHXIsM (ORCPT
+        with ESMTP id S235524AbhHXJA5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Aug 2021 04:48:12 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7E4C061757
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 01:47:28 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id oc2-20020a17090b1c0200b00179e56772d6so1283294pjb.4
-        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 01:47:28 -0700 (PDT)
+        Tue, 24 Aug 2021 05:00:57 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACE95C061757;
+        Tue, 24 Aug 2021 02:00:13 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id x16so17755742pfh.2;
+        Tue, 24 Aug 2021 02:00:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tVJAPvgMbNMhxKXeO03R+hvScbq+4VlPa0BONKG03BI=;
-        b=OZM/afBgpyVQNHRrSarWgAojEw2soUXGQh9h6ar4I9ajCIv9dZOpX6cavspPTyl0Ys
-         BiPBXCYdmJ8b/Vt0bucTBHRVM2rv5rI5nrBJTbHNd6ikCMbC+9qu3eEwIl+sTyRsoX2z
-         vEMbtb/XaOyn3yKZ3180nL7zOrw1PPyKD71c26BfyD5X3tRsi5E3uIJzODi4A8VPLvEq
-         CXrUgpV6be+NDKcjg8WL+sxWhXstM1Zc8p3qLjfKQq4cWxomD1wK8RPBNTaa/UYjq719
-         QT97KcKkv/IusGpcd3YMaT0mplIl1isyBpa+kWr6bbG5vEakL6BZRm0lHsm23qIELGiV
-         KsPg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=epEB/j6CfBFIWkI0NQJbQR8TgF9ZCPLM1VaX62dtXjE=;
+        b=Tio88SDoVKNebqEv7EELHgUiLge67qA0ftH92DcDDAwxdw/BfAh+TQMqJT9lB0bJRU
+         Uh9pB1kqPVzHiMFhf/JPm/enwI/t8sgKWJSq1CEnJKyLCerfwF7HAO3di5jeTA4f80lW
+         G4Esd9q8C87U1m2W1lVHm301AWB3vnJKmC3C6l1Md5Z02RSFXQr3+tG71IJk+VWbs4LV
+         Pn95j0vmASYf5SgeJ/c516z0ycMVSlFWitKXN0NwwQuzMxx98N5cZVorwdAX5GvlRZn8
+         fiDf4Xt0xsBIvW+Tay5kpHd2KvvFlG6fucrvJgOoMAbTckUFESR4NyAWPVlTnTMQVy4p
+         5/Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tVJAPvgMbNMhxKXeO03R+hvScbq+4VlPa0BONKG03BI=;
-        b=qXgCosWVXoNzagYU4BqTu1G61dtyzurn1lTWLaqpApDEqcm9Sra1dHFAXMqBkwC3II
-         15UM0zm21s3RUq47HdNxPPxSFkkLQ0eeNyyZ2TLZ49SWolgy/hlRe1CcvE1bPZFNiTsP
-         gBnIINnorbuytCNkOuLmBJa6a8Vd9HG2GeZD0Y0BlU5ecHkDbhBZceR5QoHquExekfI3
-         yBco5c8J1mq63u9qtm5WBV5U+0yRkiun93PEpizb/rXueLKo7wdwAhTrSuvW0icODeLl
-         Rug54/fqFuza67q5Uf7tVHduyFZFz5D4U+7CkcS6z2iNM55zqEecnyH2BWUHvDjOqP8b
-         DZyA==
-X-Gm-Message-State: AOAM533cRDnGy4t+N7OnwxmxZRB98roI7ZGGFvhCrAGM+zjSIaAYlFlB
-        lsjh0W3bUQB5xSrzZFcE/Ctujw==
-X-Google-Smtp-Source: ABdhPJzLsDqCQjs9/UG+SPzsKTBx3iLUeU+n5rJbxZCsyzTYuB7pN12asph1b+jsKUJm3U94dvzPYg==
-X-Received: by 2002:a17:90b:116:: with SMTP id p22mr3289987pjz.67.1629794847869;
-        Tue, 24 Aug 2021 01:47:27 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([202.155.204.36])
-        by smtp.gmail.com with ESMTPSA id f137sm18728068pfa.160.2021.08.24.01.47.23
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=epEB/j6CfBFIWkI0NQJbQR8TgF9ZCPLM1VaX62dtXjE=;
+        b=nW3hEUJ0R+yIXGQEBrTkv/io/dEv/2A9CwpSOjJkjrCZcIs8OeNalKPrWKnDv0PfOM
+         1Fzh3p+Io06jdYRNSR8jGwuP/yK9GFIuKxcWww2r+bw8n/cuH9Fw2DTdpyAAAvSydWCy
+         UBIwV98kT8ZY5d/W3DjDrDz1DLEA4sAt2Jj3rSddmyS92JKTLfdkLSLYG9BUK67jy4JB
+         0PhCQIth4OAS+8JCLeJIV34uvdeq/bI5gNNGnYSPDS7pbfkCGlbETWlG/HojzgjDlq7Q
+         bAIK6j8N3/ZjGqhq8jJX2iTig5I5QvMUjZGKEF+d7B3iTck1MmYK7EO1jYCz9umDqaXp
+         R4YQ==
+X-Gm-Message-State: AOAM532LNGNSoUjmVpkEKDcVaiLIdZBJTTVHJENA27XhXerQ5zVNdR6b
+        +EyaADL8lNGwvaCV+kLoz8s=
+X-Google-Smtp-Source: ABdhPJxaOAv+8OR3Q4jPnbfeBbBg2NxrcO52QInY04JsS/isxPgECbKutzEPFG4d5C4W3Kz1XaRl2A==
+X-Received: by 2002:a05:6a00:189f:b0:3e1:b92d:5ef6 with SMTP id x31-20020a056a00189f00b003e1b92d5ef6mr38299958pfh.81.1629795613163;
+        Tue, 24 Aug 2021 02:00:13 -0700 (PDT)
+Received: from ubuntu.localdomain ([171.224.180.204])
+        by smtp.gmail.com with ESMTPSA id u24sm18943692pfm.85.2021.08.24.02.00.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Aug 2021 01:47:27 -0700 (PDT)
-Date:   Tue, 24 Aug 2021 16:47:20 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     mathieu.poirier@linaro.org, coresight@lists.linaro.org,
-        linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
-        acme@kernel.org, suzuki.poulose@arm.com,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] Support ETE decoding
-Message-ID: <20210824084720.GG204566@leoy-ThinkPad-X240s>
-References: <20210806134109.1182235-1-james.clark@arm.com>
+        Tue, 24 Aug 2021 02:00:12 -0700 (PDT)
+From:   Nghia Le <nghialm78@gmail.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     Nghia Le <nghialm78@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, lukas.bulwahn@gmail.com
+Subject: [PATCH] perf tools: Add missing newline at the end of file
+Date:   Tue, 24 Aug 2021 15:59:47 +0700
+Message-Id: <20210824085947.224062-1-nghialm78@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210806134109.1182235-1-james.clark@arm.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Mathieu, Suzuki, Mike,
+Add missing newline at the end of file parse-sublevel-options.h.
+Thus removing relevant warning reported by checkpatch.
 
-On Fri, Aug 06, 2021 at 02:41:00PM +0100, James Clark wrote:
-> Changes since v1:
->  * Re-implement with a new magic number instead of piggybacking on ETMv4
->  * Improve comments and function name around cs_etm_decoder__get_etmv4_arch_ver()
->  * Add a warning for unrecognised magic numbers
->  * Split typo fix into new commit
->  * Add Leo's reviewed-by tags
->  * Create a new struct for ETE config (cs_ete_trace_params) instead of re-using ETMv4 config
-> 
-> Applies to perf/core f3c33cbd922
-> Also available at https://gitlab.arm.com/linux-arm/linux-jc/-/tree/james-ete-v2
+Signed-off-by: Nghia Le <nghialm78@gmail.com>
+---
+ tools/perf/util/parse-sublevel-options.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I have finished the review for this patch series and it's good form for
-me.  Since this patch series is to enable new feature for ETE, it's
-good if any of you could review as well before merging.
+diff --git a/tools/perf/util/parse-sublevel-options.h b/tools/perf/util/parse-sublevel-options.h
+index 9b9efcc2aaad..578b18ef03bb 100644
+--- a/tools/perf/util/parse-sublevel-options.h
++++ b/tools/perf/util/parse-sublevel-options.h
+@@ -8,4 +8,4 @@ struct sublevel_option {
+ 
+ int perf_parse_sublevel_options(const char *str, struct sublevel_option *opts);
+ 
+-#endif
+\ No newline at end of file
++#endif
+-- 
+2.25.1
 
-Thanks,
-Leo
