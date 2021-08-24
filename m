@@ -2,88 +2,232 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_CR_TRAILER,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D4CC4338F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 19:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E24C4338F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 20:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47EE461220
-	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 19:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6B160F6F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 24 Aug 2021 20:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234956AbhHXTlh (ORCPT
+        id S234765AbhHXU7X (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 24 Aug 2021 15:41:37 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:44742 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229728AbhHXTlh (ORCPT
+        Tue, 24 Aug 2021 16:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230523AbhHXU7X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 24 Aug 2021 15:41:37 -0400
-Received: by mail-lf1-f41.google.com with SMTP id o10so47813032lfr.11;
-        Tue, 24 Aug 2021 12:40:52 -0700 (PDT)
+        Tue, 24 Aug 2021 16:59:23 -0400
+Received: from mail-qv1-xf4a.google.com (mail-qv1-xf4a.google.com [IPv6:2607:f8b0:4864:20::f4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78401C061764
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 13:58:38 -0700 (PDT)
+Received: by mail-qv1-xf4a.google.com with SMTP id m10-20020a056214158ab029035a6c1e5f3eso15855786qvw.7
+        for <linux-perf-users@vger.kernel.org>; Tue, 24 Aug 2021 13:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=P0j4ZUNHZMW2sebPv8vbOTFk+k+W5EprfBZkXv7dWW0=;
+        b=JYoh2oraLDKX+78vyoyZOn7M3EyhNZ+Dmb94pFlKHSeNMbkOCuHSYPtkUrqVI0Cbo2
+         7Ssq9dyzbo9VDlwtCGArx4VJqFnaK8FWBLWv3c/LgnhdkPoEO4ReGvFsV/nHD3nt9zxG
+         dCOI4yUWB1wWzLXuK8kNg6CTKZ4bTNIBeaD14woichnmwE76OfOrJZNovBk5HbOqf7G4
+         gSkh4BeGHqkQnN85MlcMH4tl2q3l1DFQHW0c2DXqJZ4XriWiFbYvp1fDj+SCqLETQlvI
+         x8vuVyWwM1XGvJl0QlMPZjYMDZAsiCF9EQJvVjALHCuaUJYxnpP0BjtKxL848rN9aGml
+         HDrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VfEPuan/zCIEg+H/ClhRQP2hu3myJiA0etgVi2UQg2A=;
-        b=QPervYaYegUocV0f39v4PtEqHuqB5WKhzL/K//mEdG56wgOzBuFSwaIMDk6/PjWf7a
-         /rf84Q1GwnaMHp3O234UbQOYKz5vvQwtHkwlPCMKZ/lvInNM0mVhh7us82HlLeKclsB7
-         esvyfZB5NAxlIWn4DL+aKciOU9Xp9WFV0oExYspbUZG5JLsoBzqf3Rf+QOgvxwzp4w9I
-         M33SBfAOIYlmWDWStYORbnkpboNexAkaxBRjAEUm8A2ZHnZmd7HRCVBrLbIp+d71xDVc
-         ZWs3uLufrC29z879BkvXgbBwgjLZOltFSPSDjQdXf2iuWw0W7z3kHtdGGBEuiJLXJNbk
-         VWeQ==
-X-Gm-Message-State: AOAM530aULFkJ9qbURP7WBB7OZ1gDGNXiESy+3uBobsxxZbtRKJY5te3
-        z2LUUEgiAOnrxpeL3NtrwAXBWK9T3/+YCAWuFJw=
-X-Google-Smtp-Source: ABdhPJyY6Kq0QFIxOUEodaPp97AYu4Z0bqd1l4JiIFefiXeXzoPuLNXQ0o1IgWN9NHIAWuL9vRLvCZDw8OsyLSvcytY=
-X-Received: by 2002:a05:6512:158e:: with SMTP id bp14mr22128013lfb.509.1629834051824;
- Tue, 24 Aug 2021 12:40:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1629454773.git.rickyman7@gmail.com> <f9100c6e428eafe1b9761f947550e45ccc9e8849.1629454773.git.rickyman7@gmail.com>
-In-Reply-To: <f9100c6e428eafe1b9761f947550e45ccc9e8849.1629454773.git.rickyman7@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 24 Aug 2021 12:40:40 -0700
-Message-ID: <CAM9d7ch4RM5rKrYLKrny3yt3ciK87aqzJ8Wt3ze87u9KBHjyXg@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 08/15] perf workqueue: add queue_work and
- flush_workqueue functions
-To:     Riccardo Mancini <rickyman7@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=P0j4ZUNHZMW2sebPv8vbOTFk+k+W5EprfBZkXv7dWW0=;
+        b=d115jUrZXqT60nKTnO/IJGXjkLO0QmVwwnAtzRh5+OFSYKUijxvSlfDz5CZ8QvntU9
+         4SaWM/ZXn9JpAzRV4G1sJ6MuGAINCTp/8XVQF2OV9PDRs2uehN/neJaYHBgbd9WRyYzd
+         yafeGaHj50h7Wvd5uMJB0FGRve/6+L28mihgrMnRQ5jejO6sEL1ZZOQvpBUz6Divslj0
+         03NYN71CeVjiXLQARUclZiNQ/b8wNQTgyTWBlZgPPaGHEW8PUSpptk7+6WkY4aU8yK3D
+         AeJojlbzjRaq24JnFg5dSITCQVw23NCc8ik4WeNWajgtAnfXtj3f+KLDrcY7DmcdhByP
+         x0gw==
+X-Gm-Message-State: AOAM530J94J+Vy551pjgGezlXw8WNrLXtM+/Yi7TN1vpqrhDFrklq5hm
+        2s0KpAioI+08Et0B4PSyTflhmzY/Izcm
+X-Google-Smtp-Source: ABdhPJzmGFqSGfwJmRJstV5A7kM6ngNwv85K7PLl92AxsM/rYkFYm6//uxsTn5Cs3dtY6MUk7hMubK9JGjp+
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:202:d75f:d6af:12a8:ba25])
+ (user=irogers job=sendgmr) by 2002:a05:6214:acd:: with SMTP id
+ g13mr41583309qvi.23.1629838717148; Tue, 24 Aug 2021 13:58:37 -0700 (PDT)
+Date:   Tue, 24 Aug 2021 13:58:29 -0700
+Message-Id: <20210824205829.52822-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.rc2.250.ged5fa647cd-goog
+Subject: [PATCH] perf data: Correct -h output.
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+        Namhyung Kim <namhyung@kernel.org>,
+        Joshua Martinez <jrm5317@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, Joshua Martinez <joshuamart@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 20, 2021 at 3:54 AM Riccardo Mancini <rickyman7@gmail.com> wrote:
->
-> This patch adds functions to queue and wait work_structs, and
-> related tests.
->
-> When a new work item is added, the workqueue first checks if there
-> are threads to wake up. If so, it wakes it up with the given work item,
-> otherwise it will pick the next round-robin thread and queue the work
-> item to its queue. A thread which completes its queue will go to sleep.
->
-> The round-robin mechanism is implemented through the next_worker
-> attibute which will point to the next worker to be chosen for queueing.
-> When work is assigned to that worker or when the worker goes to sleep,
-> the pointer is moved to the next worker in the busy_list, if any.
-> When a worker is woken up, it is added in the busy list just before the
-> next_worker, so that it will be chosen as last (it's just been assigned
-> a work item).
+From: Joshua Martinez <joshuamart@google.com>
 
-Do we really need this?  I think some of the complexity comes
-because of this.  Can we simply put the works in a list in wq
-and workers take it out with a lock?  Then the kernel will
-distribute the works among the threads for us.
+There is currently only 1 perf data command, but supporting extra
+commands was breaking the help output. Simplify for now so that the help
+output is correct.
 
-Maybe we can get rid of worker->lock too..
+Before:
+$ perf data -h
 
-Thanks,
-Namhyung
+ Usage: perf data [<common options>] <command> [<options>]
+
+$ perf data
+Usage:
+        perf data [<common options>] <command> [<options>]
+
+        Available commands:
+         convert        - converts data file between formats
+
+After:
+$ perf data
+
+ Usage: perf data convert [<options>]
+
+    -f, --force           don't complain, do it
+    -i, --input <file>    input file name
+    -v, --verbose         be more verbose
+        --all             Convert all events
+        --to-ctf ...      Convert to CTF format
+        --to-json ...     Convert to JSON format
+        --tod             Convert time to wall clock time
+
+$ perf data -h
+
+ Usage: perf data convert [<options>]
+
+    -f, --force           don't complain, do it
+    -i, --input <file>    input file name
+    -v, --verbose         be more verbose
+        --all             Convert all events
+        --to-ctf ...      Convert to CTF format
+        --to-json ...     Convert to JSON format
+        --tod             Convert time to wall clock time
+
+Signed-off-by: Joshua Martinez <joshuamart@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-data.c | 62 ++++++++++++---------------------------
+ 1 file changed, 19 insertions(+), 43 deletions(-)
+
+diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
+index 15ca23675ef0..b7f9dc85a407 100644
+--- a/tools/perf/builtin-data.c
++++ b/tools/perf/builtin-data.c
+@@ -21,46 +21,21 @@ static struct data_cmd data_cmds[];
+ #define for_each_cmd(cmd) \
+ 	for (cmd = data_cmds; cmd && cmd->name; cmd++)
+ 
+-static const struct option data_options[] = {
+-	OPT_END()
+-};
+-
+ static const char * const data_subcommands[] = { "convert", NULL };
+ 
+ static const char *data_usage[] = {
+-	"perf data [<common options>] <command> [<options>]",
++	"perf data convert [<options>]",
+ 	NULL
+ };
+ 
+-static void print_usage(void)
+-{
+-	struct data_cmd *cmd;
+-
+-	printf("Usage:\n");
+-	printf("\t%s\n\n", data_usage[0]);
+-	printf("\tAvailable commands:\n");
+-
+-	for_each_cmd(cmd) {
+-		printf("\t %s\t- %s\n", cmd->name, cmd->summary);
+-	}
+-
+-	printf("\n");
+-}
+-
+-static const char * const data_convert_usage[] = {
+-	"perf data convert [<options>]",
+-	NULL
++const char *to_json;
++const char *to_ctf;
++struct perf_data_convert_opts opts = {
++	.force = false,
++	.all = false,
+ };
+ 
+-static int cmd_data_convert(int argc, const char **argv)
+-{
+-	const char *to_json = NULL;
+-	const char *to_ctf = NULL;
+-	struct perf_data_convert_opts opts = {
+-		.force = false,
+-		.all = false,
+-	};
+-	const struct option options[] = {
++const struct option data_options[] = {
+ 		OPT_INCR('v', "verbose", &verbose, "be more verbose"),
+ 		OPT_STRING('i', "input", &input_name, "file", "input file name"),
+ 		OPT_STRING(0, "to-json", &to_json, NULL, "Convert to JSON format"),
+@@ -73,10 +48,13 @@ static int cmd_data_convert(int argc, const char **argv)
+ 		OPT_END()
+ 	};
+ 
+-	argc = parse_options(argc, argv, options,
+-			     data_convert_usage, 0);
++static int cmd_data_convert(int argc, const char **argv)
++{
++
++	argc = parse_options(argc, argv, data_options,
++			     data_usage, 0);
+ 	if (argc) {
+-		usage_with_options(data_convert_usage, options);
++		usage_with_options(data_usage, data_options);
+ 		return -1;
+ 	}
+ 
+@@ -116,14 +94,13 @@ int cmd_data(int argc, const char **argv)
+ 	struct data_cmd *cmd;
+ 	const char *cmdstr;
+ 
+-	/* No command specified. */
+-	if (argc < 2)
+-		goto usage;
+-
+ 	argc = parse_options_subcommand(argc, argv, data_options, data_subcommands, data_usage,
+ 			     PARSE_OPT_STOP_AT_NON_OPTION);
+-	if (argc < 1)
+-		goto usage;
++
++	if (!argc) {
++		usage_with_options(data_usage, data_options);
++		return -1;
++	}
+ 
+ 	cmdstr = argv[0];
+ 
+@@ -135,7 +112,6 @@ int cmd_data(int argc, const char **argv)
+ 	}
+ 
+ 	pr_err("Unknown command: %s\n", cmdstr);
+-usage:
+-	print_usage();
++	usage_with_options(data_usage, data_options);
+ 	return -1;
+ }
+-- 
+2.33.0.rc2.250.ged5fa647cd-goog
+
