@@ -2,201 +2,213 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_CR_TRAILER,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC5EC4338F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Aug 2021 16:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041DFC4338F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Aug 2021 16:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE75861056
-	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Aug 2021 16:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB4A61058
+	for <linux-perf-users@archiver.kernel.org>; Wed, 25 Aug 2021 16:59:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242075AbhHYQz0 (ORCPT
+        id S231916AbhHYRA1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 25 Aug 2021 12:55:26 -0400
-Received: from frasgout.his.huawei.com ([185.176.79.56]:3692 "EHLO
-        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230490AbhHYQz0 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 25 Aug 2021 12:55:26 -0400
-Received: from fraeml705-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4GvsVs5lK7z67GvM;
-        Thu, 26 Aug 2021 00:53:25 +0800 (CST)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- fraeml705-chm.china.huawei.com (10.206.15.54) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Wed, 25 Aug 2021 18:54:37 +0200
-Received: from [10.47.26.214] (10.47.26.214) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.8; Wed, 25 Aug
- 2021 17:54:36 +0100
-Subject: Re: [Question] perf tools: lex parsing issue
-To:     Ian Rogers <irogers@google.com>
-CC:     Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <2e52bc21-8e60-f1fc-804b-d8993ca7c482@huawei.com>
- <CAP-5=fXqM4Y5R5BXJb9Caf8NO1Oyz+qFaote3AqFu0MDGCvgAQ@mail.gmail.com>
- <e6157b05-fadd-b15d-17cf-9d964517da9c@huawei.com>
- <CAP-5=fW4dWDH+=VLWc0jjRBDrU2qGQh9aUXhVp-Mvdme2HZrLA@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <055803d6-b483-f839-22fb-d84fad404bcf@huawei.com>
-Date:   Wed, 25 Aug 2021 17:58:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.1
+        Wed, 25 Aug 2021 13:00:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229791AbhHYRA1 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Wed, 25 Aug 2021 13:00:27 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3B70161056;
+        Wed, 25 Aug 2021 16:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1629910781;
+        bh=8svIy2DRVAvuqk85qjTGG0b4XCqSnyOm8NGC7jWY43s=;
+        h=Date:From:To:Cc:Subject:From;
+        b=V52Fw0cLMHnWjAoVMx0L7zHx0026uWghVh43nB/nZnIuE8v4YLlvuN6Hs6TuwgNyu
+         GVbjz9NbvOoIcK/EFeG9Guxj7WW3hk/EIuz6cn4lsIQ4tPxY34ImIx0E5SitxkUMwg
+         P1YQefnq1Pg7YAyyoGFeLCn0vpbHt6RyP9qimPCNU0vszrfgR5pPtO2IEWc+u7+b1N
+         P0Vf077jyqT+t/JN3ue+jTNSPQ5F5HB79vNjOQ2ByVY2vo+spzsQxdmBc9gvG2YZF4
+         XkR8KoYRb9o9CQOD/BD6ObUZhosO+5taJEYhHF4tgXWizoBkseaO6O8uOKLq0MOIYp
+         zwRDcC5KXKksw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D0D834007E; Wed, 25 Aug 2021 13:59:37 -0300 (-03)
+Date:   Wed, 25 Aug 2021 13:59:37 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf bench inject-buildid: Handle writen() errors
+Message-ID: <YSZ2+Wvt2Kjq6twd@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fW4dWDH+=VLWc0jjRBDrU2qGQh9aUXhVp-Mvdme2HZrLA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.26.214]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 25/08/2021 17:47, Ian Rogers wrote:
-> On Wed, Aug 25, 2021 at 7:32 AM John Garry<john.garry@huawei.com>  wrote:
->> On 25/08/2021 01:13, Ian Rogers wrote:
->>
->> Thanks for getting back to me
->>
->>
->>>> + if (term->type_term == PARSE_EVENTS__TERM_TYPE_SAMPLE_PERIOD) {
->>>> +       term->config = strdup("period");
->>>> + }
->>>> +
->>>> if (!head) {
->>>>           parse_events_term__delete(term);
->>>>           YYABORT;
->>>> --
->>>>
->>>> ----8-----
->>> Agreed this is hacky,
->> This might be a*bit*  better:
->>
->> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->> index e5eae23cfceb..e597beaaa179 100644
->> --- a/tools/perf/util/parse-events.c
->> +++ b/tools/perf/util/parse-events.c
->> @@ -1058,6 +1058,13 @@ static const char
->> *config_term_names[__PARSE_EVENTS__TERM_TYPE_NR] = {
->>          [PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE]       = "aux-sample-size",
->>    };
->>
->> +const char * get_config_term(int term_type)
->> +{
->> +       if (term_type >= __PARSE_EVENTS__TERM_TYPE_NR)
->> +               return "";
->> +       return config_term_names[term_type];
->> +}
->> +
->>    static bool config_term_shrinked;
->>
->>    static bool
->> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
->> index bf6e41aa9b6a..0f658732535f 100644
->> --- a/tools/perf/util/parse-events.h
->> +++ b/tools/perf/util/parse-events.h
->> @@ -90,6 +90,8 @@ enum {
->>          __PARSE_EVENTS__TERM_TYPE_NR,
->>    };
->>
->> +const char *get_config_term(int term_type);
->> +
->>    struct parse_events_array {
->>          size_t nr_ranges;
->>          struct {
->> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
->> index 9321bd0e2f76..8d6d3fae226d 100644
->> --- a/tools/perf/util/parse-events.y
->> +++ b/tools/perf/util/parse-events.y
->> @@ -832,8 +832,9 @@ PE_TERM '=' PE_NAME
->>    PE_TERM '=' PE_VALUE
->>    {
->>          struct parse_events_term *term;
->> +       char *config = strdup(get_config_term($1));
->>
->> -       ABORT_ON(parse_events_term__num(&term, (int)$1, NULL, $3, false, &@1,
->> &@3));
->> +       ABORT_ON(parse_events_term__num(&term, (int)$1, config, $3, false,
->> &@1, &@3));
->>          $$ = term;
->>    }
->>
->>
->>> I think it'd be better to fix this up in the
->>> output. For example:
->>>
->>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>> index 6cdbee8a12e7..c77c42275efa 100644
->>> --- a/tools/perf/util/pmu.c
->>> +++ b/tools/perf/util/pmu.c
->>> @@ -365,15 +365,21 @@ static int __perf_pmu__new_alias(struct
->>> list_head *list, char *dir, char *name,
->>>           memset(newval, 0, sizeof(newval));
->>>           ret = 0;
->>>           list_for_each_entry(term, &alias->terms, list) {
->>> +               const char * config = term->config;
->>> +
->>>                   if (ret)
->>>                           ret += scnprintf(newval + ret, sizeof(newval) - ret,
->>>                                            ",");
->>> +               if (!config) {
->>> +                       /* Note: config_term_names in parse_events.c
->>> isn't accessible */
->>> +                       config = config_term_names[term->type_term];
->> We could just expose some parse-events.c API, like above.
->>
->>> +               }
->>>                   if (term->type_val == PARSE_EVENTS__TERM_TYPE_NUM)
->>>                           ret += scnprintf(newval + ret, sizeof(newval) - ret,
->>> -                                        "%s=%#x", term->config, term->val.num);
->>> +                                        "%s=%#x", config, term->val.num);
->>>                   else if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
->>>                           ret += scnprintf(newval + ret, sizeof(newval) - ret,
->>> -                                        "%s=%s", term->config, term->val.str);
->>> +                                        "%s=%s", config, term->val.str);
->>>           }
->>>
->>>           alias->name = strdup(name);
->> But how about this alternative simple one:
->>
->> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
->> index e5eae23cfceb..9e5df934d22d 100644
->> --- a/tools/perf/util/parse-events.c
->> +++ b/tools/perf/util/parse-events.c
->> @@ -3084,7 +3084,7 @@ int parse_events_term__num(struct
->> parse_events_term **term,
->>          struct parse_events_term temp = {
->>                  .type_val  = PARSE_EVENTS__TERM_TYPE_NUM,
->>                  .type_term = type_term,
->> -               .config    = config,
->> +               .config    = config ? : strdup(config_term_names[type_term]),
->>                  .no_value  = no_value,
->>                  .err_term  = loc_term ? loc_term->first_column : 0,
->>                  .err_val   = loc_val  ? loc_val->first_column  : 0,
->> --
-> If you have this change isn't the change to parse_events_term__num()
-> unnecessary?
+Hi Namhyung,
 
-eh, this is parse_events_term__num().
+	Please check and ack,
 
-Anyway, yes, this 1-line change in parse_events_term__num() only does 
-look to fix it. More testing required, though.
+- Arnaldo
 
-This 1 liner fix looks good to me.
+From 4e5caa5fbe6955dd26336a0b106c52b98c793f3b Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Wed, 25 Aug 2021 11:50:37 -0300
+Subject: [PATCH 1/2] perf bench inject-buildid: Handle writen() errors
 
-Cheers,
-John
+The build on fedora:35 and fedora:rawhide with clang is failing with:
+
+  49    41.00 fedora:35                     : FAIL clang version 13.0.0 (Fedora 13.0.0~rc1-1.fc35)
+    bench/inject-buildid.c:351:6: error: variable 'len' set but not used [-Werror,-Wunused-but-set-variable]
+            u64 len = 0;
+                ^
+    1 error generated.
+    make[3]: *** [/git/perf-5.14.0-rc7/tools/build/Makefile.build:139: bench] Error 2
+  50    41.11 fedora:rawhide                : FAIL clang version 13.0.0 (Fedora 13.0.0~rc1-1.fc35)
+    bench/inject-buildid.c:351:6: error: variable 'len' set but not used [-Werror,-Wunused-but-set-variable]
+            u64 len = 0;
+                ^
+    1 error generated.
+    make[3]: *** [/git/perf-5.14.0-rc7/tools/build/Makefile.build:139: bench] Error 2
+
+That 'len' variable is not used at all, so just make sure all the
+synthesize_RECORD() routines return ssize_t to propagate the writen()
+return, as it may fail, ditch the 'ret' var and bail out if those
+routines fail.
+
+Fixes: 0bf02a0d80427f26 ("perf bench: Add build-id injection benchmark")
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/bench/inject-buildid.c | 52 ++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 22 deletions(-)
+
+diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
+index 55d373b75791b0e4..17672790f1231acc 100644
+--- a/tools/perf/bench/inject-buildid.c
++++ b/tools/perf/bench/inject-buildid.c
+@@ -133,7 +133,7 @@ static u64 dso_map_addr(struct bench_dso *dso)
+ 	return 0x400000ULL + dso->ino * 8192ULL;
+ }
+ 
+-static u32 synthesize_attr(struct bench_data *data)
++static ssize_t synthesize_attr(struct bench_data *data)
+ {
+ 	union perf_event event;
+ 
+@@ -151,7 +151,7 @@ static u32 synthesize_attr(struct bench_data *data)
+ 	return writen(data->input_pipe[1], &event, event.header.size);
+ }
+ 
+-static u32 synthesize_fork(struct bench_data *data)
++static ssize_t synthesize_fork(struct bench_data *data)
+ {
+ 	union perf_event event;
+ 
+@@ -169,8 +169,7 @@ static u32 synthesize_fork(struct bench_data *data)
+ 	return writen(data->input_pipe[1], &event, event.header.size);
+ }
+ 
+-static u32 synthesize_mmap(struct bench_data *data, struct bench_dso *dso,
+-			   u64 timestamp)
++static ssize_t synthesize_mmap(struct bench_data *data, struct bench_dso *dso, u64 timestamp)
+ {
+ 	union perf_event event;
+ 	size_t len = offsetof(struct perf_record_mmap2, filename);
+@@ -198,23 +197,25 @@ static u32 synthesize_mmap(struct bench_data *data, struct bench_dso *dso,
+ 
+ 	if (len > sizeof(event.mmap2)) {
+ 		/* write mmap2 event first */
+-		writen(data->input_pipe[1], &event, len - bench_id_hdr_size);
++		if (writen(data->input_pipe[1], &event, len - bench_id_hdr_size) < 0)
++			return -1;
+ 		/* zero-fill sample id header */
+ 		memset(id_hdr_ptr, 0, bench_id_hdr_size);
+ 		/* put timestamp in the right position */
+ 		ts_idx = (bench_id_hdr_size / sizeof(u64)) - 2;
+ 		id_hdr_ptr[ts_idx] = timestamp;
+-		writen(data->input_pipe[1], id_hdr_ptr, bench_id_hdr_size);
+-	} else {
+-		ts_idx = (len / sizeof(u64)) - 2;
+-		id_hdr_ptr[ts_idx] = timestamp;
+-		writen(data->input_pipe[1], &event, len);
++		if (writen(data->input_pipe[1], id_hdr_ptr, bench_id_hdr_size) < 0)
++			return -1;
++
++		return len;
+ 	}
+-	return len;
++
++	ts_idx = (len / sizeof(u64)) - 2;
++	id_hdr_ptr[ts_idx] = timestamp;
++	return writen(data->input_pipe[1], &event, len);
+ }
+ 
+-static u32 synthesize_sample(struct bench_data *data, struct bench_dso *dso,
+-			     u64 timestamp)
++static ssize_t synthesize_sample(struct bench_data *data, struct bench_dso *dso, u64 timestamp)
+ {
+ 	union perf_event event;
+ 	struct perf_sample sample = {
+@@ -233,7 +234,7 @@ static u32 synthesize_sample(struct bench_data *data, struct bench_dso *dso,
+ 	return writen(data->input_pipe[1], &event, event.header.size);
+ }
+ 
+-static u32 synthesize_flush(struct bench_data *data)
++static ssize_t synthesize_flush(struct bench_data *data)
+ {
+ 	struct perf_event_header header = {
+ 		.size = sizeof(header),
+@@ -348,14 +349,16 @@ static int inject_build_id(struct bench_data *data, u64 *max_rss)
+ 	int status;
+ 	unsigned int i, k;
+ 	struct rusage rusage;
+-	u64 len = 0;
+ 
+ 	/* this makes the child to run */
+ 	if (perf_header__write_pipe(data->input_pipe[1]) < 0)
+ 		return -1;
+ 
+-	len += synthesize_attr(data);
+-	len += synthesize_fork(data);
++	if (synthesize_attr(data) < 0)
++		return -1;
++
++	if (synthesize_fork(data) < 0)
++		return -1;
+ 
+ 	for (i = 0; i < nr_mmaps; i++) {
+ 		int idx = rand() % (nr_dsos - 1);
+@@ -363,13 +366,18 @@ static int inject_build_id(struct bench_data *data, u64 *max_rss)
+ 		u64 timestamp = rand() % 1000000;
+ 
+ 		pr_debug2("   [%d] injecting: %s\n", i+1, dso->name);
+-		len += synthesize_mmap(data, dso, timestamp);
++		if (synthesize_mmap(data, dso, timestamp) < 0)
++			return -1;
+ 
+-		for (k = 0; k < nr_samples; k++)
+-			len += synthesize_sample(data, dso, timestamp + k * 1000);
++		for (k = 0; k < nr_samples; k++) {
++			if (synthesize_sample(data, dso, timestamp + k * 1000) < 0)
++				return -1;
++		}
+ 
+-		if ((i + 1) % 10 == 0)
+-			len += synthesize_flush(data);
++		if ((i + 1) % 10 == 0) {
++			if (synthesize_flush(data) < 0)
++				return -1;
++		}
+ 	}
+ 
+ 	/* this makes the child to finish */
+-- 
+2.31.1
 
