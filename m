@@ -2,116 +2,148 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_CR_TRAILER,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578D7C432BE
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Aug 2021 19:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE0C43216
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Aug 2021 20:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FE5A6108D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Aug 2021 19:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10F1E61037
+	for <linux-perf-users@archiver.kernel.org>; Thu, 26 Aug 2021 20:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243300AbhHZTKN (ORCPT
+        id S243534AbhHZU76 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 26 Aug 2021 15:10:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38956 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230442AbhHZTKM (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 26 Aug 2021 15:10:12 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E4D5161052;
-        Thu, 26 Aug 2021 19:09:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1630004964;
-        bh=n+iRiPHG+mQ5MPOYWhKEq5xLaeCMPXwkshM8Phv4gEM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YlmdBnTf1WEJ/CSDKcgZSZo5LOGl/lOxpaxCBPfGWeN/ZT65COEFIf6ydN61V9QgK
-         yxzyCP/uYkccM12cAZMVlDjL+m600Wy9G9evncSRPKSCnpPeirT+PAq5leSOFv7CTA
-         zc3QdPsvOocdjH0QRS1Ev88Cd4xqLng6hMoVM9/eg0Nzi2ovlXXDQzCrqCOnPkpCSq
-         xi7bkJTrUecp+pA3dQawr/Siu/drJk54pM98puz1kqjGifqduu81aTT6+IK5XyNyqp
-         hC3Oc2IgRhdUI7t3m5b+WHqhBNRGeQLcGlfcJUjIvKZe/FrHJV43SZC3Zt6HblBmOp
-         8boPWErB9pdGQ==
-Received: by mail-ej1-f45.google.com with SMTP id me10so8483031ejb.11;
-        Thu, 26 Aug 2021 12:09:24 -0700 (PDT)
-X-Gm-Message-State: AOAM531ENHRn/nHkqGYp3RH6BYOKY+xQ98+Dyak0pH/mWN75fN+jvPoO
-        o5voHpSkE8R4rxoRNPc4V1nyLpOTZyAKfk+E4A==
-X-Google-Smtp-Source: ABdhPJzUFDpBsNWGNyiE29SIh7dKKli7aZ0R/Ozw8m0It0WdT9wJ+yjrqf2xnCrbBfbJ7thVBpF+m/Xy+TkMyPiCW6Q=
-X-Received: by 2002:a17:906:1cd0:: with SMTP id i16mr5841937ejh.360.1630004963537;
- Thu, 26 Aug 2021 12:09:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210728230230.1911468-1-robh@kernel.org> <20210728230230.1911468-3-robh@kernel.org>
- <d720903c-926e-f57a-0862-4e5d76db763a@kernel.org> <CAL_JsqLRv9ugKJcn4dq_ps0JMt74Y7PKA=5yySYxvftdQWzzPA@mail.gmail.com>
- <de97454b-9b4d-492f-a435-6a5e33889219@www.fastmail.com>
-In-Reply-To: <de97454b-9b4d-492f-a435-6a5e33889219@www.fastmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 26 Aug 2021 14:09:11 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKpT93W6nBj68DykEJzjFYOPG=8PGShsh2QZVzHq5N3fQ@mail.gmail.com>
-Message-ID: <CAL_JsqKpT93W6nBj68DykEJzjFYOPG=8PGShsh2QZVzHq5N3fQ@mail.gmail.com>
-Subject: Re: [RFC 2/3] perf/x86: Control RDPMC access from .enable() hook
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 26 Aug 2021 16:59:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230125AbhHZU75 (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Thu, 26 Aug 2021 16:59:57 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D37AC061757;
+        Thu, 26 Aug 2021 13:59:09 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id e14so5004056qkg.3;
+        Thu, 26 Aug 2021 13:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ldGhthI++t3w6986XDZba6Q1yZRX4odOpIMvkvePfHc=;
+        b=OheyBCur9wHxyJUrnhNfW2lfxtb3kQ6W+jYCnrD/Bu07QjycyF9xZlAaegudPBLJDn
+         8IasTBBZUwesaV7XZh07vNgJiN8jrvVWJ8J4rQc75VV7OjbAXUBZZFZl8OoOa9x+RkH8
+         a+zqgpivSYpVXoh3UyUiiRzKCsjGNKsVSvHCjBkgBRHXqUcBxnzpvPN+/JSNzmMgk/Pr
+         j+jFRlarz83iekoCTYuz3n8xJHqVv0TduhQ+s2z85F+z3T1p0x0PIlmLjvbdPN1sPfZ1
+         4W1CTRqSEXOju5Kpnsp28Ty9GYmqdRlmEeiFCGCnXrSo6Fyedw0U0GsFQSsblkbUZtjz
+         +7oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ldGhthI++t3w6986XDZba6Q1yZRX4odOpIMvkvePfHc=;
+        b=r42gHwmPFkI3T3XN4PkDiRDMkA9H+6Q05S0ADO0wdUWewxKFtlSnHm2BfPfL0WRkTN
+         hcKgPBCu1ea/wsG/PJ+M/cxbvZMLtBZGkLujRQIAPVJLXpSfb/owcv80Xn1TnZB7Wdht
+         8BGfZ8srZ6JKojPn7pZulchVGX/6Xrb3RqG/+dRB5XcFTbB5TpF6cDLS0kxBNarNWdY6
+         XyhcuanfgnKIVjXaOBr+UKFuJlf3wkxxwv3BMqemHp45O0oHCJ+K//eWtKvqF+JYFzQT
+         GrQL/HiZwz8eLPn42y4mRj2JDXushy50/ilbo/zcn6JvnvHx4yMhXdxskfPzTcpJR1+7
+         ZvUg==
+X-Gm-Message-State: AOAM533Mqiu0Cuyspej28MCPpbJmP9G910MRl54U2Bbdb6D3uAiOH2Nt
+        GR8+U3FtuAsY/tNRH3L6AGHSZHDA4h5Lqg==
+X-Google-Smtp-Source: ABdhPJxrD+K1ALRaZQSDKJ72hjbpCHhEic6Csz/W3OUeeXf3irJ5comsp24peI48bMJIZwCal3yxRA==
+X-Received: by 2002:a37:61d5:: with SMTP id v204mr5747644qkb.308.1630011547957;
+        Thu, 26 Aug 2021 13:59:07 -0700 (PDT)
+Received: from localhost ([12.28.44.171])
+        by smtp.gmail.com with ESMTPSA id p22sm3327691qkj.16.2021.08.26.13.59.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Aug 2021 13:59:07 -0700 (PDT)
+Date:   Thu, 26 Aug 2021 13:59:06 -0700
+From:   Yury Norov <yury.norov@gmail.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Alexander Lobakin <alobakin@pm.me>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
+        Alexey Klimov <aklimov@redhat.com>,
+        Andrea Merello <andrea.merello@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Ben Gardon <bgardon@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brian Cain <bcain@codeaurora.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Joe Perches <joe@perches.com>, Jonas Bonn <jonas@southpole.se>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Rich Felker <dalias@libc.org>,
+        Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tejun Heo <tj@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Subject: Re: [PATCH 17/17] vsprintf: rework bitmap_list_string
+Message-ID: <YSgAmjvwscaRb8PT@yury-ThinkPad>
+References: <20210814211713.180533-1-yury.norov@gmail.com>
+ <20210814211713.180533-18-yury.norov@gmail.com>
+ <YSeh7SrwoMhWb8CO@alley>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YSeh7SrwoMhWb8CO@alley>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Aug 26, 2021 at 1:13 PM Andy Lutomirski <luto@kernel.org> wrote:
->
->
->
-> On Thu, Aug 12, 2021, at 11:16 AM, Rob Herring wrote:
-> > On Thu, Aug 12, 2021 at 11:50 AM Andy Lutomirski <luto@kernel.org> wrote:
-> > >
-> > > On 7/28/21 4:02 PM, Rob Herring wrote:
-> > > > Rather than controlling RDPMC access behind the scenes from switch_mm(),
-> > > > move RDPMC access controls to the PMU .enable() hook. The .enable() hook
-> > > > is called whenever the perf CPU or task context changes which is when
-> > > > the RDPMC access may need to change.
-> > > >
-> > > > This is the first step in moving the RDPMC state tracking out of the mm
-> > > > context to the perf context.
-> > >
-> > > Is this series supposed to be a user-visible change or not?  I'm confused.
-> >
-> > It should not be user-visible. Or at least not user-visible for what
-> > any user would notice. If an event is not part of the perf context on
-> > another thread sharing the mm, does that thread need rdpmc access? No
-> > access would be a user-visible change, but I struggle with how that's
-> > a useful scenario?
-> >
->
-> This is what I mean by user-visible -- it changes semantics in a way that a user program could detect.  I'm not saying it's a problem, but I do think you need to document the new semantics.
+On Thu, Aug 26, 2021 at 04:15:09PM +0200, Petr Mladek wrote:
+> On Sat 2021-08-14 14:17:13, Yury Norov wrote:
+> > bitmap_list_string() is very ineffective when printing bitmaps with long
+> > ranges of set bits because it calls find_next_bit for each bit in the
+> > bitmap.  We can do better by detecting ranges of set bits.
+> > 
+> > In my environment, before/after is 943008/31008 ns.
+> > 
+> > Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> > Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> I like the patch. The new code is much easier to follow.
+> Feel free to use:
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> Best Regards,
+> Petr
 
-After testing some scenarios and finding perf_event_tests[1], this
-series isn't going to work for x86 unless rdpmc is restricted to task
-events only or allowed to segfault on CPU events when read on the
-wrong CPU rather than just returning garbage. It's been discussed
-before here[2].
+Thanks Petr! The patch is already in the linux-next.
 
-Ultimately, I'm just trying to define the behavior for arm64 where we
-don't have an existing ABI to maintain and don't have to recreate the
-mistakes of x86 rdpmc ABI. Tying the access to mmap is messy. As we
-explicitly request user access on perf_event_open(), I think it may be
-better to just enable access when the event's context is active and
-ignore mmap(). Maybe you have an opinion there since you added the
-mmap() part?
+Andrew, Stephen, can you please append Petr's reviewed-by?
 
-Rob
-
-[1] https://github.com/deater/perf_event_tests
-[2] https://lore.kernel.org/lkml/alpine.DEB.2.21.1901101229010.3358@macbook-air/
+Thanks,
+Yury
