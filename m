@@ -2,161 +2,167 @@ Return-Path: <linux-perf-users-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 698FAC4320A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Aug 2021 15:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082FAC4320A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Aug 2021 21:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4C161076
-	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Aug 2021 15:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA83960EBD
+	for <linux-perf-users@archiver.kernel.org>; Fri, 27 Aug 2021 21:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245409AbhH0PX2 (ORCPT
+        id S231840AbhH0VL5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Aug 2021 11:23:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245343AbhH0PX2 (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Aug 2021 11:23:28 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EAEC0613CF
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 08:22:39 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id r13so5567804pff.7
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 08:22:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=QatDM27fKYA9pWDzVSAqlJ2DDoFQbm13fmaaMfb9ulg=;
-        b=LbfQeRJPD2tlThKAHYznAy0sM0IgIfh1wTpRJBZ2a8T56zVu98PuMUUVUbHs4fqFWr
-         6+86/kLM/nQLlWQf9dDa+no5hVa+6sXIHhmX9R3rM1SD9hRro8HWA2j/NGyx2O8VrgV+
-         oGP6lA9WOmK8FVw2oSIVs+avOR5GJ+s6JTH9S2ut8a2dmjwSmakGT8siao8WSM0rYY/D
-         l8AtqZP9IsjFRz1XRX7SFZjz8ry7nluU0QO8loudJxQXIIhTLPgOJCI+sU7b8vw4rsbo
-         7ceZSl6gyIwnJ0+ZB+tg2Cex82NuQqvIiek/SOq2xNCKjHmmV/miz2C81kIq6WQooMor
-         pjmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QatDM27fKYA9pWDzVSAqlJ2DDoFQbm13fmaaMfb9ulg=;
-        b=S+HsfHU72dng2UYBdlfUdPiYLLuLOPrZCvclZqHzoZaYJ7SbOb0M5wpiylQcGc6aJT
-         xt2s0Qj0tsE3lx83UkC4RRbI5JhPhf+tAyWXWIAIgxfUiHkDBXe4aQ79H1ymvY2Sq2SH
-         WidHvszCjqf9EYfyy42+1Iq1niClQkWT0nlKWuiyKDKo6z/8eJwgSTN/9qLKfpyam5wF
-         s8qFvBcFsQw3Q32mLydnVVjqQz8fJcnVkWrbbnHWCqpSXDo9EXern6dUtfUW3pVtPNU8
-         HmwUjB3S7ztzVmpdNoWj93za2GBIFKpEvcxdy+vkQ/lEMhRA+tpe+uzDDOsHyTIr+VZd
-         b84A==
-X-Gm-Message-State: AOAM532xut3GORkdKp1O8mkiTt5u4xpfoymjeHL/88ZS57kJiAi/D9xz
-        TWY8Q9H0qi5nlenuEDb6T90UAw==
-X-Google-Smtp-Source: ABdhPJzEumx17gqrFfS4IgX2tHxkXDWTQYfyqElR8d63vRz/R/VGX/kHlh1uWjTReV2Ta0/ixjnVag==
-X-Received: by 2002:a05:6a00:26f6:b0:3ed:834e:153 with SMTP id p54-20020a056a0026f600b003ed834e0153mr9605926pfw.53.1630077758383;
-        Fri, 27 Aug 2021 08:22:38 -0700 (PDT)
-Received: from google.com (157.214.185.35.bc.googleusercontent.com. [35.185.214.157])
-        by smtp.gmail.com with ESMTPSA id q3sm7448697pgf.18.2021.08.27.08.22.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Aug 2021 08:22:37 -0700 (PDT)
-Date:   Fri, 27 Aug 2021 15:22:33 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Guo Ren <guoren@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Fri, 27 Aug 2021 17:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231570AbhH0VL4 (ORCPT <rfc822;linux-perf-users@vger.kernel.org>);
+        Fri, 27 Aug 2021 17:11:56 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3821B60E78;
+        Fri, 27 Aug 2021 21:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1630098667;
+        bh=0J24TIWf8un+7BNgVI6ycuS4d2s9YAG3kZ6HY1i/HO0=;
+        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+        b=Um3Zag09FUrqeeBy8h8bw/Dq9pfj83Oac5gjtk2iNXPqrbZRBiHAzbJb6Ne+f9mKF
+         dxwifgj7U1VMFioh1/McZPcjNt/H08BTn5z0UGYzJv70mhfjeQ2qvNQoup2k6dBmmb
+         nEvxJCfcWDQwMYszsMOyv3EwycPOruIhvFILTselPDsguTo956zceTgD5/ac8VzrBv
+         hM75CBvFavx+J1j/gcIwvaFNYmWoKJ1ZzdPCdCa2CUG19Q5MyAVQA4Fuy+EwcsOqUS
+         b9qwAChEu3uLyyUYCgMfP0w0xISCnwPx6KnxRfrgFcPhI+/XMlp/WSw8fkhBIVieNK
+         3RXhLEbuenPSA==
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 5560927C0054;
+        Fri, 27 Aug 2021 17:11:05 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute6.internal (MEProxy); Fri, 27 Aug 2021 17:11:05 -0400
+X-ME-Sender: <xms:51QpYSOvkzC3y8P2Oa9yoZBPh34Vg5W_CdmhzjqOedvLTMePf8evyQ>
+    <xme:51QpYQ8gdXSppk5nkco8dlBhM-Lh8DktuirAOSY3J2aj0WsdmdJRgsqRZ31Cq8j9r
+    DE2PPBfbF3McxtuFME>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddruddufedgudehkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
+    ggtffrrghtthgvrhhnpeefheekleetudffieethedtkeegfeevjefgvedugeevgefhtdek
+    jeevhfdutedugfenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdroh
+    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegr
+    nhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedukeehieefvd
+    dqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhu
+    thhordhush
+X-ME-Proxy: <xmx:51QpYZR44FeWE4zFCjnX2BuNYRwwk6WYni5WIDNLgPMe7fJiQDeKwQ>
+    <xmx:51QpYSu7O9wIsvP6qkcxwxNgNXXUYHKjJqraqGnnrKH3eJ2kYlreqQ>
+    <xmx:51QpYacXf4F-fD_eZ6rg7CcWXFqJXWaVrdhIoG5SKxmE84sVPsbLIQ>
+    <xmx:6VQpYV3LBRZ9QVC2-ieZi_Y7JTuc_OtcKILAVABxXW5ee_cCBIp7IXjIubc>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2F5CAA0378F; Fri, 27 Aug 2021 17:11:03 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1125-g685cec594c-fm-20210825.001-g685cec59
+Mime-Version: 1.0
+Message-Id: <43b3a838-da8a-4733-9832-f3d5f990ec13@www.fastmail.com>
+In-Reply-To: <CAL_JsqKpT93W6nBj68DykEJzjFYOPG=8PGShsh2QZVzHq5N3fQ@mail.gmail.com>
+References: <20210728230230.1911468-1-robh@kernel.org>
+ <20210728230230.1911468-3-robh@kernel.org>
+ <d720903c-926e-f57a-0862-4e5d76db763a@kernel.org>
+ <CAL_JsqLRv9ugKJcn4dq_ps0JMt74Y7PKA=5yySYxvftdQWzzPA@mail.gmail.com>
+ <de97454b-9b4d-492f-a435-6a5e33889219@www.fastmail.com>
+ <CAL_JsqKpT93W6nBj68DykEJzjFYOPG=8PGShsh2QZVzHq5N3fQ@mail.gmail.com>
+Date:   Fri, 27 Aug 2021 14:10:42 -0700
+From:   "Andy Lutomirski" <luto@kernel.org>
+To:     "Rob Herring" <robh@kernel.org>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Will Deacon" <will@kernel.org>,
+        "Kan Liang" <kan.liang@linux.intel.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Jiri Olsa" <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Artem Kashkanov <artem.kashkanov@intel.com>,
-        Like Xu <like.xu.linux@gmail.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: Re: [PATCH 05/15] perf: Track guest callbacks on a per-CPU basis
-Message-ID: <YSkDOWze5dBHkJnA@google.com>
-References: <20210827005718.585190-1-seanjc@google.com>
- <20210827005718.585190-6-seanjc@google.com>
- <YSiRBQQE7md7ZrNC@hirez.programming.kicks-ass.net>
- <YSj7jq32U8Euf38o@google.com>
- <YSj9LQfbKxOhxqcP@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YSj9LQfbKxOhxqcP@hirez.programming.kicks-ass.net>
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [RFC 2/3] perf/x86: Control RDPMC access from .enable() hook
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Aug 27, 2021, Peter Zijlstra wrote:
-> On Fri, Aug 27, 2021 at 02:49:50PM +0000, Sean Christopherson wrote:
-> > On Fri, Aug 27, 2021, Peter Zijlstra wrote:
-> > > On Thu, Aug 26, 2021 at 05:57:08PM -0700, Sean Christopherson wrote:
-> > > > Use a per-CPU pointer to track perf's guest callbacks so that KVM can set
-> > > > the callbacks more precisely and avoid a lurking NULL pointer dereference.
-> > > 
-> > > I'm completely failing to see how per-cpu helps anything here...
-> > 
-> > It doesn't help until KVM is converted to set the per-cpu pointer in flows that
-> > are protected against preemption, and more specifically when KVM only writes to
-> > the pointer from the owning CPU.  
-> 
-> So the 'problem' I have with this is that sane (!KVM using) people, will
-> still have to suffer that load, whereas with the static_call() we patch
-> in an 'xor %rax,%rax' and only have immediate code flow.
 
-Again, I've no objection to the static_call() approach.  I didn't even see the
-patch until I had finished testing my series :-/
 
-> > Ignoring static call for the moment, I don't see how the unreg side can be safe
-> > using a bare single global pointer.  There is no way for KVM to prevent an NMI
-> > from running in parallel on a different CPU.  If there's a more elegant solution,
-> > especially something that can be backported, e.g. an rcu-protected pointer, I'm
-> > all for it.  I went down the per-cpu path because it allowed for cleanups in KVM,
-> > but similar cleanups can be done without per-cpu perf callbacks.
-> 
-> If all the perf_guest_cbs dereferences are with preemption disabled
-> (IRQs disabled, IRQ context, NMI context included), then the sequence:
-> 
-> 	WRITE_ONCE(perf_guest_cbs, NULL);
-> 	synchronize_rcu();
-> 
-> Ensures that all prior observers of perf_guest_csb will have completed
-> and future observes must observe the NULL value.
+On Thu, Aug 26, 2021, at 12:09 PM, Rob Herring wrote:
+> On Thu, Aug 26, 2021 at 1:13 PM Andy Lutomirski <luto@kernel.org> wrot=
+e:
+> >
+> >
+> >
+> > On Thu, Aug 12, 2021, at 11:16 AM, Rob Herring wrote:
+> > > On Thu, Aug 12, 2021 at 11:50 AM Andy Lutomirski <luto@kernel.org>=
+ wrote:
+> > > >
+> > > > On 7/28/21 4:02 PM, Rob Herring wrote:
+> > > > > Rather than controlling RDPMC access behind the scenes from sw=
+itch_mm(),
+> > > > > move RDPMC access controls to the PMU .enable() hook. The .ena=
+ble() hook
+> > > > > is called whenever the perf CPU or task context changes which =
+is when
+> > > > > the RDPMC access may need to change.
+> > > > >
+> > > > > This is the first step in moving the RDPMC state tracking out =
+of the mm
+> > > > > context to the perf context.
+> > > >
+> > > > Is this series supposed to be a user-visible change or not?  I'm=
+ confused.
+> > >
+> > > It should not be user-visible. Or at least not user-visible for wh=
+at
+> > > any user would notice. If an event is not part of the perf context=
+ on
+> > > another thread sharing the mm, does that thread need rdpmc access?=
+ No
+> > > access would be a user-visible change, but I struggle with how tha=
+t's
+> > > a useful scenario?
+> > >
+> >
+> > This is what I mean by user-visible -- it changes semantics in a way=
+ that a user program could detect.  I'm not saying it's a problem, but I=
+ do think you need to document the new semantics.
+>=20
+> After testing some scenarios and finding perf_event_tests[1], this
+> series isn't going to work for x86 unless rdpmc is restricted to task
+> events only or allowed to segfault on CPU events when read on the
+> wrong CPU rather than just returning garbage. It's been discussed
+> before here[2].
+>=20
+> Ultimately, I'm just trying to define the behavior for arm64 where we
+> don't have an existing ABI to maintain and don't have to recreate the
+> mistakes of x86 rdpmc ABI. Tying the access to mmap is messy. As we
+> explicitly request user access on perf_event_open(), I think it may be
+> better to just enable access when the event's context is active and
+> ignore mmap(). Maybe you have an opinion there since you added the
+> mmap() part?
 
-That alone won't be sufficient, as the read side also needs to ensure it doesn't
-reload perf_guest_cbs between NULL checks and dereferences.  But that's easy
-enough to solve with a READ_ONCE and maybe a helper to make it more cumbersome
-to use perf_guest_cbs directly.
+That makes sense to me. The mmap() part was always a giant kludge.
 
-How about this for a series?
+There is fundamentally a race, at least if rseq isn=E2=80=99t used: if y=
+ou check that you=E2=80=99re on the right CPU, do RDPMC, and throw out t=
+he result if you were on the wrong CPU (determined by looking at the mma=
+p), you still would very much prefer not to fault.
 
-  1. Use READ_ONCE/WRITE_ONCE + synchronize_rcu() to fix the underlying bug
-  2. Fix KVM PT interrupt handler bug
-  3. Kill off perf_guest_cbs usage in architectures that don't need the callbacks
-  4. Replace ->is_in_guest()/->is_user_mode() with ->state(), and s/get_guest_ip/get_ip
-  5. Implement static_call() support
-  6. Cleanups, if there are any
-  6..N KVM cleanups, e.g. to eliminate current_vcpu and share x86+arm64 callbacks
+Maybe rseq or a vDSO helper is the right solution for ARM.
+
+>=20
+> Rob
+>=20
+> [1] https://github.com/deater/perf_event_tests
+> [2] https://lore.kernel.org/lkml/alpine.DEB.2.21.1901101229010.3358@ma=
+cbook-air/
+>=20
