@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-26.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0640C432BE
-	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 00:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C06C4320E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 00:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C215C60C3E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 00:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905516102A
+	for <linux-perf-users@archiver.kernel.org>; Sat, 28 Aug 2021 00:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232868AbhH1AhZ (ORCPT
+        id S232918AbhH1Ah2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 27 Aug 2021 20:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46230 "EHLO
+        Fri, 27 Aug 2021 20:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232807AbhH1AhU (ORCPT
+        with ESMTP id S232858AbhH1AhZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 27 Aug 2021 20:37:20 -0400
+        Fri, 27 Aug 2021 20:37:25 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5E6AC061796
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 17:36:30 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id z6-20020a257e06000000b0059bad6decfbso880559ybc.16
-        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 17:36:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD12C0617AF
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 17:36:33 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id q80-20020a25d953000000b0059a45a5f834so8330485ybg.22
+        for <linux-perf-users@vger.kernel.org>; Fri, 27 Aug 2021 17:36:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=reply-to:date:in-reply-to:message-id:mime-version:references
          :subject:from:to:cc;
-        bh=J1gV9tKuEUW347bCpCRKYVIA3sPFQNKnByLeTysAe1c=;
-        b=QQC9kCQqRwL40ouGUsJ6vhRZON2TPobzHX8Wq8NP7Mf7/RKw30MhddUWUdztQM8ka7
-         Ewe++e/HjV2jGw30ZO9LaCG2WpwNsAvCft0FNwp9j2VxNuY0jXVJogAA4hui8IIZ1qr9
-         T7Ay+2a4aRkadNU1ca0JCC87XvjH4ea9fD4ReM/qOgy67MxneR4EHRBEt1lUd0VOX2+/
-         aMIald+U354j6b4DBU7OSxpd/vJmRGaMfQXYZFeXtKK7qkfMyGqETcknapO+6PjS0TvX
-         f2FLBBpeqGMiBMtBIznPS2E0O9iUn3iZeMA1csLuIwLQaPaZSBmpT2biwVLtTLrwW9db
-         1vRg==
+        bh=oqmEir0ICv/3G92ai+heTZuDyr/2G3d8WRYAGw86atk=;
+        b=PcPAOihT8OlOhhUR4O32+YWwPzAPmLXJ1HEV+moJpFC1Qy84KcVrj+ajHpTlQK+a3F
+         iyxUIoBJmALw6qqcNEgkIBWBH6GlQPAe+u7xlbyeAychGYyySNpy/bvcaaDuenDkzBb1
+         Tjlhu6cHuXug1LfrtevGrfztVaOuMtHQ1BbUdWdKfT8tes9/0JNecwDm/BWfVrT79Qhh
+         U/SjMl4oOYlt5v38Pnm8Mc6W1SnA5LO9EWqHnie5e5sXhbuMbSanMYmcJC2M9uljBuiN
+         FTc3AiajdilK67F7Z2gaOx4+/6EEfK+b8GQmcjFFKC29NzjAngrdpD9yW51Odds/BoDr
+         blsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:reply-to:date:in-reply-to:message-id
          :mime-version:references:subject:from:to:cc;
-        bh=J1gV9tKuEUW347bCpCRKYVIA3sPFQNKnByLeTysAe1c=;
-        b=NW3IDNIHLTa/CM9bIzLB5XE/cpvMUj2dyTUZc5kA7ykSrl8yxZjXY9K34eNa5uGmhF
-         Ltauma6rtEZZdC6kCejY4Aivy2qXH+XNYUC8ilKdBEcB2Jc25eWDpJ9rnd4xBcPeBw2t
-         dwup1NZw9cIU2EZsbEsc+CjZBrbaGpE0F9YrvuVkA9iCe75dP/y5FgqTrgO0fe3ZZOnK
-         KKaQcSMLHQJ0MHdpXL2k82AYSsXXRFfrYawRT1a2qfSicsxj3+qSsfzJVEsO2f+kAHlv
-         RSb2WdrCDWCJecJNVy8NBokvi+3vhx3KTKie92tUu6+a2NB0KzxMVrgCzeNHstOWzCbG
-         NeaQ==
-X-Gm-Message-State: AOAM532N/VDymXGH7WW69J6CxPg0Z37urdmRMLlZCFAl6pAQ9FVKKowa
-        j25X/BnBt+/ii4TOlQTln5c1upQhPVo=
-X-Google-Smtp-Source: ABdhPJycwxh1le3BAg4292rl1ZqiFoDJidbv03xd08RKtKGj0W0JQHpqPcTgq5axIHXDILJ1EM67ZM2iLac=
+        bh=oqmEir0ICv/3G92ai+heTZuDyr/2G3d8WRYAGw86atk=;
+        b=F5zLUT6vlVnU7IeouDoHW8r7tis1ZKqHmHjlUpgGYd0WbYG4Bu4hIjh09IPbkkXkTJ
+         fZhSeyFCrH937yR0H09oYRDNTbA4uIoR72wWoH9H5XreGCVE82XnHZVpUoK4koDp+OgY
+         9MPeBr0sHzVEgSho/jnenKlKc7sjyABngtsS4IfvBktrNJK+zOJUsmM1imxVNub3gKMU
+         6UmPcDNyvgMMorQ3zTIGkXGVjw1XDZBU5HRZGPqcCFzzSIGXl/W/lfg+Eh8YNFVqcCah
+         Ph6ALKCYubuh5w2+MPgWoibGYURpJjS9uVBfulxWGNYrAO6z8GHO7rvnKc/M9bV63UL5
+         IbKg==
+X-Gm-Message-State: AOAM5304hyy2u5sdjA+9W6/TXmMlqrncxjtjG2/Nryrix34cB2o6k/UG
+        wgrh2ZihGp8XUg30A6DPR3hmiqnDxc4=
+X-Google-Smtp-Source: ABdhPJyTmAQoKJ2tjPvfJaPWBN34/RS1O5zwXSkZLsm9h521rPpR1j//umIRZ/UqerB16AfCO1AGIAPsHvE=
 X-Received: from seanjc798194.pdx.corp.google.com ([2620:15c:90:200:f66c:b851:7e79:7ed4])
- (user=seanjc job=sendgmr) by 2002:a25:d307:: with SMTP id e7mr8478177ybf.119.1630110990084;
- Fri, 27 Aug 2021 17:36:30 -0700 (PDT)
+ (user=seanjc job=sendgmr) by 2002:a25:4545:: with SMTP id s66mr8318615yba.191.1630110992229;
+ Fri, 27 Aug 2021 17:36:32 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date:   Fri, 27 Aug 2021 17:35:47 -0700
+Date:   Fri, 27 Aug 2021 17:35:48 -0700
 In-Reply-To: <20210828003558.713983-1-seanjc@google.com>
-Message-Id: <20210828003558.713983-3-seanjc@google.com>
+Message-Id: <20210828003558.713983-4-seanjc@google.com>
 Mime-Version: 1.0
 References: <20210828003558.713983-1-seanjc@google.com>
 X-Mailer: git-send-email 2.33.0.259.gc128427fd7-goog
-Subject: [PATCH v2 02/13] KVM: x86: Register perf callbacks after calling
- vendor's hardware_setup()
+Subject: [PATCH v2 03/13] KVM: x86: Register Processor Trace interrupt hook
+ iff PT enabled in guest
 From:   Sean Christopherson <seanjc@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -108,63 +108,77 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Wait to register perf callbacks until after doing vendor hardaware setup.
-VMX's hardware_setup() configures Intel Processor Trace (PT) mode, and a
-future fix to register the Intel PT guest interrupt hook if and only if
-Intel PT is exposed to the guest will consume the configured PT mode.
+Override the Processor Trace (PT) interrupt handler for guest mode if and
+only if PT is configured for host+guest mode, i.e. is being used
+independently by both host and guest.  If PT is configured for system
+mode, the host fully controls PT and must handle all events.
 
-Delaying registration to hardware setup is effectively a nop as KVM's perf
-hooks all pivot on the per-CPU current_vcpu, which is non-NULL only when
-KVM is handling an IRQ/NMI in a VM-Exit path.  I.e. current_vcpu will be
-NULL throughout both kvm_arch_init() and kvm_arch_hardware_setup().
-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Artem Kashkanov <artem.kashkanov@intel.com>
+Fixes: 8479e04e7d6b ("KVM: x86: Inject PMI for KVM guest")
 Cc: stable@vger.kernel.org
+Cc: Like Xu <like.xu.linux@gmail.com>
+Reported-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reported-by: Artem Kashkanov <artem.kashkanov@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- arch/x86/kvm/x86.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 1 +
+ arch/x86/kvm/vmx/vmx.c          | 1 +
+ arch/x86/kvm/x86.c              | 5 ++++-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 09b256db394a..1ea4943a73d7 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1494,6 +1494,7 @@ struct kvm_x86_init_ops {
+ 	int (*disabled_by_bios)(void);
+ 	int (*check_processor_compatibility)(void);
+ 	int (*hardware_setup)(void);
++	bool (*intel_pt_intr_in_guest)(void);
+ 
+ 	struct kvm_x86_ops *runtime_ops;
+ };
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index fada1055f325..f19d72136f77 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7896,6 +7896,7 @@ static struct kvm_x86_init_ops vmx_init_ops __initdata = {
+ 	.disabled_by_bios = vmx_disabled_by_bios,
+ 	.check_processor_compatibility = vmx_check_processor_compat,
+ 	.hardware_setup = hardware_setup,
++	.intel_pt_intr_in_guest = vmx_pt_mode_is_host_guest,
+ 
+ 	.runtime_ops = &vmx_x86_ops,
+ };
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 86539c1686fa..fb6015f97f9e 100644
+index fb6015f97f9e..ffc6c2d73508 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -8426,8 +8426,6 @@ int kvm_arch_init(void *opaque)
+@@ -8305,7 +8305,7 @@ static struct perf_guest_info_callbacks kvm_guest_cbs = {
+ 	.is_in_guest		= kvm_is_in_guest,
+ 	.is_user_mode		= kvm_is_user_mode,
+ 	.get_guest_ip		= kvm_get_guest_ip,
+-	.handle_intel_pt_intr	= kvm_handle_intel_pt_intr,
++	.handle_intel_pt_intr	= NULL,
+ };
  
- 	kvm_timer_init();
- 
--	perf_register_guest_info_callbacks(&kvm_guest_cbs);
--
- 	if (boot_cpu_has(X86_FEATURE_XSAVE)) {
- 		host_xcr0 = xgetbv(XCR_XFEATURE_ENABLED_MASK);
- 		supported_xcr0 = host_xcr0 & KVM_SUPPORTED_XCR0;
-@@ -8461,7 +8459,6 @@ void kvm_arch_exit(void)
- 		clear_hv_tscchange_cb();
- #endif
- 	kvm_lapic_exit();
--	perf_unregister_guest_info_callbacks(&kvm_guest_cbs);
- 
- 	if (!boot_cpu_has(X86_FEATURE_CONSTANT_TSC))
- 		cpufreq_unregister_notifier(&kvmclock_cpufreq_notifier_block,
-@@ -11064,6 +11061,8 @@ int kvm_arch_hardware_setup(void *opaque)
+ #ifdef CONFIG_X86_64
+@@ -11061,6 +11061,8 @@ int kvm_arch_hardware_setup(void *opaque)
  	memcpy(&kvm_x86_ops, ops->runtime_ops, sizeof(kvm_x86_ops));
  	kvm_ops_static_call_update();
  
-+	perf_register_guest_info_callbacks(&kvm_guest_cbs);
-+
++	if (ops->intel_pt_intr_in_guest && ops->intel_pt_intr_in_guest())
++		kvm_guest_cbs.handle_intel_pt_intr = kvm_handle_intel_pt_intr;
+ 	perf_register_guest_info_callbacks(&kvm_guest_cbs);
+ 
  	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
- 		supported_xss = 0;
- 
-@@ -11091,6 +11090,8 @@ int kvm_arch_hardware_setup(void *opaque)
- 
+@@ -11091,6 +11093,7 @@ int kvm_arch_hardware_setup(void *opaque)
  void kvm_arch_hardware_unsetup(void)
  {
-+	perf_unregister_guest_info_callbacks(&kvm_guest_cbs);
-+
+ 	perf_unregister_guest_info_callbacks(&kvm_guest_cbs);
++	kvm_guest_cbs.handle_intel_pt_intr = NULL;
+ 
  	static_call(kvm_x86_hardware_unsetup)();
  }
- 
 -- 
 2.33.0.259.gc128427fd7-goog
 
